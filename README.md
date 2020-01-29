@@ -3,7 +3,7 @@
 ![Windows 8](https://img.shields.io/badge/Windows_8-pass-green.svg?longCache=true) ![Chrome 79](https://img.shields.io/badge/Chrome_79-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknow-red.svg?longCache=true)
 - 本脚本为自用的Tampermonkey脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 使用方式同其他Tampermonkey脚本
-- 安装链接→[Github](https://github.com/201411232004/OldBilibiliPage/raw/master/main.user.js)→[Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
+- 安装链接→[Github](https://github.com/201411232004/Bilibili-Old/raw/master/main.user.js)→[Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
 ---
 ### 脚本功能
 - 主要
