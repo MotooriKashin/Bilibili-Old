@@ -1,0 +1,145 @@
+<!DOCTYPE html><html>
+<head>
+    <title>bilibili html5 player</title>
+    <meta http-equiv="Content-type" content="text/html;charset=utf-8"><meta name="spm_prefix" content="888.211">
+      <script type="text/javascript">
+        window.activity = {id: 4127, spmId: '888.211'};
+        window.reportMsgObj = {};
+        window.reportConfig = {
+          sample: 1,
+          scrollTracker: true,
+          msgObjects: 'reportMsgObj',
+          errorTracker: true
+        };
+      </script>
+      <script src="//s1.hdslb.com/bfs/seed/log/report/log-reporter.js"></script>
+    
+    <script type="text/javascript">
+      window.SentryConfig = {
+        environemnt: 'production',
+        dsn: 'https://06b7f02e7b1a4496a3dba3630381ab05@api.bilibili.com/x/traceback/19',
+        release: '4127',
+        sampleRate: 0.2,
+      }
+    </script>
+    <script type="text/javascript" src="//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.2.1.min.js"></script>
+    <script type="text/javascript" src="//s1.hdslb.com/bfs/static/activity/activity/sentry-report.js"></script>
+  
+    <script type="text/javascript">
+        if (!!navigator.userAgent.match(/AppleWebKit.*Mobile.*/)) {
+            window.location.href = '//www.bilibili.com/blackboard/html5mobileplayer.html' + window.location.search;
+        }
+    </script>
+    <!-- <link rel="stylesheet" type="text/css" href="src/css/jquery-ui.css" /> -->
+    <link rel="stylesheet" type="text/css" href="//static.hdslb.com/plugins/mCustomScrollbar/jquery.mCustomScrollbar.min.css">
+    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script>
+    <script type="text/javascript" src="//static.hdslb.com/js/jquery.zclip.min.js"></script>
+    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="//static.hdslb.com/plugins/mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+    <!-- <script type="text/javascript" src="//static.hdslb.com/js/jquery.xdomainrequest.min.js"></script> -->
+    <script src="//static.hdslb.com/player/js/bilibiliPlayer.min.js"></script>
+    <script src="//static.hdslb.com/player/js/whitelist.js"></script>
+    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/short/config/biliconfig.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    if (window.__BILI_CONFIG__ && window.__BILI_CONFIG__.show_bv) {
+      window.show_bv = 1;
+    } else {
+      window.show_bv = 0;
+    }
+    </script>
+    <style type="text/css">
+    html, body, .player {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    </style>
+</head>
+<body>
+    <div id="heimu"></div>
+    <div class="player">
+        <div id="bilibiliPlayer"></div>
+    </div>
+
+<script type="text/javascript">
+var allow = true;
+if (window.top != window.self && window.REFERRER_LIST) {
+    try {
+        var h = window.document.referrer.match(/^http(s)?:\/\/(.*?)\//);
+        if (h && h[2] && !(new RegExp(window.REFERRER_LIST.join('|').replace(/\./g, '\\.').replace(/\*/g, '\.\*'))).test(h[2])) {
+            allow = false;
+        } else if (!window.document.referrer && window.navigator.userAgent.indexOf('MicroMessenger') === -1 && window.navigator.userAgent.indexOf('IqiyiApp') === -1) {
+            allow = false;
+        }
+    } catch(e) {
+
+    }
+}
+var GetUrlValue = function(name) {
+    var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+        try {
+            return decodeURIComponent(r[2]);
+        } catch (e) {
+            return null;
+        }
+    }
+    return null;
+}
+if(GetUrlValue('crossDomain')) {
+    document.domain = 'bilibili.com';
+}
+var record = GetUrlValue('record');
+try {
+    record = window.parent.RECORD_STRING || GetUrlValue('record');
+} catch(e) {
+    
+}
+if(allow) {
+    var player = new bilibiliPlayer({
+        aid: GetUrlValue('aid'),
+        cid: GetUrlValue('cid'),
+        bvid: GetUrlValue('bvid'),
+        show_bv: window.show_bv,
+        danmaku: GetUrlValue('danmaku') !== null ? (GetUrlValue('danmaku') == 0 ? false : true) : true,
+        autoplay: GetUrlValue('autoplay') ? true : false,
+        as_wide: GetUrlValue('as_wide') ? 1 : false,
+        player_type: GetUrlValue('player_type') || 0,
+        pre_ad: GetUrlValue('pre_ad') || 0,
+        lastplaytime: GetUrlValue('lastplaytime'),
+        enable_ssl: GetUrlValue('enable_ssl') || 1,
+        enable_ssl_resolve: GetUrlValue('enable_ssl_resolve') !== null ? (GetUrlValue('enable_ssl_resolve') == 0 ? false : true) : true,
+        enable_ssl_stream: GetUrlValue('enable_ssl_stream') !== null ? (GetUrlValue('enable_ssl_stream') == 0 ? false : true) : true,
+        extra_params: GetUrlValue('urlparam') ? decodeURIComponent(GetUrlValue('urlparam')) : null,
+        seasonId: GetUrlValue('seasonId'),
+        episodeId: GetUrlValue('episodeId'),
+        season_type: GetUrlValue('season_type'),
+        pb: GetUrlValue('pb'),
+        last_ep_id: GetUrlValue('last_ep_id'),
+        has_next: GetUrlValue('has_next'),
+        b: GetUrlValue('b'),
+        p: GetUrlValue('p') || 1,
+        t: GetUrlValue('t'),
+        d: GetUrlValue('d'),
+        record: record
+    });
+    if(window.parent) {
+        try {
+            window.parent.player = player;
+            window.player = player;
+            if(typeof window.parent['Html5IframeInitialized'] === 'function') {
+                    window.parent['Html5IframeInitialized']();
+            }
+        } catch(e) {
+            window.player = player;
+        }
+    }
+}
+
+</script>
+
+
+</body></html>
