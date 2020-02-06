@@ -3,7 +3,8 @@
 ![Windows 8](https://img.shields.io/badge/Windows_8-pass-green.svg?longCache=true) ![Chrome 79](https://img.shields.io/badge/Chrome_79-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknow-red.svg?longCache=true)
 - 本脚本为自用的Tampermonkey脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 使用方式同其他Tampermonkey脚本
-- 安装链接→[Github](https://github.com/201411232004/Bilibili-Old/raw/master/main.user.js)→[Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
+- 脚本地址→[Github](https://github.com/201411232004/Bilibili-Old/)→[Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
+
 ---
 ### 脚本功能
 - 主要
@@ -15,6 +16,7 @@
    + 实现了部分[blackboard](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)中嵌入式播放器
    + 实现了部分非播放页的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底
    + 实现了在倒计时后去掉烦人的6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
+
 ---
 ### 当前问题
 以下问题这里可能处于并将长期处于无法解决状态，请多担待！
@@ -26,6 +28,7 @@
 - 构造番剧信息时不可避免使用了同步请求，可能导致载入时间延长，延迟高时尤为明显。
 - 由于chrome始终无法找到拦截原生脚本的办法且Tampermonkey注入可能无法达到最速，所以原生脚本可能残留并影响旧版页面功能，缓解办法还是刷新，最有效的还是硬刷新。
 - 由于脚本实现机制是重写整个网页框架，可能导致部分其他脚本功能异常，不过神奇的是搭配[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)后有些就能恢复正常(参见下面兼容性列表)
+
 ---
 ### 兼容报告
 下面是测试用的平台，目前没有测试其他平台的条件和意向
@@ -39,11 +42,13 @@ Tampermonkey BETA 4.10.6106
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)——功能方面兼容，但设置界面丢失，建议在新版播放页把相关设置(登录授权等)设置好，然后就可以与本脚本一起使用
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)——本不兼容，需安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)才可兼容，注意该脚本需要在新版播放页读取CC字幕设置(需登录)，之后可以与本脚本一起使用
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)——本不兼容，需安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)才可兼容
+
 ---
 ### 参考致谢
 - 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份，[如需请参考](https://pan.bnu.edu.cn/l/toTT4q)
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[the1812](https://github.com/the1812)的[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，虽非本意，且原理不明，但确实能改善本脚本与部分脚本的兼容问题。
+
 ---
 ### 效果预览
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg)
