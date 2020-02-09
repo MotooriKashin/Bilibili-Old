@@ -35,7 +35,7 @@
 ### 兼容测试
 下面是测试用的平台，目前没有测试其他平台的条件和意向
 ```
-Microsoft Windows 8 (Build 6.2.9200.0) （64位）
+Microsoft Windows 8 (Build 6.2.9200.0) （64 位）
 Google Chrome 80.0.3987.87 (正式版本) （64 位） (cohort: 80_87_Win)
 Tampermonkey BETA 4.10.6109
 ```
