@@ -1,12 +1,13 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Windows_8-pass-green.svg?longCache=true) ![Chrome 79](https://img.shields.io/badge/Chrome_79-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknow-red.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Windows_8-pass-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknow-red.svg?longCache=true)
 - 本脚本为自用的Tampermonkey脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 使用方式同其他Tampermonkey脚本
-- 脚本地址→[Github](https://github.com/201411232004/Bilibili-Old/)→[Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
+- **本脚本可能导致其他作用于同一页面的脚本失效，详情及可能的解决办法见下面兼容性条目**
+- 脚本地址 → [Github](https://github.com/201411232004/Bilibili-Old/) → [Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
 
 ---
-### 脚本功能
+### 脚本实现
 - 主要
    + 一般的av页包括分P，如 https://www.bilibili.com/video/av50619577
    + Bangumi页(ss和ep)，如 https://www.bilibili.com/bangumi/play/ss3398 或 https://www.bilibili.com/bangumi/play/ep84776
@@ -18,34 +19,40 @@
    + 实现了在倒计时后去掉烦人的6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
 
 ---
-### 当前问题
-以下问题这里可能处于并将长期处于无法解决状态，请多担待！
-1. 嵌入式播放器的新版换p功能会失效，请使用播放按钮旁的下一P按钮换P。
-2. 旧版不支持互动视频，观看互动视频请关闭本脚本，否则不会出现分支选项。
+### 已知问题
+**以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
+1. 嵌入式页面(`blackboard`)的新版换p功能会失效，只能使用播放按钮旁的下一P按钮换下一P。
+2. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本，否则将丢失分支选项。
 3. 稍后再看页面没有mini播放器(新版页面也没有，大概是B站自身bug)。
 4. 稍后再看页面宽屏或网页全屏模式下弹幕显示区域没有重绘。
 5. av页渲染有点慢，除非版底出现，否则请稍等播放器渲染出来(其实播放器渲染比版头还快，为美观做了隐藏处理)。
-- 构造番剧信息时不可避免使用了同步请求，可能导致载入时间延长，延迟高时尤为明显。
-- 由于chrome始终无法找到拦截原生脚本的办法且Tampermonkey注入可能无法达到最速，所以原生脚本可能残留并影响旧版页面功能，缓解办法还是刷新，最有效的还是硬刷新。
-- 由于脚本实现机制是重写整个网页框架，可能导致部分其他脚本功能异常，不过神奇的是搭配[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)后有些就能恢复正常(参见下面兼容性列表)
+6. **其他载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+7. 构造播放信息时不可避免使用了同步请求，可能导致载入时间延长，延迟高时尤为明显。
+8. 已经运行的原生脚本无法阻止，若导致页面载入异常，也请刷新解决。
+9. 由于脚本实现机制，可能导致部分其他脚本功能异常，具体应该是所有作用于同一页面的无`run-at       document-start`字段的脚本全部失效(**详情及可能的解决办法见下面兼容性条目**)
 
 ---
-### 兼容报告
+### 兼容测试
 下面是测试用的平台，目前没有测试其他平台的条件和意向
 ```
-Windows 8 (Build 9200)
-Google Chrome 79.0.3945.130 (正式版本) （64 位） (cohort: 79_Win_130)
-Tampermonkey BETA 4.10.6106
+Microsoft Windows 8 (Build 6.2.9200.0) （64位）
+Google Chrome 80.0.3987.87 (正式版本) （64 位） (cohort: 80_87_Win)
+Tampermonkey BETA 4.10.6109
 ```
-另外，由于脚本实现机制，会使部分其他脚本失效，测试列表参考如下
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)——完全兼容，配合使用还可改善其他脚本兼容问题
-- [解除B站区域限制](https://greasyfork.org/scripts/25718)——功能方面兼容，但设置界面丢失，建议在新版播放页把相关设置(登录授权等)设置好，然后就可以与本脚本一起使用
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)——本不兼容，需安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)才可兼容，注意该脚本需要在新版播放页读取CC字幕设置(需登录)，之后可以与本脚本一起使用
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)——本不兼容，需安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)才可兼容
+另外由于脚本实现机制，可能会使部分无`run-at       document-start`字段的脚本失效
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)—— 带`run-at       document-start`字段，完全正常，配合使用还可改善其他脚本兼容问题
+- [解除B站区域限制](https://greasyfork.org/scripts/25718)—— 带`run-at       document-start`字段，功能方面正常，但设置界面丢失，建议在新版播放页把相关设置(登录授权等)设置好，然后就可以与本脚本一起使用
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)—— 无`run-at       document-start`字段，几乎完全失效，需安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)才可恢复，注意该脚本需要在新版播放页读取CC字幕设置(需登录)，之后可以与本脚本一起使用
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)—— 无`run-at       document-start`字段，几乎完全失效，可以通过添加`run-at       document-start`字段恢复，也可安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复
+- 其他因本脚本缘故而失效的脚本，或也可试试这两种方法能否恢复：(并未经过严格测试)
 
+   ```
+   ①添加`run-at       document-start`字段；
+   ②安装Bilibili Evolved脚本
+   ```
 ---
 ### 参考致谢
-- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份，[如需请参考](https://pan.bnu.edu.cn/l/toTT4q)
+- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [这是链接](https://pan.bnu.edu.cn/l/toTT4q)
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[the1812](https://github.com/the1812)的[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，虽非本意，且原理不明，但确实能改善本脚本与部分脚本的兼容问题。
 
@@ -59,7 +66,7 @@ Tampermonkey BETA 4.10.6106
 - 2020-02-06：对av页也主动写入__INITIAL_STATE__字段；
 - 2020-01-29：当嵌入播放器分辨率太小(宽度<720)时自动启动宽屏模式；
 - 2020-01-25：排除匹配直播站点，消除对于直播站点的影响；
-- 2020-01-24：紧急修复部分页面(拜年祭)潜入式播放器替换失败问题；
+- 2020-01-24：紧急修复部分页面(拜年祭)嵌入式播放器替换失败问题；
 - 2020-01-22：优化部分其他实现；
 - 2020-01-20：修正大会员及付费提示；修复部分特殊Bangumi页(ep)判定；
 - 2020-01-19：从BGM页中分离出特殊页面(有特殊背景图)另外处理；修复稍后再看无法读取标题导致报错；主动构造了ep页番剧信息；主动写入标题；
