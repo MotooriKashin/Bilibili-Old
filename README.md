@@ -11,7 +11,7 @@
 - 主要
    + 一般的av页包括分P，如 https://www.bilibili.com/video/av50619577
    + Bangumi页(ss和ep)，如 https://www.bilibili.com/bangumi/play/ss3398 或 https://www.bilibili.com/bangumi/play/ep84776
-   + 稍后再看，如 https://www.bilibili.com/video/av50619577
+   + 稍后再看，如 https://www.bilibili.com/watchlater/#/av50619577/p1
    + 特殊Bangumi页(带特殊背景图)，如 https://www.bilibili.com/bangumi/play/ss12116/
 - 其他
    + 实现了部分[blackboard](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)中嵌入式播放器
