@@ -1,10 +1,10 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Windows_8-pass-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknow-red.svg?longCache=true)
-- 本脚本为自用的Tampermonkey脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
-- 使用方式同其他Tampermonkey脚本
+![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
+- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
+- 使用方式同其他[Tampermonkey](https://www.tampermonkey.net/)脚本
 - **本脚本可能导致其他作用于同一页面的脚本失效，详情及可能的解决办法见下面兼容性条目**
-- 脚本地址 → [Github](https://github.com/201411232004/Bilibili-Old/) → [Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
+- 脚本地址 → [Github](https://github.com/MotooriKashin/Bilibili-Old/) → [Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
 
 ---
 ### 脚本实现
@@ -14,21 +14,21 @@
    + 稍后再看，如 https://www.bilibili.com/watchlater/#/av50619577/p1
    + 特殊Bangumi页(带特殊背景图)，如 https://www.bilibili.com/bangumi/play/ss12116/
 - 其他
-   + 实现了部分[blackboard](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)中嵌入式播放器
+   + 实现了部分(如[blackboard](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg))中嵌入式播放器
    + 实现了部分非播放页的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底
    + 实现了在倒计时后去掉烦人的6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 嵌入式页面(`blackboard`)的新版换p功能会失效，只能使用播放按钮旁的下一P按钮换下一P。
+1. 嵌入式页面(`blackboard`)的新版换p功能会失效，不过一般也不会嵌入带分P的视频(目前只发现[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html))。
 2. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本，否则将丢失分支选项。
 3. 稍后再看页面没有mini播放器(新版页面也没有，大概是B站自身bug)。
 4. 稍后再看页面宽屏或网页全屏模式下弹幕显示区域没有重绘。
 5. av页渲染有点慢，除非版底出现，否则请稍等播放器渲染出来(其实播放器渲染比版头还快，为美观做了隐藏处理)。
 6. **其他载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 7. 构造播放信息时不可避免使用了同步请求，可能导致载入时间延长，延迟高时尤为明显。
-8. 已经运行的原生脚本无法阻止，若导致页面载入异常，也请刷新解决。
+8. 已经运行的原生脚本无法阻止，可能导致页面载入异常，也请刷新解决。
 9. 由于脚本实现机制，可能导致部分其他脚本功能异常，具体应该是所有作用于同一页面的无`run-at       document-start`字段的脚本全部失效(**详情及可能的解决办法见下面兼容性条目**)
 
 ---
@@ -36,8 +36,8 @@
 下面是测试用的平台，目前没有测试其他平台的条件和意向
 ```
 Microsoft Windows 8 (Build 6.2.9200.0) （64 位）
-Google Chrome 80.0.3987.87 (正式版本) （64 位） (cohort: 80_87_Win)
-Tampermonkey BETA 4.10.6109
+Google Chrome 80.0.3987.116 (正式版本) （64 位） (cohort: 80_87_Win)
+Tampermonkey BETA 4.10.6111
 ```
 另外由于脚本实现机制，可能会使部分无`run-at       document-start`字段的脚本失效
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)—— 带`run-at       document-start`字段，完全正常，配合使用还可改善其他脚本兼容问题
@@ -46,15 +46,15 @@ Tampermonkey BETA 4.10.6109
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)—— 无`run-at       document-start`字段，几乎完全失效，可以通过添加`run-at       document-start`字段恢复，也可安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复
 - 其他因本脚本缘故而失效的脚本，或也可试试这两种方法能否恢复：(并未经过严格测试)
 
-   ```
-   ①添加`run-at       document-start`字段；
-   ②安装Bilibili Evolved脚本
-   ```
+     ①添加`run-at       document-start`字段；
+     ②安装Bilibili Evolved脚本
+   
 ---
 ### 参考致谢
-- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [这是链接](https://pan.bnu.edu.cn/l/toTT4q)
+- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [这是链接](https://pan.bnu.edu.cn/l/toTT4q)([Github](https://github.com/MotooriKashin/Bilibili-Old/tree/master/bilibili)上也有备份)
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[the1812](https://github.com/the1812)的[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，虽非本意，且原理不明，但确实能改善本脚本与部分脚本的兼容问题。
+- 描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，这里一并致谢。
 
 ---
 ### 效果预览
@@ -63,6 +63,7 @@ Tampermonkey BETA 4.10.6109
 ![Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg)
 ![Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ### 版本历史
+- 2020-02-21：规范脚本架构；重写了嵌入式播放器替换逻辑并默认选择宽屏模式；
 - 2020-02-06：对av页也主动写入__INITIAL_STATE__字段；
 - 2020-01-29：当嵌入播放器分辨率太小(宽度<720)时自动启动宽屏模式；
 - 2020-01-25：排除匹配直播站点，消除对于直播站点的影响；
