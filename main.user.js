@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.5.2
+// @version      2.5.3
 // @description  切换Bilibili旧版HTML5播放器，恢复2019年12月09日之前的界面。已实现video/bangumi/watchlater/mylist及部分blackboard页面。若出现一般的载入异常请先尝试刷新解决。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/201411232004/Bilibili-Old/
