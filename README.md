@@ -3,6 +3,7 @@
 ![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 使用方式同其他[Tampermonkey](https://www.tampermonkey.net/)脚本
+- 虽然本脚本主要作用于[Bilibili](https://www.bilibili.com/)，但为了处理非主站的嵌入式播放器的跨域问题改为了全网生效，有强迫症的话可以改回去(`// @match        *://*.bilibili.com/*`)放心只在主站使用的话肯定不会有跨域问题
 - **本脚本可能导致其他作用于同一页面的脚本失效，详情及可能的解决办法见下面兼容性条目**
 - 脚本地址 → [Github](https://github.com/MotooriKashin/Bilibili-Old/) → [Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
 
@@ -14,7 +15,7 @@
    + 稍后再看，如 https://www.bilibili.com/watchlater/#/av50619577/p1
    + 特殊Bangumi页(带特殊背景图)，如 https://www.bilibili.com/bangumi/play/ss12116/
 - 其他
-   + 实现了部分(如[blackboard](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg))中嵌入式播放器
+   + 实现了部分[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
    + 实现了部分非播放页的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底
    + 实现了在倒计时后去掉烦人的6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
 
@@ -44,10 +45,11 @@ Tampermonkey BETA 4.10.6111
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)—— 带`run-at       document-start`字段，功能方面正常，但设置界面丢失，建议在新版播放页把相关设置(登录授权等)设置好，然后就可以与本脚本一起使用
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)—— 无`run-at       document-start`字段，几乎完全失效，需安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)才可恢复，注意该脚本需要在新版播放页读取CC字幕设置(需登录)，之后可以与本脚本一起使用
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)—— 无`run-at       document-start`字段，几乎完全失效，可以通过添加`run-at       document-start`字段恢复，也可安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复
+- [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)—— 带`run-at       document-start`字段，完全正常
 - 其他因本脚本缘故而失效的脚本，或也可试试这两种方法能否恢复：(并未经过严格测试)
 
-     ①添加`run-at       document-start`字段；
-     ②安装Bilibili Evolved脚本
+     ①添加`run-at       document-start`字段，但很多脚本可能不能过早启动。所以若要兼容本脚本，也推荐其他Bilibili脚本以使用该字段为前提下创建
+     ②安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，原理不明，但对部分脚本确实有效
    
 ---
 ### 参考致谢
@@ -63,6 +65,7 @@ Tampermonkey BETA 4.10.6111
 ![Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg)
 ![Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ### 版本历史
+- 2020-02-22：修复版头替换bug；更改脚本为全网生效以处理非主站嵌入式播放器跨域问题；
 - 2020-02-21：规范脚本架构；重写了嵌入式播放器替换逻辑并默认选择宽屏模式；
 - 2020-02-06：对av页也主动写入__INITIAL_STATE__字段；
 - 2020-01-29：当嵌入播放器分辨率太小(宽度<720)时自动启动宽屏模式；
