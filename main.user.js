@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.5.4
+// @version      2.5.5
 // @description  切换Bilibili旧版HTML5播放器，恢复2019年12月09日之前的界面。已实现video/bangumi/watchlater/mylist及嵌入式播放器。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
-// @match        *://*/*
+// @match        *://*.bilibili.com/*
 // @license      MIT License
 // @run-at       document-start
 // @icon         https://static.hdslb.com/images/favicon.ico
@@ -16,10 +16,6 @@
 
 (function() {
     'use strict';
-
-    /* 设置为全网脚本是处理bilibili嵌入播放器的跨域权限 */
-    /* 若有强迫症，可自行将上面@match后面替换为【*://*.bilibili.com/*】 */
-    /* 那将导致非bilibili域名下的嵌入播放器替换失败 */
 
     let INITIAL_DOCUMENT = ""; // 网页源代码，为避免多余请求，需要时再通过url获取(尚不知如何直接从本地获取)
     let INITIAL_TITLE = document.getElementsByTagName("title");if (INITIAL_TITLE[0]){INITIAL_TITLE = INITIAL_TITLE[0].innerText;} // 网页原标题
@@ -254,56 +250,31 @@
             functionInterface.rewritePage(html);
             },
         "blackboard" : ()=>{
-            let player = document.getElementsByTagName("iframe");
-            if (player[0]){
-                for (let i = 0;i < player.length;i++){
-                    let src = player[i].src;
-                    console.log(player[i]);
-                    if (src && src.match(/newplayer/)){
-                        let aid = 1 * src.match(/aid=[0-9]*/)[0].replace(/aid=/,"");
-                        let cid = src.match(/cid=[0-9]*/);if(cid && cid[0]){cid = 1 * cid[0].replace(/cid=/,"");}
-                        let element = player[i];
-                        let width = player[i].offsetWidth;let height = player[i].offsetHeight;
-                        if(!cid){ // 尝试用URL获取cid(可能会跨域注意！)
-                            let xhr = new XMLHttpRequest();
-                            let url = '//api.bilibili.com/x/player/pagelist?aid=' + aid + '&jsonp=jsonp';
-                            xhr.open('GET',url,true);
-                            xhr.onload = () => {
-                                let cid = JSON.parse(xhr.responseText).data[0].cid;
-                                let iframe = document.createElement("iframe");
-                                iframe.setAttribute("src",iframeplayer.blackboard(aid,cid));
-                                iframe.setAttribute("style",'width: '+ width +'px;height: ' + height + 'px;');
-                                element.replaceWith(iframe);
-                            }
-                            xhr.send();
-                        }
-                        else{
-                            let iframe = document.createElement("iframe");
-                            iframe.setAttribute("src",iframeplayer.blackboard(aid,cid));
-                            iframe.setAttribute("style",'width: '+ width +'px;height: ' + height + 'px;');
-                            element.replaceWith(iframe);
-                        }
-                    }
-                }
+            let url = location.href;
+            let aid = 1 * url.match(/aid=[0-9]*/)[0].replace(/aid=/,"");
+            let cid = url.match(/cid=[0-9]*/);if(cid && cid[0]){cid = 1 * cid[0].replace(/cid=/,"");}
+            if(!cid){
+                let url = '//api.bilibili.com/x/player/pagelist?aid=' + aid + '&jsonp=jsonp'
+                let cid = JSON.parse(xhr.false(url)).data[0].cid;
+                location.replace(iframeplayer.blackboard(aid,cid));
+            }
+            else{
+                location.replace(iframeplayer.blackboard(aid,cid));
             }
             },
         "home" : ()=>{
             let html = page.home;
             functionInterface.rewritePage(html);
-            },
+            }
     }
-    if(INITIAL_PATH[2] && INITIAL_PATH[2].match(/bilibili\./)){ // 匹配*.bilibili.com
-        if(INITIAL_PATH[3]){
-            if(INITIAL_PATH[3] == 'video' && INITIAL_PATH[4].startsWith('av')){rewritePage.av();} // 普通av页
-            if(INITIAL_PATH[3] == 'watchlater'){rewritePage.watchlater();} // 稍后再看
-            if(INITIAL_PATH[3] == 'bangumi' && INITIAL_PATH[4] == 'play'){rewritePage.bangumi();} // bangumi(包括特殊页面)
-            if(INITIAL_PATH[3] == 'blackboard' && INITIAL_PATH[4] && INITIAL_PATH[4].startsWith('newplayer')){window.parent.postMessage("newplayer", "*")} // 嵌入式页面
-            if(INITIAL_PATH[2] != 'live.bilibili.com'){global.rewriteSction();} // 不处理直播页版面
-        }
-        if(INITIAL_PATH[2].match(/live/) == null){
-            document.addEventListener("DOMContentLoaded",global.resetSction()); // 不对直播页进行其他全局处理
-        }
+    if(INITIAL_PATH[3]){
+        if(INITIAL_PATH[3] == 'video' && INITIAL_PATH[4].startsWith('av')){rewritePage.av();} // 普通av页
+        if(INITIAL_PATH[3] == 'watchlater'){rewritePage.watchlater();} // 稍后再看
+        if(INITIAL_PATH[3] == 'bangumi' && INITIAL_PATH[4] == 'play'){rewritePage.bangumi();} // bangumi(包括特殊页面)
+        if(INITIAL_PATH[3] == 'blackboard' && INITIAL_PATH[4] && INITIAL_PATH[4].startsWith('newplayer')){rewritePage.blackboard();} // 嵌入式页面
+        if(INITIAL_PATH[2] != 'live.bilibili.com'){global.rewriteSction();} // 不处理直播页版面
     }
-    /* 监听子页面传送的嵌入式播放器信息 */
-    window.addEventListener('message',(event)=>{if(event.data == "newplayer"){console.log("发现嵌入播放器！开始替换……",event.data + " -> oldplayer");rewritePage.blackboard();}},false);
+    if(INITIAL_PATH[2].match(/live/) == null){
+        document.addEventListener("DOMContentLoaded",global.resetSction()); // 不对直播页进行其他全局处理
+    }
 })();
