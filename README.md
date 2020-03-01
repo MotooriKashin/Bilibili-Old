@@ -2,8 +2,7 @@
 ---
 ![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
-- 使用方式同其他[Tampermonkey](https://www.tampermonkey.net/)脚本
-- 虽然本脚本主要作用于[Bilibili](https://www.bilibili.com/)，但为了处理非主站的嵌入式播放器的跨域问题改为了全网生效，有强迫症的话可以改回去(`// @match        *://*.bilibili.com/*`)放心只在主站使用的话肯定不会有跨域问题
+- 使用方式同其他[Tampermonkey](https://www.tampermonkey.net/)脚本（只在Chrome下通过测试）
 - **本脚本可能导致其他作用于同一页面的脚本失效，详情及可能的解决办法见下面兼容性条目**
 - 脚本地址 → [Github](https://github.com/MotooriKashin/Bilibili-Old/) → [Greasy Fork](https://greasyfork.org/zh-CN/scripts/394296)
 
@@ -48,8 +47,8 @@ Tampermonkey BETA 4.10.6111
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)—— 带`run-at       document-start`字段，完全正常
 - 其他因本脚本缘故而失效的脚本，或也可试试这两种方法能否恢复：(并未经过严格测试)
 
-     ①添加`run-at       document-start`字段，但很多脚本可能不能过早启动。所以若要兼容本脚本，也推荐其他Bilibili脚本以使用该字段为前提下创建
-     ②安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，原理不明，但对部分脚本确实有效
+     ①添加`run-at       document-start`字段，但很多脚本可能不能过早启动，所以未必有效
+     ②安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，原理不明，所以未必有效
    
 ---
 ### 参考致谢
@@ -60,13 +59,11 @@ Tampermonkey BETA 4.10.6111
 
 ---
 ### 效果预览
-[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg)
-[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg)
-[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg)
-[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
+[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) [Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) [Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) [Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 _为节约流量这里只展示一张预览图，其余需要的话可以直接点击查看_
-![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg)
+![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-01：重写嵌入式播放器替换逻辑，解决了子页面的跨域问题并将`match`改回了Bilibili主站；
 - 2020-02-22：修复版头替换bug；更改脚本为全网生效以处理非主站嵌入式播放器跨域问题；
 - 2020-02-21：规范脚本架构；重写了嵌入式播放器替换逻辑并默认选择宽屏模式；
 - 2020-02-06：对av页也主动写入__INITIAL_STATE__字段；
