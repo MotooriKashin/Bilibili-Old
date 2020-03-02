@@ -9,8 +9,8 @@
 ### 脚本实现
 - 重写
    + av(含分P)，如 [av50619577](https://www.bilibili.com/video/av50619577)(Brambly Boundaries)
-   + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398)(冰菓) 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776)(冰菓第一话)
-   + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1)(慎点！事先未添加稍后再看将跳转到添加界面)
+   + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398)(冰菓) 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776)(深具传统的古典文学部之重生)
+   + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1)(慎点！)
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/)(你的名字)
 - 修改
    + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
@@ -22,10 +22,10 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 嵌入式页面(`blackboard`)的新版换p功能会失效(目前只发现[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html)有分p)。
-2. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本，否则将丢失分支选项。
+1. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html))。
+2. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本。
 3. 稍后再看页面没有mini播放器(新版页面也没有，大概是B站自身bug)。
-4. 稍后再看页面宽屏或网页全屏模式下弹幕显示区域没有重绘。
+4. 稍后再看页面宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 5. av页渲染有点慢，除非版底出现，否则请稍等播放器渲染出来(其实播放器渲染比版头还快，为美观做了隐藏处理)。
 6. **一般载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 7. 由于脚本实现机制，可能导致部分其他脚本功能异常(**详情及可能的解决办法见下面兼容性条目**)
@@ -35,17 +35,17 @@
 ### 兼容测试
 下面是测试用的平台，目前没有测试其他平台的条件和意向
 - Microsoft Windows 8 (Build 6.2.9200.0) （64 位）
-- Google Chrome 80.0.3987.116 (正式版本) （64 位） (cohort: 80_87_Win)
+- Google Chrome 80.0.3987.122 (正式版本) （64 位） (cohort: 80_87_Win)
 - Tampermonkey BETA 4.10.6111
 
 和其他同域脚本一起使用时将导致一些无`run-at document-start`元数据的脚本异常甚至失效！
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常，配合使用还可改善其他脚本兼容问题
-- [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能方面无碍，但设置界面丢失，建议先在新版播放页把相关设置(登录授权等)设置好再使用
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 几乎完全失效，可配合[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复，而且该脚本需要先在新版播放页读取CC字幕设置(需登录)再使用
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 几乎完全失效，可以通过添加`run-at document-start`字段恢复，也可配合[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常，配合使用还可改善与其他脚本兼容问题
+- [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，但设置界面丢失，请先在新版播放页把相关设置(登录授权等)设置好再使用
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全失效，可配合[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复，需先在新版播放页读取CC字幕设置(需登录)再使用
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 完全失效，可以通过添加`run-at document-start`字段恢复，也可配合[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)恢复
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
 - 其他因本脚本缘故而异常的脚本，或也可试试这两种方法能否恢复：(并未经过严格测试)
-   + 添加`run-at document-start`字段，但很多脚本可能不能过早启动，所以未必有效
+   + 添加`run-at document-start`字段，但很多脚本不能过早启动，所以未必有效
    + 安装[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，原理不明，所以未必有效
 
 ---
@@ -54,7 +54,7 @@
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[the1812](https://github.com/the1812)的[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，虽非本意，且原理不明，但确实改善了本脚本与其他脚本的兼容问题。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，十分感谢。
-- 账号注册时间参考了[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)，还使用了作者专栏中的最新数据，这里一并致谢。由于原脚本已经失效并不再维护，而个人非常需要这个功能，故擅作主张添加了进了脚本。
+- 账号注册时间参考了[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)，还使用了作者专栏中的最新数据，这里一并致谢。(由于原脚本已经失效并不再维护，而个人非常需要这个功能，故擅作主张添加了进了脚本。)
 
 ---
 ### 效果预览
