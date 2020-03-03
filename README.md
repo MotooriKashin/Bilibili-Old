@@ -12,7 +12,7 @@
    + av(含分P)，如 [av50619577](https://www.bilibili.com/video/av50619577)(Brambly Boundaries)
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398)(冰菓) 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776)(深具传统的古典文学部之重生)
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1)(慎点！)
-   + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/)(你的名字)
+   + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/)(声之形)
 - 修改
    + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
    + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底
