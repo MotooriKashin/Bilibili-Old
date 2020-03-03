@@ -4,6 +4,7 @@
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)(Chrome)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 本脚本没有任何交互设计，所有功能安装即默认开启
 - **本脚本可能导致其他作用于同一页面的脚本异常，详情及可能的解决办法见下面兼容性条目**
+- 长记2019年12月9日下午B站官方突然取消了旧版播放页入口强制使用新版，而后2019年12月21日残留的稍后再看页也变成新版，只剩被B站遗弃的**播单页**或许是唯一的旧版页面遗存，可点击前往([bilibili moe 2018 日本动画场应援](https://www.bilibili.com/playlist/video/pl769))对比一下新旧播放页的体验再考虑是否需要安装本脚本，只是希望不要因此而让播单页也步了稍后再看页的后尘……
 
 ---
 ### 脚本实现
@@ -18,6 +19,8 @@
    + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
    + 添加个人空间中显示B站账号(当前登录)的[注册时间](https://greasyfork.org/zh-CN/forum/uploads/editor/jh/tnnuxkpfsbqn.png)
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ac/1s42um54ff7t.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息(有待完善)
+   + 替换播单页已经失效的版头并统一了播放器布局
+   + 恢复B站首页[在线人数及一周投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
 
 ---
 ### 已知问题
@@ -51,7 +54,7 @@
 
 ---
 ### 参考致谢
-- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [这是链接](https://pan.bnu.edu.cn/l/toTT4q)([Github](https://github.com/MotooriKashin/Bilibili-Old/tree/master/bilibili)上也有备份)
+- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [网盘分享](https://pan.bnu.edu.cn/l/toTT4q)([Github](https://github.com/MotooriKashin/Bilibili-Old/tree/master/bilibili)上也有备份)
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[the1812](https://github.com/the1812)的[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)脚本，虽非本意，且原理不明，但确实改善了本脚本与其他脚本的兼容问题。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，十分感谢。
@@ -62,6 +65,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-03：修复播单页失效版头并统一播放器布局；恢复B站首页在线数统计和投稿数统计；
 - 2020-03-02：添加了当前登录的B站账号注册时间信息显示，初步修复空间收藏和频道中的失效视频信息；
 - 2020-03-01：重写嵌入式播放器替换逻辑，解决了子页面的跨域问题并将`match`改回了Bilibili主站；
 - 2020-02-22：修复版头替换bug；更改脚本为全网生效以处理非主站嵌入式播放器跨域问题；
