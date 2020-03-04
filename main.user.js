@@ -11,6 +11,7 @@
 // @run-at       document-start
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @compatible   chrome
+// @grant        none
 // ==/UserScript==
 
 (function() {
