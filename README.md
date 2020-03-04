@@ -43,7 +43,7 @@
 - Google Chrome 80.0.3987.122 (正式版本) （64 位） (cohort: 80_87_Win)
 - Tampermonkey BETA 4.10.6111
 
-虽然已尽力回避与其他脚本的冲突而改为了沙箱模式运行，但部分无`run-at document-start`仍可能出现异常！
+虽然已尽力回避与其他脚本的冲突而改为了沙箱模式运行，但部分不以`run-at document-start`启动的脚本仍可能出现异常！
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，请先在新版播放页把相关设置好(登录授权等)再使用
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，需先在新版播放页读取CC字幕设置(需登录)再使用
