@@ -21,7 +21,7 @@
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ac/1s42um54ff7t.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息(有待完善)
    + 替换播单页已经失效的版头并统一了播放器布局
    + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
-   + 添加番剧分集播放和弹幕显示
+   + 添加番剧分集播放数和弹幕数显示
 
 ---
 ### 已知问题
