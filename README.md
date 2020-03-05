@@ -2,9 +2,12 @@
 ---
 ![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)(Chrome)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
-- 本脚本没有任何交互设计，所有功能安装即默认开启
-- 本脚本已尽力回避与其他同域脚本的冲突，详情及可能的解决办法见下面兼容性条目
-- 长记2019年12月9日下午B站官方突然取消了旧版播放页入口强制使用新版，而后2019年12月24日残留的稍后再看页也变成新版，只剩被B站遗弃的播单页或许是唯一的旧版页面遗存，可点击前往([bilibili moe 2018 日本动画场应援](https://www.bilibili.com/playlist/video/pl769))对比一下新旧播放页的体验再考虑是否需要安装本脚本，只希望不要因此而让播单页也步了稍后再看页的后尘
+- 本脚本没有任何交互设计，所有功能安装即默认开启，包括依个人兴趣添加的各种奇葩功能
+- 本脚本选择了沙箱运行来回避与其他同域脚本的冲突，详情及可能出现冲突时的解决办法见下面兼容性条目
+- 记
+   + 2019年12月09日：B站突然取消了旧版Video、Bangumi页面入口
+   + 2019年12月24日：B站再次再次把稍后再看也改为了新版
+   + 如今播单页([bilibili moe 2018 日本动画场应援](https://www.bilibili.com/playlist/video/pl769))或许是仅剩的原生旧版播放页面了
 
 ---
 ### 脚本实现
@@ -15,13 +18,12 @@
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/)(声之形)
 - 修改
    + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
-   + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底
-   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
-   + 添加个人空间中显示B站账号(当前登录)的[注册时间](https://greasyfork.org/zh-CN/forum/uploads/editor/jh/tnnuxkpfsbqn.png)
-   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ac/1s42um54ff7t.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息(有待完善)
-   + 替换播单页已经失效的版头并统一了播放器布局
-   + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
+   + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底以统一版式
    + 添加番剧分集播放数和弹幕数显示
+   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
+   + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
+   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ac/1s42um54ff7t.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息
+   + 其他存在功能失效、回滚、取消及不足道哉等情由这里不再逐一列出
 
 ---
 ### 已知问题
@@ -32,9 +34,9 @@
 4. 稍后再看页面没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页面宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av页渲染有点慢，除非版底出现，否则请稍等播放器渲染出来(其实播放器渲染比版头还快，为美观做了隐藏处理)。
-7. **一般载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 8. 由于脚本实现机制，可能导致部分其他脚本功能异常(**详情及可能的解决办法见下面兼容性条目**)
-9. 未能找回失效收藏视频的封面和正确标题以及失效频道视频时长信息(这方面做得更好的→[哔哩哔哩(B站|Bilibili)收藏夹Fix](https://greasyfork.org/zh-CN/scripts/383143))
+9. 沙箱模式只能间接访问页面上下文，致使载入异常风险增加还请见谅。
 
 ---
 ### 兼容测试
@@ -43,7 +45,7 @@
 - Google Chrome 80.0.3987.122 (正式版本) （64 位） (cohort: 80_87_Win)
 - Tampermonkey BETA 4.10.6111
 
-虽然已尽力回避与其他脚本的冲突而改为了沙箱模式运行，但部分不以`run-at document-start`启动的脚本仍可能出现异常！
+测试发现本脚本若直接在页面上下文(即默认模式)中运行将导致其他同域的不以`run-at document-start`模式注入的脚本无法启动，其中原因或许与重写页面时所暴力使用的`document.write()`方法有关，进一步的测试还发现若此时还存在某同域脚本(可以是本脚本)在沙箱模式中运行时，就能使其他无法正常启动的脚本得以注入运行，出于兼容其他同域脚本的考虑，脚本正式由默认模式改为了沙箱模式运行。测试数据书记如下：
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，请先在新版播放页把相关设置好(登录授权等)再使用
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，需先在新版播放页读取CC字幕设置(需登录)再使用
@@ -55,8 +57,8 @@
 ### 参考致谢
 - 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [网盘分享](https://pan.bnu.edu.cn/l/toTT4q)([Github](https://github.com/MotooriKashin/Bilibili-Old/tree/master/bilibili)上也有备份)
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
+- 感谢[BiliPlus](https://www.biliplus.com/)开放的Bilibili数据查询接口。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，十分感谢。
-- 账号注册时间参考了[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)，还使用了作者专栏中的最新数据，这里一并致谢。(由于原脚本已经失效并不再维护，而个人非常需要这个功能，故擅作主张添加了进了脚本。)
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，十分感谢。
 
 ---
@@ -64,6 +66,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-05：使用第三方接口(BiliPlus)修复了失效视频信息；
 - 2020-03-04：修改元数据以缓解与其他同域脚本的冲突；添加番剧分集播放和弹幕显示；
 - 2020-03-03：修复播单页失效版头并统一播放器布局；恢复B站首页在线数统计和投稿数统计；
 - 2020-03-02：添加了当前登录的B站账号注册时间信息显示，初步修复空间收藏和频道中的失效视频信息；
