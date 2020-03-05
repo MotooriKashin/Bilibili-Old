@@ -3,7 +3,7 @@
 ![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)(Chrome)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 本脚本没有任何交互设计，所有功能安装即默认开启，包括依个人兴趣添加的各种奇葩功能
-- 本脚本选择了沙箱运行来回避与其他同域脚本的冲突，详情及可能出现冲突时的解决办法见下面兼容性条目
+- 本脚本选择沙箱模式来尽力回避与其他同域脚本的冲突，详情及可能出现冲突时的解决办法见下面兼容性条目
 - 记
    + 2019年12月09日：B站突然取消了旧版Video、Bangumi页面入口
    + 2019年12月24日：B站再次再次把稍后再看也改为了新版
