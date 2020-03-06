@@ -4,7 +4,7 @@
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)(Chrome)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
 - 本脚本没有任何交互设计，所有功能安装即默认开启，包括依个人兴趣添加的各种奇葩功能
 - 本脚本选择沙箱模式来尽力回避与其他同域脚本的冲突，详情及可能出现冲突时的解决办法见下面兼容性条目
-- 记
+- 缘起
    + 2019年12月09日：B站突然取消了旧版Video、Bangumi页面入口
    + 2019年12月24日：B站再次再次把稍后再看也改为了新版
    + 如今播单页([bilibili moe 2018 日本动画场应援](https://www.bilibili.com/playlist/video/pl769))或许是仅剩的原生旧版播放页面了
@@ -20,10 +20,10 @@
    + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
    + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底以统一版式
    + 添加番剧分集播放数和弹幕数显示
-   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
+   + 添加在倒计时(30s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
    + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ac/1s42um54ff7t.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息
-   + 其他存在功能失效、回滚、取消及不足道哉等情由这里不再逐一列出
+   + 其他功能存在失效、回滚、取消及不足道哉等情由这里不再逐一列出
 
 ---
 ### 已知问题
@@ -42,16 +42,16 @@
 ### 兼容测试
 下面是测试用的平台，目前没有测试其他平台的条件和意向
 - Microsoft Windows 8 (Build 6.2.9200.0) （64 位）
-- Google Chrome 80.0.3987.122 (正式版本) （64 位） (cohort: 80_87_Win)
+- Google Chrome 80.0.3987.132 (正式版本) （64 位） (cohort: 80_87_Win)
 - Tampermonkey BETA 4.10.6111
 
-测试发现本脚本若直接在页面上下文(即默认模式)中运行将导致其他同域的不以`run-at document-start`模式注入的脚本无法启动，其中原因或许与重写页面时所暴力使用的`document.write()`方法有关，进一步的测试还发现若此时还存在某同域脚本(可以是本脚本)在沙箱模式中运行时，就能使其他无法正常启动的脚本得以注入运行，出于兼容其他同域脚本的考虑，脚本正式由默认模式改为了沙箱模式运行。测试数据书记如下：
+测试发现本脚本若直接在页面上下文(即默认模式)中运行将导致其他同域的不以`run-at document-start`模式注入的脚本无法启动，其中原因或许与重写页面时所暴力使用的`document.write()`方法有关，进一步的测试还发现若此时还存在某同域脚本(可以是本脚本)在沙箱模式中运行时，其他异常脚本便能恢复，出于兼容其他同域脚本的考虑，脚本正式由默认模式改为了沙箱模式运行。具体测试数据如下：
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，请先在新版播放页把相关设置好(登录授权等)再使用
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，需先在新版播放页读取CC字幕设置(需登录)再使用
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，可能会导致弹幕列表上下滑块失效，添加`run-at document-start`元数据则完全恢复正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
-- 其他可能因本脚本缘故而异常的脚本，可以试试添加`run-at document-start`元数据，但部分脚本可能无法过早启动，只能建议其他同域脚本尽量以`run-at document-start`启动为前提进行建构
+- 其他可能因本脚本缘故而异常的脚本，可以试试添加`run-at document-start`元数据，但部分脚本可能无法过早启动，建议其他同域脚本尽量以`run-at document-start`启动为前提进行建构
 
 ---
 ### 参考致谢
@@ -67,6 +67,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-06：不再对子页面进行多余处理以降低性能需求；修复了跨域请求未带协议时可能请求错误的bug；初步引入错误收集功能以缓解因报错而导致脚本完全瘫痪的情况；
 - 2020-03-05：使用第三方接口(BiliPlus)修复了失效视频信息；
 - 2020-03-04：修改元数据以缓解与其他同域脚本的冲突；添加番剧分集播放和弹幕显示；
 - 2020-03-03：修复播单页失效版头并统一播放器布局；恢复B站首页在线数统计和投稿数统计；
