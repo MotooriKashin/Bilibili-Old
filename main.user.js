@@ -382,8 +382,8 @@
                 if(views.innerText == "-" && danmakus.innerText == "-"){
                     window.setTimeout(()=>{functionInterface.setEpisodeData("first")},100);return;}
                 views.setAttribute("title","全" + views.innerText);
-                danmakus.setAttribute("title","全" + views.innerText);
-                log.log("合计播放：" + views.innerText + " 合计弹幕：" + views.innerText);
+                danmakus.setAttribute("title","全" + danmakus.innerText);
+                log.log("合计播放：" + views.innerText + " 合计弹幕：" + danmakus.innerText);
                 xhr.true("https://api.bilibili.com/x/web-interface/archive/stat?aid=" + window.aid,functionInterface.setEpisodeData);return;}
             if(!data){xhr.true("https://api.bilibili.com/x/web-interface/archive/stat?aid=" + window.aid,functionInterface.setEpisodeData);return;}
             data = JSON.parse(data).data;
