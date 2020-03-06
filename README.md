@@ -22,7 +22,7 @@
    + 添加番剧分集播放数和弹幕数显示
    + 添加在倒计时(30s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
    + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
-   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ac/1s42um54ff7t.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息
+   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息
    + 其他功能存在失效、回滚、取消及不足道哉等情由这里不再逐一列出
 
 ---
