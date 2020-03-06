@@ -355,7 +355,7 @@
                 online = a;}
             online.setAttribute("title","在线观看：" + play_online);
             online.text = "在线人数：" + web_online;
-            log.log("在线人数：" + web_online + "title"," 在线观看：" + play_online + " 最新投稿：" + all_count);
+            log.log("在线人数：" + web_online + " 在线观看：" + play_online + " 最新投稿：" + all_count);
             if(!online.parentNode.getElementsByTagName("em")[0]){
                 let em = document.createElement("em");
                 let count = document.createElement("a");
