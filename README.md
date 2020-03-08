@@ -20,7 +20,7 @@
    + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
    + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底以统一版式
    + 添加番剧分集播放数和弹幕数显示
-   + 添加在倒计时(30s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
+   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
    + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息
    + 其他功能存在失效、回滚、取消及不足道哉等情由这里不再逐一列出
@@ -30,7 +30,7 @@
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
 1. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html))。
 2. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本。
-3. 稍后再看页面播放器右侧列表载入失败。
+3. 稍后再看页面播放器右侧列表载入失败及投币功能失效。
 4. 稍后再看页面没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页面宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av页渲染有点慢，除非版底出现，否则请稍等播放器渲染出来(其实播放器渲染比版头还快，为美观做了隐藏处理)。
@@ -67,6 +67,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-08：修复稍后再看页面重写错误；
 - 2020-03-06：不再对子页面进行多余处理以降低性能需求；修复了跨域请求未带协议时可能请求错误的bug；初步引入错误收集功能以缓解因报错而导致脚本完全瘫痪的情况；
 - 2020-03-05：使用第三方接口(BiliPlus)修复了失效视频信息；
 - 2020-03-04：修改元数据以缓解与其他同域脚本的冲突；添加番剧分集播放和弹幕显示；
