@@ -535,6 +535,7 @@
         if(INITIAL_PATH[3] == 'playlist' && INITIAL_PATH[4] == 'video' && INITIAL_PATH[5].startsWith('pl')){rewritePage.playlist();}
         if(INITIAL_PATH[2] != 'live.bilibili.com'){global.rewriteSction();}
         if(INITIAL_PATH[2] == 'space.bilibili.com'){global.space();}
+        if(INITIAL_PATH[2] == 'www.bilibili.com' &&(INITIAL_PATH[3].startsWith('\?') || INITIAL_PATH[3].startsWith('\#'))){rewritePage.home();}
     }
     else{
         if(INITIAL_PATH[2] == 'www.bilibili.com'){rewritePage.home();}
