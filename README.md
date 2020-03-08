@@ -67,7 +67,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
-- 2020-03-08：修复稍后再看页面重写错误；
+- 2020-03-08：修复稍后再看页面重写错误；修复带参数情况下B站主页判定失误；
 - 2020-03-06：不再对子页面进行多余处理以降低性能需求；修复了跨域请求未带协议时可能请求错误的bug；初步引入错误收集功能以缓解因报错而导致脚本完全瘫痪的情况；
 - 2020-03-05：使用第三方接口(BiliPlus)修复了失效视频信息；
 - 2020-03-04：修改元数据以缓解与其他同域脚本的冲突；添加番剧分集播放和弹幕显示；
