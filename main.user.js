@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.6.1
+// @version      2.6.2
 // @description  切换Bilibili旧版HTML5播放器，恢复2019年12月09日之前的界面。已实现video/bangumi/watchlater/mylist及嵌入式播放器。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -184,7 +184,7 @@
         "removePreview" : () => { // 6分钟预览
             let hint = document.getElementsByClassName("video-float-hint-btn");
             if (hint[0]){
-                let i = 30; // 倒计时长度，可自行修改，单位/s
+                let i = 10; // 倒计时长度，可自行修改，单位/s
                 if(document.getElementsByClassName("second-cut")[0]){return;}
                 else{
                     let sec = document.createElement("span");
@@ -205,7 +205,7 @@
             data = JSON.parse(data);
             try{if(!data.card || data.card.regtime == 0)throw "获取注册时间失败";}catch(err){log.error(err);return;}
             let jointime = functionInterface.timeFormat(data.card.regtime * 1000);
-            let birthdate = data.card.birthday;log.debug(birthdate);
+            let birthdate = data.card.birthday;
             document.addEventListener("DOMNodeInserted",(msg) => {
                 let birthday = document.getElementsByClassName("birthday");
                 if(birthday[0]){
@@ -442,7 +442,7 @@
                 functionInterface.deleteHead();}
         },
         "watchlater" : () => { // 稍后再看
-            let html = page.watchlater;
+            let html = page.watchlater();
             functionInterface.rewritePage(html);
             functionInterface.selectDanmu();
         },
@@ -502,12 +502,12 @@
             }
         },
         "home" : () => { // Bilibili主页(当前尚未启用，且实现上仍有问题：丢失了主推和推广)
-            //let html = page.home;
+            //let html = page.home();
             //functionInterface.rewritePage(html);
             functionInterface.setOnline();
         },
         "playlist" : () => { // 播单页(被废弃的旧版播放页遗存)
-            //let html = page.playlist;
+            //let html = page.playlist();
             //functionInterface.rewritePage(html);
             /* 暂不需要重写，统一下播放器布局并修复版头失效问题 */
             window.onload = () => {
