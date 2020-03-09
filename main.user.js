@@ -426,12 +426,14 @@
         "callbackReplyFloor" : (data) => { // 评论楼层回调
             data = JSON.parse(data).data;
             try{if(!data || !data.replies)throw "获取评论数据失败";}catch(err){log.error(err);return;}
-            let floor = {};
+            let floor = {};let top = data.top;
             let hots = data.hots;if(hots && hots[0])for(let i=0;i<hots.length;i++){floor[hots[i].rpid] = hots[i].floor}
-            let top = data.top;if(top && top.admin)floor[top.admin.rpid] = top.admin.floor;
             let replies = data.replies;if(replies && replies[0])for(let i=0;i<replies.length;i++){floor[replies[i].rpid] = replies[i].floor}
             let main_floor = document.getElementsByClassName("main-floor");
             let list_item = document.getElementsByClassName("list-item");
+            if(top && top.admin)floor[top.admin.rpid] = top.admin.floor;
+            if(top && top.upper)floor[top.upper.rpid] = top.upper.floor;
+            if(top && top.vote)floor[top.vote.rpid] = top.vote.floor;
             if(main_floor[0]){
                 for(let i=0;i<main_floor.length;i++){
                     let rpid = main_floor[i].getAttribute("id").split('_')[2];
