@@ -1,42 +1,40 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
-- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)(Chrome)脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
-- 本脚本没有任何交互设计，所有功能安装即默认开启，包括依个人兴趣添加的各种奇葩功能
-- 本脚本选择沙箱模式来尽力回避与其他同域脚本的冲突，详情及可能出现冲突时的解决办法见下面兼容性条目
+- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/ "Chrome版")脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
+- 本脚本没有任何交互设计，所有功能安装即默认开启，包括一些任性的功能
+- 本脚本已尽力回避与其他同域脚本的冲突，仍有极小概率未能全然回避，详情及可能的解决思路见下文兼容性条目
 - 缘起
    + 2019年12月09日：B站突然取消了旧版Video、Bangumi页面入口
    + 2019年12月24日：B站再次再次把稍后再看也改为了新版
-   + 如今播单页([bilibili moe 2018 日本动画场应援](https://www.bilibili.com/playlist/video/pl769))或许是仅剩的原生旧版播放页面了
+   + 仅存的旧版页面-->[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
 
 ---
 ### 脚本实现
 - 重写
-   + av(含分P)，如 [av50619577](https://www.bilibili.com/video/av50619577)(Brambly Boundaries)
-   + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398)(冰菓) 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776)(深具传统的古典文学部之重生)
-   + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1)(慎点！)
-   + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/)(声之形)
+   + av(含分P)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")
+   + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
+   + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
+   + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
 - 修改
-   + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg)([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html) [campus](https://campus.bilibili.com/index.html) [biligame](https://www.biligame.com/detail/?id=101644) [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D))
-   + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg)和版底以统一版式
+   + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg "截图")([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
+   + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg "截图")和版底以统一版式
    + 添加番剧分集播放数和弹幕数显示
-   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg)提示框
-   + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png)统计
-   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png)和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png)里的失效视频信息
-   + 其他功能存在失效、回滚、取消及不足道哉等情由这里不再逐一列出
+   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg "截图")提示框
+   + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png "截图")统计
+   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png "截图")和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png "截图")里的失效视频信息
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html))。
-2. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本。
-3. 稍后再看页面播放器右侧列表载入失败及投币功能失效。
-4. 稍后再看页面没有mini播放器(新版页面也没有，大概是B站自身bug)。
-5. 稍后再看页面宽屏或网页全屏模式下弹幕滚动区域没有重绘。
-6. av页渲染有点慢，除非版底出现，否则请稍等播放器渲染出来(其实播放器渲染比版头还快，为美观做了隐藏处理)。
+1. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本。
+2. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+3. 稍后再看页播放器右侧列表载入失败及投币功能失效。
+4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
+5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
+6. av页在播放器渲染出来之前可能版面会有些奇怪。
 7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 8. 由于脚本实现机制，可能导致部分其他脚本功能异常(**详情及可能的解决办法见下面兼容性条目**)
-9. 沙箱模式只能间接访问页面上下文，致使载入异常风险增加还请见谅。
 
 ---
 ### 兼容测试
@@ -51,11 +49,11 @@
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，需先在新版播放页读取CC字幕设置(需登录)再使用
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，可能会导致弹幕列表上下滑块失效，添加`run-at document-start`元数据则完全恢复正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
-- 其他可能因本脚本缘故而异常的脚本，可以试试添加`run-at document-start`元数据，但部分脚本可能无法过早启动，建议其他同域脚本尽量以`run-at document-start`启动为前提进行建构
+- 其他可能因本脚本缘故而异常的脚本，可以试试添加`run-at document-start`元数据，但部分脚本可能无法过早启动，所以未必有效
 
 ---
 ### 参考致谢
-- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。 → [网盘分享](https://pan.bnu.edu.cn/l/toTT4q)([Github](https://github.com/MotooriKashin/Bilibili-Old/tree/master/bilibili)上也有备份)
+- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[BiliPlus](https://www.biliplus.com/)开放的Bilibili数据查询接口。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
@@ -67,6 +65,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-09：固定失效视频信息防止被页面顽固地改回去；初步修复评论楼层信息；
 - 2020-03-08：修复稍后再看页面重写错误；修复带参数情况下B站主页判定失误；
 - 2020-03-06：不再对子页面进行多余处理以降低性能需求；修复了跨域请求未带协议时可能请求错误的bug；初步引入错误收集功能以缓解因报错而导致脚本完全瘫痪的情况；
 - 2020-03-05：使用第三方接口(BiliPlus)修复了失效视频信息；
