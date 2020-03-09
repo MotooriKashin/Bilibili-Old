@@ -423,7 +423,7 @@
             let next = data.root.floor;
             xhr.true("https://api.bilibili.com/x/v2/reply/main?oid=" + oid + "&next=" + next + "&type=" + window.type + "&plat=2&mode=" + window.mode,functionInterface.callbackReplyFloor);
         },
-        "callbackFeplyFloor" : (data) => { // 评论楼层回调
+        "callbackReplyFloor" : (data) => { // 评论楼层回调
             data = JSON.parse(data).data;
             try{if(!data || !data.replies)throw "获取评论数据失败";}catch(err){log.error(err);return;}
             let floor = {};
