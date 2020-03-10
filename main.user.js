@@ -450,7 +450,7 @@
             if (logo[0]) logo[0].remove();
         },
         "setJoinTime" : (data) => { /* 处理注册时间 */
-            try {data = JSON.parse(data);} catch (e) {log.error(e);return;}
+            try {data = JSON.parse(data);} catch (e) {log.error(e);log.debug(data);return;}
             let jointime = functionInterface.timeFormat(data.card.regtime * 1000); // 返回值不是13位，主动配位
             let birthdate = data.card.birthday;
             document.addEventListener("DOMNodeInserted",(msg) => {
@@ -542,7 +542,7 @@
             txt.text = title;
         },
         "callbackRefav" : (data) => { /* 频道视频回调 */
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
             let disabled = document.getElementsByClassName("small-item");
             for (let i=0;i<disabled.length;i++) {
                 let aid = disabled[i].getAttribute("data-aid") * 1;
@@ -605,7 +605,7 @@
             },1000);
         },
         "callbackOnline" : (data) => { /* 在线显示回调 */
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
             let all_count = data.all_count;
             let web_online = data.web_online;
             let play_online = data.play_online;
@@ -667,7 +667,7 @@
                 xhr.true(url.stat(window.aid),functionInterface.setEpisodeData);
                 return;
             }
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
             let view = data.view;
             let danmaku = data.danmaku;
             if (view>=10000) view = (view / 10000).toFixed(1) + "万";
@@ -698,20 +698,20 @@
             }
         },
         "callbackReplyPrev" : (data) => { /* 前页评论回调 */
-            try {data = JSON.parse(data).data;} catch(e) {log.error(e);return;}
+            try {data = JSON.parse(data).data;} catch(e) {log.error(e);log.debug(data);return;}
             let i = data.replies.length - 1;
             let oid = data.replies[0].oid;
             let root = data.replies[i].rpid; // 获取最后一条评论
             xhr.true(url.replycursor(oid,root,window.type),functionInterface.callbackReplyCursor);
         },
         "callbackReplyCursor" : (data) => { // 前条评论回调
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
             let oid = data.root.oid;
             let next = data.root.floor;
             xhr.true(url.replynext(oid,next,window.type,window.mode),functionInterface.callbackReplyFloor);
         },
         "callbackReplyFloor" : (data) => { /* 评论楼层回调 */
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
             let floor = {}; // 评论id：评论floor
             let top = data.top;
             let hots = data.hots;
