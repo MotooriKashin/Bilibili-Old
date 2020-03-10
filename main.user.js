@@ -542,9 +542,7 @@
                         data.match(/\<title\>.+?\ \-\ AV/)[0]; // 尝试获取biliplus数据
                         title = data.match(/\<title\>.+?\ \-\ AV/)[0].replace(/\<title\>/,"").replace(/\ \-\ AV/,"");
                         cover = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/\<img style=\"display:none\"\ src=\"/,"").replace(/\"\ alt/,"");
-                        log.log(3);
                     } catch (e) {
-                        log.log(4);
                         title = "AV" + aid; // 无法获取失效视频信息,只能标题改为av号
                     }
                 }
