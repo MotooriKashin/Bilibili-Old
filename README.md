@@ -55,7 +55,7 @@
 ### 参考致谢
 - 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
-- 感谢[BiliPlus](https://www.biliplus.com/)开放的Bilibili数据查询接口。
+- 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj]()开放的Bilibili数据查询接口。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与其他脚本的冲突问题也是受其启发，非常感谢。
@@ -65,7 +65,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
-- 2020-03-10：修改页面上下文获取方式；完善调试模块；优化脚本结构；
+- 2020-03-10：修改页面上下文获取方式；完善调试模块；添加第三方接口(Bilibilijj)的视频信息接口；
 - 2020-03-09：固定失效视频信息防止被页面顽固地改回去；初步修复评论楼层信息；
 - 2020-03-08：修复稍后再看页面重写错误；修复带参数情况下B站主页判定失误；
 - 2020-03-06：不再对子页面进行多余处理以降低性能需求；修复了跨域请求未带协议时可能请求错误的bug；初步引入错误收集功能以缓解因报错而导致脚本完全瘫痪的情况；
