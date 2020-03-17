@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.6.4
-// @description  切换Bilibili旧版HTML5播放器，恢复2019年12月09日之前的界面。已实现video/bangumi/watchlater/mylist及嵌入式播放器。
+// @version      2.6.5
+// @description  切换B站旧版HTML5播放器，恢复2019年12月09日之前的界面。已实现video/bangumi/watchlater/mylist及嵌入式播放器。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -201,14 +201,16 @@
             dat.upInfo = is.up_info; // up主信息
             dat.rightsInfo = is.rights; // 权限信息
             dat.pubInfo = is.publish; // 时间信息
-            if (pug.dialog) { // 付费信息
+            if (pug.dialog || pug.pay == 1) { // 付费信息
                 dat.payMent = {
                     "price":"0.0",
                     "promotion":"",
                     "tip":"大会员专享观看特权哦~"
                 };
-                dat.payMent.vip_promotion = pug.dialog.title;
-                if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+                if (pug.dialog) {
+                    dat.payMent.vip_promotion = pug.dialog.title;
+                    if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+                }
             }
             log.log("Bangumi __INITIAL_STATE__ Build SUCCESS!");
             return dat;
@@ -344,14 +346,16 @@
             dat.upInfo = ini.up_info;
             dat.rightsInfo = ini.rights;
             dat.pubInfo = ini.publish;
-            if (pug.dialog) {
+            if (pug.dialog || pug.pay == 1) { // 付费信息
                 dat.payMent = {
                     "price":"0.0",
                     "promotion":"",
                     "tip":"大会员专享观看特权哦~"
                 };
-                dat.payMent.vip_promotion = pug.dialog.title;
-                if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+                if (pug.dialog) {
+                    dat.payMent.vip_promotion = pug.dialog.title;
+                    if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+                }
             }
             log.log("Special __INITIAL_STATE__ Build SUCCESS!");
             return dat;
@@ -369,7 +373,7 @@
                 let setdanmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
                 if (setdanmu) {
                     setdanmu.click();
-                    clearInterval(danmaku);
+                    window.clearInterval(danmaku);
                 }
             },100);
         },
@@ -379,7 +383,7 @@
                 if (head[1]) {
                     head[1].remove();
                     document.getElementById("bofqi").removeAttribute("style");
-                    clearInterval(rehead);
+                    window.clearInterval(rehead);
                 }
             },100);
         },
@@ -388,7 +392,7 @@
                 let new_entry = document.getElementsByClassName("new-entry")[0];
                 if (new_entry) {
                     new_entry.setAttribute("style","visibility: hidden;");
-                    clearInterval(deleteentry);
+                    window.clearInterval(deleteentry);
                 }
             },100);
         },
@@ -543,7 +547,7 @@
                         title = data.match(/\<title\>.+?\ \-\ AV/)[0].replace(/\<title\>/,"").replace(/\ \-\ AV/,"");
                         cover = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/\<img style=\"display:none\"\ src=\"/,"").replace(/\"\ alt/,"");
                     } catch (e) {
-                        title = "AV" + aid; // 无法获取失效视频信息,只能标题改为av号
+                        title = "AV" + aid; // 无法获取失效视频信息,只能将标题改为av号
                     }
                 }
             }
@@ -619,7 +623,7 @@
             let ck_online = window.setInterval(() => {
                 let online = document.getElementsByClassName("online");
                 if (online[0]) {
-                    clearInterval(ck_online);
+                    window.clearInterval(ck_online);
                     xhr.true(url.online(),functionInterface.callbackOnline);
                 }
             },1000);
@@ -661,11 +665,14 @@
             }
             window.setTimeout(functionInterface.setOnline,60000); // 在线数据轮循
         },
-        "setPlayerShadow" : () => { /* 添加播放器投影 */
+        "setGlobalStyle" : () => { /* 添加全局样式 */
             let style = document.createElement("style");
             style.setAttribute("type","text/css");
             document.head.appendChild(style);
-            style.appendChild(document.createTextNode("#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}"));
+            style.appendChild(document.createTextNode(
+                "#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}" + // 播放器投影
+                ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}" // 搜索框字号
+            ));
         },
         "setEpisodeData" : (data) => { /* 处理分集播放和弹幕 */
             let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
@@ -768,11 +775,11 @@
                 let wait = window.setInterval(() => {
                     if (document.getElementsByClassName("info-sec-av")[0]) { // 判断原生播放及评论数据是否已经写入
                         functionInterface.setEpisodeData("first");
-                        clearInterval(wait);
+                        window.clearInterval(wait);
                     }
                 },1000);
                 window.setTimeout(() => {
-                    clearInterval(wait); // 延时10s取消轮循
+                    window.clearInterval(wait); // 延时10s取消轮循
                 },10000);
                 document.addEventListener("DOMNodeInserted",(msg) => {
                     if (msg.relatedNode.className == "info-sec-av") {
@@ -823,13 +830,13 @@
             document.addEventListener("DOMNodeInserted",(msg) => {
                 if (msg.target.src && msg.target.src.match('//api.bilibili.com/x/v2/reply?')) oidsrc = msg.target.src; // 开始载入或切换评论时的消息，顺便获取当前页评论参数
                 if (msg.target.className && msg.target.className == "main-floor") { // 旧版评论载入完成消息，可以开始处理
-                    clearTimeout(oidtimer); // 评论不止一条，全载入后再处理
+                    window.clearTimeout(oidtimer); // 评论不止一条，全载入后再处理
                     oidtimer = window.setTimeout(() => {
                         functionInterface.setReplyFloor(oidsrc);
                     },1000);
                 }
                 if (msg.target.className && msg.target.className == "list-item reply-wrap ") { // 新版评论载入完成消息，可以开始处理
-                    clearTimeout(oidtimer); // 同样不止一条，全载入后再处理
+                    window.clearTimeout(oidtimer); // 同样不止一条，全载入后再处理
                     oidtimer = window.setTimeout(() => {
                         functionInterface.setReplyFloor(oidsrc);
                     },1000);
@@ -838,7 +845,7 @@
                 functionInterface.removePreview(); // 处理预览
                 functionInterface.removeLiveLogo(); // 处理水印
             });
-            functionInterface.setPlayerShadow(); // 处理播放器投影
+            functionInterface.setGlobalStyle(); // 处理全局样式
         },
         "space" : () => { /* 处理个人空间 */
             let src,mid;
