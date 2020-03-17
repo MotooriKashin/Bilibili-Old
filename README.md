@@ -1,11 +1,11 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
-- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/ "Chrome版")脚本，通过重写网页框架的方式切换到Bilibili旧版播放页
+- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/ "Chrome版")脚本，通过重写网页框架的方式切换到B站旧版播放页
 - 本脚本没有任何交互设计，所有功能安装即默认开启，包括一些任性的功能
-- 本脚本已尽力回避与其他同域脚本的冲突，仍有极小概率未能全然回避，详情及可能的解决思路见下文兼容性条目
+- 本脚本已尝试回避与其他同域脚本的冲突，仍有极小概率未能全然回避，详情及可能的解决思路见下文兼容性条目
 - 缘起
-   + 2019年12月09日：B站突然取消了旧版Video、Bangumi页面入口
+   + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 仅存的旧版页面-->[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
 
@@ -16,7 +16,7 @@
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
-- 修改
+- 修改(部分内容参看底部历史记录)
    + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg "截图")([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg "截图")和版底以统一版式
    + 添加番剧分集播放数和弹幕数显示
@@ -29,7 +29,7 @@
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
 1. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本。
 2. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-3. 稍后再看页播放器右侧列表载入失败及投币功能失效。
+3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av页在播放器渲染出来之前可能版面会有些奇怪。
@@ -65,6 +65,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-17：修复已付费时付费信息未配置的bug；将搜索页搜索框字号改回旧版大小；
 - 2020-03-10：修改页面上下文获取方式；完善调试模块；添加第三方接口(Bilibilijj)的视频信息接口；
 - 2020-03-09：固定失效视频信息防止被页面顽固地改回去；初步修复评论楼层信息；
 - 2020-03-08：修复稍后再看页面重写错误；修复带参数情况下B站主页判定失误；
