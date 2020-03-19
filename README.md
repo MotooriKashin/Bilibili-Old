@@ -65,6 +65,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-19：修复存在类似`index.html`后缀时的主页判定；替换“标签修改记录”页失效版头；
 - 2020-03-17：修复已付费时付费信息未配置的bug；将搜索页搜索框字号改回旧版大小；
 - 2020-03-10：修改页面上下文获取方式；完善调试模块；添加第三方接口(Bilibilijj)的视频信息接口；
 - 2020-03-09：固定失效视频信息防止被页面顽固地改回去；初步修复评论楼层信息；
