@@ -670,7 +670,7 @@
             style.setAttribute("type","text/css");
             document.head.appendChild(style);
             style.appendChild(document.createTextNode(
-                "#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}" + // 播放器投影
+                //"#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}" + // 播放器投影
                 ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}" // 搜索框字号
             ));
         },
