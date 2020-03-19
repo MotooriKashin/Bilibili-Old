@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.6.5
-// @description  切换B站旧版HTML5播放器，恢复2019年12月09日之前的界面。已实现video/bangumi/watchlater/mylist及嵌入式播放器。
+// @version      2.6.6
+// @description  切换旧版Bilibili HTML5播放器，尝试恢复2019年12月09日之前的页面。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -714,7 +714,7 @@
                 if (key[0] == "type") window.type = key[1];
             }
             if (sort==0) window.mode = 1; /* 0:热门评论；1：评论；2：最新评论；*/
-            if (sort==1) return; // 无法以回复数获取
+            if (sort==1) return; // 暂时无法以回复数获取
             if (sort==2) window.mode = 0;
             if (pn==1) { // 首页直接获取
                 xhr.true(url.replymain(oid,window.type,window.mode),functionInterface.callbackReplyFloor);
@@ -739,7 +739,7 @@
         },
         "callbackReplyFloor" : (data) => { /* 评论楼层回调 */
             try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
-            let floor = {}; // 评论id：评论floor
+            let floor = {}; // 准备填充键值 评论id：评论floor
             let top = data.top;
             let hots = data.hots;
             let replies = data.replies;
@@ -779,7 +779,7 @@
                     }
                 },1000);
                 window.setTimeout(() => {
-                    window.clearInterval(wait); // 延时10s取消轮循
+                    window.clearInterval(wait); // 延时10s取消轮循，10s若网页仍未就绪便不再处理
                 },10000);
                 document.addEventListener("DOMNodeInserted",(msg) => {
                     if (msg.relatedNode.className == "info-sec-av") {
@@ -811,8 +811,10 @@
     /* 处理模块 */
     const global = {
         "rewriteSction" : () => { /* 处理版头和版底 */
-            document.addEventListener("DOMNodeInserted",() => {
+            document.addEventListener("DOMNodeInserted",(msg) => {
                 let inh = document.getElementById("internationalHeader");
+                let erh = document.getElementsByClassName("header");
+                let ctn = document.getElementsByClassName("z_top_container");
                 let inf = document.getElementsByClassName("international-footer");
                 if (inh) {
                     let ppt = document.getElementById("primaryPageTab");
@@ -823,6 +825,10 @@
                     }
                 }
                 if (inf[0]) functionInterface.setFoot(inf[0]); // 处理版底
+                if (erh[0] && ctn[0]) {
+                    ctn[0].remove(); // 移除其他失效版头
+                    functionInterface.setTotalHead(erh[0]); // 替换其他失效版头
+                }
             });
         },
         "resetSction" : () => { /* 其他全局处理 */
@@ -891,13 +897,13 @@
                     let data = {}; // __INITIAL_STATE__
                     if (INITIAL_PATH[5].startsWith('ss')) {
                         let ini = xhr.false(url.ssid(id[0]));
-                        data = InitialState.bangumi(ini,null); // 获取__INITIAL_STATE__返回值
+                        data = InitialState.bangumi(ini,null); // 获取__INITIAL_STATE__返回值供重写网页框架时使用
                     }
                     if (INITIAL_PATH[5].startsWith('ep')) {
                         let ini = xhr.false(url.epid(id[0]));
                         data = InitialState.bangumi(ini,id[0]);
                     }
-                    let html = page.bangumi(JSON.stringify(data));
+                    let html = page.bangumi(JSON.stringify(data)); // 上下文不通，__INITIAL_STATE__数据只能由DOM被动写入
                     functionInterface.rewritePage(html);
                     functionInterface.selectDanmu();
                     functionInterface.deleteNewEntry(); // 移除选择新版入口
@@ -929,7 +935,7 @@
             if (!cid) { // 新版嵌入式播放器未必自带cid，若无，则通过url获取
                 let cid = JSON.parse(xhr.false(url.pagelist(aid))).data[0].cid;
                 location.replace(iframeplayer.blackboard(aid,cid));
-                log.log("嵌入式播放器：aid=" + aid + " cid=" + cid); // 重定向到旧版播放器：blackboard(可更换)
+                log.log("嵌入式播放器：aid=" + aid + " cid=" + cid); // 重定向到嵌入式播放器：blackboard(上面有其他替代)
             }
             else {
                 location.replace(iframeplayer.blackboard(aid,cid));
@@ -958,7 +964,7 @@
         if (INITIAL_PATH[3] == 'playlist' && INITIAL_PATH[4] == 'video' && INITIAL_PATH[5].startsWith('pl')) rewritePage.playlist();
         if (INITIAL_PATH[2] != 'live.bilibili.com') global.rewriteSction();
         if (INITIAL_PATH[2] == 'space.bilibili.com') global.space();
-        if (INITIAL_PATH[2] == 'www.bilibili.com' &&(INITIAL_PATH[3].startsWith('\?') || INITIAL_PATH[3].startsWith('\#'))) rewritePage.home();
+        if (INITIAL_PATH[2] == 'www.bilibili.com' && (INITIAL_PATH[3].startsWith('\?') || INITIAL_PATH[3].startsWith('\#') || INITIAL_PATH[3].startsWith('index'))) rewritePage.home();
     } else {
         if (INITIAL_PATH[2] == 'www.bilibili.com') rewritePage.home();
     }
