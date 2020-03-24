@@ -1,13 +1,13 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true) ![Other](https://img.shields.io/badge/Other-unknown-red.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/ "Chrome版")脚本，通过重写网页框架的方式切换到B站旧版播放页
 - 本脚本没有任何交互设计，所有功能安装即默认开启，包括一些任性的功能
-- 本脚本已尝试回避与其他同域脚本的冲突，仍有极小概率未能全然回避，详情及可能的解决思路见下文兼容性条目
-- 缘起
+- 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
-   + 仅存的旧版页面-->[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
+   + 2020年03月23日：B站启用BV号替代原本的av号
+   + 仅存的旧版页面：[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
 
 ---
 ### 脚本实现
@@ -17,10 +17,10 @@
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
 - 修改(部分内容参看底部历史记录)
-   + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg "截图")([blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
+   + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg "截图")(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg "截图")和版底以统一版式
-   + 添加番剧分集播放数和弹幕数显示
-   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg "截图")提示框
+   + 添加番剧分集播放数和弹幕数显示(鼠标焦点会显示原合计数目)
+   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg "截图")框
    + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png "截图")统计
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png "截图")和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png "截图")里的失效视频信息
 
@@ -32,24 +32,24 @@
 3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
-6. av页在播放器渲染出来之前可能版面会有些奇怪。
+6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
 7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 8. 由于脚本实现机制，可能导致部分其他脚本功能异常(**详情及可能的解决办法见下面兼容性条目**)
 
 ---
 ### 兼容测试
-下面是测试用的平台，目前没有测试其他平台的条件和意向
-- Microsoft Windows 8 (Build 6.2.9200.0) （64 位）
-- Google Chrome 80.0.3987.132 (正式版本) （64 位） (cohort: 80_87_Win)
-- Tampermonkey BETA 4.10.6111
-
-测试发现本脚本若直接在页面上下文(即默认模式)中运行将导致其他同域的不以`run-at document-start`模式注入的脚本无法启动，其中原因或许与重写页面时所暴力使用的`document.write()`方法有关，进一步的测试还发现若此时还存在某同域脚本(可以是本脚本)在沙箱模式中运行时，其他异常脚本便能恢复，出于兼容其他同域脚本的考虑，脚本正式由默认模式改为了沙箱模式运行。具体测试数据如下：
+下面是测试用的平台，不保证其他平台兼容性
+>
+> Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
+> Google Chrome 80.0.3987.149 (正式版本) （64 位） (cohort: 80_87_Win)  
+> Tampermonkey BETA 4.10.6111
+>
+与其他同域脚本兼容数据
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，请先在新版播放页把相关设置好(登录授权等)再使用
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，需先在新版播放页读取CC字幕设置(需登录)再使用
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，可能会导致弹幕列表上下滑块失效，添加`run-at document-start`元数据则完全恢复正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
-- 其他可能因本脚本缘故而异常的脚本，可以试试添加`run-at document-start`元数据，但部分脚本可能无法过早启动，所以未必有效
 
 ---
 ### 参考致谢
@@ -59,12 +59,14 @@
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与其他脚本的冲突问题也是受其启发，非常感谢。
+- BV转av参考了[知乎mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)的回答，非常感谢。
 
 ---
 ### 效果预览
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
+- 2020-03-24：修复因BV改版而失效的功能；默认启用BV强制重定向(非二次请求)到原av页功能；
 - 2020-03-23：紧急适配新版BV号；
 - 2020-03-19：修复存在类似`index.html`后缀时的主页判定；替换“标签修改记录”页失效版头；
 - 2020-03-17：修复已付费时付费信息未配置的bug；将搜索页搜索框字号改回旧版大小；
