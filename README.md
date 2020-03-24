@@ -12,7 +12,7 @@
 ---
 ### 脚本实现
 - 重写
-   + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")
+   + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
@@ -34,7 +34,7 @@
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
 7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-8. 由于脚本实现机制，可能导致部分其他脚本功能异常(**详情及可能的解决办法见下面兼容性条目**)
+8. 由于脚本实现机制，可能导致部分其他脚本功能异常(详情及可能的解决办法见下面兼容性条目)
 
 ---
 ### 兼容测试
@@ -43,7 +43,7 @@
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
 > Google Chrome 80.0.3987.149 (正式版本) （64 位） (cohort: 80_87_Win)  
 > Tampermonkey BETA 4.10.6111
->
+>  
 与其他同域脚本兼容数据
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，请先在新版播放页把相关设置好(登录授权等)再使用
@@ -66,7 +66,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/om/l1wtk3aohb35.png)
 ### 版本历史
-- 2020-03-24：修复因BV改版而失效的功能；默认启用BV强制重定向(非二次请求)到原av页功能；
+- 2020-03-24：修复因BV改版而失效的功能；默认启用BV强制重定向(非二次请求)到原av页功能；修复BV转av时未带上参数的bug；
 - 2020-03-23：紧急适配新版BV号；
 - 2020-03-19：修复存在类似`index.html`后缀时的主页判定；替换“标签修改记录”页失效版头；
 - 2020-03-17：修复已付费时付费信息未配置的bug；将搜索页搜索框字号改回旧版大小；
