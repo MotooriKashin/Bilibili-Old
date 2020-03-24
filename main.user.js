@@ -43,35 +43,6 @@
         "html"       : (aid,cid) => {return "https://www.bilibili.com/html/player.html?wmode=transparent&aid=" + aid;}, // 无需cid的播放器
         "playlist"   : (aid,cid,pl) => {if (pl) return "https://www.bilibili.com/blackboard/playlist-player.html?pl=" + pl; else return "https://www.bilibili.com/blackboard/playlist-player.html?aid=" + aid + "&cid=" + cid;} // 播单播放器，输入pl请将aid，cid置null，反之请将pl置空
     }
-    /*** 初始化数据 ***/
-    let config = {
-        /* 置0则不启用 */
-        "rewrite" : {
-            /* 重写功能 */
-            "av" : 1,
-            "bangumi" : 1,
-            "watchlater" : 1,
-            "special" : 1,
-            "blackboard" : 1,
-            "home" : 0,
-            "playlist" : 0,
-        },
-        "reset" : {
-            /* 修改功能 */
-            "grobalboard" : 1,
-            "replyfloor" : 1,
-            "headblur" : 1,
-            "preview" : 1,
-            "livelogo" : 1,
-            "searchwrap" : 1,
-            "playershadow" : 0,
-            "jointime" : 1,
-            "lostvideo" : 1,
-            "online" : 1,
-            "bvid2av" : 1,
-            "selectdanmu" : 1
-        }
-    }
     /*** 调试模块 ***/
     const log = {
         "log"        : (message) => console.log("[Bilibili 旧播放页]",message),
@@ -124,6 +95,36 @@
         "pagelist"    : (aid) => {return "https://api.bilibili.com/x/player/pagelist?aid=" + aid + "&jsonp=jsonp";},
         "jijidown"    : (aid) => {return "https://www.jijidown.com/video/av" + aid;},
         "bvidview"    : (bvid)=>{return "https://api.bilibili.com/x/web-interface/view?bvid=" + bvid;}
+    }
+    /*** 初始化数据 ***/
+    let config = {
+        /* 只需将数字改为0，对应功能即不会启用 */
+        "rewrite" : {
+            /* 重写功能 */
+            "av" : 1, // av(BV)
+            "bangumi" : 1, // Bangumi
+            "watchlater" : 1, // 稍后再看
+            "special" : 1, // special
+            "blackboard" : 1, // 嵌入式播放器
+            "home" : 0, // 主页
+            "playlist" : 0, // 播单页
+        },
+        "reset" : {
+            /* 修改功能 */
+            "grobalboard" : 1, // 全局顶栏和底栏
+            "replyfloor" : 1, // 评论楼层信息
+            "headblur" : 1, // 顶栏透明度
+            "preview" : 1, // 付费预览框
+            "livelogo" : 1, // 直播水印
+            "searchwrap" : 1, // 搜索框字体
+            "playershadow" : 0, // 播放器投影
+            "jointime" : 1, // 注册时间
+            "lostvideo" : 1, // 失效视频信息
+            "online" : 1, // 在线及投稿数
+            "bvid2av" : 1, // BV页跳转av页
+            "selectdanmu" : 1, // 选择弹幕列表
+            "episodedata" : 1 // 分集数据
+        }
     }
     /*** 数据配置模块 ***/
     const InitialState = {
@@ -448,14 +449,8 @@
         },
         "selectDanmu" : () => {
             /* 选择弹幕列表 */
-            if (!config.reset.selectdanmu) return;
-            let danmaku = window.setInterval(() => {
-                let setdanmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
-                if (setdanmu) {
-                    setdanmu.click();
-                    window.clearInterval(danmaku);
-                }
-            },100);
+            let setdanmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
+            if (setdanmu) setdanmu.click();
         },
         "deleteHead" : () => {
             /* 替换失效版头 */
@@ -829,8 +824,8 @@
                     },100);
                     return;
                 }
-                views.setAttribute("title","全" + views.innerText); // 备份总播放数
-                danmakus.setAttribute("title","全" + danmakus.innerText); // 备份总弹幕数
+                views.setAttribute("title","总播放数 " + views.innerText); // 备份总播放数
+                danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText); // 备份总弹幕数
                 log.log("合计播放：" + views.innerText + " 合计弹幕：" + danmakus.innerText);
                 xhr.true(url.stat(window.aid),functionInterface.setEpisodeData);
                 return;
@@ -1062,6 +1057,8 @@
                 if (config.reset.preview) functionInterface.removePreview();
                 // 处理水印
                 if (config.reset.livelogo) functionInterface.removeLiveLogo();
+                // 选择弹幕列表
+                if (config.reset.selectdanmu && msg.target.className && msg.target.className == "bilibili-player-video-subtitle") functionInterface.selectDanmu();
             });
             // 处理全局样式
             functionInterface.setGlobalStyle();
@@ -1111,8 +1108,6 @@
                 let html = page.video(data);
                 // 重写网页框架
                 functionInterface.rewritePage(html);
-                // 选中弹幕列表
-                functionInterface.selectDanmu();
                 // 替换失效版头
                 functionInterface.deleteHead();
             }
@@ -1122,7 +1117,6 @@
             if (!config.rewrite.watchlater) return;
             let html = page.watchlater();
             functionInterface.rewritePage(html);
-            functionInterface.selectDanmu();
         },
         "bangumi" : () => {
             /* Bangumi */
@@ -1147,11 +1141,10 @@
                     // 传递__INITIAL_STATE__，重写页面
                     let html = page.bangumi(JSON.stringify(data));
                     functionInterface.rewritePage(html);
-                    functionInterface.selectDanmu();
                     // 移除无用的新版入口
                     functionInterface.deleteNewEntry();
                     // 处理分集播放和弹幕数
-                    functionInterface.setBangumi(data);
+                    if (config.reset.episodedata) functionInterface.setBangumi(data);
                 }
                 else {
                     // 暂时无法兼容数据，分离Special页面另外处理
