@@ -2,7 +2,7 @@
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/ "Chrome版")脚本，通过重写网页框架的方式切换到B站旧版播放页
-- 本脚本没有任何交互设计，所有功能安装即默认开启，包括一些任性的功能
+- 本脚本没有任何交互设计，大部分功能安装即默认开启，包括一些任性的功能，实在想关闭可参考[教程](https://greasyfork.org/zh-CN/forum/uploads/editor/35/nuatsts8k9qm.png "简单流程图")
 - 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
