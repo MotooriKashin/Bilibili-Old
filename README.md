@@ -1,7 +1,7 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_80-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/ "Chrome版")脚本，通过重写网页框架的方式切换到B站旧版播放页
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_80-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版播放页
 - 本脚本默认开启部分任性的附加功能，如不喜欢可通过设置界面关闭
 - 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
@@ -23,6 +23,7 @@
    + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg "截图")框
    + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png "截图")统计
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png "截图")和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png "截图")里的失效视频信息
+   + 在旧版av(BV)页添加点赞功能(需通过设置界面启用)
 - 设置
    + 设置入口在页面右下角2~3厘米高处，自动贴边，鼠标移过会自动浮现
    + 设置入口有意设计得并不明显以尽量不污染原生版面
@@ -47,8 +48,8 @@
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
 > Google Chrome 80.0.3987.149 (正式版本) （64 位） (cohort: 80_87_Win)  
-> Tampermonkey BETA 4.10.6111
->  
+> Tampermonkey BETA 4.10.6112
+>
 与其他同域脚本兼容数据
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，功能设置请去新版页面
@@ -71,6 +72,10 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-03-26
+   + 在av(BV)页添加点赞功能，默认不启用，可通过设置界面启用
+   + 修复部分设置项无效的错误
+   + 修复新版主页中设置界面异常
 - 2020-03-25
    + 引入设置界面以供自定义功能开关
    + 修正选择弹幕列表功能
