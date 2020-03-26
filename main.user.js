@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.1
+// @version      2.7.2
 // @description  切换旧版Bilibili HTML5播放器，尝试恢复2019年12月09日之前的页面。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -21,6 +21,7 @@
 
     /*** 预处理模块 ***/
     let INITIAL_DOCUMENT = ""; // 网页源代码，需要时再通过url获取(尚不知如何直接从本地获取)
+    let INITIAL_CONFIG = ""; // 默认配置
     let INITIAL_TITLE = document.getElementsByTagName("title"); // 网页原标题
     let INITIAL_PATH = document.location.href.split('/'); // 当前网址(以"/"分割)
     if (INITIAL_TITLE[0]) INITIAL_TITLE = INITIAL_TITLE[0].innerText;
@@ -1044,7 +1045,7 @@
             /* 配置当前点赞数据 */
             try {data = JSON.parse(data).data.stat.like;} catch (e) {log.error(e);return;}
             document.getElementsByClassName("like")[0].setAttribute("title","点赞人数" + data);
-            if (data>1000) data = (data/1000).toFixed(1) + "万";
+            if (data>10000) data = (data/10000).toFixed(1) + "万";
             let text = document.createTextNode(" 点赞 " + data);
             ele.replaceWith(text);
             xhr.true(url.haslike(window.aid),functionInterface.callbackHasLike,text);
@@ -1125,9 +1126,19 @@
                 table = document.createElement("div");
                 table.setAttribute("class","bili-old ui-table");
                 let info = document.createElement("span");
+                let rec = document.createElement("span");
                 info.setAttribute("style","color: rgb(0,0,0);font-size: 14px;");
                 info.innerText = "BilibiliOld 设置";
                 table.appendChild(info);
+                rec.setAttribute("style","color: blue;float: right;");
+                rec.innerText = "恢复默认";
+                rec.onclick = () => {
+                    config = INITIAL_CONFIG;
+                    log.log(config);
+                    localStorage.setItem("LSBOC",JSON.stringify(config));
+                    table.remove();
+                }
+                table.appendChild(rec);
                 for (let key in config.rewrite) UIInterface.setTable(table,UIInterface.menu[key],config.rewrite[key],key);
                 for (let key in config.reset) UIInterface.setTable(table,UIInterface.menu[key],config.reset[key],key);
                 document.body.appendChild(table);
@@ -1415,6 +1426,7 @@
         }
     }
     /*** 初始化设置 ***/
+    INITIAL_CONFIG = JSON.parse(JSON.stringify(config));
     if (localStorage.getItem("LSBOC")) {
         // 读取必须逐一，但写入不必
         let data = JSON.parse(localStorage.getItem("LSBOC"));
