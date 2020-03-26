@@ -138,13 +138,13 @@
             "preview" : 1,
             "livelogo" : 1,
             "searchwrap" : 1,
-            "playershadow" : 0,
             "jointime" : 1,
             "lostvideo" : 1,
             "online" : 1,
             "bvid2av" : 1,
             "selectdanmu" : 1,
             "episodedata" : 1,
+            "playershadow" : 0,
             "like" : 0
         }
     }
@@ -1053,7 +1053,12 @@
         },
         "callbackHasLike" : (data,ele) => {
             /* 确认是否已经点赞 */
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            if (!JSON.parse(data).data) {
+                // 未登录时点赞提示登录
+                document.getElementsByClassName("l-icon-move")[0].onclick = () => document.getElementsByClassName("c-icon-move")[0].click();
+                return;
+            }
+            data = JSON.parse(data).data;
             if (data) {
                 // 已点赞将图标点亮
                 document.getElementsByClassName("l-icon-move")[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
@@ -1198,13 +1203,13 @@
             "preview" : ["付费预览框","关闭播放器左下角付费预览框"],
             "livelogo" : ["直播水印","去除直播间Bilibili字样的水印"],
             "searchwrap" : ["搜索框字体","重设搜索页搜索字体大小"],
-            "playershadow" : ["播放器投影","启用播放器投影"],
             "jointime" : ["注册时间","在个人空间显示B站账号注册时间"],
             "lostvideo" : ["失效视频","修复收藏和频道中的失效视频信息"],
-            "online" : ["在线及投稿数","恢复Bilibili主页在线人数及投稿数"],
+            "online" : ["在线数据","恢复Bilibili主页在线人数及投稿数"],
             "bvid2av" : ["BV页跳转av页","BV页强制跳转av页"],
             "selectdanmu" : ["弹幕列表","自动展示播放器的弹幕列表而不是推荐视频"],
             "episodedata" : ["番剧分集数据","显示连载番剧单回的播放数和弹幕数"],
+            "playershadow" : ["播放器投影","启用播放器投影"],
             "like" : ["点赞","添加旧版av(BV)页点赞功能"]
         }
     }
