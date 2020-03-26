@@ -1029,6 +1029,7 @@
                     let af = document.createElement("b");
                     let text = document.createTextNode("点赞 --");
                     span.setAttribute("class","u like");
+                    span.setAttribute("style","margin-right: 5px;");
                     span.appendChild(bef);
                     span.appendChild(af);
                     span.appendChild(text);
@@ -1190,7 +1191,7 @@
             "special" : ["special","启用旧版特殊播放页"],
             "blackboard" : ["嵌入式播放器","替换嵌入式播放器"],
             "home" : ["主页","(切莫开启！！！)启用旧版Bilibili主页"],
-            "playlist" : ["播单页","(切莫开启！！！)是否启用旧版播单页"],
+            "playlist" : ["播单页","(切莫开启！！！)启用旧版播单页"],
             "grobalboard" : ["顶栏和底栏","替换新版顶栏和底栏"],
             "replyfloor" : ["评论楼层","显示评论的楼层信息"],
             "headblur" : ["顶栏透明度","使顶栏全透明"],
