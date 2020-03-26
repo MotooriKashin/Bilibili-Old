@@ -75,6 +75,8 @@
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
 - 2020-03-26
+   + 添加初始化设置选项；
+   + 修复点赞数少打了个零的bug；
    + 在av(BV)页添加点赞功能，默认不启用，可通过设置界面启用
    + 修复部分设置项无效的错误
    + 修复新版主页中设置界面异常
