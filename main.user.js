@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.0
+// @version      2.7.1
 // @description  切换旧版Bilibili HTML5播放器，尝试恢复2019年12月09日之前的页面。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -14,7 +14,6 @@
 // @grant        GM_xmlhttpRequest
 // @run-at       document-start
 // @license      MIT License
-// @compatible   chrome
 // ==/UserScript==
 
 (function() {
@@ -28,7 +27,7 @@
 
     /*** 网页框架模块 ***/
     const page = {
-        "video"      : (INITIAL_STATE) => {return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + INITIAL_TITLE + '</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><script type="text/javascript">window.__BILI_CONFIG__={"show_bv":false}</script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" /><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><script>window.__INITIAL_STATE__=' + INITIAL_STATE + ';(function(){var s;(s=document.currentScript||document.scripts[document.scripts.length-1]).parentNode.removeChild(s);}());</script><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script> <script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true"></div><div class="bili-wrapper" id="bofqi" style="visibility: hidden;"><script type="text/javascript">function getQueryString(e){var r=new RegExp("(^|&)"+e+"=([^&]*)(&|$)"),i=window.location.search.substr(1).match(r);return null!=i?unescape(i[2]):null}window.getInternetExplorerVersion=function(){var e=-1;if("Microsoft Internet Explorer"==navigator.appName){var r=navigator.userAgent;null!=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r)&&(e=parseFloat(RegExp.$1))}return e};var vd=window.__INITIAL_STATE__&&window.__INITIAL_STATE__.videoData;if(vd&&vd.aid&&9!==getInternetExplorerVersion()){if($("#__bofqi").innerHTML=\'<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>\',vd.embedPlayer){var p=getQueryString("p")?getQueryString("p")-1:0,player={aid:vd.aid,cid:vd.pages[p]&&vd.pages[p].cid||vd.pages[0].cid};EmbedPlayer("player","//static.hdslb.com/play.swf","cid="+player.cid+"&aid="+player.aid+"&pre_ad=")}vd.embed&&$("#bofqi").html(vd.embed)}else $("#bofqi").remove()</script></div><script>0</script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><div class="footer bili-footer report-wrap-module"></div><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script></body></html>';},
+        "video"      : (INITIAL_STATE) => {return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + INITIAL_TITLE + '</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><script type="text/javascript">window.__BILI_CONFIG__={"show_bv":false}</script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" /><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background: url(//static.hdslb.com/images/base/icons.png);}</style></head><body><script>window.__INITIAL_STATE__=' + INITIAL_STATE + ';(function(){var s;(s=document.currentScript||document.scripts[document.scripts.length-1]).parentNode.removeChild(s);}());</script><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script> <script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true"></div><div class="bili-wrapper" id="bofqi" style="visibility: hidden;"><script type="text/javascript">function getQueryString(e){var r=new RegExp("(^|&)"+e+"=([^&]*)(&|$)"),i=window.location.search.substr(1).match(r);return null!=i?unescape(i[2]):null}window.getInternetExplorerVersion=function(){var e=-1;if("Microsoft Internet Explorer"==navigator.appName){var r=navigator.userAgent;null!=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r)&&(e=parseFloat(RegExp.$1))}return e};var vd=window.__INITIAL_STATE__&&window.__INITIAL_STATE__.videoData;if(vd&&vd.aid&&9!==getInternetExplorerVersion()){if($("#__bofqi").innerHTML=\'<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>\',vd.embedPlayer){var p=getQueryString("p")?getQueryString("p")-1:0,player={aid:vd.aid,cid:vd.pages[p]&&vd.pages[p].cid||vd.pages[0].cid};EmbedPlayer("player","//static.hdslb.com/play.swf","cid="+player.cid+"&aid="+player.aid+"&pre_ad=")}vd.embed&&$("#bofqi").html(vd.embed)}else $("#bofqi").remove()</script></div><script>0</script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><div class="footer bili-footer report-wrap-module"></div><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script></body></html>';},
         "watchlater" : () => {return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><script type="text/javascript">window.__BILI_CONFIG__={"show_bv":false}</script><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="watchlater-app"></div><div class="footer bili-footer"></div><script type="text/javascript">0</script><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/jinkela/watchlater/1.watchlater.ba8f2751267792c1f4a5e3a14514e47c34afba61.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/jinkela/watchlater/watchlater.ba8f2751267792c1f4a5e3a14514e47c34afba61.js"></script></body></html>';},
         "bangumi"    : (INITIAL_STATE) => {return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + INITIAL_TITLE + '</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript">window.__BILI_CONFIG__={"show_bv":false}</script><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.764aaa07c8ac8078b639306b18838d080a1cefc1.css" /></head><body><script>window.__INITIAL_STATE__=' + INITIAL_STATE + ';(function(){var s;(s=document.currentScript||document.scripts[document.scripts.length-1]).parentNode.removeChild(s);}());</script><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true" class="main-container"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.764aaa07c8ac8078b639306b18838d080a1cefc1.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.764aaa07c8ac8078b639306b18838d080a1cefc1.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>';},
         "special"    : (INITIAL_STATE) => {return '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + INITIAL_TITLE + '</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript">window.__BILI_CONFIG__={"show_bv":false}</script><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/bangumi/play/js/promise.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.764aaa07c8ac8078b639306b18838d080a1cefc1.css" /></head><body><script>window.__INITIAL_STATE__=' + INITIAL_STATE + ';(function(){var s;(s=document.currentScript||document.scripts[document.scripts.length-1]).parentNode.removeChild(s);}());</script><div class="z-top-container " style="height:42px"></div><div id="app" data-server-rendered="true" class="main-container special"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/js/manifest.3b709027.js" crossorigin defer></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/js/vendor.3b709027.js" crossorigin defer></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/js/bangumi-play.3b709027.js" crossorigin defer></script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>';},
@@ -49,7 +48,7 @@
         "online"   : ".online a {color: rgb(109, 117, 122);}.popularize-module .online em {display: inline-block;height: 10px;line-height: 10px;vertical-align: top;border-left: 1px solid rgb(184, 192, 204);margin: 12px 15px 0px;}",
         "playshadow" : "#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}",
         "search" : ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}",
-        "uiface" : ".ui-face {color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 18;}.ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}.ui-face span {display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}.ui-table {color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 18;}.checke{position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;} .checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}",
+        "uiface" : ".ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 18;}.ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}.ui-face span {display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}.ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 18;}.checke{position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;} .checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}",
         "bofqi" : "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}"
     }
     /*** 调试模块 ***/
@@ -69,22 +68,31 @@
             xhr.send(null);
             if (xhr.status === 200) return xhr.responseText;
         },
-        // 异步请求，附带cookies
-        "true"  : (url,callback) => {
+        // 异步请求，附带cookies，ele为callback的附加传参
+        "true"  : (url,callback,ele) => {
             const xhr = new XMLHttpRequest();
             xhr.open('GET',url,true);
             xhr.withCredentials = true;
-            xhr.onload = () => callback(xhr.responseText)
+            xhr.onload = () => callback(xhr.responseText,ele)
             xhr.onerror = () => log.error("XHR Failed url=" + url)
             xhr.send();
         },
         // 跨域请求，需配置@connect
-        "GM"    : (url,callback,data) => {
+        "GM"    : (url,callback,ele) => {
             GM_xmlhttpRequest({
                 method : 'GET',
                 url    : url,
-                onload : (response) => callback(response.responseText,data)
+                onload : (response) => callback(response.responseText,ele)
             });
+        },
+        // 表单请求
+        "post"  : (url,header,data,callback,ele) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST",url,true);
+            xhr.setRequestHeader("Content-type", header);
+            xhr.withCredentials = true;
+            xhr.onload = () => callback(xhr.responseText,ele);
+            xhr.send(data);
         }
     }
     /*** URL模块 ***/
@@ -103,7 +111,10 @@
         "epid"        : (epid) => {return "https://bangumi.bilibili.com/view/web_api/season?ep_id=" + epid;},
         "pagelist"    : (aid) => {return "https://api.bilibili.com/x/player/pagelist?aid=" + aid + "&jsonp=jsonp";},
         "jijidown"    : (aid) => {return "https://www.jijidown.com/video/av" + aid;},
-        "bvidview"    : (bvid)=>{return "https://api.bilibili.com/x/web-interface/view?bvid=" + bvid;}
+        "bvidview"    : (bvid) => {return "https://api.bilibili.com/x/web-interface/view?bvid=" + bvid;},
+        "aidview"     : (aid) => {return "https://api.bilibili.com/x/web-interface/view?aid=" + aid;},
+        "haslike"     : (aid) => {return "https://api.bilibili.com/x/web-interface/archive/has/like?aid=" + aid;},
+        "enlike"      : () => {return "https://api.bilibili.com/x/web-interface/archive/like";}
     }
     /*** 默认设置数据 ***/
     let config = {
@@ -132,7 +143,8 @@
             "online" : 1,
             "bvid2av" : 1,
             "selectdanmu" : 1,
-            "episodedata" : 1
+            "episodedata" : 1,
+            "like" : 0
         }
     }
     /*** 数据配置模块 ***/
@@ -1003,34 +1015,75 @@
                 return r.join("");
             }
         },
-        "setTable" : (ele,name,check,key) => {
-            /* 创建设置项 */
-            let div = document.createElement("div");
-            let span = document.createElement("span");
-            let input = document.createElement("input");
-            ele.appendChild(div);
-            div.setAttribute("style","padding: 4px 4px 0px 4px;");
-            if (document.getElementsByClassName("checke")[0]) div.setAttribute("style","padding: 0px 4px 0px 4px;");
-            div.appendChild(span);
-            div.appendChild(input);
-            span.setAttribute("style","float: left;display: inline-block;width: 130px;color: rgb(0,0,0);font-size: 14px;");
-            span.setAttribute("title",name[1]);
-            span.innerText = name[0];
-            input.setAttribute("type","checkbox");
-            input.setAttribute("class","checke");
-            // 初始化设置
-            if (check) input.checked = true;
-            // 保存功能
-            input.onclick = () => {
-                if (input.checked){
-                    if (key in config.rewrite) config.rewrite[key] = 1;
-                    else config.reset[key] = 1;
+        "setLike" : () => {
+            /* 初始化点赞数据 */
+            let coin = document.getElementsByClassName("c-icon-move");
+            let number = document.getElementsByClassName("number");
+            let node = document.getElementsByClassName("coin");
+            let timer = window.setInterval(() => {
+                if (coin[0]) {
+                    window.clearInterval(timer);
+                    let span = document.createElement("span");
+                    let bef = document.createElement("i");
+                    let af = document.createElement("b");
+                    let text = document.createTextNode("点赞 --");
+                    span.setAttribute("class","u like");
+                    span.appendChild(bef);
+                    span.appendChild(af);
+                    span.appendChild(text);
+                    bef.setAttribute("class","l-icon-move");
+                    bef.setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;");
+                    af.setAttribute("class","l-icon-moved");
+                    af.setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
+                    number[0].insertBefore(span,node[0]);
+                    xhr.true(url.aidview(window.aid),functionInterface.callbackLike,text);
                 }
-                else {
-                    if (key in config.rewrite) config.rewrite[key] = 0;
-                    else config.reset[key] = 0;
+            },100);
+        },
+        "callbackLike" : (data,ele) => {
+            /* 配置当前点赞数据 */
+            try {data = JSON.parse(data).data.stat.like;} catch (e) {log.error(e);return;}
+            document.getElementsByClassName("like")[0].setAttribute("title","点赞人数" + data);
+            if (data>1000) data = (data/1000).toFixed(1) + "万";
+            let text = document.createTextNode(" 点赞 " + data);
+            ele.replaceWith(text);
+            xhr.true(url.haslike(window.aid),functionInterface.callbackHasLike,text);
+        },
+        "callbackHasLike" : (data,ele) => {
+            /* 确认是否已经点赞 */
+            try {data = JSON.parse(data).data;} catch (e) {log.error(e);return;}
+            if (data) {
+                // 已点赞将图标点亮
+                document.getElementsByClassName("l-icon-move")[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                document.getElementsByClassName("l-icon-moved")[0].setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;");
+            }
+            else {
+                // 未点赞配置单击反馈
+                document.getElementsByClassName("l-icon-move")[0].onclick = () => {
+                    let msg = "aid=" + window.aid + "&like=1&csrf=" + functionInterface.getCookies().bili_jct;
+                    xhr.post(url.enlike(),"application/x-www-form-urlencoded",msg,functionInterface.callbackEnLike,ele);
                 }
             }
+        },
+        "callbackEnLike" : (data,ele) => {
+            /* 成功点赞将图标点亮 */
+            try {data = JSON.parse(data).ttl;} catch (e) {log.error(e);return;}
+            document.getElementsByClassName("l-icon-move")[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;");
+            if (ele.nodeValue.match(/万/)[0]) return;
+            let number = 1 * ele.nodeValue.match(/[0-9]+/) + 1;
+            ele.replaceWith(document.createTextNode(" 点赞 " + number));
+        },
+        "getCookies" : () => {
+            /* 返回cookies对象 */
+            let cookies = document.cookie.split('; ');
+            let obj = cookies.reduce((pre, next) => {
+                let key = next.split('=')[0];
+                let val = next.split('=')[1];
+                pre[key] = val;
+                return pre;
+            },{});
+            return obj;
         }
     }
     /* 交互模块 */
@@ -1075,8 +1128,8 @@
                 info.setAttribute("style","color: rgb(0,0,0);font-size: 14px;");
                 info.innerText = "BilibiliOld 设置";
                 table.appendChild(info);
-                for (let key in config.rewrite) functionInterface.setTable(table,UIInterface.menu[key],config.rewrite[key],key);
-                for (let key in config.reset) functionInterface.setTable(table,UIInterface.menu[key],config.reset[key],key);
+                for (let key in config.rewrite) UIInterface.setTable(table,UIInterface.menu[key],config.rewrite[key],key);
+                for (let key in config.reset) UIInterface.setTable(table,UIInterface.menu[key],config.reset[key],key);
                 document.body.appendChild(table);
             }
             else table = table[0];
@@ -1089,6 +1142,35 @@
                 },1000);
             }
         },
+        "setTable" : (ele,name,check,key) => {
+            /* 创建设置项 */
+            let div = document.createElement("div");
+            let span = document.createElement("span");
+            let input = document.createElement("input");
+            ele.appendChild(div);
+            div.setAttribute("style","padding: 4px 4px 0px 4px;");
+            if (document.getElementsByClassName("checke")[0]) div.setAttribute("style","padding: 0px 4px 0px 4px;");
+            div.appendChild(span);
+            div.appendChild(input);
+            span.setAttribute("style","float: left;display: inline-block;width: 130px;color: rgb(0,0,0);font-size: 14px;");
+            span.setAttribute("title",name[1]);
+            span.innerText = name[0];
+            input.setAttribute("type","checkbox");
+            input.setAttribute("class","checke");
+            // 初始化设置
+            if (check) input.checked = true;
+            // 保存功能
+            input.onclick = () => {
+                if (input.checked){
+                    if (key in config.rewrite) config.rewrite[key] = 1;
+                    else config.reset[key] = 1;
+                }
+                else {
+                    if (key in config.rewrite) config.rewrite[key] = 0;
+                    else config.reset[key] = 0;
+                }
+            }
+        },
         "menu" : {
             /* 设置项信息 */
             "av" : ["av(BV)","启用旧版av(BV)页"],
@@ -1098,19 +1180,20 @@
             "blackboard" : ["嵌入式播放器","替换嵌入式播放器"],
             "home" : ["主页","(切莫开启！！！)启用旧版Bilibili主页"],
             "playlist" : ["播单页","(切莫开启！！！)是否启用旧版播单页"],
-            "grobalboard" : ["全局顶栏和底栏","替换新版顶栏和底栏"],
-            "replyfloor" : ["评论楼层信息","显示评论的楼层信息"],
+            "grobalboard" : ["顶栏和底栏","替换新版顶栏和底栏"],
+            "replyfloor" : ["评论楼层","显示评论的楼层信息"],
             "headblur" : ["顶栏透明度","使顶栏全透明"],
             "preview" : ["付费预览框","关闭播放器左下角付费预览框"],
             "livelogo" : ["直播水印","去除直播间Bilibili字样的水印"],
             "searchwrap" : ["搜索框字体","重设搜索页搜索字体大小"],
             "playershadow" : ["播放器投影","启用播放器投影"],
             "jointime" : ["注册时间","在个人空间显示B站账号注册时间"],
-            "lostvideo" : ["失效视频信息","修复收藏和频道中的失效视频信息"],
+            "lostvideo" : ["失效视频","修复收藏和频道中的失效视频信息"],
             "online" : ["在线及投稿数","恢复Bilibili主页在线人数及投稿数"],
             "bvid2av" : ["BV页跳转av页","BV页强制跳转av页"],
-            "selectdanmu" : ["选择弹幕列表","自动展示播放器的弹幕列表而不是推荐视频"],
-            "episodedata" : ["番剧分集数据","显示连载番剧单回的播放数和弹幕数"]
+            "selectdanmu" : ["弹幕列表","自动展示播放器的弹幕列表而不是推荐视频"],
+            "episodedata" : ["番剧分集数据","显示连载番剧单回的播放数和弹幕数"],
+            "like" : ["点赞","添加旧版av(BV)页点赞功能"]
         }
     }
     /* 处理模块 */
@@ -1221,11 +1304,14 @@
             if (INITIAL_DOCUMENT.match(/__INITIAL_STATE__=/)) {
                 // av(BV)的__INITIAL_STATE__差别不大，无需重构
                 let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/\;\(function/,"");
+                window.aid = JSON.parse(data).aid;
                 let html = page.video(data);
                 // 重写网页框架
                 functionInterface.rewritePage(html);
                 // 替换失效版头
                 functionInterface.deleteHead();
+                // 配置点赞数据
+                if (config.reset.like) functionInterface.setLike();
             }
         },
         "watchlater" : () => {
@@ -1246,6 +1332,7 @@
             INITIAL_DOCUMENT = xhr.false(location.href);
             if (INITIAL_DOCUMENT.match(/__INITIAL_STATE__/)) {
                 // 分离special页面
+                if (!config.rewrite.bangumi) return;
                 if (INITIAL_DOCUMENT.match(/"specialCover":""/)) {
                     // 移除新版__INITIAL_STATE__，与旧版差异过大，会导致页面渲染终止(其实应该会被覆盖)
                     if (window.__INITIAL_STATE__) Reflect.deleteProperty(window, "__INITIAL_STATE__");
@@ -1328,7 +1415,12 @@
         }
     }
     /*** 初始化设置 ***/
-    if (localStorage.getItem("LSBOC")) config = JSON.parse(localStorage.getItem("LSBOC"));
+    if (localStorage.getItem("LSBOC")) {
+        // 读取必须逐一，但写入不必
+        let data = JSON.parse(localStorage.getItem("LSBOC"));
+        for (let key in data.rewrite) config.rewrite[key] = data.rewrite[key];
+        for (let key in data.reset) config.reset[key] = data.reset[key];
+    }
     else localStorage.setItem("LSBOC",JSON.stringify(config));
     /*** 页面分离模块 ***/
     if (INITIAL_PATH[3]) {
