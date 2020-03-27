@@ -25,7 +25,7 @@
    + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png "截图")和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png "截图")里的失效视频信息
    + 在旧版av(BV)页添加点赞功能(需通过设置界面启用)
 - 设置
-   + 设置入口在页面右下角2~3厘米高处，自动贴边，鼠标移过会自动浮现
+   + 设置入口在页面右下角2~3厘米高处，隐形且自动贴边，鼠标移过会自动浮现
    + 设置入口有意设计得并不明显以尽量不污染原生版面
    + 设置界面会在鼠标移开后消失，然后设置内容会自动保存
    + 设置内容依赖本地缓存，不同主机间不共享，须分别设置
@@ -74,6 +74,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-03-27
+   + 修复bvid导致的嵌入式播放器替换失败；
 - 2020-03-26
    + 添加初始化设置选项；
    + 修复点赞数少打了个零的bug；
