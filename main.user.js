@@ -1400,9 +1400,12 @@
             /* 嵌入式播放器 */
             if (!config.rewrite.blackboard) return;
             let link = location.href;
-            let aid = 1 * link.match(/aid=[0-9]*/)[0].replace(/aid=/,"");
+            let aid = link.match(/aid=[0-9]*/);
             let cid = link.match(/cid=[0-9]*/);
             let type = link.match(/season_type=[0-9]*/);
+            // 最新嵌入式页面可能不再提供aid，通过bvid获取
+            if (aid && aid[0]) aid = 1 * aid[0].replace(/aid=/,"");
+            else aid = 1 * functionInterface.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace(/bvid=/,""));
             if (cid && cid[0]) cid = 1 * cid[0].replace(/cid=/,"");
             // 获取播放(付费)类型，无则置空
             if (type && type[0]) type = type[0].replace(/season_type=/,"");
