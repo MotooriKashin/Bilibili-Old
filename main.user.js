@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.2
+// @version      2.7.3
 // @description  切换旧版Bilibili HTML5播放器，尝试恢复2019年12月09日之前的页面。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -49,7 +49,7 @@
         "online"   : ".online a {color: rgb(109, 117, 122);}.popularize-module .online em {display: inline-block;height: 10px;line-height: 10px;vertical-align: top;border-left: 1px solid rgb(184, 192, 204);margin: 12px 15px 0px;}",
         "playshadow" : "#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}",
         "search" : ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}",
-        "uiface" : ".ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 18;}.ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}.ui-face span {display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}.ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 18;}.checke{position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;} .checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}",
+        "uiface" : "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 108;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 108;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}",
         "bofqi" : "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}"
     }
     /*** 调试模块 ***/
@@ -1101,6 +1101,7 @@
             let enter = document.createElement("span");
             let icon = document.createElement("i");
             ui_face.setAttribute("class","bili-old ui-face");
+            ui_face.setAttribute("id","ui-face");
             ui_face.setAttribute("style","right: -54px;");
             ui_face.onmouseover = () => ui_face.setAttribute("style","right: 0px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);");
             ui_face.onmouseout = () => ui_face.setAttribute("style","right: -54px;");
@@ -1131,12 +1132,13 @@
             if (!table[0]) {
                 table = document.createElement("div");
                 table.setAttribute("class","bili-old ui-table");
+                table.setAttribute("id","ui-table");
                 let info = document.createElement("span");
                 let rec = document.createElement("span");
                 info.setAttribute("style","color: rgb(0,0,0);font-size: 14px;");
                 info.innerText = "BilibiliOld 设置";
                 table.appendChild(info);
-                rec.setAttribute("style","color: blue;float: right;");
+                rec.setAttribute("style","color: blue;float: right;font-size: 12px;");
                 rec.innerText = "恢复默认";
                 rec.onclick = () => {
                     config = INITIAL_CONFIG;
@@ -1165,11 +1167,11 @@
             let span = document.createElement("span");
             let input = document.createElement("input");
             ele.appendChild(div);
-            div.setAttribute("style","padding: 4px 4px 0px 4px;");
-            if (document.getElementsByClassName("checke")[0]) div.setAttribute("style","padding: 0px 4px 0px 4px;");
+            div.setAttribute("style","padding: 4px 4px 0px 4px;clear: both;");
+            if (document.getElementsByClassName("checke")[0]) div.setAttribute("style","padding: 0px 4px 0px 4px;clear: both;");
             div.appendChild(span);
             div.appendChild(input);
-            span.setAttribute("style","float: left;display: inline-block;width: 130px;color: rgb(0,0,0);font-size: 14px;");
+            span.setAttribute("style","float: left;display: inline-block;color: rgb(0,0,0);font-size: 14px;");
             span.setAttribute("title",name[1]);
             span.innerText = name[0];
             input.setAttribute("type","checkbox");
