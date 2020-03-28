@@ -41,8 +41,7 @@
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
 7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)**
-8. 设置界面在少数页面可能变形或被其他元素遮挡。
-9. 由于脚本实现机制，可能导致部分同域脚本功能异常。
+8. 由于脚本实现机制，可能导致部分同域脚本功能异常。
 
 ---
 ### 兼容测试
@@ -74,6 +73,9 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-03-28
+   + 修复一个强制类型转化错误；
+   + 修正无效av(BV)页判定以缓和与其他同域脚本的冲突；
 - 2020-03-27
    + 修复bvid导致的嵌入式播放器替换失败；
 - 2020-03-26
