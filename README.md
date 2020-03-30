@@ -4,6 +4,7 @@
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版播放页
 - 本脚本默认开启部分任性的附加功能，如不喜欢可通过设置界面关闭
 - 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
+- 本脚本的初衷是旧版播放器有些功能是无可替代的，并不是排斥新版播放器
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
@@ -17,14 +18,18 @@
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
 - 修改
-   + 替换[嵌入式播放器](https://greasyfork.org/zh-CN/forum/uploads/editor/mo/76f0wjjv4k1w.jpg "截图")(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
-   + 替换除主页外的新版[版头](https://greasyfork.org/zh-CN/forum/uploads/editor/4x/ntcyt7zzdzdu.jpg "截图")和版底以统一版式
-   + 添加番剧分集播放数和弹幕数显示
-   + 添加在倒计时(10s)后去掉6分钟[预览](https://greasyfork.org/zh-CN/forum/uploads/editor/hv/kyxr9nt8gsja.jpg "截图")框
-   + 恢复B站首页[在线人数及投稿数](https://greasyfork.org/zh-CN/forum/uploads/editor/zj/n7yg4qxngxd1.png "截图")统计
-   + 修复个人空间中[收藏](https://greasyfork.org/zh-CN/forum/uploads/editor/ca/ohatx7xxuk5k.png "截图")和[频道](https://greasyfork.org/zh-CN/forum/uploads/editor/pt/5g52iq0yirlm.png "截图")里的失效视频信息
-   + 在旧版av(BV)页添加点赞功能(需通过设置界面启用)
+   + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
+   + 替换大部分新版版头和版底
+   + 添加BV跳转到对应的av页
+   + 添加番剧分集播放数和弹幕数
+   + 添加旧版av(BV)页点赞功能
+   + 添加在倒计时(10s)后去掉6分钟预览框
+   + 添加个人空间显示注册时间
+   + 恢复B站首页在线数据
+   + 修复评论区的楼层信息
+   + 修复收藏和频道里的失效视频信息
 - 设置
+   + 上述部分功能默认不启用，需自行在设置界面开启
    + 设置入口在页面右下角2~3厘米高处，隐形且自动贴边，鼠标移过会自动浮现
    + 设置入口有意设计得并不明显以尽量不污染原生版面
    + 设置界面会在鼠标移开后消失，然后设置内容会自动保存
@@ -34,13 +39,13 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版播放器原生不支持互动视频，观看互动视频请关闭本脚本。
+1. 旧版播放器原生不支持互动视频，观看互动视频可临时在设置中关闭“av(BV)项”。
 2. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
-7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)**
+7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 8. 由于脚本实现机制，可能导致部分同域脚本功能异常。
 
 ---
@@ -52,11 +57,13 @@
 > Tampermonkey BETA 4.10.6112
 >
 与其他同域脚本兼容数据
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
-- [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，功能设置请去新版页面
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，初次使用需现在新版页面读取设置
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，可以添加`run-at document-start`元数据增强稳定性
-- [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
+|       | 兼容性 | 备注 |
+| ---------------------- | ------------- | --------------------------------------------------------------- |
+| [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) | 完全正常 | |
+| [解除B站区域限制](https://greasyfork.org/scripts/25718) | 功能正常 | 缺失设置界面，调整设置需去新版页面 |
+| [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) | 完全正常 | 初次使用需在新版页面读取设置数据 |
+| [Bilibili 修车插件](https://greasyfork.org/scripts/374449) | 基本正常  | 可以添加`run-at document-start`元数据增强稳定性 |
+| [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) | 完全正常 | |
 
 ---
 ### 参考致谢
@@ -66,13 +73,15 @@
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与其他脚本的冲突问题也是受其启发，非常感谢。
-- BV转av参考了[知乎mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的Python代码，非常感谢。
+- BV转av参考了[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的Python代码，非常感谢。
 
 ---
 ### 效果预览
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-03-30
+   + 修改av(BV)页失效版头处理方法，缓解双版头“一闪而过”的现象；
 - 2020-03-28
    + 修复一个强制类型转化错误；
    + 修正无效av(BV)页判定以缓和与其他同域脚本的冲突；
