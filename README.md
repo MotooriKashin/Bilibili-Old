@@ -45,8 +45,9 @@
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
-7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-8. 由于脚本实现机制，可能导致部分同域脚本功能异常。
+7. 收藏列表页因缺乏旧版页面备份未能实现。
+8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+9. 由于脚本实现机制，可能导致部分同域脚本功能异常。
 
 ---
 ### 兼容测试
@@ -58,13 +59,11 @@
 >
  
 与其他同域脚本兼容数据
-|       | 兼容性 | 备注 |
-| ---------------------- | ------------- | --------------------------------------------------------------- |
-| [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) | 完全正常 | |
-| [解除B站区域限制](https://greasyfork.org/scripts/25718) | 功能正常 | 缺失设置界面，调整设置需去新版页面 |
-| [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) | 完全正常 | 初次使用需在新版页面读取设置数据 |
-| [Bilibili 修车插件](https://greasyfork.org/scripts/374449) | 基本正常  | 可以添加`run-at document-start`元数据增强稳定性 |
-| [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) | 完全正常 | |
+- [Bilibili Evolved] (https://github.com/the1812/Bilibili-Evolved)完全正常
+- [Bilibili直播间挂机助手] (https://github.com/SeaLoong/Bilibili-LRHH)完全正常
+- [解除B站区域限制] (https://greasyfork.org/scripts/25718)功能正常，缺失设置界面，调整设置需去新版页面
+- [Bilibili CC字幕工具] (https://greasyfork.org/scripts/378513)完全正常，初次使用需在新版页面读取设置数据
+- [Bilibili 修车插件] (https://greasyfork.org/scripts/374449)基本正常，可以添加`run-at document-start`元数据增强稳定性
 
 ---
 ### 参考致谢
