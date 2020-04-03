@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.5
+// @version      2.7.6
 // @description  启用旧版播放页面，恢复原生的旧版播放器。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -51,6 +51,7 @@
         "search"     : ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}",
         "uiface"     : "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 108;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 108;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}",
         "bofqi"      : "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
+        "qingming"   : "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
     }
     /*** 调试封装 ***/
     const log = {
@@ -325,13 +326,15 @@
             // 添加全局样式
             let player_shadow = cssstyle.playshadow;
             let search_wrap = cssstyle.search;
+            let qingming = cssstyle.qingming;
             let ui = cssstyle.uiface;
             let style = document.createElement("style");
             if (!config.reset.playershadow) player_shadow = "";
             if (!config.reset.searchwrap) search_wrap = "";
+            if (Date.parse(new Date()) > 1586016000000) qingming = "";
             style.setAttribute("type","text/css");
             document.head.appendChild(style);
-            style.appendChild(document.createTextNode(player_shadow + search_wrap + ui));
+            style.appendChild(document.createTextNode(player_shadow + search_wrap + ui + qingming));
         },
         "rewritePage" : (html) => {
             // 重写网页框架
@@ -472,12 +475,12 @@
                         small_item[i].getElementsByClassName("title")[0].text = "Loading";
                         small_item[i].setAttribute("class",item_change);
                         if (!window.tid) {
-                            window.tid = Date.parse( new Date());
+                            window.tid = Date.parse(new Date());
                             xhr.true(url.channel(mid,cid,pn),functionInterface.callbackRefav);
                         }
                         else {
-                            if (Date.parse( new Date()) - window.tid >= 1000) {
-                                window.tid = Date.parse( new Date());
+                            if (Date.parse(new Date()) - window.tid >= 1000) {
+                                window.tid = Date.parse(new Date());
                                 xhr.true(url.channel(mid,cid,pn),functionInterface.callbackRefav);
                             }
                         }
@@ -1111,7 +1114,7 @@
             let cid = link.match(/cid=[0-9]*/);
             let type = link.match(/season_type=[0-9]*/);
             if (aid && aid[0]) aid = 1 * aid[0].replace("aid=","");
-            else aid = 1 * functionInterface.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace("bvid=",""));
+            else try {aid = 1 * functionInterface.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace("bvid=",""));}catch (e) {log.error(e);return;}
             if (cid && cid[0]) cid = 1 * cid[0].replace("cid=","");
             if (type && type[0]) type = type[0].replace("season_type=","");
             else type = NaN;
