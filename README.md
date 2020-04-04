@@ -80,6 +80,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-04-04
+   + 将视频简介中BV号转化为av号以便跳转；
 - 2020-03-30
    + 修改av(BV)页失效版头处理方法，缓解双版头“一闪而过”的现象；
 - 2020-03-28
