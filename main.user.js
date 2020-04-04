@@ -849,6 +849,18 @@
             let number = 1 * ele.nodeValue.match(/[0-9]+/) + 1;
             ele.replaceWith(document.createTextNode(" 点赞 " + number));
         },
+        "avdesc" : () => {
+            // 视频简介中BV转超链接
+            let desc = document.getElementsByClassName("info");
+            if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
+                let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
+                for (let i=0;i<paster.length;i++){
+                    let newer = "av" + functionInterface.chansId(paster[i]);
+                    newer = '<a target="_blank" href="//www.bilibili.com/video/' + newer + '">' + newer + '</a>';
+                    desc[1].innerHTML = desc[1].outerHTML.replace(paster[i],newer);
+                }
+            }
+        },
     }
     /* 交互界面 */
     const UIInterface = {
@@ -1013,6 +1025,7 @@
                     }
                 }
                 functionInterface.deleteHead();
+                functionInterface.avdesc();
                 if (config.reset.headblur) functionInterface.removeBlur();
                 if (config.reset.preview) functionInterface.removePreview();
                 if (config.reset.livelogo) functionInterface.removeLiveLogo();
@@ -1053,15 +1066,6 @@
             if (INITIAL_DOCUMENT.match("__INITIAL_STATE__=")) {
                 if (INITIAL_DOCUMENT.match('"code":404')) return;
                 let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
-                let desc = JSON.parse(data).videoData.desc
-                if (desc && desc.match(/BV[A-Za-z0-9]+/i)) {
-                    let paster = desc.match(/BV[A-Za-z0-9]+/i);
-                    for (let i=0;i<paster.length;i++){
-                        let newer = "av" + functionInterface.chansId(paster[i]);
-                        log.log(paster[i]);
-                        data = data.replace(paster[i],newer);
-                    }
-                }
                 window.aid = JSON.parse(data).aid;
                 let html = page.video(data);
                 functionInterface.rewritePage(html);
