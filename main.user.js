@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.6
+// @version      2.7.7
 // @description  启用旧版播放页面，恢复原生的旧版播放器。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -1053,6 +1053,15 @@
             if (INITIAL_DOCUMENT.match("__INITIAL_STATE__=")) {
                 if (INITIAL_DOCUMENT.match('"code":404')) return;
                 let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
+                let desc = JSON.parse(data).videoData.desc
+                if (desc && desc.match(/BV[A-Za-z0-9]+/i)) {
+                    let paster = desc.match(/BV[A-Za-z0-9]+/i);
+                    for (let i=0;i<paster.length;i++){
+                        let newer = "av" + functionInterface.chansId(paster[i]);
+                        log.log(paster[i]);
+                        data = data.replace(paster[i],newer);
+                    }
+                }
                 window.aid = JSON.parse(data).aid;
                 let html = page.video(data);
                 functionInterface.rewritePage(html);
