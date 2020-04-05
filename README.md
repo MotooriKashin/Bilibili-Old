@@ -72,7 +72,7 @@
 ### 参考致谢
 - 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
-- 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj]()开放的Bilibili数据查询接口。
+- 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)开放的Bilibili数据查询接口。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与其他脚本的冲突问题也是受其启发，非常感谢。
