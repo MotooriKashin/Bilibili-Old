@@ -84,7 +84,7 @@
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
 - 2020-04-05
-   + 实现旧版B站主页：旧版升级需在设置里开启，新安装默认开启
+   + 实现旧版B站主页，可能需要在设置里开启
    + 忽略处理新版主页的版头和版底
 - 2020-04-04
    + 将视频简介中BV号转化为av号以便跳转
