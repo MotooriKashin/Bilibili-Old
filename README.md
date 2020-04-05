@@ -57,7 +57,7 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 80.0.3987.163 (正式版本) （64 位） (cohort: 80_87_Win)  
+> Google Chrome 80.0.3987.163 (正式版本) （64 位） (cohort: 80_162_Win)  
 > Tampermonkey BETA 4.10.6112
 >
  
