@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.8
+// @version      2.7.9
 // @description  启用旧版播放页面，恢复原生的旧版播放器。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -857,6 +857,7 @@
         "avdesc" : () => {
             // 视频简介中BV转超链接
             let desc = document.getElementsByClassName("info");
+            if (INITIAL_PATH[3] != 'video') return;
             if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
                 let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
                 for (let i=0;i<paster.length;i++){
@@ -967,7 +968,7 @@
             "special" : ["special","启用旧版特殊播放页"],
             "blackboard" : ["嵌入式播放器","替换嵌入式播放器"],
             "home" : ["主页","启用旧版Bilibili主页"],
-            "playlist" : ["播单页","(切莫开启！！！)启用旧版播单页"],
+            "playlist" : ["playlist","(切莫开启！！！)启用旧版播单页"],
             "grobalboard" : ["版头和版底","替换新版版头和版底"],
             "replyfloor" : ["评论楼层","显示评论的楼层信息"],
             "headblur" : ["顶栏透明度","使顶栏全透明"],
@@ -980,7 +981,7 @@
             "bvid2av" : ["BV页跳转av页","BV页强制跳转av页"],
             "selectdanmu" : ["弹幕列表","自动展示播放器的弹幕列表而不是推荐视频"],
             "episodedata" : ["番剧分集数据","显示连载番剧单回的播放数和弹幕数"],
-            "like" : ["点赞","旧版av(BV)页添加点赞功能"]
+            "like" : ["点赞","启用旧版av(BV)页添加点赞功能"]
         }
     }
     /* 修改相关 */
@@ -1013,6 +1014,9 @@
         "resetSction" : () => {
             // 全局处理
             let oidsrc,oidtimer;
+            functionInterface.setGlobalStyle();
+            UIInterface.start();
+            if (INITIAL_PATH[2] == 'live.bilibili.com') return;
             global.rewriteSction();
             document.addEventListener("DOMNodeInserted",(msg) => {
                 if (config.reset.replyfloor) {
@@ -1037,8 +1041,6 @@
                 if (config.reset.livelogo) functionInterface.removeLiveLogo();
                 if (config.reset.selectdanmu && msg.target.className && msg.target.className == "bilibili-player-video-subtitle") functionInterface.selectDanmu();
             });
-            functionInterface.setGlobalStyle();
-            UIInterface.start();
         },
         "space" : () => {
             // 空间相关
@@ -1178,5 +1180,5 @@
     } else {
         if (INITIAL_PATH[2] == 'www.bilibili.com') rewritePage.home();
     }
-    if (window.self == window.top) document.addEventListener("DOMContentLoaded",global.resetSction());
+    document.addEventListener("DOMContentLoaded",global.resetSction());
 })();
