@@ -8,6 +8,7 @@
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
+   + 2020年04月04日：B站取消旧版主页入口
    + 仅存的旧版页面：[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
 
 ---
@@ -17,6 +18,7 @@
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
+   + Bilibili主页
 - 修改
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换大部分新版版头和版底
@@ -54,7 +56,7 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 80.0.3987.149 (正式版本) （64 位） (cohort: 80_87_Win)  
+> Google Chrome 80.0.3987.163 (正式版本) （64 位） (cohort: 80_87_Win)  
 > Tampermonkey BETA 4.10.6112
 >
  
@@ -80,18 +82,21 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-04-05
+   + 实现旧版B站主页并默认启用
+   + 忽略处理新版主页的版头和版底
 - 2020-04-04
-   + 将视频简介中BV号转化为av号以便跳转；
+   + 将视频简介中BV号转化为av号以便跳转
 - 2020-03-30
-   + 修改av(BV)页失效版头处理方法，缓解双版头“一闪而过”的现象；
+   + 修改av(BV)页失效版头处理方法，缓解双版头“一闪而过”的现象
 - 2020-03-28
-   + 修复一个强制类型转化错误；
-   + 修正无效av(BV)页判定以缓和与其他同域脚本的冲突；
+   + 修复一个强制类型转化错误
+   + 修正无效av(BV)页判定以缓和与其他同域脚本的冲突
 - 2020-03-27
-   + 修复bvid导致的嵌入式播放器替换失败；
+   + 修复bvid导致的嵌入式播放器替换失败
 - 2020-03-26
-   + 添加初始化设置选项；
-   + 修复点赞数少打了个零的bug；
+   + 添加初始化设置选项
+   + 修复点赞数少打了个零的bug
    + 在av(BV)页添加点赞功能，默认不启用，可通过设置界面启用
    + 修复部分设置项无效的错误
    + 修复新版主页中设置界面异常
