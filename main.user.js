@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.7.9
-// @description  启用旧版播放页面，恢复原生的旧版播放器。
+// @version      2.8.0
+// @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -175,7 +175,7 @@
             dat.mediaInfo.evaluate = is.evaluate;
             dat.mediaInfo.is_paster_ads = is.is_paster_ads;
             dat.mediaInfo.jp_title = is.jp_title;
-            dat.mediaInfo.link = is.link; // 详情链接
+            dat.mediaInfo.link = is.link;
             dat.mediaInfo.media_id = is.media_id;
             dat.mediaInfo.mode = is.mode;
             dat.mediaInfo.season_id = is.season_id;
@@ -280,7 +280,26 @@
         "home" : (ini) => {
             let dat = {};
             ini = JSON.parse(ini);
-            dat.recommendData = ini.recommendList;
+            dat.recommendData = [];// ini.recommendList;
+            for (let i=0;i<ini.recommendList.length;i++) {
+                dat.recommendData[i] = {};
+                dat.recommendData[i].aid = ini.recommendList[i].aid;
+                dat.recommendData[i].typename = ini.recommendList[i].tname;
+                dat.recommendData[i].title = ini.recommendList[i].title;
+                dat.recommendData[i].subtitle = "";
+                dat.recommendData[i].play = ini.recommendList[i].stat.view;
+                dat.recommendData[i].review = ini.recommendList[i].stat.reply;
+                dat.recommendData[i].video_review = "";
+                dat.recommendData[i].favorites = ini.recommendList[i].stat.favorite;
+                dat.recommendData[i].mid = ini.recommendList[i].owner.mid;
+                dat.recommendData[i].author = ini.recommendList[i].owner.name;
+                dat.recommendData[i].create = ini.recommendList[i].pubdate;
+                dat.recommendData[i].pic = ini.recommendList[i].pic;
+                dat.recommendData[i].coins = ini.recommendList[i].stat.coin;
+                dat.recommendData[i].duration = ini.recommendList[i].duration;
+                dat.recommendData[i].badgepay = false;
+                dat.recommendData[i].rights = ini.recommendList[i].rights;
+            }
             dat.locsData = ini.locsData;
             dat.locsData[23] = ini.locsData[3197];
             log.log("Home __INITIAL_STATE__ Build SUCCESS!");
@@ -1065,7 +1084,6 @@
     /*** 重写相关 ***/
     const rewritePage = {
         "av" : () => {
-            /* video */
             if (config.reset.bvid2av && INITIAL_PATH[4].toLowerCase().startsWith('bv')) {
                 history.replaceState(null,null,"https://www.bilibili.com/video/av" + functionInterface.chansId(INITIAL_PATH[4]) + location.search);
             }
@@ -1162,12 +1180,12 @@
     }
     /*** 初始化设置 ***/
     INITIAL_CONFIG = JSON.parse(JSON.stringify(config));
-    if (localStorage.getItem("LSBOC")) {
+    try {
         let data = JSON.parse(localStorage.getItem("LSBOC"));
         for (let key in data.rewrite) if (key in config.rewrite) config.rewrite[key] = data.rewrite[key];
         for (let key in data.reset) if (key in config.reset) config.reset[key] = data.reset[key];
     }
-    else localStorage.setItem("LSBOC",JSON.stringify(config));
+    catch (e) {localStorage.setItem("LSBOC",JSON.stringify(config));}
     /*** 页面分离 ***/
     if (INITIAL_PATH[3]) {
         if (INITIAL_PATH[3] == 'video' && (INITIAL_PATH[4].toLowerCase().startsWith('av') || INITIAL_PATH[4].toLowerCase().startsWith('bv'))) rewritePage.av();
