@@ -1033,10 +1033,8 @@
         "resetSction" : () => {
             // 全局处理
             let oidsrc,oidtimer;
-            UIInterface.start();
-            if (INITIAL_PATH[2].match('live.bilibili.com')) return;
-            log.log(location.href);
-            functionInterface.setGlobalStyle();
+            if (window.self == window.top) UIInterface.start();
+            if (!INITIAL_PATH[2].match("live.bilibili.com")) functionInterface.setGlobalStyle();
             global.rewriteSction();
             document.addEventListener("DOMNodeInserted",(msg) => {
                 if (config.reset.replyfloor) {
