@@ -1,10 +1,10 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_80-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版播放页
+- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
 - 本脚本默认开启部分任性的附加功能，如不喜欢可通过设置界面关闭
 - 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
-- 本脚本的初衷是个人更喜欢旧版界面，奈何官方接连弃置相关入口
+- 本脚本的初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
@@ -14,11 +14,11 @@
 ---
 ### 脚本实现
 - 重写
+   + B站主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
    + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
-   + Bilibili主页
 - 修改
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换大部分新版版头和版底
@@ -31,13 +31,14 @@
    + 修复评论区的楼层信息
    + 修复收藏和频道里的失效视频信息
 - 设置
-   + 上述部分功能默认不启用，需自行在设置界面开启
-   + 设置入口在页面右下角2~3厘米高处，隐形且自动贴边，鼠标移过会自动浮现
-   + 设置入口有意设计得并不明显以尽量不污染原生版面
+   + 设置默认开启大部分功能，少部分按需自行在设置界面开启
+   + 设置入口在页面右下角2~3厘米高处，白色且自动贴边，鼠标移过会自动浮现
+   + 设置入口有意设计得并不明显以尽量不污染原生版面，不过网页底色不是纯白的话还是很明显的
+   + 设置入口实在找不到的话可以通过清除B站cookie的方式恢复默认设置
    + 设置界面会在鼠标移开后消失，然后设置内容会自动保存
    + 设置内容依赖本地缓存，不同主机间不共享，须分别设置
-   + 部分设置可能需要刷新才会生效，刷新前请将鼠标移开让界面消失
-   + 各选项鼠标放在对应文字上面会浮现简短介绍
+   + 设置内容可能需要刷新才会生效，刷新前请将鼠标移开让界面消失
+   + 设置选项鼠标放在对应文字上面会浮现简短介绍
 
 ---
 ### 已知问题
@@ -48,7 +49,7 @@
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
-7. 收藏列表页因缺乏旧版页面备份未能实现。
+7. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
 8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 9. 由于脚本实现机制，可能导致部分同域脚本功能异常。
 
@@ -83,6 +84,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
 ### 版本历史
+- 2020-04-06
+   + 修复旧版主页部分版块数据错误
 - 2020-04-05
    + 实现旧版B站主页，可能需要在设置里开启
    + 忽略处理新版主页的版头和版底
