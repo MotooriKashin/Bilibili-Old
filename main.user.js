@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.8.0
+// @version      2.8.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -1033,9 +1033,10 @@
         "resetSction" : () => {
             // 全局处理
             let oidsrc,oidtimer;
-            functionInterface.setGlobalStyle();
             UIInterface.start();
-            if (INITIAL_PATH[2] == 'live.bilibili.com') return;
+            if (INITIAL_PATH[2].match('live.bilibili.com')) return;
+            log.log(location.href);
+            functionInterface.setGlobalStyle();
             global.rewriteSction();
             document.addEventListener("DOMNodeInserted",(msg) => {
                 if (config.reset.replyfloor) {
