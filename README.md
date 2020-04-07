@@ -17,7 +17,7 @@
    + B站主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
-   + 稍后再看，如 [av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
+   + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
 - 修改
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
@@ -31,27 +31,23 @@
    + 修复评论区的楼层信息
    + 修复收藏和频道里的失效视频信息
 - 设置
-   + 设置默认开启大部分功能，少部分按需自行在设置界面开启
-   + 设置入口在页面右下角2~3厘米高处，白色且自动贴边，鼠标移过会自动浮现
+   + 设置入口在页面右下角2~3厘米高处，白色且自动贴边，鼠标移过会自动浮现，选项有鼠标浮动介绍
    + 设置入口有意设计得并不明显以尽量不污染原生版面，不过网页底色不是纯白的话还是很明显的
-   + 设置入口实在找不到的话可以通过清除B站cookie的方式恢复默认设置
    + 设置界面会在鼠标移开后消失，然后设置内容会自动保存
    + 设置内容依赖本地缓存，不同主机间不共享，须分别设置
-   + 设置内容可能需要刷新才会生效，刷新前请将鼠标移开让界面消失
-   + 设置选项鼠标放在对应文字上面会浮现简短介绍
+   + **不会设置可参考[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif)也可以通过清除B站cookie的方式恢复默认**
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版播放器原生不支持互动视频，观看互动视频可临时在设置中关闭“av(BV)项”。
+1. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。(请临时关闭av设置项或直接关闭脚本)
 2. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
-6. av(BV)页在播放器渲染出来之前可能版面会有些奇怪。
+6. av(BV)页在播放器渲染出来之前可能布局会有些奇怪。
 7. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
 8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-9. 由于脚本实现机制，可能导致部分同域脚本功能异常。
 
 ---
 ### 兼容测试
@@ -82,8 +78,10 @@
 ---
 ### 效果预览
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
-![Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/pa/q98b6e0nrghx.png)
+![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-07
+   + 修复未启用旧版av(BV) 页时新版av(BV)页播放器自毁的问题；
 - 2020-04-06
    + 修复旧版主页部分版块数据错误
    + 忽略某同域脚本创建的子页面
@@ -187,17 +185,11 @@
 - 2020-01-11
    + 去掉了一个正则表达式以改善兼容问题
 - 2020-01-10
-   + 再重写替换架构，不再主动继承任何原生网页数据 
-   + 为兼容性重新引入XHR并修复部分问题
    + 重写脚本架构
    + 修复部分布局问题
 - 2020-01-08
    + 规范脚本结构
    + 再处理av页版头问题
-- 2020-01-05
-   + 回滚2.1.3版本的av页架构，使渲染过程不那么撕裂
-- 2020-01-04
-   + 参考2.1.3版本再优化av页架构，加快av页载入速度
 - 2020-01-03
    + 重写av页框架
    + 添加bangumi页实现
