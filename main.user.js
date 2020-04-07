@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.8.1
+// @version      2.8.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -1053,7 +1053,7 @@
                     }
                 }
                 functionInterface.deleteElement();
-                functionInterface.avdesc();
+                if (config.rewrite.av) functionInterface.avdesc();
                 if (config.reset.headblur) functionInterface.removeBlur();
                 if (config.reset.preview) functionInterface.removePreview();
                 if (config.reset.livelogo) functionInterface.removeLiveLogo();
