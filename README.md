@@ -45,9 +45,8 @@
 3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
 4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
-6. av(BV)页在播放器渲染出来之前可能布局会有些奇怪。
-7. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
-8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
+7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 
 ---
 ### 兼容测试
@@ -64,6 +63,7 @@
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，调整设置需去新版页面
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，初次使用需在新版页面读取设置数据
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，可以添加`run-at document-start`元数据增强稳定性
+- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341) 完全正常
 
 ---
 ### 参考致谢
@@ -80,8 +80,10 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-08
+   + 优化av(BV)页播放器载入速度
 - 2020-04-07
-   + 修复未启用旧版av(BV) 页时新版av(BV)页播放器自毁的问题；
+   + 修复未启用旧版av(BV) 页时新版av(BV)页播放器自毁的问题
 - 2020-04-06
    + 修复旧版主页部分版块数据错误
    + 忽略某同域脚本创建的子页面
