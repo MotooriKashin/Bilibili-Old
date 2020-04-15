@@ -54,7 +54,7 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 80.0.3987.163 (正式版本) （64 位） (cohort: 80_162_Win)  
+> Google Chrome 81.0.4044.92 (正式版本) （64 位） (cohort: 81_Win_92)  
 > Tampermonkey BETA 4.10.6112
 >
  
@@ -81,6 +81,9 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-15
+   + 备份旧版播放器设置以免脚本关闭时被新版页面置空
+   + 修复部分页面设置界面被遮挡问题
 - 2020-04-11
    + 优化新版版头和版底替换方式
 - 2020-04-09
