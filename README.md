@@ -62,7 +62,7 @@
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，调整设置需去新版页面
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常，初次使用需在新版页面读取设置数据
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，可以添加`run-at document-start`元数据增强稳定性
 - [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341) 完全正常
 
