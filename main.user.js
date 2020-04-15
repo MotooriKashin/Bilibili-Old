@@ -1095,8 +1095,10 @@
     } catch (e) {localStorage.setItem("LSBOC",JSON.stringify(config));}
     try {
         let bilibili_player_settings = JSON.parse(localStorage.getItem("bilibili_player_settings"));
-        if (bilibili_player_settings.video_status.autopart != "") localStorage.setItem("bilibili_player_settings_copy",JSON.stringify(bilibili_player_settings));
-        else localStorage.setItem("bilibili_player_settings",localStorage.getItem("bilibili_player_settings_copy"));
+        if (bilibili_player_settings) {
+            if (bilibili_player_settings.video_status.autopart !== "") localStorage.setItem("bilibili_player_settings_copy",JSON.stringify(bilibili_player_settings));
+            else localStorage.setItem("bilibili_player_settings",localStorage.getItem("bilibili_player_settings_copy"));
+        }
     } catch (e) {}
     /*** 页面分离 ***/
     if (INITIAL_PATH[3]) {
