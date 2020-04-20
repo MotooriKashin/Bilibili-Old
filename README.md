@@ -1,6 +1,6 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_80-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_81-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
 - 本脚本默认开启部分任性的附加功能，如不喜欢可通过设置界面关闭
 - 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
@@ -40,7 +40,7 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。(请临时关闭av设置项或直接关闭脚本)
+1. 旧版播放器原生不支持互动视频所以不会启用旧版页面。
 2. 播放页面的充电入口失效，请移步UP主的个人空间。
 2. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
@@ -48,13 +48,14 @@
 5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
 6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
 7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+8. 实现机制问题可能导致部分同域脚本及扩展失效。
 
 ---
 ### 兼容测试
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 81.0.4044.92 (正式版本) （64 位） (cohort: 81_Win_92)  
+> Google Chrome 81.0.4044.113 (正式版本) （64 位） (cohort: 81_Win_113)  
 > Tampermonkey BETA 4.10.6112
 >
  
@@ -81,6 +82,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-15
+   + 主动忽略互动视频
 - 2020-04-15
    + 备份旧版播放器设置以免脚本关闭时被新版页面置空
    + 修复部分页面设置界面被遮挡问题
