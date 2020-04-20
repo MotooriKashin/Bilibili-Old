@@ -82,7 +82,7 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
-- 2020-04-15
+- 2020-04-20
    + 主动忽略互动视频
 - 2020-04-15
    + 备份旧版播放器设置以免脚本关闭时被新版页面置空
