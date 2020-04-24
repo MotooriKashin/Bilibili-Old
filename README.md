@@ -9,6 +9,7 @@
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
    + 2020年04月04日：B站取消旧版主页入口
+   + 2020年04月23日：B站开启4K灰度测试
    + 仅存的旧版页面：[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
 
 ---
@@ -40,15 +41,17 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版播放器原生不支持互动视频所以不会启用旧版页面。
-2. 播放页面的充电入口失效，请移步UP主的个人空间。
-2. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-3. 稍后再看页播放器右侧列表载入失败、投币功能失效。
-4. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
-5. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
-6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
-7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-8. 实现机制问题可能导致部分同域脚本及扩展失效。
+1. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
+2. 旧版播放器原生不支持全景视频，将无法移动视角。
+3. Bangumi和稍后再看暂时无法提供4K画质选择，av(BV)4K支持上可能存在问题。
+4. 播放页面的充电入口失效，请移步UP主的个人空间。
+5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+6. 稍后再看页播放器右侧列表载入失败、投币功能失效。
+7. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
+8. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
+9. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
+10. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+11. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
 ---
 ### 兼容测试
@@ -82,6 +85,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-24
+   + 配置av(BV)\_\_playinfo\_\_以提供4K画质选项
 - 2020-04-20
    + 主动忽略互动视频
 - 2020-04-15
@@ -168,7 +173,7 @@
    + 规范脚本架构
    + 重写了嵌入式播放器替换逻辑并默认选择宽屏模式
 - 2020-02-06
-   + 对av页也主动写入__INITIAL_STATE__字段
+   + 对av页也主动写入\_\_INITIAL_STATE\_\_字段
 - 2020-01-29
    + 当嵌入播放器分辨率太小(宽度<720)时自动启动宽屏模式
 - 2020-01-25
