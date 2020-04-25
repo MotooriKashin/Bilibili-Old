@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.8.9
+// @version      2.9.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -1011,7 +1011,7 @@
     const rewritePage = {
         "av" : () => {
             if (config.reset.bvid2av && INITIAL_PATH[4].toLowerCase().startsWith('bv')) { // BV转av
-                history.replaceState(null,null,"https://www.bilibili.com/video/av" + dealwith.chansId(INITIAL_PATH[4]) + location.search);}
+                history.replaceState(null,null,"https://www.bilibili.com/video/av" + dealwith.chansId(INITIAL_PATH[4]) + location.search + location.hash);}
             if (!config.rewrite.av) return;
             INITIAL_DOCUMENT = xhr.false(location.href);
             if (INITIAL_DOCUMENT.match("__INITIAL_STATE__=")) {
