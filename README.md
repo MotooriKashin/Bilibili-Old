@@ -46,19 +46,16 @@
 3. Bangumi和稍后再看暂时无法提供4K画质选择，av(BV)4K支持上可能存在问题。
 4. 播放页面的充电入口失效，请移步UP主的个人空间。
 5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-6. 稍后再看页播放器右侧列表载入失败、投币功能失效。
-7. 稍后再看页没有mini播放器(新版页面也没有，大概是B站自身bug)。
-8. 稍后再看页宽屏或网页全屏模式下弹幕滚动区域没有重绘。
-9. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
-10. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-11. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
+6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
+7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+8. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
 ---
 ### 兼容测试
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 81.0.4044.113 (正式版本) （64 位） (cohort: 81_Win_113)  
+> Google Chrome 81.0.4044.122 (正式版本) （64 位） (cohort: 81_Win_122)  
 > Tampermonkey BETA 4.10.6112
 >
  
@@ -85,6 +82,10 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-25
+   + 修复稍后再看右侧列表载入失败的问题
+   + 修复稍后再看宽屏或网页全屏模式下弹幕滚动区域没有重绘的问题
+   + 修复稍后再看页没有mini播放器的问题
 - 2020-04-24
    + 配置av(BV)\_\_playinfo\_\_以提供4K画质选项
 - 2020-04-20
