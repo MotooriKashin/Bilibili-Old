@@ -14,6 +14,7 @@
 
 ---
 ### 脚本实现
+**以下所有功能都可以在设置里自定义启用或关闭**
 - 重写
    + B站主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
