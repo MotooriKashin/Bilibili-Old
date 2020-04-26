@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.9.0
+// @version      2.9.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -148,150 +148,156 @@
     /*** 配置__INITIAL_STATE__ ***/
     const InitialState = {
         "bangumi" : (xhr,epId) => {
-            let is;
-            let ep = 0;
-            try {is = JSON.parse(xhr).result;} catch (e) {log.error(e);return;}
-            let ic = JSON.parse(INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace('INITIAL_STATE__=',"").replace(';(function',""));
-            let pug = JSON.parse(INITIAL_DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace('PGC_USERSTATE__=',"").replace('</script>',""));
-            let dat = {"ver":{},"loginInfo":{},"canReview":false, "userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":false,"area":0,"app":false,"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
-            if (epId) {dat.epId = 1 * epId;ep = 1;}
-            else {
-                dat.epId = "";
-                if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id;ep = 1;}
-            }
-            dat.ssId = is.season_id;
-            dat.mdId = 1 * is.link.match(/[0-9][0-9]*/)[0];
-            dat.mediaInfo = {};
-            dat.mediaInfo.actors = is.actors;
-            dat.mediaInfo.alias = is.alias;
-            dat.mediaInfo.areas = is.areas;
-            dat.mediaInfo.cover = is.cover;
-            dat.mediaInfo.evaluate = is.evaluate;
-            dat.mediaInfo.is_paster_ads = is.is_paster_ads;
-            dat.mediaInfo.jp_title = is.jp_title;
-            dat.mediaInfo.link = is.link;
-            dat.mediaInfo.media_id = is.media_id;
-            dat.mediaInfo.mode = is.mode;
-            dat.mediaInfo.season_id = is.season_id;
-            dat.mediaInfo.season_status = is.season_status;
-            dat.mediaInfo.season_title = is.season_title;
-            dat.mediaInfo.season_type = is.season_type;
-            dat.mediaInfo.series_title = is.series_title;
-            dat.mediaInfo.square_cover = is.square_cover;
-            dat.mediaInfo.staff = is.staff;
-            dat.mediaInfo.style = is.style;
-            dat.mediaInfo.title = is.title;
-            dat.mediaInfo.total_ep = is.total_ep;
-            dat.mediaRating = is.rating;
-            dat.epList = is.episodes;
-            if (ep==0) dat.epId=dat.epList[0].ep_id;
-            for (let i=0;i<dat.epList.length;i++) if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
-            dat.newestEp = is.newest_ep;
-            dat.seasonList = is.seasons;
-            if (!dat.seasonList) dat.seasonList = ic.sections;
-            dat.seasonStat = {"views":0,"danmakus":0,"coins":0,"favorites":0};
-            dat.userStat = {"loaded":true,"error":false,"follow":0,"pay":0,"payPackPaid":0,"sponsor":0};
-            dat.userStat.watchProgress = pug.progress;
-            dat.userStat.vipInfo = pug.vip_info;
-            dat.upInfo = is.up_info;
-            dat.rightsInfo = is.rights;
-            dat.pubInfo = is.publish;
-            if (pug.dialog || pug.pay == 1) {
-                dat.payMent = {"price":"0.0","promotion":"","tip":"大会员专享观看特权哦~"};
-                if (pug.dialog) {
-                    dat.payMent.vip_promotion = pug.dialog.title;
-                    if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+            try {
+                let is;
+                let ep = 0;
+                is = JSON.parse(xhr).result;
+                let ic = JSON.parse(INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace('INITIAL_STATE__=',"").replace(';(function',""));
+                let pug = JSON.parse(INITIAL_DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace('PGC_USERSTATE__=',"").replace('</script>',""));
+                let dat = {"ver":{},"loginInfo":{},"canReview":false, "userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":false,"area":0,"app":false,"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
+                if (epId) {dat.epId = 1 * epId;ep = 1;}
+                else {
+                    dat.epId = "";
+                    if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id;ep = 1;}
                 }
-            }
-            log.log("Bangumi __INITIAL_STATE__ Build SUCCESS!");
-            return dat;
+                dat.ssId = is.season_id;
+                dat.mdId = 1 * is.link.match(/[0-9][0-9]*/)[0];
+                dat.mediaInfo = {};
+                dat.mediaInfo.actors = is.actors;
+                dat.mediaInfo.alias = is.alias;
+                dat.mediaInfo.areas = is.areas;
+                dat.mediaInfo.cover = is.cover;
+                dat.mediaInfo.evaluate = is.evaluate;
+                dat.mediaInfo.is_paster_ads = is.is_paster_ads;
+                dat.mediaInfo.jp_title = is.jp_title;
+                dat.mediaInfo.link = is.link;
+                dat.mediaInfo.media_id = is.media_id;
+                dat.mediaInfo.mode = is.mode;
+                dat.mediaInfo.season_id = is.season_id;
+                dat.mediaInfo.season_status = is.season_status;
+                dat.mediaInfo.season_title = is.season_title;
+                dat.mediaInfo.season_type = is.season_type;
+                dat.mediaInfo.series_title = is.series_title;
+                dat.mediaInfo.square_cover = is.square_cover;
+                dat.mediaInfo.staff = is.staff;
+                dat.mediaInfo.style = is.style;
+                dat.mediaInfo.title = is.title;
+                dat.mediaInfo.total_ep = is.total_ep;
+                dat.mediaRating = is.rating;
+                dat.epList = is.episodes;
+                if (ep==0) dat.epId=dat.epList[0].ep_id;
+                for (let i=0;i<dat.epList.length;i++) if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                dat.newestEp = is.newest_ep;
+                dat.seasonList = is.seasons;
+                if (!dat.seasonList) dat.seasonList = ic.sections;
+                dat.seasonStat = {"views":0,"danmakus":0,"coins":0,"favorites":0};
+                dat.userStat = {"loaded":true,"error":false,"follow":0,"pay":0,"payPackPaid":0,"sponsor":0};
+                dat.userStat.watchProgress = pug.progress;
+                dat.userStat.vipInfo = pug.vip_info;
+                dat.upInfo = is.up_info;
+                dat.rightsInfo = is.rights;
+                dat.pubInfo = is.publish;
+                if (pug.dialog || pug.pay == 1) {
+                    dat.payMent = {"price":"0.0","promotion":"","tip":"大会员专享观看特权哦~"};
+                    if (pug.dialog) {
+                        dat.payMent.vip_promotion = pug.dialog.title;
+                        if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+                    }
+                }
+                log.log("Bangumi __INITIAL_STATE__ Build SUCCESS!");
+                return dat;
+            } catch (e) {log.error(e);}
         },
         "special" : (xhr,epId) => {
-            let ini;
-            let ep = 0;
-            try {ini = JSON.parse(xhr).result;} catch(e) {log.error(e);return;}
-            let pug = JSON.parse(INITIAL_DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace('PGC_USERSTATE__=',"").replace('</script>',""));
-            let is = JSON.parse(INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace('INITIAL_STATE__=',"").replace(';(function',""));
-            let dat = {"ver":{"mobile":false,"ios":false,"android":false,"windowsPhone":false,"iPhone":false,"ios9":false,"iPad":false,"webApp":false,"microMessenger":false,"weibo":false,"uc":false,"qq":false,"baidu":false,"mqq":false,"mBaidu":false,"iqiyi":false,"qqLive":false,"safari":true,"youku":false,"ie":false,"edge":false,"bili":false,"biliVer":0},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":true,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false};
-            if (epId) {dat.epId = 1 * epId;ep = 1;}
-            else {
-                dat.epId = "";
-                if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id;ep = 1;}
-            }
-            dat.ssId = ini.season_id;
-            dat.mdId = 1 * ini.link.match(/[0-9][0-9]*/)[0];
-            dat.mediaInfo = {};
-            dat.mediaInfo.actors = ini.actors;
-            dat.mediaInfo.alias = ini.alias;
-            dat.mediaInfo.areas = ini.areas;
-            dat.mediaInfo.bkg_cover = ini.bkg_cover;
-            dat.mediaInfo.cover = ini.cover;
-            dat.mediaInfo.evaluate = ini.evaluate;
-            dat.mediaInfo.is_paster_ads = ini.is_paster_ads;
-            dat.jp_title = ini.jp_title;
-            dat.mediaInfo.link = ini.link;
-            dat.mediaInfo.media_id = ini.media_id;
-            dat.mediaInfo.mode = ini.mode;
-            dat.mediaInfo.season_id = ini.season_id;
-            dat.mediaInfo.season_status = ini.season_status;
-            dat.mediaInfo.season_title = ini.season_title;
-            dat.mediaInfo.season_type = ini.season_type;
-            dat.mediaInfo.square_cover = ini.square_cover;
-            dat.mediaInfo.staff = ini.staff;
-            dat.mediaInfo.stat = ini.state;
-            dat.mediaInfo.style = ini.style;
-            dat.mediaInfo.title = ini.title;
-            dat.mediaRating = ini.rating;
-            dat.epList = ini.episodes;
-            if (ep==0) dat.epId = dat.epList[0].ep_id;
-            for (let i=0;i<dat.epList.length;i++) if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
-            dat.newestEp = ini.newest_ep;
-            dat.seasonList = ini.seasons;
-            if (!dat.seasonList) dat.seasonList = is.sections;
-            dat.seasonStat = {"views":0,"danmakus":0,"coins":0,"favorites":0};
-            dat.userStat = {"loaded":false,"error":false,"follow":0,"pay":0,"payPackPaid":0,"sponsor":0};
-            dat.userStat.watchProgress = pug.progress;
-            dat.userStat.vipInfo = pug.vip_info;
-            dat.upInfo = ini.up_info;
-            dat.rightsInfo = ini.rights;
-            dat.pubInfo = ini.publish;
-            if (pug.dialog || pug.pay == 1) {
-                dat.payMent = {"price":"0.0","promotion":"","tip":"大会员专享观看特权哦~"};
-                if (pug.dialog) {
-                    dat.payMent.vip_promotion = pug.dialog.title;
-                    if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+            try {
+                let ini;
+                let ep = 0;
+                ini = JSON.parse(xhr).result;
+                let pug = JSON.parse(INITIAL_DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace('PGC_USERSTATE__=',"").replace('</script>',""));
+                let is = JSON.parse(INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace('INITIAL_STATE__=',"").replace(';(function',""));
+                let dat = {"ver":{"mobile":false,"ios":false,"android":false,"windowsPhone":false,"iPhone":false,"ios9":false,"iPad":false,"webApp":false,"microMessenger":false,"weibo":false,"uc":false,"qq":false,"baidu":false,"mqq":false,"mBaidu":false,"iqiyi":false,"qqLive":false,"safari":true,"youku":false,"ie":false,"edge":false,"bili":false,"biliVer":0},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":true,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false};
+                if (epId) {dat.epId = 1 * epId;ep = 1;}
+                else {
+                    dat.epId = "";
+                    if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id;ep = 1;}
                 }
-            }
-            log.log("Special __INITIAL_STATE__ Build SUCCESS!");
-            return dat;
+                dat.ssId = ini.season_id;
+                dat.mdId = 1 * ini.link.match(/[0-9][0-9]*/)[0];
+                dat.mediaInfo = {};
+                dat.mediaInfo.actors = ini.actors;
+                dat.mediaInfo.alias = ini.alias;
+                dat.mediaInfo.areas = ini.areas;
+                dat.mediaInfo.bkg_cover = ini.bkg_cover;
+                dat.mediaInfo.cover = ini.cover;
+                dat.mediaInfo.evaluate = ini.evaluate;
+                dat.mediaInfo.is_paster_ads = ini.is_paster_ads;
+                dat.jp_title = ini.jp_title;
+                dat.mediaInfo.link = ini.link;
+                dat.mediaInfo.media_id = ini.media_id;
+                dat.mediaInfo.mode = ini.mode;
+                dat.mediaInfo.season_id = ini.season_id;
+                dat.mediaInfo.season_status = ini.season_status;
+                dat.mediaInfo.season_title = ini.season_title;
+                dat.mediaInfo.season_type = ini.season_type;
+                dat.mediaInfo.square_cover = ini.square_cover;
+                dat.mediaInfo.staff = ini.staff;
+                dat.mediaInfo.stat = ini.state;
+                dat.mediaInfo.style = ini.style;
+                dat.mediaInfo.title = ini.title;
+                dat.mediaRating = ini.rating;
+                dat.epList = ini.episodes;
+                if (ep==0) dat.epId = dat.epList[0].ep_id;
+                for (let i=0;i<dat.epList.length;i++) if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                dat.newestEp = ini.newest_ep;
+                dat.seasonList = ini.seasons;
+                if (!dat.seasonList) dat.seasonList = is.sections;
+                dat.seasonStat = {"views":0,"danmakus":0,"coins":0,"favorites":0};
+                dat.userStat = {"loaded":false,"error":false,"follow":0,"pay":0,"payPackPaid":0,"sponsor":0};
+                dat.userStat.watchProgress = pug.progress;
+                dat.userStat.vipInfo = pug.vip_info;
+                dat.upInfo = ini.up_info;
+                dat.rightsInfo = ini.rights;
+                dat.pubInfo = ini.publish;
+                if (pug.dialog || pug.pay == 1) {
+                    dat.payMent = {"price":"0.0","promotion":"","tip":"大会员专享观看特权哦~"};
+                    if (pug.dialog) {
+                        dat.payMent.vip_promotion = pug.dialog.title;
+                        if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
+                    }
+                }
+                log.log("Special __INITIAL_STATE__ Build SUCCESS!");
+                return dat;
+            } catch (e) {log.error(e);}
         },
         "home" : (ini) => {
-            let dat = {};
-            ini = JSON.parse(ini);
-            dat.recommendData = [];// ini.recommendList;
-            for (let i=0;i<ini.recommendList.length;i++) {
-                dat.recommendData[i] = {};
-                dat.recommendData[i].aid = ini.recommendList[i].aid;
-                dat.recommendData[i].typename = ini.recommendList[i].tname;
-                dat.recommendData[i].title = ini.recommendList[i].title;
-                dat.recommendData[i].subtitle = "";
-                dat.recommendData[i].play = ini.recommendList[i].stat.view;
-                dat.recommendData[i].review = ini.recommendList[i].stat.reply;
-                dat.recommendData[i].video_review = "";
-                dat.recommendData[i].favorites = ini.recommendList[i].stat.favorite;
-                dat.recommendData[i].mid = ini.recommendList[i].owner.mid;
-                dat.recommendData[i].author = ini.recommendList[i].owner.name;
-                dat.recommendData[i].create = ini.recommendList[i].pubdate;
-                dat.recommendData[i].pic = ini.recommendList[i].pic;
-                dat.recommendData[i].coins = ini.recommendList[i].stat.coin;
-                dat.recommendData[i].duration = ini.recommendList[i].duration;
-                dat.recommendData[i].badgepay = false;
-                dat.recommendData[i].rights = ini.recommendList[i].rights;
-            }
-            dat.locsData = ini.locsData;
-            dat.locsData[23] = ini.locsData[3197];
-            log.log("Home __INITIAL_STATE__ Build SUCCESS!");
-            return dat;
+            try {
+                let dat = {};
+                ini = JSON.parse(ini);
+                dat.recommendData = [];// ini.recommendList;
+                for (let i=0;i<ini.recommendList.length;i++) {
+                    dat.recommendData[i] = {};
+                    dat.recommendData[i].aid = ini.recommendList[i].aid;
+                    dat.recommendData[i].typename = ini.recommendList[i].tname;
+                    dat.recommendData[i].title = ini.recommendList[i].title;
+                    dat.recommendData[i].subtitle = "";
+                    dat.recommendData[i].play = ini.recommendList[i].stat.view;
+                    dat.recommendData[i].review = ini.recommendList[i].stat.reply;
+                    dat.recommendData[i].video_review = "";
+                    dat.recommendData[i].favorites = ini.recommendList[i].stat.favorite;
+                    dat.recommendData[i].mid = ini.recommendList[i].owner.mid;
+                    dat.recommendData[i].author = ini.recommendList[i].owner.name;
+                    dat.recommendData[i].create = ini.recommendList[i].pubdate;
+                    dat.recommendData[i].pic = ini.recommendList[i].pic;
+                    dat.recommendData[i].coins = ini.recommendList[i].stat.coin;
+                    dat.recommendData[i].duration = ini.recommendList[i].duration;
+                    dat.recommendData[i].badgepay = false;
+                    dat.recommendData[i].rights = ini.recommendList[i].rights;
+                }
+                dat.locsData = ini.locsData;
+                dat.locsData[23] = ini.locsData[3197];
+                log.log("Home __INITIAL_STATE__ Build SUCCESS!");
+                return dat;
+            } catch (e) {log.error(e);}
         },
     }
     /*** 函数相关 ***/
@@ -411,102 +417,110 @@
         },
         "setJoinTime" : (data) => {
             // 添加注册时间显示，依赖开放隐私设置
-            try {data = JSON.parse(data);} catch (e) {log.error(e);log.debug(data);return;}
-            let jointime = dealwith.timeFormat(data.card.regtime * 1000); // 时间戳不是13位，主动补位
-            let birthdate = data.card.birthday;
-            document.addEventListener("DOMNodeInserted",(msg) => {
-                let birthday = document.getElementsByClassName("birthday");
-                if (birthday[0]) {
-                    if (document.getElementsByClassName("jointime")[0]) return;
-                    else {
-                        let div = document.createElement("div");
-                        let icon = document.createElement("span");
-                        let text = document.createElement("span");
-                        let style = document.createElement("style");
-                        div.setAttribute("class","item jointime");
-                        birthday[0].parentNode.appendChild(div);
-                        icon.setAttribute("class","icon");
-                        div.appendChild(icon);
-                        text.setAttribute("class","text");
-                        text.innerText = jointime;
-                        div.appendChild(text);
-                        style.setAttribute("type","text/css");
-                        document.head.appendChild(style);
-                        style.appendChild(document.createTextNode(cssstyle.jointime));
+            try {
+                data = JSON.parse(data);
+                let jointime = dealwith.timeFormat(data.card.regtime * 1000); // 时间戳不是13位，主动补位
+                let birthdate = data.card.birthday;
+                document.addEventListener("DOMNodeInserted",(msg) => {
+                    let birthday = document.getElementsByClassName("birthday");
+                    if (birthday[0]) {
+                        if (document.getElementsByClassName("jointime")[0]) return;
+                        else {
+                            let div = document.createElement("div");
+                            let icon = document.createElement("span");
+                            let text = document.createElement("span");
+                            let style = document.createElement("style");
+                            div.setAttribute("class","item jointime");
+                            birthday[0].parentNode.appendChild(div);
+                            icon.setAttribute("class","icon");
+                            div.appendChild(icon);
+                            text.setAttribute("class","text");
+                            text.innerText = jointime;
+                            div.appendChild(text);
+                            style.setAttribute("type","text/css");
+                            document.head.appendChild(style);
+                            style.appendChild(document.createTextNode(cssstyle.jointime));
+                        }
                     }
-                }
-            });
+                });
+            } catch (e) {log.error(e);}
         },
         "setFavlist" : (src) => {
             // 处理失效频道视频
-            let cid,mid,pn;
-            src = src.split('?')[1].split('&');
-            for (let i=0;i<src.length;i++) {
-                let key = src[i].split('=');
-                if (key[0] == "cid") cid = key[1];
-                if (key[0] == "mid") mid = key[1];
-                if (key[0] == "pn") pn = key[1];
-            }
-            let small_item = document.getElementsByClassName("small-item");
-            let item_change = "small-item fakeDanmu-item";
-            if (small_item[0]) {
-                for (let i=0;i<small_item.length;i++) {
-                    if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") {
-                        small_item[i].getElementsByClassName("title")[0].text = "Loading";
-                        small_item[i].setAttribute("class",item_change);
-                        if (!window.tid) {
-                            window.tid = Date.parse(new Date());
-                            xhr.true(url.channel(mid,cid,pn),dealwith.callbackRefav);
-                        }
-                        else {
-                            if (Date.parse(new Date()) - window.tid >= 1000) {
+            try {
+                let cid,mid,pn;
+                src = src.split('?')[1].split('&');
+                for (let i=0;i<src.length;i++) {
+                    let key = src[i].split('=');
+                    if (key[0] == "cid") cid = key[1];
+                    if (key[0] == "mid") mid = key[1];
+                    if (key[0] == "pn") pn = key[1];
+                }
+                let small_item = document.getElementsByClassName("small-item");
+                let item_change = "small-item fakeDanmu-item";
+                if (small_item[0]) {
+                    for (let i=0;i<small_item.length;i++) {
+                        if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") {
+                            small_item[i].getElementsByClassName("title")[0].text = "Loading";
+                            small_item[i].setAttribute("class",item_change);
+                            if (!window.tid) {
                                 window.tid = Date.parse(new Date());
                                 xhr.true(url.channel(mid,cid,pn),dealwith.callbackRefav);
+                            }
+                            else {
+                                if (Date.parse(new Date()) - window.tid >= 1000) {
+                                    window.tid = Date.parse(new Date());
+                                    xhr.true(url.channel(mid,cid,pn),dealwith.callbackRefav);
+                                }
                             }
                         }
                     }
                 }
-            }
+            } catch (e) {log.error(e);}
         },
         "callbackRefav" : (data) => {
             // 频道视频数据
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
-            let disabled = document.getElementsByClassName("small-item");
-            for (let i=0;i<disabled.length;i++) {
-                let aid = disabled[i].getAttribute("data-aid") * 1;
-                let title = "av" + aid;
-                if (data.list.archives[i].title) title = data.list.archives[i].title;
-                let a = disabled[i].getElementsByClassName("cover")[0];
-                let img = disabled[i].getElementsByTagName("img")[0];
-                let txt = disabled[i].getElementsByClassName("title")[0];
-                if (txt.text == "Loading") {
-                    if (aid) {
-                        log.log("失效视频：AV" + aid);
-                        txt.setAttribute("href","//www.bilibili.com/video/av" + aid);
-                        a.setAttribute("href","//www.bilibili.com/video/av" + aid);
+            try {
+                data = JSON.parse(data).data;
+                let disabled = document.getElementsByClassName("small-item");
+                for (let i=0;i<disabled.length;i++) {
+                    let aid = disabled[i].getAttribute("data-aid") * 1;
+                    let title = "av" + aid;
+                    if (data.list.archives[i].title) title = data.list.archives[i].title;
+                    let a = disabled[i].getElementsByClassName("cover")[0];
+                    let img = disabled[i].getElementsByTagName("img")[0];
+                    let txt = disabled[i].getElementsByClassName("title")[0];
+                    if (txt.text == "Loading") {
+                        if (aid) {
+                            log.log("失效视频：AV" + aid);
+                            txt.setAttribute("href","//www.bilibili.com/video/av" + aid);
+                            a.setAttribute("href","//www.bilibili.com/video/av" + aid);
+                        }
+                        else {
+                            aid = disabled[i].getAttribute("data-aid");
+                            log.log("失效视频：" + aid);
+                            txt.setAttribute("href","//www.bilibili.com/video/" + aid);
+                            a.setAttribute("href","//www.bilibili.com/video/" + aid);
+                        }
+                        a.setAttribute("target","_blank");
+                        a.setAttribute("class","cover cover-normal");
+                        img.setAttribute("alt",title);
+                        img.setAttribute("src",data.list.archives[i].pic.replace("http","https") + "@380w_240h_100Q_1c.webp");
+                        txt.setAttribute("target","_blank");
+                        txt.setAttribute("title",title);
+                        txt.setAttribute("style","text-decoration: line-through;color: #ff0000;");
+                        txt.text = title;
                     }
-                    else {
-                        aid = disabled[i].getAttribute("data-aid");
-                        log.log("失效视频：" + aid);
-                        txt.setAttribute("href","//www.bilibili.com/video/" + aid);
-                        a.setAttribute("href","//www.bilibili.com/video/" + aid);
-                    }
-                    a.setAttribute("target","_blank");
-                    a.setAttribute("class","cover cover-normal");
-                    img.setAttribute("alt",title);
-                    img.setAttribute("src",data.list.archives[i].pic.replace("http","https") + "@380w_240h_100Q_1c.webp");
-                    txt.setAttribute("target","_blank");
-                    txt.setAttribute("title",title);
-                    txt.setAttribute("style","text-decoration: line-through;color: #ff0000;");
-                    txt.text = title;
                 }
-            }
+            } catch (e) {log.error(e);}
         },
         "refav" : (ele) => {
             // 处理失效收藏视频
-            let aid = ele.getAttribute("data-aid");
-            if (1 * aid) xhr.GM(url.jijidown(aid),dealwith.callbackFav,ele);
-            else xhr.GM(url.jijidown(dealwith.chansId(aid)),dealwith.callbackFav,ele);
+            try {
+                let aid = ele.getAttribute("data-aid");
+                if (1 * aid) xhr.GM(url.jijidown(aid),dealwith.callbackFav,ele);
+                else xhr.GM(url.jijidown(dealwith.chansId(aid)),dealwith.callbackFav,ele);
+            } catch (e) {log.error(e);}
         },
         "callbackFav" : (data,ele) => {
             // 收藏视频第三方数据
@@ -594,60 +608,64 @@
         },
         "callbackOnline" : (data) => {
             // 在线数据
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
-            let all_count = data.all_count;
-            let web_online = data.web_online;
-            let play_online = data.play_online;
-            let online = document.getElementsByClassName("online")[0];
-            if (online.tagName == "DIV") online = online.getElementsByTagName("a")[0];
-            else {
-                let parent = online.parentNode;
-                online.remove();
-                let div = document.createElement("div");
-                let a = document.createElement("a");
-                div.setAttribute("class","online");
-                parent.insertBefore(div,parent.firstChild);
-                a.setAttribute("href","//www.bilibili.com/video/online.html");
-                a.setAttribute("target","_blank");
-                div.appendChild(a);
-                online = a;
-            }
-            online.setAttribute("title","在线观看：" + play_online);
-            online.text = "在线人数：" + web_online;
-            log.log("在线人数：" + web_online + " 在线观看：" + play_online + " 最新投稿：" + all_count);
-            if (!online.parentNode.getElementsByTagName("em")[0]) {
-                let em = document.createElement("em");
-                let count = document.createElement("a");
-                online.parentNode.insertBefore(em,online.nextSibling);
-                count.setAttribute("href","//www.bilibili.com/newlist.html");
-                count.setAttribute("target","_blank");
-                online.parentNode.insertBefore(count,em.nextSibling);
-                count.text = "最新投稿：" + all_count;
-            }
-            else {
-                let count = online.parentNode.getElementsByTagName("a")[1];
-                count.text = "最新投稿：" + all_count;
-            }
-            window.setTimeout(dealwith.setOnline,60000);
+            try {
+                data = JSON.parse(data).data;
+                let all_count = data.all_count;
+                let web_online = data.web_online;
+                let play_online = data.play_online;
+                let online = document.getElementsByClassName("online")[0];
+                if (online.tagName == "DIV") online = online.getElementsByTagName("a")[0];
+                else {
+                    let parent = online.parentNode;
+                    online.remove();
+                    let div = document.createElement("div");
+                    let a = document.createElement("a");
+                    div.setAttribute("class","online");
+                    parent.insertBefore(div,parent.firstChild);
+                    a.setAttribute("href","//www.bilibili.com/video/online.html");
+                    a.setAttribute("target","_blank");
+                    div.appendChild(a);
+                    online = a;
+                }
+                online.setAttribute("title","在线观看：" + play_online);
+                online.text = "在线人数：" + web_online;
+                log.log("在线人数：" + web_online + " 在线观看：" + play_online + " 最新投稿：" + all_count);
+                if (!online.parentNode.getElementsByTagName("em")[0]) {
+                    let em = document.createElement("em");
+                    let count = document.createElement("a");
+                    online.parentNode.insertBefore(em,online.nextSibling);
+                    count.setAttribute("href","//www.bilibili.com/newlist.html");
+                    count.setAttribute("target","_blank");
+                    online.parentNode.insertBefore(count,em.nextSibling);
+                    count.text = "最新投稿：" + all_count;
+                }
+                else {
+                    let count = online.parentNode.getElementsByTagName("a")[1];
+                    count.text = "最新投稿：" + all_count;
+                }
+                window.setTimeout(dealwith.setOnline,60000);
+            } catch (e) {log.error(e);}
         },
         "setBangumi" : (data) => {
             // 添加番剧分集数据
-            if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) {
-                window.aid = data.epInfo.aid;
-                let wait = window.setInterval(() => {
-                    if (document.getElementsByClassName("info-sec-av")[0]) {
-                        dealwith.setEpisodeData("first");
-                        window.clearInterval(wait);
-                    }
-                },1000);
-                window.setTimeout(() => {window.clearInterval(wait);},10000);
-                document.addEventListener("DOMNodeInserted",(msg) => {
-                    if (msg.relatedNode.className == "info-sec-av") {
-                        window.aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
-                        dealwith.setEpisodeData();
-                    }
-                });
-            }
+            try {
+                if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) {
+                    window.aid = data.epInfo.aid;
+                    let wait = window.setInterval(() => {
+                        if (document.getElementsByClassName("info-sec-av")[0]) {
+                            dealwith.setEpisodeData("first");
+                            window.clearInterval(wait);
+                        }
+                    },1000);
+                    window.setTimeout(() => {window.clearInterval(wait);},10000);
+                    document.addEventListener("DOMNodeInserted",(msg) => {
+                        if (msg.relatedNode.className == "info-sec-av") {
+                            window.aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
+                            dealwith.setEpisodeData();
+                        }
+                    });
+                }
+            } catch (e) {log.error(e);}
         },
         "setEpisodeData" : (data) => {
             // 番剧分集数据
@@ -662,86 +680,96 @@
                 return;
             }
             if (!data) {xhr.true(url.stat(window.aid),dealwith.setEpisodeData);return;}
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
-            let view = data.view;
-            let danmaku = data.danmaku;
-            if (view>=10000) view = (view / 10000).toFixed(1) + "万";
-            if (danmaku>=10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
-            views.innerText = view;
-            danmakus.innerText = danmaku;
-            log.log("播放：" + view + " 弹幕：" + danmaku);
+            try {
+                data = JSON.parse(data).data;
+                let view = data.view;
+                let danmaku = data.danmaku;
+                if (view>=10000) view = (view / 10000).toFixed(1) + "万";
+                if (danmaku>=10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
+                views.innerText = view;
+                danmakus.innerText = danmaku;
+                log.log("播放：" + view + " 弹幕：" + danmaku);
+            } catch (e) {log.error(e);}
         },
         "setReplyFloor" : (src) => {
             // 添加评论的楼层信息
-            let oid,sort,pn;
-            src = src.split('?')[1].split('&');
-            for (let i=0;i<src.length;i++) {
-                let key = src[i].split('=');
-                if (key[0] == "oid") oid = key[1];
-                if (key[0] == "sort") sort = key[1]; // 0:默认排序；1：按回复数；2：按赞同数；
-                if (key[0] == "pn") pn = key[1];
-                if (key[0] == "type") window.type = key[1];
-            }
-            /* 0:热门评论；1：评论；2：最新评论；*/
-            if (sort==0) window.mode = 1;
-            if (sort==1) return;
-            if (sort==2) window.mode = 0;
-            if (pn==1) xhr.true(url.replymain(oid,window.type,window.mode),dealwith.callbackReplyFloor);
-            else {
-                if (sort==2) return;
-                pn = pn - 1;
-                xhr.true(url.reply(window.type,sort,oid,pn),dealwith.callbackReplyPrev);
-            }
+            try {
+                let oid,sort,pn;
+                src = src.split('?')[1].split('&');
+                for (let i=0;i<src.length;i++) {
+                    let key = src[i].split('=');
+                    if (key[0] == "oid") oid = key[1];
+                    if (key[0] == "sort") sort = key[1]; // 0:默认排序；1：按回复数；2：按赞同数；
+                    if (key[0] == "pn") pn = key[1];
+                    if (key[0] == "type") window.type = key[1];
+                }
+                /* 0:热门评论；1：评论；2：最新评论；*/
+                if (sort==0) window.mode = 1;
+                if (sort==1) return;
+                if (sort==2) window.mode = 0;
+                if (pn==1) xhr.true(url.replymain(oid,window.type,window.mode),dealwith.callbackReplyFloor);
+                else {
+                    if (sort==2) return;
+                    pn = pn - 1;
+                    xhr.true(url.reply(window.type,sort,oid,pn),dealwith.callbackReplyPrev);
+                }
+            } catch (e) {log.error(e);}
         },
         "callbackReplyPrev" : (data) => {
             // 上一页评论数据
-            try {data = JSON.parse(data).data;} catch(e) {log.error(e);log.debug(data);return;}
-            let i = data.replies.length - 1;
-            let oid = data.replies[0].oid;
-            let root = data.replies[i].rpid;
-            xhr.true(url.replycursor(oid,root,window.type),dealwith.callbackReplyCursor);
+            try {
+                data = JSON.parse(data).data;
+                let i = data.replies.length - 1;
+                let oid = data.replies[0].oid;
+                let root = data.replies[i].rpid;
+                xhr.true(url.replycursor(oid,root,window.type),dealwith.callbackReplyCursor);
+            } catch (e) {log.error(e);}
         },
         "callbackReplyCursor" : (data) => {
             // 上一条评论数据
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
-            let oid = data.root.oid;
-            let next = data.root.floor;
-            xhr.true(url.replynext(oid,next,window.type,window.mode),dealwith.callbackReplyFloor);
+            try {
+                data = JSON.parse(data).data;
+                let oid = data.root.oid;
+                let next = data.root.floor;
+                xhr.true(url.replynext(oid,next,window.type,window.mode),dealwith.callbackReplyFloor);
+            } catch (e) {log.error(e);}
         },
         "callbackReplyFloor" : (data) => {
             // 当前评论数据
-            try {data = JSON.parse(data).data;} catch (e) {log.error(e);log.debug(data);return;}
-            let floor = {};
-            let top = data.top;
-            let hots = data.hots;
-            let replies = data.replies;
-            let list_item = document.getElementsByClassName("list-item");
-            let main_floor = document.getElementsByClassName("main-floor");
-            if (hots && hots[0]) for (let i=0;i<hots.length;i++) floor[hots[i].rpid] = hots[i].floor;
-            if (replies && replies[0]) for (let i=0;i<replies.length;i++) floor[replies[i].rpid] = replies[i].floor;
-            if (top && top.admin) floor[top.admin.rpid] = top.admin.floor;
-            if (top && top.upper) floor[top.upper.rpid] = top.upper.floor;
-            if (top && top.vote) floor[top.vote.rpid] = top.vote.floor;
-            if (main_floor[0]) {
-                for (let i=0;i<main_floor.length;i++) {
-                    let rpid = main_floor[i].getAttribute("id").split('_')[2];
-                    // 老版评论直接写入floor
-                    if (rpid in floor) main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
-                }
-            }
-            if (list_item[0]) {
-                for (let i=0;i<list_item.length;i++) {
-                    let rpid = list_item[i].getAttribute("data-id");
-                    if (rpid in floor) {
-                        let node = list_item[i].getElementsByClassName("info")[0];
-                        // 新版评论需另外创建floor
-                        let span = document.createElement("span");
-                        span.setAttribute("class","floor");
-                        span.innerText = "#" + floor[rpid];
-                        node.insertBefore(span,node.firstChild);
+            try {
+                data = JSON.parse(data).data;
+                let floor = {};
+                let top = data.top;
+                let hots = data.hots;
+                let replies = data.replies;
+                let list_item = document.getElementsByClassName("list-item");
+                let main_floor = document.getElementsByClassName("main-floor");
+                if (hots && hots[0]) for (let i=0;i<hots.length;i++) floor[hots[i].rpid] = hots[i].floor;
+                if (replies && replies[0]) for (let i=0;i<replies.length;i++) floor[replies[i].rpid] = replies[i].floor;
+                if (top && top.admin) floor[top.admin.rpid] = top.admin.floor;
+                if (top && top.upper) floor[top.upper.rpid] = top.upper.floor;
+                if (top && top.vote) floor[top.vote.rpid] = top.vote.floor;
+                if (main_floor[0]) {
+                    for (let i=0;i<main_floor.length;i++) {
+                        let rpid = main_floor[i].getAttribute("id").split('_')[2];
+                        // 老版评论直接写入floor
+                        if (rpid in floor) main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
                     }
                 }
-            }
+                if (list_item[0]) {
+                    for (let i=0;i<list_item.length;i++) {
+                        let rpid = list_item[i].getAttribute("data-id");
+                        if (rpid in floor) {
+                            let node = list_item[i].getElementsByClassName("info")[0];
+                            // 新版评论需另外创建floor
+                            let span = document.createElement("span");
+                            span.setAttribute("class","floor");
+                            span.innerText = "#" + floor[rpid];
+                            node.insertBefore(span,node.firstChild);
+                        }
+                    }
+                }
+            } catch (e) {log.error(e);}
         },
         "setPlayList" : () =>{
             // 处理播单页失效版头，修改播放器布局
@@ -787,40 +815,46 @@
         },
         "callbackLike" : (data,ele) => {
             // 点赞数据
-            try {data = JSON.parse(data).data.stat.like;} catch (e) {log.error(e);return;}
-            document.getElementsByClassName("like")[0].setAttribute("title","点赞人数" + data);
-            if (data>10000) data = (data/10000).toFixed(1) + "万";
-            let text = document.createTextNode(" 点赞 " + data);
-            ele.replaceWith(text);
-            xhr.true(url.haslike(window.aid),dealwith.callbackHasLike,text);
+            try {
+                data = JSON.parse(data).data.stat.like;
+                document.getElementsByClassName("like")[0].setAttribute("title","点赞人数" + data);
+                if (data>10000) data = (data/10000).toFixed(1) + "万";
+                let text = document.createTextNode(" 点赞 " + data);
+                ele.replaceWith(text);
+                xhr.true(url.haslike(window.aid),dealwith.callbackHasLike,text);
+            } catch (e) {log.error(e);}
         },
         "callbackHasLike" : (data,ele) => {
             // 点赞情况
-            if (JSON.parse(data).data >= 0) {
-                let move = document.getElementsByClassName("l-icon-move");
-                let moved = document.getElementsByClassName("l-icon-moved");
-                data = JSON.parse(data).data;
-                if (data) {
-                    move[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                    moved[0].setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;");
-                }
-                else {
-                    move[0].onclick = () => {
-                        let msg = "aid=" + window.aid + "&like=1&csrf=" + dealwith.getCookies().bili_jct;
-                        xhr.post(url.enlike(),"application/x-www-form-urlencoded",msg,dealwith.callbackEnLike,ele);
+            try {
+                if (JSON.parse(data).data >= 0) {
+                    let move = document.getElementsByClassName("l-icon-move");
+                    let moved = document.getElementsByClassName("l-icon-moved");
+                    data = JSON.parse(data).data;
+                    if (data) {
+                        move[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                        moved[0].setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;");
+                    }
+                    else {
+                        move[0].onclick = () => {
+                            let msg = "aid=" + window.aid + "&like=1&csrf=" + dealwith.getCookies().bili_jct;
+                            xhr.post(url.enlike(),"application/x-www-form-urlencoded",msg,dealwith.callbackEnLike,ele);
+                        }
                     }
                 }
-            }
-            else document.getElementsByClassName("l-icon-move")[0].onclick = () => document.getElementsByClassName("c-icon-move")[0].click();
+                else document.getElementsByClassName("l-icon-move")[0].onclick = () => document.getElementsByClassName("c-icon-move")[0].click();
+            } catch (e) {log.error(e);}
         },
         "callbackEnLike" : (data,ele) => {
             // 点赞成功
-            try {data = JSON.parse(data).ttl;} catch (e) {log.error(e);return;}
-            document.getElementsByClassName("l-icon-move")[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;");
-            if (ele.nodeValue.match("万")) return;
-            let number = 1 * ele.nodeValue.match(/[0-9]+/) + 1;
-            ele.replaceWith(document.createTextNode(" 点赞 " + number));
+            try {
+                data = JSON.parse(data).ttl;
+                document.getElementsByClassName("l-icon-move")[0].setAttribute("style","width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                document.getElementsByClassName("l-icon-moved")[0].setAttribute("style","width: 22px;height: 22px;background-position: -725px -2068px;");
+                if (ele.nodeValue.match("万")) return;
+                let number = 1 * ele.nodeValue.match(/[0-9]+/) + 1;
+                ele.replaceWith(document.createTextNode(" 点赞 " + number));
+            } catch (e) {log.error(e);}
         },
         "avdesc" : () => {
             // 视频简介中BV转超链接
@@ -973,13 +1007,15 @@
                 if (msg.target.id == "bili-header-m") try {document.getElementById("internationalHeader").remove();}catch(e){}; // 移除新版版头
                 if (config.reset.replyfloor) {
                     if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) oidsrc = msg.target.src;
-                    if (msg.target.className && msg.target.className == "main-floor") { // 旧版评论
-                        window.clearTimeout(oidtimer);
-                        oidtimer = window.setTimeout(() => {dealwith.setReplyFloor(oidsrc);},1000);
-                    }
-                    if (msg.target.className && msg.target.className == "list-item reply-wrap ") { // 新版评论
-                        window.clearTimeout(oidtimer);
-                        oidtimer = window.setTimeout(() => {dealwith.setReplyFloor(oidsrc);},1000);
+                    if (oidsrc) {
+                        if (msg.target.className && msg.target.className == "main-floor") { // 旧版评论
+                            window.clearTimeout(oidtimer);
+                            oidtimer = window.setTimeout(() => {dealwith.setReplyFloor(oidsrc);},1000);
+                        }
+                        if (msg.target.className && msg.target.className == "list-item reply-wrap ") { // 新版评论
+                            window.clearTimeout(oidtimer);
+                            oidtimer = window.setTimeout(() => {dealwith.setReplyFloor(oidsrc);},1000);
+                        }
                     }
                 }
                 dealwith.deleteElement(); // 移除残留
@@ -1010,85 +1046,99 @@
     /*** 重写相关 ***/
     const rewritePage = {
         "av" : () => {
-            if (config.reset.bvid2av && INITIAL_PATH[4].toLowerCase().startsWith('bv')) { // BV转av
-                history.replaceState(null,null,"https://www.bilibili.com/video/av" + dealwith.chansId(INITIAL_PATH[4]) + location.search + location.hash);}
-            if (!config.rewrite.av) return;
-            INITIAL_DOCUMENT = xhr.false(location.href);
-            if (INITIAL_DOCUMENT.match("__INITIAL_STATE__=")) {
-                if (INITIAL_DOCUMENT.match('"code":404')) return;
-                let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
-                try {
-                    unsafeWindow.__playinfo__ = JSON.parse(INITIAL_DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace("playinfo__=","").replace("</script>",""));
-                } catch(e) {log.log(e);}
-                let ini = JSON.parse(data);
-                if (ini.videoData.stein_guide_cid) return; // 忽略互动视频
-                window.aid = ini.aid;
-                let html = page.video(data);
-                dealwith.rewritePage(html);
-                if (config.reset.like) dealwith.setLike();
-            }
+            try {
+                if (config.reset.bvid2av && INITIAL_PATH[4].toLowerCase().startsWith('bv')) { // BV转av
+                    history.replaceState(null,null,"https://www.bilibili.com/video/av" + dealwith.chansId(INITIAL_PATH[4]) + location.search + location.hash);}
+                if (!config.rewrite.av) return;
+                INITIAL_DOCUMENT = xhr.false(location.href);
+                if (INITIAL_DOCUMENT.match("__INITIAL_STATE__=")) {
+                    if (INITIAL_DOCUMENT.match('"code":404')) return;
+                    let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
+                    try {
+                        unsafeWindow.__playinfo__ = JSON.parse(INITIAL_DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace("playinfo__=","").replace("</script>",""));
+                    } catch(e) {log.log(e);}
+                    let ini = JSON.parse(data);
+                    if (ini.videoData.stein_guide_cid) return; // 忽略互动视频
+                    window.aid = ini.aid;
+                    let html = page.video(data);
+                    dealwith.rewritePage(html);
+                    if (config.reset.like) dealwith.setLike();
+                }
+            } catch (e) {log.error(e);}
         },
         "watchlater" : () => {
-            if (!config.rewrite.watchlater) return;
-            if (INITIAL_PATH[5] && INITIAL_PATH[5].toLowerCase().startsWith('bv')){
-                INITIAL_PATH[5] = "av" + dealwith.chansId(INITIAL_PATH[5]);
-                history.replaceState(null,null,INITIAL_PATH.join("/"));
-            }
-            let html = page.watchlater();
-            dealwith.rewritePage(html);
+            try {
+                if (!config.rewrite.watchlater) return;
+                if (INITIAL_PATH[5] && INITIAL_PATH[5].toLowerCase().startsWith('bv')){
+                    INITIAL_PATH[5] = "av" + dealwith.chansId(INITIAL_PATH[5]);
+                    history.replaceState(null,null,INITIAL_PATH.join("/"));
+                }
+                let html = page.watchlater();
+                dealwith.rewritePage(html);
+            } catch (e) {log.error(e);}
         },
         "bangumi" : () => {
-            if (!config.rewrite.bangumi && !config.rewrite.special) return;
-            INITIAL_DOCUMENT = xhr.false(location.href);
-            if (INITIAL_DOCUMENT.match('__INITIAL_STATE__=')) {
-                if (!config.rewrite.bangumi) return;
-                if (INITIAL_DOCUMENT.match('"specialCover":""')) {
-                    let data = {};
-                    let id = location.href.match(/[0-9]+/);
-                    if (INITIAL_PATH[5].startsWith('ss')) {let ini = xhr.false(url.ssid(id[0]));data = InitialState.bangumi(ini,null);}
-                    if (INITIAL_PATH[5].startsWith('ep')) {let ini = xhr.false(url.epid(id[0]));data = InitialState.bangumi(ini,id[0]);}
-                    let html = page.bangumi(JSON.stringify(data));
-                    dealwith.rewritePage(html);
-                    if (config.reset.episodedata) dealwith.setBangumi(data);
+            try {
+                if (!config.rewrite.bangumi && !config.rewrite.special) return;
+                INITIAL_DOCUMENT = xhr.false(location.href);
+                if (INITIAL_DOCUMENT.match('__INITIAL_STATE__=')) {
+                    if (!config.rewrite.bangumi) return;
+                    if (INITIAL_DOCUMENT.match('"specialCover":""')) {
+                        let data = {};
+                        let id = location.href.match(/[0-9]+/);
+                        if (INITIAL_PATH[5].startsWith('ss')) {let ini = xhr.false(url.ssid(id[0]));data = InitialState.bangumi(ini,null);}
+                        if (INITIAL_PATH[5].startsWith('ep')) {let ini = xhr.false(url.epid(id[0]));data = InitialState.bangumi(ini,id[0]);}
+                        let html = page.bangumi(JSON.stringify(data));
+                        dealwith.rewritePage(html);
+                        if (config.reset.episodedata) dealwith.setBangumi(data);
+                    }
+                    else rewritePage.special(); // 分离特殊bangumi
                 }
-                else rewritePage.special(); // 分离特殊bangumi
-            }
+            } catch (e) {log.error(e);}
         },
         "special" : () => {
-            if (!config.rewrite.special) return;
-            let data = "";
-            let id = location.href.match(/[0-9]+/);
-            if (INITIAL_PATH[5].startsWith('ss')) {let ini = xhr.false(url.ssid(id[0]));data = InitialState.special(ini,null);}
-            if (INITIAL_PATH[5].startsWith('ep')) {let ini = xhr.false(url.epid(id[0]));data = InitialState.special(ini,id[0]);}
-            let html = page.special(JSON.stringify(data));
-            dealwith.rewritePage(html);
+            try {
+                if (!config.rewrite.special) return;
+                let data = "";
+                let id = location.href.match(/[0-9]+/);
+                if (INITIAL_PATH[5].startsWith('ss')) {let ini = xhr.false(url.ssid(id[0]));data = InitialState.special(ini,null);}
+                if (INITIAL_PATH[5].startsWith('ep')) {let ini = xhr.false(url.epid(id[0]));data = InitialState.special(ini,id[0]);}
+                let html = page.special(JSON.stringify(data));
+                dealwith.rewritePage(html);
+            } catch (e) {log.error(e);}
         },
         "blackboard" : () => {
-            if (!config.rewrite.blackboard) return;
-            let link = location.href;
-            let aid = link.match(/aid=[0-9]*/);
-            let cid = link.match(/cid=[0-9]*/);
-            let type = link.match(/season_type=[0-9]*/);
-            if (aid && aid[0]) aid = 1 * aid[0].replace("aid=","");else try {aid = 1 * dealwith.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace("bvid=",""));}catch (e) {log.error(e);return;}
-            if (cid && cid[0]) cid = 1 * cid[0].replace("cid=","");
-            if (type && type[0]) type = type[0].replace("season_type=",""); else type = NaN;
-            if (!aid) aid = 1 * dealwith.chansId(link.match(/aid=[A-Za-z0-9]*/)[0].replace('aid=',"")); // 旧版不支持bvid，尝试转化为aid
-            if (!cid) try {cid = JSON.parse(xhr.false(url.pagelist(aid))).data[0].cid;} catch(e) {log.error(e);return;}
-            location.replace(iframeplayer.blackboard(aid,cid,type));
-            log.log("嵌入式播放器：aid=" + aid + " cid=" + cid);
+            try {
+                if (!config.rewrite.blackboard) return;
+                let link = location.href;
+                let aid = link.match(/aid=[0-9]*/);
+                let cid = link.match(/cid=[0-9]*/);
+                let type = link.match(/season_type=[0-9]*/);
+                if (aid && aid[0]) aid = 1 * aid[0].replace("aid=","");else try {aid = 1 * dealwith.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace("bvid=",""));}catch (e) {log.error(e);return;}
+                if (cid && cid[0]) cid = 1 * cid[0].replace("cid=","");
+                if (type && type[0]) type = type[0].replace("season_type=",""); else type = NaN;
+                if (!aid) aid = 1 * dealwith.chansId(link.match(/aid=[A-Za-z0-9]*/)[0].replace('aid=',"")); // 旧版不支持bvid，尝试转化为aid
+                if (!cid) try {cid = JSON.parse(xhr.false(url.pagelist(aid))).data[0].cid;} catch(e) {log.error(e);return;}
+                location.replace(iframeplayer.blackboard(aid,cid,type));
+                log.log("嵌入式播放器：aid=" + aid + " cid=" + cid);
+            } catch (e) {log.error(e);}
         },
         "home" : () => {
-            if (config.rewrite.home) {
-                INITIAL_DOCUMENT = xhr.false(location.href);
-                let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
-                let html = page.home(JSON.stringify(InitialState.home(data)));
-                dealwith.rewritePage(html);
-            }
-            if (config.reset.online) dealwith.setOnline();
+            try {
+                if (config.rewrite.home) {
+                    INITIAL_DOCUMENT = xhr.false(location.href);
+                    let data = INITIAL_DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
+                    let html = page.home(JSON.stringify(InitialState.home(data)));
+                    dealwith.rewritePage(html);
+                }
+                if (config.reset.online) dealwith.setOnline();
+            } catch (e) {log.error(e);}
         },
         "playlist" : () => {
-            if (config.rewrite.playlist) {let html = page.playlist();dealwith.rewritePage(html);}
-            dealwith.setPlayList();
+            try {
+                if (config.rewrite.playlist) {let html = page.playlist();dealwith.rewritePage(html);}
+                dealwith.setPlayList();
+            } catch (e) {log.error(e);}
         }
     }
     /*** 初始化设置 ***/
