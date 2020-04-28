@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.9.1
+// @version      2.9.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -127,7 +127,7 @@
             "special" : 1,
             "blackboard" : 1,
             "home" : 1,
-            "playlist" : 0,
+            "playlist" : 1,
         },
         "reset" : {
             "grobalboard" : 1,
@@ -145,7 +145,7 @@
             "like" : 0
         }
     }
-    /*** 配置__INITIAL_STATE__ ***/
+    /*** __INITIAL_STATE__ ***/
     const InitialState = {
         "bangumi" : (xhr,epId) => {
             try {
@@ -273,7 +273,7 @@
             try {
                 let dat = {};
                 ini = JSON.parse(ini);
-                dat.recommendData = [];// ini.recommendList;
+                dat.recommendData = [];
                 for (let i=0;i<ini.recommendList.length;i++) {
                     dat.recommendData[i] = {};
                     dat.recommendData[i].aid = ini.recommendList[i].aid;
@@ -771,22 +771,6 @@
                 }
             } catch (e) {log.error(e);}
         },
-        "setPlayList" : () =>{
-            // 处理播单页失效版头，修改播放器布局
-            window.onload = () => {
-                let div = document.createElement("div");
-                div.setAttribute("class","z-top-container has-menu");
-                document.body.insertBefore(div,document.body.firstChild);
-                let script = document.createElement("script");
-                script.setAttribute("type","text/javascript");
-                script.setAttribute("src","//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
-                document.body.appendChild(script);
-                let style = document.createElement("style");
-                style.setAttribute("type","text/css");
-                document.head.appendChild(style);
-                style.appendChild(document.createTextNode(cssstyle.bofqi));
-            }
-        },
         "setLike" : () => {
             // 添加av(BV)页点赞功能
             let coin = document.getElementsByClassName("c-icon-move");
@@ -1136,8 +1120,9 @@
         },
         "playlist" : () => {
             try {
-                if (config.rewrite.playlist) {let html = page.playlist();dealwith.rewritePage(html);}
-                dealwith.setPlayList();
+                if (!config.rewrite.playlist) return;
+                let pl = INITIAL_PATH[5].match(/[0-9]+/)[0];
+                location.replace(iframeplayer.playlist(null,null,pl));
             } catch (e) {log.error(e);}
         }
     }
@@ -1148,7 +1133,7 @@
         for (let key in data.rewrite) if (key in config.rewrite) config.rewrite[key] = data.rewrite[key];
         for (let key in data.reset) if (key in config.reset) config.reset[key] = data.reset[key];
     } catch (e) {localStorage.setItem("LSBOC",JSON.stringify(config));}
-    try {
+    try { // 备份旧版播放器设置
         let bilibili_player_settings = JSON.parse(localStorage.getItem("bilibili_player_settings"));
         if (bilibili_player_settings) {
             if (bilibili_player_settings.video_status.autopart !== "") localStorage.setItem("bilibili_player_settings_copy",JSON.stringify(bilibili_player_settings));
@@ -1161,7 +1146,7 @@
         if (INITIAL_PATH[3] == 'watchlater') rewritePage.watchlater();
         if (INITIAL_PATH[3] == 'bangumi' && INITIAL_PATH[4] == 'play') rewritePage.bangumi();
         if (INITIAL_PATH[3] == 'blackboard' && INITIAL_PATH[4] && INITIAL_PATH[4].startsWith('newplayer')) rewritePage.blackboard();
-        if (INITIAL_PATH[3] == 'playlist' && INITIAL_PATH[4] == 'video' && INITIAL_PATH[5].startsWith('pl')) rewritePage.playlist();
+        if (INITIAL_PATH[3] == 'playlist' && INITIAL_PATH[5].startsWith('pl')) rewritePage.playlist();
         if (INITIAL_PATH[2] == 'space.bilibili.com') global.space();
         if (INITIAL_PATH[2] == 'www.bilibili.com' && (INITIAL_PATH[3].startsWith('\?') || INITIAL_PATH[3].startsWith('\#') || INITIAL_PATH[3].startsWith('index.'))) rewritePage.home();
     } else {
