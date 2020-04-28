@@ -8,9 +8,9 @@
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
-   + 2020年04月04日：B站取消旧版主页入口
+   + 2020年04月04日：B站取消旧版主页
    + 2020年04月23日：B站开启4K灰度测试
-   + 仅存的旧版页面：[播单页](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
+   + 2020年04月28日：B站404所有播单相关页面
 
 ---
 ### 脚本实现
@@ -32,6 +32,7 @@
    + 恢复B站首页在线数据
    + 修复评论区的楼层信息
    + 修复收藏和频道里的失效视频信息
+   + 重定向播单页到播放器
 - 设置
    + 设置入口在页面右下角2~3厘米高处，鼠标过才会自动浮现
    + 设置入口有意设计得并不明显以尽量不污染原生版面
@@ -48,19 +49,20 @@
 4. 播放页面的充电入口失效，请移步UP主的个人空间。
 5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
-7. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-8. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
+7. 播单页由于被404无法重写，暂时只能直接重定向到播放器。
+8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+9. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
 ---
-### 兼容测试
+### 兼容数据
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 81.0.4044.122 (正式版本) （64 位） (cohort: 81_Win_122)  
+> Google Chrome 81.0.4044.129 (正式版本) （64 位） (cohort: 81\_Win\_129)  
 > Tampermonkey BETA 4.10.6112
 >
  
-与其他同域脚本兼容数据
+其他同域脚本兼容数据
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，缺失设置界面，调整设置需去新版页面
@@ -75,7 +77,7 @@
 - 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)开放的Bilibili数据查询接口。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
-- 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与其他脚本的冲突问题也是受其启发，非常感谢。
+- 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
 - BV转av参考了[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的Python代码，非常感谢。
 
 ---
@@ -83,6 +85,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-04-28
+   + 撤销所有播单页失效修改，将播单直接重定向播放器(可能需要在设置里开启)
 - 2020-04-26
    + 修复评论链接获取错误
 - 2020-04-25
@@ -124,7 +128,7 @@
    + 修复bvid导致的嵌入式播放器替换失败
 - 2020-03-26
    + 添加初始化设置选项
-   + 修复点赞数少打了个零的bug
+   + 修复点赞数少打了个零的问题
    + 在av(BV)页添加点赞功能，默认不启用，可通过设置界面启用
    + 修复部分设置项无效的错误
    + 修复新版主页中设置界面异常
@@ -135,14 +139,14 @@
 - 2020-03-24
    + 修复因BV改版而失效的功能
    + 默认启用BV强制重定向(非二次请求)到原av页功能
-   + 修复BV转av时未带上参数的bug
+   + 修复BV转av时未带上参数的问题
 - 2020-03-23
    + 紧急适配新版BV号
 - 2020-03-19
    + 修复存在类似`index.html`后缀时的主页判定
    + 替换“标签修改记录”页失效版头
 - 2020-03-17
-   + 修复已付费时付费信息未配置的bug
+   + 修复已付费时付费信息未配置的问题
    + 将搜索页搜索框字号改回旧版大小
 - 2020-03-10
    + 修改页面上下文获取方式
@@ -156,7 +160,7 @@
    + 修复带参数情况下B站主页判定失误
 - 2020-03-06
    + 不再对子页面进行多余处理以降低性能需求
-   + 修复了跨域请求未带协议时可能请求错误的bug
+   + 修复了跨域请求未带协议时可能请求错误的问题
    + 初步引入错误收集功能以缓解因报错而导致脚本完全瘫痪的情况
 - 2020-03-05
    + 使用第三方接口(BiliPlus)修复了失效视频信息
@@ -172,7 +176,7 @@
 - 2020-03-01
    + 重写嵌入式播放器替换逻辑，解决了子页面的跨域问题并将`match`改回了Bilibili主站
 - 2020-02-22
-   + 修复版头替换bug
+   + 修复版头替换问题
    + 更改脚本为全网生效以处理非主站嵌入式播放器跨域问题
 - 2020-02-21
    + 规范脚本架构
@@ -197,7 +201,7 @@
    + 主动写入标题
 - 2020-01-18
    + 主动构造了番剧信息，解决ss番剧页”开播提醒“问题
-   + 添加了av页的__INITIAL_STATE__，防止注入过快导致缺少相关数据使播放器启动失败
+   + 添加了av页的\_\_INITIAL_STATE\_\_，防止注入过快导致缺少相关数据使播放器启动失败
 - 2020-01-17
    + 修复了av页分离错误
    + 重写了内嵌播放页替换过程
@@ -228,5 +232,3 @@
    + 重写脚本结构并整合了稍后再看页面
 - 2019-12-27
    + 发布脚本
-   + 改进修复播放器布局的方法
-   + 修复整个页面布局
