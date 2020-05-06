@@ -352,7 +352,6 @@
             if (config.reset.playershadow) csss = csss + cssstyle.playshadow;
             if (config.reset.searchwrap) csss = csss + cssstyle.search;
             if (config.reset.like) csss = csss + cssstyle.like;
-            //if (Date.parse(new Date()) > 1586016000000) csss = csss + cssstyle.qingming;
             style.setAttribute("type","text/css");
             document.head.appendChild(style);
             style.appendChild(document.createTextNode(csss));
@@ -372,14 +371,11 @@
         },
         "deleteElement" : () => {
             // 去除失效项目
-            let head = document.getElementsByClassName("bili-header-m");
-            let new_entry = document.getElementsByClassName("new-entry")[0];
-            let app = document.getElementById("fixed_app_download");
-            let ver = document.getElementsByClassName("ver")[0];
-            if (head[1]) head[1].remove();
-            if (new_entry) new_entry.setAttribute("style","visibility: hidden;");
-            if (ver) ver.remove();
-            if (app) app.remove();
+            if (document.getElementsByClassName("bili-header-m")[1]) document.getElementsByClassName("bili-header-m")[1].remove();
+            if (document.getElementsByClassName("contact-help")[0]) document.getElementsByClassName("contact-help")[0].remove();
+            if (document.getElementsByClassName("new-entry")[0]) document.getElementsByClassName("new-entry")[0].remove();
+            if (document.getElementsByClassName("ver")[0]) document.getElementsByClassName("ver")[0].remove();
+            if (document.getElementById("fixed_app_download")) document.getElementById("fixed_app_download").remove();
         },
         "removeBlur" : () => {
             // 调整顶栏全透明
