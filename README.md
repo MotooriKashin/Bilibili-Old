@@ -2,7 +2,7 @@
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_81-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
-- 本脚本默认开启部分任性的附加功能，如不喜欢可通过设置界面关闭
+- 本脚本默认开启所有功能，部分任性功能如不喜欢可自行关闭
 - 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
 - 本脚本的初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
@@ -19,7 +19,7 @@
    + B站主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
-   + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577/p1 "Brambly Boundaries")
+   + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
    + Special，如 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
 - 修改
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
@@ -45,7 +45,7 @@
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
 1. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
 2. 旧版播放器原生不支持全景视频，将无法移动视角。
-3. Bangumi和稍后再看暂时无法提供4K画质选择，av(BV)4K支持上可能存在问题。
+3. Bangumi和稍后再看暂时无法提供4K画质选择，且av(BV)4K支持上可能存在问题。
 4. 播放页面的充电入口失效，请移步UP主的个人空间。
 5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
@@ -85,8 +85,11 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-05-06
+   + 添加稍后再看点赞功能
+   + 改进修改部分载入时机
 - 2020-04-28
-   + 撤销所有播单页失效修改，将播单直接重定向播放器(可能需要在设置里开启)
+   + 撤销所有播单页失效修改，将播单直接重定向播放器
 - 2020-04-26
    + 修复评论链接获取错误
 - 2020-04-25
