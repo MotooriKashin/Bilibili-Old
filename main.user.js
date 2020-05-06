@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.9.2
+// @version      2.9.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
@@ -52,6 +52,7 @@
         "uiface"     : "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 1008;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 10008;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}",
         "bofqi"      : "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
         "qingming"   : "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
+        "like"       : ".video-info-module .number .like b, .video-info-module .number .like i {background: url(//static.hdslb.com/images/base/icons.png);display: inline-block;margin-top: -3px;vertical-align: middle;}",
     }
     /*** 调试封装 ***/
     const log = {
@@ -142,7 +143,7 @@
             "bvid2av" : 1,
             "selectdanmu" : 1,
             "episodedata" : 1,
-            "like" : 0
+            "like" : 1
         }
     }
     /*** __INITIAL_STATE__ ***/
@@ -346,17 +347,15 @@
         },
         "setGlobalStyle" : () => {
             // 添加全局样式
-            let player_shadow = cssstyle.playshadow;
-            let search_wrap = cssstyle.search;
-            let qingming = "";//cssstyle.qingming;
-            let ui = cssstyle.uiface;
+            let csss = cssstyle.uiface;
             let style = document.createElement("style");
-            if (!config.reset.playershadow) player_shadow = "";
-            if (!config.reset.searchwrap) search_wrap = "";
-            //if (Date.parse(new Date()) > 1586016000000) qingming = "";
+            if (config.reset.playershadow) csss = csss + cssstyle.playshadow;
+            if (config.reset.searchwrap) csss = csss + cssstyle.search;
+            if (config.reset.like) csss = csss + cssstyle.like;
+            //if (Date.parse(new Date()) > 1586016000000) csss = csss + cssstyle.qingming;
             style.setAttribute("type","text/css");
             document.head.appendChild(style);
-            style.appendChild(document.createTextNode(player_shadow + search_wrap + ui + qingming));
+            style.appendChild(document.createTextNode(csss));
         },
         "rewritePage" : (html) => {
             // 重写网页框架
@@ -773,7 +772,7 @@
         },
         "setLike" : () => {
             // 添加av(BV)页点赞功能
-            let coin = document.getElementsByClassName("c-icon-move");
+            let coin = document.getElementsByClassName("bilibili-player-video-subtitle");
             let number = document.getElementsByClassName("number");
             let node = document.getElementsByClassName("coin");
             let timer = window.setInterval(() => {
@@ -906,7 +905,7 @@
             }
             else table = table[0];
             table.onmouseover = () => window.clearTimeout(timer);
-            table.onmouseout = () => {timer = window.setTimeout(() => {table.setAttribute("hidden","hidden");localStorage.setItem("LSBOC",JSON.stringify(config));},1000);}
+            table.onmouseout = () => {timer = window.setTimeout(() => {table.setAttribute("hidden","hidden");localStorage.setItem("LSBOC",JSON.stringify(config));},500);}
         },
         "setTable" : (ele,name,check,key) => {
             // 选项数据
@@ -937,7 +936,7 @@
             "special" : ["special","启用旧版特殊播放页"],
             "blackboard" : ["嵌入式播放器","替换嵌入式播放器"],
             "home" : ["主页","启用旧版Bilibili主页"],
-            "playlist" : ["playlist","(无需开启！！！)启用旧版播单页"],
+            "playlist" : ["playlist","播单页重定向"],
             "grobalboard" : ["版头和版底","替换新版版头和版底"],
             "replyfloor" : ["评论楼层","显示评论的楼层信息"],
             "headblur" : ["顶栏透明度","使顶栏全透明"],
@@ -1053,12 +1052,17 @@
         "watchlater" : () => {
             try {
                 if (!config.rewrite.watchlater) return;
-                if (INITIAL_PATH[5] && INITIAL_PATH[5].toLowerCase().startsWith('bv')){
-                    INITIAL_PATH[5] = "av" + dealwith.chansId(INITIAL_PATH[5]);
-                    history.replaceState(null,null,INITIAL_PATH.join("/"));
+                if (INITIAL_PATH[5]) {
+                    window.aid = INITIAL_PATH[5].match(/[0-9]+/)[0]?INITIAL_PATH[5].match(/[0-9]+/)[0]:"";
+                    if (INITIAL_PATH[5].toLowerCase().startsWith('bv')){
+                        window.aid = dealwith.chansId(INITIAL_PATH[5]);
+                        INITIAL_PATH[5] = "av" + window.aid;
+                        history.replaceState(null,null,INITIAL_PATH.join("/"));
+                    }
                 }
                 let html = page.watchlater();
                 dealwith.rewritePage(html);
+                if (config.reset.like) dealwith.setLike();
             } catch (e) {log.error(e);}
         },
         "bangumi" : () => {
@@ -1127,13 +1131,13 @@
         }
     }
     /*** 初始化设置 ***/
-    INITIAL_CONFIG = JSON.parse(JSON.stringify(config)); // 二次转化方为定值
+    INITIAL_CONFIG = JSON.parse(JSON.stringify(config));
     try {
         let data = JSON.parse(localStorage.getItem("LSBOC"));
         for (let key in data.rewrite) if (key in config.rewrite) config.rewrite[key] = data.rewrite[key];
         for (let key in data.reset) if (key in config.reset) config.reset[key] = data.reset[key];
     } catch (e) {localStorage.setItem("LSBOC",JSON.stringify(config));}
-    try { // 备份旧版播放器设置
+    try {
         let bilibili_player_settings = JSON.parse(localStorage.getItem("bilibili_player_settings"));
         if (bilibili_player_settings) {
             if (bilibili_player_settings.video_status.autopart !== "") localStorage.setItem("bilibili_player_settings_copy",JSON.stringify(bilibili_player_settings));
@@ -1152,5 +1156,5 @@
     } else {
         if (INITIAL_PATH[2] == 'www.bilibili.com') rewritePage.home();
     }
-    document.addEventListener("DOMContentLoaded",global.resetSction());
+    global.resetSction();
 })();
