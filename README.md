@@ -1,21 +1,20 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_81-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
-- 本脚本默认开启所有功能，部分任性功能如不喜欢可自行关闭
-- 本脚本会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
+- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面，默认开启所有功能，部分任性功能如不喜欢可自行关闭。
+- 本脚本可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
 - 本脚本的初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
    + 2020年04月04日：B站取消旧版主页
    + 2020年04月23日：B站开启4K灰度测试
-   + 2020年04月28日：B站404所有[播单](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")相关页面
+   + 2020年04月28日：B站404[播单](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")页面
 
 ---
 ### 脚本实现
 **以下所有功能都可以在设置里自定义启用或关闭**
-- 重写
+- 重写(基于旧版网页框架)
    + B站主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生")
@@ -38,7 +37,7 @@
    + 设置入口有意设计得并不明显以尽量不污染原生版面
    + 设置界面会在鼠标移开后消失并保存
    + 设置内容依赖本地缓存且不同主机间不共享
-   + **不会设置可参考->[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif)**
+   + **设置图示可参考[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif)**
 
 ---
 ### 已知问题
@@ -85,6 +84,9 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-05-10
+   + 修复动态更新提醒不消失的问题；
+   + 评论楼层显示现支持按热度排序；
 - 2020-05-08
    + 修改av页框架以延迟评论加载速度
 - 2020-05-06
