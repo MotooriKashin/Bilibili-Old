@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.9.4
-// @description  恢复原生的旧版页面，包括主页和播放页。
+// @version      2.9.5
+// @description  尝试恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -205,7 +205,6 @@
                         if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
                     }
                 }
-                log.log("Bangumi __INITIAL_STATE__ Build SUCCESS!");
                 return dat;
             } catch (e) {log.error(e);}
         },
@@ -266,7 +265,6 @@
                         if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
                     }
                 }
-                log.log("Special __INITIAL_STATE__ Build SUCCESS!");
                 return dat;
             } catch (e) {log.error(e);}
         },
@@ -296,7 +294,6 @@
                 }
                 dat.locsData = ini.locsData;
                 dat.locsData[23] = ini.locsData[3197];
-                log.log("Home __INITIAL_STATE__ Build SUCCESS!");
                 return dat;
             } catch (e) {log.error(e);}
         },
@@ -694,19 +691,21 @@
                 for (let i=0;i<src.length;i++) {
                     let key = src[i].split('=');
                     if (key[0] == "oid") oid = key[1];
-                    if (key[0] == "sort") sort = key[1]; // 0:默认排序；1：按回复数；2：按赞同数；
+                    if (key[0] == "sort") sort = key[1];
                     if (key[0] == "pn") pn = key[1];
                     if (key[0] == "type") window.type = key[1];
                 }
-                /* 0:热门评论；1：评论；2：最新评论；*/
                 if (sort==0) window.mode = 1;
                 if (sort==1) return;
-                if (sort==2) window.mode = 0;
-                if (pn==1) xhr.true(url.replymain(oid,window.type,window.mode),dealwith.callbackReplyFloor);
+                if (sort==2) window.mode = 3;
+                // 热门：sort=2 mode=3 时间：sort=0 mode=2  回复：sort=1 默认(热门+时间) mode=1
+                if (sort==2) xhr.true(url.replynext(oid,pn,window.type,window.mode),dealwith.callbackReplyFloor);
                 else {
-                    if (sort==2) return;
-                    pn = pn - 1;
-                    xhr.true(url.reply(window.type,sort,oid,pn),dealwith.callbackReplyPrev);
+                    if (pn==1) xhr.true(url.replymain(oid,window.type,window.mode),dealwith.callbackReplyFloor);
+                    else{
+                        pn = pn - 1;
+                        xhr.true(url.reply(window.type,sort,oid,pn),dealwith.callbackReplyPrev);
+                    }
                 }
             } catch (e) {log.error(e);}
         },
@@ -1036,7 +1035,7 @@
                     try {
                         unsafeWindow.__playinfo__ = JSON.parse(INITIAL_DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace("playinfo__=","").replace("</script>",""));
                         log.debug(unsafeWindow.__playinfo__);
-                    } catch(e) {log.log(e);}
+                    } catch(e) {log.error(e);}
                     let ini = JSON.parse(data);
                     if (ini.videoData.stein_guide_cid) return; // 忽略互动视频
                     window.aid = ini.aid;
@@ -1136,9 +1135,14 @@
     } catch (e) {localStorage.setItem("LSBOC",JSON.stringify(config));}
     try {
         let bilibili_player_settings = JSON.parse(localStorage.getItem("bilibili_player_settings"));
+        window.uid = dealwith.getCookies().DedeUserID;
         if (bilibili_player_settings) {
             if (bilibili_player_settings.video_status.autopart !== "") localStorage.setItem("bilibili_player_settings_copy",JSON.stringify(bilibili_player_settings));
             else localStorage.setItem("bilibili_player_settings",localStorage.getItem("bilibili_player_settings_copy"));
+        }
+        if (window.uid) {
+            let offset = dealwith.getCookies()["bp_video_offset_"+window.uid];
+            if (offset) document.cookie = "bp_t_offset_" + window.uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; path=/";
         }
     } catch (e) {}
     /*** 页面分离 ***/
