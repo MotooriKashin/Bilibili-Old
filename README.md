@@ -1,9 +1,10 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_81-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 本脚本为自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面，默认开启所有功能，部分任性功能如不喜欢可自行关闭。
-- 本脚本可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
-- 本脚本的初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
+- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
+- 默认开启所有功能，部分任性功能如不喜欢可自行关闭。
+- 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
+- 初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
    + 2019年12月24日：B站再次把稍后再看也改为了新版
    + 2020年03月23日：B站启用BV号替代原本的av号
@@ -33,7 +34,7 @@
    + 修复收藏和频道里的失效视频信息
    + 重定向播单页到播放器
 - 设置
-   + 设置入口在页面右下角2~3厘米高处，鼠标过才会自动浮现
+   + 设置入口在页面右下角2~3厘米高处
    + 设置入口有意设计得并不明显以尽量不污染原生版面
    + 设置界面会在鼠标移开后消失并保存
    + 设置内容依赖本地缓存且不同主机间不共享
@@ -49,6 +50,7 @@
 5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
 7. 播单页由于被404无法重写，暂时只能直接重定向到播放器。
+8. 旧版主页没有资讯分区。
 8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 9. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
@@ -57,7 +59,7 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 81.0.4044.129 (正式版本) （64 位） (cohort: 81\_Win\_129)  
+> Google Chrome 81.0.4044.138 (正式版本) （64 位） (cohort: 81\_Win\_138)  
 > Tampermonkey BETA 4.10.6112
 >
  
@@ -84,9 +86,11 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-05-11
+   + 修复av页资讯视频分区信息
 - 2020-05-10
-   + 修复动态更新提醒不消失的问题；
-   + 评论楼层显示现支持按热度排序；
+   + 修复动态更新提醒不消失的问题
+   + 评论楼层显示现支持按热度排序
 - 2020-05-08
    + 修改av页框架以延迟评论加载速度
 - 2020-05-06
