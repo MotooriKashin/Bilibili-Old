@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.9.5
-// @description  尝试恢复原生的旧版页面，包括主页和播放页。
+// @version      2.9.6
+// @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @homepageURL  https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -847,6 +847,26 @@
                 }
             }
         },
+        "resetSort" : () => {
+            // 修复资讯区信息
+            if (window.tid) {
+                let timer = window.setInterval(()=>{
+                    let tminfo = document.getElementsByClassName("tm-info");
+                    if (tminfo[0]) {
+                        window.clearInterval(timer);
+                        let span = tminfo[0].getElementsByTagName("a");
+                        span[1].href = "https://www.bilibili.com/v/information/";
+                        span[1].innerText = "资讯";
+                        switch (window.tid) {
+                            case 203: span[2].href = "https://www.bilibili.com/v/information/hotspot/";span[2].innerText = "热点";break;
+                            case 204: span[2].href = "https://www.bilibili.com/v/information/global/";span[2].innerText = "环球";break;
+                            case 205: span[2].href = "https://www.bilibili.com/v/information/social/";span[2].innerText = "社会";break;
+                            case 206: span[2].href = "https://www.bilibili.com/v/information/multiple/";span[2].innerText = "综合";break;
+                        }
+                    }
+                },1000);
+            }
+        },
     }
     /* 交互界面 */
     const UIInterface = {
@@ -1036,11 +1056,13 @@
                         unsafeWindow.__playinfo__ = JSON.parse(INITIAL_DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace("playinfo__=","").replace("</script>",""));
                         log.debug(unsafeWindow.__playinfo__);
                     } catch(e) {log.error(e);}
-                    let ini = JSON.parse(data);
-                    if (ini.videoData.stein_guide_cid) return; // 忽略互动视频
-                    window.aid = ini.aid;
-                    let html = page.video(data);
+                    data = JSON.parse(data);
+                    if (data.videoData.stein_guide_cid) return; // 忽略互动视频
+                    if (203<=data.videoData.tid<=206) {window.tid = data.videoData.tid;data.videoData.tid = 17;}
+                    window.aid = data.aid;
+                    let html = page.video(JSON.stringify(data));
                     dealwith.rewritePage(html);
+                    dealwith.resetSort();
                     if (config.reset.like) dealwith.setLike();
                 }
             } catch (e) {log.error(e);}
