@@ -136,7 +136,8 @@
             "bvid2av" : 1,
             "selectdanmu" : 1,
             "episodedata" : 1,
-            "like" : 1
+            "like" : 1,
+            "message" : 0,
         }
     }
     const INITIAL_STATE = {
@@ -470,6 +471,7 @@
             handle.hidden("ver","class");
             handle.hidden("fixed_app_download","id");
             handle.hidden("app-download","class");
+            if (config.reset.message) handle.hidden("bilibili-player-video-message","class");
             if (document.getElementsByClassName("bili-header-m")[1]) document.getElementsByClassName("bili-header-m")[1].remove();arr.push("head");
         },
         "avdesc" : () => {
@@ -994,7 +996,8 @@
             "bvid2av" : ["BV⇒av","BV重定向到av"],
             "selectdanmu" : ["弹幕列表","首选弹幕列表而非推荐视频"],
             "episodedata" : ["番剧分集数据","显示番剧单回的播放数和弹幕数"],
-            "like" : ["点赞","添加旧版播放页添加点赞功能"]
+            "like" : ["点赞","添加旧版播放页添加点赞功能"],
+            "message" : ["通知区","隐藏播放器上方通知区域"]
         }
     }
     const sort = {
