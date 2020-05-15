@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.10.4
+// @version      2.10.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -18,8 +18,8 @@
 (function() {
     'use strict';
 
-    let DOCUMENT,CONFIG,ts,aid,cid,mid,uid,src,tid,mode,type,oidsrc,__INITIAL_STATE__,__playinfo__;
-    let arr = [],obj = {};
+    let DOCUMENT,CONFIG,ml,pl,ts,aid,cid,mid,uid,src,tid,mode,type,count,oidsrc,__INITIAL_STATE__,__playinfo__;
+    let arr = [],avs = [], ids = [],obj = {};
     let TITLE = document.getElementsByTagName("title");
     let LOCATION = document.location.href.split('/');
 
@@ -66,7 +66,9 @@
             "pagelist" : "https://api.bilibili.com/x/player/pagelist", // aid
             "view" : "https://api.bilibili.com/x/web-interface/view", // aid || bvid
             "haslike" : "https://api.bilibili.com/x/web-interface/archive/has/like", // aid
-            "like" : "https://api.bilibili.com/x/web-interface/archive/like"
+            "like" : "https://api.bilibili.com/x/web-interface/archive/like",
+            "ids4Player" : "https://api.bilibili.com/x/v1/medialist/resource/ids4Player", // media_id
+            "cards" : "https://api.bilibili.com/x/article/cards", // ids
         },
         "sort" : {
             "202" : [202,"资讯","https://www.bilibili.com/v/information/"],
@@ -126,7 +128,7 @@
         "reset" : {
             "grobalboard" : 1,
             "replyfloor" : 1,
-            "headblur" : 1,
+            "headblur" : 0,
             "preview" : 1,
             "livelogo" : 1,
             "searchwrap" : 1,
@@ -134,8 +136,8 @@
             "lostvideo" : 1,
             "online" : 1,
             "bvid2av" : 1,
-            "selectdanmu" : 1,
-            "episodedata" : 1,
+            "selectdanmu" : 0,
+            "episodedata" : 0,
             "like" : 1,
             "message" : 0,
         }
@@ -339,7 +341,7 @@
                 }
             },
             "watchlater" : {
-                "start" : () => {
+                "init" : () => {
                     let timer = window.setInterval(()=>{
                         let tminfo = document.getElementsByClassName("tm-info");
                         if (tminfo[0]&&aid) {
@@ -366,7 +368,7 @@
         },
         "setLike" : {
             // 添加点赞功能
-            "start" : () => {
+            "init" : () => {
                 if (!config.reset.like) return;
                 let coin = document.getElementsByClassName("bilibili-player-video-subtitle");
                 let number = document.getElementsByClassName("number");
@@ -526,7 +528,7 @@
         },
         "setReplyFloor" : {
             // 添加评论区楼层
-            "start" : (src) => {
+            "init" : (src) => {
                 if (!config.reset.replyfloor) return;
                 try {
                     let oid,sort,pn;
@@ -605,7 +607,7 @@
         },
         "setBangumi" : {
             // 添加番剧分集数据
-            "start" : (data) => {
+            "init" : (data) => {
                 if (!config.reset.episodedata) return;
                 try {
                     if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) {
@@ -652,7 +654,7 @@
         },
         "setOnline" : {
             // 恢复首页在线数据
-            "start" : () => {
+            "init" : () => {
                 if (!config.reset.online) return;
                 let style = document.createElement("style");
                 style.setAttribute("type","text/css");
@@ -708,7 +710,7 @@
         },
         "setJoinTime" : {
             // 显示账号注册时间
-            "start" : () => {
+            "init" : () => {
                 if (!mid && !config.reset.jointime) return;
                 xhr.GM(handle.obj2search(API.url.membercard,{"mid":mid}),handle.setJoinTime.jointime)
             },
@@ -745,7 +747,7 @@
         "fixVideoLost" : {
             // 修复失效视频信息
             "favlist" : {
-                "start" : (msg) => {
+                "init" : (msg) => {
                     try {
                         let aid = msg.target.getAttribute("data-aid");
                         if (!(1 * aid)) aid = handle.chansId(aid);
@@ -794,7 +796,7 @@
                 }
             },
             "channel" : {
-                "start" : (src) => {
+                "init" : (src) => {
                     if (!config.reset.lostvideo) return;
                     try {
                         let cid,mid,pn;
@@ -901,9 +903,89 @@
                 if (msg.target.className == "small-item disabled") msg.target.className = "small-item";
             }
         },
+        "setPlayList" : () =>{
+            // 处理播单页
+            window.onload = () => {
+                let div = document.createElement("div");
+                div.setAttribute("class","z-top-container has-menu");
+                document.body.insertBefore(div,document.body.firstChild);
+                let script = document.createElement("script");
+                script.setAttribute("type","text/javascript");
+                script.setAttribute("src","//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
+                document.body.appendChild(script);
+                let style = document.createElement("style");
+                style.setAttribute("type","text/css");
+                document.head.appendChild(style);
+                style.appendChild(document.createTextNode(API.style.bofqi));
+            }
+        },
+        "setMediaList" : {
+            // 处理收藏页
+            "init" : () => {
+                if (ml===182603655) return;
+                xhr.true(handle.obj2search(API.url.ids4Player,{"media_id":ml}),handle.setMediaList.ids4Player);
+            },
+            "ids4Player" : (data) => {
+                try {
+                    data = JSON.parse(data).data;
+                    let value = [];
+                    for (let i=0;i<data.medias.length;i++) avs[i] = data.medias[i].id;
+                    for (let i=0;i<20;i++) if (avs[i]) value[i] = "av" + avs[i];
+                    avs.splice(0,20);
+                    xhr.true(handle.obj2search(API.url.cards,{"ids":value.join("%2C")}),handle.setMediaList.cards);
+                } catch(e) {log.error(e)}
+            },
+            "cards" : (data,num) => {
+                try {
+                    let value = [];
+                    data = JSON.parse(data).data;
+                    for (let key in data) {ids.push(data[key])}
+                    if (avs[0]) {
+                        for (let i=0;i<20;i++) if (avs[i]) value[i] = "av" + avs[i];
+                        avs.splice(0,20);
+                        xhr.true(handle.obj2search(API.url.cards,{"ids":value.join("%2C")}),handle.setMediaList.cards);
+                    }
+                    else {handle.setMediaList.make();}
+                } catch(e) {log.error(e)}
+            },
+            "make" : () => {
+                log.log(ids);
+                let toview = {
+                    "attr": 2,
+                    "cover" : "https://i0.hdslb.com/bfs/archive/a45ef4fcde397247032cf4ce0c8f71815f9e28d0.jpg",
+                    "ctime" : 1529021131,
+                    "description" : "bilibili moe 2018 动画角色人气大赏日本动画场应援视频播单 / 每天不定时更新最新的一批",
+                    "faved_count" :0,
+                    "favored" : 0,
+                    "favorite" : false,
+                    "id" : 1826036,
+                    "is_favorite" : false,
+                    "like_count" : 0,
+                    "mid" : 26468955,
+                    "mlid" : 182603655,
+                    "mtime" : 1533874759,
+                    "name" : "bilibili moe 2018 日本动画场应援",
+                    "owner" : {face: "http://i2.hdslb.com/bfs/face/57389d533621407d36981a99fed93834dd8b20e6.jpg",mid: 26468955,name: "萌战基"},
+                    "pid" : 769,
+                    "play_count" : 0,
+                    "recent_oids" : [28705200, 28705483, 28707213],
+                    "recent_res" : [{oid: 28705200, typ: 2}, {oid: 28705483, typ: 2}, {oid: 28707213, typ: 2}],
+                    "reply_count" : 0,
+                    "share_count" : 0,
+                    "stat" : {pid: 769, view: 298591, favorite: 1684, reply: 10, share: 0},
+                    "state" : 0,
+                    "type" : 2
+                };
+                toview.count = ids.length;
+                toview.list = ids;
+                let data = {"code":0,"data":toview,"message":"0","ttl":1};
+                obj = {"aid":ids[0].aid,"cid":ids[0].cid,"playlist":encodeURIComponent(JSON.stringify(data))};
+                setTimeout(()=>{unsafeWindow.BilibiliPlayer(obj)},5000);
+            }
+        },
     }
     const UI = {
-        "start" : () => {
+        "init" : () => {
             // 绘制交互
             let ui_face = document.createElement("div");
             let enter = document.createElement("span");
@@ -983,7 +1065,7 @@
             "watchlater" : ["稍后再看","启用旧版稍后再看"],
             "frame" : ["嵌入式播放器","替换嵌入式播放器"],
             "home" : ["主页","启用旧版Bilibili主页"],
-            "playlist" : ["playlist","播单页重定向"],
+            "playlist" : ["playlist","恢复播单播放页"],
             "grobalboard" : ["版头和版底","替换新版版头和版底"],
             "replyfloor" : ["评论楼层","显示评论的楼层号"],
             "headblur" : ["顶栏透明度","使顶栏全透明"],
@@ -1020,7 +1102,7 @@
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                     handle.write(API.pageframe.video);
                     handle.fixSort.av();
-                    handle.setLike.start();
+                    handle.setLike.init();
                 }
             } catch(e) {log.error(e)}
         },
@@ -1029,8 +1111,8 @@
                 if (!config.rewrite.watchlater || !uid) return;
                 if (LOCATION[5]) {
                     handle.write(API.pageframe.watchlater);
-                    handle.setLike.start();
-                    handle.fixSort.watchlater.start();
+                    handle.setLike.init();
+                    handle.fixSort.watchlater.init();
                     aid = LOCATION[5].match(/[0-9]+/)?LOCATION[5].match(/[0-9]+/)[0]:aid;
                     if (LOCATION[5].toLowerCase().startsWith('bv')){
                         aid = handle.chansId(LOCATION[5]);
@@ -1050,7 +1132,7 @@
                     if (LOCATION[5].startsWith('ep')) __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(handle.obj2search(API.url.season,{"ep_id":id})),id);
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                     if (DOCUMENT.match('"specialCover":""')) handle.write(API.pageframe.bangumi); else handle.write(API.pageframe.cinema);
-                    handle.setBangumi.start(__INITIAL_STATE__);
+                    handle.setBangumi.init(__INITIAL_STATE__);
                 }
             } catch(e){log.error(e)}
         },
@@ -1069,9 +1151,22 @@
         "playlist" : () => {
             try {
                 if (!config.rewrite.playlist) return;
-                let pl = LOCATION[5].match(/[0-9]+/)[0];
-                location.replace(handle.obj2search(API.playerframe.playlist,{"pl":pl}));
-            } catch(e) {log.error(e);}
+                pl = LOCATION[5].match(/[0-9]+/)[0];
+                localStorage.setItem("playlist",pl);
+                location.replace("https://www.bilibili.com/medialist/play/ml182603655");
+            } catch(e) {log.error(e)}
+        },
+        "medialist" : () => {
+            try {
+                ml = LOCATION[5].match(/[0-9]+/)[0];
+                pl = localStorage.getItem("playlist")?localStorage.getItem("playlist"):"";
+                if (pl) {
+                    history.replaceState(null,null,"https://www.bilibili.com/playlist/video/pl" + pl);
+                    handle.write(API.pageframe.playlist);
+                    handle.setPlayList();
+                    localStorage.setItem("playlist","");
+                }
+            } catch(e) {log.error(e)}
         },
         "home" : () => {
             try {
@@ -1081,16 +1176,16 @@
                     unsafeWindow.__INITIAL_STATE__ = INITIAL_STATE.home(__INITIAL_STATE__);
                     handle.write(API.pageframe.home);
                 }
-                handle.setOnline.start();
+                handle.setOnline.init();
             } catch(e) {log.error(e)}
         },
         "space" : () => {
             mid = LOCATION[3]?1*LOCATION[3]:mid;
-            handle.setJoinTime.start();
+            handle.setJoinTime.init();
         },
         "all" : () => {
             let timer;
-            if (window.self == window.top) UI.start();
+            if (window.self == window.top) UI.init();
             if (!LOCATION[2].match("live.bilibili.com")) handle.setGlobalStyle();
             document.addEventListener("DOMNodeInserted",(msg) => {
                 let head = document.getElementById("internationalHeader");
@@ -1100,8 +1195,8 @@
                 if (msg.target.className == "bilibili-player-video-subtitle") handle.selectDanmu();
                 if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) oidsrc = msg.target.src;
                 if (msg.target.src && msg.target.src.match("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src;
-                if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") handle.fixVideoLost.channel.start(src);
-                if (msg.target.className == "small-item disabled") handle.fixVideoLost.favlist.start(msg);
+                if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") handle.fixVideoLost.channel.init(src);
+                if (msg.target.className == "small-item disabled") handle.fixVideoLost.favlist.init(msg);
                 handle.fixvar();
                 handle.avdesc();
                 handle.removeBlur();
@@ -1112,7 +1207,7 @@
                 if (oidsrc) {
                     if (msg.target.className && (msg.target.className == "main-floor" || msg.target.className == "list-item reply-wrap ")){
                         window.clearTimeout(timer);
-                        timer = window.setTimeout(() => {handle.setReplyFloor.start(oidsrc);},1000);
+                        timer = window.setTimeout(() => {handle.setReplyFloor.init(oidsrc);},1000);
                     }
                 }
             });
@@ -1142,6 +1237,7 @@
         if (LOCATION[3] == 'bangumi' && LOCATION[4] == 'play') sort.bangumi();
         if (LOCATION[3] == 'blackboard' && LOCATION[4] && LOCATION[4].startsWith('newplayer')) sort.frame();
         if (LOCATION[3] == 'playlist' && LOCATION[5].startsWith('pl')) sort.playlist();
+        if (LOCATION[3] == 'medialist' && LOCATION[4] == 'play' && LOCATION[5].startsWith('ml')) sort.medialist();
         if (LOCATION[2] == 'space.bilibili.com') sort.space();
         if (LOCATION[2] == 'www.bilibili.com' && (LOCATION[3].startsWith('\?') || LOCATION[3].startsWith('\#') || LOCATION[3].startsWith('index.'))) sort.home();
     } else {if (LOCATION[2] == 'www.bilibili.com') sort.home()}
