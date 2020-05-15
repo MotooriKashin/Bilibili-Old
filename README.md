@@ -10,7 +10,7 @@
    + 2020年03月23日：B站启用BV号替代原本的av号
    + 2020年04月04日：B站取消旧版主页
    + 2020年04月23日：B站开启4K灰度测试
-   + 2020年04月28日：B站404[播单](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")页面
+   + 2020年04月28日：B站404播单页面
 
 ---
 ### 脚本实现
@@ -20,6 +20,7 @@
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生") 或 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
    + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
+   + 播单，如[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
 - 修改
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换大部分新版版头和版底
@@ -48,8 +49,7 @@
 4. 播放页面的充电入口失效，请移步UP主的个人空间。
 5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
-7. 播单页由于被404无法重写，暂时只能直接重定向到播放器。
-8. 旧版主页没有资讯分区而残留有已经被弃置的广告分区。
+7. 旧版主页没有资讯分区而残留有已经被弃置的广告分区。
 8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 9. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
@@ -75,16 +75,18 @@
 - 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)开放的Bilibili数据查询接口。
+- 感谢[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的bv2av(Python)代码。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
-- 感谢[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的bv2av(Python)代码。
 
 ---
 ### 效果预览
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-05-15
+   + 通过绕过404的方式恢复旧版播单页
 - 2020-05-14
    + 修复从稍后再看列表页进入稍后再看播放页面仍为新版的问题
    + 添加隐藏播放器上方通知区选项
