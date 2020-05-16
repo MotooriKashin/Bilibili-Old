@@ -22,7 +22,7 @@
    + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
    + 播单，如[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
    + 收藏，如[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
-- 修改
+- 修改(部分请在设置里启用)
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换大部分新版版头和版底
    + 添加BV跳转到对应的av页
@@ -33,7 +33,6 @@
    + 恢复B站首页在线数据
    + 修复评论区的楼层信息
    + 修复收藏和频道里的失效视频信息
-   + 重定向播单页到播放器
 - 设置
    + 设置入口在页面右下角2~3厘米高处
    + 设置入口有意设计得并不明显以尽量不污染原生版面
