@@ -125,7 +125,7 @@
             "frame" : 1,
             "home" : 1,
             "playlist" : 1,
-            "medialist" : 0,
+            "medialist" : 1,
         },
         "reset" : {
             "grobalboard" : 1,
@@ -140,7 +140,7 @@
             "bvid2av" : 1,
             "selectdanmu" : 0,
             "episodedata" : 0,
-            "like" : 1,
+            "like" : 0,
             "message" : 0,
         }
     }
@@ -294,9 +294,9 @@
             if (!cid) cid = unsafeWindow.cid?unsafeWindow.cid:cid;
             if (oaid) {
                 if (oaid!=unsafeWindow.aid) {
-                    aid = unsafeWindow.aid?unsafeWindow.cid:aid;
-                    history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash);
-                    oaid = aid;
+                    aid = unsafeWindow.aid?unsafeWindow.aid:aid;
+                    oaid = unsafeWindow.aid;
+                    handle.setMediaList.restore.init();
                 }
             }
         },
@@ -990,6 +990,66 @@
                 oaid = ids[0].aid;
                 obj = {"aid":ids[0].aid,"cid":ids[0].cid,"watchlater":encodeURIComponent(JSON.stringify(toview))};
                 unsafeWindow.BilibiliPlayer(obj);
+            },
+            "restore" : {
+                "init" : () =>{
+                    let data;
+                    history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash);
+                    for (let i=0;i<ids.length;i++) if (ids[i].aid==aid) data = ids[i];
+                    handle.setMediaList.restore.view(data);
+                },
+                "view" : (data) => {
+                    let video_info = document.getElementById("viewbox_report").childNodes;
+                    let up_info = document.getElementById("v_upinfo").childNodes;
+                    let tag = document.getElementById("v_tag").childNodes;
+                    let desc = document.getElementById("v_desc").childNodes;
+                    let arc_toolbar_report = document.getElementById("arc_toolbar_report").childNodes;
+                    let title = video_info[0];
+                    let info = video_info[1];
+                    let number = video_info[2];
+                    document.title = data.title;
+                    title.title = data.title;
+                    title.childNodes[1].innerText = data.title;
+                    //info.childNodes[1].childNodes[0].href = API.sort[API.sort[data.tid][0]][2]; // 留待完善分区表
+                    //info.childNodes[1].childNodes[0].innerText = API.sort[API.sort[data.tid][0]][1];
+                    //info.childNodes[2].childNodes[0].href = API.sort[data.tid][2];
+                    //info.childNodes[2].childNodes[0].innerText = API.sort[data.tid][1];
+                    info.childNodes[3].innerText = handle.timeFormat(data.pubdate*1000);
+                    number.childNodes[0].title = "总播放数" + data.stat.view;
+                    number.childNodes[0].innerText = data.stat.view<10000?data.stat.view:(data.stat.view / 10000).toFixed(1) + "万";
+                    number.childNodes[1].title = "总弹幕数" + data.stat.danmaku;
+                    number.childNodes[1].innerText = data.stat.danmaku<10000?data.stat.danmaku:(data.stat.danmaku / 10000).toFixed(1) + "万";
+                    if (data.stat.his_rank>0) {number.childNodes[2].innerText = "最高全站日排行" + data.stat.his_rank + "名"} else {number.childNodes[2].setAttribute("hidden","hidden")}
+                    if (number.childNodes[4].className == "u like") {
+                        number.childNodes[4].title = "点赞人数" + data.stat.like;
+                        number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("点赞 " + (data.stat.like<10000?data.stat.like:(data.stat.like / 10000).toFixed(1) + "万")));
+                        number.childNodes[5].title = "投硬币枚数" + data.stat.coin;
+                        number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin<10000?data.stat.coin:(data.stat.coin / 10000).toFixed(1) + "万")));
+                        number.childNodes[6].title = "收藏人数" + data.stat.favorite;
+                        number.childNodes[6].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite<10000?data.stat.favorite:(data.stat.favorite / 10000).toFixed(1) + "万")));
+                    }
+                    else {
+                        number.childNodes[4].title = "投硬币枚数" + data.stat.coin;
+                        number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin<10000?data.stat.coin:(data.stat.coin / 10000).toFixed(1) + "万")));
+                        number.childNodes[5].title = "收藏人数" + data.stat.favorite;
+                        number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite<10000?data.stat.favorite:(data.stat.favorite / 10000).toFixed(1) + "万")));
+                    }
+                    up_info[0].childNodes[1].href = "https://space.bilibili.com/" + data.owner.mid;
+                    up_info[0].childNodes[1].childNodes[0].src = data.owner.face;
+                    up_info[1].childNodes[0].childNodes[0].href = "https://space.bilibili.com/" + data.owner.mid;
+                    up_info[1].childNodes[0].childNodes[0].innerText = data.owner.name;
+                    up_info[1].childNodes[1].childNodes[0].innerText = "这里是up主简介";
+                    up_info[1].childNodes[2].childNodes[0].innerText = "投稿 --";
+                    up_info[1].childNodes[2].childNodes[1].innerText = "粉丝 --";
+                    arc_toolbar_report[0].childNodes[0].title = "分享人数" + data.stat.share;
+                    arc_toolbar_report[0].childNodes[0].childNodes[1].innerText = data.stat.share<10000?data.stat.share:(data.stat.share / 10000).toFixed(1) + "万";
+                    arc_toolbar_report[2].title = "收藏人数" + data.stat.favorite;
+                    arc_toolbar_report[2].childNodes[0].childNodes[3].innerText = data.stat.favorite<10000?data.stat.favorite:(data.stat.favorite / 10000).toFixed(1) + "万";
+                    arc_toolbar_report[3].title = "投硬币枚数" + data.stat.coin;
+                    arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = data.stat.coin<10000?data.stat.coin:(data.stat.coin / 10000).toFixed(1) + "万";
+                    tag[0].setAttribute("hidden","hidden");
+                    desc[1].innerText = data.desc;
+                }
             }
         },
     }
