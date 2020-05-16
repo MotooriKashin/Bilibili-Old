@@ -21,6 +21,7 @@
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生") 或 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
    + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
    + 播单，如[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
+   + 收藏，如[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
 - 修改
    + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换大部分新版版头和版底
@@ -48,7 +49,7 @@
 3. Bangumi和稍后再看暂时无法提供4K画质选择，且av(BV)4K支持上存在问题。
 4. 播放页面的充电入口失效，请移步UP主的个人空间。
 5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-6. 收藏列表页因缺乏旧版页面备份未能实现([help wanted](https://github.com/MotooriKashin/Bilibili-Old/issues/5))。
+6. 收藏播放页将跳转av页并使用稍后再看实现了收藏列表，但切p时页面信息不会随之更新(待优化)
 7. 旧版主页没有资讯分区而残留有已经被弃置的广告分区。
 8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
 9. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
@@ -85,6 +86,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-05-16
+   + 使用稍后再看播放器替换收藏播放页(待优化)
 - 2020-05-15
    + 通过绕过404的方式恢复旧版播单页
 - 2020-05-14
