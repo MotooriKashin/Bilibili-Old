@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.10.5
+// @version      2.10.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -18,7 +18,7 @@
 (function() {
     'use strict';
 
-    let DOCUMENT,CONFIG,ml,pl,ts,aid,cid,mid,uid,src,tid,mode,type,count,oidsrc,__INITIAL_STATE__,__playinfo__;
+    let DOCUMENT,CONFIG,ml,pl,ts,aid,cid,mid,uid,src,tid,oaid,mode,type,count,oidsrc,__INITIAL_STATE__,__playinfo__;
     let arr = [],avs = [], ids = [],obj = {};
     let TITLE = document.getElementsByTagName("title");
     let LOCATION = document.location.href.split('/');
@@ -69,6 +69,7 @@
             "like" : "https://api.bilibili.com/x/web-interface/archive/like",
             "ids4Player" : "https://api.bilibili.com/x/v1/medialist/resource/ids4Player", // media_id
             "cards" : "https://api.bilibili.com/x/article/cards", // ids
+            "medialist" : "https://api.bilibili.com/x/v1/medialist/detail", // media_id && pn=1&ps=1
         },
         "sort" : {
             "202" : [202,"资讯","https://www.bilibili.com/v/information/"],
@@ -124,6 +125,7 @@
             "frame" : 1,
             "home" : 1,
             "playlist" : 1,
+            "medialist" : 0,
         },
         "reset" : {
             "grobalboard" : 1,
@@ -288,8 +290,15 @@
         },
         "fixvar" : () => {
             // 重整变量
-            if (!aid) aid = unsafeWindow.aid?unsafeWindow.aid:aid;
+            if (!aid) aid = unsafeWindow.aid?unsafeWindow.cid:aid;
             if (!cid) cid = unsafeWindow.cid?unsafeWindow.cid:cid;
+            if (oaid) {
+                if (oaid!=unsafeWindow.aid) {
+                    aid = unsafeWindow.aid?unsafeWindow.cid:aid;
+                    history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash);
+                    oaid = aid;
+                }
+            }
         },
         "hidden" : (node,type) => {
             // 隐藏节点
@@ -921,9 +930,19 @@
         },
         "setMediaList" : {
             // 处理收藏页
-            "init" : () => {
-                if (ml===182603655) return;
-                xhr.true(handle.obj2search(API.url.ids4Player,{"media_id":ml}),handle.setMediaList.ids4Player);
+            "init" : (data) => {
+                try {
+                    if (!localStorage.getItem("medialist")) return;
+                    if (data){
+                        data = JSON.parse(data).data;
+                        if (data.medias) location.replace("https://www.bilibili.com/video/av" + data.medias[0].id);
+                    }
+                    else {
+                        ml = localStorage.getItem("medialist");
+                        localStorage.setItem("medialist","");
+                        xhr.true(handle.obj2search(API.url.ids4Player,{"media_id":ml}),handle.setMediaList.ids4Player);
+                    }
+                } catch(e) {log.error(e)}
             },
             "ids4Player" : (data) => {
                 try {
@@ -949,38 +968,28 @@
                 } catch(e) {log.error(e)}
             },
             "make" : () => {
-                log.log(ids);
-                let toview = {
-                    "attr": 2,
-                    "cover" : "https://i0.hdslb.com/bfs/archive/a45ef4fcde397247032cf4ce0c8f71815f9e28d0.jpg",
-                    "ctime" : 1529021131,
-                    "description" : "bilibili moe 2018 动画角色人气大赏日本动画场应援视频播单 / 每天不定时更新最新的一批",
-                    "faved_count" :0,
-                    "favored" : 0,
-                    "favorite" : false,
-                    "id" : 1826036,
-                    "is_favorite" : false,
-                    "like_count" : 0,
-                    "mid" : 26468955,
-                    "mlid" : 182603655,
-                    "mtime" : 1533874759,
-                    "name" : "bilibili moe 2018 日本动画场应援",
-                    "owner" : {face: "http://i2.hdslb.com/bfs/face/57389d533621407d36981a99fed93834dd8b20e6.jpg",mid: 26468955,name: "萌战基"},
-                    "pid" : 769,
-                    "play_count" : 0,
-                    "recent_oids" : [28705200, 28705483, 28707213],
-                    "recent_res" : [{oid: 28705200, typ: 2}, {oid: 28705483, typ: 2}, {oid: 28707213, typ: 2}],
-                    "reply_count" : 0,
-                    "share_count" : 0,
-                    "stat" : {pid: 769, view: 298591, favorite: 1684, reply: 10, share: 0},
-                    "state" : 0,
-                    "type" : 2
-                };
-                toview.count = ids.length;
-                toview.list = ids;
-                let data = {"code":0,"data":toview,"message":"0","ttl":1};
-                obj = {"aid":ids[0].aid,"cid":ids[0].cid,"playlist":encodeURIComponent(JSON.stringify(data))};
-                setTimeout(()=>{unsafeWindow.BilibiliPlayer(obj)},5000);
+                if (!unsafeWindow.BilibiliPlayer) {
+                    window.setTimeout(()=>{handle.setMediaList.make()},100);
+                    return;
+                }
+                for (let i=0;i<ids.length;i++) {
+                    ids[i].progress = 0;
+                    ids[i].add_at = ids[i].ctime;
+                    ids[i].pages = [];
+                    ids[i].pages[0] = {};
+                    ids[i].pages[0].cid = ids[i].cid;
+                    ids[i].pages[0].dimension = ids[i].dimension;
+                    ids[i].pages[0].duration = ids[i].duration;
+                    ids[i].pages[0].from = "vupload";
+                    ids[i].pages[0].page = 1;
+                    ids[i].pages[0].part = ids[i].title;
+                    ids[i].pages[0].vid = "";
+                    ids[i].pages[0].weblink = "";
+                }
+                let toview = {"code":0,"message":"0","ttl":1,"data":{"count":ids.length,"list":ids}};
+                oaid = ids[0].aid;
+                obj = {"aid":ids[0].aid,"cid":ids[0].cid,"watchlater":encodeURIComponent(JSON.stringify(toview))};
+                unsafeWindow.BilibiliPlayer(obj);
             }
         },
     }
@@ -1066,6 +1075,7 @@
             "frame" : ["嵌入式播放器","替换嵌入式播放器"],
             "home" : ["主页","启用旧版Bilibili主页"],
             "playlist" : ["playlist","恢复播单播放页"],
+            "medialist" : ["medialist","替换收藏播放页"],
             "grobalboard" : ["版头和版底","替换新版版头和版底"],
             "replyfloor" : ["评论楼层","显示评论的楼层号"],
             "headblur" : ["顶栏透明度","使顶栏全透明"],
@@ -1103,6 +1113,7 @@
                     handle.write(API.pageframe.video);
                     handle.fixSort.av();
                     handle.setLike.init();
+                    handle.setMediaList.init();
                 }
             } catch(e) {log.error(e)}
         },
@@ -1165,6 +1176,12 @@
                     handle.write(API.pageframe.playlist);
                     handle.setPlayList();
                     localStorage.setItem("playlist","");
+                    localStorage.setItem("medialist","");
+                }
+                else {
+                    if (!config.rewrite.medialist) return;
+                    localStorage.setItem("medialist",ml);
+                    xhr.true(handle.obj2search(API.url.medialist,{"media_id":ml,"pn":1,"ps":1}),handle.setMediaList.init);
                 }
             } catch(e) {log.error(e)}
         },
