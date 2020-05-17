@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.10.6
+// @version      2.10.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -149,8 +149,8 @@
             try {
                 let ep = 0,dat = {};
                 let rp = JSON.parse(data).result;
-                let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace('INITIAL_STATE__=',"").replace(';(function',""));
-                let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace('PGC_USERSTATE__=',"").replace('</script>',""));
+                let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
+                let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
                 if (rp.bkg_cover) {dat = {"ver":{"mobile":false,"ios":false,"android":false,"windowsPhone":false,"iPhone":false,"ios9":false,"iPad":false,"webApp":false,"microMessenger":false,"weibo":false,"uc":false,"qq":false,"baidu":false,"mqq":false,"mBaidu":false,"iqiyi":false,"qqLive":false,"safari":true,"youku":false,"ie":false,"edge":false,"bili":false,"biliVer":0},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":true,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false};} else {dat = {"ver":{},"loginInfo":{},"canReview":false, "userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":false,"area":0,"app":false,"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};}
                 if (epId) {dat.epId = 1 * epId;ep = 1;}else {dat.epId = "";if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id;ep = 1;}}
                 dat.ssId = rp.season_id;
@@ -771,8 +771,8 @@
                     let title,cover;
                     try {
                         data.match('window._INIT')[0];
-                        title = data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace('<title>',"").replace('-哔哩哔哩唧唧',"");
-                        cover = data.match(/"img\":\ \".+?\",/)[0].replace('"img": "',"").replace('",',"");
+                        title = data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/,"").replace(/-哔哩哔哩唧唧/,"");
+                        cover = data.match(/"img\":\ \".+?\",/)[0].replace(/"img": "/,"").replace(/",/,"");
                         cover.match('hdslb')[0];
                     } catch(e) {
                         try {
@@ -782,8 +782,8 @@
                         } catch(e) {
                             try {
                                 data.match(/\<title\>.+?\ \-\ AV/)[0];
-                                title = data.match(/\<title\>.+?\ \-\ AV/)[0].replace('<title>',"").replace(' - AV',"");
-                                cover = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace('<img style="display:none" src="',"").replace('" alt',"");
+                                title = data.match(/\<title\>.+?\ \-\ AV/)[0].replace(/<title>/,"").replace(/ - AV/,"");
+                                cover = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/<img style="display:none" src="/,"").replace(/" alt/,"");
                             } catch(e) {
                                 title = "AV" + aid;
                             }
@@ -1158,11 +1158,12 @@
                 if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) history.replaceState(null,null,"https://www.bilibili.com/video/av" + handle.chansId(LOCATION[4]) + location.search + location.hash);
                 if (!config.rewrite.av) return;
                 DOCUMENT = xhr.false(location.href);
-                if (DOCUMENT.match("__INITIAL_STATE__=")) {
+                if (DOCUMENT.match('__INITIAL_STATE__=')) {
                     if (DOCUMENT.match('"code":404')) return;
-                    let __INITIAL_STATE__ = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function",""));
+                    let __INITIAL_STATE__ = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
                     if (DOCUMENT.match('playinfo__')) {
-                        __playinfo__ = JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace("playinfo__=","").replace("</script>",""));
+                        __playinfo__ = DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/,"").replace(/<\/script>/,"");
+                        __playinfo__ = __playinfo__.match('http:')?JSON.parse(__playinfo__.replace(/http/g,"https")):JSON.parse(__playinfo__);
                         unsafeWindow.__playinfo__ = __playinfo__;
                         log.debug(__playinfo__);
                     }
@@ -1210,11 +1211,11 @@
         "frame" : () => {
             if (!config.rewrite.frame) return;
             let link = location.href;
-            let season_type = link.match(/season_type=[0-9]*/)?1*link.match(/season_type=[0-9]*/)[0].replace("season_type=",""):"";
-            let player_type = link.match(/player_type=[0-9]*/)?1*link.match(/player_type=[0-9]*/)[0].replace("player_type=",""):"";
-            aid = link.match(/aid=[0-9]*/)?1*link.match(/aid=[0-9]*/)[0].replace("aid=",""):1*handle.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace("bvid=",""));
-            aid = aid?aid:1*handle.chansId(link.match(/aid=[A-Za-z0-9]*/)[0].replace('aid=',""));
-            cid = link.match(/cid=[0-9]*/)?1*link.match(/cid=[0-9]*/)[0].replace("cid=",""):cid;
+            let season_type = link.match(/season_type=[0-9]*/)?1*link.match(/season_type=[0-9]*/)[0].replace(/season_type=/,""):"";
+            let player_type = link.match(/player_type=[0-9]*/)?1*link.match(/player_type=[0-9]*/)[0].replace(/player_type=/,""):"";
+            aid = link.match(/aid=[0-9]*/)?1*link.match(/aid=[0-9]*/)[0].replace(/aid=/,""):1*handle.chansId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace(/bvid=/,""));
+            aid = aid?aid:1*handle.chansId(link.match(/aid=[A-Za-z0-9]*/)[0].replace(/aid=/,""));
+            cid = link.match(/cid=[0-9]*/)?1*link.match(/cid=[0-9]*/)[0].replace(/cid=/,""):cid;
             cid = cid?cid:JSON.parse(xhr.false(handle.obj2search(API.url.pagelist,{"aid":aid}))).data[0].cid;
             location.replace(handle.obj2search(API.playerframe.html5player,{"aid":aid,"cid":cid,"season_type":season_type,"player_type":player_type,"as_wide":1,"urlparam":"module%253Dbangumi","crossDomain":"true"}));
             log.log("嵌入式播放器：aid=" + aid + " cid=" + cid);
@@ -1249,7 +1250,7 @@
             try {
                 if (config.rewrite.home) {
                     DOCUMENT = xhr.false(location.href);
-                    __INITIAL_STATE__ = DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace("INITIAL_STATE__=","").replace(";(function","");
+                    __INITIAL_STATE__ = DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,"");
                     unsafeWindow.__INITIAL_STATE__ = INITIAL_STATE.home(__INITIAL_STATE__);
                     handle.write(API.pageframe.home);
                 }
