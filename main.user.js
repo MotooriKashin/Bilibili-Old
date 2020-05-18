@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.10.8
+// @version      2.10.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1168,7 +1168,7 @@
                     let __INITIAL_STATE__ = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,"")); // 继承__INITIAL_STATE__
                     if (DOCUMENT.match('playinfo__')) { // 判断是否能继承 __playinfo__
                         __playinfo__ = DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/,"").replace(/<\/script>/,""); // 继承 __playinfo__
-                        __playinfo__ = __playinfo__.match('http:')?JSON.parse(__playinfo__.replace(/http/g,"https")):JSON.parse(__playinfo__); // 修改flv为安全链接
+                        __playinfo__ = JSON.parse(__playinfo__.replace(/http:/g,"https:")) // 修改flv为安全链接
                         unsafeWindow.__playinfo__ = __playinfo__; // 写入 __playinfo__
                         log.debug(__playinfo__);
                     }
