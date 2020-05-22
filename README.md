@@ -11,10 +11,10 @@
    + 2020年04月04日：B站取消旧版主页
    + 2020年04月23日：B站开启4K灰度测试
    + 2020年04月28日：B站404播单页面
+   + 2020年05月21日：B站启用新版弹幕文件，旧版弹幕接口目前还未失效
 
 ---
 ### 脚本实现
-**以下所有功能都可以在设置里自定义启用或关闭**
 - 重写(基于旧版网页框架)
    + B站主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
@@ -43,15 +43,17 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
-2. 旧版播放器原生不支持全景视频，将无法移动视角。
-3. Bangumi和稍后再看暂时无法提供4K画质选择，且av(BV)4K支持上存在问题。
-4. 播放页面的充电入口失效，请移步UP主的个人空间。
-5. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-6. 收藏播放页将跳转av页并使用稍后再看构建了收藏列表，但切p时评论等部分信息不会更新。
-7. 旧版主页没有资讯分区而残留有已经被弃置的广告分区。
-8. **偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳**(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-9. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
+1. 机制限制无法在浏览器请求新页面前启用旧页面所以旧版页面载入注定慢于新版页面。
+2. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
+3. 旧版播放器原生不支持全景视频，将无法移动视角。
+4. 旧版主页没有资讯分区而残留有已经被弃置的广告分区。
+5. Bangumi和稍后再看暂时无法提供4K画质选择，且av(BV)4K支持上存在问题。
+6. 播放页面的充电入口失效，请移步UP主的个人空间。
+7. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+8. 收藏播放页将跳转av页并使用稍后再看构建了收藏列表，但切p时评论等部分信息不会更新。
+9. [B站并未提高旧版弹幕上限且旧版弹幕接口面临和谐大家且用且珍惜](https://github.com/MotooriKashin/Bilibili-Old/issues/10)
+10. 偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+11. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
 ---
 ### 兼容数据
@@ -63,12 +65,14 @@
 >
  
 其他同域脚本兼容数据
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 完全正常
-- [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 完全正常
-- [解除B站区域限制](https://greasyfork.org/scripts/25718) 功能正常，调整设置需去新版页面
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 完全正常
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 基本正常，推荐补上`run-at document-start`
-- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341) 完全正常
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 正常
+- [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 正常
+- [解除B站区域限制](https://greasyfork.org/scripts/25718) 正常 调整设置需去新版页面
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 正常
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 正常 推荐`run-at document-start`
+- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341) 正常
+- **IDM下载浮动条 失效**
+- [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh) 正常
 
 ---
 ### 参考致谢
