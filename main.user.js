@@ -146,6 +146,7 @@
             "selectdanmu" : 0,
             "episodedata" : 0,
             "like" : 0,
+            "static" : 0,
             "message" : 0,
         }
     }
@@ -1160,6 +1161,7 @@
             "selectdanmu" : ["弹幕列表","首选弹幕列表而非推荐视频"],
             "episodedata" : ["番剧分集数据","显示番剧单回的播放数和弹幕数"],
             "like" : ["点赞","添加旧版播放页添加点赞功能"],
+            "static" : ["静态页面跳转","将静态av页跳转到普通av页"],
             "message" : ["通知区","隐藏播放器上方通知区域"]
         }
     }
@@ -1261,6 +1263,10 @@
                 }
             } catch(e) {log.error(e)}
         },
+        "s" : () => { // 静态视频相关
+            if (!config.reset.static) return;
+            location.replace(location.href.replace("s/video","video"));
+        },
         "home" : () => { // 主页相关
             try {
                 if (config.rewrite.home) {
@@ -1270,6 +1276,7 @@
                     handle.write(API.pageframe.home); // 重写主页框架
                 }
                 handle.setOnline.init(); // 在线数据入口
+                // 重定向正在直播(不兼容)
                 handle.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'https://api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
                 handle.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'https://api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
             } catch(e) {log.error(e)}
@@ -1306,7 +1313,7 @@
                     }
                 }
             });
-            handle.intercept("playurl?","playurl?fourk=1&");
+            handle.intercept("playurl?","playurl?fourk=1&"); // 重定向4k视频
         }
     }
     // 初始化
@@ -1330,6 +1337,7 @@
     } catch(e) {}
     // 页面分离
     if (LOCATION[3]) {
+        if (LOCATION[3] == 's' && (LOCATION[5].toLowerCase().startsWith('av') || LOCATION[5].toLowerCase().startsWith('bv'))) sort.s();
         if (LOCATION[3] == 'video' && (LOCATION[4].toLowerCase().startsWith('av') || LOCATION[4].toLowerCase().startsWith('bv'))) sort.video();
         if (LOCATION[3] == 'watchlater') sort.watchlater();
         if (LOCATION[3] == 'bangumi' && LOCATION[4] == 'play') sort.bangumi();
