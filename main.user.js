@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    Motoori Kashin
-// @version      2.10.9
+// @version      2.11.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       Motoori Kashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -278,7 +278,7 @@
             },{});
             return obj;
         },
-        "obj2search" : (url,obj) =>{ // 链接参数相关
+        "obj2search" : (url,obj) => { // 链接参数相关
             if (obj) {
                 let arr = [],i = 0;
                 for (let key in obj) {
@@ -290,6 +290,14 @@
                 url = url + "?" + arr.join("&");
             }
             return url;
+        },
+        "intercept" : (urlmatch, newurl) => { // xhr重定向
+            const open = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+                this.url = url;
+                url = url.replace(urlmatch, newurl);
+                return open.call(this, method, url, ...rest);
+            }
         },
         "fixvar" : () => { // 重整变量相关
             if (!aid) aid = unsafeWindow.aid?unsafeWindow.cid:aid;
@@ -1262,6 +1270,8 @@
                     handle.write(API.pageframe.home); // 重写主页框架
                 }
                 handle.setOnline.init(); // 在线数据入口
+                handle.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'https://api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
+                handle.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'https://api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
             } catch(e) {log.error(e)}
         },
         "space" : () => { // 空间相关
@@ -1296,6 +1306,7 @@
                     }
                 }
             });
+            handle.intercept("playurl?","playurl?fourk=1&");
         }
     }
     // 初始化
