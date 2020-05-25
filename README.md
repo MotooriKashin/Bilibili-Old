@@ -46,7 +46,7 @@
 1. 机制限制无法在浏览器请求新页面前启用旧页面所以旧版页面载入注定慢于新版页面。
 2. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
 3. 旧版播放器原生不支持全景视频，将无法移动视角。
-4. 旧版主页没有资讯分区而残留有已经被弃置的广告分区。
+4. 旧版主页缺少资讯分区、残留广告分区、正在直播获取失败。
 5. Bangumi和稍后再看暂时无法提供4K画质选择，且av(BV)4K支持上存在问题。
 6. 播放页面的充电入口失效，请移步UP主的个人空间。
 7. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
@@ -89,6 +89,8 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+- 2020-05-25
+   + 引入xhr hook处理失效接口
 - 2020-05-18
    + 修改一个正则表达式以改善兼容问题
    + 修复点赞功能
