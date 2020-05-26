@@ -98,6 +98,7 @@
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
+                xhr.withCredentials = true;
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         resolve(xhr.response);
@@ -1139,6 +1140,7 @@
                     JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,"")); // 继承__INITIAL_STATE__
                 window.__playinfo__ = DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/,"").replace(/<\/script>/,""); // 继承 __playinfo__
                 window.__playinfo__ = JSON.parse(window.__playinfo__.replace(/http:/g,"https:"));debug.debug(window.__playinfo__); // 修改flv为安全链接
+                unsafeWindow.__playinfo__ = undefined;
                 if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                 aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid; // 获取aid
                 tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid; // 获取tid
