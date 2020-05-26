@@ -98,7 +98,6 @@
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
-                xhr.withCredentials = true;
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         resolve(xhr.response);
@@ -133,7 +132,6 @@
                 let xhr = new XMLHttpRequest();
                 xhr.open('post', url, true);
                 xhr.withCredentials = true;
-                xhr.setRequestHeader("Content-type", header);
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) {
                         resolve(xhr.response);
@@ -313,6 +311,7 @@
             const open = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 this.url = url;
+                if (url.match(urlmatch) && !newurl) return; // 阻断请求
                 url = url.replace(urlmatch, newurl);
                 return open.call(this, method, url, ...rest);
             }
@@ -1222,8 +1221,8 @@
                 deliver.write(API.pageframe.home); // 重写主页框架
             }
             deliver.setOnline(); // 在线数据入口
-            deliver.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'https://api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
-            deliver.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'https://api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
+            deliver.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'https://backup.hdslb.com/bfs/mainfront/liverecom.json');
+            deliver.intercept('https://api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', false);
         },
         global: () => {
             if (window.self == window.top) UI.init();
