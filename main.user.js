@@ -1183,9 +1183,8 @@
                 if (DOCUMENT.includes('"code":404')) return; // 判断页面是否404
                 unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ =
                     JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,"")); // 继承__INITIAL_STATE__
-                window.__playinfo__ = DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/,"").replace(/<\/script>/,""); // 继承 __playinfo__
-                window.__playinfo__ = JSON.parse(window.__playinfo__.replace(/http:/g,"https:"));debug.debug(window.__playinfo__); // 修改flv为安全链接
-                unsafeWindow.__playinfo__ = undefined;
+                window.__playinfo__ = DOCUMENT.includes("playinfo__=") ? DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/,"").replace(/<\/script>/,"") : ""; // 继承 __playinfo__
+                window.__playinfo__ = window.__playinfo__ ? JSON.parse(window.__playinfo__.replace(/http:/g,"https:")) : "";debug.debug(window.__playinfo__); // 修改flv为安全链接
                 if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                 aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid; // 获取aid
                 tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid; // 获取tid
@@ -1265,7 +1264,7 @@
         home: () => {
             if (config.rewrite.home) {
                 DOCUMENT = xhr.false(location.href);
-                __INITIAL_STATE__ = DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""); // 继承__INITIAL_STATE__
+                __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,"") : ""; // 继承__INITIAL_STATE__
                 unsafeWindow.__INITIAL_STATE__ = INITIAL_STATE.home(__INITIAL_STATE__); // 新旧__INITIAL_STATE__不兼容，进行重构
                 deliver.write(API.pageframe.home); // 重写主页框架
             }
