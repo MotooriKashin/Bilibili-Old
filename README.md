@@ -1,6 +1,6 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_81-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_74-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 80](https://img.shields.io/badge/Google_Chrome_83-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
 - 默认开启部分功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
@@ -46,21 +46,20 @@
 1. 机制限制无法在浏览器请求新页面前启用旧页面所以旧版页面载入注定慢于新版页面。
 2. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
 3. 旧版播放器原生不支持全景视频，将无法移动视角。
-4. 旧版主页缺少资讯分区、残留广告分区、正在直播获取失败。
-5. 4K视频支持上可能存在问题。
-6. 播放页面的充电入口失效，请移步UP主的个人空间。
-7. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-8. 收藏播放页将跳转av页并使用稍后再看构建了收藏列表，但切p时评论等部分信息不会更新。
-9. [B站并未提高旧版弹幕上限且旧版弹幕接口面临和谐大家且用且珍惜](https://github.com/MotooriKashin/Bilibili-Old/issues/10)
-10. 偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-11. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
+4. 旧版主页缺少资讯分区而残留广告分区
+5. 播放页面的充电入口失效，请移步UP主的个人空间。
+6. 嵌入式页面的换p功能会失效(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+7. 收藏播放页将跳转av页并使用稍后再看构建了收藏列表，但切p时评论等部分信息不会更新。
+8. [B站并未提高旧版弹幕上限且旧版弹幕接口面临和谐大家且用且珍惜](https://github.com/MotooriKashin/Bilibili-Old/issues/10)
+9. 偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
+10. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
 
 ---
 ### 兼容数据
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 81.0.4103.61 (正式版本) （64 位） (cohort: 81\_Win\_61)  
+> Google Chrome 83.0.4103.61 (正式版本) （64 位） (cohort: 83\_61\_Win)  
 > Tampermonkey BETA 4.10.6112
 >
  
