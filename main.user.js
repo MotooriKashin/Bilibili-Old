@@ -355,7 +355,8 @@
             }
             const open = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-                if (url.includes("playurl?")) url = url.replace("playurl?","playurl?fourk=1&"); // 添加4k参数
+                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?","playurl?fourk=1&"); // 添加4k视频参数
+                if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?","playurl?fourk=1&"); // 添加4k番剧参数
                 if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList")) url = recList(this, url);
                 if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore")) url = recMore(this, url);
                 return open.call(this, method, url, ...rest);
