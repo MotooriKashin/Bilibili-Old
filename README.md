@@ -87,7 +87,9 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
+**可能不能及时同步自[Github](https://github.com/MotooriKashin/Bilibili-Old)**
 - 2020-05-29
+   + 添加替换视频心跳选项，若播放历史被广告插件等误伤时刻尝试打开
    + 修复正在直播链接
    + 由于B站关闭相关接口，移除恢复在线数据功能
 - 2020-05-27
