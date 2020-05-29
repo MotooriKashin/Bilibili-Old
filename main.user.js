@@ -185,7 +185,8 @@
             episodedata: 1,
             like: 1,
             static: 1,
-            heartbeat: 0
+            heartbeat: 0,
+            carousel: 0
         }
     }
     const INITIAL_STATE = {
@@ -453,6 +454,7 @@
             window.setTimeout(() => {deliver.removeBlur()},3000);
         },
         videoMessage: (ul) => { // 播放信息
+            if (!config.reset.carousel) return;
             let message = '', i = 0, className = "slide";
             for (let key in API.message) {
                 switch(i) {
@@ -1192,27 +1194,28 @@
             }
         },
         menu: { // 设置选项数据，与默认设置数据一一对应
-            av : ["av(BV)","启用旧版av(BV)页"],
-            bangumi : ["Bangumi","启用旧版番剧页"],
-            watchlater : ["稍后再看","启用旧版稍后再看"],
-            frame : ["嵌入式播放器","替换嵌入式播放器"],
-            home : ["主页","启用旧版Bilibili主页"],
-            playlist : ["playlist","恢复播单播放页"],
-            medialist : ["medialist","替换收藏播放页"],
-            grobalboard : ["版头和版底","替换新版版头和版底"],
-            replyfloor : ["评论楼层","显示评论的楼层号"],
-            headblur : ["顶栏透明度","使顶栏全透明"],
-            preview : ["付费预览框","去除播放器左下角付费预览框"],
-            livelogo : ["直播水印","去除直播间Bilibili水印"],
-            searchwrap : ["搜索框字体","重设搜索页字号"],
-            jointime : ["注册时间","个人空间显示B站账号注册时间"],
-            lostvideo : ["失效视频","修复收藏和频道中的失效视频信息"],
-            bvid2av : ["BV⇒av","BV重定向到av"],
-            selectdanmu : ["弹幕列表","首选弹幕列表而非推荐视频"],
-            episodedata : ["番剧分集数据","显示番剧单回的播放数和弹幕数"],
-            like : ["点赞","添加旧版播放页添加点赞功能"],
-            static : ["静态页面跳转","将静态av页跳转到普通av页"],
-            heartbeat : ["视频心跳", "在播放历史记录被广告插件等误伤时打开"]
+            av : ["av(BV)", "启用旧版av(BV)页"],
+            bangumi : ["Bangumi", "启用旧版番剧页"],
+            watchlater : ["稍后再看", "启用旧版稍后再看"],
+            frame : ["嵌入式播放器", "替换嵌入式播放器"],
+            home : ["主页", "启用旧版Bilibili主页"],
+            playlist : ["playlist", "恢复播单播放页"],
+            medialist : ["medialist", "替换收藏播放页"],
+            grobalboard : ["版头和版底", "替换新版版头和版底"],
+            replyfloor : ["评论楼层", "显示评论的楼层号"],
+            headblur : ["顶栏透明度", "使顶栏全透明"],
+            preview : ["付费预览框", "去除播放器左下角付费预览框"],
+            livelogo : ["直播水印", "去除直播间Bilibili水印"],
+            searchwrap : ["搜索框字体", "重设搜索页字号"],
+            jointime : ["注册时间", "个人空间显示B站账号注册时间"],
+            lostvideo : ["失效视频", "修复收藏和频道中的失效视频信息"],
+            bvid2av : ["BV⇒av", "BV重定向到av"],
+            selectdanmu : ["弹幕列表", "首选弹幕列表而非推荐视频"],
+            episodedata : ["番剧分集数据", "显示番剧单回的播放数和弹幕数"],
+            like : ["点赞", "添加旧版播放页添加点赞功能"],
+            static : ["静态页面跳转", "将静态av页跳转到普通av页"],
+            heartbeat : ["视频心跳", "在播放历史记录被广告插件等误伤时打开"],
+            carousel : ["播放信息", "恢复播放器顶部通知信息"]
         }
     }
     const thread = {
