@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
-// @namespace    Motoori Kashin
+// @namespace    MotooriKashin
 // @version      3.0.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
-// @author       Motoori Kashin
+// @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
@@ -185,6 +185,7 @@
             episodedata: 1,
             like: 1,
             static: 1,
+            heartbeat: 0
         }
     }
     const INITIAL_STATE = {
@@ -383,8 +384,9 @@
             }
             const open = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?","playurl?fourk=1&"); // 添加4k视频参数
-                if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?","playurl?fourk=1&"); // 添加4k番剧参数
+                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
+                if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
+                if (url.includes("api.bilibili.com/x/report/web/heartbeat") && config.reset.heartbeat) url = url.replace("report", "click-interface"); // 替换视频心跳
                 if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList")) url = recList(this, url);
                 if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore")) url = recMore(this, url);
                 return open.call(this, method, url, ...rest);
@@ -1209,7 +1211,8 @@
             selectdanmu : ["弹幕列表","首选弹幕列表而非推荐视频"],
             episodedata : ["番剧分集数据","显示番剧单回的播放数和弹幕数"],
             like : ["点赞","添加旧版播放页添加点赞功能"],
-            static : ["静态页面跳转","将静态av页跳转到普通av页"]
+            static : ["静态页面跳转","将静态av页跳转到普通av页"],
+            heartbeat : ["视频心跳", "在播放历史记录被广告插件等误伤时打开"]
         }
     }
     const thread = {
