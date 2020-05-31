@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.0.3
+// @version      3.0.4
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -656,7 +656,16 @@
                 },100);
         },
         setMediaList: async (data) => { // 收藏播放
-            if (!localStorage.getItem("medialist")) return; // 判断是正常av页还是收藏播放页
+            if (!localStorage.getItem("medialist")) { // 判断是正常av页还是收藏播放页
+                if (!window.__playinfo__.data || !window.__playinfo__.data.accept_quality) return;
+                if (window.__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
+                let timer = setInterval(() => {
+                    if (!unsafeWindow.BilibiliPlayer) return;
+                    clearInterval(timer);
+                    unsafeWindow.BilibiliPlayer({aid:unsafeWindow.aid, cid: unsafeWindow.cid});
+                },100)
+                return;
+            }
             if (data){ // 以传参data决定处理类型
                 data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id":ml,"pn":1,"ps":1})); // 获取收藏播放页正在播放的视频av
                 data = JSON.parse(data).data;
