@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.0.4
+// @version      3.0.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -272,6 +272,7 @@
                 }
                 dat.locsData = ini.locsData;
                 dat.locsData[23] = ini.locsData[3197];
+                if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{"id":36585,"contract_id":"","pos_num":1,"name":"小黑屋弹幕举报","pic":"https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg","litpic":"","url":"https://www.bilibili.com/blackboard/activity-dmjbfj.html","style":0,"agency":"","label":"","intro":"","creative_type":0,"request_id":"1546354354629q172a23a61a62q626","src_id":32,"area":0,"is_ad_loc":true,"ad_cb":"","title":"","server_type":0,"cm_mark":0,"stime":1520478000,"mid":"14629218"}];
                 return dat;
             } catch(e) {debug.error(e);}
         }
@@ -315,6 +316,66 @@
                 url = url + "?" + arr.join("&");
             }
             return url;
+        },
+        getCookies: () => { // cookies对象
+            let cookies = document.cookie.split('; ');
+            let obj = cookies.reduce((pre, next) => {
+                let key = next.split('=')[0];
+                let val = next.split('=')[1];
+                pre[key] = val;
+                return pre;
+            },{});
+            return obj;
+        },
+        setGlobalStyle: () => { // 添加样式
+            let csss = API.style.uiface;
+            let style = document.createElement("style");
+            csss = csss + API.style.online;
+            if (config.reset.playershadow) csss = csss + API.style.playshadow;
+            if (config.reset.searchwrap) csss = csss + API.style.search;
+            if (config.reset.like) csss = csss + API.style.like;
+            style.setAttribute("type","text/css");
+            document.head.appendChild(style);
+            style.appendChild(document.createTextNode(csss));
+        },
+        fixvar: () => { // aid变化监听
+            if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
+            if (oid) {
+                if (oid!=unsafeWindow.aid) { // 收藏播放切p判断
+                    aid = unsafeWindow.aid ? unsafeWindow.aid : aid;
+                    oid = unsafeWindow.aid;
+                    deliver.setMediaListRestore(); // 更新收藏播放
+                }
+            }
+        },
+        write : (html) => { // 重写网页
+            document.open();
+            document.write(html);
+            document.close();
+        },
+        reSction: () => { // 重写版面
+            if (!config.reset.grobalboard) return;
+            document.getElementById("internationalHeader").setAttribute("style","visibility:hidden;");
+            let newh = document.createElement("div");
+            let script = document.createElement("script");
+            let foot = document.getElementsByClassName("international-footer");
+            script.setAttribute("type","text/javascript");
+            script.setAttribute("src","//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
+            if(document.getElementsByClassName("mini-type")[0]) newh.setAttribute("class","z-top-container");
+            else newh.setAttribute("class","z-top-container has-menu");
+            document.body.insertBefore(newh,document.body.firstChild);
+            document.body.insertBefore(script,document.body.firstChild);
+            if (foot[0]) {
+                let div = document.createElement("div");
+                div.setAttribute("class","footer bili-footer report-wrap-module");
+                div.setAttribute("id","home_footer");
+                foot[0].replaceWith(div);
+                let script = document.createElement("script");
+                script.setAttribute("type","text/javascript");
+                script.setAttribute("src","//static.hdslb.com/common/js/footer.js");
+                document.body.appendChild(script);
+            }
+            window.setTimeout(() => {deliver.removeBlur()},3000);
         },
         intercept: () => { // xhr重定向
             function recList (obj, url) { // 首页正在直播数据
@@ -392,66 +453,6 @@
                 if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore")) url = recMore(this, url);
                 return open.call(this, method, url, ...rest);
             }
-        },
-        getCookies: () => { // cookies对象
-            let cookies = document.cookie.split('; ');
-            let obj = cookies.reduce((pre, next) => {
-                let key = next.split('=')[0];
-                let val = next.split('=')[1];
-                pre[key] = val;
-                return pre;
-            },{});
-            return obj;
-        },
-        setGlobalStyle: () => { // 添加样式
-            let csss = API.style.uiface;
-            let style = document.createElement("style");
-            csss = csss + API.style.online;
-            if (config.reset.playershadow) csss = csss + API.style.playshadow;
-            if (config.reset.searchwrap) csss = csss + API.style.search;
-            if (config.reset.like) csss = csss + API.style.like;
-            style.setAttribute("type","text/css");
-            document.head.appendChild(style);
-            style.appendChild(document.createTextNode(csss));
-        },
-        fixvar: () => { // aid变化监听
-            if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
-            if (oid) {
-                if (oid!=unsafeWindow.aid) { // 收藏播放切p判断
-                    aid = unsafeWindow.aid ? unsafeWindow.aid : aid;
-                    oid = unsafeWindow.aid;
-                    deliver.setMediaListRestore(); // 更新收藏播放
-                }
-            }
-        },
-        write : (html) => { // 重写网页
-            document.open();
-            document.write(html);
-            document.close();
-        },
-        reSction: () => { // 重写版面
-            if (!config.reset.grobalboard) return;
-            document.getElementById("internationalHeader").setAttribute("style","visibility:hidden;");
-            let newh = document.createElement("div");
-            let script = document.createElement("script");
-            let foot = document.getElementsByClassName("international-footer");
-            script.setAttribute("type","text/javascript");
-            script.setAttribute("src","//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
-            if(document.getElementsByClassName("mini-type")[0]) newh.setAttribute("class","z-top-container");
-            else newh.setAttribute("class","z-top-container has-menu");
-            document.body.insertBefore(newh,document.body.firstChild);
-            document.body.insertBefore(script,document.body.firstChild);
-            if (foot[0]) {
-                let div = document.createElement("div");
-                div.setAttribute("class","footer bili-footer report-wrap-module");
-                div.setAttribute("id","home_footer");
-                foot[0].replaceWith(div);
-                let script = document.createElement("script");
-                script.setAttribute("type","text/javascript");
-                script.setAttribute("src","//static.hdslb.com/common/js/footer.js");
-                document.body.appendChild(script);
-            }
-            window.setTimeout(() => {deliver.removeBlur()},3000);
         },
         videoMessage: (ul) => { // 播放信息
             if (!config.reset.carousel) return;
