@@ -88,6 +88,8 @@
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
 **可能不能及时从[Github](https://github.com/MotooriKashin/Bilibili-Old)同步最新历史**
+- 2020-06-04
+   + 修复主页特别推荐位，主动生成默认数据
 - 2020-05-31
    + 二次初始化av视频以便默认启用4K画质
 - 2020-05-29
