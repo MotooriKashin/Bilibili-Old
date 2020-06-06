@@ -113,21 +113,10 @@
                 xhr.open('get', url, true);
                 xhr.withCredentials = true;
                 xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(xhr.response);
-                    } else {
-                        reject({
-                            status: xhr.status,
-                            statusText: xhr.statusText
-                        });
-                    }
+                    if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response)
+                    else reject({status: xhr.status, statusText: xhr.statusText})
                 };
-                xhr.onerror = () => {
-                    reject({
-                        status: xhr.status,
-                        statusText: xhr.statusText
-                    });
-                };
+                xhr.onerror = () => reject({status: xhr.status, statusText: xhr.statusText})
                 xhr.send();
             });
         },
@@ -147,21 +136,10 @@
                 xhr.open('post', url, true);
                 xhr.withCredentials = true;
                 xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) {
-                        resolve(xhr.response);
-                    } else {
-                        reject({
-                            status: xhr.status,
-                            statusText: xhr.statusText
-                        });
-                    }
+                    if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response)
+                    else reject({status: xhr.status,statusText: xhr.statusText})
                 };
-                xhr.onerror = () => {
-                    reject({
-                        status: xhr.status,
-                        statusText: xhr.statusText
-                    });
-                };
+                xhr.onerror = () => reject({status: xhr.status, statusText: xhr.statusText})
                 xhr.send(data);
             });
         }
@@ -353,35 +331,6 @@
                 }
             }
         },
-        write : (html) => { // 重写网页
-            document.open();
-            document.write(html);
-            document.close();
-        },
-        reSction: () => { // 重写版面
-            if (!config.reset.grobalboard) return;
-            document.getElementById("internationalHeader").setAttribute("style","visibility:hidden;");
-            let newh = document.createElement("div");
-            let script = document.createElement("script");
-            let foot = document.getElementsByClassName("international-footer");
-            script.setAttribute("type","text/javascript");
-            script.setAttribute("src","//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
-            if(document.getElementsByClassName("mini-type")[0]) newh.setAttribute("class","z-top-container");
-            else newh.setAttribute("class","z-top-container has-menu");
-            document.body.insertBefore(newh,document.body.firstChild);
-            document.body.insertBefore(script,document.body.firstChild);
-            if (foot[0]) {
-                let div = document.createElement("div");
-                div.setAttribute("class","footer bili-footer report-wrap-module");
-                div.setAttribute("id","home_footer");
-                foot[0].replaceWith(div);
-                let script = document.createElement("script");
-                script.setAttribute("type","text/javascript");
-                script.setAttribute("src","//static.hdslb.com/common/js/footer.js");
-                document.body.appendChild(script);
-            }
-            window.setTimeout(() => {deliver.removeBlur()},3000);
-        },
         intercept: () => { // xhr hook
             const open = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
@@ -412,6 +361,35 @@
             obj.addEventListener('readystatechange', function () {if ( obj.readyState === 4 ) {replaceResponse()}});
             obj.addEventListener('load', function () {replaceResponse()});
             return url.replace(index[0],index[1]);
+        },
+        write : (html) => { // 重写网页
+            document.open();
+            document.write(html);
+            document.close();
+        },
+        reSction: () => { // 重写版面
+            if (!config.reset.grobalboard) return;
+            document.getElementById("internationalHeader").setAttribute("style","visibility:hidden;");
+            let newh = document.createElement("div");
+            let script = document.createElement("script");
+            let foot = document.getElementsByClassName("international-footer");
+            script.setAttribute("type","text/javascript");
+            script.setAttribute("src","//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
+            if(document.getElementsByClassName("mini-type")[0]) newh.setAttribute("class","z-top-container");
+            else newh.setAttribute("class","z-top-container has-menu");
+            document.body.insertBefore(newh,document.body.firstChild);
+            document.body.insertBefore(script,document.body.firstChild);
+            if (foot[0]) {
+                let div = document.createElement("div");
+                div.setAttribute("class","footer bili-footer report-wrap-module");
+                div.setAttribute("id","home_footer");
+                foot[0].replaceWith(div);
+                let script = document.createElement("script");
+                script.setAttribute("type","text/javascript");
+                script.setAttribute("src","//static.hdslb.com/common/js/footer.js");
+                document.body.appendChild(script);
+            }
+            window.setTimeout(() => {deliver.removeBlur()},3000);
         },
         videoMessage: (ul) => { // 播放信息
             if (!config.reset.carousel) return;
