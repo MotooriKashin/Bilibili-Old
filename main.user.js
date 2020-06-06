@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.0.5
+// @version      3.0.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -86,6 +86,11 @@
             3: ['https://www.bilibili.com/blackboard/html5playerhelp.html', 'HTML5播放器'],
             4: ['https://app.bilibili.com/?from=bfq', '客户端下载'],
             5: ['http://link.acg.tv/forum.php', 'bug反馈传送门']
+        },
+        xhrhook: {
+            reclist: ['api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web'],
+            recmore: ['api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web'],
+            heartbeat: ['api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat'],
         }
     }
     const debug = {
@@ -377,82 +382,39 @@
             }
             window.setTimeout(() => {deliver.removeBlur()},3000);
         },
-        intercept: () => { // xhr重定向
-            function recList (obj, url) { // 首页正在直播数据
-                obj.addEventListener('readystatechange', function () {
-                    if ( obj.readyState === 4 ) {
-                        var response = event.target.responseText.replace(/preview_banner_list/,"preview").replace(/ranking_list/,"ranking").replace(/recommend_room_list/,"recommend");
-                        response = JSON.parse(response);
-                        response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
-                        if (response.data.recommend) {
-                            for (let i = 0; i < response.data.recommend.length; i++) {
-                                response.data.recommend[i].pic = response.data.recommend[i].cover;
-                                response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                            }
-                        }
-                        if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
-                        Object.defineProperty(obj, 'response', {writable: true});
-                        Object.defineProperty(obj, 'responseText', {writable: true});
-                        obj.response = obj.responseText = JSON.stringify(response);
-                    }
-                });
-                obj.addEventListener('load', function () {
-                    var response = event.target.responseText.replace(/preview_banner_list/,"preview").replace(/ranking_list/,"ranking").replace(/recommend_room_list/,"recommend");
-                    response = JSON.parse(response);
-                    response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
-                    if (response.data.recommend) {
-                        for (let i = 0; i < response.data.recommend.length; i++) {
-                            response.data.recommend[i].pic = response.data.recommend[i].cover;
-                            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                        }
-                    }
-                    if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
-                    Object.defineProperty(obj, 'response', {writable: true});
-                    Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response =obj.responseText = JSON.stringify(response);
-                });
-                return url.replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList","api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web");
-            }
-            function recMore (obj, url) { // 正在直播动态数据
-                obj.addEventListener('readystatechange', function () {
-                    if ( obj.readyState === 4 ) {
-                        var response = event.target.responseText.replace(/recommend_room_list/,"recommend");
-                        response = JSON.parse(response);
-                        if (response.data.recommend) {
-                            for (let i = 0; i < response.data.recommend.length; i++) {
-                                response.data.recommend[i].pic = response.data.recommend[i].cover;
-                                response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                            }
-                        }
-                        Object.defineProperty(obj, 'response', {writable: true});
-                        Object.defineProperty(obj, 'responseText', {writable: true});
-                        obj.response = obj.responseText = JSON.stringify(response);
-                    }
-                });
-                obj.addEventListener('load', function () {
-                    var response = event.target.responseText.replace(/recommend_room_list/,"recommend");
-                    response = JSON.parse(response);
-                    if (response.data.recommend) {
-                        for (let i = 0; i < response.data.recommend.length; i++) {
-                            response.data.recommend[i].pic = response.data.recommend[i].cover;
-                            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                        }
-                    }
-                    Object.defineProperty(obj, 'response', {writable: true});
-                    Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response =obj.responseText = JSON.stringify(response);
-                });
-                return url.replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore","api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web");
-            }
+        intercept: () => { // xhr hook
             const open = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
+                if (url.includes(API.xhrhook.heartbeat[0]) && config.reset.heartbeat) url = url.replace(API.xhrhook.heartbeat[0], API.xhrhook.heartbeat[1]); // 替换视频心跳
+                if (url.includes(API.xhrhook.reclist[0])) url = deliver.response(this, url, API.xhrhook.reclist); // 修改正在直播
+                if (url.includes(API.xhrhook.recmore[0])) url = deliver.response(this, url, API.xhrhook.recmore); // 修改直播动态
+                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) {
+                    url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
+                    if (!url.includes("fnver")) url = url + '&fnver=0&fnval=16';
+                }
                 if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
-                if (url.includes("api.bilibili.com/x/report/web/heartbeat") && config.reset.heartbeat) url = url.replace("report", "click-interface"); // 替换视频心跳
-                if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList")) url = recList(this, url);
-                if (url.includes("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore")) url = recMore(this, url);
                 return open.call(this, method, url, ...rest);
             }
+        },
+        response: (obj,url,index) => { // 修改xhr response
+            function replaceResponse(){
+                var response = event.target.responseText.replace(/preview_banner_list/,"preview").replace(/ranking_list/,"ranking").replace(/recommend_room_list/,"recommend");
+                response = JSON.parse(response);
+                response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
+                if (response.data.recommend) {
+                    for (let i = 0; i < response.data.recommend.length; i++) {
+                        response.data.recommend[i].pic = response.data.recommend[i].cover;
+                        response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
+                    }
+                }
+                if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
+                Object.defineProperty(obj, 'response', {writable: true});
+                Object.defineProperty(obj, 'responseText', {writable: true});
+                obj.response =obj.responseText = JSON.stringify(response);
+            }
+            obj.addEventListener('readystatechange', function () {if ( obj.readyState === 4 ) {replaceResponse()}});
+            obj.addEventListener('load', function () {replaceResponse()});
+            return url.replace(index[0],index[1]);
         },
         videoMessage: (ul) => { // 播放信息
             if (!config.reset.carousel) return;
