@@ -388,10 +388,7 @@
                 if (url.includes(API.xhrhook.heartbeat[0]) && config.reset.heartbeat) url = url.replace(API.xhrhook.heartbeat[0], API.xhrhook.heartbeat[1]); // 替换视频心跳
                 if (url.includes(API.xhrhook.reclist[0])) url = deliver.response(this, url, API.xhrhook.reclist); // 修改正在直播
                 if (url.includes(API.xhrhook.recmore[0])) url = deliver.response(this, url, API.xhrhook.recmore); // 修改直播动态
-                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) {
-                    url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
-                    if (!url.includes("fnver")) url = url + '&fnver=0&fnval=16';
-                }
+                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
                 if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
                 return open.call(this, method, url, ...rest);
             }
@@ -619,16 +616,7 @@
                 },100);
         },
         setMediaList: async (data) => { // 收藏播放
-            if (!localStorage.getItem("medialist")) { // 判断是正常av页还是收藏播放页
-                if (!window.__playinfo__.data || !window.__playinfo__.data.accept_quality) return;
-                if (window.__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
-                let timer = setInterval(() => {
-                    if (!unsafeWindow.BilibiliPlayer) return;
-                    clearInterval(timer);
-                    unsafeWindow.BilibiliPlayer({aid:unsafeWindow.aid, cid: unsafeWindow.cid});
-                },100)
-                return;
-            }
+            if (!localStorage.getItem("medialist")) return;
             if (data){ // 以传参data决定处理类型
                 data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id":ml,"pn":1,"ps":1})); // 获取收藏播放页正在播放的视频av
                 data = JSON.parse(data).data;
@@ -1203,7 +1191,6 @@
                 window.__playinfo__ = DOCUMENT.includes("playinfo__=") ? DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/,"").replace(/<\/script>/,"") : ""; // 继承 __playinfo__
                 window.__playinfo__ = window.__playinfo__ ? JSON.parse(window.__playinfo__.replace(/http:/g,"https:")) : ""; // 修改flv为安全链接
                 debug.debug(window.__playinfo__);
-                unsafeWindow.__playinfo__ = ""; // 取消继承__playinfo__
                 if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                 aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid; // 获取aid
                 tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid; // 获取tid
