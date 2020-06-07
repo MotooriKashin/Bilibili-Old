@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.0.6
+// @version      3.0.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -651,6 +651,13 @@
                             oid = ids[0].aid; // 保存初始aid，以便判断是否切p
                             obj = {"aid":ids[0].aid,"cid":ids[0].cid,"watchlater":encodeURIComponent(JSON.stringify(toview))}; // 重构初始化播放器参数
                             unsafeWindow.bilibiliPlayer(obj); // 初始化播放器，使用稍后再看列表模拟收藏列表
+                            let bpui = document.getElementsByClassName("bpui-button-text");
+                            let t = setInterval(()=>{ // 更新列表信息
+                                if (bpui[1]) {
+                                    clearInterval(t);
+                                    bpui[1].firstChild.innerText = "收藏列表";
+                                }
+                            },100);
                         }
                     },100);
                 } catch(e) {debug.error(e)}
@@ -711,6 +718,14 @@
             arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万";
             tag[0].setAttribute("hidden", "hidden");
             desc[1].innerText = data.desc;
+            new unsafeWindow.bbComment(".comment",unsafeWindow.aid,1);
+            let bpui = document.getElementsByClassName("bpui-button-text");
+            let t = setInterval(()=>{ // 更新列表信息
+                if (bpui[1]) {
+                    clearInterval(t);
+                    bpui[1].firstChild.innerText = "收藏列表";
+                }
+            },100);
         },
         setBangumi: (data) => { // 分集数据
             if (!config.reset.episodedata) return;
