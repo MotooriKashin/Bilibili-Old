@@ -79,7 +79,7 @@
 - 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
 - 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)开放的Bilibili数据查询接口。
 - 感谢[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的bv2av(Python)代码。
-- 感谢[wly5556](https://greasyfork.org/users/217840)提供的简洁而有力地刷新播放器的方法。
+- 感谢[wly5556](https://greasyfork.org/users/217840)提供的简洁而有力的原生调用方法。
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
@@ -91,6 +91,7 @@
 ### 版本历史
 **可能不能及时从[Github](https://github.com/MotooriKashin/Bilibili-Old)同步最新历史**
 - 2020-06-06
+   + 收藏播放页支持刷新评论区
    + 改进刷新播放器的方法
 - 2020-06-04
    + 修复主页特别推荐位，主动生成默认数据
