@@ -169,8 +169,7 @@
             like: 1,
             static: 1,
             heartbeat: 0,
-            carousel: 0,
-            fourk: 0
+            carousel: 0
         }
     }
     const INITIAL_STATE = {
@@ -338,10 +337,7 @@
                 if (url.includes(API.xhrhook.heartbeat[0]) && config.reset.heartbeat) url = url.replace(API.xhrhook.heartbeat[0], API.xhrhook.heartbeat[1]); // 替换视频心跳
                 if (url.includes(API.xhrhook.reclist[0])) url = deliver.response(this, url, API.xhrhook.reclist); // 修改正在直播
                 if (url.includes(API.xhrhook.recmore[0])) url = deliver.response(this, url, API.xhrhook.recmore); // 修改直播动态
-                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) { // 添加4k视频参数
-                    url = url.replace("playurl?", "playurl?fourk=1&");
-                    if (config.reset.fourk && !url.includes("fnver")) url = url + "&fnver=0&fnval=16";
-                }
+                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
                 if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
                 return open.call(this, method, url, ...rest);
             }
@@ -599,13 +595,14 @@
         },
         setMediaList: async (data) => { // 收藏播放
             if (!localStorage.getItem("medialist")) { // 判断是正常av页还是收藏播放页
-                if (!config.reset.fourk) return;
                 if (!window.__playinfo__.data || !window.__playinfo__.data.accept_quality) return;
                 if (window.__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
                 let timer = setInterval(() => {
                     if (!unsafeWindow.BilibiliPlayer) return;
                     clearInterval(timer);
-                    unsafeWindow.bilibiliPlayer({aid:unsafeWindow.aid, cid: unsafeWindow.cid});
+                    let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
+                    unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
+                    unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
                 },100)
                 return;
             }
@@ -1167,8 +1164,7 @@
             like : ["点赞", "添加旧版播放页添加点赞功能"],
             static : ["静态页面跳转", "将静态av页跳转到普通av页"],
             heartbeat : ["视频心跳", "在播放历史记录被广告插件等误伤时打开"],
-            carousel : ["播放信息", "恢复播放器顶部通知信息"],
-            fourk : ["刷新播放器", "二次初始化播放器以支持4k作为默认画质"]
+            carousel : ["播放信息", "恢复播放器顶部通知信息"]
         }
     }
     const thread = {
