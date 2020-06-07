@@ -90,7 +90,7 @@
         xhrhook: {
             reclist: ['api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web'],
             recmore: ['api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web'],
-            heartbeat: ['api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat'],
+            heartbeat: ['api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat']
         }
     }
     const debug = {
@@ -340,6 +340,28 @@
                 if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
                 if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
                 return open.call(this, method, url, ...rest);
+            }
+            function jsonp(){
+                const ajax = unsafeWindow.$.ajax;
+                unsafeWindow.$.ajax = function (obj, ...rest) {
+                    if (obj) {
+                        if (obj.dataType == "jsonp") {
+                            if (obj.url.includes("region") && obj.data.rid == 165) {
+                                obj.data.rid = 202;
+                            }
+                        }
+                    }
+                    return ajax.call(this, obj, ...rest);
+                }
+            }
+            if (unsafeWindow.$) jsonp();
+            else {
+                let timer = setInterval(() => {
+                    if (unsafeWindow.$) {
+                        clearInterval(timer);
+                        jsonp();
+                    }
+                },10);
             }
         },
         response: (obj,url,index) => { // 修改xhr response
@@ -718,7 +740,7 @@
             arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万";
             tag[0].setAttribute("hidden", "hidden");
             desc[1].innerText = data.desc;
-            new unsafeWindow.bbComment(".comment",unsafeWindow.aid,1);
+            new unsafeWindow.bbComment(".comment",unsafeWindow.aid, 1, unsafeWindow.UserStatus.userInfo, "");
             let bpui = document.getElementsByClassName("bpui-button-text");
             let t = setInterval(()=>{ // 更新列表信息
                 if (bpui[1]) {
@@ -1081,6 +1103,24 @@
                     }
                 }
             } catch(e) {debug.error(e)}
+        },
+        fixnews: (node) => { // 广告区转资讯区
+            if (node.id == "bili_ad") {
+                node = node.getElementsByClassName("name");
+                if (node[0]) node[0].text = "资讯";
+            }
+            if (node.className == "report-wrap-module elevator-module") node.children[1].children[13].innerHTML = "资讯";
+            if (node.id == "bili-header-m") {
+                node = node.getElementsByClassName('nav-name');
+                if (node[0]) {
+                    for (let i = 0; i < node.length; i++) {
+                        if (node[i].textContent == "广告") {
+                            node[i].textContent = "资讯";
+                            node[i].parentNode.href = "//www.bilibili.com/v/information/";
+                        }
+                    }
+                }
+            }
         }
     }
     const UI = {
@@ -1295,6 +1335,7 @@
                 if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src;
                 if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src);
                 if (msg.target.className == "small-item disabled") deliver.fixVideoLost.favlist(msg);
+                if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m") deliver.fixnews(msg.target);
                 if (src && msg.target.className && (msg.target.className == "main-floor" || msg.target.className == "list-item reply-wrap ")){
                     window.clearTimeout(timer);
                     timer = window.setTimeout(() => {deliver.setReplyFloor(src);},1000);
