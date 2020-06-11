@@ -11,6 +11,8 @@
 // @connect      jijidown.com
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @grant        GM_xmlhttpRequest
+// @grant        GM_getValue
+// @grant        GM_setValue
 // @run-at       document-start
 // @license      MIT License
 // ==/UserScript==
@@ -485,31 +487,6 @@
             }
             return url;
         },
-        playurl: (aid, cid, qn, type, sor) => { // 配置视频链接
-            let obj = {}
-            let sign = deliver.sign();
-            aid = aid ? aid : unsafeWindow.aid;
-            cid = cid ? cid : unsafeWindow.cid;
-            qn = qn ? qn : 120;
-            type = type ? type : "mp4";
-            sor = sor ? sor : "";
-            switch(type){
-                case 'dash' : if (sor) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
-                    else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
-                    break;
-                case 'flv' : if (sor) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
-                    else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
-                    break;
-                case 'off' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: qn, quality: qn, type: ''}
-                    obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
-                    return deliver.obj2search(API.url.sign, obj);
-                    break;
-                case 'mp4' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: 208}
-                    obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
-                    return deliver.obj2search(API.url.proj, obj);
-                    break;
-            }
-        },
         getCookies: () => { // cookies对象
             let cookies = document.cookie.split('; ');
             let obj = cookies.reduce((pre, next) => {
@@ -531,74 +508,66 @@
             document.head.appendChild(style);
             style.appendChild(document.createTextNode(csss));
         },
-        fixvar: () => { // aid变化监听
-            if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
-            if (oid) {
-                if (oid!=unsafeWindow.aid) { // 收藏播放切p判断
-                    aid = unsafeWindow.aid ? unsafeWindow.aid : aid;
-                    oid = unsafeWindow.aid;
-                    deliver.setMediaListRestore(); // 更新收藏播放
-                }
-            }
-        },
-        intercept: () => { // xhr hook
-            const open = XMLHttpRequest.prototype.open;
-            XMLHttpRequest.prototype.open = function (method, url, ...rest) { // original xhr hook
-                if (url.includes(API.xhrhook.heartbeat[0]) && config.reset.heartbeat) url = url.replace(API.xhrhook.heartbeat[0], API.xhrhook.heartbeat[1]); // 替换视频心跳
-                if (url.includes(API.xhrhook.reclist[0])) url = deliver.response(this, url, API.xhrhook.reclist); // 修改正在直播
-                if (url.includes(API.xhrhook.recmore[0])) url = deliver.response(this, url, API.xhrhook.recmore); // 修改直播动态
-                if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
-                if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
-                return open.call(this, method, url, ...rest);
-            }
-            function jsonp(){ // jsonp hook
-                const ajax = unsafeWindow.$.ajax;
-                unsafeWindow.$.ajax = function (obj, ...rest) {
-                    if (obj) {
-                        if (obj.dataType == "jsonp") {
-                            if (obj.url.includes("region") && obj.data.rid == 165) {
-                                obj.data.rid = 202; // 替换广告区rid为资讯区rid
-                            }
-                        }
-                    }
-                    return ajax.call(this, obj, ...rest);
-                }
-            }
-            if (unsafeWindow.$) jsonp(); // jsonp非原生调用，先判断jQuery是否载入，以免报错
-            else {
-                let timer = setInterval(() => {
-                    if (unsafeWindow.$) {
-                        clearInterval(timer);
-                        jsonp();
-                    }
-                },10); // 为不错过任何jsonp，轮循间隔设得有点小
-                setTimeout(() => clearInterval(timer), 5000); // 网页可能不引入jQuery，延时取消轮循
-            }
-        },
-        response: (obj,url,index) => { // 修改xhr response
-            function replaceResponse(){ // 目前只有一个地方涉及修改xhr返回值，所以暂未进行区分
-                var response = event.target.responseText.replace(/preview_banner_list/,"preview").replace(/ranking_list/,"ranking").replace(/recommend_room_list/,"recommend");
-                response = JSON.parse(response);
-                response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
-                if (response.data.recommend) {
-                    for (let i = 0; i < response.data.recommend.length; i++) {
-                        response.data.recommend[i].pic = response.data.recommend[i].cover;
-                        response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                    }
-                }
-                if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
-                Object.defineProperty(obj, 'response', {writable: true});
-                Object.defineProperty(obj, 'responseText', {writable: true});
-                obj.response =obj.responseText = JSON.stringify(response);
-            }
-            obj.addEventListener('readystatechange', function () {if ( obj.readyState === 4 ) {replaceResponse()}});
-            obj.addEventListener('load', function () {replaceResponse()});
-            return url.replace(index[0],index[1]);
-        },
         write : (html) => { // 重写网页
             document.open();
             document.write(html);
             document.close();
+        },
+        intercept: { // xhr hook
+            init: () => {
+                const open = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (method, url, ...rest) { // original xhr hook
+                    if (url.includes(API.xhrhook.heartbeat[0]) && config.reset.heartbeat) url = url.replace(API.xhrhook.heartbeat[0], API.xhrhook.heartbeat[1]); // 替换视频心跳
+                    if (url.includes(API.xhrhook.reclist[0])) url = deliver.intercept.response(this, url, API.xhrhook.reclist); // 修改正在直播
+                    if (url.includes(API.xhrhook.recmore[0])) url = deliver.intercept.response(this, url, API.xhrhook.recmore); // 修改直播动态
+                    if (url.includes("/x/player/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k视频参数
+                    if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) url = url.replace("playurl?", "playurl?fourk=1&"); // 添加4k番剧参数
+                    return open.call(this, method, url, ...rest);
+                }
+                function jsonp(){ // jsonp hook
+                    const ajax = unsafeWindow.$.ajax;
+                    unsafeWindow.$.ajax = function (obj, ...rest) {
+                        if (obj) {
+                            if (obj.dataType == "jsonp") {
+                                if (obj.url.includes("region") && obj.data.rid == 165) {
+                                    obj.data.rid = 202; // 替换广告区rid为资讯区rid
+                                }
+                            }
+                        }
+                        return ajax.call(this, obj, ...rest);
+                    }
+                }
+                if (unsafeWindow.$) jsonp(); // jsonp非原生调用，先判断jQuery是否载入，以免报错
+                else {
+                    let timer = setInterval(() => {
+                        if (unsafeWindow.$) {
+                            clearInterval(timer);
+                            jsonp();
+                        }
+                    },10); // 为不错过任何jsonp，轮循间隔设得有点小
+                    setTimeout(() => clearInterval(timer), 5000); // 网页可能不引入jQuery，延时取消轮循
+                }
+            },
+            response: (obj,url,index) => { // 修改xhr response
+                function replaceResponse(){ // 目前只有一个地方涉及修改xhr返回值，所以暂未进行区分
+                    var response = event.target.responseText.replace(/preview_banner_list/,"preview").replace(/ranking_list/,"ranking").replace(/recommend_room_list/,"recommend");
+                    response = JSON.parse(response);
+                    response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
+                    if (response.data.recommend) {
+                        for (let i = 0; i < response.data.recommend.length; i++) {
+                            response.data.recommend[i].pic = response.data.recommend[i].cover;
+                            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
+                        }
+                    }
+                    if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
+                    Object.defineProperty(obj, 'response', {writable: true});
+                    Object.defineProperty(obj, 'responseText', {writable: true});
+                    obj.response =obj.responseText = JSON.stringify(response);
+                }
+                obj.addEventListener('readystatechange', function () {if ( obj.readyState === 4 ) {replaceResponse()}});
+                obj.addEventListener('load', function () {replaceResponse()});
+                return url.replace(index[0],index[1]);
+            }
         },
         reSction: () => { // 重写版面
             if (!config.reset.grobalboard) return;
@@ -641,29 +610,24 @@
             }
             setTimeout(() => {ul.innerHTML = message},100);
         },
-        download: async () => { // 拉取视频链接
-            let url = deliver.playurl();
-            let data = await xhr.true(url);
-            data = JSON.parse(data);
-            return data.durl ? data.durl[0].url : "拉取视频地址失败";
-        },
-        switchVideo: () => { // 切p相关
-            let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
-            if (config.reset.download) {
+        download: {
+            init : (title) => {
                 url = "";
                 let fixnav_report = document.getElementById("fixnav_report");
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("bangumi-nav-right")[0];
+                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-menu")[0];
+                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-tools")[0];
                 if (!fixnav_report) return;
                 let div = document.createElement("div");
                 div.setAttribute("class","video_download icon");
                 div.setAttribute("title","下载视频");
-                document.getElementsByClassName("video_download")[0] ? document.getElementsByClassName("video_download")[0].replaceWith(div) : fixnav_report.insertBefore(div,fixnav_report.firstChild);
+                let append = () => document.getElementsByClassName("video_download")[0] ? document.getElementsByClassName("video_download")[0].replaceWith(div) : fixnav_report.insertBefore(div,fixnav_report.firstChild);
                 div.onclick = async () => {
                     if (!url) {
                         let a = document.createElement("a");
                         div.appendChild(a);
                         url = 1;
-                        url = await deliver.download();
+                        url = await deliver.download.geturl();
                         if (!url.includes("com")) {
                             alert(url);
                             return;
@@ -674,7 +638,59 @@
                     }
                     else div.firstChild.click();
                 }
-            }
+                if (document.getElementsByClassName("float-nav")[0]) {
+                    let timer = setInterval(() => {
+                        if (document.getElementsByClassName("float-nav")[0].getAttribute("style") == "display:none;") return;
+                        clearInterval(timer);
+                        append();
+                    },1000);
+                }
+                else {
+                    if (fixnav_report.getAttribute("style") == "display:none;") {
+                        let timer = setInterval(() => {
+                            if (fixnav_report.getAttribute("style") == "display: none;") return;
+                            clearInterval(timer);
+                            append();
+                        },1000);
+                    }
+                    else {;append();}
+                }
+            },
+            geturl: async () => { // 拉取视频链接
+                let url = deliver.download.playurl();
+                let data = await xhr.true(url);
+                data = JSON.parse(data);
+                return data.durl ? data.durl[0].url : "拉取视频地址失败";
+            },
+            playurl: (aid, cid, qn, type, sor) => { // 配置视频链接
+                let obj = {}
+                let sign = deliver.sign();
+                aid = aid ? aid : unsafeWindow.aid;
+                cid = cid ? cid : unsafeWindow.cid;
+                qn = qn ? qn : 120;
+                type = type ? type : "mp4";
+                sor = sor ? sor : "";
+                switch(type){
+                    case 'dash' : if (sor) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
+                        else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
+                        break;
+                    case 'flv' : if (sor) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
+                        else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
+                        break;
+                    case 'off' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: qn, quality: qn, type: ''}
+                        obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
+                        return deliver.obj2search(API.url.sign, obj);
+                        break;
+                    case 'mp4' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: 208}
+                        obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
+                        return deliver.obj2search(API.url.proj, obj);
+                        break;
+                }
+            },
+        },
+        switchVideo: () => { // 切p相关
+            let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
+            if (config.reset.download) deliver.download.init(title);
             if (!config.reset.selectdanmu) return;
             let danmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
             if (danmu) danmu.click();
@@ -703,7 +719,7 @@
             }
         },
         avdesc : () => { // 超链接转化
-            if (!config.rewrite.av || !aid) return;
+            if (!config.rewrite.video || !aid) return;
             let desc = document.getElementsByClassName("info");
             if (LOCATION[3] != 'video') return;
             if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
@@ -743,25 +759,26 @@
             hidden("app-download","class");
             if (document.getElementsByClassName("bili-header-m")[1]) document.getElementsByClassName("bili-header-m")[1].remove();
         },
-        fixSort: () => { // 失效分区
-            let timer = window.setInterval(()=>{
-                let tminfo = document.getElementsByClassName("tm-info");
-                if (tminfo[0]) {
-                    window.clearInterval(timer);
-                    if (!(tid in API.sort)) return; // 判断tid是否在需要修复的范围
-                    let nodes = tminfo[0].childNodes;
-                    // 创建分区信息节点并写入tid对应的分区数据
-                    nodes[1].replaceWith(nodes[0].cloneNode(true));
-                    nodes[2].replaceWith(nodes[0].cloneNode(true));
-                    nodes[2].childNodes[1].remove();
-                    nodes[1].childNodes[0].href = API.sort[API.sort[tid][0]][2];
-                    nodes[1].childNodes[0].innerText = API.sort[API.sort[tid][0]][1];
-                    nodes[2].childNodes[0].href = API.sort[tid][2];
-                    nodes[2].childNodes[0].innerText = API.sort[tid][1];
-                }
-            },1000);
-        },
-        fixSortWatchLater : () => { // 稍后再看分区
+        fixSort: { // 失效分区
+            video: () => {
+                let timer = window.setInterval(()=>{
+                    let tminfo = document.getElementsByClassName("tm-info");
+                    if (tminfo[0]) {
+                        window.clearInterval(timer);
+                        if (!(tid in API.sort)) return; // 判断tid是否在需要修复的范围
+                        let nodes = tminfo[0].childNodes;
+                        // 创建分区信息节点并写入tid对应的分区数据
+                        nodes[1].replaceWith(nodes[0].cloneNode(true));
+                        nodes[2].replaceWith(nodes[0].cloneNode(true));
+                        nodes[2].childNodes[1].remove();
+                        nodes[1].childNodes[0].href = API.sort[API.sort[tid][0]][2];
+                        nodes[1].childNodes[0].innerText = API.sort[API.sort[tid][0]][1];
+                        nodes[2].childNodes[0].href = API.sort[tid][2];
+                        nodes[2].childNodes[0].innerText = API.sort[tid][1];
+                    }
+                },1000);
+            },
+            watchlater : () => { // 稍后再看分区
             let timer = window.setInterval(async ()=>{
                 let tminfo = document.getElementsByClassName("tm-info");
                 if (tminfo[0]&&aid) { // 判断是否是稍后再看播放页面
@@ -784,6 +801,7 @@
                     }
                 }
             },1000);
+        },
         },
         setLike: () => { // 点赞功能
             if (!config.reset.like) return;
@@ -859,183 +877,190 @@
                     }
                 },100);
         },
-        setMediaList: async (data) => { // 收藏播放
-            if (!localStorage.getItem("medialist")) { // 判断是正常av页还是收藏播放页
-                if (!window.__playinfo__.data || !window.__playinfo__.data.accept_quality) return;
-                if (window.__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
-                let timer = setInterval(() => {
-                    if (!unsafeWindow.BilibiliPlayer) return;
-                    clearInterval(timer);
-                    let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
-                    unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
-                    unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
-                },100)
-                return;
-            }
-            if (data){ // 以传参data决定处理类型
-                data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id":ml,"pn":1,"ps":1})); // 获取收藏播放页正在播放的视频av
-                data = JSON.parse(data).data;
-                if (data.medias) location.replace("https://www.bilibili.com/video/av" + data.medias[0].id); // 跳转到av页
-            }
-            else {
-                let loop = async () => {
-                    let value =[];
-                    for (let i=0;i<20;i++) if (avs[i]) value[i] = "av" + avs[i]; // API限制一次最多获取20
-                    avs.splice(0,20); // 删除即将获取项目的记录
-                    data = await xhr.true(deliver.obj2search(API.url.cards, {"ids":value.join("%2C")})); // 获取列表视频对应数据
-                    data = JSON.parse(data).data;
-                    for (let key in data) {ids.push(data[key])} // 依次保存收藏视频数据进全局变量
-                    if (avs[0]) loop();
-                }
-                ml = localStorage.getItem("medialist"); // 读取收藏号
-                localStorage.setItem("medialist",""); // 清除收藏号
-                data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id":ml})); // 获取收藏列表所有aid
-                try {
-                    data = JSON.parse(data).data;
-                    let value = [];
-                    for (let i=0;i<data.medias.length;i++) avs[i] = data.medias[i].id; // 保存收藏列表aid
-                    await loop(); // 获取列表视频对应数据
-                    let timer = window.setInterval(()=>{
-                        if (unsafeWindow.BilibiliPlayer) {
-                            clearInterval(timer);
-                            // 重构稍后再看列表所需数据
-                            for (let i=0;i<ids.length;i++) {
-                                ids[i].progress = 0;
-                                ids[i].add_at = ids[i].ctime;
-                                ids[i].pages = [];
-                                ids[i].pages[0] = {};
-                                ids[i].pages[0].cid = ids[i].cid;
-                                ids[i].pages[0].dimension = ids[i].dimension;
-                                ids[i].pages[0].duration = ids[i].duration;
-                                ids[i].pages[0].from = "vupload";
-                                ids[i].pages[0].page = 1;
-                                ids[i].pages[0].part = ids[i].title;
-                                ids[i].pages[0].vid = "";
-                                ids[i].pages[0].weblink = "";
-                            }
-                            let toview = {"code":0,"message":"0","ttl":1,"data":{"count":ids.length,"list":ids}};
-                            oid = ids[0].aid; // 保存初始aid，以便判断是否切p
-                            obj = {"aid":ids[0].aid,"cid":ids[0].cid,"watchlater":encodeURIComponent(JSON.stringify(toview))}; // 重构初始化播放器参数
-                            unsafeWindow.BilibiliPlayer(obj); // 初始化播放器，使用稍后再看列表模拟收藏列表
-                            let bpui = document.getElementsByClassName("bpui-button-text");
-                            let t = setInterval(()=>{ // 更新列表信息
-                                if (bpui[1]) {
-                                    clearInterval(t);
-                                    bpui[1].firstChild.innerText = "收藏列表";
-                                }
-                            },100);
-                        }
-                    },100);
-                } catch(e) {debug.error(e)}
-            }
-        },
-        setMediaListRestore: () => { // 收藏播放更新
-            let data;
-            history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash); // 更新地址栏av号
-            for (let i=0;i<ids.length;i++) if (ids[i].aid==aid) data = ids[i];
-            let video_info = document.getElementById("viewbox_report").childNodes;
-            let up_info = document.getElementById("v_upinfo").childNodes;
-            let tag = document.getElementById("v_tag").childNodes;
-            let desc = document.getElementById("v_desc").childNodes;
-            let arc_toolbar_report = document.getElementById("arc_toolbar_report").childNodes;
-            let title = video_info[0];
-            let info = video_info[1];
-            let number = video_info[2];
-            document.title = data.title;
-            title.title = data.title;
-            title.childNodes[1].innerText = data.title;
-            // 留待完善分区表
-            //info.childNodes[1].childNodes[0].href = API.sort[API.sort[data.tid][0]][2];
-            //info.childNodes[1].childNodes[0].innerText = API.sort[API.sort[data.tid][0]][1];
-            //info.childNodes[2].childNodes[0].href = API.sort[data.tid][2];
-            //info.childNodes[2].childNodes[0].innerText = API.sort[data.tid][1];
-            info.childNodes[3].innerText = deliver.timeFormat(data.pubdate*1000);
-            number.childNodes[0].title = "总播放数" + data.stat.view;
-            number.childNodes[0].innerText = data.stat.view < 10000 ? data.stat.view : (data.stat.view / 10000).toFixed(1) + "万";
-            number.childNodes[1].title = "总弹幕数" + data.stat.danmaku;
-            number.childNodes[1].innerText = data.stat.danmaku < 10000 ? data.stat.danmaku : (data.stat.danmaku / 10000).toFixed(1) + "万";
-            if (data.stat.his_rank>0) {number.childNodes[2].innerText = "最高全站日排行" + data.stat.his_rank + "名"} else {number.childNodes[2].setAttribute("hidden","hidden")}
-            if (number.childNodes[4].className == "u like") {
-                number.childNodes[4].title = "点赞人数" + data.stat.like;
-                number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("点赞 " + (data.stat.like < 10000 ? data.stat.like : (data.stat.like / 10000).toFixed(1) + "万")));
-                number.childNodes[5].title = "投硬币枚数" + data.stat.coin;
-                number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万")));
-                number.childNodes[6].title = "收藏人数" + data.stat.favorite;
-                number.childNodes[6].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万")));
-            }
-            else {
-                number.childNodes[4].title = "投硬币枚数" + data.stat.coin;
-                number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万")));
-                number.childNodes[5].title = "收藏人数" + data.stat.favorite;
-                number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万")));
-            }
-            up_info[0].childNodes[1].href = "https://space.bilibili.com/" + data.owner.mid;
-            up_info[0].childNodes[1].childNodes[0].src = data.owner.face;
-            up_info[1].childNodes[0].childNodes[0].href = "https://space.bilibili.com/" + data.owner.mid;
-            up_info[1].childNodes[0].childNodes[0].innerText = data.owner.name;
-            up_info[1].childNodes[1].childNodes[0].innerText = "这里是up主简介";
-            up_info[1].childNodes[2].childNodes[0].innerText = "投稿 --";
-            up_info[1].childNodes[2].childNodes[1].innerText = "粉丝 --";
-            arc_toolbar_report[0].childNodes[0].title = "分享人数" + data.stat.share;
-            arc_toolbar_report[0].childNodes[0].childNodes[1].innerText = data.stat.share < 10000 ? data.stat.share : (data.stat.share / 10000).toFixed(1) + "万";
-            arc_toolbar_report[2].title = "收藏人数" + data.stat.favorite;
-            arc_toolbar_report[2].childNodes[0].childNodes[3].innerText = data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万";
-            arc_toolbar_report[3].title = "投硬币枚数" + data.stat.coin;
-            arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万";
-            tag[0].setAttribute("hidden", "hidden");
-            desc[1].innerText = data.desc;
-            new unsafeWindow.bbComment(".comment",unsafeWindow.aid, 1, unsafeWindow.UserStatus.userInfo, "");
-            let bpui = document.getElementsByClassName("bpui-button-text");
-            let t = setInterval(()=>{ // 更新列表信息
-                if (bpui[1]) {
-                    clearInterval(t);
-                    bpui[1].firstChild.innerText = "收藏列表";
-                }
-            },100);
-        },
-        setBangumi: (data) => { // 分集数据
-            if (!config.reset.episodedata) return;
-            if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) { // 判断是否有分集数据
-                aid = data.epInfo.aid; // 获取aid
-                let timer = window.setInterval(() => {
-                    if (document.getElementsByClassName("info-sec-av")[0]) {
-                        deliver.episodeData("first"); // 进入首集处理
-                        window.clearInterval(timer);
-                    }
-                },1000);
-                window.setTimeout(() => {window.clearInterval(timer);},10000); // 延时取消操作
-                document.addEventListener("DOMNodeInserted",(msg) => {
-                    if (msg.relatedNode.className == "info-sec-av") { // 判断是否切p
-                        aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
-                        deliver.episodeData();
-                    }
-                });
-            }
-        },
-        episodeData: async (data) => { // 分集数据处理
-            let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
-            let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
-            if (data == "first") { // 判断是否是首集
-                if (views.innerText == "-" && danmakus.innerText == "-") {
-                    window.setTimeout(() => {deliver.episodeData("first")},100);
+        setMediaList: {
+            init: async (data) => { // 收藏播放
+                if (!ml) { // 判断是正常av页还是收藏播放页
+                    if (!window.__playinfo__.data || !window.__playinfo__.data.accept_quality) return;
+                    if (window.__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
+                    let timer = setInterval(() => {
+                        if (!unsafeWindow.BilibiliPlayer) return;
+                        clearInterval(timer);
+                        let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
+                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
+                        unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
+                    },100)
                     return;
                 }
-                views.setAttribute("title","总播放数 " + views.innerText); // 备份总播放数
-                danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText); // 备份总弹幕数
-                debug.log("合计播放：" + views.innerText + " 合计弹幕：" + danmakus.innerText);
-                data = await xhr.true(deliver.obj2search(API.url.stat, {"aid":aid})); // 请求首集数据
-            }
-            if (!data) {data = await xhr.true(deliver.obj2search(API.url.stat, {"aid":aid}))} // 请求非首集数据
-            try {
-                data = JSON.parse(data).data;
-                let view = data.view;
-                let danmaku = data.danmaku;
-                if (view>=10000) view = (view / 10000).toFixed(1) + "万";
-                if (danmaku>=10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
-                views.innerText = view; // 写入分集播放量
-                danmakus.innerText = danmaku; // 写入分集弹幕数
-                debug.log("播放：" + view + " 弹幕：" + danmaku);
-            } catch(e) {debug.error(e);}
+                if (data){ // 以传参data决定处理类型
+                    data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id":ml,"pn":1,"ps":1})); // 获取收藏播放页正在播放的视频av
+                    data = JSON.parse(data).data;
+                    if (data && data.medias) location.replace("https://www.bilibili.com/video/av" + data.medias[0].id); // 跳转到av页
+                    else GM_setValue("medialist", 0);
+                }
+                else {
+                    let loop = async () => {
+                        let value =[];
+                        for (let i=0;i<20;i++) if (avs[i]) value[i] = "av" + avs[i]; // API限制一次最多获取20
+                        avs.splice(0,20); // 删除即将获取项目的记录
+                        data = await xhr.true(deliver.obj2search(API.url.cards, {"ids":value.join("%2C")})); // 获取列表视频对应数据
+                        data = JSON.parse(data).data;
+                        for (let key in data) {ids.push(data[key])} // 依次保存收藏视频数据进全局变量
+                        if (avs[0]) loop();
+                    }
+                    data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id": ml})); // 获取收藏列表所有aid
+                    try {
+                        data = JSON.parse(data).data;
+                        let value = [];
+                        for (let i=0;i<data.medias.length;i++) avs[i] = data.medias[i].id; // 保存收藏列表aid
+                        await loop(); // 获取列表视频对应数据
+                        let timer = window.setInterval(()=>{
+                            if (unsafeWindow.BilibiliPlayer) {
+                                clearInterval(timer);
+                                // 重构稍后再看列表所需数据
+                                for (let i=0;i<ids.length;i++) {
+                                    ids[i].progress = 0;
+                                    ids[i].add_at = ids[i].ctime;
+                                    ids[i].pages = [];
+                                    ids[i].pages[0] = {};
+                                    ids[i].pages[0].cid = ids[i].cid;
+                                    ids[i].pages[0].dimension = ids[i].dimension;
+                                    ids[i].pages[0].duration = ids[i].duration;
+                                    ids[i].pages[0].from = "vupload";
+                                    ids[i].pages[0].page = 1;
+                                    ids[i].pages[0].part = ids[i].title;
+                                    ids[i].pages[0].vid = "";
+                                    ids[i].pages[0].weblink = "";
+                                }
+                                let toview = {"code":0,"message":"0","ttl":1,"data":{"count":ids.length,"list":ids}};
+                                oid = ids[0].aid; // 保存初始aid，以便判断是否切p
+                                obj = {"aid":ids[0].aid,"cid":ids[0].cid,"watchlater":encodeURIComponent(JSON.stringify(toview))}; // 重构初始化播放器参数
+                                unsafeWindow.BilibiliPlayer(obj); // 初始化播放器，使用稍后再看列表模拟收藏列表
+                                let bpui = document.getElementsByClassName("bpui-button-text");
+                                let t = setInterval(()=>{ // 更新列表信息
+                                    if (bpui[1]) {
+                                        clearInterval(t);
+                                        bpui[1].firstChild.innerText = "收藏列表";
+                                    }
+                                },100);
+                            }
+                        },100);
+                    } catch(e) {debug.error(e)}
+                }
+            },
+            fixvar: () => { // aid变化监听
+                if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
+                if (oid) {
+                    if (oid!=unsafeWindow.aid) { // 收藏播放切p判断
+                        aid = unsafeWindow.aid ? unsafeWindow.aid : aid;
+                        oid = unsafeWindow.aid;
+                        deliver.setMediaList.restore(); // 更新收藏播放
+                    }
+                }
+            },
+            restore: () => { // 收藏播放更新
+                let data;
+                history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash); // 更新地址栏av号
+                for (let i=0;i<ids.length;i++) if (ids[i].aid==aid) data = ids[i];
+                let video_info = document.getElementById("viewbox_report").childNodes;
+                let up_info = document.getElementById("v_upinfo").childNodes;
+                let tag = document.getElementById("v_tag").childNodes;
+                let desc = document.getElementById("v_desc").childNodes;
+                let arc_toolbar_report = document.getElementById("arc_toolbar_report").childNodes;
+                let title = video_info[0];
+                let info = video_info[1];
+                let number = video_info[2];
+                document.title = data.title;
+                title.title = data.title;
+                title.childNodes[1].innerText = data.title;
+                // 留待完善分区表
+                //info.childNodes[1].childNodes[0].href = API.sort[API.sort[data.tid][0]][2];
+                //info.childNodes[1].childNodes[0].innerText = API.sort[API.sort[data.tid][0]][1];
+                //info.childNodes[2].childNodes[0].href = API.sort[data.tid][2];
+                //info.childNodes[2].childNodes[0].innerText = API.sort[data.tid][1];
+                info.childNodes[3].innerText = deliver.timeFormat(data.pubdate*1000);
+                number.childNodes[0].title = "总播放数" + data.stat.view;
+                number.childNodes[0].innerText = data.stat.view < 10000 ? data.stat.view : (data.stat.view / 10000).toFixed(1) + "万";
+                number.childNodes[1].title = "总弹幕数" + data.stat.danmaku;
+                number.childNodes[1].innerText = data.stat.danmaku < 10000 ? data.stat.danmaku : (data.stat.danmaku / 10000).toFixed(1) + "万";
+                if (data.stat.his_rank>0) {number.childNodes[2].innerText = "最高全站日排行" + data.stat.his_rank + "名"} else {number.childNodes[2].setAttribute("hidden","hidden")}
+                if (number.childNodes[4].className == "u like") {
+                    number.childNodes[4].title = "点赞人数" + data.stat.like;
+                    number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("点赞 " + (data.stat.like < 10000 ? data.stat.like : (data.stat.like / 10000).toFixed(1) + "万")));
+                    number.childNodes[5].title = "投硬币枚数" + data.stat.coin;
+                    number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万")));
+                    number.childNodes[6].title = "收藏人数" + data.stat.favorite;
+                    number.childNodes[6].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万")));
+                }
+                else {
+                    number.childNodes[4].title = "投硬币枚数" + data.stat.coin;
+                    number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万")));
+                    number.childNodes[5].title = "收藏人数" + data.stat.favorite;
+                    number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万")));
+                }
+                up_info[0].childNodes[1].href = "https://space.bilibili.com/" + data.owner.mid;
+                up_info[0].childNodes[1].childNodes[0].src = data.owner.face;
+                up_info[1].childNodes[0].childNodes[0].href = "https://space.bilibili.com/" + data.owner.mid;
+                up_info[1].childNodes[0].childNodes[0].innerText = data.owner.name;
+                up_info[1].childNodes[1].childNodes[0].innerText = "这里是up主简介";
+                up_info[1].childNodes[2].childNodes[0].innerText = "投稿 --";
+                up_info[1].childNodes[2].childNodes[1].innerText = "粉丝 --";
+                arc_toolbar_report[0].childNodes[0].title = "分享人数" + data.stat.share;
+                arc_toolbar_report[0].childNodes[0].childNodes[1].innerText = data.stat.share < 10000 ? data.stat.share : (data.stat.share / 10000).toFixed(1) + "万";
+                arc_toolbar_report[2].title = "收藏人数" + data.stat.favorite;
+                arc_toolbar_report[2].childNodes[0].childNodes[3].innerText = data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万";
+                arc_toolbar_report[3].title = "投硬币枚数" + data.stat.coin;
+                arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万";
+                tag[0].setAttribute("hidden", "hidden");
+                desc[1].innerText = data.desc;
+                new unsafeWindow.bbComment(".comment",unsafeWindow.aid, 1, unsafeWindow.UserStatus.userInfo, "");
+                let bpui = document.getElementsByClassName("bpui-button-text");
+                let t = setInterval(()=>{ // 更新列表信息
+                    if (bpui[1]) {
+                        clearInterval(t);
+                        bpui[1].firstChild.innerText = "收藏列表";
+                    }
+                },100);
+            },
+        },
+        setBangumi: {
+            init: (data) => { // 分集数据
+                if (!config.reset.episodedata) return;
+                if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) { // 判断是否有分集数据
+                    aid = data.epInfo.aid; // 获取aid
+                    let timer = window.setInterval(() => {
+                        if (document.getElementsByClassName("info-sec-av")[0]) {
+                            deliver.setBangumi.episodeData("first"); // 进入首集处理
+                            window.clearInterval(timer);
+                        }
+                    },1000);
+                    window.setTimeout(() => {window.clearInterval(timer);},10000); // 延时取消操作
+                }
+            },
+            episodeData: async (data) => { // 分集数据处理
+                let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
+                let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
+                if (data == "first") { // 判断是否是首集
+                    if (views.innerText == "-" && danmakus.innerText == "-") {
+                        window.setTimeout(() => {deliver.episodeData("first")},100);
+                        return;
+                    }
+                    views.setAttribute("title","总播放数 " + views.innerText); // 备份总播放数
+                    danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText); // 备份总弹幕数
+                    debug.log("合计播放：" + views.innerText + " 合计弹幕：" + danmakus.innerText);
+                    data = await xhr.true(deliver.obj2search(API.url.stat, {"aid":aid})); // 请求首集数据
+                }
+                if (!data) {data = await xhr.true(deliver.obj2search(API.url.stat, {"aid":aid}))} // 请求非首集数据
+                try {
+                    data = JSON.parse(data).data;
+                    let view = data.view;
+                    let danmaku = data.danmaku;
+                    if (view>=10000) view = (view / 10000).toFixed(1) + "万";
+                    if (danmaku>=10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
+                    views.innerText = view; // 写入分集播放量
+                    danmakus.innerText = danmaku; // 写入分集弹幕数
+                    debug.log("播放：" + view + " 弹幕：" + danmaku);
+                } catch(e) {debug.error(e);}
+            },
         },
         setPlayList: () => { // 播单处理
             window.onload = () => {
@@ -1408,7 +1433,7 @@
                 rec.onclick = () => {
                     for (let key in def.rewrite) if (key in config.rewrite) config.rewrite[key] = def.rewrite[key];
                     for (let key in def.reset) if (key in config.reset) config.reset[key] = def.reset[key];
-                    localStorage.setItem("biliold",JSON.stringify(config));
+                    GM_setValue("config",config);
                     table.remove();
                 }
                 table.appendChild(rec);
@@ -1419,7 +1444,7 @@
             else table = table[0];
             // 设置失去焦点时消失时间
             table.onmouseover = () => window.clearTimeout(timer);
-            table.onmouseout = () => {timer = window.setTimeout(() => {table.setAttribute("hidden","hidden");localStorage.setItem("biliold",JSON.stringify(config));},500);}
+            table.onmouseout = () => {timer = window.setTimeout(() => {table.setAttribute("hidden","hidden");GM_setValue("config",config);},500);}
         },
         setTable: (ele,name,check,key) => { // 读取写入各设置数据
             let div = document.createElement("div");
@@ -1476,6 +1501,8 @@
     }
     const thread = {
         video: () => {
+            ml = GM_getValue("medialist");
+            GM_setValue("medialist", 0);
             if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')
                ) history.replaceState(null,null,"https://www.bilibili.com/video/av" + deliver.convertId(LOCATION[4]) + location.search + location.hash);
             if (!config.rewrite.av) return;
@@ -1488,26 +1515,25 @@
                 window.__playinfo__ = window.__playinfo__ ? JSON.parse(window.__playinfo__.replace(/http:/g,"https:")) : ""; // 修改flv为安全链接
                 debug.debug(window.__playinfo__);
                 if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
+                window.hd = 1;
                 aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid; // 获取aid
                 tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid; // 获取tid
                 deliver.write(API.pageframe.video); // 重写av框架
-                deliver.fixSort() // 修复分区
+                deliver.fixSort.video() // 修复分区
                 deliver.setLike();// 添加点赞功能
-                deliver.setMediaList(); // 收藏播放功能
+                deliver.setMediaList.init(); // 收藏播放功能
             }
         },
         watchlater: () => {
             if (!config.rewrite.watchlater || !uid) return;
-            if (LOCATION[5]) {
-                deliver.write(API.pageframe.watchlater); // 重写稍后再看框架
-                deliver.setLike(); // 添加点赞功能入口
-                deliver.fixSortWatchLater(); // 修复分区入口
-                aid = LOCATION[5].match(/[0-9]+/) ? LOCATION[5].match(/[0-9]+/)[0] : aid; // 获取aid
-                if (LOCATION[5].toLowerCase().startsWith('bv')){ // 地址栏若是bv，尝试转为av
-                    aid = deliver.convertId(LOCATION[5]); // bvid转aid
-                    LOCATION[5] = "av" + aid;
-                    history.replaceState(null,null,LOCATION.join("/")); // 替换地址栏bvid
-                }
+            deliver.write(API.pageframe.watchlater); // 重写稍后再看框架
+            deliver.setLike(); // 添加点赞功能入口
+            deliver.fixSort.watchlater(); // 修复分区入口
+            aid = LOCATION[5].match(/[0-9]+/) ? LOCATION[5].match(/[0-9]+/)[0] : aid; // 获取aid
+            if (LOCATION[5].toLowerCase().startsWith('bv')){ // 地址栏若是bv，尝试转为av
+                aid = deliver.convertId(LOCATION[5]); // bvid转aid
+                LOCATION[5] = "av" + aid;
+                history.replaceState(null,null,LOCATION.join("/")); // 替换地址栏bvid
             }
         },
         bangumi: () => {
@@ -1518,8 +1544,9 @@
                 if (LOCATION[5].startsWith('ss')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"season_id":id})),null);
                 if (LOCATION[5].startsWith('ep')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"ep_id":id})),id);
                 if (__INITIAL_STATE__.epInfo.badge === "互动") return; // 忽略互动番剧
+                window.hd = 1;
                 if (DOCUMENT.match('"specialCover":""')) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema); // 重写bangumi框架，按是否有特殊背景分别处理
-                deliver.setBangumi(__INITIAL_STATE__); // 分集数据
+                deliver.setBangumi.init(__INITIAL_STATE__); // 分集数据
             }
         },
         blackboard: () => {
@@ -1536,24 +1563,24 @@
         },
         playlist: () => {
             if (!config.rewrite.playlist) return;
-            pl = LOCATION[5].match(/[0-9]+/)[0]; // 获取播单号
-            localStorage.setItem("playlist",pl); // 保存播单号，写入localstorge，下同
+            pl = 1 * LOCATION[5].match(/[0-9]+/)[0]; // 获取播单号
+            GM_setValue("playlist",pl); // 保存播单号
             location.replace("https://www.bilibili.com/medialist/play/ml182603655"); // 重定向到收藏播放页，绕过404
         },
         medialist: () => {
-            ml = LOCATION[5].match(/[0-9]+/)[0]; // 获取收藏号
-            pl = localStorage.getItem("playlist")?localStorage.getItem("playlist"):""; // 获取播单数据
+            ml = 1 * LOCATION[5].match(/[0-9]+/)[0]; // 获取收藏号
+            pl = GM_getValue("playlist") ? GM_getValue("playlist") : ""; // 获取播单数据
             if (pl) { // 判断是否播单重定向而来
                 history.replaceState(null,null,"https://www.bilibili.com/playlist/video/pl" + pl); // 跳转回播单
+                GM_setValue("playlist", 0); // 清除播单号
+                GM_setValue("medialist", 0);// 清除收藏号
                 deliver.write(API.pageframe.playlist); // 重写播单框架
                 deliver.setPlayList(); // 播单额外处理入口
-                localStorage.setItem("playlist",""); // 清除播单号
-                localStorage.setItem("medialist","");// 清除收藏号
             }
             else {
                 if (!config.rewrite.medialist) return;
-                localStorage.setItem("medialist",ml); // 保存收藏号
-                deliver.setMediaList(ml);
+                GM_setValue("medialist",ml); // 保存收藏号
+                deliver.setMediaList.init(ml);
             }
         },
         svideo: () => {
@@ -1576,47 +1603,47 @@
         global: () => {
             if (window.self == window.top) UI.init();
             if (!LOCATION[2].match("live.bilibili.com")) deliver.setGlobalStyle(); // 样式创建
-            deliver.intercept(); // xhr重定向
-            unsafeWindow.playurl = deliver.download;
+            deliver.intercept.init(); // xhr重定向
             document.addEventListener("DOMNodeInserted",(msg) => {
                 let head = document.getElementById("internationalHeader");
                 if (msg.target.id == "bofqi") msg.target.removeAttribute("style"); // 取消隐藏av页播放器
                 if (msg.target.id == "internationalHeader") deliver.reSction(); // 版头替换
                 if (msg.target.id == "bili-header-m") if (head) head.remove(); // 移除新版版头
-                if (msg.target.className == "bilibili-player-video-subtitle") deliver.switchVideo(); // 监听切p
+                if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo(); // 监听切p
                 if (msg.target.className == "bilibili-player-video-message-ul") deliver.videoMessage(msg.target); // 恢复播放器通知信息
                 if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) src = msg.target.src; // 捕获评论链接
                 if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src; // 捕获频道链接
                 if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src); // 处理频道失效视频信息
                 if (msg.target.className == "small-item disabled") deliver.fixVideoLost.favlist(msg); // 处理收藏失效视频信息
+                if (msg.relatedNode.className == "info-sec-av") {aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];deliver.setBangumi.episodeData();} // 判断番剧是否切p
                 if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m") deliver.fixnews(msg.target); // 广告区转资讯区
                 if (src && msg.target.className && (msg.target.className == "main-floor" || msg.target.className == "list-item reply-wrap ")){
                     window.clearTimeout(timer);
                     timer = window.setTimeout(() => {deliver.setReplyFloor(src);},1000); // 修复评论楼层
                 }
                 deliver.removeNodes(); // 处理失效节点
-                deliver.fixvar(); // 监听全局变量
+                deliver.setMediaList.fixvar(); // 监听全局变量
                 deliver.removeBlur(); // 顶栏透明度
-                deliver.avdesc(); // 超链接转化
                 deliver.removePreview(); // 去除预览提示框
                 deliver.removeLiveLogo(); // 去除直播水印
                 deliver.fixVideoLost.home(msg); // 处理空间主页失效视频
+                if (window.hd) deliver.avdesc(); // 超链接转化
             });
         }
     }
     /******* 启动入口 *******/
     def = JSON.parse(JSON.stringify(config));
-    try { // 脚本设置
-        let data = JSON.parse(localStorage.getItem("biliold"));
+    let data = GM_getValue("config");
+    if (data) {
         for (let key in data.rewrite) if (key in config.rewrite) config.rewrite[key] = data.rewrite[key];
         for (let key in data.reset) if (key in config.reset) config.reset[key] = data.reset[key];
-    } catch(e) {localStorage.setItem("biliold",JSON.stringify(config));}
+    } else GM_setValue("config",config);
     try {
         let bilibili_player_settings = JSON.parse(localStorage.getItem("bilibili_player_settings"));
         uid = deliver.getCookies().DedeUserID;
         if (bilibili_player_settings) { // 播放器设置
-            if (bilibili_player_settings.video_status.autopart !== "") localStorage.setItem("bilibili_player_settings_copy",JSON.stringify(bilibili_player_settings));
-            else localStorage.setItem("bilibili_player_settings",localStorage.getItem("bilibili_player_settings_copy"));
+            if (bilibili_player_settings.video_status.autopart !== "") GM_setValue("bilibili_player_settings",bilibili_player_settings);
+            else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings",JSON.stringify(GM_getValue("bilibili_player_settings")));
         }
         if (uid) { // 动态历史数据
             let offset = deliver.getCookies()["bp_video_offset_"+ uid];
