@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.0.8
+// @version      3.0.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -212,6 +212,7 @@
                 dat.mediaInfo.total_ep = rp.total_ep;
                 dat.mediaRating = rp.rating;
                 dat.epList = rp.episodes;
+                if (dat.epList[0].cid === -1) for (let i=0;i<ini.epList.length;i++) dat.epList[i].cid = ini.epList[i].cid;
                 if (ep==0) dat.epId=dat.epList[0].ep_id;
                 for (let i=0;i<dat.epList.length;i++) if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
                 dat.newestEp = rp.newest_ep;
@@ -1516,6 +1517,7 @@
                 let id = location.href.match(/[0-9]+/)[0]; // 获取ss(ep)号
                 if (LOCATION[5].startsWith('ss')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"season_id":id})),null);
                 if (LOCATION[5].startsWith('ep')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"ep_id":id})),id);
+                if (__INITIAL_STATE__.epInfo.badge === "互动") return; // 忽略互动番剧
                 if (DOCUMENT.match('"specialCover":""')) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema); // 重写bangumi框架，按是否有特殊背景分别处理
                 deliver.setBangumi(__INITIAL_STATE__); // 分集数据
             }
