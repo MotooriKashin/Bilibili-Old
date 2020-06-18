@@ -83,6 +83,8 @@
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
+- 下载功能参考了[Bilibili_video_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢。
+- md5算法修改自百度百科，具体来源不明，侵删，非常感谢。
 
 ---
 ### 效果预览
