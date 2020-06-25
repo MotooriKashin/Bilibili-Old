@@ -1,7 +1,7 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 83](https://img.shields.io/badge/Google_Chrome_83-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面
+- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是旧版页面？)
 - 默认开启部分功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
 - 初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
@@ -59,11 +59,12 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 83.0.4103.61 (正式版本) （64 位） (cohort: 83\_61\_Win)  
+> Google Chrome 83.0.4103.6 (正式版本) （64 位） (cohort: 83\_61\_Win)  
 > Tampermonkey BETA 4.10.6112
 >
  
 其他同域脚本兼容数据
+- **所有重写过的页面其他以`run-at document-start`注入的同域脚本的`GM_setValue`功能失效！**
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 正常 调整设置需去新版页面
@@ -83,8 +84,8 @@
 - 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
-- 下载功能参考了[Bilibili_video_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢。
-- md5算法修改自百度百科，具体来源不明，侵删，非常感谢。
+- 下载功能参考了[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢。
+- 哈希(md5)算法修改自百度百科，作者不明，侵删，非常感谢。
 
 ---
 ### 效果预览
@@ -92,6 +93,8 @@
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
 **可能不能及时从[Github](https://github.com/MotooriKashin/Bilibili-Old)同步最新历史**
+- 2020-06-25
+   + 修复稍后再看顶栏
 - 2020-06-11
    + 改用脚本管理器存储设置数据(需要重新自定义自己的设置选项)
    + 下载视频支持新版播放页
