@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.0.9
+// @version      3.1.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -615,6 +615,7 @@
                 url = "";
                 let fixnav_report = document.getElementById("fixnav_report");
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("bangumi-nav-right")[0];
+                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("fixed-nav-m")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-menu")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-tools")[0];
                 if (!fixnav_report) return;
