@@ -63,8 +63,7 @@
 > Tampermonkey BETA 4.10.6112
 >
  
-其他同域脚本兼容数据
-- **所有重写过的页面其他以`run-at document-start`注入的同域脚本的`GM_setValue`功能失效！**
+**所有重写过的页面其他以`run-at document-start`注入的同域脚本的`GM_setValue`功能失效！**
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 正常
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718) 正常 调整设置需去新版页面
