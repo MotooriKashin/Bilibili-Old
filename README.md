@@ -38,7 +38,7 @@
 ### 关于设置
 - 本脚本旨在恢复原生旧版页面并尽量不去添加多余的东西，所以设置界面设计得比较隐蔽(纯白底色且自动贴边)
 - 本脚本所有功能都可以在设置中独立选择是否启用并附带详细说明，设置数据存储在脚本管理器中
-- 设置入口在页面右下角2~3厘米处，鼠标移到对应位置会自动显现(或者参考[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例"))
+- 设置入口在页面右下角2~3厘米处，鼠标移到对应位置会自动显现(或者参考[这个动图](https://camo.githubusercontent.com/67063eab77119e4c798b95578ea211c8cfca9d0a/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767554b55532e676966 "设置参考示例"))
 
 ---
 ### 已知问题
@@ -134,7 +134,7 @@
 ---
 ### 效果预览
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
-![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
+![Bangumi](https://camo.githubusercontent.com/1802bb815c3f624f636b0ee71554a7b3816f1801/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767774576392e706e67)
 ### 版本历史
 - 2020-06-26
    + 修复av页带评论跳转锚点时mini播放器错位
