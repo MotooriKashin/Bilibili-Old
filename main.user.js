@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.1.0
+// @version      3.1.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -15,6 +15,7 @@
 // @grant        GM_setValue
 // @run-at       document-start
 // @license      MIT License
+// @note         本次更新：修复HTML5帮助页视频地址
 // ==/UserScript==
 
 (function() {
@@ -654,7 +655,7 @@
                             append();
                         },1000);
                     }
-                    else {;append();}
+                    else append()
                 }
             },
             geturl: async () => { // 拉取视频链接
@@ -1551,16 +1552,19 @@
             }
         },
         blackboard: () => {
+            if (LOCATION[4].startsWith('html5player')) if (LOCATION[4].includes("3521416") && LOCATION[4].includes("6041635")) location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":3521416,"cid":192446449}));
             if (!config.rewrite.frame) return;
-            let link = location.href;
-            let season_type = link.match(/season_type=[0-9]*/)?1*link.match(/season_type=[0-9]*/)[0].replace(/season_type=/,""):""; // 获取season_type
-            let player_type = link.match(/player_type=[0-9]*/)?1*link.match(/player_type=[0-9]*/)[0].replace(/player_type=/,""):""; // 获取player_type
-            aid = link.match(/aid=[0-9]*/) ? 1 * link.match(/aid=[0-9]*/)[0].replace(/aid=/,"") : 1 * deliver.convertId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace(/bvid=/,"")); // 获取aid或bvid转的aid
-            aid = aid ? aid : 1 * deliver.convertId(link.match(/aid=[A-Za-z0-9]*/)[0].replace(/aid=/,"")); // 获取写作aid读作bvid的aid
-            cid = link.match(/cid=[0-9]*/)?1*link.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : cid; // 获取cid
-            cid = cid ? cid : JSON.parse(xhr.false(deliver.obj2search(API.url.pagelist,{"aid":aid}))).data[0].cid; // 获取cid失败，通过aid获取
-            location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":aid,"cid":cid,"season_type":season_type,"player_type":player_type,"as_wide":1,"urlparam":"module%253Dbangumi","crossDomain":"true"}));
-            debug.log("嵌入式播放器：aid=" + aid + " cid=" + cid);
+            if (LOCATION[4].startsWith('newplayer')) {
+                let link = location.href;
+                let season_type = link.match(/season_type=[0-9]*/)?1*link.match(/season_type=[0-9]*/)[0].replace(/season_type=/,""):""; // 获取season_type
+                let player_type = link.match(/player_type=[0-9]*/)?1*link.match(/player_type=[0-9]*/)[0].replace(/player_type=/,""):""; // 获取player_type
+                aid = link.match(/aid=[0-9]*/) ? 1 * link.match(/aid=[0-9]*/)[0].replace(/aid=/,"") : 1 * deliver.convertId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace(/bvid=/,"")); // 获取aid或bvid转的aid
+                aid = aid ? aid : 1 * deliver.convertId(link.match(/aid=[A-Za-z0-9]*/)[0].replace(/aid=/,"")); // 获取写作aid读作bvid的aid
+                cid = link.match(/cid=[0-9]*/)?1*link.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : cid; // 获取cid
+                cid = cid ? cid : JSON.parse(xhr.false(deliver.obj2search(API.url.pagelist,{"aid":aid}))).data[0].cid; // 获取cid失败，通过aid获取
+                location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":aid,"cid":cid,"season_type":season_type,"player_type":player_type,"as_wide":1,"urlparam":"module%253Dbangumi","crossDomain":"true"}));
+                debug.log("嵌入式播放器：aid=" + aid + " cid=" + cid);
+            }
         },
         playlist: () => {
             if (!config.rewrite.playlist) return;
@@ -1607,7 +1611,7 @@
             deliver.intercept.init(); // xhr重定向
             document.addEventListener("DOMNodeInserted",(msg) => {
                 let head = document.getElementById("internationalHeader");
-                if (msg.target.id == "bofqi") msg.target.removeAttribute("style"); // 取消隐藏av页播放器
+                if (msg.target.className == "rec-btn prev") document.getElementById("bofqi").removeAttribute("style"); // 取消隐藏av页播放器
                 if (msg.target.id == "internationalHeader") deliver.reSction(); // 版头替换
                 if (msg.target.id == "bili-header-m") if (head) head.remove(); // 移除新版版头
                 if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo(); // 监听切p
@@ -1655,7 +1659,7 @@
         if (LOCATION[3] == 'video' && (LOCATION[4].toLowerCase().startsWith('av') || LOCATION[4].toLowerCase().startsWith('bv'))) thread.video();
         if (LOCATION[3] == 'watchlater') thread.watchlater();
         if (LOCATION[3] == 'bangumi' && LOCATION[4] == 'play') thread.bangumi();
-        if (LOCATION[3] == 'blackboard' && LOCATION[4] && LOCATION[4].startsWith('newplayer')) thread.blackboard();
+        if (LOCATION[3] == 'blackboard' && LOCATION[4]) thread.blackboard();
         if (LOCATION[3] == 'playlist' && LOCATION[5].startsWith('pl')) thread.playlist();
         if (LOCATION[3] == 'medialist' && LOCATION[4] == 'play' && LOCATION[5].startsWith('ml')) thread.medialist();
         if (LOCATION[3] == 's' && (LOCATION[5].toLowerCase().startsWith('av') || LOCATION[5].toLowerCase().startsWith('bv'))) thread.svideo();
