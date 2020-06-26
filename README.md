@@ -1,7 +1,7 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 83](https://img.shields.io/badge/Google_Chrome_83-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(其实主要是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例"))
+- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")？)
 - 默认开启部分附加功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
 - 初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
