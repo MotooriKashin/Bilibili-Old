@@ -1,8 +1,8 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 83](https://img.shields.io/badge/Google_Chrome_83-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是旧版页面？)
-- 默认开启部分功能，部分任性功能如不喜欢可自行关闭。
+- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(其实主要是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例"))
+- 默认开启部分附加功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
 - 初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
    + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
@@ -11,7 +11,7 @@
    + 2020年04月04日：B站取消旧版主页
    + 2020年04月23日：B站开启4K灰度测试
    + 2020年04月28日：B站404播单页面
-   + 2020年05月21日：B站启用新版弹幕文件，旧版弹幕接口目前还未失效
+   + 2020年05月21日：B站启用新版弹幕文件
 
 ---
 ### 脚本实现
@@ -33,26 +33,28 @@
    + 添加个人空间显示注册时间
    + 修复评论区的楼层信息
    + 修复收藏和频道里的失效视频信息
-- 设置
-   + 设置入口在页面右下角2~3厘米高处
-   + 设置入口有意设计得并不明显以尽量不污染原生版面
-   + 设置界面会在鼠标移开后消失并保存
-   + **设置图示可参考[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif)**
+
+---
+### 关于设置
+- 本脚本旨在恢复原生旧版页面并尽量不去添加多余的东西，所以设置界面设计得比较隐蔽(纯白底色且自动贴边)
+- 本脚本所有功能都可以在设置中独立选择是否启用并附带详细说明，设置数据存储在脚本管理器中
+- 设置入口在页面右下角2~3厘米处，鼠标移到对应位置会自动显现(或者参考[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例"))
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 机制限制无法在浏览器请求新页面前启用旧页面所以旧版页面载入比较慢。
-2. 4k视频支持上可能有问题。
-3. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
-4. 旧版播放器原生不支持全景视频，将无法移动视角。
-5. 旧版主页知识区仍写作科技区，热门版块切换后无法获取最新信息。
-6. 播放页面的充电入口失效，请移步UP主的个人空间。
-7. 嵌入式页面只简单替换播放器没有单独实现其他部分(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-8. 收藏播放页将跳转av页并使用稍后再看构建了收藏列表，但切p时评论等部分信息不会更新。
-9. [B站并未提高旧版弹幕上限且旧版弹幕接口面临和谐大家且用且珍惜](https://github.com/MotooriKashin/Bilibili-Old/issues/10)
-10. 偶发载入异常问题请通过刷新解决，没用就多刷新几次，硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)
-11. 实现机制问题可能导致部分同域脚本及扩展失效(参见下文兼容性条目)。
+1. 旧版页面由于机制问题将牺牲一些载入速度。
+2. 旧版播放器4k视频支持上可能有问题但无条件进行测试。
+3. 旧版播放器未适配新版弹幕，没有随着变动弹幕上限。
+4. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
+5. 旧版播放器原生不支持全景视频，将无法移动视角。
+6. 旧版主页科技区便是新版的知识区，广告区已失效并替换为新添的咨询区且无法刷新动态。
+7. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
+8. 嵌入式页面只简单替换播放器其他附带如切P等功能没有单独适配(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+9. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
+10. 收藏播放页并没有原生旧版页面所以采用av页加上稍后再看列表进行模拟，up简介等非重要信息没有去额外获取。
+11. 其他偶发载入异常问题请尝试刷新解决，没用就多刷新几次硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)。
+12. 重写页面使用的`document.write()`方法可能并已经造成部分兼容问题详见下文。
 
 ---
 ### 兼容数据
@@ -64,14 +66,57 @@
 >
  
 **所有重写过的页面其他以`run-at document-start`注入的同域脚本的`GM_setValue`功能失效！**
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) 正常
-- [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH) 正常
-- [解除B站区域限制](https://greasyfork.org/scripts/25718) 正常 调整设置需去新版页面
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513) 正常
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449) 正常 推荐`run-at document-start`
-- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341) 正常
-- **IDM下载浮动条 失效**
-- [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh) 正常
+<table>
+   <thead>
+      <tr>
+         <th>脚本</th>
+         <th>兼容性</th>
+         <th>详细说明</th>
+      </tr>
+   </thead>
+   <tbody>
+      <tr>
+         <td><a href="https://github.com/the1812/Bilibili-Evolved">Bilibili Evolved</a></td>
+         <td>正常</td>
+         <td>在由本脚本实现的旧版页面里调整设置无效</td>
+      </tr>
+      <tr>
+         <td><a href="https://github.com/SeaLoong/Bilibili-LRHH">Bilibili直播间挂机助手</a></td>
+         <td>正常</td>
+         <td></td>
+      </tr>
+      <tr>
+         <td><a href="https://greasyfork.org/scripts/25718">解除B站区域限制</a></td>
+         <td>正常</td>
+         <td>可能并未针对旧版页面实现设置界面，调整设置请去新版页面或者番剧详情页面</td>
+      </tr>
+      <tr>
+         <td><a href="https://greasyfork.org/scripts/378513">Bilibili CC字幕工具</a></td>
+         <td>正常</td>
+         <td>可能会读取设置数据出错，去新版页面读取一下设置便可一劳永逸</td>
+      </tr>
+      <tr>
+         <td><a href="https://greasyfork.org/scripts/374449">Bilibili 修车插件</a></td>
+         <td>正常</td>
+         <td>该脚本会二次初始化播放器，推荐需要使用时再启用并添加`run-at document-start`元数据以缩短该过程</td>
+      </tr>
+      <tr>
+         <td><a href="https://greasyfork.org/zh-CN/scripts/40341">Bilibili - Whose Bullets</a></td>
+         <td>正常</td>
+         <td></td>
+      </tr>
+      <tr>
+         <td><a href="http://www.internetdownloadmanager.com">IDM下载浮动条</a></td>
+         <td><strong>失效</strong></td>
+         <td>在由本脚本实现的旧版页面里不会显示下载浮动条</td>
+      </tr>
+      <tr>
+         <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">pakku.js</a></td>
+         <td>正常</td>
+         <td></td>
+      </tr>
+   </tbody>
+</table>
 
 ---
 ### 参考致谢
@@ -91,7 +136,9 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://s1.ax1x.com/2020/04/07/GgwEv9.png)
 ### 版本历史
-**可能不能及时从[Github](https://github.com/MotooriKashin/Bilibili-Old)同步最新历史**
+- 2020-06-26
+   + 修复av页带评论跳转锚点时mini播放器错位
+   + 修复[HTML5播放器帮助页](https://www.bilibili.com/blackboard/html5playerhelp.html)视频cid错误
 - 2020-06-25
    + 修复稍后再看顶栏
 - 2020-06-11
