@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.1.1
+// @version      3.1.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -15,7 +15,6 @@
 // @grant        GM_setValue
 // @run-at       document-start
 // @license      MIT License
-// @note         本次更新：修复HTML5帮助页视频地址
 // ==/UserScript==
 
 (function() {
@@ -43,7 +42,7 @@
             jointime: ".user .info .meta .row {height: 88px;white-space: normal;}.user .info .jointime .icon {background-position: -209px -84px;}.user .info .jointime .text {color: #00a1d6;}}",
             online: ".online a {color: rgb(109, 117, 122);}.popularize-module .online em {display: inline-block;height: 10px;line-height: 10px;vertical-align: top;border-left: 1px solid rgb(184, 192, 204);margin: 12px 15px 0px;}",
             search: ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}",
-            uiface: "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 1008;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 10008;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}#ui-state {border-radius: 5px;z-index: 1000;width: auto;position: fixed;right: 280px;color: #fff;background: #0008;padding: 1rem;font-size: 12pt;top: 50%;transform: translateY(-50%);transition: .2s ease-out .8s;max-width: 20%;max-height: 100%;line-height: 2;white-space: pre-wrap;pointer-events: none;opacity: 1;}.video_download {cursor: pointer;width: 46px;height: 48px;background-color: #f6f9fa;background-position: -1353px -1095px;background-repeat: no-repeat;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;display: inline-block;background-image: url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color: #00a1d6;border-color: #00a1d6;}",
+            uiface: "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 1008;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 10008;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}#ui-state {border-radius: 5px;z-index: 1000;width: auto;position: fixed;right: 280px;color: #fff;background: #0008;padding: 1rem;font-size: 12pt;top: 50%;transform: translateY(-50%);transition: .2s ease-out .8s;max-width: 20%;line-height: 2;white-space: pre-wrap;pointer-events: none;opacity: 1;}.video_download {cursor: pointer;width: 46px;height: 48px;background-color: #f6f9fa;background-position: -1353px -1095px;background-repeat: no-repeat;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;display: inline-block;background-image: url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color: #00a1d6;border-color: #00a1d6;}",
             bofqi: "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
             gray: "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
             like: ".video-info-module .number .like b, .video-info-module .number .like i {background: url(//static.hdslb.com/images/base/icons.png);display: inline-block;margin-top: -3px;vertical-align: middle;}"
@@ -104,7 +103,27 @@
         log: (msg) => console.log("[" + deliver.timeFormat(new Date()) + "]",msg),
         error: (msg) => console.error("[" + deliver.timeFormat(new Date()) + "]",msg),
         warn: (msg) => console.warn("[" + deliver.timeFormat(new Date()) + "]",msg),
-        debug: (msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]",msg)
+        debug: (msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]",msg),
+        msg: (msg, warn, delay) => {
+            let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
+            if (!node) {debug.log(msg);return;}
+            let item = document.createElement("div");
+            let text = document.createElement("div");
+            let span = document.createElement("span");
+            let red = document.createElement("span");
+            delay = delay ? delay : 3000;
+            item.setAttribute("class","bilibili-player-video-toast-item bilibili-player-video-toast-msg");
+            text.setAttribute("class","bilibili-player-video-toast-item-text");
+            span.setAttribute("class","video-float-hint-text");
+            red.setAttribute("class","video-float-hint-btn hint-red");
+            span.innerText = msg;
+            red.innerText = warn ? warn : "";
+            text.appendChild(span);
+            if (warn) text.appendChild(red);
+            item.appendChild(text);
+            node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
+            setTimeout(() => item.remove(), delay);
+        }
     }
     const xhr = {
         'false': (url) => { // 同步
@@ -176,6 +195,7 @@
             like: 1,
             static: 1,
             download: 0,
+            idm: 0,
             heartbeat: 0,
             carousel: 0
         }
@@ -613,8 +633,8 @@
         },
         download: {
             init : (title) => {
-                url = "";
                 let fixnav_report = document.getElementById("fixnav_report");
+                let a = document.createElement("a");
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("bangumi-nav-right")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("fixed-nav-m")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-menu")[0];
@@ -625,20 +645,18 @@
                 div.setAttribute("title","下载视频");
                 let append = () => document.getElementsByClassName("video_download")[0] ? document.getElementsByClassName("video_download")[0].replaceWith(div) : fixnav_report.insertBefore(div,fixnav_report.firstChild);
                 div.onclick = async () => {
-                    if (!url) {
-                        let a = document.createElement("a");
-                        div.appendChild(a);
-                        url = 1;
-                        url = await deliver.download.geturl();
-                        if (!url.includes("com")) {
-                            alert(url);
-                            return;
-                        }
-                        a.setAttribute("href",url);
-                        a.setAttribute("download",title ? title : url);
-                        a.click();
-                    }
-                    else div.firstChild.click();
+                    document.body.appendChild(a);
+                    url = url ? url : await deliver.download.geturl();
+                    if (!url) {debug.msg("拉取下载链接失败 ಥ_ಥ");url = true;return;}
+                    if (url === true) {debug.msg("本视频无法获取下载链接", "请勿反复调戏！"); return;}
+                    navigator.clipboard.writeText(url);
+                    debug.msg("已复制视频下载链接到剪切板");
+                    if (!config.reset.idm) return;
+                    a.setAttribute("href",url);
+                    a.setAttribute("hidden","hidden");
+                    a.setAttribute("download",title ? title + ".mp4" : url);
+                    a.click();
+                    a.remove();
                 }
                 if (document.getElementsByClassName("float-nav")[0]) {
                     let timer = setInterval(() => {
@@ -662,7 +680,7 @@
                 let url = deliver.download.playurl();
                 let data = await xhr.true(url);
                 data = JSON.parse(data);
-                return data.durl ? data.durl[0].url : "拉取视频地址失败";
+                return data.durl ? data.durl[0].url : "";
             },
             playurl: (aid, cid, qn, type, sor) => { // 配置视频链接
                 let obj = {}
@@ -697,28 +715,23 @@
             let danmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
             if (danmu) danmu.click();
         },
-        removePreview: () => { // 付费预览
+        removePreview: (node) => { // 付费预览
             if (!config.reset.preview) return;
-            let hint = document.getElementsByClassName("video-float-hint-btn");
-            if (hint[0]) {
-                let i = 10; // 倒计时长度，单位：秒
-                if (document.getElementsByClassName("second-cut")[0]) return;
-                else {
-                    let sec = document.createElement("span");
-                    sec.setAttribute("class","video-float-hint-btn second-cut");
-                    hint[0].parentNode.appendChild(sec);
-                    function cut(){
-                        sec.innerText = i - 1 + "s";
-                        if (i==0) {
-                            hint[0].parentNode.remove();
-                            return;
-                        }
-                        i = i - 1;
-                        window.setTimeout(cut,1000);
-                    }
-                    new cut();
+            let hint = document.getElementsByClassName("video-float-hint-btn")[0];
+            let i = 10; // 倒计时长度，单位：秒
+            let sec = document.createElement("span");
+            sec.setAttribute("class","video-float-hint-btn second-cut");
+            hint.parentNode.appendChild(sec);
+            function cut(){
+                sec.innerText = i - 1 + "s";
+                if (i==0) {
+                    node.remove();
+                    return;
                 }
+                i = i - 1;
+                window.setTimeout(cut,1000);
             }
+            new cut();
         },
         avdesc : () => { // 超链接转化
             if (!config.rewrite.video || !aid) return;
@@ -1476,27 +1489,28 @@
             div.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
         },
         menu: { // 设置选项数据，与默认设置数据一一对应
-            av : ["av(BV)", "是否启用旧版av(BV)页：将启用旧版av页框架，播放器、页面全部恢复旧版样式。(将牺牲一点页面载入速度)"],
-            bangumi : ["Bangumi", "是否启用旧版番剧页：将启用旧版番剧页框架，播放器、页面全部恢复旧版样式。(将牺牲一点页面载入速度)"],
-            watchlater : ["稍后再看", "是否启用旧版稍后再看：将启用旧版稍后再看框架，播放器、页面全部恢复旧版样式。(将牺牲一点页面载入速度)"],
-            frame : ["嵌入播放器", "是否将新版嵌入播放器替换为旧版嵌入播放器(只替换播放器不会专门处理被嵌入页面的其他实现)"],
-            home : ["主页", "是否启用旧版主页：将启用旧版主页框架，排版、分区全部恢复旧版样式。(将牺牲一点页面载入速度。广告区已失效并替换为资讯区数据)"],
-            playlist : ["playlist", "是否恢复播单播放页：将先跳转收藏播放页避开404再恢复回播单页。(将牺牲更多一点页面载入速度)"],
-            medialist : ["medialist", "是否替换收藏播放页：收藏播放页是新版专属页面，故采用跳转到对应av页的方式再在播放器中以稍后再看列表模拟收藏列表，页面其他信息也将随切p而更新。(分区及up简介除外)"],
+            av : ["av(BV)", "是否启用旧版av(BV)页：将启用旧版av页框架，播放器、页面全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度"],
+            bangumi : ["Bangumi", "是否启用旧版番剧页：将启用旧版番剧页框架，播放器、页面全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度"],
+            watchlater : ["稍后再看", "是否启用旧版稍后再看：将启用旧版稍后再看框架，播放器、页面全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度"],
+            frame : ["嵌入播放器", "是否将新版嵌入播放器替换为旧版嵌入播放器。<br>※ 只替换播放器不会专门处理被嵌入页面的其他实现"],
+            home : ["主页", "是否启用旧版主页：将启用旧版主页框架，排版、分区全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度<br>※ 广告区已失效并替换为资讯区数据"],
+            playlist : ["playlist", "是否恢复播单播放页：将先跳转收藏播放页避开404再恢复回播单页。<br>※ 将牺牲更多一点页面载入速度"],
+            medialist : ["medialist", "是否替换收藏播放页：收藏播放页是新版专属页面，故采用跳转到对应av页的方式再在播放器中以稍后再看列表模拟收藏列表，页面其他信息也将随切p而更新。<br>※ 分区及up简介除外"],
             grobalboard : ["版头和版底", "是否替换新版版头和版底：将识别并替换所有新版版头为旧版版头，旧版失效广告区入口替换为资讯区入口。"],
-            replyfloor : ["评论楼层", "是否显示评论的楼层号：官方取消的显示评论区楼层的功能，基本修复了视频、专题、专栏等地区的评论区大部分评论的楼层号。(上古“按评论数”排列的评论无法恢复楼层号)"],
+            replyfloor : ["评论楼层", "是否显示评论的楼层号：官方取消的显示评论区楼层的功能，基本修复了视频、专题、专栏等地区的评论区大部分评论的楼层号。<br>※ 上古“按评论数”排列的评论无法恢复楼层号"],
             headblur : ["顶栏透明度", "是否使顶栏全透明：私心的功能，导致顶栏信息不清晰的话请关闭。"],
             preview : ["付费预览框", "是否去除播放器左下角付费预览框：有10s倒计时，6分钟预览时左下角提示框一直存在也是挺烦的。"],
             livelogo : ["直播水印", "是否去除直播间水印：去除直播间播放器角落“Bilibili”字样的水印。"],
             searchwrap : ["搜索框字体", "是否重设搜索页字号：新版调大了搜索框字体大小，应请调回了旧版大小。"],
-            jointime : ["注册时间", "是否在个人空间显示B站账号注册时间：官方取消的显示账号注册时间功能，尽力恢复了当初的样式。(依赖up主开放个人资料)"],
-            lostvideo : ["失效视频", "是否修复收藏和频道中的失效视频信息：借助第三方接口恢复失效视频的封面和标题，将标题标红并添加删除线。(获取不到数据的话将只修改标题为对应av号)"],
+            jointime : ["注册时间", "是否在个人空间显示B站账号注册时间：官方取消的显示账号注册时间功能，尽力恢复了当初的样式。<br>※ 依赖up主开放个人资料"],
+            lostvideo : ["失效视频", "是否修复收藏和频道中的失效视频信息：借助第三方接口恢复失效视频的封面和标题，将标题标红并添加删除线。<br>※ 获取不到数据的话将只修改标题为对应av号"],
             bvid2av : ["BV⇒av", "是否将BV重定向到av：进入bv页时自动重定向到对应av页(不刷新页面)。"],
             selectdanmu : ["弹幕列表", "是否进入旧版播放页面时自动选择展示“弹幕列表”(默认是“推荐视频”)"],
             episodedata : ["番剧分集数据", "是否显示番剧单回的播放数和弹幕数：让新番显示当前回的播放数和弹幕数，原来的合计播放数和弹幕数将显示在鼠标焦点的浮动信息上"],
-            like : ["点赞", "是否为旧版播放页添加添加点赞功能：点赞是新版页面专属功能，很简陋地在旧版视频信息栏添加了个“红心”的点赞按钮。(缺乏官方的动效体验捉急)"],
+            like : ["点赞", "是否为旧版播放页添加添加点赞功能：点赞是新版页面专属功能，很简陋地在旧版视频信息栏添加了个“红心”的点赞按钮。<br>※ 缺乏官方的动效体验捉急"],
             static : ["静态页面跳转", "是否将静态av页跳转到普通av页：静态页面是新版专属页面，页面大部分信息都内置于页面中以加快载入速度，将直接跳转到普通的av页(以启用旧版av页)。"],
-            download : ["下载视频", "是否启用视频下载功能：将在播放页(av和番剧)回到顶部按钮上方创建一个下载视频按钮，点击即可下载mp4(1080P)格式的视频。(暂不支持会员视频下载)"],
+            download : ["下载视频", "是否启用视频下载功能：将在播放页(av和番剧)回到顶部按钮上方创建一个下载视频按钮，点击将复制视频链接(mp4/1080P)到剪切板以便使用其他工具下载(因浏览器同源策略无法直接调用下载功能 ಥ_ಥ)。<br>※ 不支持会员视频下载<br>※ 建议配合IDM并开启“直接下载”选项"],
+            idm : ["直接下载", "“下载视频”的下级选项，启用后将尝试访问视频链接，IDM拓展可以直接捕获视频。<br>※ 非IDM还是不要开启"],
             heartbeat : ["视频心跳", "是否替换播放记录心跳：旧版视频心跳存在被某些广告插件误杀的情况，导致播放视频而没有记录进历史记录，存在类似情形可以尝试启用。"],
             carousel : ["播放信息", "是否恢复播放器顶部通知信息：视频通知信息获取不到任何有效信息，导致旧版播放器上方通知区一片空白，启用将生成默认数据填充。"]
         }
@@ -1611,6 +1625,7 @@
             deliver.intercept.init(); // xhr重定向
             document.addEventListener("DOMNodeInserted",(msg) => {
                 let head = document.getElementById("internationalHeader");
+                if (/bilibili-player-video-toast-pay/.test(msg.target.className)) deliver.removePreview(msg.target); // 去除预览提示框
                 if (msg.target.className == "rec-btn prev") document.getElementById("bofqi").removeAttribute("style"); // 取消隐藏av页播放器
                 if (msg.target.id == "internationalHeader") deliver.reSction(); // 版头替换
                 if (msg.target.id == "bili-header-m") if (head) head.remove(); // 移除新版版头
@@ -1629,7 +1644,6 @@
                 deliver.removeNodes(); // 处理失效节点
                 deliver.setMediaList.fixvar(); // 监听全局变量
                 deliver.removeBlur(); // 顶栏透明度
-                deliver.removePreview(); // 去除预览提示框
                 deliver.removeLiveLogo(); // 去除直播水印
                 deliver.fixVideoLost.home(msg); // 处理空间主页失效视频
                 if (window.hd) deliver.avdesc(); // 超链接转化
@@ -1638,6 +1652,7 @@
     }
     /******* 启动入口 *******/
     def = JSON.parse(JSON.stringify(config));
+    unsafeWindow.debug = debug;
     let data = GM_getValue("config");
     if (data) {
         for (let key in data.rewrite) if (key in config.rewrite) config.rewrite[key] = data.rewrite[key];
