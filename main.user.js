@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.1.4
+// @version      3.1.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1628,7 +1628,7 @@
                 let head = document.getElementById("internationalHeader");
                 let player = document.getElementById("bofqi");
                 if (/bilibili-player-video-toast-pay/.test(msg.target.className)) deliver.removePreview(msg.target); // 去除预览提示框
-                if (msg.target.className == "bb-comment ") if (player) player.removeAttribute("style"); // 取消隐藏av页播放器
+                if (msg.target.className == "bb-comment ") if (player && /hidden/.test(player.getAttribute("style"))) player.removeAttribute("style"); // 取消隐藏av页播放器
                 if (msg.target.id == "internationalHeader") deliver.reSction(); // 版头替换
                 if (msg.target.id == "bili-header-m") if (head) head.remove(); // 移除新版版头
                 if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo(); // 监听切p
