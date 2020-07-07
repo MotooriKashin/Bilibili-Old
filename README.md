@@ -70,15 +70,15 @@
    <thead>
       <tr>
          <th>脚本</th>
-         <th>兼容</th>
-         <th>说明</th>
+         <th>兼容性</th>
+         <th>详细说明</th>
       </tr>
    </thead>
    <tbody>
       <tr>
          <td><a href="https://github.com/the1812/Bilibili-Evolved">Bilibili Evolved</a></td>
          <td>正常</td>
-         <td>`GM_setValue`异常，在旧版页面里无法保存设置</td>
+         <td>GM_setValue异常，在旧版页面里无法保存设置</td>
       </tr>
       <tr>
          <td><a href="https://github.com/SeaLoong/Bilibili-LRHH">Bilibili直播间挂机助手</a></td>
