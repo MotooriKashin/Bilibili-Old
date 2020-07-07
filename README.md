@@ -22,17 +22,17 @@
    + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
    + 播单，如[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
    + 收藏，如[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
+   + 嵌入式播放器，如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")
 - 修改(部分请在设置里启用)
-   + 替换嵌入式播放器(如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才"))
    + 替换大部分新版版头和版底
-   + 添加BV跳转到对应的av页
-   + 添加番剧分集播放数和弹幕数
-   + 添加旧版av(BV)页点赞功能
-   + 添加下载视频功能
-   + 添加在倒计时(10s)后去掉6分钟预览框
-   + 添加个人空间显示注册时间
+   + BV跳转到对应的av页
+   + 显示番剧分集播放数和弹幕数
+   + 在旧版av(BV)页添加点赞功能
+   + 下载视频
+   + 去除6分钟预览框
+   + 在个人空间显示注册时间
    + 修复评论区的楼层信息
-   + 修复收藏和频道里的失效视频信息
+   + 修复收藏和频道里的失效视频封面和标题
 
 ---
 ### 关于设置
@@ -43,7 +43,7 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版页面由于机制问题将牺牲一些载入速度。
+1. 机制问题无法在新版页面载入前就启用旧版页面，所以载入速度新版页面慢。
 2. 旧版播放器4k视频支持上可能有问题但无条件进行测试。
 3. 旧版播放器未适配新版弹幕，没有随着变动弹幕上限。
 4. 旧版播放器原生不支持互动视频，只会播放分支之前的部分。
@@ -61,7 +61,7 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 83.0.4103.6 (正式版本) （64 位） (cohort: 83\_61\_Win)  
+> Google Chrome 83.0.4103.116 (正式版本) （64 位） (cohort: 83\_61\_Win)  
 > Tampermonkey BETA 4.10.6112
 >
  
@@ -70,15 +70,15 @@
    <thead>
       <tr>
          <th>脚本</th>
-         <th>兼容性</th>
-         <th>详细说明</th>
+         <th>兼容</th>
+         <th>说明</th>
       </tr>
    </thead>
    <tbody>
       <tr>
          <td><a href="https://github.com/the1812/Bilibili-Evolved">Bilibili Evolved</a></td>
          <td>正常</td>
-         <td>在由本脚本实现的旧版页面里调整设置无效</td>
+         <td>`GM_setValue`异常，在旧版页面里无法保存设置</td>
       </tr>
       <tr>
          <td><a href="https://github.com/SeaLoong/Bilibili-LRHH">Bilibili直播间挂机助手</a></td>
@@ -98,7 +98,7 @@
       <tr>
          <td><a href="https://greasyfork.org/scripts/374449">Bilibili 修车插件</a></td>
          <td>正常</td>
-         <td>该脚本会二次初始化播放器，推荐需要使用时再启用并添加`run-at document-start`元数据以缩短该过程</td>
+         <td>会二次初始化播放器，推荐需要使用时再启用并添加`run-at document-start`元数据以缩短该过程</td>
       </tr>
       <tr>
          <td><a href="https://greasyfork.org/zh-CN/scripts/40341">Bilibili - Whose Bullets</a></td>
@@ -108,7 +108,7 @@
       <tr>
          <td><a href="http://www.internetdownloadmanager.com">IDM下载浮动条</a></td>
          <td><strong>失效</strong></td>
-         <td>在由本脚本实现的旧版页面里不会显示下载浮动条</td>
+         <td>旧版页面里不会显示下载浮动条</td>
       </tr>
       <tr>
          <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">pakku.js</a></td>
@@ -136,6 +136,10 @@
 ①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://camo.githubusercontent.com/1802bb815c3f624f636b0ee71554a7b3816f1801/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767774576392e706e67)
 ### 版本历史
+- 2020-07-07
+   + 修复设置界面在部分页面布局错乱
+   + 改进嵌入式播放框架选择
+   + 添加去除旧版主页广告选项
 - 2020-07-02
    + 修复新版播放页面样式误删
 - 2020-07-01
