@@ -89,12 +89,12 @@
       <tr>
          <td><a href="https://greasyfork.org/scripts/25718">解除B站区域限制</a></td>
          <td>正常</td>
-         <td>可能并未针对旧版页面实现设置界面，调整设置请去新版页面或者番剧详情页面</td>
+         <td>设置界面缺失，调整设置请去新版页面</td>
       </tr>
       <tr>
          <td><a href="https://greasyfork.org/scripts/378513">Bilibili CC字幕工具</a></td>
          <td>正常</td>
-         <td>可能会读取设置数据出错，去新版页面读取一下设置便可一劳永逸</td>
+         <td>初次使用若设置数据读取出错，只需去新版页面读取一次</td>
       </tr>
       <tr>
          <td><a href="https://greasyfork.org/scripts/374449">Bilibili 修车插件</a></td>
