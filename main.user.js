@@ -547,11 +547,7 @@
                         let hook = [_url];
                         url = deliver.intercept.response(this, url, API.xhrhook.recmore, hook);
                     }
-                    if (url.includes("/x/player/playurl?") && !url.includes("fourk")) { // 添加4k视频参数
-                        url = url.replace("playurl?", "playurl?fourk=1&");
-                        debug.log("XHR重定向", [_url, url]);
-                    }
-                    if (url.includes("/pgc/player/web/playurl?") && !url.includes("fourk")) { // 添加4k番剧参数
+                    if (url.includes("/playurl?") && !url.includes("fourk") && !url.includes("sign")) { // 添加4k视频参数
                         url = url.replace("playurl?", "playurl?fourk=1&");
                         debug.log("XHR重定向", [_url, url]);
                     }
@@ -1557,7 +1553,7 @@
                 if (DOCUMENT.includes('"code":404')) return; // 判断页面是否404
                 unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ =
                     JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")); // 继承__INITIAL_STATE__
-                window.__playinfo__ = DOCUMENT.includes("playinfo__=") ? DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "") : ""; // 继承 __playinfo__
+                window.__playinfo__ = JSON.parse(DOCUMENT.includes("playinfo__=") ? DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "") : ""); // 继承 __playinfo__
                 debug.log("__playinfo__", window.__playinfo__);
                 if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                 unsafeWindow.__INITIAL_STATE__.comment = {count: 0, list: []} // 修复评论数据缺失
