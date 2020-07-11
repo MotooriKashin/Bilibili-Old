@@ -63,7 +63,7 @@
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
 > Google Chrome 83.0.4103.116 (正式版本) （64 位） (cohort: 83\_61\_Win)  
-> Tampermonkey BETA 4.10.6112
+> Tampermonkey BETA 4.10.6115
 >
  
 **所有重写过的页面其他以`run-at document-start`注入的同域脚本的`GM_setValue`功能失效！**
@@ -139,6 +139,8 @@
 ### 版本历史
 - 2020-07-11
    + 改进去除首页广告功能
+   + 改进bv=>av功能，使大部分模块直接显示av号
+   + 修复主页部分分区问题
 - 2020-07-07
    + 修复设置界面在部分页面布局错乱
    + 改进嵌入式播放框架选择
