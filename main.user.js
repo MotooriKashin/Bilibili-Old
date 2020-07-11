@@ -695,11 +695,11 @@
             geturl: async (data) => { // 拉取视频链接
                 let url = deliver.download.playurl();
                 try {
-					data = await xhr.true(url);
-					data = JSON.parse(data);
-					debug.log("视频链接", data);
-					return data.durl ? data.durl[0].url : "";
-				} catch(e) {debug.error(e);return "";}
+                    data = await xhr.true(url);
+                    data = JSON.parse(data);
+                    debug.log("视频链接", data);
+                    return data.durl ? data.durl[0].url : "";
+                } catch(e) {debug.error(e);return "";}
             },
             playurl: (aid, cid, qn, type, sor) => { // 配置视频链接
                 let obj = {}
@@ -811,103 +811,103 @@
                 },1000);
             },
             watchlater : (data) => { // 稍后再看分区
-            let timer = window.setInterval(async ()=>{
-                let tminfo = document.getElementsByClassName("tm-info");
-                if (tminfo[0]&&aid) { // 判断是否是稍后再看播放页面
-                    window.clearInterval(timer);
-                    let child = tminfo[0].childNodes;
-                    if (child[2].nodeType === 8) {
-						try {
-							data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid})); // 判断并获取需要修复的分区tid
-                            tid = JSON.parse(data).data.tid;
-                            if (!(tid in API.sort)) return; // 判断tid是否在需要修复的分区范围
-                            // 创建分区信息节点并写入tid对应的分区数据
-                            child[2].replaceWith(child[0].cloneNode(true));
-                            child[4].replaceWith(child[0].cloneNode(true));
-                            child[4].childNodes[1].remove();
-                            child[2].childNodes[0].href = API.sort[API.sort[tid][0]][2];
-                            child[2].childNodes[0].innerText = API.sort[API.sort[tid][0]][1];
-                            child[4].childNodes[0].href = API.sort[tid][2];
-                            child[4].childNodes[0].innerText = API.sort[tid][1];
-                        } catch(e) {debug.error(e)}
+                let timer = window.setInterval(async ()=>{
+                    let tminfo = document.getElementsByClassName("tm-info");
+                    if (tminfo[0]&&aid) { // 判断是否是稍后再看播放页面
+                        window.clearInterval(timer);
+                        let child = tminfo[0].childNodes;
+                        if (child[2].nodeType === 8) {
+                            try {
+                                data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid})); // 判断并获取需要修复的分区tid
+                                tid = JSON.parse(data).data.tid;
+                                if (!(tid in API.sort)) return; // 判断tid是否在需要修复的分区范围
+                                // 创建分区信息节点并写入tid对应的分区数据
+                                child[2].replaceWith(child[0].cloneNode(true));
+                                child[4].replaceWith(child[0].cloneNode(true));
+                                child[4].childNodes[1].remove();
+                                child[2].childNodes[0].href = API.sort[API.sort[tid][0]][2];
+                                child[2].childNodes[0].innerText = API.sort[API.sort[tid][0]][1];
+                                child[4].childNodes[0].href = API.sort[tid][2];
+                                child[4].childNodes[0].innerText = API.sort[tid][1];
+                            } catch(e) {debug.error(e)}
+                        }
                     }
-                }
-            },1000);
-        },
+                },1000);
+            },
         },
         setLike: (data) => { // 点赞功能
             if (!config.reset.like) return;
-                let coin = document.getElementsByClassName("bilibili-player-video-subtitle");
-                let number = document.getElementsByClassName("number");
-                let node = document.getElementsByClassName("coin");
-                let timer = window.setInterval(async () => {
-                    if (coin[0]) { // 判断页面渲染进度
-                        window.clearInterval(timer);
-                        let span = document.createElement("span");
-                        let bef = document.createElement("i");
-                        let af = document.createElement("b");
-                        let text = document.createTextNode("点赞 --");
-                        let arg = text;
-                        // 创建点赞数据相关节点并初始化
-                        span.setAttribute("class", "u like");
-                        span.setAttribute("style", "margin-right: 5px;");
-                        span.appendChild(bef);
-                        span.appendChild(af);
-                        span.appendChild(text);
-                        bef.setAttribute("class", "l-icon-move");
-                        bef.setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
-                        af.setAttribute("class", "l-icon-moved");
-                        af.setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
-                        number[0].insertBefore(span,node[0]);
-						try {
-							data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid})); // 获取点赞数
-                            data = JSON.parse(data).data.stat.like;
-                            document.getElementsByClassName("like")[0].setAttribute("title", "点赞人数" + data);
-                            if (data>10000) data = (data/10000).toFixed(1) + "万";
-                            text = document.createTextNode(" 点赞 " + data);
-                            arg.replaceWith(text); // 写入点赞人数
-                            arg = text;
-                            data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid": aid}));
-                            data = JSON.parse(data);
-                            if (data.data == 0 || data.data == 1) {
-                                let move = document.getElementsByClassName("l-icon-move");
-                                let moved = document.getElementsByClassName("l-icon-moved");
-                                data = data.data;
-                                if (data == 1) { // 点赞过点亮图标
-                                    move[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                                    moved[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
-                                }
-                                move[0].onclick = async () => { // 没有点赞过绑定点赞点击事件
-                                    let msg = "aid=" + aid + "&like=1&csrf=" +deliver.getCookies().bili_jct; // 构造点赞表单
-                                    data = await xhr.post(API.url.like, "application/x-www-form-urlencoded"); // 请求点赞表单
-                                    data = JSON.parse(data).ttl;
-                                    // 点亮点赞图标
-                                    document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                                    document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
-                                    if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
-                                    let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1; // 点赞数+1
-                                    text = document.createTextNode(" 点赞 " + number)
-                                    arg.replaceWith(text);
-                                    arg = text;
-                                }
-                                moved[0].onclick = async () => { // 点赞过绑定取消点赞点击事件
-                                    let msg = "aid=" + aid + "&like=2&csrf=" +deliver.getCookies().bili_jct; // 构造取消点赞表单
-                                    data = await xhr.post(API.url.like, "application/x-www-form-urlencoded"); // 请求取消点赞表单
-                                    data = JSON.parse(data).ttl;
-                                    // 点亮点赞图标
-                                    document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
-                                    document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
-                                    if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
-                                    let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1; // 点赞数-1
-                                    text = document.createTextNode(" 点赞 " + number)
-                                    arg.replaceWith(text);
-                                    arg = text;
-                                }
+            let coin = document.getElementsByClassName("bilibili-player-video-subtitle");
+            let number = document.getElementsByClassName("number");
+            let node = document.getElementsByClassName("coin");
+            let timer = window.setInterval(async () => {
+                if (coin[0]) { // 判断页面渲染进度
+                    window.clearInterval(timer);
+                    let span = document.createElement("span");
+                    let bef = document.createElement("i");
+                    let af = document.createElement("b");
+                    let text = document.createTextNode("点赞 --");
+                    let arg = text;
+                    // 创建点赞数据相关节点并初始化
+                    span.setAttribute("class", "u like");
+                    span.setAttribute("style", "margin-right: 5px;");
+                    span.appendChild(bef);
+                    span.appendChild(af);
+                    span.appendChild(text);
+                    bef.setAttribute("class", "l-icon-move");
+                    bef.setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
+                    af.setAttribute("class", "l-icon-moved");
+                    af.setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
+                    number[0].insertBefore(span,node[0]);
+                    try {
+                        data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid})); // 获取点赞数
+                        data = JSON.parse(data).data.stat.like;
+                        document.getElementsByClassName("like")[0].setAttribute("title", "点赞人数" + data);
+                        if (data>10000) data = (data/10000).toFixed(1) + "万";
+                        text = document.createTextNode(" 点赞 " + data);
+                        arg.replaceWith(text); // 写入点赞人数
+                        arg = text;
+                        data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid": aid}));
+                        data = JSON.parse(data);
+                        if (data.data == 0 || data.data == 1) {
+                            let move = document.getElementsByClassName("l-icon-move");
+                            let moved = document.getElementsByClassName("l-icon-moved");
+                            data = data.data;
+                            if (data == 1) { // 点赞过点亮图标
+                                move[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                                moved[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
                             }
-                            else document.getElementsByClassName("l-icon-move")[0].onclick = () => document.getElementsByClassName("c-icon-move")[0].click();
-                        } catch(e) {debug.error(e)}
-                    }
-                },100);
+                            move[0].onclick = async () => { // 没有点赞过绑定点赞点击事件
+                                let msg = "aid=" + aid + "&like=1&csrf=" +deliver.getCookies().bili_jct; // 构造点赞表单
+                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded"); // 请求点赞表单
+                                data = JSON.parse(data).ttl;
+                                // 点亮点赞图标
+                                document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                                document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
+                                if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
+                                let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1; // 点赞数+1
+                                text = document.createTextNode(" 点赞 " + number)
+                                arg.replaceWith(text);
+                                arg = text;
+                            }
+                            moved[0].onclick = async () => { // 点赞过绑定取消点赞点击事件
+                                let msg = "aid=" + aid + "&like=2&csrf=" +deliver.getCookies().bili_jct; // 构造取消点赞表单
+                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded"); // 请求取消点赞表单
+                                data = JSON.parse(data).ttl;
+                                // 点亮点赞图标
+                                document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
+                                document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
+                                if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
+                                let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1; // 点赞数-1
+                                text = document.createTextNode(" 点赞 " + number)
+                                arg.replaceWith(text);
+                                arg = text;
+                            }
+                        }
+                        else document.getElementsByClassName("l-icon-move")[0].onclick = () => document.getElementsByClassName("c-icon-move")[0].click();
+                    } catch(e) {debug.error(e)}
+                }
+            },100);
         },
         setMediaList: {
             init: async (data) => { // 收藏播放
@@ -924,12 +924,12 @@
                     return;
                 }
                 if (data){ // 以传参data决定处理类型
-					try {
-						data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id": ml, "pn": 1, "ps":1})); // 获取收藏播放页正在播放的视频av
-						data = JSON.parse(data).data;
-						if (data && data.medias) location.replace("https://www.bilibili.com/video/av" + data.medias[0].id); // 跳转到av页
-						else GM_setValue("medialist", 0);
-					} catch(e) {debug.error(e)}
+                    try {
+                        data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id": ml, "pn": 1, "ps":1})); // 获取收藏播放页正在播放的视频av
+                        data = JSON.parse(data).data;
+                        if (data && data.medias) location.replace("https://www.bilibili.com/video/av" + data.medias[0].id); // 跳转到av页
+                        else GM_setValue("medialist", 0);
+                    } catch(e) {debug.error(e)}
                 }
                 else {
                     let loop = async () => {
@@ -941,8 +941,8 @@
                         for (let key in data) {ids.push(data[key])} // 依次保存收藏视频数据进全局变量
                         if (avs[0]) loop();
                     }
-					try {
-						data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id": ml})); // 获取收藏列表所有aid
+                    try {
+                        data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id": ml})); // 获取收藏列表所有aid
                         data = JSON.parse(data).data;
                         let value = [];
                         for (let i = 0; i < data.medias.length; i++) avs[i] = data.medias[i].id; // 保存收藏列表aid
@@ -1072,29 +1072,29 @@
                 }
             },
             episodeData: async (data) => { // 分集数据处理
-				try {
-					let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
-					let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
-					if (data == "first") { // 判断是否是首集
-						if (views.innerText == "-" && danmakus.innerText == "-") {
-							window.setTimeout(() => {deliver.episodeData("first")},100);
-							return;
-						}
-						views.setAttribute("title","总播放数 " + views.innerText); // 备份总播放数
-						danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText); // 备份总弹幕数
-						debug.log("总弹幕数", views.innerText, " 总弹幕数", danmakus.innerText);
-						data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid})); // 请求首集数据
-					}
-					if (!data) {data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid}))} // 请求非首集数据
-					data = JSON.parse(data).data;
-					let view = data.view;
-					let danmaku = data.danmaku;
-					if (view >= 10000) view = (view / 10000).toFixed(1) + "万";
-					if (danmaku >= 10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
-					views.innerText = view; // 写入分集播放量
-					danmakus.innerText = danmaku; // 写入分集弹幕数
-					debug.log("播放", view + " 弹幕", danmaku);
-				} catch(e) {debug.error(e)}
+                try {
+                    let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
+                    let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
+                    if (data == "first") { // 判断是否是首集
+                        if (views.innerText == "-" && danmakus.innerText == "-") {
+                            window.setTimeout(() => {deliver.episodeData("first")},100);
+                            return;
+                        }
+                        views.setAttribute("title","总播放数 " + views.innerText); // 备份总播放数
+                        danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText); // 备份总弹幕数
+                        debug.log("总弹幕数", views.innerText, " 总弹幕数", danmakus.innerText);
+                        data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid})); // 请求首集数据
+                    }
+                    if (!data) {data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid}))} // 请求非首集数据
+                    data = JSON.parse(data).data;
+                    let view = data.view;
+                    let danmaku = data.danmaku;
+                    if (view >= 10000) view = (view / 10000).toFixed(1) + "万";
+                    if (danmaku >= 10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
+                    views.innerText = view; // 写入分集播放量
+                    danmakus.innerText = danmaku; // 写入分集弹幕数
+                    debug.log("播放", view + " 弹幕", danmaku);
+                } catch(e) {debug.error(e)}
             },
         },
         setPlayList: () => { // 播单处理
@@ -1154,7 +1154,7 @@
                                 count.text = all_count ? "最新投稿：" + all_count : "最新投稿";
                             }
                             if (!all_count || !web_online || !play_online) return;
-							window.setTimeout(()=> loop(), 60000); // 60s轮循
+                            window.setTimeout(()=> loop(), 60000); // 60s轮循
                         } catch(e) {debug.error(e)}
                     }
                     loop();
