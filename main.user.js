@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.1.7
+// @version      3.1.8
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1570,7 +1570,7 @@
                     TITLE = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ =
                         JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")); // 继承__INITIAL_STATE__
-                    window.__playinfo__ = JSON.parse(DOCUMENT.includes("playinfo__=") ? DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "") : ""); // 继承 __playinfo__
+                    window.__playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : ""; // 继承 __playinfo__
                     debug.log("__playinfo__", window.__playinfo__);
                     if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                     unsafeWindow.__INITIAL_STATE__.comment = {count: 0, list: []} // 修复评论数据缺失
