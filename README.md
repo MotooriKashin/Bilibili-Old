@@ -112,9 +112,14 @@
          <td>旧版页面里不会显示下载浮动条</td>
       </tr>
       <tr>
-         <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">pakku.js</a></td>
+         <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">smoothscroll</a></td>
          <td>正常</td>
          <td></td>
+      </tr>
+      <tr>
+         <td><a href="http://iamdustan.com/smoothscroll/">pakku.js</a></td>
+         <td><strong>失效</strong></td>
+         <td>平滑滚动失效</td>
       </tr>
    </tbody>
 </table>
@@ -130,6 +135,7 @@
 - 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
 - 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
 - 下载功能参考了[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢。
+- 下载界面模仿了[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)，非常感谢。
 - 哈希(md5)算法修改自百度百科，作者不明，侵删，非常感谢。
 
 ---
@@ -139,6 +145,8 @@
 ### 版本历史
 - 2020-07-13
    + 修复一个三目运算语法错误
+   + 改进视频下载功能
+   + 修复新版稍后再看改版引发的布局问题
 - 2020-07-11
    + 改进去除首页广告功能
    + 改进bv=>av功能，使大部分模块直接显示av号
