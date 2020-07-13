@@ -112,12 +112,12 @@
          <td>旧版页面里不会显示下载浮动条</td>
       </tr>
       <tr>
-         <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">smoothscroll</a></td>
+         <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">pakku.js</a></td>
          <td>正常</td>
          <td></td>
       </tr>
       <tr>
-         <td><a href="http://iamdustan.com/smoothscroll/">pakku.js</a></td>
+         <td><a href="http://iamdustan.com/smoothscroll/">smoothscroll</a></td>
          <td><strong>失效</strong></td>
          <td>平滑滚动失效</td>
       </tr>
