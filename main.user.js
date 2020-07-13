@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.1.8
+// @version      3.1.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -21,8 +21,8 @@
     'use strict';
 
     let ml, pl, ts, aid, cid, def, mid, oid, src, tid, uid, url, mode, type, timer;
-    let arr = [],avs = [], ids = [],obj = {};
-    let TITLE, DOCUMENT, __INITIAL_STATE__;
+    let arr = [], avs = [], ids = [], obj = {}, mdf = {};
+    let TITLE, DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
     const API = {
@@ -42,7 +42,8 @@
             uiface: "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 1008;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;font-size: 14px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;line-height: normal;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 10008;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}#ui-state {border-radius: 5px;z-index: 1000;width: auto;position: fixed;right: 280px;color: #fff;background: #0008;padding: 1rem;font-size: 12pt;top: 50%;transform: translateY(-50%);transition: .2s ease-out .8s;max-width: 20%;line-height: 2;white-space: pre-wrap;pointer-events: none;opacity: 1;}.video_download {cursor: pointer;width: 46px;height: 48px;background-color: #f6f9fa;background-position: -1353px -1095px;background-repeat: no-repeat;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;display: inline-block;background-image: url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color: #00a1d6;border-color: #00a1d6;}",
             bofqi: "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
             gray: "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
-            like: ".video-info-module .number .like b, .video-info-module .number .like i {background: url(//static.hdslb.com/images/base/icons.png);display: inline-block;margin-top: -3px;vertical-align: middle;}"
+            like: ".video-info-module .number .like b, .video-info-module .number .like i {background: url(//static.hdslb.com/images/base/icons.png);display: inline-block;margin-top: -3px;vertical-align: middle;}",
+            download : "#bili-old-download-table {position: fixed;z-index: 3300;bottom: 0;background: #f6f6f6;width: 100%;text-align: center;}#bili-old-download-table .download-box {background-color: #fff;color: #000 !important;border: #ccc 1px solid;border-radius: 3px;display: inline-block;margin: 3px;}.download-mp4 {color: #fff !important;background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);}.download-avc {color: #fff !important;background-color: #f00;background-image: linear-gradient(to right, #f00, #c00);}.download-hev {color: #fff !important;background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);}.download-aac {color: #fff !important;background-color: #0d0;background-image: linear-gradient(to right, #0d0, #0a0);}.download-flv {color: #fff !important;background-color: #f90;background-image: linear-gradient(to right, #f90, #d70);}.download-type {color: #000 !important;display: table-cell;min-width: 1.5em;padding: 1px 3px;text-align: center;vertical-align: middle;}#bili-old-download-table a {display: table-cell;padding: 3px;text-decoration: none;}.quality-high {background-color: #c0f;}.quality-1080p {background-color: #f00;}.quality-720p {background-color: #f90;}.quality-480p {background-color: #00d;}.quality-360p {background-color: #0d0;}.download-quality {color: #fff !important;padding: 1px 3px;text-align: center;}.download-size {font-size: 90%;margin-top: 2px;padding: 1px 3px;text-align: center;}"
         },
         playerframe : { // 播放器框架
             html5player: "https://www.bilibili.com/blackboard/html5player.html", // aid, cid, season_type player_type + &as_wide=1&urlparam=module%253Dbangumi&crossDomain=true
@@ -186,7 +187,6 @@
             like: 1,
             static: 1,
             download: 0,
-            idm: 0,
             heartbeat: 0,
             carousel: 0,
             adloc: 0
@@ -466,6 +466,18 @@
             let s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
             return type?Y+M+D+h+m+s:h+m+s; // 默认返回hh：mm：ss；type存在加上yy：mm：dd
         },
+        sizeFormat : (size) => { // 格式化字节
+            let dex = 1024 ** 3, unit = ["B", "K", "M", "G"], i = unit.length - 1;
+            while (dex > 1) {
+                if (size >= dex) {
+                    size = (size / dex).toFixed(2);
+                    break;
+                }
+                dex = dex / 1024;
+                i--;
+            }
+            return size + unit[i];
+        },
         convertId: (str) => { // bv <=> av
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
             let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
@@ -516,6 +528,7 @@
             let style = document.createElement("style");
             csss = csss + API.style.online;
             csss = csss + API.style.search;
+            csss = csss + API.style.download;
             if (config.reset.playershadow) csss = csss + API.style.playshadow;
             if (config.reset.like) csss = csss + API.style.like;
             style.setAttribute("type", "text/css");
@@ -533,17 +546,20 @@
                     }
                     if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) { // 修改正在直播
                         let hook = [_url, ""];
-                        deliver.intercept.biliIndexRec(this, hook);
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
                         url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
                     }
                     if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) { // 修改直播动态
                         let hook = [_url, ""];
-                        deliver.intercept.biliIndexRec(this, hook);
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
                         url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
                     }
-                    if (url.includes("/playurl?") && !url.includes("fourk") && !url.includes("sign")) { // 添加4k视频参数
-                        url = url.replace("playurl?", "playurl?fourk=1&");
-                        debug.log("XHR重定向", [_url, url]);
+                    if (url.includes("/playurl?")) { // 添加4k视频参数
+                        if (!url.includes("fourk") && !url.includes("sign")) {
+                            url = url.replace("playurl?", "playurl?fourk=1&");
+                            debug.log("XHR重定向", [_url, url]);
+                        }
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this)});
                     }
                     return open.call(this, method, url, ...rest);
                 }
@@ -578,28 +594,30 @@
                 }
             },
             biliIndexRec: (obj, hook = []) => { // 修改首页直播推荐数据
-                function callback(){
-                    try {
-                        hook.push(JSON.parse(event.target.responseText));
-                        let response = event.target.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
-                        response = JSON.parse(response);
-                        response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
-                        if (response.data.recommend) {
-                            for (let i = 0; i < response.data.recommend.length; i++) {
-                                response.data.recommend[i].pic = response.data.recommend[i].cover;
-                                response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                            }
+                try {
+                    hook.push(JSON.parse(event.target.responseText));
+                    let response = event.target.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+                    response = JSON.parse(response);
+                    response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
+                    if (response.data.recommend) {
+                        for (let i = 0; i < response.data.recommend.length; i++) {
+                            response.data.recommend[i].pic = response.data.recommend[i].cover;
+                            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
                         }
-                        if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
-                        hook.push(response);
-                        debug.log("XHR重定向", "修改返回值", hook);
-                        Object.defineProperty(obj, 'response', {writable: true});
-                        Object.defineProperty(obj, 'responseText', {writable: true});
-                        obj.response =obj.responseText = JSON.stringify(response);
-                    } catch(e) {debug.error(e)}
-                }
-                obj.addEventListener('readystatechange', () => {if ( obj.readyState === 4 ) callback()});
+                    }
+                    if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
+                    hook.push(response);
+                    debug.log("XHR重定向", "修改返回值", hook);
+                    Object.defineProperty(obj, 'response', {writable: true});
+                    Object.defineProperty(obj, 'responseText', {writable: true});
+                    obj.response =obj.responseText = JSON.stringify(response);
+                } catch(e) {debug.error(e)}
             },
+            playinfo: (obj) => { // 记录视频地址
+                try {
+                    __playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);
+                } catch (e) {debug.log(e)}
+            }
         },
         write : (html) => { // 重写网页
             document.open();
@@ -650,29 +668,54 @@
         download: {
             init : (title) => {
                 let fixnav_report = document.getElementById("fixnav_report");
-                let a = document.createElement("a");
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("bangumi-nav-right")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("fixed-nav-m")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-menu")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-tools")[0];
                 if (!fixnav_report) return;
+                if (fixnav_report.parentNode && fixnav_report.parentNode.id == "bili-header-m") return;
+                url = "";mdf = {};
                 let div = document.createElement("div");
                 div.setAttribute("class", "video_download icon");
                 div.setAttribute("title", "下载视频");
                 let append = () => document.getElementsByClassName("video_download")[0] ? document.getElementsByClassName("video_download")[0].replaceWith(div) : fixnav_report.insertBefore(div,fixnav_report.firstChild);
                 div.onclick = async () => {
-                    document.body.appendChild(a);
-                    url = url ? url : await deliver.download.geturl();
-                    if (!url) {debug.msg("拉取下载链接失败 ಥ_ಥ"); url = true; return;}
-                    if (url === true) {debug.msg("本视频无法获取下载链接", "请勿反复调戏！"); return;}
-                    navigator.clipboard.writeText(url);
-                    debug.msg("已复制视频下载链接到剪切板");
-                    if (!config.reset.idm) return;
-                    a.setAttribute("href", url);
-                    a.setAttribute("hidden", "hidden");
-                    a.setAttribute("download", title ? title + ".mp4" : url);
-                    a.click();
-                    a.remove();
+                    let qua = {120 : "4K", 112 : "1080P+", 80 : "1080P", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
+                    try {url = url ? url : await deliver.download.geturl()} catch(e) {url = {mp4 : false}}
+                    try {
+                        if (url && url.durl) {
+                            mdf.mp4 = ["1080P", url.durl[0].url, deliver.sizeFormat(url.durl[0].size)];
+                            navigator.clipboard.writeText(url.durl[0]);
+                        } else {debug.warn("mp4", url)}
+                        if (__playinfo__.data || __playinfo__.result) {
+                            let path = __playinfo__.data ? __playinfo__.data : __playinfo__.result;
+                            if (path.durl) {
+                                if (path.format == "mp4") {mdf.mp4 = [qua[path.quality],path.durl[0].url, deliver.sizeFormat(path.durl[0].size)]}
+                                else {
+                                    mdf.flv = [];
+                                    for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["分段 " + path.durl[i].order, path.durl[i].url, deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
+                                }
+                            }
+                            if (path.dash) {
+                                mdf.dash = {}
+                                for (let i = 0; i < path.dash.video.length; i++) {
+                                    if (path.dash.video[i].codecs.startsWith("avc")) {
+                                        if (!mdf.dash.avc) mdf.dash.avc = [];
+                                        mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl, deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                                    }
+                                    else {
+                                        if (!mdf.dash.hev) mdf.dash.hev = [];
+                                        mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl, deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                                    }
+                                }
+                                for (let i = 0; i < path.dash.audio.length; i++) {
+                                    if (!mdf.dash.aac) mdf.dash.aac = [];
+                                    mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl, deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
+                                }
+                            }
+                        }
+                        deliver.download.item();
+                    } catch(e) {debug.error(e)}
                 }
                 if (document.getElementsByClassName("float-nav")[0]) {
                     let timer = setInterval(() => {
@@ -696,10 +739,8 @@
                 let url = deliver.download.playurl();
                 try {
                     data = await xhr.true(url);
-                    data = JSON.parse(data);
-                    debug.log("视频链接", data);
-                    return data.durl ? data.durl[0].url : "";
-                } catch(e) {debug.error(e);return "";}
+                    return JSON.parse(data);
+                } catch(e) {debug.error(e);}
             },
             playurl: (aid, cid, qn, type, sor) => { // 配置视频链接
                 let obj = {}
@@ -726,6 +767,54 @@
                         break;
                 }
             },
+            item: () => {
+                let top = document.getElementById("bili-old-download-table");
+                if (top) top.remove();
+                function addBox(obj, name, type, color, quatily){
+                    let box = document.createElement("div");
+                    box.setAttribute("class", "download-box");
+                    let tab = document.createElement("div");
+                    tab.setAttribute("class", "download-type " + type);
+                    tab.innerHTML = name;
+                    box.appendChild(tab);
+                    top.appendChild(box);
+                    for (let i = 0; i < obj.length; i++) {
+                        switch (color ? color : obj[i][0]) {
+                            case "1080P": quatily = "quality-1080p"; break;
+                            case "720P": quatily = "quality-720p"; break;
+                            case "480P": quatily = "quality-480p"; break;
+                            case "360P": quatily = "quality-360p"; break;
+                            default: quatily = "quality-high";
+                        }
+                        quatily = 1 * obj[i][0] ? "quality-480p" : quatily;
+                        let a = document.createElement("a");
+                        let q = document.createElement("div");
+                        let s = document.createElement("div");
+                        a.setAttribute("download", "download");
+                        a.setAttribute("href", obj[i][1]);
+                        q.setAttribute("class", "download-quality " + quatily);
+                        q.innerHTML = obj[i][0];
+                        s.setAttribute("class", "download-size");
+                        s.innerHTML = obj[i][2];
+                        a.appendChild(q);
+                        a.appendChild(s);
+                        box.appendChild(a);
+                    }
+                }
+                top = document.createElement("div");
+                top.setAttribute("id", "bili-old-download-table");
+                let view = document.createElement("div");
+                if (mdf.mp4) addBox([mdf.mp4], "mp4", "download-mp4");
+                if (mdf.flv) addBox(mdf.flv, "flv", "download-flv", mdf.flv[0][3]);
+                if (mdf.dash) {
+                    if (mdf.dash.avc) addBox(mdf.dash.avc, "avc", "download-avc");
+                    if (mdf.dash.hev) addBox(mdf.dash.hev, "hev", "download-hev");
+                    if (mdf.dash.aac) addBox(mdf.dash.aac, "aac", "download-aac");
+                }
+                document.body.appendChild(top);
+                top.onmouseover = () => window.clearTimeout(timer);
+                top.onmouseout = () => {timer = window.setTimeout(() => top.remove(), 1000)}
+            }
         },
         switchVideo: () => { // 切p相关
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
@@ -912,8 +1001,8 @@
         setMediaList: {
             init: async (data) => { // 收藏播放
                 if (!ml) { // 判断是正常av页还是收藏播放页
-                    if (!window.__playinfo__.data || !window.__playinfo__.data.accept_quality) return;
-                    if (window.__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
+                    if (!__playinfo__.data || !__playinfo__.data.accept_quality) return;
+                    if (__playinfo__.data.accept_quality[0] < 120) return; // 4k时初始化播放器
                     let timer = setInterval(() => {
                         if (!unsafeWindow.BilibiliPlayer) return;
                         clearInterval(timer);
@@ -1461,10 +1550,7 @@
             ui_face.onclick = () => {
                 let table = document.getElementsByClassName("ui-table");
                 if (!table[0]) UI.table();
-                else {
-                    if (table[0].getAttribute("hidden")) table[0].removeAttribute("hidden");
-                    UI.table();
-                }
+                else if (table[0].getAttribute("hidden")) table[0].removeAttribute("hidden");
             }
             ui_face.appendChild(icon);
             ui_face.appendChild(enter);
@@ -1473,9 +1559,9 @@
             let timer = window.setInterval(() => {if (document.body) {window.clearInterval(timer); document.body.appendChild(ui_face);}}, 1000);
         },
         table: () => { // 绘制设置选项
-            let table = document.getElementsByClassName("ui-table");
+            let table = document.getElementsByClassName("ui-table")[0];
             let timer;
-            if (!table[0]) {
+            if (!table) {
                 table = document.createElement("div");
                 table.setAttribute("class", "bili-old ui-table");
                 table.setAttribute("id", "ui-table");
@@ -1498,7 +1584,6 @@
                 for (let key in config.reset) UI.setTable(table, UI.menu[key], config.reset[key], key);
                 document.body.appendChild(table);
             }
-            else table = table[0];
             // 设置失去焦点时消失时间
             table.onmouseover = () => window.clearTimeout(timer);
             table.onmouseout = () => {timer = window.setTimeout(() => {table.setAttribute("hidden", "hidden");GM_setValue("config", config); debug.msg("已保存设置");}, 500);}
@@ -1549,8 +1634,7 @@
             episodedata : ["分集数据", "是否显示番剧单回的播放数和弹幕数？<br>让新番显示当前回的播放数和弹幕数，原来的合计播放数和弹幕数将显示在鼠标焦点的浮动信息上"],
             like : ["点赞", "是否为旧版播放页添加添加点赞功能？<br>点赞是新版页面专属功能，很简陋地在旧版视频信息栏添加了个“红心”的点赞按钮。<br>※ 缺乏官方的动效体验捉急"],
             static : ["静态页面", "是否将静态av页跳转到普通av页？<br>静态页面是新版专属页面，页面大部分信息都内置于页面中以加快载入速度，将直接跳转到普通的av页(以启用旧版av页)。"],
-            download : ["下载视频", "是否启用视频下载功能？<br>将在播放页(av和番剧)回到顶部按钮上方创建一个下载视频按钮，点击将复制视频链接(mp4/1080P)到剪切板以便使用其他工具下载(因浏览器同源策略无法直接调用下载功能 ಥ_ಥ)。<br>※ 不支持会员视频下载<br>※ 建议配合IDM并开启“直接下载”选项"],
-            idm : ["直接下载", "“下载视频”的下级选项<br>启用后将尝试访问视频链接，IDM拓展可以直接捕获视频。<br>※ 非IDM还是不要开启"],
+            download : ["下载视频", "是否启用视频下载功能？<br>将在播放页(av和番剧)回到顶部按钮上方创建一个下载视频按钮，点击在底部显示下载链接，请右键另存为或右键IDM下载。<br>mp4：原生mp4，拓展名.mp4<br>avc：h.264视频轨，拓展名.m4v<br>hev：h.265视频轨，拓展名.m4v<br>aac：音频轨，拓展名.m4a<br>flv：流媒体，拓展名.flv<br>※以上格式不一定会全部出现<br>※mp4一般最高只有1080P<br>※DASH视/音频分开，视频编码一般选avc，音频自选<br>※flv可能分段，画质为正在播放的画质"],
             heartbeat : ["视频心跳", "是否替换播放记录心跳？<br>旧版视频心跳存在被某些广告插件误杀的情况，导致播放视频而没有记录进历史记录，存在类似情形可以尝试启用。"],
             carousel : ["播放信息", "是否恢复播放器顶部通知信息？<br>视频通知信息获取不到任何有效信息，导致旧版播放器上方通知区一片空白，启用将生成默认数据填充。"],
             adloc : ["主页广告", "是否去除B站主页的广告数据？<br>包括主页主推荐位5幅滚动图中的广告，直播区上方横幅的广告。<br>※ 只支持旧版主页"]
@@ -1570,8 +1654,7 @@
                     TITLE = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ =
                         JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")); // 继承__INITIAL_STATE__
-                    window.__playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : ""; // 继承 __playinfo__
-                    debug.log("__playinfo__", window.__playinfo__);
+                    __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : ""; // 继承 __playinfo__
                     if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                     unsafeWindow.__INITIAL_STATE__.comment = {count: 0, list: []} // 修复评论数据缺失
                     window.hd = 1;
@@ -1622,7 +1705,7 @@
                 aid = link.match(/aid=[0-9]*/) ? 1 * link.match(/aid=[0-9]*/)[0].replace(/aid=/,"") : 1 * deliver.convertId(link.match(/bvid=[A-Za-z0-9]*/)[0].replace(/bvid=/,"")); // 获取aid或bvid转的aid
                 aid = aid ? aid : 1 * deliver.convertId(link.match(/aid=[A-Za-z0-9]*/)[0].replace(/aid=/,"")); // 获取写作aid读作bvid的aid
                 cid = link.match(/cid=[0-9]*/) ? 1 * link.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : ""; // 获取cid
-                cid ? location.replace(deliver.obj2search(API.playerframe.html5player,{"aid" :aid,"cid": cid,"season_type": season_type,"player_type": player_type,"as_wide": 1, "urlparam": "module%253Dbangumi", "crossDomain": "true"})) : location.replace(deliver.obj2search(API.playerframe.html,{"aid": aid, "season_type": season_type, "player_type": player_type, "as_wide": 1, "urlparam": "module%253Dbangumi", "crossDomain": "true", "wmode": "transparent"}));
+                cid ? location.replace(deliver.obj2search(API.playerframe.html5player,{"aid": aid,"cid": cid,"season_type": season_type,"player_type": player_type,"as_wide": 1, "urlparam": "module%253Dbangumi", "crossDomain": "true"})) : location.replace(deliver.obj2search(API.playerframe.html,{"aid": aid, "season_type": season_type, "player_type": player_type, "as_wide": 1, "urlparam": "module%253Dbangumi", "crossDomain": "true", "wmode": "transparent"}));
                 debug.log("嵌入播放器", "aid=" + aid, " cid=" + cid);
             }
         },
