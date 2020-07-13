@@ -665,7 +665,7 @@
             }
             setTimeout(() => {ul.innerHTML = message}, 100);
         },
-        download: {
+        download: { // 下载视频
             init : (title) => {
                 let fixnav_report = document.getElementById("fixnav_report");
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("bangumi-nav-right")[0];
@@ -673,24 +673,24 @@
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-menu")[0];
                 fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-tools")[0];
                 if (!fixnav_report) return;
-                if (fixnav_report.parentNode && fixnav_report.parentNode.id == "bili-header-m") return;
-                url = "";mdf = {};
+                if (fixnav_report.parentNode && fixnav_report.parentNode.id == "bili-header-m") return; // 排除部分旧版顶栏
+                url = "";mdf = {}; // 换p初始化
                 let div = document.createElement("div");
                 div.setAttribute("class", "video_download icon");
                 div.setAttribute("title", "下载视频");
                 let append = () => document.getElementsByClassName("video_download")[0] ? document.getElementsByClassName("video_download")[0].replaceWith(div) : fixnav_report.insertBefore(div,fixnav_report.firstChild);
                 div.onclick = async () => {
                     let qua = {120 : "4K", 112 : "1080P+", 80 : "1080P", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
-                    try {url = url ? url : await deliver.download.geturl()} catch(e) {url = {mp4 : false}}
+                    try {url = url ? url : await deliver.download.geturl()} catch(e) {url = {mp4 : false}} // 获取mp4，忽略报错
                     try {
                         if (url && url.durl) {
                             mdf.mp4 = ["1080P", url.durl[0].url, deliver.sizeFormat(url.durl[0].size)];
                             navigator.clipboard.writeText(url.durl[0]);
                         } else {debug.warn("mp4", url)}
                         if (__playinfo__.data || __playinfo__.result) {
-                            let path = __playinfo__.data ? __playinfo__.data : __playinfo__.result;
+                            let path = __playinfo__.data ? __playinfo__.data : __playinfo__.result; // 链接可能在data/result里
                             if (path.durl) {
-                                if (path.format == "mp4") {mdf.mp4 = [qua[path.quality],path.durl[0].url, deliver.sizeFormat(path.durl[0].size)]}
+                                if (path.format == "mp4") {mdf.mp4 = [qua[path.quality],path.durl[0].url, deliver.sizeFormat(path.durl[0].size)]} // durl可能是mp4，一般出现在预览时
                                 else {
                                     mdf.flv = [];
                                     for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["分段 " + path.durl[i].order, path.durl[i].url, deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
@@ -1716,20 +1716,23 @@
             location.replace("https://www.bilibili.com/medialist/play/ml182603655"); // 重定向到收藏播放页，绕过404
         },
         medialist: () => {
-            ml = 1 * LOCATION[5].match(/[0-9]+/)[0]; // 获取收藏号
-            pl = GM_getValue("playlist") ? GM_getValue("playlist") : ""; // 获取播单数据
-            if (pl) { // 判断是否播单重定向而来
-                history.replaceState(null,null, "https://www.bilibili.com/playlist/video/pl" + pl); // 跳转回播单
-                GM_setValue("playlist", 0); // 清除播单号
-                GM_setValue("medialist", 0);// 清除收藏号
-                deliver.write(API.pageframe.playlist); // 重写播单框架
-                deliver.setPlayList(); // 播单额外处理入口
+            if (LOCATION[5].startsWith("ml")) {
+                ml = 1 * LOCATION[5].match(/[0-9]+/)[0]; // 获取收藏号
+                pl = GM_getValue("playlist") ? GM_getValue("playlist") : ""; // 获取播单数据
+                if (pl) { // 判断是否播单重定向而来
+                    history.replaceState(null,null, "https://www.bilibili.com/playlist/video/pl" + pl); // 跳转回播单
+                    GM_setValue("playlist", 0); // 清除播单号
+                    GM_setValue("medialist", 0);// 清除收藏号
+                    deliver.write(API.pageframe.playlist); // 重写播单框架
+                    deliver.setPlayList(); // 播单额外处理入口
+                }
+                else {
+                    if (!config.rewrite.medialist) return;
+                    GM_setValue("medialist", ml); // 保存收藏号
+                    deliver.setMediaList.init(ml);
+                }
             }
-            else {
-                if (!config.rewrite.medialist) return;
-                GM_setValue("medialist", ml); // 保存收藏号
-                deliver.setMediaList.init(ml);
-            }
+            if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); // 重定向稍后再看
         },
         svideo: () => {
             if (!config.reset.static) return;
@@ -1811,7 +1814,7 @@
         if (LOCATION[3] == 'bangumi' && LOCATION[4] == 'play') thread.bangumi();
         if (LOCATION[3] == 'blackboard' && LOCATION[4]) thread.blackboard();
         if (LOCATION[3] == 'playlist' && LOCATION[5].startsWith('pl')) thread.playlist();
-        if (LOCATION[3] == 'medialist' && LOCATION[4] == 'play' && LOCATION[5].startsWith('ml')) thread.medialist();
+        if (LOCATION[3] == 'medialist' && LOCATION[4] == 'play') thread.medialist(); // https://www.bilibili.com/medialist/play/watchlater/p1
         if (LOCATION[3] == 's' && (LOCATION[5].toLowerCase().startsWith('av') || LOCATION[5].toLowerCase().startsWith('bv'))) thread.svideo();
         if (LOCATION[2] == 'space.bilibili.com') thread.space();
         if (LOCATION[2] == 'www.bilibili.com' && (LOCATION[3].startsWith('\?') || LOCATION[3].startsWith('\#') || LOCATION[3].startsWith('index.'))) thread.home();
