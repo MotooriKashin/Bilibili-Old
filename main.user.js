@@ -20,7 +20,7 @@
 (function() {
     'use strict';
 
-    let ml, pl, ts, aid, cid, def, mid, oid, src, tid, uid, url, mode, type, timer;
+    let ml, pl, ts, aid, cid, def, mid, oid, pgc, src, tid, uid, url, mode, type, timer;
     let arr = [], avs = [], ids = [], obj = {}, mdf = {};
     let TITLE, DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
@@ -74,7 +74,8 @@
             x: "https://api.bilibili.com/x/player/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
             pgc: "https://api.bilibili.com/pgc/player/web/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
             sign: "https://interface.bilibili.com/v2/playurl", // appkey, cid=, otype=json, qn, quality, type
-            proj: "https://app.bilibili.com/v2/playurlproj" // appkey, cid=, otype=json, qn
+            proj: "https://app.bilibili.com/v2/playurlproj", // appkey, cid=, otype=json, qn
+            pgcproj: "https://api.bilibili.com/pgc/player/api/playurlproj" // appkey, cid=, otype=json, platform=android_i, qn
         },
         sort: { // 分区对照表
             202: [202,"资讯", "https://www.bilibili.com/v/information/"],
@@ -559,6 +560,7 @@
                             url = url.replace("playurl?", "playurl?fourk=1&");
                             debug.log("XHR重定向", [_url, url]);
                         }
+                        if (url.includes("pgc")) pgc = true;
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this)});
                     }
                     return open.call(this, method, url, ...rest);
@@ -690,7 +692,7 @@
                         if (url && url.durl) {
                             mdf.mp4 = ["1080P", url.durl[0].url, deliver.sizeFormat(url.durl[0].size)];
                             navigator.clipboard.writeText(url.durl[0]);
-                        } else {debug.warn("mp4", url)}
+                        } else {debug.error("mp4", "404 Not Found!")}
                         if (__playinfo__ && (__playinfo__.data || __playinfo__.result)) {
                             let path = __playinfo__.data ? __playinfo__.data : __playinfo__.result; // 链接可能在data/result里
                             if (path.durl) { // 获取flv
@@ -742,31 +744,31 @@
             geturl: async (data) => { // 拉取视频链接
                 let url = deliver.download.playurl();
                 try {
-                    data = await xhr.true(url);
+                    data = await xhr.GM(url);
                     return JSON.parse(data);
                 } catch(e) {debug.error(e);}
             },
-            playurl: (aid, cid, qn, type, sor) => { // 配置视频链接
+            playurl: (aid, cid, qn, type) => { // 配置视频链接
                 let obj = {}
                 let sign = deliver.sign();
                 aid = aid ? aid : unsafeWindow.aid;
                 cid = cid ? cid : unsafeWindow.cid;
                 qn = qn ? qn : 120;
                 type = type ? type : "mp4";
-                sor = sor ? sor : "";
                 switch(type){
-                    case 'dash' : if (sor) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
+                    case 'dash' : if (pgc) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
                         else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
                         break;
-                    case 'flv' : if (sor) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
+                    case 'flv' : if (pgc) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
                         else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
                         break;
                     case 'off' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: qn, quality: qn, type: ''}
                         obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
                         return deliver.obj2search(API.url.sign, obj);
                         break;
-                    case 'mp4' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: 208}
+                    case 'mp4' : obj = {appkey: sign[0], cid: cid, otype: 'json', platform: 'android_i', qn: 208}
                         obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
+                        if (pgc) return deliver.obj2search(API.url.pgcproj, obj);
                         return deliver.obj2search(API.url.proj, obj);
                         break;
                 }
@@ -950,7 +952,7 @@
                     bef.setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
                     af.setAttribute("class", "l-icon-moved");
                     af.setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
-                    number[0].insertBefore(span,node[0]);
+                    number[0].insertBefore(span, node[0]);
                     try {
                         data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid})); // 获取点赞数
                         data = JSON.parse(data).data.stat.like;
@@ -1009,8 +1011,7 @@
                     let timer = setInterval(() => {
                         if (!unsafeWindow.BilibiliPlayer) return;
                         clearInterval(timer);
-                        let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
-                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
+                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload("cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid);
                         unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
                     },100)
                     return;
@@ -1817,7 +1818,7 @@
         if (LOCATION[3] == 'bangumi' && LOCATION[4] == 'play') thread.bangumi();
         if (LOCATION[3] == 'blackboard' && LOCATION[4]) thread.blackboard();
         if (LOCATION[3] == 'playlist' && LOCATION[5].startsWith('pl')) thread.playlist();
-        if (LOCATION[3] == 'medialist' && LOCATION[4] == 'play') thread.medialist(); // https://www.bilibili.com/medialist/play/watchlater/p1
+        if (LOCATION[3] == 'medialist' && LOCATION[4] == 'play') thread.medialist();
         if (LOCATION[3] == 's' && (LOCATION[5].toLowerCase().startsWith('av') || LOCATION[5].toLowerCase().startsWith('bv'))) thread.svideo();
         if (LOCATION[2] == 'space.bilibili.com') thread.space();
         if (LOCATION[2] == 'www.bilibili.com' && (LOCATION[3].startsWith('\?') || LOCATION[3].startsWith('\#') || LOCATION[3].startsWith('index.'))) thread.home();
