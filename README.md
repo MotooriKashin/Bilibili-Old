@@ -1,61 +1,61 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 83](https://img.shields.io/badge/Google_Chrome_83-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- 自用的[Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")？)
+- [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")？)
 - 默认开启部分附加功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
-- 初衷是个人更喜欢旧版界面，无奈官方接连弃置相关入口
-   + 2019年12月09日：B站突然取消了旧版av、Bangumi页面入口
-   + 2019年12月24日：B站再次把稍后再看也改为了新版
-   + 2020年03月23日：B站启用BV号替代原本的av号
-   + 2020年04月04日：B站取消旧版主页
-   + 2020年04月23日：B站开启4K灰度测试
-   + 2020年04月28日：B站404播单页面
-   + 2020年05月21日：B站启用新版弹幕文件
+- B站页面变动时间轴：
+   + 2019年12月09日：移除旧版av、旧版Bangumi
+   + 2019年12月24日：移除旧版稍后再看
+   + 2020年03月23日：默认启用bv代替av
+   + 2020年04月04日：移除旧版主页
+   + 2020年04月23日：开启4K灰度测试
+   + 2020年04月28日：移除播单相关
+   + 2020年05月21日：启用新版弹幕
 
 ---
 ### 脚本实现
-- 重写(基于旧版网页框架)
-   + B站主页
+- 重写(基于原生旧版网页框架)
+   + 主页
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生") 或 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
    + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
    + 播单，如[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")
    + 收藏，如[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
-   + 嵌入式播放器，如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")
-- 修改(部分请在设置里启用)
-   + 替换大部分新版版头和版底
-   + BV跳转到对应的av页
+   + 替换嵌入式播放器，如 [blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视") [campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘") [biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传") [moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")
+- 修改(可能需要自行启用)
+   + 替换掉新版版头和版底
+   + 部分禁用BV并在进入BV时跳转到av
    + 显示番剧分集播放数和弹幕数
-   + 在旧版av(BV)页添加点赞功能
-   + 下载视频
-   + 去除6分钟预览框
+   + 为旧版播放页添加点赞功能
+   + 添加下载视频功能
+   + 移除预览提示框
    + 在个人空间显示注册时间
-   + 修复评论区的楼层信息
+   + 修复评论区的楼层号
    + 修复收藏和频道里的失效视频封面和标题
 
 ---
 ### 关于设置
-- 本脚本旨在恢复原生旧版页面并尽量不去添加多余的东西，所以设置界面设计得比较隐蔽(纯白底色且自动贴边)
-- 本脚本所有功能都可以在设置中独立选择是否启用并附带详细说明，设置数据存储在脚本管理器中
-- 设置入口在页面右下角2~3厘米处，鼠标移到对应位置会自动显现(或者参考[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例"))
+- 设置入口设计得比较隐蔽以保持页面纯粹，入口在页面右下角2~3厘米处，鼠标移到对应位置会自动显现
+- 设置中可单独选择所有功能启用与否，附带各功能简要说明
+- 设置数据存储在脚本管理器中，不受清除cookies影响
+- [这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例")能解决所有设置相关问题
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 机制问题无法在新版页面载入前就启用旧版页面，所以载入速度新版页面慢。
-2. 旧版播放器4k视频支持上可能有问题但无条件进行测试。
-3. 旧版播放器未适配新版弹幕，没有随着变动弹幕上限。
-4. 旧版播放器原生不支持CC字幕，万幸可以通过第三方脚本进行支持——[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)。
+1. 机制原因无法在新版页面载入前就启用旧版页面，所以载入速度比新版页面稍慢。
+2. 旧版播放器4k视频支持上可能有问题。
+3. 旧版播放器未适配新版弹幕，弹幕上限没有变动。
+4. 旧版播放器原生不支持CC字幕，万幸可以通过[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
 4. 旧版播放器原生不支持互动视频，已主动忽略。
 5. 旧版播放器原生不支持全景视频，将无法移动视角。
-6. 旧版主页科技区便是新版的知识区，广告区已失效并替换为新添的咨询区且无法刷新动态。
+6. 旧版主页科技区便是新版的知识区，三日及周推荐已失效并隐藏切换按钮，广告区已失效并替换为新添的资讯区且无法刷新动态。
 7. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
 8. 嵌入式页面只简单替换播放器其他附带如切P等功能没有单独适配(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 9. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
 10. 收藏播放页并没有原生旧版页面所以采用av页加上稍后再看列表进行模拟，up简介等非重要信息没有去额外获取。
 11. 偶发载入异常问题请尝试刷新解决，没用就多刷新几次硬刷新更佳(快捷键`Shift + F5`或者`Ctrl + Shift + R`)。
-12. 重写页面使用的`document.write()`方法可能并已经造成部分兼容问题详见下文。
 
 ---
 ### 兼容数据
@@ -66,81 +66,41 @@
 > Tampermonkey BETA 4.10.6115
 >
  
-**所有重写过的页面其他以`run-at document-start`注入的同域脚本的`GM_setValue`功能失效！**
-<table>
-   <thead>
-      <tr>
-         <th>脚本</th>
-         <th>兼容性</th>
-         <th>详细说明</th>
-      </tr>
-   </thead>
-   <tbody>
-      <tr>
-         <td><a href="https://github.com/the1812/Bilibili-Evolved">Bilibili Evolved</a></td>
-         <td>正常</td>
-         <td>GM_setValue异常，在旧版页面里无法保存设置</td>
-      </tr>
-      <tr>
-         <td><a href="https://github.com/SeaLoong/Bilibili-LRHH">Bilibili直播间挂机助手</a></td>
-         <td>正常</td>
-         <td></td>
-      </tr>
-      <tr>
-         <td><a href="https://greasyfork.org/scripts/25718">解除B站区域限制</a></td>
-         <td>正常</td>
-         <td>设置界面缺失，调整设置请去新版页面</td>
-      </tr>
-      <tr>
-         <td><a href="https://greasyfork.org/scripts/378513">Bilibili CC字幕工具</a></td>
-         <td>正常</td>
-         <td>初次使用若设置数据读取出错，只需去新版页面读取一次</td>
-      </tr>
-      <tr>
-         <td><a href="https://greasyfork.org/scripts/374449">Bilibili 修车插件</a></td>
-         <td>正常</td>
-         <td>会二次初始化播放器，推荐修改并添加`run-at document-start`</td>
-      </tr>
-      <tr>
-         <td><a href="https://greasyfork.org/zh-CN/scripts/40341">Bilibili - Whose Bullets</a></td>
-         <td>正常</td>
-         <td></td>
-      </tr>
-      <tr>
-         <td><a href="http://www.internetdownloadmanager.com">IDM下载浮动条</a></td>
-         <td><strong>失效</strong></td>
-         <td>旧版页面里不会显示下载浮动条</td>
-      </tr>
-      <tr>
-         <td><a href="https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh">pakku.js</a></td>
-         <td>正常</td>
-         <td></td>
-      </tr>
-      <tr>
-         <td><a href="http://iamdustan.com/smoothscroll/">smoothscroll</a></td>
-         <td><strong>失效</strong></td>
-         <td>平滑滚动失效</td>
-      </tr>
-   </tbody>
-</table>
+脚本使用的`document.write()`方法在旧版页面对其他脚本及扩展造成了一些兼容问题
+- 在本脚本刷新网页框架之前写入DOM的数据无效：如对DOM/CSS的更改
+- 在本脚本刷新网页框架之前写入DOM的回调无效：如addEventListener、document.onclick
+- 在本脚本刷新网页框架之前注入页面的其他脚本`GM_setValue`方法失效
+- 与其他脚本兼容问题主要出其他脚本以`run-at document-start`注入时
+
+下面是一些测试过的同域脚本及扩展的结果
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：大部分功能正常兼容，旧版页面`GM_setValue`失效无法存储设置更改，旧版主页“简化主页”会造成布局错乱，旧版番剧页面批量下载功能报错“获取番剧数据失败: 无法找到 Season ID”(当前视频下载没问题)，快捷键拓展部分未适配旧版播放器
+- [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)：完全正常，本脚本并未重写直播页面所以理论上也不存在兼容问题
+- [解除B站区域限制](https://greasyfork.org/scripts/25718)：功能正常，并未失陪旧版UI，所以无法在旧版页面调出设置，调整设置请去新版页面或者番剧详情页面
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：完全正常，能使旧版播放器支持CC字幕，**强烈推荐！**。初次使用可能会报错“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：只适配旧版播放器的脚本\*1，并没有兼容问题，由于该脚本会二次初始化播放器，个人推荐手动为其添加以`run-at document-start`注入的元数据，并只在需要使用时启用平时关闭为好
+- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：只适配旧版播放器的脚本\*2，并没有兼容问题
+- [IDM Integration Module](http://www.internetdownloadmanager.com)：IDM高级浏览器集成可能是通过往页面注入`content.js`的方式实现的下载浮动条，作为拓展该注入行为肯定在本脚本重写页面之前，所以在旧版页面下载浮动条是失效的，不过IDM下载监听没问题，本脚本下载视频功能的链接能正常捕获，右键使用IDM下载也没问题
+- [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：完全正常
+- [smoothscroll](http://iamdustan.com/smoothscroll/)：有人反馈平滑滚动失效，未作进一步测试
 
 ---
-### 参考致谢
-- 感谢[Wayback Machine](https://archive.org/web/)保存的旧版网页备份。
-- 感谢[indefined](https://github.com/indefined)提供的[脚本](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)参考和细心讲解，实在受益良多。
-- 感谢[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)开放的Bilibili数据查询接口。
-- 感谢[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)开源的bv2av(Python)代码。
-- 感谢[wly5556](https://greasyfork.org/users/217840)提供的简洁而有力的原生调用方法。
-- 脚本描述文件参考了[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)的设计，非常感谢。
-- 番剧分集数据参考了[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢。
-- 部分内容还学习和参考了[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，与同域脚本兼容问题也深受启发，非常感谢。
-- 下载功能参考了[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢。
-- 下载界面模仿了[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)，非常感谢。
-- 哈希(md5)算法修改自百度百科，作者不明，侵删，非常感谢。
+### 参考来源
+- 旧版网页框架来源：[Wayback Machine](https://archive.org/web/)，非常感谢！
+- 脚本原型及指导：[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)，非常感谢！
+- 第三方数据接口：[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)，非常感谢！
+- 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)，非常感谢！
+- BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)，非常感谢！
+- 页面原生调用来源：[wly5556](https://greasyfork.org/users/217840)，非常感谢！
+- README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)，非常感谢！
+- 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢！
+- 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，非常感谢！
+- playurl算法来源：[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢！
+- 下载界面样式来源：[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)，非常感谢！
+- MD5算法来源：[MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)，非常感谢！
+- 测试及反馈：所有使用本脚本及反馈各种问题的大家，非常感谢！
 
 ---
 ### 效果预览
-①[Bangumi](https://greasyfork.org/zh-CN/forum/uploads/editor/eh/valwnnnfyrpx.jpg) ②[Video](https://greasyfork.org/zh-CN/forum/uploads/editor/3i/lts2zojlzla4.jpg) ③[Watchlater](https://greasyfork.org/zh-CN/forum/uploads/editor/xc/tiah7eq7uxcq.jpg) ④[Bagumi-special](https://greasyfork.org/zh-CN/forum/uploads/editor/el/ekipssyk5445.jpg)
 ![Bangumi](https://camo.githubusercontent.com/1802bb815c3f624f636b0ee71554a7b3816f1801/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767774576392e706e67)
 ### 版本历史
 - 2020-07-15
