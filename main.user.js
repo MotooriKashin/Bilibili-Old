@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.2.0
+// @version      3.2.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -468,16 +468,35 @@
             return type?Y+M+D+h+m+s:h+m+s; // 默认返回hh：mm：ss；type存在加上yy：mm：dd
         },
         sizeFormat : (size) => { // 格式化字节
-            let dex = 1024 ** 3, unit = ["B", "K", "M", "G"], i = unit.length - 1;
+            let dex = 1024 ** 3, vor = 1000 ** 3, unit = ["B", "K", "M", "G"], i = unit.length - 1;
             while (dex > 1) {
-                if (size >= dex) {
+                if (size >= vor) {
                     size = (size / dex).toFixed(2);
                     break;
                 }
                 dex = dex / 1024;
+                vor = vor / 1000;
                 i--;
             }
             return size + unit[i];
+        },
+        bubbleSort : (arr, rev) => { // 冒泡排序
+            let temp=[];
+            rev = rev ? true : false;
+            for (let i = 0; i < arr.length - 1; i++) {
+                let bool = true;
+                for (let j = 0; j < arr.length - 1 - i; j++) {
+                    if(arr[j] > arr[j+1]){
+                        temp = arr[j];
+                        arr[j] = arr[j+1];
+                        arr[j+1] = temp;
+                        bool = false;
+                    }
+                }
+                if (bool) break;
+            }
+            if (rev) return arr.reverse();
+            return arr;
         },
         convertId: (str) => { // bv <=> av
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
@@ -560,7 +579,9 @@
                             url = url.replace("playurl?", "playurl?fourk=1&");
                             debug.log("XHR重定向", [_url, url]);
                         }
-                        if (url.includes("pgc")) pgc = true;
+                        cid = url.match(/cid=[0-9]*/) ? 1 * url.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : "";
+                        aid = url.match(/avid=[0-9]*/) ? 1 * url.match(/avid=[0-9]*/)[0].replace(/avid=/,"") : "";
+                        pgc = url.includes("pgc") ? true : false;
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this)});
                     }
                     return open.call(this, method, url, ...rest);
@@ -626,10 +647,6 @@
             document.write(html);
             document.close();
         },
-        playinfo: async () => {
-            await Object.defineProperty(unsafeWindow, "__playinfo__", {set:() => {window.__playinfo__ = __playinfo__}});
-            __playinfo__ = window.__playinfo__;
-        },
         reSction: () => { // 重写版面
             if (!config.reset.grobalboard) return;
             document.getElementById("internationalHeader").setAttribute("style", "visibility:hidden;");
@@ -672,34 +689,36 @@
             setTimeout(() => {ul.innerHTML = message}, 100);
         },
         download: { // 下载视频
-            init : (title) => {
-                let fixnav_report = document.getElementById("fixnav_report");
-                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("bangumi-nav-right")[0];
-                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("fixed-nav-m")[0];
-                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-menu")[0];
-                fixnav_report = fixnav_report ? fixnav_report : document.getElementsByClassName("nav-tools")[0];
-                if (!fixnav_report) return;
-                if (fixnav_report.parentNode && fixnav_report.parentNode.id == "bili-header-m") return; // 排除部分旧版顶栏
-                url = "";mdf = {}; // 换p初始化
-                let div = document.createElement("div");
-                div.setAttribute("class", "video_download icon");
-                div.setAttribute("title", "下载视频");
-                let append = () => document.getElementsByClassName("video_download")[0] ? document.getElementsByClassName("video_download")[0].replaceWith(div) : fixnav_report.insertBefore(div,fixnav_report.firstChild);
+            init : (node) => {
+                if (!config.reset.download) return;
+                let li = document.createElement("li");
+                let div = document.createElement("a");
+                li.setAttribute("class", "context-line context-menu-function bili-old-download");
+                div.setAttribute("class", "context-menu-a js-action");
+                div.setAttribute("href", "javascript:void(0);");
+                div.innerText = "下载视频";
+                li.appendChild(div);
+                node.firstChild.appendChild(li);
                 div.onclick = async () => {
+                    debug.msg("正在获取视频链接", ">>>");
                     let qua = {120 : "4K", 112 : "1080P+", 80 : "1080P", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
-                    try {url = url ? url : await deliver.download.geturl()} catch(e) {url = {mp4 : false}} // 获取mp4，忽略报错
+                    let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
+                    try {url = url ? url : await deliver.download.geturl()} catch(e) {url = {mp4 : false}}
                     try {
                         if (url && url.durl) {
-                            mdf.mp4 = ["1080P", url.durl[0].url, deliver.sizeFormat(url.durl[0].size)];
+                            mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
                             navigator.clipboard.writeText(url.durl[0]);
                         } else {debug.error("mp4", "404 Not Found!")}
-                        if (__playinfo__ && (__playinfo__.data || __playinfo__.result)) {
-                            let path = __playinfo__.data ? __playinfo__.data : __playinfo__.result; // 链接可能在data/result里
+                        if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
+                            let path = __playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result);
                             if (path.durl) { // 获取flv
-                                if (path.format == "mp4") {mdf.mp4 = [qua[path.quality],path.durl[0].url, deliver.sizeFormat(path.durl[0].size)]} // durl可能是mp4，一般出现在预览时
+                                if (path.format == "mp4") { // durl可能是mp4
+                                    if (!mdf.mp4) mdf.mp4 = [];
+                                    mdf.mp4.push([qua[path.quality],path.durl[0].url.replace("http:", ""), deliver.sizeFormat(path.durl[0].size)]);
+                                }
                                 else {
                                     mdf.flv = [];
-                                    for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["分段 " + path.durl[i].order, path.durl[i].url, deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
+                                    for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["part " + path.durl[i].order, path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
                                 }
                             }
                             if (path.dash) { // 获取DASH
@@ -707,54 +726,42 @@
                                 for (let i = 0; i < path.dash.video.length; i++) { // 获取视频流
                                     if (path.dash.video[i].codecs.startsWith("avc")) {
                                         if (!mdf.dash.avc) mdf.dash.avc = [];
-                                        mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl, deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                                        mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
                                     }
                                     else {
                                         if (!mdf.dash.hev) mdf.dash.hev = [];
-                                        mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl, deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                                        mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
                                     }
                                 }
                                 for (let i = 0; i < path.dash.audio.length; i++) { // 获取音频流
                                     if (!mdf.dash.aac) mdf.dash.aac = [];
-                                    mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl, deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
+                                    mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
                                 }
+                                mdf.dash.aac = deliver.bubbleSort(mdf.dash.aac, true); // 倒序音频
+                                for (let i = 0; i < mdf.dash.aac.length; i++) if (mdf.dash.aac[i][0] in bps) mdf.dash.aac[i][0] = bps[mdf.dash.aac[i][0]]; // 标注码率(大概)
                             }
                         }
                         deliver.download.item();
+                        mdf = {};
                     } catch(e) {debug.error(e)}
                 }
-                if (document.getElementsByClassName("float-nav")[0]) {
-                    let timer = setInterval(() => {
-                        if (document.getElementsByClassName("float-nav")[0].getAttribute("style") == "display:none;") return;
-                        clearInterval(timer);
-                        append();
-                    },1000);
-                }
-                else {
-                    if (fixnav_report.getAttribute("style") == "display:none;") {
-                        let timer = setInterval(() => {
-                            if (fixnav_report.getAttribute("style") == "display: none;") return;
-                            clearInterval(timer);
-                            append();
-                        },1000);
-                    }
-                    else append()
-                }
             },
-            geturl: async (data) => { // 拉取视频链接
-                let url = deliver.download.playurl();
+            geturl: async (...arg) => { // 拉取视频链接
+                let url = deliver.download.playurl(...arg);
+                if (!url) return;
                 try {
-                    data = await xhr.GM(url);
+                    let data = await xhr.GM(url);
                     return JSON.parse(data);
                 } catch(e) {debug.error(e);}
             },
-            playurl: (aid, cid, qn, type) => { // 配置视频链接
+            playurl: (qn, type) => { // 配置视频链接
                 let obj = {}
                 let sign = deliver.sign();
                 aid = aid ? aid : unsafeWindow.aid;
                 cid = cid ? cid : unsafeWindow.cid;
                 qn = qn ? qn : 120;
                 type = type ? type : "mp4";
+                if (!cid) return;
                 switch(type){
                     case 'dash' : if (pgc) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
                         else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
@@ -776,6 +783,7 @@
             item: () => {
                 let top = document.getElementById("bili-old-download-table");
                 if (top) top.remove();
+                if (!mdf.mp4 && !mdf.flv && !mdf.dash) {debug.msg("未找到任何视频链接 ಥ_ಥ"); return;}
                 function addBox(obj, name, type, color, quatily){
                     let box = document.createElement("div");
                     box.setAttribute("class", "download-box");
@@ -784,19 +792,27 @@
                     tab.innerHTML = name;
                     box.appendChild(tab);
                     top.appendChild(box);
+                    switch (name) {
+                        case "mp4": name = ".mp4"; break;
+                        case "avc": name = ".m4v"; break;
+                        case "hev": name = ".m4v"; break;
+                        case "aac": name = ".m4a"; break;
+                    }
                     for (let i = 0; i < obj.length; i++) {
                         switch (color ? color : obj[i][0]) {
                             case "1080P": quatily = "quality-1080p"; break;
                             case "720P": quatily = "quality-720p"; break;
                             case "480P": quatily = "quality-480p"; break;
                             case "360P": quatily = "quality-360p"; break;
+                            case "320kbps": quatily = "quality-720p"; break;
+                            case "128kbps": quatily = "quality-480p"; break;
+                            case "64kbps": quatily = "quality-360p"; break;
                             default: quatily = "quality-high";
                         }
-                        quatily = 1 * obj[i][0] ? "quality-480p" : quatily;
                         let a = document.createElement("a");
                         let q = document.createElement("div");
                         let s = document.createElement("div");
-                        a.setAttribute("download", "download");
+                        a.setAttribute("download", obj[i][0] + name);
                         a.setAttribute("href", obj[i][1]);
                         q.setAttribute("class", "download-quality " + quatily);
                         q.innerHTML = obj[i][0];
@@ -809,8 +825,7 @@
                 }
                 top = document.createElement("div");
                 top.setAttribute("id", "bili-old-download-table");
-                let view = document.createElement("div");
-                if (mdf.mp4) addBox([mdf.mp4], "mp4", "download-mp4");
+                if (mdf.mp4) addBox(mdf.mp4, "mp4", "download-mp4");
                 if (mdf.flv) addBox(mdf.flv, "flv", "download-flv", mdf.flv[0][3]);
                 if (mdf.dash) {
                     if (mdf.dash.avc) addBox(mdf.dash.avc, "avc", "download-avc");
@@ -818,13 +833,14 @@
                     if (mdf.dash.aac) addBox(mdf.dash.aac, "aac", "download-aac");
                 }
                 document.body.appendChild(top);
+                debug.msg("右键另存为或右键IDM下载", "详见设置", 5000);
                 top.onmouseover = () => window.clearTimeout(timer);
                 top.onmouseout = () => {timer = window.setTimeout(() => top.remove(), 1000)}
             }
         },
         switchVideo: () => { // 切p相关
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
-            if (config.reset.download) deliver.download.init(title);
+            if (config.reset.download) {url = "";mdf = {};};
             if (!config.reset.selectdanmu) return;
             let danmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
             if (danmu) danmu.click();
@@ -860,7 +876,7 @@
                 }
             }
         },
-        resetNodes : () => { // 节点监听
+        resetNodes : (ext) => { // 节点监听
             let remove = (node, type, hidden, index) => {
                 index ? index : index = 0;
                 switch(type){ // 一般能移除的就移除，否则隐藏
@@ -880,6 +896,8 @@
             remove("bili-header-m", "class", false, 1); // 移除失效版头
             if (window.home) remove("rec-btn prev", "class"); // 移除主页昨日榜
             if (window.home) remove("rec-btn next", "class"); // 移除主页七日榜
+            ext = document.getElementsByClassName("bili-old-download");
+            if (ext[1]) ext[0].remove();
             if (config.reset.headblur) { // 使顶栏透明
                 let blur = document.getElementsByClassName("blur-bg");
                 if (blur[0]) blur[0].removeAttribute("style");
@@ -1620,28 +1638,28 @@
             div.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
         },
         menu: { // 设置选项数据，与默认设置数据一一对应
-            av : ["av(BV)", "是否启用旧版av页？<br>将启用旧版av页框架，播放器、页面全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度"],
-            bangumi : ["Bangumi", "是否启用旧版番剧页？<br>将启用旧版番剧页框架，播放器、页面全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度"],
-            watchlater : ["稍后再看", "是否启用旧版稍后再看？<br>将启用旧版稍后再看框架，播放器、页面全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度"],
-            frame : ["嵌入播放器", "是否将新版嵌入播放器替换为旧版嵌入播放器？<br>※ 只替换播放器不会专门处理被嵌入页面的其他实现"],
-            home : ["主页", "是否启用旧版主页？<br>将启用旧版主页框架，排版、分区全部恢复旧版样式。<br>※ 将牺牲一点页面载入速度<br>※ 广告区已失效并替换为资讯区数据"],
-            playlist : ["播单", "是否恢复播单播放页？<br>将先跳转收藏播放页避开404再恢复回播单页。<br>※ 将牺牲更多一点页面载入速度"],
-            medialist : ["收藏", "是否替换收藏播放页？<br>收藏播放页是新版专属页面，故采用跳转到对应av页的方式再在播放器中以稍后再看列表模拟收藏列表，页面其他信息也将随切p而更新。<br>※ 分区及up简介除外"],
-            grobalboard : ["版头版底", "是否替换新版版头和版底？<br>将识别并替换所有新版版头为旧版版头，旧版失效广告区入口替换为资讯区入口。"],
-            replyfloor : ["评论楼层", "是否显示评论的楼层号？<br>官方取消的显示评论区楼层的功能，基本修复了视频、专题、专栏等地区的评论区大部分评论的楼层号。<br>※ 上古“按评论数”排列的评论无法恢复楼层号"],
-            headblur : ["顶栏透明", "是否使顶栏全透明？<br>私心的功能，导致顶栏信息不清晰的话请关闭。"],
-            preview : ["付费预览", "是否去除播放器左下角付费预览框？<br>有10s倒计时，6分钟预览时左下角提示框一直存在也是挺烦的。"],
-            jointime : ["注册时间", "是否在个人空间显示B站账号注册时间？<br>官方取消的显示账号注册时间功能，尽力恢复了当初的样式。<br>※ 依赖up主开放个人资料"],
-            lostvideo : ["失效视频", "是否修复收藏和频道中的失效视频信息？<br>借助第三方接口恢复失效视频的封面和标题，将标题标红并添加删除线。<br>※ 获取不到数据的话将只修改标题为对应av号"],
-            bvid2av : ["BV⇒av", "启用后将尽量让页面中的跳转链接使用av号而不是bv号，并且进入bv页面时自动跳转到av页面(不会重载页面)。<br>※ 前者不一定覆盖到所有链接"],
-            selectdanmu : ["弹幕列表", "是否进入旧版播放页面时自动选择展示“弹幕列表”(默认是“推荐视频”)？"],
-            episodedata : ["分集数据", "是否显示番剧单回的播放数和弹幕数？<br>让新番显示当前回的播放数和弹幕数，原来的合计播放数和弹幕数将显示在鼠标焦点的浮动信息上"],
-            like : ["点赞", "是否为旧版播放页添加添加点赞功能？<br>点赞是新版页面专属功能，很简陋地在旧版视频信息栏添加了个“红心”的点赞按钮。<br>※ 缺乏官方的动效体验捉急"],
-            static : ["静态页面", "是否将静态av页跳转到普通av页？<br>静态页面是新版专属页面，页面大部分信息都内置于页面中以加快载入速度，将直接跳转到普通的av页(以启用旧版av页)。"],
-            download : ["下载视频", "是否启用视频下载功能？<br>将在播放页(av和番剧)回到顶部按钮上方创建一个下载视频按钮，点击在底部显示下载链接，请右键另存为或右键IDM下载。<br>mp4：原生mp4，拓展名.mp4<br>avc：h.264视频轨，拓展名.m4v<br>hev：h.265视频轨，拓展名.m4v<br>aac：音频轨，拓展名.m4a<br>flv：流媒体，拓展名.flv<br>※以上格式不一定会全部出现<br>※mp4一般最高只有1080P<br>※DASH视/音频分开，视频编码一般选avc，音频自选<br>※flv可能分段，画质为正在播放的画质"],
-            heartbeat : ["视频心跳", "是否替换播放记录心跳？<br>旧版视频心跳存在被某些广告插件误杀的情况，导致播放视频而没有记录进历史记录，存在类似情形可以尝试启用。"],
-            carousel : ["播放信息", "是否恢复播放器顶部通知信息？<br>视频通知信息获取不到任何有效信息，导致旧版播放器上方通知区一片空白，启用将生成默认数据填充。"],
-            adloc : ["主页广告", "是否去除B站主页的广告数据？<br>包括主页主推荐位5幅滚动图中的广告，直播区上方横幅的广告。<br>※ 只支持旧版主页"]
+            av : ["av(BV)", "启用旧版av页面"],
+            bangumi : ["Bangumi", "启用旧版番剧页面"],
+            watchlater : ["稍后再看", "启用旧版稍后再看页面"],
+            frame : ["嵌入", "替换嵌入式播放器，不会单独适配被嵌入页面的其他功能"],
+            home : ["主页", "启用旧版主页，广告区已失效并替换为资讯区"],
+            playlist : ["播单", "恢复播单页，使用跳转绕开404"],
+            medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求"],
+            grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
+            replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外"],
+            headblur : ["顶栏透明", "使旧版顶栏全透明"],
+            preview : ["付费预览", "去除播放器左下角付费预览框"],
+            jointime : ["注册时间", "在个人空间显示B站账号注册时间，依赖主人开放个人资料"],
+            lostvideo : ["失效视频", "借助第三方接口修复失效视频的封面和标题，将标题标红并添加删除线，无数据时只修改标题为av号"],
+            bvid2av : ["BV⇒av", "让所有页面能使用av号的地方尽量使用av号(未能完全覆盖)<br>进入bv页面自动跳转到av页面(不会重载页面)"],
+            selectdanmu : ["弹幕列表", "让旧版播放器优先展示弹幕列表而不是推荐视频"],
+            episodedata : ["分集数据", "让番剧显示分集的播放数和弹幕数，原来总计数据显示在鼠标焦点的浮动信息上"],
+            like : ["点赞", "为旧版播放页面添加点赞功能，点赞是新版页面专属功能，功能简陋，不支持一键三联"],
+            static : ["静态页面", "将静态页面跳转到普通页面以启用旧版页面，静态页面是新版新增页面，页面大部分信息都内置于页面中以加快载入速度"],
+            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>avc：h.264视频轨，拓展名.m4v<br>hev：h.265视频轨，拓展名.m4v<br>aac：音频轨，拓展名.m4a<br>※DASH/flv可能需要自行合并，工具推荐ffmpeg、MKVToolNix……<br>※DASH视/音频分开，视频(avc/hev)选择一种编码中的一档画质，音频(aac)选择一种码率，两者合并才是一个完整视频<br>※flv为当前播放器选择的画质，所有分段连在一起才是一个完整视频<br>※颜色对应画质：紫1080P+|红1080P|黄720P|蓝480P|绿360P"],
+            heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用"],
+            carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息"],
+            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"]
         }
     }
     const thread = {
@@ -1649,16 +1667,15 @@
             try {
                 ml = GM_getValue("medialist");
                 GM_setValue("medialist", 0);
-                if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')
-                   ) history.replaceState(null, null, "https://www.bilibili.com/video/av" + deliver.convertId(LOCATION[4]) + location.search + location.hash);
-                if (!config.rewrite.av) {deliver.playinfo(); return;}
+                if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) history.replaceState(null, null, "https://www.bilibili.com/video/av" + deliver.convertId(LOCATION[4]) + location.search + location.hash);
+                if (!config.rewrite.av && !config.reset.download) return;
                 DOCUMENT = xhr.false(location.href); // 获取网页源代码
-                if (DOCUMENT.includes('__INITIAL_STATE__=')) { // 判断页面是否会自动重定向
+                __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
+                if (config.rewrite.av && DOCUMENT.includes('__INITIAL_STATE__=')) { // 判断页面是否会自动重定向
                     if (DOCUMENT.includes('"code":404')) return; // 判断页面是否404
                     TITLE = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ =
                         JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")); // 继承__INITIAL_STATE__
-                    __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : ""; // 继承 __playinfo__
                     if (__INITIAL_STATE__.videoData.stein_guide_cid) return; // 忽略互动视频
                     unsafeWindow.__INITIAL_STATE__.comment = {count: 0, list: []} // 修复评论数据缺失
                     window.hd = 1;
@@ -1685,9 +1702,10 @@
         },
         bangumi: () => {
             try {
-                if (!config.rewrite.bangumi) return;
+                if (!config.rewrite.bangumi && !config.reset.download) return;
                 DOCUMENT = xhr.false(location.href); // 获取网页源代码
-                if (DOCUMENT.includes('__INITIAL_STATE__=')) { // 判断页面是否404
+                __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
+                if (config.rewrite.bangumi && DOCUMENT.includes('__INITIAL_STATE__=')) { // 判断页面是否404
                     TITLE = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                     let id = location.href.match(/[0-9]+/)[0]; // 获取ss(ep)号
                     if (LOCATION[5].startsWith('ss')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"season_id":id})),null);
@@ -1770,6 +1788,7 @@
                 if (msg.target.id == "internationalHeader") deliver.reSction(); // 版头替换
                 if (msg.target.id == "bili-header-m") if (head) head.remove(); // 移除新版版头
                 if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo(); // 监听切p
+                if (/bilibili-player-context-menu-container/.test(msg.target.className)) deliver.download.init(msg.target); // 播放器右键菜单
                 if (msg.target.className == "bilibili-player-video-message-ul") deliver.videoMessage(msg.target); // 恢复播放器通知信息
                 if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) src = msg.target.src; // 捕获评论链接
                 if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src; // 捕获频道链接
