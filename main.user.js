@@ -1703,6 +1703,7 @@
         bangumi: () => {
             try {
                 if (!config.rewrite.bangumi && !config.reset.download) return;
+                pgc = true;
                 DOCUMENT = xhr.false(location.href); // 获取网页源代码
                 __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
                 if (config.rewrite.bangumi && DOCUMENT.includes('__INITIAL_STATE__=')) { // 判断页面是否404
