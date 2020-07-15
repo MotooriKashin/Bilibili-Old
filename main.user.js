@@ -187,7 +187,7 @@
             episodedata: 1,
             like: 1,
             static: 1,
-            download: 0,
+            download: 1,
             heartbeat: 0,
             carousel: 0,
             adloc: 0
