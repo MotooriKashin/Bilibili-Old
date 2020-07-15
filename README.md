@@ -4,7 +4,7 @@
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")？)
 - 默认开启部分附加功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
-- B站页面变动时间轴：
+- B站页面变动摘记：
    + 2019年12月09日：移除旧版av、旧版Bangumi
    + 2019年12月24日：移除旧版稍后再看
    + 2020年03月23日：默认启用bv代替av
@@ -16,7 +16,7 @@
 ---
 ### 脚本实现
 - 重写(基于原生旧版网页框架)
-   + 主页
+   + 主页，即 https://www.bilibili.com
    + av(BV)，如 [av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")或[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss和ep)，如 [ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 或 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生") 或 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
    + 稍后再看，如 [https://www.bilibili.com/watchlater/#/av50619577](https://www.bilibili.com/watchlater/#/av50619577 "Brambly Boundaries")
@@ -50,7 +50,8 @@
 4. 旧版播放器原生不支持CC字幕，万幸可以通过[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
 4. 旧版播放器原生不支持互动视频，已主动忽略。
 5. 旧版播放器原生不支持全景视频，将无法移动视角。
-6. 旧版主页科技区便是新版的知识区，三日及周推荐已失效并隐藏切换按钮，广告区已失效并替换为新添的资讯区且无法刷新动态。
+6. 旧版主页科技区便是新版的知识区，广告区已失效并替换为新添的资讯区且无法刷新动态。
+7. 旧版主页推荐位视频数据失效，已暂时屏蔽三日\昨日\七日切换按钮。
 7. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
 8. 嵌入式页面只简单替换播放器其他附带如切P等功能没有单独适配(如[拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 9. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
@@ -66,25 +67,32 @@
 > Tampermonkey BETA 4.10.6115
 >
  
-脚本使用的`document.write()`方法在旧版页面对其他脚本及扩展造成了一些兼容问题
+脚本使用的`document.write()`方法在旧版页面对其他脚本及扩展造成了一些兼容问题  
+主要集中在以`run-at document-start`注入的同域脚本
 - 在本脚本刷新网页框架之前写入DOM的数据无效：如对DOM/CSS的更改
 - 在本脚本刷新网页框架之前写入DOM的回调无效：如addEventListener、document.onclick
 - 在本脚本刷新网页框架之前注入页面的其他脚本`GM_setValue`方法失效
-- 与其他脚本兼容问题主要出其他脚本以`run-at document-start`注入时
 
 下面是一些测试过的同域脚本及扩展的结果
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：大部分功能正常兼容，旧版页面`GM_setValue`失效无法存储设置更改，旧版主页“简化主页”会造成布局错乱，旧版番剧页面批量下载功能报错“获取番剧数据失败: 无法找到 Season ID”(当前视频下载没问题)，快捷键拓展部分未适配旧版播放器
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：大部分功能正常兼容
+   + 旧版页面`GM_setValue`失效无法存储设置更改
+   + 旧版主页“简化主页”会造成布局错乱
+   + 旧版番剧页面批量下载功能报错“获取番剧数据失败: 无法找到 Season ID”(当前视频下载没问题)
+   + 快捷键拓展部分未适配旧版播放器
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)：完全正常，本脚本并未重写直播页面所以理论上也不存在兼容问题
-- [解除B站区域限制](https://greasyfork.org/scripts/25718)：功能正常，并未失陪旧版UI，所以无法在旧版页面调出设置，调整设置请去新版页面或者番剧详情页面
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：完全正常，能使旧版播放器支持CC字幕，**强烈推荐！**。初次使用可能会报错“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：只适配旧版播放器的脚本\*1，并没有兼容问题，由于该脚本会二次初始化播放器，个人推荐手动为其添加以`run-at document-start`注入的元数据，并只在需要使用时启用平时关闭为好
+- [解除B站区域限制](https://greasyfork.org/scripts/25718)：功能正常
+   + 并未适配旧版UI，所以无法在旧版页面调出设置，调整设置请去新版页面或者番剧详情页面
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：完全正常，能使旧版播放器支持CC字幕，**强烈推荐！**。
+   + 初次使用可能会报错“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：只适配旧版播放器的脚本\*1，并没有兼容问题
+   + 由于该脚本会二次初始化播放器，个人推荐手动为其添加以`run-at document-start`注入的元数据，并只在需要使用时启用平时最好关闭
 - [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：只适配旧版播放器的脚本\*2，并没有兼容问题
 - [IDM Integration Module](http://www.internetdownloadmanager.com)：IDM高级浏览器集成可能是通过往页面注入`content.js`的方式实现的下载浮动条，作为拓展该注入行为肯定在本脚本重写页面之前，所以在旧版页面下载浮动条是失效的，不过IDM下载监听没问题，本脚本下载视频功能的链接能正常捕获，右键使用IDM下载也没问题
 - [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：完全正常
 - [smoothscroll](http://iamdustan.com/smoothscroll/)：有人反馈平滑滚动失效，未作进一步测试
 
 ---
-### 参考来源
+### 参考致谢
 - 旧版网页框架来源：[Wayback Machine](https://archive.org/web/)，非常感谢！
 - 脚本原型及指导：[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)，非常感谢！
 - 第三方数据接口：[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)，非常感谢！
@@ -97,7 +105,6 @@
 - playurl算法来源：[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢！
 - 下载界面样式来源：[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)，非常感谢！
 - MD5算法来源：[MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)，非常感谢！
-- 测试及反馈：所有使用本脚本及反馈各种问题的大家，非常感谢！
 
 ---
 ### 效果预览
