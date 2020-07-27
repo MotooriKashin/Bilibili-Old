@@ -4,6 +4,7 @@
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")？)
 - 默认开启部分附加功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
+- B站变动时间轴
    + 2019年12月09日：移除旧版av、旧版Bangumi
    + 2019年12月24日：移除旧版稍后再看
    + 2020年03月23日：默认启用bv代替av
