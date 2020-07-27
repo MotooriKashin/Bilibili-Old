@@ -1,10 +1,9 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 83](https://img.shields.io/badge/Google_Chrome_83-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到B站旧版页面(什么是[旧版播放器](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")？)
 - 默认开启部分附加功能，部分任性功能如不喜欢可自行关闭。
 - 可能会与小部分同域脚本产生冲突，详情及可能的解决思路见下文兼容性条目
-- B站页面变动摘记：
    + 2019年12月09日：移除旧版av、旧版Bangumi
    + 2019年12月24日：移除旧版稍后再看
    + 2020年03月23日：默认启用bv代替av
@@ -12,7 +11,7 @@
    + 2020年04月23日：开启4K灰度测试
    + 2020年04月28日：移除播单相关
    + 2020年05月21日：启用新版弹幕
-   + 2020年07月13日：套用收藏列表实现稍后再看
+   + 2020年07月13日：稍后再看再改版
 
 ---
 ### 脚本实现
@@ -41,15 +40,15 @@
 - 入口在页面右下角2~3厘米处，鼠标移到对应位置会自动显现
 - 设置中可单独选择所有功能启用与否，附带各功能简要说明
 - 设置数据存储在脚本管理器中，不受清除cookies影响
-- [这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例")能解决所有设置相关问题
+- [这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例") 能解决所有设置相关问题
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 机制原因无法在新版页面载入前就启用旧版页面，所以载入速度比新版页面稍慢。
+1. 旧版页面载入较新版慢，因为无法在请求新版之前启用旧版。
 2. 旧版播放器4k视频支持上可能有问题。
 3. 旧版播放器未适配新版弹幕，弹幕上限没有变动。
-4. 旧版播放器原生不支持CC字幕，万幸可以通过[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
+4. 旧版播放器原生不支持CC字幕，推荐安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
 5. 旧版播放器原生不支持互动视频，已主动忽略。
 6. 旧版播放器原生不支持全景视频，将无法移动视角。
 7. 旧版主页科技区便是新版的知识区，广告区已失效并替换为新添的资讯区且无法刷新动态。
@@ -65,8 +64,8 @@
 下面是测试用的平台，不保证其他平台兼容性
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 83.0.4103.116 (正式版本) （64 位） (cohort: 83\_61\_Win)  
-> Tampermonkey BETA 4.10.6115
+> Google Chrome 84.0.4147.89 (正式版本) （64 位） (cohort: Stable)  
+> Tampermonkey BETA 4.10.6117
 >
  
 脚本使用的`document.write()`方法在旧版页面对其他脚本及扩展造成了一些兼容问题  
@@ -74,17 +73,18 @@
 - 在本脚本刷新网页框架之前写入DOM的数据无效：如对DOM/CSS的更改
 - 在本脚本刷新网页框架之前写入DOM的回调无效：如addEventListener、document.onclick
 - 在本脚本刷新网页框架之前注入页面的其他脚本`GM_setValue`方法失效
+- **注意：写入window的属性和方法等不会失效**
 
 下面是一些测试过的同域脚本及扩展的结果
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：大部分功能正常兼容
-   + 旧版页面`GM_setValue`失效无法存储设置更改
-   + 旧版主页“简化主页”会造成布局错乱
+   + 在旧版页面`GM_setValue`失效无法导致保存设置
+   + 在旧版主页“简化主页”冲突会造成布局错乱
    + 旧版番剧页面批量下载功能报错“获取番剧数据失败: 无法找到 Season ID”(当前视频下载没问题)
    + 快捷键拓展部分未适配旧版播放器
 - [Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)：完全正常，本脚本并未重写直播页面所以理论上也不存在兼容问题
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：功能正常
    + 并未适配旧版UI，所以无法在旧版页面调出设置，调整设置请去新版页面或者番剧详情页面
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：完全正常，能使旧版播放器支持CC字幕，**强烈推荐！**。
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：完全正常，能使旧版播放器支持CC字幕，**强烈推荐安装！**。
    + 初次使用可能会报错“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：只适配旧版播放器的脚本\*1，并没有兼容问题
    + 由于该脚本会二次初始化播放器，个人推荐手动为其添加以`run-at document-start`注入的元数据，并只在需要使用时启用平时最好关闭
@@ -95,23 +95,26 @@
 
 ---
 ### 参考致谢
-- 旧版网页框架来源：[Wayback Machine](https://archive.org/web/)，非常感谢！
-- 脚本原型及指导：[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)，非常感谢！
-- 第三方数据接口：[BiliPlus](https://www.biliplus.com/)和[Bilibilijj](https://www.jijidown.com/)，非常感谢！
-- 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)，非常感谢！
-- BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)，非常感谢！
-- 页面原生调用来源：[wly5556](https://greasyfork.org/users/217840)，非常感谢！
-- README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)，非常感谢！
-- 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)，非常感谢！
-- 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)，非常感谢！
-- playurl算法来源：[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)，非常感谢！
-- 下载界面样式来源：[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)，非常感谢！
-- MD5算法来源：[MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)，非常感谢！
+- 旧版网页框架来源：[Wayback Machine](https://archive.org/web/)
+- 脚本原型来源及指导：[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)
+- 第三方数据接口：[BiliPlus](https://www.biliplus.com/)、[Bilibilijj](https://www.jijidown.com/)
+- 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)
+- BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)
+- 页面原生调用来源：[wly5556](https://greasyfork.org/users/217840)
+- README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)
+- 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
+- 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
+- playurl算法来源：[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)
+- 下载界面样式来源：[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)
+- MD5算法来源：[MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)
 
 ---
 ### 效果预览
 ![Bangumi](https://camo.githubusercontent.com/1802bb815c3f624f636b0ee71554a7b3816f1801/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767774576392e706e67)
 ### 版本历史
+- 2020-07-27
+   + 修复分集数据错误
+   + 替换失效的嵌入式播放器
 - 2020-07-15
    + 将下载按钮移动到播放器右键菜单
 - 2020-07-14
