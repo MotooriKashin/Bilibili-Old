@@ -728,7 +728,7 @@
                             mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
                             navigator.clipboard.writeText(url.durl[0]);
                         }
-                        else debug.log("获取mp4文件失败", url);
+                        else debug.log("获取mp4文件失败", "code: 200600");
                         if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
                             let path = __playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result);
                             if (path.durl) { // 获取flv
