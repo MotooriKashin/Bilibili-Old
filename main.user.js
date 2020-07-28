@@ -20,11 +20,13 @@
 (function() {
     'use strict';
 
+    /*-----全局变量-----*/
     let ml, pl, ts, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, timer, defig;
     let arr = [], avs = [], ids = [], obj = {}, mdf = {};
     let TITLE, DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
+    /*-----API-----*/
     const API = {
         pageframe: { // 网页框架
             watchlater: '<!DOCTYPE html><html><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="spm_prefix" content="333.342"/><link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="viewlater-app"><app></app></div><div class="footer bili-footer"></div><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script></body></html>',
@@ -92,6 +94,8 @@
             5: ['http://link.acg.tv/forum.php', 'bug反馈传送门']
         }
     }
+
+    /*-----console-----*/
     const debug = {
         log: (...msg) => console.log("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         error: (...msg) => console.error("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
@@ -119,6 +123,8 @@
             setTimeout(() => item.remove(), delay);
         }
     }
+
+    /*-----XMLHttpRequest-----*/
     const xhr = {
         'false': (url) => { // 同步
             const xhr = new XMLHttpRequest();
@@ -164,6 +170,8 @@
             });
         }
     }
+
+    /*-----默认设置-----*/
     const config = {
         rewrite: {
             av: 1,
@@ -192,6 +200,8 @@
             adloc: 0
         }
     }
+
+    /*-----__INITIAL_STATE__-----*/
     const INITIAL_STATE = {
         bangumi: (data,epId) => { // bangumi
             try {
@@ -285,6 +295,8 @@
             catch(e) {debug.error(e)}
         }
     }
+
+    /*-----函数定义-----*/
     const deliver = {
         md5: (str) => { // string => md5
             let md5_RotateLeft = (lValue, iShiftBits) => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
@@ -469,7 +481,7 @@
             let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
             let m = (date.getMinutes() <10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
             let s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
-            return type ? Y + M + D + h  +m + s : h + m + s; // 默认返回hh：mm：ss；type存在加上yy：mm：dd
+            return type ? Y + M + D + h +m + s : h + m + s; // 默认返回hh：mm：ss；type存在加上yy：mm：dd
         },
         sizeFormat : (size) => { // 格式化字节
             let dex = 1024 ** 3, vor = 1000 ** 3, unit = ["B", "K", "M", "G"], i = unit.length - 1;
@@ -692,7 +704,7 @@
                     '" resourceid="" srcid="" sid=""><a href="' + API.message[key][0] +
                     '" target="_blank" name="message_line"><font color="#ffffff">' + API.message[key][1] + '</font></a></li>';
             }
-            setTimeout(() => ul.innerHTML = message, 100);
+            setTimeout(() => {ul.innerHTML = message}, 100);
         },
         download: { // 下载视频
             init : (node) => {
@@ -845,7 +857,7 @@
                 document.body.appendChild(top);
                 debug.msg("右键另存为或右键IDM下载", "详见设置", 5000);
                 top.onmouseover = () => window.clearTimeout(timer);
-                top.onmouseout = () => timer = window.setTimeout(() => top.remove(), 1000);
+                top.onmouseout = () => {timer = window.setTimeout(() => top.remove(), 1000)};
             }
         },
         switchVideo: () => { // 切p相关
@@ -1578,6 +1590,8 @@
             catch(e) {debug.error(e)}
         }
     }
+
+    /*-----UI-----*/
     const UI = {
         init: () => { // 设置绘制
             let ui_face = document.createElement("div");
@@ -1697,6 +1711,8 @@
             adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"]
         }
     }
+
+    /*-----分离调用-----*/
     const thread = {
         video: () => { // av/BV
             try {
@@ -1816,7 +1832,8 @@
             deliver.setOnline(); // 在线数据入口
         }
     }
-    /******* 初始化 *******/
+
+    /*-----初始化-----*/
     defig = JSON.parse(JSON.stringify(config)); // 保存默认设置
     let data = GM_getValue("config"); // 读取本地设置
     if (data) {
@@ -1842,7 +1859,8 @@
         }
     }
     catch(e) {debug.error(e)}
-    /******* 页面分离 *******/
+
+    /*-----页面分离-----*/
     if (LOCATION[3]) {
         if (LOCATION[3] == 'video' && (LOCATION[4].toLowerCase().startsWith('av') || LOCATION[4].toLowerCase().startsWith('bv'))) thread.video();
         if (LOCATION[3] == 'watchlater') thread.watchlater();
@@ -1855,7 +1873,8 @@
         if (LOCATION[2] == 'www.bilibili.com' && (LOCATION[3].startsWith('\?') || LOCATION[3].startsWith('\#') || LOCATION[3].startsWith('index.'))) thread.home();
     }
     else if (LOCATION[2] == 'www.bilibili.com') thread.home();
-    /******* 全局处理 *******/
+
+    /*-----全局调用-----*/
     if (window.self == window.top) UI.init(); // 绘制UI
     if (!LOCATION[2].match("live.bilibili.com")) deliver.setGlobalStyle(); // 样式创建
     deliver.intercept.init(); // xhr重定向
