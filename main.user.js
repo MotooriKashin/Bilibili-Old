@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.2.4
+// @version      3.2.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -197,7 +197,8 @@
             download: 1,
             heartbeat: 0,
             carousel: 0,
-            adloc: 0
+            adloc: 0,
+            roomplay: 0,
         }
     }
 
@@ -590,6 +591,10 @@
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
                         url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
                     }
+                    if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) { // 修改直播数据
+                        let hook = [_url];
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.getRoomPlayInfo(this, hook)});
+                    }
                     if (url.includes("/playurl?")) { // 添加4k视频参数
                         if (!url.includes("fourk") && !url.includes("sign")) {
                             url = url.replace("playurl?", "playurl?fourk=1&");
@@ -645,6 +650,25 @@
                         }
                     }
                     if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
+                    hook.push(response);
+                    debug.log("XHR重定向", "修改返回值", hook);
+                    Object.defineProperty(obj, 'response', {writable: true});
+                    Object.defineProperty(obj, 'responseText', {writable: true});
+                    obj.response =obj.responseText = JSON.stringify(response);
+                }
+                catch(e) {debug.error(e)}
+            },
+            getRoomPlayInfo: (obj, hook = []) => { // 修改直播数据
+                if (!config.reset.roomplay) return;
+                try {
+                    hook.push(JSON.parse(event.target.responseText));
+                    let response = event.target.responseText;
+                    response = JSON.parse(response);
+                    if (response.data) {
+                        response.data.live_status = 0;
+                        response.data.live_time = -1;
+                        response.data.play_url = null;
+                    }
                     hook.push(response);
                     debug.log("XHR重定向", "修改返回值", hook);
                     Object.defineProperty(obj, 'response', {writable: true});
@@ -1708,7 +1732,8 @@
             download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>avc：h.264视频轨，拓展名.m4v<br>hev：h.265视频轨，拓展名.m4v<br>aac：音频轨，拓展名.m4a<br>※DASH/flv可能需要自行合并，工具推荐ffmpeg、MKVToolNix……<br>※DASH视/音频分开，视频(avc/hev)选择一种编码中的一档画质，音频(aac)选择一种码率，两者合并才是一个完整视频<br>※flv为当前播放器选择的画质，所有分段连在一起才是一个完整视频<br>※颜色对应画质：紫1080P+|红1080P|黄720P|蓝480P|绿360P"],
             heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用"],
             carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息"],
-            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"]
+            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
+            roomplay : ["直播状态", "将直播间设置为未开播状态，只拦截直播视频及轮播视频以节约流量，其他功能不受影响"]
         }
     }
 
@@ -1846,6 +1871,10 @@
             unsafeWindow.__BILI_CONFIG__ = {"show_bv": false};
             Object.defineProperty(unsafeWindow, '__BILI_CONFIG__', {writable: false});
         }
+        if (LOCATION[2] == 'live.bilibili.com' && config.reset.roomplay) {
+            unsafeWindow.__NEPTUNE_IS_MY_WAIFU__ = undefined;
+            Object.defineProperty(unsafeWindow, '__NEPTUNE_IS_MY_WAIFU__', {writable: false});
+        }
         uid = deliver.getCookies().DedeUserID; // 判定是否登录
         let bilibili_player_settings = localStorage.getItem("bilibili_player_settings"); // 读取播放器设置
         if (bilibili_player_settings) {
@@ -1876,7 +1905,7 @@
 
     /*-----全局调用-----*/
     if (window.self == window.top) UI.init(); // 绘制UI
-    if (!LOCATION[2].match("live.bilibili.com")) deliver.setGlobalStyle(); // 样式创建
+    deliver.setGlobalStyle(); // 样式创建
     deliver.intercept.init(); // xhr重定向
     document.addEventListener("DOMNodeInserted",(msg) => {
         let head = document.getElementById("internationalHeader");
