@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.2.5
+// @version      3.2.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -85,14 +85,12 @@
             205: [202,"社会", "https://www.bilibili.com/v/information/social/"],
             206: [202,"综合", "https://www.bilibili.com/v/information/multiple/"]
         },
-        message: { // 播放器通知
-            0: ['https://www.bilibili.com/blackboard/activity-4KPC.html', '解锁超清4K画质'],
-            1: ['https://www.bilibili.com/blackboard/activity-4K120FPS-PC.html', '4K120FPS投稿全量开放'],
-            2: ['https://www.bilibili.com/blackboard/bilibili2009.html', '十年前的B站长啥样'],
-            3: ['https://www.bilibili.com/blackboard/html5playerhelp.html', 'HTML5播放器'],
-            4: ['https://app.bilibili.com/?from=bfq', '客户端下载'],
-            5: ['http://link.acg.tv/forum.php', 'bug反馈传送门']
-        }
+        message: [ // 播放器通知
+            ['https://www.bilibili.com/blackboard/activity-4KPC.html', '解锁超清4K画质'],
+            ['https://www.bilibili.com/blackboard/activity-4K120FPS-PC.html', '4K120FPS投稿全量开放'],
+            ['https://www.bilibili.com/blackboard/bilibili2009.html', '十年前的B站长啥样'],
+            ['https://www.bilibili.com/blackboard/html5playerhelp.html', 'HTML5播放器试用'],
+        ]
     }
 
     /*-----console-----*/
@@ -515,6 +513,15 @@
             if (rev) return arr.reverse();
             return arr;
         },
+        randomArray: (arr, num) => { // 数组随机提取
+            let out = [];
+            num = num < arr.length ? num : arr.length;
+            while(out.length < num){
+                var temp = (Math.random()*arr.length) >> 0;
+                out.push(arr.splice(temp,1)[0]);
+            }
+            return out;
+        },
         convertId: (str) => { // bv <=> av
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
             let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
@@ -595,6 +602,10 @@
                         let hook = [_url];
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.getRoomPlayInfo(this, hook)});
                     }
+                    if (url.includes('api.bilibili.com/x/player/carousel')) { // 修改播放器通知
+                        let hook = [_url];
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.carousel(this, hook)});
+                    }
                     if (url.includes("/playurl?")) { // 添加4k视频参数
                         if (!url.includes("fourk") && !url.includes("sign")) {
                             url = url.replace("playurl?", "playurl?fourk=1&");
@@ -654,7 +665,7 @@
                     debug.log("XHR重定向", "修改返回值", hook);
                     Object.defineProperty(obj, 'response', {writable: true});
                     Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response =obj.responseText = JSON.stringify(response);
+                    obj.response = obj.responseText = JSON.stringify(response);
                 }
                 catch(e) {debug.error(e)}
             },
@@ -673,7 +684,19 @@
                     debug.log("XHR重定向", "修改返回值", hook);
                     Object.defineProperty(obj, 'response', {writable: true});
                     Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response =obj.responseText = JSON.stringify(response);
+                    obj.response = obj.responseText = JSON.stringify(response);
+                }
+                catch(e) {debug.error(e)}
+            },
+            carousel: (obj, hook = []) => { // 生成播放信息
+                if (!config.reset.carousel) return;
+                try {
+                    let msg = deliver.randomArray(API.message, 2);
+                    let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
+                    let parser = new DOMParser(),
+                        responseXML = parser.parseFromString(xmltext, "text/xml");
+                    Object.defineProperty(obj, 'responseXML', {writable: true});
+                    obj.responseXML = responseXML;
                 }
                 catch(e) {debug.error(e)}
             },
@@ -712,23 +735,6 @@
                 document.body.appendChild(script);
             }
             window.setTimeout(() => {deliver.resetNodes()}, 3000);
-        },
-        videoMessage: (ul) => { // 播放信息
-            if (!config.reset.carousel) return;
-            let message = '', i = 0, className = "slide";
-            for (let key in API.message) {
-                switch(i) { // 默认展示第二条，原api已失效所有信息本地生成
-                    case 0: className = "slide prev"; break;
-                    case 1: className = "slide current"; break;
-                    case 2: className = "slide next"; break;
-                    default: className = "slide";
-                }
-                i++;
-                message = message + '<li class="' + className + '" title="" name="message_line" posnum="' + key +
-                    '" resourceid="" srcid="" sid=""><a href="' + API.message[key][0] +
-                    '" target="_blank" name="message_line"><font color="#ffffff">' + API.message[key][1] + '</font></a></li>';
-            }
-            setTimeout(() => {ul.innerHTML = message}, 100);
         },
         download: { // 下载视频
             init : (node) => {
@@ -1916,7 +1922,6 @@
         if (msg.target.id == "bili-header-m") if (head) head.remove(); // 移除新版版头
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo(); // 监听切p
         if (/bilibili-player-context-menu-container/.test(msg.target.className)) deliver.download.init(msg.target); // 播放器右键菜单
-        if (msg.target.className == "bilibili-player-video-message-ul") deliver.videoMessage(msg.target); // 恢复播放器通知信息
         if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) src = msg.target.src; // 捕获评论链接
         if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src; // 捕获频道链接
         if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src); // 处理频道失效视频信息
