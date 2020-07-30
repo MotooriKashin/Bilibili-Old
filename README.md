@@ -87,6 +87,7 @@
 - [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：完全正常
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：基本正常
    + 旧版UI未适配，无法在旧版页面调出设置
+   + **请关闭本脚本“区域限制”选项**
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：完全正常，能使旧版播放器支持CC字幕。
    + 初次使用可能会报错：“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：完全正常
@@ -109,6 +110,7 @@
 - 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
 - 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
 - playurl算法来源：[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)
+- BPplayurl参数参考：[解除B站区域限制](https://greasyfork.org/scripts/25718)
 - 下载界面样式来源：[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)
 - MD5算法来源：[MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)
 
