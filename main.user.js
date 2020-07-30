@@ -608,7 +608,7 @@
                     if (url.includes('bangumi.bilibili.com/view/web_api/season/user/status')) { // 修改区域限制
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.status(this)});
                     }
-                    if (url.includes("/playurl?")) { // 添加4k视频参数
+                    if (url.includes("/playurl?")) { // 监听视频链接
                         if (!url.includes("fourk") && !url.includes("sign")) {
                             url = url.replace("playurl?", "playurl?fourk=1&");
                             debug.log("XHR重定向", [_url, url]);
@@ -732,7 +732,7 @@
             },
             playinfo: (obj, url) => { // 记录视频地址
                 try {
-                    if (limit && __playinfo__) {
+                    if (limit && __playinfo__) { // 替换视频地址
                         let response = JSON.parse(event.target.responseText);
                         response.code = 0;
                         response.message = "success";
@@ -743,7 +743,7 @@
                         obj.response = response;
                         obj.responseText = JSON.stringify(response);
                     }
-                    else {__playinfo__ = JSON.parse(event.target.responseText);}
+                    else {__playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);}
                 }
                 catch (e) {debug.log(e)}
             }
