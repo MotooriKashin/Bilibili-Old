@@ -21,7 +21,7 @@
     'use strict';
 
     /*-----全局变量-----*/
-    let ml, pl, ts, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, timer, defig;
+    let ml, pl, ts, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, limit, timer, defig;
     let arr = [], avs = [], ids = [], obj = {}, mdf = {};
     let TITLE, DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
@@ -76,7 +76,8 @@
             pgc: "https://api.bilibili.com/pgc/player/web/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
             sign: "https://interface.bilibili.com/v2/playurl", // appkey, cid=, otype=json, qn, quality, type
             proj: "https://app.bilibili.com/v2/playurlproj", // appkey, cid=, otype=json, qn
-            pgcproj: "https://api.bilibili.com/pgc/player/api/playurlproj" // appkey, cid=, otype=json, platform=android_i, qn
+            pgcproj: "https://api.bilibili.com/pgc/player/api/playurlproj", // appkey, cid=, otype=json, platform=android_i, qn
+            BPplayurl: "https://www.biliplus.com/BPplayurl.php"
         },
         sort: { // 分区对照表
             202: [202,"资讯", "https://www.bilibili.com/v/information/"],
@@ -181,6 +182,7 @@
             medialist: 1,
         },
         reset: {
+            limit: 1,
             grobalboard: 1,
             replyfloor: 1,
             headblur: 0,
@@ -603,6 +605,9 @@
                     if (url.includes('api.bilibili.com/x/player/carousel')) { // 修改播放器通知
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.carousel(this)});
                     }
+                    if (url.includes('bangumi.bilibili.com/view/web_api/season/user/status')) { // 修改区域限制
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.status(this)});
+                    }
                     if (url.includes("/playurl?")) { // 添加4k视频参数
                         if (!url.includes("fourk") && !url.includes("sign")) {
                             url = url.replace("playurl?", "playurl?fourk=1&");
@@ -611,7 +616,8 @@
                         cid = url.match(/cid=[0-9]*/) ? 1 * url.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : "";
                         aid = url.match(/avid=[0-9]*/) ? 1 * url.match(/avid=[0-9]*/)[0].replace(/avid=/,"") : "";
                         pgc = url.includes("pgc") ? true : false;
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this)});
+                        if (limit) deliver.intercept.playurl(url);
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this, url)});
                     }
                     return open.call(this, method, url, ...rest);
                 }
@@ -662,7 +668,8 @@
                     debug.log("XHR重定向", "修改返回值", hook);
                     Object.defineProperty(obj, 'response', {writable: true});
                     Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response = obj.responseText = JSON.stringify(response);
+                    obj.response = response;
+                    obj.responseText = JSON.stringify(response);
                 }
                 catch(e) {debug.error(e)}
             },
@@ -681,7 +688,8 @@
                     debug.log("XHR重定向", "修改返回值", hook);
                     Object.defineProperty(obj, 'response', {writable: true});
                     Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response = obj.responseText = JSON.stringify(response);
+                    obj.response = response;
+                    obj.responseText = JSON.stringify(response);
                 }
                 catch(e) {debug.error(e)}
             },
@@ -697,9 +705,45 @@
                 }
                 catch(e) {debug.error(e)}
             },
-            playinfo: (obj) => { // 记录视频地址
+            status: (obj) => { // 解除区域限制
+                if (!config.reset.limit) return;
                 try {
-                    __playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);
+                    let response = JSON.parse(event.target.responseText);
+                    if (response.result && response.result.area_limit) {
+                        response.result.area_limit = 0;
+                        limit = true;
+                        Object.defineProperty(obj, 'response', {writable: true});
+                        Object.defineProperty(obj, 'responseText', {writable: true});
+                        obj.response = response;
+                        obj.responseText = JSON.stringify(response);
+                    }
+                }
+                catch (e) {debug.log(e)}
+            },
+            playurl: (url) => { // 视频地址重定向
+                try {
+                    debug.log("区域限制", "拉取视频播放地址中", "aid=", aid, "cid=", cid);
+                    __playinfo__ = xhr.false(API.url.BPplayurl + "?" + url.split("?")[1] + "&module=pgc&balh_ajax=1");
+                }
+                catch (e) {
+                    __playinfo__ = undefined;
+                    debug.msg("拉取视频播放地址失败 ಥ_ಥ");
+                }
+            },
+            playinfo: (obj, url) => { // 记录视频地址
+                try {
+                    if (limit && __playinfo__) {
+                        let response = JSON.parse(event.target.responseText);
+                        response.code = 0;
+                        response.message = "success";
+                        response.result = JSON.parse(__playinfo__);
+                        Object.defineProperty(obj, 'response', {writable: true});
+                        Object.defineProperty(obj, 'responseText', {writable: true});
+                        __playinfo__ = response;
+                        obj.response = response;
+                        obj.responseText = JSON.stringify(response);
+                    }
+                    else {__playinfo__ = JSON.parse(event.target.responseText);}
                 }
                 catch (e) {debug.log(e)}
             }
@@ -1721,6 +1765,7 @@
             home : ["主页", "启用旧版主页，广告区已失效并替换为资讯区"],
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求"],
+            limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※应该不支持大会员番剧<br>※使用同类脚本请关闭此选项"],
             grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外"],
             headblur : ["顶栏透明", "使旧版顶栏全透明"],
