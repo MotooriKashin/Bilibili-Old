@@ -204,13 +204,14 @@
     const INITIAL_STATE = {
         bangumi: (data,epId) => { // bangumi
             try {
-                let ep = 0,dat = {};
+                let ep = 0, dat = {};
                 let rp = JSON.parse(data).result;
                 let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
                 let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
-                if (rp.bkg_cover) {dat = {"ver":{"mobile":false,"ios":false,"android":false,"windowsPhone":false,"iPhone":false,"ios9":false,"iPad":false,"webApp":false,"microMessenger":false,"weibo":false,"uc":false,"qq":false,"baidu":false,"mqq":false,"mBaidu":false,"iqiyi":false,"qqLive":false,"safari":true,"youku":false,"ie":false,"edge":false,"bili":false,"biliVer":0},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":true,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false};} else {dat = {"ver":{},"loginInfo":{},"canReview":false, "userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":false,"area":0,"app":false,"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};}
-                if (epId) {dat.epId = 1 * epId;ep = 1;}
-                else {dat.epId = "";if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id;ep = 1;}}
+                if (rp.bkg_cover) {dat = {"ver":{"mobile":false,"ios":false,"android":false,"windowsPhone":false,"iPhone":false,"ios9":false,"iPad":false,"webApp":false,"microMessenger":false,"weibo":false,"uc":false,"qq":false,"baidu":false,"mqq":false,"mBaidu":false,"iqiyi":false,"qqLive":false,"safari":true,"youku":false,"ie":false,"edge":false,"bili":false,"biliVer":0},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":true,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false};}
+				else {dat = {"ver":{},"loginInfo":{},"canReview":false, "userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"special":false,"area":0,"app":false,"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};}
+                if (epId) {dat.epId = 1 * epId; ep = 1;}
+                else {dat.epId = "";if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
                 dat.ssId = rp.season_id;
                 dat.mdId = 1 * rp.link.match(/[0-9][0-9]*/)[0];
                 dat.mediaInfo = {};
@@ -583,28 +584,24 @@
             init: () => {
                 const open = XMLHttpRequest.prototype.open;
                 XMLHttpRequest.prototype.open = function (method, url, ...rest) { // original xhr hook
-                    let _url = url;
+                    let _url = url, hook = [_url, ""];
                     if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) { // 替换视频心跳
                         url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
                         debug.log("XHR重定向", [_url, url]);
                     }
                     if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) { // 修改正在直播
-                        let hook = [_url, ""];
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
                         url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
                     }
                     if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) { // 修改直播动态
-                        let hook = [_url, ""];
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
                         url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
                     }
                     if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) { // 修改直播数据
-                        let hook = [_url];
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.getRoomPlayInfo(this, hook)});
                     }
                     if (url.includes('api.bilibili.com/x/player/carousel')) { // 修改播放器通知
-                        let hook = [_url];
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.carousel(this, hook)});
+                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.carousel(this)});
                     }
                     if (url.includes("/playurl?")) { // 添加4k视频参数
                         if (!url.includes("fourk") && !url.includes("sign")) {
@@ -688,7 +685,7 @@
                 }
                 catch(e) {debug.error(e)}
             },
-            carousel: (obj, hook = []) => { // 生成播放信息
+            carousel: (obj) => { // 生成播放信息
                 if (!config.reset.carousel) return;
                 try {
                     let msg = deliver.randomArray(API.message, 2);
@@ -1739,7 +1736,7 @@
             heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用"],
             carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息"],
             adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
-            roomplay : ["直播状态", "将直播间设置为未开播状态，只拦截直播视频及轮播视频以节约流量，其他功能不受影响"]
+            roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量，其他功能不受影响"]
         }
     }
 
