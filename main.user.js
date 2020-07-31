@@ -744,6 +744,7 @@
                         obj.responseText = JSON.stringify(response);
                     }
                     else {__playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);}
+                    if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
                 }
                 catch (e) {debug.log(e)}
             }
@@ -788,55 +789,56 @@
                 div.innerText = "下载视频";
                 li.appendChild(div);
                 node.firstChild.appendChild(li);
-                div.onclick = async () => {
-                    debug.msg("正在获取视频链接", ">>>");
-                    let qua = {120 : "4K", 112 : "1080P+", 80 : "1080P", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
-                    let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
-                    try {url = url ? url : await deliver.download.geturl()}
-                    catch(e) {url = {mp4 : false}}
-                    try {
-                        if (url && url.durl) {
-                            mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
-                            navigator.clipboard.writeText(url.durl[0]);
+                div.onclick = deliver.download.setTable;
+            },
+            setTable: async () => {
+                debug.msg("正在获取视频链接", ">>>");
+                let qua = {120 : "4K", 112 : "1080P+", 80 : "1080P", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
+                let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
+                try {url = url ? url : await deliver.download.geturl()}
+                catch(e) {url = {mp4 : false}}
+                try {
+                    if (url && url.durl) {
+                        mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
+                        navigator.clipboard.writeText(url.durl[0]);
+                    }
+                    else debug.log("获取mp4文件失败", "code: 200600");
+                    if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
+                        let path = __playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result);
+                        if (path.durl) { // 获取flv
+                            if (path.format == "mp4") { // durl可能是mp4
+                                if (!mdf.mp4) mdf.mp4 = [];
+                                mdf.mp4.push([qua[path.quality],path.durl[0].url.replace("http:", ""), deliver.sizeFormat(path.durl[0].size)]);
+                            }
+                            else {
+                                mdf.flv = [];
+                                for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["part " + path.durl[i].order, path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
+                            }
                         }
-                        else debug.log("获取mp4文件失败", "code: 200600");
-                        if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
-                            let path = __playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result);
-                            if (path.durl) { // 获取flv
-                                if (path.format == "mp4") { // durl可能是mp4
-                                    if (!mdf.mp4) mdf.mp4 = [];
-                                    mdf.mp4.push([qua[path.quality],path.durl[0].url.replace("http:", ""), deliver.sizeFormat(path.durl[0].size)]);
+                        if (path.dash) { // 获取DASH
+                            mdf.dash = {}
+                            for (let i = 0; i < path.dash.video.length; i++) { // 获取视频流
+                                if (path.dash.video[i].codecs.startsWith("avc")) {
+                                    if (!mdf.dash.avc) mdf.dash.avc = [];
+                                    mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
                                 }
                                 else {
-                                    mdf.flv = [];
-                                    for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["part " + path.durl[i].order, path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
+                                    if (!mdf.dash.hev) mdf.dash.hev = [];
+                                    mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
                                 }
                             }
-                            if (path.dash) { // 获取DASH
-                                mdf.dash = {}
-                                for (let i = 0; i < path.dash.video.length; i++) { // 获取视频流
-                                    if (path.dash.video[i].codecs.startsWith("avc")) {
-                                        if (!mdf.dash.avc) mdf.dash.avc = [];
-                                        mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
-                                    }
-                                    else {
-                                        if (!mdf.dash.hev) mdf.dash.hev = [];
-                                        mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
-                                    }
-                                }
-                                for (let i = 0; i < path.dash.audio.length; i++) { // 获取音频流
-                                    if (!mdf.dash.aac) mdf.dash.aac = [];
-                                    mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
-                                }
-                                mdf.dash.aac = deliver.bubbleSort(mdf.dash.aac, true); // 倒序音频
-                                for (let i = 0; i < mdf.dash.aac.length; i++) if (mdf.dash.aac[i][0] in bps) mdf.dash.aac[i][0] = bps[mdf.dash.aac[i][0]]; // 标注码率(大概)
+                            for (let i = 0; i < path.dash.audio.length; i++) { // 获取音频流
+                                if (!mdf.dash.aac) mdf.dash.aac = [];
+                                mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
                             }
+                            mdf.dash.aac = deliver.bubbleSort(mdf.dash.aac, true); // 倒序音频
+                            for (let i = 0; i < mdf.dash.aac.length; i++) if (mdf.dash.aac[i][0] in bps) mdf.dash.aac[i][0] = bps[mdf.dash.aac[i][0]]; // 标注码率(大概)
                         }
-                        deliver.download.item();
-                        mdf = {};
                     }
-                    catch(e) {debug.error(e)}
+                    deliver.download.item();
+                    mdf = {};
                 }
+                catch(e) {debug.error(e)}
             },
             geturl: async (...arg) => { // 拉取视频链接
                 let url = deliver.download.playurl(...arg);
@@ -926,7 +928,7 @@
                     if (mdf.dash.aac) addBox(mdf.dash.aac, "aac", "download-aac");
                 }
                 document.body.appendChild(top);
-                debug.msg("右键另存为或右键IDM下载", "详见设置", 5000);
+                debug.msg("右键另存为或右键IDM下载", "详见设置", 3000);
                 top.onmouseover = () => window.clearTimeout(timer);
                 top.onmouseout = () => {timer = window.setTimeout(() => top.remove(), 1000)};
             }
