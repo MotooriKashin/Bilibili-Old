@@ -21,9 +21,9 @@
     'use strict';
 
     /*-----全局变量-----*/
-    let ml, pl, ts, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, limit, timer, defig;
+    let ml, pl, ts, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, limit, defig;
     let arr = [], avs = [], ids = [], obj = {}, mdf = {};
-    let TITLE, DOCUMENT, __playinfo__, __INITIAL_STATE__;
+    let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
     /*-----API-----*/
@@ -874,7 +874,7 @@
                 }
             },
             item: () => {
-                let top = document.getElementById("bili-old-download-table");
+                let timer, top = document.getElementById("bili-old-download-table");
                 if (top) top.remove();
                 if (!mdf.mp4 && !mdf.flv && !mdf.dash) {debug.msg("未找到任何视频链接 ಥ_ಥ"); return;}
                 function addBox(obj, name, type, color, quatily){
@@ -1279,7 +1279,7 @@
                     window.setTimeout(() => window.clearInterval(timer), 10000); // 延时取消操作
                 }
             },
-            episodeData: async (data) => { // 分集数据处理
+            episodeData: async (data, msg) => { // 分集数据处理
                 try {
                     let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
                     let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
@@ -1293,7 +1293,10 @@
                         debug.log("总弹幕数", views.innerText, " 总弹幕数", danmakus.innerText);
                         data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid})); // 请求首集数据
                     }
-                    if (!data) data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid})); // 请求非首集数据
+                    if (!data) {
+                        aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
+                        data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid})); // 请求非首集数据
+                    }
                     data = JSON.parse(data).data;
                     let view = data.view;
                     let danmaku = data.danmaku;
@@ -1444,75 +1447,61 @@
                 msg.target.firstChild.setAttribute("target", "_blank");
                 msg.target.firstChild.setAttribute("class", "cover cover-normal");
             },
-            channel: async (src) => {
+            channel: async (link) => {
+                src = "";
                 if (!config.reset.lostvideo) return;
                 try {
-                    let cid, mid, pn, data;
-                    let fix = () => {
-                        data = JSON.parse(data).data;
-                        let disabled = document.getElementsByClassName("small-item");
-                        for (let i = 0; i < disabled.length; i++) {
-                            let aid = disabled[i].getAttribute("data-aid") * 1; // 获取aid
-                            let title = "av" + aid;
-                            if (data.list.archives[i].title) title = data.list.archives[i].title;
-                            let a = disabled[i].getElementsByClassName("cover")[0];
-                            let img = disabled[i].getElementsByTagName("img")[0];
-                            let txt = disabled[i].getElementsByClassName("title")[0];
-                            if (txt.text == "Loading") {
-                                if (aid) { // 判断aid还是bvid
-                                    debug.log("失效视频", "av" + aid);
-                                    // 修复失效视频av号
-                                    txt.setAttribute("href", "//www.bilibili.com/video/av" + aid);
-                                    a.setAttribute("href", "//www.bilibili.com/video/av" + aid);
-                                }
-                                else {
-                                    // 修复失效视频bv号
-                                    aid = disabled[i].getAttribute("data-aid");
-                                    debug.log("失效视频", aid);
-                                    txt.setAttribute("href", "//www.bilibili.com/video/" + aid);
-                                    a.setAttribute("href", "//www.bilibili.com/video/" + aid);
-                                }
-                                a.setAttribute("target", "_blank");
-                                a.setAttribute("class", "cover cover-normal");
-                                img.setAttribute("alt", title);
-                                img.setAttribute("src", data.list.archives[i].pic.replace("http","https") + "@380w_240h_100Q_1c.webp"); // 修复失效视频封面
-                                txt.setAttribute("target", "_blank");
-                                txt.setAttribute("title", title);
-                                txt.setAttribute("style", "text-decoration: line-through;color: #ff0000;"); // 为失效视频标题添加红色删除线
-                                txt.text = title; // 修复失效视频标题
-                            }
-                        }
-                    }
-                    src = src.split('?')[1].split('&');
+                    let cid, mid, pn, data, bull;
+                    link = link.split('?')[1].split('&');
                     // 获取cid，mid，pn
-                    for (let i = 0; i < src.length; i++) {
-                        let key = src[i].split('=');
+                    for (let i = 0; i < link.length; i++) {
+                        let key = link[i].split('=');
                         if (key[0] == "cid") cid = key[1]; // 此cid不是视频播放页的cid，应该就是个频道号
                         if (key[0] == "mid") mid = key[1]; // mid是up主空间号
                         if (key[0] == "pn") pn = key[1]; // pn是频道当前页码
                     }
                     let small_item = document.getElementsByClassName("small-item");
-                    let item_change = "small-item fakeDanmu-item";
                     if (small_item[0]) {
                         for (let i = 0; i < small_item.length; i++) {
                             if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") { // 判断失效视频
-                                small_item[i].getElementsByClassName("title")[0].text = "Loading"; // 预处理失效视频标题，方便定位
-                                small_item[i].setAttribute("class", item_change);
-                                if (!ts) { // 以ts时间戳判断缓冲请求出数，失效视频可能很多，但同时只需请求第一次
-                                    ts = Date.parse(new Date()); // 保存ts时间戳全局变量
-                                    // 第一次直接请求失效页视频数据
-                                    data = await xhr.true(deliver.obj2search(API.url.channel, {"mid": mid, "cid": cid, "pn": pn, "ps": 30, "order": 0}));
-                                    fix();
-                                }
-                                else {
-                                    if (Date.parse(new Date()) - ts >= 1000) { // 过滤ls之内的重复请求
-                                        ts = Date.parse(new Date()); // 刷新ts时间戳
-                                        // 相隔时间过长，可能是切换了频道列表或页码，可以刷新请求
-                                        data = await xhr.true(deliver.obj2search(API.url.channel, {"mid": mid, "cid": cid, "pn": pn, "ps": 30, "order": 0}));
-                                        fix();
-                                    }
-                                }
+                                small_item[i].setAttribute("class", "small-item fakeDanmu-item");
+                                bull = true;
                             }
+                        }
+                    }
+                    if (!bull) return;
+                    data = await xhr.true(deliver.obj2search(API.url.channel, {"mid": mid, "cid": cid, "pn": pn, "ps": 30, "order": 0}));
+                    data = JSON.parse(data).data;
+                    let disabled = document.getElementsByClassName("small-item");
+                    for (let i = 0; i < disabled.length; i++) {
+                        let aid = disabled[i].getAttribute("data-aid") * 1; // 获取aid
+                        let title = "av" + aid;
+                        if (data.list.archives[i].title) title = data.list.archives[i].title;
+                        let a = disabled[i].getElementsByClassName("cover")[0];
+                        let img = disabled[i].getElementsByTagName("img")[0];
+                        let txt = disabled[i].getElementsByClassName("title")[0];
+                        if (txt.text == "已失效视频") {
+                            if (aid) { // 判断aid还是bvid
+                                debug.log("失效视频", "av" + aid);
+                                // 修复失效视频av号
+                                txt.setAttribute("href", "//www.bilibili.com/video/av" + aid);
+                                a.setAttribute("href", "//www.bilibili.com/video/av" + aid);
+                            }
+                            else {
+                                // 修复失效视频bv号
+                                aid = disabled[i].getAttribute("data-aid");
+                                debug.log("失效视频", aid);
+                                txt.setAttribute("href", "//www.bilibili.com/video/" + aid);
+                                a.setAttribute("href", "//www.bilibili.com/video/" + aid);
+                            }
+                            a.setAttribute("target", "_blank");
+                            a.setAttribute("class", "cover cover-normal");
+                            img.setAttribute("alt", title);
+                            img.setAttribute("src", data.list.archives[i].pic.replace("http","https") + "@380w_240h_100Q_1c.webp"); // 修复失效视频封面
+                            txt.setAttribute("target", "_blank");
+                            txt.setAttribute("title", title);
+                            txt.setAttribute("style", "text-decoration: line-through;color: #ff0000;"); // 为失效视频标题添加红色删除线
+                            txt.text = title; // 修复失效视频标题
                         }
                     }
                 }
@@ -1559,13 +1548,14 @@
                 if (msg.target.className == "small-item disabled") msg.target.className = "small-item";
             }
         },
-        setReplyFloor: async (src) => { // 评论楼层
+        setReplyFloor: async (link) => { // 评论楼层
+            src = "";
             if (!config.reset.replyfloor) return;
             try {
                 let oid, sort, pn, data;
-                src = src.split('?')[1].split('&');
-                for (let i = 0; i < src.length; i++) {
-                    let key = src[i].split('=');
+                link = link.split('?')[1].split('&');
+                for (let i = 0; i < link.length; i++) {
+                    let key = link[i].split('=');
                     if (key[0] == "oid") oid = key[1]; // oid是评论号，视频播放页似与aid相关
                     if (key[0] == "sort") sort = key[1]; // 评论排序方式
                     if (key[0] == "pn") pn = key[1]; // 评论页码
@@ -1966,17 +1956,11 @@
         if (/bilibili-player-context-menu-container/.test(msg.target.className)) deliver.download.init(msg.target); // 播放器右键菜单
         if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) src = msg.target.src; // 捕获评论链接
         if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src; // 捕获频道链接
-        if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src); // 处理频道失效视频信息
+        if (src && msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src); // 处理频道失效视频信息
         if (msg.target.className == "small-item disabled") deliver.fixVideoLost.favlist(msg); // 处理收藏失效视频信息
-        if (msg.relatedNode.className == "info-sec-av") { // 判断番剧是否切p
-            aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
-            deliver.setBangumi.episodeData(); // 刷新番剧播放数据
-        }
+        if (msg.relatedNode.className == "info-sec-av") deliver.setBangumi.episodeData("", msg); // 刷新番剧播放数据
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") deliver.fixnews(msg.target); // 广告区转资讯区
-        if (src && msg.target.className && (msg.target.className == "main-floor" || msg.target.className == "list-item reply-wrap ")){
-            window.clearTimeout(timer);
-            timer = window.setTimeout(() => deliver.setReplyFloor(src),1000); // 修复评论楼层
-        }
+        if (src && msg.target.className && (msg.target.className == "main-floor" || msg.target.className == "list-item reply-wrap ")) deliver.setReplyFloor(src); // 修复评论楼层
         deliver.resetNodes(); // 监听节点
         deliver.setMediaList.fixvar(); // 监听全局变量
         deliver.fixVideoLost.home(msg); // 处理空间主页失效视频
