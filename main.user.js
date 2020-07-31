@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.2.6
+// @version      3.2.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1409,9 +1409,8 @@
         },
         fixVideoLost: { // 失效视频
             favlist: async (msg, data) => {
-                if (!config.reset.lostvideo) return;
-                let title, cover;
-                let aid = msg.target.getAttribute("data-aid"); // 获取av号
+                if (!config.reset.lostvideo || window.src) return;
+                let title, cover, aid = msg.target.getAttribute("data-aid"); // 获取av号
                 if (!(1 * aid)) aid = deliver.convertId(aid); // 获取bv转的av号
                 if (arr.indexOf(aid) != -1) return; // 判断视频是否已经处理
                 arr.push(aid); // 记录已经处理过的视频aid
@@ -1448,10 +1447,9 @@
                 msg.target.firstChild.setAttribute("class", "cover cover-normal");
             },
             channel: async (link) => {
-                src = "";
-                if (!config.reset.lostvideo) return;
+                if (!config.reset.lostvideo || !src) return;
                 try {
-                    let cid, mid, pn, data, bull;
+                    let cid, mid, pn, data;
                     link = link.split('?')[1].split('&');
                     // 获取cid，mid，pn
                     for (let i = 0; i < link.length; i++) {
@@ -1461,26 +1459,19 @@
                         if (key[0] == "pn") pn = key[1]; // pn是频道当前页码
                     }
                     let small_item = document.getElementsByClassName("small-item");
-                    if (small_item[0]) {
-                        for (let i = 0; i < small_item.length; i++) {
-                            if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") { // 判断失效视频
-                                small_item[i].setAttribute("class", "small-item fakeDanmu-item");
-                                bull = true;
-                            }
-                        }
-                    }
-                    if (!bull) return;
+                    if (small_item[0]) for (let i = 0; i < small_item.length; i++) if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") src = "";
+                    if (src) return;
                     data = await xhr.true(deliver.obj2search(API.url.channel, {"mid": mid, "cid": cid, "pn": pn, "ps": 30, "order": 0}));
                     data = JSON.parse(data).data;
-                    let disabled = document.getElementsByClassName("small-item");
-                    for (let i = 0; i < disabled.length; i++) {
-                        let aid = disabled[i].getAttribute("data-aid") * 1; // 获取aid
+                    for (let i = 0; i < small_item.length; i++) {
+                        let aid = small_item[i].getAttribute("data-aid") * 1; // 获取aid
                         let title = "av" + aid;
                         if (data.list.archives[i].title) title = data.list.archives[i].title;
-                        let a = disabled[i].getElementsByClassName("cover")[0];
-                        let img = disabled[i].getElementsByTagName("img")[0];
-                        let txt = disabled[i].getElementsByClassName("title")[0];
+                        let a = small_item[i].getElementsByClassName("cover")[0];
+                        let img = small_item[i].getElementsByTagName("img")[0];
+                        let txt = small_item[i].getElementsByClassName("title")[0];
                         if (txt.text == "已失效视频") {
+                            small_item[i].setAttribute("class", "small-item fakeDanmu-item");
                             if (aid) { // 判断aid还是bvid
                                 debug.log("失效视频", "av" + aid);
                                 // 修复失效视频av号
@@ -1489,7 +1480,7 @@
                             }
                             else {
                                 // 修复失效视频bv号
-                                aid = disabled[i].getAttribute("data-aid");
+                                aid = small_item[i].getAttribute("data-aid");
                                 debug.log("失效视频", aid);
                                 txt.setAttribute("href", "//www.bilibili.com/video/" + aid);
                                 a.setAttribute("href", "//www.bilibili.com/video/" + aid);
@@ -1907,7 +1898,6 @@
     try {
         if (config.reset.bvid2av) { // 关闭show_bv
             unsafeWindow.__BILI_CONFIG__ = {"show_bv": false};
-            Object.defineProperty(unsafeWindow, '__BILI_CONFIG__', {writable: false});
         }
         if (LOCATION[2] == 'live.bilibili.com' && config.reset.roomplay) {
             unsafeWindow.__NEPTUNE_IS_MY_WAIFU__ = undefined;
@@ -1955,8 +1945,8 @@
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo(); // 监听切p
         if (/bilibili-player-context-menu-container/.test(msg.target.className)) deliver.download.init(msg.target); // 播放器右键菜单
         if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) src = msg.target.src; // 捕获评论链接
-        if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) src = msg.target.src; // 捕获频道链接
-        if (src && msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src); // 处理频道失效视频信息
+        if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) window.src = src = msg.target.src; // 捕获频道链接
+        if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") deliver.fixVideoLost.channel(src); // 处理频道失效视频信息
         if (msg.target.className == "small-item disabled") deliver.fixVideoLost.favlist(msg); // 处理收藏失效视频信息
         if (msg.relatedNode.className == "info-sec-av") deliver.setBangumi.episodeData("", msg); // 刷新番剧播放数据
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") deliver.fixnews(msg.target); // 广告区转资讯区
