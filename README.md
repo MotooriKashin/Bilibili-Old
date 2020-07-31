@@ -56,7 +56,7 @@
 4. 旧版播放器原生不支持CC字幕，推荐安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
 5. 旧版播放器原生不支持互动视频，已主动忽略。
 6. 旧版播放器原生不支持全景视频，将无法移动视角。
-7. 旧版主页部分失效分区已进行替换，广告-->资讯(排行接口失效——2020.07.30)。
+7. 旧版主页部分失效分区已进行替换，广告-->资讯(排行接口失效 2020.07.30)。
 8. 旧版主页推荐位接口失效，已屏蔽三日\昨日\七日切换。
 9. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
 10. 嵌入式页面只简单替换播放器不会单独适配其他功能(如 [拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
@@ -73,29 +73,29 @@
 >
  
 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
-- _DOM的数据被覆盖_
-- _DOM的回调失效：如`addEventListener`、`document.onclick`_
-- _`GM_setValue()`方法失效_
+- DOM的数据被覆盖
+- DOM的回调失效：如`addEventListener`、`document.onclick`
+- `GM_setValue()`方法失效
 - **注1：只针对以`run-at document-start`注入脚本**
 - **注2：只针对启用了旧版框架的页面**
 - **注3：window的属性和方法等不会失效**
 
 附上测试结果供参考：
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：**基本正常**
-   + _`GM_setValue`失效，在旧版页面无法修改设置_
-   + _“简化主页”冲突，使旧版主页布局紊乱_
-   + _旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”_
-   + _快捷键拓展未适配，在旧版页面部分快捷键无效_
+   + `GM_setValue`失效，在旧版页面无法修改设置
+   + “简化主页”冲突，使旧版主页布局紊乱
+   + 旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”
+   + 快捷键拓展未适配，在旧版页面部分快捷键无效
 - [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：**完全正常**
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：**基本正常**
-   + _旧版UI未适配，无法在旧版页面调出设置_
-   + _**若要同时使用请关闭本脚本“区域限制”选项！**_
+   + 旧版UI未适配，无法在旧版页面调出设置
+   + **若要同时使用请关闭本脚本“区域限制”选项！**
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：**完全正常**
-   + _初次使用可能会报错：“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决_
-   + _**推荐安装以让旧版播放器支持CC字幕**_
+   + 初次使用可能会报错：“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
+   + **推荐安装以让旧版播放器支持CC字幕**
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：**完全正常**
-   + _推荐以`run-at document-start`注入_
-   + _推荐只在需要时启用该脚本_
+   + 推荐以`run-at document-start`注入
+   + 推荐只在需要时启用该脚本
 - [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：**完全正常**
 - [IDM Integration Module](http://www.internetdownloadmanager.com)：**下载浮动条失效 ಥ_ಥ**
 - [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：**完全正常**
