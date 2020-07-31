@@ -113,7 +113,7 @@
 - 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
 - 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
 - playurl算法来源：[Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)
-- BPplayurl接口来源：[解除B站区域限制](https://greasyfork.org/scripts/25718)
+- BPplayurl接口来源：[BiliPlus](https://www.biliplus.com/)、[解除B站区域限制](https://greasyfork.org/scripts/25718)
 - 下载界面样式来源：[YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)
 - MD5算法来源：[MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)
 
