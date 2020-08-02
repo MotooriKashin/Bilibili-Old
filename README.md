@@ -1,6 +1,6 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 74](https://img.shields.io/badge/Mozilla_Firefox_76-compatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生[旧版页面](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")
 - 默认启用了部分其他功能，可通过设置关闭
 - 可能会与其他同域脚本产生冲突，详情参见下文兼容数据
@@ -72,6 +72,7 @@
 > Tampermonkey BETA 4.10.6117
 >
  
+注：**已确定Firefox 79存在兼容问题！**  
 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
 - DOM的数据被覆盖
 - DOM的回调失效：如`addEventListener`、`document.onclick`
@@ -124,6 +125,7 @@
 - 2020-07-31
    + 优化评论楼层功能
    + 优化失效视频功能
+   + 下载视频将随切P而更新
 - 2020-07-30
    + 添加解除区域限制功能(大概不支持会员视频)
 - 2020-07-29
