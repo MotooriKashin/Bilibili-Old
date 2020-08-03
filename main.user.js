@@ -158,7 +158,9 @@
         post: (url, header, data) => { // 表单
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
+                header = header ? header : "application/x-www-form-urlencoded";
                 xhr.open('post', url, true);
+                xhr.setRequestHeader("Content-type", header);
                 xhr.withCredentials = true;
                 xhr.onload = () => {
                     if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response)
@@ -1089,7 +1091,7 @@
                             }
                             move[0].onclick = async () => { // 没有点赞过绑定点赞点击事件
                                 let msg = "aid=" + aid + "&like=1&csrf=" +deliver.getCookies().bili_jct; // 构造点赞表单
-                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded"); // 请求点赞表单
+                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg); // 请求点赞表单
                                 data = JSON.parse(data).ttl;
                                 // 点亮点赞图标
                                 document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
@@ -1102,7 +1104,7 @@
                             }
                             moved[0].onclick = async () => { // 点赞过绑定取消点赞点击事件
                                 let msg = "aid=" + aid + "&like=2&csrf=" +deliver.getCookies().bili_jct; // 构造取消点赞表单
-                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded"); // 请求取消点赞表单
+                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg); // 请求取消点赞表单
                                 data = JSON.parse(data).ttl;
                                 // 点亮点赞图标
                                 document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
