@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.2.7
+// @version      3.2.8
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -991,7 +991,6 @@
             remove("app-download", "class"); // 移除app下载浮动条
             remove("bilibili-live-player-video-logo", "class");// 移除直播水印
             remove("bili-header-m", "class", false, 1); // 移除失效版头
-            remove("chaos-pk-vm", "id");
             if (window.home) remove("rec-btn prev", "class"); // 移除主页昨日榜
             if (window.home) remove("rec-btn next", "class"); // 移除主页七日榜
             ext = document.getElementsByClassName("bili-old-download");
@@ -1048,10 +1047,10 @@
         },
         setLike: (data) => { // 点赞功能
             if (!config.reset.like) return;
-            let coin = document.getElementsByClassName("bilibili-player-video-subtitle")[0];
-            let number = document.getElementsByClassName("number");
-            let node = document.getElementsByClassName("coin");
             let timer = window.setInterval(async () => {
+                let coin = document.getElementsByClassName("bilibili-player-video-subtitle")[0];
+                let number = document.getElementsByClassName("number")[0];
+                let node = document.getElementsByClassName("coin")[0];
                 if (coin) { // 判断页面渲染进度
                     window.clearInterval(timer);
                     let span = document.createElement("span");
@@ -1069,7 +1068,7 @@
                     bef.setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
                     af.setAttribute("class", "l-icon-moved");
                     af.setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
-                    number[0].insertBefore(span, node[0]);
+                    number.insertBefore(span, node);
                     try {
                         data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid})); // 获取点赞数
                         data = JSON.parse(data).data.stat.like;
