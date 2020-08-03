@@ -1081,42 +1081,43 @@
                         arg = text;
                         data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid": aid}));
                         data = JSON.parse(data);
-                        if (data.data == 0 || data.data == 1) {
-                            let move = document.getElementsByClassName("l-icon-move");
-                            let moved = document.getElementsByClassName("l-icon-moved");
-                            data = data.data;
-                            if (data == 1) { // 点赞过点亮图标
-                                move[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                                moved[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
-                            }
-                            move[0].onclick = async () => { // 没有点赞过绑定点赞点击事件
-                                let msg = "aid=" + aid + "&like=1&csrf=" +deliver.getCookies().bili_jct; // 构造点赞表单
-                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg); // 请求点赞表单
-                                data = JSON.parse(data).ttl;
-                                // 点亮点赞图标
-                                document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                                document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
-                                if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
-                                let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1; // 点赞数+1
-                                text = document.createTextNode(" 点赞 " + number)
-                                arg.replaceWith(text);
-                                arg = text;
-                            }
-                            moved[0].onclick = async () => { // 点赞过绑定取消点赞点击事件
-                                let msg = "aid=" + aid + "&like=2&csrf=" +deliver.getCookies().bili_jct; // 构造取消点赞表单
-                                data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg); // 请求取消点赞表单
-                                data = JSON.parse(data).ttl;
-                                // 点亮点赞图标
-                                document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
-                                document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
-                                if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
-                                let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1; // 点赞数-1
-                                text = document.createTextNode(" 点赞 " + number)
-                                arg.replaceWith(text);
-                                arg = text;
-                            }
+                        let move = document.getElementsByClassName("l-icon-move");
+                        let moved = document.getElementsByClassName("l-icon-moved");
+                        data = data.data;
+                        if (data == 1) { // 点赞过点亮图标
+                            move[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                            moved[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
                         }
-                        else document.getElementsByClassName("l-icon-move")[0].onclick = () => document.getElementsByClassName("c-icon-move")[0].click();
+                        move[0].onclick = async () => { // 没有点赞过绑定点赞点击事件
+                            if (!deliver.getCookies().bili_jct) { // 没有登录绑定快捷登录
+                                document.getElementsByClassName("c-icon-move")[0].click();
+                                return;
+                            }
+                            let msg = "aid=" + aid + "&like=1&csrf=" + deliver.getCookies().bili_jct; // 构造点赞表单
+                            data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg); // 请求点赞表单
+                            data = JSON.parse(data).ttl;
+                            // 点亮点赞图标
+                            document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
+                            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
+                            if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
+                            let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1; // 点赞数+1
+                            text = document.createTextNode(" 点赞 " + number)
+                            arg.replaceWith(text);
+                            arg = text;
+                        }
+                        moved[0].onclick = async () => { // 点赞过绑定取消点赞点击事件
+                            let msg = "aid=" + aid + "&like=2&csrf=" + deliver.getCookies().bili_jct; // 构造取消点赞表单
+                            data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg); // 请求取消点赞表单
+                            data = JSON.parse(data).ttl;
+                            // 点亮点赞图标
+                            document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
+                            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
+                            if (arg.nodeValue.match("万")) return; // 忽略点赞上万的情况
+                            let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1; // 点赞数-1
+                            text = document.createTextNode(" 点赞 " + number)
+                            arg.replaceWith(text);
+                            arg = text;
+                        }
                     }
                     catch(e) {debug.error(e)}
                 }
