@@ -21,7 +21,7 @@
 (function() {
     'use strict';
 
-    let ml, pl, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, limit, defig;
+    let ml, pl, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, danmu, limit, defig;
     let arr = [], avs = [], ids = [], obj = {}, mdf = {};
     let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
@@ -686,7 +686,7 @@
                         this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this, url)});
                     }
                     // 修改弹幕链接
-                    if (url.includes("list.so")) {
+                    if (url.includes("list.so") && config.reset.danmuku) {
                         // 这时pakku.js已经修改了xhr对象，需要另做处理
                         if (this.pakku_url) {
                             onlyRunOneTime = true;
@@ -715,7 +715,7 @@
                     }
                     return open.call(this, method, url, ...rest);
                 }
-                if (config.reset.danmuku) {
+                if (config.reset.danmuku && danmu) {
                     XMLHttpRequest.prototype.send = function (...arg) {
                         // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
                         // (pakku.js正常运行时这个send()不会被调用)
@@ -768,7 +768,6 @@
                                     });
                                 });
                             }
-
                             function getSegConfig() {
                                 return new Promise(function (resolve) {
                                     let xhr = new XMLHttpRequest();
@@ -2060,6 +2059,7 @@
                 // 判断是否收藏跳转而来
                 ml = GM_getValue("medialist");
                 GM_setValue("medialist", 0);
+                danmu = 1
                 // bv转av
                 if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) history.replaceState(null, null, "https://www.bilibili.com/video/av" + deliver.convertId(LOCATION[4]) + location.search + location.hash);
                 if (!config.rewrite.av && !config.reset.download) return;
@@ -2094,6 +2094,7 @@
             // 稍后再看
             if (!config.rewrite.watchlater || !uid) return;
             // 重写王爷框架并调用后续处理
+            danmu = 1;
             deliver.write(API.pageframe.watchlater);
             deliver.setLike();
             deliver.fixSort.watchlater();
@@ -2111,6 +2112,7 @@
                 if (!config.rewrite.bangumi && !config.reset.download) return;
                 // 指定playurl类型
                 pgc = true;
+                danmu = 1;
                 // 获取网页源代码
                 DOCUMENT = xhr.false(location.href);
                 // 记录__playinfo__
@@ -2134,6 +2136,7 @@
         blackboard: () => {
             // 嵌入
             // 修复HTML5播放器帮助页视频cid错误
+            danmu = 1;
             if (LOCATION[4].startsWith('html5player')) if (LOCATION[4].includes("3521416") && LOCATION[4].includes("6041635")) location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":3521416,"cid":192446449}));
             if (!config.rewrite.frame) return;
             if (LOCATION[4].startsWith('newplayer')) {
@@ -2159,6 +2162,7 @@
         },
         medialist: () => {
             // 收藏
+            danmu = 1;
             if (LOCATION[5].startsWith("ml")) {
                 ml = 1 * LOCATION[5].match(/[0-9]+/)[0];
                 pl = GM_getValue("playlist") ? GM_getValue("playlist") : "";
