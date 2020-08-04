@@ -3,7 +3,7 @@
 // @namespace    MotooriKashin
 // @version      3.2.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
-// @author       MotooriKashin
+// @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
@@ -608,7 +608,10 @@
             // 转换解码后的protobuf到xml
             debug.log("新版弹幕转码成功！");
             return new Promise(function (resolve) {
-                let dom = (new DOMParser()).parseFromString("<i><chatserver>chat.bilibili.com</chatserver><chatid>" + pid + "</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source></i>", "text/xml");
+                danmaku.sort(function (a, b) {
+                    return a.progress - b.progress;
+                });
+                let dom = (new DOMParser()).parseFromString("<i><chatserver>chat.bilibili.com</chatserver><chatid>" + cid + "</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source></i>", "text/xml");
                 let root = dom.childNodes[0];
                 let d, attr, dmk;
                 for (let i in danmaku) {
