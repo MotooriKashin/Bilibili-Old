@@ -18,7 +18,7 @@
 ---
 ### 脚本实现
 - 重写 (基于旧版网页框架)
-   + 主页：https://www.bilibili.com
+   + 主页：[www.bilibili.com](https://www.bilibili.com)
    + av(BV)：[av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")、[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
    + Bangumi(ss/ep)：[ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 、 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生") 、 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
    + 稍后再看：[watchlater/#/list](https://www.bilibili.com/watchlater/#/list "播放列表")、[medialist/play/watchlater](https://www.bilibili.com/medialist/play/watchlater "播放全部")
@@ -38,6 +38,7 @@
    + 修复 评论楼层号
    + 修复 收藏和频道里的失效视频封面和标题
    + 添加 屏蔽直播及轮播视频的功能
+   + 添加 旧版播放器支持新版弹幕
 
 ---
 ### 关于设置
@@ -51,18 +52,16 @@
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
 1. 旧版页面载入较新版慢，因为无法在请求新版之前启用旧版。
-2. 旧版播放器4k视频支持上可能有问题。
-3. 旧版播放器未适配新版弹幕，弹幕上限没有变动。
-4. 旧版播放器原生不支持CC字幕，推荐安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
-5. 旧版播放器原生不支持互动视频，已主动忽略。
-6. 旧版播放器原生不支持全景视频，将无法移动视角。
-7. 旧版主页部分失效分区已进行替换，广告-->资讯(排行接口失效 2020.07.30)。
-8. 旧版主页推荐位接口失效，已屏蔽三日\昨日\七日切换。
-9. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
-10. 嵌入式页面只简单替换播放器不会单独适配其他功能(如 [拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-11. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
-12. 收藏播放页会跳转av页进行模拟，up简介等非重要信息没有去额外获取。
-13. 各种由于浏览器缓存引发载入异常问题请尝试刷新，硬刷新(`Shift + F5`或`Ctrl + Shift + R`)更佳。
+2. 旧版播放器原生不支持CC字幕，推荐安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
+3. 旧版播放器原生不支持互动视频，已主动忽略。
+4. 旧版播放器原生不支持全景视频，将无法移动视角。
+5. 旧版主页部分失效分区已进行替换，广告-->资讯(排行接口失效 2020.07.30)。
+6. 旧版主页推荐位接口失效，已屏蔽三日\昨日\七日切换。
+7. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
+8. 嵌入式页面只简单替换播放器不会单独适配其他功能(如 [拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+9. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
+10. 收藏播放页会跳转av页进行模拟，up简介等非重要信息没有去额外获取。
+11. 各种由于浏览器缓存引发载入异常问题请尝试刷新，硬刷新(`Shift + F5`或`Ctrl + Shift + R`)更佳。
 
 ---
 ### 兼容数据
@@ -109,7 +108,7 @@
 - 第三方数据接口来源：[BiliPlus](https://www.biliplus.com/)、[Bilibilijj](https://www.jijidown.com/)
 - 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)
 - BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)
-- 页面原生调用来源：[wly5556](https://greasyfork.org/users/217840)
+- 页面原生调用及新版弹幕转码：[wly5556](https://greasyfork.org/users/217840)
 - README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)
 - 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
 - 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
@@ -122,6 +121,8 @@
 ### 效果预览
 ![Bangumi](https://camo.githubusercontent.com/1802bb815c3f624f636b0ee71554a7b3816f1801/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767774576392e706e67)
 ### 版本历史
+- 2020-08-04
+   + 实现旧版播放器支持新版弹幕 (感谢wly5556)
 - 2020-08-03
    + 修复点赞功能
 - 2020-07-31
