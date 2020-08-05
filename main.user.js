@@ -432,8 +432,6 @@
                                 allrequset.push(new Promise(function (resolve) {
                                     let xhr = new XMLHttpRequest();
                                     xhr.addEventListener("load", function () {
-                                        // protoSegments.push(xhr.response);
-                                        // 踩到坑：如果分段不是按顺序排列的，播放器内部处理弹幕的时间会从正常的8秒变成30秒（对于40000条弹幕）
                                         protoSegments[index] = xhr.response;
                                         resolve();
                                     });
@@ -451,7 +449,6 @@
                                 deliver.toXml(Segments, pid).then(function (xml) {
                                     callBack.forEach(function (f) {
                                         xhr.response = xhr.responseText = xml;
-                                        // 播放器处理12000条弹幕往上就明显感到界面卡顿，40000条更是耗时8秒
                                         f.call(xhr);
                                     });
                                 });
@@ -925,6 +922,8 @@
         toXml : (danmaku, pid) => {
             debug.log("新版弹幕转码成功！");
             return new Promise(function (resolve) {
+                //按出现时间排序弹幕，能避免反复插入dom元素，明显提高性能
+                //排序后40000条弹幕旧播放器能在1秒左右处理完
                 danmaku.sort(function (a, b) {
                     return a.progress - b.progress;
                 });
