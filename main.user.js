@@ -224,7 +224,7 @@
         }
     }
 
-    // __INITIAL_STATE__重构
+    // 重构__INITIAL_STATE__
     const INITIAL_STATE = {
         // bangumi
         bangumi: (data,epId) => {
@@ -322,7 +322,7 @@
         }
     }
 
-    // xhr hook
+    // xhr hook，包括原生XMLHttpRequest和$.ajax中的jsonp
     const intercept = {
         init: () => {
             const open = XMLHttpRequest.prototype.open;
@@ -403,6 +403,7 @@
                 }
                 return open.call(this, method, url, ...rest);
             }
+            // 只在视频页hook `XMLHttpRequest.prototype.send`
             if (config.reset.danmuku && danmu) {
                 XMLHttpRequest.prototype.send = async function (...arg) {
                     // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
@@ -1372,19 +1373,7 @@
         // 收藏播放
         setMediaList: {
             init: async (data) => {
-                if (!ml) {
-                    // 判断是正常av页还是收藏播放页
-                    if (!__playinfo__.data || !__playinfo__.data.accept_quality) return;
-                    if (__playinfo__.data.accept_quality[0] < 120) return;
-                    let timer = setInterval(() => {
-                        // 播放器没有默认载入4k画质，重写初始化播放器
-                        if (!unsafeWindow.BilibiliPlayer) return;
-                        clearInterval(timer);
-                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload("cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid);
-                        unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
-                    },100)
-                    return;
-                }
+                if (!ml) return;
                 if (data){
                     // 以传参data决定处理类型
                     try {
@@ -2099,6 +2088,7 @@
                     tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid;
                     // 重写网页框架并进行调用后续处理
                     deliver.write(API.pageframe.video);
+                    if (DOCUMENT.includes("超清 4K")) unsafeWindow.__playinfo__ = undefined;
                     document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                     deliver.fixSort.video()
                     deliver.setLike();
@@ -2237,7 +2227,7 @@
     defig = JSON.parse(JSON.stringify(config));
     let data = GM_getValue("config");
     if (data) {
-        // 读取脚本管理器中的自定义设置
+        // 读取脚本管理器中的修改过的设置
         for (let key in data.rewrite) if (key in config.rewrite) config.rewrite[key] = data.rewrite[key];
         for (let key in data.reset) if (key in config.reset) config.reset[key] = data.reset[key];
     }
@@ -2289,9 +2279,11 @@
     else if (LOCATION[2] == 'www.bilibili.com') thread.home();
 
     // 全局调用
-    // 一次性调用：设置入口绘制、全局样式创建、xhrhook
+    // 绘制设置入口
     if (window.self == window.top) UI.init();
+    // 创建全局样式
     deliver.setGlobalStyle();
+    // 启用xhr hook
     intercept.init();
     // DOM修改监听调用
     document.addEventListener("DOMNodeInserted",(msg) => {
