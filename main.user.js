@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.2.9
+// @version      3.3.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -21,19 +21,57 @@
 (function() {
     'use strict';
 
-    let ml, pl, aid, cid, mid, oid, pgc, src, tid, uid, url, mode, type, danmu, limit, defig;
+    // 全局变量
+    let ml, pl, aid, big, cid, mid, oid, pgc, src, tid, uid, url, bvid, mode, type, danmu, limit, defig;
     let arr = [], avs = [], ids = [], obj = {}, mdf = {};
     let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
+    // protobuf初始化
     const root = protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
+    // 脚本默认设置：0 - 关闭，1 - 开启，2 - ？！
+    // 一般直接修改这里无效，脚本读取的是管理器中的数据
+    // 个别无法在设置界面调整的选项才能在这里修改并生效
+    const config = {
+        rewrite: {
+            av: 1,
+            bangumi: 1,
+            watchlater: 1,
+            frame: 1,
+            home: 1,
+            playlist: 1,
+            medialist: 1,
+        },
+        reset: {
+            danmuku: 1,
+            limit: 1,
+            grobalboard: 1,
+            replyfloor: 1,
+            headblur: 0,
+            preview: 1,
+            jointime: 1,
+            lostvideo: 1,
+            bvid2av: 1,
+            selectdanmu: 0,
+            episodedata: 1,
+            like: 1,
+            static: 1,
+            download: 1,
+            heartbeat: 0,
+            carousel: 0,
+            adloc: 0,
+            roomplay: 0,
+        },
+        big: 0
+    }
+
+    // 统一api接口
     const API = {
-        // 统一api接口
+        // 网页框架
         pageframe: {
-            // 网页框架
             watchlater: '<!DOCTYPE html><html><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="spm_prefix" content="333.342"/><link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="viewlater-app"><app></app></div><div class="footer bili-footer"></div><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script></body></html>',
             playlist: '<!DOCTYPE html><html><head><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=333.44><link rel=stylesheet href=//static.hdslb.com/phoenix/dist/css/comment.min.css type=text/css><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=0><link href=//s1.hdslb.com/bfs/static/jinkela/playlist-video/css/playlist_video.0.87292febba67b03f65d05c15d03e325d9db4f56a.css rel=stylesheet><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div id=playlist-video-app></div><div class="footer bili-footer report-wrap-module"></div><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js></script><script type=text/javascript src=//static.hdslb.com/js/jquery.qrcode.min.js></script><script type=text/javascript charset=utf-8 src=//static.hdslb.com/common/js/footer.js></script><script type=text/javascript src=//static.hdslb.com/js/swfobject.js></script><script type=text/javascript src=//static.hdslb.com/js/video.min.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/moxie.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/plupload.js></script><script type=text/javascript src=//static.hdslb.com/phoenix/dist/js/comment.min.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script></body></html>',
             bangumi: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.764aaa07c8ac8078b639306b18838d080a1cefc1.css" /></head><body><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true" class="main-container"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.764aaa07c8ac8078b639306b18838d080a1cefc1.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.764aaa07c8ac8078b639306b18838d080a1cefc1.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
@@ -41,8 +79,8 @@
             video: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" /><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background: url(//static.hdslb.com/images/base/icons.png);}</style></head><body><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script> <script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true"></div><div class="player-fix abs" id="bofqi" style="visibility:hidden;"><script type="text/javascript">function getQueryString(e){var r=new RegExp("(^|&)"+e+"=([^&]*)(&|$)"),i=window.location.search.substr(1).match(r);return null!=i?unescape(i[2]):null}window.getInternetExplorerVersion=function(){var e=-1;if("Microsoft Internet Explorer"==navigator.appName){var r=navigator.userAgent;null!=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r)&&(e=parseFloat(RegExp.$1))}return e};var vd=window.__INITIAL_STATE__&&window.__INITIAL_STATE__.videoData;if(vd&&vd.aid&&9!==getInternetExplorerVersion()){if($("#__bofqi").innerHTML=\'<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>\',vd.embedPlayer){var p=getQueryString("p")?getQueryString("p")-1:0,player={aid:vd.aid,cid:vd.pages[p]&&vd.pages[p].cid||vd.pages[0].cid};EmbedPlayer("player","//static.hdslb.com/play.swf","cid="+player.cid+"&aid="+player.aid+"&pre_ad=")}vd.embed&&$("#bofqi").html(vd.embed)}else $("#bofqi").remove()</script></div><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><div class="footer bili-footer report-wrap-module"></div><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script></body></html>',
             home: '<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css"></head><body><div id="home-app"></div><div id="app" data-server-rendered="true"></div><script src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script></script><script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js" defer></script><script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js" defer></script><div class="footer bili-footer report-wrap-module"></div><script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js" crossorigin></script><script type="text/javascript" defer="defer" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script><link rel="prefetch" as="script" href="//static.hdslb.com/js/video.min.js"></body></html>'
         },
+        // 样式表
         style: {
-            // 样式表
             playshadow: "#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}",
             download : "#bili-old-download-table {position: fixed;z-index: 3300;bottom: 0;background: #f6f6f6;width: 100%;text-align: center;}#bili-old-download-table .download-box {background-color: #fff;color: #000 !important;border: #ccc 1px solid;border-radius: 3px;display: inline-block;margin: 3px;}.download-mp4 {color: #fff !important;background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);}.download-avc {color: #fff !important;background-color: #f00;background-image: linear-gradient(to right, #f00, #c00);}.download-hev {color: #fff !important;background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);}.download-aac {color: #fff !important;background-color: #0d0;background-image: linear-gradient(to right, #0d0, #0a0);}.download-flv {color: #fff !important;background-color: #f90;background-image: linear-gradient(to right, #f90, #d70);}.download-type {color: #000 !important;display: table-cell;min-width: 1.5em;padding: 1px 3px;text-align: center;vertical-align: middle;}#bili-old-download-table a {display: table-cell;padding: 3px;text-decoration: none;}.quality-high {background-color: #c0f;}.quality-1080p {background-color: #f00;}.quality-720p {background-color: #f90;}.quality-480p {background-color: #00d;}.quality-360p {background-color: #0d0;}.download-quality {color: #fff !important;padding: 1px 3px;text-align: center;}.download-size {font-size: 90%;margin-top: 2px;padding: 1px 3px;text-align: center;}",
             jointime: ".user .info .meta .row {height: 88px;white-space: normal;}.user .info .jointime .icon {background-position: -209px -84px;}.user .info .jointime .text {color: #00a1d6;}}",
@@ -53,15 +91,15 @@
             gray: "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
             like: ".video-info-module .number .like b, .video-info-module .number .like i {background: url(//static.hdslb.com/images/base/icons.png);display: inline-block;margin-top: -3px;vertical-align: middle;}",
         },
+        // 播放器框架
         playerframe : {
-            // 播放器框架
             html5player: "https://www.bilibili.com/blackboard/html5player.html", // aid, cid, season_type player_type + &as_wide=1&urlparam=module%253Dbangumi&crossDomain=true
             playlist: "https://www.bilibili.com/blackboard/playlist-player.html", // pl || aid,cid
             ancient: "https://www.bilibili.com/blackboard/activity-ancient-player.html", // aid,cid
             player: "https://player.bilibili.com/player.html", // aid,cid &| page
         },
+        // URL
         url: {
-            // URL
             spacedetial: "https://api.bilibili.com/medialist/gateway/base/spaceDetail", // media_id, pn + &ps=20&keyword=&order=mtime&type=0&tid=0
             channel: "https://api.bilibili.com/x/space/channel/video", // mid, cid, pn + &ps=30&order=0
             biliplus: "https://www.biliplus.com/video/av",
@@ -87,16 +125,16 @@
             pgcproj: "https://api.bilibili.com/pgc/player/api/playurlproj", // appkey, cid=, otype=json, platform=android_i, qn
             BPplayurl: "https://www.biliplus.com/BPplayurl.php"
         },
+        // 未识别分区对照表
         sort: {
-            // 未识别分区对照表
             202: [202,"资讯", "https://www.bilibili.com/v/information/"],
             203: [202,"热点", "https://www.bilibili.com/v/information/hotspot/"],
             204: [202,"环球", "https://www.bilibili.com/v/information/global/"],
             205: [202,"社会", "https://www.bilibili.com/v/information/social/"],
             206: [202,"综合", "https://www.bilibili.com/v/information/multiple/"]
         },
+        // 播放器通知
         message: [
-            // 播放器通知
             ['https://www.bilibili.com/blackboard/activity-4KPC.html', '解锁超清4K画质'],
             ['https://www.bilibili.com/blackboard/activity-4K120FPS-PC.html', '4K120FPS投稿全量开放'],
             ['https://www.bilibili.com/blackboard/bilibili2009.html', '十年前的B站长啥样'],
@@ -104,14 +142,13 @@
         ]
     }
 
+    // 调试模块封装
     const debug = {
-        // 调试模块封装
         log: (...msg) => console.log("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         error: (...msg) => console.error("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         warn: (...msg) => console.warn("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         debug: (...msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         msg: (msg, warn, delay) => {
-            // 播放器消息
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
             warn = warn ? warn : "";
             if (!node) {debug.log(msg, warn);return;}
@@ -134,18 +171,18 @@
         }
     }
 
+    // XMLHttpReques封装，除同步方法外统一返回promise
     const xhr = {
-        // XMLHttpReques封装，除同步方法外统一返回promise
+        // 同步方法
         'false': (url) => {
-            // 同步方法
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, false);
             xhr.withCredentials = true;
             xhr.send(null);
             if (xhr.status === 200) return xhr.responseText;
         },
+        // 异步方法
         'true': (url) => {
-            // 异步方法
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
@@ -158,8 +195,8 @@
                 xhr.send();
             });
         },
+        // 跨域方法
         GM: (url) => {
-            // 跨域方法
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
                     method : 'GET',
@@ -169,8 +206,8 @@
                 });
             })
         },
+        // 表单方法
         post: (url, header, data) => {
-            // 表单方法
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 header = header ? header : "application/x-www-form-urlencoded";
@@ -187,45 +224,10 @@
         }
     }
 
-    const config = {
-        // 默认设置，对应说明见UI.menu
-        rewrite: {
-            // 重写部分
-            av: 1,
-            bangumi: 1,
-            watchlater: 1,
-            frame: 1,
-            home: 1,
-            playlist: 1,
-            medialist: 1,
-        },
-        reset: {
-            // 修改部分
-            danmuku: 1,
-            limit: 1,
-            grobalboard: 1,
-            replyfloor: 1,
-            headblur: 0,
-            preview: 1,
-            jointime: 1,
-            lostvideo: 1,
-            bvid2av: 1,
-            selectdanmu: 0,
-            episodedata: 1,
-            like: 1,
-            static: 1,
-            download: 1,
-            heartbeat: 0,
-            carousel: 0,
-            adloc: 0,
-            roomplay: 0,
-        }
-    }
-
+    // __INITIAL_STATE__重构
     const INITIAL_STATE = {
-        // __INITIAL_STATE__重构
+        // bangumi
         bangumi: (data,epId) => {
-            // bangumi
             try {
                 let ep = 0, dat = {};
                 let rp = JSON.parse(data).result;
@@ -285,8 +287,8 @@
             }
             catch(e) {debug.error(e)}
         },
+        // 主页
         home: (data) => {
-            // 主页
             try {
                 let dat = {};
                 let ini = JSON.parse(data);
@@ -320,186 +322,500 @@
         }
     }
 
-    const deliver = {
-        // 函数统一接口
-        md5: (str) => {
-            // MD5接口，修改自百度百科https://baike.baidu.com/item/MD5/212708
-            let md5_RotateLeft = (lValue, iShiftBits) => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
-            let md5_AddUnsigned = (lX, lY) => {
-                let lX4, lY4, lX8, lY8, lResult;
-                lX8 = (lX & 0x80000000);
-                lY8 = (lY & 0x80000000);
-                lX4 = (lX & 0x40000000);
-                lY4 = (lY & 0x40000000);
-                lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
-                if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-                if (lX4 | lY4) {
-                    if (lResult & 0x40000000) return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-                    else return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+    // xhr hook
+    const intercept = {
+        init: () => {
+            const open = XMLHttpRequest.prototype.open;
+            const send = XMLHttpRequest.prototype.send;
+            const addEventListener = XMLHttpRequest.prototype.addEventListener;
+            // 为了防止pakku.js休眠时，send中主动请求分段的部分被重复调用而设置的标志
+            let onlyRunOneTime = true;
+            // 原生xhr hook
+            XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+                let _url = url, hook = [_url, ""];
+                // 替换视频心跳
+                if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
+                    url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
+                    debug.log("XHR重定向", "替换视频心跳", [_url, url]);
                 }
-                else return (lResult ^ lX8 ^ lY8);
+                // 修改正在直播
+                if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.biliIndexRec(this, hook)});
+                    url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
+                }
+                // 修改直播动态
+                if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.biliIndexRec(this, hook)});
+                    url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
+                }
+                // 修改直播数据
+                if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.getRoomPlayInfo(this, hook)});
+                }
+                // 修改播放器通知
+                if (url.includes('api.bilibili.com/x/player/carousel')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.carousel(this)});
+                }
+                // 修改区域限制
+                if (url.includes('bangumi.bilibili.com/view/web_api/season/user/status')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.status(this)});
+                }
+                // 监听视频链接
+                if (url.includes("/playurl?")) {
+                    if (!url.includes("fourk") && !url.includes("sign")) {
+                        url = url.replace("playurl?", "playurl?fourk=1&");
+                        debug.log("XHR重定向", "添加4K参数", [_url, url]);
+                    }
+                    cid = url.match(/cid=[0-9]*/) ? 1 * url.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : "";
+                    aid = url.match(/avid=[0-9]*/) ? 1 * url.match(/avid=[0-9]*/)[0].replace(/avid=/,"") : "";
+                    bvid = deliver.convertId(aid);
+                    pgc = url.includes("pgc") ? true : false;
+                    if (big || limit) this.url = url;
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
+                }
+                // 修改弹幕链接
+                if (url.includes("list.so") && config.reset.danmuku) {
+                    // 这时pakku.js已经修改了xhr对象，需要另做处理
+                    if (this.pakku_url) {
+                        onlyRunOneTime = true;
+                        let oid = unsafeWindow.cid;
+                        let pid = unsafeWindow.aid;
+                        // 更改pakku.js请求的url，使它过滤分段弹幕
+                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + oid + "&pid=" + pid + "&segment_index=1";
+                        this.responseType = "arraybuffer";
+                        let xhr = this;
+                        let cb = [];
+                        for (let i in this.pakku_load_callback) {
+                            cb[i] = this.pakku_load_callback[i];
+                        }
+                        for (let i in this.pakku_load_callback) {
+                            // 将pakku.js返回的数据转换回xml
+                            this.pakku_load_callback[i] = function () {
+                                deliver.toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems, pid).then(function (xml) {
+                                    xhr.response = xhr.responseText = xml;
+                                    cb[i].call(xhr);
+                                });
+                            }
+                        }
+                    } else {
+                        this.reqURL = url;
+                    }
+                }
+                return open.call(this, method, url, ...rest);
             }
-            let md5_F = (x, y, z) => (x & y) | ((~x) & z);
-            let md5_G = (x, y, z) => (x & z) | (y & (~z));
-            let md5_H = (x, y, z) => (x ^ y ^ z);
-            let md5_I = (x, y, z) => (y ^ (x | (~z)));
-            let md5_FF = (a, b, c, d, x, s, ac) => {
-                a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_F(b, c, d), x), ac));
-                return md5_AddUnsigned(md5_RotateLeft(a, s), b);
-            };
-            let md5_GG = (a, b, c, d, x, s, ac) => {
-                a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_G(b, c, d), x), ac));
-                return md5_AddUnsigned(md5_RotateLeft(a, s), b);
-            };
-            let md5_HH = (a, b, c, d, x, s, ac) => {
-                a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_H(b, c, d), x), ac));
-                return md5_AddUnsigned(md5_RotateLeft(a, s), b);
-            };
-            let md5_II = (a, b, c, d, x, s, ac) => {
-                a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_I(b, c, d), x), ac));
-                return md5_AddUnsigned(md5_RotateLeft(a, s), b);
-            };
-            let md5_ConvertToWordArray = (string) => {
-                let lWordCount;
-                let lMessageLength = string.length;
-                let lNumberOfWords_temp1 = lMessageLength + 8;
-                let lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64;
-                let lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16;
-                let lWordArray = Array(lNumberOfWords - 1);
-                let lBytePosition = 0;
-                let lByteCount = 0;
-                while (lByteCount < lMessageLength) {
-                    lWordCount = (lByteCount - (lByteCount % 4)) / 4;
-                    lBytePosition = (lByteCount % 4) * 8;
-                    lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
-                    lByteCount++;
-                }
-                lWordCount = (lByteCount - (lByteCount % 4)) / 4;
-                lBytePosition = (lByteCount % 4) * 8;
-                lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
-                lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
-                lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
-                return lWordArray;
-            };
-            let md5_WordToHex = (lValue) => {
-                let WordToHexValue = "",
-                    WordToHexValue_temp = "",
-                    lByte, lCount;
-                for (lCount = 0; lCount <= 3; lCount++) {
-                    lByte = (lValue >>> (lCount * 8)) & 255;
-                    WordToHexValue_temp = "0" + lByte.toString(16);
-                    WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
-                }
-                return WordToHexValue;
-            };
-            let md5_Utf8Encode = (string) => {
-                string = string.replace(/\r\n/g, "\n");
-                let utftext = "";
-                for (let n = 0; n < string.length; n++) {
-                    let c = string.charCodeAt(n);
-                    if (c < 128) utftext += String.fromCharCode(c);
-                    else if ((c > 127) && (c < 2048)) {
-                        utftext += String.fromCharCode((c >> 6) | 192);
-                        utftext += String.fromCharCode((c & 63) | 128);
+            if (config.reset.danmuku && danmu) {
+                XMLHttpRequest.prototype.send = async function (...arg) {
+                    // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
+                    // (pakku.js正常运行时这个send()不会被调用)
+                    if (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && onlyRunOneTime)) {
+                        if (this.pakku_url && this.pakku_url.includes("seg.so"))onlyRunOneTime = false;
+                        // 对于没有pakku.js的情况，模拟一个xhr响应
+                        Object.defineProperty(this, "response", { writable: true });
+                        Object.defineProperty(this, "responseText", { writable: true });
+                        Object.defineProperty(this, "readyState", { writable: true });
+                        Object.defineProperty(this, "status", { writable: true });
+                        this.readyState = 4;
+                        this.status = 200;
+                        this.abort();
+                        let cid = unsafeWindow.cid;
+                        let pid = unsafeWindow.aid;
+                        let callBack = this.callBack;
+                        let xhr = this;
+                        let protoSegments = [];
+                        getSegConfig().then(getAllSeg);
+                        // 获得所有分段
+                        function getAllSeg(config) {
+                            let total = config.dmSge.total;
+                            let allrequset = [];
+                            for (let index = 1; index <= total; index++) {
+                                allrequset.push(new Promise(function (resolve) {
+                                    let xhr = new XMLHttpRequest();
+                                    xhr.addEventListener("load", function () {
+                                        // protoSegments.push(xhr.response);
+                                        // 踩到坑：如果分段不是按顺序排列的，播放器内部处理弹幕的时间会从正常的8秒变成30秒（对于40000条弹幕）
+                                        protoSegments[index] = xhr.response;
+                                        resolve();
+                                    });
+                                    xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + pid + "&segment_index=" + index);
+                                    xhr.responseType = "arraybuffer";
+                                    xhr.send();
+                                }));
+                            }
+                            // 完成所有的网络请求大概要300ms
+                            Promise.all(allrequset).then(function () {
+                                let Segments = [];
+                                protoSegments.forEach(function (seg) {
+                                    Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
+                                });
+                                deliver.toXml(Segments, pid).then(function (xml) {
+                                    callBack.forEach(function (f) {
+                                        xhr.response = xhr.responseText = xml;
+                                        // 播放器处理12000条弹幕往上就明显感到界面卡顿，40000条更是耗时8秒
+                                        f.call(xhr);
+                                    });
+                                });
+                            });
+                        }
+                        function getSegConfig() {
+                            return new Promise(function (resolve) {
+                                let xhr = new XMLHttpRequest();
+                                xhr.addEventListener("load", function () {
+                                    let res = protoView.decode(new Uint8Array(xhr.response));
+                                    resolve(res);
+                                });
+                                xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + cid + "&pid=" + pid);
+                                xhr.responseType = "arraybuffer";
+                                xhr.send();
+                            });
+
+                        }
+                    }
+                    else if (this.url) {
+                        // 解除限制
+                        Object.defineProperty(this, "response", { writable: true });
+                        Object.defineProperty(this, "responseText", { writable: true });
+                        Object.defineProperty(this, "readyState", { writable: true });
+                        Object.defineProperty(this, "status", { writable: true });
+                        this.abort();
+                        let response;
+                        if (limit) {
+                            response = {"code":0,"message":"success","result":{}};
+                            response.result = JSON.parse(await xhr.false(API.url.BPplayurl + "?" + this.url.split("?")[1] + "&module=pgc&balh_ajax=1"));
+                        }
+                        else if (big) {
+                            if (pgc) response = JSON.parse(await xhr.GM("http://212.64.37.212/baiduyun/bvurl.php?anime=1&bvid=" + bvid + "&cid=" + cid));
+                            else response = JSON.parse(await xhr.GM("http://212.64.37.212/baiduyun/bvurl.php?bvid=" + bvid + "&cid=" + cid));
+                        }
+                        this.response = response;
+                        this.responseText = JSON.stringify(response);
+                        this.readyState = 3;
+                        this.status = 200;
+                        this.readyState = 4;
+                        this.onreadystatechange.call(obj);
+                        __playinfo__ = response
+                        debug.log("解除限制", "aid=", aid, "cid=", cid)
                     }
                     else {
-                        utftext += String.fromCharCode((c >> 12) | 224);
-                        utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                        utftext += String.fromCharCode((c & 63) | 128);
+                        send.call(this, ...arg);
                     }
                 }
-                return utftext;
-            };
-            let x = Array();
-            let k, AA, BB, CC, DD, a, b, c, d;
-            let S11 = 7, S12 = 12, S13 = 17, S14 = 22;
-            let S21 = 5, S22 = 9, S23 = 14, S24 = 20;
-            let S31 = 4, S32 = 11, S33 = 16, S34 = 23;
-            let S41 = 6, S42 = 10, S43 = 15, S44 = 21;
-            str = md5_Utf8Encode(str);
-            x = md5_ConvertToWordArray(str);
-            a = 0x67452301;
-            b = 0xEFCDAB89;
-            c = 0x98BADCFE;
-            d = 0x10325476;
-            for (k = 0; k < x.length; k += 16) {
-                AA = a;
-                BB = b;
-                CC = c;
-                DD = d;
-                a = md5_FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
-                d = md5_FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
-                c = md5_FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
-                b = md5_FF(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
-                a = md5_FF(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
-                d = md5_FF(d, a, b, c, x[k + 5], S12, 0x4787C62A);
-                c = md5_FF(c, d, a, b, x[k + 6], S13, 0xA8304613);
-                b = md5_FF(b, c, d, a, x[k + 7], S14, 0xFD469501);
-                a = md5_FF(a, b, c, d, x[k + 8], S11, 0x698098D8);
-                d = md5_FF(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
-                c = md5_FF(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
-                b = md5_FF(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
-                a = md5_FF(a, b, c, d, x[k + 12], S11, 0x6B901122);
-                d = md5_FF(d, a, b, c, x[k + 13], S12, 0xFD987193);
-                c = md5_FF(c, d, a, b, x[k + 14], S13, 0xA679438E);
-                b = md5_FF(b, c, d, a, x[k + 15], S14, 0x49B40821);
-                a = md5_GG(a, b, c, d, x[k + 1], S21, 0xF61E2562);
-                d = md5_GG(d, a, b, c, x[k + 6], S22, 0xC040B340);
-                c = md5_GG(c, d, a, b, x[k + 11], S23, 0x265E5A51);
-                b = md5_GG(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
-                a = md5_GG(a, b, c, d, x[k + 5], S21, 0xD62F105D);
-                d = md5_GG(d, a, b, c, x[k + 10], S22, 0x2441453);
-                c = md5_GG(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
-                b = md5_GG(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
-                a = md5_GG(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
-                d = md5_GG(d, a, b, c, x[k + 14], S22, 0xC33707D6);
-                c = md5_GG(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
-                b = md5_GG(b, c, d, a, x[k + 8], S24, 0x455A14ED);
-                a = md5_GG(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
-                d = md5_GG(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
-                c = md5_GG(c, d, a, b, x[k + 7], S23, 0x676F02D9);
-                b = md5_GG(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
-                a = md5_HH(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
-                d = md5_HH(d, a, b, c, x[k + 8], S32, 0x8771F681);
-                c = md5_HH(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
-                b = md5_HH(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
-                a = md5_HH(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
-                d = md5_HH(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
-                c = md5_HH(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
-                b = md5_HH(b, c, d, a, x[k + 10], S34, 0xBEBFBC70);
-                a = md5_HH(a, b, c, d, x[k + 13], S31, 0x289B7EC6);
-                d = md5_HH(d, a, b, c, x[k + 0], S32, 0xEAA127FA);
-                c = md5_HH(c, d, a, b, x[k + 3], S33, 0xD4EF3085);
-                b = md5_HH(b, c, d, a, x[k + 6], S34, 0x4881D05);
-                a = md5_HH(a, b, c, d, x[k + 9], S31, 0xD9D4D039);
-                d = md5_HH(d, a, b, c, x[k + 12], S32, 0xE6DB99E5);
-                c = md5_HH(c, d, a, b, x[k + 15], S33, 0x1FA27CF8);
-                b = md5_HH(b, c, d, a, x[k + 2], S34, 0xC4AC5665);
-                a = md5_II(a, b, c, d, x[k + 0], S41, 0xF4292244);
-                d = md5_II(d, a, b, c, x[k + 7], S42, 0x432AFF97);
-                c = md5_II(c, d, a, b, x[k + 14], S43, 0xAB9423A7);
-                b = md5_II(b, c, d, a, x[k + 5], S44, 0xFC93A039);
-                a = md5_II(a, b, c, d, x[k + 12], S41, 0x655B59C3);
-                d = md5_II(d, a, b, c, x[k + 3], S42, 0x8F0CCC92);
-                c = md5_II(c, d, a, b, x[k + 10], S43, 0xFFEFF47D);
-                b = md5_II(b, c, d, a, x[k + 1], S44, 0x85845DD1);
-                a = md5_II(a, b, c, d, x[k + 8], S41, 0x6FA87E4F);
-                d = md5_II(d, a, b, c, x[k + 15], S42, 0xFE2CE6E0);
-                c = md5_II(c, d, a, b, x[k + 6], S43, 0xA3014314);
-                b = md5_II(b, c, d, a, x[k + 13], S44, 0x4E0811A1);
-                a = md5_II(a, b, c, d, x[k + 4], S41, 0xF7537E82);
-                d = md5_II(d, a, b, c, x[k + 11], S42, 0xBD3AF235);
-                c = md5_II(c, d, a, b, x[k + 2], S43, 0x2AD7D2BB);
-                b = md5_II(b, c, d, a, x[k + 9], S44, 0xEB86D391);
-                a = md5_AddUnsigned(a, AA);
-                b = md5_AddUnsigned(b, BB);
-                c = md5_AddUnsigned(c, CC);
-                d = md5_AddUnsigned(d, DD);
+                XMLHttpRequest.prototype.addEventListener = function (name, callback) {
+                    if (name == "load") {
+                        this.callBack = this.callBack || [];
+                        this.callBack.push(callback);
+                    }
+                    return addEventListener.call(this, name, callback);
+                }
             }
-            return (md5_WordToHex(a) + md5_WordToHex(b) + md5_WordToHex(c) + md5_WordToHex(d)).toLowerCase();
+            // jsonp hook
+            function jsonp(){
+                const ajax = unsafeWindow.$.ajax;
+                unsafeWindow.$.ajax = function (obj, ...rest) {
+                    if (obj) {
+                        if (obj.dataType == "jsonp") {
+                            let _obj = JSON.parse(JSON.stringify(obj));
+                            if (obj.url.includes("region") && obj.data.rid == 165) {
+                                // 替换广告区rid为资讯区rid
+                                obj.data.rid = 202;
+                                debug.log("JSONP重定向", "替换广告区", [_obj, obj]);
+                            }
+                            if (obj.url.includes('api.bilibili.com/x/web-interface/ranking/index')) {
+                                // 修改置顶推荐
+                                obj.url = obj.url.replace('ranking/index', 'index/top');
+                                debug.log("JSONP重定向", "修复置顶推荐", [_obj, obj]);
+                            }
+                        }
+                    }
+                    return ajax.call(this, obj, ...rest);
+                }
+            }
+            // jsonp非原生调用，先判断jQuery是否载入，以免报错
+            if (unsafeWindow.$ && unsafeWindow.$.ajax) jsonp();
+            else {
+                let timer = setInterval(() => {
+                    // 为不错过任何jsonp，轮循间隔设得有点小
+                    if (unsafeWindow.$) {
+                        clearInterval(timer);
+                        jsonp();
+                    }
+                },10);
+                setTimeout(() => clearInterval(timer), 5000);
+            }
         },
+        // 修改首页直播推荐数据
+        biliIndexRec: (obj, hook = []) => {
+            try {
+                hook.push(JSON.parse(event.target.responseText));
+                let response = event.target.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+                response = JSON.parse(response);
+                response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
+                if (response.data.recommend) {
+                    for (let i = 0; i < response.data.recommend.length; i++) {
+                        response.data.recommend[i].pic = response.data.recommend[i].cover;
+                        response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
+                    }
+                }
+                if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
+                hook.push(response);
+                debug.log("XHR重定向", "修复正在直播", hook);
+                Object.defineProperty(obj, 'response', {writable: true});
+                Object.defineProperty(obj, 'responseText', {writable: true});
+                obj.response = response;
+                obj.responseText = JSON.stringify(response);
+            }
+            catch(e) {debug.error(e)}
+        },
+        // 修改直播数据
+        getRoomPlayInfo: (obj, hook = []) => {
+            if (!config.reset.roomplay) return;
+            try {
+                hook.push(JSON.parse(event.target.responseText));
+                let response = event.target.responseText;
+                response = JSON.parse(response);
+                if (response.data) {
+                    response.data.live_status = 0;
+                    response.data.live_time = -1;
+                    response.data.play_url = null;
+                }
+                hook.push(response);
+                debug.log("XHR重定向", "拦截直播媒体", hook);
+                Object.defineProperty(obj, 'response', {writable: true});
+                Object.defineProperty(obj, 'responseText', {writable: true});
+                obj.response = response;
+                obj.responseText = JSON.stringify(response);
+            }
+            catch(e) {debug.error(e)}
+        },
+        // 生成播放信息
+        carousel: (obj) => {
+            if (!config.reset.carousel) return;
+            try {
+                let msg = deliver.randomArray(API.message, 2);
+                let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
+                let parser = new DOMParser(),
+                    responseXML = parser.parseFromString(xmltext, "text/xml");
+                Object.defineProperty(obj, 'responseXML', {writable: true});
+                obj.responseXML = responseXML;
+            }
+            catch(e) {debug.error(e)}
+        },
+        // 强制载入播放器
+        status: (obj) => {
+            try {
+                let response = JSON.parse(event.target.responseText);
+                if (response.result) {
+                    if (config.reset.limit && response.result.area_limit){
+                        response.result.area_limit = 0;
+                        limit = true;
+                    }
+                    if (response.result.pay) big = 0;
+                    if (!response.result.pay && config.big && response.result.dialog) {
+                        response.result.pay = 1;
+                        big = true;
+                    }
+                    if (limit || big) {
+                        Object.defineProperty(obj, 'response', {writable: true});
+                        Object.defineProperty(obj, 'responseText', {writable: true});
+                        obj.response = response;
+                        obj.responseText = JSON.stringify(response);
+                    }
+                }
+            }
+            catch (e) {debug.log(e)}
+        },
+        // 监听视频地址
+        playinfo: (obj, url) => {
+            try {
+                if (!event.target.response) return;
+                __playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);
+                // 刷新下载面板
+                if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
+            }
+            catch (e) {debug.log(e)}
+        }
+    }
+
+    // MD5接口，修改自百度百科https://baike.baidu.com/item/MD5/212708
+    const md5 = (str) => {
+        let md5_RotateLeft = (lValue, iShiftBits) => (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+        let md5_AddUnsigned = (lX, lY) => {
+            let lX4, lY4, lX8, lY8, lResult;
+            lX8 = (lX & 0x80000000);
+            lY8 = (lY & 0x80000000);
+            lX4 = (lX & 0x40000000);
+            lY4 = (lY & 0x40000000);
+            lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
+            if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+            if (lX4 | lY4) {
+                if (lResult & 0x40000000) return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+                else return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+            }
+            else return (lResult ^ lX8 ^ lY8);
+        }
+        let md5_F = (x, y, z) => (x & y) | ((~x) & z);
+        let md5_G = (x, y, z) => (x & z) | (y & (~z));
+        let md5_H = (x, y, z) => (x ^ y ^ z);
+        let md5_I = (x, y, z) => (y ^ (x | (~z)));
+        let md5_FF = (a, b, c, d, x, s, ac) => {
+            a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_F(b, c, d), x), ac));
+            return md5_AddUnsigned(md5_RotateLeft(a, s), b);
+        };
+        let md5_GG = (a, b, c, d, x, s, ac) => {
+            a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_G(b, c, d), x), ac));
+            return md5_AddUnsigned(md5_RotateLeft(a, s), b);
+        };
+        let md5_HH = (a, b, c, d, x, s, ac) => {
+            a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_H(b, c, d), x), ac));
+            return md5_AddUnsigned(md5_RotateLeft(a, s), b);
+        };
+        let md5_II = (a, b, c, d, x, s, ac) => {
+            a = md5_AddUnsigned(a, md5_AddUnsigned(md5_AddUnsigned(md5_I(b, c, d), x), ac));
+            return md5_AddUnsigned(md5_RotateLeft(a, s), b);
+        };
+        let md5_ConvertToWordArray = (string) => {
+            let lWordCount;
+            let lMessageLength = string.length;
+            let lNumberOfWords_temp1 = lMessageLength + 8;
+            let lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64;
+            let lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16;
+            let lWordArray = Array(lNumberOfWords - 1);
+            let lBytePosition = 0;
+            let lByteCount = 0;
+            while (lByteCount < lMessageLength) {
+                lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+                lBytePosition = (lByteCount % 4) * 8;
+                lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
+                lByteCount++;
+            }
+            lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+            lBytePosition = (lByteCount % 4) * 8;
+            lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
+            lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
+            lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
+            return lWordArray;
+        };
+        let md5_WordToHex = (lValue) => {
+            let WordToHexValue = "",
+                WordToHexValue_temp = "",
+                lByte, lCount;
+            for (lCount = 0; lCount <= 3; lCount++) {
+                lByte = (lValue >>> (lCount * 8)) & 255;
+                WordToHexValue_temp = "0" + lByte.toString(16);
+                WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
+            }
+            return WordToHexValue;
+        };
+        let md5_Utf8Encode = (string) => {
+            string = string.replace(/\r\n/g, "\n");
+            let utftext = "";
+            for (let n = 0; n < string.length; n++) {
+                let c = string.charCodeAt(n);
+                if (c < 128) utftext += String.fromCharCode(c);
+                else if ((c > 127) && (c < 2048)) {
+                    utftext += String.fromCharCode((c >> 6) | 192);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+                else {
+                    utftext += String.fromCharCode((c >> 12) | 224);
+                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                    utftext += String.fromCharCode((c & 63) | 128);
+                }
+            }
+            return utftext;
+        };
+        let x = Array();
+        let k, AA, BB, CC, DD, a, b, c, d;
+        let S11 = 7, S12 = 12, S13 = 17, S14 = 22;
+        let S21 = 5, S22 = 9, S23 = 14, S24 = 20;
+        let S31 = 4, S32 = 11, S33 = 16, S34 = 23;
+        let S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+        str = md5_Utf8Encode(str);
+        x = md5_ConvertToWordArray(str);
+        a = 0x67452301;
+        b = 0xEFCDAB89;
+        c = 0x98BADCFE;
+        d = 0x10325476;
+        for (k = 0; k < x.length; k += 16) {
+            AA = a;
+            BB = b;
+            CC = c;
+            DD = d;
+            a = md5_FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
+            d = md5_FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
+            c = md5_FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
+            b = md5_FF(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
+            a = md5_FF(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
+            d = md5_FF(d, a, b, c, x[k + 5], S12, 0x4787C62A);
+            c = md5_FF(c, d, a, b, x[k + 6], S13, 0xA8304613);
+            b = md5_FF(b, c, d, a, x[k + 7], S14, 0xFD469501);
+            a = md5_FF(a, b, c, d, x[k + 8], S11, 0x698098D8);
+            d = md5_FF(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
+            c = md5_FF(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
+            b = md5_FF(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
+            a = md5_FF(a, b, c, d, x[k + 12], S11, 0x6B901122);
+            d = md5_FF(d, a, b, c, x[k + 13], S12, 0xFD987193);
+            c = md5_FF(c, d, a, b, x[k + 14], S13, 0xA679438E);
+            b = md5_FF(b, c, d, a, x[k + 15], S14, 0x49B40821);
+            a = md5_GG(a, b, c, d, x[k + 1], S21, 0xF61E2562);
+            d = md5_GG(d, a, b, c, x[k + 6], S22, 0xC040B340);
+            c = md5_GG(c, d, a, b, x[k + 11], S23, 0x265E5A51);
+            b = md5_GG(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
+            a = md5_GG(a, b, c, d, x[k + 5], S21, 0xD62F105D);
+            d = md5_GG(d, a, b, c, x[k + 10], S22, 0x2441453);
+            c = md5_GG(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
+            b = md5_GG(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
+            a = md5_GG(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
+            d = md5_GG(d, a, b, c, x[k + 14], S22, 0xC33707D6);
+            c = md5_GG(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
+            b = md5_GG(b, c, d, a, x[k + 8], S24, 0x455A14ED);
+            a = md5_GG(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
+            d = md5_GG(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
+            c = md5_GG(c, d, a, b, x[k + 7], S23, 0x676F02D9);
+            b = md5_GG(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
+            a = md5_HH(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
+            d = md5_HH(d, a, b, c, x[k + 8], S32, 0x8771F681);
+            c = md5_HH(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
+            b = md5_HH(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
+            a = md5_HH(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
+            d = md5_HH(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
+            c = md5_HH(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
+            b = md5_HH(b, c, d, a, x[k + 10], S34, 0xBEBFBC70);
+            a = md5_HH(a, b, c, d, x[k + 13], S31, 0x289B7EC6);
+            d = md5_HH(d, a, b, c, x[k + 0], S32, 0xEAA127FA);
+            c = md5_HH(c, d, a, b, x[k + 3], S33, 0xD4EF3085);
+            b = md5_HH(b, c, d, a, x[k + 6], S34, 0x4881D05);
+            a = md5_HH(a, b, c, d, x[k + 9], S31, 0xD9D4D039);
+            d = md5_HH(d, a, b, c, x[k + 12], S32, 0xE6DB99E5);
+            c = md5_HH(c, d, a, b, x[k + 15], S33, 0x1FA27CF8);
+            b = md5_HH(b, c, d, a, x[k + 2], S34, 0xC4AC5665);
+            a = md5_II(a, b, c, d, x[k + 0], S41, 0xF4292244);
+            d = md5_II(d, a, b, c, x[k + 7], S42, 0x432AFF97);
+            c = md5_II(c, d, a, b, x[k + 14], S43, 0xAB9423A7);
+            b = md5_II(b, c, d, a, x[k + 5], S44, 0xFC93A039);
+            a = md5_II(a, b, c, d, x[k + 12], S41, 0x655B59C3);
+            d = md5_II(d, a, b, c, x[k + 3], S42, 0x8F0CCC92);
+            c = md5_II(c, d, a, b, x[k + 10], S43, 0xFFEFF47D);
+            b = md5_II(b, c, d, a, x[k + 1], S44, 0x85845DD1);
+            a = md5_II(a, b, c, d, x[k + 8], S41, 0x6FA87E4F);
+            d = md5_II(d, a, b, c, x[k + 15], S42, 0xFE2CE6E0);
+            c = md5_II(c, d, a, b, x[k + 6], S43, 0xA3014314);
+            b = md5_II(b, c, d, a, x[k + 13], S44, 0x4E0811A1);
+            a = md5_II(a, b, c, d, x[k + 4], S41, 0xF7537E82);
+            d = md5_II(d, a, b, c, x[k + 11], S42, 0xBD3AF235);
+            c = md5_II(c, d, a, b, x[k + 2], S43, 0x2AD7D2BB);
+            b = md5_II(b, c, d, a, x[k + 9], S44, 0xEB86D391);
+            a = md5_AddUnsigned(a, AA);
+            b = md5_AddUnsigned(b, BB);
+            c = md5_AddUnsigned(c, CC);
+            d = md5_AddUnsigned(d, DD);
+        }
+        return (md5_WordToHex(a) + md5_WordToHex(b) + md5_WordToHex(c) + md5_WordToHex(d)).toLowerCase();
+    }
+
+    // 函数统一接口
+    const deliver = {
+        // 格式化时间戳，默认返回hh：mm：ss；指定type加上yy：mm：dd
         timeFormat : (time,type) => {
-            // 格式化时间戳，默认返回hh：mm：ss；指定type加上yy：mm：dd
             let date = new Date(time);
             let Y = date.getFullYear() + '-';
             let M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -509,8 +825,8 @@
             let s = (date.getSeconds() <10 ? '0' + date.getSeconds() : date.getSeconds());
             return type ? Y + M + D + h +m + s : h + m + s;
         },
+        // 格式化字节，逢千换单位，最高到G字节
         sizeFormat : (size) => {
-            // 格式化字节，逢千换单位，最高到G字节
             let dex = 1024 ** 3, vor = 1000 ** 3, unit = ["B", "K", "M", "G"], i = unit.length - 1;
             while (dex > 1) {
                 if (size >= vor) {
@@ -523,8 +839,8 @@
             }
             return size + unit[i];
         },
+        // 数组冒泡排序，指定rev逆序
         bubbleSort : (arr, rev) => {
-            // 数组冒泡排序，指定rev逆序
             let temp=[];
             rev = rev ? true : false;
             for (let i = 0; i < arr.length - 1; i++) {
@@ -542,8 +858,8 @@
             if (rev) return arr.reverse();
             return arr;
         },
+        // 数组随机提取，num指定随机提取几个
         randomArray: (arr, num) => {
-            // 数组随机提取，num指定随机提取几个
             let out = [];
             num = num || 1;
             num = num < arr.length ? num : arr.length;
@@ -553,8 +869,8 @@
             }
             return out;
         },
+        // bv/av互转，算法见https://www.zhihu.com/question/381784377/answer/1099438784
         convertId: (str) => {
-            // bv/av互转，算法见https://www.zhihu.com/question/381784377/answer/1099438784
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
             let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
             for (let i = 0; i < 58; i++) tr[table[i]] = i;
@@ -572,14 +888,14 @@
                 return r.join("");
             }
         },
+        // key secret，见https://github.com/Henryhaohao/Bilibili_video_download
         sign: () => {
-            // key secret，见https://github.com/Henryhaohao/Bilibili_video_download
             let table = 'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', str = '';
             for (let i = table.length -1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() + 2);
             return str.split(':')
         },
+        // 对象转url的查询部分
         obj2search: (url, obj) => {
-            // 对象转url的查询部分
             if (obj) {
                 let arr = [],i = 0;
                 for (let key in obj) {
@@ -593,8 +909,8 @@
             }
             return url;
         },
+        // cookies对象，通过属性访问键值
         getCookies: () => {
-            // cookies对象，通过属性访问键值
             let cookies = document.cookie.split('; ');
             let obj = cookies.reduce((pre, next) => {
                 let key = next.split('=')[0];
@@ -604,8 +920,8 @@
             }, {});
             return obj;
         },
+        // 转换解码后的protobuf到xml
         toXml : (danmaku, pid) => {
-            // 转换解码后的protobuf到xml
             debug.log("新版弹幕转码成功！");
             return new Promise(function (resolve) {
                 danmaku.sort(function (a, b) {
@@ -625,8 +941,8 @@
                 resolve(new XMLSerializer().serializeToString(dom));
             });
         },
+        // 添加全局样式
         setGlobalStyle: () => {
-            // 添加全局样式
             let csss = API.style.uiface;
             let style = document.createElement("style");
             csss = csss + API.style.online;
@@ -638,317 +954,14 @@
             document.head.appendChild(style);
             style.appendChild(document.createTextNode(csss));
         },
-        intercept: {
-            // xhr hook
-            init: () => {
-                const open = XMLHttpRequest.prototype.open;
-                const send = XMLHttpRequest.prototype.send;
-                const addEventListener = XMLHttpRequest.prototype.addEventListener;
-                // 为了防止pakku.js休眠时，send中主动请求分段的部分被重复调用而设置的标志
-                let onlyRunOneTime = true;
-                XMLHttpRequest.prototype.open = function (method, url, ...rest) {
-                    // 原生xhr hook
-                    let _url = url, hook = [_url, ""];
-                    // 替换视频心跳
-                    if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
-                        url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
-                        debug.log("XHR重定向", [_url, url]);
-                    }
-                    // 修改正在直播
-                    if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) {
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
-                        url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
-                    }
-                    // 修改直播动态
-                    if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) {
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.biliIndexRec(this, hook)});
-                        url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
-                    }
-                    // 修改直播数据
-                    if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) {
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.getRoomPlayInfo(this, hook)});
-                    }
-                    // 修改播放器通知
-                    if (url.includes('api.bilibili.com/x/player/carousel')) {
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.carousel(this)});
-                    }
-                    // 修改区域限制
-                    if (url.includes('bangumi.bilibili.com/view/web_api/season/user/status')) {
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.status(this)});
-                    }
-                    // 监听视频链接
-                    if (url.includes("/playurl?")) {
-                        if (!url.includes("fourk") && !url.includes("sign")) {
-                            url = url.replace("playurl?", "playurl?fourk=1&");
-                            debug.log("XHR重定向", [_url, url]);
-                        }
-                        cid = url.match(/cid=[0-9]*/) ? 1 * url.match(/cid=[0-9]*/)[0].replace(/cid=/,"") : "";
-                        aid = url.match(/avid=[0-9]*/) ? 1 * url.match(/avid=[0-9]*/)[0].replace(/avid=/,"") : "";
-                        pgc = url.includes("pgc") ? true : false;
-                        if (limit) deliver.intercept.playurl(url);
-                        this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) deliver.intercept.playinfo(this, url)});
-                    }
-                    // 修改弹幕链接
-                    if (url.includes("list.so") && config.reset.danmuku) {
-                        // 这时pakku.js已经修改了xhr对象，需要另做处理
-                        if (this.pakku_url) {
-                            onlyRunOneTime = true;
-                            let oid = unsafeWindow.cid;
-                            let pid = unsafeWindow.aid;
-                            // 更改pakku.js请求的url，使它过滤分段弹幕
-                            this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + oid + "&pid=" + pid + "&segment_index=1";
-                            this.responseType = "arraybuffer";
-                            let xhr = this;
-                            let cb = [];
-                            for (let i in this.pakku_load_callback) {
-                                cb[i] = this.pakku_load_callback[i];
-                            }
-                            for (let i in this.pakku_load_callback) {
-                                // 将pakku.js返回的数据转换回xml
-                                this.pakku_load_callback[i] = function () {
-                                    deliver.toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems, pid).then(function (xml) {
-                                        xhr.response = xhr.responseText = xml;
-                                        cb[i].call(xhr);
-                                    });
-                                }
-                            }
-                        } else {
-                            this.reqURL = url;
-                        }
-                    }
-                    return open.call(this, method, url, ...rest);
-                }
-                if (config.reset.danmuku && danmu) {
-                    XMLHttpRequest.prototype.send = function (...arg) {
-                        // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
-                        // (pakku.js正常运行时这个send()不会被调用)
-                        if (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && onlyRunOneTime)) {
-                            if (this.pakku_url && this.pakku_url.includes("seg.so"))onlyRunOneTime = false;
-                            // 对于没有pakku.js的情况，模拟一个xhr响应
-                            Object.defineProperty(this, "response", { writable: true });
-                            Object.defineProperty(this, "responseText", { writable: true });
-                            Object.defineProperty(this, "readyState", { writable: true });
-                            Object.defineProperty(this, "status", { writable: true });
-                            this.readyState = 4;
-                            this.status = 200;
-                            this.abort();
-                            let cid = unsafeWindow.cid;
-                            let pid = unsafeWindow.aid;
-                            let callBack = this.callBack;
-                            let xhr = this;
-                            let protoSegments = [];
-                            getSegConfig().then(getAllSeg);
-                            // 获得所有分段
-                            function getAllSeg(config) {
-                                let total = config.dmSge.total;
-                                let allrequset = [];
-                                for (let index = 1; index <= total; index++) {
-                                    allrequset.push(new Promise(function (resolve) {
-                                        let xhr = new XMLHttpRequest();
-                                        xhr.addEventListener("load", function () {
-                                            // protoSegments.push(xhr.response);
-                                            // 踩到坑：如果分段不是按顺序排列的，播放器内部处理弹幕的时间会从正常的8秒变成30秒（对于40000条弹幕）
-                                            protoSegments[index] = xhr.response;
-                                            resolve();
-                                        });
-                                        xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + pid + "&segment_index=" + index);
-                                        xhr.responseType = "arraybuffer";
-                                        xhr.send();
-                                    }));
-                                }
-                                // 完成所有的网络请求大概要300ms
-                                Promise.all(allrequset).then(function () {
-                                    let Segments = [];
-                                    protoSegments.forEach(function (seg) {
-                                        Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
-                                    });
-                                    deliver.toXml(Segments, pid).then(function (xml) {
-                                        callBack.forEach(function (f) {
-                                            xhr.response = xhr.responseText = xml;
-                                            // 播放器处理12000条弹幕往上就明显感到界面卡顿，40000条更是耗时8秒
-                                            f.call(xhr);
-                                        });
-                                    });
-                                });
-                            }
-                            function getSegConfig() {
-                                return new Promise(function (resolve) {
-                                    let xhr = new XMLHttpRequest();
-                                    xhr.addEventListener("load", function () {
-                                        let res = protoView.decode(new Uint8Array(xhr.response));
-                                        resolve(res);
-                                    });
-                                    xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + cid + "&pid=" + pid);
-                                    xhr.responseType = "arraybuffer";
-                                    xhr.send();
-                                });
-
-                            }
-                        } else {
-                            send.call(this, ...arg);
-                        }
-                    }
-                    XMLHttpRequest.prototype.addEventListener = function (name, callback) {
-                        if (name == "load") {
-                            this.callBack = this.callBack || [];
-                            this.callBack.push(callback);
-                        }
-                        return addEventListener.call(this, name, callback);
-                    }
-                }
-                function jsonp(){
-                    // jsonp hook
-                    const ajax = unsafeWindow.$.ajax;
-                    unsafeWindow.$.ajax = function (obj, ...rest) {
-                        if (obj) {
-                            if (obj.dataType == "jsonp") {
-                                let _obj = JSON.parse(JSON.stringify(obj));
-                                if (obj.url.includes("region") && obj.data.rid == 165) {
-                                    // 替换广告区rid为资讯区rid
-                                    obj.data.rid = 202;
-                                    debug.log("JSONP重定向", [_obj, obj]);
-                                }
-                                if (obj.url.includes('api.bilibili.com/x/web-interface/ranking/index')) {
-                                    // 修改置顶推荐
-                                    obj.url = obj.url.replace('ranking/index', 'index/top');
-                                    debug.log("JSONP重定向", [_obj, obj]);
-                                }
-                            }
-                        }
-                        return ajax.call(this, obj, ...rest);
-                    }
-                }
-                // jsonp非原生调用，先判断jQuery是否载入，以免报错
-                if (unsafeWindow.$ && unsafeWindow.$.ajax) jsonp();
-                else {
-                    let timer = setInterval(() => {
-                        // 为不错过任何jsonp，轮循间隔设得有点小
-                        if (unsafeWindow.$) {
-                            clearInterval(timer);
-                            jsonp();
-                        }
-                    },10);
-                    setTimeout(() => clearInterval(timer), 5000);
-                }
-            },
-            biliIndexRec: (obj, hook = []) => {
-                // 修改首页直播推荐数据
-                try {
-                    hook.push(JSON.parse(event.target.responseText));
-                    let response = event.target.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
-                    response = JSON.parse(response);
-                    response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
-                    if (response.data.recommend) {
-                        for (let i = 0; i < response.data.recommend.length; i++) {
-                            response.data.recommend[i].pic = response.data.recommend[i].cover;
-                            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-                        }
-                    }
-                    if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
-                    hook.push(response);
-                    debug.log("XHR重定向", "修改返回值", hook);
-                    Object.defineProperty(obj, 'response', {writable: true});
-                    Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response = response;
-                    obj.responseText = JSON.stringify(response);
-                }
-                catch(e) {debug.error(e)}
-            },
-            getRoomPlayInfo: (obj, hook = []) => {
-                // 修改直播数据
-                if (!config.reset.roomplay) return;
-                try {
-                    hook.push(JSON.parse(event.target.responseText));
-                    let response = event.target.responseText;
-                    response = JSON.parse(response);
-                    if (response.data) {
-                        response.data.live_status = 0;
-                        response.data.live_time = -1;
-                        response.data.play_url = null;
-                    }
-                    hook.push(response);
-                    debug.log("XHR重定向", "修改返回值", hook);
-                    Object.defineProperty(obj, 'response', {writable: true});
-                    Object.defineProperty(obj, 'responseText', {writable: true});
-                    obj.response = response;
-                    obj.responseText = JSON.stringify(response);
-                }
-                catch(e) {debug.error(e)}
-            },
-            carousel: (obj) => {
-                // 生成播放信息
-                if (!config.reset.carousel) return;
-                try {
-                    let msg = deliver.randomArray(API.message, 2);
-                    let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
-                    let parser = new DOMParser(),
-                        responseXML = parser.parseFromString(xmltext, "text/xml");
-                    Object.defineProperty(obj, 'responseXML', {writable: true});
-                    obj.responseXML = responseXML;
-                }
-                catch(e) {debug.error(e)}
-            },
-            status: (obj) => {
-                // 解除区域限制
-                if (!config.reset.limit) return;
-                try {
-                    let response = JSON.parse(event.target.responseText);
-                    if (response.result && response.result.area_limit) {
-                        response.result.area_limit = 0;
-                        limit = true;
-                        Object.defineProperty(obj, 'response', {writable: true});
-                        Object.defineProperty(obj, 'responseText', {writable: true});
-                        obj.response = response;
-                        obj.responseText = JSON.stringify(response);
-                    }
-                }
-                catch (e) {debug.log(e)}
-            },
-            playurl: (url) => {
-                // 视频地址重定向
-                try {
-                    debug.log("区域限制", "拉取视频播放地址中", "aid=", aid, "cid=", cid);
-                    __playinfo__ = xhr.false(API.url.BPplayurl + "?" + url.split("?")[1] + "&module=pgc&balh_ajax=1");
-                }
-                catch (e) {
-                    __playinfo__ = undefined;
-                    debug.msg("拉取视频播放地址失败 ಥ_ಥ");
-                }
-            },
-            playinfo: (obj, url) => {
-                // 监听视频地址
-                try {
-                    if (limit && __playinfo__) {
-                        // 替换视频地址
-                        let response = JSON.parse(event.target.responseText);
-                        response.code = 0;
-                        response.message = "success";
-                        response.result = JSON.parse(__playinfo__);
-                        Object.defineProperty(obj, 'response', {writable: true});
-                        Object.defineProperty(obj, 'responseText', {writable: true});
-                        __playinfo__ = response;
-                        obj.response = response;
-                        obj.responseText = JSON.stringify(response);
-                    }
-                    else {
-                        // 记录视频地址
-                        if (!event.target.response) return;
-                        __playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);
-                    }
-                    // 刷新下载面板
-                    if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
-                }
-                catch (e) {debug.log(e)}
-            }
-        },
+        // 重写网页
         write : (html) => {
-            // 重写网页
             document.open();
             document.write(html);
             document.close();
         },
+        // 重写版面
         reSction: () => {
-            // 重写版面
             if (!config.reset.grobalboard) return;
             document.getElementById("internationalHeader").setAttribute("style", "visibility:hidden;");
             let newh = document.createElement("div");
@@ -972,10 +985,10 @@
             }
             window.setTimeout(() => {deliver.resetNodes()}, 3000);
         },
+        // 下载视频
         download: {
-            // 下载视频
+            // 创建播放器右键菜单
             init : (node) => {
-                // 创建播放器右键菜单
                 if (!config.reset.download) return;
                 let li = document.createElement("li");
                 let div = document.createElement("a");
@@ -987,8 +1000,8 @@
                 node.firstChild.appendChild(li);
                 div.onclick = deliver.download.setTable;
             },
+            // 配置下载数据
             setTable: async () => {
-                // 配置下载数据
                 debug.msg("正在获取视频链接", ">>>");
                 let qua = {120 : "4K", 112 : "1080P+", 80 : "1080P", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
@@ -997,7 +1010,7 @@
                 try {
                     if (url && url.durl) {
                         mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
-                        navigator.clipboard.writeText(url.durl[0]);
+                        navigator.clipboard.writeText(url.durl[0].url);
                     }
                     else debug.log("获取mp4文件失败", "code:", 200600);
                     if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
@@ -1011,7 +1024,7 @@
                             }
                             else {
                                 mdf.flv = [];
-                                for (let i = 0; i < path.durl.length; i++) mdf.flv.push(["part " + path.durl[i].order, path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
+                                for (let i = 0; i < path.durl.length; i++) mdf.flv.push([qua[path.quality] + "*" + path.durl[i].order, path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size), qua[path.quality]]);
                             }
                         }
                         if (path.dash) {
@@ -1044,8 +1057,8 @@
                 }
                 catch(e) {debug.error(e)}
             },
+            // 拉取mp4链接
             geturl: async (...arg) => {
-                // 拉取mp4链接
                 let url = deliver.download.playurl(...arg);
                 if (!url) return;
                 try {
@@ -1054,8 +1067,8 @@
                 }
                 catch(e) {debug.error(e);}
             },
+            // 配置视频链接
             playurl: (qn, type) => {
-                // 配置视频链接
                 let obj = {}
                 let sign = deliver.sign();
                 aid = aid ? aid : unsafeWindow.aid;
@@ -1071,18 +1084,18 @@
                         else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
                         break;
                     case 'off' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: qn, quality: qn, type: ''}
-                        obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
+                        obj.sign = md5(deliver.obj2search("", obj) + sign[1]);
                         return deliver.obj2search(API.url.sign, obj);
                         break;
                     case 'mp4' : obj = {appkey: sign[0], cid: cid, otype: 'json', platform: 'android_i', qn: 208}
-                        obj.sign = deliver.md5(deliver.obj2search("", obj) + sign[1]);
+                        obj.sign = md5(deliver.obj2search("", obj) + sign[1]);
                         if (pgc) return deliver.obj2search(API.url.pgcproj, obj);
                         return deliver.obj2search(API.url.proj, obj);
                         break;
                 }
             },
+            // 创建下载面板
             item: () => {
-                // 创建下载面板
                 let timer, top = document.getElementById("bili-old-download-table");
                 if (top) top.remove();
                 if (!mdf.mp4 && !mdf.flv && !mdf.dash) {debug.msg("未找到任何视频链接 ಥ_ಥ"); return;}
@@ -1140,16 +1153,16 @@
                 top.onmouseout = () => {timer = window.setTimeout(() => top.remove(), 1000)};
             }
         },
+        // 切p相关
         switchVideo: () => {
-            // 切p相关
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
             if (config.reset.download) {url = "";mdf = {};};
             if (!config.reset.selectdanmu) return;
             let danmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
             if (danmu) danmu.click();
         },
+        // 付费预览
         removePreview: (node) => {
-            // 付费预览
             if (!config.reset.preview) return;
             let hint = document.getElementsByClassName("video-float-hint-btn")[0];
             // 倒计时长度，单位：秒
@@ -1168,8 +1181,8 @@
             }
             new cut();
         },
+        // 超链接转化
         avdesc : () => {
-            // 超链接转化
             if (!config.rewrite.video || !aid) return;
             let desc = document.getElementsByClassName("info");
             if (LOCATION[3] != 'video' || !window.hd) return;
@@ -1182,8 +1195,8 @@
                 }
             }
         },
+        // 节点监听
         resetNodes : (ext) => {
-            // 节点监听
             let remove = (node, type, hidden, index) => {
                 index ? index : index = 0;
                 switch(type){
@@ -1221,10 +1234,10 @@
                 if (blur[0]) blur[0].removeAttribute("style");
             }
         },
+        // 失效分区
         fixSort: {
-            // 失效分区
+            // av
             video: () => {
-                // av分区
                 let timer = window.setInterval(()=>{
                     let tminfo = document.getElementsByClassName("tm-info");
                     if (tminfo[0]) {
@@ -1242,8 +1255,8 @@
                     }
                 },1000);
             },
+            // 稍后再看
             watchlater : (data) => {
-                // 稍后再看分区
                 let timer = window.setInterval(async ()=>{
                     let tminfo = document.getElementsByClassName("tm-info");
                     // 判断是否是少后再看页面
@@ -1271,8 +1284,8 @@
                 },1000);
             },
         },
+        // 点赞功能
         setLike: (data) => {
-            // 点赞功能
             if (!config.reset.like) return;
             let timer = window.setInterval(async () => {
                 let coin = document.getElementsByClassName("bilibili-player-video-subtitle")[0];
@@ -1356,9 +1369,9 @@
                 }
             },100);
         },
+        // 收藏播放
         setMediaList: {
             init: async (data) => {
-                // 收藏播放
                 if (!ml) {
                     // 判断是正常av页还是收藏播放页
                     if (!__playinfo__.data || !__playinfo__.data.accept_quality) return;
@@ -1443,8 +1456,8 @@
                     catch(e) {debug.error(e)}
                 }
             },
+            // aid变化监听
             fixvar: () => {
-                // aid变化监听
                 if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
                 if (oid) {
                     if (oid != unsafeWindow.aid) {
@@ -1455,8 +1468,8 @@
                     }
                 }
             },
+            // 收藏播放更新
             restore: () => {
-                // 收藏播放更新
                 let data;
                 history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash);
                 for (let i=0;i<ids.length;i++) if (ids[i].aid==aid) data = ids[i];
@@ -1517,9 +1530,9 @@
                 },100);
             },
         },
+        // 分集数据
         setBangumi: {
             init: (data) => {
-                // 分集数据
                 if (!config.reset.episodedata) return;
                 // 判断是否有分集数据
                 if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) {
@@ -1534,8 +1547,8 @@
                     window.setTimeout(() => window.clearInterval(timer), 10000);
                 }
             },
+            // 分集数据处理
             episodeData: async (data, msg) => {
-                // 分集数据处理
                 try {
                     let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
                     let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
@@ -1567,8 +1580,8 @@
                 catch(e) {debug.error(e)}
             },
         },
+        // 跳转完后的播单处理
         setPlayList: () => {
-            // 跳转完后的播单处理
             window.onload = () => {
                 let div = document.createElement("div");
                 div.setAttribute("class","z-top-container has-menu");
@@ -1583,8 +1596,8 @@
                 style.appendChild(document.createTextNode(API.style.bofqi));
             }
         },
+        // 在线数据，接口失效
         setOnline: () => {
-            // 在线数据，接口失效
             let timer = window.setInterval(async () => {
                 let online = document.getElementsByClassName("online")[0];
                 if (online) {
@@ -1637,8 +1650,8 @@
                 }
             },1000);
         },
+        // 注册时间
         setJoinTime: async () => {
-            // 注册时间
             if (!mid && !config.reset.jointime) return;
             let data = await xhr.GM(deliver.obj2search(API.url.membercard,{"mid": mid}));
             try {
@@ -1672,10 +1685,11 @@
             }
             catch(e) {debug.error(e)}
         },
+        // 失效视频
         fixVideoLost: {
-            // 失效视频
+            // 收藏里的失效视频
             favlist: async (msg, data) => {
-                // 收藏里的失效视频，src判定是否为频道并取消重复处理
+                // src判定是否为频道并取消重复处理
                 if (!config.reset.lostvideo || window.src) return;
                 // 获取av号或者将bv转为av
                 let title, cover, aid = msg.target.getAttribute("data-aid");
@@ -1719,8 +1733,8 @@
                 msg.target.firstChild.setAttribute("target", "_blank");
                 msg.target.firstChild.setAttribute("class", "cover cover-normal");
             },
+            // 频道里的失效视频
             channel: async (link) => {
-                // 频道里的失效视频
                 if (!config.reset.lostvideo || !src) return;
                 try {
                     let cid, mid, pn, data;
@@ -1773,8 +1787,8 @@
                 }
                 catch(e) {debug.error(e)}
             },
+            // 空间首页展示的失效视频
             home: (msg) => {
-                // 空间首页展示的失效视频
                 if (!config.reset.lostvideo) return;
                 let channel_item = document.getElementsByClassName("channel-item");
                 if (channel_item[0]) {
@@ -1815,8 +1829,8 @@
                 if (msg.target.className == "small-item disabled") msg.target.className = "small-item";
             }
         },
+        // 评论楼层
         setReplyFloor: async (link) => {
-            // 评论楼层
             src = "";
             if (!config.reset.replyfloor) return;
             try {
@@ -1883,8 +1897,8 @@
             }
             catch(e) {debug.error(e)}
         },
+        // 广告区转资讯区
         fixnews: (node, move) => {
-            // 广告区转资讯区
             try {
                 let rank = config.reset.grobalboard ? document.getElementsByClassName("rank-tab")[0] : "";
                 if (node.id == "bili_ad") {
@@ -1923,10 +1937,10 @@
         }
     }
 
+    // 设置界面
     const UI = {
-        // 设置界面
+        // 设置入口
         init: () => {
-            // 设置入口
             let ui_face = document.createElement("div");
             let enter = document.createElement("span");
             let icon = document.createElement("i");
@@ -1951,8 +1965,8 @@
                 }
             }, 1000);
         },
+        // 设置面板
         table: () => {
-            // 设置面板
             let table = document.getElementsByClassName("ui-table")[0];
             let timer;
             if (!table) {
@@ -1988,8 +2002,8 @@
                 }, 500);
             }
         },
+        // 设置选项
         setTable: (ele, name, check, key) => {
-            // 设置选项
             let div = document.createElement("div");
             let span = document.createElement("span");
             let input = document.createElement("input");
@@ -2024,8 +2038,8 @@
             }
             div.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
         },
+        // 设置内容及说明，基本与config一一对应
         menu: {
-            // 设置选项数据，与默认设置数据一一对应
             av : ["av(BV)", "启用旧版av页面"],
             bangumi : ["Bangumi", "启用旧版番剧页面"],
             watchlater : ["稍后再看", "启用旧版稍后再看页面"],
@@ -2054,10 +2068,10 @@
         }
     }
 
+    // 页面分离
     const thread = {
-        // 页面分离
+        // av/BV
         video: () => {
-            // av/BV
             try {
                 // 判断是否收藏跳转而来
                 ml = GM_getValue("medialist");
@@ -2093,8 +2107,8 @@
             }
             catch(e) {debug.error(e)}
         },
+        // 稍后再看
         watchlater: () => {
-            // 稍后再看
             if (!config.rewrite.watchlater || !uid) return;
             // 重写王爷框架并调用后续处理
             danmu = 1;
@@ -2109,8 +2123,8 @@
                 history.replaceState(null,null,LOCATION.join("/"));
             }
         },
+        // 番剧
         bangumi: () => {
-            // 番剧
             try {
                 if (!config.rewrite.bangumi && !config.reset.download) return;
                 // 指定playurl类型
@@ -2136,8 +2150,8 @@
             }
             catch(e) {debug.error(e)}
         },
+        // 嵌入
         blackboard: () => {
-            // 嵌入
             // 修复HTML5播放器帮助页视频cid错误
             danmu = 1;
             if (LOCATION[4].startsWith('html5player')) if (LOCATION[4].includes("3521416") && LOCATION[4].includes("6041635")) location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":3521416,"cid":192446449}));
@@ -2155,16 +2169,16 @@
                 debug.log("嵌入播放器", "aid=" + aid, " cid=" + cid);
             }
         },
+        // 播单
         playlist: () => {
-            // 播单
             // 保存播单号并跳转到收藏
             if (!config.rewrite.playlist) return;
             pl = 1 * LOCATION[5].match(/[0-9]+/)[0];
             GM_setValue("playlist", pl);
             location.replace("https://www.bilibili.com/medialist/play/ml182603655");
         },
+        // 收藏
         medialist: () => {
-            // 收藏
             danmu = 1;
             if (LOCATION[5].startsWith("ml")) {
                 ml = 1 * LOCATION[5].match(/[0-9]+/)[0];
@@ -2188,20 +2202,20 @@
             // 新版稍后再看跳转到旧版稍后再看
             if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); // 重定向稍后再看
         },
+        // 静态av
         svideo: () => {
-            // 静态av
-            // 直接跳转会普通av
+            // 直接跳转回普通av
             if (!config.reset.static) return;
             location.replace(location.href.replace("s/video", "video"));
         },
+        // 空间
         space: () => {
-            // 空间
             // 调用注册时间处理
             mid = LOCATION[3] ? 1 * LOCATION[3] : mid;
             deliver.setJoinTime();
         },
+        // 主页
         home: () => {
-            // 主页
             if (config.rewrite.home) {
                 try {
                     window.home = 1;
@@ -2229,6 +2243,8 @@
     }
     else GM_setValue("config",config);
     try {
+        // ？！ // @connect、跨域报错
+        big = config.big === 2 ? 1 : 0;
         // 关闭Worker才能hook到弹幕
         if (config.reset.danmuku) unsafeWindow.Worker = null;
         // 关闭show_bv
@@ -2276,7 +2292,7 @@
     // 一次性调用：设置入口绘制、全局样式创建、xhrhook
     if (window.self == window.top) UI.init();
     deliver.setGlobalStyle();
-    deliver.intercept.init();
+    intercept.init();
     // DOM修改监听调用
     document.addEventListener("DOMNodeInserted",(msg) => {
         // 去除预览提示框
