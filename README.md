@@ -43,9 +43,9 @@
 ---
 ### 关于设置
 - 设置入口设计得比较隐蔽以保护原生页面
-- 入口在页面右下角2~3厘米处，鼠标移过会自动显现
+- 入口在页面右下角2~3厘米处鼠标移过会自动显现
 - 大部分设置都需要刷新才会生效
-- 设置数据存储在脚本管理器中，与cookies无关
+- 设置数据存储在脚本管理器中与cookies无关
 - [这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例") 能解决所有设置相关问题
 
 ---
@@ -67,48 +67,65 @@
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 84.0.4147.89 (正式版本) （64 位） (cohort: Stable)  
+> Google Chrome 84.0.4147.105 (正式版本) （64 位） (cohort: Stable)  
 > Tampermonkey BETA 4.10.6117
 >
  
-注：**已确定Firefox 79存在兼容问题！**  
-旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
-- DOM的数据被覆盖
-- DOM的回调失效：如`addEventListener`、`document.onclick`
-- `GM_setValue()`方法失效
-- **注1：只针对以`run-at document-start`注入脚本**
-- **注2：只针对启用了旧版框架的页面**
-- **注3：window的属性和方法等不会失效**
+平台兼容问题：
+   - **Firefox最新版(79)旧版框架启用失败，原因不明，之前的版本没问题**  
 
-附上测试结果供参考：
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：**基本正常**
-   + `GM_setValue`失效，在旧版页面无法修改设置
-   + “简化主页”冲突，使旧版主页布局紊乱
-   + 旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”
-   + 快捷键拓展未适配，在旧版页面部分快捷键无效
+代码兼容问题：  
+- 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
+   - DOM的数据被覆盖
+   - DOM的回调失效：如`addEventListener`、`document.onclick`
+   - `GM_setValue()`方法失效
+   - **注1：只针对以`run-at document-start`注入脚本**
+   - **注2：只针对启用了旧版框架的页面**
+   - **注3：window的属性和方法等不会失效**
+
+附上测试结果：
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：**基本正常**  
+   `GM_setValue`失效，在旧版页面无法修改设置  
+   “简化主页”冲突，使旧版主页布局紊乱  
+   旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”  
+   快捷键拓展未适配，在旧版页面部分快捷键无效
 - [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：**完全正常**
-- [解除B站区域限制](https://greasyfork.org/scripts/25718)：**基本正常**
-   + 旧版UI未适配，无法在旧版页面调出设置
-   + **若要同时使用请关闭本脚本“区域限制”选项！**
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：**完全正常**
-   + 初次使用可能会报错：“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决
-   + **推荐安装以让旧版播放器支持CC字幕**
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：**完全正常**
-   + 推荐以`run-at document-start`注入
-   + 推荐只在需要时启用该脚本
+- [解除B站区域限制](https://greasyfork.org/scripts/25718)：**基本正常**  
+   旧版UI未适配，无法在旧版页面调出设置  
+   **若要同时使用请关闭本脚本“区域限制”选项！**
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：**完全正常**  
+   初次使用可能会报错：“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决  
+   **推荐安装以让旧版播放器支持CC字幕**
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：**完全正常**  
+   推荐以`run-at document-start`注入  
+   推荐只在需要时启用该脚本
 - [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：**完全正常**
 - [IDM Integration Module](http://www.internetdownloadmanager.com)：**下载浮动条失效 ಥ_ಥ**
 - [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：**完全正常**
 - [smoothscroll](http://iamdustan.com/smoothscroll/)：**平滑滚动失效 ಥ_ಥ**
 
 ---
+### 隐私相关
+1. 脚本在实现部分功能时可能会读取您的部分信息
+   - cookies：与B站后端进行交互时默认带上了cookies以让B站识别用户身份
+      + uid：用于判断是否登录，以修复动态等
+      + bili_jct：用于与B站后端进行校验，实现点赞功能
+2. 脚本申请了`GM_xmlhttpRequest`权限只用于获取第三方数据，参见元数据`@connect`
+   - [BiliPlus](https://www.biliplus.com/)：获取缓存的视频标题和封面等信息
+   - [Bilibilijj](https://www.jijidown.com/)：获取缓存的视频标题和封面等信息
+   - [bilibili](https://www.bilibili.com)：同域名下的不同主机(如 www.bilibili.com 与 space.bilibili.com )，B站可能并未开通[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限，也只能采用GM实现跨域
+3. 脚本引用了部分公开库，用于无法自己独立实现的功能
+   - [protobuf](https://github.com/protobufjs/protobuf.js)：用于将新版proto弹幕转码为旧版播放器能识别的xml弹幕
+
+---
 ### 参考致谢
+- JavaScript库：[protobuf](https://github.com/protobufjs/protobuf.js)
 - 旧版网页框架来源：[Wayback Machine](https://archive.org/web/)
 - 脚本原型来源及指导：[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)
 - 第三方数据接口来源：[BiliPlus](https://www.biliplus.com/)、[Bilibilijj](https://www.jijidown.com/)
 - 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)
 - BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)
-- 页面原生调用及新版弹幕转码：[wly5556](https://greasyfork.org/users/217840)
+- 新版弹幕转码来源：[wly5556](https://greasyfork.org/users/217840)
 - README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)
 - 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
 - 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
@@ -121,6 +138,9 @@
 ### 效果预览
 ![Bangumi](https://camo.githubusercontent.com/1802bb815c3f624f636b0ee71554a7b3816f1801/68747470733a2f2f73312e617831782e636f6d2f323032302f30342f30372f4767774576392e706e67)
 ### 版本历史
+- 2020-08-05
+   + 下载面板flv类型也显示画质
+   + 优化脚本结构和注释便于维护
 - 2020-08-04
    + 实现旧版播放器支持新版弹幕 (感谢wly5556)
 - 2020-08-03
