@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.1
+// @version      3.3.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -66,7 +66,7 @@
             roomplay: 0,
             history: 0
         },
-        big: 0
+        big: 1
     }
 
     // 统一api接口
@@ -1201,7 +1201,7 @@
         },
         // 超链接转化
         avdesc : async () => {
-            if (!config.rewrite.video || !aid) return;
+            if (!config.rewrite.av || !aid) return;
             let desc = document.getElementsByClassName("info");
             if (LOCATION[3] != 'video' || !window.hd) return;
             if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
