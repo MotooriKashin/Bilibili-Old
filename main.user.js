@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.2
+// @version      3.3.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1184,23 +1184,26 @@
         },
         // 付费预览
         removePreview: async (node) => {
-            if (!config.reset.preview) return;
-            let hint = document.getElementsByClassName("video-float-hint-btn")[0];
-            // 倒计时长度，单位：秒
-            let i = 10;
-            let sec = document.createElement("span");
-            sec.setAttribute("class", "video-float-hint-btn second-cut");
-            hint.parentNode.appendChild(sec);
-            function cut(){
-                sec.innerText = i - 1 + "s";
-                if (i==0) {
-                    node.remove();
-                    return;
+            try {
+                if (!config.reset.preview) return;
+                let hint = document.getElementsByClassName("video-float-hint-text")[0];
+                // 倒计时长度，单位：秒
+                let i = 10;
+                let sec = document.createElement("span");
+                sec.setAttribute("class", "video-float-hint-btn second-cut");
+                hint.parentNode.appendChild(sec);
+                function cut(){
+                    sec.innerText = i - 1 + "s";
+                    if (i==0) {
+                        node.remove();
+                        return;
+                    }
+                    i = i - 1;
+                    window.setTimeout(cut,1000);
                 }
-                i = i - 1;
-                window.setTimeout(cut,1000);
+                new cut();
             }
-            new cut();
+            catch(e) {debug.error(e)}
         },
         // 超链接转化
         avdesc : async () => {
@@ -1857,54 +1860,133 @@
                     oid = obj.oid,
                     sort = obj.sort,
                     pn = obj.pn,
+                    root = obj.root,
                     type = obj.type;
                 // sort与mode对应转化，sort == 1时暂时处理不了直接退出
+                // 热门：sort=2 mode=3 时间：sort=0 mode=2  回复：sort=1 默认(热门+时间) mode=1
                 if (sort == 0) mode = 1;
                 if (sort == 1) return;
                 if (sort == 2) mode = 3;
-                // 热门：sort=2 mode=3 时间：sort=0 mode=2  回复：sort=1 默认(热门+时间) mode=1
-                if (sort == 2) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": pn,"type": type,"mode": mode}));
-                else if (pn == 1) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"type": type,"mode": mode}));
+                let list_item = document.getElementsByClassName("reply-wrap");
+                let main_floor = document.getElementsByTagName("li");
+                // 展开楼中楼的楼层号其实就是顺序排列
+                if (root) {
+                    // 延时100ms，等楼中楼展开完
+                    setTimeout( () => {
+                        if (main_floor[0]) {
+                            let x = (pn - 1) * 10 + 1;
+                            for (let i = 0; i < main_floor.length; i++) {
+                                if (main_floor[i].id && main_floor[i].id.includes("l_id") && !main_floor[i].getElementsByClassName("floor-num")[0]) {
+                                    let rpid = main_floor[i].getAttribute("id").split('_')[2];
+                                    let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
+                                    let span = document.createElement("span");
+                                    span.setAttribute("class", "floor-num");
+                                    span.setAttribute("style", "float: left;color: #aaa;padding-right: 10px;");
+                                    span.innerText = "#" + x;
+                                    node.insertBefore(span,node.firstChild);
+                                    x++;
+                                }
+                            }
+                        }
+                        if (list_item[0]) {
+                            let x = (pn - 1) * 10 + 1;
+                            for (let i = 0; i < list_item.length; i++) {
+                                if (!list_item[i].getElementsByClassName("floor")[0]) {
+                                    let node = list_item[i].getElementsByClassName("info")[0];
+                                    let span = document.createElement("span");
+                                    span.setAttribute("class", "floor");
+                                    span.innerText = "#" + x;
+                                    node.insertBefore(span,node.firstChild);
+                                    x++;
+                                }
+                            }
+                        }
+                    }, 100)
+                }
                 else {
-                    // 时间排序的楼层号需要相对前页判定
-                    pn = pn - 1;
-                    data = await xhr.true(deliver.obj2search(API.url.reply, {"type": type,"sort": sort,"oid": oid,"pn": pn}));
-                    data = JSON.parse(data).data;
-                    let i = data.replies.length - 1;
-                    oid = data.replies[0].oid;
-                    let root = data.replies[i].rpid;
-                    data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
-                    data = JSON.parse(data).data;
-                    oid = data.root.oid;
-                    let next = data.root.floor;
-                    data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": next,"type": type,"mode": mode}));
-                }
-                data = JSON.parse(data).data;
-                let floor = {}, top = data.top, hots = data.hots, replies = data.replies;
-                let list_item = document.getElementsByClassName("list-item");
-                let main_floor = document.getElementsByClassName("main-floor");
-                if (hots && hots[0]) for (let i = 0; i < hots.length; i++) floor[hots[i].rpid] = hots[i].floor;
-                if (replies && replies[0]) for (let i = 0;i < replies.length; i++) floor[replies[i].rpid] = replies[i].floor;
-                if (top && top.admin) floor[top.admin.rpid] = top.admin.floor;
-                if (top && top.upper) floor[top.upper.rpid] = top.upper.floor;
-                if (top && top.vote) floor[top.vote.rpid] = top.vote.floor;
-                if (main_floor[0]) {
-                    // 旧版评论直接写入楼层号
-                    for (let i = 0; i < main_floor.length; i++) {
-                        let rpid = main_floor[i].getAttribute("id").split('_')[2];
-                        if (rpid in floor) main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
+                    if (sort == 2) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": pn,"type": type,"mode": mode}));
+                    else if (pn == 1) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"type": type,"mode": mode}));
+                    else {
+                        // 时间排序的楼层号需要相对前页判定
+                        pn = pn - 1;
+                        data = await xhr.true(deliver.obj2search(API.url.reply, {"type": type,"sort": sort,"oid": oid,"pn": pn}));
+                        data = JSON.parse(data).data;
+                        let i = data.replies.length - 1;
+                        oid = data.replies[0].oid;
+                        let root = data.replies[i].rpid;
+                        data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
+                        data = JSON.parse(data).data;
+                        oid = data.root.oid;
+                        let next = data.root.floor;
+                        data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": next,"type": type,"mode": mode}));
                     }
-                }
-                if (list_item[0]) {
+                    data = JSON.parse(data).data;
+                    let floor = {}, top = data.top, hots = data.hots, replies = data.replies, froot = data.root;
+                    if (hots && hots[0]) {
+                        for (let i = 0; i < hots.length; i++) {
+                            floor[hots[i].rpid] = hots[i].floor;
+                            if (hots[i].replies) {
+                                for (let j = 0; j < hots[i].replies.length; j++) {
+                                    floor[hots[i].replies[j].rpid] = hots[i].replies[j].floor;
+                                }
+                            }
+                        }
+                    }
+                    if (replies && replies[0]) {
+                        for (let i = 0;i < replies.length; i++) {
+                            floor[replies[i].rpid] = replies[i].floor;
+                            if (replies[i].replies) {
+                                for (let j = 0; j < replies[i].replies.length; j++) {
+                                    floor[replies[i].replies[j].rpid] = replies[i].replies[j].floor;
+                                }
+                            }
+                        }
+                    }
+                    if (top) {
+                        for (let key in top) {
+                            if (top[key]) {
+                                floor[top[key].rpid] = top[key].floor;
+                                if (top[key].replies) {
+                                    for (let i = 0; i < top[key].replies.length; i++) {
+                                        floor[top[key].replies[i].rpid] = top[key].replies[i].floor;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (froot && froot.replies) for (let i = 0; i < froot.replies.length; i++) floor[froot.replies[i].rpid] = froot.replies[i].floor;
+                    // 旧版评论直接写入楼层号
+                    if (main_floor[0]) {
+                        for (let i = 0; i < main_floor.length; i++) {
+                            if (main_floor[i].id && main_floor[i].id.includes("l_id")) {
+                                let rpid = main_floor[i].getAttribute("id").split('_')[2];
+                                if (rpid in floor) {
+                                    try {
+                                        main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
+                                    }
+                                    catch (e) {
+                                        let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
+                                        let span = document.createElement("span");
+                                        span.setAttribute("class", "floor-num");
+                                        span.setAttribute("style", "float: left;color: #aaa;padding-right: 10px;");
+                                        span.innerText = "#" + floor[rpid];
+                                        node.insertBefore(span,node.firstChild);
+                                    }
+                                }
+                            }
+                        }
+                    }
                     // 新版评论需另外创建楼层号
-                    for (let i = 0; i<list_item.length; i++) {
-                        let rpid = list_item[i].getAttribute("data-id");
-                        if (rpid in floor) {
-                            let node = list_item[i].getElementsByClassName("info")[0];
-                            let span = document.createElement("span");
-                            span.setAttribute("class", "floor");
-                            span.innerText = "#" + floor[rpid];
-                            node.insertBefore(span,node.firstChild);
+                    if (list_item[0]) {
+                        for (let i = 0; i<list_item.length; i++) {
+                            let rpid = list_item[i].getAttribute("data-id");
+                            if (rpid in floor) {
+                                let node = list_item[i].getElementsByClassName("info")[0];
+                                let span = document.createElement("span");
+                                span.setAttribute("class", "floor");
+                                span.innerText = "#" + floor[rpid];
+                                node.insertBefore(span,node.firstChild);
+                            }
                         }
                     }
                 }
@@ -2344,7 +2426,7 @@
         // 创建播放器右键下载菜单
         if (/bilibili-player-context-menu-container/.test(msg.target.className)) deliver.download.init(msg.target);
         // 捕获评论链接
-        if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply?')) src = msg.target.src;
+        if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply') && msg.target.src.includes("oid")) src = msg.target.src;
         // 捕获频道视频链接
         if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) window.src = src = msg.target.src;
         // 修复失效频道视频
@@ -2356,7 +2438,7 @@
         // 失效分区转换
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") deliver.fixnews(msg.target);
         // 修复评论楼层
-        if (src && msg.target.className && (msg.target.className == "main-floor" || msg.target.className == "list-item reply-wrap ")) deliver.setReplyFloor(src);
+        if (src && ((msg.target.id && msg.target.id.includes("l_id")) || (msg.target.className && msg.target.className.includes("reply-wrap")))) deliver.setReplyFloor(src);
         // 其他节点监听
         deliver.resetNodes();
         // 收藏页切p监听
