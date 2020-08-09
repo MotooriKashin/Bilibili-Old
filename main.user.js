@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.4
+// @version      3.3.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -110,6 +110,7 @@
             replymain: "https://api.bilibili.com/x/v2/reply/main", // oid, type, mode &| next
             reply: "https://api.bilibili.com/x/v2/reply", // type,sort,oid,pn
             replycursor: "https://api.bilibili.com/x/v2/reply/reply/cursor", // oid, root, type &| sort
+            replydialog: "https://api.bilibili.com/x/v2/reply/dialog/cursor",
             membercard: "https://account.bilibili.com/api/member/getCardByMid", // mid
             season: "https://bangumi.bilibili.com/view/web_api/season", // season_id || ep_id
             pagelist: "https://api.bilibili.com/x/player/pagelist", // aid
@@ -128,11 +129,38 @@
         },
         // 未识别分区对照表
         sort: {
-            202: [202,"资讯", "https://www.bilibili.com/v/information/"],
-            203: [202,"热点", "https://www.bilibili.com/v/information/hotspot/"],
-            204: [202,"环球", "https://www.bilibili.com/v/information/global/"],
-            205: [202,"社会", "https://www.bilibili.com/v/information/social/"],
-            206: [202,"综合", "https://www.bilibili.com/v/information/multiple/"]
+            1: [1, "动画", "https://www.bilibili.com/v/douga/"],
+            3: [3, "音乐", "https://www.bilibili.com/v/music/"],
+            29: [3, "音乐现场", "https://www.bilibili.com/v/music/live"],
+            36: [36, "科技", "https://www.bilibili.com/v/technology"],
+            86: [1, "特摄", "https://www.bilibili.com/v/douga/"],
+            95: [188, "手机平板", "https://www.bilibili.com/v/digital/mobile/"],
+            129: [129, "舞蹈", "https://www.bilibili.com/v/dance"],
+            155: [155, "时尚", "https://www.bilibili.com/v/fashion"],
+            160: [160, "生活", "https://www.bilibili.com/v/life"],
+            168: [168, "国创", "https://www.bilibili.com/guochuang"],
+            176: [160, "汽车", "https://www.bilibili.com/v/life/automobile"],
+            188: [188, "数码", "https://www.bilibili.com/v/digital"],
+            189: [188, "电脑装机", "https://www.bilibili.com/v/digital/pc"],
+            190: [188, "数码摄影", "https://www.bilibili.com/v/digital/photography"],
+            191: [188, "影音智能", "https://www.bilibili.com/v/digital/intelligence_av"],
+            192: [155, "风尚标", "https://www.bilibili.com/v/fashion/trends"],
+            193: [3, "MV", "https://www.bilibili.com/v/music/mv"],
+            194: [3, "电音", "https://www.bilibili.com/v/music/electronic"],
+            195: [168, "动态漫·广播剧", "https://www.bilibili.com/v/guochuang/motioncomic"],
+            198: [129, "街舞", "https://www.bilibili.com/v/dance/hiphop"],
+            199: [129, "明星舞蹈", "https://www.bilibili.com/v/dance/star"],
+            200: [129, "中国舞", "https://www.bilibili.com/v/dance/china"],
+            201: [36, "科学科普", "https://www.bilibili.com/v/technology/science"],
+            202: [202, "资讯", "https://www.bilibili.com/v/information/"],
+            203: [202, "热点", "https://www.bilibili.com/v/information/hotspot/"],
+            204: [202, "环球", "https://www.bilibili.com/v/information/global/"],
+            205: [202, "社会", "https://www.bilibili.com/v/information/social/"],
+            206: [202, "综合", "https://www.bilibili.com/v/information/multiple/"],
+            207: [36, "财经", "https://www.bilibili.com/v/technology/finance"],
+            208: [36, "校园学习", "https://www.bilibili.com/v/technology/campus"],
+            209: [36, "职业职场", "https://www.bilibili.com/v/technology/career"],
+            210: [1, "手办·模玩", "https://www.bilibili.com/v/douga/garage_kit"]
         },
         // 播放器通知
         message: [
@@ -152,7 +180,8 @@
         msg: (msg, warn, delay) => {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
             warn = warn ? warn : "";
-            if (!node) {debug.log(msg, warn);return;}
+            debug.log(msg, warn);
+            if (!node) return;
             let item = document.createElement("div");
             let text = document.createElement("div");
             let span = document.createElement("span");
@@ -528,6 +557,11 @@
                                 // 替换广告区rid为资讯区rid
                                 obj.data.rid = 202;
                                 debug.log("JSONP重定向", "替换广告区", [_obj, obj]);
+                            }
+                            if (obj.url.includes("region") && obj.data.original == 1) {
+                                // 替换原创排行为全部排行
+                                obj.data.original = 0;
+                                debug.log("JSONP重定向", "修复原创排行", [_obj, obj]);
                             }
                             if (obj.url.includes('api.bilibili.com/x/web-interface/ranking/index')) {
                                 // 修改置顶推荐
@@ -1869,15 +1903,62 @@
                 if (sort == 2) mode = 3;
                 let list_item = document.getElementsByClassName("reply-wrap");
                 let main_floor = document.getElementsByTagName("li");
-                // 展开楼中楼的楼层号其实就是顺序排列
+                // 展开楼中楼的楼层号
                 if (root) {
-                    data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
-                    if (pn > 2) {
-                        for (let i = 1; i < Math.ceil(pn/2); i++) {
-                            data = JSON.parse(data).data
-                            let min_id = data.root.replies[data.root.replies.length - 1].floor + 1;
-                            data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type, "min_id": min_id}));
+                    // 前两页直接获取
+                    if (pn < 2) data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
+                    else {
+                        // 3页以上先获取当页首条评论rpid
+                        let dialog;
+                        if (list_item[0]) {
+                            for (let i = 0; i < list_item.length; i++) {
+                                if (list_item[i].getAttribute("data-id") == root) {
+                                    list_item = list_item[i].getElementsByClassName("reply-wrap");
+                                    if (list_item[0]) {
+                                        for (let j = 0; j < list_item.length; j++) {
+                                            if (!list_item[j].getElementsByClassName("floor")[0]) {
+                                                dialog = list_item[j].getAttribute("data-id");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
                         }
+                        else if (main_floor[0]) {
+                            for (let i = 0; i < main_floor.length; i++) {
+                                if (main_floor[i].getAttribute("id") && main_floor[i].getAttribute("id").includes(root)) {
+                                    main_floor = main_floor[i].getElementsByTagName("li");
+                                    if (main_floor[0]) {
+                                        for (let j = 0; j < main_floor.length; j++) {
+                                            if (main_floor[j].id && main_floor[j].id.includes("l_id") && !main_floor[j].getElementsByClassName("floor-num")[0]) {
+                                                dialog = main_floor[j].getAttribute("id").split('_')[2];
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        // 根据当页首条评论rpid获取min_id
+                        data = await xhr.true(deliver.obj2search(API.url.replydialog, {"oid": oid,"root": root,"type": type, "dialog": dialog, "size": 20}));
+                        let min_id = JSON.parse(data).data.replies;
+                        if (min_id) {
+                            for (let i = 0; i < min_id.length; i++) {
+                                if (min_id[i].rpid == dialog) {
+                                    min_id = min_id[i].floor;
+                                    break;
+                                }
+                            }
+                        }
+                        else {
+                            debug.msg("当前页楼中楼层获取失败 ಥ_ಥ");
+                            return;
+                        }
+                        // 根据min_id获取当页数据
+                        data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type, "min_id": min_id}));
                     }
                 }
                 else {
@@ -1998,6 +2079,7 @@
                                 let sight = node[i].parentNode.parentNode.children[1];
                                 sight.insertBefore(move, sight.lastChild)
                             }
+                            if (node[i].textContent == "娱乐") node[i].parentNode.parentNode.children[1].lastChild.remove();
                         }
                     }
                 }
@@ -2123,7 +2205,7 @@
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新"],
             limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※应该不支持大会员番剧<br>※使用同类脚本请关闭此选项"],
             grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
-            replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外"],
+            replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
             headblur : ["顶栏透明", "使旧版顶栏全透明"],
             preview : ["付费预览", "去除播放器左下角付费预览框"],
             jointime : ["注册时间", "在个人空间显示B站账号注册时间，依赖主人开放个人资料"],
