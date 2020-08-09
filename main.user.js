@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.5
+// @version      3.3.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1085,26 +1085,30 @@
                         if (path.dash) {
                             // 获取DASH
                             mdf.dash = {}
-                            for (let i = 0; i < path.dash.video.length; i++) {
-                                // 获取视频流
-                                if (path.dash.video[i].codecs.startsWith("avc")) {
-                                    if (!mdf.dash.avc) mdf.dash.avc = [];
-                                    mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
-                                }
-                                else {
-                                    if (!mdf.dash.hev) mdf.dash.hev = [];
-                                    mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                            if (path.dash.video) {
+                                for (let i = 0; i < path.dash.video.length; i++) {
+                                    // 获取视频流
+                                    if (path.dash.video[i].codecs.startsWith("avc")) {
+                                        if (!mdf.dash.avc) mdf.dash.avc = [];
+                                        mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                                    }
+                                    else {
+                                        if (!mdf.dash.hev) mdf.dash.hev = [];
+                                        mdf.dash.hev.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8)]);
+                                    }
                                 }
                             }
-                            for (let i = 0; i < path.dash.audio.length; i++) {
-                                // 获取音频流
-                                if (!mdf.dash.aac) mdf.dash.aac = [];
-                                mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
+                            if (path.dash.audio) {
+                                for (let i = 0; i < path.dash.audio.length; i++) {
+                                    // 获取音频流
+                                    if (!mdf.dash.aac) mdf.dash.aac = [];
+                                    mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), deliver.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8)]);
+                                }
+                                // 倒序音频
+                                mdf.dash.aac = deliver.bubbleSort(mdf.dash.aac, true);
+                                // 标注大概码率
+                                for (let i = 0; i < mdf.dash.aac.length; i++) if (mdf.dash.aac[i][0] in bps) mdf.dash.aac[i][0] = bps[mdf.dash.aac[i][0]];
                             }
-                            // 倒序音频
-                            mdf.dash.aac = deliver.bubbleSort(mdf.dash.aac, true);
-                            // 标注大概码率
-                            for (let i = 0; i < mdf.dash.aac.length; i++) if (mdf.dash.aac[i][0] in bps) mdf.dash.aac[i][0] = bps[mdf.dash.aac[i][0]];
                         }
                     }
                     deliver.download.item();
