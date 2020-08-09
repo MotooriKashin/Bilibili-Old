@@ -2244,7 +2244,7 @@
 
                 }
                 else {
-                    DOCUMENT = document.head.outerHTML + document.body.outerHTML;
+                    DOCUMENT = document.head.outerHTML;
                     __INITIAL_STATE__ = unsafeWindow.__INITIAL_STATE__;
                 }
                 // 判断页面是否会自动重定向或者404
