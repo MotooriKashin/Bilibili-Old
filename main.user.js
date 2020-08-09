@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.3
+// @version      3.3.4
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1871,37 +1871,14 @@
                 let main_floor = document.getElementsByTagName("li");
                 // 展开楼中楼的楼层号其实就是顺序排列
                 if (root) {
-                    // 延时100ms，等楼中楼展开完
-                    setTimeout( () => {
-                        if (main_floor[0]) {
-                            let x = (pn - 1) * 10 + 1;
-                            for (let i = 0; i < main_floor.length; i++) {
-                                if (main_floor[i].id && main_floor[i].id.includes("l_id") && !main_floor[i].getElementsByClassName("floor-num")[0]) {
-                                    let rpid = main_floor[i].getAttribute("id").split('_')[2];
-                                    let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
-                                    let span = document.createElement("span");
-                                    span.setAttribute("class", "floor-num");
-                                    span.setAttribute("style", "float: left;color: #aaa;padding-right: 10px;");
-                                    span.innerText = "#" + x;
-                                    node.insertBefore(span,node.firstChild);
-                                    x++;
-                                }
-                            }
+                    data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
+                    if (pn > 2) {
+                        for (let i = 1; i < Math.ceil(pn/2); i++) {
+                            data = JSON.parse(data).data
+                            let min_id = data.root.replies[data.root.replies.length - 1].floor + 1;
+                            data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type, "min_id": min_id}));
                         }
-                        if (list_item[0]) {
-                            let x = (pn - 1) * 10 + 1;
-                            for (let i = 0; i < list_item.length; i++) {
-                                if (!list_item[i].getElementsByClassName("floor")[0]) {
-                                    let node = list_item[i].getElementsByClassName("info")[0];
-                                    let span = document.createElement("span");
-                                    span.setAttribute("class", "floor");
-                                    span.innerText = "#" + x;
-                                    node.insertBefore(span,node.firstChild);
-                                    x++;
-                                }
-                            }
-                        }
-                    }, 100)
+                    }
                 }
                 else {
                     if (sort == 2) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": pn,"type": type,"mode": mode}));
@@ -1920,73 +1897,73 @@
                         let next = data.root.floor;
                         data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": next,"type": type,"mode": mode}));
                     }
-                    data = JSON.parse(data).data;
-                    let floor = {}, top = data.top, hots = data.hots, replies = data.replies, froot = data.root;
-                    if (hots && hots[0]) {
-                        for (let i = 0; i < hots.length; i++) {
-                            floor[hots[i].rpid] = hots[i].floor;
-                            if (hots[i].replies) {
-                                for (let j = 0; j < hots[i].replies.length; j++) {
-                                    floor[hots[i].replies[j].rpid] = hots[i].replies[j].floor;
+                }
+                data = JSON.parse(data).data;
+                let floor = {}, top = data.top, hots = data.hots, replies = data.replies, froot = data.root;
+                if (hots && hots[0]) {
+                    for (let i = 0; i < hots.length; i++) {
+                        floor[hots[i].rpid] = hots[i].floor;
+                        if (hots[i].replies) {
+                            for (let j = 0; j < hots[i].replies.length; j++) {
+                                floor[hots[i].replies[j].rpid] = hots[i].replies[j].floor;
+                            }
+                        }
+                    }
+                }
+                if (replies && replies[0]) {
+                    for (let i = 0;i < replies.length; i++) {
+                        floor[replies[i].rpid] = replies[i].floor;
+                        if (replies[i].replies) {
+                            for (let j = 0; j < replies[i].replies.length; j++) {
+                                floor[replies[i].replies[j].rpid] = replies[i].replies[j].floor;
+                            }
+                        }
+                    }
+                }
+                if (top) {
+                    for (let key in top) {
+                        if (top[key]) {
+                            floor[top[key].rpid] = top[key].floor;
+                            if (top[key].replies) {
+                                for (let i = 0; i < top[key].replies.length; i++) {
+                                    floor[top[key].replies[i].rpid] = top[key].replies[i].floor;
                                 }
                             }
                         }
                     }
-                    if (replies && replies[0]) {
-                        for (let i = 0;i < replies.length; i++) {
-                            floor[replies[i].rpid] = replies[i].floor;
-                            if (replies[i].replies) {
-                                for (let j = 0; j < replies[i].replies.length; j++) {
-                                    floor[replies[i].replies[j].rpid] = replies[i].replies[j].floor;
-                                }
-                            }
-                        }
-                    }
-                    if (top) {
-                        for (let key in top) {
-                            if (top[key]) {
-                                floor[top[key].rpid] = top[key].floor;
-                                if (top[key].replies) {
-                                    for (let i = 0; i < top[key].replies.length; i++) {
-                                        floor[top[key].replies[i].rpid] = top[key].replies[i].floor;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (froot && froot.replies) for (let i = 0; i < froot.replies.length; i++) floor[froot.replies[i].rpid] = froot.replies[i].floor;
-                    // 旧版评论直接写入楼层号
-                    if (main_floor[0]) {
-                        for (let i = 0; i < main_floor.length; i++) {
-                            if (main_floor[i].id && main_floor[i].id.includes("l_id")) {
-                                let rpid = main_floor[i].getAttribute("id").split('_')[2];
-                                if (rpid in floor) {
-                                    try {
-                                        main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
-                                    }
-                                    catch (e) {
-                                        let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
-                                        let span = document.createElement("span");
-                                        span.setAttribute("class", "floor-num");
-                                        span.setAttribute("style", "float: left;color: #aaa;padding-right: 10px;");
-                                        span.innerText = "#" + floor[rpid];
-                                        node.insertBefore(span,node.firstChild);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // 新版评论需另外创建楼层号
-                    if (list_item[0]) {
-                        for (let i = 0; i<list_item.length; i++) {
-                            let rpid = list_item[i].getAttribute("data-id");
+                }
+                if (froot && froot.replies) for (let i = 0; i < froot.replies.length; i++) floor[froot.replies[i].rpid] = froot.replies[i].floor;
+                // 旧版评论直接写入楼层号
+                if (main_floor[0]) {
+                    for (let i = 0; i < main_floor.length; i++) {
+                        if (main_floor[i].id && main_floor[i].id.includes("l_id")) {
+                            let rpid = main_floor[i].getAttribute("id").split('_')[2];
                             if (rpid in floor) {
-                                let node = list_item[i].getElementsByClassName("info")[0];
-                                let span = document.createElement("span");
-                                span.setAttribute("class", "floor");
-                                span.innerText = "#" + floor[rpid];
-                                node.insertBefore(span,node.firstChild);
+                                try {
+                                    main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
+                                }
+                                catch (e) {
+                                    let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
+                                    let span = document.createElement("span");
+                                    span.setAttribute("class", "floor-num");
+                                    span.setAttribute("style", "float: left;color: #aaa;padding-right: 10px;");
+                                    span.innerText = "#" + floor[rpid];
+                                    node.insertBefore(span,node.firstChild);
+                                }
                             }
+                        }
+                    }
+                }
+                // 新版评论需另外创建楼层号
+                if (list_item[0]) {
+                    for (let i = 0; i<list_item.length; i++) {
+                        let rpid = list_item[i].getAttribute("data-id");
+                        if (rpid in floor) {
+                            let node = list_item[i].getElementsByClassName("info")[0];
+                            let span = document.createElement("span");
+                            span.setAttribute("class", "floor");
+                            span.innerText = "#" + floor[rpid];
+                            node.insertBefore(span,node.firstChild);
                         }
                     }
                 }
