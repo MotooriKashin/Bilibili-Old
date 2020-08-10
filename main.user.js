@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.6
+// @version      3.3.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -45,6 +45,7 @@
             medialist: 1,
         },
         reset: {
+            xhrhook: 1,
             danmuku: 1,
             limit: 0,
             grobalboard: 1,
@@ -2208,10 +2209,12 @@
                 if (input.checked) {
                     if (key in config.rewrite) config.rewrite[key] = 1;
                     else config.reset[key] = 1;
+                    if (!config.reset.xhrhook && key != "xhrhook" && UI.menu[key][1].includes("xhrhook")) debug.msg("xhrhook已关闭，[" + UI.menu[key][0] + "]部分功能启用失败")
                 }
                 else {
                     if (key in config.rewrite) config.rewrite[key] = 0;
                     else config.reset[key] = 0;
+                    if (key == "xhrhook") debug.msg("xhrhook已关闭，部分功能无法生效！")
                 }
             }
             // 鼠标移出隐藏并保存设置
@@ -2230,11 +2233,11 @@
             bangumi : ["Bangumi", "启用旧版番剧页面，基于旧版网页框架"],
             watchlater : ["稍后再看", "启用旧版稍后再看页面，基于旧版网页框架"],
             frame : ["嵌入", "替换嵌入式播放器，不会单独适配被嵌入页面的其他功能"],
-            home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区"],
+            home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区<br>※部分功能依赖xhrhook"],
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
-            danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新"],
-            limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项"],
+            danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新<br>※依赖xhrhook"],
+            limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
             grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
             headblur : ["顶栏透明", "使旧版顶栏全透明"],
@@ -2246,12 +2249,13 @@
             episodedata : ["分集数据", "让番剧显示分集的播放数和弹幕数，原来总计数据显示在鼠标焦点的浮动信息上"],
             like : ["点赞功能", "为旧版播放页面添加点赞功能，点赞是新版页面专属功能，功能简陋，不支持一键三联"],
             static : ["静态页面", "将静态页面跳转到普通页面以启用旧版页面，静态页面是新版新增页面，页面大部分信息都内置于页面中以加快载入速度"],
-            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>※详见脚本简介"],
-            heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用"],
-            carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息"],
-            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
-            roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量，其他功能不受影响"],
-            history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"]
+            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>※部分功能依赖xhrhook<br>※详见脚本简介"],
+            heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用<br>※依赖xhrhook"],
+            carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息<br>※依赖xhrhook"],
+            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……<br>※依赖xhrhook"],
+            roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决<br>※依赖xhrhook"],
+            history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史<br>※依赖xhrhook"],
+            xhrhook : ["xhrhook", "一些功能使用xhrhook实现，这里提供一个开关供部分特殊情况下关闭，使用这些功能不建议关闭本开关：<br>※旧版主页·失效分区修复/广告移除<br>※新版弹幕<br>※解除区域限制<br>※下载视频·链接捕获<br>※视频心跳替换<br>※播放通知生成<br>※直播流拦截<br>※播放历史只显示视频"]
         }
     }
 
@@ -2486,7 +2490,7 @@
     // 创建全局样式
     deliver.setGlobalStyle();
     // 启用xhr hook
-    intercept.init();
+    if (config.reset.xhrhook) intercept.init();
     // DOM修改监听调用
     document.addEventListener("DOMNodeInserted",(msg) => {
         // 去除预览提示框
