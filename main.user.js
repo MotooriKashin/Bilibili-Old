@@ -32,9 +32,8 @@
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
-    // 脚本默认设置：0 - 关闭，1 - 开启，2 - ？！
+    // 脚本默认设置：0 - 关闭，1 - 开启
     // 一般直接修改这里无效，脚本读取的是管理器中的数据
-    // 个别无法在设置界面调整的选项才能在这里修改并生效
     const config = {
         rewrite: {
             av: 1,
@@ -47,7 +46,7 @@
         },
         reset: {
             danmuku: 1,
-            limit: 1,
+            limit: 0,
             grobalboard: 1,
             replyfloor: 1,
             headblur: 0,
@@ -216,10 +215,7 @@
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
                 xhr.withCredentials = true;
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response)
-                    else reject({status: xhr.status, statusText: xhr.statusText})
-                };
+                xhr.onload = () => resolve(xhr.response);
                 xhr.onerror = () => reject({status: xhr.status, statusText: xhr.statusText})
                 xhr.send();
             });
@@ -228,7 +224,7 @@
         GM: (url) => {
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
-                    method : 'GET',
+                    method : "GET",
                     url    : url,
                     onload : (response) => resolve(response.responseText),
                     onerror : (status) => reject(status)
@@ -243,10 +239,7 @@
                 xhr.open('post', url, true);
                 xhr.setRequestHeader("Content-type", header);
                 xhr.withCredentials = true;
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.response)
-                    else reject({status: xhr.status,statusText: xhr.statusText})
-                };
+                xhr.onload = () => resolve(xhr.response);
                 xhr.onerror = () => reject({status: xhr.status, statusText: xhr.statusText})
                 xhr.send(data);
             });
@@ -1118,14 +1111,14 @@
                         }
                         else {
                             mdf.xml = [];
-                            mdf.xml.push(["弹幕", "//api.bilibili.com/x/v1/dm/list.so?oid=" + cid, "--"]);
+                            mdf.xml.push(["弹幕", "//api.bilibili.com/x/v1/dm/list.so?oid=" + cid, "--------"]);
                         }
                         // 获取其他
                         if (__INITIAL_STATE__) {
                             mdf.xml = mdf.xml || [];
-                            mdf.xml.push(["封面", (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.pic || __INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), "--"]);
-                            if (__INITIAL_STATE__.mediaInfo && __INITIAL_STATE__.mediaInfo.bkg_cover) mdf.xml.push(["海报", __INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), "--"]);
-                            if (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.subtitle && __INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < __INITIAL_STATE__.videoData.subtitle.list.length; i++) mdf.xml.push([__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, __INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), "--"]);
+                            mdf.xml.push(["封面", (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.pic || __INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), "--------"]);
+                            if (__INITIAL_STATE__.mediaInfo && __INITIAL_STATE__.mediaInfo.bkg_cover) mdf.xml.push(["海报", __INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), "--------"]);
+                            if (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.subtitle && __INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < __INITIAL_STATE__.videoData.subtitle.list.length; i++) mdf.xml.push([__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, __INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), "--------"]);
                         }
                     }
                     deliver.download.item();
@@ -1213,7 +1206,7 @@
                         let s = document.createElement("div");
                         q.innerHTML = obj[i][0];
                         obj[i][0] = "弹幕" || "封面" ? "av" + aid : obj[i][0];
-                        name = obj[i][2] == "--" ? "" : name;
+                        name = obj[i][2] == "--------" ? "" : name;
                         a.setAttribute("download", obj[i][0] + name);
                         a.setAttribute("href", obj[i][1]);
                         q.setAttribute("class", "download-quality " + quatily);
@@ -2233,15 +2226,15 @@
         },
         // 设置内容及说明，基本与config一一对应
         menu: {
-            av : ["av(BV)", "启用旧版av页面"],
-            bangumi : ["Bangumi", "启用旧版番剧页面"],
-            watchlater : ["稍后再看", "启用旧版稍后再看页面"],
+            av : ["av(BV)", "启用旧版av页面，基于旧版网页框架"],
+            bangumi : ["Bangumi", "启用旧版番剧页面，基于旧版网页框架"],
+            watchlater : ["稍后再看", "启用旧版稍后再看页面，基于旧版网页框架"],
             frame : ["嵌入", "替换嵌入式播放器，不会单独适配被嵌入页面的其他功能"],
-            home : ["主页", "启用旧版主页，广告区已失效并替换为资讯区"],
+            home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区"],
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新"],
-            limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※应该不支持大会员番剧<br>※使用同类脚本请关闭此选项"],
+            limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项"],
             grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
             headblur : ["顶栏透明", "使旧版顶栏全透明"],
@@ -2251,9 +2244,9 @@
             bvid2av : ["BV⇒av", "让所有页面能使用av号的地方尽量使用av号(未能完全覆盖)<br>进入bv页面自动跳转到av页面(不会重载页面)"],
             selectdanmu : ["弹幕优先", "让旧版播放器优先展示弹幕列表而不是推荐视频"],
             episodedata : ["分集数据", "让番剧显示分集的播放数和弹幕数，原来总计数据显示在鼠标焦点的浮动信息上"],
-            like : ["点赞", "为旧版播放页面添加点赞功能，点赞是新版页面专属功能，功能简陋，不支持一键三联"],
+            like : ["点赞功能", "为旧版播放页面添加点赞功能，点赞是新版页面专属功能，功能简陋，不支持一键三联"],
             static : ["静态页面", "将静态页面跳转到普通页面以启用旧版页面，静态页面是新版新增页面，页面大部分信息都内置于页面中以加快载入速度"],
-            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>avc：h.264视频轨，拓展名.m4v<br>hev：h.265视频轨，拓展名.m4v<br>aac：音频轨，拓展名.m4a<br>※DASH/flv可能需要自行合并，工具推荐ffmpeg、MKVToolNix……<br>※DASH视/音频分开，视频(avc/hev)选择一种编码中的一档画质，音频(aac)选择一种码率，两者合并才是一个完整视频<br>※flv为当前播放器选择的画质，所有分段连在一起才是一个完整视频<br>※颜色对应画质：紫1080P+|红1080P|黄720P|蓝480P|绿360P"],
+            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>※详见脚本简介"],
             heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用"],
             carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息"],
             adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
