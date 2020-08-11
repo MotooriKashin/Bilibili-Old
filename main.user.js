@@ -1210,6 +1210,7 @@
                         name = obj[i][2] == "--------" ? "" : name;
                         a.setAttribute("download", obj[i][0] + name);
                         a.setAttribute("href", obj[i][1]);
+                        a.setAttribute("target", "_blank");
                         q.setAttribute("class", "download-quality " + quatily);
                         s.setAttribute("class", "download-size");
                         s.innerHTML = obj[i][2];
@@ -1229,7 +1230,7 @@
                 }
                 if (mdf.xml) addBox(mdf.xml, "其他", "download-xml", "360P");
                 document.body.appendChild(top);
-                debug.msg("右键另存为或右键IDM下载", "详见设置", 3000);
+                debug.msg("右键另存为或右键IDM下载", "详见脚本简介", 3000);
                 top.onmouseover = () => window.clearTimeout(timer);
                 top.onmouseout = () => {timer = window.setTimeout(() => {
                     top.remove();
