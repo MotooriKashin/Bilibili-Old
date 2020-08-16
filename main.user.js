@@ -65,7 +65,7 @@
             adloc: 0,
             roomplay: 0,
             history: 0,
-            electric: 1
+            electric: 0
         },
     }
 
