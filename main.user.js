@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.8
+// @version      3.3.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -64,7 +64,8 @@
             carousel: 0,
             adloc: 0,
             roomplay: 0,
-            history: 0
+            history: 0,
+            electric: 1
         },
     }
 
@@ -72,7 +73,7 @@
     const API = {
         // 网页框架
         pageframe: {
-            watchlater: '<!DOCTYPE html><html><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="spm_prefix" content="333.342"/><link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="viewlater-app"><app></app></div><div class="footer bili-footer"></div><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script></body></html>',
+            watchlater: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="spm_prefix" content="333.342"/><link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="viewlater-app"><app></app></div><div class="footer bili-footer"></div><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script></body></html>',
             playlist: '<!DOCTYPE html><html><head><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=333.44><link rel=stylesheet href=//static.hdslb.com/phoenix/dist/css/comment.min.css type=text/css><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=0><link href=//s1.hdslb.com/bfs/static/jinkela/playlist-video/css/playlist_video.0.87292febba67b03f65d05c15d03e325d9db4f56a.css rel=stylesheet><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div id=playlist-video-app></div><div class="footer bili-footer report-wrap-module"></div><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js></script><script type=text/javascript src=//static.hdslb.com/js/jquery.qrcode.min.js></script><script type=text/javascript charset=utf-8 src=//static.hdslb.com/common/js/footer.js></script><script type=text/javascript src=//static.hdslb.com/js/swfobject.js></script><script type=text/javascript src=//static.hdslb.com/js/video.min.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/moxie.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/plupload.js></script><script type=text/javascript src=//static.hdslb.com/phoenix/dist/js/comment.min.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script></body></html>',
             bangumi: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" /></head><body><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true" class="main-container"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
             cinema: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" /></head><body><div class="z-top-container " style="height:42px"></div><div id="app" data-server-rendered="true" class="main-container special"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
@@ -434,12 +435,12 @@
                 }
                 return open.call(this, method, url, ...rest);
             }
-            // 只在视频页hook `XMLHttpRequest.prototype.send`
-            if (config.reset.danmuku) {
+            // 部分功能依赖hook `XMLHttpRequest.prototype.send`
+            if (config.reset.xhrhook) {
                 XMLHttpRequest.prototype.send = async function (...arg) {
                     // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
                     // (pakku.js正常运行时这个send()不会被调用)
-                    if (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && onlyRunOneTime)) {
+                    if (config.reset.danmuku && (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && onlyRunOneTime))) {
                         if (this.pakku_url && this.pakku_url.includes("seg.so"))onlyRunOneTime = false;
                         // 对于没有pakku.js的情况，模拟一个xhr响应
                         Object.defineProperty(this, "response", { writable: true });
@@ -1016,7 +1017,10 @@
             let foot = document.getElementsByClassName("international-footer");
             script.setAttribute("type", "text/javascript");
             script.setAttribute("src", "//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
-            if(document.getElementsByClassName("mini-type")[0]) newh.setAttribute("class", "z-top-container");
+            if(document.getElementsByClassName("mini-type")[0]) {
+                if (location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list")) newh.setAttribute("class", "z-top-container has-menu");
+                else newh.setAttribute("class", "z-top-container");
+            }
             else newh.setAttribute("class", "z-top-container has-menu");
             document.body.insertBefore(newh,document.body.firstChild);
             document.body.insertBefore(script,document.body.firstChild);
@@ -1119,6 +1123,7 @@
                             mdf.xml = mdf.xml || [];
                             mdf.xml.push(["封面", (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.pic || __INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), "--------"]);
                             if (__INITIAL_STATE__.mediaInfo && __INITIAL_STATE__.mediaInfo.bkg_cover) mdf.xml.push(["海报", __INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), "--------"]);
+                            if (__INITIAL_STATE__.mediaInfo && __INITIAL_STATE__.mediaInfo.specialCover) mdf.xml.push(["海报", __INITIAL_STATE__.mediaInfo.specialCover.replace("http:", ""), "--------"]);
                             if (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.subtitle && __INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < __INITIAL_STATE__.videoData.subtitle.list.length; i++) mdf.xml.push([__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, __INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), "--------"]);
                         }
                     }
@@ -1274,9 +1279,8 @@
         },
         // 超链接转化
         avdesc : async () => {
-            if (!config.rewrite.av || !aid) return;
+            if (!config.rewrite.av || !aid || LOCATION[3] != 'video') return;
             let desc = document.getElementsByClassName("info");
-            if (LOCATION[3] != 'video' || !window.hd) return;
             if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
                 let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
                 for (let i = 0; i < paster.length; i++){
@@ -1314,9 +1318,9 @@
             // 移除失效版头
             remove("bili-header-m", "class", false, 1);
             // 移除主页昨日榜
-            if (window.home) remove("rec-btn prev", "class");
+            if (window.recbtn) remove("rec-btn prev", "class");
             // 移除主页七日榜
-            if (window.home) remove("rec-btn next", "class");
+            if (window.recbtn) remove("rec-btn next", "class");
             // 移除双重视频下载右键菜单
             if (document.getElementsByClassName("bili-old-download")[1]) document.getElementsByClassName("bili-old-download")[0].remove();
             // 使顶栏透明
@@ -2122,6 +2126,16 @@
                 }
             }
             catch(e) {debug.error("分区·版面", e)}
+        },
+        electricPanelJump: async (node) => {
+            try {
+                if (!config.reset.electric) return;
+                config.reset.electric = 0;
+                setTimeout(() => {node.click()}, 1);
+                debug.log("跳过充电鸣谢");
+                setTimeout(() => {config.reset.electric = 1}, 5000);
+            }
+            catch(e) {debug.error("充电鸣谢", e)}
         }
     }
 
@@ -2210,7 +2224,7 @@
                 if (input.checked) {
                     if (key in config.rewrite) config.rewrite[key] = 1;
                     else config.reset[key] = 1;
-                    if (!config.reset.xhrhook && key != "xhrhook" && UI.menu[key][1].includes("xhrhook")) debug.msg("xhrhook已关闭，[" + UI.menu[key][0] + "]部分功能启用失败")
+                    if (!config.reset.xhrhook && key != "xhrhook" && UI.menu[key][1].includes("xhrhook")) debug.msg("启用失败！xhrhook已关闭！", UI.menu[key][0])
                 }
                 else {
                     if (key in config.rewrite) config.rewrite[key] = 0;
@@ -2234,7 +2248,7 @@
             bangumi : ["Bangumi", "启用旧版番剧页面，基于旧版网页框架"],
             watchlater : ["稍后再看", "启用旧版稍后再看页面，基于旧版网页框架"],
             frame : ["嵌入", "替换嵌入式播放器，不会单独适配被嵌入页面的其他功能"],
-            home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区<br>※部分功能依赖xhrhook"],
+            home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区"],
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新<br>※依赖xhrhook"],
@@ -2250,13 +2264,14 @@
             episodedata : ["分集数据", "让番剧显示分集的播放数和弹幕数，原来总计数据显示在鼠标焦点的浮动信息上"],
             like : ["点赞功能", "为旧版播放页面添加点赞功能，点赞是新版页面专属功能，功能简陋，不支持一键三联"],
             static : ["静态页面", "将静态页面跳转到普通页面以启用旧版页面，静态页面是新版新增页面，页面大部分信息都内置于页面中以加快载入速度"],
-            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>※部分功能依赖xhrhook<br>※详见脚本简介"],
-            heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用<br>※依赖xhrhook"],
-            carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息<br>※依赖xhrhook"],
-            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……<br>※依赖xhrhook"],
-            roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决<br>※依赖xhrhook"],
-            history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史<br>※依赖xhrhook"],
-            xhrhook : ["xhrhook", "一些功能使用xhrhook实现，这里提供一个开关供部分特殊情况下关闭，使用这些功能不建议关闭本开关：<br>※旧版主页·失效分区修复/广告移除<br>※新版弹幕<br>※解除区域限制<br>※下载视频·链接捕获<br>※视频心跳替换<br>※播放通知生成<br>※直播流拦截<br>※播放历史只显示视频"]
+            download : ["下载视频", "播放器右键菜单>>>下载视频>>>选择文件>>>右键另存为/右键IDM下载<br>！！！复制无效/左键点击无效！！！<br>※详见脚本简介"],
+            heartbeat : ["视频心跳", "替换被其他广告屏蔽插件拦截的视频心跳，若出现播放视频但不记录历史的情况可以尝试启用"],
+            carousel : ["播放信息", "填充旧版播放器顶部缺失的通知信息"],
+            adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
+            roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决"],
+            history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"],
+            xhrhook : ["xhrhook", "hook xhr的send属性，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
+            electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"]
         }
     }
 
@@ -2278,17 +2293,14 @@
                 __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
                 // 判断页面是否会自动重定向或者404
                 if (config.rewrite.av && __INITIAL_STATE__) {
-                    if (DOCUMENT.includes('"code":404')) return;
-                    // 继承__INITIAL_STATE__
-                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                     // 忽略互动视频
-                    if (__INITIAL_STATE__.videoData.stein_guide_cid) return;
+                    if (__INITIAL_STATE__ && __INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.stein_guide_cid) return;
                     // 修复评论数据缺失
-                    unsafeWindow.__INITIAL_STATE__.comment = {count: 0, list: []}
+                    __INITIAL_STATE__.comment = {count: 0, list: []}
                     // 写入全局变量
-                    window.hd = 1;
                     aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid;
                     tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid;
+                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                     // 重写网页框架并进行调用后续处理
                     deliver.write(API.pageframe.video);
                     if (DOCUMENT.includes("超清 4K")) unsafeWindow.__playinfo__ = undefined;
@@ -2335,14 +2347,14 @@
                 if (config.rewrite.bangumi && __INITIAL_STATE__) {
                     let id = location.href.match(/[0-9]+/)[0];
                     // 获取__INITIAL_STATE__
-                    if (LOCATION[5].startsWith('ss')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"season_id":id})),null);
-                    if (LOCATION[5].startsWith('ep')) unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"ep_id":id})),id);
-                    if (__INITIAL_STATE__.epInfo.badge === "互动") return;
-                    window.hd = 1;
+                    if (LOCATION[5].startsWith('ss')) __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"season_id":id})),null);
+                    if (LOCATION[5].startsWith('ep')) __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"ep_id":id})),id);
+                    if (__INITIAL_STATE__ && __INITIAL_STATE__.epInfo && __INITIAL_STATE__.epInfo.badge === "互动") return;
                     // 重写网页框架并调用后续处理，按是否有特殊背景分别处理
+                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                     if (DOCUMENT.match('"specialCover":""')) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema);
                     document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
-                    deliver.setBangumi.init(__INITIAL_STATE__);
+                    if (__INITIAL_STATE__) deliver.setBangumi.init(__INITIAL_STATE__);
                 }
             }
             catch(e) {debug.error("框架·Bangumi", e)}
@@ -2414,7 +2426,7 @@
         home: () => {
             if (config.rewrite.home) {
                 try {
-                    window.home = 1;
+                    window.recbtn = 1;
                     if (!unsafeWindow.__INITIAL_STATE__) {
                         DOCUMENT = xhr.false(location.href);
                         __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : ""; // 继承__INITIAL_STATE__
@@ -2491,7 +2503,7 @@
     // 创建全局样式
     deliver.setGlobalStyle();
     // 启用xhr hook
-    if (config.reset.xhrhook) intercept.init();
+    intercept.init();
     // DOM修改监听调用
     document.addEventListener("DOMNodeInserted",(msg) => {
         // 去除预览提示框
@@ -2518,7 +2530,9 @@
         // 失效分区转换
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") deliver.fixnews(msg.target);
         // 修复评论楼层
-        if (src && ((msg.target.id && msg.target.id.includes("l_id")) || (msg.target.className && msg.target.className.includes("reply-wrap")))) deliver.setReplyFloor(src);
+        if (src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) deliver.setReplyFloor(src);
+        // 跳过充电鸣谢
+        if (/bilibili-player-electric-panel-jump/.test(msg.relatedNode.className)) deliver.electricPanelJump(msg.relatedNode);
         // 其他节点监听
         deliver.resetNodes();
         // 收藏页切p监听
@@ -2527,5 +2541,6 @@
         deliver.fixVideoLost.home(msg);
         // bv号转超链接
         deliver.avdesc();
+
     });
 })();
