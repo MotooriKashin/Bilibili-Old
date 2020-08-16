@@ -4,16 +4,16 @@
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生[旧版页面](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")
 - 默认启用了部分其他功能，可通过设置关闭
 - 可能会与其他同域脚本产生冲突，详情参见下文兼容数据
-- B站变动时间轴记录
-   + 2019年12月09日：弃用 旧版av&Bangumi
-   + 2019年12月24日：弃用 旧版稍后再看
-   + 2020年03月23日：启用 BV代替av
-   + 2020年04月04日：弃用 旧版主页
-   + 2020年04月23日：开启 4K灰度测试
-   + 2020年04月28日：弃用 播单
-   + 2020年05月21日：改版 弹幕
-   + 2020年07月13日：改版 稍后再看
-   + 2020年07月29日：改版 新版播放器
+- B站改版摘记
+   + 2019年12月09日：放弃旧版av、Bangumi
+   + 2019年12月24日：放弃旧版稍后再看
+   + 2020年03月23日：启用BV代替av
+   + 2020年04月04日：放弃旧版主页
+   + 2020年04月23日：开启4K灰度测试
+   + 2020年04月28日：放弃播单
+   + 2020年05月21日：弹幕改版：xml-->proto
+   + 2020年07月13日：稍后再看改版：套用收藏播放
+   + 2020年07月29日：新版播放器改版：新抖动图
 
 ---
 ### 脚本实现
@@ -54,40 +54,39 @@
 ![dash](https://i.loli.net/2020/08/16/Y4GzOdmqtZshH3b.png)
 ![flv](https://i.loli.net/2020/08/16/LPaobejz1GONkYR.png)
 - 播放器右键-->下载视频-->右键另存为（有[IDM](https://www.internetdownloadmanager.com/)的可以右键调用IDM）
-- **复制无效，左键无效，时效120分钟**
-   + mp4：首选格式，但一般最高只提供1080P画质
-   + dash：视音频分流，后缀都是 m4s，修改为对应后缀：视频 avc/hev(m4v)，音频 aac(m4a)
-      - avc：h.264 视频流，主流的视频编码，体积稍大，兼容较好
-      - hev：h.265 视频流，较新的视频编码，体积较小，兼容较差
-      - aac：aac 音频流，显示大概码率
-   + flv：流媒体，基本同mp4，远古视频可能分段
-   + 其他：“--”表示大小未知(而不是不可用)
-      - 弹幕：xml 弹幕
+- **链接复制无效，左键点击无效，时效120分钟！**
+- 捕获播放器内容，而不是另外请求，格式说明如下：
+   + `mp4`：首选格式，但最高只提供1080P画质
+   + `dash`：视音频分流，修改后缀`.m4s`：视频`.m4v`、音频`.m4a`
+      - `avc`：h.264 视频流，主流的视频编码，体积大兼容好
+      - `hev`：h.265 视频流，较新的视频编码，体积小兼容差
+      - `aac`：aac 音频流
+   + `flv`：流媒体，不分段约等于mp4，分段需要合并
+   + 其他：“--” 表示大小未知而不是无法获取
+      - 弹幕：`xml`弹幕
       - 封面：封面图片
-      - 海报：特殊背景图 (特殊Bangumi页面)
-      - 中文：CC字幕文件 (其他语言同理)
-- dash/flv可能需要自行合并，工具推荐如[ffmpeg](http://ffmpeg.org/)、[MKVToolNix](https://mkvtoolnix.download/)……
-   + dash：一条视频轨、一条音频轨，封装成一个完整视频
-   + flv：有多少分段下多少，连接成一个完整视频
-   + 二者不会同时出现(取决于播放器)
-- 画质取决于当前播放器，尤其是flv格式，请先切换到对应画质
-- 播放器能播放的才能下载，6分钟预览也只能捕获预览的那部分
+      - 海报：特殊背景图，只在特殊Bangumi页面
+      - 中文：CC字幕文件，其他语言同理
+- 分流及分段视频可能需要自行合并，工具推荐如[ffmpeg](http://ffmpeg.org/)、[MKVToolNix](https://mkvtoolnix.download/)
+   + `dash`(封装)：视频轨 + 音频轨 = 完整视频
+   + `flv`(合并)：分段1 + 分段2 + … + 分段n = 完整视频
+- 画质也取决于播放器，所以请先切换到对应画质
+- 能播放才能下载，6分钟预览也只能捕获预览
 
 ---
 ### 已知问题
-**以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版页面载入较新版慢，因为必须先载入新版页面。
-2. 旧版播放器不支持CC字幕，[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)提供支持。
+以下问题这里可能处于并将长期处于无法解决状态，请多担待！  
+1. 旧版页面载入较新版慢，做不到在新版前载入。
+2. 旧版播放器不支持CC字幕，可以通过[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)支持。
 3. 旧版播放器不支持互动视频，已主动忽略。
 4. 旧版播放器不支持全景视频。
 5. 旧版主页广告区替换为资讯区且无法获取排行。
 6. 旧版主页推荐位接口失效，已屏蔽相关切换。
-7. 旧版页面的充电接口失效。
-8. 嵌入页面只替换播放器不单独适配其他功能(如 [拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
-9. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
-10. 收藏播放会跳转av页模拟，列表过大时载入缓慢，部分信息不会刷新。
-11. 楼中楼层号在页数大于3且第一条评论是回复时无法获取。
-12. 各种载入异常问题请尝试刷新，硬刷新(`Shift + F5`或`Ctrl + Shift + R`)更佳。
+7. 旧版页面的充电接口失效，请不要使用。
+8. 嵌入页面播放器外的内容不单独适配。
+9. 收藏播放重定向到av页进行模拟，延迟高，列表不宜过大。
+10. 楼中楼层号当页数>2且第一条是回复(@)时获取不到。
+11. 遇到问题请刷新页面，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。
 
 ---
 ### 兼容数据
@@ -96,11 +95,9 @@
 > Google Chrome 84.0.4147.125 (正式版本) （64 位） (cohort: Stable)  
 > Tampermonkey BETA 4.10.6118
 >
- 
-平台兼容问题：
-   - **Firefox最新版(79)旧版框架启用失败**，原因不明，之前的版本没问题  
 
-代码兼容问题：  
+
+- **Firefox最新版(79)旧版框架启用失败**，原因不明，之前的版本没问题   
 - 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
    - DOM的数据被覆盖
    - DOM的回调失效：如`addEventListener`、`document.onclick`
@@ -134,24 +131,24 @@
 ### 隐私相关
 1. 脚本会读取您的部分信息
    - cookies：与B站后端进行交互时识别用户身份
-      + DedeUserID：用于判断是否登录以修复动态
-      + bili_jct：用于与B站后端进行校验实现点赞功能
-2. 脚本申请了`GM_xmlhttpRequest`权限用于实现xhr跨域，`@connect`元数据如下
+      + DedeUserID：判断是否登录以修复动态
+      + bili_jct：与B站后端进行校验实现点赞功能
+2. 脚本申请了`GM_xmlhttpRequest`跨域权限，`@connect`元数据如下
    - [BiliPlus](https://www.biliplus.com/)：获取缓存的视频标题和封面等信息以修复失效视频
    - [Bilibilijj](https://www.jijidown.com/)：获取缓存的视频标题和封面等信息以修复失效视频
-   - [bilibili](https://www.bilibili.com)：同域名下的不同主机(如 www.bilibili.com 与 space.bilibili.com )，B站可能并未开通[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限，也只能采用GM实现跨域
+   - [bilibili](https://www.bilibili.com)：同域名下的不同主机(如 www.bilibili.com 与 space.bilibili.com )，B站可能并未开通[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限
 3. 脚本引用了部分公开库，用于无法自己独立实现的功能
-   - [protobuf](https://github.com/protobufjs/protobuf.js)：用于解码新版proto弹幕并转化为旧版播放器能识别的xml弹幕
+   - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕并转化为旧版播放器能识别的xml弹幕
 
 ---
 ### 参考致谢
-- JavaScript库：[protobuf](https://github.com/protobufjs/protobuf.js)
+- JavaScript公开库：[protobuf](https://github.com/protobufjs/protobuf.js)
 - 旧版网页框架来源：[Wayback Machine](https://archive.org/web/)
 - 脚本原型来源及指导：[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliOldPlayer)
 - 第三方数据接口来源：[BiliPlus](https://www.biliplus.com/)、[Bilibilijj](https://www.jijidown.com/)
 - 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)
 - BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)
-- 新版弹幕转码来源：[wly5556](https://greasyfork.org/users/217840)
+- 新版弹幕转码来源：[wly5556](https://github.com/MotooriKashin/Bilibili-Old/issues/16)
 - README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)
 - 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
 - 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
