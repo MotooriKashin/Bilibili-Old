@@ -11,9 +11,9 @@
    + 2020年04月04日：放弃旧版主页
    + 2020年04月23日：开启4K灰度测试
    + 2020年04月28日：放弃播单
-   + 2020年05月21日：弹幕改版：xml-->proto
+   + 2020年05月21日：弹幕改版：启用proto弹幕
    + 2020年07月13日：稍后再看改版：套用收藏播放
-   + 2020年07月29日：新版播放器改版：新抖动图
+   + 2020年07月29日：新版播放器改版：启用新抖动图
 
 ---
 ### 脚本实现
@@ -56,20 +56,20 @@
 - 播放器右键-->下载视频-->右键另存为（有[IDM](https://www.internetdownloadmanager.com/)的可以右键调用IDM）
 - **链接复制无效，左键点击无效，时效120分钟！**
 - 捕获播放器内容，而不是另外请求，格式说明如下：
-   + `mp4`：首选格式，但最高只提供1080P画质
-   + `dash`：视音频分流，修改后缀`.m4s`：视频`.m4v`、音频`.m4a`
-      - `avc`：h.264 视频流，主流的视频编码，体积大兼容好
-      - `hev`：h.265 视频流，较新的视频编码，体积小兼容差
-      - `aac`：aac 音频流
-   + `flv`：流媒体，不分段约等于mp4，分段需要合并
+   + mp4：首选格式，但最高只提供1080P画质
+   + dash：视音频分流，虽然都显示后缀`.m4s`，其实应该是视频`.m4v`、音频`.m4a`
+      - avc：h.264 视频流，主流的视频编码，体积大兼容好
+      - hev：h.265 视频流，较新的视频编码，体积小兼容差
+      - aac：aac 音频流
+   + flv：流媒体，不分段约等于mp4，分段需要合并
    + 其他：“--” 表示大小未知而不是无法获取
-      - 弹幕：`xml`弹幕
+      - 弹幕：xml弹幕
       - 封面：封面图片
       - 海报：特殊背景图，只在特殊Bangumi页面
       - 中文：CC字幕文件，其他语言同理
 - 分流及分段视频可能需要自行合并，工具推荐如[ffmpeg](http://ffmpeg.org/)、[MKVToolNix](https://mkvtoolnix.download/)
-   + `dash`(封装)：视频轨 + 音频轨 = 完整视频
-   + `flv`(合并)：分段1 + 分段2 + … + 分段n = 完整视频
+   + dash(封装)：视频轨 + 音频轨 = 完整视频
+   + flv(合并)：分段1 + 分段2 + … + 分段n = 完整视频
 - 画质也取决于播放器，所以请先切换到对应画质
 - 能播放才能下载，6分钟预览也只能捕获预览
 
@@ -102,9 +102,9 @@
    - DOM的数据被覆盖
    - DOM的回调失效：如`addEventListener`、`document.onclick`
    - `GM_setValue()`方法失效
-   - **注1：只针对以`run-at document-start`注入脚本**
-   - **注2：只针对启用了旧版框架的页面**
-   - **注3：window的属性和方法等不会失效**
+   - 注1：只针对以`run-at document-start`注入脚本
+   - 注2：只针对启用了旧版框架的页面
+   - 注3：window的属性和方法等不会失效
 
 附上测试结果：
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：**基本正常**  
@@ -148,7 +148,7 @@
 - 第三方数据接口来源：[BiliPlus](https://www.biliplus.com/)、[Bilibilijj](https://www.jijidown.com/)
 - 注册时间样式来源：[哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)
 - BV<=>av算法来源：[mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)
-- 新版弹幕转码来源：[wly5556](https://github.com/MotooriKashin/Bilibili-Old/issues/16)
+- 新版弹幕转码来源：[wly5556](https://github.com/MotooriKashin/Bilibili-Old/issues/10)
 - README设计参考：[Bilibili直播间挂机助手](https://github.com/SeaLoong/Bilibili-LRHH)
 - 番剧分集数据参考：[Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)
 - 部分API示例及兼容问题启发：[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
