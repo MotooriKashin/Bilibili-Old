@@ -43,63 +43,62 @@
 
 ---
 ### 关于设置
-- 设置入口设计得比较隐蔽以保护原生页面
-- 入口在页面右下角2~3厘米处鼠标移过会自动显现
-- 大部分设置都需要刷新才会生效
-- 设置数据存储在脚本管理器中与cookies无关
-- [这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例") 能解决所有设置相关问题
+- 入口贴边隐藏以保护原生页面
+- 入口在页面右下角高约一寸处
+- 部分设置都需要刷新才会生效
+- 设置数据存储在脚本管理器中
+- [这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例")能解决所有设置问题
 
 ---
 ### 下载视频
-![dash.png](https://i.loli.net/2020/08/09/DxGrcmKwzgjEPtk.png)
-![flv.png](https://i.loli.net/2020/08/09/yT1WXO3tbqKi6dL.png)
-- 右键播放器出现下载菜单，点击即可出现上图的下载面板
-- 右键对应的画质另存为，有[IDM](https://www.internetdownloadmanager.com/)的可以右键IDM下载
-- **下载地址复制无效，左键点击无效，过期时间为120分钟**
-   + mp4：首选格式，一般最高只能获取到1080P
-   + dash：视音频分流，视频avc/hev，音频aac
-      - avc：h.264视频流，主流的视频编码，体积稍大，普遍兼容
-      - hev：h.265视频流，较新的视频编码，体积较小，兼容较差
-      - aac：aac音频流
-   + flv：流媒体，基本同mp4，但老视频可能分段，如图二
-   + 其他：提供其他附属下载，“--”表示未主动去获取大小而不是不可用
-      - 弹幕：xml弹幕
+![dash](https://i.loli.net/2020/08/16/Y4GzOdmqtZshH3b.png)
+![flv](https://i.loli.net/2020/08/16/LPaobejz1GONkYR.png)
+- 播放器右键-->下载视频-->右键另存为（有[IDM](https://www.internetdownloadmanager.com/)的可以右键调用IDM）
+- **复制无效，左键无效，时效120分钟**
+   + mp4：首选格式，但一般最高只提供1080P画质
+   + dash：视音频分流，后缀都是 m4s，修改为对应后缀：视频 avc/hev(m4v)，音频 aac(m4a)
+      - avc：h.264 视频流，主流的视频编码，体积稍大，兼容较好
+      - hev：h.265 视频流，较新的视频编码，体积较小，兼容较差
+      - aac：aac 音频流，显示大概码率
+   + flv：流媒体，基本同mp4，远古视频可能分段
+   + 其他：“--”表示大小未知(而不是不可用)
+      - 弹幕：xml 弹幕
       - 封面：封面图片
-      - 海报：特殊背景图，只出现在特殊Bangumi页面
-      - 中文：CC字幕文件，其他语言同理
-- dash和flv可能需要自行合并，工具如[ffmpeg](http://ffmpeg.org/)、[MKVToolNix](https://mkvtoolnix.download/)等
-   + dash：视频avc或hev选一，音频音质选一，合并为一个视频
-   + flv：有多少分段下多少，连在一起才是一个完整视频
-- 捕获的是播放器播放的画质，尤其是flv格式，请先切换到对应画质
-- dash和flv不会同时出现，同样取决于播放器，mp4可能获取不到
-- 大会员视频和画质要有大会员，6分钟预览也只能捕获预览的部分
+      - 海报：特殊背景图 (特殊Bangumi页面)
+      - 中文：CC字幕文件 (其他语言同理)
+- dash/flv可能需要自行合并，工具推荐如[ffmpeg](http://ffmpeg.org/)、[MKVToolNix](https://mkvtoolnix.download/)……
+   + dash：一条视频轨、一条音频轨，封装成一个完整视频
+   + flv：有多少分段下多少，连接成一个完整视频
+   + 二者不会同时出现(取决于播放器)
+- 画质取决于当前播放器，尤其是flv格式，请先切换到对应画质
+- 播放器能播放的才能下载，6分钟预览也只能捕获预览的那部分
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 旧版页面载入较新版慢，因为无法在请求新版之前启用旧版。
-2. 旧版播放器原生不支持CC字幕，推荐安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)进行支持。
-3. 旧版播放器原生不支持互动视频，已主动忽略。
-4. 旧版播放器原生不支持全景视频，将无法移动视角。
-5. 旧版主页部分失效分区已进行替换，广告-->资讯(排行接口失效 2020.07.30)。
-6. 旧版主页推荐位接口失效，已屏蔽三日\昨日\七日切换。
-7. 旧版播放页面的充电接口失效，请移步UP主的个人空间。
-8. 嵌入式页面只简单替换播放器不会单独适配其他功能(如 [拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
+1. 旧版页面载入较新版慢，因为必须先载入新版页面。
+2. 旧版播放器不支持CC字幕，[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)提供支持。
+3. 旧版播放器不支持互动视频，已主动忽略。
+4. 旧版播放器不支持全景视频。
+5. 旧版主页广告区替换为资讯区且无法获取排行。
+6. 旧版主页推荐位接口失效，已屏蔽相关切换。
+7. 旧版页面的充电接口失效。
+8. 嵌入页面只替换播放器不单独适配其他功能(如 [拜年祭](https://www.bilibili.com/blackboard/bnj2020.html "拜年祭2020"))。
 9. 播单页使用二次跳转的方式绕开404错误所以载入比较慢。
-10. 收藏播放页会跳转av页进行模拟，up简介等非重要信息没有去额外获取，若列表视频过多载入及切P都将变慢。
-11. 楼中楼页数大于3且该页第一条评论是回复则该页无法获取楼层号。
-12. 各种由于浏览器缓存引发载入异常问题请尝试刷新，硬刷新(`Shift + F5`或`Ctrl + Shift + R`)更佳。
+10. 收藏播放会跳转av页模拟，列表过大时载入缓慢，部分信息不会刷新。
+11. 楼中楼层号在页数大于3且第一条评论是回复时无法获取。
+12. 各种载入异常问题请尝试刷新，硬刷新(`Shift + F5`或`Ctrl + Shift + R`)更佳。
 
 ---
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 84.0.4147.105 (正式版本) （64 位） (cohort: Stable)  
+> Google Chrome 84.0.4147.125 (正式版本) （64 位） (cohort: Stable)  
 > Tampermonkey BETA 4.10.6118
 >
  
 平台兼容问题：
-   - **Firefox最新版(79)旧版框架启用失败，原因不明，之前的版本没问题**  
+   - **Firefox最新版(79)旧版框架启用失败**，原因不明，之前的版本没问题  
 
 代码兼容问题：  
 - 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
@@ -133,16 +132,16 @@
 
 ---
 ### 隐私相关
-1. 脚本在实现部分功能时可能会读取您的部分信息
-   - cookies：与B站后端进行交互时默认带上了cookies以让B站识别用户身份
-      + DedeUserID：用于判断是否登录，以修复动态等
-      + bili_jct：用于与B站后端进行校验，实现点赞功能
-2. 脚本申请了`GM_xmlhttpRequest`权限只用于获取第三方数据，参见元数据`@connect`
-   - [BiliPlus](https://www.biliplus.com/)：获取缓存的视频标题和封面等信息
-   - [Bilibilijj](https://www.jijidown.com/)：获取缓存的视频标题和封面等信息
+1. 脚本会读取您的部分信息
+   - cookies：与B站后端进行交互时识别用户身份
+      + DedeUserID：用于判断是否登录以修复动态
+      + bili_jct：用于与B站后端进行校验实现点赞功能
+2. 脚本申请了`GM_xmlhttpRequest`权限用于实现xhr跨域，`@connect`元数据如下
+   - [BiliPlus](https://www.biliplus.com/)：获取缓存的视频标题和封面等信息以修复失效视频
+   - [Bilibilijj](https://www.jijidown.com/)：获取缓存的视频标题和封面等信息以修复失效视频
    - [bilibili](https://www.bilibili.com)：同域名下的不同主机(如 www.bilibili.com 与 space.bilibili.com )，B站可能并未开通[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限，也只能采用GM实现跨域
 3. 脚本引用了部分公开库，用于无法自己独立实现的功能
-   - [protobuf](https://github.com/protobufjs/protobuf.js)：用于将新版proto弹幕转码为旧版播放器能识别的xml弹幕
+   - [protobuf](https://github.com/protobufjs/protobuf.js)：用于解码新版proto弹幕并转化为旧版播放器能识别的xml弹幕
 
 ---
 ### 参考致谢
@@ -165,6 +164,10 @@
 ### 效果预览
 ![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
 ### 版本历史
+- 2020-08-16
+   + xhrhook选项调整为只控制send(open因为太多功能依赖默认开启)
+   + 修改话题、活动主页版头类型
+   + 添加跳过充电鸣谢功能
 - 2020-08-14
    + 补全下载清晰度信息
 - 2020-08-11
