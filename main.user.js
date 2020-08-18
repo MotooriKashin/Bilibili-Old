@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.3.9
+// @version      3.4.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1467,7 +1467,20 @@
         // 收藏播放，收藏列表视频过多将导致视频加载及切换缓慢
         setMediaList: {
             init: async (data) => {
-                if (!ml) return;
+                if (!ml) {
+                    // 4k时初始化播放器
+                    if (__playinfo__.data && __playinfo__.data.accept_quality) {
+                        if (__playinfo__.data.accept_quality[0] < 120) return;
+                        let timer = setInterval(() => {
+                            if (!unsafeWindow.BilibiliPlayer) return;
+                            clearInterval(timer);
+                            let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
+                            unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
+                            unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
+                        },100)
+                        return;
+                    }
+                }
                 if (data){
                     // 以传参data决定处理类型
                     try {
@@ -2303,7 +2316,6 @@
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                     // 重写网页框架并进行调用后续处理
                     deliver.write(API.pageframe.video);
-                    if (DOCUMENT.includes("超清 4K")) unsafeWindow.__playinfo__ = undefined;
                     document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                     deliver.fixSort.video()
                     deliver.setLike();
