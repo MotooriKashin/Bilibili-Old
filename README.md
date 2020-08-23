@@ -1,10 +1,10 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生[旧版页面](https://www.bilibili.com/blackboard/html5playerhelp.html "HTML5播放器简介&示例")
-- 默认启用了部分其他功能，可在设置中关闭
-- 可能会与其他同域脚本产生冲突，详情参见下文兼容数据
-- B站改版记录
+- [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生旧版页面
+- 默认启用了部分附加功能，可在设置中选择关闭
+- 与部分脚本及扩展不兼容，详见兼容数据条目
+- B站改版时间轴
    + 2019年12月09日：放弃旧版av、Bangumi
    + 2019年12月24日：放弃旧版稍后再看
    + 2020年03月23日：启用BV代替av
