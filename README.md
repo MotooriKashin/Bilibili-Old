@@ -1,4 +1,7 @@
 # Bilibili 旧播放页
+
+**旧版番剧页触发B站风控启用失败，原因不明，正在寻求绕行方案！**
+
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生旧版页面
