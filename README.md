@@ -136,6 +136,8 @@
 ### 效果预览
 ![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
 ### 版本历史
+- 2020-08-25
+   + 重构Bangumi的__INITIAL_STATE__以绕开B站风控(尚不完美)
 - 2020-08-23
    + 不再预隐藏av页播放器，以优化Firefox79体验(未根本解决)
 - 2020-08-18
