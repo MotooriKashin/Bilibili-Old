@@ -112,7 +112,7 @@
             replycursor: "https://api.bilibili.com/x/v2/reply/reply/cursor", // oid, root, type &| sort
             replydialog: "https://api.bilibili.com/x/v2/reply/dialog/cursor",
             membercard: "https://account.bilibili.com/api/member/getCardByMid", // mid
-            season: "https://bangumi.bilibili.com/view/web_api/season", // season_id || ep_id
+            season: "https://api.bilibili.com/pgc/view/web/season", // season_id || ep_id
             pagelist: "https://api.bilibili.com/x/player/pagelist", // aid
             view: "https://api.bilibili.com/x/web-interface/view", // aid || bvid
             haslike: "https://api.bilibili.com/x/web-interface/archive/has/like", // aid
@@ -251,14 +251,15 @@
     // 重构__INITIAL_STATE__
     const INITIAL_STATE = {
         // bangumi
-        bangumi: (data,epId) => {
+        bangumi: (epId) => {
             try {
-                let ep = 0, rp = "";
-                try {rp = JSON.parse(data).result;}catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
+                // rp为api数据，由于api改版，现已修复并默认禁用，保留代码以备不时只需
+                let ep = 0, rp = "", mode;
                 let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
                 let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
                 let dat = {"ver":{},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
                 dat.special = rp.bkg_cover ? true : (ini.mediaInfo.specialCover ? true : false);
+                mode = dat.special ? 1 : 2;
                 if (epId) {dat.epId = 1 * epId; ep = 1;}
                 else {dat.epId = "";if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
                 dat.ssId = rp.season_id || ini.mediaInfo.ssId;
@@ -274,7 +275,7 @@
                 dat.mediaInfo.jp_title = rp.jp_title || ini.mediaInfo.jpTitle;
                 dat.mediaInfo.link = "https://www.bilibili.com/bangumi/media/md" + dat.mdId;
                 dat.mediaInfo.media_id = rp.media_id || dat.mdId;
-                dat.mediaInfo.mode = rp.mode || 2;
+                dat.mediaInfo.mode = rp.mode || mode;
                 dat.mediaInfo.paster_text = "";
                 dat.mediaInfo.season_id = rp.season_id || ini.mediaInfo.ssId;
                 dat.mediaInfo.season_status = rp.season_status || ini.mediaInfo.status;
@@ -290,12 +291,19 @@
                 if (rp) {
                     dat.epList = rp.episodes;
                     if (dat.epList[0].cid === -1) for (let i = 0; i < ini.epList.length; i++) dat.epList[i].cid = ini.epList[i].cid;
-                    if (ep == 0) dat.epId = dat.epList[0].ep_id;
-                    for (let i = 0; i < dat.epList.length; i++) if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                    if (ep == 0) dat.epId = (ini.epList[0] && dat.epList[0].id) || "";
+                    for (let i = 0; i < dat.epList.length; i++) {
+                        dat.epList[i].ep_id = dat.epList[i].id;
+                        dat.epList[i].episode_status = dat.epList[i].status;
+                        dat.epList[i].index = dat.epList[i].title;
+                        dat.epList[i].index_title = dat.epList[i].long_title;
+                        if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                    }
                 }
                 else {
                     dat.epList = [];
-                    if (ep == 0) dat.epId = ini.epList[0].id;
+                    for (let i = 0; i < ini.sections.length; i++) for (let j = 0; j < ini.sections[i].epList.length; j++) ini.epList.push(ini.sections[i].epList[j]);
+                    if (ep == 0) dat.epId = (ini.epList[0] && ini.epList[0].id) || "";
                     for (let i = 0; i < ini.epList.length; i++) {
                         dat.epList[i] = {};
                         dat.epList[i].aid = ini.epList[i].aid;
@@ -316,9 +324,10 @@
                         dat.epList[i].section_type = 0;
                         dat.epList[i].vid = ini.epList[i].vid;
                         if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
-}
+                    }
                 }
-                dat.newestEp = rp.newest_ep || ini.mediaInfo.newestEp;
+                dat.epInfo = dat.epInfo || ini.epInfo;
+                dat.newestEp = rp.new_ep || ini.mediaInfo.newestEp;
                 dat.seasonList = rp.seasons;
                 if (!dat.seasonList) {
                     dat.seasonList = [];
@@ -348,11 +357,23 @@
                 dat.userStat = {"loaded":true, "error":false, "follow":0, "pay":0, "payPackPaid":0, "sponsor":0};
                 dat.userStat.watchProgress = pug.progress;
                 dat.userStat.vipInfo = pug.vip_info;
-                dat.upInfo = rp.up_info || ini.mediaInfo.upInfo;
+                dat.upInfo = rp.up_info || {};
                 dat.rightsInfo = rp.rights || {};
                 dat.pubInfo = rp.publish || {};
                 if (!rp) {
                     dat.newestEp.isNew = dat.newestEp.isNew ? 1 : 0
+                    dat.upInfo.avatar = ini.mediaInfo.upInfo.avatar;
+                    dat.upInfo.follower = "--";
+                    dat.upInfo.is_vip = ini.mediaInfo.upInfo.isAnnualVip ? 1 : 0;
+                    dat.upInfo.mid = ini.mediaInfo.upInfo.mid;
+                    dat.upInfo.pendant = {
+                        image : ini.mediaInfo.upInfo.pendantImage,
+                        name : ini.mediaInfo.upInfo.pendantName,
+                        pid : ini.mediaInfo.upInfo.pendantId
+                    };
+                    dat.upInfo.uname = ini.mediaInfo.upInfo.name;
+                    dat.upInfo.verify_type = 6;
+                    if (dat.upInfo.mid < 1) dat.upInfo = {avatar: "//i0.hdslb.com/bfs/app/3e60b20604b6fdc7d081eb6a1ec72aa47c5a3964.jpg", follower: 897603, is_vip: 1, mid: 2, pendant: {image: "http://i2.hdslb.com/bfs/garb/item/cd3e9a6fa18db9ebdc128b0fef64cb32c5aab854.png", name: "如果历史是一群喵", pid: 1141}, uname: "碧诗", verify_type: 2}
                     dat.rightsInfo.allow_bp = ini.mediaInfo.rights.allowBp ? 1 : 0;
                     dat.rightsInfo.allow_download = 1;
                     dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
@@ -443,6 +464,11 @@
                 if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) {
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.biliIndexRec(this, hook)});
                     url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
+                }
+                // 重定向番剧信息
+                if (url.includes('bangumi.bilibili.com/view/web_api/season?')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.season(this, hook)});
+                    url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season', 'api.bilibili.com/pgc/view/web/season');
                 }
                 // 修改直播数据
                 if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) {
@@ -662,10 +688,28 @@
                 debug.log("XHR重定向", "修复正在直播", hook);
                 Object.defineProperty(obj, 'response', {writable: true});
                 Object.defineProperty(obj, 'responseText', {writable: true});
-                obj.response = response;
-                obj.responseText = JSON.stringify(response);
+                obj.response = obj.responseText = JSON.stringify(response);
             }
             catch(e) {debug.error("首页推荐", e)}
+        },
+        // 修复番剧季度信息
+        season: (obj, hook = []) => {
+            try {
+                hook.push(JSON.parse(event.target.responseText));
+                let response = JSON.parse(event.target.responseText);
+                for (let i = 0; i < response.result.episodes.length; i++){
+                    response.result.episodes[i].ep_id = response.result.episodes[i].id;
+                    response.result.episodes[i].episode_status = response.result.episodes[i].status;
+                    response.result.episodes[i].index = response.result.episodes[i].title;
+                    response.result.episodes[i].index_title = response.result.episodes[i].long_title;
+                }
+                hook.push(response);
+                debug.log("XHR重定向", "番剧季度信息", hook);
+                Object.defineProperty(obj, 'response', {writable: true});
+                Object.defineProperty(obj, 'responseText', {writable: true});
+                obj.response = obj.responseText = JSON.stringify(response);
+            }
+            catch(e) {debug.error("番剧季度信息", e)}
         },
         // 修改直播数据
         getRoomPlayInfo: (obj, hook = []) => {
@@ -683,8 +727,7 @@
                 debug.log("XHR重定向", "拦截直播媒体", hook);
                 Object.defineProperty(obj, 'response', {writable: true});
                 Object.defineProperty(obj, 'responseText', {writable: true});
-                obj.response = response;
-                obj.responseText = JSON.stringify(response);
+                obj.response = obj.responseText = JSON.stringify(response);
             }
             catch(e) {debug.error("直播拦截", e)}
         },
@@ -718,8 +761,7 @@
                     if (limit || big) {
                         Object.defineProperty(obj, 'response', {writable: true});
                         Object.defineProperty(obj, 'responseText', {writable: true});
-                        obj.response = response;
-                        obj.responseText = JSON.stringify(response);
+                        obj.response = obj.responseText = JSON.stringify(response);
                     }
                 }
             }
@@ -2421,10 +2463,9 @@
                 __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
                 // 判断页面是否404
                 if (config.rewrite.bangumi && __INITIAL_STATE__) {
-                    let id = location.href.match(/[0-9]+/)[0];
+                    let id = LOCATION[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
                     // 获取__INITIAL_STATE__
-                    if (LOCATION[5].startsWith('ss')) __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"season_id":id})),null);
-                    if (LOCATION[5].startsWith('ep')) __INITIAL_STATE__ = INITIAL_STATE.bangumi(xhr.false(deliver.obj2search(API.url.season,{"ep_id":id})),id);
+                    __INITIAL_STATE__ = INITIAL_STATE.bangumi(id);
                     if (__INITIAL_STATE__ && __INITIAL_STATE__.epInfo && __INITIAL_STATE__.epInfo.badge === "互动") return;
                     // 重写网页框架并调用后续处理，按是否有特殊背景分别处理
                     unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
@@ -2445,7 +2486,7 @@
                     let obj = deliver.search2obj(location.href),
                         season_type = obj.season_type || "",
                         player_type = obj.player_type || "";
-                    aid = obj.aid || deliver.convertId(obj.bvid) || deliver.convertId(obj.aid);
+                    aid = 1 * obj.aid ? 1 * obj.aid : (obj.aid ? deliver.convertId(obj.aid) : (obj.bvid ? deliver.convertId(obj.bvid) : ""))
                     cid = obj.cid || JSON.parse(xhr.false(deliver.obj2search(API.url.pagelist,{"aid" : aid}))).data[0].cid
                     // 重定向到旧版播放器
                     location.replace(deliver.obj2search(API.playerframe.html5player,{"aid": aid,"cid": cid,"season_type": season_type,"player_type": player_type,"as_wide": 1,}));
