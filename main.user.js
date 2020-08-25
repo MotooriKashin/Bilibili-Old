@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.2
+// @version      3.4.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -253,12 +253,8 @@
         // bangumi
         bangumi: (data,epId) => {
             try {
-                let ep = 0;
-                let rp = "";
-                try {
-                    rp = JSON.parse(data).result;
-                }
-                catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
+                let ep = 0, rp = "";
+                try {rp = JSON.parse(data).result;}catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
                 let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
                 let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
                 let dat = {"ver":{},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
@@ -353,8 +349,22 @@
                 dat.userStat.watchProgress = pug.progress;
                 dat.userStat.vipInfo = pug.vip_info;
                 dat.upInfo = rp.up_info || ini.mediaInfo.upInfo;
-                dat.rightsInfo = rp.rights || ini.mediaInfo.rights;
-                dat.pubInfo = rp.publish || ini.mediaInfo.pub;
+                dat.rightsInfo = rp.rights || {};
+                dat.pubInfo = rp.publish || {};
+                if (!rp) {
+                    dat.newestEp.isNew = dat.newestEp.isNew ? 1 : 0
+                    dat.rightsInfo.allow_bp = ini.mediaInfo.rights.allowBp ? 1 : 0;
+                    dat.rightsInfo.allow_download = 1;
+                    dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
+                    dat.rightsInfo.copyright = "bilibili";
+                    dat.rightsInfo.is_preview = ini.mediaInfo.rights.isPreview ? 1 : 0;
+                    dat.rightsInfo.watch_platform = 0;
+                    dat.pubInfo.is_finish = ini.mediaInfo.pub.isFinish ? 1 : 0;
+                    dat.pubInfo.is_started = ini.mediaInfo.pub.isStart ? 1 : 0;
+                    dat.pubInfo.pub_time = ini.mediaInfo.pub.time;
+                    dat.pubInfo.pub_time_show = ini.mediaInfo.pub.timeShow;
+                    dat.pubInfo.weekday = -1;
+                }
                 if (pug.dialog || pug.pay == 1) {
                     dat.payMent = {"price":"0.0", "promotion":"", "tip":"大会员专享观看特权哦~"};
                     if (pug.dialog) {
