@@ -1,7 +1,4 @@
 # Bilibili 旧播放页
-
-**旧版番剧页触发B站风控启用失败，原因不明，正在寻求绕行方案！**
-
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生旧版页面
@@ -17,6 +14,7 @@
    + 2020年05月21日：启用proto弹幕
    + 2020年07月13日：启用收藏式稍后再看
    + 2020年07月29日：启用新播放器加载图
+   + 2020年08月25日：旧版番剧信息被风控
 
 ---
 ### 脚本实现
@@ -72,7 +70,8 @@
 6. 播单相关的页面直接被B站404，而404指令会限制对页面的修改，只能使用重定向的方式恢复播单的播放页面。
 7. 收藏列表的播放页面并不存在对应的旧版，脚本使用重定向到av页并载入稍后再看列表进行模拟，但并不完美，请尽量不要在播放列表太大时启用。已知稍后再看列表上限是100，用来模拟容量为999的收藏列表极为卡顿。
 8. 恢复评论楼层号时一并添加了楼中楼的楼层号，当楼中楼的当前页码大于2且第一条评论是@回复别人时，那页楼中楼的所有评论楼层号将无法获取。
-9. 页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。部分功能由于脚本无法在浏览器读取缓存前注入而失效，同样只能靠硬刷新缓解。
+9. 旧版Bangumi番剧信息接口被临时风控(status:412)，Bangumi播放页切换季度信息会获取失败。
+10. 页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。部分功能由于脚本无法在浏览器读取缓存前注入而失效，同样只能靠硬刷新缓解。
 
 ---
 ### 兼容数据
@@ -137,7 +136,8 @@
 ![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
 ### 版本历史
 - 2020-08-25
-   + 重构Bangumi的__INITIAL_STATE__以绕开B站风控(尚不完美)
+   + 重构Bangumi的\_\_INITIAL\_STATE\_\_以绕开B站风控
+   + 修复嵌入播放器替换失败的问题
 - 2020-08-23
    + 不再预隐藏av页播放器，以优化Firefox79体验(未根本解决)
 - 2020-08-18
