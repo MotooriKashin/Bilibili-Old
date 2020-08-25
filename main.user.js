@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.1
+// @version      3.4.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -254,53 +254,107 @@
         bangumi: (data,epId) => {
             try {
                 let ep = 0;
-                let rp = JSON.parse(data).result;
+                let rp = "";
+                try {
+                    rp = JSON.parse(data).result;
+                }
+                catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
                 let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
                 let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
                 let dat = {"ver":{},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
-                dat.special = rp.bkg_cover ? true : false;
+                dat.special = rp.bkg_cover ? true : (ini.mediaInfo.specialCover ? true : false);
                 if (epId) {dat.epId = 1 * epId; ep = 1;}
                 else {dat.epId = "";if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
-                dat.ssId = rp.season_id;
-                dat.mdId = 1 * rp.link.match(/[0-9][0-9]*/)[0];
+                dat.ssId = rp.season_id || ini.mediaInfo.ssId;
+                dat.mdId = ini.mediaInfo.id;
                 dat.mediaInfo = {};
-                dat.mediaInfo.actors = rp.actors;
-                dat.mediaInfo.alias = rp.alias;
-                dat.mediaInfo.areas = rp.areas;
-                dat.mediaInfo.bkg_cover = rp.bkg_cover;
-                dat.mediaInfo.cover = rp.cover;
-                dat.mediaInfo.evaluate = rp.evaluate;
-                dat.mediaInfo.is_paster_ads = rp.is_paster_ads;
-                dat.mediaInfo.jp_title = rp.jp_title;
-                dat.mediaInfo.link = rp.link;
-                dat.mediaInfo.media_id = rp.media_id;
-                dat.mediaInfo.mode = rp.mode;
+                dat.mediaInfo.actors = rp.actors || "";
+                dat.mediaInfo.alias = rp.alias || ini.mediaInfo.alias;
+                dat.mediaInfo.areas = rp.areas || [];
+                dat.mediaInfo.bkg_cover = rp.bkg_cover || ini.mediaInfo.specialCover;
+                dat.mediaInfo.cover = rp.cover || ini.mediaInfo.cover;
+                dat.mediaInfo.evaluate = rp.evaluate || ini.mediaInfo.evaluate;
+                dat.mediaInfo.is_paster_ads = rp.is_paster_ads || 0;
+                dat.mediaInfo.jp_title = rp.jp_title || ini.mediaInfo.jpTitle;
+                dat.mediaInfo.link = "https://www.bilibili.com/bangumi/media/md" + dat.mdId;
+                dat.mediaInfo.media_id = rp.media_id || dat.mdId;
+                dat.mediaInfo.mode = rp.mode || 2;
                 dat.mediaInfo.paster_text = "";
-                dat.mediaInfo.season_id = rp.season_id;
-                dat.mediaInfo.season_status = rp.season_status;
-                dat.mediaInfo.season_title = rp.season_title;
-                dat.mediaInfo.season_type = rp.season_type;
-                dat.mediaInfo.square_cover = rp.square_cover;
-                dat.mediaInfo.staff = rp.staff;
-                dat.mediaInfo.stat = rp.state;
-                dat.mediaInfo.style = rp.style;
-                dat.mediaInfo.title = rp.title;
-                dat.mediaInfo.total_ep = rp.total_ep;
-                dat.mediaRating = rp.rating;
-                dat.epList = rp.episodes;
-                if (dat.epList[0].cid === -1) for (let i = 0; i < ini.epList.length; i++) dat.epList[i].cid = ini.epList[i].cid;
-                if (ep == 0) dat.epId=dat.epList[0].ep_id;
-                for (let i = 0; i < dat.epList.length; i++) if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
-                dat.newestEp = rp.newest_ep;
+                dat.mediaInfo.season_id = rp.season_id || ini.mediaInfo.ssId;
+                dat.mediaInfo.season_status = rp.season_status || ini.mediaInfo.status;
+                dat.mediaInfo.season_title = rp.season_title || ini.mediaInfo.title;
+                dat.mediaInfo.season_type = rp.season_type || ini.mediaInfo.ssType;
+                dat.mediaInfo.square_cover = rp.square_cover || ini.mediaInfo.squareCover;
+                dat.mediaInfo.staff = rp.staff || "";
+                dat.mediaInfo.stat = rp.state || ini.mediaInfo.stat;
+                dat.mediaInfo.style = rp.style || [];
+                dat.mediaInfo.title = rp.title || ini.mediaInfo.title;
+                dat.mediaInfo.total_ep = rp.total_ep || ini.epList.length;
+                dat.mediaRating = rp.rating || ini.mediaInfo.rating;
+                if (rp) {
+                    dat.epList = rp.episodes;
+                    if (dat.epList[0].cid === -1) for (let i = 0; i < ini.epList.length; i++) dat.epList[i].cid = ini.epList[i].cid;
+                    if (ep == 0) dat.epId = dat.epList[0].ep_id;
+                    for (let i = 0; i < dat.epList.length; i++) if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                }
+                else {
+                    dat.epList = [];
+                    if (ep == 0) dat.epId = ini.epList[0].id;
+                    for (let i = 0; i < ini.epList.length; i++) {
+                        dat.epList[i] = {};
+                        dat.epList[i].aid = ini.epList[i].aid;
+                        dat.epList[i].cid = ini.epList[i].cid;
+                        dat.epList[i].badge = ini.epList[i].badge;
+                        dat.epList[i].badge_type = ini.epList[i].badgeType;
+                        dat.epList[i].cover = ini.epList[i].cover;
+                        dat.epList[i].duration = -1;
+                        dat.epList[i].ep_id = ini.epList[i].id;
+                        dat.epList[i].episode_status = ini.epList[i].epStatus;
+                        dat.epList[i].from = ini.epList[i].from;
+                        dat.epList[i].index = ini.epList[i].title;
+                        dat.epList[i].index_title = ini.epList[i].longTitle;
+                        dat.epList[i].mid = ini.mediaInfo.upInfo.mid;
+                        dat.epList[i].page = 1;
+                        dat.epList[i].pub_real_time = ini.epList[i].releaseDate || ini.mediaInfo.pub.time;
+                        dat.epList[i].section_id = -1;
+                        dat.epList[i].section_type = 0;
+                        dat.epList[i].vid = ini.epList[i].vid;
+                        if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+}
+                }
+                dat.newestEp = rp.newest_ep || ini.mediaInfo.newestEp;
                 dat.seasonList = rp.seasons;
-                if (!dat.seasonList) dat.seasonList = ini.sections;
+                if (!dat.seasonList) {
+                    dat.seasonList = [];
+                    for (let i = 0; i < ini.ssList.length; i++) {
+                        dat.seasonList[i] = {};
+                        dat.seasonList[i].badge = ini.ssList[i].badge;
+                        dat.seasonList[i].badge_type = ini.ssList[i].badgeType;
+                        dat.seasonList[i].cover = ini.ssList[i].cover;
+                        dat.seasonList[i].media_id = -1;
+                        dat.seasonList[i].new_ep = {
+                            cover : ini.ssList[i].epCover,
+                            id : -1,
+                            index_show : ini.ssList[i].desc
+                        };
+                        dat.seasonList[i].season_id = ini.ssList[i].id;
+                        dat.seasonList[i].season_title = ini.ssList[i].title;
+                        dat.seasonList[i].season_type = ini.ssList[i].type;
+                        dat.seasonList[i].stat = {
+                            danmaku: 0,
+                            follow: 0,
+                            view: 0
+                        };
+                        dat.seasonList[i].title = ini.ssList[i].title;
+                    }
+                }
                 dat.seasonStat = {"views":0, "danmakus":0, "coins":0, "favorites":0};
                 dat.userStat = {"loaded":true, "error":false, "follow":0, "pay":0, "payPackPaid":0, "sponsor":0};
                 dat.userStat.watchProgress = pug.progress;
                 dat.userStat.vipInfo = pug.vip_info;
-                dat.upInfo = rp.up_info;
-                dat.rightsInfo = rp.rights;
-                dat.pubInfo = rp.publish;
+                dat.upInfo = rp.up_info || ini.mediaInfo.upInfo;
+                dat.rightsInfo = rp.rights || ini.mediaInfo.rights;
+                dat.pubInfo = rp.publish || ini.mediaInfo.pub;
                 if (pug.dialog || pug.pay == 1) {
                     dat.payMent = {"price":"0.0", "promotion":"", "tip":"大会员专享观看特权哦~"};
                     if (pug.dialog) {
@@ -310,7 +364,7 @@
                 }
                 return dat;
             }
-            catch(e) {debug.error("重构番剧__INITIAL_STATE__", e)}
+            catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
         },
         // 主页
         home: (data) => {
@@ -343,7 +397,7 @@
                 if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{"id":36585,"contract_id":"","pos_num":1,"name":"小黑屋弹幕举报","pic":"https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg","litpic":"","url":"https://www.bilibili.com/blackboard/activity-dmjbfj.html","style":0,"agency":"","label":"","intro":"","creative_type":0,"request_id":"1546354354629q172a23a61a62q626","src_id":32,"area":0,"is_ad_loc":true,"ad_cb":"","title":"","server_type":0,"cm_mark":0,"stime":1520478000,"mid":"14629218"}];
                 return dat;
             }
-            catch(e) {debug.error("重构主页__INITIAL_STATE__", e)}
+            catch(e) {debug.error("__INITIAL_STATE__·Home", e)}
         }
     }
 
