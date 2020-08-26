@@ -1,6 +1,6 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 84](https://img.shields.io/badge/Google_Chrome_84-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 85](https://img.shields.io/badge/Google_Chrome_85-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生旧版页面
 - 默认启用了部分附加功能，可在设置中选择关闭
 - 与部分脚本及扩展不兼容，详见兼容数据条目
@@ -102,7 +102,7 @@
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 84.0.4147.125 (正式版本) （64 位） (cohort: Stable)  
+> Google Chrome 85.0.4183.83 (正式版本) （64 位） (cohort: 85\_83\_Win)  
 > Tampermonkey BETA 4.10.6118
 >
 
