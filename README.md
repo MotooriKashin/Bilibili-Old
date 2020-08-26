@@ -120,7 +120,7 @@
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：**基本正常**：`GM_setValue`失效，在旧版页面无法修改设置、“简化主页”冲突，使旧版主页布局紊乱、旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”、快捷键拓展未适配，在旧版页面部分快捷键无效
 - [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：**完全正常**
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：**基本正常**：旧版UI未适配，无法在旧版页面调出设置、**若要同时使用请关闭本脚本“区域限制”选项！**
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：**完全正常**：初次使用可能会报错：“CC字幕助手配置失败:SyntaxError: Unexpected token u in JSON at position 0”，去新版页面使用一次即可永久解决 、**推荐安装以让旧版播放器支持CC字幕**
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：**完全正常**
 - [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：**完全正常**：推荐以`run-at document-start`注入 、推荐只在需要时启用该脚本
 - [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：**完全正常**
 - [IDM Integration Module](http://www.internetdownloadmanager.com)：**下载浮动条失效 ಥ_ಥ**
@@ -160,6 +160,8 @@
 ### 效果预览
 ![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
 ### 版本历史
+- 2020-08-26
+   + 改进旧版播放器设置维护，隐身模式下管理设置
 - 2020-08-25
    + 重构Bangumi的\_\_INITIAL\_STATE\_\_以绕开B站风控
    + 修复嵌入播放器替换失败的问题
