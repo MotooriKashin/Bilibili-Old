@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.3
+// @version      3.4.4
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -66,7 +66,7 @@
             roomplay: 0,
             history: 0,
             electric: 0
-        },
+        }
     }
 
     // 统一api接口
@@ -2592,6 +2592,7 @@
             if (bilibili_player_settings.video_status.autopart !== "") GM_setValue("bilibili_player_settings", bilibili_player_settings);
             else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
         }
+        else if (LOCATION[2] == 'www.bilibili.com' && GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
         // 维护旧版动态状态
         if (uid) {
             let offset = deliver.getCookies()["bp_video_offset_"+ uid];
