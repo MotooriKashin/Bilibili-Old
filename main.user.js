@@ -23,7 +23,7 @@
 
     // 全局变量
     let ml, pl, aid, big, cid, mid, oid, pgc, src, tid, uid, url, xml, bvid, limit, defig;
-    let arr = [], ids = [], obj = {}, mdf = {}, bloburl = {};
+    let arr = [], ids = [], obj = {}, mdf = {}, bloburl = {}, video = {};
     let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
@@ -1162,21 +1162,25 @@
                 debug.msg("正在获取视频链接", ">>>");
                 let qua = {120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
-                try {url = url ? url : await deliver.download.geturl()}
-                catch(e) {url = {mp4 : false}}
+                let path = __playinfo__ ? (__playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result)) : "";
+                try {
+                    url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
+                    if (url[1]) path.durl = url[1].data ? url[1].data.durl : url[1].result.durl;
+                }
+                catch(e) {debug.log(url);url = [1]}
                 try {
                     // 获取mp4
-                    if (url && url.durl) {
+                    if (url[0] && url[0].durl) {
+                        url = url[0];
                         mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
                         navigator.clipboard.writeText(url.durl[0].url);
                     }
                     else debug.log("下载配置", config.big ? url : "获取mp4链接失败 ಥ_ಥ");
                     if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
-                        let path = __playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result);
                         // 获取flv
                         if (path.durl) {
                             // durl可能是mp4
-                            if (path.format == "mp4") {
+                            if (path.durl[0] && path.durl[0].url.includes("mp4?")) {
                                 if (!mdf.mp4) mdf.mp4 = [];
                                 mdf.mp4.push([qua[path.quality],path.durl[0].url.replace("http:", ""), deliver.sizeFormat(path.durl[0].size)]);
                             }
@@ -1249,7 +1253,7 @@
                 catch(e) {debug.error("下载拉取", e);}
             },
             // 配置视频链接
-            playurl: (qn, type) => {
+            playurl: (type, qn) => {
                 let obj = {}
                 let sign = deliver.sign();
                 aid = aid || unsafeWindow.aid;
@@ -1333,12 +1337,12 @@
                 top = document.createElement("div");
                 top.setAttribute("id", "bili-old-download-table");
                 if (mdf.mp4) addBox(mdf.mp4, "mp4", "download-mp4");
-                if (mdf.flv) addBox(mdf.flv, "flv", "download-flv");
                 if (mdf.dash) {
                     if (mdf.dash.avc) addBox(mdf.dash.avc, "avc", "download-avc");
                     if (mdf.dash.hev) addBox(mdf.dash.hev, "hev", "download-hev");
                     if (mdf.dash.aac) addBox(mdf.dash.aac, "aac", "download-aac");
                 }
+                if (mdf.flv) addBox(mdf.flv, "flv", "download-flv");
                 if (mdf.xml) addBox(mdf.xml, "其他", "download-xml", "360P");
                 document.body.appendChild(top);
                 debug.msg("右键另存为或右键IDM下载", "详见脚本简介", 3000);
