@@ -106,7 +106,7 @@
 >
 
 
-- **Firefox最新版(79)旧版框架启用失败**，原因不明，之前的版本没问题   
+- **Firefox最新版(79及之后)旧版框架启用失败**，原因不明，之前的版本没问题   
 - 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
    - DOM的数据被覆盖
    - DOM的回调失效：如`addEventListener`、`document.onclick`
