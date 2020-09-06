@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.4
+// @version      3.4.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -47,6 +47,7 @@
         reset: {
             xhrhook: 1,
             danmuku: 1,
+            livechat: 1,
             limit: 0,
             grobalboard: 1,
             replyfloor: 1,
@@ -439,7 +440,177 @@
             const send = XMLHttpRequest.prototype.send;
             const addEventListener = XMLHttpRequest.prototype.addEventListener;
             // 为了防止pakku.js休眠时，send中主动请求分段的部分被重复调用而设置的标志
-            let onlyRunOneTime = true;
+            let segRequestOnlyOnce = true;
+            if (config.reset.livechat) {
+                let decoder = new TextDecoder();
+                let encoder = new TextEncoder();
+                //钩子是为了获取ws对象的引用，只运行一次
+                let wbHookRunOnce = true;
+                const wssend = WebSocket.prototype.send;
+                WebSocket.prototype.send = function (...arg) {
+                    if (wbHookRunOnce && this.url == 'wss://broadcast.chat.bilibili.com:4095/sub') {
+                        liveChatOld = this;
+                        //从bilibiliPlayer.js > b.prototype.xx复制过来
+                        //body[Object]: 含有相应信息的对象
+                        //option[Number]: 数据包对应的行为，详见Pl对象
+                        //                 =5 一条弹幕数据
+                        //                 =7 首个数据包，建立与服务器的连接
+                        //return[Buffer]: 包装好的数据
+                        liveChatOld.convertToArrayBuffer = function (body, option) {
+                            let header = [{"name":"Header Length","key":"headerLen","qg":2,"offset":4,"value":16},{"name":"Protocol Version","key":"ver","qg":2,"offset":6,"value":1},{"name":"Operation","key":"op","qg":4,"offset":8,"value": option},{"name":"Sequence Id","key":"seq","qg":4,"offset":12,"value":1}];
+                            let headerBuf = new ArrayBuffer(16);
+                            let viewer = new DataView(headerBuf, 0);
+                            let bodyBuf = encoder.encode(JSON.stringify(body));
+                            viewer.setInt32(0, 16 + bodyBuf.byteLength);
+                            header.forEach(function (b) {
+                                4 === b.qg ? viewer.setInt32(b.offset, b.value) : 2 === b.qg && viewer.setInt16(b.offset, b.value)
+                            })
+                            return concatBuffer(headerBuf, bodyBuf);
+                        }
+                        wbHookRunOnce = false;
+                        liveChat.connectChatServer();
+                    }
+                    wssend.call(this, ...arg);
+                }
+                //原函数位于bilibiliPlayer.js > c.a.eK 和 jsc-player > Dl.mergeArrayBuffer
+                //连接两个buffer
+                function concatBuffer(headerBuf, bodyBuf) {
+                    headerBuf = new Uint8Array(headerBuf);
+                    bodyBuf = new Uint8Array(bodyBuf);
+                    var d = new Uint8Array(headerBuf.byteLength + bodyBuf.byteLength);
+                    d.set(headerBuf, 0);
+                    d.set(bodyBuf, headerBuf.byteLength);
+                    return d.buffer;
+                }
+                //操作常量表
+                let Pl = {"WS_OP_HEARTBEAT":2,"WS_OP_HEARTBEAT_REPLY":3,"WS_OP_DATA":1000,"WS_OP_BATCH_DATA":9,"WS_OP_DISCONNECT_REPLY":6,"WS_OP_USER_AUTHENTICATION":7,"WS_OP_CONNECT_SUCCESS":8,"WS_OP_CHANGEROOM":12,"WS_OP_CHANGEROOM_REPLY":13,"WS_OP_REGISTER":14,"WS_OP_REGISTER_REPLY":15,"WS_OP_UNREGISTER":16,"WS_OP_UNREGISTER_REPLY":17,"WS_OP_OGVCMD_REPLY":1015,"WS_PACKAGE_HEADER_TOTAL_LENGTH":18,"WS_PACKAGE_OFFSET":0,"WS_HEADER_OFFSET":4,"WS_VERSION_OFFSET":6,"WS_OPERATION_OFFSET":8,"WS_SEQUENCE_OFFSET":12,"WS_COMPRESS_OFFSET":16,"WS_CONTENTTYPE_OFFSET":17,"WS_BODY_PROTOCOL_VERSION":1,"WS_HEADER_DEFAULT_VERSION":1,"WS_HEADER_DEFAULT_OPERATION":1,"ws_header_default_sequence":1,"WS_HEADER_DEFAULT_COMPRESS":0,"WS_HEADER_DEFAULT_CONTENTTYPE":0};
+                //请求头
+                let wsBinaryHeaderList = [{"name":"Header Length","key":"headerLen","bytes":2,"offset":4,"value":18},{"name":"Protocol Version","key":"ver","bytes":2,"offset":6,"value":1},{"name":"Operation","key":"op","bytes":4,"offset":8,"value":7},{"name":"Sequence Id","key":"seq","bytes":4,"offset":12,"value":2},{"name":"Compress","key":"compress","bytes":1,"offset":16,"value":0},{"name":"ContentType","key":"contentType","bytes":1,"offset":17,"value":0}]
+                let liveChatOld; //对旧播放器建立的ws对象的引用
+                //大部分代码从jsc-player直接复制出来，代码风格差别很大，基础功能之外的部分先注释掉了
+                let liveChat = new WebSocket('wss://broadcast.chat.bilibili.com:7823/sub');
+                liveChat.binaryType = "arraybuffer";
+                liveChat.heatTimer = -1;
+                //每30秒一个心跳包
+                liveChat.heartBeat = function () {
+                    var i = this;
+                    clearTimeout(this.heatTimer);
+                    var e = this.convertToArrayBuffer({}, Pl.WS_OP_HEARTBEAT);
+                    this.send(e),
+                        this.heatTimer = window.setTimeout((function () {
+                            i.heartBeat()
+                        }), 1e3 * 30)
+                }
+                liveChat.onmessage = function (i) {
+                    var e = this;
+                    try {
+                        var t = this.convertToObject(i.data);
+                        if (t)
+                            switch (t.op) {
+                                case Pl.WS_OP_HEARTBEAT_REPLY:
+                                    //this.onHeartBeatReply(t.body);
+                                    break;
+                                case Pl.WS_OP_CONNECT_SUCCESS:
+                                    this.heartBeat();
+                                    break;
+                                case Pl.WS_OP_CHANGEROOM_REPLY:
+                                    //0 === Number(t.body.code) && this.options.onChangeRoomReply({ data: t && t.body });
+                                    break;
+                                case Pl.WS_OP_REGISTER_REPLY:
+                                    //0 === Number(t.body.code) && this.options.onRegisterReply({ data: t && t.body });
+                                    break;
+                                case Pl.WS_OP_UNREGISTER_REPLY:
+                                    //0 === Number(t.body.code) && this.options.onUnRegisterReply({ data: t && t.body });
+                                    break;
+                                case Pl.WS_OP_DATA:
+                                case Pl.WS_OP_BATCH_DATA:
+                                    t.body.forEach(function (v) {
+                                        liveChatOld.onmessage({
+                                            data: liveChatOld.convertToArrayBuffer({
+                                                cmd: 'DM',
+                                                info: [v[0], v[1]]
+                                            }, 5)
+                                        });
+                                    });
+                                    break;
+                                case Pl.WS_OP_OGVCMD_REPLY:
+                                    //this.onOgvCmdReply(t);
+                                    break;
+                                default:
+                                    //this.msgReply(t)
+                            }
+                    } catch (i) {
+                        console.error("WebSocket Error: ", i)
+                    }
+                    return this
+                }
+                //jsc-player > i.prototype.convertToArrayBuffer，与旧版的不同，新版播放器的请求头多了两字节
+                //jsc版没有混淆变量名，舒服了
+                liveChat.convertToArrayBuffer = function (body, option) {
+                    let headerBuf = new ArrayBuffer(Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH),
+                        viewer = new DataView(headerBuf, Pl.WS_PACKAGE_OFFSET),
+                        bodyBuf = encoder.encode(JSON.stringify(body));
+                    viewer.setInt32(Pl.WS_PACKAGE_OFFSET, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH + bodyBuf.byteLength);
+                    wsBinaryHeaderList[2].value = option;
+                    wsBinaryHeaderList.forEach((function (i) {
+                        4 === i.bytes ? (viewer.setInt32(i.offset, i.value),
+                            "seq" === i.key && ++i.value) : 2 === i.bytes ? viewer.setInt16(i.offset, i.value) : 1 === i.bytes && viewer.setInt8(i.offset, i.value)
+                    }));
+                    return concatBuffer(headerBuf, bodyBuf);
+                }
+                //jsc-player > i.prototype.convertToObject
+                //convertToArrayBuffer对应的解码函数
+                liveChat.convertToObject = function (i) {
+                    var e = new DataView(i),
+                        t = {};
+                    if (t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET),
+                        wsBinaryHeaderList.forEach((function (i) {
+                            4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
+                        })),
+                        t.op && t.op === Pl.WS_OP_BATCH_DATA)
+                        t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH, t.packetLen);
+                    else if (t.op && Pl.WS_OP_DATA === t.op)
+                        t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
+                    else if (t.op && t.op === Pl.WS_OP_OGVCMD_REPLY)
+                        t.body = ""; //this.parseOgvCmd(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
+                    else if (t.op) {
+                        t.body = [];
+                        for (var a = Pl.WS_PACKAGE_OFFSET, r = t.packetLen, n = "", l = ""; a < i.byteLength; a += r) {
+                            r = e.getInt32(a),
+                                n = e.getInt16(a + Pl.WS_HEADER_OFFSET);
+                            try {
+                                l = JSON.parse(decoder.decode(i.slice(a + n, a + r))),
+                                    t.body = l
+                            } catch (e) {
+                                l = decoder.decode(i.slice(a + n, a + r)),
+                                    console.error("decode body error:", new Uint8Array(i), t)
+                            }
+                        }
+                    }
+                    return t
+                }
+                liveChat.connectChatServer = function () {
+                    let body = {
+                        "room_id": "video://" + aid + "/" + cid,
+                        "platform": "web",
+                        "accepts": [1000, 1015]
+                    }; //旧版为{"uid":******,"roomid":*********,"protover":1,"aid":*********,"from":7}
+                    return wssend.call(this, this.convertToArrayBuffer(body, 7));
+                }
+                liveChat.parseDanmaku = function (i, e, t, a) {
+                    for (var r, n = [], l = t; l < i.byteLength; l += a) {
+                        a = e.getInt32(l),
+                            r = e.getInt16(l + Pl.WS_HEADER_OFFSET);
+                        try {
+                            n.push(JSON.parse(decoder.decode(i.slice(l + r, l + a))))
+                        } catch (e) {
+                            n.push(decoder.decode(i.slice(l + r, l + a))),
+                                console.error("decode body error:", new Uint8Array(i))
+                        }
+                    }
+                    return n
+                }
+            }
             // 原生xhr hook
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 let _url = url, hook = [_url, ""];
@@ -499,7 +670,7 @@
                 if (url.includes("list.so") && config.reset.danmuku) {
                     // 这时pakku.js已经修改了xhr对象，需要另做处理
                     if (this.pakku_url) {
-                        onlyRunOneTime = true;
+                        segRequestOnlyOnce = true;
                         let oid = unsafeWindow.cid;
                         let pid = unsafeWindow.aid;
                         // 更改pakku.js请求的url，使它过滤分段弹幕
@@ -530,8 +701,8 @@
                 XMLHttpRequest.prototype.send = async function (...arg) {
                     // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
                     // (pakku.js正常运行时这个send()不会被调用)
-                    if (config.reset.danmuku && (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && onlyRunOneTime))) {
-                        if (this.pakku_url && this.pakku_url.includes("seg.so"))onlyRunOneTime = false;
+                    if (config.reset.danmuku && (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && segRequestOnlyOnce))) {
+                        if (this.pakku_url && this.pakku_url.includes("seg.so"))segRequestOnlyOnce = false;
                         // 对于没有pakku.js的情况，模拟一个xhr响应
                         Object.defineProperty(this, "response", { writable: true });
                         Object.defineProperty(this, "responseText", { writable: true });
@@ -2375,6 +2546,7 @@
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新<br>※依赖xhrhook"],
+            livechat : ["实时弹幕修复", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
             limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
             grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
