@@ -39,6 +39,7 @@
    + 添加 屏蔽直播及轮播视频的功能
    + 添加 旧版播放器支持新版弹幕
    + 添加 历史记录只显示视频播放历史功能
+   + 修复 旧版播放器实时弹幕
 
 ---
 ### 关于设置
@@ -50,44 +51,37 @@
 ---
 ### 下载视频
 ![dash](https://i.loli.net/2020/08/16/Y4GzOdmqtZshH3b.png)
-![flv](https://i.loli.net/2020/08/16/LPaobejz1GONkYR.png)
-- 播放器右键菜单，呼出图示下载面板，右键另存为即可，注意：
-   + 鼠标左键直接点击无效！（浏览器同源策略）
-   + 直接复制链接到第三方工具无效！（B站防盗链策略）需额外配置：
-      - referer：*.bilibili.com域名下
-      - user-agent：任意有效值（不能为空）
-   + IDM用户可以右键IDM（也能捕获左键点击）
-- 画质和格式取决于当前播放，所以：
-   + 下载前建议切换到所需画质
-   + 能播放才能下载（大会员、港澳台）
-   + 6分钟预览也只能捕获预览
-- 下面是格式说明：
-   + mp4：原生mp4视频（含音频），最高只有1080P
-   + avc：h.264视频流（无音频），建议修改拓展名为`.m4v`
-   + hev：h.265视频流（无音频），建议修改拓展名为`.m4v`
-   + aac：纯音频，建议修改拓展名为`.m4a`
-   + flv：flash流媒体（含音频）
-   + 弹幕：xml格式弹幕
-   + 封面：视频封面，Bangumi封面
-   + 海报：特殊Bangumi背景图
-   + 中文：CC字幕，以对应语言命名
-- 无音频的视频流（avc/hec）需要另外下载音频（aac）部分：
-   + avc（h.264）、hev（h.265）视频流二选一，或者无脑选avc
-   + aac音频无脑选体积最大的
-   + 视频流 + 音频流 = 视频（封装）
-+ flv格式如果分段就要下载全部分段：
-   + 只有一个分段就是没分段，这种flv约等于mp4
-   + 分段1 + …… + 分段n = 视频（合并）
-- **封装和合并操作需要自行使用第三方工具**：[ffmpeg](https://ffmpeg.org)、[MKVToolNix](https://mkvtoolnix.download)……
-- 设置里开启“新版弹幕”后下载面板上的就是proto弹幕转化而成的xml弹幕
-- 其他部分大小数据为“--”不影响下载
-
-按：有mp4的话自然下载mp4最好，可惜如果要更高画质只能DASH/flv二选一。DASH格式必然是音视频分流的，flv除了老视频都已经不分段了，不分段的话flv是比DASH更好的选择。
+- 播放器右键菜单 → 下载视频 → 右键另存为
+   1. 鼠标左键直接点击无效！（浏览器同源策略）
+   2. 直接复制链接到第三方工具无效！（B站防盗链策略）
+      1. referer：*.bilibili.com域名下
+      2. user-agent：任意有效值（不能为空）
+   3. IDM用户可以右键IDM，同时也能捕获左键点击
+- 画质和格式取决于当前播放，能播放才能下载（大会员、港澳台）
+   1. 下载前建议切换到所需画质
+   2. 6分钟预览也只能捕获预览
+- B站提供了三种格式供选择：mp4、DASH和flv
+   1. mp4：原生mp4
+   2. DASH：音视频分离
+      1. avc：h.264视频流
+      2. hev：h.265视频流
+      3. aac：音频流
+   3. flv：流媒体文件
+- DASH格式将视频/音频拆分成独立的文件
+   1. 视频流有两种(avc/hev)，选择**一种**即可
+   2. 音频流只有一种aac，选择所需码率
+   3. 视频流 + 音频流 = 视频
+- flv格式可能会被切分成多段，历史遗留问题多见于老视频
+   1. 不分段的flv约等于mp4
+   2. 分段1 + …… + 分段n = 视频
+- 弹幕等附属内容只提供原生格式，不会专门进行转码
+   1. 启用新版弹幕后提供的就是新版弹幕的xml文件
+   2. 部分文件不会去获取大小数据，一律显示为“--”
 
 ---
 ### 已知问题
 以下问题这里可能处于并将长期处于无法解决状态，请多担待！  
-1. 由于实现机制做不到在浏览器访问新版页面之前启用旧版页面，所以旧版页面载入比较慢且新版页面可能一闪而过。
+1. 由于实现机制做不到在浏览器访问新版页面之前启用旧版页面，所以旧版页面载入比较慢且新版页面可能一闪而过。Firefox 79及后续版本无法良好支持旧版播放页面，原因暂时不得而知，猜测可能与vue有关。
 2. 旧版播放器已失去官方维护，版本停留在`2019-10-31 07:38:36`，所以新版播放器互动视频、全景视频、高能进度条等功能是不支持的，互动视频脚本已主动忽略不会启用旧版，全景视频无法移动视角，CC字幕有[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)提供第三方支持。
 3. 主页内容改版极大，旧版很多接口已出现问题，脚本已将被废弃的广告区替换为资讯区的内容，但B站并不提供资讯区的排行所以右边排行榜无法获取。推荐视频不再提供三日/昨日/一周分类，已屏蔽对应的切换按钮。直播推荐及排行已通过`xhr hook`方式修复。
 4. 旧版播放页面的充电接口是失效的，为避免财产损失请不要使用，新版播放页面也不提供充电入口，需要给UP主充电请移步对应的空间。
@@ -106,38 +100,46 @@
 >
 
 
-- **Firefox最新版(79及之后)旧版框架启用失败**，原因不明，之前的版本没问题   
-- 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
-   - DOM的数据被覆盖
-   - DOM的回调失效：如`addEventListener`、`document.onclick`
-   - `GM_setValue()`方法失效
-   1. 只针对以`run-at document-start`注入脚本
-   2. 只针对启用了旧版框架的页面
-   3. window的属性和方法等不会失效
+1. **Firefox最新版(79及之后)旧版框架启用失败**，原因不明，之前的版本没问题   
+2. 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
+   1. DOM的数据被覆盖
+   2. DOM的回调失效：如`addEventListener`、`document.onclick`
+   3. `GM_setValue()`方法失效
+   4. 只针对以`run-at document-start`注入脚本
+   5. 只针对启用了旧版框架的页面
 
 附上测试结果：
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：**基本正常**：`GM_setValue`失效，在旧版页面无法修改设置、“简化主页”冲突，使旧版主页布局紊乱、旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”、快捷键拓展未适配，在旧版页面部分快捷键无效
-- [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：**完全正常**
-- [解除B站区域限制](https://greasyfork.org/scripts/25718)：**基本正常**：旧版UI未适配，无法在旧版页面调出设置、**若要同时使用请关闭本脚本“区域限制”选项！**
-- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：**完全正常**
-- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)：**完全正常**：推荐以`run-at document-start`注入 、推荐只在需要时启用该脚本
-- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：**完全正常**
-- [IDM Integration Module](http://www.internetdownloadmanager.com)：**下载浮动条失效 ಥ_ಥ**
-- [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：**完全正常**
-- [smoothscroll](http://iamdustan.com/smoothscroll/)：**平滑滚动失效 ಥ_ಥ**
+1. [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
+   1. `GM_setValue`失效，在旧版页面无法修改设置
+   2. “简化主页”冲突，使旧版主页布局紊乱
+   3. 旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”
+   4. 快捷键拓展未适配，在旧版页面部分快捷键无效
+2. [解除B站区域限制](https://greasyfork.org/scripts/25718)
+   1. 旧版UI未适配，无法在旧版页面调出设置
+   2. **若要同时使用请关闭本脚本“区域限制”选项！**
+3. [Bilibili 修车插件](https://greasyfork.org/scripts/374449)
+   1. 推荐以`run-at document-start`注入
+   2. 推荐只在需要时启用该脚本
+4. [IDM Integration Module](http://www.internetdownloadmanager.com)：下载浮动条失效
+5. [smoothscroll](http://iamdustan.com/smoothscroll/)：平滑滚动失效
+6. [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：正常
+7. [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：正常
+8. [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：正常
+
+9. [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：正常
 
 ---
 ### 隐私相关
 1. 脚本会读取您的部分信息
-   - cookies：与B站后端进行交互时识别用户身份
-      + DedeUserID：判断是否登录
-      + bili_jct：与B站后端进行操作验证
+   1. cookies：与B站后端进行交互时识别用户身份
+      1. DedeUserID：判断是否登录
+      2. bili_jct：与B站后端进行操作验证
 2. 脚本申请了`GM_xmlhttpRequest`跨域权限，`@connect`元数据如下
-   - [BiliPlus](https://www.biliplus.com/)：获取失效视频信息
-   - [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
-   - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
+   1. [BiliPlus](https://www.biliplus.com/)：获取失效视频信息
+   2. [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
+   3. [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
 3. 脚本引用了部分公开库
-   - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
+   1. [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
 
 ---
 ### 参考致谢
@@ -153,12 +155,14 @@
 - [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)：playurl接口算法
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl接口参考
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
-- [MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)：md5算法
+- [MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)：md5哈希算法
 
 ---
 ### 效果预览
 ![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
 ### 版本历史
+- 2020-09-06
+   + 修复旧版播放器实时弹幕
 - 2020-08-26
    + 改进旧版播放器设置维护
    + 下载视频主动获取flv格式
