@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.5
+// @version      3.4.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -23,7 +23,7 @@
 
     // 全局变量
     let ml, pl, aid, big, cid, mid, oid, pgc, src, tid, uid, url, xml, bvid, limit, defig;
-    let arr = [], ids = [], obj = {}, mdf = {}, bloburl = {}, video = {};
+    let arr = [], ids = [], obj = {}, mdf = {}, bloburl = {};
     let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
@@ -35,136 +35,137 @@
     // 脚本默认设置：0 - 关闭，1 - 开启
     // 一般直接修改这里无效，脚本读取的是管理器中的数据
     const config = {
-        rewrite: {
-            av: 1,
-            bangumi: 1,
-            watchlater: 1,
-            frame: 1,
-            home: 1,
-            playlist: 1,
-            medialist: 1,
+        rewrite : {
+            av : 1,
+            bangumi : 1,
+            watchlater : 1,
+            frame : 1,
+            home : 1,
+            playlist : 1,
+            medialist : 1,
         },
-        reset: {
-            xhrhook: 1,
-            danmuku: 1,
-            livechat: 1,
-            limit: 0,
-            grobalboard: 1,
-            replyfloor: 1,
-            headblur: 0,
-            preview: 1,
-            jointime: 1,
-            lostvideo: 1,
-            bvid2av: 1,
-            selectdanmu: 0,
-            episodedata: 1,
-            like: 1,
-            static: 1,
-            download: 1,
-            heartbeat: 0,
-            carousel: 0,
-            adloc: 0,
-            roomplay: 0,
-            history: 0,
-            electric: 0
+        reset : {
+            xhrhook : 1,
+            danmuku : 1,
+            livechat : 1,
+            limit : 0,
+            grobalboard : 1,
+            replyfloor : 1,
+            headblur : 0,
+            preview : 1,
+            jointime : 1,
+            lostvideo : 1,
+            bvid2av : 1,
+            selectdanmu : 0,
+            episodedata : 1,
+            like : 1,
+            static : 1,
+            download : 1,
+            heartbeat : 0,
+            carousel : 0,
+            adloc : 0,
+            roomplay : 0,
+            history : 0,
+            electric : 0
         }
     }
 
     // 统一api接口
     const API = {
         // 网页框架
-        pageframe: {
-            watchlater: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="spm_prefix" content="333.342"/><link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="viewlater-app"><app></app></div><div class="footer bili-footer"></div><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script></body></html>',
-            playlist: '<!DOCTYPE html><html><head><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=333.44><link rel=stylesheet href=//static.hdslb.com/phoenix/dist/css/comment.min.css type=text/css><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=0><link href=//s1.hdslb.com/bfs/static/jinkela/playlist-video/css/playlist_video.0.87292febba67b03f65d05c15d03e325d9db4f56a.css rel=stylesheet><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div id=playlist-video-app></div><div class="footer bili-footer report-wrap-module"></div><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js></script><script type=text/javascript src=//static.hdslb.com/js/jquery.qrcode.min.js></script><script type=text/javascript charset=utf-8 src=//static.hdslb.com/common/js/footer.js></script><script type=text/javascript src=//static.hdslb.com/js/swfobject.js></script><script type=text/javascript src=//static.hdslb.com/js/video.min.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/moxie.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/plupload.js></script><script type=text/javascript src=//static.hdslb.com/phoenix/dist/js/comment.min.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script></body></html>',
-            bangumi: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" /></head><body><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true" class="main-container"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
-            cinema: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" /></head><body><div class="z-top-container " style="height:42px"></div><div id="app" data-server-rendered="true" class="main-container special"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
-            video: '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" /><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background: url(//static.hdslb.com/images/base/icons.png);}</style></head><body><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script> <script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true"></div><div class="bili-wrapper" id="bofqi"></div><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript">function getQueryString(e){var r=new RegExp("(^|&)"+e+"=([^&]*)(&|$)"),i=window.location.search.substr(1).match(r);return null!=i?unescape(i[2]):null}window.getInternetExplorerVersion=function(){var e=-1;if("Microsoft Internet Explorer"==navigator.appName){var r=navigator.userAgent;null!=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r)&&(e=parseFloat(RegExp.$1))}return e};var vd=window.__INITIAL_STATE__&&window.__INITIAL_STATE__.videoData;if(vd&&vd.aid&&9!==getInternetExplorerVersion()){if($("#__bofqi").innerHTML=\'<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>\',vd.embedPlayer){var p=getQueryString("p")?getQueryString("p")-1:0,player={aid:vd.aid,cid:vd.pages[p]&&vd.pages[p].cid||vd.pages[0].cid};EmbedPlayer("player","//static.hdslb.com/play.swf","cid="+player.cid+"&aid="+player.aid+"&pre_ad=")}vd.embed&&$("#bofqi").html(vd.embed)}else $("#bofqi").remove()</script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><div class="footer bili-footer report-wrap-module"></div><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script></body></html>',
-            home: '<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css"></head><body><div id="home-app"></div><div id="app" data-server-rendered="true"></div><script src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script></script><script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js" defer></script><script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js" defer></script><div class="footer bili-footer report-wrap-module"></div><script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js" crossorigin></script><script type="text/javascript" defer="defer" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script><link rel="prefetch" as="script" href="//static.hdslb.com/js/video.min.js"></body></html>'
+        pageframe : {
+            watchlater : '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="spm_prefix" content="333.342"/><link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css"><link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css"><link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css" rel="stylesheet"><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div class="z-top-container has-menu"></div><div id="viewlater-app"><app></app></div><div class="footer bili-footer"></div><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"></script><script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"></script><script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script></body></html>',
+            playlist : '<!DOCTYPE html><html><head><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=333.44><link rel=stylesheet href=//static.hdslb.com/phoenix/dist/css/comment.min.css type=text/css><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=renderer content=webkit><meta name=description content=bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。><meta name=keywords content=B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid><meta name=spm_prefix content=0><link href=//s1.hdslb.com/bfs/static/jinkela/playlist-video/css/playlist_video.0.87292febba67b03f65d05c15d03e325d9db4f56a.css rel=stylesheet><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}</style></head><body><div id=playlist-video-app></div><div class="footer bili-footer report-wrap-module"></div><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js></script><script type=text/javascript src=//static.hdslb.com/js/jquery.qrcode.min.js></script><script type=text/javascript charset=utf-8 src=//static.hdslb.com/common/js/footer.js></script><script type=text/javascript src=//static.hdslb.com/js/swfobject.js></script><script type=text/javascript src=//static.hdslb.com/js/video.min.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/moxie.js></script><script type=text/javascript src=//static.hdslb.com/mstation/js/upload/plupload.js></script><script type=text/javascript src=//static.hdslb.com/phoenix/dist/js/comment.min.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script><script type=text/javascript src=//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js></script></body></html>',
+            bangumi : '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" /></head><body><div class="z-top-container has-menu"></div><div id="app" data-server-rendered="true" class="main-container"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
+            cinema : '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"></script><script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" /></head><body><div class="z-top-container " style="height:42px"></div><div id="app" data-server-rendered="true" class="main-container special"></div><script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js" crossorigin="" defer="defer"></script><script type="text/javascript">0</script><div class="footer bili-footer report-wrap-module" id="home_footer"></div><script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"></script><script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script></body></html>',
+            video : '<!DOCTYPE html><html><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" /><style type="text/css">#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background : url(//static.hdslb.com/images/base/icons.png);}</style></head><body><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><div class="z-top-container has-menu"></div><div id="video-page-app"></div><div id="app" data-server-rendered="true"></div><div class="bili-wrapper" id="bofqi"></div><div class="footer bili-footer report-wrap-module"></div><script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script><script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script><script type="text/javascript">function getQueryString(e){var r=new RegExp("(^|&)"+e+"=([^&]*)(&|$)"),i=window.location.search.substr(1).match(r);return null!=i?unescape(i[2]):null}window.getInternetExplorerVersion=function(){var e=-1;if("Microsoft Internet Explorer"==navigator.appName){var r=navigator.userAgent;null!=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r)&&(e=parseFloat(RegExp.$1))}return e};var vd=window.__INITIAL_STATE__&&window.__INITIAL_STATE__.videoData;if(vd&&vd.aid&&9!==getInternetExplorerVersion()){if($("#__bofqi").innerHTML=\'<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>\',vd.embedPlayer){var p=getQueryString("p")?getQueryString("p")-1:0,player={aid:vd.aid,cid:vd.pages[p]&&vd.pages[p].cid||vd.pages[0].cid};EmbedPlayer("player","//static.hdslb.com/play.swf","cid="+player.cid+"&aid="+player.aid+"&pre_ad=")}vd.embed&&$("#bofqi").html(vd.embed)}else $("#bofqi").remove()</script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js" crossorigin="" defer="defer"></script><script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script><link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" /><script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"></script><script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script></body></html>',
+            home : '<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="utf-8"><title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title><meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。"><meta name="keywords" content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃"><meta name="renderer" content="webkit"><meta http-equiv="X-UA-Compatible" content="IE=edge"><link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml" title="哔哩哔哩"><script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script><link rel="stylesheet" href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css"></head><body><div id="home-app"></div><div id="app" data-server-rendered="true"></div><script src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script></script><script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js" defer></script><script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js" defer></script><div class="footer bili-footer report-wrap-module"></div><script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js" crossorigin></script><script type="text/javascript" defer="defer" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script><link rel="prefetch" as="script" href="//static.hdslb.com/js/video.min.js"></body></html>'
         },
         // 样式表
-        style: {
-            playshadow: "#bilibiliPlayer, #bofqi.mini-player {box-shadow: 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}",
-            download : "#bili-old-download-table {position: fixed;z-index: 3300;bottom: 0;background: #f6f6f6;width: 100%;text-align: center;}#bili-old-download-table .download-box {background-color: #fff;color: #000 !important;border: #ccc 1px solid;border-radius: 3px;display: inline-block;margin: 3px;}.download-mp4 {color: #fff !important;background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);}.download-avc {color: #fff !important;background-color: #f00;background-image: linear-gradient(to right, #f00, #c00);}.download-hev {color: #fff !important;background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);}.download-aac {color: #fff !important;background-color: #0d0;background-image: linear-gradient(to right, #0d0, #0a0);}.download-flv {color: #fff !important;background-color: #f90;background-image: linear-gradient(to right, #f90, #d70);}.download-type {color: #000 !important;display: table-cell;min-width: 1.5em;padding: 1px 3px;text-align: center;vertical-align: middle;}#bili-old-download-table a {display: table-cell;padding: 3px;text-decoration: none;}.quality-high {background-color: #c0f;}.quality-1080p {background-color: #f00;}.quality-720p {background-color: #f90;}.quality-480p {background-color: #00d;}.quality-360p {background-color: #0d0;}.download-quality {color: #fff !important;padding: 1px 3px;text-align: center;}.download-size {font-size: 90%;margin-top: 2px;padding: 1px 3px;text-align: center;}",
-            jointime: ".user .info .meta .row {height: 88px;white-space: normal;}.user .info .jointime .icon {background-position: -209px -84px;}.user .info .jointime .text {color: #00a1d6;}}",
-            online: ".online a {color: rgb(109, 117, 122);}.popularize-module .online em {display: inline-block;height: 10px;line-height: 10px;vertical-align: top;border-left: 1px solid rgb(184, 192, 204);margin: 12px 15px 0px;}",
-            search: ".search-wrap .search-block .input-wrap input {font: 400 13.3333px Arial !important;}",
-            uiface: "#ui-face {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;position: fixed;padding: 4px;bottom: 65px;width: 56px;height: 40px;transition: right 0.7s;-moz-transition: right 0.7s;-webkit-transition: right 0.7s;-o-transition: right 0.7s;z-index: 1008;}#ui-face i {background-position: -471px -982px;display: block;width: 20px;height: 20px;margin: auto;transition: 0.2s;background-image: url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size: 14px;display: block;width: 50%;margin: auto;transition: 0.2s;color: rgb(0,0,0)}#ui-table {box-sizing: content-box;color: #fff;background-color: rgb(255,255,255);border-radius:5px;font-size: 14px;position: fixed;padding: 4px;bottom: 30px;right: 58px;width: 200px;height: 360px;line-height: normal;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);overflow-y: scroll;z-index: 10008;}.checke{float: right;position: relative;-webkit-appearance: none;width: 40px;height: 20px;line-height: 20px;background: #eee;border-radius: 10px;outline: none;border: 2px solid #999999;}.checke:before{position: absolute;left: 0;content: '';width: 12px;height: 12px;border-radius: 50%;background: #eee;box-shadow: 0px 0px 5px #ddd;transition: all 0.2s linear;border: 2px solid #999999;}.checke:checked{   background: #01a1d6;}.checke:checked:before{left: 20px;transition: all 0.2s linear;}#ui-state {border-radius: 5px;z-index: 1000;width: auto;position: fixed;right: 280px;color: #fff;background: #0008;padding: 1rem;font-size: 12pt;top: 50%;transform: translateY(-50%);transition: .2s ease-out .8s;max-width: 20%;line-height: 2;white-space: pre-wrap;pointer-events: none;opacity: 1;}.video_download {cursor: pointer;width: 46px;height: 48px;background-color: #f6f9fa;background-position: -1353px -1095px;background-repeat: no-repeat;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;display: inline-block;background-image: url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color: #00a1d6;border-color: #00a1d6;}",
-            bofqi: "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
-            gray: "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
-            like: ".video-info-module .number .like b, .video-info-module .number .like i {background: url(//static.hdslb.com/images/base/icons.png);display: inline-block;margin-top: -3px;vertical-align: middle;}",
+        style : {
+            playshadow : "#bilibiliPlayer, #bofqi.mini-player {box-shadow : 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}",
+            download : "#bili-old-download-table {position : fixed;z-index : 3300;bottom : 0;background : #f6f6f6;width : 100%;text-align : center;}#bili-old-download-table .download-box {background-color : #fff;color : #000 !important;border : #ccc 1px solid;border-radius : 3px;display : inline-block;margin : 3px;}.download-mp4 {color : #fff !important;background-color : #c0f;background-image : linear-gradient(to right, #c0f, #90f);}.download-avc {color : #fff !important;background-color : #f00;background-image : linear-gradient(to right, #f00, #c00);}.download-hev {color : #fff !important;background-color : #ffe42b;background-image : linear-gradient(to right, #ffe42b, #dfb200);}.download-aac {color : #fff !important;background-color : #0d0;background-image : linear-gradient(to right, #0d0, #0a0);}.download-flv {color : #fff !important;background-color : #f90;background-image : linear-gradient(to right, #f90, #d70);}.download-type {color : #000 !important;display : table-cell;min-width : 1.5em;padding : 1px 3px;text-align : center;vertical-align : middle;}#bili-old-download-table a {display : table-cell;padding : 3px;text-decoration : none;}.quality-high {background-color : #c0f;}.quality-1080p {background-color : #f00;}.quality-720p {background-color : #f90;}.quality-480p {background-color : #00d;}.quality-360p {background-color : #0d0;}.download-quality {color : #fff !important;padding : 1px 3px;text-align : center;}.download-size {font-size : 90%;margin-top : 2px;padding : 1px 3px;text-align : center;}",
+            jointime : ".user .info .meta .row {height : 88px;white-space : normal;}.user .info .jointime .icon {background-position : -209px -84px;}.user .info .jointime .text {color : #00a1d6;}}",
+            online : ".online a {color : rgb(109, 117, 122);}.popularize-module .online em {display : inline-block;height : 10px;line-height : 10px;vertical-align : top;border-left : 1px solid rgb(184, 192, 204);margin : 12px 15px 0px;}",
+            search : ".search-wrap .search-block .input-wrap input {font : 400 13.3333px Arial !important;}",
+            uiface : "#ui-face {box-sizing : content-box;color : #fff;background-color : rgb(255,255,255);border-radius:5px;position : fixed;padding : 4px;bottom : 65px;width : 56px;height : 40px;transition : right 0.7s;-moz-transition : right 0.7s;-webkit-transition : right 0.7s;-o-transition : right 0.7s;z-index : 1008;}#ui-face i {background-position : -471px -982px;display : block;width : 20px;height : 20px;margin : auto;transition : 0.2s;background-image : url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size : 14px;display : block;width : 50%;margin : auto;transition : 0.2s;color : rgb(0,0,0)}#ui-table {box-sizing : content-box;color : #fff;background-color : rgb(255,255,255);border-radius:5px;font-size : 14px;position : fixed;padding : 4px;bottom : 30px;right : 58px;width : 200px;height : 360px;line-height : normal;box-shadow : rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border : 1px solid rgb(233, 234, 236);overflow-y : scroll;z-index : 10008;}.checke{float : right;position : relative;-webkit-appearance : none;width : 40px;height : 20px;line-height : 20px;background : #eee;border-radius : 10px;outline : none;border : 2px solid #999999;}.checke:before{position : absolute;left : 0;content : '';width : 12px;height : 12px;border-radius : 50%;background : #eee;box-shadow : 0px 0px 5px #ddd;transition : all 0.2s linear;border : 2px solid #999999;}.checke:checked{   background : #01a1d6;}.checke:checked:before{left : 20px;transition : all 0.2s linear;}#ui-state {border-radius : 5px;z-index : 1000;width : auto;position : fixed;right : 280px;color : #fff;background : #0008;padding : 1rem;font-size : 12pt;top : 50%;transform : translateY(-50%);transition : .2s ease-out .8s;max-width : 20%;line-height : 2;white-space : pre-wrap;pointer-events : none;opacity : 1;}.video_download {cursor : pointer;width : 46px;height : 48px;background-color : #f6f9fa;background-position : -1353px -1095px;background-repeat : no-repeat;border : 1px solid #e5e9ef;overflow : hidden;border-radius : 4px;display : inline-block;background-image : url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color : #00a1d6;border-color : #00a1d6;}",
+            bofqi : "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
+            gray : "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
+            like : ".video-info-module .number .like b, .video-info-module .number .like i {background : url(//static.hdslb.com/images/base/icons.png);display : inline-block;margin-top : -3px;vertical-align : middle;}",
         },
         // 播放器框架
         playerframe : {
-            html5player: "https://www.bilibili.com/blackboard/html5player.html", // aid, cid, season_type player_type + &as_wide=1
-            playlist: "https://www.bilibili.com/blackboard/playlist-player.html", // pl || aid,cid
-            ancient: "https://www.bilibili.com/blackboard/activity-ancient-player.html", // aid,cid
-            player: "https://player.bilibili.com/player.html", // aid,cid &| page
+            html5player : "https://www.bilibili.com/blackboard/html5player.html", // aid, cid, season_type player_type + &as_wide=1
+            playlist : "https://www.bilibili.com/blackboard/playlist-player.html", // pl || aid,cid
+            ancient : "https://www.bilibili.com/blackboard/activity-ancient-player.html", // aid,cid
+            player : "https://player.bilibili.com/player.html", // aid,cid &| page
         },
         // URL
-        url: {
-            spacedetial: "https://api.bilibili.com/medialist/gateway/base/spaceDetail", // media_id, pn + &ps=20&keyword=&order=mtime&type=0&tid=0
-            channel: "https://api.bilibili.com/x/space/channel/video", // mid, cid, pn + &ps=30&order=0
-            biliplus: "https://www.biliplus.com/video/av",
-            jijidown: "https://www.jijidown.com/video/av",
-            online: "https://api.bilibili.com/x/web-interface/online",
-            stat: "https://api.bilibili.com/x/web-interface/archive/stat", // aid
-            replymain: "https://api.bilibili.com/x/v2/reply/main", // oid, type, mode &| next
-            reply: "https://api.bilibili.com/x/v2/reply", // type,sort,oid,pn
-            replycursor: "https://api.bilibili.com/x/v2/reply/reply/cursor", // oid, root, type &| sort
-            replydialog: "https://api.bilibili.com/x/v2/reply/dialog/cursor",
-            membercard: "https://account.bilibili.com/api/member/getCardByMid", // mid
-            season: "https://api.bilibili.com/pgc/view/web/season", // season_id || ep_id
-            pagelist: "https://api.bilibili.com/x/player/pagelist", // aid
-            view: "https://api.bilibili.com/x/web-interface/view", // aid || bvid
-            haslike: "https://api.bilibili.com/x/web-interface/archive/has/like", // aid
-            like: "https://api.bilibili.com/x/web-interface/archive/like",
-            ids4Player: "https://api.bilibili.com/x/v1/medialist/resource/ids4Player", // media_id
-            cards: "https://api.bilibili.com/x/article/cards", // ids
-            medialist: "https://api.bilibili.com/x/v1/medialist/detail", // media_id && pn=1&ps=1
-            x: "https://api.bilibili.com/x/player/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
-            pgc: "https://api.bilibili.com/pgc/player/web/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
-            sign: "https://interface.bilibili.com/v2/playurl", // appkey, cid=, otype=json, qn, quality, type
-            proj: "https://app.bilibili.com/v2/playurlproj", // appkey, cid=, otype=json, qn
-            pgcproj: "https://api.bilibili.com/pgc/player/api/playurlproj", // appkey, cid=, otype=json, platform=android_i, qn
-            BPplayurl: "https://www.biliplus.com/BPplayurl.php"
+        url : {
+            spacedetial : "https://api.bilibili.com/medialist/gateway/base/spaceDetail", // media_id, pn + &ps=20&keyword=&order=mtime&type=0&tid=0
+            channel : "https://api.bilibili.com/x/space/channel/video", // mid, cid, pn + &ps=30&order=0
+            biliplus : "https://www.biliplus.com/video/av",
+            jijidown : "https://www.jijidown.com/video/av",
+            online : "https://api.bilibili.com/x/web-interface/online",
+            stat : "https://api.bilibili.com/x/web-interface/archive/stat", // aid
+            replymain : "https://api.bilibili.com/x/v2/reply/main", // oid, type, mode &| next
+            reply : "https://api.bilibili.com/x/v2/reply", // type,sort,oid,pn
+            replycursor : "https://api.bilibili.com/x/v2/reply/reply/cursor", // oid, root, type &| sort
+            replydialog : "https://api.bilibili.com/x/v2/reply/dialog/cursor",
+            membercard : "https://account.bilibili.com/api/member/getCardByMid", // mid
+            season : "https://api.bilibili.com/pgc/view/web/season", // season_id || ep_id
+            pagelist : "https://api.bilibili.com/x/player/pagelist", // aid
+            view : "https://api.bilibili.com/x/web-interface/view", // aid || bvid
+            haslike : "https://api.bilibili.com/x/web-interface/archive/has/like", // aid
+            like : "https://api.bilibili.com/x/web-interface/archive/like",
+            ids4Player : "https://api.bilibili.com/x/v1/medialist/resource/ids4Player", // media_id
+            cards : "https://api.bilibili.com/x/article/cards", // ids
+            medialist : "https://api.bilibili.com/x/v1/medialist/detail", // media_id && pn=1&ps=1
+            x : "https://api.bilibili.com/x/player/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
+            pgc : "https://api.bilibili.com/pgc/player/web/playurl", // avid | bvid, cid, qn + fourk=1&type=&otype=json |+ &fnver=0&fnval=16
+            sign : "https://interface.bilibili.com/v2/playurl", // appkey, cid=, otype=json, qn, quality, type
+            proj : "https://app.bilibili.com/v2/playurlproj", // appkey, cid=, otype=json, qn
+            pgcproj : "https://api.bilibili.com/pgc/player/api/playurlproj", // appkey, cid=, otype=json, platform=android_i, qn
+            BPplayurl : "https://www.biliplus.com/BPplayurl.php", // [origin] + &module=pgc&balh_ajax=1
+            ranklist : "https://api.bilibili.com/pgc/season/rank/web/list" // season_type, &day=3
         },
         // 未识别分区对照表
-        sort: {
-            1: [1, "动画", "https://www.bilibili.com/v/douga/"],
-            3: [3, "音乐", "https://www.bilibili.com/v/music/"],
-            29: [3, "音乐现场", "https://www.bilibili.com/v/music/live"],
-            36: [36, "科技", "https://www.bilibili.com/v/technology"],
-            86: [1, "特摄", "https://www.bilibili.com/v/douga/"],
-            95: [188, "手机平板", "https://www.bilibili.com/v/digital/mobile/"],
-            129: [129, "舞蹈", "https://www.bilibili.com/v/dance"],
-            155: [155, "时尚", "https://www.bilibili.com/v/fashion"],
-            160: [160, "生活", "https://www.bilibili.com/v/life"],
-            168: [168, "国创", "https://www.bilibili.com/guochuang"],
-            176: [160, "汽车", "https://www.bilibili.com/v/life/automobile"],
-            188: [188, "数码", "https://www.bilibili.com/v/digital"],
-            189: [188, "电脑装机", "https://www.bilibili.com/v/digital/pc"],
-            190: [188, "数码摄影", "https://www.bilibili.com/v/digital/photography"],
-            191: [188, "影音智能", "https://www.bilibili.com/v/digital/intelligence_av"],
-            192: [155, "风尚标", "https://www.bilibili.com/v/fashion/trends"],
-            193: [3, "MV", "https://www.bilibili.com/v/music/mv"],
-            194: [3, "电音", "https://www.bilibili.com/v/music/electronic"],
-            195: [168, "动态漫·广播剧", "https://www.bilibili.com/v/guochuang/motioncomic"],
-            198: [129, "街舞", "https://www.bilibili.com/v/dance/hiphop"],
-            199: [129, "明星舞蹈", "https://www.bilibili.com/v/dance/star"],
-            200: [129, "中国舞", "https://www.bilibili.com/v/dance/china"],
-            201: [36, "科学科普", "https://www.bilibili.com/v/technology/science"],
-            202: [202, "资讯", "https://www.bilibili.com/v/information/"],
-            203: [202, "热点", "https://www.bilibili.com/v/information/hotspot/"],
-            204: [202, "环球", "https://www.bilibili.com/v/information/global/"],
-            205: [202, "社会", "https://www.bilibili.com/v/information/social/"],
-            206: [202, "综合", "https://www.bilibili.com/v/information/multiple/"],
-            207: [36, "财经", "https://www.bilibili.com/v/technology/finance"],
-            208: [36, "校园学习", "https://www.bilibili.com/v/technology/campus"],
-            209: [36, "职业职场", "https://www.bilibili.com/v/technology/career"],
-            210: [1, "手办·模玩", "https://www.bilibili.com/v/douga/garage_kit"]
+        sort : {
+            1 : [1, "动画", "https://www.bilibili.com/v/douga/"],
+            3 : [3, "音乐", "https://www.bilibili.com/v/music/"],
+            29 : [3, "音乐现场", "https://www.bilibili.com/v/music/live"],
+            36 : [36, "科技", "https://www.bilibili.com/v/technology"],
+            86 : [1, "特摄", "https://www.bilibili.com/v/douga/"],
+            95 : [188, "手机平板", "https://www.bilibili.com/v/digital/mobile/"],
+            129 : [129, "舞蹈", "https://www.bilibili.com/v/dance"],
+            155 : [155, "时尚", "https://www.bilibili.com/v/fashion"],
+            160 : [160, "生活", "https://www.bilibili.com/v/life"],
+            168 : [168, "国创", "https://www.bilibili.com/guochuang"],
+            176 : [160, "汽车", "https://www.bilibili.com/v/life/automobile"],
+            188 : [188, "数码", "https://www.bilibili.com/v/digital"],
+            189 : [188, "电脑装机", "https://www.bilibili.com/v/digital/pc"],
+            190 : [188, "数码摄影", "https://www.bilibili.com/v/digital/photography"],
+            191 : [188, "影音智能", "https://www.bilibili.com/v/digital/intelligence_av"],
+            192 : [155, "风尚标", "https://www.bilibili.com/v/fashion/trends"],
+            193 : [3, "MV", "https://www.bilibili.com/v/music/mv"],
+            194 : [3, "电音", "https://www.bilibili.com/v/music/electronic"],
+            195 : [168, "动态漫·广播剧", "https://www.bilibili.com/v/guochuang/motioncomic"],
+            198 : [129, "街舞", "https://www.bilibili.com/v/dance/hiphop"],
+            199 : [129, "明星舞蹈", "https://www.bilibili.com/v/dance/star"],
+            200 : [129, "中国舞", "https://www.bilibili.com/v/dance/china"],
+            201 : [36, "科学科普", "https://www.bilibili.com/v/technology/science"],
+            202 : [202, "资讯", "https://www.bilibili.com/v/information/"],
+            203 : [202, "热点", "https://www.bilibili.com/v/information/hotspot/"],
+            204 : [202, "环球", "https://www.bilibili.com/v/information/global/"],
+            205 : [202, "社会", "https://www.bilibili.com/v/information/social/"],
+            206 : [202, "综合", "https://www.bilibili.com/v/information/multiple/"],
+            207 : [36, "财经", "https://www.bilibili.com/v/technology/finance"],
+            208 : [36, "校园学习", "https://www.bilibili.com/v/technology/campus"],
+            209 : [36, "职业职场", "https://www.bilibili.com/v/technology/career"],
+            210 : [1, "手办·模玩", "https://www.bilibili.com/v/douga/garage_kit"]
         },
         // 播放器通知
-        message: [
+        message : [
             ['https://www.bilibili.com/blackboard/activity-4KPC.html', '解锁超清4K画质'],
             ['https://www.bilibili.com/blackboard/activity-4K120FPS-PC.html', '4K120FPS投稿全量开放'],
             ['https://www.bilibili.com/blackboard/bilibili2009.html', '十年前的B站长啥样'],
@@ -174,29 +175,29 @@
 
     // 调试模块封装
     const debug = {
-        log: (...msg) => console.log("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
-        error: (...msg) => console.error("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
-        warn: (...msg) => console.warn("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
-        debug: (...msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
-        msg: (...msg) => {
+        log : (...msg) => console.log("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
+        error : (...msg) => console.error("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
+        warn : (...msg) => console.warn("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
+        debug : (...msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
+        msg : (...msg) => {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
             debug.log(...msg);
             if (!node) return;
             let warn = msg[1] || "", delay = msg[2] || 3000;
-            let item = document.createElement("div");
-            let text = document.createElement("div");
-            let span = document.createElement("span");
-            let red = document.createElement("span");
+            let item = document.createElement("div"),
+                text = document.createElement("div"),
+                span = document.createElement("span"),
+                red = document.createElement("span");
             delay = delay ? delay : 3000;
             item.setAttribute("class","bilibili-player-video-toast-item bilibili-player-video-toast-msg");
+            item.appendChild(text);
             text.setAttribute("class","bilibili-player-video-toast-item-text");
-            span.setAttribute("class","video-float-hint-text");
-            red.setAttribute("class","video-float-hint-btn hint-red");
-            span.innerText = msg[0];
-            red.innerText = warn ? warn : "";
             text.appendChild(span);
             if (warn) text.appendChild(red);
-            item.appendChild(text);
+            span.setAttribute("class","video-float-hint-text");
+            span.innerText = msg[0];
+            red.setAttribute("class","video-float-hint-btn hint-red");
+            red.innerText = warn ? warn : "";
             node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
             setTimeout(() => item.remove(), delay);
         }
@@ -205,37 +206,37 @@
     // XMLHttpReques封装，除同步方法外统一返回promise
     const xhr = {
         // 同步方法
-        'false': (url) => {
+        'false' : (url) => {
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, false);
             xhr.withCredentials = true;
             xhr.send(null);
-            if (xhr.status === 200) return xhr.responseText;
+            return xhr.responseText;
         },
         // 异步方法
-        'true': (url) => {
+        'true' : (url) => {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.response);
-                xhr.onerror = () => reject({status: xhr.status, statusText: xhr.statusText})
+                xhr.onerror = () => reject(xhr)
                 xhr.send();
             });
         },
         // 跨域方法
-        GM: (url) => {
+        GM : (url) => {
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
-                    method : "GET",
-                    url    : url,
-                    onload : (response) => resolve(response.responseText),
+                    method  : "GET",
+                    url     : url,
+                    onload  : (response) => resolve(response.responseText),
                     onerror : (status) => reject(status)
                 });
             })
         },
         // 表单方法
-        post: (url, header, data) => {
+        post : (url, header, data) => {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 header = header ? header : "application/x-www-form-urlencoded";
@@ -243,7 +244,7 @@
                 xhr.setRequestHeader("Content-type", header);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.response);
-                xhr.onerror = () => reject({status: xhr.status, statusText: xhr.statusText})
+                xhr.onerror = () => reject(xhr)
                 xhr.send(data);
             });
         }
@@ -252,9 +253,9 @@
     // 重构__INITIAL_STATE__
     const INITIAL_STATE = {
         // bangumi
-        bangumi: (epId) => {
+        bangumi : (epId) => {
             try {
-                // rp为api数据，由于api改版，现已修复并默认禁用，保留代码以备不时只需
+                // rp为api数据，由于api改版，现已修复并默认禁用，保留代码以备不时之需
                 let ep = 0, rp = "", mode;
                 let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
                 let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
@@ -262,7 +263,7 @@
                 dat.special = rp.bkg_cover ? true : (ini.mediaInfo.specialCover ? true : false);
                 mode = dat.special ? 1 : 2;
                 if (epId) {dat.epId = 1 * epId; ep = 1;}
-                else {dat.epId = "";if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
+                else {dat.epId = ""; if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
                 dat.ssId = rp.season_id || ini.mediaInfo.ssId;
                 dat.mdId = ini.mediaInfo.id;
                 dat.mediaInfo = {};
@@ -347,9 +348,9 @@
                         dat.seasonList[i].season_title = ini.ssList[i].title;
                         dat.seasonList[i].season_type = ini.ssList[i].type;
                         dat.seasonList[i].stat = {
-                            danmaku: 0,
-                            follow: 0,
-                            view: 0
+                            danmaku : 0,
+                            follow : 0,
+                            view : 0
                         };
                         dat.seasonList[i].title = ini.ssList[i].title;
                     }
@@ -374,7 +375,7 @@
                     };
                     dat.upInfo.uname = ini.mediaInfo.upInfo.name;
                     dat.upInfo.verify_type = 6;
-                    if (dat.upInfo.mid < 1) dat.upInfo = {avatar: "//i0.hdslb.com/bfs/app/3e60b20604b6fdc7d081eb6a1ec72aa47c5a3964.jpg", follower: 897603, is_vip: 1, mid: 2, pendant: {image: "http://i2.hdslb.com/bfs/garb/item/cd3e9a6fa18db9ebdc128b0fef64cb32c5aab854.png", name: "如果历史是一群喵", pid: 1141}, uname: "碧诗", verify_type: 2}
+                    if (dat.upInfo.mid < 1) dat.upInfo = {avatar : "//i0.hdslb.com/bfs/app/3e60b20604b6fdc7d081eb6a1ec72aa47c5a3964.jpg", follower : 897603, is_vip : 1, mid : 2, pendant : {image : "http://i2.hdslb.com/bfs/garb/item/cd3e9a6fa18db9ebdc128b0fef64cb32c5aab854.png", name : "如果历史是一群喵", pid : 1141}, uname : "碧诗", verify_type : 2}
                     dat.rightsInfo.allow_bp = ini.mediaInfo.rights.allowBp ? 1 : 0;
                     dat.rightsInfo.allow_download = 1;
                     dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
@@ -399,7 +400,7 @@
             catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
         },
         // 主页
-        home: (data) => {
+        home : (data) => {
             try {
                 let dat = {};
                 let ini = JSON.parse(data);
@@ -435,7 +436,7 @@
 
     // xhr hook，包括原生XMLHttpRequest和$.ajax中的jsonp
     const intercept = {
-        init: () => {
+        init : () => {
             const open = XMLHttpRequest.prototype.open;
             const send = XMLHttpRequest.prototype.send;
             const addEventListener = XMLHttpRequest.prototype.addEventListener;
@@ -444,20 +445,20 @@
             if (config.reset.livechat) {
                 let decoder = new TextDecoder();
                 let encoder = new TextEncoder();
-                //钩子是为了获取ws对象的引用，只运行一次
+                // 钩子是为了获取ws对象的引用，只运行一次
                 let wbHookRunOnce = true;
                 const wssend = WebSocket.prototype.send;
                 WebSocket.prototype.send = function (...arg) {
                     if (wbHookRunOnce && this.url == 'wss://broadcast.chat.bilibili.com:4095/sub') {
                         liveChatOld = this;
-                        //从bilibiliPlayer.js > b.prototype.xx复制过来
-                        //body[Object]: 含有相应信息的对象
-                        //option[Number]: 数据包对应的行为，详见Pl对象
-                        //                 =5 一条弹幕数据
-                        //                 =7 首个数据包，建立与服务器的连接
-                        //return[Buffer]: 包装好的数据
+                        // 从bilibiliPlayer.js > b.prototype.xx复制过来
+                        // body[Object] : 含有相应信息的对象
+                        // option[Number] : 数据包对应的行为，详见Pl对象
+                        //                  =5 一条弹幕数据
+                        //                  =7 首个数据包，建立与服务器的连接
+                        // return[Buffer] : 包装好的数据
                         liveChatOld.convertToArrayBuffer = function (body, option) {
-                            let header = [{"name":"Header Length","key":"headerLen","qg":2,"offset":4,"value":16},{"name":"Protocol Version","key":"ver","qg":2,"offset":6,"value":1},{"name":"Operation","key":"op","qg":4,"offset":8,"value": option},{"name":"Sequence Id","key":"seq","qg":4,"offset":12,"value":1}];
+                            let header = [{"name":"Header Length","key":"headerLen","qg":2,"offset":4,"value":16},{"name":"Protocol Version","key":"ver","qg":2,"offset":6,"value":1},{"name":"Operation","key":"op","qg":4,"offset":8,"value" : option},{"name":"Sequence Id","key":"seq","qg":4,"offset":12,"value":1}];
                             let headerBuf = new ArrayBuffer(16);
                             let viewer = new DataView(headerBuf, 0);
                             let bodyBuf = encoder.encode(JSON.stringify(body));
@@ -472,8 +473,8 @@
                     }
                     wssend.call(this, ...arg);
                 }
-                //原函数位于bilibiliPlayer.js > c.a.eK 和 jsc-player > Dl.mergeArrayBuffer
-                //连接两个buffer
+                // 原函数位于bilibiliPlayer.js > c.a.eK 和 jsc-player > Dl.mergeArrayBuffer
+                // 连接两个buffer
                 function concatBuffer(headerBuf, bodyBuf) {
                     headerBuf = new Uint8Array(headerBuf);
                     bodyBuf = new Uint8Array(bodyBuf);
@@ -482,24 +483,24 @@
                     d.set(bodyBuf, headerBuf.byteLength);
                     return d.buffer;
                 }
-                //操作常量表
+                // 操作常量表
                 let Pl = {"WS_OP_HEARTBEAT":2,"WS_OP_HEARTBEAT_REPLY":3,"WS_OP_DATA":1000,"WS_OP_BATCH_DATA":9,"WS_OP_DISCONNECT_REPLY":6,"WS_OP_USER_AUTHENTICATION":7,"WS_OP_CONNECT_SUCCESS":8,"WS_OP_CHANGEROOM":12,"WS_OP_CHANGEROOM_REPLY":13,"WS_OP_REGISTER":14,"WS_OP_REGISTER_REPLY":15,"WS_OP_UNREGISTER":16,"WS_OP_UNREGISTER_REPLY":17,"WS_OP_OGVCMD_REPLY":1015,"WS_PACKAGE_HEADER_TOTAL_LENGTH":18,"WS_PACKAGE_OFFSET":0,"WS_HEADER_OFFSET":4,"WS_VERSION_OFFSET":6,"WS_OPERATION_OFFSET":8,"WS_SEQUENCE_OFFSET":12,"WS_COMPRESS_OFFSET":16,"WS_CONTENTTYPE_OFFSET":17,"WS_BODY_PROTOCOL_VERSION":1,"WS_HEADER_DEFAULT_VERSION":1,"WS_HEADER_DEFAULT_OPERATION":1,"ws_header_default_sequence":1,"WS_HEADER_DEFAULT_COMPRESS":0,"WS_HEADER_DEFAULT_CONTENTTYPE":0};
-                //请求头
+                // 请求头
                 let wsBinaryHeaderList = [{"name":"Header Length","key":"headerLen","bytes":2,"offset":4,"value":18},{"name":"Protocol Version","key":"ver","bytes":2,"offset":6,"value":1},{"name":"Operation","key":"op","bytes":4,"offset":8,"value":7},{"name":"Sequence Id","key":"seq","bytes":4,"offset":12,"value":2},{"name":"Compress","key":"compress","bytes":1,"offset":16,"value":0},{"name":"ContentType","key":"contentType","bytes":1,"offset":17,"value":0}]
-                let liveChatOld; //对旧播放器建立的ws对象的引用
-                //大部分代码从jsc-player直接复制出来，代码风格差别很大，基础功能之外的部分先注释掉了
+                let liveChatOld; // 对旧播放器建立的ws对象的引用
+                // 大部分代码从jsc-player直接复制出来，代码风格差别很大，基础功能之外的部分先注释掉了
                 let liveChat = new WebSocket('wss://broadcast.chat.bilibili.com:7823/sub');
                 liveChat.binaryType = "arraybuffer";
                 liveChat.heatTimer = -1;
-                //每30秒一个心跳包
+                // 每30秒一个心跳包
                 liveChat.heartBeat = function () {
                     var i = this;
                     clearTimeout(this.heatTimer);
                     var e = this.convertToArrayBuffer({}, Pl.WS_OP_HEARTBEAT);
                     this.send(e),
                         this.heatTimer = window.setTimeout((function () {
-                            i.heartBeat()
-                        }), 1e3 * 30)
+                        i.heartBeat()
+                    }), 1e3 * 30)
                 }
                 liveChat.onmessage = function (i) {
                     var e = this;
@@ -514,21 +515,21 @@
                                     this.heartBeat();
                                     break;
                                 case Pl.WS_OP_CHANGEROOM_REPLY:
-                                    //0 === Number(t.body.code) && this.options.onChangeRoomReply({ data: t && t.body });
+                                    //0 === Number(t.body.code) && this.options.onChangeRoomReply({ data : t && t.body });
                                     break;
                                 case Pl.WS_OP_REGISTER_REPLY:
-                                    //0 === Number(t.body.code) && this.options.onRegisterReply({ data: t && t.body });
+                                    //0 === Number(t.body.code) && this.options.onRegisterReply({ data : t && t.body });
                                     break;
                                 case Pl.WS_OP_UNREGISTER_REPLY:
-                                    //0 === Number(t.body.code) && this.options.onUnRegisterReply({ data: t && t.body });
+                                    //0 === Number(t.body.code) && this.options.onUnRegisterReply({ data : t && t.body });
                                     break;
                                 case Pl.WS_OP_DATA:
                                 case Pl.WS_OP_BATCH_DATA:
                                     t.body.forEach(function (v) {
                                         liveChatOld.onmessage({
-                                            data: liveChatOld.convertToArrayBuffer({
-                                                cmd: 'DM',
-                                                info: [v[0], v[1]]
+                                            data : liveChatOld.convertToArrayBuffer({
+                                                cmd : 'DM',
+                                                info : [v[0], v[1]]
                                             }, 5)
                                         });
                                     });
@@ -540,12 +541,12 @@
                                     //this.msgReply(t)
                             }
                     } catch (i) {
-                        console.error("WebSocket Error: ", i)
+                        console.error("WebSocket Error : ", i)
                     }
                     return this
                 }
-                //jsc-player > i.prototype.convertToArrayBuffer，与旧版的不同，新版播放器的请求头多了两字节
-                //jsc版没有混淆变量名，舒服了
+                // jsc-player > i.prototype.convertToArrayBuffer，与旧版的不同，新版播放器的请求头多了两字节
+                // jsc版没有混淆变量名，舒服了
                 liveChat.convertToArrayBuffer = function (body, option) {
                     let headerBuf = new ArrayBuffer(Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH),
                         viewer = new DataView(headerBuf, Pl.WS_PACKAGE_OFFSET),
@@ -554,25 +555,25 @@
                     wsBinaryHeaderList[2].value = option;
                     wsBinaryHeaderList.forEach((function (i) {
                         4 === i.bytes ? (viewer.setInt32(i.offset, i.value),
-                            "seq" === i.key && ++i.value) : 2 === i.bytes ? viewer.setInt16(i.offset, i.value) : 1 === i.bytes && viewer.setInt8(i.offset, i.value)
+                                         "seq" === i.key && ++i.value) : 2 === i.bytes ? viewer.setInt16(i.offset, i.value) : 1 === i.bytes && viewer.setInt8(i.offset, i.value)
                     }));
                     return concatBuffer(headerBuf, bodyBuf);
                 }
-                //jsc-player > i.prototype.convertToObject
-                //convertToArrayBuffer对应的解码函数
+                // jsc-player > i.prototype.convertToObject
+                // convertToArrayBuffer对应的解码函数
                 liveChat.convertToObject = function (i) {
                     var e = new DataView(i),
                         t = {};
                     if (t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET),
                         wsBinaryHeaderList.forEach((function (i) {
-                            4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
-                        })),
+                        4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
+                    })),
                         t.op && t.op === Pl.WS_OP_BATCH_DATA)
                         t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH, t.packetLen);
                     else if (t.op && Pl.WS_OP_DATA === t.op)
                         t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
                     else if (t.op && t.op === Pl.WS_OP_OGVCMD_REPLY)
-                        t.body = ""; //this.parseOgvCmd(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
+                        t.body = ""; // this.parseOgvCmd(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
                     else if (t.op) {
                         t.body = [];
                         for (var a = Pl.WS_PACKAGE_OFFSET, r = t.packetLen, n = "", l = ""; a < i.byteLength; a += r) {
@@ -591,10 +592,10 @@
                 }
                 liveChat.connectChatServer = function () {
                     let body = {
-                        "room_id": "video://" + aid + "/" + cid,
-                        "platform": "web",
-                        "accepts": [1000, 1015]
-                    }; //旧版为{"uid":******,"roomid":*********,"protover":1,"aid":*********,"from":7}
+                        "room_id" : "video://" + aid + "/" + cid,
+                        "platform" : "web",
+                        "accepts" : [1000, 1015]
+                    }; // 旧版为{"uid":******,"roomid":*********,"protover":1,"aid":*********,"from":7}
                     return wssend.call(this, this.convertToArrayBuffer(body, 7));
                 }
                 liveChat.parseDanmaku = function (i, e, t, a) {
@@ -702,12 +703,12 @@
                     // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
                     // (pakku.js正常运行时这个send()不会被调用)
                     if (config.reset.danmuku && (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && segRequestOnlyOnce))) {
-                        if (this.pakku_url && this.pakku_url.includes("seg.so"))segRequestOnlyOnce = false;
+                        if (this.pakku_url && this.pakku_url.includes("seg.so")) segRequestOnlyOnce = false;
                         // 对于没有pakku.js的情况，模拟一个xhr响应
-                        Object.defineProperty(this, "response", { writable: true });
-                        Object.defineProperty(this, "responseText", { writable: true });
-                        Object.defineProperty(this, "readyState", { writable: true });
-                        Object.defineProperty(this, "status", { writable: true });
+                        Object.defineProperty(this, "response", { writable : true });
+                        Object.defineProperty(this, "responseText", { writable : true });
+                        Object.defineProperty(this, "readyState", { writable : true });
+                        Object.defineProperty(this, "status", { writable : true });
                         this.readyState = 4;
                         this.status = 200;
                         this.abort();
@@ -767,10 +768,10 @@
                     else if (this.url) {
                         try {
                             // 解除限制
-                            Object.defineProperty(this, "response", { writable: true });
-                            Object.defineProperty(this, "responseText", { writable: true });
-                            Object.defineProperty(this, "readyState", { writable: true });
-                            Object.defineProperty(this, "status", { writable: true });
+                            Object.defineProperty(this, "response", { writable : true });
+                            Object.defineProperty(this, "responseText", { writable : true });
+                            Object.defineProperty(this, "readyState", { writable : true });
+                            Object.defineProperty(this, "status", { writable : true });
                             this.abort();
                             let response;
                             if (limit) {
@@ -842,12 +843,12 @@
             }
         },
         // 修改首页直播推荐数据
-        biliIndexRec: (obj, hook = []) => {
+        biliIndexRec : (obj, hook = []) => {
             try {
                 hook.push(JSON.parse(event.target.responseText));
                 let response = event.target.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
                 response = JSON.parse(response);
-                response.data.text_link = {text: "233秒居然能做这些！", link: "//vc.bilibili.com"};
+                response.data.text_link = {text : "233秒居然能做这些！", link : "//vc.bilibili.com"};
                 if (response.data.recommend) {
                     for (let i = 0; i < response.data.recommend.length; i++) {
                         response.data.recommend[i].pic = response.data.recommend[i].cover;
@@ -857,14 +858,14 @@
                 if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
                 hook.push(response);
                 debug.log("XHR重定向", "修复正在直播", hook);
-                Object.defineProperty(obj, 'response', {writable: true});
-                Object.defineProperty(obj, 'responseText', {writable: true});
+                Object.defineProperty(obj, 'response', {writable : true});
+                Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
             catch(e) {debug.error("首页推荐", e)}
         },
         // 修复番剧季度信息
-        season: (obj, hook = []) => {
+        season : (obj, hook = []) => {
             try {
                 hook.push(JSON.parse(event.target.responseText));
                 let response = JSON.parse(event.target.responseText);
@@ -876,14 +877,14 @@
                 }
                 hook.push(response);
                 debug.log("XHR重定向", "番剧季度信息", hook);
-                Object.defineProperty(obj, 'response', {writable: true});
-                Object.defineProperty(obj, 'responseText', {writable: true});
+                Object.defineProperty(obj, 'response', {writable : true});
+                Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
             catch(e) {debug.error("番剧季度信息", e)}
         },
         // 修改直播数据
-        getRoomPlayInfo: (obj, hook = []) => {
+        getRoomPlayInfo : (obj, hook = []) => {
             if (!config.reset.roomplay) return;
             try {
                 hook.push(JSON.parse(event.target.responseText));
@@ -896,27 +897,27 @@
                 }
                 hook.push(response);
                 debug.log("XHR重定向", "拦截直播媒体", hook);
-                Object.defineProperty(obj, 'response', {writable: true});
-                Object.defineProperty(obj, 'responseText', {writable: true});
+                Object.defineProperty(obj, 'response', {writable : true});
+                Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
             catch(e) {debug.error("直播拦截", e)}
         },
         // 生成播放信息
-        carousel: (obj) => {
+        carousel : (obj) => {
             if (!config.reset.carousel) return;
             try {
                 let msg = deliver.randomArray(API.message, 2);
                 let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
                 let parser = new DOMParser(),
                     responseXML = parser.parseFromString(xmltext, "text/xml");
-                Object.defineProperty(obj, 'responseXML', {writable: true});
+                Object.defineProperty(obj, 'responseXML', {writable : true});
                 obj.responseXML = responseXML;
             }
             catch(e) {debug.error("播放通知", e)}
         },
         // 强制载入播放器
-        status: (obj) => {
+        status : (obj) => {
             try {
                 let response = JSON.parse(event.target.responseText);
                 if (response.result) {
@@ -930,8 +931,8 @@
                         big = true;
                     }
                     if (limit || big) {
-                        Object.defineProperty(obj, 'response', {writable: true});
-                        Object.defineProperty(obj, 'responseText', {writable: true});
+                        Object.defineProperty(obj, 'response', {writable : true});
+                        Object.defineProperty(obj, 'responseText', {writable : true});
                         obj.response = obj.responseText = JSON.stringify(response);
                     }
                 }
@@ -939,7 +940,7 @@
             catch (e) {debug.error("强制启用播放器", e)}
         },
         // 监听视频地址
-        playinfo: (obj) => {
+        playinfo : (obj) => {
             try {
                 if (!obj.response) return;
                 __playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);
@@ -1142,7 +1143,7 @@
         },
         // 格式化字节，逢千换单位，最高到G字节
         sizeFormat : (size) => {
-            let dex = 1024 ** 3, vor = 1000 ** 3, unit = ["B", "K", "M", "G"], i = unit.length - 1;
+            let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
             while (dex > 1) {
                 if (size >= vor) {
                     size = (size / dex).toFixed(2);
@@ -1153,6 +1154,19 @@
                 i--;
             }
             return size + unit[i];
+        },
+        // 格式化计数法
+        unitFormat : (num) => {
+            let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
+            while (dex > 1) {
+                if (num >= dex) {
+                    num = (num / dex).toFixed(1);
+                    break;
+                }
+                dex = dex / 10000;
+                i--;
+            }
+            return num + unit[i];
         },
         // 数组冒泡排序，指定rev逆序
         bubbleSort : (arr, rev) => {
@@ -1174,7 +1188,7 @@
             return arr;
         },
         // 数组随机提取，num指定随机提取几个
-        randomArray: (arr, num) => {
+        randomArray : (arr, num) => {
             let out = [];
             num = num || 1;
             num = num < arr.length ? num : arr.length;
@@ -1185,7 +1199,7 @@
             return out;
         },
         // bv/av互转，算法见https://www.zhihu.com/question/381784377/answer/1099438784
-        convertId: (str) => {
+        convertId : (str) => {
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
             let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
             for (let i = 0; i < 58; i++) tr[table[i]] = i;
@@ -1204,13 +1218,13 @@
             }
         },
         // key secret，见https://github.com/Henryhaohao/Bilibili_video_download
-        sign: () => {
+        sign : () => {
             let table = 'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', str = '';
             for (let i = table.length -1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() + 2);
             return str.split(':')
         },
         // 对象转url的查询部分
-        obj2search: (url, obj) => {
+        obj2search : (url, obj) => {
             if (obj) {
                 let arr = [],i = 0;
                 for (let key in obj) {
@@ -1225,7 +1239,7 @@
             return url;
         },
         // 提取url查询部分成对象
-        search2obj: (url) => {
+        search2obj : (url) => {
             url = url.split('#')[0];
             url = url.split('?')[1] ? url.split('?')[1].split('&') : "";
             if (!url) return;
@@ -1234,7 +1248,7 @@
             return obj;
         },
         // cookies对象，通过属性访问键值
-        getCookies: () => {
+        getCookies : () => {
             let cookies = document.cookie.split('; ');
             let obj = cookies.reduce((pre, next) => {
                 let key = next.split('=')[0];
@@ -1267,7 +1281,7 @@
             });
         },
         // 添加全局样式
-        setGlobalStyle: async () => {
+        setGlobalStyle : async () => {
             let csss = API.style.uiface;
             let style = document.createElement("style");
             csss = csss + API.style.online;
@@ -1286,7 +1300,7 @@
             document.close();
         },
         // 重写版面
-        reSction: async () => {
+        reSction : async () => {
             if (!config.reset.grobalboard) return;
             document.getElementById("internationalHeader").setAttribute("style", "visibility:hidden;");
             let newh = document.createElement("div");
@@ -1314,7 +1328,7 @@
             window.setTimeout(() => {deliver.resetNodes()}, 3000);
         },
         // 下载视频
-        download: {
+        download : {
             // 创建播放器右键菜单
             init : async (node) => {
                 if (!config.reset.download) return;
@@ -1329,7 +1343,7 @@
                 div.onclick = deliver.download.setTable;
             },
             // 配置下载数据
-            setTable: async () => {
+            setTable : async () => {
                 debug.msg("正在获取视频链接", ">>>");
                 let qua = {120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
@@ -1414,7 +1428,7 @@
                 catch(e) {debug.error("下载配置", e)}
             },
             // 拉取mp4链接
-            geturl: async (...arg) => {
+            geturl : async (...arg) => {
                 let url = deliver.download.playurl(...arg);
                 if (!url) return;
                 try {
@@ -1424,7 +1438,7 @@
                 catch(e) {debug.error("下载拉取", e);}
             },
             // 配置视频链接
-            playurl: (type, qn) => {
+            playurl : (type, qn) => {
                 let obj = {}
                 let sign = deliver.sign();
                 aid = aid || unsafeWindow.aid;
@@ -1433,17 +1447,17 @@
                 type = type || "mp4";
                 if (!cid) return;
                 switch(type){
-                    case 'dash' : if (pgc) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
-                        else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 16});
+                    case 'dash' : if (pgc) return deliver.obj2search(API.url.pgc, {avid : aid, cid : cid, qn : qn, fourk : 1, otype : 'json', fnver : 0, fnval : 16});
+                        else return deliver.obj2search(API.url.x, {avid : aid, cid : cid, qn : qn, fourk : 1, otype : 'json', fnver : 0, fnval : 16});
                         break;
-                    case 'flv' : if (pgc) return deliver.obj2search(API.url.pgc, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
-                        else return deliver.obj2search(API.url.x, {avid: aid, cid: cid, qn: qn, fourk: 1, otype: 'json'});
+                    case 'flv' : if (pgc) return deliver.obj2search(API.url.pgc, {avid : aid, cid : cid, qn : qn, fourk : 1, otype : 'json'});
+                        else return deliver.obj2search(API.url.x, {avid : aid, cid : cid, qn : qn, fourk : 1, otype : 'json'});
                         break;
-                    case 'off' : obj = {appkey: sign[0], cid: cid, otype: 'json', qn: qn, quality: qn, type: ''}
+                    case 'off' : obj = {appkey : sign[0], cid : cid, otype : 'json', qn : qn, quality : qn, type : ''}
                         obj.sign = md5(deliver.obj2search("", obj) + sign[1]);
                         return deliver.obj2search(API.url.sign, obj);
                         break;
-                    case 'mp4' : obj = {appkey: sign[0], cid: cid, otype: 'json', platform: 'android_i', qn: 208}
+                    case 'mp4' : obj = {appkey : sign[0], cid : cid, otype : 'json', platform : 'android_i', qn : 208}
                         obj.sign = md5(deliver.obj2search("", obj) + sign[1]);
                         if (pgc) return deliver.obj2search(API.url.pgcproj, obj);
                         return deliver.obj2search(API.url.proj, obj);
@@ -1451,7 +1465,7 @@
                 }
             },
             // 创建下载面板
-            item: () => {
+            item : () => {
                 let timer, top = document.getElementById("bili-old-download-table");
                 if (top) {
                     top.remove();
@@ -1470,23 +1484,23 @@
                     box.appendChild(tab);
                     top.appendChild(box);
                     switch (name) {
-                        case "mp4": name = ".mp4"; break;
-                        case "avc": name = ".m4v"; break;
-                        case "hev": name = ".m4v"; break;
-                        case "aac": name = ".m4a"; break;
-                        case "其他": name = ".xml"; break;
+                        case "mp4" : name = ".mp4"; break;
+                        case "avc" : name = ".m4v"; break;
+                        case "hev" : name = ".m4v"; break;
+                        case "aac" : name = ".m4a"; break;
+                        case "其他" : name = ".xml"; break;
                     }
                     let qua = quatily;
                     for (let i = 0; i < obj.length; i++) {
                         switch (qua || obj[i][0]) {
-                            case "1080P": quatily = "quality-1080p"; break;
-                            case "720P": quatily = "quality-720p"; break;
-                            case "480P": quatily = "quality-480p"; break;
-                            case "360P": quatily = "quality-360p"; break;
-                            case "320kbps": quatily = "quality-720p"; break;
-                            case "128kbps": quatily = "quality-480p"; break;
-                            case "64kbps": quatily = "quality-360p"; break;
-                            default: quatily = "quality-high";
+                            case "1080P" : quatily = "quality-1080p"; break;
+                            case "720P" : quatily = "quality-720p"; break;
+                            case "480P" : quatily = "quality-480p"; break;
+                            case "360P" : quatily = "quality-360p"; break;
+                            case "320kbps" : quatily = "quality-720p"; break;
+                            case "128kbps" : quatily = "quality-480p"; break;
+                            case "64kbps" : quatily = "quality-360p"; break;
+                            default : quatily = "quality-high";
                         }
                         let a = document.createElement("a");
                         let q = document.createElement("div");
@@ -1528,7 +1542,7 @@
             }
         },
         // 切p相关
-        switchVideo: async () => {
+        switchVideo : async () => {
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
             if (config.reset.download) {url = "";mdf = {};};
             if (!config.reset.selectdanmu) return;
@@ -1536,7 +1550,7 @@
             if (danmu) danmu.click();
         },
         // 付费预览
-        removePreview: async (node) => {
+        removePreview : async (node) => {
             try {
                 if (!config.reset.preview) return;
                 let hint = document.getElementsByClassName("video-float-hint-text")[0];
@@ -1611,9 +1625,9 @@
             }
         },
         // 失效分区
-        fixSort: {
+        fixSort : {
             // av
-            video: async () => {
+            video : async () => {
                 let timer = window.setInterval(()=>{
                     let tminfo = document.getElementsByClassName("tm-info");
                     if (tminfo[0]) {
@@ -1642,7 +1656,7 @@
                         if (child[2].nodeType === 8) {
                             try {
                                 // 通过链接获取tid
-                                data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid}));
+                                data = await xhr.true(deliver.obj2search(API.url.view, {"aid" : aid}));
                                 tid = JSON.parse(data).data.tid;
                                 if (!(tid in API.sort)) return;
                                 // 创建分区信息节点并写入tid对应的分区数据
@@ -1661,7 +1675,7 @@
             },
         },
         // 点赞功能
-        setLike: async (data) => {
+        setLike : async (data) => {
             if (!config.reset.like) return;
             let timer = window.setInterval(async () => {
                 let coin = document.getElementsByClassName("bilibili-player-video-subtitle")[0];
@@ -1677,33 +1691,33 @@
                     let arg = text;
                     // 创建点赞数据相关节点并初始化
                     span.setAttribute("class", "u like");
-                    span.setAttribute("style", "margin-right: 5px;");
+                    span.setAttribute("style", "margin-right : 5px;");
                     span.appendChild(bef);
                     span.appendChild(af);
                     span.appendChild(text);
                     bef.setAttribute("class", "l-icon-move");
-                    bef.setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
+                    bef.setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
                     af.setAttribute("class", "l-icon-moved");
-                    af.setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
+                    af.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                     try {
                         number.insertBefore(span, node);
                         // 获取点赞数据
-                        data = await xhr.true(deliver.obj2search(API.url.view, {"aid": aid}));
+                        data = await xhr.true(deliver.obj2search(API.url.view, {"aid" : aid}));
                         data = JSON.parse(data).data.stat.like;
                         document.getElementsByClassName("like")[0].setAttribute("title", "点赞人数" + data);
                         if (data>10000) data = (data/10000).toFixed(1) + "万";
                         text = document.createTextNode(" 点赞 " + data);
                         arg.replaceWith(text);
                         arg = text;
-                        data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid": aid}));
+                        data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid" : aid}));
                         data = JSON.parse(data);
                         let move = document.getElementsByClassName("l-icon-move");
                         let moved = document.getElementsByClassName("l-icon-moved");
                         data = data.data;
                         if (data == 1) {
                             // 点赞过点亮图标
-                            move[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                            moved[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
+                            move[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
+                            moved[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                         }
                         move[0].onclick = async () => {
                             // 没有点赞过绑定点赞点击事件
@@ -1717,8 +1731,8 @@
                             data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg);
                             data = JSON.parse(data).ttl;
                             // 点亮点赞图标并修改显示数据
-                            document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;display: none;");
-                            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;");
+                            document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
+                            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                             if (arg.nodeValue.match("万")) return;
                             let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1;
                             text = document.createTextNode(" 点赞 " + number)
@@ -1732,8 +1746,8 @@
                             data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg);
                             data = JSON.parse(data).ttl;
                             // 熄灭点赞图标并修改显示数据
-                            document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -660px -2068px;");
-                            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width: 22px;height: 22px;background-position: -725px -2068px;display: none;");
+                            document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
+                            document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                             if (arg.nodeValue.match("万")) return;
                             let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1;
                             text = document.createTextNode(" 点赞 " + number)
@@ -1746,8 +1760,8 @@
             },100);
         },
         // 收藏播放，收藏列表视频过多将导致视频加载及切换缓慢
-        setMediaList: {
-            init: async (data) => {
+        setMediaList : {
+            init : async (data) => {
                 if (!ml) {
                     // 4k时初始化播放器
                     if (__playinfo__.data && __playinfo__.data.accept_quality) {
@@ -1766,7 +1780,7 @@
                     // 以传参data决定处理类型
                     try {
                         // 获取首个视频av并跳转
-                        data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id": ml, "pn": 1, "ps":1}));
+                        data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id" : ml, "pn" : 1, "ps":1}));
                         data = JSON.parse(data).data;
                         location.replace("https://www.bilibili.com/video/av" + data.medias[0].id);
                     }
@@ -1780,7 +1794,7 @@
                     try {
                         let avs = [], value = [], promises = [];
                         // 获取收藏列表，这里获取只能获取到aid
-                        data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id": ml}));
+                        data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id" : ml}));
                         data = JSON.parse(data).data;
                         for (let i = 0; i < data.medias.length; i++) {
                             ids[i] = data.medias[i].id;
@@ -1790,7 +1804,7 @@
                         while (avs.length) {
                             let i = avs.length > 20 ? 20 : avs.length;
                             value = avs.splice(0,i);
-                            promises.push(xhr.true(deliver.obj2search(API.url.cards, {"ids": value.join("%2C")})));
+                            promises.push(xhr.true(deliver.obj2search(API.url.cards, {"ids" : value.join("%2C")})));
                         }
                         value = [];
                         data = await Promise.all(promises);
@@ -1827,12 +1841,12 @@
                                     ids[i].pages[0].vid = "";
                                     ids[i].pages[0].weblink = "";
                                 }
-                                let toview = {"code":0, "message": "0", "ttl": 1, "data": {"count": ids.length, "list": ids}};
+                                let toview = {"code":0, "message" : "0", "ttl" : 1, "data" : {"count" : ids.length, "list" : ids}};
                                 // 保存初始aid，以便判断是否切p
                                 oid = ids[0].aid;
                                 debug.log("收藏列表", toview);
                                 // 构造初始化参数并重新初始化播放器
-                                obj = {"aid": ids[0].aid, "cid": ids[0].cid, "watchlater":encodeURIComponent(JSON.stringify(toview))}; // 重构初始化播放器参数
+                                obj = {"aid" : ids[0].aid, "cid" : ids[0].cid, "watchlater":encodeURIComponent(JSON.stringify(toview))}; // 重构初始化播放器参数
                                 unsafeWindow.BilibiliPlayer(obj);
                                 let bpui = document.getElementsByClassName("bpui-button-text");
                                 let t = setInterval(() => {
@@ -1849,7 +1863,7 @@
                 }
             },
             // aid变化监听
-            fixvar: async () => {
+            fixvar : async () => {
                 if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
                 if (oid) {
                     if (oid != unsafeWindow.aid) {
@@ -1861,7 +1875,7 @@
                 }
             },
             // 收藏播放更新
-            restore: async () => {
+            restore : async () => {
                 let data;
                 history.replaceState(null,null,"https://www.bilibili.com/video/av" + aid + location.search + location.hash);
                 for (let i=0;i<ids.length;i++) if (ids[i].aid==aid) data = ids[i];
@@ -1924,8 +1938,8 @@
             },
         },
         // 分集数据
-        setBangumi: {
-            init: async (data) => {
+        setBangumi : {
+            init : async (data) => {
                 if (!config.reset.episodedata) return;
                 // 判断是否有分集数据
                 if (data.epList[1] && (data.epList[0].aid != data.epList[1].aid)) {
@@ -1941,7 +1955,7 @@
                 }
             },
             // 分集数据处理
-            episodeData: async (data, msg) => {
+            episodeData : async (data, msg) => {
                 try {
                     let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
                     let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
@@ -1955,11 +1969,11 @@
                         views.setAttribute("title","总播放数 " + views.innerText);
                         danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText);
                         debug.log("总播放数", views.innerText, " 总弹幕数", danmakus.innerText);
-                        data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid}));
+                        data = await xhr.true(deliver.obj2search(API.url.stat, {"aid" : aid}));
                     }
                     if (!data) {
                         aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
-                        data = await xhr.true(deliver.obj2search(API.url.stat, {"aid": aid}));
+                        data = await xhr.true(deliver.obj2search(API.url.stat, {"aid" : aid}));
                     }
                     data = JSON.parse(data).data;
                     let view = data.view;
@@ -1974,7 +1988,7 @@
             },
         },
         // 跳转完后的播单处理
-        setPlayList: async () => {
+        setPlayList : async () => {
             window.onload = () => {
                 let div = document.createElement("div");
                 div.setAttribute("class","z-top-container has-menu");
@@ -1990,7 +2004,7 @@
             }
         },
         // 在线数据，接口失效
-        setOnline: async () => {
+        setOnline : async () => {
             let timer = window.setInterval(async () => {
                 let online = document.getElementsByClassName("online")[0];
                 if (online) {
@@ -2044,9 +2058,9 @@
             },1000);
         },
         // 注册时间
-        setJoinTime: async () => {
+        setJoinTime : async () => {
             if (!mid && !config.reset.jointime) return;
-            let data = await xhr.GM(deliver.obj2search(API.url.membercard,{"mid": mid}));
+            let data = await xhr.GM(deliver.obj2search(API.url.membercard,{"mid" : mid}));
             try {
                 data = JSON.parse(data);
                 // 格式化时间戳，不是13位，主动补位
@@ -2079,9 +2093,9 @@
             catch(e) {debug.error("注册时间", e)}
         },
         // 失效视频
-        fixVideoLost: {
+        fixVideoLost : {
             // 收藏里的失效视频
-            favlist: async (msg, data) => {
+            favlist : async (msg, data) => {
                 // src判定是否为频道并取消重复处理
                 if (!config.reset.lostvideo || window.src) return;
                 // 获取av号或者将bv转为av
@@ -2095,7 +2109,7 @@
                     data = await xhr.GM(API.url.jijidown + aid);
                     data.match('window._INIT')[0];
                     title = data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/,"").replace(/-哔哩哔哩唧唧/,"");
-                    cover = data.match(/"img\":\ \".+?\",/)[0].replace(/"img": "/,"").replace(/",/,"");
+                    cover = data.match(/"img\":\ \".+?\",/)[0].replace(/"img" : "/,"").replace(/",/,"");
                     // 判断封面是否有效
                     cover.match('hdslb')[0];
                 }
@@ -2119,7 +2133,7 @@
                 img.setAttribute("alt",title);
                 txt.setAttribute("href", "//www.bilibili.com/video/av" + aid);
                 txt.setAttribute("title",title);
-                txt.setAttribute("style", "text-decoration: line-through;color: #ff0000;");
+                txt.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                 txt.text = title;
                 msg.target.setAttribute("class", "small-item");
                 msg.target.firstChild.setAttribute("href", "//www.bilibili.com/video/av" + aid);
@@ -2127,7 +2141,7 @@
                 msg.target.firstChild.setAttribute("class", "cover cover-normal");
             },
             // 频道里的失效视频
-            channel: async (link) => {
+            channel : async (link) => {
                 if (!config.reset.lostvideo || !src) return;
                 try {
                     let data, obj = deliver.search2obj(link),
@@ -2137,7 +2151,7 @@
                     let small_item = document.getElementsByClassName("small-item");
                     if (small_item[0]) for (let i = 0; i < small_item.length; i++) if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") src = "";
                     if (src) return;
-                    data = await xhr.true(deliver.obj2search(API.url.channel, {"mid": mid, "cid": cid, "pn": pn, "ps": 30, "order": 0}));
+                    data = await xhr.true(deliver.obj2search(API.url.channel, {"mid" : mid, "cid" : cid, "pn" : pn, "ps" : 30, "order" : 0}));
                     data = JSON.parse(data).data;
                     for (let i = 0; i < small_item.length; i++) {
                         let aid = small_item[i].getAttribute("data-aid") * 1;
@@ -2167,7 +2181,7 @@
                             img.setAttribute("src", data.list.archives[i].pic.replace("http","https") + "@380w_240h_100Q_1c.webp");
                             txt.setAttribute("target", "_blank");
                             txt.setAttribute("title", title);
-                            txt.setAttribute("style", "text-decoration: line-through;color: #ff0000;");
+                            txt.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                             txt.text = title;
                         }
                     }
@@ -2175,7 +2189,7 @@
                 catch(e) {debug.error("失效视频·频道", e)}
             },
             // 空间首页展示的失效视频
-            home: async (msg) => {
+            home : async (msg) => {
                 if (!config.reset.lostvideo) return;
                 let channel_item = document.getElementsByClassName("channel-item");
                 if (channel_item[0]) {
@@ -2205,7 +2219,7 @@
                                 a.setAttribute("class", "cover cover-normal");
                                 txt.setAttribute("target", "_blank");
                                 txt.setAttribute("title", img);
-                                txt.setAttribute("style", "text-decoration: line-through;color: #ff0000;");
+                                txt.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                                 txt.text = img;
                             }
                         }
@@ -2217,7 +2231,7 @@
             }
         },
         // 评论楼层
-        setReplyFloor: async (link) => {
+        setReplyFloor : async (link) => {
             src = "";
             if (!config.reset.replyfloor) return;
             try {
@@ -2237,7 +2251,7 @@
                 // 展开楼中楼的楼层号
                 if (root) {
                     // 前两页直接获取
-                    if (pn < 2) data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
+                    if (pn < 2) data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid" : oid,"root" : root,"type" : type}));
                     else {
                         // 3页以上先获取当页首条评论rpid
                         let dialog;
@@ -2274,40 +2288,30 @@
                             }
                         }
                         // 根据当页首条评论rpid获取min_id
-                        data = await xhr.true(deliver.obj2search(API.url.replydialog, {"oid": oid,"root": root,"type": type, "dialog": dialog, "size": 20}));
+                        data = await xhr.true(deliver.obj2search(API.url.replydialog, {"oid" : oid,"root" : root,"type" : type, "dialog" : dialog, "size" : 20}));
                         let min_id = JSON.parse(data).data.replies;
-                        if (min_id) {
-                            for (let i = 0; i < min_id.length; i++) {
-                                if (min_id[i].rpid == dialog) {
-                                    min_id = min_id[i].floor;
-                                    break;
-                                }
-                            }
-                        }
-                        else {
-                            debug.msg("当前页楼中楼层获取失败 ಥ_ಥ");
-                            return;
-                        }
+                        if (min_id) {for (let i = 0; i < min_id.length; i++) if (min_id[i].rpid == dialog) {min_id = min_id[i].floor; break;}}
+                        else {debug.msg("当前页楼中楼层获取失败 ಥ_ಥ"); return;}
                         // 根据min_id获取当页数据
-                        data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type, "min_id": min_id}));
+                        data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid" : oid,"root" : root,"type" : type, "min_id" : min_id}));
                     }
                 }
                 else {
-                    if (sort == 2) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": pn,"type": type,"mode": mode}));
-                    else if (pn == 1) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"type": type,"mode": mode}));
+                    if (sort == 2) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid" : oid,"next" : pn,"type" : type,"mode" : mode}));
+                    else if (pn == 1) data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid" : oid,"type" : type,"mode" : mode}));
                     else {
                         // 时间排序的楼层号需要相对前页判定
                         pn = pn - 1;
-                        data = await xhr.true(deliver.obj2search(API.url.reply, {"type": type,"sort": sort,"oid": oid,"pn": pn}));
+                        data = await xhr.true(deliver.obj2search(API.url.reply, {"type" : type,"sort" : sort,"oid" : oid,"pn" : pn}));
                         data = JSON.parse(data).data;
                         let i = data.replies.length - 1;
                         oid = data.replies[0].oid;
                         let root = data.replies[i].rpid;
-                        data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid": oid,"root": root,"type": type}));
+                        data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid" : oid,"root" : root,"type" : type}));
                         data = JSON.parse(data).data;
                         oid = data.root.oid;
                         let next = data.root.floor;
-                        data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid": oid,"next": next,"type": type,"mode": mode}));
+                        data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid" : oid,"next" : next,"type" : type,"mode" : mode}));
                     }
                 }
                 data = JSON.parse(data).data;
@@ -2315,32 +2319,20 @@
                 if (hots && hots[0]) {
                     for (let i = 0; i < hots.length; i++) {
                         floor[hots[i].rpid] = hots[i].floor;
-                        if (hots[i].replies) {
-                            for (let j = 0; j < hots[i].replies.length; j++) {
-                                floor[hots[i].replies[j].rpid] = hots[i].replies[j].floor;
-                            }
-                        }
+                        if (hots[i].replies) for (let j = 0; j < hots[i].replies.length; j++) floor[hots[i].replies[j].rpid] = hots[i].replies[j].floor;
                     }
                 }
                 if (replies && replies[0]) {
                     for (let i = 0;i < replies.length; i++) {
                         floor[replies[i].rpid] = replies[i].floor;
-                        if (replies[i].replies) {
-                            for (let j = 0; j < replies[i].replies.length; j++) {
-                                floor[replies[i].replies[j].rpid] = replies[i].replies[j].floor;
-                            }
-                        }
+                        if (replies[i].replies) for (let j = 0; j < replies[i].replies.length; j++) floor[replies[i].replies[j].rpid] = replies[i].replies[j].floor;
                     }
                 }
                 if (top) {
                     for (let key in top) {
                         if (top[key]) {
                             floor[top[key].rpid] = top[key].floor;
-                            if (top[key].replies) {
-                                for (let i = 0; i < top[key].replies.length; i++) {
-                                    floor[top[key].replies[i].rpid] = top[key].replies[i].floor;
-                                }
-                            }
+                            if (top[key].replies) for (let i = 0; i < top[key].replies.length; i++) floor[top[key].replies[i].rpid] = top[key].replies[i].floor;
                         }
                     }
                 }
@@ -2358,7 +2350,7 @@
                                     let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
                                     let span = document.createElement("span");
                                     span.setAttribute("class", "floor-num");
-                                    span.setAttribute("style", "float: left;color: #aaa;padding-right: 10px;");
+                                    span.setAttribute("style", "float : left;color : #aaa;padding-right : 10px;");
                                     span.innerText = "#" + floor[rpid];
                                     node.insertBefore(span,node.firstChild);
                                 }
@@ -2383,7 +2375,7 @@
             catch(e) {debug.error("评论楼层", e)}
         },
         // 广告区转资讯区
-        fixnews: async (node, move) => {
+        fixnews : async (node, move) => {
             try {
                 let rank = config.reset.grobalboard ? document.getElementsByClassName("rank-tab")[0] : "";
                 if (node.id == "bili_ad") {
@@ -2391,6 +2383,10 @@
                     node = node.getElementsByClassName("name");
                     if (node[0]) node[0].text = "资讯";
                     for (let i = 0; i < sight.length; i++ ) if (sight[i].href.includes("www.bilibili.com/v/ad/ad/")) sight[i].href = "https://www.bilibili.com/v/information/";
+                    let rcon = document.createElement("div");
+                    rcon.setAttribute("class", "r-con");
+                    rcon.innerHTML = '<div class="r-con"><header style="margin-bottom: 14px"><h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3></header><div class="carousel-module"><div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp" width="260" height="280"/></a></div></div></div>';
+                    document.getElementById("ranking_ad").replaceWith(rcon);
                 }
                 if (node.className == "report-wrap-module elevator-module") node.children[1].children[13].innerHTML = "资讯";
                 if (node.id == "bili-header-m") {
@@ -2421,7 +2417,8 @@
             }
             catch(e) {debug.error("分区·版面", e)}
         },
-        electricPanelJump: async (node) => {
+        // 跳过充电鸣谢
+        electricPanelJump : async (node) => {
             try {
                 if (!config.reset.electric) return;
                 config.reset.electric = 0;
@@ -2430,21 +2427,64 @@
                 setTimeout(() => {config.reset.electric = 1}, 5000);
             }
             catch(e) {debug.error("充电鸣谢", e)}
+        },
+        // 修复分区排行
+        fixrank : async (node) => {
+            let sort = {
+                bili_movie : ["ranking_movie", 2, "https://www.bilibili.com/ranking/cinema/23/0/3"],
+                bili_teleplay : ["ranking_teleplay", 5, "https://www.bilibili.com/ranking/cinema/11/0/3"],
+                bili_documentary : ["ranking_documentary", 3, "https://www.bilibili.com/ranking/cinema/177/0/3"]
+            }
+            sort = sort[node.id];
+            if (!sort) return;
+            let section = node.getElementsByClassName("sec-rank report-wrap-module zone-rank")[0];
+            section.innerHTML = '<header class="rank-head"><h3>排行</h3></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list"></ul></div><a href="' + sort[2] + '" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>';
+            try {
+                let data = await xhr.true(deliver.obj2search(API.url.ranklist, {season_type : sort[1], day : 3}));
+                data = JSON.parse(data).data;
+                node = node.getElementsByClassName("bangumi-rank-list rank-list")[0];
+                for (let i = 0; i < 8; i++) {
+                    let li = document.createElement("li"),
+                        cl = i < 3 ? "rank-item highlight" : "rank-item",
+                        fw;
+                    li.setAttribute("class", cl);
+                    li.innerHTML = '<i class="ri-num">' + (i + 1) + '</i><a href="'+ data.list[i].url + '" target="_blank" title="' + data.list[i].title + ' 播放:' + data.list[i].stat.view + '" class="ri-info-wrap"><p class="ri-title">' + data.list[i].title + '</p><span class="ri-total">' + data.list[i].new_ep.index_show + '</span></a>';
+                    li.onmouseover = () => {
+                        fw = document.createElement("div");
+                        fw.setAttribute("class", "bangumi-info-module");
+                        fw.setAttribute("style", 'left: ' + li.getBoundingClientRect().left + 'px; top: ' + (getTotalTop(li) - 150) + 'px;');
+                        fw.innerHTML = '<div class="v-preview clearfix"><div class="lazy-img cover"><img alt="' + data.list[i].title + '" src="' + data.list[i].cover + '" /></div><div><p class="title">' + data.list[i].title + '</p><p class="desc">' + data.list[i].new_ep.index_show + '</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>' + deliver.unitFormat(data.list[i].stat.view) + '</span><span class="danmu"><i class="icon"></i>' + deliver.unitFormat(data.list[i].stat.danmaku) + '</span><span class="fav"><i class="icon"></i>' + deliver.unitFormat(data.list[i].stat.follow) + '</span></div>';
+                        document.body.appendChild(fw);
+                    }
+                    li.onmouseout = () => fw.remove();
+                    node.appendChild(li);
+                }
+                function getTotalTop(node){
+                    var sum = 0;
+                    do{
+                        sum += node.offsetTop;
+                        node = node.offsetParent;
+                    }
+                    while(node);
+                    return sum;
+                }
+            }
+            catch (e) {debug.error("分区排行", e)}
         }
     }
 
     // 设置界面
     const UI = {
         // 设置入口
-        init: async () => {
+        init : async () => {
             let ui_face = document.createElement("div");
             let enter = document.createElement("span");
             let icon = document.createElement("i");
             ui_face.setAttribute("class", "bili-old ui-face");
             ui_face.setAttribute("id", "ui-face");
-            ui_face.setAttribute("style", "right: -54px;");
-            ui_face.onmouseover = () => ui_face.setAttribute("style", "right: 0px;box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border: 1px solid rgb(233, 234, 236);");
-            ui_face.onmouseout = () => ui_face.setAttribute("style", "right: -54px;");
+            ui_face.setAttribute("style", "right : -54px;");
+            ui_face.onmouseover = () => ui_face.setAttribute("style", "right : 0px;box-shadow : rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border : 1px solid rgb(233, 234, 236);");
+            ui_face.onmouseout = () => ui_face.setAttribute("style", "right : -54px;");
             ui_face.onclick = () => {
                 let table = document.getElementsByClassName("ui-table");
                 if (!table[0]) UI.table();
@@ -2462,7 +2502,7 @@
             }, 1000);
         },
         // 设置面板
-        table: async () => {
+        table : async () => {
             let table = document.getElementsByClassName("ui-table")[0];
             let timer;
             if (!table) {
@@ -2471,10 +2511,10 @@
                 table.setAttribute("id", "ui-table");
                 let info = document.createElement("span");
                 let rec = document.createElement("span");
-                info.setAttribute("style", "color: rgb(0,0,0);font-size: 14px;");
+                info.setAttribute("style", "color : rgb(0,0,0);font-size : 14px;");
                 info.innerText = "BilibiliOld 设置";
                 table.appendChild(info);
-                rec.setAttribute("style", "color: blue;float: right;font-size: 12px;");
+                rec.setAttribute("style", "color : blue;float : right;font-size : 12px;");
                 rec.innerText = "恢复默认";
                 rec.onclick = () => {
                     for (let key in defig.rewrite) if (key in config.rewrite) config.rewrite[key] = defig.rewrite[key];
@@ -2499,16 +2539,16 @@
             }
         },
         // 设置选项
-        setTable: async (ele, name, check, key) => {
+        setTable : async (ele, name, check, key) => {
             let div = document.createElement("div");
             let span = document.createElement("span");
             let input = document.createElement("input");
             ele.appendChild(div);
-            div.setAttribute("style", "padding: 4px 4px 0px 4px;clear: both;");
-            if (document.getElementsByClassName("checke")[0]) div.setAttribute("style", "padding: 0px 4px 0px 4px;clear: both;");
+            div.setAttribute("style", "padding : 4px 4px 0px 4px;clear : both;");
+            if (document.getElementsByClassName("checke")[0]) div.setAttribute("style", "padding : 0px 4px 0px 4px;clear : both;");
             div.appendChild(span);
             div.appendChild(input);
-            span.setAttribute("style", "float: left;display: inline-block;color: rgb(0,0,0);font-size: 14px;");
+            span.setAttribute("style", "float : left;display : inline-block;color : rgb(0,0,0);font-size : 14px;");
             span.innerText = name[0];
             input.setAttribute("type", "checkbox");
             input.setAttribute("class", "checke");
@@ -2537,7 +2577,7 @@
             div.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
         },
         // 设置内容及说明，基本与config一一对应
-        menu: {
+        menu : {
             av : ["av(BV)", "启用旧版av页面，基于旧版网页框架"],
             bangumi : ["Bangumi", "启用旧版番剧页面，基于旧版网页框架"],
             watchlater : ["稍后再看", "启用旧版稍后再看页面，基于旧版网页框架"],
@@ -2545,8 +2585,8 @@
             home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区"],
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
-            danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢且可能不会动态更新<br>※依赖xhrhook"],
-            livechat : ["实时弹幕修复", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
+            danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢<br>※依赖xhrhook"],
+            livechat : ["实时弹幕", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
             limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
             grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
@@ -2573,7 +2613,7 @@
     // 页面分离
     const thread = {
         // av/BV
-        video: () => {
+        video : () => {
             try {
                 // 判断是否收藏跳转而来
                 ml = GM_getValue("medialist");
@@ -2591,7 +2631,7 @@
                     // 忽略互动视频
                     if (__INITIAL_STATE__ && __INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.stein_guide_cid) return;
                     // 修复评论数据缺失
-                    __INITIAL_STATE__.comment = {count: 0, list: []}
+                    __INITIAL_STATE__.comment = {count : 0, list : []}
                     // 写入全局变量
                     aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid;
                     tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid;
@@ -2607,7 +2647,7 @@
             catch(e) {debug.error("框架·av/BV", e)}
         },
         // 稍后再看
-        watchlater: () => {
+        watchlater : () => {
             try {
                 if (!config.rewrite.watchlater || !uid) return;
                 // 重写网页框架并调用后续处理
@@ -2627,7 +2667,7 @@
             catch(e) {debug.error("框架·稍后再看", e)}
         },
         // 番剧
-        bangumi: () => {
+        bangumi : () => {
             try {
                 if (!config.rewrite.bangumi && !config.reset.download) return;
                 // 指定playurl类型
@@ -2653,7 +2693,7 @@
             catch(e) {debug.error("框架·Bangumi", e)}
         },
         // 嵌入
-        blackboard: () => {
+        blackboard : () => {
             try {
                 // 修复HTML5播放器帮助页视频cid错误
                 if (LOCATION[4].startsWith('html5player')) if (LOCATION[4].includes("3521416") && LOCATION[4].includes("6041635")) location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":3521416,"cid":192446449}));
@@ -2665,14 +2705,14 @@
                     aid = 1 * obj.aid ? 1 * obj.aid : (obj.aid ? deliver.convertId(obj.aid) : (obj.bvid ? deliver.convertId(obj.bvid) : ""))
                     cid = obj.cid || JSON.parse(xhr.false(deliver.obj2search(API.url.pagelist,{"aid" : aid}))).data[0].cid
                     // 重定向到旧版播放器
-                    location.replace(deliver.obj2search(API.playerframe.html5player,{"aid": aid,"cid": cid,"season_type": season_type,"player_type": player_type,"as_wide": 1,}));
+                    location.replace(deliver.obj2search(API.playerframe.html5player,{"aid" : aid,"cid" : cid,"season_type" : season_type,"player_type" : player_type,"as_wide" : 1,}));
                     debug.log("嵌入播放器", "aid=", aid, " cid=", cid);
                 }
             }
             catch(e) {debug.error("框架·嵌入", e)}
         },
         // 播单
-        playlist: () => {
+        playlist : () => {
             // 保存播单号并跳转到收藏
             if (!config.rewrite.playlist) return;
             pl = 1 * LOCATION[5].match(/[0-9]+/)[0];
@@ -2680,7 +2720,7 @@
             location.replace("https://www.bilibili.com/medialist/play/ml182603655");
         },
         // 收藏
-        medialist: () => {
+        medialist : () => {
             if (LOCATION[5].startsWith("ml")) {
                 ml = 1 * LOCATION[5].match(/[0-9]+/)[0];
                 pl = GM_getValue("playlist") ? GM_getValue("playlist") : "";
@@ -2704,19 +2744,19 @@
             if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); // 重定向稍后再看
         },
         // 静态av
-        svideo: () => {
+        svideo : () => {
             // 直接跳转回普通av
             if (!config.reset.static) return;
             location.replace(location.href.replace("s/video", "video"));
         },
         // 空间
-        space: () => {
+        space : () => {
             // 调用注册时间处理
             mid = LOCATION[3] ? 1 * LOCATION[3] : mid;
             deliver.setJoinTime();
         },
         // 主页
-        home: () => {
+        home : () => {
             if (config.rewrite.home) {
                 try {
                     window.recbtn = 1;
@@ -2751,13 +2791,13 @@
         if (config.reset.danmuku) unsafeWindow.Worker = null;
         // 关闭show_bv
         if (config.reset.bvid2av) {
-            unsafeWindow.__BILI_CONFIG__ = {"show_bv": false};
-            Object.defineProperty(unsafeWindow, '__BILI_CONFIG__', {writable: false});
+            unsafeWindow.__BILI_CONFIG__ = {"show_bv" : false};
+            Object.defineProperty(unsafeWindow, '__BILI_CONFIG__', {writable : false});
         }
         // 清空预置的直播数据
         if (LOCATION[2] == 'live.bilibili.com' && config.reset.roomplay) {
             unsafeWindow.__NEPTUNE_IS_MY_WAIFU__ = undefined;
-            Object.defineProperty(unsafeWindow, '__NEPTUNE_IS_MY_WAIFU__', {writable: false});
+            Object.defineProperty(unsafeWindow, '__NEPTUNE_IS_MY_WAIFU__', {writable : false});
         }
         // uid判断是否登录
         uid = deliver.getCookies().DedeUserID;
@@ -2825,6 +2865,8 @@
         if (src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) deliver.setReplyFloor(src);
         // 跳过充电鸣谢
         if (/bilibili-player-electric-panel-jump/.test(msg.relatedNode.className)) deliver.electricPanelJump(msg.relatedNode);
+        // 修复分区排行
+        if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") deliver.fixrank(msg.target);
         // 其他节点监听
         deliver.resetNodes();
         // 收藏页切p监听
@@ -2833,6 +2875,5 @@
         deliver.fixVideoLost.home(msg);
         // bv号转超链接
         deliver.avdesc();
-
     });
 })();
