@@ -28,7 +28,7 @@
     let LOCATION = document.location.href.split('/');
 
     // protobuf初始化
-    const root = protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
+    const root = window.protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
@@ -527,10 +527,9 @@
                     }
 
                     liveChat.onmessage = function (i) {
-                        var e = this;
                         try {
                             var t = this.convertToObject(i.data);
-                            if (t)
+                            if (t) {
                                 switch (t.op) {
                                     case Pl.WS_OP_HEARTBEAT_REPLY:
                                         // 对于心跳包,服务器响应当前在线人数的数据
@@ -569,6 +568,7 @@
                                     default:
                                         //this.msgReply(t)
                                 }
+                            }
                         } catch (i) {
                             console.error("WebSocket Error : ", i)
                         }
@@ -593,29 +593,31 @@
                     // jsc-player > i.prototype.convertToObject
                     // convertToArrayBuffer对应的解码函数
                     liveChat.convertToObject = function (i) {
-                        var e = new DataView(i),
-                            t = {};
-                        if (t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET),
-                            wsBinaryHeaderList.forEach((function (i) {
+                        var e = new DataView(i), t = {};
+                        t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET);
+                        wsBinaryHeaderList.forEach((function (i) {
                             4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
-                        })),
-                            t.op && t.op === Pl.WS_OP_BATCH_DATA)
+                        }));
+                        if (t.op && t.op === Pl.WS_OP_BATCH_DATA) {
                             t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH, t.packetLen);
-                        else if (t.op && Pl.WS_OP_DATA === t.op)
+                        }
+                        else if (t.op && Pl.WS_OP_DATA === t.op) {
                             t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
-                        else if (t.op && t.op === Pl.WS_OP_OGVCMD_REPLY)
+                        }
+                        else if (t.op && t.op === Pl.WS_OP_OGVCMD_REPLY) {
                             t.body = ""; // this.parseOgvCmd(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
+                        }
                         else if (t.op) {
                             t.body = [];
                             for (var a = Pl.WS_PACKAGE_OFFSET, r = t.packetLen, n = "", l = ""; a < i.byteLength; a += r) {
-                                r = e.getInt32(a),
-                                    n = e.getInt16(a + Pl.WS_HEADER_OFFSET);
+                                r = e.getInt32(a);
+                                n = e.getInt16(a + Pl.WS_HEADER_OFFSET);
                                 try {
-                                    l = JSON.parse(decoder.decode(i.slice(a + n, a + r))),
-                                        t.body = l
+                                    l = JSON.parse(decoder.decode(i.slice(a + n, a + r)));
+                                    t.body = l;
                                 } catch (e) {
-                                    l = decoder.decode(i.slice(a + n, a + r)),
-                                        console.error("decode body error:", new Uint8Array(i), t)
+                                    l = decoder.decode(i.slice(a + n, a + r));
+                                    console.error("decode body error:", new Uint8Array(i), t);
                                 }
                             }
                         }
@@ -625,16 +627,16 @@
                     // jsc-player > i.prototype.parseDanmaku
                     liveChat.parseDanmaku = function (i, e, t, a) {
                         for (var r, n = [], l = t; l < i.byteLength; l += a) {
-                            a = e.getInt32(l),
-                                r = e.getInt16(l + Pl.WS_HEADER_OFFSET);
+                            a = e.getInt32(l);
+                            r = e.getInt16(l + Pl.WS_HEADER_OFFSET);
                             try {
-                                n.push(JSON.parse(decoder.decode(i.slice(l + r, l + a))))
+                                n.push(JSON.parse(decoder.decode(i.slice(l + r, l + a))));
                             } catch (e) {
-                                n.push(decoder.decode(i.slice(l + r, l + a))),
-                                    console.error("decode body error:", new Uint8Array(i))
+                                n.push(decoder.decode(i.slice(l + r, l + a)));
+                                console.error("decode body error:", new Uint8Array(i));
                             }
                         }
-                        return n
+                        return n;
                     }
                 }
             }
