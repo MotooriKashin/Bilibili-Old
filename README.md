@@ -1,7 +1,7 @@
 # Bilibili 旧播放页
 ---
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 85](https://img.shields.io/badge/Google_Chrome_85-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
-- [Tampermonkey](https://www.tampermonkey.net/)脚本，通过重写网页框架的方式切换到原生旧版页面
+- [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式切换到原生旧版页面
 - 默认启用了部分附加功能，可在设置中选择关闭
 - 与部分脚本及扩展不兼容，详见兼容数据条目
 - B站改版时间轴
@@ -27,7 +27,7 @@
    + 收藏：[medialist/play/ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
    + 嵌入：[blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视")、[campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘")、[biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传")、[moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")、[mylist](https://www.bilibili.com/mylist4#4 "各种神弹幕")
 - 修改 (部分需在设置里启用)
-   + 替换 全局版头和版底
+   + 替换 全局顶栏和底栏
    + 启用 av并在进入BV时跳转到av
    + 添加 显示番剧分集播放数和弹幕数
    + 添加 旧版播放页点赞功能
@@ -42,41 +42,30 @@
    + 修复 旧版播放器实时弹幕
 
 ---
+### 效果预览
+![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
+
+---
 ### 关于设置
 - 设置入口在页面右下角2-3厘米处贴边，鼠标移动到位置会自动浮现，点击即可出现设置面板。
 - 所有设置选项可通过对应按钮选择启用还是关闭，鼠标移动到对应选项会出现简短提示。
 - 大部分设置都不会及时生效，需要刷新页面，部分设置之间可能相互依赖。
-- 如果实在不会操作，[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例") 应该能解决一些问题
+- 如果实在不会操作，[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例") 应该能解决一些问题。
 
 ---
 ### 下载视频
 ![dash](https://i.loli.net/2020/08/16/Y4GzOdmqtZshH3b.png)
-- 播放器右键菜单 → 下载视频 → 右键另存为
-   1. 鼠标左键直接点击无效！（浏览器同源策略）
-   2. 直接复制链接到第三方工具无效！（B站防盗链策略）
-      1. referer：*.bilibili.com域名下
-      2. user-agent：任意有效值（不能为空）
-   3. IDM用户可以右键IDM，同时也能捕获左键点击
-- 画质和格式取决于当前播放，能播放才能下载（大会员、港澳台）
-   1. 下载前建议切换到所需画质
-   2. 6分钟预览也只能捕获预览
-- B站提供了三种格式供选择：mp4、DASH和flv
-   1. mp4：原生mp4
-   2. DASH：音视频分离
-      1. avc：h.264视频流
-      2. hev：h.265视频流
-      3. aac：音频流
-   3. flv：流媒体文件
-- DASH格式将视频/音频拆分成独立的文件
-   1. 视频流有两种(avc/hev)，选择**一种**即可
-   2. 音频流只有一种aac，选择所需码率
-   3. 视频流 + 音频流 = 视频
-- flv格式可能会被切分成多段，历史遗留问题多见于老视频
-   1. 不分段的flv约等于mp4
-   2. 分段1 + …… + 分段n = 视频
-- 弹幕等附属内容只提供原生格式，不会专门进行转码
-   1. 启用新版弹幕后提供的就是新版弹幕的xml文件
-   2. 部分文件不会去获取大小数据，一律显示为“--”
+播放器画面上右键选择下载视频就会出现如图所示下载面板，右键选择保存为即可。  
+**脚本只提供下载链接，不负责下载**，那样太消耗内存，容易导致浏览器崩溃  
+下面是附加说明：
+   - 不要直接左键点击，因为浏览器同源策略左键并不会调用下载。
+   - 不要直接复制链接，因为B站防盗链会检查`refer`和`user agent`，如果实在要复制，请配置`refer`为B站域名（*.bilibili.com）且设置任意有效的`user agent`。
+   - mp4最高画质只有1080P，因为B站只提供了一档画质。
+   - avc/hev/aac是DASH格式，音视频分离：avc/hev是视频流，aac是音频流，视频流二选一 + 音频流 = 完整视频。
+   - flv历史原因可能会切分成多段，但是近年来的新视频已经不分段了。
+   - 能播放才能下载，脚本所做的只是把播放器获取到的链接展示出来而已。
+   - 在脚本设置里启用新版弹幕后，提供的就是新版proto弹幕的xml文件。
+   - 文件大小未知不代表获取不到，获取不到就不会展示。
 
 ---
 ### 已知问题
@@ -95,61 +84,60 @@
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 85.0.4183.83 (正式版本) （64 位） (cohort: 85\_83\_Win)  
-> Tampermonkey BETA 4.10.6118
+> Google Chrome 85.0.4183.102 (正式版本) （64 位） (cohort: Stable)  
+> Tampermonkey BETA 4.10.6119
 >
 
-
-1. **Firefox最新版(79及之后)旧版框架启用失败**，原因不明，之前的版本没问题   
-2. 旧版页面使用的`document.write()`方法对其他脚本及扩展的影响：
-   1. DOM的数据被覆盖
-   2. DOM的回调失效：如`addEventListener`、`document.onclick`
-   3. `GM_setValue()`方法失效
-   4. 只针对以`run-at document-start`注入脚本
-   5. 只针对启用了旧版框架的页面
+- 只在最新版chrome + Tampermonkey上通过测试
+- **Firefox最新版(79及之后)旧版框架启用失败**，之前的版本没问题   
+- 旧版页面不得已使用的`document.write()`方法严重影响其他脚本及扩展：
+   - DOM的数据被覆盖
+   - DOM的回调失效：如`addEventListener`、`document.onclick`
+   - `GM_setValue()`方法失效
+   - 只针对同样以`run-at document-start`注入的脚本
+   - 只针对启用了旧版框架的页面
 
 附上测试结果：
-1. [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
-   1. `GM_setValue`失效，在旧版页面无法修改设置
-   2. “简化主页”冲突，使旧版主页布局紊乱
-   3. 旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”
-   4. 快捷键拓展未适配，在旧版页面部分快捷键无效
-2. [解除B站区域限制](https://greasyfork.org/scripts/25718)
-   1. 旧版UI未适配，无法在旧版页面调出设置
-   2. **若要同时使用请关闭本脚本“区域限制”选项！**
-3. [Bilibili 修车插件](https://greasyfork.org/scripts/374449)
-   1. 推荐以`run-at document-start`注入
-   2. 推荐只在需要时启用该脚本
-4. [IDM Integration Module](http://www.internetdownloadmanager.com)：下载浮动条失效
-5. [smoothscroll](http://iamdustan.com/smoothscroll/)：平滑滚动失效
-6. [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：正常
-7. [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：正常
-8. [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：正常
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
+   - `GM_setValue`失效，在旧版页面无法修改设置
+   - “简化主页”冲突，使旧版主页布局紊乱
+   - 旧版番剧页面“批量下载”报错：“获取番剧数据失败: 无法找到 Season ID”
+   - 快捷键拓展未适配，在旧版页面部分快捷键无效
+- [解除B站区域限制](https://greasyfork.org/scripts/25718)
+   - 旧版UI未适配，无法在旧版页面调出设置
+   - **若要同时使用请关闭本脚本“区域限制”选项！**
+- [Bilibili 修车插件](https://greasyfork.org/scripts/374449)
+   - 推荐以`run-at document-start`注入
+   - 推荐只在需要时启用该脚本
+- [IDM Integration Module](http://www.internetdownloadmanager.com)：下载浮动条失效
+- [smoothscroll](http://iamdustan.com/smoothscroll/)：平滑滚动失效
+- [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：正常
+- [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：正常
+- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：正常
 
-9. [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：正常
+- [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：正常
 
 ---
 ### 隐私相关
-1. 脚本会读取您的部分信息
-   1. cookies：与B站后端进行交互时识别用户身份
-      1. DedeUserID：判断是否登录
-      2. bili_jct：与B站后端进行操作验证
-2. 脚本申请了`GM_xmlhttpRequest`跨域权限，`@connect`元数据如下
-   1. [BiliPlus](https://www.biliplus.com/)：获取失效视频信息
-   2. [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
-   3. [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
-3. 脚本引用了部分公开库
-   1. [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
+- 脚本会读取您的部分信息
+   - cookies：与B站后端进行交互时识别用户身份
+      - DedeUserID：判断是否登录
+      - bili_jct：与B站后端进行操作验证
+- 脚本申请了`GM_xmlhttpRequest`跨域权限，`@connect`元数据如下
+   - [BiliPlus](https://www.biliplus.com/)：获取失效视频信息
+   - [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
+   - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
+- 脚本引用了部分公开库
+   - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
 
 ---
 ### 参考致谢
-- [protobuf](https://github.com/protobufjs/protobuf.js)(License: BSD 3-Clause)：protobuf.js库
+- [protobuf (License: BSD 3-Clause)](https://github.com/protobufjs/protobuf.js)：protobuf.js库
 - [Wayback Machine](https://archive.org/web/)：B站旧版网页源代码
 - [indefined](https://github.com/indefined/)：脚本原型及指导
 - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：第三方数据接口
 - [哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)：注册时间样式参考
 - [mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)：av/BV转化算法的python源码
-- [wly5556](https://github.com/MotooriKashin/Bilibili-Old/issues/10)：proto弹幕解码转码
 - [Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)：番剧分集信息接口
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：兼容问题启发及部分实现参考
 - [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)：playurl接口算法
@@ -158,9 +146,9 @@
 - [MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)：md5哈希算法
 
 ---
-### 效果预览
-![binguo.png](https://i.loli.net/2020/08/09/dStpanmQZYAJce6.png)
 ### 版本历史
+- 2020-09-13
+   + 修复旧版顶栏图片高分辨率适配问题
 - 2020-09-12
    + 修复换P后没有切换到对应的实时弹幕服务器
 - 2020-09-11
@@ -179,7 +167,7 @@
    + 修复4k画质初始化播放器
 - 2020-08-16
    + xhrhook选项调整为只控制send(open因为太多功能依赖默认开启)
-   + 修改话题、活动主页版头类型
+   + 修改话题、活动主页顶栏类型
    + 添加跳过充电鸣谢功能
 - 2020-08-14
    + 补全下载清晰度信息
