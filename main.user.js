@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.7
+// @version      3.4.8
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -88,7 +88,7 @@
             jointime : ".user .info .meta .row {height : 88px;white-space : normal;}.user .info .jointime .icon {background-position : -209px -84px;}.user .info .jointime .text {color : #00a1d6;}}",
             online : ".online a {color : rgb(109, 117, 122);}.popularize-module .online em {display : inline-block;height : 10px;line-height : 10px;vertical-align : top;border-left : 1px solid rgb(184, 192, 204);margin : 12px 15px 0px;}",
             search : ".search-wrap .search-block .input-wrap input {font : 400 13.3333px Arial !important;}",
-            uiface : "#ui-face {box-sizing : content-box;color : #fff;background-color : rgb(255,255,255);border-radius:5px;position : fixed;padding : 4px;bottom : 65px;width : 56px;height : 40px;transition : right 0.7s;-moz-transition : right 0.7s;-webkit-transition : right 0.7s;-o-transition : right 0.7s;z-index : 1008;}#ui-face i {background-position : -471px -982px;display : block;width : 20px;height : 20px;margin : auto;transition : 0.2s;background-image : url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size : 14px;display : block;width : 50%;margin : auto;transition : 0.2s;color : rgb(0,0,0)}#ui-table {box-sizing : content-box;color : #fff;background-color : rgb(255,255,255);border-radius:5px;font-size : 14px;position : fixed;padding : 4px;bottom : 30px;right : 58px;width : 200px;height : 360px;line-height : normal;box-shadow : rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border : 1px solid rgb(233, 234, 236);overflow-y : scroll;z-index : 10008;}.checke{float : right;position : relative;-webkit-appearance : none;width : 40px;height : 20px;line-height : 20px;background : #eee;border-radius : 10px;outline : none;border : 2px solid #999999;}.checke:before{position : absolute;left : 0;content : '';width : 12px;height : 12px;border-radius : 50%;background : #eee;box-shadow : 0px 0px 5px #ddd;transition : all 0.2s linear;border : 2px solid #999999;}.checke:checked{   background : #01a1d6;}.checke:checked:before{left : 20px;transition : all 0.2s linear;}#ui-state {border-radius : 5px;z-index : 1000;width : auto;position : fixed;right : 280px;color : #fff;background : #0008;padding : 1rem;font-size : 12pt;top : 50%;transform : translateY(-50%);transition : .2s ease-out .8s;max-width : 20%;line-height : 2;white-space : pre-wrap;pointer-events : none;opacity : 1;}.video_download {cursor : pointer;width : 46px;height : 48px;background-color : #f6f9fa;background-position : -1353px -1095px;background-repeat : no-repeat;border : 1px solid #e5e9ef;overflow : hidden;border-radius : 4px;display : inline-block;background-image : url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color : #00a1d6;border-color : #00a1d6;}",
+            uiface : "#ui-face {box-sizing : content-box;color : #fff;background-color : rgb(255,255,255);border-radius:5px;position : fixed;padding : 4px;bottom : 65px;width : 56px;height : 40px;transition : right 0.7s;-moz-transition : right 0.7s;-webkit-transition : right 0.7s;-o-transition : right 0.7s;z-index : 1008;}#ui-face i {background-position : -471px -982px;display : block;width : 20px;height : 20px;margin : auto;transition : 0.2s;background-image : url(//static.hdslb.com/images/base/icons.png);}#ui-face span {font-size : 14px;display : block;width : 50%;margin : auto;transition : 0.2s;color : rgb(0,0,0)}#ui-table {box-sizing : content-box;color : #fff;background-color : rgb(255,255,255);border-radius:5px;font-size : 14px;position : fixed;padding : 4px;bottom : 30px;right : 58px;width : 200px;height : 360px;line-height : normal;box-shadow : rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;border : 1px solid rgb(233, 234, 236);overflow-y : scroll;z-index : 10008;}.checke{float : right;position : relative;-webkit-appearance : none;width : 40px;height : 20px;line-height : 20px;background : #eee;border-radius : 10px;outline : none;border : 2px solid #999999;}.checke:before{position : absolute;left : 0;content : '';width : 12px;height : 12px;border-radius : 50%;background : #eee;box-shadow : 0px 0px 5px #ddd;transition : all 0.2s linear;border : 2px solid #999999;}.checke:checked{   background : #01a1d6;}.checke:checked:before{left : 20px;transition : all 0.2s linear;}#ui-state {border-radius : 5px;z-index : 1000;width : auto;position : fixed;right : 280px;color : #fff;background : #0008;padding : 1rem;font-size : 12pt;top : 50%;transform : translateY(-50%);transition : .2s ease-out .8s;max-width : 20%;line-height : 2;white-space : pre-wrap;pointer-events : none;opacity : 1;}.video_download {cursor : pointer;width : 46px;height : 48px;background-color : #f6f9fa;background-position : -1353px -1095px;background-repeat : no-repeat;border : 1px solid #e5e9ef;overflow : hidden;border-radius : 4px;display : inline-block;background-image : url(//static.hdslb.com/images/base/icons.png);}.video_download:hover {background-color : #00a1d6;border-color : #00a1d6;}.bili-header-m .head-banner{background-position: center 0 !important;background-size: cover !important;}",
             bofqi : "#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}",
             gray : "html {filter:grayscale(100%);-webkit-filter:grayscale(100%);-moz-filter:grayscale(100%);-ms-filter:grayscale(100%);-o-filter:grayscale(100%);filter:progid:DXImageTransform.Microsoft.BasicImage(grayscale=1);-webkit-filter:grayscale(1);}",
             like : ".video-info-module .number .like b, .video-info-module .number .like i {background : url(//static.hdslb.com/images/base/icons.png);display : inline-block;margin-top : -3px;vertical-align : middle;}",
@@ -585,7 +585,7 @@
                         wsBinaryHeaderList[2].value = option;
                         wsBinaryHeaderList.forEach((function (i) {
                             4 === i.bytes ? (viewer.setInt32(i.offset, i.value),
-                                "seq" === i.key && ++i.value) : 2 === i.bytes ? viewer.setInt16(i.offset, i.value) : 1 === i.bytes && viewer.setInt8(i.offset, i.value)
+                                             "seq" === i.key && ++i.value) : 2 === i.bytes ? viewer.setInt16(i.offset, i.value) : 1 === i.bytes && viewer.setInt8(i.offset, i.value)
                         }));
                         return mergeArrayBuffer(headerBuf, bodyBuf);
                     }
@@ -597,8 +597,8 @@
                             t = {};
                         if (t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET),
                             wsBinaryHeaderList.forEach((function (i) {
-                                4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
-                            })),
+                            4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
+                        })),
                             t.op && t.op === Pl.WS_OP_BATCH_DATA)
                             t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH, t.packetLen);
                         else if (t.op && Pl.WS_OP_DATA === t.op)
@@ -1636,7 +1636,7 @@
             remove("app-download", "class");
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
-            // 移除失效版头
+            // 移除失效顶栏
             remove("bili-header-m", "class", false, 1);
             // 移除主页昨日榜
             if (window.recbtn) remove("rec-btn prev", "class");
@@ -2614,7 +2614,7 @@
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢<br>※依赖xhrhook"],
             livechat : ["实时弹幕", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
             limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
-            grobalboard : ["版头版底", "识别并替换所有新版版头为旧版版头，旧版失效广告区替换为资讯区"],
+            grobalboard : ["顶栏底栏", "识别并替换所有新版顶栏为旧版顶栏，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
             headblur : ["顶栏透明", "使旧版顶栏全透明"],
             preview : ["付费预览", "去除播放器左下角付费预览框"],
