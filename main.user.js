@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.8
+// @version      3.4.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -127,7 +127,8 @@
             proj : "https://app.bilibili.com/v2/playurlproj", // appkey, cid=, otype=json, qn
             pgcproj : "https://api.bilibili.com/pgc/player/api/playurlproj", // appkey, cid=, otype=json, platform=android_i, qn
             BPplayurl : "https://www.biliplus.com/BPplayurl.php", // [origin] + &module=pgc&balh_ajax=1
-            ranklist : "https://api.bilibili.com/pgc/season/rank/web/list" // season_type, &day=3
+            ranklist : "https://api.bilibili.com/pgc/season/rank/web/list", // season_type, &day=3
+            detail : "https://api.bilibili.com/x/web-interface/view/detail" // aid
         },
         // 未识别分区对照表
         sort : {
@@ -231,7 +232,7 @@
                     method  : "GET",
                     url     : url,
                     onload  : (response) => resolve(response.responseText),
-                    onerror : (status) => reject(status)
+                    onerror : (response) => reject(response.status)
                 });
             })
         },
@@ -252,6 +253,24 @@
 
     // 重构__INITIAL_STATE__
     const INITIAL_STATE = {
+        // av/BV
+        av : (data) => {
+            try {
+                data = JSON.parse(data).data;
+                aid = aid || data.View.aid;
+                cid = cid || data.View.cid;
+                let dat = {aid : -1, comment : {count : 0, list : []}, error : {}, isClient : false, p: "", player: "", playurl: {}, related : [], tags : [], upData : {}, videoData : {}}
+                dat.aid = data.View.aid;
+                dat.related = data.Related;
+                dat.tags = data.Tags;
+                dat.upData = data.Card.card;
+                dat.upData.archiveCount = data.Card.archive_count;
+                dat.videoData = data.View;
+                dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid +'&aid=' + aid +'&pre_ad=")'
+                return dat;
+            }
+            catch (e) {debug.error("__INITIAL_STATE__·av", ...e)}
+        },
         // bangumi
         bangumi : (epId) => {
             try {
@@ -397,7 +416,7 @@
                 }
                 return dat;
             }
-            catch(e) {debug.error("__INITIAL_STATE__·Bangumi", e)}
+            catch(e) {debug.error("__INITIAL_STATE__·Bangumi", ...e)}
         },
         // 主页
         home : (data) => {
@@ -430,7 +449,7 @@
                 if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{"id":36585,"contract_id":"","pos_num":1,"name":"小黑屋弹幕举报","pic":"https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg","litpic":"","url":"https://www.bilibili.com/blackboard/activity-dmjbfj.html","style":0,"agency":"","label":"","intro":"","creative_type":0,"request_id":"1546354354629q172a23a61a62q626","src_id":32,"area":0,"is_ad_loc":true,"ad_cb":"","title":"","server_type":0,"cm_mark":0,"stime":1520478000,"mid":"14629218"}];
                 return dat;
             }
-            catch(e) {debug.error("__INITIAL_STATE__·Home", e)}
+            catch(e) {debug.error("__INITIAL_STATE__·Home", ...e)}
         }
     }
 
@@ -814,9 +833,9 @@
                             this.onreadystatechange();
                             __playinfo__ = response;
                             debug.log("解除限制", "aid=", aid, "cid=", cid);
-                            if (!response.data && !response.result) debug.msg("解除限制失败 ಥ_ಥ", "", "", response);
+                            if (!response.data && !response.result) throw [response];
                         }
-                        catch(e) {debug.error("解除限制", e)}
+                        catch(e) {debug.error("解除限制", ...e)}
                     }
                     else {
                         send.call(this, ...arg);
@@ -873,8 +892,8 @@
         // 修改首页直播推荐数据
         biliIndexRec : (obj, hook = []) => {
             try {
-                hook.push(JSON.parse(event.target.responseText));
-                let response = event.target.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+                hook.push(JSON.parse(obj.responseText));
+                let response = obj.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
                 response = JSON.parse(response);
                 response.data.text_link = {text : "233秒居然能做这些！", link : "//vc.bilibili.com"};
                 if (response.data.recommend) {
@@ -890,13 +909,13 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {debug.error("首页推荐", e)}
+            catch(e) {debug.error("首页推荐", ...e)}
         },
         // 修复番剧季度信息
         season : (obj, hook = []) => {
             try {
-                hook.push(JSON.parse(event.target.responseText));
-                let response = JSON.parse(event.target.responseText);
+                hook.push(JSON.parse(obj.responseText));
+                let response = JSON.parse(obj.responseText);
                 for (let i = 0; i < response.result.episodes.length; i++){
                     response.result.episodes[i].ep_id = response.result.episodes[i].id;
                     response.result.episodes[i].episode_status = response.result.episodes[i].status;
@@ -909,14 +928,14 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {debug.error("番剧季度信息", e)}
+            catch(e) {debug.error("番剧季度信息", ...e)}
         },
         // 修改直播数据
         getRoomPlayInfo : (obj, hook = []) => {
             if (!config.reset.roomplay) return;
             try {
-                hook.push(JSON.parse(event.target.responseText));
-                let response = event.target.responseText;
+                hook.push(JSON.parse(obj.responseText));
+                let response = obj.responseText;
                 response = JSON.parse(response);
                 if (response.data) {
                     response.data.live_status = 0;
@@ -929,7 +948,7 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {debug.error("直播拦截", e)}
+            catch(e) {debug.error("直播拦截", ...e)}
         },
         // 生成播放信息
         carousel : (obj) => {
@@ -942,12 +961,12 @@
                 Object.defineProperty(obj, 'responseXML', {writable : true});
                 obj.responseXML = responseXML;
             }
-            catch(e) {debug.error("播放通知", e)}
+            catch(e) {debug.error("播放通知", ...e)}
         },
         // 强制载入播放器
         status : (obj) => {
             try {
-                let response = JSON.parse(event.target.responseText);
+                let response = JSON.parse(obj.responseText);
                 if (response.result) {
                     if (config.reset.limit && response.result.area_limit){
                         response.result.area_limit = 0;
@@ -965,17 +984,17 @@
                     }
                 }
             }
-            catch (e) {debug.error("强制启用播放器", e)}
+            catch (e) {debug.error("强制启用播放器", ...e)}
         },
         // 监听视频地址
         playinfo : (obj) => {
             try {
-                if (!obj.response) return;
-                __playinfo__ = typeof event.target.response == "object" ? event.target.response : JSON.parse(event.target.response);
+                if (!obj.response) throw [obj];
+                __playinfo__ = typeof obj.response == "object" ? obj.response : JSON.parse(obj.response);
                 // 刷新下载面板
                 if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
             }
-            catch (e) {debug.error("视频监听", e)}
+            catch (e) {debug.error("视频监听", ...e)}
         }
     }
 
@@ -1453,13 +1472,13 @@
                     deliver.download.item();
                     mdf = {};
                 }
-                catch(e) {debug.error("下载配置", e)}
+                catch(e) {debug.error("下载配置", ...e)}
             },
             // 拉取mp4链接
             geturl : async (...arg) => {
                 let url = deliver.download.playurl(...arg);
-                if (!url) return;
                 try {
+                    if (!url) throw [url];
                     let data = await xhr.GM(url);
                     return JSON.parse(data);
                 }
@@ -1496,13 +1515,15 @@
             item : () => {
                 let timer, top = document.getElementById("bili-old-download-table");
                 if (top) {
+                    // 刷新下载面板
                     top.remove();
+                    // 释放bolb残留
                     if (bloburl.xml) {
                         window.URL.revokeObjectURL(bloburl.xml);
                         bloburl.xml = "";
                     }
                 }
-                if (!mdf.mp4 && !mdf.flv && !mdf.dash) {debug.msg("未找到任何视频链接 ಥ_ಥ"); return;}
+                if (!mdf.mp4 && !mdf.flv && !mdf.dash) throw ["未找到任何视频链接", "ಥ_ಥ", mdf];
                 function addBox(obj, name, type, quatily){
                     let box = document.createElement("div");
                     box.setAttribute("class", "download-box");
@@ -1598,7 +1619,7 @@
                 }
                 new cut();
             }
-            catch(e) {debug.error("付费预览", e)}
+            catch(e) {debug.error("付费预览", ...e)}
         },
         // 超链接转化
         avdesc : async () => {
@@ -1696,7 +1717,7 @@
                                 child[4].childNodes[0].href = API.sort[tid][2];
                                 child[4].childNodes[0].innerText = API.sort[tid][1];
                             }
-                            catch(e) {debug.error("分区·稍后再看", e)}
+                            catch(e) {debug.error("分区·稍后再看", ...e)}
                         }
                     }
                 },1000);
@@ -1783,7 +1804,7 @@
                             arg = text;
                         }
                     }
-                    catch(e) {debug.error("点赞功能", e)}
+                    catch(e) {debug.error("点赞功能", ...e)}
                 }
             },100);
         },
@@ -1791,18 +1812,16 @@
         setMediaList : {
             init : async (data) => {
                 if (!ml) {
-                    // 4k时初始化播放器
-                    if (__playinfo__.data && __playinfo__.data.accept_quality) {
+                    // 二次初始化播放器
+                    let timer = setInterval(() => {
+                        if (!unsafeWindow.BilibiliPlayer) return;
+                        clearInterval(timer);
                         if (__playinfo__.data.accept_quality[0] < 120) return;
-                        let timer = setInterval(() => {
-                            if (!unsafeWindow.BilibiliPlayer) return;
-                            clearInterval(timer);
-                            let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
-                            unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
-                            unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
-                        },100)
-                        return;
-                    }
+                        let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
+                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
+                        unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
+                    },100)
+                    return;
                 }
                 if (data){
                     // 以传参data决定处理类型
@@ -1815,7 +1834,7 @@
                     catch(e) {
                         // 跳转失败，清理残余
                         GM_setValue("medialist", 0);
-                        debug.error(e)
+                        debug.error(e);
                     }
                 }
                 else {
@@ -1887,7 +1906,7 @@
                             }
                         },100);
                     }
-                    catch(e) {debug.error("收藏模拟", e)}
+                    catch(e) {debug.error("收藏模拟", ...e)}
                 }
             },
             // aid变化监听
@@ -2012,7 +2031,7 @@
                     danmakus.innerText = danmaku;
                     debug.log("播放", view + " 弹幕", danmaku);
                 }
-                catch(e) {debug.error("分集数据", e)}
+                catch(e) {debug.error("分集数据", ...e)}
             },
         },
         // 跳转完后的播单处理
@@ -2075,11 +2094,11 @@
                                 let count = online.parentNode.getElementsByTagName("a")[1];
                                 count.text = all_count ? "最新投稿：" + all_count : "最新投稿";
                             }
-                            if (!all_count || !web_online || !play_online) return;
+                            if (!all_count || !web_online || !play_online) throw ["无在线数据", data];
                             // 60s刷新一次
                             window.setTimeout(()=> loop(), 60000);
                         }
-                        catch(e) {debug.error("在线数据", e)}
+                        catch(e) {debug.error("在线数据", ...e)}
                     }
                     loop();
                 }
@@ -2118,7 +2137,7 @@
                     }
                 });
             }
-            catch(e) {debug.error("注册时间", e)}
+            catch(e) {debug.error("注册时间", ...e)}
         },
         // 失效视频
         fixVideoLost : {
@@ -2214,7 +2233,7 @@
                         }
                     }
                 }
-                catch(e) {debug.error("失效视频·频道", e)}
+                catch(e) {debug.error("失效视频·频道", ...e)}
             },
             // 空间首页展示的失效视频
             home : async (msg) => {
@@ -2270,9 +2289,9 @@
                     root = obj.root,
                     type = obj.type;
                 // sort与mode对应转化，sort == 1时暂时处理不了直接退出
-                // 热门：sort=2 mode=3 时间：sort=0 mode=2  回复：sort=1 默认(热门+时间) mode=1
+                // 热门：sort=2 mode=3 时间：sort=0 mode=2  回复：sort=1 默认(热门+时间)： mode=1
                 if (sort == 0) mode = 1;
-                if (sort == 1) return;
+                if (sort == 1) throw ["暂无法处理按回复排列的评论", obj];
                 if (sort == 2) mode = 3;
                 let list_item = document.getElementsByClassName("reply-wrap");
                 let main_floor = document.getElementsByTagName("li");
@@ -2400,7 +2419,7 @@
                     }
                 }
             }
-            catch(e) {debug.error("评论楼层", e)}
+            catch(e) {debug.error("评论楼层", ...e)}
         },
         // 广告区转资讯区
         fixnews : async (node, move) => {
@@ -2443,7 +2462,7 @@
                     rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
                 }
             }
-            catch(e) {debug.error("分区·版面", e)}
+            catch(e) {debug.error("分区·版面", ...e)}
         },
         // 跳过充电鸣谢
         electricPanelJump : async (node) => {
@@ -2454,7 +2473,7 @@
                 debug.log("跳过充电鸣谢");
                 setTimeout(() => {config.reset.electric = 1}, 5000);
             }
-            catch(e) {debug.error("充电鸣谢", e)}
+            catch(e) {debug.error("充电鸣谢", ...e)}
         },
         // 修复分区排行
         fixrank : async (node) => {
@@ -2497,7 +2516,7 @@
                     return sum;
                 }
             }
-            catch (e) {debug.error("分区排行", e)}
+            catch (e) {debug.error("分区排行", ...e)}
         }
     }
 
@@ -2647,37 +2666,38 @@
                 ml = GM_getValue("medialist");
                 GM_setValue("medialist", 0);
                 // bv转av
-                if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) history.replaceState(null, null, "https://www.bilibili.com/video/av" + deliver.convertId(LOCATION[4]) + location.search + location.hash);
-                if (!config.rewrite.av && !config.reset.download) return;
-                // 获取网页源代码
-                DOCUMENT = xhr.false(location.href);
-                __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : ""; // 继承__INITIAL_STATE__
-                // 记录__playinfo__
-                __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
-                // 判断页面是否会自动重定向或者404
-                if (config.rewrite.av && __INITIAL_STATE__) {
-                    // 忽略互动视频
-                    if (__INITIAL_STATE__ && __INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.stein_guide_cid) return;
-                    // 修复评论数据缺失
-                    __INITIAL_STATE__.comment = {count : 0, list : []}
-                    // 写入全局变量
-                    aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid;
-                    tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid;
-                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
-                    // 重写网页框架并进行调用后续处理
-                    deliver.write(API.pageframe.video);
-                    document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
-                    deliver.fixSort.video()
-                    deliver.setLike();
-                    deliver.setMediaList.init();
+                if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) {
+                    aid = deliver.convertId(LOCATION[4]);
+                    history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
                 }
+                if (!config.rewrite.av && !config.reset.download) throw ["未启用旧版av页", location.href];
+                // 获取网页源代码
+                __playinfo__ = unsafeWindow.__playinfo__;
+                if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
+                aid = aid || LOCATION[4].match(/[0-9]+/)[0];
+                DOCUMENT = xhr.false(deliver.obj2search(API.url.detail, {aid : aid}));
+                __INITIAL_STATE__ = INITIAL_STATE.av(DOCUMENT);
+                if (__INITIAL_STATE__.videoData.redirect_url) throw ["番剧重定向：", __INITIAL_STATE__.videoData.redirect_url];
+                if (__INITIAL_STATE__.videoData.stein_guide_cid) throw ["忽略互动视频：", "av" + aid];
+                // 写入全局变量
+                aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid;
+                tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid;
+                __playinfo__ = __playinfo__ ? __playinfo__ : unsafeWindow.__playinfo__;
+                unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
+                // 重写网页框架并进行调用后续处理
+                deliver.write(API.pageframe.video);
+                document.title = __INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                deliver.fixSort.video()
+                deliver.setLike();
+                deliver.setMediaList.init();
             }
-            catch(e) {debug.error("框架·av/BV", e)}
+            catch(e) {debug.error("框架·av/BV", ...e)}
         },
         // 稍后再看
         watchlater : () => {
             try {
-                if (!config.rewrite.watchlater || !uid) return;
+                if (!config.rewrite.watchlater) throw ["未启用旧版稍后再看", location.href];
+                if (!uid) throw ["未登录", "无法启用旧版稍后再看"];
                 // 重写网页框架并调用后续处理
                 deliver.write(API.pageframe.watchlater);
                 deliver.setLike();
@@ -2692,40 +2712,39 @@
                     }
                 }
             }
-            catch(e) {debug.error("框架·稍后再看", e)}
+            catch(e) {debug.error("框架·稍后再看", ...e)}
         },
         // 番剧
         bangumi : () => {
             try {
-                if (!config.rewrite.bangumi && !config.reset.download) return;
+                if (!config.rewrite.bangumi && !config.reset.download) throw ["未启用旧版Bangumi", location.href];
                 // 指定playurl类型
                 pgc = true;
                 // 获取网页源代码
                 DOCUMENT = xhr.false(location.href);
                 __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : ""; // 继承__INITIAL_STATE__
-                // 记录__playinfo__
                 __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
+                if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
                 // 判断页面是否404
-                if (config.rewrite.bangumi && __INITIAL_STATE__) {
-                    let id = LOCATION[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
-                    // 获取__INITIAL_STATE__
-                    __INITIAL_STATE__ = INITIAL_STATE.bangumi(id);
-                    if (__INITIAL_STATE__ && __INITIAL_STATE__.epInfo && __INITIAL_STATE__.epInfo.badge === "互动") return;
-                    // 重写网页框架并调用后续处理，按是否有特殊背景分别处理
-                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
-                    if (DOCUMENT.match('"specialCover":""')) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema);
-                    document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
-                    if (__INITIAL_STATE__) deliver.setBangumi.init(__INITIAL_STATE__);
-                }
+                if (!__INITIAL_STATE__) throw ["__INITIAL_STATE__错误", "Bangumi可能无效", __INITIAL_STATE__];
+                let id = LOCATION[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
+                // 获取__INITIAL_STATE__
+                __INITIAL_STATE__ = INITIAL_STATE.bangumi(id);
+                if (__INITIAL_STATE__ && __INITIAL_STATE__.epInfo && __INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
+                // 重写网页框架并调用后续处理，按是否有特殊背景分别处理
+                unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
+                if (DOCUMENT.match('"specialCover":""')) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema);
+                document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
+                if (__INITIAL_STATE__) deliver.setBangumi.init(__INITIAL_STATE__);
             }
-            catch(e) {debug.error("框架·Bangumi", e)}
+            catch(e) {debug.error("框架·Bangumi", ...e)}
         },
         // 嵌入
         blackboard : () => {
             try {
                 // 修复HTML5播放器帮助页视频cid错误
                 if (LOCATION[4].startsWith('html5player')) if (LOCATION[4].includes("3521416") && LOCATION[4].includes("6041635")) location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":3521416,"cid":192446449}));
-                if (!config.rewrite.frame) return;
+                if (!config.rewrite.frame) throw ["未启用旧版嵌入播放器", location.href];
                 if (LOCATION[4].startsWith('newplayer')) {
                     let obj = deliver.search2obj(location.href),
                         season_type = obj.season_type || "",
@@ -2737,7 +2756,7 @@
                     debug.log("嵌入播放器", "aid=", aid, " cid=", cid);
                 }
             }
-            catch(e) {debug.error("框架·嵌入", e)}
+            catch(e) {debug.error("框架·嵌入", ...e)}
         },
         // 播单
         playlist : () => {
@@ -2785,21 +2804,20 @@
         },
         // 主页
         home : () => {
-            if (config.rewrite.home) {
-                try {
-                    window.recbtn = 1;
-                    if (!unsafeWindow.__INITIAL_STATE__) {
-                        DOCUMENT = xhr.false(location.href);
-                        __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : ""; // 继承__INITIAL_STATE__
-                    }
-                    else __INITIAL_STATE__ = JSON.stringify(unsafeWindow.__INITIAL_STATE__);
-                    // 新旧__INITIAL_STATE__不兼容，进行重构
-                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.home(__INITIAL_STATE__);
-                    // 重写网页框架
-                    deliver.write(API.pageframe.home);
+            try {
+                if (!config.rewrite.home) throw ["未启用旧版主页", location.href];
+                window.recbtn = 1;
+                if (!unsafeWindow.__INITIAL_STATE__) {
+                    DOCUMENT = xhr.false(location.href);
+                    __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : ""; // 继承__INITIAL_STATE__
                 }
-                catch(e) {debug.error("框架·主页", e)}
+                else __INITIAL_STATE__ = JSON.stringify(unsafeWindow.__INITIAL_STATE__);
+                // 新旧__INITIAL_STATE__不兼容，进行重构
+                unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__ = INITIAL_STATE.home(__INITIAL_STATE__);
+                // 重写网页框架
+                deliver.write(API.pageframe.home);
             }
+            catch(e) {debug.error("框架·主页", ...e)}
             // 调用在线数据处理
             deliver.setOnline();
         }
@@ -2843,7 +2861,7 @@
             if (offset) document.cookie = "bp_t_offset_" + uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; path=/";
         }
     }
-    catch(e) {debug.error("初始化", e)}
+    catch(e) {debug.error("初始化", ...e)}
 
     // 分离页面单独调用
     if (LOCATION[3]) {
