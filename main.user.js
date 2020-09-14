@@ -182,8 +182,7 @@
         debug : (...msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         msg : (...msg) => {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
-            debug.log(...msg);
-            if (!node) return;
+            if (!node) {debug.log(...msg); return;}
             let warn = msg[1] || "", delay = msg[2] || 3000;
             let item = document.createElement("div"),
                 text = document.createElement("div"),
@@ -1337,8 +1336,8 @@
             if (config.reset.playershadow) csss = csss + API.style.playshadow;
             if (config.reset.like) csss = csss + API.style.like;
             style.setAttribute("type", "text/css");
-            if (document.head) document.head.appendChild(style);
             style.appendChild(document.createTextNode(csss));
+            setTimeout(() =>document.head.appendChild(style));
         },
         // 重写网页
         write : (html) => {
