@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.4.9
+// @version      3.5.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -2155,7 +2155,7 @@
                     data = await xhr.GM(API.url.jijidown + aid);
                     data.match('window._INIT')[0];
                     title = data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/,"").replace(/-哔哩哔哩唧唧/,"");
-                    cover = data.match(/"img\":\ \".+?\",/)[0].replace(/"img" : "/,"").replace(/",/,"");
+                    cover = data.match(/\"img\":\ \".+?\",/)[0].match(/http.+?\",/)[0].replace(/",/,"");
                     // 判断封面是否有效
                     cover.match('hdslb')[0];
                 }
@@ -2175,7 +2175,7 @@
                 debug.log("失效视频", "av" + aid);
                 let img = msg.target.getElementsByTagName("img")[0];
                 let txt = msg.target.getElementsByClassName("title")[0];
-                img.setAttribute("src",cover + "@380w_240h_100Q_1c.webp");
+                if (cover) img.setAttribute("src",cover + "@380w_240h_100Q_1c.webp");
                 img.setAttribute("alt",title);
                 txt.setAttribute("href", "//www.bilibili.com/video/av" + aid);
                 txt.setAttribute("title",title);
