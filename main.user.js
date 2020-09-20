@@ -211,7 +211,7 @@
                     method  : "GET",
                     url     : url,
                     onload  : (response) => resolve(response.responseText),
-                    onerror : (response) => reject(response.status)
+                    onerror : (response) => reject(response)
                 });
             })
         },
@@ -248,7 +248,7 @@
                 dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid +'&aid=' + aid +'&pre_ad=")'
                 return dat;
             }
-            catch (e) {debug.error("__INITIAL_STATE__·av", ...e)}
+            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·av", ...e)}
         },
         // bangumi
         bangumi : (epId) => {
@@ -395,7 +395,7 @@
                 }
                 return dat;
             }
-            catch(e) {debug.error("__INITIAL_STATE__·Bangumi", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·Bangumi", ...e)}
         },
         // 主页
         home : (data) => {
@@ -428,7 +428,7 @@
                 if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{"id":36585,"contract_id":"","pos_num":1,"name":"小黑屋弹幕举报","pic":"https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg","litpic":"","url":"https://www.bilibili.com/blackboard/activity-dmjbfj.html","style":0,"agency":"","label":"","intro":"","creative_type":0,"request_id":"1546354354629q172a23a61a62q626","src_id":32,"area":0,"is_ad_loc":true,"ad_cb":"","title":"","server_type":0,"cm_mark":0,"stime":1520478000,"mid":"14629218"}];
                 return dat;
             }
-            catch(e) {debug.error("__INITIAL_STATE__·Home", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·Home", ...e)}
         }
     }
 
@@ -689,7 +689,7 @@
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
-                    pgc = url.includes("pgc") ? true : false;;
+                    pgc = url.includes("pgc") ? true : false;
                     if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
@@ -800,21 +800,22 @@
                             Object.defineProperty(this, "status", { writable : true });
                             this.abort();
                             let response;
-                            if (limit) {
-                                response = {"code":0,"message":"success","result":{}};
-                                response.result = JSON.parse(await xhr.true(API.url.BPplayurl + "?" + this.url.split("?")[1] + "&module=pgc&balh_ajax=1"));
+                            try {
+                                if (limit) {
+                                    response = JSON.parse(await xhr.true(API.url.BPplayurl + "?" + this.url.split("?")[1] + "&module=pgc&balh_ajax=1"));
+                                    response = {"code" : 0, "message" : "success" , "result" : response};
+                                }
                             }
-                            this.response = response;
-                            this.responseText = JSON.stringify(response);
+                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", "", 10000); throw "解除限制失败 ಥ_ಥ";}
+                            this.response = this.responseText = JSON.stringify(response);
                             this.status = 200;
                             this.readyState = 3;
                             this.readyState = 4;
-                            this.onreadystatechange();
+                            setTimeout(this.onreadystatechange);
                             __playinfo__ = response;
                             debug.log("解除限制", "aid=", aid, "cid=", cid);
-                            if (!response.data && !response.result) throw [response];
                         }
-                        catch(e) {debug.error("解除限制", ...e)}
+                        catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("解除限制", ...e)}
                     }
                     else {
                         send.call(this, ...arg);
@@ -888,7 +889,7 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {debug.error("首页推荐", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("首页推荐", ...e)}
         },
         // 修复番剧季度信息
         season : (obj, hook = []) => {
@@ -907,7 +908,7 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {debug.error("番剧季度信息", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("番剧季度信息", ...e)}
         },
         // 修改直播数据
         getRoomPlayInfo : (obj, hook = []) => {
@@ -927,7 +928,7 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {debug.error("直播拦截", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("直播拦截", ...e)}
         },
         // 生成播放信息
         carousel : (obj) => {
@@ -940,7 +941,7 @@
                 Object.defineProperty(obj, 'responseXML', {writable : true});
                 obj.responseXML = responseXML;
             }
-            catch(e) {debug.error("播放通知", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("播放通知", ...e)}
         },
         // 强制载入播放器
         status : (obj) => {
@@ -963,17 +964,17 @@
                     }
                 }
             }
-            catch (e) {debug.error("强制启用播放器", ...e)}
+            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("强制启用播放器", ...e)}
         },
         // 监听视频地址
         playinfo : (obj) => {
             try {
-                if (!obj.response) throw [obj];
+                if (!obj.response) throw obj;
                 __playinfo__ = typeof obj.response == "object" ? obj.response : JSON.parse(obj.response);
                 // 刷新下载面板
                 if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
             }
-            catch (e) {debug.error("视频监听", ...e)}
+            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("视频监听", ...e)}
         }
     }
 
@@ -1400,7 +1401,7 @@
                     url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
                     if (url[1]) path.durl = url[1].data ? url[1].data.durl : url[1].result.durl;
                 }
-                catch(e) {debug.log(url);url = [1]}
+                catch(e) {debug.log("下载获取", url); url = [1]}
                 try {
                     // 获取mp4
                     if (url[0] && url[0].durl) {
@@ -1408,7 +1409,6 @@
                         mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
                         navigator.clipboard.writeText(url.durl[0].url);
                     }
-                    else debug.log("下载配置", config.big ? url : "获取mp4链接失败 ಥ_ಥ");
                     if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
                         // 获取flv
                         if (path.durl) {
@@ -1473,17 +1473,17 @@
                     deliver.download.item();
                     mdf = {};
                 }
-                catch(e) {debug.error("下载配置", ...e)}
+                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("下载配置", ...e)}
             },
             // 拉取mp4链接
             geturl : async (...arg) => {
                 let url = deliver.download.playurl(...arg);
                 try {
-                    if (!url) throw [url];
+                    if (!url) throw url;
                     let data = await xhr.GM(url);
                     return JSON.parse(data);
                 }
-                catch(e) {debug.error("下载拉取", e);}
+                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("下载拉取", ...e);}
             },
             // 配置视频链接
             playurl : (type, qn) => {
@@ -1524,7 +1524,7 @@
                         bloburl.xml = "";
                     }
                 }
-                if (!mdf.mp4 && !mdf.flv && !mdf.dash) throw ["未找到任何视频链接", "ಥ_ಥ", mdf];
+                if (!mdf.mp4 && !mdf.flv && !mdf.dash) throw (debug.msg("未找到任何视频链接 ಥ_ಥ"), mdf);
                 function addBox(obj, name, type, quatily){
                     let box = document.createElement("div");
                     box.setAttribute("class", "download-box");
@@ -1620,7 +1620,7 @@
                 }
                 new cut();
             }
-            catch(e) {debug.error("付费预览", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("付费预览", ...e)}
         },
         // 超链接转化
         avdesc : async () => {
@@ -1718,7 +1718,7 @@
                                 child[4].childNodes[0].href = API.sort[tid][2];
                                 child[4].childNodes[0].innerText = API.sort[tid][1];
                             }
-                            catch(e) {debug.error("分区·稍后再看", ...e)}
+                            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分区·稍后再看", ...e)}
                         }
                     }
                 },1000);
@@ -1755,8 +1755,7 @@
                         data = await xhr.true(deliver.obj2search(API.url.view, {"aid" : aid}));
                         data = JSON.parse(data).data.stat.like;
                         document.getElementsByClassName("like")[0].setAttribute("title", "点赞人数" + data);
-                        if (data>10000) data = (data/10000).toFixed(1) + "万";
-                        text = document.createTextNode(" 点赞 " + data);
+                        text = document.createTextNode(" 点赞 " + deliver.unitFormat(data));
                         arg.replaceWith(text);
                         arg = text;
                         data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid" : aid}));
@@ -1805,7 +1804,7 @@
                             arg = text;
                         }
                     }
-                    catch(e) {debug.error("点赞功能", ...e)}
+                    catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("点赞功能", ...e)}
                 }
             },100);
         },
@@ -1907,7 +1906,7 @@
                             }
                         },100);
                     }
-                    catch(e) {debug.error("收藏模拟", ...e)}
+                    catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("收藏模拟", ...e)}
                 }
             },
             // aid变化监听
@@ -1940,24 +1939,24 @@
                 title.childNodes[1].innerText = data.title;
                 info.childNodes[3].innerText = deliver.timeFormat(data.pubdate*1000);
                 number.childNodes[0].title = "总播放数" + data.stat.view;
-                number.childNodes[0].innerText = data.stat.view < 10000 ? data.stat.view : (data.stat.view / 10000).toFixed(1) + "万";
+                number.childNodes[0].innerText = deliver.unitFormat(data.stat.view);
                 number.childNodes[1].title = "总弹幕数" + data.stat.danmaku;
-                number.childNodes[1].innerText = data.stat.danmaku < 10000 ? data.stat.danmaku : (data.stat.danmaku / 10000).toFixed(1) + "万";
+                number.childNodes[1].innerText = deliver.unitFormat(data.stat.danmaku);
                 if (data.stat.his_rank > 0) number.childNodes[2].innerText = "最高全站日排行" + data.stat.his_rank + "名";
                 else try {number.childNodes[2].setAttribute("hidden", "hidden");} catch(e) {}
                 if (number.childNodes[4].className == "u like") {
                     number.childNodes[4].title = "点赞人数" + data.stat.like;
-                    number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("点赞 " + (data.stat.like < 10000 ? data.stat.like : (data.stat.like / 10000).toFixed(1) + "万")));
+                    number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("点赞 " + deliver.unitFormat(data.stat.like)));
                     number.childNodes[5].title = "投硬币枚数" + data.stat.coin;
-                    number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万")));
+                    number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("硬币 " + deliver.unitFormat(data.stat.coin)));
                     number.childNodes[6].title = "收藏人数" + data.stat.favorite;
-                    number.childNodes[6].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万")));
+                    number.childNodes[6].childNodes[2].replaceWith(document.createTextNode("收藏 " + deliver.unitFormat(data.stat.favorite)));
                 }
                 else {
                     number.childNodes[4].title = "投硬币枚数" + data.stat.coin;
-                    number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("硬币 " + (data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万")));
+                    number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("硬币 " + deliver.unitFormat(data.stat.coin)));
                     number.childNodes[5].title = "收藏人数" + data.stat.favorite;
-                    number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("收藏 " + (data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万")));
+                    number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("收藏 " + deliver.unitFormat(data.stat.favorite)));
                 }
                 up_info[0].childNodes[1].href = "https://space.bilibili.com/" + data.owner.mid;
                 up_info[0].childNodes[1].childNodes[0].src = data.owner.face;
@@ -1967,11 +1966,11 @@
                 up_info[1].childNodes[2].childNodes[0].innerText = "投稿 --";
                 up_info[1].childNodes[2].childNodes[1].innerText = "粉丝 --";
                 arc_toolbar_report[0].childNodes[0].title = "分享人数" + data.stat.share;
-                arc_toolbar_report[0].childNodes[0].childNodes[1].innerText = data.stat.share < 10000 ? data.stat.share : (data.stat.share / 10000).toFixed(1) + "万";
+                arc_toolbar_report[0].childNodes[0].childNodes[1].innerText = deliver.unitFormat(data.stat.share);
                 arc_toolbar_report[2].title = "收藏人数" + data.stat.favorite;
-                arc_toolbar_report[2].childNodes[0].childNodes[3].innerText = data.stat.favorite < 10000 ? data.stat.favorite : (data.stat.favorite / 10000).toFixed(1) + "万";
+                arc_toolbar_report[2].childNodes[0].childNodes[3].innerText = deliver.unitFormat(data.stat.favorite);
                 arc_toolbar_report[3].title = "投硬币枚数" + data.stat.coin;
-                arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = data.stat.coin < 10000 ? data.stat.coin : (data.stat.coin / 10000).toFixed(1) + "万";
+                arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = deliver.unitFormat(data.stat.coin);
                 tag[0].setAttribute("hidden", "hidden");
                 desc[1].innerText = data.desc;
                 new unsafeWindow.bbComment(".comment",unsafeWindow.aid, 1, unsafeWindow.UserStatus.userInfo, "");
@@ -2026,13 +2025,13 @@
                     data = JSON.parse(data).data;
                     let view = data.view;
                     let danmaku = data.danmaku;
-                    if (view >= 10000) view = (view / 10000).toFixed(1) + "万";
-                    if (danmaku >= 10000) danmaku = (danmaku / 10000).toFixed(1) + "万";
+                    view = deliver.unitFormat(view);
+                    danmaku = deliver.unitFormat(danmaku);
                     views.innerText = view;
                     danmakus.innerText = danmaku;
                     debug.log("播放", view + " 弹幕", danmaku);
                 }
-                catch(e) {debug.error("分集数据", ...e)}
+                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分集数据", ...e)}
             },
         },
         // 跳转完后的播单处理
@@ -2095,11 +2094,11 @@
                                 let count = online.parentNode.getElementsByTagName("a")[1];
                                 count.text = all_count ? "最新投稿：" + all_count : "最新投稿";
                             }
-                            if (!all_count || !web_online || !play_online) throw ["无在线数据", data];
+                            if (!all_count || !web_online || !play_online) throw data;
                             // 60s刷新一次
                             window.setTimeout(()=> loop(), 60000);
                         }
-                        catch(e) {debug.error("在线数据", ...e)}
+                        catch(e) {e = typeof e === "object" && e[0] ? e : [e] ;debug.error("在线数据", ...e)}
                     }
                     loop();
                 }
@@ -2138,7 +2137,7 @@
                     }
                 });
             }
-            catch(e) {debug.error("注册时间", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("注册时间", ...e)}
         },
         // 失效视频
         fixVideoLost : {
@@ -2234,7 +2233,7 @@
                         }
                     }
                 }
-                catch(e) {debug.error("失效视频·频道", ...e)}
+                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("失效视频·频道", ...e)}
             },
             // 空间首页展示的失效视频
             home : async (msg) => {
@@ -2420,7 +2419,7 @@
                     }
                 }
             }
-            catch(e) {debug.error("评论楼层", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("评论楼层", ...e)}
         },
         // 广告区转资讯区
         fixnews : async (node, move) => {
@@ -2463,7 +2462,7 @@
                     rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
                 }
             }
-            catch(e) {debug.error("分区·版面", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分区·版面", ...e)}
         },
         // 跳过充电鸣谢
         electricPanelJump : async (node) => {
@@ -2474,7 +2473,7 @@
                 debug.log("跳过充电鸣谢");
                 setTimeout(() => {config.reset.electric = 1}, 5000);
             }
-            catch(e) {debug.error("充电鸣谢", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("充电鸣谢", ...e)}
         },
         // 修复分区排行
         fixrank : async (node) => {
@@ -2517,7 +2516,7 @@
                     return sum;
                 }
             }
-            catch (e) {debug.error("分区排行", ...e)}
+            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分区排行", ...e)}
         }
     }
 
@@ -2692,7 +2691,7 @@
                 deliver.setLike();
                 deliver.setMediaList.init();
             }
-            catch(e) {debug.error("框架·av/BV", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·av/BV", ...e)}
         },
         // 稍后再看
         watchlater : () => {
@@ -2713,7 +2712,7 @@
                     }
                 }
             }
-            catch(e) {debug.error("框架·稍后再看", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·稍后再看", ...e)}
         },
         // 番剧
         bangumi : () => {
@@ -2738,7 +2737,7 @@
                 document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
                 if (__INITIAL_STATE__) deliver.setBangumi.init(__INITIAL_STATE__);
             }
-            catch(e) {debug.error("框架·Bangumi", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·Bangumi", ...e)}
         },
         // 嵌入
         blackboard : () => {
@@ -2757,7 +2756,7 @@
                     debug.log("嵌入播放器", "aid=", aid, " cid=", cid);
                 }
             }
-            catch(e) {debug.error("框架·嵌入", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·嵌入", ...e)}
         },
         // 播单
         playlist : () => {
@@ -2818,7 +2817,7 @@
                 // 重写网页框架
                 deliver.write(API.pageframe.home);
             }
-            catch(e) {debug.error("框架·主页", ...e)}
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·主页", ...e)}
             // 调用在线数据处理
             deliver.setOnline();
         }
@@ -2862,7 +2861,7 @@
             if (offset) document.cookie = "bp_t_offset_" + uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; path=/";
         }
     }
-    catch(e) {debug.error("初始化", ...e)}
+    catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("初始化", ...e)}
 
     // 分离页面单独调用
     if (LOCATION[3]) {
