@@ -180,27 +180,7 @@
         error : (...msg) => console.error("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         warn : (...msg) => console.warn("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
         debug : (...msg) => console.debug("[" + deliver.timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
-        msg : (...msg) => {
-            let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
-            if (!node) {debug.log(...msg); return;}
-            let warn = msg[1] || "", delay = msg[2] || 3000;
-            let item = document.createElement("div"),
-                text = document.createElement("div"),
-                span = document.createElement("span"),
-                red = document.createElement("span");
-            delay = delay ? delay : 3000;
-            item.setAttribute("class","bilibili-player-video-toast-item bilibili-player-video-toast-msg");
-            item.appendChild(text);
-            text.setAttribute("class","bilibili-player-video-toast-item-text");
-            text.appendChild(span);
-            if (warn) text.appendChild(red);
-            span.setAttribute("class","video-float-hint-text");
-            span.innerText = msg[0];
-            red.setAttribute("class","video-float-hint-btn hint-red");
-            red.innerText = warn ? warn : "";
-            node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
-            setTimeout(() => item.remove(), delay);
-        }
+        msg : (...msg) => {deliver.debug(...msg)}
     }
 
     // XMLHttpReques封装，除同步方法外统一返回promise
@@ -709,7 +689,7 @@
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
-                    pgc = url.includes("pgc") ? true : false;
+                    pgc = url.includes("pgc") ? true : false;;
                     if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
@@ -1338,6 +1318,28 @@
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(csss));
             setTimeout(() =>document.head.appendChild(style));
+        },
+        // 播放器调试通知
+        debug : (...msg) => {
+            let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
+            if (!node) {debug.log(...msg); return;}
+            let warn = msg[1] || "", delay = msg[2] || 3000;
+            let item = document.createElement("div"),
+                text = document.createElement("div"),
+                span = document.createElement("span"),
+                red = document.createElement("span");
+            delay = delay ? delay : 3000;
+            item.setAttribute("class","bilibili-player-video-toast-item bilibili-player-video-toast-msg");
+            item.appendChild(text);
+            text.setAttribute("class","bilibili-player-video-toast-item-text");
+            text.appendChild(span);
+            if (warn) text.appendChild(red);
+            span.setAttribute("class","video-float-hint-text");
+            span.innerText = msg[0];
+            red.setAttribute("class","video-float-hint-btn hint-red");
+            red.innerText = warn ? warn : "";
+            node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
+            setTimeout(() => item.remove(), delay);
         },
         // 重写网页
         write : (html) => {
