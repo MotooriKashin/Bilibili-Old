@@ -200,7 +200,7 @@
                 xhr.open('get', url, true);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.response);
-                xhr.onerror = () => reject(xhr)
+                xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
                 xhr.send();
             });
         },
@@ -208,10 +208,10 @@
         GM : (url) => {
             return new Promise((resolve, reject) => {
                 GM_xmlhttpRequest({
-                    method  : "GET",
-                    url     : url,
-                    onload  : (response) => resolve(response.responseText),
-                    onerror : (response) => reject(response)
+                    method    : "GET",
+                    url       : url,
+                    onload    : (xhr) => resolve(xhr.responseText),
+                    onerror   : (xhr) => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT"),
                 });
             })
         },
@@ -224,7 +224,7 @@
                 xhr.setRequestHeader("Content-type", header);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.response);
-                xhr.onerror = () => reject(xhr)
+                xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
                 xhr.send(data);
             });
         }
@@ -806,12 +806,13 @@
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
                             }
-                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", "", 10000); throw "解除限制失败 ಥ_ಥ";}
+                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ"); response = {"code" : -404, "message" : e , "data" : null};}
                             this.response = this.responseText = JSON.stringify(response);
                             this.status = 200;
                             this.readyState = 3;
                             this.readyState = 4;
                             setTimeout(this.onreadystatechange);
+                            if (response.code !== 0) throw ["解除限制失败", "ಥ_ಥ", response.message];
                             __playinfo__ = response;
                             debug.log("解除限制", "aid=", aid, "cid=", cid);
                         }
