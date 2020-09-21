@@ -85,7 +85,7 @@
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
 > Google Chrome 85.0.4183.102 (正式版本) （64 位） (cohort: Stable)  
-> Tampermonkey BETA 4.10.6119
+> Tampermonkey BETA 4.10.6120
 >
 
 - 只在最新版chrome + Tampermonkey上通过测试
@@ -149,6 +149,7 @@
 ### 版本历史
 - 2020-09-21
    + 修复旧版Bangumi追番数据
+   + 修复部分节点误伤
 - 2020-09-20
    + 修复一个正则表达式错误
    + 优化调试数据
