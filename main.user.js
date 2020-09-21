@@ -695,8 +695,7 @@
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
                     pgc = url.includes("pgc") ? true : false;
-                    big = config.big > 1 ? true : big;
-                    if (config.big > 1 || (big && ids.indexOf(1 * cid) >= 0) || limit) this.url = url;
+                    if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
                 // 修改弹幕链接
@@ -1674,7 +1673,7 @@
             remove("contact-help", "class", true);
             // 移除新版提示
             remove("new-entry", "class");
-            remove("ver", "class");
+            if (window.recbtn) remove("ver", "class");
             remove("trynew-btn", "class");
             // 移除app下载浮动框
             remove("fixed_app_download", "id");
@@ -1682,7 +1681,7 @@
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
-            remove("bili-header-m", "class", false, 1);
+            remove("bili-header-m report-wrap-module", "class", false, 1);
             // 移除主页昨日榜
             if (window.recbtn) remove("rec-btn prev", "class");
             // 移除主页七日榜
