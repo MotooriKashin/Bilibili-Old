@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.0
+// @version      3.5.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -668,6 +668,11 @@
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.season(this, hook)});
                     url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season', 'api.bilibili.com/pgc/view/web/season');
                 }
+                // 重定向追番信息
+                if (url.includes('bangumi.bilibili.com/ext/web_api/season_count?')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.stat(this, hook)});
+                    url = hook[1] = url.replace('bangumi.bilibili.com/ext/web_api/season_count', 'api.bilibili.com/pgc/web/season/stat');
+                }
                 // 修改直播数据
                 if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) {
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.getRoomPlayInfo(this, hook)});
@@ -690,7 +695,8 @@
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
                     pgc = url.includes("pgc") ? true : false;
-                    if (limit) this.url = url;
+                    big = config.big > 1 ? true : big;
+                    if (config.big > 1 || (big && ids.indexOf(1 * cid) >= 0) || limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
                 // 修改弹幕链接
@@ -905,6 +911,20 @@
                 }
                 hook.push(response);
                 debug.log("XHR重定向", "番剧季度信息", hook);
+                Object.defineProperty(obj, 'response', {writable : true});
+                Object.defineProperty(obj, 'responseText', {writable : true});
+                obj.response = obj.responseText = JSON.stringify(response);
+            }
+            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("番剧季度信息", ...e)}
+        },
+        // 修复番剧追番信息
+        stat : (obj, hook = []) => {
+            try {
+                hook.push(JSON.parse(obj.responseText));
+                let response = JSON.parse(obj.responseText);
+                response.result.favorites = response.result.follow;
+                hook.push(response);
+                debug.log("XHR重定向", "番剧追番信息", hook);
                 Object.defineProperty(obj, 'response', {writable : true});
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
