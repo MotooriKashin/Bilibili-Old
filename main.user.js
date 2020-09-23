@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.1
+// @version      3.5.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -808,6 +808,7 @@
                             try {
                                 if (limit) {
                                     response = JSON.parse(await xhr.true(API.url.BPplayurl + "?" + this.url.split("?")[1] + "&module=pgc&balh_ajax=1"));
+                                    if (response.code < 0) throw response;
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
                             }
@@ -1419,7 +1420,7 @@
                 let path = __playinfo__ ? (__playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result)) : "";
                 try {
                     url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
-                    if (url[1]) path.durl = url[1].data ? url[1].data.durl : url[1].result.durl;
+                    if (url[1]) path.durl = url[1].durl || (url[1].data ? url[1].data.durl : (url[1].result ? url[1].result.durl : ""));
                 }
                 catch(e) {debug.log("下载获取", url); url = [1]}
                 try {
@@ -1513,6 +1514,7 @@
                 cid = cid || unsafeWindow.cid;
                 qn = qn || 120;
                 type = type || "mp4";
+                type = (type == "flv" && !pgc) ? "off" : type;
                 if (!cid) return;
                 switch(type){
                     case 'dash' : if (pgc) return deliver.obj2search(API.url.pgc, {avid : aid, cid : cid, qn : qn, fourk : 1, otype : 'json', fnver : 0, fnval : 16});
