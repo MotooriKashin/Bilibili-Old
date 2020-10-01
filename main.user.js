@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.2
+// @version      3.5.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -393,6 +393,7 @@
                         if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
                     }
                 }
+                if (dat.epInfo.index >= 0) {dat.special = false; dat.mediaInfo.bkg_cover = "";}
                 return dat;
             }
             catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·Bangumi", ...e)}
@@ -1417,7 +1418,7 @@
                 debug.msg("正在获取视频链接", ">>>");
                 let qua = {120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
-                let path = __playinfo__ ? (__playinfo__.data ? __playinfo__.data : (__playinfo__.durl ? __playinfo__ : __playinfo__.result)) : "";
+                let path = __playinfo__.data || (__playinfo__.durl && __playinfo__) || __playinfo__.result || "";
                 try {
                     url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
                     if (url[1]) path.durl = url[1].durl || (url[1].data ? url[1].data.durl : (url[1].result ? url[1].result.durl : ""));
@@ -1514,7 +1515,6 @@
                 cid = cid || unsafeWindow.cid;
                 qn = qn || 120;
                 type = type || "mp4";
-                type = (type == "flv" && !pgc) ? "off" : type;
                 if (!cid) return;
                 switch(type){
                     case 'dash' : if (pgc) return deliver.obj2search(API.url.pgc, {avid : aid, cid : cid, qn : qn, fourk : 1, otype : 'json', fnver : 0, fnval : 16});
