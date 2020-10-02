@@ -695,7 +695,7 @@
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
-                    pgc = url.includes("pgc") ? true : false;
+                    pgc = url.includes("pgc") ? true : false;;
                     if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
@@ -813,7 +813,7 @@
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
                             }
-                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ"); response = {"code" : -404, "message" : e , "data" : null};}
+                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", e.message || e); response = {"code" : -404, "message" : e , "data" : null};}
                             this.response = this.responseText = JSON.stringify(response);
                             this.status = 200;
                             this.readyState = 3;
