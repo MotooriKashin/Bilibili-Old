@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.3
+// @version      3.5.4
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -373,7 +373,7 @@
                     };
                     dat.upInfo.uname = ini.mediaInfo.upInfo.name;
                     dat.upInfo.verify_type = 6;
-                    if (dat.upInfo.mid < 1) dat.upInfo = {avatar : "//i0.hdslb.com/bfs/app/3e60b20604b6fdc7d081eb6a1ec72aa47c5a3964.jpg", follower : 897603, is_vip : 1, mid : 2, pendant : {image : "http://i2.hdslb.com/bfs/garb/item/cd3e9a6fa18db9ebdc128b0fef64cb32c5aab854.png", name : "如果历史是一群喵", pid : 1141}, uname : "碧诗", verify_type : 2}
+                    if (dat.upInfo.mid < 1) dat.upInfo = {avatar : "//i0.hdslb.com/bfs/face/ef0457addb24141e15dfac6fbf45293ccf1e32ab.jpg", follower : 897603, is_vip : 1, mid : 2, pendant : {image : "", name : "", pid : 0}, uname : "碧诗", verify_type : 2}
                     dat.rightsInfo.allow_bp = ini.mediaInfo.rights.allowBp ? 1 : 0;
                     dat.rightsInfo.allow_download = 1;
                     dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
@@ -433,7 +433,7 @@
         }
     }
 
-    // xhr hook，包括原生XMLHttpRequest和$.ajax中的jsonp
+    // xhr hook，包括原生XMLHttpRequest、$.ajax中的jsonp、WebSocket
     const intercept = {
         init : () => {
             const open = XMLHttpRequest.prototype.open;
@@ -808,7 +808,7 @@
                             let response;
                             try {
                                 if (limit) {
-                                    // 区域限制 + APP限制的DASH似乎缺少帧率信息，现默认启用flv
+                                    // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                                     response = JSON.parse(await xhr.true(deliver.obj2search(API.url.BPplayurl, {avid : aid, balh_ajax : 1, cid : cid, platform : "android_i", qn : deliver.search2obj(this.url).qn, fourk : 1, module : "pgc", otype : 'json'})));
                                     if (response.code != 0) throw response;
                                     response = {"code" : 0, "message" : "success" , "result" : response};
@@ -1218,7 +1218,7 @@
             }
             return num + unit[i];
         },
-        // 数组冒泡排序，指定rev逆序
+        // 数组冒泡排序，指定rev输出逆序
         bubbleSort : (arr, rev) => {
             let temp=[];
             rev = rev ? true : false;
@@ -1517,7 +1517,7 @@
                 }
                 catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("下载配置", ...e)}
             },
-            // 拉取mp4链接
+            // 拉取视频链接
             geturl : async (...arg) => {
                 let url = deliver.download.playurl(...arg);
                 try {
@@ -1529,8 +1529,7 @@
             },
             // 配置视频链接
             playurl : (type, qn) => {
-                let obj = {}
-                let sign = deliver.sign();
+                let obj = {}, sign = deliver.sign();
                 aid = aid || unsafeWindow.aid;
                 cid = cid || unsafeWindow.cid;
                 qn = qn || 120;
@@ -1636,7 +1635,7 @@
         // 切p相关
         switchVideo : async () => {
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
-            if (config.reset.download) {url = "";mdf = {};};
+            if (config.reset.download) {url = ""; mdf = {};};
             if (!config.reset.selectdanmu) return;
             let danmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
             if (danmu) danmu.click();
@@ -2471,13 +2470,13 @@
                     let sight = node.getElementsByTagName("a");
                     node = node.getElementsByClassName("name");
                     if (node[0]) node[0].text = "资讯";
-                    for (let i = 0; i < sight.length; i++ ) if (sight[i].href.includes("www.bilibili.com/v/ad/ad/")) sight[i].href = "https://www.bilibili.com/v/information/";
+                    for (let i = 0; i < sight.length; i++) if (sight[i].href.includes("www.bilibili.com/v/ad/ad/")) sight[i].href = "https://www.bilibili.com/v/information/";
                     let rcon = document.createElement("div");
                     rcon.setAttribute("class", "r-con");
                     rcon.innerHTML = '<div class="r-con"><header style="margin-bottom: 14px"><h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3></header><div class="carousel-module"><div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp" width="260" height="280"/></a></div></div></div>';
                     document.getElementById("ranking_ad").replaceWith(rcon);
                 }
-                if (node.className == "report-wrap-module elevator-module") node.children[1].children[13].innerHTML = "资讯";
+                if (node.className == "report-wrap-module elevator-module") for (let item of node.children[1].children) if (item.innerHTML == "广告") item.innerHTML = "资讯";
                 if (node.id == "bili-header-m") {
                     node = node.getElementsByClassName('nav-name');
                     if (node[0]) {
@@ -2519,6 +2518,7 @@
         },
         // 修复分区排行
         fixrank : async (node) => {
+            // 这些分区排行榜已全部采用类似番剧排行的模式，故采用相似的节点覆盖
             let sort = {
                 bili_movie : ["ranking_movie", 2, "https://www.bilibili.com/ranking/cinema/23/0/3"],
                 bili_teleplay : ["ranking_teleplay", 5, "https://www.bilibili.com/ranking/cinema/11/0/3"],
@@ -2548,6 +2548,7 @@
                     li.onmouseout = () => fw.remove();
                     node.appendChild(li);
                 }
+                // 计算节点相对高度
                 function getTotalTop(node){
                     var sum = 0;
                     do{
@@ -2671,12 +2672,12 @@
             bangumi : ["Bangumi", "启用旧版番剧页面，基于旧版网页框架"],
             watchlater : ["稍后再看", "启用旧版稍后再看页面，基于旧版网页框架"],
             frame : ["嵌入", "替换嵌入式播放器，不会单独适配被嵌入页面的其他功能"],
-            home : ["主页", "启用旧版主页，，基于旧版网页框架，广告区已失效并替换为资讯区"],
+            home : ["主页", "启用旧版主页，，基于旧版网页框架，旧版主页失效内容过多，已进行一定程度处理满足日常使用"],
             playlist : ["播单", "恢复播单页，使用跳转绕开404"],
-            medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
+            medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>依赖旧版av页<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢<br>※依赖xhrhook"],
             livechat : ["实时弹幕", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
-            limit : ["区域限制", "尝试解除B站区域限制，用于观看港澳台番剧<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
+            limit : ["区域限制", "尝试解除B站区域限制(包括部分仅限APP限制)，用于观看港澳台番剧<br>※只适配旧版播放器<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
             grobalboard : ["顶栏底栏", "识别并替换所有新版顶栏为旧版顶栏，旧版失效广告区替换为资讯区"],
             replyfloor : ["评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
             headblur : ["顶栏透明", "使旧版顶栏全透明"],
@@ -2694,7 +2695,7 @@
             adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
             roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决"],
             history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"],
-            xhrhook : ["xhrhook", "hook xhr的send属性，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
+            xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
             electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"]
         }
     }
