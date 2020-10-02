@@ -695,7 +695,7 @@
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
-                    pgc = url.includes("pgc") ? true : false;;
+                    pgc = url.includes("pgc") ? true : false;
                     if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
@@ -808,8 +808,9 @@
                             let response;
                             try {
                                 if (limit) {
-                                    response = JSON.parse(await xhr.true(API.url.BPplayurl + "?" + this.url.split("?")[1] + "&module=pgc&balh_ajax=1"));
-                                    if (response.code < 0) throw response;
+                                    // 区域限制 + APP限制的DASH似乎缺少帧率信息，现默认启用flv
+                                    response = JSON.parse(await xhr.true(deliver.obj2search(API.url.BPplayurl, {avid : aid, balh_ajax : 1, cid : cid, platform : "android_i", qn : deliver.search2obj(this.url).qn, fourk : 1, module : "pgc", otype : 'json'})));
+                                    if (response.code != 0) throw response;
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
                             }
