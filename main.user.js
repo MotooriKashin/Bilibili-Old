@@ -1375,7 +1375,7 @@
                         break;
                     case "cid" : cid = arr[1];
                         break;
-                    case "__playinfo__" : __playinfo__ = arr[1];
+                    case "__playinfo__" : __playinfo__ = __playinfo__ || arr[1];
                         break;
                 }
             }
@@ -1434,7 +1434,7 @@
                 debug.msg("正在获取视频链接", ">>>");
                 let qua = {120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
-                let path = (__playinfo__ && (__playinfo__.data || (__playinfo__.durl && __playinfo__) || __playinfo__.result)) || "";
+                let path = __playinfo__ ? (__playinfo__.data || (__playinfo__.durl && __playinfo__) || __playinfo__.result) : "";
                 try {
                     url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
                     if (url[1]) {
@@ -2711,9 +2711,6 @@
                     aid = deliver.convertId(LOCATION[4]);
                     history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
                 }
-                if (!config.rewrite.av && !config.reset.download) throw ["未启用旧版av页", location.href];
-                // 获取网页源代码
-                __playinfo__ = unsafeWindow.__playinfo__;
                 if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
                 aid = aid || LOCATION[4].match(/[0-9]+/)[0];
                 DOCUMENT = xhr.false(deliver.obj2search(API.url.detail, {aid : aid}));
@@ -2723,7 +2720,6 @@
                 // 写入全局变量
                 aid = __INITIAL_STATE__.aid ? __INITIAL_STATE__.aid : aid;
                 tid = __INITIAL_STATE__.videoData.tid ? __INITIAL_STATE__.videoData.tid : tid;
-                __playinfo__ = __playinfo__ ? __playinfo__ : unsafeWindow.__playinfo__;
                 unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
                 // 重写网页框架并进行调用后续处理
                 deliver.write(API.pageframe.video);
@@ -2758,14 +2754,12 @@
         // 番剧
         bangumi : () => {
             try {
-                if (!config.rewrite.bangumi && !config.reset.download) throw ["未启用旧版Bangumi", location.href];
+                if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
                 // 指定playurl类型
                 pgc = true;
                 // 获取网页源代码
                 DOCUMENT = xhr.false(location.href);
                 __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : ""; // 继承__INITIAL_STATE__
-                __playinfo__ = DOCUMENT.includes("playinfo__=") ? JSON.parse(DOCUMENT.match(/playinfo__=.+?\<\/script>/)[0].replace(/playinfo__=/, "").replace(/<\/script>/, "")) : "";
-                if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
                 // 判断页面是否404
                 if (!__INITIAL_STATE__) throw ["__INITIAL_STATE__错误", "Bangumi可能无效", __INITIAL_STATE__];
                 let id = LOCATION[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
