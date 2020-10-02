@@ -1364,6 +1364,22 @@
             node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
             setTimeout(() => item.remove(), delay);
         },
+        // 全局变量监听
+        getVariable : (value) => {
+            Object.defineProperty(unsafeWindow, "__playinfo__",{set: (value) => {read(["__playinfo__", value])}, get: () => {return __playinfo__}, configurable: true});
+            Object.defineProperty(unsafeWindow, "aid",{set: (value) => {read(["aid", value])}, get: () => {return aid}, configurable: true});
+            Object.defineProperty(unsafeWindow, "cid",{set: (value) => {read(["cid", value])}, get: () => {return cid}, configurable: true});
+            function read(arr){
+                switch (arr[0]) {
+                    case "aid" : aid = arr[1];
+                        break;
+                    case "cid" : cid = arr[1];
+                        break;
+                    case "__playinfo__" : __playinfo__ = arr[1];
+                        break;
+                }
+            }
+        },
         // 重写网页
         write : (html) => {
             document.open();
@@ -2858,6 +2874,8 @@
     }
     else GM_setValue("config",config);
     try {
+        // 监听全局变量
+        deliver.getVariable();
         // 关闭Worker才能hook到弹幕
         if (config.reset.danmuku) unsafeWindow.Worker = null;
         // 关闭show_bv
