@@ -1418,10 +1418,13 @@
                 debug.msg("正在获取视频链接", ">>>");
                 let qua = {120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
-                let path = __playinfo__.data || (__playinfo__.durl && __playinfo__) || __playinfo__.result || "";
+                let path = (__playinfo__ && (__playinfo__.data || (__playinfo__.durl && __playinfo__) || __playinfo__.result)) || "";
                 try {
                     url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
-                    if (url[1]) path.durl = url[1].durl || (url[1].data ? url[1].data.durl : (url[1].result ? url[1].result.durl : ""));
+                    if (url[1]) {
+                        if (__playinfo__) path.durl = url[1].durl || (url[1].data ? url[1].data.durl : (url[1].result ? url[1].result.durl : ""));
+                        else path = url[1].data || (url[1].durl && url[1]) || url[1].result;
+                    }
                 }
                 catch(e) {debug.log("下载获取", url); url = [1]}
                 try {
@@ -1431,7 +1434,7 @@
                         mdf.mp4 = [["1080P", url.durl[0].url.replace("http:", ""), deliver.sizeFormat(url.durl[0].size)]];
                         navigator.clipboard.writeText(url.durl[0].url);
                     }
-                    if (__playinfo__ && (__playinfo__.durl || __playinfo__.data || __playinfo__.result)) {
+                    if (path) {
                         // 获取flv
                         if (path.durl) {
                             // durl可能是mp4
@@ -1933,7 +1936,7 @@
             },
             // aid变化监听
             fixvar : async () => {
-                if (!aid) aid = unsafeWindow.aid ? unsafeWindow.cid : aid;
+                if (!aid) aid = unsafeWindow.aid ? unsafeWindow.aid : aid;
                 if (oid) {
                     if (oid != unsafeWindow.aid) {
                         // 收藏播放切p判断
