@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.5
+// @version      3.5.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -363,7 +363,6 @@
                         if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
                         if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) ids.push(dat.epList[i].cid);
                     }
-                    dat.epInfo = ini.epInfo;
                     dat.newestEp = ini.mediaInfo.newestEp;
                     dat.seasonList = [];
                     for (let i = 0; i < ini.ssList.length; i++) {
