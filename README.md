@@ -147,6 +147,8 @@
 
 ---
 ### 版本历史
+- 2020-10-07
+   + 修复Bangumi\_\_INITIAL\_STATE\_\_重构错误
 - 2020-10-06
    + 解除限制支持某些被404的Bangumi（[ss5970](https://www.bilibili.com/bangumi/play/ss5970)）
    + 优化嵌入播放器cid获取
