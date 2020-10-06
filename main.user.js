@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.4
+// @version      3.5.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -96,8 +96,8 @@
         // 播放器框架
         playerframe : {
             html5player : "https://www.bilibili.com/blackboard/html5player.html", // aid, cid, season_type player_type + &as_wide=1
-            playlist : "https://www.bilibili.com/blackboard/playlist-player.html", // pl || aid,cid
-            ancient : "https://www.bilibili.com/blackboard/activity-ancient-player.html", // aid,cid
+            playlist : "https://www.bilibili.com/blackboard/playlist-player.html", // pl || aid, cid
+            ancient : "https://www.bilibili.com/blackboard/activity-ancient-player.html", // aid, cid
             player : "https://player.bilibili.com/player.html", // aid,cid &| page
         },
         // URL
@@ -235,7 +235,7 @@
         // av/BV
         av : (data) => {
             try {
-                data = JSON.parse(data).data;
+                data = deliver.xhrJsonCheck(data).data;
                 aid = aid || data.View.aid;
                 cid = cid || data.View.cid;
                 let dat = {aid : -1, comment : {count : 0, list : []}, error : {}, isClient : false, p: "", player: "", playurl: {}, related : [], tags : [], upData : {}, videoData : {}}
@@ -248,59 +248,94 @@
                 dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid +'&aid=' + aid +'&pre_ad=")'
                 return dat;
             }
-            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·av", ...e)}
+            catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("__INITIAL_STATE__·av", ...e)}
         },
         // bangumi
         bangumi : (epId) => {
             try {
-                // rp为api数据，由于api改版，现已修复并默认禁用，保留代码以备不时之需
-                let ep = 0, rp = "", mode;
-                let ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
-                let pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
+                let ep = 0, rp = {}, ini = {}, pug = {}, mode;
                 let dat = {"ver":{},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
-                dat.special = rp.bkg_cover ? true : (ini.mediaInfo.specialCover ? true : false);
-                mode = dat.special ? 1 : 2;
-                if (epId) {dat.epId = 1 * epId; ep = 1;}
-                else {dat.epId = ""; if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
-                dat.ssId = rp.season_id || ini.mediaInfo.ssId;
-                dat.mdId = ini.mediaInfo.id;
-                dat.mediaInfo = {};
-                dat.mediaInfo.actors = rp.actors || "";
-                dat.mediaInfo.alias = rp.alias || ini.mediaInfo.alias;
-                dat.mediaInfo.areas = rp.areas || [];
-                dat.mediaInfo.bkg_cover = rp.bkg_cover || ini.mediaInfo.specialCover;
-                dat.mediaInfo.cover = rp.cover || ini.mediaInfo.cover;
-                dat.mediaInfo.evaluate = rp.evaluate || ini.mediaInfo.evaluate;
-                dat.mediaInfo.is_paster_ads = rp.is_paster_ads || 0;
-                dat.mediaInfo.jp_title = rp.jp_title || ini.mediaInfo.jpTitle;
-                dat.mediaInfo.link = "https://www.bilibili.com/bangumi/media/md" + dat.mdId;
-                dat.mediaInfo.media_id = rp.media_id || dat.mdId;
-                dat.mediaInfo.mode = rp.mode || mode;
-                dat.mediaInfo.paster_text = "";
-                dat.mediaInfo.season_id = rp.season_id || ini.mediaInfo.ssId;
-                dat.mediaInfo.season_status = rp.season_status || ini.mediaInfo.status;
-                dat.mediaInfo.season_title = rp.season_title || ini.mediaInfo.title;
-                dat.mediaInfo.season_type = rp.season_type || ini.mediaInfo.ssType;
-                dat.mediaInfo.square_cover = rp.square_cover || ini.mediaInfo.squareCover;
-                dat.mediaInfo.staff = rp.staff || "";
-                dat.mediaInfo.stat = rp.state || ini.mediaInfo.stat;
-                dat.mediaInfo.style = rp.style || [];
-                dat.mediaInfo.title = rp.title || ini.mediaInfo.title;
-                dat.mediaInfo.total_ep = rp.total_ep || ini.epList.length;
-                dat.mediaRating = rp.rating || ini.mediaInfo.rating;
-                if (rp) {
+                if (DOCUMENT.startsWith("{")) {
+                    // rp为api获取到的备用数据保存于DOCUMENT中，作为DOCUMENT被404的备用数据源，无法获取播放进度信息，以ss进入默认选择第一p
+                    rp = deliver.xhrJsonCheck(DOCUMENT).result;
+                    dat.special = rp.bkg_cover ? true : false;
+                    if (epId) {dat.epId = 1 * epId; ep = 1;} else dat.epId = ""
+                    dat.ssId = rp.season_id;
+                    dat.mdId = rp.media_id;
+                    dat.mediaInfo = {};
+                    dat.mediaInfo.actors = rp.actors || "";
+                    dat.mediaInfo.alias = rp.alias;
+                    dat.mediaInfo.areas = rp.areas || [];
+                    dat.mediaInfo.bkg_cover = rp.bkg_cover;
+                    dat.mediaInfo.cover = rp.cover;
+                    dat.mediaInfo.evaluate = rp.evaluate;
+                    dat.mediaInfo.is_paster_ads = rp.is_paster_ads || 0;
+                    dat.mediaInfo.jp_title = rp.jp_title;
+                    dat.mediaInfo.link = rp.link;
+                    dat.mediaInfo.media_id = rp.media_id;
+                    dat.mediaInfo.mode = rp.mode;
+                    dat.mediaInfo.paster_text = "";
+                    dat.mediaInfo.season_id = rp.season_id;
+                    dat.mediaInfo.season_status = rp.status;
+                    dat.mediaInfo.season_title = rp.season_title;
+                    dat.mediaInfo.season_type = rp.type;
+                    dat.mediaInfo.square_cover = rp.square_cover;
+                    dat.mediaInfo.staff = rp.staff || "";
+                    dat.mediaInfo.stat = rp.state;
+                    dat.mediaInfo.style = rp.style || [];
+                    dat.mediaInfo.title = rp.title;
+                    dat.mediaInfo.total_ep = rp.total;
+                    dat.mediaRating = rp.rating;
                     dat.epList = rp.episodes;
-                    if (dat.epList[0].cid === -1) for (let i = 0; i < ini.epList.length; i++) dat.epList[i].cid = ini.epList[i].cid;
-                    if (ep == 0) dat.epId = (ini.epList[0] && dat.epList[0].id) || "";
+                    if (ep == 0) dat.epId = (rp.episodes[0] && rp.episodes[0].id) || "";
                     for (let i = 0; i < dat.epList.length; i++) {
                         dat.epList[i].ep_id = dat.epList[i].id;
                         dat.epList[i].episode_status = dat.epList[i].status;
                         dat.epList[i].index = dat.epList[i].title;
                         dat.epList[i].index_title = dat.epList[i].long_title;
                         if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                        if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) ids.push(dat.epList[i].cid);
                     }
+                    dat.newestEp = rp.new_ep;
+                    dat.seasonList = rp.seasons;
+                    dat.rightsInfo = rp.rights;
+                    dat.pubInfo = rp.publish;
+                    dat.upInfo = rp.up_info || {};
                 }
                 else {
+                    // 正常DOCUMENT数据源，up组主数据可能无效，将指向uid=2(站长)
+                    ini = JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
+                    pug = JSON.parse(DOCUMENT.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
+                    dat.special = ini.mediaInfo.specialCover ? true : false;
+                    mode = dat.special ? 1 : 2;
+                    if (epId) {dat.epId = 1 * epId; ep = 1;}
+                    else {dat.epId = ""; if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
+                    dat.ssId = ini.mediaInfo.ssId;
+                    dat.mdId = ini.mediaInfo.id;
+                    dat.mediaInfo = {};
+                    dat.mediaInfo.actors = "";
+                    dat.mediaInfo.alias = ini.mediaInfo.alias;
+                    dat.mediaInfo.areas = [];
+                    dat.mediaInfo.bkg_cover = ini.mediaInfo.specialCover;
+                    dat.mediaInfo.cover = ini.mediaInfo.cover;
+                    dat.mediaInfo.evaluate = ini.mediaInfo.evaluate;
+                    dat.mediaInfo.is_paster_ads = 0;
+                    dat.mediaInfo.jp_title = ini.mediaInfo.jpTitle;
+                    dat.mediaInfo.link = "https://www.bilibili.com/bangumi/media/md" + dat.mdId;
+                    dat.mediaInfo.media_id = dat.mdId;
+                    dat.mediaInfo.mode = mode;
+                    dat.mediaInfo.paster_text = "";
+                    dat.mediaInfo.season_id = ini.mediaInfo.ssId;
+                    dat.mediaInfo.season_status = ini.mediaInfo.status;
+                    dat.mediaInfo.season_title = ini.mediaInfo.title;
+                    dat.mediaInfo.season_type = ini.mediaInfo.ssType;
+                    dat.mediaInfo.square_cover = ini.mediaInfo.squareCover;
+                    dat.mediaInfo.staff = "";
+                    dat.mediaInfo.stat = ini.mediaInfo.stat;
+                    dat.mediaInfo.style = [];
+                    dat.mediaInfo.title = ini.mediaInfo.title;
+                    dat.mediaInfo.total_ep = ini.epList.length;
+                    dat.mediaRating = ini.mediaInfo.rating;
                     dat.epList = [];
                     for (let i = 0; i < ini.sections.length; i++) for (let j = 0; j < ini.sections[i].epList.length; j++) ini.epList.push(ini.sections[i].epList[j]);
                     if (ep == 0) dat.epId = (ini.epList[0] && ini.epList[0].id) || "";
@@ -324,12 +359,10 @@
                         dat.epList[i].section_type = 0;
                         dat.epList[i].vid = ini.epList[i].vid;
                         if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                        if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) ids.push(dat.epList[i].cid);
                     }
-                }
-                dat.epInfo = dat.epInfo || ini.epInfo;
-                dat.newestEp = rp.new_ep || ini.mediaInfo.newestEp;
-                dat.seasonList = rp.seasons;
-                if (!dat.seasonList) {
+                    dat.epInfo = ini.epInfo;
+                    dat.newestEp = ini.mediaInfo.newestEp;
                     dat.seasonList = [];
                     for (let i = 0; i < ini.ssList.length; i++) {
                         dat.seasonList[i] = {};
@@ -352,16 +385,21 @@
                         };
                         dat.seasonList[i].title = ini.ssList[i].title;
                     }
-                }
-                dat.seasonStat = {"views":0, "danmakus":0, "coins":0, "favorites":0};
-                dat.userStat = {"loaded":true, "error":false, "follow":0, "pay":0, "payPackPaid":0, "sponsor":0};
-                dat.userStat.watchProgress = pug.progress;
-                dat.userStat.vipInfo = pug.vip_info;
-                dat.upInfo = rp.up_info || {};
-                dat.rightsInfo = rp.rights || {};
-                dat.pubInfo = rp.publish || {};
-                if (!rp) {
-                    dat.newestEp.isNew = dat.newestEp.isNew ? 1 : 0
+                    dat.newestEp.isNew = dat.newestEp.isNew ? 1 : 0;
+                    dat.rightsInfo = {};
+                    dat.rightsInfo.allow_bp = ini.mediaInfo.rights.allowBp ? 1 : 0;
+                    dat.rightsInfo.allow_download = 1;
+                    dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
+                    dat.rightsInfo.copyright = "bilibili";
+                    dat.rightsInfo.is_preview = ini.mediaInfo.rights.isPreview ? 1 : 0;
+                    dat.rightsInfo.watch_platform = 0;
+                    dat.pubInfo = {};
+                    dat.pubInfo.is_finish = ini.mediaInfo.pub.isFinish ? 1 : 0;
+                    dat.pubInfo.is_started = ini.mediaInfo.pub.isStart ? 1 : 0;
+                    dat.pubInfo.pub_time = ini.mediaInfo.pub.time;
+                    dat.pubInfo.pub_time_show = ini.mediaInfo.pub.timeShow;
+                    dat.pubInfo.weekday = -1;
+                    dat.upInfo = {};
                     dat.upInfo.avatar = ini.mediaInfo.upInfo.avatar;
                     dat.upInfo.follower = "--";
                     dat.upInfo.is_vip = ini.mediaInfo.upInfo.isAnnualVip ? 1 : 0;
@@ -374,18 +412,11 @@
                     dat.upInfo.uname = ini.mediaInfo.upInfo.name;
                     dat.upInfo.verify_type = 6;
                     if (dat.upInfo.mid < 1) dat.upInfo = {avatar : "//i0.hdslb.com/bfs/face/ef0457addb24141e15dfac6fbf45293ccf1e32ab.jpg", follower : 897603, is_vip : 1, mid : 2, pendant : {image : "", name : "", pid : 0}, uname : "碧诗", verify_type : 2}
-                    dat.rightsInfo.allow_bp = ini.mediaInfo.rights.allowBp ? 1 : 0;
-                    dat.rightsInfo.allow_download = 1;
-                    dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
-                    dat.rightsInfo.copyright = "bilibili";
-                    dat.rightsInfo.is_preview = ini.mediaInfo.rights.isPreview ? 1 : 0;
-                    dat.rightsInfo.watch_platform = 0;
-                    dat.pubInfo.is_finish = ini.mediaInfo.pub.isFinish ? 1 : 0;
-                    dat.pubInfo.is_started = ini.mediaInfo.pub.isStart ? 1 : 0;
-                    dat.pubInfo.pub_time = ini.mediaInfo.pub.time;
-                    dat.pubInfo.pub_time_show = ini.mediaInfo.pub.timeShow;
-                    dat.pubInfo.weekday = -1;
                 }
+                dat.seasonStat = {"views":0, "danmakus":0, "coins":0, "favorites":0};
+                dat.userStat = {"loaded":true, "error":false, "follow":0, "pay":0, "payPackPaid":0, "sponsor":0};
+                dat.userStat.watchProgress = pug.progress;
+                dat.userStat.vipInfo = pug.vip_info;
                 if (pug.dialog || pug.pay == 1) {
                     dat.payMent = {"price":"0.0", "promotion":"", "tip":"大会员专享观看特权哦~"};
                     if (pug.dialog) {
@@ -396,7 +427,7 @@
                 if (dat.epInfo.index >= 0) {dat.special = false; dat.mediaInfo.bkg_cover = "";}
                 return dat;
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·Bangumi", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("__INITIAL_STATE__·Bangumi", ...e)}
         },
         // 主页
         home : (data) => {
@@ -429,7 +460,7 @@
                 if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{"id":36585,"contract_id":"","pos_num":1,"name":"小黑屋弹幕举报","pic":"https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg","litpic":"","url":"https://www.bilibili.com/blackboard/activity-dmjbfj.html","style":0,"agency":"","label":"","intro":"","creative_type":0,"request_id":"1546354354629q172a23a61a62q626","src_id":32,"area":0,"is_ad_loc":true,"ad_cb":"","title":"","server_type":0,"cm_mark":0,"stime":1520478000,"mid":"14629218"}];
                 return dat;
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("__INITIAL_STATE__·Home", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("__INITIAL_STATE__·Home", ...e)}
         }
     }
 
@@ -683,7 +714,7 @@
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.carousel(this)});
                 }
                 // 修改区域限制
-                if (url.includes('bangumi.bilibili.com/view/web_api/season/user/status')) {
+                if (url.includes('season/user/status?')) {
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.status(this)});
                 }
                 // 监听视频链接
@@ -809,7 +840,7 @@
                             try {
                                 if (limit) {
                                     // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
-                                    response = JSON.parse(await xhr.true(deliver.obj2search(API.url.BPplayurl, {avid : aid, balh_ajax : 1, cid : cid, platform : "android_i", qn : deliver.search2obj(this.url).qn, fourk : 1, module : "pgc", otype : 'json'})));
+                                    response = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.BPplayurl, {avid : aid, balh_ajax : 1, cid : cid, platform : "android_i", qn : deliver.search2obj(this.url).qn, fourk : 1, module : "pgc", otype : 'json'})));
                                     if (response.code != 0) throw response;
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
@@ -819,12 +850,12 @@
                             this.status = 200;
                             this.readyState = 3;
                             this.readyState = 4;
-                            setTimeout(this.onreadystatechange);
+                            this.onreadystatechange();
                             if (response.code !== 0) throw ["解除限制失败", "ಥ_ಥ", response.message];
                             __playinfo__ = response;
                             debug.log("解除限制", "aid=", aid, "cid=", cid);
                         }
-                        catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("解除限制", ...e)}
+                        catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e)}
                     }
                     else {
                         send.call(this, ...arg);
@@ -881,7 +912,7 @@
         // 修改首页直播推荐数据
         biliIndexRec : (obj, hook = []) => {
             try {
-                hook.push(JSON.parse(obj.responseText));
+                hook.push(deliver.xhrJsonCheck(obj.responseText));
                 let response = obj.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
                 response = JSON.parse(response);
                 response.data.text_link = {text : "233秒居然能做这些！", link : "//vc.bilibili.com"};
@@ -898,13 +929,13 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("首页推荐", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("首页推荐", ...e)}
         },
         // 修复番剧季度信息
         season : (obj, hook = []) => {
             try {
-                hook.push(JSON.parse(obj.responseText));
-                let response = JSON.parse(obj.responseText);
+                hook.push(deliver.xhrJsonCheck(obj.responseText));
+                let response = deliver.xhrJsonCheck(obj.responseText);
                 for (let i = 0; i < response.result.episodes.length; i++){
                     response.result.episodes[i].ep_id = response.result.episodes[i].id;
                     response.result.episodes[i].episode_status = response.result.episodes[i].status;
@@ -917,13 +948,13 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("番剧季度信息", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e)}
         },
         // 修复番剧追番信息
         stat : (obj, hook = []) => {
             try {
-                hook.push(JSON.parse(obj.responseText));
-                let response = JSON.parse(obj.responseText);
+                hook.push(deliver.xhrJsonCheck(obj.responseText));
+                let response = deliver.xhrJsonCheck(obj.responseText);
                 response.result.favorites = response.result.follow;
                 hook.push(response);
                 debug.log("XHR重定向", "番剧追番信息", hook);
@@ -931,15 +962,14 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("番剧季度信息", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e)}
         },
         // 修改直播数据
         getRoomPlayInfo : (obj, hook = []) => {
             if (!config.reset.roomplay) return;
             try {
-                hook.push(JSON.parse(obj.responseText));
-                let response = obj.responseText;
-                response = JSON.parse(response);
+                hook.push(deliver.xhrJsonCheck(obj.responseText));
+                let response = deliver.xhrJsonCheck(obj.responseText);
                 if (response.data) {
                     response.data.live_status = 0;
                     response.data.live_time = -1;
@@ -951,7 +981,7 @@
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("直播拦截", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("直播拦截", ...e)}
         },
         // 生成播放信息
         carousel : (obj) => {
@@ -964,15 +994,16 @@
                 Object.defineProperty(obj, 'responseXML', {writable : true});
                 obj.responseXML = responseXML;
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("播放通知", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("播放通知", ...e)}
         },
         // 强制载入播放器
         status : (obj) => {
             try {
-                let response = JSON.parse(obj.responseText);
+                let response = deliver.xhrJsonCheck(obj.responseText);
                 if (response.result) {
                     if (config.reset.limit && response.result.area_limit){
                         response.result.area_limit = 0;
+                        response.ban_area_show = 1;
                         limit = true;
                     }
                     if (response.result.pay) big = 0;
@@ -987,17 +1018,17 @@
                     }
                 }
             }
-            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("强制启用播放器", ...e)}
+            catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e)}
         },
         // 监听视频地址
         playinfo : (obj) => {
             try {
                 if (!obj.response) throw obj;
-                __playinfo__ = typeof obj.response == "object" ? obj.response : JSON.parse(obj.response);
+                __playinfo__ = typeof obj.response == "object" ? obj.response : deliver.xhrJsonCheck(obj.response, true);
                 // 刷新下载面板
                 if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
             }
-            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("视频监听", ...e)}
+            catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("视频监听", ...e)}
         }
     }
 
@@ -1365,11 +1396,18 @@
             node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
             setTimeout(() => item.remove(), delay);
         },
+        // xhr返回json校验
+        xhrJsonCheck : (data, toast) => {
+            data = JSON.parse(data);
+            if ("code" in data && data.code !== 0) {
+                let msg = data.msg || data.message || "";
+                if (toast) debug.msg("xhr错误：", data.code + " " + msg);
+                throw [data.code, msg, data]
+            }
+            return data;
+        },
         // 全局变量监听
         getVariable : (value) => {
-            Object.defineProperty(unsafeWindow, "__playinfo__",{set: (value) => {read(["__playinfo__", value])}, get: () => {return __playinfo__}, configurable: true});
-            Object.defineProperty(unsafeWindow, "aid",{set: (value) => {read(["aid", value])}, get: () => {return aid}, configurable: true});
-            Object.defineProperty(unsafeWindow, "cid",{set: (value) => {read(["cid", value])}, get: () => {return cid}, configurable: true});
             function read(arr){
                 switch (arr[0]) {
                     case "aid" : aid = arr[1];
@@ -1380,6 +1418,11 @@
                         break;
                 }
             }
+            Object.defineProperty(unsafeWindow, "aid",{set: (value) => {read(["aid", value])}, get: () => {return aid}, configurable: true});
+            Object.defineProperty(unsafeWindow, "cid",{set: (value) => {read(["cid", value])}, get: () => {return cid}, configurable: true});
+            Object.defineProperty(unsafeWindow, "__playinfo__",{set: (value) => {read(["__playinfo__", value])}, get: () => {return __playinfo__}, configurable: true});
+            Object.defineProperty(unsafeWindow, "__BILI_CONFIG__",{get: () => {return {"show_bv" : false}}, configurable: true});
+            if (LOCATION[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(unsafeWindow, "__NEPTUNE_IS_MY_WAIFU__",{get: () => {return undefined}, configurable: true});
         },
         // 重写网页
         write : (html) => {
@@ -1515,7 +1558,7 @@
                     deliver.download.item();
                     mdf = {};
                 }
-                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("下载配置", ...e)}
+                catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("下载配置", ...e)}
             },
             // 拉取视频链接
             geturl : async (...arg) => {
@@ -1523,9 +1566,9 @@
                 try {
                     if (!url) throw url;
                     let data = await xhr.GM(url);
-                    return JSON.parse(data);
+                    return deliver.xhrJsonCheck(data);
                 }
-                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("下载拉取", ...e);}
+                catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("下载拉取", ...e);}
             },
             // 配置视频链接
             playurl : (type, qn) => {
@@ -1661,7 +1704,7 @@
                 }
                 new cut();
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("付费预览", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("付费预览", ...e)}
         },
         // 超链接转化
         avdesc : async () => {
@@ -1748,7 +1791,7 @@
                             try {
                                 // 通过链接获取tid
                                 data = await xhr.true(deliver.obj2search(API.url.view, {"aid" : aid}));
-                                tid = JSON.parse(data).data.tid;
+                                tid = deliver.xhrJsonCheck(data).data.tid;
                                 if (!(tid in API.sort)) return;
                                 // 创建分区信息节点并写入tid对应的分区数据
                                 child[2].replaceWith(child[0].cloneNode(true));
@@ -1759,7 +1802,7 @@
                                 child[4].childNodes[0].href = API.sort[tid][2];
                                 child[4].childNodes[0].innerText = API.sort[tid][1];
                             }
-                            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分区·稍后再看", ...e)}
+                            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("分区·稍后再看", ...e)}
                         }
                     }
                 },1000);
@@ -1776,40 +1819,22 @@
                 if (coin && node) {
                     window.clearInterval(timer);
                     let span = document.createElement("span");
-                    let bef = document.createElement("i");
-                    let af = document.createElement("b");
+                    let move = document.createElement("i");
+                    let moved = document.createElement("b");
                     let text = document.createTextNode("点赞 --");
                     let arg = text;
                     // 创建点赞数据相关节点并初始化
                     span.setAttribute("class", "u like");
                     span.setAttribute("style", "margin-right : 5px;");
-                    span.appendChild(bef);
-                    span.appendChild(af);
+                    span.appendChild(move);
+                    span.appendChild(moved);
                     span.appendChild(text);
-                    bef.setAttribute("class", "l-icon-move");
-                    bef.setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
-                    af.setAttribute("class", "l-icon-moved");
-                    af.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
+                    move.setAttribute("class", "l-icon-move");
+                    move.setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
+                    moved.setAttribute("class", "l-icon-moved");
+                    moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                     try {
-                        number.insertBefore(span, node);
-                        // 获取点赞数据
-                        data = await xhr.true(deliver.obj2search(API.url.view, {"aid" : aid}));
-                        data = JSON.parse(data).data.stat.like;
-                        document.getElementsByClassName("like")[0].setAttribute("title", "点赞人数" + data);
-                        text = document.createTextNode(" 点赞 " + deliver.unitFormat(data));
-                        arg.replaceWith(text);
-                        arg = text;
-                        data = await xhr.true(deliver.obj2search(API.url.haslike, {"aid" : aid}));
-                        data = JSON.parse(data);
-                        let move = document.getElementsByClassName("l-icon-move");
-                        let moved = document.getElementsByClassName("l-icon-moved");
-                        data = data.data;
-                        if (data == 1) {
-                            // 点赞过点亮图标
-                            move[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
-                            moved[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
-                        }
-                        move[0].onclick = async () => {
+                        move.onclick = async () => {
                             // 没有点赞过绑定点赞点击事件
                             if (!deliver.getCookies().bili_jct) {
                                 // 没有登录绑定快捷登录
@@ -1819,8 +1844,9 @@
                             // 构造并请求点赞表单
                             let msg = "aid=" + aid + "&like=1&csrf=" + deliver.getCookies().bili_jct;
                             data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg);
-                            data = JSON.parse(data).ttl;
+                            data = deliver.xhrJsonCheck(data).ttl;
                             // 点亮点赞图标并修改显示数据
+                            debug.msg("点赞成功！");
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                             if (arg.nodeValue.match("万")) return;
@@ -1829,13 +1855,14 @@
                             arg.replaceWith(text);
                             arg = text;
                         }
-                        moved[0].onclick = async () => {
+                        moved.onclick = async () => {
                             // 点赞过绑定取消点赞点击事件
                             // 构造并请求取消点赞表单
                             let msg = "aid=" + aid + "&like=2&csrf=" + deliver.getCookies().bili_jct;
                             data = await xhr.post(API.url.like, "application/x-www-form-urlencoded", msg);
-                            data = JSON.parse(data).ttl;
+                            data = deliver.xhrJsonCheck(data).ttl;
                             // 熄灭点赞图标并修改显示数据
+                            debug.msg("点赞撤回！");
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                             if (arg.nodeValue.match("万")) return;
@@ -1844,8 +1871,22 @@
                             arg.replaceWith(text);
                             arg = text;
                         }
+                        number.insertBefore(span, node);
+                        // 获取点赞数据
+                        data = await xhr.true(deliver.obj2search(API.url.view, {"aid" : aid}));
+                        data = deliver.xhrJsonCheck(data).data.stat.like;
+                        document.getElementsByClassName("like")[0].setAttribute("title", "点赞人数" + data);
+                        text = document.createTextNode(" 点赞 " + deliver.unitFormat(data));
+                        arg.replaceWith(text);
+                        arg = text;
+                        data = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.haslike, {"aid" : aid}))).data;
+                        if (data == 1) {
+                            // 点赞过点亮图标
+                            move.setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
+                            moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
+                        }
                     }
-                    catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("点赞功能", ...e)}
+                    catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("点赞功能", ...e)}
                 }
             },100);
         },
@@ -1869,7 +1910,7 @@
                     try {
                         // 获取首个视频av并跳转
                         data = await xhr.true(deliver.obj2search(API.url.medialist, {"media_id" : ml, "pn" : 1, "ps":1}));
-                        data = JSON.parse(data).data;
+                        data = deliver.xhrJsonCheck(data).data;
                         location.replace("https://www.bilibili.com/video/av" + data.medias[0].id);
                     }
                     catch(e) {
@@ -1883,7 +1924,7 @@
                         let avs = [], value = [], promises = [];
                         // 获取收藏列表，这里获取只能获取到aid
                         data = await xhr.true(deliver.obj2search(API.url.ids4Player, {"media_id" : ml}));
-                        data = JSON.parse(data).data;
+                        data = deliver.xhrJsonCheck(data).data;
                         for (let i = 0; i < data.medias.length; i++) {
                             ids[i] = data.medias[i].id;
                             avs[i] = "av" + data.medias[i].id;
@@ -1898,7 +1939,7 @@
                         data = await Promise.all(promises);
                         // 格式化数据并排序
                         for (let i = 0; i < data.length; i++) {
-                            data[i] = JSON.parse(data[i]);
+                            data[i] = deliver.xhrJsonCheck(data[i]);
                             for (let key in data[i].data) avs.push(data[i].data[key]);
                         }
                         for (let i = 0; i < ids.length; i++) {
@@ -1947,7 +1988,7 @@
                             }
                         },100);
                     }
-                    catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("收藏模拟", ...e)}
+                    catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("收藏模拟", ...e)}
                 }
             },
             // aid变化监听
@@ -2063,7 +2104,7 @@
                         aid = msg.relatedNode.innerText.match(/[0-9]+/)[0];
                         data = await xhr.true(deliver.obj2search(API.url.stat, {"aid" : aid}));
                     }
-                    data = JSON.parse(data).data;
+                    data = deliver.xhrJsonCheck(data).data;
                     let view = data.view;
                     let danmaku = data.danmaku;
                     view = deliver.unitFormat(view);
@@ -2072,7 +2113,7 @@
                     danmakus.innerText = danmaku;
                     debug.log("播放", view + " 弹幕", danmaku);
                 }
-                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分集数据", ...e)}
+                catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("分集数据", ...e)}
             },
         },
         // 跳转完后的播单处理
@@ -2101,7 +2142,7 @@
                     let loop = async () => {
                         try {
                             let data = await xhr.true(API.url.online);
-                            data = JSON.parse(data).data;
+                            data = deliver.xhrJsonCheck(data).data;
                             let all_count = data.all_count;
                             let web_online = data.web_online;
                             let play_online = data.play_online;
@@ -2135,11 +2176,11 @@
                                 let count = online.parentNode.getElementsByTagName("a")[1];
                                 count.text = all_count ? "最新投稿：" + all_count : "最新投稿";
                             }
-                            if (!all_count || !web_online || !play_online) throw data;
+                            if (!all_count || !web_online || !play_online) return;
                             // 60s刷新一次
                             window.setTimeout(()=> loop(), 60000);
                         }
-                        catch(e) {e = typeof e === "object" && e[0] ? e : [e] ;debug.error("在线数据", ...e)}
+                        catch(e) {e = Array.isArray(e) ? e : [e] ;debug.error("在线数据", ...e)}
                     }
                     loop();
                 }
@@ -2150,7 +2191,7 @@
             if (!mid && !config.reset.jointime) return;
             let data = await xhr.GM(deliver.obj2search(API.url.membercard,{"mid" : mid}));
             try {
-                data = JSON.parse(data);
+                data = deliver.xhrJsonCheck(data);
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = deliver.timeFormat(data.card.regtime * 1000, 1);
                 let birthdate = data.card.birthday;
@@ -2178,7 +2219,7 @@
                     }
                 });
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("注册时间", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("注册时间", ...e)}
         },
         // 失效视频
         fixVideoLost : {
@@ -2240,7 +2281,7 @@
                     if (small_item[0]) for (let i = 0; i < small_item.length; i++) if (small_item[i].getElementsByClassName("title")[0].text == "已失效视频") src = "";
                     if (src) return;
                     data = await xhr.true(deliver.obj2search(API.url.channel, {"mid" : mid, "cid" : cid, "pn" : pn, "ps" : 30, "order" : 0}));
-                    data = JSON.parse(data).data;
+                    data = deliver.xhrJsonCheck(data).data;
                     for (let i = 0; i < small_item.length; i++) {
                         let aid = small_item[i].getAttribute("data-aid") * 1;
                         let title = "av" + aid;
@@ -2274,7 +2315,7 @@
                         }
                     }
                 }
-                catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("失效视频·频道", ...e)}
+                catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("失效视频·频道", ...e)}
             },
             // 空间首页展示的失效视频
             home : async (msg) => {
@@ -2377,7 +2418,7 @@
                         }
                         // 根据当页首条评论rpid获取min_id
                         data = await xhr.true(deliver.obj2search(API.url.replydialog, {"oid" : oid,"root" : root,"type" : type, "dialog" : dialog, "size" : 20}));
-                        let min_id = JSON.parse(data).data.replies;
+                        let min_id = deliver.xhrJsonCheck(data).data.replies;
                         if (min_id) {for (let i = 0; i < min_id.length; i++) if (min_id[i].rpid == dialog) {min_id = min_id[i].floor; break;}}
                         else {debug.msg("当前页楼中楼层获取失败 ಥ_ಥ"); return;}
                         // 根据min_id获取当页数据
@@ -2391,18 +2432,18 @@
                         // 时间排序的楼层号需要相对前页判定
                         pn = pn - 1;
                         data = await xhr.true(deliver.obj2search(API.url.reply, {"type" : type,"sort" : sort,"oid" : oid,"pn" : pn}));
-                        data = JSON.parse(data).data;
+                        data = deliver.xhrJsonCheck(data).data;
                         let i = data.replies.length - 1;
                         oid = data.replies[0].oid;
                         let root = data.replies[i].rpid;
                         data = await xhr.true(deliver.obj2search(API.url.replycursor, {"oid" : oid,"root" : root,"type" : type}));
-                        data = JSON.parse(data).data;
+                        data = deliver.xhrJsonCheck(data).data;
                         oid = data.root.oid;
                         let next = data.root.floor;
                         data = await xhr.true(deliver.obj2search(API.url.replymain, {"oid" : oid,"next" : next,"type" : type,"mode" : mode}));
                     }
                 }
-                data = JSON.parse(data).data;
+                data = deliver.xhrJsonCheck(data).data;
                 let floor = {}, top = data.top, hots = data.hots, replies = data.replies, froot = data.root;
                 if (hots && hots[0]) {
                     for (let i = 0; i < hots.length; i++) {
@@ -2460,7 +2501,7 @@
                     }
                 }
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("评论楼层", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("评论楼层", ...e)}
         },
         // 广告区转资讯区
         fixnews : async (node, move) => {
@@ -2503,7 +2544,7 @@
                     rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
                 }
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分区·版面", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("分区·版面", ...e)}
         },
         // 跳过充电鸣谢
         electricPanelJump : async (node) => {
@@ -2514,7 +2555,7 @@
                 debug.log("跳过充电鸣谢");
                 setTimeout(() => {config.reset.electric = 1}, 5000);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("充电鸣谢", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("充电鸣谢", ...e)}
         },
         // 修复分区排行
         fixrank : async (node) => {
@@ -2530,7 +2571,7 @@
             section.innerHTML = '<header class="rank-head"><h3>排行</h3></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list"></ul></div><a href="' + sort[2] + '" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>';
             try {
                 let data = await xhr.true(deliver.obj2search(API.url.ranklist, {season_type : sort[1], day : 3}));
-                data = JSON.parse(data).data;
+                data = deliver.xhrJsonCheck(data).data;
                 node = node.getElementsByClassName("bangumi-rank-list rank-list")[0];
                 for (let i = 0; i < 8; i++) {
                     let li = document.createElement("li"),
@@ -2559,7 +2600,7 @@
                     return sum;
                 }
             }
-            catch (e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("分区排行", ...e)}
+            catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("分区排行", ...e)}
         }
     }
 
@@ -2673,7 +2714,7 @@
             watchlater : ["稍后再看", "启用旧版稍后再看页面，基于旧版网页框架"],
             frame : ["嵌入", "替换嵌入式播放器，不会单独适配被嵌入页面的其他功能"],
             home : ["主页", "启用旧版主页，，基于旧版网页框架，旧版主页失效内容过多，已进行一定程度处理满足日常使用"],
-            playlist : ["播单", "恢复播单页，使用跳转绕开404"],
+            playlist : ["播单", "恢复播单页，基于旧版网页框架"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>依赖旧版av页<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
             danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢<br>※依赖xhrhook"],
             livechat : ["实时弹幕", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
@@ -2730,7 +2771,7 @@
                 deliver.setLike();
                 deliver.setMediaList.init();
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·av/BV", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·av/BV", ...e)}
         },
         // 稍后再看
         watchlater : () => {
@@ -2751,7 +2792,7 @@
                     }
                 }
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·稍后再看", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·稍后再看", ...e)}
         },
         // 番剧
         bangumi : () => {
@@ -2763,18 +2804,22 @@
                 DOCUMENT = xhr.false(location.href);
                 __INITIAL_STATE__ = DOCUMENT.includes("__INITIAL_STATE__=") ? JSON.parse(DOCUMENT.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : ""; // 继承__INITIAL_STATE__
                 // 判断页面是否404
-                if (!__INITIAL_STATE__) throw ["__INITIAL_STATE__错误", "Bangumi可能无效", __INITIAL_STATE__];
+                if (!__INITIAL_STATE__){
+                    // 尝试获取备用数据源
+                    if (LOCATION[5].startsWith('ss')) DOCUMENT = xhr.false(deliver.obj2search(API.url.season, {season_id : location.href.match(/[0-9]+/)[0]}));
+                    else if (LOCATION[5].startsWith('ep')) DOCUMENT = xhr.false(deliver.obj2search(API.url.season, {ep_id : location.href.match(/[0-9]+/)[0]}));
+                }
                 let id = LOCATION[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
                 // 获取__INITIAL_STATE__
                 __INITIAL_STATE__ = INITIAL_STATE.bangumi(id);
                 if (__INITIAL_STATE__ && __INITIAL_STATE__.epInfo && __INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
                 // 重写网页框架并调用后续处理，按是否有特殊背景分别处理
                 unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
-                if (DOCUMENT.match('"specialCover":""')) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema);
-                document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "");
+                if (DOCUMENT.match('"specialCover":""') || !__INITIAL_STATE__.special) deliver.write(API.pageframe.bangumi); else deliver.write(API.pageframe.cinema);
+                document.title = DOCUMENT.match(/<title.*?>.+?<\/title>/) ? DOCUMENT.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "") : __INITIAL_STATE__.mediaInfo.title;
                 if (__INITIAL_STATE__) deliver.setBangumi.init(__INITIAL_STATE__);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·Bangumi", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·Bangumi", ...e)}
         },
         // 嵌入
         blackboard : () => {
@@ -2786,43 +2831,48 @@
                     let obj = deliver.search2obj(location.href),
                         season_type = obj.season_type || "",
                         player_type = obj.player_type || "";
-                    aid = 1 * obj.aid ? 1 * obj.aid : (obj.aid ? deliver.convertId(obj.aid) : (obj.bvid ? deliver.convertId(obj.bvid) : ""))
-                    cid = obj.cid || JSON.parse(xhr.false(deliver.obj2search(API.url.pagelist,{"aid" : aid}))).data[0].cid
+                    aid = 1 * obj.aid || deliver.convertId(obj.aid) || deliver.convertId(obj.bvid);
+                    cid = obj.cid || "";
+                    try {
+                        cid = cid || deliver.xhrJsonCheck(xhr.false(deliver.obj2search(API.url.pagelist,{"aid" : aid}))).data[0].cid
+                    }
+                    catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·嵌入", ...e)}
                     // 重定向到旧版播放器
                     location.replace(deliver.obj2search(API.playerframe.html5player,{"aid" : aid,"cid" : cid,"season_type" : season_type,"player_type" : player_type,"as_wide" : 1,}));
                     debug.log("嵌入播放器", "aid=", aid, " cid=", cid);
                 }
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·嵌入", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·嵌入", ...e)}
         },
         // 播单
         playlist : () => {
-            // 保存播单号并跳转到收藏
-            if (!config.rewrite.playlist) return;
-            pl = 1 * LOCATION[5].match(/[0-9]+/)[0];
-            GM_setValue("playlist", pl);
-            location.replace("https://www.bilibili.com/medialist/play/ml182603655");
+            try {
+                if (!config.rewrite.playlist) return;
+                if (LOCATION[4] == "video") {
+                    deliver.write(API.pageframe.playlist);
+                    deliver.setPlayList();
+                }
+                if (LOCATION[4] == "detail") {
+                    __INITIAL_STATE__ = {mid : "", pid : "", plinfoData : {}, pllistData : {}}
+                    DOCUMENT = deliver.xhrJsonCheck(xhr.false(deliver.obj2search(API.url.playlist, {pid : LOCATION[5].match(/[0-9]+/)[0]}))).data;
+                    __INITIAL_STATE__.mid = DOCUMENT.mid;
+                    __INITIAL_STATE__.pid = DOCUMENT.pid;
+                    __INITIAL_STATE__.plinfoData = {attr : DOCUMENT.attr, count : DOCUMENT.count, cover : DOCUMENT.cover, ctime : DOCUMENT.ctime, description : DOCUMENT.description, favored : DOCUMENT.favored, id : DOCUMENT.id, is_favorite : DOCUMENT.is_favorite, mid : DOCUMENT.mid, mtime : DOCUMENT.mtime, owner : DOCUMENT.owner, pid : DOCUMENT.pid, stat : DOCUMENT.stat, state : DOCUMENT.state, type : DOCUMENT.type,};
+                    __INITIAL_STATE__.pllistData = DOCUMENT.list;
+                    unsafeWindow.__INITIAL_STATE__ = __INITIAL_STATE__;
+                    deliver.write(API.pageframe.detail);
+                }
+            }
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("播单", ...e)}
         },
         // 收藏
         medialist : () => {
             if (LOCATION[5].startsWith("ml")) {
                 ml = 1 * LOCATION[5].match(/[0-9]+/)[0];
-                pl = GM_getValue("playlist") ? GM_getValue("playlist") : "";
-                if (pl) {
-                    // 判断是否播单重定向而来并把网址修改回去(免跳转)
-                    history.replaceState(null,null, "https://www.bilibili.com/playlist/video/pl" + pl);
-                    GM_setValue("playlist", 0);
-                    GM_setValue("medialist", 0);
-                    // 重写网页框架并调用后续处理
-                    deliver.write(API.pageframe.playlist);
-                    deliver.setPlayList();
-                }
-                else {
-                    // 保存收藏号并调用av跳转
-                    if (!config.rewrite.medialist) return;
-                    GM_setValue("medialist", ml);
-                    deliver.setMediaList.init(ml);
-                }
+                // 保存收藏号并调用av跳转
+                if (!config.rewrite.medialist) return;
+                GM_setValue("medialist", ml);
+                deliver.setMediaList.init(ml);
             }
             // 新版稍后再看跳转到旧版稍后再看
             if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); // 重定向稍后再看
@@ -2854,7 +2904,7 @@
                 // 重写网页框架
                 deliver.write(API.pageframe.home);
             }
-            catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("框架·主页", ...e)}
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·主页", ...e)}
             // 调用在线数据处理
             deliver.setOnline();
         }
@@ -2870,21 +2920,11 @@
     }
     else GM_setValue("config",config);
     try {
-        // 监听全局变量
+        // 监听拦截全局变量
         deliver.getVariable();
         // 关闭Worker才能hook到弹幕
         if (config.reset.danmuku) unsafeWindow.Worker = null;
-        // 关闭show_bv
-        if (config.reset.bvid2av) {
-            unsafeWindow.__BILI_CONFIG__ = {"show_bv" : false};
-            Object.defineProperty(unsafeWindow, '__BILI_CONFIG__', {writable : false});
-        }
-        // 清空预置的直播数据
-        if (LOCATION[2] == 'live.bilibili.com' && config.reset.roomplay) {
-            unsafeWindow.__NEPTUNE_IS_MY_WAIFU__ = undefined;
-            Object.defineProperty(unsafeWindow, '__NEPTUNE_IS_MY_WAIFU__', {writable : false});
-        }
-        // uid判断是否登录
+        // uid用于判断是否登录
         uid = deliver.getCookies().DedeUserID;
         // 维护旧版播放器设置
         let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
@@ -2900,7 +2940,7 @@
             if (offset) document.cookie = "bp_t_offset_" + uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; path=/";
         }
     }
-    catch(e) {e = typeof e === "object" && e[0] ? e : [e]; debug.error("初始化", ...e)}
+    catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("初始化", ...e)}
 
     // 分离页面单独调用
     if (LOCATION[3]) {
