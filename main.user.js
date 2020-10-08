@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.6
+// @version      3.5.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -66,7 +66,8 @@
             adloc : 0,
             roomplay : 0,
             history : 0,
-            electric : 0
+            electric : 0,
+            panel : 0
         }
     }
 
@@ -1740,6 +1741,7 @@
             remove("new-entry", "class");
             if (window.recbtn) remove("ver", "class");
             remove("trynew-btn", "class");
+            if (config.reset.panel) remove("bilibili-player-ending-panel", "class");
             // 移除app下载浮动框
             remove("fixed_app_download", "id");
             remove("app-download", "class");
@@ -1880,6 +1882,7 @@
                         text = document.createTextNode(" 点赞 " + deliver.unitFormat(data));
                         arg.replaceWith(text);
                         arg = text;
+                        if (!deliver.getCookies().bili_jct) return;
                         data = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.haslike, {"aid" : aid}))).data;
                         if (data == 1) {
                             // 点赞过点亮图标
@@ -2738,7 +2741,8 @@
             roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决"],
             history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"],
             xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
-            electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"]
+            electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"],
+            panel : ["最后一帧", "使视频播放结束后画面停留在最后一帧，不再展示功能窗口"]
         }
     }
 
