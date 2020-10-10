@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.7
+// @version      3.5.8
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -672,6 +672,67 @@
                     }
                 }
             }
+            //Worker Hook
+            if (config.reset.danmuku && Worker) {
+                //hook postMessage来得到旧播放器用来 获取list.so 的worker对象
+                let workerPostMsg = Worker.prototype.postMessage;
+                let list_so;
+                let loadTime, parseTime; //旧播放器需要得到相关耗时数据，这里手动算
+                Worker.prototype.postMessage = function (aMessage, transferList) {
+                    if (aMessage.url && aMessage.url.includes("list.so")) {
+                        list_so = this;
+                        loadTime = new Date();
+                        let Segments = [];
+                        deliver.getSegDanmaku(function (protoSegments) {
+                            loadTime = new Date() - loadTime;
+                            parseTime = new Date();
+                            protoSegments.forEach(function (seg) {
+                                Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
+                            });
+                            Segments.sort(function (a, b) {
+                                return a.progress - b.progress;
+                            });
+                            //转换到xml只是为了满足下载功能
+                            if(config.reset.download) {
+                                deliver.toXml(Segments, aid).then(function (result) {
+                                    // 备份弹幕
+                                    xml = result;
+                                });
+                            }
+                            //将弹幕转换为旧格式
+                            Segments = Segments.map(function (v) {
+                                return {
+                                    class: 0,
+                                    color: v.color,
+                                    date: v.ctime,
+                                    dmid: v.id,
+                                    mode: v.mode,
+                                    size: v.fontsize,
+                                    stime: v.progress / 1000,
+                                    text: v.content,
+                                    uid: v.midHash
+                                };
+                            });
+                            parseTime = new Date() - parseTime;
+                            list_so.onmessage({
+                                data: {
+                                    code: 0,
+                                    danmakuArray: Segments,
+                                    loadTime: loadTime,
+                                    parseTime: parseTime,
+                                    sendTip: "",
+                                    state: 0,
+                                    textSide: "",
+                                    total: Segments.length.toString()
+                                }
+                            });
+                            debug.log("载入新版弹幕");
+                        });
+                    } else {
+                        workerPostMsg.call(this, aMessage, transferList);
+                    }
+                }
+            }
             // 原生xhr hook
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 let _url = url, hook = [_url, ""];
@@ -737,10 +798,9 @@
                     // 这时pakku.js已经修改了xhr对象，需要另做处理
                     if (this.pakku_url) {
                         segRequestOnlyOnce = true;
-                        let oid = unsafeWindow.cid;
-                        let pid = unsafeWindow.aid;
+                        let pid = aid;
                         // 更改pakku.js请求的url，使它过滤分段弹幕
-                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + oid + "&pid=" + pid + "&segment_index=1";
+                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + pid + "&segment_index=1";
                         this.responseType = "arraybuffer";
                         let xhr = this;
                         let cb = [];
@@ -765,11 +825,11 @@
             // 部分功能依赖hook `XMLHttpRequest.prototype.send`
             if (config.reset.xhrhook) {
                 XMLHttpRequest.prototype.send = async function (...arg) {
-                    // 条件分别对应        |没有开启pakku.js|pakku.js休眠中，钩子捕捉到的首次对seg.so的请求|
+                    // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
                     // (pakku.js正常运行时这个send()不会被调用)
-                    if (config.reset.danmuku && (this.reqURL || (this.pakku_url && this.pakku_url.includes("seg.so") && segRequestOnlyOnce))) {
-                        if (this.pakku_url && this.pakku_url.includes("seg.so")) segRequestOnlyOnce = false;
-                        // 对于没有pakku.js的情况，模拟一个xhr响应
+                    if (config.reset.danmuku && (this.pakku_url && this.pakku_url.includes("seg.so") && segRequestOnlyOnce)) {
+                        segRequestOnlyOnce = false;
+                        // pakku.js会禁用Worker，这时需要模拟一个xhr响应
                         Object.defineProperty(this, "response", { writable : true });
                         Object.defineProperty(this, "responseText", { writable : true });
                         Object.defineProperty(this, "readyState", { writable : true });
@@ -777,35 +837,14 @@
                         this.readyState = 4;
                         this.status = 200;
                         this.abort();
-                        let cid = unsafeWindow.cid;
-                        let pid = unsafeWindow.aid;
                         let callBack = this.callBack;
                         let xhr = this;
-                        let protoSegments = [];
-                        getSegConfig().then(getAllSeg);
-                        // 获得所有分段
-                        function getAllSeg(config) {
-                            let total = config.dmSge.total;
-                            let allrequset = [];
-                            for (let index = 1; index <= total; index++) {
-                                allrequset.push(new Promise(function (resolve) {
-                                    let xhr = new XMLHttpRequest();
-                                    xhr.addEventListener("load", function () {
-                                        protoSegments[index] = xhr.response;
-                                        resolve();
-                                    });
-                                    xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + pid + "&segment_index=" + index);
-                                    xhr.responseType = "arraybuffer";
-                                    xhr.send();
-                                }));
-                            }
-                            // 完成所有的网络请求大概要300ms
-                            Promise.all(allrequset).then(function () {
+                        deliver.getSegDanmaku(function (protoSegments) {
                                 let Segments = [];
                                 protoSegments.forEach(function (seg) {
                                     Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                                 });
-                                deliver.toXml(Segments, pid).then(function (toXml) {
+                                deliver.toXml(Segments, aid).then(function (toXml) {
                                     callBack.forEach(function (f) {
                                         xhr.response = xhr.responseText = toXml;
                                         f.call(xhr);
@@ -815,20 +854,6 @@
                                     debug.log("载入新版弹幕");
                                 });
                             });
-                        }
-                        function getSegConfig() {
-                            return new Promise(function (resolve) {
-                                let xhr = new XMLHttpRequest();
-                                xhr.addEventListener("load", function () {
-                                    let res = protoView.decode(new Uint8Array(xhr.response));
-                                    resolve(res);
-                                });
-                                xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + cid + "&pid=" + pid);
-                                xhr.responseType = "arraybuffer";
-                                xhr.send();
-                            });
-
-                        }
                     }
                     else if (this.url) {
                         try {
@@ -1362,6 +1387,42 @@
                 }
                 resolve(new XMLSerializer().serializeToString(dom));
             });
+        },
+        getSegDanmaku: function (onload) {
+            let protoSegments = [];
+            getSegConfig().then(getAllSeg);
+            function getSegConfig() {
+                return new Promise(function (resolve) {
+                    let xhr = new XMLHttpRequest();
+                    xhr.addEventListener("load", function () {
+                        let res = protoView.decode(new Uint8Array(xhr.response));
+                        resolve(res);
+                    });
+                    xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + cid + "&pid=" + aid);
+                    xhr.responseType = "arraybuffer";
+                    xhr.send();
+                });
+            }
+            // 获得所有分段
+            function getAllSeg(config) {
+                let total = config.dmSge.total;
+                let allrequset = [];
+                let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + aid;
+                for (let index = 1; index <= total; index++) {
+                    allrequset.push(new Promise(function (resolve) {
+                        let xhr = new XMLHttpRequest();
+                        xhr.addEventListener("load", function () {
+                            protoSegments[index] = xhr.response;
+                            resolve();
+                        });
+                        xhr.open("get", reqUrl + "&segment_index=" + index);
+                        xhr.responseType = "arraybuffer";
+                        xhr.send();
+                    }));
+                }
+                // 完成所有的网络请求大概要300ms
+                return Promise.all(allrequset).then(function () { onload(protoSegments); });
+            }
         },
         // 添加全局样式
         setGlobalStyle : async () => {
@@ -2507,6 +2568,15 @@
             }
             catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("评论楼层", ...e)}
         },
+        //修复评论”跳转指定时间“功能
+        fixVideoSeek: function(node) {
+            node.querySelectorAll("a.video-seek").forEach(function (v) {
+                v.addEventListener("click", function (e) {
+                    window.scrollTo(0,170);
+                    unsafeWindow.player.seek(Number(e.target.attributes[2].nodeValue));
+                });
+            });
+        },
         // 广告区转资讯区
         fixnews : async (node, move) => {
             try {
@@ -2720,7 +2790,7 @@
             home : ["主页", "启用旧版主页，，基于旧版网页框架，旧版主页失效内容过多，已进行一定程度处理满足日常使用"],
             playlist : ["播单", "恢复播单页，基于旧版网页框架"],
             medialist : ["收藏", "模拟收藏列表播放页面，收藏播放页是新版专属页面，只能先跳转av页再模拟收藏列表<br>依赖旧版av页<br>切P时up主简介等少数信息不会另外请求<br>※播放列表视频太多将导致视频载入及切换速度变慢"],
-            danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，但弹幕加载速度应该会变慢<br>※依赖xhrhook"],
+            danmuku : ["新版弹幕", "尝试换用新版弹幕接口，弹幕上限将变为两倍，对加载速度影响不明显<br>※依赖xhrhook"],
             livechat : ["实时弹幕", "尝试修复实时弹幕聊天功能，使旧播放器能继续实时接收最新弹幕<br>※依赖WebSocket hook"],
             limit : ["区域限制", "尝试解除B站区域限制(包括部分仅限APP限制)，用于观看港澳台番剧<br>※只适配旧版播放器<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook"],
             grobalboard : ["顶栏底栏", "识别并替换所有新版顶栏为旧版顶栏，旧版失效广告区替换为资讯区"],
@@ -2927,8 +2997,6 @@
     try {
         // 监听拦截全局变量
         deliver.getVariable();
-        // 关闭Worker才能hook到弹幕
-        if (config.reset.danmuku) unsafeWindow.Worker = null;
         // uid用于判断是否登录
         uid = deliver.getCookies().DedeUserID;
         // 维护旧版播放器设置
@@ -2991,8 +3059,8 @@
         if (msg.relatedNode.className == "info-sec-av") deliver.setBangumi.episodeData("", msg);
         // 失效分区转换
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") deliver.fixnews(msg.target);
-        // 修复评论楼层
-        if (src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) deliver.setReplyFloor(src);
+        // 修复评论楼层&修复评论空降坐标
+        if (src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) { deliver.setReplyFloor(src); deliver.fixVideoSeek(msg.target.parentNode); }
         // 跳过充电鸣谢
         if (/bilibili-player-electric-panel-jump/.test(msg.relatedNode.className)) deliver.electricPanelJump(msg.relatedNode);
         // 修复分区排行
