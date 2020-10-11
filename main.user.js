@@ -864,6 +864,8 @@
                             Object.defineProperty(this, "responseText", { writable : true });
                             Object.defineProperty(this, "readyState", { writable : true });
                             Object.defineProperty(this, "status", { writable : true });
+                            this.readyState = 2;
+                            this.status = 200;
                             this.abort();
                             let response;
                             try {
@@ -876,8 +878,6 @@
                             }
                             catch (e) {debug.msg("解除限制失败 ಥ_ಥ", e); response = {"code" : -404, "message" : e , "data" : null};}
                             this.response = this.responseText = JSON.stringify(response);
-                            this.status = 200;
-                            this.readyState = 3;
                             this.readyState = 4;
                             this.onreadystatechange();
                             if (response.code !== 0) throw response.message;
