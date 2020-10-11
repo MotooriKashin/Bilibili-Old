@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.8
+// @version      3.5.9
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -394,7 +394,7 @@
                     dat.rightsInfo.allow_review = ini.mediaInfo.rights.allowReview ? 1 : 0;
                     dat.rightsInfo.copyright = "bilibili";
                     dat.rightsInfo.is_preview = ini.mediaInfo.rights.isPreview ? 1 : 0;
-                    dat.rightsInfo.watch_platform = 0;
+                    dat.rightsInfo.watch_platform = ini.mediaInfo.rights.appOnly ? 1 : 0;
                     dat.pubInfo = {};
                     dat.pubInfo.is_finish = ini.mediaInfo.pub.isFinish ? 1 : 0;
                     dat.pubInfo.is_started = ini.mediaInfo.pub.isStart ? 1 : 0;
@@ -867,18 +867,18 @@
                             try {
                                 if (limit) {
                                     // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
-                                    response = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.BPplayurl, {avid : aid, balh_ajax : 1, cid : cid, platform : "android_i", qn : deliver.search2obj(this.url).qn, fourk : 1, module : "pgc", otype : 'json'})));
-                                    if (response.code != 0) throw response;
+                                    let obj = Object.assign(deliver.search2obj(this.url), __INITIAL_STATE__.rightsInfo.watch_platform ? {balh_ajax : 1, fnval : "", fnver : "", module : "pgc", platform : "android_i"} : {balh_ajax : 1, module : "pgc"})
+                                    response = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.BPplayurl, obj)));
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
                             }
-                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", e.message || e); response = {"code" : -404, "message" : e , "data" : null};}
+                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", e); response = {"code" : -404, "message" : e , "data" : null};}
                             this.response = this.responseText = JSON.stringify(response);
                             this.status = 200;
                             this.readyState = 3;
                             this.readyState = 4;
                             this.onreadystatechange();
-                            if (response.code !== 0) throw ["解除限制失败", "ಥ_ಥ", response.message];
+                            if (response.code !== 0) throw response.message;
                             __playinfo__ = response;
                             debug.log("解除限制", "aid=", aid, "cid=", cid);
                         }
@@ -1900,7 +1900,7 @@
                     try {
                         move.onclick = async () => {
                             // 没有点赞过绑定点赞点击事件
-                            if (!deliver.getCookies().bili_jct) {
+                            if (!uid) {
                                 // 没有登录绑定快捷登录
                                 document.getElementsByClassName("c-icon-move")[0].click();
                                 return;
@@ -1943,7 +1943,7 @@
                         text = document.createTextNode(" 点赞 " + deliver.unitFormat(data));
                         arg.replaceWith(text);
                         arg = text;
-                        if (!deliver.getCookies().bili_jct) return;
+                        if (!uid) return;
                         data = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.haslike, {"aid" : aid}))).data;
                         if (data == 1) {
                             // 点赞过点亮图标
@@ -2833,6 +2833,7 @@
                 aid = aid || LOCATION[4].match(/[0-9]+/)[0];
                 DOCUMENT = xhr.false(deliver.obj2search(API.url.detail, {aid : aid}));
                 __INITIAL_STATE__ = INITIAL_STATE.av(DOCUMENT);
+                if (!__INITIAL_STATE__) throw "av/BV号可能无效！";
                 if (__INITIAL_STATE__.videoData.redirect_url) throw ["番剧重定向：", __INITIAL_STATE__.videoData.redirect_url];
                 if (__INITIAL_STATE__.videoData.stein_guide_cid) throw ["忽略互动视频：", "av" + aid];
                 // 写入全局变量
