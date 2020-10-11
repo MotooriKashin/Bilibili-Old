@@ -458,7 +458,7 @@
                 }
                 dat.locsData = ini.locsData;
                 dat.locsData[23] = ini.locsData[3197];
-                if (config.reset.adloc) for (let key in dat.locsData) if (dat.locsData[key]) for (let i = dat.locsData[key].length - 1; i >= 0; i--) if (dat.locsData[key][i].is_ad) {debug.log("移除广告", key, dat.locsData[key][i]);dat.locsData[key].splice(i, 1);}
+                if (config.reset.adloc) for (let key in dat.locsData) if (dat.locsData[key]) for (let i = dat.locsData[key].length - 1; i >= 0; i--) if (dat.locsData[key][i].is_ad) {debug.debug("移除广告", key, dat.locsData[key][i]);dat.locsData[key].splice(i, 1);}
                 if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{"id":36585,"contract_id":"","pos_num":1,"name":"小黑屋弹幕举报","pic":"https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg","litpic":"","url":"https://www.bilibili.com/blackboard/activity-dmjbfj.html","style":0,"agency":"","label":"","intro":"","creative_type":0,"request_id":"1546354354629q172a23a61a62q626","src_id":32,"area":0,"is_ad_loc":true,"ad_cb":"","title":"","server_type":0,"cm_mark":0,"stime":1520478000,"mid":"14629218"}];
                 return dat;
             }
@@ -726,7 +726,6 @@
                                     total: Segments.length.toString()
                                 }
                             });
-                            debug.log("载入新版弹幕");
                         });
                     } else {
                         workerPostMsg.call(this, aMessage, transferList);
@@ -740,13 +739,13 @@
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
                     url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
-                    debug.log("XHR重定向", "替换视频心跳", [_url, url]);
+                    debug.debug("XHR重定向", "替换视频心跳", [_url, url]);
                 }
                 // 显示历史视频
                 if (url.includes('api.bilibili.com/x/web-interface/history/cursor') && url.includes("business") && config.reset.history) {
                     let max = obj.max || "", view_at = obj.view_at || "";
                     url = deliver.obj2search("//api.bilibili.com/x/web-interface/history/cursor", {max : max, view_at : view_at, type : "archive", ps : 20});
-                    debug.log("XHR重定向", "显示历史视频", [_url, url]);
+                    debug.debug("XHR重定向", "显示历史视频", [_url, url]);
                 }
                 // 修改正在直播
                 if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) {
@@ -768,9 +767,13 @@
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.stat(this, hook)});
                     url = hook[1] = url.replace('bangumi.bilibili.com/ext/web_api/season_count', 'api.bilibili.com/pgc/web/season/stat');
                 }
+                // 修改番剧推荐
+                if (url.includes('api.bilibili.com/pgc/web/recommend/related/recommend')) {
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.recommend(this)});
+                }
                 // 修改直播数据
                 if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) {
-                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.getRoomPlayInfo(this, hook)});
+                    this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.getRoomPlayInfo(this)});
                 }
                 // 修改播放器通知
                 if (url.includes('api.bilibili.com/x/player/carousel')) {
@@ -784,7 +787,7 @@
                 if (url.includes("/playurl?")) {
                     if (!url.includes("fourk") && !url.includes("sign")) {
                         url = url.replace("playurl?", "playurl?fourk=1&");
-                        debug.log("XHR重定向", "添加4K参数", [_url, url]);
+                        debug.debug("XHR重定向", "添加4K参数", [_url, url]);
                     }
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
@@ -840,20 +843,19 @@
                         let callBack = this.callBack;
                         let xhr = this;
                         deliver.getSegDanmaku(function (protoSegments) {
-                                let Segments = [];
-                                protoSegments.forEach(function (seg) {
-                                    Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
-                                });
-                                deliver.toXml(Segments, aid).then(function (toXml) {
-                                    callBack.forEach(function (f) {
-                                        xhr.response = xhr.responseText = toXml;
-                                        f.call(xhr);
-                                    });
-                                    // 备份弹幕
-                                    xml = xhr.response;
-                                    debug.log("载入新版弹幕");
-                                });
+                            let Segments = [];
+                            protoSegments.forEach(function (seg) {
+                                Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                             });
+                            deliver.toXml(Segments, aid).then(function (toXml) {
+                                callBack.forEach(function (f) {
+                                    xhr.response = xhr.responseText = toXml;
+                                    f.call(xhr);
+                                });
+                                // 备份弹幕
+                                xml = xhr.response;
+                            });
+                        });
                     }
                     else if (this.url) {
                         try {
@@ -906,17 +908,17 @@
                             if (obj.url.includes("region") && obj.data.rid == 165) {
                                 // 替换广告区rid为资讯区rid
                                 obj.data.rid = 202;
-                                debug.log("JSONP重定向", "替换广告区", [_obj, obj]);
+                                debug.debug("JSONP重定向", "替换广告区", [_obj, obj]);
                             }
                             if (obj.url.includes("region") && obj.data.original == 1) {
                                 // 替换原创排行为全部排行
                                 obj.data.original = 0;
-                                debug.log("JSONP重定向", "修复原创排行", [_obj, obj]);
+                                debug.debug("JSONP重定向", "修复原创排行", [_obj, obj]);
                             }
                             if (obj.url.includes('api.bilibili.com/x/web-interface/ranking/index')) {
                                 // 修改置顶推荐
                                 obj.url = obj.url.replace('ranking/index', 'index/top');
-                                debug.log("JSONP重定向", "修复置顶推荐", [_obj, obj]);
+                                debug.debug("JSONP重定向", "修复置顶推荐", [_obj, obj]);
                             }
                         }
                     }
@@ -951,7 +953,7 @@
                 }
                 if (response.data.preview) for (let i = 0; i < response.data.preview.length; i++) response.data.preview[i].url = response.data.preview[i].link;
                 hook.push(response);
-                debug.log("XHR重定向", "修复正在直播", hook);
+                debug.debug("XHR重定向", "修复正在直播", hook);
                 Object.defineProperty(obj, 'response', {writable : true});
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
@@ -970,7 +972,7 @@
                     response.result.episodes[i].index_title = response.result.episodes[i].long_title;
                 }
                 hook.push(response);
-                debug.log("XHR重定向", "番剧季度信息", hook);
+                debug.debug("XHR重定向", "番剧季度信息", hook);
                 Object.defineProperty(obj, 'response', {writable : true});
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
@@ -984,7 +986,7 @@
                 let response = deliver.xhrJsonCheck(obj.responseText);
                 response.result.favorites = response.result.follow;
                 hook.push(response);
-                debug.log("XHR重定向", "番剧追番信息", hook);
+                debug.debug("XHR重定向", "番剧追番信息", hook);
                 Object.defineProperty(obj, 'response', {writable : true});
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
@@ -1003,12 +1005,27 @@
                     response.data.play_url = null;
                 }
                 hook.push(response);
-                debug.log("XHR重定向", "拦截直播媒体", hook);
+                debug.debug("XHR重定向", "拦截直播媒体", hook);
                 Object.defineProperty(obj, 'response', {writable : true});
                 Object.defineProperty(obj, 'responseText', {writable : true});
                 obj.response = obj.responseText = JSON.stringify(response);
             }
             catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("直播拦截", ...e)}
+        },
+        // 修改番剧推荐
+        recommend : (obj, hook = []) => {
+            if (!config.reset.roomplay) return;
+            try {
+                hook.push(deliver.xhrJsonCheck(obj.responseText));
+                let response = deliver.xhrJsonCheck(obj.responseText);
+                if (response.result && response.result.season) response.result = response.result.season;
+                hook.push(response);
+                debug.debug("XHR重定向", "修改番剧推荐", hook);
+                Object.defineProperty(obj, 'response', {writable : true});
+                Object.defineProperty(obj, 'responseText', {writable : true});
+                obj.response = obj.responseText = JSON.stringify(response);
+            }
+            catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("番剧推荐", ...e)}
         },
         // 生成播放信息
         carousel : (obj) => {
@@ -1793,7 +1810,7 @@
                     case "tag" : node = document.getElementsByTagName(node)[index] ? document.getElementsByTagName(node)[index] : "";break;
                 }
                 if (!node || node.getAttribute("hidden")) return;
-                debug.log("移除节点", node);
+                debug.debug("移除节点", node);
                 hidden ? node.setAttribute("hidden", "hidden") : node.remove();
             }
             // 隐藏联系客服
@@ -2038,7 +2055,7 @@
                                 let toview = {"code":0, "message" : "0", "ttl" : 1, "data" : {"count" : ids.length, "list" : ids}};
                                 // 保存初始aid，以便判断是否切p
                                 oid = ids[0].aid;
-                                debug.log("收藏列表", toview);
+                                debug.debug("收藏列表", toview);
                                 // 构造初始化参数并重新初始化播放器
                                 obj = {"aid" : ids[0].aid, "cid" : ids[0].cid, "watchlater":encodeURIComponent(JSON.stringify(toview))}; // 重构初始化播放器参数
                                 unsafeWindow.BilibiliPlayer(obj);
@@ -2162,7 +2179,7 @@
                         // 备份总播放数和弹幕数
                         views.setAttribute("title","总播放数 " + views.innerText);
                         danmakus.setAttribute("title","总弹幕数 " + danmakus.innerText);
-                        debug.log("总播放数", views.innerText, " 总弹幕数", danmakus.innerText);
+                        debug.debug("总播放数", views.innerText, " 总弹幕数", danmakus.innerText);
                         data = await xhr.true(deliver.obj2search(API.url.stat, {"aid" : aid}));
                     }
                     if (!data) {
@@ -2176,7 +2193,7 @@
                     danmaku = deliver.unitFormat(danmaku);
                     views.innerText = view;
                     danmakus.innerText = danmaku;
-                    debug.log("播放", view + " 弹幕", danmaku);
+                    debug.debug("播放", view + " 弹幕", danmaku);
                 }
                 catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("分集数据", ...e)}
             },
@@ -2626,7 +2643,6 @@
                 if (!config.reset.electric) return;
                 config.reset.electric = 0;
                 setTimeout(() => {node.click()}, 1);
-                debug.log("跳过充电鸣谢");
                 setTimeout(() => {config.reset.electric = 1}, 5000);
             }
             catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("充电鸣谢", ...e)}
