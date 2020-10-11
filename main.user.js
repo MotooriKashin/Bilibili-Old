@@ -1014,7 +1014,6 @@
         },
         // 修改番剧推荐
         recommend : (obj, hook = []) => {
-            if (!config.reset.roomplay) return;
             try {
                 hook.push(deliver.xhrJsonCheck(obj.responseText));
                 let response = deliver.xhrJsonCheck(obj.responseText);
