@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.5.9
+// @version      3.6.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -23,7 +23,7 @@
 
     // 全局变量
     let ml, pl, aid, big, cid, mid, oid, pgc, src, tid, uid, url, xml, bvid, limit, defig;
-    let arr = [], ids = [], obj = {}, mdf = {}, bloburl = {};
+    let arr = [], ids = [], obj = {}, mdf = {}, hash = [], bloburl = {};
     let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
@@ -67,7 +67,8 @@
             roomplay : 0,
             history : 0,
             electric : 0,
-            panel : 0
+            panel : 0,
+            midcrc : 0
         }
     }
 
@@ -131,7 +132,9 @@
             BPplayurl : "https://www.biliplus.com/BPplayurl.php", // [origin] + &module=pgc&balh_ajax=1
             ranklist : "https://api.bilibili.com/pgc/season/rank/web/list", // season_type, &day=3
             detail : "https://api.bilibili.com/x/web-interface/view/detail", // aid
-            playlist : "https://api.bilibili.com/x/playlist/video/toview" // pid
+            playlist : "https://api.bilibili.com/x/playlist/video/toview", // pid
+            card : "https://api.bilibili.com/x/web-interface/card", // mid
+            listso : "https://api.bilibili.com/x/v1/dm/list.so" //oid
         },
         // 未识别分区对照表
         sort : {
@@ -586,6 +589,8 @@
                                     case Pl.WS_OP_DATA:
                                     case Pl.WS_OP_BATCH_DATA:
                                         t.body.forEach(function (v) {
+                                            // 记录实时弹幕哈希值
+                                            hash.push(v[0].split(",")[7]);
                                             liveChatOld.onmessage({
                                                 data: liveChatOld.convertToArrayBuffer({
                                                     cmd: 'DM',
@@ -701,6 +706,8 @@
                             }
                             //将弹幕转换为旧格式
                             Segments = Segments.map(function (v) {
+                                 // 记录弹幕池哈希值
+                                hash.push(v.midHash);
                                 return {
                                     class: 0,
                                     color: v.color,
@@ -1252,6 +1259,96 @@
         return (md5_WordToHex(a) + md5_WordToHex(b) + md5_WordToHex(c) + md5_WordToHex(d)).toLowerCase();
     }
 
+    // crc哈希转mid算法，来源https://github.com/esterTion/BiliBili_crc2mid
+    const BiliBili_midcrc = function () {
+        const CRCPOLYNOMIAL = 0xEDB88320;
+        let startTime = performance.now(),
+            crctable = new Array(256),
+            create_table = function () {
+                let crcreg,
+                    i,
+                    j;
+                for (i = 0; i < 256; ++i) {
+                    crcreg = i;
+                    for (j = 0; j < 8; ++j) {
+                        if ((crcreg & 1) !== 0) {
+                            crcreg = CRCPOLYNOMIAL ^ (crcreg >>> 1);
+                        } else {
+                            crcreg >>>= 1;
+                        }
+                    }
+                    crctable[i] = crcreg;
+                }
+            },
+            crc32 = function (input) {
+                if (typeof(input) != 'string') input = input.toString();
+                let crcstart = 0xFFFFFFFF,
+                    len = input.length,
+                    index;
+                for (let i = 0; i < len; ++i) {
+                    index = (crcstart ^ input.charCodeAt(i)) & 0xff;
+                    crcstart = (crcstart >>> 8) ^ crctable[index];
+                }
+                return crcstart;
+            },
+            crc32lastindex = function (input) {
+                if (typeof(input) != 'string') input = input.toString();
+                let crcstart = 0xFFFFFFFF,
+                    len = input.length,
+                    index;
+                for (let i = 0; i < len; ++i) {
+                    index = (crcstart ^ input.charCodeAt(i)) & 0xff;
+                    crcstart = (crcstart >>> 8) ^ crctable[index];
+                }
+                return index;
+            },
+            getcrcindex = function (t) {
+                for (let i = 0; i < 256; i++) if (crctable[i] >>> 24 == t) return i;
+                return -1;
+            },
+            deepCheck = function (i, index) {
+                let tc = 0x00,
+                    str = '',
+                    hash = crc32(i);
+                tc = hash & 0xff ^ index[2];
+                if (!(tc <= 57 && tc >= 48)) return [0];
+                str += tc - 48;
+                hash = crctable[index[2]] ^ (hash >>> 8);
+                tc = hash & 0xff ^ index[1];
+                if (!(tc <= 57 && tc >= 48)) return [0];
+                str += tc - 48;
+                hash = crctable[index[1]] ^ (hash >>> 8);
+                tc = hash & 0xff ^ index[0];
+                if (!(tc <= 57 && tc >= 48)) return [0];
+                str += tc - 48;
+                hash = crctable[index[0]] ^ (hash >>> 8);
+                return [1, str];
+            };
+        create_table();
+        let index = new Array(4);
+        return function (input) {
+            let ht = parseInt('0x' + input) ^ 0xffffffff,
+                snum,
+                i,
+                lastindex,
+                deepCheckData;
+            for (i = 3; i >= 0; i--) {
+                index[3 - i] = getcrcindex(ht >>> (i * 8));
+                snum = crctable[index[3 - i]];
+                ht ^= snum >>> ((3 - i) * 8);
+            }
+            for (i = 0; i < 10000000; i++) {
+                lastindex = crc32lastindex(i);
+                if (lastindex == index[3]) {
+                    deepCheckData = deepCheck(i, index);
+                    if (deepCheckData[0]) break;
+                }
+            }
+            if (i == 10000000) return -1;
+            return i + '' + deepCheckData[1];
+        };
+    };
+
     // 函数统一接口
     const deliver = {
         // 格式化时间戳，默认返回hh：mm：ss；指定type加上yy：mm：dd
@@ -1757,10 +1854,12 @@
         // 切p相关
         switchVideo : async () => {
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
-            if (config.reset.download) {url = ""; mdf = {};};
-            if (!config.reset.selectdanmu) return;
-            let danmu = document.getElementsByClassName("bilibili-player-filter-btn")[1];
-            if (danmu) danmu.click();
+            if (config.reset.download) {url = ""; mdf = {}; hash = [];};
+            if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
+            if (config.reset.midcrc && !config.reset.danmuku && !hash[0]) {
+                let data = await xhr.true(deliver.obj2search(API.url.listso, {oid : cid}));
+                data.match(/d p=".+?"/g).forEach((v) => {hash.push(v.split(",")[6])});
+            }
         },
         // 付费预览
         removePreview : async (node) => {
@@ -2690,6 +2789,40 @@
                 }
             }
             catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("分区排行", ...e)}
+        },
+        // 弹幕哈希反查
+        danmkuHashId : async (node) => {
+            if (!config.reset.midcrc || !window.midcrc) return;
+            let index = 1 * node.getAttribute("dmno");
+            node.addEventListener("contextmenu", () => {
+                setTimeout(async (data)=>{
+                    try {
+                        let descipline = document.createElement("li");
+                        let onwer = document.createElement("li");
+                        let mid = window.midcrc(hash[index]);
+                        node = document.getElementsByClassName("bili-old-hash");
+                        if (node[0]) for (let i = 0; i < node.length; i++ ) node[i].remove();
+                        if (document.getElementsByClassName("bilibili-player-icon bilibili-player-icon-arrow-down")[0]) return;
+                        if (document.getElementsByClassName("bilibili-player-icon bilibili-player-icon-arrow-up")[0]) return;
+                        descipline.setAttribute("class", "context-line context-menu-descipline bili-old-hash");
+                        descipline.innerHTML = '<a class="context-menu-a" href="javascript:void(0);"></a>';
+                        onwer.setAttribute("class", "context-line context-menu-function bili-old-hash");
+                        onwer.innerHTML = '<a class="context-menu-a js-action" title="" href="//space.bilibili.com/' + mid + '">hash: ' + hash[index] + " mid: " + mid + '</a>';
+                        node = document.getElementsByClassName("bilibili-player-context-menu-container")[0];
+                        node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
+                        onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
+                        data = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.card, {mid : mid})));
+                        onwer.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" class="reply-face"><img src="' +
+                            data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
+                            mid + '" href="//space.bilibili.com/' +
+                            mid + '" target="_blank" class="' +
+                            (data.data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + data.data.card.name + '</a> ' +
+                            data.data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
+                            data.data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
+                    }
+                    catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("弹幕反查", ...e)}
+                })
+            })
         }
     }
 
@@ -2827,7 +2960,8 @@
             history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"],
             xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
             electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"],
-            panel : ["最后一帧", "使视频播放结束后画面停留在最后一帧，不再展示功能窗口"]
+            panel : ["最后一帧", "使视频播放结束后画面停留在最后一帧，不再展示功能窗口"],
+            midcrc : ["弹幕反查" , "在旧版播放器弹幕列表上右键将显示发送者信息，鼠标移动到发送者名字上展示详细信息页<br>※原理是通过crc哈希值暴力逆推出mid，再通过mid获取发送者信息，由于哈希函数特性二者不一定一一对应，所以结果仅供参考<br>※不支持嵌入式旧版播放器<br>※修复弹幕排序后由于无法获取哈希值故无法查询<br>※出错时说明逆推出的mid不正确，但不出错也不代表一定正确"]
         }
     }
 
@@ -2966,7 +3100,7 @@
                 deliver.setMediaList.init(ml);
             }
             // 新版稍后再看跳转到旧版稍后再看
-            if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); // 重定向稍后再看
+            if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); 
         },
         // 静态av
         svideo : () => {
@@ -3052,6 +3186,8 @@
     deliver.setGlobalStyle();
     // 启用xhr hook
     intercept.init();
+    // 启用弹幕哈希引擎
+    if (window.self == window.top && config.reset.midcrc) window.midcrc = new BiliBili_midcrc();
     // DOM修改监听调用
     document.addEventListener("DOMNodeInserted",(msg) => {
         // 去除预览提示框
@@ -3081,6 +3217,8 @@
         if (/bilibili-player-electric-panel-jump/.test(msg.relatedNode.className)) deliver.electricPanelJump(msg.relatedNode);
         // 修复分区排行
         if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") deliver.fixrank(msg.target);
+        // 弹幕哈希反查
+        if (/danmaku-info-row/.test(msg.target.className)) deliver.danmkuHashId(msg.target);
         // 其他节点监听
         deliver.resetNodes();
         // 收藏页切p监听
