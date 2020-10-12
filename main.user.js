@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.6.0
+// @version      3.6.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -709,7 +709,7 @@
                             }
                             //将弹幕转换为旧格式
                             Segments = Segments.map(function (v) {
-                                 // 记录弹幕池哈希值
+                                // 记录弹幕池哈希值
                                 hash.push(v.midHash);
                                 return {
                                     class: 0,
@@ -782,7 +782,7 @@
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.recommend(this)});
                 }
                 // 修改直播数据
-                if (url.includes('api.live.bilibili.com/xlive/web-room/v1/index/getRoomPlayInfo')) {
+                if (url.includes('api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo')) {
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.getRoomPlayInfo(this)});
                 }
                 // 修改播放器通知
@@ -1012,7 +1012,7 @@
                 if (response.data) {
                     response.data.live_status = 0;
                     response.data.live_time = -1;
-                    response.data.play_url = null;
+                    response.data.playurl_info = null;
                 }
                 hook.push(response);
                 debug.debug("XHR重定向", "拦截直播媒体", hook);
@@ -1551,7 +1551,7 @@
             if (config.reset.like) csss = csss + API.style.like;
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(csss));
-            setTimeout(() =>document.head.appendChild(style));
+            setTimeout(() => {if (document.head) document.head.appendChild(style)});
         },
         // 播放器调试通知
         debug : (...msg) => {
