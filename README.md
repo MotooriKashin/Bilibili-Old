@@ -1,6 +1,6 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 85](https://img.shields.io/badge/Google_Chrome_85-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 86](https://img.shields.io/badge/Google_Chrome_86-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式切换到原生旧版页面
 - 默认启用了部分附加功能，可在设置中选择关闭
 - 与部分脚本及扩展不兼容，详见兼容数据条目
@@ -41,6 +41,7 @@
    + 添加 旧版播放器支持新版弹幕
    + 添加 历史记录只显示视频播放历史功能
    + 修复 旧版播放器实时弹幕
+   + 添加 查询弹幕发送者功能
 
 ---
 ### 效果预览
@@ -57,7 +58,7 @@
 ### 下载视频
 ![dash](https://i.loli.net/2020/08/16/Y4GzOdmqtZshH3b.png)  
 播放器画面上右键选择下载视频就会出现如图所示下载面板，右键选择保存为即可。  
-**脚本只提供下载链接，不负责下载**，那样太消耗内存，容易导致浏览器崩溃  
+**脚本只提供下载链接，不负责下载。**  
 下面是附加说明：
    - 不要直接左键点击，因为浏览器同源策略左键并不会调用下载。
    - 不要直接复制链接，因为B站防盗链会检查`refer`和`user agent`，如果实在要复制，请配置`refer`为B站域名（*.bilibili.com）且设置任意有效的`user agent`。
@@ -78,13 +79,14 @@
 5. 替换嵌入播放器后顶层页面对于播放器的控制将失效，脚本也无暇去一一适配，不过涉及的页面也不多，已知的只有拜年祭2020专题页面。
 6. 收藏列表的播放页面并不存在对应的旧版，脚本使用重定向到av页并载入稍后再看列表进行模拟，但并不完美，请尽量不要在播放列表太大时启用。已知稍后再看列表上限是100，用来模拟容量为999的收藏列表极为卡顿。
 7. 恢复评论楼层号时一并添加了楼中楼的楼层号，当楼中楼的当前页码大于2且第一条评论是@回复别人时，那页楼中楼的所有评论楼层号将无法获取。
-8. **页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。部分功能由于脚本无法在浏览器读取缓存前注入而失效，同样只能靠硬刷新缓解**。
+8. 查询弹幕发送者功能是通过哈希反推(详见参考致谢相关链接)，存在哈希碰撞的可能性，所以结果未必可靠。
+9. **页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。部分功能由于脚本无法在浏览器读取缓存前注入而失效，同样只能靠硬刷新缓解**。
 
 ---
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> Google Chrome 85.0.4183.121 (正式版本) （64 位） (cohort: Stable)  
+> 86.0.4240.75 (正式版本) （64 位） (cohort: 86_Win_75)  
 > Tampermonkey BETA 4.10.6120
 >
 
@@ -113,8 +115,6 @@
 - [smoothscroll](http://iamdustan.com/smoothscroll/)：平滑滚动失效
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：正常
 - [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：正常
-- [Bilibili - Whose Bullets](https://greasyfork.org/zh-CN/scripts/40341)：正常
-
 - [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：正常
 
 ---
@@ -132,7 +132,7 @@
 
 ---
 ### 参考致谢
-- [protobuf (License: BSD 3-Clause)](https://github.com/protobufjs/protobuf.js)：protobuf.js库
+- [protobuf](https://github.com/protobufjs/protobuf.js)：protobuf.js库（BSD 3-Clause许可）
 - [Wayback Machine](https://archive.org/web/)：B站旧版网页源代码
 - [indefined](https://github.com/indefined/)：脚本原型及指导
 - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：第三方数据接口
@@ -144,9 +144,13 @@
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl接口参考
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
 - [MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)：md5哈希算法
+- [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
+- [esterTion](https://github.com/esterTion/BiliBili_crc2mid)：弹幕哈希反查JavaScript源码（GFUL许可）
 
 ---
 ### 版本历史
+- 2020-10-12
+   + 添加查询弹幕发送者信息的功能
 - 2020-10-11
    + 修复Bangumi番剧推荐
    + 对于非APP限制的区域限制Bangumi不再强制获取flv格式
