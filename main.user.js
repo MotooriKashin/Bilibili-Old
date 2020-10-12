@@ -68,7 +68,10 @@
             history : 0,
             electric : 0,
             panel : 0,
-            midcrc : 0
+            midcrc : 0,
+            viewbofqi : 0,
+            widescreen : 0,
+            danmakuoff : 0
         }
     }
 
@@ -1860,6 +1863,17 @@
                 let data = await xhr.true(deliver.obj2search(API.url.listso, {oid : cid}));
                 data.match(/d p=".+?"/g).forEach((v) => {hash.push(v.split(",")[6])});
             }
+            setTimeout(()=>{
+                if (config.reset.viewbofqi && document.querySelector("#bofqi")) document.querySelector("#bofqi").scrollIntoView({behavior: 'smooth', block: 'center'});
+                if (config.reset.widescreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff")) {
+                    document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen").click();
+                }
+                if (config.reset.danmakuoff && !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off")) {
+                    if (document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")) {
+                        document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click();
+                    }
+                }
+            });
         },
         // 付费预览
         removePreview : async (node) => {
@@ -2961,7 +2975,10 @@
             xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
             electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"],
             panel : ["最后一帧", "使视频播放结束后画面停留在最后一帧，不再展示功能窗口"],
-            midcrc : ["弹幕反查" , "在旧版播放器弹幕列表上右键将显示发送者信息，鼠标移动到发送者名字上展示详细信息页<br>※原理是通过crc哈希值暴力逆推出mid，再通过mid获取发送者信息，由于哈希函数特性二者不一定一一对应，所以结果仅供参考<br>※不支持嵌入式旧版播放器<br>※修复弹幕排序后由于无法获取哈希值故无法查询<br>※出错时说明逆推出的mid不正确，但不出错也不代表一定正确"]
+            midcrc : ["弹幕反查" , "在旧版播放器弹幕列表上右键将显示发送者信息，鼠标移动到发送者名字上展示详细信息页<br>※原理是通过crc哈希值暴力逆推出mid，再通过mid获取发送者信息，由于哈希函数特性二者不一定一一对应，所以结果仅供参考<br>※不支持嵌入式旧版播放器<br>※修复弹幕排序后由于无法获取哈希值故无法查询<br>※出错时说明逆推出的mid不正确，但不出错也不代表一定正确"],
+            viewbofqi : ["播放居中", "自动滚动到播放器，使播放器位于网页可视区域正中"],
+            widescreen : ["自动宽屏", "默认启用网页宽屏"],
+            danmakuoff : ["关闭弹幕", "默认关闭弹幕，开启后切p也会主动关闭弹幕"]
         }
     }
 
@@ -3100,7 +3117,7 @@
                 deliver.setMediaList.init(ml);
             }
             // 新版稍后再看跳转到旧版稍后再看
-            if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); 
+            if (LOCATION[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
         },
         // 静态av
         svideo : () => {
