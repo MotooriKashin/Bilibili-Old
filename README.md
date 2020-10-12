@@ -114,8 +114,6 @@
 - [IDM Integration Module](http://www.internetdownloadmanager.com)：下载浮动条失效
 - [smoothscroll](http://iamdustan.com/smoothscroll/)：平滑滚动失效
 - [Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)：正常
-- [Bilibili直播间挂机助手3](https://github.com/SeaLoong/Bilibili-LRHH)：正常
-- [pakku.js](https://chrome.google.com/webstore/detail/jklfcpboamajpiikgkbjcnnnnooefbhh)：正常
 
 ---
 ### 隐私相关
