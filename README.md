@@ -55,7 +55,7 @@
 ### 关于设置
 - 设置入口在页面右下角2-3厘米处贴边，鼠标移动到位置会自动浮现，点击即可出现设置面板。
 - 所有设置选项可通过对应按钮选择启用还是关闭，鼠标移动到对应选项会出现简短提示。
-- 大部分设置都不会及时生效，需要刷新页面，部分设置之间可能相互依赖。
+- 大部分设置都不会即时生效，需要刷新页面，部分设置之间可能相互依赖。
 - 如果实在不会操作，[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif "设置参考示例") 应该能解决一些问题。
 
 ---
@@ -129,7 +129,7 @@
 - 脚本申请了`GM_xmlhttpRequest`跨域权限，`@connect`元数据如下
    - [BiliPlus](https://www.biliplus.com/)：获取失效视频信息
    - [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
-   - [mcbbs.net](www.mcbbs.net)：授权登录接口
+   - [mcbbs](https://www.mcbbs.net)：授权登录接口
    - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
 - 脚本引用了部分公开库
    - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
