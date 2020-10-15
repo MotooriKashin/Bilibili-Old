@@ -2881,8 +2881,6 @@
                     setTimeout(() => {page.remove()},3000);
                     GM_setValue("access_key", data.access_key);
                     GM_setValue("access_date", Date.now());
-                    debug.log(data.access_key, GM_getValue("access_key"));
-
                 }
                 catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e)}
             }
@@ -3124,7 +3122,7 @@
                     let obj = deliver.search2obj(location.href),
                         season_type = obj.season_type || "",
                         player_type = obj.player_type || "";
-                    aid = 1 * obj.aid || deliver.convertId(obj.aid) || deliver.convertId(obj.bvid);
+                    aid = 1 * obj.aid || (obj.aid ? deliver.convertId(obj.aid) : undefined) || (obj.bvid ? deliver.convertId(obj.bvid) : undefined);
                     cid = obj.cid || "";
                     try {
                         cid = cid || deliver.xhrJsonCheck(xhr.false(deliver.obj2search(API.url.pagelist,{"aid" : aid}))).data[0].cid
