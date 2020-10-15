@@ -751,8 +751,6 @@
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 let _url = url, hook = [_url, ""];
                 let obj = deliver.search2obj(url);
-                // 拦截跟踪日志
-                if (url.includes('data.bilibili.com/log/web')) return open.call(this, "", null, ...rest);
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
                     url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
@@ -809,7 +807,7 @@
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
-                    pgc = url.includes("pgc") ? true : false;;
+                    pgc = url.includes("pgc") ? true : false;
                     if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
