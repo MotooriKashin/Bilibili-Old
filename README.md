@@ -16,6 +16,7 @@
    + 2020年07月29日：启用新播放器加载图
    + 2020年08月25日：旧版番剧信息被风控
    + 2020年09月23日：启用新版播放器弹幕叠加层
+   + 2020年10月14日：重定向排行榜页面
 
 ---
 ### 脚本实现
@@ -27,6 +28,7 @@
    + 播单：[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")、[detail](https://www.bilibili.com/playlist/detail/pl769 "bilibili moe 2018 日本动画场应援")
    + 收藏：[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
    + 嵌入：[blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视")、[campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘")、[biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传")、[moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")、[mylist](https://www.bilibili.com/mylist4#4 "各种神弹幕")
+   + 排行：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
 - 修改 (部分需在设置里启用)
    + 替换 全局顶栏和底栏
    + 启用 av并在进入BV时跳转到av
@@ -127,6 +129,7 @@
 - 脚本申请了`GM_xmlhttpRequest`跨域权限，`@connect`元数据如下
    - [BiliPlus](https://www.biliplus.com/)：获取失效视频信息
    - [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
+   - [mcbbs.net](www.mcbbs.net)：授权登录接口
    - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
 - 脚本引用了部分公开库
    - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
@@ -142,7 +145,7 @@
 - [Bilibili番剧显示单集信息](https://greasyfork.org/scripts/37970)：番剧分集信息接口
 - [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：兼容问题启发及部分实现参考
 - [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)：playurl接口算法
-- [解除B站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl接口参考
+- [解除B站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl接口参考、授权登录接口
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
 - [MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)：md5哈希算法
 - [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
@@ -150,6 +153,9 @@
 
 ---
 ### 版本历史
+- 2020-10-15
+   + 重写排行榜页面
+   + 初步引入大会员授权功能以支持大会员的区域限制番剧(未完全测试)
 - 2020-10-13
    + 修复因接口改版而失效的直播流拦截功能
    + 对于空白子页面不再写入全局样式
