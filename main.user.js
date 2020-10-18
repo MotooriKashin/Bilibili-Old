@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.6.2
+// @version      3.6.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -94,7 +94,7 @@
         // 样式表
         style : {
             playshadow : "#bilibiliPlayer, #bofqi.mini-player {box-shadow : 0px 2px 8px 0px rgba(0,160,216,0.3) !important;}",
-            download : "#bili-old-download-table {position : fixed;z-index : 3300;bottom : 0;background : #f6f6f6;width : 100%;text-align : center;}#bili-old-download-table .download-box {background-color : #fff;color : #000 !important;border : #ccc 1px solid;border-radius : 3px;display : inline-block;margin : 3px;}.download-mp4 {color : #fff !important;background-color : #c0f;background-image : linear-gradient(to right, #c0f, #90f);}.download-avc {color : #fff !important;background-color : #f00;background-image : linear-gradient(to right, #f00, #c00);}.download-hev {color : #fff !important;background-color : #ffe42b;background-image : linear-gradient(to right, #ffe42b, #dfb200);}.download-aac {color : #fff !important;background-color : #0d0;background-image : linear-gradient(to right, #0d0, #0a0);}.download-flv {color : #fff !important;background-color : #f90;background-image : linear-gradient(to right, #f90, #d70);}.download-type {color : #000 !important;display : table-cell;min-width : 1.5em;padding : 1px 3px;text-align : center;vertical-align : middle;}#bili-old-download-table a {display : table-cell;padding : 3px;text-decoration : none;}.quality-high {background-color : #c0f;}.quality-1080p {background-color : #f00;}.quality-720p {background-color : #f90;}.quality-480p {background-color : #00d;}.quality-360p {background-color : #0d0;}.download-quality {color : #fff !important;padding : 1px 3px;text-align : center;}.download-size {font-size : 90%;margin-top : 2px;padding : 1px 3px;text-align : center;}",
+            download : "#bili-old-download-table {position : fixed;z-index : 3300;bottom : 0;background : #f6f6f6;width : 100%;text-align : center;}#bili-old-download-table .download-box {background-color : #fff;color : #000 !important;border : #ccc 1px solid;border-radius : 3px;display : inline-block;margin : 3px;}.download-mp4 {color : #fff !important;background-color : #c0f;background-image : linear-gradient(to right, #c0f, #90f);}.download-avc {color : #fff !important;background-color : #f00;background-image : linear-gradient(to right, #f00, #c00);}.download-hev {color : #fff !important;background-color : #ffe42b;background-image : linear-gradient(to right, #ffe42b, #dfb200);}.download-aac {color : #fff !important;background-color : #0d0;background-image : linear-gradient(to right, #0d0, #0a0);}.download-flv {color : #fff !important;background-color : #f90;background-image : linear-gradient(to right, #f90, #d70);}.download-type {color : #000 !important;display : table-cell;min-width : 1.5em;padding : 1px 3px;text-align : center;vertical-align : middle;}#bili-old-download-table a {display : table-cell;padding : 3px;text-decoration : none;}.quality-tops {background-color : #ffff00;}.quality-top {background-color : #ffe42b;}.quality-highs {background-color : #f5f;}.quality-high {background-color : #c0f;}.quality-1080ps {background-color : #f00;}.quality-1080p {background-color : #d00;}.quality-720p {background-color : #f90;}.quality-480p {background-color : #00d;}.quality-360p {background-color : #0d0;}.download-quality {color : #fff !important;padding : 1px 3px;text-align : center;}.download-size {font-size : 90%;margin-top : 2px;padding : 1px 3px;text-align : center;}",
             jointime : ".user .info .meta .row {height : 88px;white-space : normal;}.user .info .jointime .icon {background-position : -209px -84px;}.user .info .jointime .text {color : #00a1d6;}}",
             online : ".online a {color : rgb(109, 117, 122);}.popularize-module .online em {display : inline-block;height : 10px;line-height : 10px;vertical-align : top;border-left : 1px solid rgb(184, 192, 204);margin : 12px 15px 0px;}",
             search : ".search-wrap .search-block .input-wrap input {font : 400 13.3333px Arial !important;}",
@@ -800,10 +800,9 @@
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
-                    if (!url.includes("fourk") && !url.includes("sign")) {
-                        url = url.replace("playurl?", "playurl?fourk=1&");
-                        debug.debug("XHR重定向", "添加4K参数", [_url, url]);
-                    }
+                    obj.fourk = obj.sign ? "" : 1;
+                    obj.fnval = obj.fnval ? 80 : "";
+                    url = deliver.obj2search(url.split("?")[0], obj);
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
                     bvid = obj.bvid || deliver.convertId(aid) || bvid;
@@ -1667,12 +1666,13 @@
             // 配置下载数据
             setTable : async () => {
                 debug.msg("正在获取视频链接", ">>>");
-                let qua = {120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
+                let qua = {125 : "HDR", 120 : "4K", 116 : "1080P60", 112 : "1080P+", 80 : "1080P", 74 : "720P60", 64 : "720P", 48 : "720P", 32 : "480P", 16 : "360P"};
                 let bps = {30216 : "64kbps", 30232 : "128kbps", 30280 : "320kbps"}
                 let path = __playinfo__ ? (__playinfo__.data || (__playinfo__.durl && __playinfo__) || __playinfo__.result) : "";
                 try {
                     url = url ? url : ((path && path.durl) ? [await deliver.download.geturl()] : await Promise.all([deliver.download.geturl(), deliver.download.geturl("flv")]));
                     if (url[1]) {
+                        mdf.flvq = url[1].quality || (url[1].data ? url[1].data.quality : (url[1].result ? url[1].result.quality : ""));
                         if (__playinfo__) path.durl = url[1].durl || (url[1].data ? url[1].data.durl : (url[1].result ? url[1].result.durl : ""));
                         else path = url[1].data || (url[1].durl && url[1]) || url[1].result;
                     }
@@ -1695,7 +1695,7 @@
                             }
                             else {
                                 mdf.flv = [];
-                                for (let i = 0; i < path.durl.length; i++) mdf.flv.push([qua[path.quality], path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size)]);
+                                for (let i = 0; i < path.durl.length; i++) mdf.flv.push([qua[mdf.flvq || path.quality], path.durl[i].url.replace("http:", ""), deliver.sizeFormat(path.durl[i].size)]);
                             }
                         }
                         // 获取DASH
@@ -1818,6 +1818,11 @@
                     let qua = quatily;
                     for (let i = 0; i < obj.length; i++) {
                         switch (qua || obj[i][0]) {
+                            case "HDR" : quatily = "quality-tops"; break;
+                            case "4K" : quatily = "quality-top"; break;
+                            case "1080P60" : quatily = "quality-highs"; break;
+                            case "720P60" : quatily = "quality-high"; break;
+                            case "1080P+" : quatily = "quality-1080ps"; break;
                             case "1080P" : quatily = "quality-1080p"; break;
                             case "720P" : quatily = "quality-720p"; break;
                             case "480P" : quatily = "quality-480p"; break;
@@ -2105,8 +2110,7 @@
                         if (!unsafeWindow.BilibiliPlayer) return;
                         clearInterval(timer);
                         if (__playinfo__.data.accept_quality[0] < 120) return;
-                        let e = "cid=" + unsafeWindow.cid + "&aid=" + unsafeWindow.aid;
-                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload(e);
+                        unsafeWindow.GrayManager && unsafeWindow.GrayManager.reload && unsafeWindow.GrayManager.reload("cid=" + cid + "&pre_ad=0&aid=" + aid);
                         unsafeWindow.BiliCm && unsafeWindow.BiliCm.Core && unsafeWindow.BiliCm.Core.reset();
                     },100)
                     return;
