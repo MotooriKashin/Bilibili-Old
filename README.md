@@ -29,7 +29,7 @@
    + 收藏：[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
    + 嵌入：[blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视")、[campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘")、[biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传")、[moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")、[mylist](https://www.bilibili.com/mylist4#4 "各种神弹幕")
    + 排行：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
-- 修改 (部分需在设置里启用)
+- 修改 (部分请在设置里启用)
    + 替换 全局顶栏和底栏
    + 启用 av并在进入BV时跳转到av
    + 添加 显示番剧分集播放数和弹幕数
@@ -45,7 +45,9 @@
    + 修复 旧版播放器实时弹幕
    + 添加 解除区域/APP限制功能
    + 添加 查询弹幕发送者功能
-   + 添加 添加自动滚动到播放器/自动关闭弹幕/自动宽屏功能
+   + 添加 自动滚动到播放器功能
+   + 添加 自动关闭弹幕功能
+   + 添加 自动宽屏功能
 
 ---
 ### 效果预览
@@ -86,7 +88,8 @@
 8. 恢复评论楼层号时一并添加了楼中楼的楼层号，当楼中楼的当前页码大于2且第一条评论是@回复别人时，那页楼中楼的所有评论楼层号将无法获取。
 9. 查询弹幕发送者功能是通过哈希反推(详见参考致谢相关链接)，存在哈希碰撞的可能性，所以结果未必可靠。
 10. 10月港澳台新番为生肉+CC字幕形式，虽然尝试解除了区域+APP限制，要正常体验还请务必安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)以载入字幕。另外本脚本“解除限制”暂只支持非会员番剧，有更专业的脚本后请务必关闭。
-11. **页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。部分功能由于脚本无法在浏览器读取缓存前注入而失效，同样只能靠硬刷新缓解**。
+11. 旧版弹幕默认接口已获取不到90分钟以后的弹幕数据，对于时长大于90分钟的电影等视频，会出现90分钟以后无弹幕的情况，只能在设置里启用“新版弹幕”解决。另外旧版实时弹幕也已失效，同样可在设置里启用“实时弹幕”加以修复。
+12. **页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。部分功能由于脚本无法在浏览器读取缓存前注入而失效，同样只能靠硬刷新缓解**。
 
 ---
 ### 兼容数据
