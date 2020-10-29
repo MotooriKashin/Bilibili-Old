@@ -17,6 +17,7 @@
    + 2020年08月25日：旧版番剧信息被风控
    + 2020年09月23日：启用新版播放器弹幕叠加层
    + 2020年10月14日：重定向排行榜页面
+   + 2020年10月27日：去除评论区小页码区
 
 ---
 ### 脚本实现
@@ -95,7 +96,7 @@
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> 86.0.4240.75 (正式版本) （64 位） (cohort: 86_Win_75)  
+> 86.0.4240.111 (正式版本) （64 位） (cohort: Stable)  
 > Tampermonkey BETA 4.10.6120
 >
 
@@ -135,6 +136,8 @@
    - [Bilibilijj](https://www.jijidown.com/)：获取失效视频信息
    - [mcbbs](https://www.mcbbs.net)：授权登录接口
    - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
+- 脚本申请了`GM_getResourceURL`跨域权限，`@resource`元数据如下
+   - [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/bilibili/js-css/comment.min.js)：旧版B站原生评论区相关脚本，用于修复新版评论丢失的小页码区，只在重写的旧版页面生效
 - 脚本引用了部分公开库
    - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
 
@@ -157,6 +160,8 @@
 
 ---
 ### 版本历史
+- 2020-10-29
+   + 修复旧版页面评论区的的小页码区，用的是旧版评论相关脚本，不负责非重写页面的评论区(如动态等)
 - 2020-10-18
    + 旧版播放器支持HDR视频（需要浏览器支持）
    + 为美观下载面板中视频外的部分内容需额外在设置中开启下载
