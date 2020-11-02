@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.6.4
+// @version      3.6.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -357,7 +357,7 @@
                     dat.mediaInfo.total_ep = ini.epList.length;
                     dat.mediaRating = ini.mediaInfo.rating;
                     dat.epList = [];
-                    for (let i = 0; i < ini.sections.length; i++) for (let j = 0; j < ini.sections[i].epList.length; j++) ini.epList.push(ini.sections[i].epList[j]);
+                    for (let i = 0; i < ini.sections.length; i++) ini.epList.push(...ini.sections[i].epList);
                     if (ep == 0) dat.epId = (ini.epList[0] && ini.epList[0].id) || "";
                     for (let i = 0; i < ini.epList.length; i++) {
                         dat.epList[i] = {};
@@ -986,6 +986,7 @@
             try {
                 hook.push(deliver.xhrJsonCheck(obj.responseText));
                 let response = deliver.xhrJsonCheck(obj.responseText);
+                for (let i = 0; i < response.result.section.length; i++) response.result.episodes.push(...response.result.section[i].episodes);
                 for (let i = 0; i < response.result.episodes.length; i++){
                     response.result.episodes[i].ep_id = response.result.episodes[i].id;
                     response.result.episodes[i].episode_status = response.result.episodes[i].status;
@@ -1088,7 +1089,7 @@
         playinfo : (obj) => {
             try {
                 if (!obj.response) throw obj;
-                __playinfo__ = typeof obj.response == "object" ? obj.response : deliver.xhrJsonCheck(obj.response, true);
+                __playinfo__ = typeof obj.response == "object" ? obj.response : deliver.xhrJsonCheck(obj.response);
                 // 刷新下载面板
                 if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
             }
