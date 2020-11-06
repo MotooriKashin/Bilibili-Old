@@ -196,7 +196,51 @@ const debug = {
     debug : (...msg) => console.debug("[" + timeFormat(new Date()) + "]", "[Bilibili Old]", ...msg),
     msg : (...msg) => message(...msg)
 }
-
+const xhr = {
+    // 同步方法
+    'false' : (url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, false);
+        xhr.withCredentials = true;
+        xhr.send(null);
+        return xhr.responseText;
+    },
+    // 异步方法
+    'true' : (url) => {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open('get', url, true);
+            xhr.withCredentials = true;
+            xhr.onload = () => resolve(xhr.response);
+            xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+            xhr.send();
+        });
+    },
+    // 跨域方法
+    GM : (url) => {
+        return new Promise((resolve, reject) => {
+            BLOD.xmlHttpRequest({
+                method    : "GET",
+                url       : url,
+                onload    : (xhr) => resolve(xhr.responseText),
+                onerror   : (xhr) => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT"),
+            });
+        })
+    },
+    // 表单方法
+    post : (url, header, data) => {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            header = header ? header : "application/x-www-form-urlencoded";
+            xhr.open('post', url, true);
+            xhr.setRequestHeader("Content-type", header);
+            xhr.withCredentials = true;
+            xhr.onload = () => resolve(xhr.response);
+            xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+            xhr.send(data);
+        });
+    }
+}
 // 暴露接口
 BLOD.timeFormat = timeFormat;
 BLOD.sizeFormat = sizeFormat;
@@ -213,3 +257,4 @@ BLOD.addCss = addCss;
 BLOD.jsonCheck = jsonCheck;
 BLOD.write = write;
 BLOD.debug = debug;
+BLOD.xhr = xhr;
