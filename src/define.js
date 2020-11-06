@@ -43,7 +43,6 @@ const unitFormat = (num) => {
 // 冒泡排序
 const bubbleSort = (arr) => {
     let temp=[];
-    rev = rev ? true : false;
     for (let i = 0; i < arr.length - 1; i++) {
         let bool = true;
         for (let j = 0; j < arr.length - 1 - i; j++) {
@@ -180,7 +179,7 @@ const tryModule = (name, callback) => {
     }
 }
 // 播放器通知
-const message = () => {
+const message = (...msg) => {
     let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
         if (!node) {
             debug.log(...msg);
