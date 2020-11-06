@@ -1,5 +1,7 @@
 // module "__INITIAL_STATE__.js"
 
+const BLOD = window.BLOD;
+
 const iniState = {
     av : (date) => {
         BLOD.try("__INITIAL_STATE__·av", () => {
