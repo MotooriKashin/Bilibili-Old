@@ -203,7 +203,7 @@ const xhr = {
         xhr.open('GET', url, false);
         xhr.withCredentials = true;
         xhr.send(null);
-        return xhr.responseText;
+        return xhr;
     },
     // 异步方法
     'true' : (url) => {
@@ -211,7 +211,7 @@ const xhr = {
             let xhr = new XMLHttpRequest();
             xhr.open('get', url, true);
             xhr.withCredentials = true;
-            xhr.onload = () => resolve(xhr.response);
+            xhr.onload = () => resolve(xhr);
             xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
             xhr.send();
         });
@@ -222,7 +222,7 @@ const xhr = {
             BLOD.xmlHttpRequest({
                 method    : "GET",
                 url       : url,
-                onload    : (xhr) => resolve(xhr.responseText),
+                onload    : (xhr) => resolve(xhr),
                 onerror   : (xhr) => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT"),
             });
         })
@@ -235,7 +235,7 @@ const xhr = {
             xhr.open('post', url, true);
             xhr.setRequestHeader("Content-type", header);
             xhr.withCredentials = true;
-            xhr.onload = () => resolve(xhr.response);
+            xhr.onload = () => resolve(xhr);
             xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
             xhr.send(data);
         });
