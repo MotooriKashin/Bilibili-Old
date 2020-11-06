@@ -172,6 +172,13 @@ const write = (html) => {
     document.write(html);
     document.close();
 }
+const tryModule = (name, callback) => {
+    try {
+        callback();
+    } catch(e) {
+        e = Array.isArray(e) ? e : [e]; debug.error(name, ...e)
+    }
+}
 // 播放器通知
 const message = () => {
     let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
@@ -256,5 +263,6 @@ BLOD.toXml = toXml;
 BLOD.addCss = addCss;
 BLOD.jsonCheck = jsonCheck;
 BLOD.write = write;
+BLOD.try = tryModule;
 BLOD.debug = debug;
 BLOD.xhr = xhr;
