@@ -5,7 +5,7 @@ const debug = BLOD.debug;
 const config = BLOD.config;
 const LOCATION = document.location.href.split('/');
 const rewrite = {
-    av: () => {
+    av: async () => {
         BLOD.path.name = "av";
         BLOD.ml = await BLOD.getValue("medialist");
         BLOD.deleteValue("medialist");
@@ -29,7 +29,7 @@ const rewrite = {
             document.title = BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
         } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·av/BV", ...e) }
     },
-    watchlater: () => {
+    watchlater: async () => {
         BLOD.path.name = "watchlater";
         try {
             if (!config.rewrite.watchlater) throw ["未启用旧版稍后再看", location.href];
@@ -45,7 +45,7 @@ const rewrite = {
             }
         } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·稍后再看", ...e) }
     },
-    bangumi: () => {
+    bangumi: async () => {
         BLOD.path.name = "bangumi";
         try {
             if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
@@ -72,7 +72,7 @@ const rewrite = {
 
         } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·Bangumi", ...e) }
     },
-    blackboard: () => {
+    blackboard: async () => {
         BLOD.path.name = "blackboard";
         if (BLOD.path[4].startsWith('html5player')) {
             if (BLOD.path[4].includes("3521416") && BLOD.path[4].includes("6041635")) {
@@ -98,7 +98,7 @@ const rewrite = {
             }
         } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·嵌入", ...e) }
     },
-    playlist: () => {
+    playlist: async () => {
         BLOD.path.name = "playlist";
         if (BLOD.path[4] == "video") {
             BLOD.write(await BLOD.getResourceText("playlist"));
@@ -121,12 +121,12 @@ const rewrite = {
             BLOD.write(await BLOD.getResourceText("playlistdetail"));
         }
     },
-    s: () => {
+    s: async () => {
         BLOD.path.name = "s";
         if (!config.reset.static) return;
         location.replace(location.href.replace("s/video", "video"));
     },
-    home: () => {
+    home: async () => {
         try {
             if (!config.rewrite.home) throw ["未启用旧版主页", location.href];
             BLOD.path.name = "home";
