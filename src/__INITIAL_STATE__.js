@@ -20,6 +20,7 @@ const iniState = {
     bangumi : (data, epId) => {
         let ep = 0, ini = {}, pug = {}, mode;
         let dat = {"ver":{},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
+        BLOD.ids = [];
         if (data.startsWith("{")) {
             // DOCUMENT被404的备用数据源，无法获取播放进度信息，以ss进入默认选择第一p
             data = BLOD.jsonCheck(data).result;
@@ -59,7 +60,7 @@ const iniState = {
                 dat.epList[i].index = dat.epList[i].title;
                 dat.epList[i].index_title = dat.epList[i].long_title;
                 if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
-                if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) ids.push(dat.epList[i].cid);
+                if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) BLOD.ids.push(dat.epList[i].cid);
             }
             dat.newestEp = data.new_ep;
             dat.seasonList = data.seasons;
@@ -124,7 +125,7 @@ const iniState = {
                 dat.epList[i].section_type = 0;
                 dat.epList[i].vid = ini.epList[i].vid;
                 if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
-                if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) ids.push(dat.epList[i].cid);
+                if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) BLOD.ids.push(dat.epList[i].cid);
             }
             dat.newestEp = ini.mediaInfo.newestEp;
             dat.seasonList = [];
@@ -192,4 +193,5 @@ const iniState = {
         return dat;
     }
 }
+
 BLOD.iniState = iniState;
