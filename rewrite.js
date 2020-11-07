@@ -104,6 +104,7 @@ const rewrite = {
     playlist: async () => {
         BLOD.path.name = "playlist";
         if (BLOD.path[4] == "video") {
+            BLOD.write("");
             BLOD.write(await BLOD.getResourceText("playlist"));
         }
         if (BLOD.path[4] == "detail") {
