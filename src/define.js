@@ -167,6 +167,7 @@ const jsonCheck = (data, toast) => {
 }
 // 重写页面
 const write = (html) => {
+    window.stop();
     document.open();
     document.write(html);
     document.close();
