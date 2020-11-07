@@ -72,4 +72,4 @@ async function setTable(table, name, check, key) {
     if (check) setTable.children[1].checked = true;
     table.appendChild(setTable);
 }
-ui();
+if (window.self == window.top) ui();
