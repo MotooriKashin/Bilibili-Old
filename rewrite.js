@@ -137,7 +137,7 @@ const rewrite = {
             else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
             await import(await BLOD.getResourceUrl("__INITIAL_STATE__"));
             window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__ = BLOD.iniState.home(BLOD.__INITIAL_STATE__);
-            BLOD.write(API.pageframe.home);
+            BLOD.write(await BLOD.getResourceText("index"));
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·主页", ...e) }
     }
