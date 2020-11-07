@@ -25,6 +25,7 @@ const rewrite = {
             BLOD.aid = BLOD.__INITIAL_STATE__.aid ? BLOD.__INITIAL_STATE__.aid : BLOD.aid;
             BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
             window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
+            BLOD.write("");
             BLOD.write(await BLOD.getResourceText("av"));
             document.title = BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
         } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·av/BV", ...e) }
@@ -34,6 +35,7 @@ const rewrite = {
         try {
             if (!config.rewrite.watchlater) throw ["未启用旧版稍后再看", location.href];
             if (!BLOD.uid) throw ["未登录", "无法启用旧版稍后再看"];
+            BLOD.write("");
             BLOD.write(await BLOD.getResourceText("watchlater"));
             if (LOCATION[5]) {
                 BLOD.aid = LOCATION[5].match(/[0-9]+/) ? LOCATION[5].match(/[0-9]+/)[0] : BLOD.aid;
@@ -65,6 +67,7 @@ const rewrite = {
             BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(page, id);
             if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
             window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
+            BLOD.write("");
             if (page.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(await BLOD.getResourceText("bangumi"));
             else BLOD.write(await BLOD.getResourceText("cinema"));
             document.title = page.match(/<title.*?>.+?<\/title>/) ?
@@ -118,6 +121,7 @@ const rewrite = {
                 BLOD.__INITIAL_STATE__ = JSON.parse(await BLOD.getResourceText("playlistjson"));
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
             }
+            BLOD.write("");
             BLOD.write(await BLOD.getResourceText("playlistdetail"));
         }
     },
@@ -137,6 +141,7 @@ const rewrite = {
             else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
             await import(await BLOD.getResourceUrl("__INITIAL_STATE__"));
             window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__ = BLOD.iniState.home(BLOD.__INITIAL_STATE__);
+            BLOD.write("");
             BLOD.write(await BLOD.getResourceText("index"));
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·主页", ...e) }
