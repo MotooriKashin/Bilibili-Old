@@ -16,7 +16,7 @@ const rewrite = {
         try {
             if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
             BLOD.aid = BLOD.aid || LOCATION[4].match(/[0-9]+/)[0];
-            let page = BLOD.BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid })).responseText;
+            let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid })).responseText;
             await import(await BLOD.getResourceUrl("__INITIAL_STATE__"));
             BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
             if (!BLOD.__INITIAL_STATE__) throw "av/BV号可能无效！";
@@ -50,7 +50,7 @@ const rewrite = {
         try {
             if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
             BLOD.pgc = true;
-            let page = BLOD.BLOD.xhr.false(location.href).responseText;
+            let page = BLOD.xhr.false(location.href).responseText;
             BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ?
                 JSON.parse(page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : "";
             if (!BLOD.__INITIAL_STATE__) {
@@ -88,7 +88,7 @@ const rewrite = {
                 BLOD.aid = 1 * obj.aid || (obj.aid ? BLOD.abv(obj.aid) : undefined) || (obj.bvid ? BLOD.abv(obj.bvid) : undefined);
                 BLOD.cid = obj.cid || "";
                 try {
-                    BLOD.cid = BLOD.cid || BLOD.jsonCheck(BLOD.BLOD.xhr.false(
+                    BLOD.cid = BLOD.cid || BLOD.jsonCheck(BLOD.xhr.false(
                         BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": BLOD.aid })).responseText).data[0].cid
                 }
                 catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·嵌入", ...e) }
@@ -107,7 +107,7 @@ const rewrite = {
             BLOD.__INITIAL_STATE__ = { mid: "", pid: "", plinfoData: {}, pllistData: {} }
             try {
                 let page = BLOD.jsonCheck(
-                    BLOD.BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/playlist/video/toview", { pid: BLOD.path[5].match(/[0-9]+/)[0] })).responseText).data;
+                    BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/playlist/video/toview", { pid: BLOD.path[5].match(/[0-9]+/)[0] })).responseText).data;
                 BLOD.__INITIAL_STATE__.mid = page.mid;
                 BLOD.__INITIAL_STATE__.pid = page.pid;
                 BLOD.__INITIAL_STATE__.plinfoData = { attr: page.attr, count: page.count, cover: page.cover, ctime: page.ctime, description: page.description, favored: page.favored, id: page.id, is_favorite: page.is_favorite, mid: page.mid, mtime: page.mtime, owner: page.owner, pid: page.pid, stat: page.stat, state: page.state, type: page.type, };
