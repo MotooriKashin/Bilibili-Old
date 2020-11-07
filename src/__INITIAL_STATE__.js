@@ -1,13 +1,14 @@
 // module "__INITIAL_STATE__.js"
 
 const BLOD = window.BLOD;
+const config = BLOD.config;
 
 const iniState = {
-    av : (data) => {
+    av: (data) => {
         data = BLOD.jsonCheck(data).data;
         BLOD.aid = BLOD.aid || data.View.aid;
         BLOD.cid = BLOD.cid || data.View.cid;
-        let dat = {aid:-1,comment:{count:0,list:[]},error:{},isClient:false,p:"",player:"",playurl:{},related:[],tags:[],upData:{},videoData:{}};
+        let dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
         dat.aid = data.View.aid;
         dat.related = data.Related;
         dat.tags = data.Tags;
@@ -17,15 +18,15 @@ const iniState = {
         dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + BLOD.cid + '&aid=' + BLOD.aid + '&pre_ad=")';
         return dat;
     },
-    bangumi : (data, epId) => {
+    bangumi: (data, epId) => {
         let ep = 0, ini = {}, pug = {}, mode;
-        let dat = {"ver":{},"loginInfo":{},"canReview":false,"userShortReview":{},"userLongReview":{},"userScore":0,"userCoined":false,"isPlayerTrigger":false,"area":0,"app":false,"mediaRating":{},"recomList":[],"playerRecomList":[],"paster":{},"payPack":{},"payMent":{},"activity":{},"spending":0,"sponsorTotal":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorWeek":{"code":0,"result":{"ep_bp":0,"users":0,"mine":{},"list":[]}},"sponsorTotalCount":0,"miniOn":true,"seasonFollowed":false,"epStat":{},"ssStat":{}};
+        let dat = { "ver": {}, "loginInfo": {}, "canReview": false, "userShortReview": {}, "userLongReview": {}, "userScore": 0, "userCoined": false, "isPlayerTrigger": false, "area": 0, "app": false, "mediaRating": {}, "recomList": [], "playerRecomList": [], "paster": {}, "payPack": {}, "payMent": {}, "activity": {}, "spending": 0, "sponsorTotal": { "code": 0, "result": { "ep_bp": 0, "users": 0, "mine": {}, "list": [] } }, "sponsorWeek": { "code": 0, "result": { "ep_bp": 0, "users": 0, "mine": {}, "list": [] } }, "sponsorTotalCount": 0, "miniOn": true, "seasonFollowed": false, "epStat": {}, "ssStat": {} };
         BLOD.ids = [];
         if (data.startsWith("{")) {
             // DOCUMENT被404的备用数据源，无法获取播放进度信息，以ss进入默认选择第一p
             data = BLOD.jsonCheck(data).result;
             dat.special = data.bkg_cover ? true : false;
-            if (epId) {dat.epId = 1 * epId; ep = 1;} else dat.epId = ""
+            if (epId) { dat.epId = 1 * epId; ep = 1; } else dat.epId = ""
             dat.ssId = data.season_id;
             dat.mdId = data.media_id;
             dat.mediaInfo = {};
@@ -59,7 +60,7 @@ const iniState = {
                 dat.epList[i].episode_status = dat.epList[i].status;
                 dat.epList[i].index = dat.epList[i].title;
                 dat.epList[i].index_title = dat.epList[i].long_title;
-                if(dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
+                if (dat.epList[i].ep_id == dat.epId) dat.epInfo = dat.epList[i];
                 if (dat.epList[i].badge == "会员" || dat.epList[i].badge_type) BLOD.ids.push(dat.epList[i].cid);
             }
             dat.newestEp = data.new_ep;
@@ -70,12 +71,12 @@ const iniState = {
         }
         else {
             // 正常DOCUMENT数据源，up组主数据可能无效，将指向uid=2(站长)
-            ini = JSON.parse(data.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/,"").replace(/;\(function/,""));
-            pug = JSON.parse(data.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/,"").replace(/<\/script>/,""));
+            ini = JSON.parse(data.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, ""));
+            pug = JSON.parse(data.match(/PGC_USERSTATE__=.+?<\/script>/)[0].replace(/PGC_USERSTATE__=/, "").replace(/<\/script>/, ""));
             dat.special = ini.mediaInfo.specialCover ? true : false;
             mode = dat.special ? 1 : 2;
-            if (epId) {dat.epId = 1 * epId; ep = 1;}
-            else {dat.epId = ""; if (pug.hasOwnProperty("progress")) {dat.epId = pug.progress.last_ep_id; ep = 1;}}
+            if (epId) { dat.epId = 1 * epId; ep = 1; }
+            else { dat.epId = ""; if (pug.hasOwnProperty("progress")) { dat.epId = pug.progress.last_ep_id; ep = 1; } }
             dat.ssId = ini.mediaInfo.ssId;
             dat.mdId = ini.mediaInfo.id;
             dat.mediaInfo = {};
@@ -136,17 +137,17 @@ const iniState = {
                 dat.seasonList[i].cover = ini.ssList[i].cover;
                 dat.seasonList[i].media_id = -1;
                 dat.seasonList[i].new_ep = {
-                    cover : ini.ssList[i].epCover,
-                    id : -1,
-                    index_show : ini.ssList[i].desc
+                    cover: ini.ssList[i].epCover,
+                    id: -1,
+                    index_show: ini.ssList[i].desc
                 };
                 dat.seasonList[i].season_id = ini.ssList[i].id;
                 dat.seasonList[i].season_title = ini.ssList[i].title;
                 dat.seasonList[i].season_type = ini.ssList[i].type;
                 dat.seasonList[i].stat = {
-                    danmaku : 0,
-                    follow : 0,
-                    view : 0
+                    danmaku: 0,
+                    follow: 0,
+                    view: 0
                 };
                 dat.seasonList[i].title = ini.ssList[i].title;
             }
@@ -170,26 +171,55 @@ const iniState = {
             dat.upInfo.is_vip = ini.mediaInfo.upInfo.isAnnualVip ? 1 : 0;
             dat.upInfo.mid = ini.mediaInfo.upInfo.mid;
             dat.upInfo.pendant = {
-                image : ini.mediaInfo.upInfo.pendantImage,
-                name : ini.mediaInfo.upInfo.pendantName,
-                pid : ini.mediaInfo.upInfo.pendantId
+                image: ini.mediaInfo.upInfo.pendantImage,
+                name: ini.mediaInfo.upInfo.pendantName,
+                pid: ini.mediaInfo.upInfo.pendantId
             };
             dat.upInfo.uname = ini.mediaInfo.upInfo.name;
             dat.upInfo.verify_type = 6;
-            if (dat.upInfo.mid < 1) dat.upInfo = {avatar : "//i0.hdslb.com/bfs/face/ef0457addb24141e15dfac6fbf45293ccf1e32ab.jpg", follower : 897603, is_vip : 1, mid : 2, pendant : {image : "", name : "", pid : 0}, uname : "碧诗", verify_type : 2}
+            if (dat.upInfo.mid < 1) dat.upInfo = { avatar: "//i0.hdslb.com/bfs/face/ef0457addb24141e15dfac6fbf45293ccf1e32ab.jpg", follower: 897603, is_vip: 1, mid: 2, pendant: { image: "", name: "", pid: 0 }, uname: "碧诗", verify_type: 2 }
         }
-        dat.seasonStat = {"views":0, "danmakus":0, "coins":0, "favorites":0};
-        dat.userStat = {"loaded":true, "error":false, "follow":0, "pay":0, "payPackPaid":0, "sponsor":0};
+        dat.seasonStat = { "views": 0, "danmakus": 0, "coins": 0, "favorites": 0 };
+        dat.userStat = { "loaded": true, "error": false, "follow": 0, "pay": 0, "payPackPaid": 0, "sponsor": 0 };
         dat.userStat.watchProgress = pug.progress;
         dat.userStat.vipInfo = pug.vip_info;
         if (pug.dialog || pug.pay == 1) {
-            dat.payMent = {"price":"0.0", "promotion":"", "tip":"大会员专享观看特权哦~"};
+            dat.payMent = { "price": "0.0", "promotion": "", "tip": "大会员专享观看特权哦~" };
             if (pug.dialog) {
                 dat.payMent.vip_promotion = pug.dialog.title;
                 if (pug.dialog.btn_left) dat.payMent.price = pug.dialog.btn_left.title.match(/[0-9]+/)[0];
             }
         }
-        if (dat.epInfo.index >= 0) {dat.special = false; dat.mediaInfo.bkg_cover = "";}
+        if (dat.epInfo.index >= 0) { dat.special = false; dat.mediaInfo.bkg_cover = ""; }
+        return dat;
+    },
+    home: (data) => {
+        let dat = {};
+        let ini = JSON.parse(data);
+        dat.recommendData = [];
+        for (let i = 0; i < ini.recommendList.length; i++) {
+            dat.recommendData[i] = {};
+            dat.recommendData[i].aid = ini.recommendList[i].aid;
+            dat.recommendData[i].typename = ini.recommendList[i].tname;
+            dat.recommendData[i].title = ini.recommendList[i].title;
+            dat.recommendData[i].subtitle = "";
+            dat.recommendData[i].play = ini.recommendList[i].stat.view;
+            dat.recommendData[i].review = ini.recommendList[i].stat.reply;
+            dat.recommendData[i].video_review = "";
+            dat.recommendData[i].favorites = ini.recommendList[i].stat.favorite;
+            dat.recommendData[i].mid = ini.recommendList[i].owner.mid;
+            dat.recommendData[i].author = ini.recommendList[i].owner.name;
+            dat.recommendData[i].create = ini.recommendList[i].pubdate;
+            dat.recommendData[i].pic = ini.recommendList[i].pic;
+            dat.recommendData[i].coins = ini.recommendList[i].stat.coin;
+            dat.recommendData[i].duration = ini.recommendList[i].duration;
+            dat.recommendData[i].badgepay = false;
+            dat.recommendData[i].rights = ini.recommendList[i].rights;
+        }
+        dat.locsData = ini.locsData;
+        dat.locsData[23] = ini.locsData[3197];
+        if (config.reset.adloc) for (let key in dat.locsData) if (dat.locsData[key]) for (let i = dat.locsData[key].length - 1; i >= 0; i--) if (dat.locsData[key][i].is_ad) { debug.debug("移除广告", key, dat.locsData[key][i]); dat.locsData[key].splice(i, 1); }
+        if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{ "id": 36585, "contract_id": "", "pos_num": 1, "name": "小黑屋弹幕举报", "pic": "https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg", "litpic": "", "url": "https://www.bilibili.com/blackboard/activity-dmjbfj.html", "style": 0, "agency": "", "label": "", "intro": "", "creative_type": 0, "request_id": "1546354354629q172a23a61a62q626", "src_id": 32, "area": 0, "is_ad_loc": true, "ad_cb": "", "title": "", "server_type": 0, "cm_mark": 0, "stime": 1520478000, "mid": "14629218" }];
         return dat;
     }
 }
