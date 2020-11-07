@@ -135,6 +135,7 @@ const rewrite = {
                 BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ? page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
             }
             else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
+            await import(await BLOD.getResourceUrl("__INITIAL_STATE__"));
             window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__ = BLOD.iniState.home(BLOD.__INITIAL_STATE__);
             BLOD.write(API.pageframe.home);
         }
