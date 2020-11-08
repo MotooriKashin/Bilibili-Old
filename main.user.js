@@ -583,7 +583,7 @@
                             if (t) {
                                 switch (t.op) {
                                     case Pl.WS_OP_HEARTBEAT_REPLY:
-                                        // 对于心跳包,服务器响应当前在线人数的数据
+                                        // 接收到心跳包后,服务器响应当前在线人数的数据
                                         // 旧播放器连接的4095端口,虽然不再下发实时弹幕,但依然照常响应在线人数
                                         // 所以暂时不用替换成新版
                                         // this.onHeartBeatReply(t.body);
@@ -695,10 +695,10 @@
             }
             //Worker Hook
             if (config.reset.danmuku && Worker) {
-                //hook postMessage来得到旧播放器用来 获取list.so 的worker对象
+                // hook postMessage来得到旧播放器创建的 获取list.so 的worker对象
                 let workerPostMsg = Worker.prototype.postMessage;
                 let list_so;
-                let loadTime, parseTime; //旧播放器需要得到相关耗时数据，这里手动算
+                let loadTime, parseTime; // 旧播放器需要得到耗时数据(网络请求，数据处理)
                 Worker.prototype.postMessage = function (aMessage, transferList) {
                     if (aMessage.url && aMessage.url.includes("list.so")) {
                         list_so = this;
@@ -713,14 +713,14 @@
                             Segments.sort(function (a, b) {
                                 return a.progress - b.progress;
                             });
-                            //转换到xml只是为了满足下载功能
+                            // 下载功能开启时，把分段弹幕转换到xml
                             if(config.reset.download) {
                                 deliver.toXml(Segments, aid).then(function (result) {
                                     // 备份弹幕
                                     xml = result;
                                 });
                             }
-                            //将弹幕转换为旧格式
+                            // 将弹幕转换为旧格式
                             Segments = Segments.map(function (v) {
                                 // 记录弹幕池哈希值
                                 hash.push(v.midHash);
@@ -728,7 +728,7 @@
                                     class: 0,
                                     color: v.color,
                                     date: v.ctime,
-                                    dmid: v.id,
+                                    dmid: v.idStr, // v.idStr与v.id在最近产生的弹幕数据中不相等
                                     mode: v.mode,
                                     size: v.fontsize,
                                     stime: v.progress / 1000,
@@ -850,6 +850,7 @@
             // 部分功能依赖hook `XMLHttpRequest.prototype.send`
             if (config.reset.xhrhook) {
                 XMLHttpRequest.prototype.send = async function (...arg) {
+                    // 新版弹幕兼容pakku.js
                     // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
                     // (pakku.js正常运行时这个send()不会被调用)
                     if (config.reset.danmuku && (this.pakku_url && this.pakku_url.includes("seg.so") && segRequestOnlyOnce)) {
@@ -1510,7 +1511,7 @@
                 for (let i in danmaku) {
                     dmk = danmaku[i];
                     d = dom.createElement("d");
-                    attr = [dmk.progress / 1000, dmk.mode, dmk.fontsize, dmk.color, dmk.ctime, 0, dmk.midHash, dmk.id];
+                    attr = [dmk.progress / 1000, dmk.mode, dmk.fontsize, dmk.color, dmk.ctime, 0, dmk.midHash, dmk.idStr];
                     d.setAttribute("p", attr.join(","));
                     d.appendChild(dom.createTextNode(dmk.content));
                     root.appendChild(d);
