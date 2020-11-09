@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.6.6
+// @version      3.6.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -3015,7 +3015,7 @@
             adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
             roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决"],
             history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"],
-            xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
+            xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※区域限制"],
             electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"],
             panel : ["最后一帧", "使视频播放结束后画面停留在最后一帧，不再展示功能窗口"],
             midcrc : ["弹幕反查" , "在旧版播放器弹幕列表上右键将显示发送者信息，鼠标移动到发送者名字上展示详细信息页<br>※原理是通过crc哈希值暴力逆推出mid，再通过mid获取发送者信息，由于哈希函数特性二者不一定一一对应，所以结果仅供参考<br>※不支持嵌入式旧版播放器<br>※修改弹幕排序后由于无法获取哈希值故无法查询<br>※出错时说明逆推出的mid不正确，但不出错也不代表一定正确"],
