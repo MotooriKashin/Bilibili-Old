@@ -990,7 +990,7 @@
             try {
                 hook.push(deliver.xhrJsonCheck(obj.responseText));
                 let response = deliver.xhrJsonCheck(obj.responseText);
-                for (let i = 0; i < response.result.section.length; i++) response.result.episodes.push(...response.result.section[i].episodes);
+                if (response.result.section) for (let i = 0; i < response.result.section.length; i++) response.result.episodes.push(...response.result.section[i].episodes);
                 for (let i = 0; i < response.result.episodes.length; i++){
                     response.result.episodes[i].ep_id = response.result.episodes[i].id;
                     response.result.episodes[i].episode_status = response.result.episodes[i].status;
