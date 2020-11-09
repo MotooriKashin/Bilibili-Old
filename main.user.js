@@ -8,24 +8,24 @@
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
 // @connect      *
-// @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
 // @icon         https://static.hdslb.com/images/favicon.ico
-// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/av.html
-// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/watchlater.html
-// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/bangumi.html
-// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/cinema.html
-// @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/playlist.html
-// @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/playlistdetail.html
-// @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/index.html
-// @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/ranking.html
-// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/ui.css
+// @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
+// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/av.html
+// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/watchlater.html
+// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/bangumi.html
+// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/cinema.html
+// @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.html
+// @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlistdetail.html
+// @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/index.html
+// @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ranking.html
+// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.css
 // @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/js-css/comment.min.js
 // @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/edit/video.min.js
-// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/crc.js
-// @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/md5.js
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/config.json
-// @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/playlist.json
-// @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dev/src/sort.json
+// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
+// @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/config.json
+// @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
+// @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
@@ -36,7 +36,7 @@
 // @license      MIT License
 // ==/UserScript==
 
-(() => {
+(function(){
     'use strict';
     const config = JSON.parse(GM_getResourceText("config"));
     const root = window.protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
@@ -160,7 +160,7 @@
                         if (t) {
                             switch (t.op) {
                                 case Pl.WS_OP_HEARTBEAT_REPLY:
-                                    // 对于心跳包,服务器响应当前在线人数的数据
+                                    // 接收到心跳包后,服务器响应当前在线人数的数据
                                     // 旧播放器连接的4095端口,虽然不再下发实时弹幕,但依然照常响应在线人数
                                     // 所以暂时不用替换成新版
                                     // this.onHeartBeatReply(t.body);
@@ -271,10 +271,10 @@
             }
         },
         worker: () => {
-            //hook postMessage来得到旧播放器用来 获取list.so 的worker对象
+            // hook postMessage来得到旧播放器创建的 获取list.so 的worker对象
             let workerPostMsg = Worker.prototype.postMessage;
             let list_so;
-            let loadTime, parseTime; //旧播放器需要得到相关耗时数据，这里手动算
+            let loadTime, parseTime; // 旧播放器需要得到耗时数据(网络请求，数据处理)
             Worker.prototype.postMessage = function (aMessage, transferList) {
                 if (aMessage.url && aMessage.url.includes("list.so")) {
                     list_so = this;
@@ -289,14 +289,14 @@
                         Segments.sort(function (a, b) {
                             return a.progress - b.progress;
                         });
-                        //转换到xml只是为了满足下载功能
+                        // 下载功能开启时，把分段弹幕转换到xml
                         if (config.reset.download) {
                             toXml(Segments, cid).then(function (result) {
                                 // 备份弹幕
                                 BLOD.xml = result;
                             });
                         }
-                        //将弹幕转换为旧格式
+                        // 将弹幕转换为旧格式
                         Segments = Segments.map(function (v) {
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
@@ -432,6 +432,7 @@
             const send = XMLHttpRequest.prototype.send;
             const addEventListener = XMLHttpRequest.prototype.addEventListener;
             XMLHttpRequest.prototype.send = async function (...arg) {
+                // 新版弹幕兼容pakku.js
                 // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
                 // (pakku.js正常运行时这个send()不会被调用)
                 if (config.reset.danmuku && (this.pakku_url && this.pakku_url.includes("seg.so") && xhrHook.segRequestOnlyOnce)) {
@@ -675,14 +676,10 @@
         init: async (node) => {
             if (!config.reset.download) return;
             let li = document.createElement("li");
-            let div = document.createElement("a");
+            li.innerHTML = '<a class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
-            div.setAttribute("class", "context-menu-a js-action");
-            div.setAttribute("href", "javascript:void(0);");
-            div.innerText = "下载视频";
-            li.appendChild(div);
             node.firstChild.appendChild(li);
-            div.onclick = download.setTable;
+            li.firstChild.onclick = download.setTable;
         },
         // 配置下载数据
         setTable: async () => {
@@ -878,7 +875,6 @@
                     break;
                 case "__playinfo__": BLOD.__playinfo__ = BLOD.__playinfo__ || arr[1];
                     break;
-                    //;
             }
         }
         if (unsafeWindow.$ && unsafeWindow.$.ajax) xhrHook.jsonp();
@@ -1096,11 +1092,31 @@
         }
         return data;
     }
+    // 节点垂直偏移
+    const getTotalTop = BLOD.getTotalTop = (node) => {
+        var sum = 0;
+        do {
+            sum += node.offsetTop;
+            node = node.offsetParent;
+        }
+        while (node);
+        return sum;
+    }
     // 重写页面
     const write = BLOD.write = (html) => {
         document.open();
         document.write(html);
         document.close();
+    }
+    // 原生脚本替换
+    const oldScript = (str) => {
+        str = str.replace("//static.hdslb.com/js/video.min.js", BLOD.getResourceURL("video"));
+        str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", BLOD.getResourceURL("comment"));
+        return str;
+    }
+    const bofqiToView = BLOD.bofqiToView = () => {
+        let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi") || "";
+        bofqi ? bofqi.scrollIntoView({ behavior: 'smooth', block: 'center' }) : "";
     }
     const removePreview = async (node) => {
         try {
@@ -1166,7 +1182,7 @@
             data.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
         }
         setTimeout(() => {
-            if (config.reset.viewbofqi && document.querySelector("#bofqi")) document.querySelector("#bofqi").scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (config.reset.viewbofqi) bofqiToView();
             if (config.reset.widescreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff")) {
                 document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen").click();
             }
@@ -1420,24 +1436,8 @@
                     else {
                         // 3页以上先获取当页首条评论rpid
                         let dialog;
-                        if (list_item[0]) {
-                            for (let i = 0; i < list_item.length; i++) {
-                                if (list_item[i].getAttribute("data-id") == root) {
-                                    list_item = list_item[i].getElementsByClassName("reply-wrap");
-                                    if (list_item[0]) for (let j = 0; j < list_item.length; j++) if (!list_item[j].getElementsByClassName("floor")[0]) { dialog = list_item[j].getAttribute("data-id"); break; }
-                                    break;
-                                }
-                            }
-                        }
-                        else if (main_floor[0]) {
-                            for (let i = 0; i < main_floor.length; i++) {
-                                if (main_floor[i].getAttribute("id") && main_floor[i].getAttribute("id").includes(root)) {
-                                    main_floor = main_floor[i].getElementsByTagName("li");
-                                    if (main_floor[0]) for (let j = 0; j < main_floor.length; j++) if (main_floor[j].id && main_floor[j].id.includes("l_id") && !main_floor[j].getElementsByClassName("floor-num")[0]) { dialog = main_floor[j].getAttribute("id").split('_')[2]; break; }
-                                    break;
-                                }
-                            }
-                        }
+                        if(list_item[0]){for(let i=0;i<list_item.length;i++){if(list_item[i].getAttribute("data-id")==root){list_item=list_item[i].getElementsByClassName("reply-wrap");if(list_item[0])for(let j=0;j<list_item.length;j++)if(!list_item[j].getElementsByClassName("floor")[0]){dialog=list_item[j].getAttribute("data-id");break;}break;}}}
+                        else if(main_floor[0]){for(let i=0;i<main_floor.length;i++){if(main_floor[i].getAttribute("id")&&main_floor[i].getAttribute("id").includes(root)){main_floor=main_floor[i].getElementsByTagName("li");if(main_floor[0])for(let j=0;j<main_floor.length;j++)if(main_floor[j].id&&main_floor[j].id.includes("l_id")&&!main_floor[j].getElementsByClassName("floor-num")[0]){dialog=main_floor[j].getAttribute("id").split('_')[2];break;}break;}}}
                         // 根据当页首条评论rpid获取min_id
                         data = await xhr.true(objUrl("https://api.bilibili.com/x/v2/reply/dialog/cursor", { "oid": oid, "root": root, "type": type, "dialog": dialog, "size": 20 }));
                         let min_id = jsonCheck(data).data.replies;
@@ -1537,12 +1537,14 @@
         }
     }
     const fixVideoSeek = (node) => {
-        node.querySelectorAll("a.video-seek").forEach(function (v) {
-            v.addEventListener("click", function (e) {
-                window.scrollTo(0, 170);
-                unsafeWindow.player.seek(Number(e.target.attributes[2].nodeValue));
+        if (document.querySelector("#bofqi")) {
+            node.querySelectorAll("a.video-seek").forEach(function (v) {
+                v.addEventListener("click", function (e) {
+                    bofqiToView();
+                    unsafeWindow.player.seek(Number(e.target.attributes[2].nodeValue));
+                })
             })
-        })
+        }
     }
     const electricPanelJump = async (node) => {
         try {
@@ -1583,16 +1585,6 @@
                 }
                 li.onmouseout = () => fw.remove();
                 node.appendChild(li);
-            }
-            // 计算节点相对高度
-            function getTotalTop(node) {
-                var sum = 0;
-                do {
-                    sum += node.offsetTop;
-                    node = node.offsetParent;
-                }
-                while (node);
-                return sum;
             }
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分区排行", ...e) }
@@ -1648,7 +1640,7 @@
         remove("contact-help", "class", true);
         // 移除新版提示
         remove("new-entry", "class");
-        if (window.recbtn) remove("ver", "class");
+        if (BLOD.path.name == "index") remove("ver", "class");
         remove("trynew-btn", "class");
         if (config.reset.panel) remove("bilibili-player-ending-panel", "class");
         // 移除app下载浮动框
@@ -1659,9 +1651,9 @@
         // 移除失效顶栏
         remove("bili-header-m report-wrap-module", "class", false, 1);
         // 移除主页昨日榜
-        if (window.recbtn) remove("rec-btn prev", "class");
+        if (BLOD.path.name == "index") remove("rec-btn prev", "class");
         // 移除主页七日榜
-        if (window.recbtn) remove("rec-btn next", "class");
+        if (BLOD.path.name == "index") remove("rec-btn next", "class");
         // 移除双重视频下载右键菜单
         if (document.getElementsByClassName("bili-old-download")[1]) document.getElementsByClassName("bili-old-download")[0].remove();
         // 使顶栏透明
@@ -1776,54 +1768,25 @@
             let data;
             history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
             for (let i = 0; i < BLOD.ids.length; i++) if (BLOD.ids[i].aid == aid) data = BLOD.ids[i];
-            let video_info = document.getElementById("viewbox_report").childNodes;
-            let up_info = document.getElementById("v_upinfo").childNodes;
-            let tag = document.getElementById("v_tag").childNodes;
-            let desc = document.getElementById("v_desc").childNodes;
-            let arc_toolbar_report = document.getElementById("arc_toolbar_report").childNodes;
-            let title = video_info[0];
-            let info = video_info[1];
-            let number = video_info[2];
+            let video_info = document.getElementById("viewbox_report");
+            let up_info = document.getElementById("v_upinfo")
+            let arc_toolbar_report = document.getElementById("arc_toolbar_report");
             document.title = data.title;
-            title.title = data.title;
-            title.childNodes[1].innerText = data.title;
-            info.childNodes[3].innerText = timeFormat(data.pubdate * 1000);
-            number.childNodes[0].title = "总播放数" + data.stat.view;
-            number.childNodes[0].innerText = unitFormat(data.stat.view);
-            number.childNodes[1].title = "总弹幕数" + data.stat.danmaku;
-            number.childNodes[1].innerText = unitFormat(data.stat.danmaku);
-            if (data.stat.his_rank > 0) number.childNodes[2].innerText = "最高全站日排行" + data.stat.his_rank + "名";
-            else try { number.childNodes[2].setAttribute("hidden", "hidden"); } catch (e) { }
-            if (number.childNodes[4].className == "u like") {
-                number.childNodes[4].title = "点赞人数" + data.stat.like;
-                number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("点赞 " + unitFormat(data.stat.like)));
-                number.childNodes[5].title = "投硬币枚数" + data.stat.coin;
-                number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("硬币 " + unitFormat(data.stat.coin)));
-                number.childNodes[6].title = "收藏人数" + data.stat.favorite;
-                number.childNodes[6].childNodes[2].replaceWith(document.createTextNode("收藏 " + unitFormat(data.stat.favorite)));
-            }
-            else {
-                number.childNodes[4].title = "投硬币枚数" + data.stat.coin;
-                number.childNodes[4].childNodes[2].replaceWith(document.createTextNode("硬币 " + unitFormat(data.stat.coin)));
-                number.childNodes[5].title = "收藏人数" + data.stat.favorite;
-                number.childNodes[5].childNodes[2].replaceWith(document.createTextNode("收藏 " + unitFormat(data.stat.favorite)));
-            }
-            up_info[0].childNodes[1].href = "https://space.bilibili.com/" + data.owner.mid;
-            up_info[0].childNodes[1].childNodes[0].src = data.owner.face;
-            up_info[1].childNodes[0].childNodes[0].href = "https://space.bilibili.com/" + data.owner.mid;
-            up_info[1].childNodes[0].childNodes[0].innerText = data.owner.name;
-            up_info[1].childNodes[1].childNodes[0].innerText = "up主简介";
-            up_info[1].childNodes[2].childNodes[0].innerText = "投稿 --";
-            up_info[1].childNodes[2].childNodes[1].innerText = "粉丝 --";
-            arc_toolbar_report[0].childNodes[0].title = "分享人数" + data.stat.share;
-            arc_toolbar_report[0].childNodes[0].childNodes[1].innerText = unitFormat(data.stat.share);
-            arc_toolbar_report[2].title = "收藏人数" + data.stat.favorite;
-            arc_toolbar_report[2].childNodes[0].childNodes[3].innerText = unitFormat(data.stat.favorite);
-            arc_toolbar_report[3].title = "投硬币枚数" + data.stat.coin;
-            arc_toolbar_report[3].childNodes[0].childNodes[3].innerText = unitFormat(data.stat.coin);
-            tag[0].setAttribute("hidden", "hidden");
-            desc[1].innerText = data.desc;
+            video_info.innerHTML = '<h1 title="' + data.title + '"><!----><span>' + data.title + '</span></h1>' +
+                '<div class="tm-info tminfo"><span class="crumb"><a href="//www.bilibili.com">主页</a> &gt;</span> <span class="crumb"><a href="//www.bilibili.com/v/douga/">动画</a> &gt;</span> <span class="crumb"><a href="//www.bilibili.com/v/douga/mad/">MAD·AMV</a></span><time>' + timeFormat(data.pubdate * 1000, true) + '</time><a class="btn-appeal">稿件投诉</a></div>' +
+                '<div class="number"><span title="总播放数' + data.stat.view + '" class="v play">' + unitFormat(data.stat.view) + '</span><span title="总弹幕数' + data.stat.danmaku + '" class="v dm">' + unitFormat(data.stat.danmaku) + '</span><span title="本日日排行数据过期后，再纳入本稿件的历史排行数据进行对比得出" class="v rank">最高全站日排行' + data.stat.like + '名</span><span class="line"></span><span class="u like" style="margin-right : 5px;" title="点赞人数' + data.stat.his_rank + '"><i class="l-icon-move" style="width : 22px;height : 22px;background-position : -660px -2068px;"></i><b class="l-icon-moved" style="width : 22px;height : 22px;background-position : -725px -2068px;display : none;"></b> 点赞 ' + unitFormat(data.stat.like) + '</span><span report-id="coinbtn1" title="投硬币枚数' + data.stat.coin + '" class="u coin"><i class="c-icon-move"></i><b class="c-icon-moved" style="background-position: -2340px -60px; display: none;"></b> 硬币 ' + unitFormat(data.stat.coin) + '</span> <span report-id="collect1" title="收藏人数' + data.stat.favorite + '" class="u fav"><i class="f-icon-move" style="background-position: 0px 0px;"></i><b class="f-icon-moved" style="background-position: -1740px -60px; display: none;"></b> 收藏 ' + unitFormat(data.stat.favorite) + '</span></div>';
+            up_info.innerHTML = '<div class="u-face fl"><!----><a href="//space.bilibili.com/' + data.owner.mid + '" target="_blank" report-id="head" class="a"><img src="' + data.owner.face + '@68w_68h.webp" width="68" height="68" class="up-face" /><!----><!----><i title="企业/团体认证" class="auth o-auth"></i></a></div>' +
+                '<div class="info"><div class="user clearfix"><a href="//space.bilibili.com/' + data.owner.mid + '" target="_blank" report-id="name" class="name is-vip">' + data.owner.name + '</a><a href="//message.bilibili.com/#whisper/mid' + data.owner.mid + '" target="_blank" report-id="message" class="message icon">发消息</a></div><div class="sign static"><span>up主简介</span><!----></div><div class="number clearfix"><span title="投稿数--">投稿：--</span><span title="粉丝数--">粉丝：--</span></div><div class="btn followe"><a report-id="follow1" class="bi-btn b-gz"><span class="gz">+ 关注</span><span class="ygz">已关注</span><span class="qxgz">取消关注</span></a><a report-id="charge" class="bi-btn b-cd elecrank-btn"><span class="cd">充电</span><span class="wtcd">为TA充电</span></a></div></div>';
+            arc_toolbar_report.children[0].children[0].title = "分享人数" + data.stat.share;
+            arc_toolbar_report.children[0].children[0].innerHTML = '<span class="t">分享</span><span class="num">' + unitFormat(data.stat.share) + '</span><i class="icon"></i>';
+            arc_toolbar_report.children[2].title = "收藏人数" + data.stat.favorite;
+            arc_toolbar_report.children[2].innerHTML = '<div class="btn-item"><i class="icon-move f-icon-moved" style="display: none;"></i><b class="icon-move f-icon-move"></b><span class="t">收藏</span><span class="num">' + unitFormat(data.stat.favorite) + '</span></div>';
+            arc_toolbar_report.children[3].title = "投硬币枚数" + data.stat.coin;
+            arc_toolbar_report.children[3].innerHTML = '<div class="btn-item"><i class="icon-move c-icon-moved" style="display: none;"></i><b class="icon-move c-icon-move"></b><span class="t">硬币</span><span class="num">' + unitFormat(data.stat.coin) + '</span></div>';
+            document.getElementById("v_tag").children[0].setAttribute("hidden", "hidden");
+            document.getElementById("v_desc").children[1].innerText = data.desc;
             new unsafeWindow.bbComment(".comment", unsafeWindow.aid, 1, unsafeWindow.UserStatus.userInfo, "");
+            data.stat.like ? video_info.children[2].children[2].setAttribute("style", "display: inline-block;") : video_info.children[2].children[2].setAttribute("style", "display: none;");
             let bpui = document.getElementsByClassName("bpui-button-text");
             let t = setInterval(() => {
                 // 更新列表名称
@@ -2077,8 +2040,8 @@
         node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
         item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-msg");
         item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span></div>';
-        item.children[0].children[0].innerHTML = msg[0];
-        item.children[0].children[1].innerHTML = msg[1];
+        item.children[0].children[0].innerHTML = msg[0] || "";
+        item.children[0].children[1].innerHTML = msg[1] || "";
         setTimeout(() => item.remove(), 3000);
     }
     // 通知封装
@@ -2323,7 +2286,7 @@
             if (dat.epInfo.index >= 0) { dat.special = false; dat.mediaInfo.bkg_cover = ""; }
             return dat;
         },
-        home: (data) => {
+        index: (data) => {
             let dat = {};
             let ini = JSON.parse(data);
             dat.recommendData = [];
@@ -2354,7 +2317,7 @@
         }
     }
     const ui = {
-        init: async () => {
+        init: async (timer) => {
             if (window.self != window.top) return;
             let face = document.createElement("div");
             let attribute = {
@@ -2370,7 +2333,9 @@
                 if (!check) ui.table(); else if (check.getAttribute("hidden")) check.removeAttribute("hidden");
             }
             face.innerHTML = "<i></i><span>设置</span>";
-            setTimeout(() => { document.body.appendChild(face) }, 100);
+            (timer = () => {
+                setTimeout(()=> {document.body ? document.body.appendChild(face) : timer()}, 100);
+            })();
         },
         table: async (timer) => {
             let table = document.createElement("div");
@@ -2445,19 +2410,19 @@
                 aid = BLOD.__INITIAL_STATE__.aid ? BLOD.__INITIAL_STATE__.aid : aid;
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
                 unsafeWindow.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
-                BLOD.write(BLOD.getResourceText("av"));
+                BLOD.write(oldScript(BLOD.getResourceText("av")));
                 document.title = BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
-                fixSort.video()
+                fixSort.video();
                 setLike();
                 setMediaList.init();
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·av/BV", ...e) }
         },
         watchlater: () => {
-            BLOD.path.name = "watchlater";
             try {
                 if (!config.rewrite.watchlater) throw ["未启用旧版稍后再看", location.href];
                 if (!BLOD.uid) throw ["未登录", "无法启用旧版稍后再看"];
-                BLOD.write(BLOD.getResourceText("watchlater"));
+                BLOD.path.name = "watchlater";
+                BLOD.write(oldScript(BLOD.getResourceText("watchlater")));
                 setLike();
                 fixSort.watchlater();
                 if (BLOD.path[5]) {
@@ -2471,9 +2436,9 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·稍后再看", ...e) }
         },
         bangumi: () => {
-            BLOD.path.name = "bangumi";
             try {
                 if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
+                BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
                 let page = xhr.false(location.href);
                 BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ?
@@ -2489,8 +2454,8 @@
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(page, id);
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
                 unsafeWindow.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
-                if (page.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.getResourceText("bangumi"));
-                else BLOD.write(BLOD.getResourceText("cinema"));
+                if (page.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(oldScript(BLOD.getResourceText("bangumi")));
+                else BLOD.write(oldScript(BLOD.getResourceText("cinema")));
                 document.title = page.match(/<title.*?>.+?<\/title>/) ?
                     page.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "") : BLOD.__INITIAL_STATE__.mediaInfo.title;
                 if (BLOD.__INITIAL_STATE__) setBangumi.init(BLOD.__INITIAL_STATE__);
@@ -2498,7 +2463,6 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·Bangumi", ...e) }
         },
         blackboard: () => {
-            BLOD.path.name = "blackboard";
             if (BLOD.path[4].startsWith('html5player')) {
                 if (BLOD.path[4].includes("3521416") && BLOD.path[4].includes("6041635")) {
                     location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": 3521416, "cid": 192446449 }));
@@ -2506,6 +2470,7 @@
             }
             try {
                 if (!config.rewrite.frame) throw ["未启用旧版嵌入播放器", location.href];
+                BLOD.path.name = "blackboard";
                 if (BLOD.path[4].startsWith('newplayer')) {
                     let obj = BLOD.urlObj(location.href),
                         season_type = obj.season_type || "",
@@ -2526,7 +2491,7 @@
         playlist: () => {
             BLOD.path.name = "playlist";
             if (BLOD.path[4] == "video") {
-                BLOD.write(BLOD.getResourceText("playlist"));
+                BLOD.write(oldScript(BLOD.getResourceText("playlist")));
             }
             if (BLOD.path[4] == "detail") {
                 BLOD.__INITIAL_STATE__ = { mid: "", pid: "", plinfoData: {}, pllistData: {} }
@@ -2543,15 +2508,15 @@
                     BLOD.__INITIAL_STATE__ = JSON.parse(BLOD.getResourceText("playlistjson"));
                 }
                 unsafeWindow.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
-                BLOD.write(BLOD.getResourceText("playlistdetail"));
+                BLOD.write(oldScript(BLOD.getResourceText("playlistdetail")));
             }
         },
         medialist: () => {
-            BLOD.path.name = "medialist";
             if (BLOD.path[5].startsWith("ml")) {
                 BLOD.ml = 1 * BLOD.path[5].match(/[0-9]+/)[0];
                 // 保存收藏号并调用av跳转
                 if (!config.rewrite.medialist) return;
+                BLOD.path.name = "medialist";
                 GM_setValue("medialist", BLOD.ml);
                 setMediaList.init(BLOD.ml);
             }
@@ -2559,8 +2524,8 @@
             if (BLOD.path[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
         },
         s: () => {
-            BLOD.path.name = "s";
             if (!config.reset.static) return;
+            BLOD.path.name = "s";
             location.replace(location.href.replace("s/video", "video"));
         },
         space: () => {
@@ -2570,13 +2535,13 @@
         index: () => {
             try {
                 if (!config.rewrite.home) throw ["未启用旧版主页", location.href];
-                BLOD.path.name = "home";
+                BLOD.path.name = "index";
                 if (!window.__INITIAL_STATE__) {
                     let page = xhr.false(location.href);
                     BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ? page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
                 }
                 else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
-                unsafeWindow.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__ = BLOD.iniState.home(BLOD.__INITIAL_STATE__);
+                unsafeWindow.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__);
                 BLOD.write(BLOD.getResourceText("index"));
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·主页", ...e) }
@@ -2585,6 +2550,7 @@
         rank: (page) => {
             try {
                 if (!config.rewrite.rank) throw ["未启用排行", location.href];
+                BLOD.path.name = "rank";
                 let refer = document.referrer.split("/");
                 if (refer && refer[4] && refer[4] == "all") page = jsonCheck(xhr.false(objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: refer[5], day: 3, type: 1, arc_type: 0 })));
                 else page = jsonCheck(xhr.false(objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: 0, day: 3, type: 1, arc_type: 0 })));
@@ -2647,8 +2613,8 @@
     }
 
     addCss(BLOD.getResourceText("css"));
-    ui.init();
     xhrHook.init();
+    ui.init();
     document.addEventListener("DOMNodeInserted", (msg) => {
         // 去除预览提示框
         if (/bilibili-player-video-toast-pay/.test(msg.target.className)) removePreview(msg.target);
