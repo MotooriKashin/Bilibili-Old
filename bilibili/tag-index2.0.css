@@ -1,0 +1,288 @@
+.s_tag .tag-area li {
+  float: left;
+  margin: 0 10px 8px 0;
+  border: 1px solid #e5e9ef;
+  border-radius: 20px;
+  padding: 0 10px;
+  position: relative;
+  height: 22px;
+  transition: all .3s; }
+  .s_tag .tag-area li a {
+    display: inline-block;
+    height: 22px;
+    color: #6d757a;
+    line-height: 22px;
+    vertical-align: middle;
+    position: relative;
+    z-index: 10;
+    transition: all .3s; }
+  .s_tag .tag-area li.hot1 {
+    border-color: #feb4cc; }
+  .s_tag .tag-area li.hot2 {
+    border-color: #f25d8e; }
+  .s_tag .tag-area li:hover {
+    border-color: #00a1d6; }
+    .s_tag .tag-area li:hover a {
+      color: #00a1d6; }
+
+.s_tag .nothing {
+  float: left;
+  color: #99a2aa;
+  font-size: 12px;
+  line-height: 26px;
+  margin-right: 10px; }
+
+.s_tag .btn-add {
+  float: left;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: 1px solid #e5e9ef;
+  position: relative;
+  transition: all .3s; }
+  .s_tag .btn-add span {
+    position: absolute;
+    background: #9ba3ab;
+    transition: all .3s; }
+  .s_tag .btn-add .one {
+    left: 5px;
+    top: 11px;
+    width: 14px;
+    height: 2px; }
+  .s_tag .btn-add .two {
+    left: 11px;
+    top: 5px;
+    width: 2px;
+    height: 14px; }
+  .s_tag .btn-add:hover {
+    border-color: #00a1d6; }
+    .s_tag .btn-add:hover span {
+      background: #00a1d6; }
+
+.s_tag .ipt {
+  display: none;
+  float: left;
+  width: 23px;
+  height: 23px;
+  border-radius: 23px;
+  border: 1px solid #00a1d6;
+  position: relative;
+  opacity: 0; }
+  .s_tag .ipt input {
+    height: 23px;
+    line-height: 23px;
+    width: 120px;
+    padding: 0 10px;
+    background: transparent;
+    transition: all .3s;
+    border: none; }
+    .s_tag .ipt input:focus {
+      font-size: 14px; }
+  .s_tag .ipt.on {
+    opacity: 1;
+    width: 158px; }
+  .s_tag .ipt a {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: url("//static.hdslb.com/images/base/icons.png") -539px -539px no-repeat;
+    left: 138px;
+    top: 6px; }
+  .s_tag .ipt .tips {
+    display: none;
+    margin-top: 5px;
+    color: #f00; }
+
+.s_tag .btn-view-tag {
+  margin-top: 10px;
+  color: #eceff3; }
+  .s_tag .btn-view-tag a {
+    color: #6d757a; }
+    .s_tag .btn-view-tag a:hover {
+      color: #00a1d6; }
+  .s_tag .btn-view-tag span {
+    margin: 0 10px; }
+
+.tag-info-pane {
+  z-index: 11;
+  position: absolute;
+  background: #fff;
+  width: 300px;
+  padding: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 4px; }
+  .tag-info-pane .tag-header .tag-title {
+    float: left;
+    color: #222;
+    font-size: 18px;
+    width: 220px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden; }
+  .tag-info-pane .tag-header .tag-title a{
+    color: #222;
+  }
+  .tag-info-pane .tag-header .tag-title a:hover{
+    color: #00a1d6;
+  }
+  .tag-info-pane .tag-header .btn-sub {
+    float: right;
+    width: 58px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #fff;
+    margin-top: -5px;
+    line-height: 28px;
+    text-align: center; }
+  .tag-info-pane .tag-header .btn-subscribe {
+    background: #00a1d6; }
+    .tag-info-pane .tag-header .btn-subscribe i {
+      display: inline-block;
+      width: 13px;
+      height: 11px;
+      vertical-align: middle;
+      margin: 0 5px 0 3px;
+      background: url("//static.hdslb.com/images/base/icons.png") -666px -603px no-repeat; }
+    .tag-info-pane .tag-header .btn-subscribe:hover {
+      background: #00b5e5; }
+  .tag-info-pane .tag-header .btn-unsubscribe {
+    display: none;
+    background: #e5e9ef;
+    color: #6d757a; }
+    .tag-info-pane .tag-header .btn-unsubscribe:hover {
+      color: #00a1d6; }
+  .tag-info-pane .btn-right-box {
+    margin: 15px 0 10px 0;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e9ef; }
+    .tag-info-pane .btn-right-box a {
+      display: inline-block;
+      font-size: 12px;
+      border-radius: 4px;
+      margin-right: 20px;
+      color: #00a1d6; }
+      .tag-info-pane .btn-right-box a i {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        background: url("//static.hdslb.com/images/base/icons.png");
+        vertical-align: top;
+        margin-right: 3px; }
+    .tag-info-pane .btn-right-box .btn-crown i {
+      background-position: -730px -2200px; }
+    .tag-info-pane .btn-right-box .btn-tread i {
+      background-position: -730px -2267px;
+      vertical-align: middle; }
+  .tag-info-pane .text {
+    line-height: 18px;
+    font-size: 12px;
+    color: #222;
+    max-height: 36px;
+    overflow: hidden; }
+  .tag-info-pane .tag-footer {
+    text-align: right; }
+    .tag-info-pane .tag-footer .btn-left-box {
+      margin-top: 8px; }
+      .tag-info-pane .tag-footer .btn-left-box a {
+        color: #00a1d6;
+        display: inline-block;
+        padding: 5px 6px;
+        border-radius: 4px;
+        margin-right: 5px; }
+        .tag-info-pane .tag-footer .btn-left-box a:hover {
+          background: #e5e9ef; }
+
+.tag-del-popup {
+  z-index: 12;
+  position: absolute;
+  background: #fff;
+  padding: 30px 20px 20px 20px;
+  min-width: 120px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  text-align: center; }
+  .tag-del-popup p {
+    font-size: 12px;
+    color: #222;
+    margin-bottom: 20px; }
+  .tag-del-popup a {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px; }
+    .tag-del-popup a.btn-ok {
+      color: #fff;
+      background: #00a1d6;
+      margin-right: 5px; }
+    .tag-del-popup a.btn-no {
+      color: #222;
+      background: #e5e9ef;
+      margin-left: 5px; }
+
+.tag-report-popup {
+  position: absolute;
+  z-index: 12;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  text-align: center; }
+  .tag-report-popup h3 {
+    font-size: 14px;
+    color: #222;
+    font-weight: bold;
+    text-align: left; }
+  .tag-report-popup ul {
+    padding: 10px 100px 10px 0px;
+    cursor: pointer; }
+    .tag-report-popup ul li {
+      line-height: 24px;
+      margin: 10px 0;
+      text-align: left; }
+      .tag-report-popup ul li i {
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        border: 1px solid #ccd0d7;
+        vertical-align: middle;
+        margin-right: 5px;
+        position: relative; }
+      .tag-report-popup ul li.on i {
+        border-color: #00a1d6; }
+        .tag-report-popup ul li.on i:before {
+          content: '';
+          position: absolute;
+          left: 2px;
+          top: 2px;
+          border-radius: 50%;
+          width: 9px;
+          height: 9px;
+          background: #00a1d6; }
+  .tag-report-popup .btn-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 10px;
+    height: 10px;
+    background: url("//static.hdslb.com/images/base/icons.png") -475px -539px; }
+  .tag-report-popup .btn-ok {
+    display: inline-block;
+    width: 80px;
+    height: 24px;
+    line-height: 24px;
+    background: #00a1d6;
+    color: #fff;
+    border-radius: 4px; }
+
+.the-grey {
+  color: #999 !important; }
+  .the-grey:hover {
+    background: #fff !important; }
+
+.tag-praise {
+  z-index: 13;
+  position: absolute;
+  font-size: 14px;
+  color: #00a1d6; }
