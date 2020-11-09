@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Bilibili 旧播放页
+// @name         Bilibili 旧版界面
 // @namespace    MotooriKashin
-// @version      3.6.9
-// @description  恢复原生的旧版页面，包括主页和播放页。
+// @version      1.0.0
+// @description  Bilibili 播放页的模块化版本，可能不支持版本太低的浏览器。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @match        *://*.bilibili.com/*
@@ -10,22 +10,22 @@
 // @connect      *
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
-// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/av.html
-// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/watchlater.html
-// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/bangumi.html
-// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/cinema.html
-// @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.html
-// @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlistdetail.html
-// @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/index.html
-// @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ranking.html
-// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.css
-// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/comment.min.js
-// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/video.min.js
-// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
-// @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/config.json
-// @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
-// @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
+// @resource     av https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/av.html
+// @resource     watchlater https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/watchlater.html
+// @resource     bangumi https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/bangumi.html
+// @resource     cinema https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/cinema.html
+// @resource     playlist https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/playlist.html
+// @resource     playlistdetail https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/playlistdetail.html
+// @resource     index https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/index.html
+// @resource     ranking https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/ranking.html
+// @resource     css https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/ui.css
+// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js
+// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js
+// @resource     crc https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/crc.js
+// @resource     md5 https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/md5.js
+// @resource     config https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/config.json
+// @resource     playlistjson https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/playlist.json
+// @resource     sort https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/sort.json
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
