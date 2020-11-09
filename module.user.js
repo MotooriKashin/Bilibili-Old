@@ -10,22 +10,22 @@
 // @connect      *
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
-// @resource     av https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/av.html
-// @resource     watchlater https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/watchlater.html
-// @resource     bangumi https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/bangumi.html
-// @resource     cinema https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/cinema.html
+// @resource     av https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/av.html
+// @resource     watchlater https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/watchlater.html
+// @resource     bangumi https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/bangumi.html
+// @resource     cinema https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/cinema.html
 // @resource     playlist https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/playlist.html
-// @resource     playlistdetail https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/playlistdetail.html
-// @resource     index https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/index.html
-// @resource     ranking https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/ranking.html
-// @resource     css https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/ui.css
-// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js
-// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js
-// @resource     crc https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/crc.js
-// @resource     md5 https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/md5.js
-// @resource     config https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/config.json
-// @resource     playlistjson https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/playlist.json
-// @resource     sort https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/src/sort.json
+// @resource     playlistdetail https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/playlistdetail.html
+// @resource     index https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/index.html
+// @resource     ranking https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/ranking.html
+// @resource     css https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/ui.css
+// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/master/src/comment.min.js
+// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/master/src/video.min.js
+// @resource     crc https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/crc.js
+// @resource     md5 https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/md5.js
+// @resource     config https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/config.json
+// @resource     playlistjson https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/playlist.json
+// @resource     sort https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/sort.json
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
