@@ -12,8 +12,8 @@
 // @connect      mcbbs.net
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
 // @icon         https://static.hdslb.com/images/favicon.ico
-// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/js-css/comment.min.js
-// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/edit/video.min.js
+// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/comment.min.js
+// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/bilibili/video.min.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceURL
 // @grant        GM_getValue
