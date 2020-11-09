@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.6.6
+// @version      3.6.7
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -583,7 +583,7 @@
                             if (t) {
                                 switch (t.op) {
                                     case Pl.WS_OP_HEARTBEAT_REPLY:
-                                        // 对于心跳包,服务器响应当前在线人数的数据
+                                        // 接收到心跳包后,服务器响应当前在线人数的数据
                                         // 旧播放器连接的4095端口,虽然不再下发实时弹幕,但依然照常响应在线人数
                                         // 所以暂时不用替换成新版
                                         // this.onHeartBeatReply(t.body);
@@ -695,10 +695,10 @@
             }
             //Worker Hook
             if (config.reset.danmuku && Worker) {
-                //hook postMessage来得到旧播放器用来 获取list.so 的worker对象
+                // hook postMessage来得到旧播放器创建的 获取list.so 的worker对象
                 let workerPostMsg = Worker.prototype.postMessage;
                 let list_so;
-                let loadTime, parseTime; //旧播放器需要得到相关耗时数据，这里手动算
+                let loadTime, parseTime; // 旧播放器需要得到耗时数据(网络请求，数据处理)
                 Worker.prototype.postMessage = function (aMessage, transferList) {
                     if (aMessage.url && aMessage.url.includes("list.so")) {
                         list_so = this;
@@ -713,14 +713,14 @@
                             Segments.sort(function (a, b) {
                                 return a.progress - b.progress;
                             });
-                            //转换到xml只是为了满足下载功能
+                            // 下载功能开启时，把分段弹幕转换到xml
                             if(config.reset.download) {
                                 deliver.toXml(Segments, aid).then(function (result) {
                                     // 备份弹幕
                                     xml = result;
                                 });
                             }
-                            //将弹幕转换为旧格式
+                            // 将弹幕转换为旧格式
                             Segments = Segments.map(function (v) {
                                 // 记录弹幕池哈希值
                                 hash.push(v.midHash);
@@ -728,7 +728,7 @@
                                     class: 0,
                                     color: v.color,
                                     date: v.ctime,
-                                    dmid: v.id,
+                                    dmid: v.idStr, // v.idStr与v.id在最近产生的弹幕数据中不相等
                                     mode: v.mode,
                                     size: v.fontsize,
                                     stime: v.progress / 1000,
@@ -850,6 +850,7 @@
             // 部分功能依赖hook `XMLHttpRequest.prototype.send`
             if (config.reset.xhrhook) {
                 XMLHttpRequest.prototype.send = async function (...arg) {
+                    // 新版弹幕兼容pakku.js
                     // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
                     // (pakku.js正常运行时这个send()不会被调用)
                     if (config.reset.danmuku && (this.pakku_url && this.pakku_url.includes("seg.so") && segRequestOnlyOnce)) {
@@ -1510,7 +1511,7 @@
                 for (let i in danmaku) {
                     dmk = danmaku[i];
                     d = dom.createElement("d");
-                    attr = [dmk.progress / 1000, dmk.mode, dmk.fontsize, dmk.color, dmk.ctime, 0, dmk.midHash, dmk.id];
+                    attr = [dmk.progress / 1000, dmk.mode, dmk.fontsize, dmk.color, dmk.ctime, 0, dmk.midHash, dmk.idStr];
                     d.setAttribute("p", attr.join(","));
                     d.appendChild(dom.createTextNode(dmk.content));
                     root.appendChild(d);
@@ -3014,7 +3015,7 @@
             adloc : ["主页广告", "去除旧版主页直接写在网页里的广告的内容，如滚动图、推荐位、横幅……"],
             roomplay : ["直播拦截", "拦截直播视频及轮播视频以节约流量<br>受浏览器缓存影响注入没有载入直播快则会失败，此种情况硬刷新可以解决"],
             history : ["视频历史", "去掉历史记录页面的直播、专栏，只显示视频播放历史"],
-            xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※新版弹幕<br>※区域限制"],
+            xhrhook : ["xhrhook", "hook xhr的send方法，副作用是所有xhr的initiator都会变成本脚本，强迫症可以选择关闭除非需要启用以下功能：<br>※区域限制"],
             electric : ["充电鸣谢", "自动跳过充电鸣谢<br>※动作再快还是会一闪而过"],
             panel : ["最后一帧", "使视频播放结束后画面停留在最后一帧，不再展示功能窗口"],
             midcrc : ["弹幕反查" , "在旧版播放器弹幕列表上右键将显示发送者信息，鼠标移动到发送者名字上展示详细信息页<br>※原理是通过crc哈希值暴力逆推出mid，再通过mid获取发送者信息，由于哈希函数特性二者不一定一一对应，所以结果仅供参考<br>※不支持嵌入式旧版播放器<br>※修改弹幕排序后由于无法获取哈希值故无法查询<br>※出错时说明逆推出的mid不正确，但不出错也不代表一定正确"],
