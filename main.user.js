@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.6.9
+// @version      3.7.0
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -806,6 +806,7 @@
                 // 修改区域限制
                 if (url.includes('season/user/status?')) {
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.status(this)});
+                    url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season/user/status', 'api.bilibili.com/pgc/view/web/season/user/status');
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
@@ -1080,11 +1081,11 @@
                         response.result.pay = 1;
                         big = true;
                     }
-                    if (limit || big) {
-                        Object.defineProperty(obj, 'response', {writable : true});
-                        Object.defineProperty(obj, 'responseText', {writable : true});
-                        obj.response = obj.responseText = JSON.stringify(response);
-                    }
+                    if (response.result.progress) response.result.watch_progress = response.result.progress;
+                    if (response.result.vip_info) response.result.vipInfo = response.result.vip_info;
+                    Object.defineProperty(obj, 'response', {writable : true});
+                    Object.defineProperty(obj, 'responseText', {writable : true});
+                    obj.response = obj.responseText = JSON.stringify(response);
                 }
             }
             catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e)}
