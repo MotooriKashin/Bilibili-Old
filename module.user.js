@@ -8,8 +8,8 @@
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
 // @connect      *
-// @icon         https://static.hdslb.com/images/favicon.ico
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
+// @icon         https://static.hdslb.com/images/favicon.ico
 // @resource     av https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/av.html
 // @resource     watchlater https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/watchlater.html
 // @resource     bangumi https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/bangumi.html
@@ -19,8 +19,8 @@
 // @resource     index https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/index.html
 // @resource     ranking https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/ranking.html
 // @resource     css https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/ui.css
-// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/master/src/comment.min.js
-// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/master/src/video.min.js
+// @resource     comment https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/comment.min.js
+// @resource     video https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/video.min.js
 // @resource     crc https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/crc.js
 // @resource     md5 https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/md5.js
 // @resource     config https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/config.json
@@ -383,6 +383,7 @@
                 // 修改区域限制
                 if (url.includes('season/user/status?')) {
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.status(this) });
+                    url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season/user/status', 'api.bilibili.com/pgc/view/web/season/user/status');
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
@@ -548,15 +549,14 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("首页推荐", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("首页推荐", ...e) }
         },
         // 修复番剧季度信息
         season: (obj, hook = []) => {
             try {
                 hook.push(jsonCheck(obj.responseText));
                 let response = jsonCheck(obj.responseText);
-                for (let i = 0; i < response.result.section.length; i++) response.result.episodes.push(...response.result.section[i].episodes);
+                if (response.result.section) for (let i = 0; i < response.result.section.length; i++) response.result.episodes.push(...response.result.section[i].episodes);
                 for (let i = 0; i < response.result.episodes.length; i++) {
                     response.result.episodes[i].ep_id = response.result.episodes[i].id;
                     response.result.episodes[i].episode_status = response.result.episodes[i].status;
@@ -568,8 +568,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e) }
         },
         // 修复番剧追番信息
         stat: (obj, hook = []) => {
@@ -582,8 +581,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e) }
         },
         // 修改直播数据
         getRoomPlayInfo: (obj, hook = []) => {
@@ -601,8 +599,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("直播拦截", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("直播拦截", ...e) }
         },
         // 修改番剧推荐
         recommend: (obj, hook = []) => {
@@ -615,8 +612,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧推荐", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧推荐", ...e) }
         },
         // 生成播放信息
         carousel: (obj) => {
@@ -633,8 +629,7 @@
                     responseXML = parser.parseFromString(xmltext, "text/xml");
                 Object.defineProperty(obj, 'responseXML', { writable: true });
                 obj.responseXML = responseXML;
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("播放通知", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("播放通知", ...e) }
         },
         // 强制载入播放器
         status: (obj) => {
@@ -651,14 +646,13 @@
                         response.result.pay = 1;
                         BLOD.vip = true;
                     }
-                    if (BLOD.limit || BLOD.vip) {
-                        Object.defineProperty(obj, 'response', { writable: true });
-                        Object.defineProperty(obj, 'responseText', { writable: true });
-                        obj.response = obj.responseText = JSON.stringify(response);
-                    }
+                    if (response.result.progress) response.result.watch_progress = response.result.progress;
+                    if (response.result.vip_info) response.result.vipInfo = response.result.vip_info;
+                    Object.defineProperty(obj, 'response', { writable: true });
+                    Object.defineProperty(obj, 'responseText', { writable: true });
+                    obj.response = obj.responseText = JSON.stringify(response);
                 }
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
         },
         // 监听视频地址
         playinfo: async (obj) => {
@@ -667,8 +661,7 @@
                 BLOD.__playinfo__ = typeof obj.response == "object" ? obj.response : jsonCheck(obj.response);
                 // 刷新下载面板
                 if (document.getElementById("bili-old-download-table")) download.setTable();
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("视频监听", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("视频监听", ...e) }
         }
     }
     const download = BLOD.download = {
