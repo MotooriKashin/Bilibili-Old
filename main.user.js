@@ -1086,8 +1086,8 @@
             try {
                 if (!obj.response) throw obj;
                 __playinfo__ = typeof obj.response == "object" ? obj.response : deliver.xhrJsonCheck(obj.response);
-                // 刷新下载面板
-                if (document.getElementById("bili-old-download-table")) deliver.download.setTable();
+                // 移除下载面板
+                if (document.getElementById("bili-old-download-table")) document.getElementById("bili-old-download-table").remove();
             }
             catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("视频监听", ...e)}
         }
@@ -1883,7 +1883,7 @@
         // 切p相关
         switchVideo : async () => {
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
-            if (config.reset.download) {url = ""; mdf = ""; hash = [];};
+            if (config.reset.download) {xml = ""; url = ""; mdf = ""; hash = [];};
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
             if (config.reset.midcrc && !config.reset.danmuku && !hash[0]) {
                 let data = await xhr.true(deliver.obj2search(API.url.listso, {oid : cid}));

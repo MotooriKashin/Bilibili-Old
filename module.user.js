@@ -8,7 +8,7 @@
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
 // @connect      *
-// @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
+// @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @resource     av https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/av.html
 // @resource     watchlater https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/watchlater.html
@@ -34,7 +34,7 @@
 // @license      MIT License
 // ==/UserScript==
 
-(function(){
+(function () {
     'use strict';
     const config = JSON.parse(GM_getResourceText("config"));
     const root = window.protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
@@ -657,8 +657,8 @@
             try {
                 if (!obj.response) throw obj;
                 BLOD.__playinfo__ = typeof obj.response == "object" ? obj.response : jsonCheck(obj.response);
-                // 刷新下载面板
-                if (document.getElementById("bili-old-download-table")) download.setTable();
+                // 移除下载面板
+                if (document.getElementById("bili-old-download-table")) document.getElementById("bili-old-download-table").remove();
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("视频监听", ...e) }
         }
     }
@@ -727,7 +727,7 @@
         quee: (path, qua, bps) => {
             if (path[0] && path[0].durl) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
-                BLOD.mdf.mp4.push(["1080P", path[0].durl[0].url.replace("http:", ""), sizeFormat(path[0].durl[0].size),".mp4"]);
+                BLOD.mdf.mp4.push(["1080P", path[0].durl[0].url.replace("http:", ""), sizeFormat(path[0].durl[0].size), ".mp4"]);
                 navigator.clipboard.writeText(path[0].durl[0].url);
             }
             if (path[1]) {
@@ -1117,10 +1117,12 @@
         str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js");
         return str;
     }
+    // 滚动到播放器
     const bofqiToView = BLOD.bofqiToView = () => {
         let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi") || "";
         bofqi ? bofqi.scrollIntoView({ behavior: 'smooth', block: 'center' }) : "";
     }
+    // 移除预览提示框
     const removePreview = async (node) => {
         try {
             if (!config.reset.preview) return;
@@ -1143,6 +1145,7 @@
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("付费预览", ...e) }
     }
+    // 替换顶栏底栏
     const resetSction = async () => {
         if (!config.reset.grobalboard) return;
         if (!unsafeWindow.$) {
@@ -1176,9 +1179,9 @@
         }
         window.setTimeout(() => { resetNodes() }, 3000);
     }
+    // 切P刷新数据
     const switchVideo = async () => {
-        let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
-        if (config.reset.download) { BLOD.url = ""; BLOD.mdf = ""; BLOD.hash = []; };
+        if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; BLOD.hash = []; };
         if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
         if (config.reset.midcrc && !config.reset.danmuku && !BLOD.hash[0]) {
             let data = await xhr.true(objUrl("https://api.bilibili.com/x/v1/dm/list.so", { oid: cid }));
@@ -1196,6 +1199,7 @@
             }
         });
     }
+    // 修复失效视频
     const fixVideoLost = {
         // 收藏里的失效视频
         favlist: async (msg, data) => {
@@ -1323,6 +1327,7 @@
             if (msg.target.className == "small-item disabled") msg.target.className = "small-item";
         }
     }
+    // 番剧分集数据
     const setBangumi = {
         init: async (data) => {
             if (!config.reset.episodedata) return;
@@ -1372,6 +1377,7 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分集数据", ...e) }
         },
     }
+    // 修复主页分区
     const fixnews = async (node, move) => {
         try {
             let rank = config.reset.grobalboard ? document.getElementsByClassName("rank-tab")[0] : "";
@@ -1414,6 +1420,7 @@
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分区·版面", ...e) }
     }
+    // 修复评论楼层
     const setReplyFloor = {
         init: async (link) => {
             BLOD.src = "";
@@ -1439,8 +1446,8 @@
                     else {
                         // 3页以上先获取当页首条评论rpid
                         let dialog;
-                        if(list_item[0]){for(let i=0;i<list_item.length;i++){if(list_item[i].getAttribute("data-id")==root){list_item=list_item[i].getElementsByClassName("reply-wrap");if(list_item[0])for(let j=0;j<list_item.length;j++)if(!list_item[j].getElementsByClassName("floor")[0]){dialog=list_item[j].getAttribute("data-id");break;}break;}}}
-                        else if(main_floor[0]){for(let i=0;i<main_floor.length;i++){if(main_floor[i].getAttribute("id")&&main_floor[i].getAttribute("id").includes(root)){main_floor=main_floor[i].getElementsByTagName("li");if(main_floor[0])for(let j=0;j<main_floor.length;j++)if(main_floor[j].id&&main_floor[j].id.includes("l_id")&&!main_floor[j].getElementsByClassName("floor-num")[0]){dialog=main_floor[j].getAttribute("id").split('_')[2];break;}break;}}}
+                        if (list_item[0]) { for (let i = 0; i < list_item.length; i++) { if (list_item[i].getAttribute("data-id") == root) { list_item = list_item[i].getElementsByClassName("reply-wrap"); if (list_item[0]) for (let j = 0; j < list_item.length; j++)if (!list_item[j].getElementsByClassName("floor")[0]) { dialog = list_item[j].getAttribute("data-id"); break; } break; } } }
+                        else if (main_floor[0]) { for (let i = 0; i < main_floor.length; i++) { if (main_floor[i].getAttribute("id") && main_floor[i].getAttribute("id").includes(root)) { main_floor = main_floor[i].getElementsByTagName("li"); if (main_floor[0]) for (let j = 0; j < main_floor.length; j++)if (main_floor[j].id && main_floor[j].id.includes("l_id") && !main_floor[j].getElementsByClassName("floor-num")[0]) { dialog = main_floor[j].getAttribute("id").split('_')[2]; break; } break; } } }
                         // 根据当页首条评论rpid获取min_id
                         data = await xhr.true(objUrl("https://api.bilibili.com/x/v2/reply/dialog/cursor", { "oid": oid, "root": root, "type": type, "dialog": dialog, "size": 20 }));
                         let min_id = jsonCheck(data).data.replies;
@@ -1539,6 +1546,7 @@
             }
         }
     }
+    // 修复评论跳转
     const fixVideoSeek = (node) => {
         if (document.querySelector("#bofqi")) {
             node.querySelectorAll("a.video-seek").forEach(function (v) {
@@ -1549,6 +1557,7 @@
             })
         }
     }
+    // 跳过充电鸣谢
     const electricPanelJump = async (node) => {
         try {
             if (!config.reset.electric) return;
@@ -1558,6 +1567,7 @@
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("充电鸣谢", ...e) }
     }
+    // 修复主页排行
     const fixrank = async (node) => {
         // 这些分区排行榜已全部采用类似番剧排行的模式，故采用相似的节点覆盖
         let sort = {
@@ -1592,6 +1602,7 @@
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分区排行", ...e) }
     }
+    // 弹幕反查
     const danmkuHashId = async (node) => {
         if (!config.reset.midcrc) return;
         BLOD.midcrc = BLOD.midcrc || (await import(await GM_getResourceURL("crc"))).default;
@@ -1626,6 +1637,7 @@
             })
         })
     }
+    // 移除节点
     const resetNodes = async (ext) => {
         let remove = (node, type, hidden, index) => {
             index ? index : index = 0;
@@ -1665,6 +1677,7 @@
             if (blur[0]) blur[0].removeAttribute("style");
         }
     }
+    // 构造媒体页
     const setMediaList = {
         init: async (data) => {
             if (!BLOD.ml) return;
@@ -1800,6 +1813,7 @@
             }, 100);
         },
     }
+    // BV超链接转化
     const avdesc = async () => {
         if (!config.rewrite.av || !aid || BLOD.path[3] != 'video') return;
         let desc = document.getElementsByClassName("info");
@@ -1812,6 +1826,7 @@
             }
         }
     }
+    // 修复分区对照
     const fixSort = {
         // av
         video: async () => {
@@ -1863,6 +1878,7 @@
             }, 1000);
         },
     }
+    // 点赞功能
     const setLike = async (data) => {
         if (!config.reset.like) return;
         let timer = window.setInterval(async () => {
@@ -1945,6 +1961,7 @@
             }
         }, 100);
     }
+    // 主页在线数据
     const setOnline = async () => {
         let timer = window.setInterval(async () => {
             let online = document.getElementsByClassName("online")[0];
@@ -1998,6 +2015,7 @@
             }
         }, 1000);
     }
+    // 空间注册时间
     const setJoinTime = async () => {
         if (!BLOD.mid && !config.reset.jointime) return;
         let data = await xhr.GM(objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": BLOD.mid }));
@@ -2032,6 +2050,7 @@
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("注册时间", ...e) }
     }
+    // 会员授权
     const accesskey = async () => {
         if (window.self != window.top) return;
         if (!config.reset.accesskey) {//
@@ -2042,13 +2061,13 @@
                 page.setAttribute("style", "display: none;");
                 page.setAttribute("src", objUrl("https://www.biliplus.com/login?act=logout"));
                 document.body.appendChild(page);
-                setTimeout(() => {page.remove()},3000);
+                setTimeout(() => { page.remove() }, 3000);
                 debug.log("取消会员授权");
             }
             return;
         }
         if (!GM_getValue("access_key") || (Date.now() - GM_getValue("access_date") > 2160000)) {
-            try{
+            try {
                 if (!BLOD.uid) {
                     debug.log("请先登录，才能授权会员");
                     return;
@@ -2056,10 +2075,10 @@
                 let data = jsonCheck(await BLOD.xhr.GM("https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a"));
                 data = await new Promise((resolve, reject) => {
                     GM_xmlhttpRequest({
-                        method    : "GET",
-                        url       : data.data.confirm_uri,
-                        onload    : (xhr) => resolve(xhr.finalUrl),
-                        onerror   : (xhr) => reject(xhr.statusText || data.data.confirm_uri + " net::ERR_CONNECTION_TIMED_OUT"),
+                        method: "GET",
+                        url: data.data.confirm_uri,
+                        onload: (xhr) => resolve(xhr.finalUrl),
+                        onerror: (xhr) => reject(xhr.statusText || data.data.confirm_uri + " net::ERR_CONNECTION_TIMED_OUT"),
                     });
                 })
                 data = urlObj(data);
@@ -2067,12 +2086,12 @@
                 page.setAttribute("style", "display: none;");
                 page.setAttribute("src", objUrl("https://www.biliplus.com/login", data));
                 document.body.appendChild(page);
-                setTimeout(() => {page.remove()},3000);
+                setTimeout(() => { page.remove() }, 3000);
                 GM_setValue("access_key", data.access_key);
                 GM_setValue("access_date", Date.now());
                 debug.log("会员授权成功！");
             }
-            catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e)}
+            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e) }
         }
     }
     // 播放器通知
@@ -2380,7 +2399,7 @@
             }
             face.innerHTML = "<i></i><span>设置</span>";
             (timer = () => {
-                setTimeout(()=> {document.body ? document.body.appendChild(face) : timer()}, 100);
+                setTimeout(() => { document.body ? document.body.appendChild(face) : timer() }, 100);
             })();
         },
         table: async (timer) => {
