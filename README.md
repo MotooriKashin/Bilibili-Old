@@ -140,6 +140,9 @@
    - [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/bilibili/js-css/comment.min.js)：旧版B站原生评论区相关脚本，用于修复新版评论丢失的小页码区，只在重写的旧版页面生效
 - 脚本引用了部分公开库
    - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
+- 脚本使用了部分原生脚本历史版本并可能进行了修改
+   - [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/comment.min.js) 2019年12月的备份，用以找回新版移除评论区小页码区域。
+   - [video.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/video.min.js) 2019年12月的备份，进行了部分修改以支持4K、HDR清晰度
 
 ---
 ### 参考致谢
@@ -161,6 +164,7 @@
 ---
 ### 版本历史
 - 2020-11-15
+   + 不再使用dateURL调用原生脚本
    + 修复"开启新版弹幕时，BAS弹幕不能载入"的问题
 - 2020-11-12
    + 修复Bangumi播放记录
