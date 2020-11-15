@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.0
+// @version      3.7.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -20,7 +20,6 @@
 // @grant        GM_setValue
 // @run-at       document-start
 // @license      MIT License
-// @downloadURL none
 // ==/UserScript==
 
 (function() {
@@ -1541,17 +1540,29 @@
                 let total = config.dmSge.total;
                 let allrequset = [];
                 let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + aid;
-                for (let index = 1; index <= total; index++) {
+                function pushReq(url, index) {
                     allrequset.push(new Promise(function (resolve) {
                         let xhr = new XMLHttpRequest();
                         xhr.addEventListener("load", function () {
-                            protoSegments[index] = xhr.response;
+                            // api的segment_index从1开始
+                            // 这个数组中从0开始存储分段数据
+                            protoSegments[index - 1] = xhr.response;
                             resolve();
                         });
-                        xhr.open("get", reqUrl + "&segment_index=" + index);
+                        xhr.open("get", url);
                         xhr.responseType = "arraybuffer";
                         xhr.send();
                     }));
+                }
+                for (let index = 1; index <= total; index++) {
+                    pushReq(reqUrl + "&segment_index=" + index, index);
+                }
+                // BAS弹幕
+                if (config.specialDms.length > 0) {
+                    for (let index = 1; index <= config.specialDms.length; index++) {
+                        // 下发的是http链接，但会被chrome的安全措施拦掉，于是替换成https
+                        pushReq(config.specialDms[index - 1].replace("http", "https"), total + index);
+                    }
                 }
                 // 完成所有的网络请求大概要300ms
                 return Promise.all(allrequset).then(function () { onload(protoSegments); });
