@@ -914,7 +914,7 @@
                                     response = {"code" : 0, "message" : "success" , "result" : response};
                                 }
                             }
-                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", e); response = {"code" : -404, "message" : e , "data" : null};}
+                            catch (e) {debug.msg("解除限制失败 ಥ_ಥ", ...e); response = {"code" : -404, "message" : e , "data" : null};}
                             this.response = this.responseText = JSON.stringify(response);
                             this.readyState = 4;
                             this.onreadystatechange();
@@ -1592,24 +1592,19 @@
         // 播放器调试通知
         debug : (...msg) => {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
-            if (!node) {debug.log(...msg); return;}
-            let warn = msg[1] || "", delay = msg[2] || 3000;
-            let item = document.createElement("div"),
-                text = document.createElement("div"),
-                span = document.createElement("span"),
-                red = document.createElement("span");
-            delay = delay ? delay : 3000;
-            item.setAttribute("class","bilibili-player-video-toast-item bilibili-player-video-toast-msg");
-            item.appendChild(text);
-            text.setAttribute("class","bilibili-player-video-toast-item-text");
-            text.appendChild(span);
-            if (warn) text.appendChild(red);
-            span.setAttribute("class","video-float-hint-text");
-            span.innerText = msg[0];
-            red.setAttribute("class","video-float-hint-btn hint-red");
-            red.innerText = warn ? warn : "";
+            if (!node) {
+                debug.log(...msg);
+                return;
+            }
+            msg.forEach((d) => {d = typeof d == "object" ? "" : d});
+            let item = document.createElement("div");
             node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
-            setTimeout(() => item.remove(), delay);
+            item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
+            item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
+            item.children[0].children[0].innerHTML = msg[0] || "";
+            item.children[0].children[1].innerHTML = msg[1] || "";
+            item.children[0].children[2].innerHTML = msg[2] || "";
+            setTimeout(() => item.remove(), 3000);
         },
         // xhr返回json校验
         xhrJsonCheck : (data, toast) => {
