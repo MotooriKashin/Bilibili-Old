@@ -12,10 +12,7 @@
 // @connect      mcbbs.net
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.js
 // @icon         https://static.hdslb.com/images/favicon.ico
-// @resource     comment https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js
-// @resource     video https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js
 // @grant        GM_xmlhttpRequest
-// @grant        GM_getResourceURL
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @run-at       document-start
@@ -26,14 +23,14 @@
     'use strict';
 
     // 全局变量
-    let ml, aid, big, cid, mid, oid, pgc, src, tid, uid, url, xml, bvid, limit, defig;
+    let ml, aid, cid, mid, oid, pgc, src, tid, uid, url, xml, bvid, limit, defig;
     let arr = [], ids = [], obj = {}, mdf = {}, hash = [], bloburl = {};
     let DOCUMENT, __playinfo__, __INITIAL_STATE__;
     let LOCATION = document.location.href.split('/');
 
     // 原生脚本获取
-    const COMMENT = GM_getResourceURL("comment"),
-          VIDEO = GM_getResourceURL("video");
+    const COMMENT = "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js",
+          VIDEO = "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js";
 
     // protobuf初始化
     const root = window.protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
@@ -1074,11 +1071,6 @@
                         response.result.area_limit = 0;
                         response.ban_area_show = 1;
                         limit = true;
-                    }
-                    if (response.result.pay) big = 0;
-                    if (!response.result.pay && config.big && response.result.dialog) {
-                        response.result.pay = 1;
-                        big = true;
                     }
                     if (response.result.progress) response.result.watch_progress = response.result.progress;
                     if (response.result.vip_info) response.result.vipInfo = response.result.vip_info;
