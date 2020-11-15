@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.1
+// @version      3.7.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -711,7 +711,7 @@
                                 return a.progress - b.progress;
                             });
                             // 下载功能开启时，把分段弹幕转换到xml
-                            if(config.reset.download) {
+                            if(config.reset.dlother) {
                                 deliver.toXml(Segments, aid).then(function (result) {
                                     // 备份弹幕
                                     xml = result;
@@ -839,9 +839,24 @@
                                 });
                             }
                         }
-                    } else {
-                        this.reqURL = url;
                     }
+                    // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
+                    // 可以直接记录弹幕数据
+                    if (config.reset.dlother) {
+                        this.addEventListener("load", function() {
+                            xml = this.response;
+                            if (mdf) deliver.download.other();
+                            if (document.getElementById("bili-old-download-table")) deliver.download.item();
+                        });
+                    }
+                }
+                //历史弹幕下载
+                if (url.includes("history?type=") && config.reset.dlother) {
+                    this.addEventListener("load", function() {
+                        xml = this.response;
+                        if (mdf) deliver.download.other();
+                        if (document.getElementById("bili-old-download-table")) deliver.download.item();
+                    });
                 }
                 return open.call(this, method, url, ...rest);
             }
