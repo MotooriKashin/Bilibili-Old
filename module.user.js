@@ -287,13 +287,11 @@
                         Segments.sort(function (a, b) {
                             return a.progress - b.progress;
                         });
-                        // 下载功能开启时，把分段弹幕转换到xml
-                        if (config.reset.dlother) {
-                            toXml(Segments, cid).then(function (result) {
-                                // 备份弹幕
-                                BLOD.xml = result;
-                            });
-                        }
+                        // 把分段弹幕转换到xml以备下载
+                        toXml(Segments, cid).then(function (result) {
+                            // 备份弹幕
+                            BLOD.xml = result;
+                        });
                         // 将弹幕转换为旧格式
                         Segments = Segments.map(function (v) {
                             // 记录弹幕池哈希值
@@ -427,16 +425,14 @@
                     }
                     // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
                     // 可以直接记录弹幕数据
-                    if (config.reset.dlother) {
-                        this.addEventListener("load", function() {
-                            BLOD.xml = this.response;
-                            BLOD.hash = [];
-                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-                        });
-                    }
+                    this.addEventListener("load", function() {
+                        BLOD.xml = this.response;
+                        BLOD.hash = [];
+                        BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                    });
                 }
-                //历史弹幕下载
-                if (url.includes("history?type=") && config.reset.dlother) {
+                // 历史弹幕下载
+                if (url.includes("history?type=")) {
                     this.addEventListener("load", function() {
                         BLOD.xml = this.response;
                         BLOD.hash = [];
