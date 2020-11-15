@@ -817,9 +817,9 @@
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
                 }
                 // 修改弹幕链接
-                if (url.includes("list.so") && config.reset.danmuku) {
+                if (url.includes("list.so")) {
                     // 这时pakku.js已经修改了xhr对象，需要另做处理
-                    if (this.pakku_url) {
+                    if (this.pakku_url && config.reset.danmuku) {
                         segRequestOnlyOnce = true;
                         let pid = aid;
                         // 更改pakku.js请求的url，使它过滤分段弹幕
@@ -837,6 +837,9 @@
                                     xhr.response = xhr.responseText = xml;
                                     cb[i].call(xhr);
                                 });
+                                xml = this.response;
+                                hash = [];
+                                xml.match(/d p=".+?"/g).forEach((v) => { hash.push(v.split(",")[6]) });
                             }
                         }
                     }
@@ -845,8 +848,8 @@
                     if (config.reset.dlother) {
                         this.addEventListener("load", function() {
                             xml = this.response;
-                            if (mdf) deliver.download.other();
-                            if (document.getElementById("bili-old-download-table")) deliver.download.item();
+                            hash = [];
+                            xml.match(/d p=".+?"/g).forEach((v) => { hash.push(v.split(",")[6]) });
                         });
                     }
                 }
@@ -854,8 +857,8 @@
                 if (url.includes("history?type=") && config.reset.dlother) {
                     this.addEventListener("load", function() {
                         xml = this.response;
-                        if (mdf) deliver.download.other();
-                        if (document.getElementById("bili-old-download-table")) deliver.download.item();
+                        hash = [];
+                        xml.match(/d p=".+?"/g).forEach((v) => { hash.push(v.split(",")[6]) });
                     });
                 }
                 return open.call(this, method, url, ...rest);
@@ -890,6 +893,8 @@
                                 });
                                 // 备份弹幕
                                 xml = xhr.response;
+                                hash = [];
+                                xml.match(/d p=".+?"/g).forEach((v) => { hash.push(v.split(",")[6]) });
                             });
                         });
                     }
@@ -1705,8 +1710,8 @@
                     deliver.download.quee(mdf.quee, qua, bps);
                     deliver.download.durl(path, qua);
                     deliver.download.dash(path, qua, bps);
-                    deliver.download.other();
                 }
+                deliver.download.other();
                 deliver.download.item();
             },
             // 创建下载面板
@@ -1900,10 +1905,7 @@
             let title = document.getElementsByTagName("h1")[0] ? document.getElementsByTagName("h1")[0].title : "";
             if (config.reset.download) {xml = ""; url = ""; mdf = ""; hash = [];};
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
-            if (config.reset.midcrc && !config.reset.danmuku && !hash[0]) {
-                let data = await xhr.true(deliver.obj2search(API.url.listso, {oid : cid}));
-                data.match(/d p=".+?"/g).forEach((v) => {hash.push(v.split(",")[6])});
-            }
+            if (config.reset.midcrc && !config.reset.danmuku && !hash[0]) xhr.true(deliver.obj2search(API.url.listso, {oid : cid}));
             setTimeout(()=>{
                 if (config.reset.viewbofqi && document.querySelector("#bofqi")) document.querySelector("#bofqi").scrollIntoView({behavior: 'smooth', block: 'center'});
                 if (config.reset.widescreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff")) {
@@ -2850,7 +2852,7 @@
                         descipline.innerHTML = '<a class="context-menu-a" href="javascript:void(0);"></a>';
                         onwer.setAttribute("class", "context-line context-menu-function bili-old-hash");
                         onwer.innerHTML = '<a class="context-menu-a js-action" title="" href="//space.bilibili.com/' + mid + '">hash: ' + hash[index] + " mid: " + mid + '</a>';
-                        node = document.getElementsByClassName("bilibili-player-context-menu-container")[0];
+                        node = document.getElementsByClassName("bilibili-player-context-menu-container white")[0];
                         node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
                         onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                         data = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.card, {mid : mid})));
@@ -3298,7 +3300,7 @@
         // 切p监听
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) deliver.switchVideo();
         // 创建播放器右键下载菜单
-        if (/bilibili-player-context-menu-container/.test(msg.target.className)) deliver.download.init(msg.target);
+        if (/bilibili-player-context-menu-container black/.test(msg.target.className)) deliver.download.init(msg.target);
         // 捕获评论链接
         if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply') && msg.target.src.includes("oid")) src = msg.target.src;
         // 捕获频道视频链接

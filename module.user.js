@@ -288,7 +288,7 @@
                             return a.progress - b.progress;
                         });
                         // 下载功能开启时，把分段弹幕转换到xml
-                        if (config.reset.download) {
+                        if (config.reset.dlother) {
                             toXml(Segments, cid).then(function (result) {
                                 // 备份弹幕
                                 BLOD.xml = result;
@@ -398,9 +398,9 @@
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 修改弹幕链接
-                if (url.includes("list.so") && config.reset.danmuku) {
+                if (url.includes("list.so")) {
                     // 这时pakku.js已经修改了xhr对象，需要另做处理
-                    if (this.pakku_url) {
+                    if (this.pakku_url && config.reset.danmuku) {
                         xhrHook.segRequestOnlyOnce = true;
                         let pid = aid;
                         // 更改pakku.js请求的url，使它过滤分段弹幕
@@ -418,11 +418,30 @@
                                     xhr.response = xhr.responseText = xml;
                                     cb[i].call(xhr);
                                 });
+                                // 备份弹幕
+                                BLOD.xml = xhr.response;
+                                BLOD.hash = [];
+                                BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                             }
                         }
-                    } else {
-                        this.reqURL = url;
                     }
+                    // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
+                    // 可以直接记录弹幕数据
+                    if (config.reset.dlother) {
+                        this.addEventListener("load", function() {
+                            BLOD.xml = this.response;
+                            BLOD.hash = [];
+                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                        });
+                    }
+                }
+                //历史弹幕下载
+                if (url.includes("history?type=") && config.reset.dlother) {
+                    this.addEventListener("load", function() {
+                        BLOD.xml = this.response;
+                        BLOD.hash = [];
+                        BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                    });
                 }
                 return open.call(this, method, url, ...rest);
             }
@@ -458,6 +477,8 @@
                             });
                             // 备份弹幕
                             BLOD.xml = xhr.response;
+                            BLOD.hash = [];
+                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                         });
                     });
                 }
@@ -676,16 +697,16 @@
         setTable: async () => {
             debug.msg("正在获取视频链接", ">>>");
             let qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
-            let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" }
+            let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
+            let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : "";
             if (!BLOD.mdf) {
-                let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : "";
                 BLOD.mdf = {};
                 BLOD.mdf.quee = BLOD.mdf.quee || ((path && path.durl) ? [await download.geturl()] : await Promise.all([download.geturl(), download.geturl("flv")]));
                 download.quee(BLOD.mdf.quee, qua, bps);
                 download.durl(path, qua);
                 download.dash(path, qua, bps);
-                download.other();
             }
+            download.other();
             download.item();
         },
         // 创建下载面板
@@ -772,17 +793,15 @@
         },
         other: () => {
             if (!config.reset.dlother) return;
+            BLOD.mdf.xml = [];
             if (BLOD.xml) {
                 let blob = new Blob([BLOD.xml]);
-                BLOD.mdf.xml = [];
                 BLOD.bloburl.xml = URL.createObjectURL(blob);
                 BLOD.mdf.xml.push(["弹幕", BLOD.bloburl.xml, sizeFormat(blob.size), ".xml"]);
             } else {
-                BLOD.mdf.xml = [];
                 BLOD.mdf.xml.push(["弹幕", "//api.bilibili.com/x/v1/dm/list.so?oid=" + cid, "--------", ".xml"]);
             }
             if (BLOD.__INITIAL_STATE__) {
-                BLOD.mdf.xml = BLOD.mdf.xml || [];
                 BLOD.mdf.xml.push(["封面", (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.pic || BLOD.__INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), "--------", ".jpg"]);
                 if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), "--------", ".jpg"]);
                 if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.specialCover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.specialCover.replace("http:", ""), "--------"], ".jpg");
@@ -1183,10 +1202,7 @@
     const switchVideo = async () => {
         if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; BLOD.hash = []; };
         if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
-        if (config.reset.midcrc && !config.reset.danmuku && !BLOD.hash[0]) {
-            let data = await xhr.true(objUrl("https://api.bilibili.com/x/v1/dm/list.so", { oid: cid }));
-            data.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-        }
+        if (config.reset.midcrc && !config.reset.danmuku && !BLOD.hash[0]) xhr.true(objUrl("https://api.bilibili.com/x/v1/dm/list.so", { oid: cid }));
         setTimeout(() => {
             if (config.reset.viewbofqi) bofqiToView();
             if (config.reset.widescreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff")) {
@@ -1621,7 +1637,7 @@
                     descipline.innerHTML = '<a class="context-menu-a" href="javascript:void(0);"></a>';
                     onwer.setAttribute("class", "context-line context-menu-function bili-old-hash");
                     onwer.innerHTML = '<a class="context-menu-a js-action" title="" href="//space.bilibili.com/' + mid + '">hash: ' + BLOD.hash[index] + " mid: " + mid + '</a>';
-                    node = document.getElementsByClassName("bilibili-player-context-menu-container")[0];
+                    node = document.getElementsByClassName("bilibili-player-context-menu-container white")[0];
                     node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
                     onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                     data = jsonCheck(await xhr.true(objUrl("https://api.bilibili.com/x/web-interface/card", { mid: mid })));
@@ -2691,7 +2707,7 @@
         // 切p监听
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) switchVideo();
         // 创建播放器右键下载菜单
-        if (/bilibili-player-context-menu-container/.test(msg.target.className)) download.init(msg.target);
+        if (/bilibili-player-context-menu-container black/.test(msg.target.className)) download.init(msg.target);
         // 捕获评论链接
         if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply') && msg.target.src.includes("oid")) BLOD.src = msg.target.src;
         // 捕获频道视频链接
