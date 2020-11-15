@@ -19,8 +19,6 @@
 // @resource     index https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/index.html
 // @resource     ranking https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/ranking.html
 // @resource     css https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/ui.css
-// @resource     comment https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/comment.min.js
-// @resource     video https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/video.min.js
 // @resource     crc https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/crc.js
 // @resource     md5 https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/md5.js
 // @resource     config https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/config.json
@@ -641,7 +639,7 @@
                         response.ban_area_show = 1;
                         BLOD.limit = true;
                     }
-                    if (response.result.pay) BLOD.vip = 0;
+                    if (response.result.pay) BLOD.big = 0;
                     if (!response.result.pay && BLOD.big && response.result.dialog) {
                         response.result.pay = 1;
                         BLOD.vip = true;
@@ -1050,17 +1048,29 @@
             let total = config.dmSge.total;
             let allrequset = [];
             let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + aid;
-            for (let index = 1; index <= total; index++) {
+            function pushReq(url, index) {
                 allrequset.push(new Promise(function (resolve) {
                     let xhr = new XMLHttpRequest();
                     xhr.addEventListener("load", function () {
-                        protoSegments[index] = xhr.response;
+                        // api的segment_index从1开始
+                        // 这个数组中从0开始存储分段数据
+                        protoSegments[index - 1] = xhr.response;
                         resolve();
                     });
-                    xhr.open("get", reqUrl + "&segment_index=" + index);
+                    xhr.open("get", url);
                     xhr.responseType = "arraybuffer";
                     xhr.send();
                 }));
+            }
+            for (let index = 1; index <= total; index++) {
+                pushReq(reqUrl + "&segment_index=" + index, index);
+            }
+            // BAS弹幕
+            if (config.specialDms.length > 0) {
+                for (let index = 1; index <= config.specialDms.length; index++) {
+                    // 下发的是http链接，但会被chrome的安全措施拦掉，于是替换成https
+                    pushReq(config.specialDms[index - 1].replace("http", "https"), total + index);
+                }
             }
             // 完成所有的网络请求大概要300ms
             return Promise.all(allrequset).then(function () { onload(protoSegments); });
@@ -1103,8 +1113,8 @@
     }
     // 原生脚本替换
     const oldScript = (str) => {
-        str = str.replace("//static.hdslb.com/js/video.min.js", BLOD.getResourceURL("video"));
-        str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", BLOD.getResourceURL("comment"));
+        str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
+        str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js");
         return str;
     }
     const bofqiToView = BLOD.bofqiToView = () => {
@@ -2022,6 +2032,49 @@
         }
         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("注册时间", ...e) }
     }
+    const accesskey = async () => {
+        if (window.self != window.top) return;
+        if (!config.reset.accesskey) {//
+            if (GM_getValue("access_key")) {
+                GM_deleteValue("access_key");
+                GM_deleteValue("access_date");
+                let page = document.createElement("iframe");
+                page.setAttribute("style", "display: none;");
+                page.setAttribute("src", objUrl("https://www.biliplus.com/login?act=logout"));
+                document.body.appendChild(page);
+                setTimeout(() => {page.remove()},3000);
+                debug.log("取消会员授权");
+            }
+            return;
+        }
+        if (!GM_getValue("access_key") || (Date.now() - GM_getValue("access_date") > 2160000)) {
+            try{
+                if (!BLOD.uid) {
+                    debug.log("请先登录，才能授权会员");
+                    return;
+                }
+                let data = jsonCheck(await BLOD.xhr.GM("https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a"));
+                data = await new Promise((resolve, reject) => {
+                    GM_xmlhttpRequest({
+                        method    : "GET",
+                        url       : data.data.confirm_uri,
+                        onload    : (xhr) => resolve(xhr.finalUrl),
+                        onerror   : (xhr) => reject(xhr.statusText || data.data.confirm_uri + " net::ERR_CONNECTION_TIMED_OUT"),
+                    });
+                })
+                data = urlObj(data);
+                let page = document.createElement("iframe");
+                page.setAttribute("style", "display: none;");
+                page.setAttribute("src", objUrl("https://www.biliplus.com/login", data));
+                document.body.appendChild(page);
+                setTimeout(() => {page.remove()},3000);
+                GM_setValue("access_key", data.access_key);
+                GM_setValue("access_date", Date.now());
+                debug.log("会员授权成功！");
+            }
+            catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e)}
+        }
+    }
     // 播放器通知
     const message = (...msg) => {
         let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
@@ -2340,6 +2393,7 @@
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
                 BLOD.setValue("config", config);
+                accesskey();
                 table.remove();
             }
             for (let key in config.rewrite) ui.setTable(table, BLOD.defaultConfig.rewrite[key], config.rewrite[key], key);
@@ -2378,6 +2432,7 @@
                     else config.reset[key] = 0;
                     if (key == "xhrhook") debug.msg("xhrhook已关闭，部分功能无法生效！");
                 }
+                if (key == "accesskey") accesskey();
             }
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
