@@ -2897,10 +2897,10 @@
             let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
             if (bilibili_player_settings) {
                 bilibili_player_settings = JSON.parse(bilibili_player_settings);
-                if (bilibili_player_settings.video_status.autopart !== "") BLOD.setValue("bilibili_player_settings", bilibili_player_settings);
-                else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
-            } else if (BLOD.getValue("bilibili_player_settings")) {
-                localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
+                if (bilibili_player_settings.video_status.autopart !== "") GM_setValue("bilibili_player_settings", bilibili_player_settings);
+                else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
+            } else if (GM_getValue("bilibili_player_settings")) {
+                localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
             }
         }
     }
