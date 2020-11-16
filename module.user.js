@@ -498,7 +498,7 @@
                                 response = { "code": 0, "message": "success", "result": response };
                             }
                         }
-                        catch (e) { debug.msg("解除限制失败 ಥ_ಥ", e); response = { "code": -404, "message": e, "data": null }; }
+                        catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
                         this.response = this.responseText = JSON.stringify(response);
                         this.readyState = 4;
                         this.onreadystatechange();
@@ -983,8 +983,18 @@
         }
     }
     // 加密密钥
-    const appkeySign = BLOD.appkeySign = () => {
-        let table = 'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', str = '';
+    const appkeySign = BLOD.appkeySign = (id) => {
+        id = 1 * id || 0;
+        let table = [
+            'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', // stream default
+            '/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``', // app pgc
+            '157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/', // app normal use
+            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special：api=<endpoint><appsecret>
+            '4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.', // Android normal
+            '12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051', // BiliLink
+            'bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22', // TV
+            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36', // ???
+        ][id], str = '';
         for (let i = table.length - 1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() + 2);
         return str.split(':')
     }
@@ -2106,6 +2116,16 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e) }
         }
     }
+    const playerSetting = () => {
+        let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
+        if (bilibili_player_settings) {
+            bilibili_player_settings = JSON.parse(bilibili_player_settings);
+            if (bilibili_player_settings.video_status.autopart !== "") BLOD.setValue("bilibili_player_settings", bilibili_player_settings);
+            else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
+        } else if (BLOD.getValue("bilibili_player_settings")) {
+            localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
+        }
+    }
     // 播放器通知
     const message = (...msg) => {
         let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
@@ -2113,12 +2133,14 @@
             debug.log(...msg);
             return;
         }
+        msg.forEach((d) => {d = typeof d == "object" ? "" : d});
         let item = document.createElement("div");
         node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
-        item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-msg");
-        item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span></div>';
+        item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
+        item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
         item.children[0].children[0].innerHTML = msg[0] || "";
         item.children[0].children[1].innerHTML = msg[1] || "";
+        item.children[0].children[2].innerHTML = msg[2] || "";
         setTimeout(() => item.remove(), 3000);
     }
     // 通知封装
@@ -2480,6 +2502,7 @@
             }
             try {
                 if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
+                playerSetting();
                 aid = aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
@@ -2500,6 +2523,7 @@
             try {
                 if (!config.rewrite.watchlater) throw ["未启用旧版稍后再看", location.href];
                 if (!BLOD.uid) throw ["未登录", "无法启用旧版稍后再看"];
+                playerSetting();
                 BLOD.path.name = "watchlater";
                 BLOD.write(oldScript(BLOD.getResourceText("watchlater")));
                 setLike();
@@ -2517,6 +2541,7 @@
         bangumi: () => {
             try {
                 if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
+                playerSetting();
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
                 let page = xhr.false(location.href);
@@ -2549,6 +2574,7 @@
             }
             try {
                 if (!config.rewrite.frame) throw ["未启用旧版嵌入播放器", location.href];
+                playerSetting();
                 BLOD.path.name = "blackboard";
                 if (BLOD.path[4].startsWith('newplayer')) {
                     let obj = BLOD.urlObj(location.href),
@@ -2665,14 +2691,6 @@
     if (BLOD.uid) {
         let offset = BLOD.getCookies()["bp_video_offset_" + BLOD.uid];
         if (offset) document.cookie = "bp_t_offset_" + BLOD.uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/";
-    }
-    let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
-    if (bilibili_player_settings) {
-        bilibili_player_settings = JSON.parse(bilibili_player_settings);
-        if (bilibili_player_settings.video_status.autopart !== "") BLOD.setValue("bilibili_player_settings", bilibili_player_settings);
-        else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
-    } else if (BLOD.path[2] == 'www.bilibili.com' && BLOD.getValue("bilibili_player_settings")) {
-        localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
     }
     // 页面分离
     if (BLOD.path[3]) {

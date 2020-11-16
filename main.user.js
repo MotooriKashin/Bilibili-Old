@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.2
+// @version      3.7.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -2891,6 +2891,17 @@
                 }
                 catch (e) {e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e)}
             }
+        },
+        // 初始化播放器设置
+        playerSetting: () => {
+            let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
+            if (bilibili_player_settings) {
+                bilibili_player_settings = JSON.parse(bilibili_player_settings);
+                if (bilibili_player_settings.video_status.autopart !== "") BLOD.setValue("bilibili_player_settings", bilibili_player_settings);
+                else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
+            } else if (BLOD.getValue("bilibili_player_settings")) {
+                localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
+            }
         }
     }
 
@@ -3052,6 +3063,7 @@
                     history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
                 }
                 if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
+                deliver.playerSetting();
                 aid = aid || LOCATION[4].match(/[0-9]+/)[0];
                 DOCUMENT = xhr.false(deliver.obj2search(API.url.detail, {aid : aid}));
                 __INITIAL_STATE__ = INITIAL_STATE.av(DOCUMENT);
@@ -3076,6 +3088,7 @@
             try {
                 if (!config.rewrite.watchlater) throw ["未启用旧版稍后再看", location.href];
                 if (!uid) throw ["未登录", "无法启用旧版稍后再看"];
+                deliver.playerSetting();
                 // 重写网页框架并调用后续处理
                 deliver.write(API.pageframe.watchlater);
                 deliver.setLike();
@@ -3096,6 +3109,7 @@
         bangumi : () => {
             try {
                 if (!config.rewrite.bangumi) throw ["未启用旧版Bangumi", location.href];
+                deliver.playerSetting();
                 // 指定playurl类型
                 pgc = true;
                 // 获取网页源代码
@@ -3125,6 +3139,7 @@
                 // 修复HTML5播放器帮助页视频cid错误
                 if (LOCATION[4].startsWith('html5player')) if (LOCATION[4].includes("3521416") && LOCATION[4].includes("6041635")) location.replace(deliver.obj2search(API.playerframe.html5player,{"aid":3521416,"cid":192446449}));
                 if (!config.rewrite.frame) throw ["未启用旧版嵌入播放器", location.href];
+                deliver.playerSetting();
                 if (LOCATION[4].startsWith('newplayer')) {
                     let obj = deliver.search2obj(location.href),
                         season_type = obj.season_type || "",
@@ -3239,14 +3254,6 @@
         deliver.getVariable();
         // uid用于判断是否登录
         uid = deliver.getCookies().DedeUserID;
-        // 维护旧版播放器设置
-        let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
-        if (bilibili_player_settings) {
-            bilibili_player_settings = JSON.parse(bilibili_player_settings);
-            if (bilibili_player_settings.video_status.autopart !== "") GM_setValue("bilibili_player_settings", bilibili_player_settings);
-            else if (GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
-        }
-        else if (LOCATION[2] == 'www.bilibili.com' && GM_getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
         // 维护旧版动态状态
         if (uid) {
             let offset = deliver.getCookies()["bp_video_offset_"+ uid];
