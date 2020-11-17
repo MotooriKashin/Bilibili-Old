@@ -141,7 +141,7 @@
 - 脚本引用了部分公开库
    - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
 - 脚本使用了部分原生脚本历史版本并可能进行了修改
-   - [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/comment.min.js) 2019年12月的备份，用以找回新版移除评论区小页码区域。
+   - [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/comment.min.js) 2019年1月的备份，进行了部分修改用以找回新版移除评论区小页码区域及回复旧版评论排序
    - [video.min.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/video.min.js) 2019年12月的备份，进行了部分修改以支持4K、HDR清晰度
 
 ---
@@ -163,6 +163,8 @@
 
 ---
 ### 版本历史
+- 2020-11-18
+   + 回复旧版评论样式，先“全部评论”再“按热度排序”
 - 2020-11-16
    + 修复新版播放器设置刷新被覆盖的问题
 - 2020-11-15
