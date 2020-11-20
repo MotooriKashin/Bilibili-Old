@@ -2844,6 +2844,7 @@
                         onwer.setAttribute("class", "context-line context-menu-function bili-old-hash");
                         onwer.innerHTML = '<a class="context-menu-a js-action" title="" href="//space.bilibili.com/' + mid + '">hash: ' + hash[index] + " mid: " + mid + '</a>';
                         node = document.getElementsByClassName("bilibili-player-context-menu-container white")[0];
+                        if (!node) return;
                         node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
                         onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                         data = deliver.xhrJsonCheck(await xhr.true(deliver.obj2search(API.url.card, {mid : mid})));
