@@ -1138,8 +1138,9 @@
     }
     // 原生脚本替换
     const oldScript = (str) => {
+        let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@53d7560d73d4d27be3cbb8412e3f87c665afc79a/src/comment.min.js";
         str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
-        str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js");
+        str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
         return str;
     }
     // 滚动到播放器
@@ -1644,6 +1645,7 @@
                     onwer.setAttribute("class", "context-line context-menu-function bili-old-hash");
                     onwer.innerHTML = '<a class="context-menu-a js-action" title="" href="//space.bilibili.com/' + mid + '">hash: ' + BLOD.hash[index] + " mid: " + mid + '</a>';
                     node = document.getElementsByClassName("bilibili-player-context-menu-container white")[0];
+                    if (!node) return;
                     node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
                     onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                     data = jsonCheck(await xhr.true(objUrl("https://api.bilibili.com/x/web-interface/card", { mid: mid })));
@@ -1837,14 +1839,15 @@
     }
     // BV超链接转化
     const avdesc = async () => {
-        if (!config.rewrite.av || !aid || BLOD.path[3] != 'video') return;
         let desc = document.getElementsByClassName("info");
-        if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
-            let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
-            for (let i = 0; i < paster.length; i++) {
-                let newer = "av" + abv(paster[i]);
-                newer = '<a target="_blank" href="//www.bilibili.com/video/' + newer + '">' + newer + '</a>';
-                desc[1].innerHTML = desc[1].outerHTML.replace(paster[i], newer);
+        if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
+            if (desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
+                let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
+                for (let i = 0; i < paster.length; i++) {
+                    let newer = "av" + abv(paster[i]);
+                    newer = '<a target="_blank" href="//www.bilibili.com/video/' + newer + '">' + newer + '</a>';
+                    desc[1].innerHTML = desc[1].outerHTML.replace(paster[i], newer);
+                }
             }
         }
     }
