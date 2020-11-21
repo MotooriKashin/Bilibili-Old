@@ -3246,6 +3246,14 @@
         }
     }
 
+    // 修复推出登录功能
+    if (location.href.includes("bilibili.com/login?act=exit")) {
+        (async () => {
+            let refer = document.referrer;
+            await xhr.post("https://passport.bilibili.com/login/exit/v2", "", "biliCSRF=" + BLOD.getCookies().bili_jct);
+            location.href = refer;
+         })();
+    }
     // 初始化设置
     defig = JSON.parse(JSON.stringify(config));
     let data = GM_getValue("config");

@@ -2673,6 +2673,14 @@
         }
     }
 
+    // 修复退出登录功能
+    if (location.href.includes("bilibili.com/login?act=exit")) {
+        (async () => {
+            let refer = document.referrer;
+            await xhr.post("https://passport.bilibili.com/login/exit/v2", "", "biliCSRF=" + BLOD.getCookies().bili_jct);
+            location.href = refer;
+         })();
+    }
     // 初始化配置数据
     let localConfig = BLOD.getValue("config");
     let configSort = ["rewrite", "reset"];
