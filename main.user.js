@@ -708,7 +708,7 @@
                                 return a.progress - b.progress;
                             });
                             // 将弹幕转换为旧格式
-                            Segments = Segments.map(function (v) {
+                            let danmaku = Segments.map(function (v) {
                                 // 记录弹幕池哈希值
                                 hash.push(v.midHash);
                                 return {
@@ -727,13 +727,13 @@
                             list_so.onmessage({
                                 data: {
                                     code: 0,
-                                    danmakuArray: Segments,
+                                    danmakuArray: danmaku,
                                     loadTime: loadTime,
                                     parseTime: parseTime,
                                     sendTip: "",
                                     state: 0,
                                     textSide: "",
-                                    total: Segments.length.toString()
+                                    total: danmaku.length.toString()
                                 }
                             });
                             // 把分段弹幕转换到xml以备下载
