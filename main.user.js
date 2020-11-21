@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.3
+// @version      3.7.4
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -1934,14 +1934,15 @@
         },
         // 超链接转化
         avdesc : async () => {
-            if (!config.rewrite.av || !aid || LOCATION[3] != 'video') return;
             let desc = document.getElementsByClassName("info");
-            if (desc[1] && desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
-                let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
-                for (let i = 0; i < paster.length; i++){
-                    let newer = "av" + deliver.convertId(paster[i]);
-                    newer = '<a target="_blank" href="//www.bilibili.com/video/' + newer + '">' + newer + '</a>';
-                    desc[1].innerHTML = desc[1].outerHTML.replace(paster[i], newer);
+            if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
+                if (desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
+                    let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
+                    for (let i = 0; i < paster.length; i++) {
+                        let newer = "av" + abv(paster[i]);
+                        newer = '<a target="_blank" href="//www.bilibili.com/video/' + newer + '">' + newer + '</a>';
+                        desc[1].innerHTML = desc[1].outerHTML.replace(paster[i], newer);
+                    }
                 }
             }
         },
