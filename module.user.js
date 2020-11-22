@@ -287,13 +287,8 @@
                         Segments.sort(function (a, b) {
                             return a.progress - b.progress;
                         });
-                        // 把分段弹幕转换到xml以备下载
-                        toXml(Segments, cid).then(function (result) {
-                            // 备份弹幕
-                            BLOD.xml = result;
-                        });
                         // 将弹幕转换为旧格式
-                        Segments = Segments.map(function (v) {
+                        let danmaku = Segments.map(function (v) {
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
                             return {
@@ -312,7 +307,7 @@
                         list_so.onmessage({
                             data: {
                                 code: 0,
-                                danmakuArray: Segments,
+                                danmakuArray: danmaku,
                                 loadTime: loadTime,
                                 parseTime: parseTime,
                                 sendTip: "",
@@ -320,6 +315,10 @@
                                 textSide: "",
                                 total: Segments.length.toString()
                             }
+                        });
+                        toXml(Segments).then(function (result) {
+                            // 备份弹幕
+                            BLOD.xml = result;
                         });
                     });
                 } else {
@@ -412,7 +411,7 @@
                         for (let i in this.pakku_load_callback) {
                             // 将pakku.js返回的数据转换回xml
                             this.pakku_load_callback[i] = function () {
-                                toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems, pid).then(function (xml) {
+                                toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems).then(function (xml) {
                                     xhr.response = xhr.responseText = xml;
                                     cb[i].call(xhr);
                                 });
@@ -466,7 +465,7 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
-                        toXml(Segments, cid).then(function (toXml) {
+                        toXml(Segments).then(function (toXml) {
                             callBack.forEach(function (f) {
                                 xhr.response = xhr.responseText = toXml;
                                 f.call(xhr);
@@ -1034,23 +1033,25 @@
         return obj;
     }
     // proto => xml
-    const toXml = BLOD.toXml = (danmaku, cid) => {
+    const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
             danmaku.sort(function (a, b) {
                 return a.progress - b.progress;
             });
-            let dom = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source></i>', "text/xml");
-            let root = dom.childNodes[0];
-            let d, attr, dmk;
-            for (let i in danmaku) {
-                dmk = danmaku[i];
-                d = dom.createElement("d");
-                attr = [dmk.progress / 1000, dmk.mode, dmk.fontsize, dmk.color, dmk.ctime, 0, dmk.midHash, dmk.idStr];
-                d.setAttribute("p", attr.join(","));
-                d.appendChild(dom.createTextNode(dmk.content));
-                root.appendChild(d);
+            let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
+            attr[5] = 0;
+            for (let i = 0; i < danmaku.length; i++) {
+                attr[0] = danmaku[i].progress / 1000;
+                attr[1] = danmaku[i].mode;
+                attr[2] = danmaku[i].fontsize;
+                attr[3] = danmaku[i].color;
+                attr[4] = danmaku[i].ctime;
+                attr[6] = danmaku[i].midHash;
+                attr[7] = danmaku[i].idStr;
+                xml += '<d p="' + attr.join(",") +'">' + danmaku[i].content + '</d>'
             }
-            resolve(new XMLSerializer().serializeToString(dom));
+            xml += "</i>";
+            resolve(xml);
         });
     }
     const getSegDanmaku = BLOD.getSegDanmaku = (onload) => {
@@ -2132,19 +2133,21 @@
     // 播放器通知
     const message = (...msg) => {
         let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
+        let time = 1 * msg[2] || 3000;
         if (!node) {
             debug.log(...msg);
             return;
         }
         msg.forEach((d) => {d = typeof d == "object" ? "" : d});
+        msg[2] = 1 * msg[2] ? "" : msg[2];
         let item = document.createElement("div");
         node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
         item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
         item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
-        item.children[0].children[0].innerHTML = msg[0] || "";
-        item.children[0].children[1].innerHTML = msg[1] || "";
-        item.children[0].children[2].innerHTML = msg[2] || "";
-        setTimeout(() => item.remove(), 3000);
+        msg[0] ? item.children[0].children[0].innerHTML = msg[0] : "";
+        msg[1] ? item.children[0].children[1].innerHTML = msg[1] : item.children[0].children[1].remove();
+        msg[2] ? item.children[0].children[2].innerHTML = msg[2] : item.children[0].children[2].remove();
+        setTimeout(() => item.remove(), time);
     }
     // 通知封装
     const debug = BLOD.debug = {

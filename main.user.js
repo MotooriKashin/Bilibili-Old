@@ -737,7 +737,7 @@
                                 }
                             });
                             // 把分段弹幕转换到xml以备下载
-                            deliver.toXml(Segments, aid).then(function (result) {
+                            deliver.toXml(Segments).then(function (result) {
                                 // 备份弹幕
                                 xml = result;
                             });
@@ -828,7 +828,7 @@
                         for (let i in this.pakku_load_callback) {
                             // 将pakku.js返回的数据转换回xml
                             this.pakku_load_callback[i] = function () {
-                                deliver.toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems, pid).then(function (xml) {
+                                deliver.toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems).then(function (xml) {
                                     xhr.response = xhr.responseText = xml;
                                     cb[i].call(xhr);
                                 });
@@ -879,7 +879,7 @@
                             protoSegments.forEach(function (seg) {
                                 Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                             });
-                            deliver.toXml(Segments, aid).then(function (toXml) {
+                            deliver.toXml(Segments).then(function (toXml) {
                                 callBack.forEach(function (f) {
                                     xhr.response = xhr.responseText = toXml;
                                     f.call(xhr);
@@ -1504,17 +1504,21 @@
             return obj;
         },
         // 转换解码后的protobuf到xml
-        toXml : (danmaku, pid) => {
+        toXml : (danmaku) => {
             return new Promise(function (resolve) {
-                //按出现时间排序弹幕，能避免反复插入dom元素，明显提高性能
-                //排序后40000条弹幕旧播放器能在1秒左右处理完
                 danmaku.sort(function (a, b) {
                     return a.progress - b.progress;
                 });
                 let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
                 attr[5] = 0;
                 for (let i = 0; i < danmaku.length; i++) {
-                    attr[0] = danmaku[i].progress / 1000, attr[1] = danmaku[i].mode, attr[2] = danmaku[i].fontsize, attr[3] = danmaku[i].color, attr[4] = danmaku[i].ctime, attr[6] = danmaku[i].midHash, attr[7] = danmaku[i].idStr;
+                    attr[0] = danmaku[i].progress / 1000;
+                    attr[1] = danmaku[i].mode;
+                    attr[2] = danmaku[i].fontsize;
+                    attr[3] = danmaku[i].color;
+                    attr[4] = danmaku[i].ctime;
+                    attr[6] = danmaku[i].midHash;
+                    attr[7] = danmaku[i].idStr;
                     xml += '<d p="' + attr.join(",") +'">' + danmaku[i].content + '</d>'
                 }
                 xml += "</i>";
@@ -1585,19 +1589,21 @@
         // 播放器调试通知
         debug : (...msg) => {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
+            let time = 1 * msg[2] || 3000;
             if (!node) {
                 debug.log(...msg);
                 return;
             }
             msg.forEach((d) => {d = typeof d == "object" ? "" : d});
+            msg[2] = 1 * msg[2] ? "" : msg[2];
             let item = document.createElement("div");
             node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
             item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
             item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
-            item.children[0].children[0].innerHTML = msg[0] || "";
-            item.children[0].children[1].innerHTML = msg[1] || "";
-            item.children[0].children[2].innerHTML = msg[2] || "";
-            setTimeout(() => item.remove(), 3000);
+            msg[0] ? item.children[0].children[0].innerHTML = msg[0] : "";
+            msg[1] ? item.children[0].children[1].innerHTML = msg[1] : item.children[0].children[1].remove();
+            msg[2] ? item.children[0].children[2].innerHTML = msg[2] : item.children[0].children[2].remove();
+            setTimeout(() => item.remove(), time);
         },
         // xhr返回json校验
         xhrJsonCheck : (data, toast) => {
