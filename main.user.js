@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.4
+// @version      3.7.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -806,7 +806,7 @@
                     url = deliver.obj2search(url.split("?")[0], obj);
                     cid = obj.cid || cid;
                     aid = obj.avid || aid;
-                    bvid = obj.bvid || deliver.convertId(aid) || bvid;
+                    bvid = obj.bvid || deliver.abv(aid) || bvid;
                     pgc = url.includes("pgc") ? true : false;
                     if (limit) this.url = url;
                     this.addEventListener('readystatechange', () => {if ( this.readyState === 4 ) intercept.playinfo(this, url)});
@@ -1444,7 +1444,7 @@
             return out;
         },
         // bv/av互转，算法见https://www.zhihu.com/question/381784377/answer/1099438784
-        convertId : (str) => {
+        abv : (str) => {
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
             let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
             for (let i = 0; i < 58; i++) tr[table[i]] = i;
@@ -2444,7 +2444,7 @@
                 if (!config.reset.lostvideo || window.src) return;
                 // 获取av号或者将bv转为av
                 let title, cover, aid = msg.target.getAttribute("data-aid");
-                if (!(1 * aid)) aid = deliver.convertId(aid);
+                if (!(1 * aid)) aid = deliver.abv(aid);
                 if (arr.indexOf(aid) != -1) return;
                 // 记录已经处理过的视频aid
                 arr.push(aid);
@@ -2902,8 +2902,9 @@
                 localStorage.setItem("bilibili_player_settings", JSON.stringify(GM_getValue("bilibili_player_settings")));
             }
         },
+        // 原生脚本替换
         oldScript: (str) => {
-            let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@53d7560d73d4d27be3cbb8412e3f87c665afc79a/src/comment.min.js";
+            let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js";
             str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
             str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
             return str;
@@ -3065,7 +3066,7 @@
                 GM_setValue("medialist", 0);
                 // bv转av
                 if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) {
-                    aid = deliver.convertId(LOCATION[4]);
+                    aid = deliver.abv(LOCATION[4]);
                     history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
                 }
                 if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
@@ -3103,7 +3104,7 @@
                 if (LOCATION[5]) {
                     aid = LOCATION[5].match(/[0-9]+/) ? LOCATION[5].match(/[0-9]+/)[0] : aid;
                     if (LOCATION[5].toLowerCase().startsWith('bv')){
-                        aid = deliver.convertId(LOCATION[5]);
+                        aid = deliver.abv(LOCATION[5]);
                         LOCATION[5] = "av" + aid;
                         history.replaceState(null,null,LOCATION.join("/"));
                     }
@@ -3150,7 +3151,7 @@
                     let obj = deliver.search2obj(location.href),
                         season_type = obj.season_type || "",
                         player_type = obj.player_type || "";
-                    aid = 1 * obj.aid || (obj.aid ? deliver.convertId(obj.aid) : undefined) || (obj.bvid ? deliver.convertId(obj.bvid) : undefined);
+                    aid = 1 * obj.aid || (obj.aid ? deliver.abv(obj.aid) : undefined) || (obj.bvid ? deliver.abv(obj.bvid) : undefined);
                     cid = obj.cid || "";
                     try {
                         cid = cid || deliver.xhrJsonCheck(xhr.false(deliver.obj2search(API.url.pagelist,{"aid" : aid}))).data[0].cid
@@ -3255,6 +3256,7 @@
          })();
     }
     // 初始化设置
+    unsafeWindow.BLOD = deliver;
     defig = JSON.parse(JSON.stringify(config));
     let data = GM_getValue("config");
     if (data) {

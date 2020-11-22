@@ -1,6 +1,6 @@
 # Bilibili 旧播放页
 ---
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 86](https://img.shields.io/badge/Google_Chrome_86-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 87](https://img.shields.io/badge/Google_Chrome_87-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)
 - [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式切换到原生旧版页面
 - 默认启用了部分附加功能，可在设置中选择关闭
 - 与部分脚本及扩展不兼容，详见兼容数据条目
@@ -96,8 +96,8 @@
 ### 兼容数据
 >
 > Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-> 86.0.4240.111 (正式版本) （64 位） (cohort: Stable)  
-> Tampermonkey BETA 4.10.6120
+> 87.0.4280.66 (正式版本) （64 位） (cohort: 87_66_Win)  
+> Tampermonkey BETA 4.10.6121
 >
 
 - 只在最新版chrome + Tampermonkey上通过测试
@@ -163,6 +163,8 @@
 
 ---
 ### 版本历史
+- 2020-11-22
+   + 修复评论区av/BV标题转化功能（未开启旧版评论时）
 - 2020-11-21
    + 修复旧版退出登录功能
    + 添加恢复“旧版评论”设置选项

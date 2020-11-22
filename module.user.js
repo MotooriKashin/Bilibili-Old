@@ -1138,7 +1138,7 @@
     }
     // 原生脚本替换
     const oldScript = (str) => {
-        let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@53d7560d73d4d27be3cbb8412e3f87c665afc79a/src/comment.min.js";
+        let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js";
         str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
         str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
         return str;
