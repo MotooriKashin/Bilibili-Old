@@ -707,13 +707,8 @@
                             Segments.sort(function (a, b) {
                                 return a.progress - b.progress;
                             });
-                            // 把分段弹幕转换到xml以备下载
-                            deliver.toXml(Segments, aid).then(function (result) {
-                                // 备份弹幕
-                                xml = result;
-                            });
                             // 将弹幕转换为旧格式
-                            Segments = Segments.map(function (v) {
+                            let danmaku = Segments.map(function (v) {
                                 // 记录弹幕池哈希值
                                 hash.push(v.midHash);
                                 return {
@@ -732,14 +727,19 @@
                             list_so.onmessage({
                                 data: {
                                     code: 0,
-                                    danmakuArray: Segments,
+                                    danmakuArray: danmaku,
                                     loadTime: loadTime,
                                     parseTime: parseTime,
                                     sendTip: "",
                                     state: 0,
                                     textSide: "",
-                                    total: Segments.length.toString()
+                                    total: danmaku.length.toString()
                                 }
+                            });
+                            // 把分段弹幕转换到xml以备下载
+                            deliver.toXml(Segments, aid).then(function (result) {
+                                // 备份弹幕
+                                xml = result;
                             });
                         });
                     } else {
@@ -1511,18 +1511,14 @@
                 danmaku.sort(function (a, b) {
                     return a.progress - b.progress;
                 });
-                let dom = (new DOMParser()).parseFromString('<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source></i>', "text/xml");
-                let root = dom.childNodes[0];
-                let d, attr, dmk;
-                for (let i in danmaku) {
-                    dmk = danmaku[i];
-                    d = dom.createElement("d");
-                    attr = [dmk.progress / 1000, dmk.mode, dmk.fontsize, dmk.color, dmk.ctime, 0, dmk.midHash, dmk.idStr];
-                    d.setAttribute("p", attr.join(","));
-                    d.appendChild(dom.createTextNode(dmk.content));
-                    root.appendChild(d);
+                let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
+                attr[5] = 0;
+                for (let i = 0; i < danmaku.length; i++) {
+                    attr[0] = danmaku[i].progress / 1000, attr[1] = danmaku[i].mode, attr[2] = danmaku[i].fontsize, attr[3] = danmaku[i].color, attr[4] = danmaku[i].ctime, attr[6] = danmaku[i].midHash, attr[7] = danmaku[i].idStr;
+                    xml += '<d p="' + attr.join(",") +'">' + danmaku[i].content + '</d>'
                 }
-                resolve(new XMLSerializer().serializeToString(dom));
+                xml += "</i>";
+                resolve(xml);
             });
         },
         getSegDanmaku: function (onload) {
