@@ -1,13 +1,14 @@
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 87](https://img.shields.io/badge/Google_Chrome_87-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)  
 
-![binguo.png](https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/preview.png)
-
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原B站旧版页面。
 尽量调用B站原生脚本进行重写，再尝试修复一些失效功能。  
 *在github上，`main.user.js`是脚本主体文件，添加到脚本管理器中即可。`module.user.js`是模块化后的版本，大量使用了ES6提供的新特性，所以对浏览器版本有较高的要求。greasyfork上提供的是前者，直接安装即可。*  
 版本更新时部分涉及原生脚本的修改以及其他模块的改进由于CDN可能会有24h以内的延迟。
 
 ---
+### 效果预览
+![binguo.png](https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/preview.png)
+
 ### 脚本实现
 *部分功能默认不生效，需要在设置里启用*
 - 重写
