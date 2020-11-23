@@ -132,24 +132,24 @@ Tampermonkey BETA 4.10.6121
    - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
 
 - (仅模块化版本)`GM_getResourceURL`/`GM_getResourceURL`：资源跨域，相关`@resource`元数据如下：
-   - [av.html](https://github.com/MotooriKashin/Bilibili-Old/src/av.html)：旧版av的html框架文件
-   - [watchlater.html](https://github.com/MotooriKashin/Bilibili-Old/src/watchlater.html)：旧版稍后再看的html框架文件
-   - [bangumi.html](https://github.com/MotooriKashin/Bilibili-Old/src/bangumi.html)/[cinema.html](https://github.com/MotooriKashin/Bilibili-Old/src/cinema.html)：旧版bangumi的html框架文件
-   - [playlist.html](https://github.com/MotooriKashin/Bilibili-Old/src/playlist.html)/[playlist.html](https://github.com/MotooriKashin/Bilibili-Old/src/playlistdetail.html)：播单的html框架文件
-   - [index.html](https://github.com/MotooriKashin/Bilibili-Old/src/index.html)：旧版主页的html框架文件
-   - [ui.css](https://github.com/MotooriKashin/Bilibili-Old/src/ui.css)：脚本依赖的css样式
-   - [crc.js](https://github.com/MotooriKashin/Bilibili-Old/src/crc.js)：弹幕反查crc逆向模块
-   - [md5.js](https://github.com/MotooriKashin/Bilibili-Old/src/md5.js)：md5模块
-   - [config.json](https://github.com/MotooriKashin/Bilibili-Old/config.json)：脚本默认设置数据
-   - [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/src/playlist.json)：一例播单数据备份
-   - [sort.json](https://github.com/MotooriKashin/Bilibili-Old/src/sort.json)：失效分区对照表
+   - [av.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/av.html)：旧版av的html框架文件
+   - [watchlater.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/watchlater.html)：旧版稍后再看的html框架文件
+   - [bangumi.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/bangumi.html)/[cinema.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/cinema.html)：旧版bangumi的html框架文件
+   - [playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.html)/[playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlistdetail.html)：播单的html框架文件
+   - [index.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/index.html)：旧版主页的html框架文件
+   - [ui.css](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.css)：脚本依赖的css样式
+   - [crc.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/crc.js)：弹幕反查crc逆向模块
+   - [md5.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/md5.js)：md5模块
+   - [config.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/config.json)：脚本默认设置数据
+   - [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.json)：一例播单数据备份
+   - [sort.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/sort.json)：失效分区对照表
 
 脚本引用了部分公开库
 - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
 
 脚本使用了部分原生脚本历史版本并可能进行了修改
-- [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/src/comment.min.js) 2019年12月的备份，进行了部分修改用以找回新版移除评论区小页码区域及恢复旧版评论排序
-- [video.min.js](https://github.com/MotooriKashin/Bilibili-Old/src/video.min.js) 2019年12月的备份，进行了部分修改以支持4K、HDR清晰度
+- [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/comment.min.js) 2019年12月的备份，进行了部分修改用以找回新版移除评论区小页码区域及恢复旧版评论排序
+- [video.min.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/video.min.js) 2019年12月的备份，进行了部分修改以支持4K、HDR清晰度
 
 ---
 ### 参考致谢
