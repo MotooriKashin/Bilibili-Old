@@ -2935,13 +2935,15 @@
             let trim = async () => {
                 url[1] = location.href;
                 if (url[0] != url[1]) {
-                    window.history.replaceState(null, null, BLOD.triming(location.href));
+                    window.history.replaceState(null, null, BLOD.triming(location.href) + location.hash);
                     url[0] = location.href;
                 }
                 if (!config.reset.bvid2av) return;
                 document.querySelectorAll("a").forEach(d => {
                     if (d.href && url.indexOf(d.href) < 0) {
-                        d.href = BLOD.triming(d.href);
+                        let hash = d.href.includes("#") ? "#" + d.href.split("#")[1] : "";
+                        hash = hash.includes("/") ? "" : hash;
+                        d.href = BLOD.triming(d.href) + hash;
                         url.push(d.href);
                     }
                 })
