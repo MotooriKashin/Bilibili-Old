@@ -2943,7 +2943,8 @@
                     if (d.href && url.indexOf(d.href) < 0) {
                         let hash = d.href.includes("#") ? "#" + d.href.split("#")[1] : "";
                         hash = hash.includes("/") ? "" : hash;
-                        d.href = BLOD.triming(d.href) + hash;
+                        d.href = BLOD.triming(d.href);
+                        if (d.href.includes("?")) d.href = d.href + hash;
                         url.push(d.href);
                     }
                 })
