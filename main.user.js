@@ -1481,6 +1481,7 @@
                 if (url) url = url + "?" + arr.join("&");
                 else url = arr.join("&");
             }
+            if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
             return url;
         },
         // 提取url查询部分成对象
