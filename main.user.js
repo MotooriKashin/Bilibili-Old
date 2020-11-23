@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.5
+// @version      3.7.6
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -2911,6 +2911,43 @@
             str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
             str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
             return str;
+        },
+        // URL转化
+        parameterTrim: () => {
+            let url = [];
+            if (!BLOD.triming) {
+                let parameters = ["spm_id_from", "from_source", "msource", "bsource", "seid", "from", "source", "session_id", "visit_id", "sourceFrom"];
+                BLOD.triming = (url) => {
+                    let obj = deliver.search2obj(url);
+                    var mas = url.split("?")[0];
+                    mas = mas.split("/");
+                    mas.forEach((d, i, mas) => {
+                        if (d.toLowerCase().startsWith('bv')) mas[i] = "av" + deliver.abv(d);
+                    });
+                    mas = mas.join("/");
+                    if (!obj) return mas;
+                    parameters.forEach(d => {
+                        obj[d] = "";
+                    })
+                    return deliver.obj2search(mas, obj);
+                }
+            }
+            let trim = async () => {
+                url[1] = location.href;
+                if (url[0] != url[1]) {
+                    window.history.replaceState(null, null, BLOD.triming(location.href));
+                    url[0] = location.href;
+                }
+                if (!config.reset.bvid2av) return;
+                document.querySelectorAll("a").forEach(d => {
+                    if (d.href && url.indexOf(d.href) < 0) {
+                        d.href = BLOD.triming(d.href);
+                        url.push(d.href);
+                    }
+                })
+            }
+            trim();
+            setTimeout(() => {unsafeWindow.onclick = trim});
         }
     }
 
@@ -3036,7 +3073,7 @@
             preview : ["付费预览", "去除播放器左下角付费预览框"],
             jointime : ["注册时间", "在个人空间显示B站账号注册时间，依赖主人开放个人资料"],
             lostvideo : ["失效视频", "借助第三方接口修复失效视频的封面和标题，将标题标红并添加删除线，无数据时只修改标题为av号"],
-            bvid2av : ["BV⇒av", "让所有页面能使用av号的地方尽量使用av号(未能完全覆盖)<br>进入bv页面自动跳转到av页面(不会重载页面)"],
+            bvid2av : ["BV⇒av", "单击一下，将页面所有BV转化为av并清理多余参数<br>地址栏是默认开启不受此开关限制"],
             selectdanmu : ["弹幕优先", "让旧版播放器优先展示弹幕列表而不是推荐视频"],
             episodedata : ["分集数据", "让番剧显示分集的播放数和弹幕数，原来总计数据显示在鼠标焦点的浮动信息上"],
             like : ["点赞功能", "为旧版播放页面添加点赞功能，点赞是新版页面专属功能，功能简陋，不支持一键三联"],
@@ -3067,13 +3104,9 @@
                 // 判断是否收藏跳转而来
                 ml = GM_getValue("medialist");
                 GM_setValue("medialist", 0);
-                // bv转av
-                if (config.reset.bvid2av && LOCATION[4].toLowerCase().startsWith('bv')) {
-                    aid = deliver.abv(LOCATION[4]);
-                    history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
-                }
                 if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
                 deliver.playerSetting();
+                if (LOCATION[4].toLowerCase().startsWith('bv')) aid = deliver.abv(LOCATION[4]);
                 aid = aid || LOCATION[4].match(/[0-9]+/)[0];
                 DOCUMENT = xhr.false(deliver.obj2search(API.url.detail, {aid : aid}));
                 __INITIAL_STATE__ = INITIAL_STATE.av(DOCUMENT);
@@ -3103,15 +3136,6 @@
                 deliver.write(deliver.oldScript(API.pageframe.watchlater));
                 deliver.setLike();
                 deliver.fixSort.watchlater();
-                // bv转av
-                if (LOCATION[5]) {
-                    aid = LOCATION[5].match(/[0-9]+/) ? LOCATION[5].match(/[0-9]+/)[0] : aid;
-                    if (LOCATION[5].toLowerCase().startsWith('bv')){
-                        aid = deliver.abv(LOCATION[5]);
-                        LOCATION[5] = "av" + aid;
-                        history.replaceState(null,null,LOCATION.join("/"));
-                    }
-                }
             }
             catch(e) {e = Array.isArray(e) ? e : [e]; debug.error("框架·稍后再看", ...e)}
         },
@@ -3256,7 +3280,7 @@
             let refer = document.referrer;
             await xhr.post("https://passport.bilibili.com/login/exit/v2", "", "biliCSRF=" + BLOD.getCookies().bili_jct);
             location.href = refer;
-         })();
+        })();
     }
     // 初始化设置
     unsafeWindow.BLOD = deliver;
@@ -3269,6 +3293,7 @@
     }
     else GM_setValue("config",config);
     try {
+        deliver.parameterTrim();
         // 监听拦截全局变量
         deliver.getVariable();
         // uid用于判断是否登录

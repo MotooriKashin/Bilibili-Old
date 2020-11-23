@@ -24,6 +24,7 @@
 // @resource     config https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/config.json
 // @resource     playlistjson https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/playlist.json
 // @resource     sort https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/sort.json
+// @resource     search https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/master/src/search.json
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
@@ -1010,6 +1011,7 @@
             if (url) url = url + "?" + arr.join("&");
             else url = arr.join("&");
         }
+        if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
         return url;
     }
     // 链接转对象
@@ -2120,6 +2122,7 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e) }
         }
     }
+    // 备份播放器设置
     const playerSetting = () => {
         let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
         if (bilibili_player_settings) {
@@ -2129,6 +2132,43 @@
         } else if (BLOD.getValue("bilibili_player_settings")) {
             localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
         }
+    }
+    // URL参数清理
+    const parameterTrim = () => {
+        let url = [];
+        if (!BLOD.triming) {
+            let parameters = JSON.parse(GM_getResourceText("search"));
+            BLOD.triming = (url) => {
+                let obj = urlObj(url);
+                var mas = url.split("?")[0];
+                mas = mas.split("/");
+                mas.forEach((d, i, mas) => {
+                    if (d.toLowerCase().startsWith('bv')) mas[i] = "av" + abv(d);
+                });
+                mas = mas.join("/");
+                if (!obj) return mas;
+                parameters.forEach(d => {
+                    obj[d] = "";
+                })
+                return objUrl(mas, obj);
+            }
+        }
+        let trim = async () => {
+            url[1] = location.href;
+            if (url[0] != url[1]) {
+                window.history.replaceState(null, null, BLOD.triming(location.href));
+                url[0] = location.href;
+            }
+            if (!config.reset.bvid2av) return;
+            document.querySelectorAll("a").forEach(d => {
+                if (d.href && url.indexOf(d.href) < 0) {
+                    d.href = BLOD.triming(d.href);
+                    url.push(d.href);
+                }
+            })
+        }
+        trim();
+        setTimeout(() => {unsafeWindow.onclick = trim});
     }
     // 播放器通知
     const message = (...msg) => {
@@ -2502,13 +2542,10 @@
             BLOD.path.name = "av";
             BLOD.ml = BLOD.getValue("medialist");
             BLOD.deleteValue("medialist");
-            if (config.reset.bvid2av && BLOD.path[4].toLowerCase().startsWith('bv')) {
-                aid = BLOD.abv(BLOD.path[4]);
-                history.replaceState(null, null, "https://www.bilibili.com/video/av" + aid + location.search + location.hash);
-            }
             try {
                 if (!config.rewrite.av) throw ["未启用旧版av页", location.href];
                 playerSetting();
+                if (BLOD.path[4].toLowerCase().startsWith('bv')) aid = abv(BLOD.path[4]);
                 aid = aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
@@ -2534,14 +2571,6 @@
                 BLOD.write(oldScript(BLOD.getResourceText("watchlater")));
                 setLike();
                 fixSort.watchlater();
-                if (BLOD.path[5]) {
-                    aid = BLOD.path[5].match(/[0-9]+/) ? BLOD.path[5].match(/[0-9]+/)[0] : aid;
-                    if (BLOD.path[5].toLowerCase().startsWith('bv')) {
-                        aid = BLOD.abv(BLOD.path[5]);
-                        BLOD.path[5] = "av" + aid;
-                        history.replaceState(null, null, BLOD.path.join("/"));
-                    }
-                }
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("框架·稍后再看", ...e) }
         },
         bangumi: () => {
@@ -2682,7 +2711,7 @@
             let refer = document.referrer;
             await xhr.post("https://passport.bilibili.com/login/exit/v2", "", "biliCSRF=" + BLOD.getCookies().bili_jct);
             location.href = refer;
-         })();
+        })();
     }
     // 初始化配置数据
     let localConfig = BLOD.getValue("config");
@@ -2699,6 +2728,7 @@
         })
         BLOD.setValue("config", config);
     }
+    parameterTrim();
     BLOD.uid = BLOD.getCookies().DedeUserID;
     BLOD.path = document.location.href.split('/');
     getVariable();
