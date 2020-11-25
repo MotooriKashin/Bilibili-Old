@@ -1602,7 +1602,7 @@
             item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
             item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
             msg[0] ? item.children[0].children[0].innerHTML = msg[0] : "";
-            msg[1] ? item.children[0].children[1].innerHTML = msg[1] : item.children[0].children[1].remove();
+            msg[1] ? item.children[0].children[1].innerHTML = msg[1] : "";
             msg[2] ? item.children[0].children[2].innerHTML = msg[2] : item.children[0].children[2].remove();
             setTimeout(() => item.remove(), time);
         },
