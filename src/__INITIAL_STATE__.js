@@ -7,10 +7,31 @@
 
     class iniState {
         constructor() {
-            this.aid = BLOD.aid;
-            this.cid = BLOD.cid;
-            this.config = BLOD.config;
-            this.debug = BLOD.debug;
+            console.debug('import module "__INITIAL_STATE__.js"')
+        }
+        get config() {
+            return BLOD.config;
+        }
+        set config(a) {
+            BLOD.config = a;
+        }
+        get debug() {
+            return BLOD.debug;
+        }
+        set debug(a) {
+            BLOD.debug = a;
+        }
+        get aid() {
+            return BLOD.aid;
+        }
+        set aid(a) {
+            BLOD.aid = a;
+        }
+        get cid() {
+            return BLOD.cid;
+        }
+        set cid(a) {
+            BLOD.cid = a;
         }
         av(data) {
             data = BLOD.jsonCheck(data).data;
