@@ -9,11 +9,15 @@
     const BLOD = window.BLOD;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log('import module "define.js"');
 >>>>>>> 604ec62 (fix debug message)
 =======
     console.debug('import module "define.js"');
 >>>>>>> ad21ab5 (fix deal with debug message)
+=======
+    console.log('import module "define.js"');
+>>>>>>> 604ec62 (fix debug message)
 
 <<<<<<< HEAD
 const BLOD = window.BLOD;

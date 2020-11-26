@@ -7,8 +7,12 @@
     const debug = BLOD.debug;
     const config = BLOD.config;
     const xhr = BLOD.xhr;
+<<<<<<< HEAD
     const toast = BLOD.toast;
     console.debug('import module "reset.js"');
+=======
+    console.log('import module "reset.js"');
+>>>>>>> 604ec62 (fix debug message)
 
     BLOD.reset = {
         // 对象捕获
