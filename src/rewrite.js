@@ -160,8 +160,8 @@
         rank() {
             try {
                 if (!BLOD.config.rewrite.rank) throw ["未启用排行", location.href];
-                BLOD.path.name = "rank", page;
-                let refer = document.referrer.split("/");
+                BLOD.path.name = "rank";
+                let refer = document.referrer.split("/"), page;
                 if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: refer[5], day: 3, type: 1, arc_type: 0 })));
                 else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: 0, day: 3, type: 1, arc_type: 0 })));
                 BLOD.__INITIAL_STATE__ = { loading: false, rankRouteParams: { arc_type: 0, day: 3, rankTab: "all", rid: 1 * refer[5] || 0, season_type: 1 }, showTypes: true, times: [{ name: "日排行", value: 1 }, { name: "三日排行", value: 3 }, { name: "周排行", value: 7 }, { name: "月排行", value: 30 }], typeList: [{ name: "全部投稿", value: 0 }, { name: "近期投稿", value: 1 }] };
