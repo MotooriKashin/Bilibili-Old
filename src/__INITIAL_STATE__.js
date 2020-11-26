@@ -5,38 +5,15 @@
 (function () {
     const BLOD = window.BLOD;
 
-    class iniState {
+    class IniState {
         constructor() {
-            console.debug('import module "__INITIAL_STATE__.js"')
-        }
-        get config() {
-            return BLOD.config;
-        }
-        set config(a) {
-            BLOD.config = a;
-        }
-        get debug() {
-            return BLOD.debug;
-        }
-        set debug(a) {
-            BLOD.debug = a;
-        }
-        get aid() {
-            return BLOD.aid;
-        }
-        set aid(a) {
-            BLOD.aid = a;
-        }
-        get cid() {
-            return BLOD.cid;
-        }
-        set cid(a) {
-            BLOD.cid = a;
+            console.log('import module "__INITIAL_STATE__.js"')
         }
         av(data) {
+            let aid = BLOD.aid, cid = BLOD.cid;
             data = BLOD.jsonCheck(data).data;
-            this.aid = this.aid || data.View.aid;
-            this.cid = this.cid || data.View.cid;
+            aid = aid || data.View.aid;
+            cid = cid || data.View.cid;
             let dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
             dat.aid = data.View.aid;
             dat.related = data.Related;
@@ -44,7 +21,7 @@
             dat.upData = data.Card.card;
             dat.upData.archiveCount = data.Card.archive_count;
             dat.videoData = data.View;
-            dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + this.cid + '&aid=' + this.aid + '&pre_ad=")';
+            dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
             return dat;
         }
         bangumi(data, epId) {
@@ -222,6 +199,7 @@
             return dat;
         }
         index(data) {
+            let config = BLOD.config, debug = BLOD.debug;
             let dat = {};
             let ini = JSON.parse(data);
             dat.recommendData = [];
@@ -246,12 +224,12 @@
             }
             dat.locsData = ini.locsData;
             dat.locsData[23] = ini.locsData[3197];
-            if (this.config.reset.adloc) for (let key in dat.locsData) if (dat.locsData[key]) for (let i = dat.locsData[key].length - 1; i >= 0; i--) if (dat.locsData[key][i].is_ad) { this.debug.debug("移除广告", key, dat.locsData[key][i]); dat.locsData[key].splice(i, 1); }
+            if (config.reset.adloc) for (let key in dat.locsData) if (dat.locsData[key]) for (let i = dat.locsData[key].length - 1; i >= 0; i--) if (dat.locsData[key][i].is_ad) { debug.debug("移除广告", key, dat.locsData[key][i]); dat.locsData[key].splice(i, 1); }
             if (dat.locsData[31][0] && dat.locsData[31][0].id == 0) dat.locsData[31] = [{ "id": 36585, "contract_id": "", "pos_num": 1, "name": "小黑屋弹幕举报", "pic": "https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg", "litpic": "", "url": "https://www.bilibili.com/blackboard/activity-dmjbfj.html", "style": 0, "agency": "", "label": "", "intro": "", "creative_type": 0, "request_id": "1546354354629q172a23a61a62q626", "src_id": 32, "area": 0, "is_ad_loc": true, "ad_cb": "", "title": "", "server_type": 0, "cm_mark": 0, "stime": 1520478000, "mid": "14629218" }];
             return dat;
         }
     }
 
-    const exports = new iniState();
+    const exports = new IniState();
     BLOD.iniState = exports;
 })();

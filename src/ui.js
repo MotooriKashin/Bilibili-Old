@@ -4,11 +4,11 @@
 (function () {
     const BLOD = window.BLOD;
 
-    class ui {
+    class Ui {
         constructor() {
-            console.debug('import module "ui.js"');
+            console.log('import module "ui.js"');
         }
-        init() {
+        init(timer) {
             let face = document.createElement("div");
             let attribute = {
                 "class": "bili-old ui-face",
@@ -38,7 +38,7 @@
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
                 BLOD.setValue("config", config);
-                accesskey();
+                BLOD.accesskey();
                 table.remove();
             }
             for (let key in config.rewrite) this.setTable(table, BLOD.defaultConfig.rewrite[key], config.rewrite[key], key);
@@ -78,12 +78,15 @@
                     else config.reset[key] = 0;
                     if (key == "xhrhook") BLOD.debug.msg("xhrhook已关闭，部分功能无法生效！");
                 }
-                if (key == "accesskey") accesskey();
+                if (key == "accesskey") BLOD.accesskey();
             }
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
         }
     }
 
-    if (window.self != window.top) new ui();
-})
+    if (window.self == window.top) {
+        let exports = new Ui();
+        exports.init();
+    }
+})()
