@@ -1,5 +1,7 @@
 /*
- * module "debug.js"
+ * @module "debug.js"
+ * @description 调试模块，以debug对象挂在在BLOD下，基本同console，其中debug.msg发送旧版播放器通知框
+ * @method debug/debug.log || debug.error || debug.warn || debug.debug || debug.msg
  */
 (function () {
     const BLOD = window.BLOD;

@@ -1,5 +1,7 @@
 /*
- * module md5.js
+ * @module md5.js
+ * @description md5模块，按需加载，以md5对象挂载在BLOD或window下
+ * @method hex || array || arrayBuffer || base64
  * [js-md5]{@link https://github.com/emn178/js-md5}
  * @license MIT
  */

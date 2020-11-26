@@ -1,5 +1,6 @@
 /*
- * module "crc.js"
+ * @module "crc.js"
+ * @description 哈希值反查引擎，按需加载，以midcrc方法挂载在BLOD或window下，输入crc哈希，输出uid
  * https://github.com/esterTion/BiliBili_crc2mid
  */
 (function () {

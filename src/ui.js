@@ -1,5 +1,6 @@
 /*
- * module "ui.js"
+ * @module "ui.js"
+ * @description 设置界面模块，只在顶层页面启用，独立生效，不暴露任何内容
  */
 (function () {
     const BLOD = window.BLOD;

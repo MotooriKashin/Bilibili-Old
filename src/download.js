@@ -1,5 +1,7 @@
 /*
- * module "download.js"
+ * @module "download.js"
+ * @description 下载组件，按需加载，挂载在BLOD下
+ * @method download.init [添加播放器右键菜单] || download [呼出下载面板]
  */
 (function () {
     const BLOD = window.BLOD;
