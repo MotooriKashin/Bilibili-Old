@@ -2,11 +2,14 @@
  * @module "debug.js"
  * @description 调试模块，以debug对象挂在在BLOD下，基本同console，其中debug.msg发送旧版播放器通知框
  * @method debug/debug.log || debug.error || debug.warn || debug.debug || debug.msg
+<<<<<<< HEAD
  * --------------------------------------------------------------------------------
  * 
  * @description 使用原生JavaScript实现[toastr]的功能
  * @url https://github.com/CodeSeven/toastr/ MIT license
  * @method toast/toast.info || toast.success || toast.warning || toast.error
+=======
+>>>>>>> 49b0faa (restore comment bangumi jump)
  */
 (function () {
     const BLOD = window.BLOD;

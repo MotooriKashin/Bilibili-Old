@@ -151,6 +151,7 @@ Tampermonkey BETA 4.10.6128
   - bili_jct：用于与 B 站后端进行操作验证
 
 脚本申请了跨域资源
+<<<<<<< HEAD
 
 - `GM_xmlhttpRequest`（`@connect`）：xhr 跨域
 
@@ -163,6 +164,34 @@ Tampermonkey BETA 4.10.6128
     - html：旧版网页框架，修改自[Wayback Machine](https://archive.org/web/)缓存
     - json：各种配置数据，包括脚本默认设置
     - js：各个功能模块，可以按需加载
+=======
+- `GM_xmlhttpRequest`：xhr跨域，相关`@connect`元数据如下：
+   - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：用于获取缓存的失效视频标题和封面
+   - [mcbbs](https://www.mcbbs.net)：用于获取APP端的鉴权`access_key`，只在解除限制功能同时开启“会员授权”时
+   - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
+
+- (仅模块化版本)`GM_getResourceURL`/`GM_getResourceURL`：资源跨域，相关`@resource`元数据如下：
+   - [av.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/av.html)：旧版av的html框架文件
+   - [watchlater.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/watchlater.html)：旧版稍后再看的html框架文件
+   - [bangumi.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/bangumi.html)/[cinema.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/cinema.html)：旧版bangumi的html框架文件
+   - [playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.html)/[playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlistdetail.html)：播单的html框架文件
+   - [index.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/index.html)：旧版主页的html框架文件
+   - [ui.css](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.css)：脚本依赖的css样式
+   - [crc.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/crc.js)：弹幕反查crc逆向模块
+   - [md5.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/md5.js)：md5模块
+   - [__INITIAL_STATE__.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/__INITIAL_STATE__.js)：\_\_INITIAL\_STATE\_\_配置模块
+   - [ui.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.js)：设置界面模块
+   - [debug.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/debug.js)：调试模块
+   - [xhr.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhr.js)：xhr封装模块
+   - [download.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/download.js)：下载模块
+   - [rewrite.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/rewrite.js)：重写模块
+   - [define.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/define.js)：函数声明模块
+   - [reset.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/reset.js)：其他处理模块
+   - [xhrhook.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhrhook.js)：xhrhook模块
+   - [config.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/config.json)：脚本默认设置数据
+   - [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.json)：一例播单数据备份
+   - [sort.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/sort.json)：失效分区对照表
+>>>>>>> 49b0faa (restore comment bangumi jump)
 
 脚本引用了部分公开库
 
@@ -217,6 +246,7 @@ Tampermonkey BETA 4.10.6128
 - 2020 年 02 月 08 日：关闭旧版历史弹幕池，部分高级弹幕、历史弹幕从此消失。
 
 ---
+<<<<<<< HEAD
 
 <details>
 <summary>版本历史</summary>
@@ -386,6 +416,11 @@ Tampermonkey BETA 4.10.6128
   - 重新实现跳过充电鸣谢功能
 - 2020-11-26
   - 修复评论区 bangumi 跳转
+=======
+### 版本历史
+- 2020-11-26
+   + 修复评论区bangumi跳转
+>>>>>>> 49b0faa (restore comment bangumi jump)
 - 2020-11-23
   - 修复评论区缺失的样式（B 站前端工程师抄 CSS 抄漏了！大概）
   - BV 转 av 支持页面所有链接并清理多余参数

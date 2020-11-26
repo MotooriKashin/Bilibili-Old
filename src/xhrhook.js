@@ -975,6 +975,7 @@
                                 toast.error(e);
                                 return;
                             }
+<<<<<<< HEAD
 >>>>>>> 5e8f294 (载入弹幕失败时弹出提示)
                             BLOD.hash = [];
                             for (let i = 0; i < segDanmaku.length; i++) {
@@ -996,6 +997,16 @@
                         seg.responseType = "arraybuffer";
                         seg.open("get", "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date);
                         seg.send();
+=======
+                        }
+                        catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
+                        this.response = this.responseText = JSON.stringify(response);
+                        this.readyState = 4;
+                        this.onreadystatechange();
+                        if (response.code !== 0) throw response.message;
+                        BLOD.__playinfo__ = response;
+                        debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
+>>>>>>> 49b0faa (restore comment bangumi jump)
                     }
                 }
                 // 监听页面多次重写jsonp

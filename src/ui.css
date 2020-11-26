@@ -361,6 +361,7 @@
 .up-info-m .avatar .name-text.is-vip, .up-info-m .avatar .name-text:hover {
   color: #fb7299;
 }
+<<<<<<< HEAD
 
 .up-info-m .title {
   display: block;
@@ -482,3 +483,5 @@
 .BLOD-dl-settings .button:hover, .BLOD-dl-settings button:hover {
   background: #1890ff;
 }
+=======
+>>>>>>> 49b0faa (restore comment bangumi jump)
