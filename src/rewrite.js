@@ -288,6 +288,7 @@
         }
         rank() {
             try {
+<<<<<<< HEAD
                 if (!BLOD.config.rewrite.rank) return;
                 BLOD.path.name = "rank";
 <<<<<<< HEAD
@@ -299,6 +300,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+                if (!BLOD.config.rewrite.rank) throw ["未启用排行", location.href];
+                BLOD.path.name = "rank";
+                let refer = document.referrer.split("/"), page;
+>>>>>>> c844375 (fix syntax error)
                 if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: refer[5], day: 3, type: 1, arc_type: 0 })));
                 else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: 0, day: 3, type: 1, arc_type: 0 })));
 >>>>>>> c844375 (fix syntax error)
