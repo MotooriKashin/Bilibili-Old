@@ -202,7 +202,8 @@
                 return download[type](...msg);
             }
         }
-        let method = makeExports("init");
+        let method = makeExports("setTable");
+        method.init = makeExports("init");
         return method;
     }
 
