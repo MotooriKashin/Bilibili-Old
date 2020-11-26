@@ -1,5 +1,8 @@
-// module "__INITIAL_STATE__.js"
+/*
+ * module "__INITIAL_STATE__.js"
+ */
 
+(function () {
 const BLOD = window.BLOD;
 const config = BLOD.config;
 
@@ -225,3 +228,4 @@ const iniState = {
 }
 
 BLOD.iniState = iniState;
+})();
