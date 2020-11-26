@@ -5,6 +5,7 @@
 (function () {
 const BLOD = window.BLOD;
 const config = BLOD.config;
+const debug = BLOD.debug;
 
 const iniState = {
     av: (data) => {
