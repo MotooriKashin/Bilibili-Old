@@ -1,5 +1,6 @@
 /*
- * module "__INITIAL_STATE__.js"
+ * @module "__INITIAL_STATE__.js"
+ * @description __INITIAL_STATE__数据配置，以iniState对象挂载在BLOD下
  */
 
 (function () {
