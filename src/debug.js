@@ -43,8 +43,8 @@
     const exports = () => {
         let debug = new Debug();
         function makeExports(type){
-            return function (msg) {
-                return debug[type](msg);
+            return function (...msg) {
+                return debug[type](...msg);
             }
         }
         let method = makeExports("log");
@@ -55,6 +55,7 @@
         method.msg = makeExports("msg");
         return method;
     }
+    
     BLOD.debug = exports();
 
 })()
