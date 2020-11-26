@@ -1,4 +1,13 @@
+<<<<<<< HEAD
 // module "define.js"
+=======
+/*
+ * module "define.js"
+ */
+(function () {
+    const BLOD = window.BLOD;
+    console.log('import module "define.js"');
+>>>>>>> 604ec62 (fix debug message)
 
 const BLOD = window.BLOD;
 
