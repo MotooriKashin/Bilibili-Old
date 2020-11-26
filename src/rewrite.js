@@ -1,5 +1,6 @@
 /*
- * module "rewrite.js"
+ * @module "rewrite.js"
+ * @description 重写模块，按需加载，以rewrite对象挂载在BLOD下
  */
 (function () {
     const BLOD = window.BLOD;

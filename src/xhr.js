@@ -1,5 +1,7 @@
 /*
- * module "xhr.js"
+ * @module "xhr.js"
+ * @description xhr封装，以xhr对象挂载在BLOD下
+ * @method xhr/xhr.true [异步请求] || xhr.false [同步请求] || xhr.GM [跨域请求] || xhr.post [表单请求]
  */
 (function () {
     const BLOD = window.BLOD;

@@ -2,7 +2,8 @@
 // module "define.js"
 =======
 /*
- * module "define.js"
+ * @module "define.js"
+ * @description 函数声明模块，定义了一些很少改动的函数，统统挂载在BLOD下
  */
 (function () {
     const BLOD = window.BLOD;

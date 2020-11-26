@@ -1,5 +1,6 @@
 /*
- * module "reset.js"
+ * @module "reset.js"
+ * @description 其他处理，非重写并没有单独模块的部分统一写这里，以reset对象挂载在BLOD下
  */
 (function () {
     const BLOD = window.BLOD;

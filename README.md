@@ -140,6 +140,15 @@ Tampermonkey BETA 4.10.6121
    - [ui.css](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.css)：脚本依赖的css样式
    - [crc.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/crc.js)：弹幕反查crc逆向模块
    - [md5.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/md5.js)：md5模块
+   - [__INITIAL_STATE__.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/__INITIAL_STATE__.js)：\_\_INITIAL\_STATE\_\_配置模块
+   - [ui.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.js)：设置界面模块
+   - [debug.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/debug.js)：调试模块
+   - [xhr.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhr.js)：xhr封装模块
+   - [download.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/download.js)：下载模块
+   - [rewrite.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/rewrite.js)：重写模块
+   - [define.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/define.js)：函数声明模块
+   - [reset.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/reset.js)：其他处理模块
+   - [xhrhook.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhrhook.js)：xhrhook模块
    - [config.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/config.json)：脚本默认设置数据
    - [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.json)：一例播单数据备份
    - [sort.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/sort.json)：失效分区对照表
@@ -187,6 +196,8 @@ Tampermonkey BETA 4.10.6121
 
 ---
 ### 版本历史
+- 2020-11-26
+   + 修复评论区bangumi跳转
 - 2020-11-23
    + 修复评论区缺失的样式（B站前端工程师抄CSS抄漏了！大概）
    + BV转av支持页面所有链接并清理多余参数
