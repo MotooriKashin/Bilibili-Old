@@ -14,10 +14,10 @@
             BLOD.deleteValue("medialist");
             try {
                 if (!BLOD.config.rewrite.av) throw ["未启用旧版av页", location.href];
-                BLOD.reset.reset.playerSetting();
+                BLOD.reset.playerSetting();
                 if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4]);
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
-                let page = BLOD.xhr.false(BLOD.BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
+                let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
                 if (!BLOD.__INITIAL_STATE__) throw "av/BV号可能无效！";
                 if (BLOD.__INITIAL_STATE__.videoData.redirect_url) throw ["番剧重定向：", BLOD.__INITIAL_STATE__.videoData.redirect_url];
@@ -160,7 +160,7 @@
         rank() {
             try {
                 if (!BLOD.config.rewrite.rank) throw ["未启用排行", location.href];
-                BLOD.path.name = "rank";
+                BLOD.path.name = "rank", page;
                 let refer = document.referrer.split("/");
                 if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: refer[5], day: 3, type: 1, arc_type: 0 })));
                 else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: 0, day: 3, type: 1, arc_type: 0 })));

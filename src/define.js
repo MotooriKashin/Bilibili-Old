@@ -1,8 +1,8 @@
 /*
  * module "define.js"
  */
-(function(){
-    const BLOD =window.BLOD;
+(function () {
+    const BLOD = window.BLOD;
 
     // 时间格式化
     BLOD.timeFormat = (time, type) => {
@@ -193,5 +193,5 @@
         bofqi ? bofqi.scrollIntoView({ behavior: 'smooth', block: 'center' }) : "";
     }
 
-    
+
 })()

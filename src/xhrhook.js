@@ -16,7 +16,7 @@
             danmaku.sort(function (a, b) {
                 return a.progress - b.progress;
             });
-            let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
+            let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             attr[5] = 0;
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
@@ -26,14 +26,14 @@
                 attr[4] = danmaku[i].ctime;
                 attr[6] = danmaku[i].midHash;
                 attr[7] = danmaku[i].idStr;
-                xml += '<d p="' + attr.join(",") +'">' + danmaku[i].content + '</d>'
+                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content + '</d>'
             }
             xml += "</i>";
             resolve(xml);
         });
     }
 
-    const getSegDanmaku  = (onload) => {
+    const getSegDanmaku = (onload) => {
         let protoSegments = [];
         getSegConfig().then(getAllSeg);
         function getSegConfig() {
@@ -43,7 +43,7 @@
                     let res = protoView.decode(new Uint8Array(xhr.response));
                     resolve(res);
                 });
-                xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + cid + "&pid=" + aid);
+                xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid);
                 xhr.responseType = "arraybuffer";
                 xhr.send();
             });
@@ -52,7 +52,7 @@
         function getAllSeg(config) {
             let total = config.dmSge.total;
             let allrequset = [];
-            let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + aid;
+            let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid;
             function pushReq(url, index) {
                 allrequset.push(new Promise(function (resolve) {
                     let xhr = new XMLHttpRequest();
@@ -81,7 +81,7 @@
             return Promise.all(allrequset).then(function () { onload(protoSegments); });
         }
     }
-    
+
     class Xhrhook {
         constructor() {
             console.log('import module "xhrhook.js"');
@@ -163,7 +163,7 @@
 
                 liveChat.onopen = function () {
                     let body = {
-                        "room_id": "video://" + aid + "/" + cid,
+                        "room_id": "video://" + BLOD.aid + "/" + BLOD.cid,
                         "platform": "web",
                         "accepts": [1000, 1015]
                     };
@@ -363,39 +363,39 @@
                 }
                 // 修改正在直播
                 if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.biliIndexRec(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.biliIndexRec(this, hook) });
                     url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
                 }
                 // 修改直播动态
                 if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.biliIndexRec(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.biliIndexRec(this, hook) });
                     url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
                 }
                 // 重定向番剧信息
                 if (url.includes('bangumi.bilibili.com/view/web_api/season?')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.season(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.season(this, hook) });
                     url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season', 'api.bilibili.com/pgc/view/web/season');
                 }
                 // 重定向追番信息
                 if (url.includes('bangumi.bilibili.com/ext/web_api/season_count?')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.stat(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.stat(this, hook) });
                     url = hook[1] = url.replace('bangumi.bilibili.com/ext/web_api/season_count', 'api.bilibili.com/pgc/web/season/stat');
                 }
                 // 修改番剧推荐
                 if (url.includes('api.bilibili.com/pgc/web/recommend/related/recommend')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.recommend(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.recommend(this) });
                 }
                 // 修改直播数据
                 if (url.includes('api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.getRoomPlayInfo(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.getRoomPlayInfo(this) });
                 }
                 // 修改播放器通知
                 if (url.includes('api.bilibili.com/x/player/carousel')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.carousel(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.carousel(this) });
                 }
                 // 修改区域限制
                 if (url.includes('season/user/status?')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.status(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.status(this) });
                     url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season/user/status', 'api.bilibili.com/pgc/view/web/season/user/status');
                 }
                 // 监听视频链接
@@ -403,23 +403,23 @@
                     obj.fourk = obj.sign ? "" : 1;
                     obj.fnval = obj.fnval ? 80 : "";
                     url = BLOD.objUrl(url.split("?")[0], obj);
-                    cid = obj.cid || cid;
-                    aid = obj.avid || aid;
-                    BLOD.bvid = bvid = obj.bvid || BLOD.abv(aid) || bvid;
+                    BLOD.cid = obj.cid || BLOD.cid;
+                    BLOD.aid = obj.avid || BLOD.aid;
+                    BLOD.bvid = BLOD.bvid = obj.bvid || BLOD.abv(BLOD.aid) || BLOD.bvid;
                     BLOD.pgc = url.includes("pgc") ? true : false;
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
-                    if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * cid) >= 0)) this.url = url;
+                    if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) this.playinfo(this, url) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 修改弹幕链接
                 if (url.includes("list.so")) {
                     // 这时pakku.js已经修改了xhr对象，需要另做处理
                     if (this.pakku_url && config.reset.danmuku) {
                         this.segRequestOnlyOnce = true;
-                        let pid = aid;
+                        let pid = BLOD.aid;
                         // 更改pakku.js请求的url，使它过滤分段弹幕
-                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + pid + "&segment_index=1";
+                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + pid + "&segment_index=1";
                         this.responseType = "arraybuffer";
                         let xhr = this;
                         let cb = [];
@@ -509,13 +509,13 @@
                         try {
                             if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
-                                if (BLOD.uid && (BLOD.ids.indexOf(1 * cid) >= 0) && config.reset.accesskey) accesskey = GM_getValue("access_key") || "";
+                                if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = GM_getValue("access_key") || "";
                                 let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, balh_ajax: 1, fnval: "", fnver: "", module: "pgc", platform: "android_i" } : { access_key: accesskey, balh_ajax: 1, module: "pgc" })
-                                response = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                 response = { "code": 0, "message": "success", "result": response };
                             }
                             else if (BLOD.vip) {
-                                let url = BLOD.pgc ? ("\x68\x74\x74\x70\x3a\x2f\x2f\x32\x31\x32\x2e\x36\x34\x2e\x33\x37\x2e\x32\x31\x32\x2f\x62\x61\x69\x64\x75\x79\x75\x6e\x2f\x62\x76\x75\x72\x6c\x2e\x70\x68\x70\x3f\x61\x6e\x69\x6d\x65\x3d\x31\x26\x62\x76\x69\x64\x3d" + bvid + "\x26\x63\x69\x64\x3d" + cid + "\x26\x75\x69\x64\x3d\x25\x33") : ("\x68\x74\x74\x70\x3a\x2f\x2f\x32\x31\x32\x2e\x36\x34\x2e\x33\x37\x2e\x32\x31\x32\x2f\x62\x61\x69\x64\x75\x79\x75\x6e\x2f\x62\x76\x75\x72\x6c\x2e\x70\x68\x70\x3f\x62\x76\x69\x64\x3d" + bvid + "\x26\x63\x69\x64\x3d" + cid);
+                                let url = BLOD.pgc ? ("\x68\x74\x74\x70\x3a\x2f\x2f\x32\x31\x32\x2e\x36\x34\x2e\x33\x37\x2e\x32\x31\x32\x2f\x62\x61\x69\x64\x75\x79\x75\x6e\x2f\x62\x76\x75\x72\x6c\x2e\x70\x68\x70\x3f\x61\x6e\x69\x6d\x65\x3d\x31\x26\x62\x76\x69\x64\x3d" + BLOD.bvid + "\x26\x63\x69\x64\x3d" + BLOD.cid + "\x26\x75\x69\x64\x3d\x25\x33") : ("\x68\x74\x74\x70\x3a\x2f\x2f\x32\x31\x32\x2e\x36\x34\x2e\x33\x37\x2e\x32\x31\x32\x2f\x62\x61\x69\x64\x75\x79\x75\x6e\x2f\x62\x76\x75\x72\x6c\x2e\x70\x68\x70\x3f\x62\x76\x69\x64\x3d" + BLOD.bvid + "\x26\x63\x69\x64\x3d" + BLOD.cid);
                                 response = BLOD.jsonCheck(await new Promise((resolve, reject) => {
                                     GM_xmlhttpRequest({
                                         method: "POST",
@@ -534,7 +534,7 @@
                         this.onreadystatechange();
                         if (response.code !== 0) throw response.message;
                         BLOD.__playinfo__ = response;
-                        debug.log("解除限制", "aid=", aid, "cid=", cid);
+                        debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
                     }
                     catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
                 }
@@ -551,8 +551,8 @@
             }
         }
         jsonp() {
-            const ajax = unsafeWindow.$.ajax;
-            unsafeWindow.$.ajax = function (obj, ...rest) {
+            const ajax = window.$.ajax;
+            window.$.ajax = function (obj, ...rest) {
                 if (obj) {
                     if (obj.dataType == "jsonp") {
                         let _obj = JSON.parse(JSON.stringify(obj));
@@ -710,7 +710,7 @@
         }
     }
 
-    let xhrhook = new Xhrhook();
+    let xhrHook = new Xhrhook();
     // 分别hook WebSocket、worker、XMLHttpRequest.open、XMLHttpRequest.send
     // jQuery的jsonp非原生对象，延时5s捕获到再hook
     // XMLHttpRequest.open主修复旧版各种失效接口只能常开
@@ -719,12 +719,12 @@
     xhrHook.open();
     if (config.reset.xhrhook) xhrHook.send();
 
-    if (window.$ && window.$.ajax) xhrhook.jsonp();
+    if (window.$ && window.$.ajax) xhrHook.jsonp();
     else {
         let timer = setInterval(() => {
             if (window.$) {
                 clearInterval(timer);
-                xhrhook.jsonp();
+                xhrHook.jsonp();
             }
         }, 10);
         setTimeout(() => clearInterval(timer), 5000);
