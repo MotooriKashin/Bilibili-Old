@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧版界面
 // @namespace    MotooriKashin
-// @version      1.0.0
+// @version      1.0.1
 // @description  Bilibili 播放页的模块化版本，可能不支持版本太低的浏览器。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -196,8 +196,6 @@
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") BLOD.reset.fixnews(msg.target);
         // 修复评论楼层&修复评论空降坐标
         if (BLOD.src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) { BLOD.reset.setReplyFloor.init(BLOD.src); BLOD.reset.fixVideoSeek(msg.target.parentNode); }
-        // 跳过充电鸣谢
-        if (/bilibili-player-electric-panel-jump/.test(msg.relatedNode.className)) BLOD.reset.electricPanelJump(msg.relatedNode);
         // 修复分区排行
         if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") BLOD.reset.fixrank(msg.target);
         // 弹幕哈希反查
