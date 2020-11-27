@@ -539,28 +539,20 @@
         }
         jsonp() {
             const ajax = window.$.ajax;
-            window.$.ajax = function (obj, ...rest) {
-                if (obj) {
-                    if (obj.dataType == "jsonp") {
-                        let _obj = JSON.parse(JSON.stringify(obj));
-                        if (obj.url.includes("region") && obj.data.rid == 165) {
-                            // 替换广告区rid为资讯区rid
-                            obj.data.rid = 202;
-                            debug.debug("JSONP重定向", "替换广告区", [_obj, obj]);
-                        }
-                        if (obj.url.includes("region") && obj.data.original == 1) {
-                            // 替换原创排行为全部排行
-                            obj.data.original = 0;
-                            debug.debug("JSONP重定向", "修复原创排行", [_obj, obj]);
-                        }
-                        if (obj.url.includes('api.bilibili.com/x/web-interface/ranking/index')) {
-                            // 修改置顶推荐
-                            obj.url = obj.url.replace('ranking/index', 'index/top');
-                            debug.debug("JSONP重定向", "修复置顶推荐", [_obj, obj]);
-                        }
+            window.$.ajax = function (...rest) {
+                rest.forEach((d, i, rest) => {
+                    if (d && d.dataType && d.dataType == "jsonp") {
+                        // 替换广告区rid为资讯区rid
+                        if (rest[i].url.includes("region") && rest[i].data.rid == 165) rest[i].data.rid = 202;
+                        // 替换原创排行为全部排行
+                        if (rest[i].url.includes("region") && rest[i].data.original == 1) rest[i].data.original = 0;
+                        // 修改置顶推荐
+                        if (rest[i].url.includes('api.bilibili.com/x/web-interface/ranking/index')) rest[i].url = rest[i].url.replace('ranking/index', 'index/top');
+                        // 跳过充电鸣谢
+                        if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = {jsonp: "jsonp", aid: 1, mid: 1}
                     }
-                }
-                return ajax.call(this, obj, ...rest);
+                })
+                return ajax.call(this, ...rest);
             }
         }
         // 首页正在直播

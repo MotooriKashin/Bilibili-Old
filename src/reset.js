@@ -163,16 +163,6 @@
                 })
             }
         },
-        // 跳过充电鸣谢
-        electricPanelJump: async (node) => {
-            try {
-                if (!config.reset.electric) return;
-                config.reset.electric = 0;
-                setTimeout(() => { node.click() }, 1);
-                setTimeout(() => { config.reset.electric = 1 }, 5000);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("充电鸣谢", ...e) }
-        },
         // 修复主页排行
         fixrank: async (node) => {
             // 这些分区排行榜已全部采用类似番剧排行的模式，故采用相似的节点覆盖
