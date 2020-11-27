@@ -1015,6 +1015,7 @@
             }
         }
         jsonp() {
+<<<<<<< HEAD
             window.$.ajaxSetup({
                 beforeSend: function (xhr) {
                     // 拦截日志上传
@@ -1057,6 +1058,24 @@
                     }
                 }
             })
+=======
+            const ajax = window.$.ajax;
+            window.$.ajax = function (...rest) {
+                rest.forEach((d, i, rest) => {
+                    if (d && d.dataType && d.dataType == "jsonp") {
+                        // 替换广告区rid为资讯区rid
+                        if (rest[i].url.includes("region") && rest[i].data.rid == 165) rest[i].data.rid = 202;
+                        // 替换原创排行为全部排行
+                        if (rest[i].url.includes("region") && rest[i].data.original == 1) rest[i].data.original = 0;
+                        // 修改置顶推荐
+                        if (rest[i].url.includes('api.bilibili.com/x/web-interface/ranking/index')) rest[i].url = rest[i].url.replace('ranking/index', 'index/top');
+                        // 跳过充电鸣谢
+                        if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = {jsonp: "jsonp", aid: 1, mid: 1}
+                    }
+                })
+                return ajax.call(this, ...rest);
+            }
+>>>>>>> 3d73ce2 (restore elec jump)
         }
 <<<<<<< HEAD
         // 首页正在直播

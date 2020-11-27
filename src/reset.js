@@ -190,6 +190,7 @@
             }
             if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
+<<<<<<< HEAD
         // 重命名评论跳转链接
         renameCommentJump: () => {
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
@@ -202,6 +203,8 @@
                 }
             })
         },
+=======
+>>>>>>> 3d73ce2 (restore elec jump)
         // 修复主页排行
         fixrank: async (node) => {
             // 这些分区排行榜已全部采用类似番剧排行的模式，故采用相似的节点覆盖

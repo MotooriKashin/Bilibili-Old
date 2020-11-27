@@ -418,6 +418,8 @@ Tampermonkey BETA 4.10.6128
   - 修复评论区 bangumi 跳转
 =======
 ### 版本历史
+- 2020-11-27
+   + 重新实现跳过充电鸣谢功能
 - 2020-11-26
    + 修复评论区bangumi跳转
 >>>>>>> 49b0faa (restore comment bangumi jump)
