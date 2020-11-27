@@ -18,7 +18,7 @@
             let dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
             dat.aid = data.View.aid;
             dat.related = data.Related;
-            dat.tags = data.Tags;
+            dat.tags = data.Tags || [];
             dat.upData = data.Card.card;
             dat.upData.archiveCount = data.Card.archive_count;
             dat.videoData = data.View;
