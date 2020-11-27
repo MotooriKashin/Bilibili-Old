@@ -1,5 +1,6 @@
 /*
- * module "xhrhook.js"
+ * @module "xhrhook.js"
+ * @description xhr hook模块
  */
 (function () {
     const BLOD = window.BLOD;
