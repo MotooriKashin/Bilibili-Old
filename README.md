@@ -85,7 +85,7 @@
 个人目前主要使用模块化后的版本，平台数据如下
 ```
 Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-87.0.4280.66 (正式版本) （64 位） (cohort: 87_66_Win)  
+Google Chrome 87.0.4280.66 (正式版本) （64 位） (cohort: 87_66_Win)  
 Tampermonkey BETA 4.10.6121
 ```
 平台
