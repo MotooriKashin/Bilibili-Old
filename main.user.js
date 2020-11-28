@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.7.7
+// @version      3.7.8
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -2919,7 +2919,7 @@
             let trim = async () => {
                 url[1] = location.href;
                 if (url[0] != url[1]) {
-                    window.history.replaceState(null, null, BLOD.triming(location.href) + location.hash);
+                    window.history.replaceState(null, null, BLOD.triming(location.href) + location.hash.includes("/") ? "" : location.hash);
                     url[0] = location.href;
                 }
                 if (!config.reset.bvid2av) return;
