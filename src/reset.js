@@ -538,7 +538,7 @@
             let trim = async () => {
                 url[1] = location.href;
                 if (url[0] != url[1]) {
-                    window.history.replaceState(null, null, BLOD.triming(location.href) + location.hash.includes("/") ? "" : location.hash);
+                    window.history.replaceState(null, null, BLOD.triming(location.href) + (location.hash.includes("/") ? "" : location.hash));
                     url[0] = location.href;
                 }
                 if (!config.reset.bvid2av) return;
