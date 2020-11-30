@@ -22,11 +22,13 @@
                         break;
                 }
             }
-            Object.defineProperty(window, "aid", { set: (value) => { read(["aid", value]) }, get: () => { return BLOD.aid }, configurable: true });
-            Object.defineProperty(window, "cid", { set: (value) => { read(["cid", value]) }, get: () => { return BLOD.cid }, configurable: true });
-            Object.defineProperty(window, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return BLOD.__playinfo__ }, configurable: true });
-            Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
-            if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
+            try {
+                Object.defineProperty(window, "aid", { set: (value) => { read(["aid", value]) }, get: () => { return BLOD.aid }, configurable: true });
+                Object.defineProperty(window, "cid", { set: (value) => { read(["cid", value]) }, get: () => { return BLOD.cid }, configurable: true });
+                Object.defineProperty(window, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return BLOD.__playinfo__ }, configurable: true });
+                Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
+                if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("对象捕获", ...e) }
         },
         // 原生脚本替换
         oldScript: (str) => {
@@ -505,7 +507,7 @@
             }
         },
         // 备份播放器设置
-        playerSetting: BLOD.playerSetting = () => {
+        playerSetting: () => {
             let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
             if (bilibili_player_settings) {
                 bilibili_player_settings = JSON.parse(bilibili_player_settings);

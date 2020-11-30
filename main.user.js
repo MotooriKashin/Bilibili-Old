@@ -948,6 +948,8 @@
                             if (rest[i].url.includes('api.bilibili.com/x/web-interface/ranking/index')) rest[i].url = rest[i].url.replace('ranking/index', 'index/top');
                             // 跳过充电鸣谢
                             if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = { jsonp: "jsonp", aid: 1, mid: 1 }
+                            // 清除远古动态
+                            if (rest[i].url.includes('api.bilibili.com/x/web-feed/feed/unread')) rest[i].url = rest[i].url.replace('feed/unread', 'article/unread');
                         }
                     })
                     return ajax.call(this, ...rest);
@@ -1622,11 +1624,13 @@
                         break;
                 }
             }
-            Object.defineProperty(unsafeWindow, "aid", { set: (value) => { read(["aid", value]) }, get: () => { return aid }, configurable: true });
-            Object.defineProperty(unsafeWindow, "cid", { set: (value) => { read(["cid", value]) }, get: () => { return cid }, configurable: true });
-            Object.defineProperty(unsafeWindow, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return __playinfo__ }, configurable: true });
-            Object.defineProperty(unsafeWindow, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
-            if (LOCATION[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(unsafeWindow, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
+            try {
+                Object.defineProperty(unsafeWindow, "aid", { set: (value) => { read(["aid", value]) }, get: () => { return aid }, configurable: true });
+                Object.defineProperty(unsafeWindow, "cid", { set: (value) => { read(["cid", value]) }, get: () => { return cid }, configurable: true });
+                Object.defineProperty(unsafeWindow, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return __playinfo__ }, configurable: true });
+                Object.defineProperty(unsafeWindow, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
+                if (LOCATION[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(unsafeWindow, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("对象捕获", ...e) }
         },
         // 重写网页
         write: (html) => {
