@@ -1070,7 +1070,9 @@
                         // 修改置顶推荐
                         if (rest[i].url.includes('api.bilibili.com/x/web-interface/ranking/index')) rest[i].url = rest[i].url.replace('ranking/index', 'index/top');
                         // 跳过充电鸣谢
-                        if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = {jsonp: "jsonp", aid: 1, mid: 1}
+                        if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = {jsonp: "jsonp", aid: 1, mid: 1};
+                        // 清除远古动态
+                        if (rest[i].url.includes('api.bilibili.com/x/web-feed/feed/unread')) rest[i].url = rest[i].url.replace('feed/unread', 'article/unread');
                     }
                 })
                 return ajax.call(this, ...rest);
