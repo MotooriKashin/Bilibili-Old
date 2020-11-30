@@ -55,9 +55,9 @@
                     JSON.parse(page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : "";
                 if (!BLOD.__INITIAL_STATE__) {
                     if (BLOD.path[5].startsWith('ss')) {
-                        page = BLOD.xhr.false(BLOD.BLOD.objUrl("https://api.bilibili.com/pgc/view/web/season", { season_id: location.href.match(/[0-9]+/)[0] }));
+                        page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/pgc/view/web/season", { season_id: location.href.match(/[0-9]+/)[0] }));
                     } else if (BLOD.path[5].startsWith('ep')) {
-                        page = BLOD.xhr.false(BLOD.BLOD.objUrl("https://api.bilibili.com/pgc/view/web/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
+                        page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/pgc/view/web/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
                     }
                 }
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
@@ -75,7 +75,7 @@
         blackboard() {
             if (BLOD.path[4].startsWith('html5player')) {
                 if (BLOD.path[4].includes("3521416") && BLOD.path[4].includes("6041635")) {
-                    location.replace(BLOD.BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": 3521416, "cid": 192446449 }));
+                    location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": 3521416, "cid": 192446449 }));
                 }
             }
             try {
@@ -90,10 +90,10 @@
                     BLOD.cid = obj.cid || "";
                     try {
                         BLOD.cid = BLOD.cid || BLOD.jsonCheck(BLOD.xhr.false(
-                            BLOD.BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": BLOD.aid }))).data[0].cid
+                            BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": BLOD.aid }))).data[0].cid
                     }
                     catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·嵌入", ...e) }
-                    location.replace(BLOD.BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html",
+                    location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html",
                         { "aid": BLOD.aid, "cid": BLOD.cid, "season_type": season_type, "player_type": player_type, "as_wide": 1, }));
                     BLOD.debug.log("嵌入播放器", "aid=", BLOD.aid, " cid=", BLOD.cid);
                 }
@@ -108,7 +108,7 @@
                 BLOD.__INITIAL_STATE__ = { mid: "", pid: "", plinfoData: {}, pllistData: {} }
                 try {
                     let page = BLOD.jsonCheck(
-                        BLOD.xhr.false(BLOD.BLOD.objUrl("https://api.bilibili.com/x/playlist/video/toview", { pid: BLOD.path[5].match(/[0-9]+/)[0] }))).data;
+                        BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/playlist/video/toview", { pid: BLOD.path[5].match(/[0-9]+/)[0] }))).data;
                     BLOD.__INITIAL_STATE__.mid = page.mid;
                     BLOD.__INITIAL_STATE__.pid = page.pid;
                     BLOD.__INITIAL_STATE__.plinfoData = { attr: page.attr, count: page.count, cover: page.cover, ctime: page.ctime, description: page.description, favored: page.favored, id: page.id, is_favorite: page.is_favorite, mid: page.mid, mtime: page.mtime, owner: page.owner, pid: page.pid, stat: page.stat, state: page.state, type: page.type, };
