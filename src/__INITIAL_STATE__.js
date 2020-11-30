@@ -8,7 +8,7 @@
 
     class IniState {
         constructor() {
-            console.log('import module "__INITIAL_STATE__.js"')
+            console.debug('import module "__INITIAL_STATE__.js"')
         }
         av(data) {
             let aid = BLOD.aid, cid = BLOD.cid;

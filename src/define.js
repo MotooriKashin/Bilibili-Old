@@ -7,8 +7,12 @@
  */
 (function () {
     const BLOD = window.BLOD;
+<<<<<<< HEAD
     console.log('import module "define.js"');
 >>>>>>> 604ec62 (fix debug message)
+=======
+    console.debug('import module "define.js"');
+>>>>>>> ad21ab5 (fix deal with debug message)
 
 const BLOD = window.BLOD;
 

@@ -7,7 +7,7 @@
 
     class Write {
         constructor() {
-            console.log('import module "rewrite.js"');
+            console.debug('import module "rewrite.js"');
         }
         av() {
             BLOD.path.name = "av";
