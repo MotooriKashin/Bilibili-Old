@@ -85,7 +85,7 @@
 
     class Xhrhook {
         constructor() {
-            console.log('import module "xhrhook.js"');
+            console.debug('import module "xhrhook.js"');
         }
         webSocket() {
             let decoder = new TextDecoder();

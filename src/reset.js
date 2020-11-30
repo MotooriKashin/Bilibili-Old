@@ -7,7 +7,7 @@
     const debug = BLOD.debug;
     const config = BLOD.config;
     const xhr = BLOD.xhr;
-    console.log('import module "reset.js"');
+    console.debug('import module "reset.js"');
 
     BLOD.reset = {
         // 对象捕获

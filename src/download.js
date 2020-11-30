@@ -8,7 +8,7 @@
 
     class Download {
         constructor() {
-            console.log('import module "download.js"')
+            console.debug('import module "download.js"')
         }
         init(node) {
             if (!BLOD.config.reset.download) return;

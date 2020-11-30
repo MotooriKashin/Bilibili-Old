@@ -8,7 +8,7 @@
 
     class Xhr {
         constructor() {
-            console.log('import module "xhr.js"');
+            console.debug('import module "xhr.js"');
         }
         false(url) {
             const xhr = new XMLHttpRequest();

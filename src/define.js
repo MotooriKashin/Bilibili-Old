@@ -4,7 +4,7 @@
  */
 (function () {
     const BLOD = window.BLOD;
-    console.log('import module "define.js"');
+    console.debug('import module "define.js"');
 
     // 时间格式化
     BLOD.timeFormat = (time, type) => {

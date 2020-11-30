@@ -7,7 +7,7 @@
 
     class Ui {
         constructor() {
-            console.log('import module "ui.js"');
+            console.debug('import module "ui.js"');
         }
         init(timer) {
             let face = document.createElement("div");
