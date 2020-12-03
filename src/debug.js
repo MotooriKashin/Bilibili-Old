@@ -8,7 +8,7 @@
 
     class Debug {
         constructor() {
-            console.log('import module "debug.js"');
+            console.debug('import module "debug.js"');
         }
         log(...msg) {
             console.log("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
