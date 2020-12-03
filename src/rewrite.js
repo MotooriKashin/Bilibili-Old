@@ -163,8 +163,8 @@
                 if (!BLOD.config.rewrite.rank) throw ["未启用排行", location.href];
                 BLOD.path.name = "rank";
                 let refer = document.referrer.split("/"), page;
-                if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: refer[5], day: 3})));
-                else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: 0, day: 3})));
+                if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: refer[5], day: 3})));
+                else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: 0, day: 3})));
                 page.data.list.forEach((function(e,i,l) {
                     l[i].author = l[i].owner.name;
                     l[i].coins = l[i].stat.coin;
