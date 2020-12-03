@@ -53,8 +53,12 @@
             str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
             // CDN未更新前，两种conment.js都匹配一次
             str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
+<<<<<<< HEAD
             str = str.replace("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js", comment);
             str = str.replace("//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js");
+=======
+            str = str.replace("//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js","//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js");
+>>>>>>> 5e07363 (修复排行榜页面无数据)
             return str;
         },
         // 移除预览提示框
