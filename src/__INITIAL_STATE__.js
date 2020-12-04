@@ -31,15 +31,26 @@
             try {
                 let aid = BLOD.aid, cid = BLOD.cid, dat;
                 data = JSON.parse(data);
-                if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
-                aid = aid || data.v2_app_api.aid;
-                cid = cid || data.v2_app_api.cid;
                 dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
-                dat.aid = data.v2_app_api.aid;
+                if (data.v2_app_api) {
+                    if (data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
+                    aid = aid || data.v2_app_api.aid;
+                    cid = cid || data.v2_app_api.cid;
+                    dat.aid = data.v2_app_api.aid;
+                    dat.tags = data.v2_app_api.tag;
+                    dat.upData = data.v2_app_api.owner;
+                    dat.videoData = data.v2_app_api;
+                } else {
+                    if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
+                    aid = aid || data.aid;
+                    cid = cid || data.list[0].cid;
+                    dat.aid = data.aid;
+                    dat.tags = [];
+                    dat.upData = { "face": "https://static.hdslb.com/images/akari.jpg", name: data.author, mid: data.mid };
+                    dat.videoData = { "aid": aid, "cid": cid, "config": { "relates_title": "相关推荐", "share_style": 1 }, "copyright": 2, "ctime": data.created, "desc": data.description, "dimension": { "height": 1080, "rotate": 0, "width": 1920 }, "duration": 360, "dynamic": "", "owner": dat.upData, "pages": [{ "cid": cid, "dimension": { "height": 1080, "rotate": 0, "width": 1920 }, "duration": 360, "from": "vupload", "page": 1, "part": "", "vid": "", "weblink": "" }], "pic": data.pic, "pubdate": data.created, "rights": { "autoplay": 0, "bp": 0, "download": 0, "elec": 0, "hd5": 0, "is_cooperation": 0, "movie": 0, "no_background": 0, "no_reprint": 0, "pay": 0, "ugc_pay": 0, "ugc_pay_preview": 0 }, "stat": { "aid": aid, "coin": 0, "danmaku": 0, "dislike": 0, "favorite": 0, "his_rank": 0, "like": 0, "now_rank": 0, "reply": 0, "share": 0, "view": 0 }, "state": 0, "tid": data.tid, "title": data.title, "tname": data.typename, "videos": 1 };
+                }
+                dat.upData = Object.assign(dat.upData, { "DisplayRank": "0", "Official": { "desc": "", "role": 0, "title": "", "type": -1 }, "approve": false, "archiveCount": 0, "article": 0, "attention": 10, "attentions": [], "birthday": "", "description": "", "fans": 44616, "friend": 10, "level_info": { "current_exp": 0, "current_level": 6, "current_min": 0, "next_exp": 0 }, "nameplate": { "condition": "", "image": "", "image_small": "", "level": "", "name": "", "nid": 0 }, "official_verify": { "desc": "", "type": -1 }, "pendant": { "expire": 0, "image": "", "image_enhance": "", "image_enhance_frame": "", "name": "", "pid": 0 }, "place": "", "rank": "10000", "regtime": 0, "sex": "保密", "sign": "", "spacesta": 0, "vip": { "accessStatus": 0, "dueRemark": "", "theme_type": 0, "vipStatus": 0, "vipStatusWarn": "", "vipType": 1 } });
                 dat.related = [];
-                dat.tags = data.v2_app_api.tag;
-                dat.upData = Object.assign(data.v2_app_api.owner, { "DisplayRank": "0", "Official": { "desc": "", "role": 0, "title": "", "type": -1 }, "approve": false, "archiveCount": 0, "article": 0, "attention": 10, "attentions": [], "birthday": "", "description": "", "fans": 44616, "friend": 10, "level_info": { "current_exp": 0, "current_level": 6, "current_min": 0, "next_exp": 0 }, "nameplate": { "condition": "", "image": "", "image_small": "", "level": "", "name": "", "nid": 0 }, "official_verify": { "desc": "", "type": -1 }, "pendant": { "expire": 0, "image": "", "image_enhance": "", "image_enhance_frame": "", "name": "", "pid": 0 }, "place": "", "rank": "10000", "regtime": 0, "sex": "保密", "sign": "", "spacesta": 0, "vip": { "accessStatus": 0, "dueRemark": "", "theme_type": 0, "vipStatus": 0, "vipStatusWarn": "", "vipType": 1 } });
-                dat.videoData = data.v2_app_api;
                 dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
                 BLOD.config.reset.like = 0;
                 BLOD.avPlus = true;
