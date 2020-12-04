@@ -30,7 +30,7 @@
         avPlus(data) {
             try {
                 let aid = BLOD.aid, cid = BLOD.cid, dat;
-                data = JSON.parse(data);
+                data = BLOD.jsonCheck(data);
                 dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
                 if (data.v2_app_api) {
                     if (data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
@@ -55,7 +55,7 @@
                 BLOD.config.reset.like = 0;
                 BLOD.avPlus = true;
                 return dat;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·av/BV", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·avPlus", ...e) }
         }
         bangumi(data, epId) {
             let ep = 0, ini = {}, pug = {}, mode;
