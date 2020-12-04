@@ -20,6 +20,10 @@
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
+                if (!BLOD.__INITIAL_STATE__) {
+                    page = BLOD.xhr.false(BLOD.objUrl("https://www.biliplus.com/api/view", { id: BLOD.aid }));
+                    BLOD.__INITIAL_STATE__ = BLOD.iniState.avPlus(page);
+                }
                 if (!BLOD.__INITIAL_STATE__) throw "av/BV号可能无效！";
                 if (BLOD.__INITIAL_STATE__.videoData.redirect_url) throw ["番剧重定向：", BLOD.__INITIAL_STATE__.videoData.redirect_url];
                 if (BLOD.__INITIAL_STATE__.videoData.stein_guide_cid) throw ["忽略互动视频：", "av" + BLOD.aid];
@@ -166,10 +170,10 @@
                 if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: refer[5], day: 3 })));
                 else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: 0, day: 3 })));
                 page.data.list.forEach(((e, i, l) => {
-                    l[i] = Object.assign(l[i], {author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku});
+                    l[i] = Object.assign(l[i], { author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku });
                     if (l[i].others) {
                         l[i].others.forEach(((e, i, l) => {
-                            l[i] = Object.assign(l[i], {author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku});
+                            l[i] = Object.assign(l[i], { author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku });
                         }));
                     }
                 }))
