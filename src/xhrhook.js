@@ -511,7 +511,7 @@
                             if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                                 if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = GM_getValue("access_key") || "";
-                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, balh_ajax: 1, fnval: "", fnver: "", module: "pgc", platform: "android_i" } : { access_key: accesskey, balh_ajax: 1, module: "pgc" })
+                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: "", fnver: "", module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
                                 response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                 response = { "code": 0, "message": "success", "result": response };
                             }
