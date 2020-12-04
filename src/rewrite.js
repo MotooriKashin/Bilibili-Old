@@ -20,7 +20,7 @@
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
-                if (!BLOD.__INITIAL_STATE__) {
+                if (!BLOD.__INITIAL_STATE__ && BLOD.config.reset.lostvideo) {
                     page = BLOD.xhr.false(BLOD.objUrl("https://www.biliplus.com/api/view", { id: BLOD.aid }));
                     BLOD.__INITIAL_STATE__ = BLOD.iniState.avPlus(page);
                 }
