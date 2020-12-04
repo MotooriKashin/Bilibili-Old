@@ -20,9 +20,10 @@
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
-                if (!BLOD.__INITIAL_STATE__ && BLOD.config.reset.lostvideo) {
+                if (!BLOD.__INITIAL_STATE__) {
                     page = BLOD.xhr.false(BLOD.objUrl("https://www.biliplus.com/api/view", { id: BLOD.aid }));
                     BLOD.__INITIAL_STATE__ = BLOD.iniState.avPlus(page);
+                    if (!BLOD.config.reset.lostvideo) throw "av/BV号可能无效！";
                 }
                 if (!BLOD.__INITIAL_STATE__) throw "av/BV号可能无效！";
                 if (BLOD.__INITIAL_STATE__.videoData.redirect_url) throw ["番剧重定向：", BLOD.__INITIAL_STATE__.videoData.redirect_url];
