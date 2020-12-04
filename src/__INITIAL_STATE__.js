@@ -11,19 +11,36 @@
             console.debug('import module "__INITIAL_STATE__.js"')
         }
         av(data) {
-            let aid = BLOD.aid, cid = BLOD.cid;
-            data = BLOD.jsonCheck(data).data;
-            aid = aid || data.View.aid;
-            cid = cid || data.View.cid;
-            let dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
-            dat.aid = data.View.aid;
-            dat.related = data.Related;
-            dat.tags = data.Tags || [];
-            dat.upData = data.Card.card;
-            dat.upData.archiveCount = data.Card.archive_count;
-            dat.videoData = data.View;
-            dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
-            return dat;
+            try {
+                let aid = BLOD.aid, cid = BLOD.cid, dat;
+                data = BLOD.jsonCheck(data).data;
+                aid = aid || data.View.aid;
+                cid = cid || data.View.cid;
+                dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
+                dat.aid = data.View.aid;
+                dat.related = data.Related;
+                dat.tags = data.Tags || [];
+                dat.upData = data.Card.card;
+                dat.upData.archiveCount = data.Card.archive_count;
+                dat.videoData = data.View;
+                dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
+                return dat;
+            } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·av/BV", ...e) }
+        }
+        avPlus(data) {
+            try {
+                let aid = BLOD.aid, cid = BLOD.cid, dat;
+                data = JSON.parse(data);
+                aid = aid || data.v2_app_api.aid;
+                cid = cid || data.v2_app_api.cid;
+                dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
+                dat.aid = data.v2_app_api.aid;
+                dat.related = [];
+                dat.tags = data.v2_app_api.tag;
+                dat.upData = data.v2_app_api.owner;
+                dat.videoData = data.v2_app_api;
+                dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
+            } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·av/BV", ...e) }
         }
         bangumi(data, epId) {
             let ep = 0, ini = {}, pug = {}, mode;
