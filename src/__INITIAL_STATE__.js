@@ -31,6 +31,7 @@
             try {
                 let aid = BLOD.aid, cid = BLOD.cid, dat;
                 data = JSON.parse(data);
+                if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
                 aid = aid || data.v2_app_api.aid;
                 cid = cid || data.v2_app_api.cid;
                 dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
@@ -40,6 +41,7 @@
                 dat.upData = Object.assign(data.v2_app_api.owner, { "DisplayRank": "0", "Official": { "desc": "", "role": 0, "title": "", "type": -1 }, "approve": false, "archiveCount": 0, "article": 0, "attention": 10, "attentions": [], "birthday": "", "description": "", "fans": 44616, "friend": 10, "level_info": { "current_exp": 0, "current_level": 6, "current_min": 0, "next_exp": 0 }, "nameplate": { "condition": "", "image": "", "image_small": "", "level": "", "name": "", "nid": 0 }, "official_verify": { "desc": "", "type": -1 }, "pendant": { "expire": 0, "image": "", "image_enhance": "", "image_enhance_frame": "", "name": "", "pid": 0 }, "place": "", "rank": "10000", "regtime": 0, "sex": "保密", "sign": "", "spacesta": 0, "vip": { "accessStatus": 0, "dueRemark": "", "theme_type": 0, "vipStatus": 0, "vipStatusWarn": "", "vipType": 1 } });
                 dat.videoData = data.v2_app_api;
                 dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
+                BLOD.config.reset.like = 0;
                 BLOD.avPlus = true;
                 return dat;
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·av/BV", ...e) }
