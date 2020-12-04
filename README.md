@@ -247,6 +247,7 @@ Tampermonkey BETA 4.10.6128
 
 ---
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <details>
 <summary>版本历史</summary>
@@ -404,6 +405,14 @@ Tampermonkey BETA 4.10.6128
   - 使用模块化版本重构主体版本以方便维护
   - 修复失效视频支持使用缓存数据直接重写 av 页（甚至评论还在！如[av51568](https://www.bilibili.com/video/av51568)）
   - 主动跳转 av 到可能有效的 bangumi（主要针对区域限制番剧，如[av713102937](https://www.bilibili.com/video/av713102937)）
+=======
+### 版本历史
+**注：部分功能可能先在设置里启用！**
+- 2020-12-04
+   + 使用模块化版本重构主体版本以方便维护
+   + 修复失效视频支持使用缓存数据直接重写av页（甚至评论还在！如[av51568](https://www.bilibili.com/video/av51568)）
+   + 主动跳转av到可能有效的bangumi（主要针对区域限制番剧，如[av713102937](https://www.bilibili.com/video/av713102937)）
+>>>>>>> 9571161 (重构代码，方便维护；)
 - 2020-12-03
   - 修复排行榜页面无数据
 - 2020-11-30
