@@ -100,7 +100,7 @@
                     BLOD.mdf.dash.aac = BLOD.mdf.dash.aac || [];
                     BLOD.mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8), ".m4a"]);
                 }
-                BLOD.mdf.dash.aac = BLOD.bubbleSort(BLOD.mdf.dash.aac, true);
+                BLOD.mdf.dash.aac = BLOD.bubbleSort(BLOD.mdf.dash.aac).reverse();
                 for (let i = 0; i < BLOD.mdf.dash.aac.length; i++) if (BLOD.mdf.dash.aac[i][0] in bps) BLOD.mdf.dash.aac[i][0] = bps[BLOD.mdf.dash.aac[i][0]];
             }
         }
