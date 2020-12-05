@@ -27,7 +27,7 @@
                 attr[4] = danmaku[i].ctime;
                 attr[6] = danmaku[i].midHash;
                 attr[7] = danmaku[i].idStr;
-                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content + '</d>'
+                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>';
             }
             xml += "</i>";
             resolve(xml);
