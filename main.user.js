@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.8.1
+// @version      3.8.2
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -27,6 +27,20 @@
     const root = window.protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
+
+    // 暴露顶层接口
+    const BLOD = unsafeWindow.BLOD = {
+        xmlhttpRequest: GM_xmlhttpRequest,
+        setValue: GM_setValue,
+        getValue: GM_getValue,
+        deleteValue: GM_deleteValue,
+        aid: aid,
+        cid: cid,
+        bvid: bvid,
+        hash: [],
+        ids: [],
+        bloburl: {}
+    }
 
     // 默认设置
     const config = {
@@ -72,20 +86,22 @@
             "oldreply": [0, "旧版评论", "恢复旧版先“全部评论”再热门评论的样式"]
         }
     }
-
-    // 暴露顶层接口
-    const BLOD = unsafeWindow.BLOD = {
-        xmlhttpRequest: GM_xmlhttpRequest,
-        setValue: GM_setValue,
-        getValue: GM_getValue,
-        deleteValue: GM_deleteValue,
-        aid: aid,
-        cid: cid,
-        bvid: bvid,
-        hash: [],
-        ids: [],
-        bloburl: {}
+    // 初始化配置数据
+    let localConfig = BLOD.getValue("config");
+    let configSort = ["rewrite", "reset"];
+    BLOD.defaultConfig = JSON.parse(JSON.stringify(config));
+    for (let key in config) if (configSort.indexOf(key) < 0) delete config[key];
+    if (localConfig) {
+        configSort.forEach(x => {
+            for (let key in localConfig[x]) if (key in config[x]) config[x][key] = localConfig[x][key];
+        })
+    } else {
+        configSort.forEach(x => {
+            for (let key in config[x]) config[x][key] = config[x][key][0];
+        })
+        BLOD.setValue("config", config);
     }
+    BLOD.config = config;
 
     // 框架
     const API = {
@@ -2657,7 +2673,7 @@
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
                 BLOD.setValue("config", config);
-                BLOD.accesskey();
+                BLOD.reset.accesskey();
                 table.remove();
             }
             for (let key in config.rewrite) this.setTable(table, BLOD.defaultConfig.rewrite[key], config.rewrite[key], key);
@@ -2697,7 +2713,7 @@
                     else config.reset[key] = 0;
                     if (key == "xhrhook") BLOD.debug.msg("xhrhook已关闭，部分功能无法生效！");
                 }
-                if (key == "accesskey") BLOD.accesskey();
+                if (key == "accesskey") BLOD.reset.accesskey();
             }
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
@@ -3426,22 +3442,6 @@
             location.href = refer;
         })();
     }
-    // 初始化配置数据
-    let localConfig = BLOD.getValue("config");
-    let configSort = ["rewrite", "reset"];
-    BLOD.defaultConfig = JSON.parse(JSON.stringify(config));
-    for (let key in config) if (configSort.indexOf(key) < 0) delete config[key];
-    if (localConfig) {
-        configSort.forEach(x => {
-            for (let key in localConfig[x]) if (key in config[x]) config[x][key] = localConfig[x][key];
-        })
-    } else {
-        configSort.forEach(x => {
-            for (let key in config[x]) config[x][key] = config[x][key][0];
-        })
-        BLOD.setValue("config", config);
-    }
-    BLOD.config = config;
     // 处理参数及BV号
     BLOD.reset.parameterTrim();
     BLOD.uid = BLOD.getCookies().DedeUserID;

@@ -39,7 +39,7 @@
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
                 BLOD.setValue("config", config);
-                BLOD.accesskey();
+                BLOD.reset.accesskey();
                 table.remove();
             }
             for (let key in config.rewrite) this.setTable(table, BLOD.defaultConfig.rewrite[key], config.rewrite[key], key);
@@ -79,7 +79,7 @@
                     else config.reset[key] = 0;
                     if (key == "xhrhook") BLOD.debug.msg("xhrhook已关闭，部分功能无法生效！");
                 }
-                if (key == "accesskey") BLOD.accesskey();
+                if (key == "accesskey") BLOD.reset.reaccesskey();
             }
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
