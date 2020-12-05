@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.8.0
+// @version      3.8.1
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -251,7 +251,7 @@
                 attr[4] = danmaku[i].ctime;
                 attr[6] = danmaku[i].midHash;
                 attr[7] = danmaku[i].idStr;
-                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content + '</d>'
+                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>';
             }
             xml += "</i>";
             resolve(xml);
