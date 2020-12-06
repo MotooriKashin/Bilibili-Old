@@ -79,7 +79,7 @@
                     else config.reset[key] = 0;
                     if (key == "xhrhook") BLOD.debug.msg("xhrhook已关闭，部分功能无法生效！");
                 }
-                if (key == "accesskey") BLOD.reset.reaccesskey();
+                if (key == "accesskey") BLOD.reset.accesskey();
             }
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
