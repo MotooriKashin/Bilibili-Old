@@ -4,6 +4,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
@@ -14,6 +15,9 @@
 =======
 // @version      3.8.1
 >>>>>>> 4627833 (修复与pakku.js不兼容的问题)
+=======
+// @version      3.8.3
+>>>>>>> 5cf66d3 (优化xhr send响应模拟)
 // @description  恢复原生的旧版页面，包括主页和播放页。
 >>>>>>> 3d73ce2 (restore elec jump)
 // @author       MotooriKashin, wly5556
@@ -955,9 +959,6 @@
                         Object.defineProperty(this, "responseText", { writable: true });
                         Object.defineProperty(this, "readyState", { writable: true });
                         Object.defineProperty(this, "status", { writable: true });
-                        this.readyState = 2;
-                        this.status = 200;
-                        this.abort();
                         let response, accesskey = "";
                         try {
                             if (BLOD.limit) {
@@ -970,6 +971,8 @@
                         }
                         catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
                         this.response = this.responseText = JSON.stringify(response);
+                        this.status = 200;
+                        this.readyState = 2;
                         this.readyState = 4;
                         this.onreadystatechange();
                         if (response.code !== 0) throw response.message;
