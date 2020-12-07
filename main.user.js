@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.8.2
+// @version      3.8.3
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -743,9 +743,6 @@
                         Object.defineProperty(this, "responseText", { writable: true });
                         Object.defineProperty(this, "readyState", { writable: true });
                         Object.defineProperty(this, "status", { writable: true });
-                        this.readyState = 2;
-                        this.status = 200;
-                        this.abort();
                         let response, accesskey = "";
                         try {
                             if (BLOD.limit) {
@@ -758,6 +755,8 @@
                         }
                         catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
                         this.response = this.responseText = JSON.stringify(response);
+                        this.status = 200;
+                        this.readyState = 2;
                         this.readyState = 4;
                         this.onreadystatechange();
                         if (response.code !== 0) throw response.message;
