@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧版界面
 // @namespace    MotooriKashin
-// @version      1.0.1
+// @version      1.0.2
 // @description  Bilibili 播放页的模块化版本，可能不支持版本太低的浏览器。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -182,10 +182,6 @@
             if (!BLOD.download) new Function(GM_getResourceText("download"))();
             BLOD.download.init(msg.target);
         }
-        // 捕获评论链接
-        if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply') && msg.target.src.includes("oid")) BLOD.src = msg.target.src;
-        // 捕获频道视频链接
-        if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) BLOD.src = msg.target.src;
         // 修复失效频道视频
         if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") BLOD.reset.fixVideoLost.channel(BLOD.src);
         // 修复失效收藏视频
@@ -195,7 +191,14 @@
         // 失效分区转换
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") BLOD.reset.fixnews(msg.target);
         // 修复评论楼层&修复评论空降坐标
-        if (BLOD.src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) { BLOD.reset.setReplyFloor.init(BLOD.src); BLOD.reset.fixVideoSeek(msg.target.parentNode); }
+        if ((/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) {
+            clearTimeout(BLOD.timer);
+            BLOD.timer = setTimeout(() => {
+                delete BLOD.timer;
+                BLOD.reset.setReplyFloor.fix();
+                BLOD.reset.fixVideoSeek(msg.target.parentNode);
+            }, 100)
+        }
         // 修复分区排行
         if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") BLOD.reset.fixrank(msg.target);
         // 弹幕哈希反查
