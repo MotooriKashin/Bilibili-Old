@@ -1,6 +1,6 @@
 /*
- * @module "__INITIAL_STATE__.js"
- * @description __INITIAL_STATE__数据配置，以iniState对象挂载在BLOD下
+ * @module "initialstate.js"
+ * @description initialstate数据配置，以iniState对象挂载在BLOD下
  */
 
 (function () {
@@ -8,7 +8,7 @@
 
     class IniState {
         constructor() {
-            console.debug('import module "__INITIAL_STATE__.js"')
+            console.debug('import module "initialstate.js"')
         }
         av(data) {
             try {
