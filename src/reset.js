@@ -845,7 +845,10 @@
             if (!config.reset.replyfloor) return;
             let floor = {}, key = ["top", "hots", "replies", "root"];
             data = data.data;
+<<<<<<< HEAD
             if (!data) return;
+=======
+>>>>>>> b29f633 (改进评论区楼层修复方式)
             if (data.upper && data.upper.top) {
                 if (Array.isArray(data.top)) data.top.push(data.upper.top);
                 else data.top = data.upper.top;
@@ -872,6 +875,7 @@
             if (li[0]) {
                 li.forEach((d) => {
                     let span = d.querySelector(".floor");
+<<<<<<< HEAD
                     let id = d.getAttribute("data-id");
                     if (!span && floor[id]) {
                         span = d.querySelector(".info");
@@ -889,6 +893,25 @@
                         }
                     }
                 })
+=======
+                    if (!span) {
+                        let id = d.getAttribute("data-id");
+                        span = d.querySelector(".info");
+                        span.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.innerHTML;
+                    }
+                })
+            } else {
+                li = document.querySelectorAll("li");
+                li.forEach((d) => {
+                    if (d.id.includes("l_id_")) {
+                        let span = d.querySelector(".floor-date");
+                        if (span.parentNode.children.length === 1) {
+                            let id = d.id.split('_')[2];
+                            span.parentNode.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.outerHTML;
+                        }
+                    }
+                })
+>>>>>>> b29f633 (改进评论区楼层修复方式)
             }
         }
     }

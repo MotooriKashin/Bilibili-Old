@@ -1074,21 +1074,39 @@
 =======
             const ajax = window.$.ajax;
             window.$.ajax = function (...rest) {
-                rest.forEach((d, i, rest) => {
+                rest.forEach((d, i, r) => {
                     if (d && d.dataType && d.dataType == "jsonp") {
                         // 替换广告区rid为资讯区rid
-                        if (rest[i].url.includes("region") && rest[i].data.rid == 165) rest[i].data.rid = 202;
+                        if (d.url.includes("region") && d.data.rid == 165) r[i].data.rid = 202;
                         // 替换原创排行为全部排行
-                        if (rest[i].url.includes("region") && rest[i].data.original == 1) rest[i].data.original = 0;
+                        if (d.url.includes("region") && d.data.original == 1) r[i].data.original = 0;
                         // 修改置顶推荐
-                        if (rest[i].url.includes('api.bilibili.com/x/web-interface/ranking/index')) rest[i].url = rest[i].url.replace('ranking/index', 'index/top');
+                        if (d.url.includes('api.bilibili.com/x/web-interface/ranking/index')) r[i].url = r[i].url.replace('ranking/index', 'index/top');
                         // 跳过充电鸣谢
-                        if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = {jsonp: "jsonp", aid: 1, mid: 1};
+                        if (config.reset.electric && d.url.includes('api.bilibili.com/x/web-interface/elec/show')) r[i].data = { jsonp: "jsonp", aid: 1, mid: 1 };
                         // 清除远古动态
-                        if (rest[i].url.includes('api.bilibili.com/x/web-feed/feed/unread')) rest[i].url = rest[i].url.replace('feed/unread', 'article/unread');
+                        if (d.url.includes('api.bilibili.com/x/web-feed/feed/unread')) r[i].url = r[i].url.replace('feed/unread', 'article/unread');
+                        // 修复评论楼层
+                        if (config.reset.replyfloor && d.url.includes('api.bilibili.com/x/v2/reply')) {
+                            if (d.url.includes('?')) rest[i].url = rest[i].url + '&mobi_app=android';
+                            else if (d.data && d.data.oid) {
+                                // 新版评论需修改返回值固定mode=3，使用deferred.pipe进行操作
+                                BLOD.pipe = (v) => {
+                                    if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
+                                    return v;
+                                }
+                                rest[i].data.mobi_app = "android";
+                            }
+                        }
                     }
                 })
-                return ajax.call(this, ...rest);
+                // 由于jQuery版本差异太大，需要严谨限定pipe操作对象
+                let run = BLOD.pipe;
+                delete BLOD.pipe;
+                return ajax.call(this, ...rest).pipe(run).done((v) => {
+                    // 记录评论楼层
+                    if (v && v.data && v.data.replies) BLOD.reset.setReplyFloor.init(v);
+                });
             }
 >>>>>>> 3d73ce2 (restore elec jump)
         }
