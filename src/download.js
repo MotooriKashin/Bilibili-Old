@@ -141,8 +141,7 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("下载拉取", ...e); }
         }
         async playurl(type, qn) {
-            let obj = {}, sign = BLOD.appkeySign();
-            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
+            let obj = {};
             BLOD.aid = BLOD.aid || window.aid;
             BLOD.cid = BLOD.cid || window.cid;
             qn = qn || 120;
@@ -155,14 +154,10 @@
                 case 'flv': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                     break;
-                case 'off': obj = { appkey: sign[0], cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' }
-                    obj.sign = BLOD.md5(BLOD.objUrl("", obj) + sign[1]);
-                    return BLOD.objUrl("https://interface.bilibili.com/v2/playurl", obj);
+                case 'off': return BLOD.urlSign("https://interface.bilibili.com/v2/playurl", { cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' });
                     break;
-                case 'mp4': obj = { appkey: sign[0], cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 }
-                    obj.sign = BLOD.md5(BLOD.objUrl("", obj) + sign[1]);
-                    if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", obj);
-                    return BLOD.objUrl("https://app.bilibili.com/v2/playurlproj", obj);
+                case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/web/playurl", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
+                    return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
                     break;
             }
         }
@@ -199,7 +194,7 @@
 
     const exports = () => {
         let download = new Download();
-        function makeExports(type){
+        function makeExports(type) {
             return function (...msg) {
                 return download[type](...msg);
             }

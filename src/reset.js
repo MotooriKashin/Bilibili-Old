@@ -486,7 +486,7 @@
                         debug.log("请先登录，才能授权会员");
                         return;
                     }
-                    let data = BLOD.jsonCheck(await BLOD.xhr.GM("https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a"));
+                    let data = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", "", 3)));
                     data = await new Promise((resolve, reject) => {
                         BLOD.xmlhttpRequest({
                             method: "GET",
@@ -534,7 +534,7 @@
                     mas = mas.join("/");
                     if (!obj) return mas;
                     parameters.forEach(d => {
-                        obj[d] = "";
+                        obj[d] = null;
                     })
                     return BLOD.objUrl(mas, obj);
                 }

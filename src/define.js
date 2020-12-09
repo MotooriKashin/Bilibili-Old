@@ -95,47 +95,57 @@
         }
     }
 
-    // 加密密钥
-    BLOD.appkeySign = (id) => {
+    // 生成加密链接
+    BLOD.urlSign = (url, obj, id) => {
+        if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
         id = 1 * id || 0;
-        let table = [
+        url = url || "";
+        let _obj = {}, table = [
             'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', // stream default
             '/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``', // app pgc
             '157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/', // app normal use
-            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special：api=<endpoint><appsecret>
+            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special: api=<endpoint><appsecret>
             '4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.', // Android normal
             '12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051', // BiliLink
             'bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22', // TV
-            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36', // ???
-        ][id], str = '';
-        for (let i = table.length - 1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() + 2);
-        return str.split(':')
+            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36'  // ???
+        ][id], key = "";
+        obj = typeof obj === "object" ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
+        url = url.split("?")[0];
+        delete obj.sign;
+        for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
+        obj = Object.assign(obj, { appkey: key.split(":")[0] });
+        Object.keys(obj).sort().map(key => {
+            _obj[key] = obj[key];
+        })
+        if (id === 3 && _obj.api) obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(_obj.api) }) + key.split(":")[1]) });
+        else obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", _obj) + key.split(":")[1]) });
+        return BLOD.objUrl(url, obj);
     }
 
     // 对象转链接
     BLOD.objUrl = (url, obj) => {
-        if (obj) {
-            let arr = [], i = 0;
-            for (let key in obj) {
-                if (obj[key] !== "" && obj[key] !== "undefined" && obj[key] !== null) {
-                    arr[i] = key + "=" + obj[key];
-                    i++;
-                }
+        obj = typeof obj === "object" ? obj : {};
+        let arr = [], i = 0;
+        for (let key in obj) {
+            if (obj[key] !== "undefined" && obj[key] !== null) {
+                arr[i] = key + "=" + obj[key];
+                i++;
             }
-            if (url) url = url + "?" + arr.join("&");
-            else url = arr.join("&");
         }
+        if (url) url = url + "?" + arr.join("&");
+        else url = arr.join("&");
         if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
         return url;
     }
 
     // 链接转对象
     BLOD.urlObj = (url) => {
+        url = url || "";
         url = url.split('#')[0];
         url = url.split('?')[1] ? url.split('?')[1].split('&') : "";
-        if (!url) return;
         let obj = {};
-        for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1];
+        if (url) for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
         return obj;
     }
 
