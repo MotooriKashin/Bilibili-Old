@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.8.3
+// @version      3.8.4
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -2160,8 +2160,8 @@
             if (li[0]) {
                 li.forEach((d) => {
                     let span = d.querySelector(".floor");
-                    if (!span) {
-                        let id = d.getAttribute("data-id");
+                    let id = d.getAttribute("data-id");
+                    if (!span && floor[id]) {
                         span = d.querySelector(".info");
                         span.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.innerHTML;
                     }
@@ -2171,8 +2171,8 @@
                 li.forEach((d) => {
                     if (d.id.includes("l_id_")) {
                         let span = d.querySelector(".floor-date");
-                        if (span.parentNode.children.length === 1) {
-                            let id = d.id.split('_')[2];
+                        let id = d.id.split('_')[2];
+                        if (span.parentNode.children.length === 1 && floor[id]) {
                             span.parentNode.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.outerHTML;
                         }
                     }
