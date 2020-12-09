@@ -641,8 +641,8 @@
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
-                    obj.fourk = obj.sign ? "" : 1;
-                    obj.fnval = obj.fnval ? 80 : "";
+                    obj.fourk = obj.sign ? null : 1;
+                    obj.fnval = obj.fnval ? 80 : null;
                     url = BLOD.objUrl(url.split("?")[0], obj);
                     BLOD.cid = obj.cid || BLOD.cid;
                     BLOD.aid = obj.avid || BLOD.aid;
@@ -748,7 +748,7 @@
                             if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                                 if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = GM_getValue("access_key") || "";
-                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: "", fnver: "", module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
+                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
                                 response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                 response = { "code": 0, "message": "success", "result": response };
                             }
@@ -1034,45 +1034,55 @@
             return r.join("");
         }
     }
-    // 加密密钥
-    BLOD.appkeySign = (id) => {
+    // 生成加密链接
+    BLOD.urlSign = (url, obj, id) => {
+        if (!BLOD.md5) BLOD.md5 = createMethod();
         id = 1 * id || 0;
-        let table = [
+        url = url || "";
+        let _obj = {}, table = [
             'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', // stream default
             '/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``', // app pgc
             '157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/', // app normal use
-            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special：api=<endpoint><appsecret>
+            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special: api=<endpoint><appsecret>
             '4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.', // Android normal
             '12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051', // BiliLink
             'bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22', // TV
-            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36', // ???
-        ][id], str = '';
-        for (let i = table.length - 1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() + 2);
-        return str.split(':')
+            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36'  // ???
+        ][id], key = "";
+        obj = typeof obj === "object" ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
+        url = url.split("?")[0];
+        delete obj.sign;
+        for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
+        obj = Object.assign(obj, { appkey: key.split(":")[0] });
+        Object.keys(obj).sort().map(key => {
+            _obj[key] = obj[key];
+        })
+        if (id === 3 && _obj.api) obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(_obj.api) }) + key.split(":")[1]) });
+        else obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", _obj) + key.split(":")[1]) });
+        return BLOD.objUrl(url, obj);
     }
     // 对象转链接
     BLOD.objUrl = (url, obj) => {
-        if (obj) {
-            let arr = [], i = 0;
-            for (let key in obj) {
-                if (obj[key] !== "" && obj[key] !== "undefined" && obj[key] !== null) {
-                    arr[i] = key + "=" + obj[key];
-                    i++;
-                }
+        obj = typeof obj === "object" ? obj : {};
+        let arr = [], i = 0;
+        for (let key in obj) {
+            if (obj[key] !== "undefined" && obj[key] !== null) {
+                arr[i] = key + "=" + obj[key];
+                i++;
             }
-            if (url) url = url + "?" + arr.join("&");
-            else url = arr.join("&");
         }
+        if (url) url = url + "?" + arr.join("&");
+        else url = arr.join("&");
         if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
         return url;
     }
     // 链接转对象
     BLOD.urlObj = (url) => {
+        url = url || "";
         url = url.split('#')[0];
         url = url.split('?')[1] ? url.split('?')[1].split('&') : "";
-        if (!url) return;
         let obj = {};
-        for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1];
+        if (url) for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
         return obj;
     }
     // cookie对象
@@ -1874,7 +1884,7 @@
                         debug.log("请先登录，才能授权会员");
                         return;
                     }
-                    let data = BLOD.jsonCheck(await BLOD.xhr.GM("https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a"));
+                    let data = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", "", 3)));
                     data = await new Promise((resolve, reject) => {
                         BLOD.xmlhttpRequest({
                             method: "GET",
@@ -1922,7 +1932,7 @@
                     mas = mas.join("/");
                     if (!obj) return mas;
                     parameters.forEach(d => {
-                        obj[d] = "";
+                        obj[d] = null;
                     })
                     return BLOD.objUrl(mas, obj);
                 }
@@ -2800,8 +2810,6 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("下载拉取", ...e); }
         }
         async playurl(type, qn) {
-            let obj = {}, sign = BLOD.appkeySign();
-            if (!BLOD.md5) BLOD.md5 = createMethod();
             BLOD.aid = BLOD.aid || unsafeWindow.aid;
             BLOD.cid = BLOD.cid || unsafeWindow.cid;
             qn = qn || 120;
@@ -2814,14 +2822,10 @@
                 case 'flv': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                     break;
-                case 'off': obj = { appkey: sign[0], cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' }
-                    obj.sign = BLOD.md5(BLOD.objUrl("", obj) + sign[1]);
-                    return BLOD.objUrl("https://interface.bilibili.com/v2/playurl", obj);
+                case 'off': return BLOD.urlSign("https://interface.bilibili.com/v2/playurl", { cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' });
                     break;
-                case 'mp4': obj = { appkey: sign[0], cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 }
-                    obj.sign = BLOD.md5(BLOD.objUrl("", obj) + sign[1]);
-                    if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", obj);
-                    return BLOD.objUrl("https://app.bilibili.com/v2/playurlproj", obj);
+                case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/web/playurl", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
+                    return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
                     break;
             }
         }
