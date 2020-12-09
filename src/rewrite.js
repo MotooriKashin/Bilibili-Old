@@ -55,24 +55,19 @@
                 BLOD.reset.playerSetting();
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
-                let page = BLOD.xhr.false(location.href);
-                BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ?
-                    JSON.parse(page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : "";
-                if (!BLOD.__INITIAL_STATE__) {
-                    if (BLOD.path[5].startsWith('ss')) {
-                        page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/pgc/view/web/season", { season_id: location.href.match(/[0-9]+/)[0] }));
-                    } else if (BLOD.path[5].startsWith('ep')) {
-                        page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/pgc/view/web/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
-                    }
+                let data;
+                if (BLOD.path[5].startsWith('ss')) {
+                    data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: location.href.match(/[0-9]+/)[0] }));
+                } else if (BLOD.path[5].startsWith('ep')) {
+                    data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
                 }
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
-                BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(page, id);
+                BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
-                if (page.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+                if (data.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
-                document.title = page.match(/<title.*?>.+?<\/title>/) ?
-                    page.match(/<title.*?>.+?<\/title>/)[0].replace(/<title.*?>/, "").replace(/<\/title>/, "") : BLOD.__INITIAL_STATE__.mediaInfo.title;
+                document.title = BLOD.__INITIAL_STATE__.mediaInfo.title;
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·Bangumi", ...e) }

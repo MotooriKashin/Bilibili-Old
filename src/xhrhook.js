@@ -374,8 +374,8 @@
                 }
                 // 重定向番剧信息
                 if (url.includes('bangumi.bilibili.com/view/web_api/season?')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.season(this, hook) });
-                    url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season', 'api.bilibili.com/pgc/view/web/season');
+                    //this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.season(this, hook) });
+                    // url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season', 'api.bilibili.com/pgc/view/web/season');
                 }
                 // 重定向追番信息
                 if (url.includes('bangumi.bilibili.com/ext/web_api/season_count?')) {
