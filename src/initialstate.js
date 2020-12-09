@@ -102,7 +102,7 @@
                 },
                 "mediaRating": data.rating,
                 "miniOn": 1,
-                "newestEp": newest_ep,
+                "newestEp": data.newest_ep,
                 "paster": {},
                 "payMent": data.payment || {},
                 "payPack": {},
