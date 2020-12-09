@@ -67,7 +67,8 @@
         bvid: bvid,
         hash: [],
         ids: [],
-        bloburl: {}
+        bloburl: {},
+        title: document.title
     }
     // 导入全局模块，其他模块按需加载
     new Function(GM_getResourceText("debug"))();

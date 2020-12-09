@@ -31,11 +31,19 @@
                 BLOD.aid = BLOD.__INITIAL_STATE__.aid ? BLOD.__INITIAL_STATE__.aid : BLOD.aid;
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
+<<<<<<< HEAD
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("av")));
                 document.title = BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 BLOD.fixSort.video();
                 BLOD.setLike();
                 BLOD.setMediaList.init();
+=======
+                BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("av")));
+                document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                BLOD.reset.fixSort.video();
+                BLOD.reset.setLike();
+                BLOD.reset.setMediaList.init();
+>>>>>>> 6bab63e (更新标题获取方式)
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·av/BV", ...e) }
         }
         watchlater() {
@@ -74,7 +82,7 @@
 =======
                 if (data.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
-                document.title = BLOD.__INITIAL_STATE__.mediaInfo.title;
+                document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 >>>>>>> 33c5e60 (重写Bangumi数据)
 
