@@ -743,7 +743,7 @@
                         Object.defineProperty(this, "responseText", { writable: true });
                         Object.defineProperty(this, "readyState", { writable: true });
                         Object.defineProperty(this, "status", { writable: true });
-                        let response, accesskey = "";
+                        let response, accesskey = null;
                         try {
                             if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
