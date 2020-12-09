@@ -110,14 +110,19 @@
 >>>>>>> 43b3ef7 (启用toast模块)
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
+<<<<<<< HEAD
                 let data = (BLOD.uid && BLOD.xhr.false(location.href).match(/last_ep_id\"\:[0-9]+/)) || [];
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : null;
                 id = id || (data[0] && data[0].split(":")[1]) || null;
+=======
+                let data;
+>>>>>>> 33c5e60 (重写Bangumi数据)
                 if (BLOD.path[5].startsWith('ss')) {
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: location.href.match(/[0-9]+/)[0] }));
                 } else if (BLOD.path[5].startsWith('ep')) {
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
                 }
+<<<<<<< HEAD
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
 <<<<<<< HEAD
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
@@ -156,6 +161,15 @@
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
 >>>>>>> 9d47e69 (修复专栏评论区头像框)
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+=======
+                let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
+                BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
+                if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
+                window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
+                if (data.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+                else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
+                document.title = BLOD.__INITIAL_STATE__.mediaInfo.title;
+>>>>>>> 33c5e60 (重写Bangumi数据)
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 >>>>>>> 33c5e60 (重写Bangumi数据)
 
