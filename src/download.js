@@ -141,7 +141,6 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("下载拉取", ...e); }
         }
         async playurl(type, qn) {
-            let obj = {};
             BLOD.aid = BLOD.aid || window.aid;
             BLOD.cid = BLOD.cid || window.cid;
             qn = qn || 120;
