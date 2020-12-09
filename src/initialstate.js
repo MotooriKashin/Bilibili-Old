@@ -59,6 +59,7 @@
         }
         bangumi(data, epId) {
             // https://bangumi.bilibili.com/view/web_api/season
+            epId = 1 * epId || null;
             data = BLOD.jsonCheck(data).result;
             let ids = [];
             data.episodes.forEach(d => {
@@ -73,7 +74,7 @@
                 "epId": epId || ids[0],
                 "epInfo": data.episodes[ids.indexOf(epId)] || data.episodes[0],
                 "epList": data.episodes,
-                "epStat": { "isPay": false, "isVip": false, "payPack": 0, "status": 0, "vipNeedPay": false },
+                "epStat": { "isPay": true, "isVip": false, "payPack": 0, "status": 1, "vipNeedPay": false },
                 "isPlayerTrigger": false,
                 "loginInfo": {},
                 "mdId": data.media_id,
