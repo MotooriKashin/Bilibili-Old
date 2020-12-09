@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      3.8.4
+// @version      3.8.5
 // @description  恢复原生的旧版页面，包括主页和播放页。
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -60,7 +60,7 @@
             "limit": [0, "区域限制", "尝试解除B站区域限制(包括部分仅限APP限制)，用于观看港澳台番剧<br>※只适配旧版播放器<br>※功能不及专门的脚本，同时使用请关闭本选项<br>※依赖xhrhook<br>※参看“会员授权”"],
             "accesskey": [0, "会员授权", "“区域限制”的高级功能，大会员的用户可以授权使用B站账户登录代理服务器，以观看会员专享视频。<br>※授权接口默认跳转到mcbbs，会弹出跨域申请，建议【总是允许域名】<br>※使用B站官方授权接口，完全不涉及密码等隐私信息，敬请放心<br>※不能解除大会员限制，只是让本身是大会员的用户能在区域限制视频继承大会员身份<br>※非大会员或者不需要观看大会员区域限制番剧开启本功能毫无意义"],
             "grobalboard": [1, "顶栏底栏", "识别并替换所有新版顶栏为旧版顶栏，旧版失效广告区替换为资讯区"],
-            "replyfloor": [1, "评论楼层", "恢复评论区楼层号，包括楼中楼"],
+            "replyfloor": [1, "评论楼层", "恢复评论区楼层号，上古“按评论数”排列的评论除外<br>添加了楼中楼层号显示，但若楼中楼当页第一条评论是回复别人则该页都无法获取"],
             "headblur": [0, "顶栏透明", "使旧版顶栏全透明"],
             "preview": [1, "付费预览", "去除播放器左下角付费预览框"],
             "jointime": [1, "注册时间", "在个人空间显示B站账号注册时间，依赖主人开放个人资料"],
@@ -641,8 +641,8 @@
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
-                    obj.fourk = obj.sign ? null : 1;
-                    obj.fnval = obj.fnval ? 80 : null;
+                    obj.fourk = obj.sign ? "" : 1;
+                    obj.fnval = obj.fnval ? 80 : "";
                     url = BLOD.objUrl(url.split("?")[0], obj);
                     BLOD.cid = obj.cid || BLOD.cid;
                     BLOD.aid = obj.avid || BLOD.aid;
@@ -743,12 +743,12 @@
                         Object.defineProperty(this, "responseText", { writable: true });
                         Object.defineProperty(this, "readyState", { writable: true });
                         Object.defineProperty(this, "status", { writable: true });
-                        let response, accesskey = null;
+                        let response, accesskey = "";
                         try {
                             if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
-                                if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
-                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
+                                if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = GM_getValue("access_key") || "";
+                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: "", fnver: "", module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
                                 response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                 response = { "code": 0, "message": "success", "result": response };
                             }
@@ -780,39 +780,21 @@
         jsonp() {
             const ajax = unsafeWindow.$.ajax;
             unsafeWindow.$.ajax = function (...rest) {
-                rest.forEach((d, i, r) => {
+                rest.forEach((d, i, rest) => {
                     if (d && d.dataType && d.dataType == "jsonp") {
                         // 替换广告区rid为资讯区rid
-                        if (d.url.includes("region") && d.data.rid == 165) r[i].data.rid = 202;
+                        if (rest[i].url.includes("region") && rest[i].data.rid == 165) rest[i].data.rid = 202;
                         // 替换原创排行为全部排行
-                        if (d.url.includes("region") && d.data.original == 1) r[i].data.original = 0;
+                        if (rest[i].url.includes("region") && rest[i].data.original == 1) rest[i].data.original = 0;
                         // 修改置顶推荐
-                        if (d.url.includes('api.bilibili.com/x/web-interface/ranking/index')) r[i].url = r[i].url.replace('ranking/index', 'index/top');
+                        if (rest[i].url.includes('api.bilibili.com/x/web-interface/ranking/index')) rest[i].url = rest[i].url.replace('ranking/index', 'index/top');
                         // 跳过充电鸣谢
-                        if (config.reset.electric && d.url.includes('api.bilibili.com/x/web-interface/elec/show')) r[i].data = { jsonp: "jsonp", aid: 1, mid: 1 };
+                        if (config.reset.electric && rest[i].url.includes('api.bilibili.com/x/web-interface/elec/show')) rest[i].data = { jsonp: "jsonp", aid: 1, mid: 1 };
                         // 清除远古动态
-                        if (d.url.includes('api.bilibili.com/x/web-feed/feed/unread')) r[i].url = r[i].url.replace('feed/unread', 'article/unread');
-                        // 修复评论楼层
-                        if (config.reset.replyfloor && d.url.includes('api.bilibili.com/x/v2/reply')) {
-                            if (d.url.includes('?')) rest[i].url = rest[i].url + '&mobi_app=android';
-                            else if (d.data && d.data.oid) {
-                                // 新版评论需修改返回值固定mode=3，使用deferred.pipe进行操作
-                                BLOD.pipe = (v) => {
-                                    if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
-                                    return v;
-                                }
-                                rest[i].data.mobi_app = "android";
-                            }
-                        }
+                        if (rest[i].url.includes('api.bilibili.com/x/web-feed/feed/unread')) rest[i].url = rest[i].url.replace('feed/unread', 'article/unread');
                     }
                 })
-                // 由于jQuery版本差异太大，需要严谨限定pipe操作对象
-                let run = BLOD.pipe;
-                delete BLOD.pipe;
-                return ajax.call(this, ...rest).pipe(run).done((v) => {
-                    // 记录评论楼层
-                    if (v && v.data && v.data.replies) BLOD.reset.setReplyFloor.init(v);
-                });
+                return ajax.call(this, ...rest);
             }
         }
         // 首页正在直播
@@ -1034,55 +1016,45 @@
             return r.join("");
         }
     }
-    // 生成加密链接
-    BLOD.urlSign = (url, obj, id) => {
-        if (!BLOD.md5) BLOD.md5 = createMethod();
+    // 加密密钥
+    BLOD.appkeySign = (id) => {
         id = 1 * id || 0;
-        url = url || "";
-        let _obj = {}, table = [
+        let table = [
             'rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg', // stream default
             '/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``', // app pgc
             '157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/', // app normal use
-            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special: api=<endpoint><appsecret>
+            '351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50', // special：api=<endpoint><appsecret>
             '4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.', // Android normal
             '12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051', // BiliLink
             'bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22', // TV
-            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36'  // ???
-        ][id], key = "";
-        obj = typeof obj === "object" ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
-        url = url.split("?")[0];
-        delete obj.sign;
-        for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
-        obj = Object.assign(obj, { appkey: key.split(":")[0] });
-        Object.keys(obj).sort().map(key => {
-            _obj[key] = obj[key];
-        })
-        if (id === 3 && _obj.api) obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(_obj.api) }) + key.split(":")[1]) });
-        else obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", _obj) + key.split(":")[1]) });
-        return BLOD.objUrl(url, obj);
+            '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36', // ???
+        ][id], str = '';
+        for (let i = table.length - 1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() + 2);
+        return str.split(':')
     }
     // 对象转链接
     BLOD.objUrl = (url, obj) => {
-        obj = typeof obj === "object" ? obj : {};
-        let arr = [], i = 0;
-        for (let key in obj) {
-            if (obj[key] !== "undefined" && obj[key] !== null) {
-                arr[i] = key + "=" + obj[key];
-                i++;
+        if (obj) {
+            let arr = [], i = 0;
+            for (let key in obj) {
+                if (obj[key] !== "" && obj[key] !== "undefined" && obj[key] !== null) {
+                    arr[i] = key + "=" + obj[key];
+                    i++;
+                }
             }
+            if (url) url = url + "?" + arr.join("&");
+            else url = arr.join("&");
         }
-        if (url) url = url + "?" + arr.join("&");
-        else url = arr.join("&");
         if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
         return url;
     }
     // 链接转对象
     BLOD.urlObj = (url) => {
-        url = url || "";
         url = url.split('#')[0];
         url = url.split('?')[1] ? url.split('?')[1].split('&') : "";
+        if (!url) return;
         let obj = {};
-        if (url) for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
+        for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1];
         return obj;
     }
     // cookie对象
@@ -1884,7 +1856,7 @@
                         debug.log("请先登录，才能授权会员");
                         return;
                     }
-                    let data = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", "", 3)));
+                    let data = BLOD.jsonCheck(await BLOD.xhr.GM("https://passport.bilibili.com/login/app/third?appkey=27eb53fc9058f8c3&api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png&sign=04224646d1fea004e79606d3b038c84a"));
                     data = await new Promise((resolve, reject) => {
                         BLOD.xmlhttpRequest({
                             method: "GET",
@@ -1932,7 +1904,7 @@
                     mas = mas.join("/");
                     if (!obj) return mas;
                     parameters.forEach(d => {
-                        obj[d] = null;
+                        obj[d] = "";
                     })
                     return BLOD.objUrl(mas, obj);
                 }
@@ -2140,53 +2112,127 @@
 
     // 修复评论楼层
     BLOD.reset.setReplyFloor = {
-        init(data) {
+        init: async (link) => {
+            BLOD.src = "";
             if (!config.reset.replyfloor) return;
-            let floor = {}, key = ["top", "hots", "replies", "root"];
-            data = data.data;
-            if (data.upper && data.upper.top) {
-                if (Array.isArray(data.top)) data.top.push(data.upper.top);
-                else data.top = data.upper.top;
-            }
-            key.forEach((d) => {
-                if (data[d]) {
-                    d = Array.isArray(data[d]) ? data[d] : [data[d]]
-                    d.forEach((d) => {
-                        floor[d.rpid] = d.floor;
-                        if (d.replies) {
-                            d.replies.forEach((d) => {
-                                floor[d.rpid] = d.floor;
-                            })
-                        }
-                    })
+            try {
+                let mode, data, obj = BLOD.urlObj(link),
+                    oid = obj.oid,
+                    sort = obj.sort,
+                    pn = obj.pn,
+                    root = obj.root,
+                    type = obj.type;
+                // sort与mode对应转化，sort == 1时暂时处理不了直接退出
+                // 热门：sort=2 mode=3 时间：sort=0 mode=2  回复：sort=1 默认(热门+时间)： mode=1
+                if (sort == 0) mode = 1;
+                if (sort == 1) throw ["暂无法处理按回复排列的评论", obj];
+                if (sort == 2) mode = 3;
+                let list_item = document.getElementsByClassName("reply-wrap");
+                let main_floor = document.getElementsByTagName("li");
+                // 展开楼中楼的楼层号
+                if (root) {
+                    // 前两页直接获取
+                    if (pn < 2) data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/reply/cursor", { "oid": oid, "root": root, "type": type }));
+                    else {
+                        // 3页以上先获取当页首条评论rpid
+                        let dialog;
+                        if (list_item[0]) { for (let i = 0; i < list_item.length; i++) { if (list_item[i].getAttribute("data-id") == root) { list_item = list_item[i].getElementsByClassName("reply-wrap"); if (list_item[0]) for (let j = 0; j < list_item.length; j++)if (!list_item[j].getElementsByClassName("floor")[0]) { dialog = list_item[j].getAttribute("data-id"); break; } break; } } }
+                        else if (main_floor[0]) { for (let i = 0; i < main_floor.length; i++) { if (main_floor[i].getAttribute("id") && main_floor[i].getAttribute("id").includes(root)) { main_floor = main_floor[i].getElementsByTagName("li"); if (main_floor[0]) for (let j = 0; j < main_floor.length; j++)if (main_floor[j].id && main_floor[j].id.includes("l_id") && !main_floor[j].getElementsByClassName("floor-num")[0]) { dialog = main_floor[j].getAttribute("id").split('_')[2]; break; } break; } } }
+                        // 根据当页首条评论rpid获取min_id
+                        data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/dialog/cursor", { "oid": oid, "root": root, "type": type, "dialog": dialog, "size": 20 }));
+                        let min_id = BLOD.jsonCheck(data).data.replies;
+                        if (min_id) { for (let i = 0; i < min_id.length; i++) if (min_id[i].rpid == dialog) { min_id = min_id[i].floor; break; } }
+                        else { debug.msg("当前页楼中楼层获取失败 ಥ_ಥ"); return; }
+                        // 根据min_id获取当页数据
+                        data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/reply/cursor", { "oid": oid, "root": root, "type": type, "min_id": min_id }));
+                    }
                 }
-            })
-            BLOD.floor = floor;
-        },
-        fix() {
-            if (!config.reset.replyfloor) return;
-            let floor = BLOD.floor || {};
-            let li = document.querySelectorAll(".reply-item.reply-wrap");
-            if (li[0]) {
-                li.forEach((d) => {
-                    let span = d.querySelector(".floor");
-                    let id = d.getAttribute("data-id");
-                    if (!span && floor[id]) {
-                        span = d.querySelector(".info");
-                        span.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.innerHTML;
+                else {
+                    if (sort == 2) data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/main", { "oid": oid, "next": pn, "type": type, "mode": mode }));
+                    else if (pn == 1) data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/main", { "oid": oid, "type": type, "mode": mode }));
+                    else {
+                        // 时间排序的楼层号需要相对前页判定
+                        pn = pn - 1;
+                        data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply", { "type": type, "sort": sort, "oid": oid, "pn": pn }));
+                        data = BLOD.jsonCheck(data).data;
+                        let i = data.replies.length - 1;
+                        oid = data.replies[0].oid;
+                        let root = data.replies[i].rpid;
+                        data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/reply/cursor", { "oid": oid, "root": root, "type": type }));
+                        data = BLOD.jsonCheck(data).data;
+                        oid = data.root.oid;
+                        let next = data.root.floor;
+                        data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v2/reply/main", { "oid": oid, "next": next, "type": type, "mode": mode }));
                     }
-                })
-            } else {
-                li = document.querySelectorAll("li");
-                li.forEach((d) => {
-                    if (d.id.includes("l_id_")) {
-                        let span = d.querySelector(".floor-date");
-                        let id = d.id.split('_')[2];
-                        if (span.parentNode.children.length === 1 && floor[id]) {
-                            span.parentNode.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.outerHTML;
+                }
+                data = BLOD.jsonCheck(data).data;
+                BLOD.reset.setReplyFloor.fix(BLOD.reset.setReplyFloor.floor(data));
+            }
+            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("评论楼层", ...e) }
+        },
+        // 纪录楼层对照表
+        floor: (data) => {
+            let floor = {}, top = data.top, hots = data.hots, replies = data.replies, froot = data.root;
+            if (hots && hots[0]) {
+                for (let i = 0; i < hots.length; i++) {
+                    floor[hots[i].rpid] = hots[i].floor;
+                    if (hots[i].replies) for (let j = 0; j < hots[i].replies.length; j++) floor[hots[i].replies[j].rpid] = hots[i].replies[j].floor;
+                }
+            }
+            if (replies && replies[0]) {
+                for (let i = 0; i < replies.length; i++) {
+                    floor[replies[i].rpid] = replies[i].floor;
+                    if (replies[i].replies) for (let j = 0; j < replies[i].replies.length; j++) floor[replies[i].replies[j].rpid] = replies[i].replies[j].floor;
+                }
+            }
+            if (top) {
+                for (let key in top) {
+                    if (top[key]) {
+                        floor[top[key].rpid] = top[key].floor;
+                        if (top[key].replies) for (let i = 0; i < top[key].replies.length; i++) floor[top[key].replies[i].rpid] = top[key].replies[i].floor;
+                    }
+                }
+            }
+            if (froot && froot.replies) for (let i = 0; i < froot.replies.length; i++) floor[froot.replies[i].rpid] = froot.replies[i].floor;
+            return floor;
+        },
+        // 修复楼层号
+        fix: (floor) => {
+            let list_item = document.getElementsByClassName("reply-wrap");
+            let main_floor = document.getElementsByTagName("li");
+            // 旧版评论直接写入楼层号
+            if (main_floor[0]) {
+                for (let i = 0; i < main_floor.length; i++) {
+                    if (main_floor[i].id && main_floor[i].id.includes("l_id")) {
+                        let rpid = main_floor[i].getAttribute("id").split('_')[2];
+                        if (rpid in floor) {
+                            try {
+                                main_floor[i].getElementsByClassName("floor-num")[0].innerText = "#" + floor[rpid];
+                            }
+                            catch (e) {
+                                let node = main_floor[i].getElementsByClassName("floor-date")[0].parentNode;
+                                let span = document.createElement("span");
+                                span.setAttribute("class", "floor-num");
+                                span.setAttribute("style", "float : left;color : #aaa;padding-right : 10px;");
+                                span.innerText = "#" + floor[rpid];
+                                node.insertBefore(span, node.firstChild);
+                            }
                         }
                     }
-                })
+                }
+            }
+            // 新版评论需另外创建楼层号
+            if (list_item[0]) {
+                for (let i = 0; i < list_item.length; i++) {
+                    let rpid = list_item[i].getAttribute("data-id");
+                    if (rpid in floor) {
+                        let node = list_item[i].getElementsByClassName("info")[0];
+                        let span = document.createElement("span");
+                        span.setAttribute("class", "floor");
+                        span.innerText = "#" + floor[rpid];
+                        node.insertBefore(span, node.firstChild);
+                    }
+                }
             }
         }
     }
@@ -2810,6 +2856,8 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("下载拉取", ...e); }
         }
         async playurl(type, qn) {
+            let obj = {}, sign = BLOD.appkeySign();
+            if (!BLOD.md5) BLOD.md5 = createMethod();
             BLOD.aid = BLOD.aid || unsafeWindow.aid;
             BLOD.cid = BLOD.cid || unsafeWindow.cid;
             qn = qn || 120;
@@ -2822,10 +2870,14 @@
                 case 'flv': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                     break;
-                case 'off': return BLOD.urlSign("https://interface.bilibili.com/v2/playurl", { cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' });
+                case 'off': obj = { appkey: sign[0], cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' }
+                    obj.sign = BLOD.md5(BLOD.objUrl("", obj) + sign[1]);
+                    return BLOD.objUrl("https://interface.bilibili.com/v2/playurl", obj);
                     break;
-                case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/web/playurl", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
-                    return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
+                case 'mp4': obj = { appkey: sign[0], cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 }
+                    obj.sign = BLOD.md5(BLOD.objUrl("", obj) + sign[1]);
+                    if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", obj);
+                    return BLOD.objUrl("https://app.bilibili.com/v2/playurlproj", obj);
                     break;
             }
         }
@@ -3453,6 +3505,8 @@
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) BLOD.reset.switchVideo();
         // 创建播放器右键下载菜单
         if (/bilibili-player-context-menu-container black/.test(msg.target.className)) BLOD.download.init(msg.target);
+        // 捕获评论链接
+        if (msg.target.src && msg.target.src.startsWith('https://api.bilibili.com/x/v2/reply') && msg.target.src.includes("oid")) BLOD.src = msg.target.src;
         // 捕获频道视频链接
         if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) BLOD.src = msg.target.src;
         // 修复失效频道视频
@@ -3463,14 +3517,8 @@
         if (msg.relatedNode.className == "info-sec-av") BLOD.reset.setBangumi.episodeData("", msg);
         // 失效分区转换
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") BLOD.reset.fixnews(msg.target);
-        if ((/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) {
-            clearTimeout(BLOD.timer);
-            BLOD.timer = setTimeout(() => {
-                delete BLOD.timer;
-                BLOD.reset.setReplyFloor.fix();
-                BLOD.reset.fixVideoSeek(msg.target.parentNode);
-            }, 100)
-        }
+        // 修复评论楼层&修复评论空降坐标
+        if (BLOD.src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) { BLOD.reset.setReplyFloor.init(BLOD.src); BLOD.reset.fixVideoSeek(msg.target.parentNode); }
         // 修复分区排行
         if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") BLOD.reset.fixrank(msg.target);
         // 弹幕哈希反查
