@@ -32,7 +32,7 @@
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("av")));
-                document.title = BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 BLOD.reset.fixSort.video();
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
@@ -67,7 +67,7 @@
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 if (data.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
-                document.title = BLOD.__INITIAL_STATE__.mediaInfo.title;
+                document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·Bangumi", ...e) }
