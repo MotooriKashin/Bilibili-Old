@@ -552,28 +552,27 @@
                         if (config.reset.electric && d.url.includes('api.bilibili.com/x/web-interface/elec/show')) r[i].data = { jsonp: "jsonp", aid: 1, mid: 1 };
                         // 清除远古动态
                         if (d.url.includes('api.bilibili.com/x/web-feed/feed/unread')) r[i].url = r[i].url.replace('feed/unread', 'article/unread');
-                        // 修复评论楼层
-                        if (config.reset.replyfloor && d.url.includes('api.bilibili.com/x/v2/reply')) {
-                            if (d.url.includes('?')) rest[i].url = rest[i].url + '&mobi_app=android';
-                            else if (d.data && d.data.oid) {
-                                // 新版评论需修改返回值固定mode=3，使用deferred.pipe进行操作
-                                BLOD.pipe = (v) => {
-                                    if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
-                                    return v;
-                                }
-                                rest[i].data.mobi_app = "android";
+                    }
+                })
+                return ajax.call(this, ...rest);
+            }
+            window.$.ajaxSetup({
+                beforeSend: function () {
+                    // 修复评论楼层并修复mode返回值
+                    if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply')) {
+                        this.url = this.url + '&mobi_app=android';
+                        let jsonpCallback = this.jsonpCallback;
+                        let call = window[jsonpCallback];
+                        if (call) {
+                            window[jsonpCallback] = function (v) {
+                                if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
+                                BLOD.reset.setReplyFloor.init(v)
+                                return call.call(this, v);
                             }
                         }
                     }
-                })
-                // 由于jQuery版本差异太大，需要严谨限定pipe操作对象
-                let run = BLOD.pipe;
-                delete BLOD.pipe;
-                return ajax.call(this, ...rest).pipe(run).done((v) => {
-                    // 记录评论楼层
-                    if (v && v.data && v.data.replies) BLOD.reset.setReplyFloor.init(v);
-                });
-            }
+                }
+            })
         }
         // 首页正在直播
         biliIndexRec(obj, hook = []) {
