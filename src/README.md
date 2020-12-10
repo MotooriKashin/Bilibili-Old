@@ -144,6 +144,6 @@ BLOD.sizeFormat = (size) => {...}
 *这里直接点击红字中的`userscript`是没用，右边的`VM`有时也没用，展开错误三角，下面调用栈点进去才能定位错误：可以看见上面命令行直接不带参数调用了`BLOD.sizeFormat()`，三角点开定位的报错函数名以及链接点进去都正确定位到了错误位置。**值得注意的是报错后再打开控制台是没有那个三角的，要先打开控制台再刷新页面报错才会出现那个三角**。*
 2. 模块中使用`const BLOD = window.BLOD`获得了`BLOD`对象后，然后接下来请**不要**`let aid = BLOD.aid`获取属性`aid`以便模块中直接使用方便`aid`代替麻烦的`BLOD.aid`。因为挂载在`BLOD`上的`aid`数据可能会变动，比如被其他模块修改了什么的，将其二次赋值给其他变量就不会同步变动，导致该模块中获取到的可能是过时甚至未初始化的`aid`。  
 对于其他任意属性`value`也是一样的，不要偷懒去二次赋值，直接使用`BLOD[value]`或`BLOD.value`就是了，虽然是麻烦了点，这也是没有办法的事情。我没测试过仿照`const BLOD = window.BLOD`改为`let value = window.BLOD.value`能不能同步，只是觉得没必要，把`BLOD.value`当成一个长一点的变量就是了，还省去了声明变量的步骤。
-3. 使用`resource`声明模块将把模块缓存在脚本管理器中，而且脚本管理器会不会及时更新模块还未可知，这可能带来了更新方面的不便。这是没有办法的事，也不能每次运行都在线获取模块，那样将严重拖累载入速度。另外模块分发使用的CDN[jsdelivr](https://www.jsdelivr.com/)比起Github原生源又有24h内的延时。所以模块还是尽量在本地调试好再上线吧。  
-Tampermonkey编辑脚本选择外部也是可以直接编辑模块的，**但注意模块不像脚本主体，其中不能引入任何中文，包括注释！**这里指的是在编辑器中添加中文，模块本身可以有中文，这些载入到Tampermonkey编辑器中都成了乱码。
+3. 使用`resource`声明模块将把模块缓存在脚本管理器中，而且脚本管理器会不会及时更新模块还未可知，这可能带来了更新方面的不便。这是没有办法的事，也不能每次运行都在线获取模块，那样将严重拖累载入速度。另外模块分发使用的CDN[jsdelivr](https://www.jsdelivr.com/)比起Github原生源又有24h内的延时。所以模块还是尽量在本地调试好再上线吧，若要立即更新，请修改[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)声明模块部分加上新版的commit哈希值并升级版本号，如`// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5d3269259f98725aa2df5df5aeef5d3e29b538fb/src/xhrhook.js`  
+Tampermonkey编辑脚本选择外部也是可以直接编辑模块的，**但注意模块不像脚本主体，其中不能引入任何中文包括注释**，这里指的是在编辑器中添加中文，模块本身可以有中文，这些载入到Tampermonkey编辑器中都成了乱码。
 4. 模块化后由于脚本主体[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)大概不会经常改动，这样更新也通知不到greasyfork，所以更新模块时请务必在[README.md](https://github.com/MotooriKashin/Bilibili-Old/blob/master/README.md)底部添加更新历史记录。
