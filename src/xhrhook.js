@@ -1029,10 +1029,15 @@
         }
         jsonp() {
 <<<<<<< HEAD
+<<<<<<< HEAD
             window.$.ajaxSetup({
                 beforeSend: function (xhr) {
                     // 拦截日志上传
                     if (this.url.includes("data.bilibili.com/log/web")) xhr.abort();
+=======
+            window.$.ajaxSetup({
+                beforeSend: function () {
+>>>>>>> d418687 (jsonp hook全部使用新方法)
                     // 广告区转资讯区
                     if (this.url.includes("region") && this.url.includes("rid=165")) this.url = this.url.replace("rid=165", "rid=202");
                     // 取消原创排行榜
@@ -1044,13 +1049,18 @@
                     // 清除远古动态
                     if (this.url.includes("api.bilibili.com/x/web-feed/feed/unread")) this.url = this.url.replace("feed/unread", "article/unread");
                     // 修复评论楼层并修复mode返回值
+<<<<<<< HEAD
                     if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid')) {
+=======
+                    if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply')) {
+>>>>>>> d418687 (jsonp hook全部使用新方法)
                         this.url = this.url + '&mobi_app=android';
                         let jsonpCallback = this.jsonpCallback;
                         let call = window[jsonpCallback];
                         if (call) {
                             window[jsonpCallback] = function (v) {
                                 if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
+<<<<<<< HEAD
                                 if (v && v.data && v.data.upper && v.data.upper.top && v.data.upper.top.replies) BLOD.topReply = v.data.upper.top.replies;
                                 if (BLOD.topReply && v.data && v.data.upper && v.data.upper.top && !v.data.upper.top.replies) v.data.upper.top.replies = BLOD.topReply;
                                 BLOD.reset.setReplyFloor.init(v)
@@ -1096,6 +1106,10 @@
                                     return v;
                                 }
                                 rest[i].data.mobi_app = "android";
+=======
+                                BLOD.reset.setReplyFloor.init(v)
+                                return call.call(this, v);
+>>>>>>> d418687 (jsonp hook全部使用新方法)
                             }
                         }
                     }
