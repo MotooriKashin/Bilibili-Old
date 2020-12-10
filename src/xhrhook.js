@@ -538,26 +538,18 @@
             }
         }
         jsonp() {
-            const ajax = window.$.ajax;
-            window.$.ajax = function (...rest) {
-                rest.forEach((d, i, r) => {
-                    if (d && d.dataType && d.dataType == "jsonp") {
-                        // 替换广告区rid为资讯区rid
-                        if (d.url.includes("region") && d.data.rid == 165) r[i].data.rid = 202;
-                        // 替换原创排行为全部排行
-                        if (d.url.includes("region") && d.data.original == 1) r[i].data.original = 0;
-                        // 修改置顶推荐
-                        if (d.url.includes('api.bilibili.com/x/web-interface/ranking/index')) r[i].url = r[i].url.replace('ranking/index', 'index/top');
-                        // 跳过充电鸣谢
-                        if (config.reset.electric && d.url.includes('api.bilibili.com/x/web-interface/elec/show')) r[i].data = { jsonp: "jsonp", aid: 1, mid: 1 };
-                        // 清除远古动态
-                        if (d.url.includes('api.bilibili.com/x/web-feed/feed/unread')) r[i].url = r[i].url.replace('feed/unread', 'article/unread');
-                    }
-                })
-                return ajax.call(this, ...rest);
-            }
             window.$.ajaxSetup({
                 beforeSend: function () {
+                    // 广告区转资讯区
+                    if (this.url.includes("region") && this.url.includes("rid=165")) this.url = this.url.replace("rid=165", "rid=202");
+                    // 取消原创排行榜
+                    if (this.url.includes("region") && this.url.includes("original=1")) this.url = this.url.replace("original=1", "original=0");
+                    // 修复置顶推荐
+                    if (this.url.includes("api.bilibili.com/x/web-interface/ranking/index")) this.url = this.url.replace("ranking/index", "index/top");
+                    // 跳过充电鸣谢
+                    if (config.reset.electric && this.url.includes("api.bilibili.com/x/web-interface/elec/show")) this.url = BLOD.objUrl(this.url.split("?")[0], Object.assign(BLOD.urlObj(this.url), { aid: 1, mid: 1 }));
+                    // 清除远古动态
+                    if (this.url.includes("api.bilibili.com/x/web-feed/feed/unread")) this.url = this.url.replace("feed/unread", "article/unread");
                     // 修复评论楼层并修复mode返回值
                     if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply')) {
                         this.url = this.url + '&mobi_app=android';
