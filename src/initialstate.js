@@ -34,9 +34,9 @@
         avPlus(data) {
             try {
                 let aid = BLOD.aid, cid = BLOD.cid;
+                data = BLOD.jsonCheck(data);
                 aid = aid || data.aid;
                 cid = cid || data.list[0].cid;
-                data = BLOD.jsonCheck(data);
                 if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
                 if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
                 BLOD.config.reset.like = 0;
