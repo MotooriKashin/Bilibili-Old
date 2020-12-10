@@ -539,7 +539,7 @@
         }
         jsonp() {
             window.$.ajaxSetup({
-                beforeSend: function () {
+                beforeSend: function (xhr) {
                     // 拦截日志上传
                     if (this.url.includes("data.bilibili.com/log/web")) xhr.abort();
                     // 广告区转资讯区
