@@ -4160,6 +4160,7 @@
 >>>>>>> 9571161 (重构代码，方便维护；)
 =======
     BLOD.addCss(BLOD.getResourceText("css"));
+    if (config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
     new Function(GM_getResourceText("ui"))();
     new Function(GM_getResourceText("xhrhook"))();
 >>>>>>> baff4af (模块化脚本以便维护)
