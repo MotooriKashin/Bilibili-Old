@@ -301,49 +301,53 @@
         }
         av(data) {
             try {
-                let aid = BLOD.aid, cid = BLOD.cid, dat;
+                let aid = BLOD.aid, cid = BLOD.cid;
                 data = BLOD.jsonCheck(data).data;
                 aid = aid || data.View.aid;
                 cid = cid || data.View.cid;
-                dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
-                dat.aid = data.View.aid;
-                dat.related = data.Related;
-                dat.tags = data.Tags || [];
-                dat.upData = data.Card.card;
-                dat.upData.archiveCount = data.Card.archive_count;
-                dat.videoData = data.View;
-                dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
-                return dat;
+                return {
+                    "aid": aid,
+                    "comment": { count: 0, list: [] },
+                    "error": {},
+                    "isClient": false,
+                    "p": "",
+                    "player": "",
+                    "playurl": {},
+                    "related": data.Related || [],
+                    "tags": data.Tags || [],
+                    "upData": Object.assign(data.Card.card, { "archiveCount": data.Card.archive_count }),
+                    "videoData": Object.assign(data.View, { "embedPlayer": 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")' })
+                }
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·av/BV", ...e) }
         }
         avPlus(data) {
             try {
                 let aid = BLOD.aid, cid = BLOD.cid, dat;
+                aid = aid || data.aid;
+                cid = cid || data.list[0].cid;
                 data = BLOD.jsonCheck(data);
-                dat = { aid: -1, comment: { count: 0, list: [] }, error: {}, isClient: false, p: "", player: "", playurl: {}, related: [], tags: [], upData: {}, videoData: {} };
-                if (data.v2_app_api) {
-                    if (data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
-                    aid = aid || data.v2_app_api.aid;
-                    cid = cid || data.v2_app_api.cid;
-                    dat.aid = data.v2_app_api.aid;
-                    dat.tags = data.v2_app_api.tag;
-                    dat.upData = data.v2_app_api.owner;
-                    dat.videoData = data.v2_app_api;
-                } else {
-                    if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
-                    aid = aid || data.aid;
-                    cid = cid || data.list[0].cid;
-                    dat.aid = aid;
-                    dat.tags = [];
-                    dat.upData = { "face": "https://static.hdslb.com/images/akari.jpg", name: data.author, mid: data.mid };
-                    dat.videoData = { "aid": aid, "cid": cid, "config": { "relates_title": "相关推荐", "share_style": 1 }, "copyright": 2, "ctime": data.created, "desc": data.description, "dimension": { "height": 1080, "rotate": 0, "width": 1920 }, "duration": 360, "dynamic": "", "owner": dat.upData, "pages": [{ "cid": cid, "dimension": { "height": 1080, "rotate": 0, "width": 1920 }, "duration": 360, "from": "vupload", "page": 1, "part": "", "vid": "", "weblink": "" }], "pic": data.pic, "pubdate": data.created, "rights": { "autoplay": 0, "bp": 0, "download": 0, "elec": 0, "hd5": 0, "is_cooperation": 0, "movie": 0, "no_background": 0, "no_reprint": 0, "pay": 0, "ugc_pay": 0, "ugc_pay_preview": 0 }, "stat": { "aid": aid, "coin": data.coins, "danmaku": data.video_review, "dislike": 0, "favorite": data.favorites, "his_rank": 0, "like": 0, "now_rank": 0, "reply": data.review, "share": 0, "view": data.play }, "state": 0, "tid": data.tid, "title": data.title, "tname": data.typename, "videos": 1 };
-                }
-                dat.upData = Object.assign(dat.upData, { "DisplayRank": "0", "Official": { "desc": "", "role": 0, "title": "", "type": -1 }, "approve": false, "archiveCount": 0, "article": 0, "attention": 10, "attentions": [], "birthday": "", "description": "", "fans": 44616, "friend": 10, "level_info": { "current_exp": 0, "current_level": 6, "current_min": 0, "next_exp": 0 }, "nameplate": { "condition": "", "image": "", "image_small": "", "level": "", "name": "", "nid": 0 }, "official_verify": { "desc": "", "type": -1 }, "pendant": { "expire": 0, "image": "", "image_enhance": "", "image_enhance_frame": "", "name": "", "pid": 0 }, "place": "", "rank": "10000", "regtime": 0, "sex": "保密", "sign": "", "spacesta": 0, "vip": { "accessStatus": 0, "dueRemark": "", "theme_type": 0, "vipStatus": 0, "vipStatusWarn": "", "vipType": 1 } });
-                dat.related = [];
-                dat.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")';
+                if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
+                if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
                 BLOD.config.reset.like = 0;
                 BLOD.avPlus = true;
-                return dat;
+                return Object.assign({
+                    "aid": aid,
+                    "comment": { count: 0, list: [] },
+                    "error": {},
+                    "isClient": false,
+                    "p": "",
+                    "player": "",
+                    "playurl": {},
+                    "related": [],
+                    "tags": [],
+                    "upData": Object.assign({ "face": "https://static.hdslb.com/images/akari.jpg", name: data.author, mid: data.mid }, { "DisplayRank": "0", "Official": { "desc": "", "role": 0, "title": "", "type": -1 }, "approve": false, "archiveCount": 0, "article": 0, "attention": 10, "attentions": [], "birthday": "", "description": "", "fans": 44616, "friend": 10, "level_info": { "current_exp": 0, "current_level": 6, "current_min": 0, "next_exp": 0 }, "nameplate": { "condition": "", "image": "", "image_small": "", "level": "", "name": "", "nid": 0 }, "official_verify": { "desc": "", "type": -1 }, "pendant": { "expire": 0, "image": "", "image_enhance": "", "image_enhance_frame": "", "name": "", "pid": 0 }, "place": "", "rank": "10000", "regtime": 0, "sex": "保密", "sign": "", "spacesta": 0, "vip": { "accessStatus": 0, "dueRemark": "", "theme_type": 0, "vipStatus": 0, "vipStatusWarn": "", "vipType": 1 } }),
+                    "videoData": Object.assign({ "aid": aid, "cid": cid, "config": { "relates_title": "相关推荐", "share_style": 1 }, "copyright": 2, "ctime": data.created, "desc": data.description, "dimension": { "height": 1080, "rotate": 0, "width": 1920 }, "duration": 360, "dynamic": "", "owner": dat.upData, "pages": [{ "cid": cid, "dimension": { "height": 1080, "rotate": 0, "width": 1920 }, "duration": 360, "from": "vupload", "page": 1, "part": "", "vid": "", "weblink": "" }], "pic": data.pic, "pubdate": data.created, "rights": { "autoplay": 0, "bp": 0, "download": 0, "elec": 0, "hd5": 0, "is_cooperation": 0, "movie": 0, "no_background": 0, "no_reprint": 0, "pay": 0, "ugc_pay": 0, "ugc_pay_preview": 0 }, "stat": { "aid": aid, "coin": data.coins, "danmaku": data.video_review, "dislike": 0, "favorite": data.favorites, "his_rank": 0, "like": 0, "now_rank": 0, "reply": data.review, "share": 0, "view": data.play }, "state": 0, "tid": data.tid, "title": data.title, "tname": data.typename, "videos": 1 }, { "embedPlayer": 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")' })
+                }, data.v2_app_api ? {
+                    "aid": data.v2_app_api.aid,
+                    "tags": data.v2_app_api.tag,
+                    "upData": data.v2_app_api.owner,
+                    "videoData": data.v2_app_api
+                } : {})
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·avPlus", ...e) }
         }
         bangumi(data, epId) {
