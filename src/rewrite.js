@@ -111,17 +111,23 @@
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 let data = (BLOD.uid && BLOD.xhr.false(location.href).match(/last_ep_id\"\:[0-9]+/)) || [];
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : null;
                 id = id || (data[0] && data[0].split(":")[1]) || null;
 =======
                 let data;
 >>>>>>> 33c5e60 (重写Bangumi数据)
+=======
+                let data = (BLOD.uid && BLOD.xhr.false(location.href).match(/last_ep_id\"\:[0-9]+/)) || [];
+                let id = data[0] ? data[0].split(":")[1] : null;
+>>>>>>> 4be23af (还原ss页默认ep)
                 if (BLOD.path[5].startsWith('ss')) {
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: location.href.match(/[0-9]+/)[0] }));
                 } else if (BLOD.path[5].startsWith('ep')) {
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
 <<<<<<< HEAD
@@ -163,6 +169,9 @@
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
 =======
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
+=======
+                id = id || (BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : null);
+>>>>>>> 4be23af (还原ss页默认ep)
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
