@@ -5,6 +5,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
@@ -20,12 +21,17 @@
 >>>>>>> 5cf66d3 (优化xhr send响应模拟)
 // @description  恢复原生的旧版页面，包括主页和播放页。
 >>>>>>> 3d73ce2 (restore elec jump)
+=======
+// @version      4.0.0
+// @description  恢复Bilibili旧版页面，包括主页和播放页
+>>>>>>> baff4af (模块化脚本以便维护)
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
 // @connect      *
+<<<<<<< HEAD
 <<<<<<< HEAD
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 =======
@@ -60,6 +66,34 @@
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
 // @resource     protobuf https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/protobuf.json
 // @resource     icon https://www.bilibili.com/index/index-icon.json
+=======
+// @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
+// @icon         https://static.hdslb.com/images/favicon.ico
+// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/av.html
+// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/watchlater.html
+// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/bangumi.html
+// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/cinema.html
+// @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.html
+// @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlistdetail.html
+// @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/index.html
+// @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ranking.html
+// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.css
+// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
+// @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
+// @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/initialstate.js
+// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.js
+// @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/debug.js
+// @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/download.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
+// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/config.json
+// @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
+// @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
+// @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
+>>>>>>> baff4af (模块化脚本以便维护)
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
@@ -71,8 +105,12 @@
 // ==/UserScript==
 
 (function () {
+    'use strict';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> baff4af (模块化脚本以便维护)
     // 获取默认设置
     const config = JSON.parse(GM_getResourceText("config"));
     // 暴露protobuf接口
@@ -97,6 +135,7 @@
         title: document.title.includes("出错") ? null : document.title
     }
     // 导入全局模块，其他模块按需加载
+<<<<<<< HEAD
     new Function(GM_getResourceText("define"))();
     new Function(GM_getResourceText("debug"))();
     new Function(GM_getResourceText("xhr"))();
@@ -197,6 +236,22 @@
             "danmakuoff": [0, "关闭弹幕", "默认关闭弹幕，开启后切p也会主动关闭弹幕"],
             "oldreply": [0, "旧版评论", "恢复旧版先“全部评论”再热门评论的样式"]
         }
+=======
+    new Function(GM_getResourceText("debug"))();
+    new Function(GM_getResourceText("xhr"))();
+    new Function(GM_getResourceText("define"))();
+    new Function(GM_getResourceText("iniState"))();
+    const debug = BLOD.debug;
+    const xhr = BLOD.xhr;
+
+    // 修复退出登录功能
+    if (location.href.includes("bilibili.com/login?act=exit")) {
+        (async () => {
+            let refer = document.referrer;
+            await xhr.post("https://passport.bilibili.com/login/exit/v2", "", "biliCSRF=" + BLOD.getCookies().bili_jct);
+            location.href = refer;
+        })();
+>>>>>>> baff4af (模块化脚本以便维护)
     }
 
     // 暴露顶层接口
@@ -212,6 +267,7 @@
         ids: [],
         bloburl: {}
     }
+<<<<<<< HEAD
 
     // 框架
     const API = {
@@ -3991,6 +4047,10 @@
         BLOD.setValue("config", config);
     }
     BLOD.config = config;
+=======
+    BLOD.config = config;
+    new Function(GM_getResourceText("reset"))();
+>>>>>>> baff4af (模块化脚本以便维护)
     // 处理参数及BV号
     BLOD.reset.parameterTrim();
     BLOD.uid = BLOD.getCookies().DedeUserID;
@@ -4003,19 +4063,55 @@
     }
     // 页面分离
     if (BLOD.path[3]) {
-        if (BLOD.path[3] == 'video' && (BLOD.path[4].toLowerCase().startsWith('av') || BLOD.path[4].toLowerCase().startsWith('bv'))) BLOD.rewrite.av();
-        if (BLOD.path[3] == 'watchlater') BLOD.rewrite.watchlater();
-        if (BLOD.path[3] == 'bangumi' && BLOD.path[4] == 'play') BLOD.rewrite.bangumi();
-        if (BLOD.path[3] == 'blackboard' && BLOD.path[4]) BLOD.rewrite.blackboard();
-        if (BLOD.path[3] == 'playlist' && BLOD.path[5].startsWith('pl')) BLOD.rewrite.playlist();
-        if (BLOD.path[3] == 'medialist' && BLOD.path[4] == 'play') BLOD.rewrite.medialist();
-        if (BLOD.path[3] == 's' && (BLOD.path[5].toLowerCase().startsWith('av') || BLOD.path[5].toLowerCase().startsWith('bv'))) BLOD.rewrite.s();
-        if (BLOD.path[2] == 'space.bilibili.com') BLOD.rewrite.space();
-        if (BLOD.path[2] == 'www.bilibili.com' && (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.'))) BLOD.rewrite.index();
-        if (BLOD.path[3] == 'v' && BLOD.path[4] == "popular") BLOD.rewrite.rank();
+        if (BLOD.path[3] == 'video' && (BLOD.path[4].toLowerCase().startsWith('av') || BLOD.path[4].toLowerCase().startsWith('bv'))) {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.av();
+        }
+        if (BLOD.path[3] == 'watchlater') {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.watchlater();
+        }
+        if (BLOD.path[3] == 'bangumi' && BLOD.path[4] == 'play') {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.bangumi();
+        }
+        if (BLOD.path[3] == 'blackboard' && BLOD.path[4]) {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.blackboard();
+        }
+        if (BLOD.path[3] == 'playlist' && BLOD.path[5].startsWith('pl')) {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.playlist();
+        }
+        if (BLOD.path[3] == 'medialist' && BLOD.path[4] == 'play') {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.medialist();
+        }
+        if (BLOD.path[3] == 's' && (BLOD.path[5].toLowerCase().startsWith('av') || BLOD.path[5].toLowerCase().startsWith('bv'))) {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.s();
+        }
+        if (BLOD.path[2] == 'space.bilibili.com') {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.space();
+        }
+        if (BLOD.path[2] == 'www.bilibili.com' && (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.'))) {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.index();
+        }
+        if (BLOD.path[3] == 'v' && BLOD.path[4] == "popular") {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.rank();
+        }
     } else {
-        if (BLOD.path[2] == 'www.bilibili.com') BLOD.rewrite.index();
-        if (BLOD.path[2] == 'live.bilibili.com') BLOD.path.name = "live";
+        if (BLOD.path[2] == 'www.bilibili.com') {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.rewrite.index();
+        }
+        if (BLOD.path[2] == 'live.bilibili.com') {
+            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
+            BLOD.path.name = "live";
+        }
     }
 
 <<<<<<< HEAD
@@ -4034,6 +4130,7 @@
 >>>>>>> 3d73ce2 (restore elec jump)
 =======
     // 写入全局样式
+<<<<<<< HEAD
     BLOD.addCss();
     // 绘制ui
     if (unsafeWindow.self == unsafeWindow.top) {
@@ -4061,6 +4158,11 @@
     }
     // 节点监听
 >>>>>>> 9571161 (重构代码，方便维护；)
+=======
+    BLOD.addCss(BLOD.getResourceText("css"));
+    new Function(GM_getResourceText("ui"))();
+    new Function(GM_getResourceText("xhrhook"))();
+>>>>>>> baff4af (模块化脚本以便维护)
     document.addEventListener("DOMNodeInserted", (msg) => {
         // 去除预览提示框
         if (/bilibili-player-video-toast-pay/.test(msg.target.className)) BLOD.reset.removePreview(msg.target);
@@ -4080,10 +4182,17 @@
         // 切p监听
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) BLOD.reset.switchVideo();
         // 创建播放器右键下载菜单
+<<<<<<< HEAD
         if (/bilibili-player-context-menu-container black/.test(msg.target.className)) BLOD.download.init(msg.target);
         // 捕获频道视频链接
         if (msg.target.src && msg.target.src.includes("//api.bilibili.com/x/space/channel/video?")) BLOD.src = msg.target.src;
 >>>>>>> 9571161 (重构代码，方便维护；)
+=======
+        if (/bilibili-player-context-menu-container black/.test(msg.target.className)) {
+            if (!BLOD.download) new Function(GM_getResourceText("download"))();
+            BLOD.download.init(msg.target);
+        }
+>>>>>>> baff4af (模块化脚本以便维护)
         // 修复失效频道视频
         if (msg.relatedNode.getAttribute("class") == "row video-list clearfix") BLOD.reset.fixVideoLost.channel(BLOD.src);
         // 修复失效收藏视频
@@ -4096,8 +4205,11 @@
         // 修复评论楼层&修复评论空降坐标
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> b29f633 (改进评论区楼层修复方式)
+=======
+>>>>>>> baff4af (模块化脚本以便维护)
         if ((/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) {
             clearTimeout(BLOD.timer);
             BLOD.timer = setTimeout(() => {
@@ -4106,6 +4218,7 @@
                 BLOD.reset.fixVideoSeek(msg.target.parentNode);
             }, 100)
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
         if (src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) { deliver.setReplyFloor.init(src); deliver.fixVideoSeek(msg.target.parentNode); }
@@ -4116,6 +4229,8 @@
         if (BLOD.src && (/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) { BLOD.reset.setReplyFloor.init(BLOD.src); BLOD.reset.fixVideoSeek(msg.target.parentNode); }
 =======
 >>>>>>> b29f633 (改进评论区楼层修复方式)
+=======
+>>>>>>> baff4af (模块化脚本以便维护)
         // 修复分区排行
         if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") BLOD.reset.fixrank(msg.target);
         // 弹幕哈希反查
@@ -4130,5 +4245,8 @@
         // bv号转超链接
         BLOD.reset.avdesc();
     });
+<<<<<<< HEAD
 
+=======
+>>>>>>> baff4af (模块化脚本以便维护)
 })();
