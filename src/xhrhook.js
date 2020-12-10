@@ -1050,10 +1050,14 @@
                     if (this.url.includes("api.bilibili.com/x/web-feed/feed/unread")) this.url = this.url.replace("feed/unread", "article/unread");
                     // 修复评论楼层并修复mode返回值
 <<<<<<< HEAD
+<<<<<<< HEAD
                     if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid')) {
 =======
                     if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply')) {
 >>>>>>> d418687 (jsonp hook全部使用新方法)
+=======
+                    if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid')) {
+>>>>>>> 5d32692 (修复评论区点赞/点踩误伤)
                         this.url = this.url + '&mobi_app=android';
                         let jsonpCallback = this.jsonpCallback;
                         let call = window[jsonpCallback];
