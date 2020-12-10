@@ -22,7 +22,7 @@
             BLOD.debug.msg("正在获取视频链接", ">>>");
             let qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
-            let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : "";
+            let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
             if (!BLOD.mdf) {
                 BLOD.mdf = {};
                 BLOD.mdf.quee = BLOD.mdf.quee || ((path && path.durl) ? [await this.geturl()] : await Promise.all([this.geturl(), this.geturl("flv")]));
