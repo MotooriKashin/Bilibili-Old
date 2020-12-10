@@ -149,6 +149,7 @@
             toast("正在获取视频下载地址...")
             let qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
+<<<<<<< HEAD
 =======
         /**
          * 呼出下载面板
@@ -157,6 +158,8 @@
             if (url) return this.custom(url);
             toast("正在获取视频下载地址...");
 >>>>>>> b93be8e (自定义下载)
+=======
+>>>>>>> 882179f (修复语法错误)
             let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
             if (!BLOD.mdf) {
                 path = path || {}
