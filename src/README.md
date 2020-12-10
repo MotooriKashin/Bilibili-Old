@@ -133,7 +133,7 @@ BLOD.sizeFormat = (size) => {...}
    - 这里所指的模块如无特别说明指的是js脚本。*html、json、css等也无需运行不是吗。*
    - 模块最开头请注释说明模块名称及大致作用，并大概列举挂载了什么内容到`BLOD`对象下，以便脚本主体[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)及其他模块使用。
    - 模块主体请运行在一个自运行函数中以免污染页面上下文。*这应该是所有js脚本默认遵守的吧。*
-   - 所有功能具体实现请尽量都写在模块中，脚本主体[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)只负责初始化、暴露接口和引入模块。*所以模块化后脚本主体基本不需更新。*
+   - 所有功能具体实现请尽量都写在模块中，脚本主体[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)只负责初始化、暴露接口和引入模块。
    - 不是全局需要的模块请按需加载以减少资源消耗，并通过模块本身挂载在`BLOD`上的痕迹判断是否重复加载。这种情况多现于在模块中引用其他模块，因为模块定义的功能也是挂载出去供别人引用的。*如上文示例按需加载的[md5.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/md5.js)。*
    - 模块中请使用`console.debug()`打印一条输出到控制台以便调试模块是否正常加载。*使用[debug.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/debug.js)封装的`BLOD.debug.debug()`也可以，只需引入顺序在[debug.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/src/debug.js)后面以免报未定义错误即可。*
 
@@ -146,4 +146,4 @@ BLOD.sizeFormat = (size) => {...}
 对于其他任意属性`value`也是一样的，不要偷懒去二次赋值，直接使用`BLOD[value]`或`BLOD.value`就是了，虽然是麻烦了点，这也是没有办法的事情。我没测试过仿照`const BLOD = window.BLOD`改为`let value = window.BLOD.value`能不能同步，只是觉得没必要，把`BLOD.value`当成一个长一点的变量就是了，还省去了声明变量的步骤。
 3. 使用`resource`声明模块将把模块缓存在脚本管理器中，而且脚本管理器会不会及时更新模块还未可知，这可能带来了更新方面的不便。这是没有办法的事，也不能每次运行都在线获取模块，那样将严重拖累载入速度。另外模块分发使用的CDN[jsdelivr](https://www.jsdelivr.com/)比起Github原生源又有24h内的延时。所以模块还是尽量在本地调试好再上线吧，若要立即更新，请修改[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)声明模块部分加上新版的commit哈希值并升级版本号，如`// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5d3269259f98725aa2df5df5aeef5d3e29b538fb/src/xhrhook.js`  
 Tampermonkey编辑脚本选择外部也是可以直接编辑模块的，**但注意模块不像脚本主体，其中不能引入任何中文包括注释**，这里指的是在编辑器中添加中文，模块本身可以有中文，这些载入到Tampermonkey编辑器中都成了乱码。
-4. 模块化后由于脚本主体[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)大概不会经常改动，这样更新也通知不到greasyfork，所以更新模块时请务必在[README.md](https://github.com/MotooriKashin/Bilibili-Old/blob/master/README.md)底部添加更新历史记录。
+4. 模块化后由于脚本主体[main.user.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/main.user.js)如果没有改动，更新就通知不到greasyfork，所以更新模块时请务必在[README.md](https://github.com/MotooriKashin/Bilibili-Old/blob/master/README.md)底部添加更新历史记录。
