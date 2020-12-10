@@ -63,13 +63,14 @@
                 BLOD.playerSetting();
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
-                let data;
+                let data = (BLOD.uid && BLOD.xhr.false(location.href).match(/last_ep_id\"\:[0-9]+/)) || [];
+                let id = data[0] ? data[0].split(":")[1] : null;
                 if (BLOD.path[5].startsWith('ss')) {
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: location.href.match(/[0-9]+/)[0] }));
                 } else if (BLOD.path[5].startsWith('ep')) {
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
                 }
-                let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
+                id = id || (BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : null);
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
