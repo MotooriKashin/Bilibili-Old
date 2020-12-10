@@ -1,8 +1,7 @@
 ![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 87](https://img.shields.io/badge/Google_Chrome_87-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)  
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原B站旧版页面。
-尽量调用B站原生脚本进行重写，再尝试修复一些失效功能。  
-*在github上，`main.user.js`是脚本主体文件，添加到脚本管理器中即可。`module.user.js`是模块化后的版本，大量使用了ES6提供的新特性，所以对浏览器版本有较高的要求；大量引用了存档在github服务器的模块，所以初次使用及升级对网络也有比较高的要求。推荐安装默认版本，或者直接从greasyfork上安装。*  
+尽量调用B站原生脚本进行重写，再尝试修复一些失效功能。   
 版本更新时部分涉及原生脚本的修改以及其他模块的改进由于CDN可能会有24h以内的延迟。
 
 ---
@@ -81,7 +80,7 @@
 
 ---
 ### 兼容相关
-个人目前主要使用模块化后的版本，平台数据如下
+个人目前主要使用平台数据如下
 ```
 Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
 Google Chrome 87.0.4280.88 (正式版本) （64 位） (cohort: Stable)  
@@ -130,7 +129,7 @@ Tampermonkey BETA 4.10.6122
    - [mcbbs](https://www.mcbbs.net)：用于获取APP端的鉴权`access_key`，只在解除限制功能同时开启“会员授权”时
    - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
 
-- (仅模块化版本)`GM_getResourceURL`/`GM_getResourceURL`：资源跨域，相关`@resource`元数据如下：
+- `GM_getResourceURL`/`GM_getResourceURL`：资源跨域，相关`@resource`元数据如下：
    - [av.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/av.html)：旧版av的html框架文件
    - [watchlater.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/watchlater.html)：旧版稍后再看的html框架文件
    - [bangumi.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/bangumi.html)/[cinema.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/cinema.html)：旧版bangumi的html框架文件
