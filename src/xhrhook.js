@@ -540,6 +540,8 @@
         jsonp() {
             window.$.ajaxSetup({
                 beforeSend: function () {
+                    // 拦截日志上传
+                    if (this.url.includes("data.bilibili.com/log/web")) xhr.abort();
                     // 广告区转资讯区
                     if (this.url.includes("region") && this.url.includes("rid=165")) this.url = this.url.replace("rid=165", "rid=202");
                     // 取消原创排行榜
