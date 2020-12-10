@@ -429,6 +429,7 @@ Tampermonkey BETA 4.10.6122
 **注：部分功能可能需要先在设置里启用！**  
 - 2020-12-10
    + 使用new Function()模块化脚本，脚本主体从此只负责引入模块、初始化及暴露接口
+   + [5d32692](https://github.com/MotooriKashin/Bilibili-Old/commit/5d3269259f98725aa2df5df5aeef5d3e29b538fb)修复评论区点赞/点踩误伤
 - 2020-12-08
    + 改进评论区楼层修复方式
       + 支持上古评论按评论数排序
