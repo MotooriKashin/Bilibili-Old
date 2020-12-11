@@ -412,7 +412,6 @@
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
-                    if (config.reset.novideo) this.url = url;
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 修改弹幕链接
