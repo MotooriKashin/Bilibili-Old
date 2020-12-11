@@ -148,7 +148,7 @@ const objUrl = (url, obj) => {
             '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36',
             '16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d'  // blink
         ][id], key = "";
-        obj = typeof obj === "object" ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
+        obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
         url = url.split("?")[0];
         delete obj.sign;
         for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
