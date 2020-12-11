@@ -411,6 +411,7 @@
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
+                    if (config.reset.novideo) this.url = url;
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 修改弹幕链接
@@ -505,7 +506,8 @@
                         Object.defineProperty(this, "status", { writable: true });
                         let response, accesskey = null;
                         try {
-                            if (BLOD.limit) {
+                            if (config.reset.novideo) response = { "code": -404, "message": "临时主动拦截视频", "data": null }
+                            else if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                                 if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
                                 let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
@@ -518,7 +520,7 @@
                         this.status = 200;
                         this.readyState = 2;
                         this.readyState = 4;
-                        this.onreadystatechange();
+                        this.onreadystatechange && this.onreadystatechange();
                         if (response.code !== 0) throw response.message;
                         BLOD.__playinfo__ = response;
                         debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
