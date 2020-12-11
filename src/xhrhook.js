@@ -403,6 +403,7 @@
                 if (url.includes("/playurl?")) {
                     obj.fourk = obj.sign ? null : 1;
                     obj.fnval = obj.fnval ? 80 : null;
+                    if (config.reset.novideo) Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
                     url = BLOD.objUrl(url.split("?")[0], obj);
                     BLOD.cid = obj.cid || BLOD.cid;
                     BLOD.aid = obj.avid || BLOD.aid;
@@ -506,8 +507,7 @@
                         Object.defineProperty(this, "status", { writable: true });
                         let response, accesskey = null;
                         try {
-                            if (config.reset.novideo) response = { "code": -404, "message": "临时主动拦截视频", "data": null }
-                            else if (BLOD.limit) {
+                            if (BLOD.limit) {
                                 // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                                 if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
                                 let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
