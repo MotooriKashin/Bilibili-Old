@@ -168,9 +168,15 @@
                 path && !path.dash && pro.push(this.geturl("dash"));
                 BLOD.mdf = {};
                 BLOD.mdf.quee = BLOD.mdf.quee || await Promise.all(pro);
+<<<<<<< HEAD
                 this.quee(BLOD.mdf.quee);
                 this.durl(path);
                 this.dash(path);
+=======
+                this.quee(BLOD.mdf.quee, qua, bps);
+                this.durl(path, qua);
+                this.dash(path, qua, bps);
+>>>>>>> 2ea7cf7 (添加视频拦截功能)
             }
             this.other();
             this.item();
@@ -279,8 +285,14 @@
             if (path[1]) {
                 for (let i = 1; i < path.length; i++) {
                     let data = path[i].data || (path[i].durl && path[i]) || path[i].result || {};
+<<<<<<< HEAD
                     this.durl(data);
                     this.dash(data);
+=======
+                    BLOD.mdf.flvq = data.quality || (data.data ? data.data.quality : (data.result ? data.result.quality : ""));
+                    this.durl(data, qua);
+                    this.dash(data, qua, bps);
+>>>>>>> 2ea7cf7 (添加视频拦截功能)
                 }
             }
         }
