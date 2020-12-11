@@ -354,7 +354,7 @@
             // https://bangumi.bilibili.com/view/web_api/season
             epId = 1 * epId || null;
             data = BLOD.jsonCheck(data).result;
-            let ids = [];
+            let ids = [], ini = BLOD.__INITIAL_STATE__ || {};
             data.episodes.forEach(d => {
                 ids.push(d.ep_id);
                 if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
@@ -394,7 +394,7 @@
                     "title": data.title,
                     "total_ep": data.total_ep
                 },
-                "mediaRating": data.rating,
+                "mediaRating": data.rating || {},
                 "miniOn": 1,
                 "newestEp": data.newest_ep,
                 "paster": {},
@@ -405,7 +405,7 @@
                 "recomList": [],
                 "rightsInfo": data.rights,
                 "seasonFollowed": false,
-                "seasonList": data.seasons,
+                "seasonList": data.seasons || [],
                 "seasonStat": data.stat,
                 "special": data.bkg_cover ? true : false,
                 "spending": 0,
