@@ -24,8 +24,12 @@
             let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
             let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
             if (!BLOD.mdf) {
+                path = path || {}
+                let pro = [this.geturl()];
+                path && !path.durl && pro.push(this.geturl("flv"));
+                path && !path.dash && pro.push(this.geturl("dash"));
                 BLOD.mdf = {};
-                BLOD.mdf.quee = BLOD.mdf.quee || ((path && path.durl) ? [await this.geturl()] : await Promise.all([this.geturl(), this.geturl("flv")]));
+                BLOD.mdf.quee = BLOD.mdf.quee || await Promise.all(pro);
                 this.quee(BLOD.mdf.quee, qua, bps);
                 this.durl(path, qua);
                 this.dash(path, qua, bps);
@@ -75,10 +79,12 @@
                 navigator.clipboard.writeText(path[0].durl[0].url);
             }
             if (path[1]) {
-                path = path[1].data || (path[1].durl && path[1]) || path[1].result || {};
-                BLOD.mdf.flvq = path.quality || (path.data ? path.data.quality : (path.result ? path.result.quality : ""));
-                this.durl(path, qua);
-                this.dash(path, qua, bps);
+                for (let i = 1; i < path.length; i++) {
+                    let data = path[i].data || (path[i].durl && path[i]) || path[i].result || {};
+                    BLOD.mdf.flvq = data.quality || (data.data ? data.data.quality : (data.result ? data.result.quality : ""));
+                    this.durl(data, qua);
+                    this.dash(data, qua, bps);
+                }
             }
         }
         dash(path, qua, bps) {
