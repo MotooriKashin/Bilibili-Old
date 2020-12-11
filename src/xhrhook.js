@@ -403,11 +403,11 @@
                 if (url.includes("/playurl?")) {
                     obj.fourk = obj.sign ? null : 1;
                     obj.fnval = obj.fnval ? 80 : null;
-                    if (config.reset.novideo) Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
-                    url = BLOD.objUrl(url.split("?")[0], obj);
                     BLOD.cid = obj.cid || BLOD.cid;
                     BLOD.aid = obj.avid || BLOD.aid;
                     BLOD.bvid = BLOD.bvid = obj.bvid || BLOD.abv(BLOD.aid) || BLOD.bvid;
+                    if (config.reset.novideo) Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
+                    url = BLOD.objUrl(url.split("?")[0], obj);
                     BLOD.pgc = url.includes("pgc") ? true : false;
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
