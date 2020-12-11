@@ -9,7 +9,6 @@
 ![binguo.png](https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/preview.png)
 
 ### 脚本实现
-*部分功能默认不生效，需要在设置里启用*
 - 重写
    + B站主页：[www.bilibili.com](https://www.bilibili.com)
    + av/BV：[av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")、[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
@@ -19,23 +18,26 @@
    + 嵌入播放器：[blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视")、[campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘")、[biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传")、[moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")、[mylist](https://www.bilibili.com/mylist4#4 "各种神弹幕")
    + 排行榜：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
    + ~~播单：[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")、[detail](https://www.bilibili.com/playlist/detail/pl769 "bilibili moe 2018 日本动画场应援")~~
-- 修改
-   + 替换大部分页面的顶栏和底栏为与旧版页面匹配的版本
-   + 还原浏览地址栏的BV链接为av链接
-   + 替换Bangumi显示的播放和弹幕数量为当前分P的对应数据，原来汇总数据显示在鼠标焦点时弹出的标题中
-   + 为旧版播放页面添加点赞功能
-   + 添加下载视频功能
-   + 移除付费预览视频左下角不会自己消失的提示框
-   + 在up主空间显示账号注册时间
-   + 找回评论楼层号
-   + 还原空间失效视频的封面及标题
-   + 屏蔽直播间正在直播或者正在轮播
-   + 为旧版播放器添加支持新版弹幕同时修复实时弹幕
-   + 让播放历史记录页面只显示视频，去掉直播和专栏的部分
-   + 添加解除区域/APP限制功能
-   + 添加查询弹幕发送者功能
-   + 提供自动宽频、自动关弹幕、自动滚动到播放器功能
+- 其他
+   + 旧版顶栏/底栏
+   + BV=>av
+   + 分集数据
+   + 旧版页面点赞
+   + 下载视频
+   + 移除付费预览框
+   + 查询注册时间
+   + 评论楼层
+   + 失效视频
+   + 直播拦截
+   + 新版弹幕/实时弹幕
+   + 视频历史
+   + 解除区域/APP限制
+   + 查询弹幕发送者
+   + 自动宽频
+   + 自动关弹幕
+   + 自动滚动到播放器
 
+*功能详情请在设置里查看，部分功能默认不生效也请在设置里启用*
 
 ---
 ### 设置相关
