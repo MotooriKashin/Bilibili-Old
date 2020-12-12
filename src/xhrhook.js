@@ -943,14 +943,60 @@
                         // 处理pakku.js处于“休眠中”的情况
                         this.pakku_send = () => xhrHook.sendDanmuku(this);
                     }
+<<<<<<< HEAD
                     else {
                         // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
                         // 备份弹幕
                         this.addEventListener("load", function () {
                             BLOD.xml = this.response;
+=======
+                    // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
+                    // 可以直接记录弹幕数据
+                    this.addEventListener("load", function () {
+                        BLOD.xml = this.response;
+                        BLOD.hash = [];
+                        BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                    });
+                }
+                // 历史弹幕下载
+                if (url.includes("history?type=")) {
+                    this.addEventListener("load", function () {
+                        BLOD.xml = this.response;
+                        BLOD.hash = [];
+                        BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                    });
+                }
+                return open.call(this, method, url, ...rest);
+            }
+        }
+        send() {
+            const send = XMLHttpRequest.prototype.send;
+            const addEventListener = XMLHttpRequest.prototype.addEventListener;
+            XMLHttpRequest.prototype.send = function (...arg) {
+                // 新版弹幕兼容pakku.js
+                // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
+                // (pakku.js正常运行时这个send()不会被调用)
+                if (config.reset.danmuku && (this.pakku_url && this.pakku_url.includes("seg.so") && this.segRequestOnlyOnce)) {
+                    this.segRequestOnlyOnce = false;
+                    // pakku.js会禁用Worker，这时需要模拟一个xhr响应
+                    Object.defineProperty(this, "response", { writable: true });
+                    Object.defineProperty(this, "responseText", { writable: true });
+                    Object.defineProperty(this, "readyState", { writable: true });
+                    Object.defineProperty(this, "status", { writable: true });
+                    this.readyState = 4;
+                    this.status = 200;
+                    this.abort();
+                    let callBack = this.callBack;
+                    let xhr = this;
+                    getSegDanmaku(function (protoSegments) {
+                        let Segments = [];
+                        protoSegments.forEach(function (seg) {
+                            Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
+>>>>>>> 891da5e (完善伪造xhr响应event流程)
                         });
                     }
                 }
+<<<<<<< HEAD
                 // 历史弹幕
                 if (url.includes("history?type=")) {
                     let param = BLOD.urlObj(url);
@@ -1026,6 +1072,53 @@
                         debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
 >>>>>>> 49b0faa (restore comment bangumi jump)
                     }
+=======
+                else if (this.url) {
+                    setTimeout(async () => {
+                        try {
+                            let response = {}, accesskey = null, progress = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")) }, 50);
+                            this.dispatchEvent(new ProgressEvent("loadstart"));
+                            Object.defineProperty(this, "response", { writable: true });
+                            Object.defineProperty(this, "responseText", { writable: true });
+                            Object.defineProperty(this, "responseURL", { writable: true });
+                            Object.defineProperty(this, "readyState", { writable: true });
+                            Object.defineProperty(this, "status", { writable: true });
+                            this.status = 200;
+                            this.readyState = 2;
+                            this.dispatchEvent(new ProgressEvent("readystatechange"));
+                            try {
+                                if (BLOD.limit) {
+                                    // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
+                                    if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
+                                    let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
+                                    response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                    response = { "code": 0, "message": "success", "result": response };
+                                }
+                            }
+                            catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
+                            clearInterval(progress);
+                            this.responseURL = this.url;
+                            this.response = this.responseText = JSON.stringify(response);
+                            this.readyState = 4;
+                            this.dispatchEvent(new ProgressEvent("readystatechange"));
+                            this.dispatchEvent(new ProgressEvent("load"));
+                            this.dispatchEvent(new ProgressEvent("loadend"));
+                            if (response.code !== 0) throw response.message;
+                            BLOD.__playinfo__ = response;
+                            debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
+                        }
+                        catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+                    })
+                }
+                else {
+                    send.call(this, ...arg);
+                }
+            }
+            XMLHttpRequest.prototype.addEventListener = function (name, callback) {
+                if (name == "load") {
+                    this.callBack = this.callBack || [];
+                    this.callBack.push(callback);
+>>>>>>> 891da5e (完善伪造xhr响应event流程)
                 }
                 // 监听页面多次重写jsonp
                 if (window.$ && (xhrHook.$ != window.$)) { xhrHook.jsonp(); xhrHook.$ = window.$; }
