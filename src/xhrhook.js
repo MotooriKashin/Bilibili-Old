@@ -465,7 +465,7 @@
         send() {
             const send = XMLHttpRequest.prototype.send;
             const addEventListener = XMLHttpRequest.prototype.addEventListener;
-            XMLHttpRequest.prototype.send = async function (...arg) {
+            XMLHttpRequest.prototype.send = function (...arg) {
                 // 新版弹幕兼容pakku.js
                 // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
                 // (pakku.js正常运行时这个send()不会被调用)
@@ -499,33 +499,41 @@
                     });
                 }
                 else if (this.url) {
-                    try {
-                        // 解除限制
-                        Object.defineProperty(this, "response", { writable: true });
-                        Object.defineProperty(this, "responseText", { writable: true });
-                        Object.defineProperty(this, "readyState", { writable: true });
-                        Object.defineProperty(this, "status", { writable: true });
-                        let response, accesskey = null;
+                    setTimeout(async () => {
                         try {
-                            if (BLOD.limit) {
-                                // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
-                                if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
-                                let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
-                                response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
-                                response = { "code": 0, "message": "success", "result": response };
+                            let response = {}, accesskey = null, progress = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")) }, 50);
+                            this.dispatchEvent(new ProgressEvent("loadstart"));
+                            Object.defineProperty(this, "response", { writable: true });
+                            Object.defineProperty(this, "responseText", { writable: true });
+                            Object.defineProperty(this, "responseURL", { writable: true });
+                            Object.defineProperty(this, "readyState", { writable: true });
+                            Object.defineProperty(this, "status", { writable: true });
+                            this.status = 200;
+                            this.readyState = 2;
+                            this.dispatchEvent(new ProgressEvent("readystatechange"));
+                            try {
+                                if (BLOD.limit) {
+                                    // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
+                                    if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
+                                    let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
+                                    response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                    response = { "code": 0, "message": "success", "result": response };
+                                }
                             }
+                            catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
+                            clearInterval(progress);
+                            this.responseURL = this.url;
+                            this.response = this.responseText = JSON.stringify(response);
+                            this.readyState = 4;
+                            this.dispatchEvent(new ProgressEvent("readystatechange"));
+                            this.dispatchEvent(new ProgressEvent("load"));
+                            this.dispatchEvent(new ProgressEvent("loadend"));
+                            if (response.code !== 0) throw response.message;
+                            BLOD.__playinfo__ = response;
+                            debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
                         }
-                        catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
-                        this.response = this.responseText = JSON.stringify(response);
-                        this.status = 200;
-                        this.readyState = 2;
-                        this.readyState = 4;
-                        this.onreadystatechange && this.onreadystatechange();
-                        if (response.code !== 0) throw response.message;
-                        BLOD.__playinfo__ = response;
-                        debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
-                    }
-                    catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+                        catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+                    })
                 }
                 else {
                     send.call(this, ...arg);
