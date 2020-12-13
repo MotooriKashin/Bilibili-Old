@@ -6,7 +6,11 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
+=======
+// @version      4.0.3
+>>>>>>> b0d74c9 (修复按时间排序置顶评论楼中楼)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
 // @version      3.7.7
@@ -87,9 +91,15 @@
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/download.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
+<<<<<<< HEAD
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/config.json
+=======
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@440bf271bcb4cbf887321e3f74d9ee947e067d20/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dc1272dad17d288c81bf10d13ab0e729d60fff5a/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7979d10e8bd4234fe1ca7099298c3ab3a5801a70/src/config.json
+>>>>>>> b0d74c9 (修复按时间排序置顶评论楼中楼)
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
