@@ -570,6 +570,8 @@
                         if (call) {
                             window[jsonpCallback] = function (v) {
                                 if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
+                                if (v && v.data && v.data.upper && v.data.upper.top && v.data.upper.top.replies) BLOD.topReply = v.data.upper.top.replies;
+                                if (BLOD.topReply && !v.data.upper.top.replies) v.data.upper.top.replies = BLOD.topReply;
                                 BLOD.reset.setReplyFloor.init(v)
                                 return call.call(this, v);
                             }
