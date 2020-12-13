@@ -1,4 +1,4 @@
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 87](https://img.shields.io/badge/Google_Chrome_87-compatible-green.svg?longCache=true) ![Firefox 79](https://img.shields.io/badge/Mozilla_Firefox_79-uncompatible-red.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)  
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-compatible-green.svg?longCache=true) ![Chrome 87](https://img.shields.io/badge/Google_Chrome_87-compatible-green.svg?longCache=true) ![Firefox 83](https://img.shields.io/badge/Mozilla_Firefox_83-uncompatible-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-compatible-green.svg?longCache=true)  
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原B站旧版页面。
 尽量调用B站原生脚本进行重写，再尝试修复一些失效功能。   
@@ -69,7 +69,7 @@
 *以下问题这里可能处于并将长期处于无法解决状态，请多担待！如能提供相关帮助，不胜感激！*  
 1. 刷新能解决一半问题，**页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。**  
 2. 由于实现机制做不到在浏览器访问新版页面之前启用旧版页面，所以旧版页面载入比较慢且新版页面可能一闪而过，主要取决于网络连接速度及网络延迟。
-3. Firefox 79及后续版本无法良好支持旧版播放页面，原因暂时不得而知，猜测可能与vue有关。
+3. Firefox 79及后续部分版本无法良好支持旧版播放页面，但目前83版已恢复正常。
 3. 旧版播放器已失去官方维护，版本停留在`2019-10-31 07:38:36`，所以新版播放器互动视频、全景视频、高能进度条等功能是不支持的，互动视频脚本已主动忽略不会启用旧版，全景视频无法移动视角，CC字幕有[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)提供第三方支持。
 4. 对于HDR画质，由于只有hev(h.265)格式，绝大部分浏览器都不支持，所以虽然已经使旧版播放器获取到了该画质选项，也是切换不了的，即使提示切换成功，播放的仍是切换之前的画质。
 5. 主页内容改版极大，旧版很多接口已出现问题，脚本已将被废弃的广告区替换为资讯区的内容，但B站并不提供资讯区的排行所以右边排行榜无法获取。推荐视频不再提供三日/昨日/一周分类，已屏蔽对应的切换按钮。
@@ -89,7 +89,7 @@ Google Chrome 87.0.4280.88 (正式版本) （64 位） (cohort: Stable)
 Tampermonkey BETA 4.10.6122
 ```
 平台
-- Firefox 79 及之后版本的浏览器无法正在重写旧版播放页面。
+- Firefox 79 及等部分版本的浏览器无法正在重写旧版播放页面。
 - 不支持Greasemonkey 4。
 
 脚本及扩展
