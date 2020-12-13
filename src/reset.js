@@ -743,9 +743,10 @@
 
     // 修复评论楼层
     BLOD.reset.setReplyFloor = {
-        init(reply) {
+        init(data) {
             if (!config.reset.replyfloor) return;
-            let floor = {}, key = ["top", "hots", "replies", "root"], data = reply.data;
+            let floor = {}, key = ["top", "hots", "replies", "root"];
+            data = {...data.data};
             if (!data) return;
             if (data.upper && data.upper.top) {
                 if (Array.isArray(data.top)) data.top.push(data.upper.top);
