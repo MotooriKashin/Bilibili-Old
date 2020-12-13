@@ -842,11 +842,15 @@
 
     // 修复评论楼层
     BLOD.reset.setReplyFloor = {
-        init(data) {
+        init(reply) {
             if (!config.reset.replyfloor) return;
+<<<<<<< HEAD
             let floor = {}, key = ["top", "hots", "replies", "root"];
             data = data.data;
 <<<<<<< HEAD
+=======
+            let floor = {}, key = ["top", "hots", "replies", "root"], data = reply.data;
+>>>>>>> 375860f (修复按时间排序置顶评论)
             if (!data) return;
 =======
 >>>>>>> b29f633 (改进评论区楼层修复方式)
