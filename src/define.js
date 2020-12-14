@@ -80,6 +80,7 @@
     // av/BV互转
     // https://www.zhihu.com/question/381784377/answer/1099438784
     BLOD.abv = (str) => {
+        if (!str) return;
         let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
         let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
         for (let i = 0; i < 58; i++) tr[table[i]] = i;
