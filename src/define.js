@@ -14,6 +14,7 @@
     console.debug('import module "define.js"');
 >>>>>>> ad21ab5 (fix deal with debug message)
 
+<<<<<<< HEAD
 const BLOD = window.BLOD;
 
 // 格式化时间
@@ -34,11 +35,39 @@ const sizeFormat = (size) => {
         if (size >= vor) {
             size = (size / dex).toFixed(2);
             break;
+=======
+    // 时间格式化
+    BLOD.timeFormat = (time, type) => {
+        if (!time) return;
+        let date = new Date(time);
+        let Y = date.getFullYear() + '-';
+        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+        let D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+        let h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+        let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+        let s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return type ? Y + M + D + h + m + s : h + m + s;
+    }
+
+    // 格式化存储
+    BLOD.sizeFormat = (size) => {
+        if (!size) return;
+        let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
+        while (dex > 1) {
+            if (size >= vor) {
+                size = (size / dex).toFixed(2);
+                break;
+            }
+            dex = dex / 1024;
+            vor = vor / 1000;
+            i--;
+>>>>>>> bc602f1 (添加参数无效判定)
         }
         dex = dex / 1024;
         vor = vor / 1000;
         i--;
     }
+<<<<<<< HEAD
     return size + unit[i];
 }
 // 格式化进位
@@ -48,10 +77,25 @@ const unitFormat = (num) => {
         if (num >= dex) {
             num = (num / dex).toFixed(1);
             break;
+=======
+
+    // 格式化进位
+    BLOD.unitFormat = (num) => {
+        if (!num) return;
+        let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
+        while (dex > 1) {
+            if (num >= dex) {
+                num = (num / dex).toFixed(1);
+                break;
+            }
+            dex = dex / 10000;
+            i--;
+>>>>>>> bc602f1 (添加参数无效判定)
         }
         dex = dex / 10000;
         i--;
     }
+<<<<<<< HEAD
     return num + unit[i];
 }
 // 冒泡排序
@@ -65,10 +109,27 @@ const bubbleSort = (arr) => {
                 arr[j] = arr[j+1];
                 arr[j+1] = temp;
                 bool = false;
+=======
+
+    // 冒泡排序
+    BLOD.bubbleSort = (arr) => {
+        if (!arr) return;
+        let temp = [];
+        for (let i = 0; i < arr.length - 1; i++) {
+            let bool = true;
+            for (let j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                    bool = false;
+                }
+>>>>>>> bc602f1 (添加参数无效判定)
             }
         }
         if (bool) break;
     }
+<<<<<<< HEAD
     return arr;
 }
 // 随机抽取
@@ -98,6 +159,20 @@ const abv = (str) => {
         let r = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
         for (let i = 0; i < 6; i++) r[s[i]] = table[parseInt(str/58**i)%58];
         return r.join("");
+=======
+
+    // 随机抽取
+    BLOD.randomArray = (arr, num) => {
+        if (!arr) return;
+        let out = [];
+        num = num || 1;
+        num = num < arr.length ? num : arr.length;
+        while (out.length < num) {
+            var temp = (Math.random() * arr.length) >> 0;
+            out.push(arr.splice(temp, 1)[0]);
+        }
+        return out;
+>>>>>>> bc602f1 (添加参数无效判定)
     }
 }
 // 加密密钥
@@ -233,6 +308,7 @@ const toXml = (danmaku, cid) => {
 
     // 添加样式
     BLOD.addCss = async (css) => {
+        if (!css) return;
         let style = document.createElement("style");
         style.setAttribute("type", "text/css");
         style.appendChild(document.createTextNode(css));
@@ -271,6 +347,7 @@ const jsonCheck = (data, toast) => {
          if (toast) debug.msg("xhr错误：", data.code + " " + msg);
         throw [data.code, msg, data]
     }
+<<<<<<< HEAD
     return data;
 }
 // 重写页面
@@ -285,6 +362,26 @@ const tryModule = (name, callback) => {
         callback();
     } catch(e) {
         e = Array.isArray(e) ? e : [e]; debug.error(name, ...e)
+=======
+
+    // 节点垂直偏移
+    BLOD.getTotalTop = (node) => {
+        if (!node) return;
+        var sum = 0;
+        do {
+            sum += node.offsetTop;
+            node = node.offsetParent;
+        }
+        while (node);
+        return sum;
+    }
+
+    // 重写页面
+    BLOD.write = (html) => {
+        document.open();
+        document.write(html);
+        document.close();
+>>>>>>> bc602f1 (添加参数无效判定)
     }
 }
 // 播放器通知
