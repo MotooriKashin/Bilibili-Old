@@ -8,6 +8,7 @@
 
     // 时间格式化
     BLOD.timeFormat = (time, type) => {
+        if (!time) return;
         let date = new Date(time);
         let Y = date.getFullYear() + '-';
         let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -20,6 +21,7 @@
 
     // 格式化存储
     BLOD.sizeFormat = (size) => {
+        if (!size) return;
         let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
         while (dex > 1) {
             if (size >= vor) {
@@ -35,6 +37,7 @@
 
     // 格式化进位
     BLOD.unitFormat = (num) => {
+        if (!num) return;
         let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
         while (dex > 1) {
             if (num >= dex) {
@@ -49,6 +52,7 @@
 
     // 冒泡排序
     BLOD.bubbleSort = (arr) => {
+        if (!arr) return;
         let temp = [];
         for (let i = 0; i < arr.length - 1; i++) {
             let bool = true;
@@ -67,6 +71,7 @@
 
     // 随机抽取
     BLOD.randomArray = (arr, num) => {
+        if (!arr) return;
         let out = [];
         num = num || 1;
         num = num < arr.length ? num : arr.length;
@@ -165,6 +170,7 @@
 
     // 添加样式
     BLOD.addCss = async (css) => {
+        if (!css) return;
         let style = document.createElement("style");
         style.setAttribute("type", "text/css");
         style.appendChild(document.createTextNode(css));
@@ -185,6 +191,7 @@
 
     // 节点垂直偏移
     BLOD.getTotalTop = (node) => {
+        if (!node) return;
         var sum = 0;
         do {
             sum += node.offsetTop;
