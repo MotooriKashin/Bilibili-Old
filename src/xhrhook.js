@@ -404,9 +404,9 @@
                     obj.fourk = obj.sign ? null : 1;
                     obj.fnval = obj.fnval ? 80 : null;
                     BLOD.cid = obj.cid || BLOD.cid;
-                    BLOD.aid = obj.avid || BLOD.aid;
-                    BLOD.bvid = BLOD.bvid = obj.bvid || BLOD.abv(BLOD.aid) || BLOD.bvid;
-                    if (config.reset.novideo) Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
+                    BLOD.aid = obj.avid || BLOD.aid || null;
+                    BLOD.bvid = obj.bvid || (BLOD.aid && BLOD.abv(BLOD.aid)) || BLOD.bvid || null;
+                    if (config.reset.novideo && !obj.sign) obj = Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
                     url = BLOD.objUrl(url.split("?")[0], obj);
                     url = url.includes("84956560bc028eb7") ? BLOD.urlSign(url, 0, 8) : url;
                     BLOD.pgc = url.includes("pgc") ? true : false;
