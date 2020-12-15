@@ -6899,6 +6899,7 @@ function Fa() {
                     }
                     Object(h.a)()
                 };
+<<<<<<< HEAD
             e.prototype.Uv = function () {
                 try {
                     "undefined" !== typeof sessionStorage && this.Di("block", this.get("block"))
@@ -6976,6 +6977,186 @@ function Fa() {
                     new Da.a({
                         container: this.template.Wc,
                         duration: 2,
+=======
+                e.prototype.WF = function () {
+                    this.video && (this.video.defaultPlaybackRate = parseFloat(this.Cg("video_status", "videospeed")) || 1, this.video.playbackRate = parseFloat(this.Cg("video_status", "videospeed")) || 1);
+                    this.Cg("video_status", "videomirror") && this.template.ga.addClass("video-mirror")
+                };
+                e.prototype.oF = function () {
+                    var b = this.get("block");
+                    this.cb.block = $.extend(!0, {}, b, {
+                        type_scroll: !0,
+                        type_top: !0,
+                        type_bottom: !0,
+                        type_reverse: !0,
+                        function_normal: !0,
+                        function_subtitle: !0,
+                        function_special: !0
+                    });
+                    this.set("block", this.cb.block)
+                };
+                e.prototype.YE = function () {
+                    return "undefined" !== typeof this.f.Gh && null !== this.f.Gh ? !0 : !1
+                };
+                e.prototype.ce = function (b) {
+                    var f = this;
+                    b && this.Eg();
+                    var d = this;
+                    this.ne = !1;
+                    this.ve = this.bg = this.ef = 0;
+                    this.Fl = +new Date;
+                    this.Cl = [];
+                    this.$r = this.ka = !1;
+                    this.Qi = null;
+                    this.dy = 5;
+                    this.td = 2E3;
+                    this.ud = 0;
+                    var e = this.f,
+                        n = v.a.C;
+                    this.ua = g.a;
+                    this.C = {
+                        button: n.button,
+                        Ww: n.buttonset,
+                        ca: n.checkbox,
+                        sQ: n.mouse,
+                        Co: n.selectable,
+                        zi: n.selectmenu,
+                        ZA: n.tabmenu,
+                        wQ: n.multiselect,
+                        kR: n.togglebutton,
+                        ah: n.slider,
+                        af: n.spinner,
+                        tb: n.menu,
+                        mR: n.tristatecheckbox
+                    };
+                    this.state = $.extend({
+                        bd: l.a.lj,
+                        repeat: l.a.vv,
+                        g: this.f.g ? l.a.vC : l.a.Ol,
+                        mode: d.YE() ? this.f.Gh : this.cb.video_status.iswidescreen && this.cb.video_status.widescreensave || e.Ew ? l.a.Nb : l.a.Mb,
+                        Xz: 0 < this.cb.video_status.autopart ? 1 : 0,
+                        jh: 1
+                    }, b);
+                    this.container = this.container.addClass(this.prefix).unbind().empty();
+                    this.aa = new c.a(this);
+                    this.I = new X.a(this);
+                    this.ka || (this.YJ(), this.Sn = window.setTimeout(function () {
+                        // f.cz()
+                    }, 1500));
+                    this.controller && this.controller.Wt(this.controller.Gn() ? "on" : "off");
+                    this.f.Wc && (this.Wc =
+                        new Da.a({
+                            container: this.template.Wc,
+                            duration: 2,
+                            time: function () {
+                                return f.video ? f.currentTime() : 0
+                            }
+                        }));
+                    this.nb(function (b) {
+                        if (d.ka) {
+                            var c = {
+                                domain: 1 <= d.f.Z ? K.a.Je.lg : 1 === d.f.nc ? K.a.Je.yq : K.a.Je.as,
+                                fe: d.f.fe,
+                                hc: d.f.hc,
+                                j: d.f.j,
+                                Da: d.f.Da,
+                                quality: 0,
+                                type: d.uf ? "" : "mp4",
+                                el: !0,
+                                ta: d.f.K,
+                                c: d
+                            };
+                            c.ta = c.ta ? c.ta + ("&qn=" + c.quality) : "qn=" + c.quality;
+                            d.f.Z && !g.a.jd("season_type", "?" + c.ta) && (c.ta += "&season_type=" + d.f.Z);
+                            d.window.Ui && (c.ta += "&tid=" + d.window.Ui);
+                            d.trigger(l.a.h.kj);
+                            K.a.r(c, function (b) {
+                                b = d.Xo(b);
+                                d.xq = 0;
+                                d.trigger(l.a.h.uh);
+                                void 0 !== b && null !== b.W && (d.aa.log("\r\n" + JSON.stringify(b) + "\r\n", 3), d.jg(b.quality), d.controller.ih(b, d.ya), d.we = {
+                                    Nc: b.Nc,
+                                    ya: d.ya,
+                                    pg: b.pg,
+                                    Fg: b.Fg
+                                })
+                            });
+                            d.S && (b.da ? d.S.setAutoSwitchTopQualityFor("video") : d.S.setAutoSwitchTopQualityFor("video", T.a));
+                            return !1
+                        }
+                        if (d.$r) return !1;
+                        d.$r = !0;
+                        b.eG && d.f.rq && !d.kk && (d.wf = new ea.a(d), d.ef = 15, d.bind(l.a.h.uh, function () {
+                            d.ef = d.kk ? 0 : 15
+                        }));
+                        b.qa && b.qa.aid && b.qa.cid && !d.f.qa && (c = $('<div class="' + d.prefix + " " + d.prefix + '-ad"></div>').prependTo(d.template.container), d.f.autoplay = !1, d.Gh = d.state && d.state.mode ? d.state.mode : 0, d.kg = new window.bilibiliPlayer({
+                            element: c,
+                            namespace: ".bilibiliplayerad" + (+new Date).toString().substr(-8),
+                            ad: b.qa.url,
+                            sourceplayer: d,
+                            aid: b.qa.aid,
+                            cid: b.qa.cid,
+                            skipable: b.qa.allow_jump,
+                            autoplay: !0,
+                            admode: d.Gh,
+                            afterplay: function () {
+                                d.kg && (d.kg.destroy(!0), d.resize(), d.km(), delete d.kg, d.trigger(l.a.h.Up))
+                            }
+                        }))
+                    })
+                };
+                e.prototype.YJ = function () {
+                    this.template = new x.a(this);
+                    this.rc = new na.a(this);
+                    this.f.qa || (this.track = new w.a(this));
+                    this.ma = new u.a(this, this.template.tN);
+                    this.hb && this.ma.hide();
+                    this.ma.ready(2, this.ex);
+                    this.ma.ready(0);
+                    this.controller = new A.a(this)
+                };
+                e.prototype.cz = function () {
+                    var b = this;
+                    clearTimeout(this.Sn);
+                    this.Sn = 0;
+                    new z.a(this);
+                    this.X = (new C.a(this)).X;
+                    this.send = new ba.a(this);
+                    this.f.La ? this.La = new P.a(this) : this.f.R ? this.R = new N.a(this) : this.wi = new O.a(this);
+                    this.J && this.yb().update(U.a.qk(this.J.type));
+                    this.S && this.yb().update(U.a.qk("DashPlayer"));
+                    this.ma.complete(0, !0);
+                    this.Zm = !1;
+                    this.template.container.find('[data-tooltip="1"]').each(function (b,
+                        c) {
+                        new f.a({
+                            name: "controll-tooltip",
+                            target: $(c),
+                            type: "tip",
+                            margin: 1
+                        })
+                    });
+                    this.P = new n.a(this, this.template.P, {
+                        na: this.template.pw
+                    });
+                    this.Ma = new ta.a({
+                        container: this.template.Ma[0],
+                        visible: this.cb.block.function_special,
+                        fontFamily: this.cb.setting_config.fontfamily,
+                        Kc: function () {
+                            return b.video ? 1E3 * b.currentTime() : 0
+                        }
+                    }, this);
+                    this.J && this.J.mediaInfo && this.J.mediaInfo.width && this.J.mediaInfo.height && this.Ma.resize(this.J.mediaInfo.width, this.J.mediaInfo.height);
+                    this.S && this.Ma.resize(this.video.videoWidth,
+                        this.video.videoHeight);
+                    this.bind(l.a.h.th, function () {
+                        b.J && b.J.mediaInfo && b.Ma.resize(b.J.mediaInfo.width, b.J.mediaInfo.height)
+                    });
+                    this.ng = new Ca.a(this, this.template.Jw, this.Ma);
+                    this.$c = new ya.a({
+                        container: this.template.ga,
+>>>>>>> f7a0180 (去掉播放器1500ms试错)
                         time: function () {
                             return f.video ? f.currentTime() : 0
                         }
