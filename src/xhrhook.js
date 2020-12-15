@@ -499,7 +499,7 @@
                     });
                 }
                 else if (this.url) {
-                    setTimeout(async () => {
+                    (async () => {
                         try {
                             let response = {}, accesskey = null, progress = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")) }, 50);
                             this.dispatchEvent(new ProgressEvent("loadstart"));
@@ -520,7 +520,7 @@
                                         response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                     } catch (e) {
                                         e = Array.isArray(e) ? e : [e];
-                                        debug.msg("pgc模式出错", ...e)
+                                        debug.error("pgc模式出错", ...e)
                                         obj.module = "bangumi";
                                         response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                     }
@@ -540,7 +540,7 @@
                             debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
                         }
                         catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
-                    })
+                    })();
                 }
                 else {
                     send.call(this, ...arg);
