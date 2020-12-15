@@ -519,6 +519,8 @@
                                     try {
                                         response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                     } catch (e) {
+                                        e = Array.isArray(e) ? e : [e];
+                                        debug.msg("pgc模式出错", ...e)
                                         obj.module = "bangumi";
                                         response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                     }
