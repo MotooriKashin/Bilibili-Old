@@ -6965,7 +6965,7 @@ function Fa() {
                     this.aa = new c.a(this);
                     this.I = new X.a(this);
                     this.ka || (this.YJ(), this.Sn = window.setTimeout(function () {
-                        f.cz()
+                        // f.cz()
                     }, 1500));
                     this.controller && this.controller.Wt(this.controller.Gn() ? "on" : "off");
                     this.f.Wc && (this.Wc =
