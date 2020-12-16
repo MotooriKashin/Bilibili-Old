@@ -541,7 +541,7 @@
                                         e = Array.isArray(e) ? e : [e];
                                         debug.error("pgc模式出错", ...e)
                                         obj.module = "bangumi";
-                                        response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                        response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                     }
                                     response = { "code": 0, "message": "success", "result": response };
                                 }
