@@ -11,6 +11,24 @@
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
+    // hook setTimeout过滤旧版播放器强制初始化错误
+    // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
+    class HookTimeOut {
+        constructor() {
+            this.hook = setTimeout;
+            window.setTimeout = (...args) => {
+                if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
+                    debug.log("过滤拦截播放器强制初始化", ...args);
+                    return Number.MIN_VALUE;
+                }
+                return this.hook.call(window, ...args);
+            }
+
+        }
+        relese() {
+            window.setTimeout = this.hook;
+        }
+    }
     // proto => xml
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
@@ -499,6 +517,7 @@
                     });
                 }
                 else if (this.url) {
+                    let hookTimeOut = new HookTimeOut();
                     (async () => {
                         try {
                             let response = {}, accesskey = null, progress = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")) }, 50);
@@ -535,6 +554,7 @@
                             this.dispatchEvent(new ProgressEvent("readystatechange"));
                             this.dispatchEvent(new ProgressEvent("load"));
                             this.dispatchEvent(new ProgressEvent("loadend"));
+                            hookTimeOut.relese();
                             if (response.code !== 0) throw response.message;
                             BLOD.__playinfo__ = response;
                             debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
