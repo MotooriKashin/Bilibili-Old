@@ -13,6 +13,7 @@
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // hook setTimeout过滤旧版播放器强制初始化错误
     // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
 =======
@@ -23,13 +24,20 @@
      * @see indefined {@link https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894}
      */
 >>>>>>> 6a3a64a (BigInt polyfill)
+=======
+    // hook setTimeout过滤旧版播放器强制初始化错误
+    // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
+>>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
     class HookTimeOut {
         constructor() {
             this.hook = setTimeout;
             window.setTimeout = (...args) => {
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
                     debug.log("过滤拦截播放器强制初始化", ...args);
+<<<<<<< HEAD
                     toast.warning("禁用播放器强制初始化！")
+=======
+>>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -40,6 +48,7 @@
             window.setTimeout = this.hook;
         }
     }
+<<<<<<< HEAD
 
     // 重构APP端playurl，result/data上层目录需另外构建
     // [@url] https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
@@ -432,6 +441,9 @@
      * @param  {[]} danmaku protoSeg.decode(new Uint8Array(this.response)).elems
      * @returns {Promise<String>} 委托对象，表示生成的xml形式的弹幕字符串
      */
+=======
+    // proto => xml
+>>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
             danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
@@ -1074,7 +1086,12 @@
                     }
 =======
                 else if (this.url) {
+<<<<<<< HEAD
                     setTimeout(async () => {
+=======
+                    let hookTimeOut = new HookTimeOut();
+                    (async () => {
+>>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
                         try {
                             let response = {}, accesskey = null, progress = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")) }, 50);
                             this.dispatchEvent(new ProgressEvent("loadstart"));
@@ -1103,6 +1120,7 @@
                             this.dispatchEvent(new ProgressEvent("readystatechange"));
                             this.dispatchEvent(new ProgressEvent("load"));
                             this.dispatchEvent(new ProgressEvent("loadend"));
+                            hookTimeOut.relese();
                             if (response.code !== 0) throw response.message;
                             BLOD.__playinfo__ = response;
                             debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
