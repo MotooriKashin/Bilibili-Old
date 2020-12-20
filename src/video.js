@@ -53020,7 +53020,7 @@
                         e = this.storage.quality,
                             null != r && +r !== e && K("CURRENT_QUALITY", e.toString()),
                             e > G.gtNeedFlvSupported && !this.state.allowFlv && (e = G.gtNeedFlvSupported),
-                            !n && e > G.gtNeedLogin && (e = 0)
+                            !n && e > G.gtNeedLogin && e
                     }
                     t = t || (this.state.allowFlv ? "" : "mp4"),
                         this.state.defQuality = e;
