@@ -731,10 +731,21 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
         }
         // 监听视频地址
-        async playinfo(obj) {
+        playinfo(obj, url) {
             try {
                 if (!obj.response) throw obj;
                 BLOD.__playinfo__ = typeof obj.response == "object" ? obj.response : BLOD.jsonCheck(obj.response);
+                // 未登录dash视频启用1080P
+                let qn = BLOD.urlObj(url).qn;
+                if (qn === 0 || qn > 32) {
+                    if (BLOD.__playinfo__.data && BLOD.__playinfo__.data.dash && BLOD.__playinfo__.data.accept_quality && BLOD.__playinfo__.data.accept_quality[0] >= 80) {
+                        BLOD.__playinfo__.data.quality = 80;
+                        Object.defineProperty(obj, 'response', { writable: true });
+                        Object.defineProperty(obj, 'responseText', { writable: true });
+                        obj.response = BLOD.__playinfo__;
+                        obj.responseText = JSON.stringify(BLOD.__playinfo__);
+                    }
+                }
                 // 移除下载面板
                 if (document.getElementById("bili-old-download-table")) document.getElementById("bili-old-download-table").remove();
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("视频监听", ...e) }
