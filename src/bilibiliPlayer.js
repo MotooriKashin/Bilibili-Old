@@ -16531,7 +16531,7 @@ function Fa() {
                             }
                     }
                     k.yd &&
-                        (0 === b ? q[0] = '\u81ea\u52a8<span class="bilibili-player-auto-hidden">(' + v[k.yd] + ")</span>" : k.yd !== b && (b = k.ya = k.yd));
+                        (0 === b ? q[0] = '\u81ea\u52a8<span class="bilibili-player-auto-hidden">(' + v[k.yd] + ")</span>" : k.yd !== b && (b = k.ya = k.yd = 80));
                     var z = !1,
                         v = [];
                     for (c = 0; c < d.length; c++) m = {
