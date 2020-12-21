@@ -26391,7 +26391,7 @@
                             window.cid && (t.cid = window.cid);
                         try {
                             t.dashSymbol = !0,
-                                this.cookie.set("CURRENT_FNVAL", "16")
+                                this.cookie.set("CURRENT_FNVAL", "80")
                         } catch (e) {
                             console.debug(e)
                         }
@@ -30210,7 +30210,7 @@
                     },
                         o = I.a.qs.parse(i.extraParams);
                     o.qn = i.quality,
-                        this.config.dashSymbol && this.state.allowFlv && (i.fnver = o.fnver = 0, i.fnval = o.fnval = 16),
+                        this.config.dashSymbol && this.state.allowFlv && (i.fnver = o.fnver = 0, i.fnval = o.fnval = 80),
                         this.config.seasonType && (o.season_type = this.config.seasonType),
                         this.ucl.typeid && (o.tid = this.ucl.typeid),
                         this.rts.playurl_start = Date.now(),
