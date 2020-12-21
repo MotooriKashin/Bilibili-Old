@@ -81,7 +81,6 @@
             if (path[1]) {
                 for (let i = 1; i < path.length; i++) {
                     let data = path[i].data || (path[i].durl && path[i]) || path[i].result || {};
-                    BLOD.mdf.flvq = data.quality || (data.data ? data.data.quality : (data.result ? data.result.quality : ""));
                     this.durl(data, qua);
                     this.dash(data, qua, bps);
                 }
@@ -117,7 +116,7 @@
                 BLOD.mdf.mp4.push([qua[path.quality], path.durl[0].url.replace("http:", ""), BLOD.sizeFormat(path.durl[0].size), ".mp4"]);
             } else {
                 BLOD.mdf.flv = [];
-                for (let i = 0; i < path.durl.length; i++) BLOD.mdf.flv.push([qua[BLOD.mdf.flvq || path.quality], path.durl[i].url.replace("http:", ""), BLOD.sizeFormat(path.durl[i].size), ".flv"]);
+                for (let i = 0; i < path.durl.length; i++) BLOD.mdf.flv.push([qua[path.durl[i].url.match(/[0-9]+\.flv/)[0].split(".")[0]], path.durl[i].url.replace("http:", ""), BLOD.sizeFormat(path.durl[i].size), ".flv"]);
             }
         }
         other() {
