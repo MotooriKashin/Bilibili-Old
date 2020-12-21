@@ -143,7 +143,11 @@
                     }
                 }
             });
+<<<<<<< HEAD
             if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000)
+=======
+            if (config.reset.autoplay) setTimeout(()=>{window.player && window.player.play && window.player.play()},1000)
+>>>>>>> e8b09e7 (添加延时1秒自动播放功能)
         },
         // 修复主页分区
         fixnews: async (node, move) => {
