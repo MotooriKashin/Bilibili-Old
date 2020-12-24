@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.0.8
+// @version      4.0.9
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
@@ -26,10 +26,10 @@
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/download.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhrhook.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@eb90773d75cb7bcff72a2562e70ffa7d865eff5d/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@eb90773d75cb7bcff72a2562e70ffa7d865eff5d/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@eb90773d75cb7bcff72a2562e70ffa7d865eff5d/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
@@ -157,14 +157,14 @@
             if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
             BLOD.rewrite.rank();
         }
+        if (BLOD.path[2] == 'live.bilibili.com') {
+            BLOD.path.name = "live";
+            BLOD.reset.disableLiveSleep();
+        }
     } else {
         if (BLOD.path[2] == 'www.bilibili.com') {
             if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
             BLOD.rewrite.index();
-        }
-        if (BLOD.path[2] == 'live.bilibili.com') {
-            if (!BLOD.rewrite) new Function(GM_getResourceText("rewrite"))();
-            BLOD.path.name = "live";
         }
     }
 
