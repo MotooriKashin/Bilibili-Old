@@ -1119,6 +1119,7 @@
     }
 
     // 阻止直播间挂机检测
+<<<<<<< HEAD
     class LiveSleep {
         constructor() {
             this.setInterval = setInterval;
@@ -1128,6 +1129,16 @@
                     if (!this.clock) {
                         debug.log("阻止直播间挂机检测", ...args);
                         toast.warning("成功阻止直播间挂机检测！");
+=======
+    class LiveSleep{
+        constructor(){
+            this.setInterval = setInterval;
+            this.clock = 0;
+            window.setInterval = (...args) => {
+                if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){t.triggerSleepCallback()}") {
+                    if (!this.clock) {
+                        debug.log("阻止直播间挂机检测", ...args);
+>>>>>>> d098e8a (禁用直播间挂机检测)
                         this.clock++;
                     }
                     return Number.MIN_VALUE;
@@ -1135,11 +1146,16 @@
                 return this.setInterval.call(window, ...args);
             }
         }
+<<<<<<< HEAD
         release() {
+=======
+        release(){
+>>>>>>> d098e8a (禁用直播间挂机检测)
             // 释放是不可能释放的，只要鼠标还在动这丫的就一直检测！
             window.setInterval = this.setInterval;
         }
     }
+<<<<<<< HEAD
     BLOD.reset.disableLiveSleep = () => {
         if (config.reset.nosleep) new LiveSleep();
     }
@@ -1444,4 +1460,8 @@
         let check = new DanmkuHashId(crc);
         return "hash: " + check[0] + " mid: " + check[1];
     }
+=======
+    BLOD.reset.disableLiveSleep = () => new LiveSleep();
+
+>>>>>>> d098e8a (禁用直播间挂机检测)
 })()
