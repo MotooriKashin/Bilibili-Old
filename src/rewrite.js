@@ -85,7 +85,7 @@
                 BLOD.path.name = "blackboard";
                 if (BLOD.path[4].startsWith('newplayer')) {
                     let obj = BLOD.urlObj(location.href),
-                        season_type = obj.season_type ? 1 : null,
+                        season_type = obj.season_type || null,
                         player_type = obj.player_type || null;
                     BLOD.aid = 1 * obj.aid || (obj.aid ? BLOD.abv(obj.aid) : undefined) || (obj.bvid ? BLOD.abv(obj.bvid) : undefined);
                     BLOD.cid = obj.cid || "";

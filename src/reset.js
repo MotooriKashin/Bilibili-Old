@@ -113,7 +113,7 @@
                     }
                 }
             });
-            if (config.reset.autoplay) setTimeout(()=>{window.player && window.player.play && window.player.play()},1000)
+            if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000)
         },
         // 修复主页分区
         fixnews: async (node, move) => {
@@ -747,7 +747,7 @@
         init(data) {
             if (!config.reset.replyfloor) return;
             let floor = {}, key = ["top", "hots", "replies", "root"];
-            data = {...data.data};
+            data = { ...data.data };
             if (!data) return;
             if (data.upper && data.upper.top) {
                 if (Array.isArray(data.top)) data.top.push(data.upper.top);
@@ -986,8 +986,8 @@
     }
 
     // 阻止直播间挂机检测
-    class LiveSleep{
-        constructor(){
+    class LiveSleep {
+        constructor() {
             this.setInterval = setInterval;
             this.clock = 0;
             window.setInterval = (...args) => {
@@ -1001,7 +1001,7 @@
                 return this.setInterval.call(window, ...args);
             }
         }
-        release(){
+        release() {
             // 释放是不可能释放的，只要鼠标还在动这丫的就一直检测！
             window.setInterval = this.setInterval;
         }

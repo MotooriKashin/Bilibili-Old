@@ -428,7 +428,7 @@
                     url = BLOD.objUrl(url.split("?")[0], obj);
                     url = url.includes("84956560bc028eb7") ? BLOD.urlSign(url, 0, 8) : url;
                     BLOD.pgc = url.includes("pgc") ? true : false;
-                    if (BLOD.pgc && BLOD.__INITIAL_STATE__.rightsInfo.watch_platform && !BLOD.limit) BLOD.limit = 2;
+                    if (BLOD.pgc && !BLOD.limit && BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.rightsInfo && BLOD.__INITIAL_STATE__.rightsInfo.watch_platform) BLOD.limit = 2;
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
