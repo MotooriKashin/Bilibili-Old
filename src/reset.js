@@ -984,4 +984,28 @@
             }, 1000);
         },
     }
+
+    // 阻止直播间挂机检测
+    class LiveSleep{
+        constructor(){
+            this.setInterval = setInterval;
+            this.clock = 0;
+            window.setInterval = (...args) => {
+                if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){t.triggerSleepCallback()}") {
+                    if (!this.clock) {
+                        debug.log("阻止直播间挂机检测", ...args);
+                        this.clock++;
+                    }
+                    return Number.MIN_VALUE;
+                }
+                return this.setInterval.call(window, ...args);
+            }
+        }
+        release(){
+            // 释放是不可能释放的，只要鼠标还在动这丫的就一直检测！
+            window.setInterval = this.setInterval;
+        }
+    }
+    BLOD.reset.disableLiveSleep = () => new LiveSleep();
+
 })()
