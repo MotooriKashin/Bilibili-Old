@@ -747,7 +747,7 @@
         init(data) {
             if (!config.reset.replyfloor) return;
             let floor = {}, key = ["top", "hots", "replies", "root"];
-            data = { ...data.data };
+            data = data.data;
             if (!data) return;
             if (data.upper && data.upper.top) {
                 if (Array.isArray(data.top)) data.top.push(data.upper.top);
