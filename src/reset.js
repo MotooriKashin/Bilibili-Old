@@ -852,9 +852,12 @@
             let floor = {}, key = ["top", "hots", "replies", "root"];
             data = data.data;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             let floor = {}, key = ["top", "hots", "replies", "root"], data = reply.data;
 >>>>>>> 375860f (修复按时间排序置顶评论)
+=======
+>>>>>>> 52245b8 (去除对象拓展运算符以兼容firefox 54)
             if (!data) return;
 =======
 >>>>>>> b29f633 (改进评论区楼层修复方式)
