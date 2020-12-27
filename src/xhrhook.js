@@ -539,18 +539,23 @@
                                     if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
                                     else {
                                         try {
-                                            response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
-                                        } catch (e) {
-                                            e = Array.isArray(e) ? e : [e];
-                                            debug.error("pgc模式出错", ...e)
+                                            //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
+                                            //e = Array.isArray(e) ? e : [e];
+                                            //debug.error("pgc模式出错", ...e)
+                                            //try {
                                             obj.module = "bangumi";
                                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                        } catch (e) {
+                                            e = Array.isArray(e) ? e : [e];
+                                            debug.msg("解除限制出错", ...e)
+                                            response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id })));
+                                            response = xhrHook.ogvplayurl(response);
                                         }
                                     }
                                     response = { "code": 0, "message": "success", "result": response };
                                 }
                             }
-                            catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
+                            catch (e) { response = { "code": -404, "message": e, "data": null }; }
                             clearInterval(progress);
                             this.responseURL = this.url;
                             this.response = this.responseText = JSON.stringify(response);
@@ -733,6 +738,121 @@
                     obj.response = obj.responseText = JSON.stringify(response);
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
+        }
+        // 重构泰国番剧playurl
+        ogvplayurl(ogv) {
+            ogv = ogv.data.video_info;
+            ogv.audio = [];
+            ogv.dash_audio.forEach((i) => {
+                ogv.audio.push({
+                    SegmentBase: { Initialization: "0-919", indexRange: "920-4539" },
+                    backupUrl: [i.backup_url],
+                    backup_url: [i.backup_url],
+                    bandwidth: i.bandwidth,
+                    baseUrl: i.base_url,
+                    base_url: i.base_url,
+                    codecid: i.codecid,
+                    codecs: "mp4a.40.2",
+                    frameRate: "",
+                    frame_rate: "",
+                    height: 0,
+                    id: i.id,
+                    md5: i.md5,
+                    mimeType: "audio/mp4",
+                    mime_type: "audio/mp4",
+                    sar: "",
+                    segment_base: { initialization: "0-919", index_range: "920-4539" },
+                    size: i.size,
+                    startWithSAP: 0,
+                    start_with_sap: 0,
+                    width: 0
+                })
+            })
+            ogv.video = [];
+            ogv.stream_list.forEach((i) => {
+                if (i.dash_video && i.dash_video.base_url) ogv.video.push({
+                    SegmentBase: { Initialization: "0-991", indexRange: "992-4599" },
+                    backupUrl: [i.dash_video.backup_url],
+                    backup_url: [i.dash_video.backup_url],
+                    bandwidth: i.dash_video.bandwidth,
+                    baseUrl: i.dash_video.base_url,
+                    base_url: i.dash_video.base_url,
+                    codecid: i.dash_video.codecid,
+                    codecs: "avc1.64001F",
+                    frameRate: "25",
+                    frame_rate: "25",
+                    height: 15 * i.stream_info.quality,
+                    id: i.stream_info.quality,
+                    md5: "",
+                    mimeType: "video/mp4",
+                    mime_type: "video/mp4",
+                    sar: "1:1",
+                    segment_base: { initialization: "0-991", index_range: "992-4599" },
+                    size: i.dash_video.size,
+                    startWithSAP: 1,
+                    start_with_sap: 1,
+                    width: 75 * i.stream_info.quality / 4
+                })
+            })
+            return {
+                "accept_description": ["清晰 480P", "流畅 360P"],
+                "accept_format": "flv480,mp4",
+                "accept_quality": [32, 16],
+                "bp": 0,
+                "code": 0,
+                "dash": {
+                    "audio": ogv.audio,
+                    "dolby": {
+                        "audio": [],
+                        "type": "NONE"
+                    },
+                    "duration": Math.ceil(ogv.timelength / 1000),
+                    "minBufferTime": 1.5,
+                    "min_buffer_time": 1.5,
+                    "video": ogv.video
+                },
+                "fnval": 80,
+                "fnver": 0,
+                "format": "flv480",
+                "from": "local",
+                "has_paid": false,
+                "is_preview": 0,
+                "message": "",
+                "no_rexcode": 0,
+                "quality": 32,
+                "result": "suee",
+                "seek_param": "start",
+                "seek_type": "offset",
+                "status": 2,
+                "support_formats": [{
+                    "description": "高清 720P",
+                    "display_desc": "720P",
+                    "format": "flv720",
+                    "need_login": true,
+                    "new_description": "720P 高清",
+                    "quality": 64,
+                    "superscript": ""
+                }, {
+                    "description": "清晰 480P",
+                    "display_desc": "480P",
+                    "format": "flv480",
+                    "new_description": "480P 清晰",
+                    "quality": 32,
+                    "superscript": ""
+                }, {
+                    "description": "流畅 360P",
+                    "display_desc": "360P",
+                    "format": "mp4",
+                    "new_description": "360P 流畅",
+                    "quality": 16,
+                    "superscript": ""
+                }
+                ],
+                "timelength": ogv.timelength,
+                "type": "DASH",
+                "video_codecid": 7,
+                "video_project": true
+            }
         }
         // 监听视频地址
         async playinfo(obj) {
