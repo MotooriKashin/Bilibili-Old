@@ -549,7 +549,7 @@
                                             e = Array.isArray(e) ? e : [e];
                                             debug.msg("解除限制失败 ಥ_ಥ", ...e)
                                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id })));
-                                            BLOD.__playinfo__ = xhrHook.ogvplayurl(response);
+                                            BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvplayurl(response) };
                                             debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
                                             throw false;
                                         }
