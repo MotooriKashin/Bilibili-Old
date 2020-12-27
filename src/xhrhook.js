@@ -547,9 +547,11 @@
                                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                         } catch (e) {
                                             e = Array.isArray(e) ? e : [e];
-                                            debug.msg("解除限制出错", ...e)
+                                            debug.msg("解除限制失败 ಥ_ಥ", ...e)
                                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id })));
-                                            response = xhrHook.ogvplayurl(response);
+                                            BLOD.__playinfo__ = xhrHook.ogvplayurl(response);
+                                            debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
+                                            throw false;
                                         }
                                     }
                                     response = { "code": 0, "message": "success", "result": response };
@@ -740,14 +742,15 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
         }
         // 重构泰国番剧playurl
+        // DASH码率，索引等信息丢失，无法直接播放只能下载。
         ogvplayurl(ogv) {
             ogv = ogv.data.video_info;
             ogv.audio = [];
             ogv.dash_audio.forEach((i) => {
                 ogv.audio.push({
                     SegmentBase: { Initialization: "0-919", indexRange: "920-4539" },
-                    backupUrl: [i.backup_url],
-                    backup_url: [i.backup_url],
+                    backupUrl: [],
+                    backup_url: [],
                     bandwidth: i.bandwidth,
                     baseUrl: i.base_url,
                     base_url: i.base_url,
@@ -770,34 +773,36 @@
             })
             ogv.video = [];
             ogv.stream_list.forEach((i) => {
-                if (i.dash_video && i.dash_video.base_url) ogv.video.push({
-                    SegmentBase: { Initialization: "0-991", indexRange: "992-4599" },
-                    backupUrl: [i.dash_video.backup_url],
-                    backup_url: [i.dash_video.backup_url],
-                    bandwidth: i.dash_video.bandwidth,
-                    baseUrl: i.dash_video.base_url,
-                    base_url: i.dash_video.base_url,
-                    codecid: i.dash_video.codecid,
-                    codecs: "avc1.64001F",
-                    frameRate: "25",
-                    frame_rate: "25",
-                    height: 15 * i.stream_info.quality,
-                    id: i.stream_info.quality,
-                    md5: "",
-                    mimeType: "video/mp4",
-                    mime_type: "video/mp4",
-                    sar: "1:1",
-                    segment_base: { initialization: "0-991", index_range: "992-4599" },
-                    size: i.dash_video.size,
-                    startWithSAP: 1,
-                    start_with_sap: 1,
-                    width: 75 * i.stream_info.quality / 4
-                })
+                if (i.dash_video && i.dash_video.base_url) {
+                    ogv.video.push({
+                        SegmentBase: { Initialization: "0-991", indexRange: "992-4599" },
+                        backupUrl: [],
+                        backup_url: [],
+                        bandwidth: i.dash_video.bandwidth,
+                        baseUrl: i.dash_video.base_url,
+                        base_url: i.dash_video.base_url,
+                        codecid: i.dash_video.codecid,
+                        codecs: "avc1.64001F",
+                        frameRate: "25",
+                        frame_rate: "25",
+                        height: 15 * i.stream_info.quality,
+                        id: i.stream_info.quality,
+                        md5: "",
+                        mimeType: "video/mp4",
+                        mime_type: "video/mp4",
+                        sar: "1:1",
+                        segment_base: { initialization: "0-991", index_range: "992-4599" },
+                        size: i.dash_video.size,
+                        startWithSAP: 1,
+                        start_with_sap: 1,
+                        width: 75 * i.stream_info.quality / 4
+                    })
+                }
             })
             return {
-                "accept_description": ["清晰 480P", "流畅 360P"],
-                "accept_format": "flv480,mp4",
-                "accept_quality": [32, 16],
+                "accept_description": ["高清 720P", "清晰 480P", "流畅 360P"],
+                "accept_format": "flv720,flv480,mp4",
+                "accept_quality": [64, 32, 16],
                 "bp": 0,
                 "code": 0,
                 "dash": {
