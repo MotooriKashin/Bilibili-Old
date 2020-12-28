@@ -8,5 +8,6 @@
     "source",
     "session_id",
     "visit_id",
-    "sourceFrom"
+    "sourceFrom",
+    "from_spmid"
 ]
