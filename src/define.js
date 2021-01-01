@@ -358,7 +358,8 @@ const objUrl = (url, obj) => {
                 'bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22', // TV
                 '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36',
                 '16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d', // blink
-                'c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726' // thuwp
+                'c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726', // thuwp
+                '2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7' // thailand
             ][id], key = "";
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
             url = url.split("?")[0];
