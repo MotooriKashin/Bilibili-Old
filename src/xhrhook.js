@@ -365,7 +365,6 @@
         }
         open() {
             const open = XMLHttpRequest.prototype.open;
-            this.segRequestOnlyOnce = true;
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 let _url = url, hook = [_url, ""];
                 let obj = BLOD.urlObj(url);
@@ -432,6 +431,7 @@
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
+                    if (this.url) this.send = () => xhrHook.sendPlayurl(this);
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 修改弹幕链接
@@ -461,6 +461,18 @@
                                 BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                             }
                         }
+                        // 处理send方法，针对实例而不再针对所有XMLHttpRequest
+                        if (this.segRequestOnlyOnce) {
+                            const addEventListener = XMLHttpRequest.prototype.addEventListener;
+                            this.addEventListener = function (name, callback) {
+                                if (name == "load") {
+                                    this.callBack = this.callBack || [];
+                                    this.callBack.push(callback);
+                                }
+                                return addEventListener.call(this, name, callback);
+                            }
+                            this.send = () => xhrHook.sendDanmuku(this);
+                        }
                     }
                     // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
                     // 可以直接记录弹幕数据
@@ -479,110 +491,6 @@
                     });
                 }
                 return open.call(this, method, url, ...rest);
-            }
-        }
-        send() {
-            const send = XMLHttpRequest.prototype.send;
-            const addEventListener = XMLHttpRequest.prototype.addEventListener;
-            XMLHttpRequest.prototype.send = function (...arg) {
-                // 新版弹幕兼容pakku.js
-                // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
-                // (pakku.js正常运行时这个send()不会被调用)
-                if (config.reset.danmuku && (this.pakku_url && this.pakku_url.includes("seg.so") && this.segRequestOnlyOnce)) {
-                    this.segRequestOnlyOnce = false;
-                    // pakku.js会禁用Worker，这时需要模拟一个xhr响应
-                    Object.defineProperty(this, "response", { writable: true });
-                    Object.defineProperty(this, "responseText", { writable: true });
-                    Object.defineProperty(this, "readyState", { writable: true });
-                    Object.defineProperty(this, "status", { writable: true });
-                    this.readyState = 4;
-                    this.status = 200;
-                    this.abort();
-                    let callBack = this.callBack;
-                    let xhr = this;
-                    getSegDanmaku(function (protoSegments) {
-                        let Segments = [];
-                        protoSegments.forEach(function (seg) {
-                            Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
-                        });
-                        toXml(Segments).then(function (toXml) {
-                            callBack.forEach(function (f) {
-                                xhr.response = xhr.responseText = toXml;
-                                f.call(xhr);
-                            });
-                            // 备份弹幕
-                            BLOD.xml = xhr.response;
-                            BLOD.hash = [];
-                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-                        });
-                    });
-                }
-                else if (this.url) {
-                    let hookTimeOut = new HookTimeOut();
-                    (async () => {
-                        try {
-                            let response = {}, accesskey = null, progress = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")) }, 50);
-                            this.dispatchEvent(new ProgressEvent("loadstart"));
-                            Object.defineProperty(this, "response", { writable: true });
-                            Object.defineProperty(this, "responseText", { writable: true });
-                            Object.defineProperty(this, "responseURL", { writable: true });
-                            Object.defineProperty(this, "readyState", { writable: true });
-                            Object.defineProperty(this, "status", { writable: true });
-                            this.status = 200;
-                            this.readyState = 2;
-                            this.dispatchEvent(new ProgressEvent("readystatechange"));
-                            try {
-                                if (BLOD.limit) {
-                                    // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
-                                    if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
-                                    let obj = Object.assign(BLOD.urlObj(this.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
-                                    if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
-                                    else {
-                                        try {
-                                            //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
-                                            //e = Array.isArray(e) ? e : [e];
-                                            //debug.error("pgc模式出错", ...e)
-                                            //try {
-                                            obj.module = "bangumi";
-                                            response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
-                                        } catch (e) {
-                                            e = Array.isArray(e) ? e : [e];
-                                            debug.msg("解除限制失败 ಥ_ಥ", ...e)
-                                            response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id })));
-                                            BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvplayurl(response) };
-                                            debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
-                                            throw false;
-                                        }
-                                    }
-                                    response = { "code": 0, "message": "success", "result": response };
-                                }
-                            }
-                            catch (e) { response = { "code": -404, "message": e, "data": null }; }
-                            clearInterval(progress);
-                            this.responseURL = this.url;
-                            this.response = this.responseText = JSON.stringify(response);
-                            this.readyState = 4;
-                            this.dispatchEvent(new ProgressEvent("readystatechange"));
-                            this.dispatchEvent(new ProgressEvent("load"));
-                            this.dispatchEvent(new ProgressEvent("loadend"));
-                            hookTimeOut.relese();
-                            if (response.code !== 0) throw response.message;
-                            BLOD.__playinfo__ = response;
-                            debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
-                        }
-                        catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
-                    })();
-                }
-                else {
-                    send.call(this, ...arg);
-                }
-            }
-            XMLHttpRequest.prototype.addEventListener = function (name, callback) {
-                if (name == "load") {
-                    this.callBack = this.callBack || [];
-                    this.callBack.push(callback);
-                }
-                return addEventListener.call(this, name, callback);
             }
         }
         jsonp() {
@@ -741,9 +649,98 @@
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
         }
+        // 模拟弹幕响应
+        async sendDanmuku(xhr) {
+            // 新版弹幕兼容pakku.js
+            // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
+            // (pakku.js正常运行时这个send()不会被调用)
+            xhr.segRequestOnlyOnce = false;
+            // pakku.js会禁用Worker，这时需要模拟一个xhr响应
+            Object.defineProperty(xhr, "response", { writable: true });
+            Object.defineProperty(xhr, "responseText", { writable: true });
+            Object.defineProperty(xhr, "readyState", { writable: true });
+            Object.defineProperty(xhr, "status", { writable: true });
+            xhr.readyState = 4;
+            xhr.status = 200;
+            xhr.abort();
+            let callBack = xhr.callBack;
+            getSegDanmaku(function (protoSegments) {
+                let Segments = [];
+                protoSegments.forEach(function (seg) {
+                    Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
+                });
+                toXml(Segments).then(function (toXml) {
+                    callBack.forEach(function (f) {
+                        xhr.response = xhr.responseText = toXml;
+                        f.call(xhr);
+                    });
+                    // 备份弹幕
+                    BLOD.xml = xhr.response;
+                    BLOD.hash = [];
+                    BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                });
+            });
+        }
+        // 代理playurl响应
+        async sendPlayurl(xhr) {
+            try {
+                let hookTimeOut = new HookTimeOut(),
+                    response = {},
+                    accesskey = null,
+                    progress = setInterval(() => { xhr.dispatchEvent(new ProgressEvent("progress")) }, 50);
+                xhr.dispatchEvent(new ProgressEvent("loadstart"));
+                Object.defineProperty(xhr, "response", { writable: true });
+                Object.defineProperty(xhr, "responseText", { writable: true });
+                Object.defineProperty(xhr, "responseURL", { writable: true });
+                Object.defineProperty(xhr, "readyState", { writable: true });
+                Object.defineProperty(xhr, "status", { writable: true });
+                xhr.status = 200;
+                xhr.readyState = 2;
+                xhr.dispatchEvent(new ProgressEvent("readystatechange"));
+                try {
+                    if (BLOD.limit) {
+                        // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
+                        if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
+                        let obj = Object.assign(BLOD.urlObj(xhr.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
+                        if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
+                        else {
+                            try {
+                                //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
+                                //e = Array.isArray(e) ? e : [e];
+                                //debug.error("pgc模式出错", ...e)
+                                //try {
+                                obj.module = "bangumi";
+                                response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                            } catch (e) {
+                                e = Array.isArray(e) ? e : [e];
+                                debug.msg("解除限制失败 ಥ_ಥ", ...e)
+                                response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id })));
+                                BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvPlayurl(response) };
+                                debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
+                                throw false;
+                            }
+                        }
+                        response = { "code": 0, "message": "success", "result": response };
+                    }
+                }
+                catch (e) { response = { "code": -404, "message": e, "data": null }; }
+                clearInterval(progress);
+                xhr.responseURL = xhr.url;
+                xhr.response = xhr.responseText = JSON.stringify(response);
+                xhr.readyState = 4;
+                xhr.dispatchEvent(new ProgressEvent("readystatechange"));
+                xhr.dispatchEvent(new ProgressEvent("load"));
+                xhr.dispatchEvent(new ProgressEvent("loadend"));
+                hookTimeOut.relese();
+                if (response.code !== 0) throw response.message;
+                BLOD.__playinfo__ = response;
+                debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
+            }
+            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+        }
         // 重构泰国番剧playurl
         // DASH码率，索引等信息丢失，无法直接播放只能下载。
-        ogvplayurl(ogv) {
+        ogvPlayurl(ogv) {
             ogv = ogv.data.video_info;
             ogv.audio = [];
             ogv.dash_audio.forEach((i) => {
@@ -871,13 +868,12 @@
     }
 
     let xhrHook = new Xhrhook();
-    // 分别hook WebSocket、worker、XMLHttpRequest.open、XMLHttpRequest.send
+    // 分别hook WebSocket、worker、XMLHttpRequest.open
     // jQuery的jsonp非原生对象，延时5s捕获到再hook
-    // XMLHttpRequest.open主修复旧版各种失效接口只能常开
+    // XMLHttpRequest.send直接在XMLHttpRequest.open对应实例进行处理
     if (config.reset.livechat) xhrHook.webSocket();
     if (config.reset.danmuku && Worker) xhrHook.worker();
     xhrHook.open();
-    if (config.reset.xhrhook) xhrHook.send();
 
     if (window.$ && window.$.ajax) xhrHook.jsonp();
     else {
