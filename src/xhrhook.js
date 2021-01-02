@@ -321,9 +321,7 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
-                        Segments.sort(function (a, b) {
-                            return a.progress - b.progress;
-                        });
+                        Segments.sort((a, b) => a.progress - b.progress);
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
                             // 记录弹幕池哈希值
@@ -353,10 +351,7 @@
                                 total: Segments.length.toString()
                             }
                         });
-                        toXml(Segments).then(function (result) {
-                            // 备份弹幕
-                            BLOD.xml = result;
-                        });
+                        toXml(Segments).then((result) => (BLOD.xml = result));
                     });
                 } else {
                     workerPostMsg.call(this, aMessage, transferList);
@@ -434,53 +429,38 @@
                     if (this.url) this.send = () => xhrHook.sendPlayurl(this);
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
-                // 修改弹幕链接
+                // 新版弹幕兼容pakku.js
                 if (url.includes("list.so")) {
-                    // 这时pakku.js已经修改了xhr对象，需要另做处理
+                    // pakku.js会在页面上挂一个xhrhook.js来修改xhr对象，这里利用这个特征实现新版弹幕兼容pakku.js
                     if (this.pakku_url && config.reset.danmuku) {
-                        this.segRequestOnlyOnce = true;
-                        let pid = BLOD.aid;
                         // 更改pakku.js请求的url，使它过滤分段弹幕
-                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + pid + "&segment_index=1";
+                        this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid + "&segment_index=1";
                         this.responseType = "arraybuffer";
-                        let xhr = this;
-                        let cb = [];
-                        for (let i in this.pakku_load_callback) {
-                            cb[i] = this.pakku_load_callback[i];
+                        this.callback = this.pakku_load_callback[0];
+                        this.respondDanmaku = function (xml) {
+                            this.response = this.responseText = xml;
+                            this.callback();
+                            BLOD.xml = xml
+                            BLOD.hash = [];
+                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                         }
-                        for (let i in this.pakku_load_callback) {
-                            // 将pakku.js返回的数据转换回xml
-                            this.pakku_load_callback[i] = function () {
-                                toXml(protoSeg.decode(new Uint8Array(xhr.response)).elems).then(function (xml) {
-                                    xhr.response = xhr.responseText = xml;
-                                    cb[i].call(xhr);
-                                });
-                                // 备份弹幕
-                                BLOD.xml = xhr.response;
-                                BLOD.hash = [];
-                                BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-                            }
+                        // 将pakku.js返回的数据转换回xml
+                        this.pakku_load_callback[0] = function () {
+                            toXml(protoSeg.decode(new Uint8Array(this.response)).elems).then((xml) => this.respondDanmaku(xml));
                         }
                         // 处理send方法，针对实例而不再针对所有XMLHttpRequest
-                        if (this.segRequestOnlyOnce) {
-                            const addEventListener = XMLHttpRequest.prototype.addEventListener;
-                            this.addEventListener = function (name, callback) {
-                                if (name == "load") {
-                                    this.callBack = this.callBack || [];
-                                    this.callBack.push(callback);
-                                }
-                                return addEventListener.call(this, name, callback);
-                            }
-                            this.send = () => xhrHook.sendDanmuku(this);
-                        }
+                        // 处理pakku.js处于“休眠中”的情况
+                        this.pakku_send = () => xhrHook.sendDanmuku(this);
                     }
-                    // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
-                    // 可以直接记录弹幕数据
-                    this.addEventListener("load", function () {
-                        BLOD.xml = this.response;
-                        BLOD.hash = [];
-                        BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-                    });
+                    else {
+                        // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
+                        // 备份弹幕
+                        this.addEventListener("load", function () {
+                            BLOD.xml = this.response;
+                            BLOD.hash = [];
+                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                        });
+                    }
                 }
                 // 历史弹幕下载
                 if (url.includes("history?type=")) {
@@ -651,11 +631,8 @@
         }
         // 模拟弹幕响应
         async sendDanmuku(xhr) {
-            // 新版弹幕兼容pakku.js
-            // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
-            // (pakku.js正常运行时这个send()不会被调用)
-            xhr.segRequestOnlyOnce = false;
-            // pakku.js会禁用Worker，这时需要模拟一个xhr响应
+            // 安装并启用了pakku.js，并且将其设置成“休眠中”状态，才会运行这里的代码
+            // pakku.js处于“工作中”状态时，不会调用send()，而是向回调函数直接投喂过滤之后的弹幕
             Object.defineProperty(xhr, "response", { writable: true });
             Object.defineProperty(xhr, "responseText", { writable: true });
             Object.defineProperty(xhr, "readyState", { writable: true });
@@ -663,22 +640,10 @@
             xhr.readyState = 4;
             xhr.status = 200;
             xhr.abort();
-            let callBack = xhr.callBack;
-            getSegDanmaku(function (protoSegments) {
+            getSegDanmaku((protoSegments) => {
                 let Segments = [];
-                protoSegments.forEach(function (seg) {
-                    Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
-                });
-                toXml(Segments).then(function (toXml) {
-                    callBack.forEach(function (f) {
-                        xhr.response = xhr.responseText = toXml;
-                        f.call(xhr);
-                    });
-                    // 备份弹幕
-                    BLOD.xml = xhr.response;
-                    BLOD.hash = [];
-                    BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-                });
+                protoSegments.forEach(seg => (Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems)));
+                toXml(Segments).then((xml) => xhr.respondDanmaku(xml));
             });
         }
         // 代理playurl响应
