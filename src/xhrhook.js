@@ -940,10 +940,14 @@
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
 <<<<<<< HEAD
+<<<<<<< HEAD
                     if (this.url) this.send = () => xhrHook.sendPlayurl(this);
 =======
                     if (config.reset.novideo) this.url = url;
 >>>>>>> 2ea7cf7 (添加视频拦截功能)
+=======
+                    if (this.url) this.send = () => xhrHook.sendPlayurl(this);
+>>>>>>> 215e079 (修改xhr send hook方法)
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 新版弹幕兼容pakku.js
@@ -964,8 +968,22 @@
                             toXml(protoSeg.decode(new Uint8Array(this.response)).elems).then((xml) => this.respondDanmaku(xml));
                         }
                         // 处理send方法，针对实例而不再针对所有XMLHttpRequest
+<<<<<<< HEAD
                         // 处理pakku.js处于“休眠中”的情况
                         this.pakku_send = () => xhrHook.sendDanmuku(this);
+=======
+                        if (this.segRequestOnlyOnce) {
+                            const addEventListener = XMLHttpRequest.prototype.addEventListener;
+                            this.addEventListener = function (name, callback) {
+                                if (name == "load") {
+                                    this.callBack = this.callBack || [];
+                                    this.callBack.push(callback);
+                                }
+                                return addEventListener.call(this, name, callback);
+                            }
+                            this.send = () => xhrHook.sendDanmuku(this);
+                        }
+>>>>>>> 215e079 (修改xhr send hook方法)
                     }
 <<<<<<< HEAD
                     else {
@@ -993,6 +1011,7 @@
                 return open.call(this, method, url, ...rest);
             }
         }
+<<<<<<< HEAD
         send() {
             const send = XMLHttpRequest.prototype.send;
             const addEventListener = XMLHttpRequest.prototype.addEventListener;
@@ -1176,6 +1195,8 @@
                 return open.call(this, method, url, ...rest);
             }
         }
+=======
+>>>>>>> 215e079 (修改xhr send hook方法)
         jsonp() {
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1481,6 +1502,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 模拟弹幕响应
 =======
         /**
@@ -1491,6 +1513,15 @@
         async sendDanmuku(xhr) {
             // 安装并启用了pakku.js，并且将其设置成“休眠中”状态，才会运行这里的代码
             // pakku.js处于“工作中”状态时，不会调用send()，而是向回调函数直接投喂过滤之后的弹幕
+=======
+        // 模拟弹幕响应
+        async sendDanmuku(xhr) {
+            // 新版弹幕兼容pakku.js
+            // pakku.js休眠中，钩子捕捉到首次对seg.so发起请求时触发
+            // (pakku.js正常运行时这个send()不会被调用)
+            xhr.segRequestOnlyOnce = false;
+            // pakku.js会禁用Worker，这时需要模拟一个xhr响应
+>>>>>>> 215e079 (修改xhr send hook方法)
             Object.defineProperty(xhr, "response", { writable: true });
             Object.defineProperty(xhr, "responseText", { writable: true });
             Object.defineProperty(xhr, "readyState", { writable: true });
@@ -1498,6 +1529,7 @@
             xhr.readyState = 4;
             xhr.status = 200;
             xhr.abort();
+<<<<<<< HEAD
             getSegDanmaku((protoSegments) => {
                 let Segments = [];
                 protoSegments.forEach(seg => (Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems)));
@@ -1512,6 +1544,27 @@
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
 >>>>>>> 6a3a64a (BigInt polyfill)
+=======
+            let callBack = xhr.callBack;
+            getSegDanmaku(function (protoSegments) {
+                let Segments = [];
+                protoSegments.forEach(function (seg) {
+                    Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
+                });
+                toXml(Segments).then(function (toXml) {
+                    callBack.forEach(function (f) {
+                        xhr.response = xhr.responseText = toXml;
+                        f.call(xhr);
+                    });
+                    // 备份弹幕
+                    BLOD.xml = xhr.response;
+                    BLOD.hash = [];
+                    BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+                });
+            });
+        }
+        // 代理playurl响应
+>>>>>>> 215e079 (修改xhr send hook方法)
         async sendPlayurl(xhr) {
             try {
                 let hookTimeOut = new HookTimeOut(),
@@ -1532,6 +1585,7 @@
                         // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                         if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
                         let obj = Object.assign(BLOD.urlObj(xhr.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
+<<<<<<< HEAD
                         if (BLOD.limit == 2) {
                             toast.info("尝试解除APP限制...")
                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
@@ -1571,14 +1625,36 @@
                                     throw toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
 >>>>>>> efcabf8 (Update xhrhook.js)
                                 }
+=======
+                        if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
+                        else {
+                            try {
+                                //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
+                                //e = Array.isArray(e) ? e : [e];
+                                //debug.error("pgc模式出错", ...e)
+                                //try {
+                                obj.module = "bangumi";
+                                response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                            } catch (e) {
+                                e = Array.isArray(e) ? e : [e];
+                                debug.msg("解除限制失败 ಥ_ಥ", ...e)
+                                response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id })));
+                                BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvPlayurl(response) };
+                                debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
+                                throw false;
+>>>>>>> 215e079 (修改xhr send hook方法)
                             }
                         }
                         response = { "code": 0, "message": "success", "result": response };
                     }
                 }
+<<<<<<< HEAD
                 catch (e) {
                     response = { "code": -404, "message": e, "data": null };
                 }
+=======
+                catch (e) { response = { "code": -404, "message": e, "data": null }; }
+>>>>>>> 215e079 (修改xhr send hook方法)
                 clearInterval(progress);
                 xhr.responseURL = xhr.url;
                 xhr.response = xhr.responseText = JSON.stringify(response);
@@ -1589,15 +1665,22 @@
                 hookTimeOut.relese();
                 if (response.code !== 0) throw response.message;
                 BLOD.__playinfo__ = response;
+<<<<<<< HEAD
                 toast.success("解除限制！", "aid=" + BLOD.aid, "cid=" + BLOD.cid);
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
 <<<<<<< HEAD
 =======
+=======
+                debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
+            }
+            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+        }
+>>>>>>> 215e079 (修改xhr send hook方法)
         // 重构泰国番剧playurl
         // DASH码率，索引等信息丢失，无法直接播放只能下载。
-        ogvplayurl(ogv) {
+        ogvPlayurl(ogv) {
             ogv = ogv.data.video_info;
             ogv.audio = [];
             ogv.dash_audio.forEach((i) => {
