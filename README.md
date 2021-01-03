@@ -151,6 +151,7 @@ Tampermonkey BETA 4.10.6122
 - `GM_setValue()`方法失效，无法保存数据到脚本管理器
 - `addEventListener`、`document.onclick`等回调失效
 
+<<<<<<< HEAD
 | 脚本/扩展                                                        | 兼容性     | 详细                                                       |
 | ---------------------------------------------------------------- | ---------- | ---------------------------------------------------------- |
 | [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)  | 部分失效   | 在旧版页面无法修改设置 “简化主页”冲突 快捷键拓展部分未适配 |
@@ -158,6 +159,15 @@ Tampermonkey BETA 4.10.6122
 | [Bilibili 修车插件](https://greasyfork.org/scripts/374449)       | 失效       | 因本脚步修改了原生脚本而失效                               |
 | [IDM Integration Module](http://www.internetdownloadmanager.com) | 浮动条失效 | 无法嗅探旧版页面媒体                                       |
 | [smoothscroll](http://iamdustan.com/smoothscroll/)               | 完全失效   | 平滑滚动失效                                               |
+=======
+| 脚本/扩展 | 兼容性 | 详细 |
+| ---- | ---- | ---- |
+| [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) | 部分失效 | 在旧版页面无法修改设置 “简化主页”冲突 快捷键拓展部分未适配|
+| [解除B站区域限制](https://greasyfork.org/scripts/25718) | 正常 | 偶尔不会在旧版页面绘制设置入口 可前往媒体页调整设置 |
+| [Bilibili 修车插件](https://greasyfork.org/scripts/374449) | 正常 | 建议`run-at document-start` 建议只在需要时启用该脚本|
+| [IDM Integration Module](http://www.internetdownloadmanager.com) | 浮动条失效 | 无法嗅探旧版页面媒体 |
+| [smoothscroll](http://iamdustan.com/smoothscroll/) | 完全失效 | 平滑滚动失效 |
+>>>>>>> a13136a (Update README.md)
 
 ---
 
