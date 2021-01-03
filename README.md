@@ -99,24 +99,13 @@ Tampermonkey BETA 4.10.6122
 - `GM_setValue()`方法失效，无法保存数据到脚本管理器
 - `addEventListener`、`document.onclick`等回调失效
 
-[Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
-> `GM_setValue`失效，在旧版页面无法修改设置。  
-> “简化主页”冲突，使旧版主页布局紊乱。  
-> 旧版番剧页面“批量下载”报错： “获取番剧数据失败: 无法找到 Season ID”  
-> 快捷键拓展未适配，在旧版页面部分快捷键无效。
-
-[解除B站区域限制](https://greasyfork.org/scripts/25718)
-> 旧版UI未适配，无法在旧版页面调出设置。  
-
-[Bilibili 修车插件](https://greasyfork.org/scripts/374449)
-> 推荐以`run-at document-start`注入。  
-> 推荐只在需要时启用该脚本。
-
-[IDM Integration Module](http://www.internetdownloadmanager.com)
-> 下载浮动条失效。
-
-[smoothscroll](http://iamdustan.com/smoothscroll/)
-> 平滑滚动失效。
+| 脚本/扩展 | 兼容性 | 详细 |
+| ---- | ---- | ---- |
+| [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) | 部分失效 | 在旧版页面无法修改设置 “简化主页”冲突 快捷键拓展部分未适配|
+| [解除B站区域限制](https://greasyfork.org/scripts/25718) | UI未适配 | 无法在旧版页面调出设置 |
+| [Bilibili 修车插件](https://greasyfork.org/scripts/374449) | 正常 | 建议`run-at document-start` 建议只在需要时启用该脚本|
+| [IDM Integration Module](http://www.internetdownloadmanager.com) | 浮动条失效 | 无法嗅探旧版页面媒体 |
+| [smoothscroll](http://iamdustan.com/smoothscroll/) | 完全失效 | 平滑滚动失效 |
 
 ---
 ### 隐私相关
