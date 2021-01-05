@@ -94,7 +94,7 @@ Google Chrome 87.0.4280.88 (正式版本) （64 位） (cohort: Stable)
 Tampermonkey BETA 4.10.6122
 ```
 平台
-- Firefox 79 及等部分版本的浏览器无法正在重写旧版播放页面。
+- Firefox 79 及等部分版本的浏览器无法重写旧版播放页面。
 - 不支持Greasemonkey 4。
 
 脚本及扩展
@@ -149,7 +149,7 @@ Tampermonkey BETA 4.10.6122
 | [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.json) | json | 一例播单\_\_INITIAL\_STATE\_\_数据存档以作留念 |
 | [sort.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/sort.json) | json | 分区对照表，用于修复旧版页面无法识别的分区 |
 | [search.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/search.json) | json | 无效参数表，用于识别无效链接参数 |
-| [protobuf.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/protobuf.json) | json | 弹幕proto，用于将读取proto弹幕 |
+| [protobuf.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/protobuf.json) | json | 弹幕proto表，用于解析proto弹幕 |
 
 脚本引用了部分公开库
 - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
@@ -171,9 +171,9 @@ Tampermonkey BETA 4.10.6122
 - [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)：playurl接口算法
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl接口参考、授权登录接口
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
-- [MD5_百度百科](https://baike.baidu.com/item/MD5/212708?fr=aladdin#6_4)：md5哈希算法
+- [js-md5](https://github.com/emn178/js-md5)：md5哈希算法（MIT许可）
 - [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
-- [esterTion](https://github.com/esterTion/BiliBili_crc2mid)：弹幕哈希反查JavaScript源码（GFUL许可）
+- [esterTion](https://github.com/esterTion/BiliBili_crc2mid)：弹幕哈希反查算法的JavaScript实现（GFUL许可）
 
 ---
 ### B站记忆
