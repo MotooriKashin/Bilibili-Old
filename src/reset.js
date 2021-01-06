@@ -451,6 +451,7 @@
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
                 }
             }, 100);
+<<<<<<< HEAD
         },
 <<<<<<< HEAD
         // 主页在线数据
@@ -509,6 +510,9 @@
         },
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+        },   
+>>>>>>> 5afb4d3 (移除在线数据及最新投稿)
         // 空间注册时间
         setJoinTime: async () => {
             if (!BLOD.mid && !config.reset.jointime) return;

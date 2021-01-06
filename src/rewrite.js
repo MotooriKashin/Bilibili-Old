@@ -297,6 +297,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·主页", ...e) }
+<<<<<<< HEAD
             BLOD.setOnline();
 =======
             catch (e) {
@@ -308,6 +309,8 @@
 =======
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·主页", ...e); }
 >>>>>>> d0dd290 (优化通知信息)
+=======
+>>>>>>> 5afb4d3 (移除在线数据及最新投稿)
         }
         rank() {
             try {
