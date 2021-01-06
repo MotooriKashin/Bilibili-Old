@@ -56,7 +56,7 @@
                 }, data.v2_app_api ? {
                     "aid": data.v2_app_api.aid,
                     "tags": data.v2_app_api.tag,
-                    "videoData":  Object.assign(data.v2_app_api, { "embedPlayer": 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")' })
+                    "videoData": Object.assign(data.v2_app_api, { "embedPlayer": 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + cid + '&aid=' + aid + '&pre_ad=")' })
                 } : {})
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("__INITIAL_STATE__·avPlus", ...e) }
         }
