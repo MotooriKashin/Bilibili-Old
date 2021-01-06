@@ -428,25 +428,26 @@
             let dat = {};
             let ini = JSON.parse(data);
             dat.recommendData = [];
-            for (let i = 0; i < ini.recommendList.length; i++) {
-                dat.recommendData[i] = {};
-                dat.recommendData[i].aid = ini.recommendList[i].aid;
-                dat.recommendData[i].typename = ini.recommendList[i].tname;
-                dat.recommendData[i].title = ini.recommendList[i].title;
-                dat.recommendData[i].subtitle = "";
-                dat.recommendData[i].play = ini.recommendList[i].stat.view;
-                dat.recommendData[i].review = ini.recommendList[i].stat.reply;
-                dat.recommendData[i].video_review = "";
-                dat.recommendData[i].favorites = ini.recommendList[i].stat.favorite;
-                dat.recommendData[i].mid = ini.recommendList[i].owner.mid;
-                dat.recommendData[i].author = ini.recommendList[i].owner.name;
-                dat.recommendData[i].create = ini.recommendList[i].pubdate;
-                dat.recommendData[i].pic = ini.recommendList[i].pic;
-                dat.recommendData[i].coins = ini.recommendList[i].stat.coin;
-                dat.recommendData[i].duration = ini.recommendList[i].duration;
-                dat.recommendData[i].badgepay = false;
-                dat.recommendData[i].rights = ini.recommendList[i].rights;
-            }
+            ini.recommendData && ini.recommendData.item.forEach(i => {
+                dat.recommendData.push({
+                    aid: BLOD.abv(i.bvid),
+                    typename: "",
+                    title: i.title,
+                    subtitle: "",
+                    play: i.stat.view,
+                    review: "",
+                    video_review: "",
+                    favorites: "",
+                    mid: i.owner.mid,
+                    author: i.owner.name,
+                    creat: "",
+                    pic: i.pic,
+                    coins: "",
+                    duration: i.duration,
+                    badgepay: false,
+                    rights: ""
+                })
+            });
             dat.locsData = ini.locsData;
             dat.locsData[23] = ini.locsData[3197];
             if (config.reset.adloc) for (let key in dat.locsData) if (dat.locsData[key]) for (let i = dat.locsData[key].length - 1; i >= 0; i--) if (dat.locsData[key][i].is_ad) { debug.debug("移除广告", key, dat.locsData[key][i]); dat.locsData[key].splice(i, 1); }
