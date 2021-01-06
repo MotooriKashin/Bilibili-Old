@@ -157,7 +157,6 @@
                 BLOD.write(BLOD.getResourceText("index"));
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·主页", ...e) }
-            BLOD.reset.setOnline();
         }
         rank() {
             try {

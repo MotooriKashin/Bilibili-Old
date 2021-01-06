@@ -376,61 +376,7 @@
                     catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("点赞功能", ...e) }
                 }
             }, 100);
-        },
-        // 主页在线数据
-        setOnline: async () => {
-            let timer = window.setInterval(async () => {
-                let online = document.getElementsByClassName("online")[0];
-                if (online) {
-                    // 判断主页载入进程
-                    window.clearInterval(timer);
-                    let loop = async () => {
-                        try {
-                            let data = await xhr.true("https://api.bilibili.com/x/web-interface/online");
-                            data = BLOD.jsonCheck(data).data;
-                            let all_count = data.all_count;
-                            let web_online = data.web_online;
-                            let play_online = data.play_online;
-                            let online = document.getElementsByClassName("online")[0];
-                            if (online.tagName == "DIV") online = online.getElementsByTagName("a")[0];
-                            else {
-                                // 旧版主页需额外创建节点
-                                let parent = online.parentNode;
-                                online.remove();
-                                let div = document.createElement("div");
-                                let a = document.createElement("a");
-                                div.setAttribute("class", "online");
-                                parent.insertBefore(div, parent.firstChild);
-                                a.setAttribute("href", "//www.bilibili.com/video/online.html");
-                                a.setAttribute("target", "_blank");
-                                div.appendChild(a);
-                                online = a;
-                            }
-                            online.setAttribute("title", "在线观看：" + play_online);
-                            online.text = web_online ? "在线人数：" + web_online : "在线列表";
-                            if (!online.parentNode.getElementsByTagName("em")[0]) {
-                                let em = document.createElement("em");
-                                let count = document.createElement("a");
-                                online.parentNode.insertBefore(em, online.nextSibling);
-                                count.setAttribute("href", "//www.bilibili.com/newlist.html");
-                                count.setAttribute("target", "_blank");
-                                online.parentNode.insertBefore(count, em.nextSibling);
-                                count.text = all_count ? "最新投稿：" + all_count : "最新投稿";
-                            }
-                            else {
-                                let count = online.parentNode.getElementsByTagName("a")[1];
-                                count.text = all_count ? "最新投稿：" + all_count : "最新投稿";
-                            }
-                            if (!all_count || !web_online || !play_online) return;
-                            // 60s刷新一次
-                            window.setTimeout(() => loop(), 60000);
-                        }
-                        catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("在线数据", ...e) }
-                    }
-                    loop();
-                }
-            }, 1000);
-        },
+        },   
         // 空间注册时间
         setJoinTime: async () => {
             if (!BLOD.mid && !config.reset.jointime) return;
