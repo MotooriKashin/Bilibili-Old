@@ -195,6 +195,9 @@ Tampermonkey BETA 4.10.6122
 ---
 ### 版本历史
 **注：部分功能可能需要先在设置里启用！**  
+- 2021-01-06
+   + 重构主页\_\_INITIAL\_STATE\_\_
+   + 移除在线数据及最新投稿
 - 2021-01-03
    + 优化xhrhook方法，不再全局hook `XMLHttpRequest.prototype.send`以减少污染
 - 2020-12-27
