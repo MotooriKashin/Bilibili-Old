@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 =======
 // @version      4.0.3
@@ -15,6 +16,9 @@
 =======
 // @version      4.0.5
 >>>>>>> 3301427 (过滤旧版播放器强制初始化代码)
+=======
+// @version      4.1.3
+>>>>>>> 9d7cf0a (修复旧版主页数据)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
 // @version      3.7.7
@@ -88,7 +92,11 @@
 // @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.css
 // @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
 // @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
+<<<<<<< HEAD
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/initialstate.js
+=======
+// @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e5899ec36fb5fc1f5c5ae40de40a6d409c1fbc7c/src/initialstate.js
+>>>>>>> 9d7cf0a (修复旧版主页数据)
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.js
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
