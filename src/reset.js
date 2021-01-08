@@ -7,6 +7,7 @@
     const debug = BLOD.debug;
     const config = BLOD.config;
     const xhr = BLOD.xhr;
+    const toast = BLOD.toast;
     console.debug('import module "reset.js"');
 
     BLOD.reset = {
@@ -52,6 +53,7 @@
                     sec.innerText = i - 1 + "s";
                     if (i == 0) {
                         node.remove();
+                        toast("移除付费预览提示框")
                         return;
                     }
                     i = i - 1;
@@ -236,7 +238,11 @@
                             data.data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
                             data.data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
                     }
-                    catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("弹幕反查", ...e) }
+                    catch (e) {
+                        e = Array.isArray(e) ? e : [e];
+                        toast.error("查询弹幕发送者信息出错！", "crc：" + BLOD.hash[index] + " mid：" + BLOD.midcrc(BLOD.hash[index]), e[0] + " " + e[1]);
+                        debug.error("弹幕反查", ...e)
+                    }
                 })
             })
         },
@@ -332,12 +338,12 @@
                             data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", "application/x-www-form-urlencoded", msg);
                             data = BLOD.jsonCheck(data).ttl;
                             // 点亮点赞图标并修改显示数据
-                            debug.msg("点赞成功！");
+                            toast.success("点赞成功！");
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                             if (arg.nodeValue.match("万")) return;
                             let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1;
-                            text = document.createTextNode(" 点赞 " + number)
+                            text = document.createTextNode(" 点赞 " + number);
                             arg.replaceWith(text);
                             arg = text;
                         }
@@ -348,7 +354,7 @@
                             data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", "application/x-www-form-urlencoded", msg);
                             data = BLOD.jsonCheck(data).ttl;
                             // 熄灭点赞图标并修改显示数据
-                            debug.msg("点赞撤回！");
+                            toast.success("取消点赞！");
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                             if (arg.nodeValue.match("万")) return;
@@ -373,10 +379,15 @@
                             moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                         }
                     }
-                    catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("点赞功能", ...e) }
+                    catch (e) {
+                        toast.error("点赞功能出错！", "已打印错误信息到控制台！");
+                        e = Array.isArray(e) ? e : [e];
+                        debug.error("点赞功能", ...e);
+                    }
                 }
             }, 100);
         },
+<<<<<<< HEAD
         // 主页在线数据
         setOnline: async () => {
             let timer = window.setInterval(async () => {
@@ -431,6 +442,8 @@
                 }
             }, 1000);
         },
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
         // 空间注册时间
         setJoinTime: async () => {
             if (!BLOD.mid && !config.reset.jointime) return;
@@ -439,7 +452,7 @@
                 data = BLOD.jsonCheck(data);
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
-                let birthdate = data.card.birthday;
+                // toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday)
                 debug.log("注册时间", data.card.name, jointime);
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
@@ -479,6 +492,7 @@
                     document.body.appendChild(page);
                     setTimeout(() => { page.remove() }, 3000);
                     debug.log("取消会员授权");
+                    toast.success("已取消会员授权！")
                 }
                 return;
             }
@@ -486,6 +500,7 @@
                 try {
                     if (!BLOD.uid) {
                         debug.log("请先登录，才能授权会员");
+                        toast.warning("请先登录！")
                         return;
                     }
                     let data = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", "", 3)));
@@ -506,8 +521,13 @@
                     BLOD.setValue("access_key", data.access_key);
                     BLOD.setValue("access_date", Date.now());
                     debug.log("会员授权成功！");
+                    toast.success("授权登录成功！", "有效期30天", "届时可能需要重新授权")
                 }
-                catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("登录鉴权", ...e) }
+                catch (e) {
+                    toast.error("授权登录失败！", "已打印错误信息到控制台！");
+                    e = Array.isArray(e) ? e : [e];
+                    debug.error("登录鉴权", ...e);
+                }
             }
         },
         // 备份播放器设置
@@ -596,6 +616,7 @@
                 }
             }
             debug.log("失效视频", "av" + aid);
+            toast.success("获取失效视频信息成功！", "av" + aid);
             if (cover) msg.target.children[0].children[0].setAttribute("src", cover + "@380w_240h_100Q_1c.webp");
             msg.target.children[0].children[0].setAttribute("alt", title);
             msg.target.children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
@@ -628,6 +649,7 @@
                         if (aid) {
                             // 修复失效视频av号
                             debug.log("失效视频", "av" + aid);
+                            toast.success("获取失效视频信息成功！", "av" + aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                         }
@@ -635,6 +657,7 @@
                             // 修复失效视频bv号
                             aid = small_item[i].getAttribute("data-aid");
                             debug.log("失效视频", aid);
+                            toast.success("获取失效视频信息成功！", aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                         }
@@ -665,6 +688,7 @@
                             if (aid) {
                                 // 修改失效视频av链接
                                 debug.log("失效视频", "av" + aid);
+                                toast.success("获取失效视频信息成功！", "av" + aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             }
@@ -672,6 +696,7 @@
                                 // 修改失效视频bv链接
                                 aid = small_item[i].getAttribute("data-aid");
                                 debug.log("失效视频", aid);
+                                toast.success("获取失效视频信息成功！", aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             }
@@ -804,6 +829,7 @@
                 // 以传参data决定处理类型
                 try {
                     // 获取首个视频av并跳转
+                    toast("尝试前往构造媒体页...", "media_id：" + BLOD.ml);
                     data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v1/medialist/detail", { "media_id": BLOD.ml, "pn": 1, "ps": 1 }));
                     data = BLOD.jsonCheck(data).data;
                     location.replace("https://www.bilibili.com/video/av" + data.medias[0].id);
@@ -816,6 +842,7 @@
             }
             else {
                 try {
+                    toast("重构媒体页信息中...")
                     let avs = [], value = [], promises = [];
                     // 获取收藏列表，这里获取只能获取到aid
                     data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v1/medialist/resource/ids4Player", { "media_id": BLOD.ml }));
@@ -871,6 +898,7 @@
                             debug.debug("收藏列表", toview);
                             // 构造初始化参数并重新初始化播放器
                             BLOD.obj = { "aid": BLOD.ids[0].aid, "cid": BLOD.ids[0].cid, "watchlater": encodeURIComponent(JSON.stringify(toview)) }; // 重构初始化播放器参数
+                            toast.success("重构成功！", "二次刷新播放器...");
                             window.BilibiliPlayer(BLOD.obj);
                             let bpui = document.getElementsByClassName("bpui-button-text");
                             let t = setInterval(() => {
@@ -883,7 +911,11 @@
                         }
                     }, 100);
                 }
-                catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("收藏模拟", ...e) }
+                catch (e) {
+                    toast.error("重构媒体页出错！", "已打印错误信息到控制台");
+                    e = Array.isArray(e) ? e : [e];
+                    debug.error("收藏模拟", ...e);
+                }
             }
         },
         // aid变化监听
@@ -899,8 +931,8 @@
             }
         },
         // 收藏播放更新
-        restore: async () => {
-            let data;
+        restore: async (data) => {
+            toast("更新页面信息...", "部分非关键信息不会去额外获取")
             history.replaceState(null, null, "https://www.bilibili.com/video/av" + BLOD.aid + location.search + location.hash);
             for (let i = 0; i < BLOD.ids.length; i++) if (BLOD.ids[i].aid == BLOD.aid) data = BLOD.ids[i];
             let video_info = document.getElementById("viewbox_report");
@@ -978,7 +1010,11 @@
                             child[4].childNodes[0].href = sort[BLOD.tid][2];
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
-                        catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分区·稍后再看", ...e) }
+                        catch (e) {
+                            toast.error("修复分区信息失败！", "已打印错误信息到控制台！");
+                            e = Array.isArray(e) ? e : [e];
+                            debug.error("分区·稍后再看", ...e);
+                        }
                     }
                 }
             }, 1000);
@@ -994,6 +1030,7 @@
                 if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){t.triggerSleepCallback()}") {
                     if (!this.clock) {
                         debug.log("阻止直播间挂机检测", ...args);
+                        toast.warning("成功阻止直播间挂机检测！");
                         this.clock++;
                     }
                     return Number.MIN_VALUE;

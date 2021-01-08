@@ -5,6 +5,7 @@
  */
 (function () {
     const BLOD = window.BLOD;
+    const toast = BLOD.toast;
 
     class Xhr {
         constructor() {
@@ -23,7 +24,10 @@
                 xhr.open('get', url, true);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.responseText);
-                xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                xhr.onerror = () => {
+                    toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                }
                 xhr.send();
             });
         }
@@ -33,7 +37,10 @@
                     method: "GET",
                     url: url,
                     onload: (xhr) => resolve(xhr.responseText),
-                    onerror: (xhr) => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT"),
+                    onerror: (xhr) => {
+                        toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                        reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                    }
                 });
             })
         }
@@ -45,7 +52,10 @@
                 xhr.setRequestHeader("Content-type", header);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.responseText);
-                xhr.onerror = () => reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                xhr.onerror = () => {
+                    toast.error("XMLHttpRequest 错误！", "method：POST url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                }
                 xhr.send(data);
             });
         }
