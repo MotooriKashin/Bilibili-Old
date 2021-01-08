@@ -19,6 +19,7 @@
             this.container.setAttribute("class", "toast-top-right");
         }
         show(type, ...msg) {
+            if (!document.body) return;
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
             this.box = document.querySelector("#toast-container");
             let item = document.createElement("div");
