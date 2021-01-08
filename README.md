@@ -15,7 +15,7 @@
    + Bangumi(ss/ep)：[ss3398](https://www.bilibili.com/bangumi/play/ss3398 "冰菓") 、 [ep84776](https://www.bilibili.com/bangumi/play/ep84776 "深具传统的古典文学部之重生") 、 [ss12116](https://www.bilibili.com/bangumi/play/ss12116/ "声之形")
    + 稍后再看：[list](https://www.bilibili.com/watchlater/#/list "播放列表")、[watchlater](https://www.bilibili.com/medialist/play/watchlater "播放全部")
    + 收藏播放：[ml182603655](https://www.bilibili.com/medialist/play/ml182603655 "bilibili moe 2018 日本动画场应援")
-   + 嵌入播放器：[blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视")、[campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘")、[biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传")、[moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")、[mylist](https://www.bilibili.com/mylist4#4 "各种神弹幕")
+   + 嵌入播放器：[blackboard](https://www.bilibili.com/blackboard/topic/activity-2020bangumiQ1_web.html "bilibili 2020 一月新番导视")、[campus](https://campus.bilibili.com/index.html "哔哩哔哩校园招聘")、[biligame](https://www.biligame.com/detail/?id=101644 "魔法纪录  魔法少女小圆外传")、[moegirl](https://zh.moegirl.org/%E4%B8%9C%E6%96%B9M-1%E6%BC%AB%E6%89%8D "东方M-1漫才")、~~[mylist](https://www.bilibili.com/mylist4#4 "各种神弹幕")~~
    + 排行榜：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
    + ~~播单：[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")、[detail](https://www.bilibili.com/playlist/detail/pl769 "bilibili moe 2018 日本动画场应援")~~
 - 其他
@@ -153,6 +153,7 @@ Tampermonkey BETA 4.10.6122
 
 脚本引用了部分公开库
 - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
+- [toastr](https://github.com/CodeSeven/toastr/)：实现通知模块
 
 脚本使用了部分原生脚本历史版本并可能进行了修改
 - [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/comment.min.js) 2019年12月的备份，进行了部分修改用以找回新版移除评论区小页码区域及恢复旧版评论排序
@@ -160,7 +161,8 @@ Tampermonkey BETA 4.10.6122
 
 ---
 ### 参考致谢
-- [protobuf](https://github.com/protobufjs/protobuf.js)：protobuf.js库（BSD 3-Clause许可）
+- [protobuf](https://github.com/protobufjs/protobuf.js)（BSD 3-Clause许可）：protobuf.js库
+- [toastr](https://github.com/CodeSeven/toastr/)（BSD 3-Clause许可）：toastr库，使用原生JavaScript重新实现
 - [Wayback Machine](https://archive.org/web/)：B站旧版网页源代码
 - [indefined](https://github.com/indefined/)：脚本原型及指导
 - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：第三方数据接口
@@ -171,9 +173,9 @@ Tampermonkey BETA 4.10.6122
 - [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)：playurl接口算法
 - [解除B站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl接口参考、授权登录接口
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
-- [js-md5](https://github.com/emn178/js-md5)：md5哈希算法（MIT许可）
+- [js-md5](https://github.com/emn178/js-md5)（MIT许可）：md5哈希算法
 - [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
-- [esterTion](https://github.com/esterTion/BiliBili_crc2mid)：弹幕哈希反查算法的JavaScript实现（GFUL许可）
+- [esterTion](https://github.com/esterTion/BiliBili_crc2mid)（GFUL许可）：弹幕哈希反查算法的JavaScript实现
 
 ---
 ### B站记忆
@@ -195,6 +197,8 @@ Tampermonkey BETA 4.10.6122
 ---
 ### 版本历史
 **注：部分功能可能需要先在设置里启用！**  
+- 2021-01-08
+   + 引入[toastr](https://github.com/CodeSeven/toastr/)通知模块，使用原生JavaScript重新实现
 - 2021-01-06
    + 重构主页\_\_INITIAL\_STATE\_\_
    + 移除在线数据及最新投稿
