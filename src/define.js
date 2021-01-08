@@ -260,6 +260,7 @@ const objUrl = (url, obj) => {
         }
         // 格式化时间
         timeFormat(time = new Date(), type) {
+<<<<<<< HEAD
 =======
     class Format {
         /**
@@ -269,6 +270,8 @@ const objUrl = (url, obj) => {
          */
         timeFormat(time = new Date().getTime(), type) {
 >>>>>>> 9448cf0 (refactor some function)
+=======
+>>>>>>> e0a4ccf (使用函数默认参数)
             let date = new Date(time),
                 Y = date.getFullYear() + '-',
                 M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
