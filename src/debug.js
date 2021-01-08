@@ -6,7 +6,7 @@
 (function () {
     const BLOD = window.BLOD;
 
-    // @url https://cdnjs.com/libraries/toastr.js
+    // @url https://github.com/CodeSeven/toastr/
     class Toast {
         constructor() {
             BLOD.addCss(BLOD.getResourceText("toast"))
@@ -41,7 +41,7 @@
             let timer = setInterval(() => {
                 i--;
                 item.setAttribute("style", "opacity: ." + i);
-                if(i === 0) {
+                if (i === 0) {
                     clearInterval(timer);
                     item.remove();
                     if (!this.box.firstChild) this.box.remove();
@@ -96,22 +96,6 @@
         }
     }
 
-    const exports = () => {
-        let debug = new Debug();
-        function makeExports(type) {
-            return function (...msg) {
-                return debug[type](...msg);
-            }
-        }
-        let method = makeExports("log");
-        method.log = makeExports("log");
-        method.error = makeExports("error");
-        method.warn = makeExports("warn");
-        method.debug = makeExports("debug");
-        method.msg = makeExports("msg");
-        return method;
-    }
-
     const toast = () => {
         let toast = new Toast();
         function makeExports(type) {
@@ -127,7 +111,23 @@
         return method;
     }
 
-    BLOD.debug = exports();
+    const debug = () => {
+        let debug = new Debug();
+        function makeExports(type) {
+            return function (...msg) {
+                return debug[type](...msg);
+            }
+        }
+        let method = makeExports("log");
+        method.log = makeExports("log");
+        method.error = makeExports("error");
+        method.warn = makeExports("warn");
+        method.debug = makeExports("debug");
+        method.msg = makeExports("msg");
+        return method;
+    }
+
     BLOD.toast = toast();
+    BLOD.debug = debug();
 
 })()
