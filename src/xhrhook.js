@@ -6,6 +6,7 @@
     const BLOD = window.BLOD;
     const config = BLOD.config;
     const debug = BLOD.debug;
+    const toast = BLOD.toast;
 
     const root = window.protobuf.Root.fromJSON(JSON.parse(BLOD.getResourceText("protobuf")));
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
@@ -19,6 +20,7 @@
             window.setTimeout = (...args) => {
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
                     debug.log("过滤拦截播放器强制初始化", ...args);
+                    toast.warning("禁用播放器强制初始化！", "等待视频数据返回...")
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -418,7 +420,10 @@
                     BLOD.cid = obj.cid || BLOD.cid;
                     BLOD.aid = obj.avid || BLOD.aid || null;
                     BLOD.bvid = obj.bvid || (BLOD.aid && BLOD.abv(BLOD.aid)) || BLOD.bvid || null;
-                    if (config.reset.novideo && !obj.sign) obj = Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
+                    if (config.reset.novideo && !obj.sign) {
+                        toast.warning("拦截视频链接！", "下载功能在播放器右键菜单", "关闭设置【视频拦截】即可恢复正常！")
+                        obj = Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
+                    }
                     url = BLOD.objUrl(url.split("?")[0], obj);
                     url = url.includes("84956560bc028eb7") ? BLOD.urlSign(url, 0, 8) : url;
                     BLOD.pgc = url.includes("pgc") ? true : false;
@@ -571,6 +576,7 @@
                     response.data.playurl_info = null;
                 }
                 hook.push(response);
+                toast.warning("拦截直播间视频流！", "关闭【直播拦截】功能可恢复正常！")
                 debug.debug("XHR重定向", "拦截直播媒体", hook);
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
@@ -667,20 +673,25 @@
                         // 区域限制 + APP限制的DASH似乎缺少码率信息，现默认启用flv以规避，platform用于伪装成APP
                         if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
                         let obj = Object.assign(BLOD.urlObj(xhr.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
-                        if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
-                        else {
+                        if (BLOD.limit == 2) {
+                            toast.info("尝试解除APP限制...")
+                            response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
+                        } else {
                             try {
                                 //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
                                 //e = Array.isArray(e) ? e : [e];
                                 //debug.error("pgc模式出错", ...e)
                                 //try {
+                                toast.info("尝试解除区域限制...")
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                             } catch (e) {
                                 e = Array.isArray(e) ? e : [e];
-                                debug.msg("解除限制失败 ಥ_ಥ", ...e)
+                                toast.error("解除限制失败 ಥ_ಥ");
+                                debug.msg("解除限制失败 ಥ_ಥ", ...e);
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
                                 BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvPlayurl(response) };
+                                toast.success("获取到下载链接！", "详见播放器右键下载菜单");
                                 debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
                                 throw false;
                             }

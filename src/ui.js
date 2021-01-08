@@ -41,6 +41,7 @@
                 BLOD.setValue("config", config);
                 BLOD.reset.accesskey();
                 table.remove();
+                toast.warning("已恢复默认数据", "刷新页面以立即生效");
             }
             for (let key in config.rewrite) this.setTable(table, BLOD.defaultConfig.rewrite[key], config.rewrite[key], key);
             for (let key in config.reset) this.setTable(table, BLOD.defaultConfig.reset[key], config.reset[key], key);
@@ -49,6 +50,7 @@
                 timer = window.setTimeout(() => {
                     table.setAttribute("hidden", "hidden");
                     BLOD.setValue("config", config);
+                    toast.success("设置数据已保存", "部分功能需要刷新页面才会生效！")
                 }, 500);
             }
         }
@@ -68,16 +70,23 @@
             setTable.children[0].innerText = name[1];
             setTable.children[1].onclick = () => {
                 if (setTable.children[1].checked) {
-                    if (key in config.rewrite) config.rewrite[key] = 1;
-                    else config.reset[key] = 1;
-                    if (!config.reset.xhrhook && key != "xhrhook" && BLOD.defaultConfig.reset[key][1].includes("xhrhook")) {
-                        BLOD.debug.msg("启用失败！xhrhook已关闭！", BLOD.defaultConfig.reset[key][0]);
+                    if (key in config.rewrite) {
+                        config.rewrite[key] = 1;
+                        toast.success("启用功能：" + name[1]);
+                    } else {
+                        config.reset[key] = 1;
+                        toast.success("启用功能：" + name[1]);
                     }
                 }
                 else {
-                    if (key in config.rewrite) config.rewrite[key] = 0;
-                    else config.reset[key] = 0;
-                    if (key == "xhrhook") BLOD.debug.msg("xhrhook已关闭，部分功能无法生效！");
+                    if (key in config.rewrite) {
+                        config.rewrite[key] = 0;
+                        toast.success("禁用功能：" + name[1]);
+                    }
+                    else {
+                        config.reset[key] = 0;
+                        toast.success("禁用功能：" + name[1]);
+                    }
                 }
                 if (key == "accesskey") BLOD.reset.accesskey();
             }
