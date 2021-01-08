@@ -35,6 +35,7 @@
                 xhr.open('get', url, true);
                 xhr.withCredentials = true;
                 xhr.onload = () => resolve(xhr.responseText);
+<<<<<<< HEAD
 =======
         /**
          * 异步链接
@@ -55,6 +56,11 @@
                 xhr.onerror = () => {
                     toast.error("method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
+=======
+                xhr.onerror = () => {
+                    toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+>>>>>>> 43b3ef7 (启用toast模块)
                 }
                 xhr.send();
             });
@@ -73,6 +79,7 @@
                 BLOD.xmlhttpRequest({
                     method: "GET",
                     url: url,
+<<<<<<< HEAD
                     headers: headers,
                     onload: (xhr) => {
                         BLOD.GMxhrLog.push([BLOD.timeFormat(new Date()), url, (String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText)]);
@@ -81,6 +88,12 @@
                     onerror: (xhr) => {
                         toast.error("method：GET", "url：" + url, xhr.statusText || "");
                         reject(xhr.statusText || "xhr出错！");
+=======
+                    onload: (xhr) => resolve(xhr.responseText),
+                    onerror: (xhr) => {
+                        toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                        reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+>>>>>>> 43b3ef7 (启用toast模块)
                     }
                 });
             })
@@ -108,8 +121,13 @@
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.responseText);
                 xhr.onerror = () => {
+<<<<<<< HEAD
                     toast.error("method：POST", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
+=======
+                    toast.error("XMLHttpRequest 错误！", "method：POST url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+>>>>>>> 43b3ef7 (启用toast模块)
                 }
                 xhr.send(data);
             });

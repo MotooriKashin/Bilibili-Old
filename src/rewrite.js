@@ -6,10 +6,13 @@
 <<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
+<<<<<<< HEAD
 =======
     const BLOD = window.BLOD; /** @see main*/
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> 5ed92f5 (change css method)
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
 
     class Write {
         constructor() {
@@ -21,10 +24,13 @@
             BLOD.deleteValue("medialist");
             try {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (!BLOD.config.rewrite.av) throw ["未启用旧版av页", location.href];
                 BLOD.playerSetting();
                 if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = abv(BLOD.path[4]);
 =======
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
                 if (!BLOD.config.rewrite.av) return;
                 BLOD.reset.playerSetting();
                 if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4]);
@@ -61,14 +67,18 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 6bab63e (更新标题获取方式)
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·av/BV", ...e) }
 =======
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
             } catch (e) {
                 e = Array.isArray(e) ? e : [e];
                 toast.error(...e);
                 BLOD.debug.error("框架·av/BV", ...e);
             }
+<<<<<<< HEAD
 >>>>>>> 43b3ef7 (启用toast模块)
 =======
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·av/BV", ...e); }
@@ -77,6 +87,8 @@
                 BLOD.reset.uplist();
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
 >>>>>>> a555edd (show up list)
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
         }
         watchlater() {
             try {
@@ -101,7 +113,15 @@
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
                 BLOD.reset.setLike();
                 BLOD.reset.fixSort.watchlater();
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·稍后再看", ...e); }
+=======
+            } catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error(...e);
+                BLOD.debug.error("框架·稍后再看", ...e);
+            }
+>>>>>>> 43b3ef7 (启用toast模块)
         }
         bangumi() {
             try {
@@ -182,7 +202,15 @@
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 >>>>>>> 33c5e60 (重写Bangumi数据)
 
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·Bangumi", ...e); }
+=======
+            } catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error(...e);
+                BLOD.debug.error("框架·Bangumi", ...e);
+            }
+>>>>>>> 43b3ef7 (启用toast模块)
         }
         blackboard() {
             if (BLOD.path[4].startsWith('html5player')) {
@@ -203,9 +231,12 @@
             }
             try {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (!BLOD.config.rewrite.frame) throw ["未启用旧版嵌入播放器", location.href];
                 BLOD.playerSetting();
 =======
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
                 if (!BLOD.config.rewrite.frame) return;
                 BLOD.reset.playerSetting();
 >>>>>>> 43b3ef7 (启用toast模块)
@@ -224,7 +255,15 @@
                     toast.success("嵌入式播放器", "aid：", BLOD.aid, " cid：", BLOD.cid);
                     BLOD.debug.log("嵌入播放器", "aid=", BLOD.aid, " cid=", BLOD.cid);
                 }
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·嵌入", ...e); }
+=======
+            } catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error(...e);
+                BLOD.debug.error("框架·嵌入", ...e);
+            }
+>>>>>>> 43b3ef7 (启用toast模块)
         }
         playlist() {
             BLOD.path.name = "playlist";
@@ -234,6 +273,9 @@
 =======
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("playlist")));
                 toast.warning("播单页相关接口已失效！", "脚本也无法恢复 ಥ_ಥ");
+<<<<<<< HEAD
+>>>>>>> 43b3ef7 (启用toast模块)
+=======
 >>>>>>> 43b3ef7 (启用toast模块)
             }
             if (BLOD.path[4] == "detail") {
@@ -256,6 +298,9 @@
 =======
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("playlistdetail")));
                 toast.warning("无法播单例表！", "这里使用的是一例备份数据以供参考");
+<<<<<<< HEAD
+>>>>>>> 43b3ef7 (启用toast模块)
+=======
 >>>>>>> 43b3ef7 (启用toast模块)
             }
         }
@@ -296,15 +341,19 @@
             }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·主页", ...e) }
 <<<<<<< HEAD
             BLOD.setOnline();
 =======
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
             catch (e) {
                 e = Array.isArray(e) ? e : [e];
                 toast.error(...e);
                 BLOD.debug.error("框架·主页", ...e);
             }
+<<<<<<< HEAD
 >>>>>>> 43b3ef7 (启用toast模块)
 =======
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·主页", ...e); }
@@ -328,6 +377,12 @@
 <<<<<<< HEAD
 =======
                 if (!BLOD.config.rewrite.rank) throw ["未启用排行", location.href];
+=======
+        }
+        rank() {
+            try {
+                if (!BLOD.config.rewrite.rank) return;
+>>>>>>> 43b3ef7 (启用toast模块)
                 BLOD.path.name = "rank";
                 let refer = document.referrer.split("/"), page;
 <<<<<<< HEAD
@@ -384,6 +439,7 @@
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("ranking")));
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·排行", ...e); }
 =======
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
@@ -424,6 +480,13 @@
                 })
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
 >>>>>>> e878ee3 (Update rewrite.js)
+=======
+            catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error(...e);
+                BLOD.debug.error("框架·排行", ...e);
+            }
+>>>>>>> 43b3ef7 (启用toast模块)
         }
     }
 

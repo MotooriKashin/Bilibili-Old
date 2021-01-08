@@ -43,9 +43,13 @@
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
                     debug.log("过滤拦截播放器强制初始化", ...args);
 <<<<<<< HEAD
+<<<<<<< HEAD
                     toast.warning("禁用播放器强制初始化！")
 =======
 >>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
+=======
+                    toast.warning("禁用播放器强制初始化！", "等待视频数据返回...")
+>>>>>>> 43b3ef7 (启用toast模块)
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -1586,10 +1590,14 @@
                         if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
                         let obj = Object.assign(BLOD.urlObj(xhr.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
                         if (BLOD.limit == 2) {
                             toast.info("尝试解除APP限制...")
                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
                         } else {
+<<<<<<< HEAD
                             try {
                                 toast.info("尝试解除区域限制...");
                                 obj.fnval = obj.fnval ? 16 : null;
@@ -1628,18 +1636,23 @@
 =======
                         if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
                         else {
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
                             try {
                                 //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
                                 //e = Array.isArray(e) ? e : [e];
                                 //debug.error("pgc模式出错", ...e)
                                 //try {
+                                toast.info("尝试解除区域限制...")
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                             } catch (e) {
                                 e = Array.isArray(e) ? e : [e];
-                                debug.msg("解除限制失败 ಥ_ಥ", ...e)
+                                toast.error("解除限制失败 ಥ_ಥ");
+                                debug.msg("解除限制失败 ಥ_ಥ", ...e);
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
                                 BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvPlayurl(response) };
+                                toast.success("获取到下载链接！", "详见播放器右键下载菜单");
                                 debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
                                 throw false;
 >>>>>>> 215e079 (修改xhr send hook方法)

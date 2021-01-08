@@ -8,6 +8,9 @@
     const config = BLOD.config;
     const xhr = BLOD.xhr;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
     const toast = BLOD.toast;
     console.debug('import module "reset.js"');
 =======
@@ -448,6 +451,7 @@
                             moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                         }
                     }
+<<<<<<< HEAD
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
                 }
             }, 100);
@@ -513,6 +517,16 @@
 =======
         },   
 >>>>>>> 5afb4d3 (移除在线数据及最新投稿)
+=======
+                    catch (e) {
+                        toast.error("点赞功能出错！", "已打印错误信息到控制台！");
+                        e = Array.isArray(e) ? e : [e];
+                        debug.error("点赞功能", ...e);
+                    }
+                }
+            }, 100);
+        },
+>>>>>>> 43b3ef7 (启用toast模块)
         // 空间注册时间
         setJoinTime: async () => {
             if (!BLOD.mid && !config.reset.jointime) return;
@@ -521,7 +535,11 @@
                 data = BLOD.jsonCheck(data);
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
+<<<<<<< HEAD
                 toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, BLOD.big ? "生日：" + data.card.birthday : "");
+=======
+                // toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday)
+>>>>>>> 43b3ef7 (启用toast模块)
                 debug.log("注册时间", data.card.name, jointime);
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
@@ -591,8 +609,17 @@
                     BLOD.setValue("access_date", Date.now());
                     debug.log("会员授权成功！");
                     toast.success("授权登录成功！", "有效期30天", "届时可能需要重新授权")
+<<<<<<< HEAD
                 }
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("登录鉴权", ...e); }
+=======
+                }
+                catch (e) {
+                    toast.error("授权登录失败！", "已打印错误信息到控制台！");
+                    e = Array.isArray(e) ? e : [e];
+                    debug.error("登录鉴权", ...e);
+                }
+>>>>>>> 43b3ef7 (启用toast模块)
             }
         },
         // 备份播放器设置
@@ -705,6 +732,7 @@
                 }
             }
             debug.log("失效视频", "av" + aid);
+            toast.success("获取失效视频信息成功！", "av" + aid);
             if (cover) msg.target.children[0].children[0].setAttribute("src", cover + "@380w_240h_100Q_1c.webp");
             msg.target.children[0].children[0].setAttribute("alt", title);
             msg.target.children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
@@ -737,6 +765,7 @@
                         if (aid) {
                             // 修复失效视频av号
                             debug.log("失效视频", "av" + aid);
+                            toast.success("获取失效视频信息成功！", "av" + aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                         }
@@ -744,6 +773,7 @@
                             // 修复失效视频bv号
                             aid = small_item[i].getAttribute("data-aid");
                             debug.log("失效视频", aid);
+                            toast.success("获取失效视频信息成功！", aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                         }
@@ -774,6 +804,7 @@
                             if (aid) {
                                 // 修改失效视频av链接
                                 debug.log("失效视频", "av" + aid);
+                                toast.success("获取失效视频信息成功！", "av" + aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             }
@@ -781,6 +812,7 @@
                                 // 修改失效视频bv链接
                                 aid = small_item[i].getAttribute("data-aid");
                                 debug.log("失效视频", aid);
+                                toast.success("获取失效视频信息成功！", aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             }
@@ -1023,7 +1055,15 @@
                         }
                     }, 100);
                 }
+<<<<<<< HEAD
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
+=======
+                catch (e) {
+                    toast.error("重构媒体页出错！", "已打印错误信息到控制台");
+                    e = Array.isArray(e) ? e : [e];
+                    debug.error("收藏模拟", ...e);
+                }
+>>>>>>> 43b3ef7 (启用toast模块)
             }
         },
         // aid变化监听
@@ -1118,7 +1158,15 @@
                             child[4].childNodes[0].href = sort[BLOD.tid][2];
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
+<<<<<<< HEAD
                         catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
+=======
+                        catch (e) {
+                            toast.error("修复分区信息失败！", "已打印错误信息到控制台！");
+                            e = Array.isArray(e) ? e : [e];
+                            debug.error("分区·稍后再看", ...e);
+                        }
+>>>>>>> 43b3ef7 (启用toast模块)
                     }
                 }
             }, 1000);
@@ -1145,7 +1193,11 @@
                 if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){t.triggerSleepCallback()}") {
                     if (!this.clock) {
                         debug.log("阻止直播间挂机检测", ...args);
+<<<<<<< HEAD
 >>>>>>> d098e8a (禁用直播间挂机检测)
+=======
+                        toast.warning("成功阻止直播间挂机检测！");
+>>>>>>> 43b3ef7 (启用toast模块)
                         this.clock++;
                     }
                     return Number.MIN_VALUE;

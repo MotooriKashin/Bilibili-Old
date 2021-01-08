@@ -6,6 +6,7 @@
 (function () {
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
+<<<<<<< HEAD
 
     class Ef2 {
         constructor() {
@@ -114,6 +115,8 @@
         }
     }
     BLOD.ef2 = new Ef2();
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
 
     class Download {
         constructor() {
@@ -244,7 +247,11 @@
                     BLOD.bloburl.xml = "";
                 }
             }
+<<<<<<< HEAD
             if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (toast.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
+=======
+            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (tosat.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
+>>>>>>> 43b3ef7 (启用toast模块)
             top = document.createElement("div");
             top.setAttribute("id", "bili-old-download-table");
             if (BLOD.mdf.mp4) this.addBox(top, BLOD.mdf.mp4, "mp4", "download-mp4");
@@ -257,7 +264,11 @@
             if (BLOD.mdf.xml) this.addBox(top, BLOD.mdf.xml, "其他", "download-xml", "360P");
             document.body.appendChild(top);
             toast.success("成功获取下载视频链接！")
+<<<<<<< HEAD
             toast.info("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
+=======
+            toast.info("请右键复制下载或者右键IDM下载链接","直接复制链接无效！", "直接左键点击无效！")
+>>>>>>> 43b3ef7 (启用toast模块)
             top.onmouseover = () => window.clearTimeout(timer);
             top.onmouseout = () => {
                 timer = window.setTimeout(() => {

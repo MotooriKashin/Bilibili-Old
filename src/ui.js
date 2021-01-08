@@ -100,6 +100,7 @@
                 BLOD.reset.accesskey();
                 table.remove();
                 toast.warning("已恢复默认数据", "刷新页面以立即生效");
+<<<<<<< HEAD
 =======
         /**
          * 绘制设置面板
@@ -117,6 +118,8 @@
                 this.left.children[0].setAttribute("id", "BLOD-UI-menu");
                 this.right.innerHTML = '';
                 for (let key in config.rewrite) { this.checked(key, true) }
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
             }
             table.children[0].children[0].onclick = () => {
                 this.flesh();
@@ -161,6 +164,7 @@
                     toast.warning("禁用功能：" + BLOD.defaultConfig[type][d][1]);
                     config[type][d] = 0;
                     BLOD.setValue("config", config);
+<<<<<<< HEAD
                     dis(div);
                 } else {
                     toast.success("启用功能：" + BLOD.defaultConfig[type][d][1]);
@@ -168,6 +172,9 @@
                     BLOD.setValue("config", config);
 <<<<<<< HEAD
                     toast.warning("设置数据已保存", "部分功能需要刷新页面才会生效！")
+=======
+                    toast.success("设置数据已保存", "部分功能需要刷新页面才会生效！")
+>>>>>>> 43b3ef7 (启用toast模块)
                 }, 500);
             }
         }
@@ -186,6 +193,7 @@
                     en(div);
                 }
             }
+<<<<<<< HEAD
         }
         /**
          * 下载菜单，这里之后可能会定制其他功能
@@ -252,6 +260,18 @@
                         toast.success("代理服务器（东南亚）已保存！", "URL：" + input.value);
                     } else {
                         toast.warning("请输入有效服务器链接！")
+=======
+            setTable.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
+            setTable.children[0].innerText = name[1];
+            setTable.children[1].onclick = () => {
+                if (setTable.children[1].checked) {
+                    if (key in config.rewrite) {
+                        config.rewrite[key] = 1;
+                        toast.success("启用功能：" + name[1]);
+                    } else {
+                        config.reset[key] = 1;
+                        toast.success("启用功能：" + name[1]);
+>>>>>>> 43b3ef7 (启用toast模块)
                     }
                 }
                 commit.onclick = callback;
@@ -305,6 +325,7 @@
                         config.reset[key] = 0;
                         toast.success("禁用功能：" + name[1]);
                     }
+<<<<<<< HEAD
 =======
                 let button = BLOD.addElement("div", {}, right);
 =======
@@ -316,6 +337,8 @@
                     timeout.value = config.timeout;
                     step.value = config.step;
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+>>>>>>> 43b3ef7 (启用toast模块)
                 }
             }
         }
