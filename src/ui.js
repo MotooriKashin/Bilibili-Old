@@ -4,6 +4,7 @@
  */
 (function () {
     const BLOD = window.BLOD;
+    const toast = BLOD.toast;
 
     class Ui {
         constructor() {
