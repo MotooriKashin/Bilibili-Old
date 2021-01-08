@@ -254,48 +254,43 @@ const objUrl = (url, obj) => {
             console.debug('import module "define.js"');
         }
         // 格式化时间
-        timeFormat(time, type) {
-            if (time) {
-                let date = new Date(time),
-                    Y = date.getFullYear() + '-',
-                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
-                    D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ',
-                    h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
-                    m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
-                    s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
-                return type ? Y + M + D + h + m + s : h + m + s;
-            }
+        timeFormat(time = new Date(), type) {
+            let date = new Date(time),
+                Y = date.getFullYear() + '-',
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ',
+                h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
+                m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
+                s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+            return type ? Y + M + D + h + m + s : h + m + s;
         }
         // 格式化存储
-        sizeFormat(size) {
-            if (size) {
-                let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
-                while (dex > 1) {
-                    if (size >= vor) {
-                        size = (size / dex).toFixed(2);
-                        break;
-                    }
-                    dex = dex / 1024;
-                    vor = vor / 1000;
-                    i--;
+        sizeFormat(size = 0) {
+            let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
+            while (dex > 1) {
+                if (size >= vor) {
+                    size = (size / dex).toFixed(2);
+                    break;
                 }
-                return size + unit[i];
+                dex = dex / 1024;
+                vor = vor / 1000;
+                i--;
             }
+            return size + unit[i];
         }
         // 格式化进位
-        unitFormat(num) {
-            if (1 * num) {
-                let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
-                while (dex > 1) {
-                    if (num >= dex) {
-                        num = (num / dex).toFixed(1);
-                        break;
-                    }
-                    dex = dex / 10000;
-                    i--;
+        unitFormat(num = 0) {
+            num = 1 * num || 0;
+            let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
+            while (dex > 1) {
+                if (num >= dex) {
+                    num = (num / dex).toFixed(1);
+                    break;
                 }
-                return num + unit[i];
+                dex = dex / 10000;
+                i--;
             }
+            return num + unit[i];
         }
         // 冒泡排序
         bubbleSort(arr) {
