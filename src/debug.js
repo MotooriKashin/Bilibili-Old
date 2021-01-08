@@ -6,6 +6,60 @@
 (function () {
     const BLOD = window.BLOD;
 
+    // @url https://cdnjs.com/libraries/toastr.js
+    class Toast {
+        constructor() {
+            BLOD.addCss(BLOD.getResourceText("toast"))
+            this.timeout = 4;
+            this.container = document.createElement("div");
+            this.container.setAttribute("id", "toast-container");
+            this.container.setAttribute("class", "toast-top-right");
+        }
+        show(type, ...msg) {
+            if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
+            this.box = document.querySelector("#toast-container");
+            let item = document.createElement("div");
+            item.setAttribute("class", "toast toast-" + type);
+            item.setAttribute("aria-live", "assertive");
+            item.setAttribute("style", "opacity: .0");
+            item = this.box.insertBefore(item, this.box.firstChild);
+            item.appendChild(this.msg(...msg));
+            this.come(item);
+            setTimeout(() => this.quit(item), this.timeout * 1000);
+        }
+        come(item, i = 0) {
+            let timer = setInterval(() => {
+                i++;
+                item.setAttribute("style", "opacity: ." + i);
+                if (i === 8) {
+                    clearInterval(timer);
+                    item.removeAttribute("style");
+                }
+            }, 50)
+        }
+        quit(item, i = 8) {
+            let timer = setInterval(() => {
+                i--;
+                item.setAttribute("style", "opacity: ." + i);
+                if(i === 0) {
+                    clearInterval(timer);
+                    item.remove();
+                    if (!this.box.firstChild) this.box.remove();
+                }
+            }, 50)
+        }
+        msg(...msg) {
+            let div = document.createElement("div");
+            div.setAttribute("class", "toast-message");
+            div.innerHTML = "";
+            msg.forEach(d => {
+                d = String(d);
+                div.innerHTML = div.innerHTML ? div.innerHTML + "<br />" + d : div.innerHTML + d;
+            });
+            return div;
+        }
+    }
+
     class Debug {
         constructor() {
             console.debug('import module "debug.js"');
@@ -13,7 +67,7 @@
         log(...msg) {
             console.log("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
         }
-        error(...msg){
+        error(...msg) {
             console.error("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
         }
         warn(...msg) {
@@ -44,7 +98,7 @@
 
     const exports = () => {
         let debug = new Debug();
-        function makeExports(type){
+        function makeExports(type) {
             return function (...msg) {
                 return debug[type](...msg);
             }
@@ -57,7 +111,23 @@
         method.msg = makeExports("msg");
         return method;
     }
-    
+
+    const toast = () => {
+        let toast = new Toast();
+        function makeExports(type) {
+            return function (...msg) {
+                return toast.show(type, ...msg);
+            }
+        }
+        let method = makeExports("info");
+        method.info = makeExports("info");
+        method.error = makeExports("error");
+        method.success = makeExports("success");
+        method.warning = makeExports("warning");
+        return method;
+    }
+
     BLOD.debug = exports();
+    BLOD.toast = toast();
 
 })()
