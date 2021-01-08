@@ -51,7 +51,7 @@
                 timer = window.setTimeout(() => {
                     table.setAttribute("hidden", "hidden");
                     BLOD.setValue("config", config);
-                    toast.success("设置数据已保存", "部分功能需要刷新页面才会生效！")
+                    toast.warning("设置数据已保存", "部分功能需要刷新页面才会生效！")
                 }, 500);
             }
         }
