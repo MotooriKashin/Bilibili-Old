@@ -816,6 +816,14 @@
                         });
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
+<<<<<<< HEAD
+=======
+                            if(v.pool == 1) {
+                                v.content = v.content.replaceAll('/n', '\n');
+                            }
+                            // 记录弹幕池哈希值
+                            BLOD.hash.push(v.midHash);
+>>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
                             return {
                                 class: v.pool,
                                 color: v.color,
@@ -966,6 +974,11 @@
                             this.response = this.responseText = xml;
                             this.callback();
                             BLOD.xml = xml;
+<<<<<<< HEAD
+=======
+                            BLOD.hash = [];
+                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
+>>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
                         }
                         // 将pakku.js返回的数据转换回xml
                         this.pakku_load_callback[0] = function () {
@@ -1849,5 +1862,9 @@
         }, 10);
         setTimeout(() => clearInterval(timer), 5000);
     }
+<<<<<<< HEAD
 })()
 >>>>>>> 34dad0d (更新protobuf弹幕结构体)
+=======
+})()
+>>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
