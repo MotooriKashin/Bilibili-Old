@@ -38,13 +38,13 @@
                 return a.progress - b.progress;
             });
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
-            attr[5] = 0;
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
                 attr[1] = danmaku[i].mode;
                 attr[2] = danmaku[i].fontsize;
                 attr[3] = danmaku[i].color;
                 attr[4] = danmaku[i].ctime;
+                attr[5] = danmaku[i].pool;
                 attr[6] = danmaku[i].midHash;
                 attr[7] = danmaku[i].idStr;
                 xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>';
@@ -326,10 +326,13 @@
                         Segments.sort((a, b) => a.progress - b.progress);
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
+                            if(v.pool == 1) {
+                                v.content = v.content.replaceAll('/n', '\n');
+                            }
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
                             return {
-                                class: 0,
+                                class: v.pool,
                                 color: v.color,
                                 date: v.ctime,
                                 dmid: v.idStr,
@@ -445,7 +448,7 @@
                         this.respondDanmaku = function (xml) {
                             this.response = this.responseText = xml;
                             this.callback();
-                            BLOD.xml = xml
+                            BLOD.xml = xml;
                             BLOD.hash = [];
                             BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                         }
