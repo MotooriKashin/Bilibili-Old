@@ -3804,12 +3804,20 @@ function Fa() {
                 this.o()
             }
             e.prototype.o = function () {
-                if (1 === this.textData.mode || 4 === this.textData.mode || 5 === this.textData.mode || 6 === this.textData.mode) window.String.prototype.trim || (window.String.prototype.trim = function () {
-                    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
-                }), this.textData.text &&
-                    (this.textData.text = this.textData.text.trim());
+                if (this.textData.class != 1) {
+                    if (1 === this.textData.mode || 4 === this.textData.mode || 5 === this.textData.mode || 6 === this.textData.mode)
+                        window.String.prototype.trim || (window.String.prototype.trim = function () {
+                            return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
+                        }), this.textData.text &&
+                            (this.textData.text = this.textData.text.trim());
+                }
                 var d = this.Ro(this.textData, this.f);
                 this.element = d.Am;
+                if (this.textData.class == 1) 
+                    if(!(this.textData.text.includes("█") || this.textData.text.includes("▂")))
+                        d.Am.style.zIndex = "1001";
+                    else
+                        d.Am.style.zIndex = "1000";
                 this.width = d.width;
                 this.height = d.height;
                 this.textData.bc ? (this.vc = this.f.height, this.cf = this.f.width, this.Wb = d.height, this.Df = d.width, this.gu = this.FK, this.hm = "Y", this.im = "X") : (this.vc = this.f.width, this.cf = this.f.height, this.Wb = d.width, this.Df = d.height, this.gu = this.GK, this.hm = "X", this.im = "Y");
@@ -24692,21 +24700,22 @@ function Fa() {
                 if (0 === h.length) d.$g(b, c), h.push(d);
                 else if (this.xB(b, d, c) || e) d.$g(b, c), this.Gk(h, d);
                 else {
-                    for (e = 0; e < h.length; e++)
-                        if (b = h[e]) {
-                            b = b.bottom + 1;
-                            if (this.f.ak && 6 !== d.textData.mode && 1 > d.textData.gb && b > d.cf * this.f.ak / 100) {
-                                d.rest = -1;
-                                break
-                            }
-                            if (b + d.Df > d.cf * (d.textData.bc ?
-                                1 : this.f.ri ? .85 : 1) - (this.f.Ms || 0)) break;
-                            if (this.xB(b, d, c)) {
-                                d.$g(b, c);
-                                this.Gk(h, d);
-                                return
-                            }
-                        } 0 === this.f.ak || 6 === d.textData.mode || 1 <= d.textData.gb ? this.$g(d, c + 1) : d.rest = -1
+                        for (e = 0; e < h.length; e++)
+                            if (b = h[e]) {
+                                if (d.textData.class != 1)
+                                    b = b.bottom + 1;
+                                if (this.f.ak && 6 !== d.textData.mode && 1 > d.textData.gb && b > d.cf * this.f.ak / 100) {
+                                    d.rest = -1;
+                                    break
+                                }
+                                if (b + d.Df > d.cf * (d.textData.bc ?
+                                    1 : this.f.ri ? .85 : 1) - (this.f.Ms || 0)) break;
+                                if (this.xB(b, d, c)) {
+                                    d.$g(b, c);
+                                    this.Gk(h, d);
+                                    return
+                                }
+                            } 0 === this.f.ak || 6 === d.textData.mode || 1 <= d.textData.gb ? this.$g(d, c + 1) : d.rest = -1
                 }
             };
             e.prototype.Gk = function (d, c) {
