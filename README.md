@@ -198,7 +198,7 @@ Tampermonkey BETA 4.10.6122
 ### 版本历史
 **注：部分功能可能需要先在设置里启用！**  
 - 2021-01-10
-   + 尝试修复“字幕弹幕”显示效果
+   + 尝试修复“字幕弹幕”显示效果 (推荐视频：[av75432](https://www.bilibili.com/video/av75432)，[av41401](https://www.bilibili.com/video/av41401))
 - 2021-01-08
    + 引入[toastr](https://github.com/CodeSeven/toastr/)通知模块，使用原生JavaScript重新实现
 - 2021-01-06
