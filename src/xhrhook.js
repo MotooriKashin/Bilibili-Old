@@ -324,6 +324,14 @@
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
                         Segments.sort((a, b) => a.progress - b.progress);
+                        //将av300000(2012年7月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
+                        if(BLOD.aid < 300000) {
+                            for(let i in Segments) {
+                                if(Segments[i].content.includes('/n')) {
+                                    Segments[i].pool = 1;
+                                }
+                            }
+                        }
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
                             if(v.pool == 1) {
