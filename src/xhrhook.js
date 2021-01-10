@@ -34,9 +34,8 @@
     // proto => xml
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
-            danmaku.sort(function (a, b) {
-                return a.progress - b.progress;
-            });
+            danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
+            danmaku.sort((a, b) => (a.progress - b.progress));
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
@@ -323,19 +322,18 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
-                        Segments.sort((a, b) => Number(a.idStr) - Number(b.idStr));
-                        Segments.sort((a, b) => a.progress - b.progress);
+                        Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
                         //将av300000(2012年7月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
-                        if(BLOD.aid < 300000) {
-                            for(let i in Segments) {
-                                if(Segments[i].content.includes('/n')) {
+                        if (BLOD.aid < 300000) {
+                            for (let i in Segments) {
+                                if (Segments[i].content.includes('/n')) {
                                     Segments[i].pool = 1;
                                 }
                             }
                         }
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
-                            if(v.pool == 1) {
+                            if (v.pool == 1) {
                                 v.content = v.content.replaceAll('/n', '\n');
                             }
                             // 记录弹幕池哈希值
