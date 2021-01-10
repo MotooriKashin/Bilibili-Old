@@ -323,6 +323,7 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
+                        Segments.sort((a, b) => Number(a.idStr) - Number(b.idStr));
                         Segments.sort((a, b) => a.progress - b.progress);
                         //将av300000(2012年7月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
                         if(BLOD.aid < 300000) {
