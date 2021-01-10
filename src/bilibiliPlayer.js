@@ -24702,7 +24702,7 @@ function Fa() {
                 else {
                         for (e = 0; e < h.length; e++)
                             if (b = h[e]) {
-                                if (d.textData.class != 1)
+                                if (d.textData.class != 1 || !d.textData.text.includes("\n"))
                                     b = b.bottom + 1;
                                 if (this.f.ak && 6 !== d.textData.mode && 1 > d.textData.gb && b > d.cf * this.f.ak / 100) {
                                     d.rest = -1;
