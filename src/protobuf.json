@@ -2,270 +2,270 @@
     "nested": {
         "bilibili": {
             "nested": {
+                "DmWebViewReply": {
+                    "fields": {
+                        "state": {
+                            "type": "int32",
+                            "id": 1
+                        },
+                        "text": {
+                            "type": "string",
+                            "id": 2
+                        },
+                        "textSide": {
+                            "type": "string",
+                            "id": 3
+                        },
+                        "dmSge": {
+                            "type": "DmSegConfig",
+                            "id": 4
+                        },
+                        "flag": {
+                            "type": "DanmakuFlagConfig",
+                            "id": 5
+                        },
+                        "specialDms": {
+                            "rule": "repeated",
+                            "type": "string",
+                            "id": 6
+                        },
+                        "checkBox": {
+                            "type": "bool",
+                            "id": 7
+                        },
+                        "count": {
+                            "type": "int64",
+                            "id": 8
+                        },
+                        "commandDms": {
+                            "rule": "repeated",
+                            "type": "CommandDm",
+                            "id": 9
+                        },
+                        "dmSetting": {
+                            "type": "DanmuWebPlayerConfig",
+                            "id": 10
+                        }
+                    }
+                },
                 "CommandDm": {
                     "fields": {
-                        "command": {
-                            "id": 4,
-                            "type": "string"
-                        },
-                        "content": {
-                            "id": 5,
-                            "type": "string"
-                        },
-                        "ctime": {
-                            "id": 7,
-                            "type": "string"
-                        },
-                        "extra": {
-                            "id": 9,
-                            "type": "string"
-                        },
                         "id": {
-                            "id": 1,
-                            "type": "int64"
-                        },
-                        "idStr": {
-                            "id": 10,
-                            "type": "string"
-                        },
-                        "mid": {
-                            "id": 3,
-                            "type": "int64"
-                        },
-                        "mtime": {
-                            "id": 8,
-                            "type": "string"
+                            "type": "int64",
+                            "id": 1
                         },
                         "oid": {
-                            "id": 2,
-                            "type": "int64"
+                            "type": "int64",
+                            "id": 2
                         },
-                        "progress": {
-                            "id": 6,
-                            "type": "int32"
-                        }
-                    }
-                },
-                "DanmakuElem": {
-                    "fields": {
-                        "action": {
-                            "id": 10,
-                            "type": "string"
+                        "mid": {
+                            "type": "int64",
+                            "id": 3
                         },
-                        "attr": {
-                            "id": 13,
-                            "type": "int32"
-                        },
-                        "color": {
-                            "id": 5,
-                            "type": "uint32"
+                        "command": {
+                            "type": "string",
+                            "id": 4
                         },
                         "content": {
-                            "id": 7,
-                            "type": "string"
-                        },
-                        "ctime": {
-                            "id": 8,
-                            "type": "int64"
-                        },
-                        "fontsize": {
-                            "id": 4,
-                            "type": "int32"
-                        },
-                        "id": {
-                            "id": 1,
-                            "type": "int64"
-                        },
-                        "idStr": {
-                            "id": 12,
-                            "type": "string"
-                        },
-                        "midHash": {
-                            "id": 6,
-                            "type": "string"
-                        },
-                        "mode": {
-                            "id": 3,
-                            "type": "int32"
-                        },
-                        "pool": {
-                            "id": 11,
-                            "type": "int32"
+                            "type": "string",
+                            "id": 5
                         },
                         "progress": {
-                            "id": 2,
-                            "type": "int32"
+                            "type": "int32",
+                            "id": 6
                         },
-                        "weight": {
-                            "id": 9,
-                            "type": "int32"
-                        }
-                    }
-                },
-                "DanmakuFlagConfig": {
-                    "fields": {
-                        "recFlag": {
-                            "id": 1,
-                            "type": "int32"
+                        "ctime": {
+                            "type": "string",
+                            "id": 7
                         },
-                        "recSwitch": {
-                            "id": 3,
-                            "type": "int32"
+                        "mtime": {
+                            "type": "string",
+                            "id": 8
                         },
-                        "recText": {
-                            "id": 2,
-                            "type": "string"
-                        }
-                    }
-                },
-                "DanmuWebPlayerConfig": {
-                    "fields": {
-                        "aiLevel": {
-                            "id": 3,
-                            "type": "int32"
+                        "extra": {
+                            "type": "string",
+                            "id": 9
                         },
-                        "aiSwitch": {
-                            "id": 2,
-                            "type": "bool"
-                        },
-                        "blockbottom": {
-                            "id": 6,
-                            "type": "bool"
-                        },
-                        "blockcolor": {
-                            "id": 7,
-                            "type": "bool"
-                        },
-                        "blockscroll": {
-                            "id": 5,
-                            "type": "bool"
-                        },
-                        "blockspecial": {
-                            "id": 8,
-                            "type": "bool"
-                        },
-                        "blocktop": {
-                            "id": 4,
-                            "type": "bool"
-                        },
-                        "bold": {
-                            "id": 18,
-                            "type": "bool"
-                        },
-                        "dmSwitch": {
-                            "id": 1,
-                            "type": "bool"
-                        },
-                        "dmarea": {
-                            "id": 12,
-                            "type": "int32"
-                        },
-                        "dmask": {
-                            "id": 10,
-                            "type": "bool"
-                        },
-                        "drawType": {
-                            "id": 20,
-                            "type": "string"
-                        },
-                        "fontborder": {
-                            "id": 19,
-                            "type": "int32"
-                        },
-                        "fontfamily": {
-                            "id": 17,
-                            "type": "string"
-                        },
-                        "fontsize": {
-                            "id": 14,
-                            "type": "float"
-                        },
-                        "opacity": {
-                            "id": 11,
-                            "type": "float"
-                        },
-                        "preventshade": {
-                            "id": 9,
-                            "type": "bool"
-                        },
-                        "screensync": {
-                            "id": 15,
-                            "type": "bool"
-                        },
-                        "speedplus": {
-                            "id": 13,
-                            "type": "float"
-                        },
-                        "speedsync": {
-                            "id": 16,
-                            "type": "bool"
+                        "idStr": {
+                            "type": "string",
+                            "id": 10
                         }
                     }
                 },
                 "DmSegConfig": {
                     "fields": {
                         "pageSize": {
-                            "id": 1,
-                            "type": "int64"
+                            "type": "int64",
+                            "id": 1
                         },
                         "total": {
-                            "id": 2,
-                            "type": "int64"
+                            "type": "int64",
+                            "id": 2
+                        }
+                    }
+                },
+                "DanmakuFlagConfig": {
+                    "fields": {
+                        "recFlag": {
+                            "type": "int32",
+                            "id": 1
+                        },
+                        "recText": {
+                            "type": "string",
+                            "id": 2
+                        },
+                        "recSwitch": {
+                            "type": "int32",
+                            "id": 3
                         }
                     }
                 },
                 "DmSegMobileReply": {
                     "fields": {
                         "elems": {
-                            "id": 1,
                             "rule": "repeated",
-                            "type": "DanmakuElem"
+                            "type": "DanmakuElem",
+                            "id": 1
                         }
                     }
                 },
-                "DmWebViewReply": {
+                "DanmakuElem": {
                     "fields": {
-                        "checkBox": {
-                            "id": 7,
-                            "type": "bool"
+                        "id": {
+                            "type": "int64",
+                            "id": 1
                         },
-                        "commandDms": {
-                            "id": 9,
-                            "rule": "repeated",
-                            "type": "CommandDm"
+                        "progress": {
+                            "type": "int32",
+                            "id": 2
                         },
-                        "count": {
-                            "id": 8,
-                            "type": "int64"
+                        "mode": {
+                            "type": "int32",
+                            "id": 3
                         },
-                        "dmSetting": {
-                            "id": 10,
-                            "type": "DanmuWebPlayerConfig"
+                        "fontsize": {
+                            "type": "int32",
+                            "id": 4
                         },
-                        "dmSge": {
-                            "id": 4,
-                            "type": "DmSegConfig"
+                        "color": {
+                            "type": "uint32",
+                            "id": 5
                         },
-                        "flag": {
-                            "id": 5,
-                            "type": "DanmakuFlagConfig"
+                        "midHash": {
+                            "type": "string",
+                            "id": 6
                         },
-                        "specialDms": {
-                            "id": 6,
-                            "rule": "repeated",
-                            "type": "string"
+                        "content": {
+                            "type": "string",
+                            "id": 7
                         },
-                        "state": {
-                            "id": 1,
-                            "type": "int32"
+                        "ctime": {
+                            "type": "int64",
+                            "id": 8
                         },
-                        "text": {
-                            "id": 2,
-                            "type": "string"
+                        "weight": {
+                            "type": "int32",
+                            "id": 9
                         },
-                        "textSide": {
-                            "id": 3,
-                            "type": "string"
+                        "action": {
+                            "type": "string",
+                            "id": 10
+                        },
+                        "pool": {
+                            "type": "int32",
+                            "id": 11
+                        },
+                        "idStr": {
+                            "type": "string",
+                            "id": 12
+                        },
+                        "attr": {
+                            "type": "int32",
+                            "id": 13
+                        }
+                    }
+                },
+                "DanmuWebPlayerConfig": {
+                    "fields": {
+                        "dmSwitch": {
+                            "type": "bool",
+                            "id": 1
+                        },
+                        "aiSwitch": {
+                            "type": "bool",
+                            "id": 2
+                        },
+                        "aiLevel": {
+                            "type": "int32",
+                            "id": 3
+                        },
+                        "blocktop": {
+                            "type": "bool",
+                            "id": 4
+                        },
+                        "blockscroll": {
+                            "type": "bool",
+                            "id": 5
+                        },
+                        "blockbottom": {
+                            "type": "bool",
+                            "id": 6
+                        },
+                        "blockcolor": {
+                            "type": "bool",
+                            "id": 7
+                        },
+                        "blockspecial": {
+                            "type": "bool",
+                            "id": 8
+                        },
+                        "preventshade": {
+                            "type": "bool",
+                            "id": 9
+                        },
+                        "dmask": {
+                            "type": "bool",
+                            "id": 10
+                        },
+                        "opacity": {
+                            "type": "float",
+                            "id": 11
+                        },
+                        "dmarea": {
+                            "type": "int32",
+                            "id": 12
+                        },
+                        "speedplus": {
+                            "type": "float",
+                            "id": 13
+                        },
+                        "fontsize": {
+                            "type": "float",
+                            "id": 14
+                        },
+                        "screensync": {
+                            "type": "bool",
+                            "id": 15
+                        },
+                        "speedsync": {
+                            "type": "bool",
+                            "id": 16
+                        },
+                        "fontfamily": {
+                            "type": "string",
+                            "id": 17
+                        },
+                        "bold": {
+                            "type": "bool",
+                            "id": 18
+                        },
+                        "fontborder": {
+                            "type": "int32",
+                            "id": 19
+                        },
+                        "drawType": {
+                            "type": "string",
+                            "id": 20
                         }
                     }
                 }
