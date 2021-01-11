@@ -91,8 +91,8 @@
 个人目前主要使用平台数据如下
 ```
 Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-Google Chrome 87.0.4280.88 (正式版本) （64 位） (cohort: Stable)  
-Tampermonkey BETA 4.10.6122
+Google Chrome 87.0.4280.141 (正式版本) （64 位） (cohort: 87_141_Win)  
+Tampermonkey BETA 4.10.6125
 ```
 平台
 - Firefox 79 及等部分版本的浏览器无法重写旧版播放页面。
@@ -199,6 +199,10 @@ Tampermonkey BETA 4.10.6122
 ---
 ### 版本历史
 **注：部分功能可能需要先在设置里启用！**  
+- 2021-01-12
+   + 修复HDR下载支持
+   + 修复拦截直播间挂机检测
+     *我就想挂后台听音乐，这点要求不过分吧*
 - 2021-01-10
    + 尝试修复“字幕弹幕”显示效果 (推荐视频：[av75432](https://www.bilibili.com/video/av75432)，[av41401](https://www.bilibili.com/video/av41401))
 - 2021-01-08
