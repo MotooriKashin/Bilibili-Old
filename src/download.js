@@ -49,7 +49,7 @@
                     BLOD.bloburl.xml = "";
                 }
             }
-            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (tosat.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
+            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (toast.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
             top = document.createElement("div");
             top.setAttribute("id", "bili-old-download-table");
             if (BLOD.mdf.mp4) this.addBox(top, BLOD.mdf.mp4, "mp4", "download-mp4");
@@ -62,7 +62,7 @@
             if (BLOD.mdf.xml) this.addBox(top, BLOD.mdf.xml, "其他", "download-xml", "360P");
             document.body.appendChild(top);
             toast.success("成功获取下载视频链接！")
-            toast.info("请右键复制下载或者右键IDM下载链接","直接复制链接无效！", "直接左键点击无效！")
+            toast.info("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
             top.onmouseover = () => window.clearTimeout(timer);
             top.onmouseout = () => {
                 timer = window.setTimeout(() => {
