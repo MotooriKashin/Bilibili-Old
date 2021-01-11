@@ -1027,7 +1027,7 @@
             this.setInterval = setInterval;
             this.clock = 0;
             window.setInterval = (...args) => {
-                if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){t.triggerSleepCallback()}") {
+                if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){e.triggerSleepCallback()}") {
                     if (!this.clock) {
                         debug.log("阻止直播间挂机检测", ...args);
                         toast.warning("成功阻止直播间挂机检测！");
