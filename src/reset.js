@@ -39,6 +39,7 @@
                 Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
                 if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("对象捕获", ...e) }
+<<<<<<< HEAD
 =======
             Object.defineProperty(window, "aid", { set: (v) => { BLOD.aid = v }, get: () => { return BLOD.aid } });
             Object.defineProperty(window, "cid", { set: (v) => { BLOD.cid = v }, get: () => { return BLOD.cid } });
@@ -49,6 +50,8 @@
             Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
             if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
 >>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
+=======
+>>>>>>> a895602 (优化通知信息)
         },
         // 原生脚本替换
         oldScript: (str) => {
@@ -452,6 +455,7 @@
                         }
                     }
 <<<<<<< HEAD
+<<<<<<< HEAD
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
                 }
             }, 100);
@@ -523,6 +527,9 @@
                         e = Array.isArray(e) ? e : [e];
                         debug.error("点赞功能", ...e);
                     }
+=======
+                    catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
+>>>>>>> a895602 (优化通知信息)
                 }
             }, 100);
         },
@@ -536,10 +543,14 @@
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, BLOD.big ? "生日：" + data.card.birthday : "");
 =======
                 // toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday)
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                toast(data.card.name + "mid：" + BLOD.mid, "注册时间：" + jointime, BLOD.big ? "生日：" + data.card.birthday : "");
+>>>>>>> a895602 (优化通知信息)
                 debug.log("注册时间", data.card.name, jointime);
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
@@ -614,12 +625,16 @@
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("登录鉴权", ...e); }
 =======
                 }
+<<<<<<< HEAD
                 catch (e) {
                     toast.error("授权登录失败！", "已打印错误信息到控制台！");
                     e = Array.isArray(e) ? e : [e];
                     debug.error("登录鉴权", ...e);
                 }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("登录鉴权", ...e); }
+>>>>>>> a895602 (优化通知信息)
             }
         },
         // 备份播放器设置
@@ -732,7 +747,6 @@
                 }
             }
             debug.log("失效视频", "av" + aid);
-            toast.success("获取失效视频信息成功！", "av" + aid);
             if (cover) msg.target.children[0].children[0].setAttribute("src", cover + "@380w_240h_100Q_1c.webp");
             msg.target.children[0].children[0].setAttribute("alt", title);
             msg.target.children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
@@ -765,7 +779,6 @@
                         if (aid) {
                             // 修复失效视频av号
                             debug.log("失效视频", "av" + aid);
-                            toast.success("获取失效视频信息成功！", "av" + aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                         }
@@ -773,7 +786,6 @@
                             // 修复失效视频bv号
                             aid = small_item[i].getAttribute("data-aid");
                             debug.log("失效视频", aid);
-                            toast.success("获取失效视频信息成功！", aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                         }
@@ -804,7 +816,6 @@
                             if (aid) {
                                 // 修改失效视频av链接
                                 debug.log("失效视频", "av" + aid);
-                                toast.success("获取失效视频信息成功！", "av" + aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             }
@@ -812,7 +823,6 @@
                                 // 修改失效视频bv链接
                                 aid = small_item[i].getAttribute("data-aid");
                                 debug.log("失效视频", aid);
-                                toast.success("获取失效视频信息成功！", aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             }
@@ -876,7 +886,7 @@
                 danmakus.innerText = danmaku;
                 debug.debug("播放", view + " 弹幕", danmaku);
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分集数据", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分集数据", ...e) }
         }
     }
 
@@ -1056,6 +1066,7 @@
                     }, 100);
                 }
 <<<<<<< HEAD
+<<<<<<< HEAD
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
 =======
                 catch (e) {
@@ -1064,6 +1075,9 @@
                     debug.error("收藏模拟", ...e);
                 }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
+>>>>>>> a895602 (优化通知信息)
             }
         },
         // aid变化监听
@@ -1159,6 +1173,7 @@
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
 =======
                         catch (e) {
@@ -1167,6 +1182,9 @@
                             debug.error("分区·稍后再看", ...e);
                         }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e);}
+>>>>>>> a895602 (优化通知信息)
                     }
                 }
             }, 1000);
