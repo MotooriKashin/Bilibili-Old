@@ -37,11 +37,7 @@
                 BLOD.reset.fixSort.video();
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·av/BV", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·av/BV", ...e); }
         }
         watchlater() {
             try {
@@ -52,11 +48,7 @@
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("watchlater")));
                 BLOD.reset.setLike();
                 BLOD.reset.fixSort.watchlater();
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·稍后再看", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·稍后再看", ...e); }
         }
         bangumi() {
             try {
@@ -80,11 +72,7 @@
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·Bangumi", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·Bangumi", ...e); }
         }
         blackboard() {
             if (BLOD.path[4].startsWith('html5player')) {
@@ -111,11 +99,7 @@
                     toast.success("嵌入式播放器", "aid：", BLOD.aid, " cid：", BLOD.cid);
                     BLOD.debug.log("嵌入播放器", "aid=", BLOD.aid, " cid=", BLOD.cid);
                 }
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·嵌入", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·嵌入", ...e); }
         }
         playlist() {
             BLOD.path.name = "playlist";
@@ -175,11 +159,7 @@
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__);
                 BLOD.write(BLOD.getResourceText("index"));
             }
-            catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·主页", ...e);
-            }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·主页", ...e); }
         }
         rank() {
             try {
@@ -203,11 +183,7 @@
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("ranking")));
             }
-            catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·排行", ...e);
-            }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·排行", ...e); }
         }
     }
 
