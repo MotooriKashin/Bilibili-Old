@@ -51,6 +51,7 @@
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 6bab63e (更新标题获取方式)
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·av/BV", ...e) }
 =======
@@ -60,6 +61,9 @@
                 BLOD.debug.error("框架·av/BV", ...e);
             }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·av/BV", ...e); }
+>>>>>>> d0dd290 (优化通知信息)
         }
         watchlater() {
             try {
@@ -81,11 +85,7 @@
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("watchlater")));
                 BLOD.reset.setLike();
                 BLOD.reset.fixSort.watchlater();
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·稍后再看", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·稍后再看", ...e); }
         }
         bangumi() {
             try {
@@ -118,11 +118,7 @@
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 >>>>>>> 33c5e60 (重写Bangumi数据)
 
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·Bangumi", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·Bangumi", ...e); }
         }
         blackboard() {
             if (BLOD.path[4].startsWith('html5player')) {
@@ -154,11 +150,7 @@
                     toast.success("嵌入式播放器", "aid：", BLOD.aid, " cid：", BLOD.cid);
                     BLOD.debug.log("嵌入播放器", "aid=", BLOD.aid, " cid=", BLOD.cid);
                 }
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·嵌入", ...e);
-            }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·嵌入", ...e); }
         }
         playlist() {
             BLOD.path.name = "playlist";
@@ -227,6 +219,7 @@
                 BLOD.write(BLOD.getResourceText("index"));
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·主页", ...e) }
             BLOD.setOnline();
 =======
@@ -236,6 +229,9 @@
                 BLOD.debug.error("框架·主页", ...e);
             }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·主页", ...e); }
+>>>>>>> d0dd290 (优化通知信息)
         }
         rank() {
             try {
@@ -292,11 +288,7 @@
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("ranking")));
             }
-            catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                toast.error(...e);
-                BLOD.debug.error("框架·排行", ...e);
-            }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·排行", ...e); }
         }
     }
 
