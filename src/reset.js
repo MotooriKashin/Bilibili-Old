@@ -29,7 +29,7 @@
                 Object.defineProperty(window, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return BLOD.__playinfo__ }, configurable: true });
                 Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
                 if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
-            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("对象捕获", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("对象捕获", ...e) }
         },
         // 原生脚本替换
         oldScript: (str) => {
@@ -61,7 +61,7 @@
                 }
                 new cut();
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("付费预览", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("付费预览", ...e) }
         },
         // 替换顶栏底栏
         resetSction: async () => {
@@ -158,7 +158,7 @@
                     rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
                 }
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分区·版面", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·版面", ...e) }
         },
         // 修复评论跳转
         fixVideoSeek: (node) => {
@@ -204,7 +204,7 @@
                     node.appendChild(li);
                 }
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分区排行", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区排行", ...e) }
         },
         // 弹幕反查
         danmkuHashId: async (node) => {
@@ -379,11 +379,7 @@
                             moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                         }
                     }
-                    catch (e) {
-                        toast.error("点赞功能出错！", "已打印错误信息到控制台！");
-                        e = Array.isArray(e) ? e : [e];
-                        debug.error("点赞功能", ...e);
-                    }
+                    catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
                 }
             }, 100);
         },
@@ -452,7 +448,7 @@
                 data = BLOD.jsonCheck(data);
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
-                toast(data.card.name, "mid：" + BLOD.mid, "注册时间：" + jointime, BLOD.big ? "生日：" + data.card.birthday : "");
+                toast(data.card.name + "mid：" + BLOD.mid, "注册时间：" + jointime, BLOD.big ? "生日：" + data.card.birthday : "");
                 debug.log("注册时间", data.card.name, jointime);
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
@@ -477,7 +473,7 @@
                     }
                 });
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("注册时间", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("注册时间", ...e) }
         },
         // 会员授权
         accesskey: async () => {
@@ -523,11 +519,7 @@
                     debug.log("会员授权成功！");
                     toast.success("授权登录成功！", "有效期30天", "届时可能需要重新授权")
                 }
-                catch (e) {
-                    toast.error("授权登录失败！", "已打印错误信息到控制台！");
-                    e = Array.isArray(e) ? e : [e];
-                    debug.error("登录鉴权", ...e);
-                }
+                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("登录鉴权", ...e); }
             }
         },
         // 备份播放器设置
@@ -616,7 +608,6 @@
                 }
             }
             debug.log("失效视频", "av" + aid);
-            toast.success("获取失效视频信息成功！", "av" + aid);
             if (cover) msg.target.children[0].children[0].setAttribute("src", cover + "@380w_240h_100Q_1c.webp");
             msg.target.children[0].children[0].setAttribute("alt", title);
             msg.target.children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
@@ -649,7 +640,6 @@
                         if (aid) {
                             // 修复失效视频av号
                             debug.log("失效视频", "av" + aid);
-                            toast.success("获取失效视频信息成功！", "av" + aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                         }
@@ -657,7 +647,6 @@
                             // 修复失效视频bv号
                             aid = small_item[i].getAttribute("data-aid");
                             debug.log("失效视频", aid);
-                            toast.success("获取失效视频信息成功！", aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                         }
@@ -672,7 +661,7 @@
                     }
                 }
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("失效视频·频道", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("失效视频·频道", ...e) }
         },
         // 空间首页展示的失效视频
         home: async (msg) => {
@@ -688,7 +677,6 @@
                             if (aid) {
                                 // 修改失效视频av链接
                                 debug.log("失效视频", "av" + aid);
-                                toast.success("获取失效视频信息成功！", "av" + aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/av" + aid);
                             }
@@ -696,7 +684,6 @@
                                 // 修改失效视频bv链接
                                 aid = small_item[i].getAttribute("data-aid");
                                 debug.log("失效视频", aid);
-                                toast.success("获取失效视频信息成功！", aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
                                 small_item[i].children[0].setAttribute("href", "//www.bilibili.com/video/" + aid);
                             }
@@ -763,7 +750,7 @@
                 danmakus.innerText = danmaku;
                 debug.debug("播放", view + " 弹幕", danmaku);
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分集数据", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分集数据", ...e) }
         }
     }
 
@@ -837,6 +824,7 @@
                 catch (e) {
                     // 跳转失败，清理残余
                     BLOD.setValue("medialist", 0);
+                    toast.error(...e);
                     debug.error(e);
                 }
             }
@@ -911,11 +899,7 @@
                         }
                     }, 100);
                 }
-                catch (e) {
-                    toast.error("重构媒体页出错！", "已打印错误信息到控制台");
-                    e = Array.isArray(e) ? e : [e];
-                    debug.error("收藏模拟", ...e);
-                }
+                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
             }
         },
         // aid变化监听
@@ -1010,11 +994,7 @@
                             child[4].childNodes[0].href = sort[BLOD.tid][2];
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
-                        catch (e) {
-                            toast.error("修复分区信息失败！", "已打印错误信息到控制台！");
-                            e = Array.isArray(e) ? e : [e];
-                            debug.error("分区·稍后再看", ...e);
-                        }
+                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e);}
                     }
                 }
             }, 1000);
