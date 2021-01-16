@@ -113,9 +113,14 @@
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
+<<<<<<< HEAD
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/reset.js
 >>>>>>> 7b4d7b5 (刷新部分模块通知)
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhrhook.js
+=======
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7881f99157024871b0c99c0df5c283b225ff5f9f/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0f5ccdfaa4549ab2c6c4c019f364778e9f5ffc1e/src/xhrhook.js
+>>>>>>> 79be282 (换行符错用)
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/config.json
 =======
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@440bf271bcb4cbf887321e3f74d9ee947e067d20/src/reset.js
