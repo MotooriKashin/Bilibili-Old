@@ -817,9 +817,14 @@
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                             if(v.pool == 1) {
                                 v.content = v.content.replaceAll('/n', '\n');
+=======
+                            if (v.pool == 1) {
+                                v.content = v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\r');
+>>>>>>> 2df4d62 (不再使用replaceAll)
                             }
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
