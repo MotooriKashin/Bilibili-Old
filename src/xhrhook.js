@@ -333,7 +333,7 @@
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
                             if (v.pool == 1) {
-                                v.content = v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\r');
+                                v.content = v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n');
                             }
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
