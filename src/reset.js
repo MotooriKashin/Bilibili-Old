@@ -252,7 +252,7 @@
                 index ? index : index = 0;
                 switch (type) {
                     case "id": node = document.querySelector("#" + node); break;
-                    case "class": node = document.querySelectorAll("." + node)[index]; break;
+                    case "class": node = node.replace(/ /g, "."); node = document.querySelectorAll("." + node)[index]; break;
                     case "tag": node = document.querySelectorAll(node)[index]; break;
                 }
                 if (!node || node.getAttribute("hidden")) return;
