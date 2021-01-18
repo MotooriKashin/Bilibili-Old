@@ -112,6 +112,7 @@
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/xhr.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
+<<<<<<< HEAD
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
 <<<<<<< HEAD
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/reset.js
@@ -131,6 +132,12 @@
 >>>>>>> 3301427 (过滤旧版播放器强制初始化代码)
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7979d10e8bd4234fe1ca7099298c3ab3a5801a70/src/config.json
 >>>>>>> b0d74c9 (修复按时间排序置顶评论楼中楼)
+=======
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c1f59a47d45058ef0691295209ce4ef9eb7e65ef/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@56641b5c11e5b8fb4659d116ad9adb04c38f61f4/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0f5ccdfaa4549ab2c6c4c019f364778e9f5ffc1e/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7dafa1f4d322f02ad7643f723875ed7238dcf591/src/config.json
+>>>>>>> 260cfab (禁用直播间一些影响体验的功能)
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
