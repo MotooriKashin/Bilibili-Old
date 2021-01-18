@@ -251,15 +251,19 @@
             let remove = (node, type, hidden, index) => {
                 index ? index : index = 0;
                 switch (type) {
-                    case "id": node = document.getElementById(node); break;
-                    case "class": node = document.getElementsByClassName(node)[index] ? document.getElementsByClassName(node)[index] : ""; break;
-                    case "tag": node = document.getElementsByTagName(node)[index] ? document.getElementsByTagName(node)[index] : ""; break;
+                    case "id": node = document.querySelector("#" + node); break;
+                    case "class": node = document.querySelectorAll("." + node)[index]; break;
+                    case "tag": node = document.querySelectorAll(node)[index]; break;
                 }
                 if (!node || node.getAttribute("hidden")) return;
                 // 一般能移除的就移除，否则隐藏
                 debug.debug("移除节点", node);
                 hidden ? node.setAttribute("hidden", "hidden") : node.remove();
             }
+            // 移除天选时刻
+            if (config.reset.noanchor) remove("anchor-guest-box-id", "id");
+            // 移除大乱斗
+            if (config.reset.nopkvm) remove("chaos-pk-vm", "id");
             // 隐藏联系客服
             remove("contact-help", "class", true);
             // 移除新版提示
@@ -994,7 +998,7 @@
                             child[4].childNodes[0].href = sort[BLOD.tid][2];
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
-                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e);}
+                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
                     }
                 }
             }, 1000);
@@ -1023,6 +1027,15 @@
             window.setInterval = this.setInterval;
         }
     }
-    BLOD.reset.disableLiveSleep = () => new LiveSleep();
+    BLOD.reset.disableLiveSleep = () => {
+        if (config.reset.nosleep) new LiveSleep();
+    }
+
+    // 禁用直播间p2p上传
+    BLOD.reset.fuckp2p = () => {
+        if (!config.reset.nop2p) return;
+        window.RTCPeerConnection = undefined;
+        window.RTCDataChannel = () => { };
+    }
 
 })()
