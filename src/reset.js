@@ -248,7 +248,7 @@
         },
         // 移除节点
         resetNodes: async () => {
-            let remove = (node, type, hidden, index) => {
+            let remove = (node, type, hidden, index, callback) => {
                 index ? index : index = 0;
                 switch (type) {
                     case "id": node = document.querySelector("#" + node); break;
@@ -259,17 +259,12 @@
                 // 一般能移除的就移除，否则隐藏
                 debug.debug("移除节点", node);
                 hidden ? node.setAttribute("hidden", "hidden") : node.remove();
+                callback && callback();
             }
             // 移除天选时刻
-            if (config.reset.noanchor) {
-                toast.warning("拦截天选时刻！");
-                remove("anchor-guest-box-id", "id");
-            }
+            if (config.reset.noanchor) remove("anchor-guest-box-id", "id", null, null, () => toast.warning("拦截天选时刻！"));
             // 移除大乱斗
-            if (config.reset.nopkvm) {
-                toast.warning("拦截大乱斗！");
-                remove("chaos-pk-vm", "id");
-            }
+            if (config.reset.nopkvm) remove("chaos-pk-vm", "id", null, null, () => toast.warning("拦截大乱斗！"));
             // 隐藏联系客服
             remove("contact-help", "class", true);
             // 移除新版提示
