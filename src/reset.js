@@ -261,9 +261,15 @@
                 hidden ? node.setAttribute("hidden", "hidden") : node.remove();
             }
             // 移除天选时刻
-            if (config.reset.noanchor) remove("anchor-guest-box-id", "id");
+            if (config.reset.noanchor) {
+                toast.warning("拦截天选时刻！");
+                remove("anchor-guest-box-id", "id");
+            }
             // 移除大乱斗
-            if (config.reset.nopkvm) remove("chaos-pk-vm", "id");
+            if (config.reset.nopkvm) {
+                toast.warning("拦截大乱斗！");
+                remove("chaos-pk-vm", "id");
+            }
             // 隐藏联系客服
             remove("contact-help", "class", true);
             // 移除新版提示
@@ -979,6 +985,7 @@
         if (!config.reset.nop2p) return;
         window.RTCPeerConnection = undefined;
         window.RTCDataChannel = () => { };
+        toast.warning("禁用直播间p2p上传！");
     }
 
 })()
