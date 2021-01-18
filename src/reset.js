@@ -314,7 +314,11 @@
                 index ? index : index = 0;
                 switch (type) {
                     case "id": node = document.querySelector("#" + node); break;
+<<<<<<< HEAD
                     case "class": node = node.replace(/ /g, "."); node = document.querySelectorAll("." + node)[index]; break;
+=======
+                    case "class": node = document.querySelectorAll("." + node)[index]; break;
+>>>>>>> 56641b5 (禁用直播间p2p上传)
                     case "tag": node = document.querySelectorAll(node)[index]; break;
                 }
                 if (!node || node.getAttribute("hidden")) return;
@@ -324,9 +328,15 @@
                 callback && callback();
             }
             // 移除天选时刻
+<<<<<<< HEAD
             if (config.reset.noanchor) remove("anchor-guest-box-id", "id", null, null, () => toast.warning("拦截天选时刻！"));
             // 移除大乱斗
             if (config.reset.nopkvm) remove("chaos-pk-vm", "id", null, null, () => toast.warning("拦截大乱斗！"));
+=======
+            if (config.reset.noanchor) remove("anchor-guest-box-id", "id");
+            // 移除大乱斗
+            if (config.reset.nopkvm) remove("chaos-pk-vm", "id");
+>>>>>>> 56641b5 (禁用直播间p2p上传)
             // 隐藏联系客服
             remove("contact-help", "class", true);
             // 隐藏历史记录搜索功能
@@ -1174,6 +1184,7 @@
                         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
 =======
                         catch (e) {
@@ -1185,6 +1196,9 @@
 =======
                         catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e);}
 >>>>>>> a895602 (优化通知信息)
+=======
+                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
+>>>>>>> 56641b5 (禁用直播间p2p上传)
                     }
                 }
             }, 1000);
@@ -1236,6 +1250,9 @@
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 56641b5 (禁用直播间p2p上传)
     BLOD.reset.disableLiveSleep = () => {
         if (config.reset.nosleep) new LiveSleep();
     }
@@ -1245,6 +1262,7 @@
         if (!config.reset.nop2p) return;
         window.RTCPeerConnection = undefined;
         window.RTCDataChannel = () => { };
+<<<<<<< HEAD
         toast.warning("禁用直播间p2p上传！");
     }
 
@@ -1542,6 +1560,9 @@
     }
 =======
     BLOD.reset.disableLiveSleep = () => new LiveSleep();
+=======
+    }
+>>>>>>> 56641b5 (禁用直播间p2p上传)
 
 >>>>>>> d098e8a (禁用直播间挂机检测)
 })()
