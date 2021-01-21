@@ -4,6 +4,7 @@
 // @version      4.1.9
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
+// @homepage     https://github.com/MotooriKashin/Bilibili-Old/
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @match        *://*.bilibili.com/*
 // @connect      bilibili.com
