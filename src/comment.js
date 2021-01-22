@@ -1093,7 +1093,7 @@
                 return e
             },
             g.prototype._createLinkById = function (e) {
-                return 0 === e.indexOf("av") || 0 === e.indexOf("BV1") ? "//www.bilibili.com/video/" + e : 0 === e.indexOf("cv") ? "//www.bilibili.com/read/" + e : void 0
+                return /bv1/i.test(e) ? "//www.bilibili.com/video/" + e : /av/i.test(e) ? "//www.bilibili.com/video/" + e.toLowerCase() : /cv/i.test(e) ? "//www.bilibili.com/read/" + e : void 0
             },
             g.prototype._resolveUrl = function (e) {
                 var n = /(http(s)?:\/\/)?([a-z0-9A-Z]+.)?(bilibili.(com|tv|cn)|biligame.(com|cn)|(bilibiliyoo|im9).com|biliapi.net|b23.tv|sugs.suning.com|kaola.com)(\$|\/|)([/.$*?~=#!%@&-A-Za-z0-9_]*)(?![^<>]*>|[^"]*?<\/a)/gi;
