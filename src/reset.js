@@ -55,11 +55,14 @@
         },
         // 原生脚本替换
         oldScript: (str) => {
-            let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js";
+            let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a2e5af617381dcede25b968815b3b8af1637c515/src/comment.min.js";
             str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
             // CDN未更新前，两种conment.js都匹配一次
             str = str.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 7ce2a49 (update comment.js)
             str = str.replace("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js", comment);
             str = str.replace("//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js");
 =======
