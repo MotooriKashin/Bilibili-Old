@@ -181,6 +181,7 @@
                     d = d.href.split("/");
                     d = d[d.length - 1] || d[d.length - 2];
                     if (config.reset.bvid2av && d.toLowerCase().startsWith('bv')) d = BLOD.abv(d);
+                    e[i].title = e[i].innerHTML;
                     e[i].innerHTML = d;
                 }
             })
