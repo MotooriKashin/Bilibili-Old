@@ -211,17 +211,27 @@
                     })
                 })
             }
+<<<<<<< HEAD
             if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
 <<<<<<< HEAD
         // 重命名评论跳转链接
         renameCommentJump: () => {
+=======
+            BLOD.reset.renameCommentJump();
+        },
+        // 重命名评论跳转链接
+        renameCommentJump: async () => {
+>>>>>>> b883a26 (重命名评论跳转链接)
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
                 if (d.href && !d.href.includes(d.innerText)) {
                     d = d.href.split("/");
                     d = d[d.length - 1] || d[d.length - 2];
+<<<<<<< HEAD
                     if (config.reset.bvid2av && d.toLowerCase().startsWith('bv')) d = BLOD.abv(d);
                     e[i].title = e[i].innerHTML;
+=======
+>>>>>>> b883a26 (重命名评论跳转链接)
                     e[i].innerHTML = d;
                 }
             })
@@ -680,7 +690,10 @@
                     });
                     mas = mas.join("/");
                     if (!obj) return mas;
+<<<<<<< HEAD
                     if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
+=======
+>>>>>>> b883a26 (重命名评论跳转链接)
                     // 参数清理
                     parameters.forEach(d => {
                         obj[d] = null;
