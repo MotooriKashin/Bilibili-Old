@@ -447,7 +447,7 @@
                     BLOD.deleteValue("access_date");
                     let page = document.createElement("iframe");
                     page.setAttribute("style", "display: none;");
-                    page.setAttribute("src", BLOD.objUrl("https://www.biliplus.com/login?act=logout"));
+                    page.setAttribute("src", "https://www.biliplus.com/login?act=logout");
                     document.body.appendChild(page);
                     setTimeout(() => { page.remove() }, 3000);
                     debug.log("取消会员授权");
