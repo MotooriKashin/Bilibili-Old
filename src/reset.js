@@ -212,6 +212,7 @@
                 })
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
 <<<<<<< HEAD
@@ -223,15 +224,25 @@
         // 重命名评论跳转链接
         renameCommentJump: async () => {
 >>>>>>> b883a26 (重命名评论跳转链接)
+=======
+            if (config.reset.commentjump) BLOD.reset.renameCommentJump();
+        },
+        // 重命名评论跳转链接
+        renameCommentJump: () => {
+>>>>>>> 21becf6 (主动转化av号)
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
                 if (d.href && !d.href.includes(d.innerText)) {
                     d = d.href.split("/");
                     d = d[d.length - 1] || d[d.length - 2];
 <<<<<<< HEAD
+<<<<<<< HEAD
                     if (config.reset.bvid2av && d.toLowerCase().startsWith('bv')) d = BLOD.abv(d);
                     e[i].title = e[i].innerHTML;
 =======
 >>>>>>> b883a26 (重命名评论跳转链接)
+=======
+                    if (config.reset.bvid2av && d.toLowerCase().startsWith('bv')) d = BLOD.abv(d);
+>>>>>>> 21becf6 (主动转化av号)
                     e[i].innerHTML = d;
                 }
             })
