@@ -628,6 +628,7 @@
         }
         // 禁用防挡字幕
         playerso(obj) {
+            if (BLOD.preventshade) return;
             let response = obj.responseText;
             if (response.includes("<bottom>1</bottom>")) {
                 response = response.replace("<bottom>1</bottom>", "<bottom>0</bottom>");
