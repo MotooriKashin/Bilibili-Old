@@ -1476,6 +1476,7 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("播放通知", ...e) }
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 禁用防挡字幕
 =======
         /**
@@ -1485,6 +1486,10 @@
 >>>>>>> 6a3a64a (BigInt polyfill)
         playerso(obj) {
             if (BLOD.preventshade) return;
+=======
+        // 禁用防挡字幕
+        playerso(obj) {
+>>>>>>> d635135 (禁用防挡字幕)
             let response = obj.responseText;
             if (response.includes("<bottom>1</bottom>")) {
                 response = response.replace("<bottom>1</bottom>", "<bottom>0</bottom>");
@@ -1494,12 +1499,15 @@
             }
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 处理番剧信息数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 6a3a64a (BigInt polyfill)
+=======
+>>>>>>> d635135 (禁用防挡字幕)
         status(obj) {
             try {
                 let response = BLOD.jsonCheck(obj.responseText);
