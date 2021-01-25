@@ -422,6 +422,10 @@
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.status(this) });
                     url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season/user/status', 'api.bilibili.com/pgc/view/web/season/user/status');
                 }
+                // 禁用防挡字幕
+                if (url.includes('api.bilibili.com/x/player.so')) {
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playerso(this) });
+                }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
                     obj.fourk = obj.sign ? null : 1;
@@ -621,6 +625,16 @@
                 Object.defineProperty(obj, 'responseXML', { writable: true });
                 obj.responseXML = responseXML;
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("播放通知", ...e) }
+        }
+        // 禁用防挡字幕
+        playerso(obj) {
+            let response = obj.responseText;
+            if (response.includes("<bottom>1</bottom>")) {
+                response = response.replace("<bottom>1</bottom>", "<bottom>0</bottom>");
+                Object.defineProperty(obj, 'response', { writable: true });
+                Object.defineProperty(obj, 'responseText', { writable: true });
+                obj.response = obj.responseText = response;
+            }
         }
         status(obj) {
             try {
