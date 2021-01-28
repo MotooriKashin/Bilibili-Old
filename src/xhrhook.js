@@ -226,6 +226,7 @@
         }
 <<<<<<< HEAD
         getIdxs(url) {
+<<<<<<< HEAD
             BLOD.xhr(url, 'arraybuffer', { 'Range': 'bytes=0-6000' }, false);
 =======
         /**
@@ -251,10 +252,34 @@
             let arr = [];
             audio.forEach(d => {
                 if (d.id == 30232 || d.id == 30280 || d.id == 30216) arr.push(d);
+=======
+            return new Promise((resolve, reject) => {
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', url.replace('http', 'https'), true);
+                xhr.setRequestHeader('Range', 'bytes=0-6000');
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = () => resolve(xhr.response);
+                xhr.onerror = () => {
+                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                }
+                xhr.send();
+>>>>>>> 3a04522 (过滤问题音频)
             })
             return arr;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        fixAudio(audio) {
+            // 多余的音频会造成DASH闪退
+            let arr = [];
+            audio.forEach(d => {
+                if (d.id == 30232 || d.id == 30280 || d.id == 30216) arr.push(d);
+            })
+            return arr;
+        }
+>>>>>>> 3a04522 (过滤问题音频)
         // APP端playurl
 =======
         /**
@@ -268,7 +293,10 @@
                 app.dash.audio = this.fixAudio(app.dash.audio);
                 return app;
             }
+<<<<<<< HEAD
             toast("重构DASH数据中...");
+=======
+>>>>>>> 3a04522 (过滤问题音频)
             for (let key in app) this.playurl[key] = app[key];
             // duration向上取整
             this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
@@ -354,7 +382,10 @@
                 if (hev[i]) video.push(hev[i]);
             }
             this.playurl.dash.video = video;
+<<<<<<< HEAD
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
+=======
+>>>>>>> 3a04522 (过滤问题音频)
             return this.playurl;
         }
 <<<<<<< HEAD
@@ -1810,6 +1841,7 @@
                             try {
                                 toast.info("尝试解除区域限制...");
                                 obj.fnval = obj.fnval ? 16 : null;
+<<<<<<< HEAD
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                                 let reBuildPlayerurl = new ReBuildPlayerurl();
@@ -1849,8 +1881,12 @@
 >>>>>>> 43b3ef7 (启用toast模块)
                             try {
                                 toast.info("尝试解除区域限制...")
+=======
+>>>>>>> 3a04522 (过滤问题音频)
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                let reBuildPlayerurl = new ReBuildPlayerurl();
+                                response = await reBuildPlayerurl.appPlayurl(response);
                             } catch (e) {
                                 e = Array.isArray(e) ? e : [e];
                                 toast.error("解除限制失败 ಥ_ಥ");
