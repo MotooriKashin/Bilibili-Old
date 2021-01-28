@@ -116,28 +116,28 @@
             }
             this.codecs = {
                 default: {
-                    30112: 'avc1.640028',  // 1080P+
-                    30102: 'hev1.1.6.L120.90',  // HEVC 1080P+
-                    30080: 'avc1.640028',  // 1080P
-                    30077: 'hev1.1.6.L120.90',  // HEVC 1080P
-                    30064: 'avc1.64001F',  // 720P
-                    30066: 'hev1.1.6.L120.90',  // HEVC 720P
-                    30032: 'avc1.64001E',  // 480P
-                    30033: 'hev1.1.6.L120.90',  // HEVC 480P
-                    30011: 'hev1.1.6.L120.90',  // HEVC 360P
-                    30016: 'avc1.64001E',  // 360P
-                    30280: 'mp4a.40.2',  // 高码音频
-                    30232: 'mp4a.40.2',  // 中码音频
-                    30216: 'mp4a.40.2',  // 低码音频
+                    30112: 'avc1.640028', // 1080P+
+                    30102: 'hev1.1.6.L120.90', // HEVC 1080P+
+                    30080: 'avc1.640028', // 1080P
+                    30077: 'hev1.1.6.L120.90', // HEVC 1080P
+                    30064: 'avc1.64001F', // 720P
+                    30066: 'hev1.1.6.L120.90', // HEVC 720P
+                    30032: 'avc1.64001E', // 480P
+                    30033: 'hev1.1.6.L120.90', // HEVC 480P
+                    30011: 'hev1.1.6.L120.90', // HEVC 360P
+                    30016: 'avc1.64001E', // 360P
+                    30280: 'mp4a.40.2', // 高码音频
+                    30232: 'mp4a.40.2', // 中码音频
+                    30216: 'mp4a.40.2', // 低码音频
                 },
                 app: {
-                    30016: 'avc1.64001E',  // APP源 360P
-                    30032: 'avc1.64001F',  // APP源 480P
-                    30064: 'avc1.640028',  // APP源 720P
-                    30080: 'avc1.640032',  // APP源 1080P
-                    30216: 'mp4a.40.2',  // APP源 低码音频
-                    30232: 'mp4a.40.2',  // APP源 中码音频
-                    30280: 'mp4a.40.2'  // APP源 高码音频 
+                    30016: 'avc1.64001E', // APP源 360P
+                    30032: 'avc1.64001F', // APP源 480P
+                    30064: 'avc1.640028', // APP源 720P
+                    30080: 'avc1.640032', // APP源 1080P
+                    30216: 'mp4a.40.2', // APP源 低码音频
+                    30232: 'mp4a.40.2', // APP源 中码音频
+                    30280: 'mp4a.40.2' // APP源 高码音频 
                 }
             }
             this.frameRate = {
@@ -153,27 +153,29 @@
                 30016: '16000/672'
             }
             this.resolution = {
-                30112: [1920, 1080],  // 1080P+
-                30102: [1920, 1080],  // HEVC 1080P+
-                30080: [1920, 1080],  // 1080P
-                30077: [1920, 1080],  // HEVC 1080P
-                30064: [1280, 720],  // 720P
-                30066: [1280, 720],  // HEVC 720P
-                30032: [852, 480],  // 480P
-                30033: [852, 480],  // HEVC 480P
-                30011: [640, 360],  // HEVC 360P
-                30016: [640, 360],  // 360P
+                30112: [1920, 1080], // 1080P+
+                30102: [1920, 1080], // HEVC 1080P+
+                30080: [1920, 1080], // 1080P
+                30077: [1920, 1080], // HEVC 1080P
+                30064: [1280, 720], // 720P
+                30066: [1280, 720], // HEVC 720P
+                30032: [852, 480], // 480P
+                30033: [852, 480], // HEVC 480P
+                30011: [640, 360], // HEVC 360P
+                30016: [640, 360], // 360P
             }
         }
         getIdxs(url) {
             return new Promise((resolve, reject) => {
+                // APP端媒体流需修改user-agent、referer
                 BLOD.xmlhttpRequest({
                     method: "GET",
                     url: url,
                     responseType: 'arraybuffer',
                     headers: {
-                        'Range': 'bytes=0-6000',
-                        'user-agent': 'Bilibili Freedoooooom/MarkII'
+                        // 另需referer不存在（GM_xmlhttpRequest默认就是）
+                        'Range': 'bytes=0-6000', // 取前6000字节以查找sidx
+                        'user-agent': 'Bilibili Freedoooooom/MarkII' // APP端UA
                     },
                     onload: (xhr) => resolve(xhr.response),
                     onerror: (xhr) => {
@@ -183,28 +185,35 @@
                 });
             })
         }
+        // APP端playurl
         async appPlayurl(app) {
             for (let key in this.playurl) this.playurl[key] = app[key];
+            // duration向上取整
             this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
+            // 构造Promise序列以同时获取所有DASH媒体segment数据
+            // 本应由播放器自行获取，B站官方称之为【首帧优化】却在缺失时直接报错导致播放器无法正常载入视频
             let arr = [];
             this.playurl.dash.video.forEach((d, i, e) => {
                 arr.push((async (d) => {
-                    BLOD.sidx = BLOD.sidx || {};
+                    BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                    if (!BLOD.sidx[id]) {
+                    if (!BLOD["sidx" + String(BLOD.cid)][id]) {
                         let data = new Uint8Array(await this.getIdxs(d.base_url));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                        // 首个“sidx”出现4字节之前的部分为索引奇石点
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                        // 首个“mooc”出现前5字节结束索引
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
-                        BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
+                        BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
                     }
                     d.segment_base = {
-                        initialization: BLOD.sidx[id][0],
-                        index_range: BLOD.sidx[id][1]
+                        initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                        index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
                     };
                     d.SegmentBase = {
-                        Initialization: BLOD.sidx[id][0],
-                        indexRange: BLOD.sidx[id][1]
+                        Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                        indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
                     }
                     d.backupUrl = d.backup_url;
                     d.baseUrl = d.base_url;
@@ -219,22 +228,22 @@
             })
             this.playurl.dash.audio.forEach((d, i, e) => {
                 arr.push((async (d) => {
-                    BLOD.sidx = BLOD.sidx || {};
+                    BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                    if (!BLOD.sidx[id]) {
+                    if (!BLOD["sidx" + String(BLOD.cid)][id]) {
                         let data = new Uint8Array(await this.getIdxs(d.base_url));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
-                        BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
                     }
                     d.segment_base = {
-                        initialization: BLOD.sidx[id][0],
-                        index_range: BLOD.sidx[id][1]
+                        initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                        index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
                     };
                     d.SegmentBase = {
-                        Initialization: BLOD.sidx[id][0],
-                        indexRange: BLOD.sidx[id][1]
+                        Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                        indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
                     }
                     d.backupUrl = d.backup_url;
                     d.baseUrl = d.base_url;
@@ -245,6 +254,7 @@
             await Promise.all(arr);
             return this.playurl;
         }
+        // Thailand playurl
         async ogvPlayurl(ogv) {
             this.playurl.quality = ogv.data.video_info.quality;
             let num = this.playurl.accept_quality[this.playurl.quality];
@@ -263,23 +273,23 @@
             ogv.data.video_info.stream_list.forEach(d => {
                 if (d.dash_video && d.dash_video.base_url) {
                     arr.push((async (d) => {
-                        BLOD.sidx = BLOD.sidx || {};
+                        BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                         let id = d.dash_video.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                        if (!BLOD.sidx[id]) {
+                        if (!BLOD["sidx" + String(BLOD.cid)][id]) {
                             let data = new Uint8Array(await this.getIdxs(d.dash_video.base_url));
                             let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                             let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                             let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
-                            BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                            BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
                         }
                         this.playurl.dash.video.push({
                             SegmentBase: {
-                                Initialization: BLOD.sidx[id][0],
-                                indexRange: BLOD.sidx[id][1]
+                                Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                                indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
                             },
                             segment_base: {
-                                initialization: BLOD.sidx[id][0],
-                                index_range: BLOD.sidx[id][1]
+                                initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                                index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
                             },
                             backupUrl: [],
                             backup_url: [],
@@ -306,23 +316,23 @@
             })
             ogv.data.video_info.dash_audio.forEach(d => {
                 arr.push((async (d) => {
-                    BLOD.sidx = BLOD.sidx || {};
+                    BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                    if (!BLOD.sidx[id]) {
+                    if (!BLOD["sidx" + String(BLOD.cid)][id]) {
                         let data = new Uint8Array(await this.getIdxs(d.base_url));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
-                        BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
                     }
                     this.playurl.dash.audio.push({
                         SegmentBase: {
-                            Initialization: BLOD.sidx[id][0],
-                            indexRange: BLOD.sidx[id][1]
+                            Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                            indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
                         },
                         segment_base: {
-                            initialization: BLOD.sidx[id][0],
-                            index_range: BLOD.sidx[id][1]
+                            initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                            index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
                         },
                         backupUrl: [],
                         backup_url: [],
