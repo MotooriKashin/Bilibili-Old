@@ -167,27 +167,33 @@
         }
         getIdxs(url) {
             return new Promise((resolve, reject) => {
-                // APP端媒体流需修改user-agent、referer
-                BLOD.xmlhttpRequest({
-                    method: "GET",
-                    url: url,
-                    responseType: 'arraybuffer',
-                    headers: {
-                        // 另需referer不存在（GM_xmlhttpRequest默认就是）
-                        'Range': 'bytes=0-6000', // 取前6000字节以查找sidx
-                        'user-agent': 'Bilibili Freedoooooom/MarkII' // APP端UA
-                    },
-                    onload: (xhr) => resolve(xhr.response),
-                    onerror: (xhr) => {
-                        toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                        reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
-                    }
-                });
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', url.replace('http', 'https'), true);
+                xhr.setRequestHeader('Range', 'bytes=0-6000');
+                xhr.responseType = 'arraybuffer';
+                xhr.onload = () => resolve(xhr.response);
+                xhr.onerror = () => {
+                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                }
+                xhr.send();
             })
+        }
+        fixAudio(audio) {
+            // 多余的音频会造成DASH闪退
+            let arr = [];
+            audio.forEach(d => {
+                if (d.id == 30232 || d.id == 30280 || d.id == 30216) arr.push(d);
+            })
+            return arr;
         }
         // APP端playurl
         async appPlayurl(app) {
             if (app.durl) return app;
+            if (app.dash.duration) {
+                app.dash.audio = this.fixAudio(app.dash.audio);
+                return app;
+            }
             for (let key in app) this.playurl[key] = app[key];
             // duration向上取整
             this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
@@ -229,6 +235,7 @@
                     d.startWithSAP = d.start_with_sap = d.startWithSAP || d.start_with_sap || 1;
                 })(e[i]))
             })
+            this.playurl.dash.audio = this.fixAudio(this.playurl.dash.audio);
             this.playurl.dash.audio.forEach((d, i, e) => {
                 arr.push((async (d) => {
                     BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
@@ -256,6 +263,19 @@
                 })(e[i]))
             })
             if (arr[0]) await Promise.all(arr);
+
+            // video排序
+            let avc = [], hev = [], video = [];
+            this.playurl.dash.video.forEach(d => {
+                if (d.codecid == 7) avc.push(d);
+                else hev.push(d);
+            })
+            let length = avc.length > hev.length ? avc.length : hev.length;
+            for (let i = length - 1; i >= 0; i--) {
+                if (avc[i]) video.push(avc[i]);
+                if (hev[i]) video.push(hev[i]);
+            }
+            this.playurl.dash.video = video;
             return this.playurl;
         }
         // Thailand playurl
@@ -362,19 +382,6 @@
                 })(d))
             })
             await Promise.all(arr);
-
-            // video排序
-            let avc = [], hev = [], arr = [];
-            this.playurl.dash.video.forEach(d => {
-                if (d.codecid == 7) avc.push(d);
-                else hev.push(d);
-            })
-            let length = avc.length > hev.length ? avc.length : hev.length;
-            for (let i = length - 1; i >= 0; i--) {
-                if (avc[i]) arr.push(avc[i]);
-                if (hev[i]) arr.push(hev[i]);
-            }
-            this.playurl.dash.video = arr;
             return this.playurl;
         }
     }
@@ -1050,9 +1057,11 @@
                         } else {
                             try {
                                 toast.info("尝试解除区域限制...");
-                                // obj.fnval = obj.fnval ? 16 : null;
+                                obj.fnval = obj.fnval ? 16 : null;
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
+                                let reBuildPlayerurl = new ReBuildPlayerurl();
+                                response = await reBuildPlayerurl.appPlayurl(response);
                             } catch (e) {
                                 e = Array.isArray(e) ? e : [e];
                                 toast.error("解除限制失败 ಥ_ಥ");
