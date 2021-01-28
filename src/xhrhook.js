@@ -61,6 +61,9 @@
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9f51f48 (reBuildPlayerurl)
 
     // 重构APP端playurl，result/data上层目录需另外构建
     // [@url] https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
@@ -146,6 +149,7 @@
             }
             this.codecs = {
                 default: {
+<<<<<<< HEAD
                     30112: 'avc1.640028', // 1080P+
                     30102: 'hev1.1.6.L120.90', // HEVC 1080P+
                     30080: 'avc1.640028', // 1080P
@@ -168,6 +172,30 @@
                     30216: 'mp4a.40.2', // APP源 低码音频
                     30232: 'mp4a.40.2', // APP源 中码音频
                     30280: 'mp4a.40.2' // APP源 高码音频 
+=======
+                    30112: 'avc1.640028',  // 1080P+
+                    30102: 'hev1.1.6.L120.90',  // HEVC 1080P+
+                    30080: 'avc1.640028',  // 1080P
+                    30077: 'hev1.1.6.L120.90',  // HEVC 1080P
+                    30064: 'avc1.64001F',  // 720P
+                    30066: 'hev1.1.6.L120.90',  // HEVC 720P
+                    30032: 'avc1.64001E',  // 480P
+                    30033: 'hev1.1.6.L120.90',  // HEVC 480P
+                    30011: 'hev1.1.6.L120.90',  // HEVC 360P
+                    30016: 'avc1.64001E',  // 360P
+                    30280: 'mp4a.40.2',  // 高码音频
+                    30232: 'mp4a.40.2',  // 中码音频
+                    30216: 'mp4a.40.2',  // 低码音频
+                },
+                app: {
+                    30016: 'avc1.64001E',  // APP源 360P
+                    30032: 'avc1.64001F',  // APP源 480P
+                    30064: 'avc1.640028',  // APP源 720P
+                    30080: 'avc1.640032',  // APP源 1080P
+                    30216: 'mp4a.40.2',  // APP源 低码音频
+                    30232: 'mp4a.40.2',  // APP源 中码音频
+                    30280: 'mp4a.40.2'  // APP源 高码音频 
+>>>>>>> 9f51f48 (reBuildPlayerurl)
                 }
             }
             this.frameRate = {
@@ -183,6 +211,7 @@
                 30016: '16000/672'
             }
             this.resolution = {
+<<<<<<< HEAD
                 30112: [1920, 1080], // 1080P+
                 30102: [1920, 1080], // HEVC 1080P+
                 30080: [1920, 1080], // 1080P
@@ -352,11 +381,119 @@
 
             this.playurl.dash.duration = Math.ceil(this.playurl.timelength / 1000);
             this.playurl.dash.minBufferTime = this.playurl.dash.min_buffer_time = 1.5;
+=======
+                30112: [1920, 1080],  // 1080P+
+                30102: [1920, 1080],  // HEVC 1080P+
+                30080: [1920, 1080],  // 1080P
+                30077: [1920, 1080],  // HEVC 1080P
+                30064: [1280, 720],  // 720P
+                30066: [1280, 720],  // HEVC 720P
+                30032: [852, 480],  // 480P
+                30033: [852, 480],  // HEVC 480P
+                30011: [640, 360],  // HEVC 360P
+                30016: [640, 360],  // 360P
+            }
+        }
+        getIdxs(url) {
+            return new Promise((resolve, reject) => {
+                BLOD.xmlhttpRequest({
+                    method: "GET",
+                    url: url,
+                    responseType: 'arraybuffer',
+                    headers: {
+                        'Range': 'bytes=0-6000',
+                        'user-agent': 'Bilibili Freedoooooom/MarkII'
+                    },
+                    onload: (xhr) => resolve(xhr.response),
+                    onerror: (xhr) => {
+                        toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
+                        reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                    }
+                });
+            })
+        }
+        async appPlayurl(app) {
+            for (let key in this.playurl) this.playurl[key] = app[key];
+            this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
+            let arr = [];
+            this.playurl.dash.video.forEach((d, i, e) => {
+                arr.push((async (d) => {
+                    BLOD.sidx = BLOD.sidx || {};
+                    let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                    if (!BLOD.sidx[id]) {
+                        let data = new Uint8Array(await this.getIdxs(d.base_url));
+                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                        BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                    }
+                    d.segment_base = {
+                        initialization: BLOD.sidx[id][0],
+                        index_range: BLOD.sidx[id][1]
+                    };
+                    d.SegmentBase = {
+                        Initialization: BLOD.sidx[id][0],
+                        indexRange: BLOD.sidx[id][1]
+                    }
+                    d.backupUrl = d.backup_url;
+                    d.baseUrl = d.base_url;
+                    d.codecs = this.codecs.app[id] || this.codecs.default[id];;
+                    d.frameRate = d.frame_rate = this.frameRate[id];
+                    d.height = this.resolution[id][1];
+                    d.width = this.resolution[id][0];
+                    d.mimeType = d.mime_type = 'video/mp4';
+                    d.sar = "1:1";
+                    d.startWithSAP = d.start_with_sap = 1;
+                })(e[i]))
+            })
+            this.playurl.dash.audio.forEach((d, i, e) => {
+                arr.push((async (d) => {
+                    BLOD.sidx = BLOD.sidx || {};
+                    let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                    if (!BLOD.sidx[id]) {
+                        let data = new Uint8Array(await this.getIdxs(d.base_url));
+                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                        BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                    }
+                    d.segment_base = {
+                        initialization: BLOD.sidx[id][0],
+                        index_range: BLOD.sidx[id][1]
+                    };
+                    d.SegmentBase = {
+                        Initialization: BLOD.sidx[id][0],
+                        indexRange: BLOD.sidx[id][1]
+                    }
+                    d.backupUrl = d.backup_url;
+                    d.baseUrl = d.base_url;
+                    d.codecs = this.codecs.app[id] || this.codecs.default[id];
+                    d.mimeType = d.mime_type = 'audio/mp4';
+                })(e[i]))
+            })
+            await Promise.all(arr);
+            return this.playurl;
+        }
+        async ogvPlayurl(ogv) {
+            this.playurl.quality = ogv.data.video_info.quality;
+            let num = this.playurl.accept_quality[this.playurl.quality];
+            this.playurl.format = this.playurl.accept_format.split(",")[num];
+            this.playurl.timelength = ogv.data.video_info.timelength.
+
+                this.playurl.accept_quality.splice(0, num);
+            this.playurl.support_formats.splice(0, num);
+            this.playurl.accept_format = this.playurl.accept_format.split(",");
+            this.playurl.accept_format.splice(num, 1);
+            this.playurl.accept_format = this.playurl.accept_format.join(",");
+
+            this.playurl.dash.duration = Math.ceil(this.playurl.timelength / 1000);
+>>>>>>> 9f51f48 (reBuildPlayerurl)
 
             let arr = [];
             ogv.data.video_info.stream_list.forEach(d => {
                 if (d.dash_video && d.dash_video.base_url) {
                     arr.push((async (d) => {
+<<<<<<< HEAD
                         BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                         let id = d.dash_video.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                         if (!BLOD["sidx" + String(BLOD.cid)][id]) {
@@ -375,6 +512,25 @@
                             segment_base: {
                                 initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
                                 index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
+=======
+                        BLOD.sidx = BLOD.sidx || {};
+                        let id = d.dash_video.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                        if (!BLOD.sidx[id]) {
+                            let data = new Uint8Array(await this.getIdxs(d.dash_video.base_url));
+                            let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                            let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                            let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                            BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        }
+                        this.playurl.dash.video.push({
+                            SegmentBase: {
+                                Initialization: BLOD.sidx[id][0],
+                                indexRange: BLOD.sidx[id][1]
+                            },
+                            segment_base: {
+                                initialization: BLOD.sidx[id][0],
+                                index_range: BLOD.sidx[id][1]
+>>>>>>> 9f51f48 (reBuildPlayerurl)
                             },
                             backupUrl: [],
                             backup_url: [],
@@ -401,6 +557,7 @@
             })
             ogv.data.video_info.dash_audio.forEach(d => {
                 arr.push((async (d) => {
+<<<<<<< HEAD
                     BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                     if (!BLOD["sidx" + String(BLOD.cid)][id]) {
@@ -419,6 +576,25 @@
                         segment_base: {
                             initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
                             index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
+=======
+                    BLOD.sidx = BLOD.sidx || {};
+                    let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                    if (!BLOD.sidx[id]) {
+                        let data = new Uint8Array(await this.getIdxs(d.base_url));
+                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                        BLOD.sidx[id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                    }
+                    this.playurl.dash.audio.push({
+                        SegmentBase: {
+                            Initialization: BLOD.sidx[id][0],
+                            indexRange: BLOD.sidx[id][1]
+                        },
+                        segment_base: {
+                            initialization: BLOD.sidx[id][0],
+                            index_range: BLOD.sidx[id][1]
+>>>>>>> 9f51f48 (reBuildPlayerurl)
                         },
                         backupUrl: [],
                         backup_url: [],
@@ -442,6 +618,7 @@
                     })
                 })(d))
             })
+<<<<<<< HEAD
             toast("等待数据回传...");
             await Promise.all(arr);
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
@@ -454,6 +631,12 @@
      * @returns {Promise<String>} 委托对象，表示生成的xml形式的弹幕字符串
      */
 =======
+=======
+            await Promise.all(arr);
+            return this.playurl;
+        }
+    }
+>>>>>>> 9f51f48 (reBuildPlayerurl)
     // proto => xml
 >>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
     const toXml = BLOD.toXml = (danmaku) => {
@@ -1665,10 +1848,6 @@
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
                             try {
-                                //response = BLOD.jsonCheck(await BLOD.xhr.true(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));} catch (e) {
-                                //e = Array.isArray(e) ? e : [e];
-                                //debug.error("pgc模式出错", ...e)
-                                //try {
                                 toast.info("尝试解除区域限制...")
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
@@ -1677,11 +1856,17 @@
                                 toast.error("解除限制失败 ಥ_ಥ");
                                 debug.msg("解除限制失败 ಥ_ಥ", ...e);
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
+<<<<<<< HEAD
                                 BLOD.__playinfo__ = { "code": 0, "message": "success", "result": xhrHook.ogvPlayurl(response) };
                                 toast.success("获取到下载链接！", "详见播放器右键下载菜单");
                                 debug.msg("此类视频暂时无法播放", "请尝试右键调出下载", 300000);
                                 throw false;
 >>>>>>> 215e079 (修改xhr send hook方法)
+=======
+                                toast("尝试重构playurl...")
+                                let reBuildPlayerurl = new ReBuildPlayerurl();
+                                response = await reBuildPlayerurl.ogvPlayurl();
+>>>>>>> 9f51f48 (reBuildPlayerurl)
                             }
                         }
                         response = { "code": 0, "message": "success", "result": response };
@@ -1716,6 +1901,7 @@
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
+<<<<<<< HEAD
 >>>>>>> 215e079 (修改xhr send hook方法)
         // 重构泰国番剧playurl
         // DASH码率，索引等信息丢失，无法直接播放只能下载。
@@ -1836,6 +2022,8 @@
             }
         }
 >>>>>>> 65c15a5 (重构泰国番剧playurl)
+=======
+>>>>>>> 9f51f48 (reBuildPlayerurl)
         // 监听视频地址
 =======
         /**
