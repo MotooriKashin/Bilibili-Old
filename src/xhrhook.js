@@ -187,6 +187,7 @@
         }
         // APP端playurl
         async appPlayurl(app) {
+            if (app.durl) return app;
             for (let key in app) this.playurl[key] = app[key];
             // duration向上取整
             this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
@@ -217,9 +218,9 @@
                         Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
                         indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
                     }
-                    d.backupUrl = d.backup_url || [];
+                    d.backupUrl = d.backup_url = d.backupUrl || d.backup_url || [];
                     d.baseUrl = d.base_url;
-                    d.codecs = d.codecs || this.codecs.app[id] || this.codecs.default[id];;
+                    d.codecs = d.codecs || this.codecs.app[id] || this.codecs.default[id];
                     d.frameRate = d.frame_rate = d.frameRate || d.frame_rate || this.frameRate[id];
                     d.height = d.height || this.resolution[id][1];
                     d.width = d.width || this.resolution[id][0];
@@ -248,9 +249,9 @@
                         Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
                         indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
                     }
-                    d.backupUrl = d.backup_url || [];
+                    d.backupUrl = d.backup_url = d.backupUrl || d.backup_url || [];
                     d.baseUrl = d.base_url;
-                    d.codecs = d.codecs || this.codecs.app[id] || this.codecs.default[id];
+                    d.codecs = d.codecs || this.codecs.app[id] || this.codecs.default[id] || "mp4a.40.2";
                     d.mimeType = d.mime_type = d.mimeType || d.mime_type || 'audio/mp4';
                 })(e[i]))
             })
@@ -361,6 +362,19 @@
                 })(d))
             })
             await Promise.all(arr);
+
+            // video排序
+            let avc = [], hev = [], arr = [];
+            this.playurl.dash.video.forEach(d => {
+                if (d.codecid == 7) avc.push(d);
+                else hev.push(d);
+            })
+            let length = avc.length > hev.length ? avc.length : hev.length;
+            for (let i = length - 1; i >= 0; i--) {
+                if (avc[i]) arr.push(avc[i]);
+                if (hev[i]) arr.push(hev[i]);
+            }
+            this.playurl.dash.video = arr;
             return this.playurl;
         }
     }
@@ -1036,7 +1050,7 @@
                         } else {
                             try {
                                 toast.info("尝试解除区域限制...");
-                                obj.fnval = obj.fnval ? 16 : null;
+                                // obj.fnval = obj.fnval ? 16 : null;
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
                             } catch (e) {
