@@ -187,71 +187,75 @@
         }
         // APP端playurl
         async appPlayurl(app) {
-            for (let key in this.playurl) this.playurl[key] = app[key];
+            for (let key in app) this.playurl[key] = app[key];
             // duration向上取整
             this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
             // 构造Promise序列以同时获取所有DASH媒体segment数据
             // 本应由播放器自行获取，B站官方称之为【首帧优化】却在缺失时直接报错导致播放器无法正常载入视频
             let arr = [];
             this.playurl.dash.video.forEach((d, i, e) => {
-                arr.push((async (d) => {
-                    BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
-                    let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                    if (!BLOD["sidx" + String(BLOD.cid)][id]) {
-                        let data = new Uint8Array(await this.getIdxs(d.base_url));
-                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
-                        // 首个“sidx”出现4字节之前的部分为索引奇石点
-                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
-                        // 首个“mooc”出现前5字节结束索引
-                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
-                        // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
-                        BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
-                    }
-                    d.segment_base = {
-                        initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
-                        index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
-                    };
-                    d.SegmentBase = {
-                        Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
-                        indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
-                    }
-                    d.backupUrl = d.backup_url;
-                    d.baseUrl = d.base_url;
-                    d.codecs = this.codecs.app[id] || this.codecs.default[id];;
-                    d.frameRate = d.frame_rate = this.frameRate[id];
-                    d.height = this.resolution[id][1];
-                    d.width = this.resolution[id][0];
-                    d.mimeType = d.mime_type = 'video/mp4';
-                    d.sar = "1:1";
-                    d.startWithSAP = d.start_with_sap = 1;
-                })(e[i]))
+                if (!d.segment_base) {
+                    arr.push((async (d) => {
+                        BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
+                        let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                        if (!BLOD["sidx" + String(BLOD.cid)][id]) {
+                            let data = new Uint8Array(await this.getIdxs(d.base_url));
+                            let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                            // 首个“sidx”出现4字节之前的部分为索引奇石点
+                            let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                            // 首个“mooc”出现前5字节结束索引
+                            let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                            // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
+                            BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        }
+                        d.segment_base = {
+                            initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                            index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
+                        };
+                        d.SegmentBase = {
+                            Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                            indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
+                        }
+                        d.backupUrl = d.backup_url;
+                        d.baseUrl = d.base_url;
+                        d.codecs = this.codecs.app[id] || this.codecs.default[id];;
+                        d.frameRate = d.frame_rate = this.frameRate[id];
+                        d.height = this.resolution[id][1];
+                        d.width = this.resolution[id][0];
+                        d.mimeType = d.mime_type = 'video/mp4';
+                        d.sar = "1:1";
+                        d.startWithSAP = d.start_with_sap = 1;
+                    })(e[i]))
+                }
             })
             this.playurl.dash.audio.forEach((d, i, e) => {
-                arr.push((async (d) => {
-                    BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
-                    let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                    if (!BLOD["sidx" + String(BLOD.cid)][id]) {
-                        let data = new Uint8Array(await this.getIdxs(d.base_url));
-                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
-                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
-                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
-                        BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
-                    }
-                    d.segment_base = {
-                        initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
-                        index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
-                    };
-                    d.SegmentBase = {
-                        Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
-                        indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
-                    }
-                    d.backupUrl = d.backup_url;
-                    d.baseUrl = d.base_url;
-                    d.codecs = this.codecs.app[id] || this.codecs.default[id];
-                    d.mimeType = d.mime_type = 'audio/mp4';
-                })(e[i]))
+                if (!d.segment_base) {
+                    arr.push((async (d) => {
+                        BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
+                        let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                        if (!BLOD["sidx" + String(BLOD.cid)][id]) {
+                            let data = new Uint8Array(await this.getIdxs(d.base_url));
+                            let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                            let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                            let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                            BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        }
+                        d.segment_base = {
+                            initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                            index_range: BLOD["sidx" + String(BLOD.cid)][id][1]
+                        };
+                        d.SegmentBase = {
+                            Initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
+                            indexRange: BLOD["sidx" + String(BLOD.cid)][id][1]
+                        }
+                        d.backupUrl = d.backup_url;
+                        d.baseUrl = d.base_url;
+                        d.codecs = this.codecs.app[id] || this.codecs.default[id];
+                        d.mimeType = d.mime_type = 'audio/mp4';
+                    })(e[i]))
+                }
             })
-            await Promise.all(arr);
+            if (arr[0]) await Promise.all(arr);
             return this.playurl;
         }
         // Thailand playurl
@@ -1041,7 +1045,7 @@
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
                                 toast("尝试重构playurl...")
                                 let reBuildPlayerurl = new ReBuildPlayerurl();
-                                response = await reBuildPlayerurl.ogvPlayurl();
+                                response = await reBuildPlayerurl.ogvPlayurl(response);
                             }
                         }
                         toast.success("解除区域限制！");
