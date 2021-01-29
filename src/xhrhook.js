@@ -20,7 +20,7 @@
             window.setTimeout = (...args) => {
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
                     debug.log("过滤拦截播放器强制初始化", ...args);
-                    toast.warning("禁用播放器强制初始化！", "等待视频数据返回...")
+                    toast.warning("禁用播放器强制初始化！")
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -1074,18 +1074,26 @@
                                 let reBuildPlayerurl = new ReBuildPlayerurl();
                                 response = await reBuildPlayerurl.appPlayurl(response);
                             } catch (e) {
-                                e = Array.isArray(e) ? e : [e];
-                                toast.error("解除限制失败 ಥ_ಥ", "尝试重新拉取Thailand地址...");
-                                response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
-                                let reBuildPlayerurl = new ReBuildPlayerurl();
-                                response = await reBuildPlayerurl.ogvPlayurl(response);
+                                try {
+                                    e = Array.isArray(e) ? e : [e];
+                                    debug.error("limit", ...e);
+                                    toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
+                                    response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
+                                    let reBuildPlayerurl = new ReBuildPlayerurl();
+                                    response = await reBuildPlayerurl.ogvPlayurl(response);
+                                } catch (e) {
+                                    debug.error("Thailand", ...e);
+                                    toast.error("拉取Thailand链接失败！", "需要Thailand代理服务器 ಥ_ಥ");
+                                }
                             }
                         }
                         toast.success("解除区域限制！");
                         response = { "code": 0, "message": "success", "result": response };
                     }
                 }
-                catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
+                catch (e) {
+                    response = { "code": -404, "message": e, "data": null };
+                }
                 clearInterval(progress);
                 xhr.responseURL = xhr.url;
                 xhr.response = xhr.responseText = JSON.stringify(response);
@@ -1098,7 +1106,7 @@
                 BLOD.__playinfo__ = response;
                 debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+            catch (e) { debug.error("接触限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
         // 监听视频地址
         async playinfo(obj) {
