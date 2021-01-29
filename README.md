@@ -124,37 +124,16 @@ Tampermonkey BETA 4.10.6125
    - bili_jct：用于与B站后端进行操作验证
 
 脚本申请了跨域资源
-- `GM_xmlhttpRequest`：xhr跨域，相关`@connect`元数据如下：
+- `GM_xmlhttpRequest`（`@connect`）：xhr跨域
    - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：用于获取缓存的失效视频标题和封面
    - [mcbbs](https://www.mcbbs.net)：用于获取APP端的鉴权`access_key`，只在解除限制功能同时开启“会员授权”时
    - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
 
-- `GM_getResourceURL`/`GM_getResourceURL`：资源跨域，相关`@resource`元数据如下：
-
-| 文件名 | 类型 | 说明 |
-| ---- | ---- | ---- |
-| [av.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/av.html) | html | 原生旧版av页备份，保留普适性框架，自动生成内容 |
-| [watchlater.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/watchlater.html) | html | 原生旧版稍后再看备份，保留普适性框架，自动生成内容 |
-| [bangumi.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/bangumi.html)/[cinema.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/cinema.html) | html | 原生旧版Bangumi页备份，保留普适性框架，自动生成内容 |
-| [playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.html)/[playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlistdetail.html) | html | 原生旧版播单页备份，保留普适性框架，自动生成内容 |
-| [index.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/index.html) | html | 原生旧版主页备份，保留普适性框架，自动生成内容 |
-| [ui.css](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.css) | css | 全局层叠样式表 |
-| [crc.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/crc.js) | js | 弹幕反查crc逆向引擎 |
-| [md5.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/md5.js) | js | MD5哈希引擎 |
-| [initialstate.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/initialstate.js) | js | \_\_INITIAL\_STATE\_\_配置模块，补全网页框架所需特异性信息 |
-| [ui.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.js) | js | UI模块，负责脚本设置界面绘制和设置调整功能 |
-| [debug.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/debug.js) | js | 调试模块，基本上是`console`的再封装 |
-| [xhr.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhr.js) | js | xhr模块，`XMLHttpRequest`的封装，集成了`GM_xmlhttpRequest` |
-| [download.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/download.js) | js | 下载模块，负责下载内容获取、构造，以及下载面板绘制 |
-| [rewrite.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/rewrite.js) | js | 重写模块，调用对应网页框架进行页面重写 |
-|[reset.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/reset.js) | js | 处理模块，负责一般的非重写处理 |
-| [define.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/define.js) | js | 函数模块，定义了一些可能用到的小函数 |
-| [xhrhook.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhrhook.js) | js | xhrhook模块，负责xhr包括jsonp的拦截、修改 |
-| [config.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/config.json) | json | 默认设置，包含设置的详细说明 |
-| [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.json) | json | 一例播单\_\_INITIAL\_STATE\_\_数据存档以作留念 |
-| [sort.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/sort.json) | json | 分区对照表，用于修复旧版页面无法识别的分区 |
-| [search.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/search.json) | json | 无效参数表，用于识别无效链接参数 |
-| [protobuf.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/protobuf.json) | json | 弹幕proto表，用于解析proto弹幕 |
+- `GM_getResourceURL`/`GM_getResourceText`（`@resource`）：资源跨域
+   - 脚本使用该API载入各个模块，模块位置在Github主页`/src`目录下，包括：
+      - html：旧版网页框架，修改自[Wayback Machine](https://archive.org/web/)缓存
+      - json：各种配置数据，包括脚本默认设置
+      - js：各个功能模块，可以按需加载
 
 脚本引用了部分公开库
 - [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版proto弹幕
