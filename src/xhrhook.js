@@ -287,14 +287,15 @@
         async ogvPlayurl(ogv) {
             toast("重构DASH数据中...");
             this.playurl.quality = ogv.data.video_info.quality;
-            let num = this.playurl.accept_quality[this.playurl.quality];
+            let num = this.playurl.accept_quality.indexOf(this.playurl.quality);
             this.playurl.format = this.playurl.accept_format.split(",")[num];
             this.playurl.timelength = ogv.data.video_info.timelength;
 
             this.playurl.accept_quality.splice(0, num);
             this.playurl.support_formats.splice(0, num);
+            this.playurl.accept_description.splice(0, num);
             this.playurl.accept_format = this.playurl.accept_format.split(",");
-            this.playurl.accept_format.splice(num, 1);
+            this.playurl.accept_format.splice(0, num);
             this.playurl.accept_format = this.playurl.accept_format.join(",");
 
             this.playurl.dash.duration = Math.ceil(this.playurl.timelength / 1000);
