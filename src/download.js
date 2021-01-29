@@ -78,7 +78,6 @@
             if (path[0] && path[0].durl) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
                 BLOD.mdf.mp4.push(["1080P", path[0].durl[0].url.replace("http:", ""), BLOD.sizeFormat(path[0].durl[0].size), ".mp4"]);
-                navigator.clipboard.writeText(path[0].durl[0].url);
             }
             if (path[1]) {
                 for (let i = 1; i < path.length; i++) {
