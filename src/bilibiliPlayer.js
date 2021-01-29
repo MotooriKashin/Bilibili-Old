@@ -7075,8 +7075,18 @@ function Fa() {
                     container: this.template.Ma[0],
                     visible: this.cb.block.function_special,
                     fontFamily: this.cb.setting_config.fontfamily,
-                    Kc: function () {
-                        return b.video ? 1E3 * b.currentTime() : 0
+                    timeSyncFunc: function() {
+                        return b.video ? 1e3 * b.currentTime() : 0
+                    },
+                    blockJudge: function(e) {
+                        //return block.judge(e)
+                        return b.Na.di(e)
+                    },
+                    pauseFunc: function() {
+                        b.pause()
+                    },
+                    seekFunc: function(e) {
+                        b.seek(e)
                     }
                 }, this);
                 this.J && this.J.mediaInfo && this.J.mediaInfo.width && this.J.mediaInfo.height && this.Ma.resize(this.J.mediaInfo.width, this.J.mediaInfo.height);
@@ -10135,6 +10145,7 @@ function Fa() {
                 this.Sc = b.getContext("2d");
                 this.canvas = b
             };
+            // buildTextData
             b.prototype.Vw = function (b) {
                 try {
                     var c = Array.isArray(b.text) ? b.text : JSON.parse(this.fy(b.text)),
@@ -10189,12 +10200,14 @@ function Fa() {
                 }), this.Vg())
             };
             b.prototype.Vg = function () {
+                // 下方注释的内容是相同代码在jsc-player.js中对应的未压缩变量名版本
+                //this.config.danmakuNumber = "function" == typeof this.config.getDanmakuNumber ? this.config.getDanmakuNumber() : this.config.danmakuNumber
                 this.f.fd = "function" === typeof this.f.uy ? this.f.uy() : this.f.fd;
-                this.eN();
-                this.jB();
+                this.eN(); //updateSTime
+                this.jB(); //typeChangeCheck
                 "div" === this.Yb() ? this.canvas.innerHTML = "" : this.Sc.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                this.Ug();
-                this.gc()
+                this.Ug(); //refreshCdmList
+                this.gc() //drawDanmaku
             };
             b.prototype.eN = function () {
                 var b = Date.now();
@@ -10212,6 +10225,7 @@ function Fa() {
             b.prototype.$t = function () {
                 return this.Va.length >= this.f.fd && -1 !== this.f.fd ? !1 : !0
             };
+            // escapeSpecialChars
             b.prototype.fy = function (b) {
                 return b.replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\t/g, "\\t").replace(/\f/g, "\\f")
             };
@@ -10419,7 +10433,17 @@ function Fa() {
                 b.font = "bold " + d.size + "px " + d.family + ", Arial, Helvetica, sans-serif";
                 d.width = b.measureText(d.text).width;
                 var k = this.measureText(d.text, d.size + "px " + d.family + ", Arial, Helvetica, sans-serif");
-                d.height = k.height;
+                // av63814这类弹幕字符画，由了5px大小的弹幕构成
+                // 对于Canvas渲染方式，播放器获取行高使用的方法是将弹幕渲染进dom，再通过offsetHeight获得行高
+                // 问题是chrome不允许显示12px以下的字符，会自动按12px来计算行高
+                // 所以给这些小于12px的弹幕，用fontsize + 2px(上下边距)计算行高，可以恢复这样的效果av40959015
+                if (d.size >= 12) {
+                    d.height = k.height;
+                }
+                else {
+                    let enter = d.text.match(/\r/g);
+                    d.height = (enter ? enter.length : 0 + 1) * d.size + 2;
+                }
                 d.Qk = k.Qk;
                 d.Pk = k.Pk;
                 d.width = d.width > f ? f : d.width;
@@ -10483,8 +10507,14 @@ function Fa() {
                 d.canvas.height = b * l;
                 d.font = "bold " + k.size + "px " + k.family + ", Arial, Helvetica, sans-serif";
                 k.width = d.measureText(k.text).width;
-                k.height = this.measureText(k.text,
-                    k.size + "px " + k.family + ", Arial, Helvetica, sans-serif").height;
+                if (k.size >= 12) {
+                    k.height = this.measureText(k.text,
+                        k.size + "px " + k.family + ", Arial, Helvetica, sans-serif").height;
+                }
+                else {
+                    let enter = k.text.match(/\r/g);
+                    k.height = (enter ? enter.length : 0 + 1) * k.size;
+                }
                 k.width = k.width > q ? q : k.width;
                 k.height = k.height > g ? g : k.height;
                 for (g = 0; g < l; g++) {
@@ -10583,6 +10613,7 @@ function Fa() {
                 d /= f;
                 return c + b * d * (2 - d)
             };
+            // 用dom计算出弹幕行高供canvas使用
             e.prototype.measureText = function (d, c) {
                 var b = document.createElement("span");
                 b.innerHTML = d;
@@ -30835,111 +30866,220 @@ function Fa() {
         m = e(200);
         var c = e.n(m);
         e = function () {
-            function b(b, c) {
-                void 0 === b && (b = {});
-                this.paused = !0;
-                this.oc = 0;
-                this.D = !1;
-                this.Ga = [];
-                this.Va = [];
-                this.$A = this.Ha = this.Oi = this.Sg = this.Fd = 0;
-                this.se = [];
-                this.IB = [];
-                this.ku = 0;
-                this.JB = 2;
-                this.options = g.a.extend({
+            // 此部分代码已替换为jsc-player中的对应代码
+            // #metadata# @jsc/video: 2.50.1-28ef9ca4 (2021-01-22T10:42:59.254Z)
+            function i(i) {
+                void 0 === i && (i = {}),
+                this.paused = !0,
+                this.dmList = [],
+                this.cdmList = [],
+                this.cTime = 0,
+                this.pTime = 0,
+                this.time0 = 0,
+                this.pauseTime = 0,
+                this.testId = 0,
+                this.testDanmakus = [],
+                this.inited = !1;
+                var e = {
                     container: document.getElementById("player"),
+                    easing: "linear",
                     Xm: "linear",
                     visible: !0,
                     fontFamily: "",
-                    Kc: null
-                }, b);
-                this.c = c;
-                this.container = this.options.container;
-                this.paused = !0;
-                this.oc = 0;
-                this.D = !1;
-                this.Ga = [];
-                this.Va = [];
-                this.Zd = this.options.visible;
-                this.Ha = this.Oi = this.Sg = this.Fd = 0;
-                this.startTime = (new Date).getTime();
-                this.$A = 0;
-                b = g.a.browser.version;
-                this.KN = b.safari && !b.il || !Worker || b.te || b.Ac || "chrome" === b.browser && 45 > b.version
+                    timeSyncFunc: null,
+                    pauseFunc: null,
+                    seekFunc: null
+                };
+                this.options = g.a.extend(e, i),
+                this.container = this.options.container,
+                this.paused = !0,
+                this.inited = !1,
+                this.dmList = [],
+                this.cdmList = [],
+                this.visibleStatus = this.options.visible,
+                this.cTime = 0,
+                this.pTime = 0,
+                this.time0 = 0,
+                this.pauseTime = 0,
+                this.startTime = (new Date).getTime(),
+                this.testId = 0
             }
-            b.prototype.o = function () {
-                var b = this;
-                this.wrap = g.a.WA('<div class="bas-danmaku ' + (this.paused ? "bas-danmaku-pause" : "") + '"></div>');
-                this.container &&
-                    this.container.appendChild(this.wrap);
-                this.D = !0;
-                this.wA && this.vA && this.resize();
-                window.requestAnimationFrame(function () {
-                    b.render()
-                })
-            };
-            b.prototype.add = function (b) {
-                var c = this;
-                if (b.va instanceof Array) {
-                    var d = 0;
-                    b.va.forEach(function (e) {
-                        c.add({
-                            va: e,
-                            parsed: b.parsed,
-                            test: b.test,
-                            Js: !0,
-                            success: function () {
-                                d++;
-                                d === b.va.length && (void 0, b.Js || c.refresh())
+            return i.parse = function(e) {
+                var t = e.danmaku;
+                if (i.workerDisabled)
+                    try {
+                        var a = Is(t.text);
+                        t.defs = a.defs,
+                        t.sets = a.sets,
+                        e.success && e.success(t)
+                    } catch (i) {
+                        console.warn("Error in BAS parser: ", i),
+                        e.error && e.error(i.message)
+                    }
+                else {
+                    if (!i.workerIndex)
+                        for (var r = 0; r < i.workerCount; r++)
+                            i.workers[r] = new c.a;
+                    var n = i.workers[i.workerIndex % i.workerCount];
+                    n.onmessage = function(i) {
+                        i.data.error ? e.error && e.error(i.data.error) : (i.data.defs = i.data.defs,
+                        i.data.sets = i.data.sets,
+                        e.success && e.success(i.data))
+                    }
+                    ,
+                    n.postMessage(t),
+                    i.workerIndex++
+                }
+            }
+            ,
+            i.prototype.init = function() {
+                var i = this;
+                if (!this.inited) {
+                    var e;
+                    //WA -> string2DOM
+                    this.wrap = g.a.WA('<div class="bas-danmaku ' + (this.paused ? "bas-danmaku-pause" : "") + '"></div>'),
+                    this.container && this.container.appendChild(this.wrap),
+                    this.inited = !0,
+                    this.resolutionWidth && this.resolutionHeight && this.resize(),
+                    this.animationFrame = window.requestAnimationFrame((function() {
+                        i.render()
+                    }
+                    ));
+                    var t = void 0
+                      , a = ["webkit", "moz", "ms", "o"];
+                    if ("hidden"in document)
+                        e = "hidden",
+                        t = "visibilitychange";
+                    else
+                        for (var r = 0; r < a.length; r++)
+                            a[r] + "Hidden"in document && (e = a[r] + "Hidden",
+                            t = a[r] + "visibilitychange");
+                    document.addEventListener(t, (function() {
+                        document[e] || "function" == typeof i.options.timeSyncFunc && i.seek(i.options.timeSyncFunc() / 1e3)
+                    }
+                    ))
+                }
+            }
+            ,
+            i.prototype.add = function(e) {
+                var t = this;
+                e.dm = e.va;
+                if (e.dm instanceof Array) {
+                    var a = 0;
+                    e.dm.forEach((function(i) {
+                        t.add({
+                            va: i,
+                            parsed: e.parsed,
+                            test: e.test,
+                            noRefresh: !0,
+                            success: function(i) {
+                                ++a === e.dm.length && (e.noRefresh || t.refresh())
                             },
-                            error: function () {
-                                d++;
-                                d === b.va.length && (void 0, b.Js || c.refresh())
+                            error: function() {
+                                ++a === e.dm.length && (e.noRefresh || t.refresh())
                             }
                         })
-                    })
+                    }
+                    ))
                 } else {
-                    b.va = $.extend({}, b.va);
-                    var e = function (d) {
-                        c.D ||
-                            c.o();
-                        b.test ? (c.dA(d, !0), c.se.push(d), c.gc(d)) : (c.dA(d), -1 === d.stime && (d.stime = c.Fd ? c.Fd / 1E3 + .1 : c.options.Kc() / 1E3 + .1), c.Ga.push(d), 1 !== c.Ga.length || c.paused || c.play(), b.Js || c.refresh())
+                    e.dm = Object.assign({}, e.dm);
+                    var r = function(i) {
+                        t.inited || t.init(),
+                        e.test ? (t.pretreatDanmaku(i, !0),
+                        t.testDanmakus.push(i),
+                        t.drawDanmaku(i)) : (t.pretreatDanmaku(i),
+                        -1 === i.stime && (t.cTime ? i.stime = t.cTime / 1e3 + .1 : i.stime = t.options.timeSyncFunc() / 1e3 + .1),
+                        t.dmList.push(i),
+                        1 !== t.dmList.length || t.paused || t.play(),
+                        e.noRefresh || t.refresh())
                     };
-                    b.parsed ? (e(b.va), b.success && b.success(b.va)) : this.parse({
-                        g: b.va,
-                        success: function (c) {
-                            e(c);
-                            b.success && b.success(c)
+                    e.parsed ? (r(e.dm),
+                    e.success && e.success(e.dm)) : i.parse({
+                        danmaku: e.dm,
+                        success: function(i) {
+                            r(i),
+                            e.success && e.success(i)
                         },
-                        error: function () {
-                            b.error && b.error()
+                        error: function() {
+                            e.error && e.error()
                         }
                     })
                 }
-            };
-            b.prototype.remove = function (b) {
-                this.Ga = this.Ga.filter(function (c) {
-                    return c.dmid !== b
-                });
+            }
+            ,
+            i.prototype.remove = function(i) {
+                this.dmList = this.dmList.filter((function(e) {
+                    return e.dmid !== i
+                }
+                )),
                 this.refresh()
-            };
-            b.prototype.dA = function (b, c) {
-                function d(c) {
-                    if ({}.hasOwnProperty.call(b.ja,
-                        c)) {
-                        var d = b.T.filter(function (b) {
-                            return b.name === c
-                        })[0];
-                        d.attrs.duration ? b.ja[c].push({
-                            name: "bas-" + b.dmid + "-" + c + "-duration",
+            }
+            ,
+            i.prototype.pretreatDanmaku = function(i, e) {
+                void 0 === e && (e = !1),
+                e && (i.dmid = "test" + this.testId++,
+                i.test = !0,
+                i.stime = this.options.timeSyncFunc() / 1e3),
+                i.def2set = {};
+                for (var t = 0; t < i.defs.length; t++) {
+                    var a = i.defs[t].name
+                      , r = 0;
+                    i.def2set[a] = [];
+                    for (var n = 0; n < i.sets.length; n++)
+                        switch (i.sets[n].type) {
+                        case "Serial":
+                            for (var o = 0, l = 0; l < i.sets[n].items.length; l++)
+                                i.sets[n].items[l].targetName === a && (i.def2set[a].push({
+                                    name: "bas-" + i.dmid + "-" + a + "-" + r,
+                                    valueStart: this.getValueStart(l, r, i.def2set[a]),
+                                    valueEnd: g.a.extend(this.getValueStart(l, r, i.def2set[a]), i.sets[n].items[l].attrs),
+                                    easing: i.sets[n].items[l].defaultEasing || this.options.easing || "linear",
+                                    duration: i.sets[n].items[l].duration / 1e3,
+                                    delay: o / 1e3,
+                                    group: n
+                                }),
+                                r++),
+                                o += i.sets[n].items[l].duration;
+                            break;
+                        case "Parallel":
+                            for (l = 0; l < i.sets[n].items.length; l++)
+                                i.sets[n].items[l].targetName === a && (i.def2set[a].push({
+                                    name: "bas-" + i.dmid + "-" + a + "-" + r,
+                                    valueEnd: g.a.extend(this.getValueStart(l, r, i.def2set[a]), i.sets[n].items[l].attrs),
+                                    easing: i.sets[n].items[l].defaultEasing || this.options.easing || "linear",
+                                    duration: i.sets[n].items[l].duration / 1e3,
+                                    delay: 0,
+                                    group: n
+                                }),
+                                r++);
+                            break;
+                        case "Unit":
+                            i.sets[n].targetName === a && (i.def2set[a].push({
+                                name: "bas-" + i.dmid + "-" + a + "-" + r,
+                                valueEnd: i.sets[n].attrs,
+                                easing: i.sets[n].defaultEasing || this.options.easing || "linear",
+                                duration: i.sets[n].duration / 1e3,
+                                delay: 0,
+                                group: n
+                            }),
+                            r++)
+                        }
+                }
+                var s = function(e) {
+                    if ({}.hasOwnProperty.call(i.def2set, e)) {
+                        var t = i.defs.filter((function(i) {
+                            return i.name === e
+                        }
+                        ))[0];
+                        t.attrs.duration ? i.def2set[e].push({
+                            name: "bas-" + i.dmid + "-" + e + "-duration",
                             valueEnd: {},
                             easing: "linear",
-                            duration: d.attrs.duration / 1E3,
+                            duration: t.attrs.duration / 1e3,
                             delay: 0,
                             group: -1
-                        }) : 0 === b.ja[c].length && b.ja[c].push({
-                            name: "bas-" + b.dmid + "-" + c + "-0",
+                        }) : 0 === i.def2set[e].length && i.def2set[e].push({
+                            name: "bas-" + i.dmid + "-" + e + "-0",
                             valueEnd: {},
                             easing: "linear",
                             duration: 4,
@@ -30947,210 +31087,229 @@ function Fa() {
                             group: -1
                         })
                     }
-                }
-                void 0 === c && (c = !1);
-                c && (b.dmid = "test" + this.$A++, b.test = !0, b.stime = this.options.Kc() / 1E3);
-                b.ja = {};
-                for (var e = 0; e < b.T.length; e++) {
-                    var f = b.T[e].name,
-                        h = 0;
-                    b.ja[f] = [];
-                    for (c = 0; c < b.Ka.length; c++) switch (b.Ka[c].type) {
-                        case "Serial":
-                            for (var n =
-                                0, m = 0; m < b.Ka[c].items.length; m++) b.Ka[c].items[m].targetName === f && (b.ja[f].push({
-                                    name: "bas-" + b.dmid + "-" + f + "-" + h,
-                                    valueStart: this.xn(m, h, b.ja[f]),
-                                    valueEnd: g.a.extend(this.xn(m, h, b.ja[f]), b.Ka[c].items[m].attrs),
-                                    easing: b.Ka[c].items[m].defaultEasing || this.options.Xm || "linear",
-                                    duration: b.Ka[c].items[m].duration / 1E3,
-                                    delay: n / 1E3,
-                                    group: c
-                                }), h++), n += b.Ka[c].items[m].duration;
-                            break;
-                        case "Parallel":
-                            for (m = 0; m < b.Ka[c].items.length; m++) b.Ka[c].items[m].targetName === f && (b.ja[f].push({
-                                name: "bas-" + b.dmid + "-" + f + "-" +
-                                    h,
-                                valueEnd: g.a.extend(this.xn(m, h, b.ja[f]), b.Ka[c].items[m].attrs),
-                                easing: b.Ka[c].items[m].defaultEasing || this.options.Xm || "linear",
-                                duration: b.Ka[c].items[m].duration / 1E3,
-                                delay: 0,
-                                group: c
-                            }), h++);
-                            break;
-                        case "Unit":
-                            b.Ka[c].targetName === f && (b.ja[f].push({
-                                name: "bas-" + b.dmid + "-" + f + "-" + h,
-                                valueEnd: b.Ka[c].attrs,
-                                easing: b.Ka[c].defaultEasing || this.options.Xm || "linear",
-                                duration: b.Ka[c].duration / 1E3,
-                                delay: 0,
-                                group: c
-                            }), h++)
-                    }
-                }
-                for (var t in b.ja) d(t);
-                b.duration = 0;
-                for (var A in b.ja)
-                    if ({}.hasOwnProperty.call(b.ja, A)) {
-                        b.Kb = {};
-                        for (var z = b.ja[A].length, e = 0; e < z; e++)
-                            if (b.ja[A][e]) {
-                                var C = [parseFloat(b.ja[A][e].delay.toFixed(10)), parseFloat((b.ja[A][e].delay + b.ja[A][e].duration).toFixed(10)), b.ja[A][e].group],
-                                    D;
-                                for (D in b.ja[A][e].valueEnd)
-                                    if (b.ja[A][e].valueEnd.hasOwnProperty(D))
-                                        if (-1 !== "x y rotateX rotateY rotateZ scale".split(" ").indexOf(D) && (D = "transform"), b.Kb[D]) {
-                                            var O = b.Kb[D].length;
-                                            t = function (c) {
-                                                if (b.Kb[D][c]) {
-                                                    var d = b.Kb[D][c][2];
-                                                    b.ja[A][e].group !== d && (b.Kb[D][c][0] > C[0] && b.Kb[D][c][0] < C[1] || b.Kb[D][c][1] > C[0] &&
-                                                        b.Kb[D][c][1] < C[1] || b.Kb[D][c][0] <= C[0] && b.Kb[D][c][1] >= C[1] && b.Kb[D][c][0] !== b.Kb[D][c][1]) && C[0] !== C[1] && (void 0, b.Kb[D] = b.Kb[D].filter(function (b) {
-                                                            return b[2] !== d
-                                                        }), b.ja[A] = b.ja[A].filter(function (b) {
-                                                            return b.group !== d
-                                                        }), c -= O - b.Kb[D].length, O = b.Kb[D].length, e -= z - b.ja[A].length, z = b.ja[A].length)
+                };
+                for (var p in i.def2set)
+                    s(p);
+                for (var d in i.duration = 0,
+                i.def2set)
+                    if ({}.hasOwnProperty.call(i.def2set, d)) {
+                        i.setsIntervals = {};
+                        var c = i.def2set[d].length;
+                        for (t = 0; t < c; t++)
+                            if (i.def2set[d][t]) {
+                                var b = [parseFloat(i.def2set[d][t].delay.toFixed(10)), parseFloat((i.def2set[d][t].delay + i.def2set[d][t].duration).toFixed(10)), i.def2set[d][t].group];
+                                for (var u in i.def2set[d][t].valueEnd)
+                                    if (i.def2set[d][t].valueEnd.hasOwnProperty(u))
+                                        if (-1 !== ["x", "y", "rotateX", "rotateY", "rotateZ", "scale"].indexOf(u) && (u = "transform"),
+                                        i.setsIntervals[u]) {
+                                            var h, y = i.setsIntervals[u].length, f = function(e) {
+                                                if (i.setsIntervals[u][e]) {
+                                                    var a = i.setsIntervals[u][e][2];
+                                                    i.def2set[d][t].group !== a && (i.setsIntervals[u][e][0] > b[0] && i.setsIntervals[u][e][0] < b[1] || i.setsIntervals[u][e][1] > b[0] && i.setsIntervals[u][e][1] < b[1] || i.setsIntervals[u][e][0] <= b[0] && i.setsIntervals[u][e][1] >= b[1] && i.setsIntervals[u][e][0] !== i.setsIntervals[u][e][1]) && b[0] !== b[1] && (console.warn("BAS: attribute conflict, name: " + d + " attr: " + u + " time: " + b + " " + i.setsIntervals[u][e]),
+                                                    i.setsIntervals[u] = i.setsIntervals[u].filter((function(i) {
+                                                        return i[2] !== a
+                                                    }
+                                                    )),
+                                                    i.def2set[d] = i.def2set[d].filter((function(i) {
+                                                        return i.group !== a
+                                                    }
+                                                    )),
+                                                    e -= y - i.setsIntervals[u].length,
+                                                    y = i.setsIntervals[u].length,
+                                                    t -= c - i.def2set[d].length,
+                                                    c = i.def2set[d].length)
                                                 }
-                                                P = c
+                                                h = e
                                             };
-                                            var P;
-                                            for (c = 0; c < O; c++) t(c), c = P;
-                                            b.Kb[D].push(C)
-                                        } else b.Kb[D] = [C]
-                            } for (e = 0; e < b.ja[A].length; e++) c = b.ja[A][e].delay + b.ja[A][e].duration,
-                                c > b.duration && (b.duration = c)
+                                            for (n = 0; n < y; n++)
+                                                f(n),
+                                                n = h;
+                                            i.setsIntervals[u].push(b)
+                                        } else
+                                            i.setsIntervals[u] = [b]
+                            }
+                        for (t = 0; t < i.def2set[d].length; t++) {
+                            var m = i.def2set[d][t].delay + i.def2set[d][t].duration;
+                            m > i.duration && (i.duration = m)
+                        }
                     }
-            };
-            b.prototype.xn = function (b, c, d) {
-                return 1 <= b && 1 <= c ? d[c - 1].valueEnd && Object.keys(d[c - 1].valueEnd).length ? d[c - 1].valueEnd : this.xn(b - 1, c - 1, d) : null
-            };
-            b.prototype.parse = function (b) {
-                var e = b.g;
-                if (this.KN) try {
-                    var f = Object(d.a)(e.text);
-                    e.T = f.T;
-                    e.Ka = f.Ka;
-                    b.success && b.success(e)
-                } catch (l) {
-                    void 0, b.error && b.error(l.message)
-                } else {
-                    if (!this.ku)
-                        for (f = 0; f < this.JB; f++) this.IB[f] = new c.a;
-                    f = this.IB[this.ku % this.JB];
-                    f.onmessage = function (c) {
-                        c.data.error ? b.error &&
-                            b.error(c.data.error) : (c.data.T = c.data.defs, c.data.Ka = c.data.sets, b.success && b.success(c.data))
-                    };
-                    f.postMessage(e);
-                    this.ku++
+            }
+            ,
+            i.prototype.getValueStart = function(i, e, t) {
+                return i >= 1 && e >= 1 ? t[e - 1].valueEnd && Object.keys(t[e - 1].valueEnd).length ? t[e - 1].valueEnd : this.getValueStart(i - 1, e - 1, t) : null
+            }
+            ,
+            i.prototype.render = function() {
+                var i = this;
+                this.paused || (this.animationFrame = window.requestAnimationFrame((function() {
+                    i.render()
                 }
-            };
-            b.prototype.render = function () {
-                var b = this;
-                this.paused || (window.requestAnimationFrame(function () {
-                    b.render()
-                }), this.Vg())
-            };
-            b.prototype.Vg = function () {
-                this.iN();
-                this.Ug();
-                this.gc()
-            };
-            b.prototype.iN = function () {
-                this.Sg = this.Fd;
-                var b = (new Date).getTime();
-                this.Fd = this.Oi + b - this.startTime;
-                if ("function" === typeof this.options.Kc) {
-                    var c = this.options.Kc();
-                    if (1E3 < Math.abs(c - this.Fd) || isNaN(this.Fd)) this.Oi =
-                        this.Sg = this.Fd = c, this.startTime = b, this.clear()
+                )),
+                this.renderDanmaku())
+            }
+            ,
+            i.prototype.renderDanmaku = function() {
+                this.updateTime(),
+                this.refreshCdmList(),
+                this.drawDanmaku()
+            }
+            ,
+            i.prototype.updateTime = function() {
+                this.pTime = this.cTime;
+                var i = (new Date).getTime();
+                if (this.cTime = this.time0 + i - this.startTime,
+                "function" == typeof this.options.timeSyncFunc) {
+                    var e = this.options.timeSyncFunc();
+                    (Math.abs(e - this.cTime) > 1e3 || isNaN(this.cTime)) && (this.cTime = e,
+                    this.pTime = e,
+                    this.time0 = e,
+                    this.startTime = i,
+                    this.refresh())
                 }
-            };
-            b.prototype.Ug = function () {
-                this.Va = [];
-                if (500 > Math.abs(this.Fd - this.Sg))
-                    for (var b = 0; b < this.Ga.length; b++) this.Ga[b].stime >= this.Sg / 1E3 && this.Ga[b].stime < this.Fd / 1E3 && this.Va.push(this.Ga[b])
-            };
-            b.prototype.gc = function (b, c) {
-                var d = this;
-                void 0 === b && (b = this.Va);
-                void 0 === c && (c = 0);
-                if (this.Zd)
-                    if (this.D || this.o(), b instanceof Array) b.forEach(function (b) {
-                        d.gc(b)
-                    });
+            }
+            ,
+            i.prototype.refreshCdmList = function(i) {
+                if (this.visibleStatus) {
+                    if (i)
+                        this.refresh();
+                    else if (this.cdmList = [],
+                    Math.abs(this.cTime - this.pTime) < 500)
+                        for (var e = 0; e < this.dmList.length; e++)
+                            this.dmList[e].stime >= this.pTime / 1e3 && this.dmList[e].stime < this.cTime / 1e3 && this.cdmList.push(this.dmList[e])
+                } else
+                    this.clear()
+            }
+            ,
+            i.prototype.drawDanmaku = function(i, e) {
+                var t = this;
+                if (void 0 === i && (i = this.cdmList),
+                void 0 === e && (e = 0),
+                this.visibleStatus)
+                    if (this.inited || this.init(),
+                    i instanceof Array)
+                        i.forEach((function(i) {
+                            t.drawDanmaku(i)
+                        }
+                        ));
                     else {
-                        b = $.extend(!0, {}, b);
-                        var e = this;
-                        c = new h.a({
+                        var a = Object.assign({}, i)
+                          , r = new h.a({
                             container: this.wrap,
-                            va: b,
-                            startTime: c,
-                            sq: function (b) {
-                                b.va.test &&
-                                    (e.se = e.se.filter(function (c) {
-                                        return c.dmid !== b.va.dmid
-                                    }))
+                            dm: a,
+                            startTime: e,
+                            animationEndCallback: function(i) {
+                                i.dm.test && (t.testDanmakus = t.testDanmakus.filter((function(e) {
+                                    return e.dmid !== i.dm.dmid
+                                }
+                                )))
                             },
-                            c: this.c
+                            pauseFunc: this.options.pauseFunc,
+                            seekFunc: this.options.seekFunc
                         });
-                        c.Qb && this.wrap.appendChild(c.Qb)
+                        this.options.blockJudge && this.options.blockJudge(r.dm) ? r.ele.style.visibility = "hidden" : r.ele.style.visibility = "",
+                        r.ele && this.wrap.appendChild(r.ele)
                     }
-            };
-            b.prototype.play = function () {
-                this.Oi = this.Ha;
-                this.startTime = (new Date).getTime();
-                this.Ha = 0;
-                this.paused = !1;
-                this.wrap && this.wrap.classList.remove("bas-danmaku-pause");
-                this.Ga.length && (this.D || this.o(), this.render())
-            };
-            b.prototype.pause = function () {
-                this.paused = !0;
-                this.D || this.o();
+            }
+            ,
+            i.prototype.play = function() {
+                this.time0 = this.pauseTime,
+                this.startTime = (new Date).getTime(),
+                this.pauseTime = 0,
+                this.paused = !1,
+                this.wrap && this.wrap.classList.remove("bas-danmaku-pause"),
+                this.dmList.length && (this.inited || this.init(),
+                this.render())
+            }
+            ,
+            i.prototype.pause = function() {
+                this.paused = !0,
+                this.inited || this.init(),
                 this.wrap.classList.add("bas-danmaku-pause");
-                this.Ha = this.Oi + (new Date).getTime() - this.startTime
-            };
-            b.prototype.toggle = function () {
-                this.paused ?
-                    this.play() : this.pause()
-            };
-            b.prototype.seek = function (b, c) {
-                void 0 === c && (c = !0);
-                this.se = [];
-                this.Oi = 1E3 * b;
-                this.startTime = (new Date).getTime();
-                this.D || this.o();
-                this.Ga.length && this.Zd && this.wrap && (this.Sg = 1E3 * b, this.Fd = 1E3 * b, this.clear(), c && this.refresh())
-            };
-            b.prototype.refresh = function () {
+                var i = (new Date).getTime();
+                this.pauseTime = this.time0 + i - this.startTime
+            }
+            ,
+            i.prototype.toggle = function() {
+                this.paused ? this.play() : this.pause()
+            }
+            ,
+            i.prototype.seek = function(i, e) {
+                void 0 === e && (e = !0),
+                this.testDanmakus = [],
+                this.time0 = 1e3 * i,
+                this.startTime = (new Date).getTime(),
+                this.inited || this.init(),
+                this.dmList.length && this.visibleStatus && this.wrap && (this.pTime = 1e3 * i,
+                this.cTime = 1e3 * i,
+                this.clear(),
+                e && this.refresh())
+            }
+            ,
+            i.prototype.refresh = function() {
                 this.clear();
-                for (var b = this.Sg / 1E3, c = 0; c < this.Ga.length; c++) this.Ga[c].stime < b && this.Ga[c].stime + this.Ga[c].duration > b && this.gc(this.Ga[c], b - this.Ga[c].stime);
-                for (c = 0; c < this.se.length; c++) this.se[c].stime < b && this.se[c].stime +
-                    this.se[c].duration > b && this.gc(this.se[c], b - this.se[c].stime)
-            };
-            b.prototype.visible = function (b) {
-                b !== this.Zd && (b ? (this.Zd = !0, this.refresh(), this.render()) : (this.Zd = !1, this.clear()))
-            };
-            b.prototype.clear = function () {
-                this.D && (this.Va = [], this.wrap && (this.wrap.innerHTML = ""))
-            };
-            b.prototype.resize = function (b, c) {
-                void 0 === b && (b = this.wA);
-                void 0 === c && (c = this.vA);
-                this.wA = b;
-                this.vA = c;
-                if (this.D) {
-                    var d = this.container.offsetWidth,
-                        e = this.container.offsetHeight;
-                    d / b > e / c ? (this.wrap.style.width = e / c * b / d * 100 + "%", this.wrap.style.height =
-                        "100%") : (this.wrap.style.width = "100%", this.wrap.style.height = d / b * c / e * 100 + "%")
+                for (var i = this.pTime / 1e3, e = 0; e < this.dmList.length; e++)
+                    this.dmList[e].stime < i && this.dmList[e].stime + this.dmList[e].duration > i && this.drawDanmaku(this.dmList[e], i - this.dmList[e].stime);
+                for (e = 0; e < this.testDanmakus.length; e++)
+                    this.testDanmakus[e].stime < i && this.testDanmakus[e].stime + this.testDanmakus[e].duration > i && this.drawDanmaku(this.testDanmakus[e], i - this.testDanmakus[e].stime)
+            }
+            ,
+            i.prototype.visible = function(i) {
+                i !== this.visibleStatus && (i ? (this.visibleStatus = !0,
+                this.refresh(),
+                this.render()) : (this.visibleStatus = !1,
+                this.clear()))
+            }
+            ,
+            i.prototype.clear = function() {
+                this.inited && (this.cdmList = [],
+                this.wrap && (this.wrap.innerHTML = ""))
+            }
+            ,
+            i.prototype.resize = function(i, e) {
+                if (void 0 === i && (i = this.resolutionWidth),
+                void 0 === e && (e = this.resolutionHeight),
+                this.resolutionWidth = i,
+                this.resolutionHeight = e,
+                this.inited) {
+                    var t = this.container.offsetWidth
+                      , a = this.container.offsetHeight;
+                    t / i > a / e ? (this.wrap.style.width = a / e * i / t * 100 + "%",
+                    this.wrap.style.height = "100%") : (this.wrap.style.width = "100%",
+                    this.wrap.style.height = t / i * e / a * 100 + "%")
                 }
                 this.refresh()
-            };
-            return b
+            }
+            ,
+            i.prototype.reset = function() {
+                this.animationFrame && window.cancelAnimationFrame(this.animationFrame);
+                for (var e = 0; e < i.workers.length; e++)
+                    i.workers[e].terminate();
+                i.workers = [],
+                this.clear(),
+                this.paused = !0,
+                this.dmList = [],
+                this.cdmList = [],
+                this.cTime = 0,
+                this.pTime = 0,
+                this.time0 = 0,
+                this.pauseTime = 0,
+                this.testId = 0,
+                this.testDanmakus = [],
+                this.dmList = [],
+                this.cdmList = [],
+                this.startTime = (new Date).getTime(),
+                i.workerIndex = 0
+            }
+            ,
+            i.prototype.destroy = function() {
+                this.reset()
+            }
+            ,
+            //i.workerDisabled = Ls.safari && !Ls.safariSupportMSE || !Worker || Ls.trident || Ls.edge || "chrome" === Ls.browser && Ls.version < 45,
+            i.workerIndex = 0,
+            i.workerCount = 2,
+            i.workers = [],
+            i
         }();
         t.a = e
     },
@@ -31178,242 +31337,286 @@ function Fa() {
     function (m, t, e) {
         var g = e(42);
         m = function () {
-            function e(d) {
-                this.prefix = ["", "-webkit-"];
-                this.Ph = {};
-                this.$i = d.container.offsetWidth / 100;
-                this.ip = d.container.offsetHeight / 100;
-                this.container = d.container;
-                this.va = d.va;
-                this.RK(this.va);
-                this.T = this.va.T;
-                this.Ka = this.va.Ka;
-                this.startTime = d.startTime;
-                this.c = d.c;
-                this.sq = d.sq;
-                this.o()
+            // 此部分代码已替换为jsc-player中的对应代码
+            // #metadata# @jsc/video: 2.50.1-28ef9ca4 (2021-01-22T10:42:59.254Z)
+            var vs =  {
+                colorFromInt: g.a.zf,
+                string2DOM: g.a.WA,
+                rgbaFormat: g.a.zo,
+            };
+            function i(i) {
+                this.prefix = ["", "-webkit-"],
+                    this.endProgress = {},
+                    this.xProportion = i.container.offsetWidth / 100, 
+                    this.yProportion = i.container.offsetHeight / 100, 
+                    this.container = i.container,
+                    this.dm = i.dm,
+                    this.percentObj2Num(this.dm),
+                    this.defs = this.dm.defs,
+                    this.sets = this.dm.sets,
+                    this.startTime = i.startTime,
+                    this.options = i,
+                    this.init()
             }
-            e.prototype.o = function () {
-                var d = this.JJ();
-                if (d) {
-                    var c = 100 * this.$i / 2 / Math.tan(Math.PI / 180 * 27.5);
-                    this.Qb = g.a.WA('<div class="bas-danmaku-item-wrap" style="perspective:' + c + "px;-webkit-perspective:" +
-                        c + 'px;">' + this.fG() + d + "</div>");
-                    for (d = 0; d < this.T.length; d++) c = this.T[d].name, this.Ph[c] = 0, this.hB(c);
-                    this.Qa(this.Qb)
+            return i.prototype.init = function () {
+                var i = this.itemsTemplate();
+                if (i) {
+                    var e = 100 * this.xProportion / 2 / Math.tan(Math.PI / 180 * 27.5);
+                    this.ele = vs.string2DOM('<div class="bas-danmaku-item-wrap" style="perspective:' + e + "px;-webkit-perspective:" + e + 'px;">' + this.animationTemplate() + i + "</div>");
+                    for (var t = 0; t < this.defs.length; t++) {
+                        var a = this.defs[t].name;
+                        this.endProgress[a] = 0,
+                            this.transience(a)
+                    }
+                    this.bindEvents(this.ele)
                 }
-            };
-            e.prototype.uw = function (d) {
-                var c = d.animationName.split("-")[2];
-                this.Ph[c] ? this.Ph[c]++ : this.Ph[c] = 1;
-                this.hB(c);
-                this.sq(this);
-                if (this.Ph[c] === this.va.ja[c].length || "duration" === d.animationName.split("-")[3]) d.target.parentNode.removeChild(d.target), 0 === this.Qb.getElementsByClassName("bas-danmaku-item").length && this.container.removeChild(this.Qb)
-            };
-            e.prototype.hB = function (d) {
-                var c =
-                    this.va.ja[d][this.Ph[d]];
-                c && c.valueEnd && (c.valueEnd.content && (this.Qb.querySelector(".bas-danmaku-item--" + d + " .bas-danmaku-item-inner").innerHTML = c.valueEnd.content.value), c.valueEnd.text && (this.Qb.querySelector(".bas-danmaku-item--" + d + " .bas-danmaku-item-inner").innerHTML = c.valueEnd.text.value), c.valueEnd.fontSize && (c = c.valueEnd.fontSize.value, 12 <= c ? this.Qb.querySelector(".bas-danmaku-item--" + d + " .bas-danmaku-item-inner").style.fontSize = c + "px" : (this.Qb.querySelector(".bas-danmaku-item--" + d + " .bas-danmaku-item-inner").style.fontSize =
-                    "12px", this.Qb.querySelector(".bas-danmaku-item--" + d + " .bas-danmaku-item-inner").style.transform = "scale(" + c / 12 + ")")))
-            };
-            e.prototype.RK = function (d) {
-                function c(c) {
-                    for (var d in c)
-                        if (c.hasOwnProperty(d)) {
-                            if (c[d].numType) var e = c[d];
-                            else if (c[d].value && c[d].value.numType) e = c[d].value;
-                            else continue;
-                            if ("number" === e.numType) switch (d) {
-                                case "x":
-                                    e = e.value / b.$i;
-                                    break;
-                                case "y":
-                                    e = e.value / b.ip;
-                                    break;
-                                default:
-                                    e = e.value
-                            } else if ("percent" === e.numType) switch (d) {
-                                case "fontSize":
-                                    e = e.value * b.$i;
-                                    break;
-                                case "width":
-                                    e = e.value *
-                                        b.$i;
-                                    break;
-                                case "height":
-                                    e = e.value * b.ip;
-                                    break;
-                                default:
-                                    e = e.value
-                            }
-                            c[d].numType ? c[d] = e : c[d].value && c[d].value.numType && (c[d].value = e)
-                        }
+            }
+                ,
+                i.prototype.animationCallback = function (i) {
+                    var e = i.animationName.split("-")[2];
+                    this.endProgress[e] ? this.endProgress[e]++ : this.endProgress[e] = 1,
+                        this.transience(e),
+                        this.options.animationEndCallback(this),
+                        this.endProgress[e] !== this.dm.def2set[e].length && "duration" !== i.animationName.split("-")[3] || (i.target.parentNode.removeChild(i.target),
+                            0 === this.ele.getElementsByClassName("bas-danmaku-item").length && this.container.removeChild(this.ele))
                 }
-                for (var b = this, e = 0; e < d.T.length; e++) c(d.T[e].attrs);
-                for (e = 0; e < d.Ka.length; e++)
-                    if (d.Ka[e].items)
-                        for (var g = 0; g < d.Ka[e].items.length; g++) c(d.Ka[e].items[g].attrs);
-                    else c(d.Ka[e].attrs);
-                for (var h in d.ja)
-                    if ({}.hasOwnProperty.call(d.ja, h))
-                        for (e = 0; e < d.ja[h].length; e++) c(d.ja[h][e].valueEnd), c(d.ja[h][e].valueStart)
-            };
-            e.prototype.JJ = function () {
-                for (var d = "", c = 0; c < this.T.length; c++) this.T[c].attrs.parent ||
-                    (d += this.Wy(this.T[c]));
-                return d
-            };
-            e.prototype.Wy = function (d, c, b) {
-                function e(b, c) {
-                    for (var d = "", e = 0; e < b.length; e++) d = "duration" === c ? d + (b[e][c] + "s") : "delay" === c ? d + (b[e][c] - h.startTime + "s") : d + b[e][c], e !== b.length - 1 && (d += ",");
-                    return d
-                }
-                var h = this;
-                void 0 === c && (c = this.$i);
-                void 0 === b && (b = this.ip);
-                var k = d.attrs,
-                    l = this.va.ja[d.name],
-                    l = "" + this.po("animation-name", e(l, "name")) + this.po("animation-duration", e(l, "duration")) + this.po("animation-timing-function", e(l, "easing")) + this.po("animation-delay", e(l, "delay")),
-                    m;
-                for (m in k) k.hasOwnProperty(m) && (l += this.Mr(m, k[m]));
-                switch (d.type) {
-                    case "DefText":
-                        var t = "";
-                        if (k.rotateX || k.rotateY || k.rotateZ) t = " rotateX(" + k.rotateX + "deg) rotateY(" + k.rotateY + "deg) rotateZ(" + k.rotateZ + "deg)";
-                        l += "transform:translate(" + k.x * c + "px, " + k.y * b + "px)" + t + " scale(" + k.scale + ");";
-                        c = "pointer-events:none;border-style:solid;-webkit-text-stroke:" + k.strokeWidth + "px " + g.a.zf(k.strokeColor) + ";";
-                        for (m in k) k.hasOwnProperty(m) && (c += this.Lr(m, k[m]));
-                        b = "";
-                        for (m = 0; m < this.T.length; m++) this.T[m].attrs.parent ===
-                            d.name && (this.Qx(d), b += this.Wy(this.T[m], d.attrs.width / 100, d.attrs.height / 100));
-                        return '<div class="bas-danmaku-item bas-danmaku-item-text bas-danmaku-item--' + d.name + '" style="' + l + '"><div class="bas-danmaku-item-inner" style="transform:translate(' + 100 * -k.anchorX + "%," + 100 * -k.anchorY + "%);" + c + '">' + k.content + b + "</div></div>";
-                    case "DefButton":
-                        l += "transform:translate(" + k.x * c + "px, " + k.y * b + "px) scale(" + k.scale + ");color:" + g.a.zo(k.textColor, k.textAlpha) + ";background-color:" + g.a.zo(k.fillColor, k.fillAlpha) +
-                            ";";
-                        c = "";
-                        for (m in k) k.hasOwnProperty(m) && (c += this.Lr(m, k[m]));
-                        return '<div class="bas-danmaku-item bas-danmaku-item-button bas-danmaku-item--' + d.name + '" style="' + l + '"><div class="bas-danmaku-item-inner" style="' + c + '">' + k.text + "</div></div>";
-                    case "DefPath":
-                        l += "transform:translate(" + k.x * c + "px, " + k.y * b + "px);";
-                        c = "";
-                        for (m in k) k.hasOwnProperty(m) && (c += this.Lr(m, k[m]));
-                        m = void 0;
-                        k.viewBox ? m = k.width || k.height ? 'viewBox="' + k.viewBox + '" ' + (k.width ? 'width="' + k.width * (k.scale || 1) + '"' : "") + " " + (k.height ? 'height="' +
-                            k.height * (k.scale || 1) + '"' : "") : 'viewBox="' + k.viewBox + '" width="' + parseInt(k.viewBox.split(" ")[2], 10) * (k.scale || 1) + '"' : k.scale && (m = 'style="transform:scale(' + k.scale + ');transform-origin: 0 0;overflow:visible;"');
-                        k = 'fill="' + g.a.zo(k.fillColor, k.fillAlpha) + '" stroke="' + g.a.zo(k.borderColor, k.borderAlpha) + '" stroke-width="' + k.borderWidth + '" d="' + k.d + '"';
-                        return '<div class="bas-danmaku-item bas-danmaku-item-path bas-danmaku-item--' + d.name + '" style="' + l + '"><div class="bas-danmaku-item-inner" style="' + c + '"><svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" ' +
-                            m + "><path " + k + "></svg></div></div>"
-                }
-            };
-            e.prototype.aI = function (d) {
-                for (var c = 0; c < this.T.length; c++)
-                    if (this.T[c].name === d) return this.T[c];
-                return null
-            };
-            e.prototype.Qx = function (d) {
-                !d || d.attrs.width && d.attrs.height || (this.xs || (this.xs = document.createElement("canvas").getContext("2d")), this.xs.font = (d.attrs.bold ? "bold " : "") + " " + d.attrs.fontSize + "px " + d.attrs.fontFamily, d.attrs.width = this.xs.measureText(d.attrs.content).width, d.attrs.height = d.attrs.fontSize)
-            };
-            e.prototype.Lr = function (d, c) {
-                switch (d) {
-                    case "fontFamily":
-                        return "font-family:&quot;" +
-                            c.split(",").join("&quot;,&quot;") + "&quot;,sans-serif;";
-                    case "textShadow":
-                        return "text-shadow:" + (c ? "rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px" : "none") + ";";
-                    case "bold":
-                        return "font-weight:" + (c ? "bold" : "normal") + ";";
-                    case "fontSize":
-                        return 12 <= c ? "font-size:" + c + "px;" : "font-size:12px;transform:scale(" + c / 12 + ");";
-                    default:
-                        return ""
-                }
-            };
-            e.prototype.Mr = function (d, c) {
-                switch (d) {
-                    case "alpha":
-                        return "opacity:" + c + ";";
-                    case "color":
-                        return "color:" + g.a.zf(c) + ";";
-                    case "zIndex":
-                        return "z-index:" + c + ";";
-                    default:
-                        return ""
-                }
-            };
-            e.prototype.fG = function () {
-                for (var d = "", c = 0; c < this.T.length; c++)
-                    for (var b = this.va.ja[this.T[c].name], e = 0; e < b.length; e++)
-                        if (this.T[c].attrs.parent) {
-                            var g = this.aI(this.T[c].attrs.parent);
-                            g && (this.Qx(g), d += this.Zy(this.T[c], b[e].name, b[e].valueStart, b[e].valueEnd, g.attrs.width / 100, g.attrs.height / 100))
-                        } else d += this.Zy(this.T[c], b[e].name, b[e].valueStart, b[e].valueEnd);
-                return "<style>" + d + "</style>"
-            };
-            e.prototype.Zy = function (d, c, b, e, g, h) {
-                void 0 === g &&
-                    (g = this.$i);
-                void 0 === h && (h = this.ip);
-                var f = "",
-                    k = "";
-                if (b && (void 0 !== b.x || void 0 !== b.y || void 0 !== b.rotateX || void 0 !== b.rotateY || void 0 !== b.rotateZ || void 0 !== b.scale) || e && (void 0 !== e.x || void 0 !== e.y || void 0 !== e.rotateX || void 0 !== e.rotateY || void 0 !== e.rotateZ || void 0 !== e.scale)) {
-                    var n = function (c) {
-                        return e && void 0 !== e[c] ? e[c].value : b && void 0 !== b[c] ? b[c].value : d.attrs[c] ? d.attrs[c] : 0
-                    },
-                        m = n("x") * g,
-                        t = n("y") * h,
-                        B = n("rotateX"),
-                        A = n("rotateY"),
-                        z = n("rotateZ"),
-                        n = "DefPath" === d.type ? 1 : n("scale"),
-                        C = function (c) {
-                            return b &&
-                                b[c] ? b[c].value : d.attrs[c] ? d.attrs[c] : 0
-                        };
-                    g *= C("x");
-                    h *= C("y");
-                    var D = C("rotateX"),
-                        O = C("rotateY"),
-                        P = C("rotateZ"),
-                        C = "DefPath" === d.type ? 1 : C("scale");
-                    switch (d.type) {
-                        case "DefText":
-                            f += "transform:translate(" + g + "px, " + h + "px) rotateX(" + D + "deg) rotateY(" + O + "deg) rotateZ(" + P + "deg) scale(" + C + ");";
-                            k += "transform:translate(" + m + "px, " + t + "px) rotateX(" + B + "deg) rotateY(" + A + "deg) rotateZ(" + z + "deg) scale(" + n + ");";
-                            break;
-                        case "DefButton":
-                        case "DefPath":
-                            f += "transform:translate(" + g + "px, " + h + "px);", k += "transform:translate(" +
-                                m + "px, " + t + "px);"
+                ,
+                i.prototype.transience = function (i) {
+                    var e = this.endProgress[i]
+                        , t = this.dm.def2set[i][e];
+                    if (t && t.valueEnd && (t.valueEnd.content && (this.ele.querySelector(".bas-danmaku-item--" + i + " .bas-danmaku-item-inner").innerHTML = t.valueEnd.content),
+                        t.valueEnd.text && (this.ele.querySelector(".bas-danmaku-item--" + i + " .bas-danmaku-item-inner").innerHTML = t.valueEnd.text),
+                        t.valueEnd.fontSize)) {
+                        var a = t.valueEnd.fontSize;
+                        a >= 12 ? this.ele.querySelector(".bas-danmaku-item--" + i + " .bas-danmaku-item-inner").style.fontSize = a + "px" : (this.ele.querySelector(".bas-danmaku-item--" + i + " .bas-danmaku-item-inner").style.fontSize = "12px",
+                            this.ele.querySelector(".bas-danmaku-item--" + i + " .bas-danmaku-item-inner").style.transform = "scale(" + a / 12 + ")")
                     }
                 }
-                for (var N in b) b.hasOwnProperty(N) && (f += this.Mr(N, b[N].value));
-                for (N in e) e.hasOwnProperty(N) && (k += this.Mr(N, e[N].value));
-                k || (k = "line-height:1;");
-                return f ? "\n@-webkit-keyframes " + c + " {\n    0% { " + f + " }\n    100% { " + k + " }\n}\n@keyframes " + c + " {\n    0% { " + f + " }\n    100% { " + k + " }\n}" : "\n@-webkit-keyframes " + c + " {\n    100% { " + k + " }\n}\n@keyframes " + c + " {\n    100% { " + k + " }\n}"
-            };
-            e.prototype.po = function (d, c) {
-                for (var b = "", e = 0; e < this.prefix.length; e++) b += "" + this.prefix[e] + d + ":" +
-                    c + ";";
-                return b
-            };
-            e.prototype.Qa = function (d) {
-                function c(c) {
-                    e.T[c].attrs.target && d.getElementsByClassName("bas-danmaku-item--" + e.T[c].name)[0].addEventListener("click", function () {
-                        "av" === b.T[c].attrs.target.objType ? (window.open("//www.bilibili.com/video/av" + b.T[c].attrs.target.av + "/index_" + b.T[c].attrs.target.page + ".html" + (b.T[c].attrs.target.time ? "?t=" + b.T[c].attrs.target.time / 1E3 : "")), b.c && b.c.pause()) : "bangumi" === b.T[c].attrs.target.objType ? (window.open("//www.bilibili.com/bangumi/play/ss" + b.T[c].attrs.target.seasonId +
-                            (b.T[c].attrs.target.time ? "?t=" + b.T[c].attrs.target.time / 1E3 : "") + "#" + b.T[c].attrs.target.episodeId), b.c && b.c.pause()) : "seek" === b.T[c].attrs.target.objType && b.c && b.c.seek(b.T[c].attrs.target.time / 1E3)
-                    })
+                ,
+                i.prototype.percentObj2Num = function (i) {
+                    for (var e = this, t = function (i) {
+                        for (var t in i)
+                            if (i.hasOwnProperty(t))
+                                if (void 0 === i[t])
+                                    delete i[t];
+                                else {
+                                    var a = void 0;
+                                    if (i[t].numType)
+                                        a = i[t];
+                                    else {
+                                        if (!i[t].value || !i[t].value.numType)
+                                            continue;
+                                        a = i[t].value
+                                    }
+                                    if ("number" === a.numType)
+                                        switch (t) {
+                                            case "x":
+                                                a = a.value / e.xProportion;
+                                                break;
+                                            case "y":
+                                                a = a.value / e.yProportion;
+                                                break;
+                                            default:
+                                                a = a.value
+                                        }
+                                    else if ("percent" === a.numType)
+                                        switch (t) {
+                                            case "fontSize":
+                                            case "width":
+                                                a = a.value * e.xProportion;
+                                                break;
+                                            case "height":
+                                                a = a.value * e.yProportion;
+                                                break;
+                                            default:
+                                                a = a.value
+                                        }
+                                    i[t].numType ? i[t] = a : i[t].value && i[t].value.numType && (i[t].value = a)
+                                }
+                    }, a = 0; a < i.defs.length; a++)
+                        t(i.defs[a].attrs);
+                    for (a = 0; a < i.sets.length; a++)
+                        if (i.sets[a].items)
+                            for (var r = 0; r < i.sets[a].items.length; r++)
+                                t(i.sets[a].items[r].attrs);
+                        else
+                            t(i.sets[a].attrs);
+                    for (var n in i.def2set)
+                        if ({}.hasOwnProperty.call(i.def2set, n))
+                            for (a = 0; a < i.def2set[n].length; a++)
+                                t(i.def2set[n][a].valueEnd),
+                                    t(i.def2set[n][a].valueStart)
                 }
-                var b = this;
-                d.addEventListener("animationend", function (c) {
-                    return b.uw(c)
-                });
-                d.addEventListener("webkitAnimationEnd", function (c) {
-                    return b.uw(c)
-                });
-                for (var e = this, g = 0; g < this.T.length; g++) c(g)
-            };
-            e.prototype.destroy = function () { };
-            return e
+                ,
+                i.prototype.itemsTemplate = function () {
+                    for (var i = "", e = 0; e < this.defs.length; e++)
+                        this.defs[e].attrs.parent || (i += this.itemsTemplateOne(this.defs[e]));
+                    return i
+                }
+                ,
+                i.prototype.itemsTemplateOne = function (i, e, t) {
+                    var a = this;
+                    void 0 === e && (e = this.xProportion),
+                        void 0 === t && (t = this.yProportion);
+                    var r, n = function (i, e) {
+                        for (var t = "", r = 0; r < i.length; r++)
+                            t += "duration" === e ? i[r][e] + "s" : "delay" === e ? i[r][e] - a.startTime + "s" : i[r][e],
+                                r !== i.length - 1 && (t += ",");
+                        return t
+                    }, o = i.attrs, l = this.dm.def2set[i.name], s = "" + this.prefixCSS("animation-name", n(l, "name")) + this.prefixCSS("animation-duration", n(l, "duration")) + this.prefixCSS("animation-timing-function", n(l, "easing")) + this.prefixCSS("animation-delay", n(l, "delay"));
+                    for (var p in o)
+                        o.hasOwnProperty(p) && (s += this.getStyleOut(p, o[p]));
+                    switch (i.type) {
+                        case "DefText":
+                            var d = "";
+                            (o.rotateX || o.rotateY || o.rotateZ) && (d = " rotateX(" + o.rotateX + "deg) rotateY(" + o.rotateY + "deg) rotateZ(" + o.rotateZ + "deg)"),
+                                s += "transform:translate(" + o.x * e + "px, " + o.y * t + "px)" + d + " scale(" + o.scale + ");",
+                                r = this.getStyleIn(o);
+                            var c = "";
+                            for (p = 0; p < this.defs.length; p++)
+                                this.defs[p].attrs.parent === i.name && (this.defSize(i),
+                                    c += this.itemsTemplateOne(this.defs[p], i.attrs.width / 100, i.attrs.height / 100));
+                            return '<div class="bas-danmaku-item bas-danmaku-item-text bas-danmaku-item--' + i.name + '" style="' + s + '"><div class="bas-danmaku-item-inner" style="' + r + '">' + o.content + c + "</div></div>";
+                        case "DefButton":
+                            return s += "transform:translate(" + o.x * e + "px, " + o.y * t + "px) scale(" + o.scale + ");color:" + vs.rgbaFormat(o.textColor, o.textAlpha) + ";background-color:" + vs.rgbaFormat(o.fillColor, o.fillAlpha) + ";",
+                                r = this.getStyleIn(o),
+                                '<div class="bas-danmaku-item bas-danmaku-item-button bas-danmaku-item--' + i.name + '" style="' + s + '"><div class="bas-danmaku-item-inner" style="' + r + '">' + o.text + "</div></div>";
+                        case "DefPath":
+                            s += "transform:translate(" + o.x * e + "px, " + o.y * t + "px);",
+                                r = this.getStyleIn(o);
+                            var b = void 0;
+                            o.viewBox ? b = o.width || o.height ? 'viewBox="' + o.viewBox + '" ' + (o.width ? 'width="' + o.width * (o.scale || 1) + '"' : "") + " " + (o.height ? 'height="' + o.height * (o.scale || 1) + '"' : "") : 'viewBox="' + o.viewBox + '" width="' + parseInt(o.viewBox.split(" ")[2], 10) * (o.scale || 1) + '"' : o.scale && (b = 'style="transform:scale(' + o.scale + ');transform-origin: 0 0;overflow:visible;"');
+                            var u = 'fill="' + vs.rgbaFormat(o.fillColor, o.fillAlpha) + '" stroke="' + vs.rgbaFormat(o.borderColor, o.borderAlpha) + '" stroke-width="' + o.borderWidth + '" d="' + o.d + '"';
+                            return '<div class="bas-danmaku-item bas-danmaku-item-path bas-danmaku-item--' + i.name + '" style="' + s + '"><div class="bas-danmaku-item-inner" style="' + r + '"><svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" ' + b + "><path " + u + "></svg></div></div>"
+                    }
+                }
+                ,
+                i.prototype.findParent = function (i) {
+                    for (var e = 0; e < this.defs.length; e++)
+                        if (this.defs[e].name === i)
+                            return this.defs[e];
+                    return null
+                }
+                ,
+                i.prototype.defSize = function (i) {
+                    !i || i.attrs.width && i.attrs.height || (this.measureCanvas || (this.measureCanvas = document.createElement("canvas").getContext("2d")),
+                        this.measureCanvas.font = (i.attrs.bold ? "bold " : "") + " " + i.attrs.fontSize + "px " + i.attrs.fontFamily,
+                        i.attrs.width = this.measureCanvas.measureText(i.attrs.content).width,
+                        i.attrs.height = i.attrs.fontSize)
+                }
+                ,
+                i.prototype.getStyleIn = function (i) {
+                    var e = ""
+                        , t = "";
+                    return i.strokeWidth && i.strokeColor && (e += "-webkit-text-stroke:" + i.strokeWidth + "px " + vs.colorFromInt(i.strokeColor) + ";"),
+                        i.hasOwnProperty("fontFamily") && (e += "font-family:&quot;" + i.fontFamily.split(",").join("&quot;,&quot;") + "&quot;,sans-serif;"),
+                        i.hasOwnProperty("textShadow") && (e += "text-shadow:" + (i.textShadow ? "rgb(0, 0, 0) 1px 0px 1px, rgb(0, 0, 0) 0px 1px 1px, rgb(0, 0, 0) 0px -1px 1px, rgb(0, 0, 0) -1px 0px 1px" : "none") + ";"),
+                        i.hasOwnProperty("bold") && (e += "font-weight:" + (i.bold ? "bold" : "normal") + ";"),
+                        i.hasOwnProperty("fontSize") && (i.fontSize >= 12 ? e += "font-size:" + i.fontSize + "px;" : (e += "font-size:12px;",
+                            t += "scale(" + i.fontSize / 12 + ") ")),
+                        i.hasOwnProperty("anchorX") && i.hasOwnProperty("anchorY") && (t += "translate(" + 100 * -i.anchorX + "%," + 100 * -i.anchorY + "%)"),
+                        t && (e += "transform:" + t + ";"),
+                        e
+                }
+                ,
+                i.prototype.getStyleOut = function (i, e) {
+                    switch (i) {
+                        case "alpha":
+                            return "opacity:" + e + ";";
+                        case "color":
+                            return "color:" + vs.colorFromInt(e) + ";";
+                        case "zIndex":
+                            return "z-index:" + e + ";";
+                        default:
+                            return ""
+                    }
+                }
+                ,
+                i.prototype.animationTemplate = function () {
+                    for (var i = "", e = 0; e < this.defs.length; e++)
+                        for (var t = this.dm.def2set[this.defs[e].name], a = 0; a < t.length; a++)
+                            if (this.defs[e].attrs.parent) {
+                                var r = this.findParent(this.defs[e].attrs.parent);
+                                r && (this.defSize(r),
+                                    i += this.keyframesTemplate(this.defs[e], t[a].name, t[a].valueStart, t[a].valueEnd, r.attrs.width / 100, r.attrs.height / 100))
+                            } else
+                                i += this.keyframesTemplate(this.defs[e], t[a].name, t[a].valueStart, t[a].valueEnd);
+                    return "<style>" + i + "</style>"
+                }
+                ,
+                i.prototype.keyframesTemplate = function (i, e, t, a, r, n) {
+                    void 0 === r && (r = this.xProportion),
+                        void 0 === n && (n = this.yProportion);
+                    var o = ""
+                        , l = "";
+                    if (t && (void 0 !== t.x || void 0 !== t.y || void 0 !== t.rotateX || void 0 !== t.rotateY || void 0 !== t.rotateZ || void 0 !== t.scale) || a && (void 0 !== a.x || void 0 !== a.y || void 0 !== a.rotateX || void 0 !== a.rotateY || void 0 !== a.rotateZ || void 0 !== a.scale)) {
+                        var s = function (e) {
+                            return a && void 0 !== a[e] ? a[e] : t && void 0 !== t[e] ? t[e] : i.attrs[e] ? i.attrs[e] : 0
+                        }
+                            , p = s("x") * r
+                            , d = s("y") * n
+                            , c = s("rotateX")
+                            , b = s("rotateY")
+                            , u = s("rotateZ")
+                            , h = "DefPath" === i.type ? 1 : s("scale")
+                            , y = function (e) {
+                                return t && void 0 !== t[e] ? t[e] : void 0 !== i.attrs[e] ? i.attrs[e] : 0
+                            }
+                            , f = y("x") * r
+                            , m = y("y") * n
+                            , v = y("rotateX")
+                            , g = y("rotateY")
+                            , x = y("rotateZ")
+                            , k = "DefPath" === i.type ? 1 : y("scale");
+                        switch (i.type) {
+                            case "DefText":
+                                o += "transform:translate(" + f + "px, " + m + "px) rotateX(" + v + "deg) rotateY(" + g + "deg) rotateZ(" + x + "deg) scale(" + k + ");",
+                                    l += "transform:translate(" + p + "px, " + d + "px) rotateX(" + c + "deg) rotateY(" + b + "deg) rotateZ(" + u + "deg) scale(" + h + ");";
+                                break;
+                            case "DefButton":
+                            case "DefPath":
+                                o += "transform:translate(" + f + "px, " + m + "px);",
+                                    l += "transform:translate(" + p + "px, " + d + "px);"
+                        }
+                    }
+                    for (var w in t)
+                        t.hasOwnProperty(w) && (o += this.getStyleOut(w, t[w]));
+                    for (var w in a)
+                        a.hasOwnProperty(w) && (l += this.getStyleOut(w, a[w]));
+                    return l || (l = "line-height:1;"),
+                        o ? "\n@-webkit-keyframes " + e + " {\n    0% { " + o + " }\n    100% { " + l + " }\n}\n@keyframes " + e + " {\n    0% { " + o + " }\n    100% { " + l + " }\n}" : "\n@-webkit-keyframes " + e + " {\n    100% { " + l + " }\n}\n@keyframes " + e + " {\n    100% { " + l + " }\n}"
+                }
+                ,
+                i.prototype.prefixCSS = function (i, e) {
+                    for (var t = "", a = 0; a < this.prefix.length; a++)
+                        t += "" + this.prefix[a] + i + ":" + e + ";";
+                    return t
+                }
+                ,
+                i.prototype.bindEvents = function (i) {
+                    var e = this;
+                    i.addEventListener("animationend", (function (i) {
+                        return e.animationCallback(i)
+                    }
+                    )),
+                        i.addEventListener("webkitAnimationEnd", (function (i) {
+                            return e.animationCallback(i)
+                        }
+                        ));
+                    for (var t = function (t) {
+                        a.defs[t].attrs.target && i.getElementsByClassName("bas-danmaku-item--" + a.defs[t].name)[0].addEventListener("click", (function () {
+                            "av" === e.defs[t].attrs.target.objType ? (window.open("//www.bilibili.com/video/" + (e.defs[t].attrs.target.bvid ? e.defs[t].attrs.target.bvid : "av" + e.defs[t].attrs.target.av) + "/?p=" + (e.defs[t].attrs.target.page || "1") + (e.defs[t].attrs.target.time ? "&t=" + e.defs[t].attrs.target.time / 1e3 : "")),
+                                e.options.pauseFunc && e.options.pauseFunc()) : "bangumi" === e.defs[t].attrs.target.objType ? (window.open("//www.bilibili.com/bangumi/play/ss" + e.defs[t].attrs.target.seasonId + (e.defs[t].attrs.target.time ? "?t=" + e.defs[t].attrs.target.time / 1e3 : "") + "#" + e.defs[t].attrs.target.episodeId),
+                                    e.options.pauseFunc && e.options.pauseFunc()) : "seek" === e.defs[t].attrs.target.objType && e.options.seekFunc && e.options.seekFunc(e.defs[t].attrs.target.time / 1e3)
+                        }
+                        ))
+                    }, a = this, r = 0; r < this.defs.length; r++)
+                        t(r)
+                }
+                ,
+                i.prototype.destroy = function () { }
+                ,
+                i
         }();
         t.a = m
     },
@@ -33863,8 +34066,9 @@ function Fa() {
     },
     function (m, t, e) {
         m.exports = function () {
-            return e(24)("/******/ (function(modules) { // webpackBootstrap\n/******/ \t// The module cache\n/******/ \tvar installedModules = {};\n/******/\n/******/ \t// The require function\n/******/ \tfunction __webpack_require__(moduleId) {\n/******/\n/******/ \t\t// Check if module is in cache\n/******/ \t\tif(installedModules[moduleId]) {\n/******/ \t\t\treturn installedModules[moduleId].exports;\n/******/ \t\t}\n/******/ \t\t// Create a new module (and put it into the cache)\n/******/ \t\tvar module = installedModules[moduleId] = {\n/******/ \t\t\ti: moduleId,\n/******/ \t\t\tl: false,\n/******/ \t\t\texports: {}\n/******/ \t\t};\n/******/\n/******/ \t\t// Execute the module function\n/******/ \t\tmodules[moduleId].call(module.exports, module, module.exports, __webpack_require__);\n/******/\n/******/ \t\t// Flag the module as loaded\n/******/ \t\tmodule.l = true;\n/******/\n/******/ \t\t// Return the exports of the module\n/******/ \t\treturn module.exports;\n/******/ \t}\n/******/\n/******/\n/******/ \t// expose the modules object (__webpack_modules__)\n/******/ \t__webpack_require__.m = modules;\n/******/\n/******/ \t// expose the module cache\n/******/ \t__webpack_require__.c = installedModules;\n/******/\n/******/ \t// define getter function for harmony exports\n/******/ \t__webpack_require__.d = function(exports, name, getter) {\n/******/ \t\tif(!__webpack_require__.o(exports, name)) {\n/******/ \t\t\tObject.defineProperty(exports, name, {\n/******/ \t\t\t\tconfigurable: false,\n/******/ \t\t\t\tenumerable: true,\n/******/ \t\t\t\tget: getter\n/******/ \t\t\t});\n/******/ \t\t}\n/******/ \t};\n/******/\n/******/ \t// getDefaultExport function for compatibility with non-harmony modules\n/******/ \t__webpack_require__.n = function(module) {\n/******/ \t\tvar getter = module && module.__esModule ?\n/******/ \t\t\tfunction getDefault() { return module['default']; } :\n/******/ \t\t\tfunction getModuleExports() { return module; };\n/******/ \t\t__webpack_require__.d(getter, 'a', getter);\n/******/ \t\treturn getter;\n/******/ \t};\n/******/\n/******/ \t// Object.prototype.hasOwnProperty.call\n/******/ \t__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };\n/******/\n/******/ \t// __webpack_public_path__\n/******/ \t__webpack_require__.p = \"\";\n/******/\n/******/ \t// Load entry module and return exports\n/******/ \treturn __webpack_require__(__webpack_require__.s = 1);\n/******/ })\n/************************************************************************/\n/******/ ([\n/* 0 */\n/***/ (function(module, __webpack_exports__, __webpack_require__) {\n\n\"use strict\";\n/* harmony default export */ __webpack_exports__[\"a\"] = ({\r\n    extend: function (child, parent) {\r\n        var cp = {};\r\n        for (var k in child) {\r\n            if (child.hasOwnProperty(k)) {\r\n                cp[k] = child[k];\r\n            }\r\n        }\r\n        for (var k in parent) {\r\n            if (parent.hasOwnProperty(k)) {\r\n                cp[k] = parent[k];\r\n            }\r\n        }\r\n        return cp;\r\n    },\r\n    htmlEncode: function (str, hasSpace, hasSpecial) {\r\n        if (!hasSpecial) {\r\n            str = str.replace(/&/g, '')\r\n                .replace(/</g, '')\r\n                .replace(/>/g, '')\r\n                .replace(/\"/g, '')\r\n                .replace(/'/g, '')\r\n                .replace(/\\//g, '')\r\n                .replace(/:/g, '')\r\n                .replace(/;/g, '');\r\n        }\r\n        return str.replace(/&/g, '&amp;')\r\n            .replace(/</g, '&lt;')\r\n            .replace(/>/g, '&gt;')\r\n            .replace(/\"/g, '&quot;')\r\n            .replace(/'/g, '&#x27;')\r\n            .replace(/\\//g, '&#x2f;')\r\n            .replace(/ /g, hasSpace ? ' ' : '&nbsp;')\r\n            .replace(/\\n/g, '<br>');\r\n    },\r\n});\r\n\n\n/***/ }),\n/* 1 */\n/***/ (function(module, __webpack_exports__, __webpack_require__) {\n\n\"use strict\";\nObject.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index_rev__ = __webpack_require__(2);\n\r\nvar ctx = self;\r\nctx.addEventListener('message', function (e) {\r\n    var dm = e.data;\r\n    try {\r\n        var parsed = Object(__WEBPACK_IMPORTED_MODULE_0__index_rev__[\"a\" /* default */])(dm.text);\r\n        dm.defs = parsed.defs;\r\n        dm.sets = parsed.sets;\r\n        ctx.postMessage(dm);\r\n    }\r\n    catch (e) {\r\n        console.warn('Error in BAS parser: ', e);\r\n        ctx.postMessage({\r\n            error: e.message,\r\n        });\r\n    }\r\n});\r\n\n\n/***/ }),\n/* 2 */\n/***/ (function(module, __webpack_exports__, __webpack_require__) {\n\n\"use strict\";\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_rev__ = __webpack_require__(0);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bas_parser_rev__ = __webpack_require__(3);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ast_transform_rev__ = __webpack_require__(5);\n\r\n\r\n\r\nfunction parser(basCode, encode) {\r\n    if (encode === void 0) { encode = true; }\r\n    var defaultCommon = {\r\n        'x': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'y': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'zIndex': 0,\r\n        'scale': {\r\n            'numType': 'number',\r\n            'value': 1,\r\n        },\r\n        'duration': undefined,\r\n    };\r\n    var defaultText = {\r\n        'content': '\u8bf7\u8f93\u5165\u5185\u5bb9',\r\n        'alpha': {\r\n            'numType': 'number',\r\n            'value': 1,\r\n        },\r\n        'color': 16777215,\r\n        'anchorX': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'anchorY': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'fontSize': {\r\n            'numType': 'number',\r\n            'value': 25,\r\n        },\r\n        'fontFamily': 'SimHei',\r\n        'bold': 1,\r\n        'textShadow': 1,\r\n        'strokeWidth': 0,\r\n        'strokeColor': 16777215,\r\n        'rotateX': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'rotateY': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'rotateZ': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'parent': undefined,\r\n    };\r\n    var defaultButton = {\r\n        'text': '\u8bf7\u8f93\u5165\u5185\u5bb9',\r\n        'fontSize': {\r\n            'numType': 'number',\r\n            'value': 25,\r\n        },\r\n        'textColor': 0,\r\n        'textAlpha': {\r\n            'numType': 'number',\r\n            'value': 1,\r\n        },\r\n        'fillColor': 16777215,\r\n        'fillAlpha': {\r\n            'numType': 'number',\r\n            'value': 1,\r\n        },\r\n        target: undefined,\r\n    };\r\n    var defaultPath = {\r\n        'd': undefined,\r\n        'viewBox': undefined,\r\n        'borderColor': 0,\r\n        'borderAlpha': {\r\n            'numType': 'number',\r\n            'value': 1,\r\n        },\r\n        'borderWidth': {\r\n            'numType': 'number',\r\n            'value': 0,\r\n        },\r\n        'fillColor': 16777215,\r\n        'fillAlpha': {\r\n            'numType': 'number',\r\n            'value': 1,\r\n        },\r\n    };\r\n    try {\r\n        var text = [];\r\n        var opacityArr = [];\r\n        var parseResult = new __WEBPACK_IMPORTED_MODULE_2__ast_transform_rev__[\"a\" /* default */](__WEBPACK_IMPORTED_MODULE_1__bas_parser_rev__[\"a\" /* default */]['parse'](basCode), encode)['transform']();\r\n        var parsed = {};\r\n        parsed.defs = parseResult.defs;\r\n        for (var i = 0; i < parseResult.defs.length; i++) {\r\n            parsed.defs[i]['attrs'] = __WEBPACK_IMPORTED_MODULE_0__utils_rev__[\"a\" /* default */].extend(defaultCommon, parseResult.defs[i]['attrs']);\r\n            if (parsed.defs[i]['type'] === 'DefText') {\r\n                parsed.defs[i]['attrs'] = __WEBPACK_IMPORTED_MODULE_0__utils_rev__[\"a\" /* default */].extend(defaultText, parseResult.defs[i]['attrs']);\r\n            }\r\n            else if (parsed.defs[i]['type'] === 'DefButton') {\r\n                parsed.defs[i]['attrs'] = __WEBPACK_IMPORTED_MODULE_0__utils_rev__[\"a\" /* default */].extend(defaultButton, parseResult.defs[i]['attrs']);\r\n            }\r\n            else if (parsed.defs[i]['type'] === 'DefPath') {\r\n                parsed.defs[i]['attrs'] = __WEBPACK_IMPORTED_MODULE_0__utils_rev__[\"a\" /* default */].extend(defaultPath, parseResult.defs[i]['attrs']);\r\n            }\r\n        }\r\n        parsed.sets = parseResult.sets;\r\n        return parsed;\r\n    }\r\n    catch (e) {\r\n        throw new Error(e.message);\r\n    }\r\n}\r\n/* harmony default export */ __webpack_exports__[\"a\"] = (parser);\r\n\n\n/***/ }),\n/* 3 */\n/***/ (function(module, __webpack_exports__, __webpack_require__) {\n\n\"use strict\";\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bas_lexer_rev__ = __webpack_require__(4);\n\r\nvar BasParser = /** @class */ (function () {\r\n    function BasParser() {\r\n        this.actionTable = [null, { 0: 6, 1: 1, 2: 2, 35: 14, 38: 48, 7: 4, 8: 8, 9: 10, 10: 12, 44: 44, 45: 38, 46: 54, 47: 52, 73: 86, 70: 46, 24: 42, 71: 50, 27: 40 }, { 11: 41, 20: 20, 21: 22, 22: 16, 28: 18 }, { 32: 26, 19: 28, 42: 24, 35: 14, 29: 32, 30: 30, 31: 73 }, { 0: 6, 2: 9, 81: 74, 4: 29, 69: 78, 6: 35, 7: 4, 8: 8, 9: 10, 10: 12, 12: 43, 70: 46, 71: 50, 16: 55, 64: 58, 18: 43, 19: 61, 78: 169, 23: 58, 24: 42, 72: 77, 73: 86, 27: 40, 66: 106, 82: 102, 79: 104, 33: 77, 34: 58, 35: 14, 36: 61, 38: 48, 39: 56, 41: 77, 43: 99, 44: 44, 45: 38, 46: 54, 47: 52, 49: 72, 50: 70, 80: 76, 55: 68, 56: 60, 57: 62, 58: 64, 59: 66, 61: 98, 62: 100 }, { 10: 39, 3: 27, 35: 14, 29: 27, 30: 39 }, { 38: 48, 71: 50, 40: 37, 9: 37, 44: 44, 45: 38, 70: 46, 73: 86, 18: 45, 12: 45, 14: 37, 24: 42, 25: 37, 27: 40 }, { 32: 26, 35: 14, 68: 159, 69: 78, 73: 86, 42: 24, 67: 112, 44: 129, 83: 110, 80: 76, 49: 72, 50: 70, 19: 28, 84: 108, 55: 68, 81: 74, 59: 66, 29: 32, 30: 30, 31: 75 }, { 0: 6, 70: 46, 2: 11, 35: 14, 5: 11, 38: 48, 7: 4, 8: 8, 9: 10, 10: 12, 44: 44, 45: 38, 14: 36, 15: 11, 17: 11, 34: 11, 71: 50, 46: 54, 47: 52, 24: 42, 25: 34, 73: 86, 27: 40 }, { 0: 6, 2: 13, 5: 13, 70: 46, 7: 4, 8: 8, 9: 10, 10: 12, 13: 49, 14: 36, 15: 13, 17: 13, 71: 50, 25: 34, 26: 71, 27: 40, 24: 42, 34: 13, 35: 14, 73: 86, 38: 48, 44: 44, 45: 38, 46: 54, 47: 52, 48: 131 }, { 64: 58, 66: 106, 69: 78, 70: 46, 71: 50, 72: 167, 73: 86, 14: 36, 15: 51, 80: 76, 81: 74, 82: 102, 23: 58, 24: 42, 25: 34, 27: 40, 79: 104, 33: 79, 34: 58, 38: 48, 39: 56, 40: 95, 41: 97, 44: 44, 45: 38, 49: 72, 50: 70, 55: 68, 56: 60, 57: 62, 58: 64, 59: 66, 61: 98, 62: 100 }, { 78: 101, 43: 101, 54: 101, 38: 91 }, { 0: 6, 2: 15, 35: 14, 38: 48, 7: 4, 8: 8, 9: 10, 10: 12, 44: 44, 45: 38, 46: 54, 47: 52, 73: 86, 70: 46, 24: 42, 71: 50, 27: 40 }, { 37: 89 }, { 78: 103, 54: 103, 43: 103 }, { 78: 84, 51: 80, 52: 82, 60: 141, 43: 84, 54: 84 }, { 69: 163 }, { 78: 105, 54: 105, 43: 105 }, { 78: 107, 54: 107, 43: 107 }, { 78: 109, 43: 109, 54: 109, 63: 109 }, { 65: 149, 74: 88, 75: 90, 76: 92, 53: 96, 77: 94 }, { 65: 151, 74: 88, 75: 90, 76: 92, 53: 96, 77: 94 }, { 65: 153, 74: 88, 75: 90, 76: 92, 53: 96, 77: 94 }, { 65: 155, 74: 88, 75: 90, 76: 92, 53: 96, 77: 94 }, { 65: 157, 74: 88, 75: 90, 76: 92, 53: 96, 77: 94 }, { 43: 111 }, { 67: 112, 68: 161, 69: 78, 73: 86, 80: 76, 49: 72, 50: 70, 83: 110, 84: 108, 54: 135, 55: 68, 81: 74, 59: 66 }];\r\n        this.gotoTable = { 27: { 0: 5 }, 28: { 0: 7 }, 29: { 2: 17 }, 30: { 2: 19 }, 31: { 17: 57, 2: 21, 34: 83, 5: 31, 15: 53 }, 32: { 36: 63, 2: 23, 19: 63 }, 33: { 36: 25, 2: 25, 19: 25 }, 34: { 19: 65 }, 35: { 12: 47, 18: 59 }, 36: { 36: 87, 19: 67 }, 37: { 5: 33 }, 38: { 64: 147, 34: 85, 23: 69 }, 39: { 38: 93 }, 40: { 63: 143 }, 41: { 78: 113, 43: 113, 54: 113, 63: 145 }, 42: { 72: 81, 33: 81, 41: 81 }, 43: { 43: 115 }, 44: { 78: 171, 54: 137, 43: 117 }, 45: { 43: 119 }, 46: { 78: 121, 54: 121, 43: 121 }, 47: { 78: 123, 54: 123, 43: 123 }, 48: { 69: 165 }, 49: { 53: 133 }, 50: { 43: 125 }, 51: { 43: 127 }, 52: { 54: 139 } };\r\n        this.prodList = [[53, 2], [27, 1], [28, 2], [28, 0], [29, 1], [29, 1], [29, 1], [32, 4], [33, 3], [33, 3], [35, 1], [35, 1], [34, 3], [34, 1], [34, 0], [36, 1], [36, 1], [37, 2], [37, 1], [31, 6], [31, 3], [31, 3], [39, 1], [39, 3], [39, 0], [40, 1], [30, 6], [30, 6], [38, 2], [38, 0], [42, 3], [43, 1], [43, 1], [44, 1], [44, 1], [44, 1], [44, 1], [46, 3], [48, 1], [48, 0], [47, 1], [47, 1], [47, 0], [41, 3], [49, 2], [49, 2], [49, 2], [49, 2], [49, 0], [45, 1], [45, 1], [51, 4], [50, 3], [50, 2], [52, 3], [52, 3], [52, 1]];\r\n        this.inputTable = { '<$>': 1, '(': 2, ')': 3, 'id': 4, '.': 5, 'then': 6, ',': 7, 'set': 8, '{': 9, '}': 10, 'time': 11, 'def': 12, '=': 13, 'hex': 14, 'number': 15, '%': 16, '+': 17, '-': 18, 'str_start': 19, 'str_end': 20, 'str_esc_char': 21, 'str_esc_unicode': 22, 'str_esc_ascii': 23, 'str_seg': 24, '[': 25, ']': 26 };\r\n    }\r\n    BasParser.parse = function (source) {\r\n        var lexer = new __WEBPACK_IMPORTED_MODULE_0__bas_lexer_rev__[\"a\" /* default */]();\r\n        lexer['source'] = source;\r\n        var parser = new BasParser();\r\n        var result = parser.parseLexer(lexer);\r\n        return result;\r\n    };\r\n    BasParser.prototype.parseLexer = function (lexer) {\r\n        var stateStack = [0];\r\n        var outputStack = [];\r\n        var state;\r\n        var token;\r\n        var act;\r\n        while (true) {\r\n            token = lexer['token'];\r\n            state = stateStack[stateStack.length - 1];\r\n            if (this.actionTable[this.inputTable[token]][state] == null) {\r\n                throw new Error('Parse Error:' + lexer['positionInfo']);\r\n            }\r\n            else {\r\n                act = this.actionTable[this.inputTable[token]][state];\r\n            }\r\n            if (act === 1) {\r\n                return outputStack.pop();\r\n            }\r\n            else if ((act & 1) === 1) {\r\n                outputStack.push(lexer['yytext']);\r\n                stateStack.push((act >>> 1) - 1);\r\n                lexer.advance();\r\n            }\r\n            else if ((act & 1) === 0) {\r\n                var pi = act >>> 1;\r\n                var length_1 = this.prodList[pi][1];\r\n                var result = null;\r\n                /** actions applying **/\r\n                /** default action **/\r\n                if (length_1 > 0) {\r\n                    result = outputStack[outputStack.length - length_1];\r\n                }\r\n                switch (pi) {\r\n                    case 0x1:\r\n                        result = {\r\n                            type: 'GlobalExprs',\r\n                            params: outputStack[outputStack.length - 1],\r\n                        };\r\n                        break;\r\n                    case 0x2:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push(outputStack[outputStack.length - 1]);\r\n                        break;\r\n                    case 0x3:\r\n                        result = [];\r\n                        break;\r\n                    case 0x4:\r\n                        result = { type: 'DefExpr', params: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x5:\r\n                        result = { type: 'SetExpr', params: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x6:\r\n                        result = { type: 'CallExpr', params: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x7:\r\n                        break;\r\n                    case 0x8:\r\n                        break;\r\n                    case 0x9:\r\n                        break;\r\n                    case 0xA:\r\n                        break;\r\n                    case 0xB:\r\n                        break;\r\n                    case 0xC:\r\n                        break;\r\n                    case 0xD:\r\n                        break;\r\n                    case 0xE:\r\n                        break;\r\n                    case 0xF:\r\n                        break;\r\n                    case 0x10:\r\n                        break;\r\n                    case 0x11:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push(outputStack[outputStack.length - 1]);\r\n                        break;\r\n                    case 0x12:\r\n                        result = [outputStack[outputStack.length - 1]];\r\n                        break;\r\n                    case 0x13:\r\n                        result = {\r\n                            type: 'UnitSetExpr',\r\n                            params: [outputStack[outputStack.length - 5], outputStack[outputStack.length - 3], outputStack[outputStack.length - 1]],\r\n                        };\r\n                        break;\r\n                    case 0x14:\r\n                        result = {\r\n                            type: 'ThenSetExpr',\r\n                            params: [outputStack[outputStack.length - 3], outputStack[outputStack.length - 1]],\r\n                        };\r\n                        break;\r\n                    case 0x15:\r\n                        result = {\r\n                            type: 'GroupSetExpr',\r\n                            params: outputStack[outputStack.length - 2],\r\n                        };\r\n                        break;\r\n                    case 0x16:\r\n                        result = {\r\n                            type: 'SetExprParams',\r\n                            params: [outputStack[outputStack.length - 1]],\r\n                        };\r\n                        break;\r\n                    case 0x17:\r\n                        result = {\r\n                            type: 'SetExprParams',\r\n                            params: [outputStack[outputStack.length - 3], outputStack[outputStack.length - 1]],\r\n                        };\r\n                        break;\r\n                    case 0x18:\r\n                        result = {\r\n                            type: 'SetExprParams',\r\n                            params: [],\r\n                        };\r\n                        break;\r\n                    case 0x19:\r\n                        break;\r\n                    case 0x1A:\r\n                        result = {\r\n                            type: 'NormalDefExpr',\r\n                            params: [outputStack[outputStack.length - 5], outputStack[outputStack.length - 4], outputStack[outputStack.length - 2]],\r\n                        };\r\n                        break;\r\n                    case 0x1B:\r\n                        result = {\r\n                            type: 'TweenDefExpr',\r\n                            params: [outputStack[outputStack.length - 5], outputStack[outputStack.length - 4], outputStack[outputStack.length - 2]],\r\n                        };\r\n                        break;\r\n                    case 0x1C:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push(outputStack[outputStack.length - 1]);\r\n                        break;\r\n                    case 0x1D:\r\n                        result = [];\r\n                        break;\r\n                    case 0x1E:\r\n                        result = {\r\n                            type: 'ASetter',\r\n                            params: [outputStack[outputStack.length - 3], outputStack[outputStack.length - 1]],\r\n                        };\r\n                        break;\r\n                    case 0x1F:\r\n                        result = { type: 'SimpleValue', value: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x20:\r\n                        break;\r\n                    case 0x21:\r\n                        result = { type: 'Num', value: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x22:\r\n                        break;\r\n                    case 0x23:\r\n                        result = { type: 'hex', value: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x24:\r\n                        result = { type: 'time', value: outputStack[outputStack.length - 1] };\r\n                        break;\r\n                    case 0x25:\r\n                        result = [outputStack[outputStack.length - 3], outputStack[outputStack.length - 2], outputStack[outputStack.length - 1]];\r\n                        break;\r\n                    case 0x26:\r\n                        break;\r\n                    case 0x27:\r\n                        break;\r\n                    case 0x28:\r\n                        break;\r\n                    case 0x29:\r\n                        break;\r\n                    case 0x2A:\r\n                        result = '+';\r\n                        break;\r\n                    case 0x2B:\r\n                        result = { type: 'String', value: outputStack[outputStack.length - 2] };\r\n                        break;\r\n                    case 0x2C:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push({ type: 'char', value: outputStack[outputStack.length - 1] });\r\n                        break;\r\n                    case 0x2D:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push({ type: 'unicode', value: outputStack[outputStack.length - 1] });\r\n                        break;\r\n                    case 0x2E:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push({ type: 'ascii', value: outputStack[outputStack.length - 1] });\r\n                        break;\r\n                    case 0x2F:\r\n                        result = outputStack[outputStack.length - 2];\r\n                        result.push({ type: 'seg', value: outputStack[outputStack.length - 1] });\r\n                        break;\r\n                    case 0x30:\r\n                        result = [];\r\n                        break;\r\n                    case 0x31:\r\n                        result = {\r\n                            type: 'ComplexValue',\r\n                            value: outputStack[outputStack.length - 1],\r\n                        };\r\n                        break;\r\n                    case 0x32:\r\n                        result = {\r\n                            type: 'ComplexValue',\r\n                            value: outputStack[outputStack.length - 1],\r\n                        };\r\n                        break;\r\n                    case 0x33:\r\n                        result = {\r\n                            type: 'Object',\r\n                            params: [outputStack[outputStack.length - 4], outputStack[outputStack.length - 2]],\r\n                        };\r\n                        break;\r\n                    case 0x34:\r\n                        result = {\r\n                            type: 'Array',\r\n                            params: outputStack[outputStack.length - 2],\r\n                        };\r\n                        break;\r\n                    case 0x35:\r\n                        result = {\r\n                            type: 'Array',\r\n                            params: [],\r\n                        };\r\n                        break;\r\n                    case 0x36:\r\n                        result = outputStack[outputStack.length - 3];\r\n                        result.push(outputStack[outputStack.length - 1]);\r\n                        break;\r\n                    case 0x37:\r\n                        result = outputStack[outputStack.length - 3];\r\n                        result.push(outputStack[outputStack.length - 1]);\r\n                        break;\r\n                    case 0x38:\r\n                        result = [outputStack[outputStack.length - 1]];\r\n                        break;\r\n                }\r\n                /** actions applying end **/\r\n                var i = 0;\r\n                while (i < length_1) {\r\n                    stateStack.pop();\r\n                    outputStack.pop();\r\n                    i++;\r\n                }\r\n                state = stateStack[stateStack.length - 1];\r\n                if (this.gotoTable[this.prodList[pi][0]][state] == null) {\r\n                    throw new Error('Goto Error!' + lexer['positionInfo']);\r\n                }\r\n                else {\r\n                    act = this.gotoTable[this.prodList[pi][0]][state];\r\n                }\r\n                stateStack.push((act >>> 1) - 1);\r\n                outputStack.push(result);\r\n            }\r\n        }\r\n    };\r\n    return BasParser;\r\n}());\r\n/* harmony default export */ __webpack_exports__[\"a\"] = (BasParser);\r\n\n\n/***/ }),\n/* 4 */\n/***/ (function(module, __webpack_exports__, __webpack_require__) {\n\n\"use strict\";\nvar DEADSTATE = 0xFFFFFFFF;\r\nvar INVALIDCHAR = 0xFFFFFFFF;\r\nvar BasLexer = /** @class */ (function () {\r\n    function BasLexer() {\r\n        this.transTable = [[false, [4294967295, 2, 1], [[0, 35, 0], [36, 36, 1], [37, 37, 2]]], [false, [4294967295, 20, 23, 22, 21, 12, 19, 18, 17, 16, 15, 14, 13, 11, 10, 9, 8, 7, 6, 5, 4, 3], [[0, 2, 0], [3, 3, 1], [4, 4, 2], [5, 5, 3], [6, 6, 4], [7, 7, 5], [8, 8, 6], [9, 9, 7], [10, 10, 8], [11, 11, 9], [12, 12, 10], [13, 13, 11], [14, 14, 12], [15, 15, 13], [16, 16, 14], [17, 17, 15], [18, 18, 16], [19, 30, 17], [31, 31, 18], [32, 32, 19], [33, 34, 20], [35, 35, 21], [36, 37, 0]]], [false, [26, 24, 25, 4294967295], [[0, 0, 0], [1, 16, 1], [17, 17, 2], [18, 32, 1], [33, 33, 3], [34, 35, 1], [36, 37, 3]]], [false, [4294967295, 27], [[0, 34, 0], [35, 35, 1], [36, 37, 0]]], [false, [4294967295, 4], [[0, 32, 0], [33, 34, 1], [35, 37, 0]]], [false, [4294967295, 33, 13, 31, 30, 29, 32, 28], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 24, 0], [25, 26, 3], [27, 27, 4], [28, 29, 5], [30, 30, 6], [31, 31, 7], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 34], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [true], [true], [true], [true], [false, [4294967295, 7, 35], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 27, 1], [28, 28, 2], [29, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 13, 30, 29, 32, 28], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 4], [30, 30, 5], [31, 31, 6], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 7, 36], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 29, 1], [30, 30, 2], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [true], [false, [4294967295, 7, 37], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 27, 1], [28, 28, 2], [29, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [true], [true], [true], [true], [true], [true], [true], [true], [true], [false, [38, 4294967295, 40, 39], [[0, 0, 0], [1, 1, 1], [2, 2, 0], [3, 12, 1], [13, 13, 0], [14, 16, 1], [17, 17, 0], [18, 21, 1], [22, 23, 0], [24, 24, 2], [25, 25, 1], [26, 26, 3], [27, 37, 1]]], [false, [27, 41, 4294967295], [[0, 32, 0], [33, 33, 1], [34, 35, 0], [36, 37, 2]]], [false, [4294967295, 34], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 42, 43], [[0, 13, 0], [14, 14, 1], [15, 15, 0], [16, 16, 2], [17, 17, 0], [18, 18, 2], [19, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 46, 44, 45], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 30, 0], [31, 31, 3], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 47], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 48, 49], [[0, 13, 0], [14, 14, 1], [15, 30, 0], [31, 31, 2], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 50, 51], [[0, 13, 0], [14, 14, 1], [15, 30, 0], [31, 31, 2], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 34, 30, 29, 32], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 4], [30, 30, 5], [31, 31, 0], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 7, 52], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 13, 2], [14, 14, 1], [15, 18, 0], [19, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7, 53], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 27, 1], [28, 28, 2], [29, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7, 54], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 20, 1], [21, 21, 2], [22, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [true], [false, [4294967295, 55], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 56], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 41], [[0, 32, 0], [33, 33, 1], [34, 37, 0]]], [false, [4294967295, 33, 42, 30, 32], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 0], [30, 30, 4], [31, 31, 0], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 42], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 44, 58, 57, 45], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 4], [30, 30, 0], [31, 31, 5], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 59], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [true], [false, [4294967295, 47], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 48, 30, 60, 49], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 4], [30, 30, 0], [31, 31, 5], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 61], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 50, 58, 62, 51], [[0, 13, 0], [14, 14, 1], [15, 26, 0], [27, 27, 2], [28, 29, 3], [30, 30, 0], [31, 31, 4], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 63], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7, 64], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 22, 1], [23, 23, 2], [24, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 65], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 66], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 67, 68], [[0, 13, 0], [14, 14, 1], [15, 15, 0], [16, 16, 2], [17, 17, 0], [18, 18, 2], [19, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 46], [[0, 6, 0], [7, 7, 1], [8, 37, 0]]], [false, [4294967295, 33, 59, 58, 57], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 4], [30, 31, 0], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 69, 70], [[0, 13, 0], [14, 14, 1], [15, 15, 0], [16, 16, 2], [17, 17, 0], [18, 18, 2], [19, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 61, 30, 60], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 29, 4], [30, 31, 0], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 71, 72], [[0, 13, 0], [14, 14, 1], [15, 15, 0], [16, 16, 2], [17, 17, 0], [18, 18, 2], [19, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 63, 58, 62], [[0, 13, 0], [14, 14, 1], [15, 26, 0], [27, 27, 2], [28, 29, 3], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 7], [[0, 6, 0], [7, 7, 1], [8, 10, 0], [11, 11, 1], [12, 12, 0], [13, 14, 1], [15, 18, 0], [19, 30, 1], [31, 31, 0], [32, 32, 1], [33, 37, 0]]], [true], [false, [4294967295, 73], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 67, 58], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 31, 0], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 67], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 33, 69, 30], [[0, 6, 0], [7, 7, 1], [8, 13, 0], [14, 14, 2], [15, 26, 0], [27, 27, 3], [28, 31, 0], [32, 32, 2], [33, 37, 0]]], [false, [4294967295, 69], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 71, 58], [[0, 13, 0], [14, 14, 1], [15, 26, 0], [27, 27, 2], [28, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 71], [[0, 13, 0], [14, 14, 1], [15, 31, 0], [32, 32, 1], [33, 37, 0]]], [false, [4294967295, 74], [[0, 10, 0], [11, 11, 1], [12, 13, 0], [14, 14, 1], [15, 19, 0], [20, 21, 1], [22, 27, 0], [28, 29, 1], [30, 31, 0], [32, 32, 1], [33, 37, 0]]], [true]];\r\n        this.finalTable = { 64: 15, 65: 10, 4: 1, 5: 3, 6: 23, 7: 26, 8: 5, 9: 7, 10: 6, 11: 24, 12: 26, 13: 3, 14: 26, 15: 21, 16: 26, 17: 16, 18: 19, 19: 20, 20: 25, 21: 17, 22: 18, 23: 22, 24: 12, 25: 11, 74: 9, 30: 2, 32: 2, 33: 2, 34: 3, 35: 26, 36: 26, 37: 26, 38: 8, 41: 0, 42: 3, 27: 0, 46: 2, 47: 4, 52: 13, 53: 26, 54: 14 };\r\n        this.inputTable = [[0, 8, 1], [9, 9, 34], [10, 10, 33], [11, 11, 1], [12, 12, 34], [13, 13, 33], [14, 31, 1], [32, 32, 34], [33, 33, 1], [34, 34, 17], [35, 35, 1], [36, 36, 19], [37, 37, 3], [38, 38, 1], [39, 39, 2], [40, 40, 6], [41, 41, 5], [42, 42, 1], [43, 43, 18], [44, 44, 15], [45, 45, 16], [46, 46, 31], [47, 47, 35], [48, 48, 32], [49, 57, 14], [58, 60, 1], [61, 61, 10], [62, 63, 1], [64, 64, 19], [65, 68, 20], [69, 69, 29], [70, 70, 20], [71, 87, 19], [88, 88, 25], [89, 90, 19], [91, 91, 9], [92, 92, 0], [93, 93, 8], [94, 94, 1], [95, 95, 19], [96, 96, 1], [97, 99, 20], [100, 100, 11], [101, 101, 28], [102, 102, 21], [103, 103, 19], [104, 104, 30], [105, 108, 19], [109, 109, 27], [110, 110, 23], [111, 113, 19], [114, 114, 22], [115, 115, 7], [116, 116, 13], [117, 117, 24], [118, 119, 19], [120, 120, 26], [121, 122, 19], [123, 123, 12], [124, 124, 1], [125, 125, 4], [126, 65535, 1]],\r\n            this.initialTable = { 'INITIAL': 2, 'STRING': 1 };\r\n    }\r\n    BasLexer.lexSeq = function (source) {\r\n        var lexer = new BasLexer();\r\n        lexer['source'] = source;\r\n        var tokens = [];\r\n        var token = lexer['token'];\r\n        while (token !== '<$>') {\r\n            tokens.push({ token: token, text: lexer['yytext'], start: lexer['startIdx'], end: lexer['endIdx'] });\r\n            lexer.advance();\r\n            token = lexer['token'];\r\n        }\r\n        return tokens;\r\n    };\r\n    BasLexer.prototype.yyrestart = function (src) {\r\n        if (src === void 0) { src = null; }\r\n        if (src != null) {\r\n            this.sourceString = src;\r\n        }\r\n        this.ended = false;\r\n        this.start = 0;\r\n        this.oldStart = 0;\r\n        this.line = 1;\r\n        this.col = 0;\r\n        this.advanced = true;\r\n        this.tokenNameString = null;\r\n        this.yyObject = {};\r\n        this['initialState'] = 'INITIAL';\r\n    };\r\n    Object.defineProperty(BasLexer.prototype, \"source\", {\r\n        set: function (src) {\r\n            this.sourceString = src;\r\n            this.yyrestart();\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"token\", {\r\n        get: function () {\r\n            if (this.advanced) {\r\n                this.tokenNameString = this.next();\r\n                this.advanced = false;\r\n            }\r\n            return this.tokenNameString;\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    BasLexer.prototype.advance = function () {\r\n        this.advanced = true;\r\n    };\r\n    Object.defineProperty(BasLexer.prototype, \"startIdx\", {\r\n        get: function () {\r\n            return this.oldStart;\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"endIdx\", {\r\n        get: function () {\r\n            return this.start;\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"position\", {\r\n        get: function () {\r\n            return [this.line, this.col];\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"positionInfo\", {\r\n        get: function () {\r\n            return this.token + '@row:' + this['position'].join('col:');\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"yytext\", {\r\n        get: function () {\r\n            return this.yyText;\r\n        },\r\n        set: function (value) {\r\n            this.yyText = value;\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"yyleng\", {\r\n        get: function () {\r\n            return this['endIdx'] - this['startIdx'];\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"yy\", {\r\n        get: function () {\r\n            return this.yyObject;\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    Object.defineProperty(BasLexer.prototype, \"tokenName\", {\r\n        get: function () {\r\n            return this.tokenNameString;\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    BasLexer.prototype.next = function () {\r\n        var findex;\r\n        var nextState;\r\n        var char;\r\n        var begin;\r\n        var next;\r\n        var ochar;\r\n        var curState;\r\n        var lastFinalState;\r\n        var lastFinalPosition;\r\n        while (true) {\r\n            findex = null;\r\n            nextState = null;\r\n            char = 0;\r\n            begin = this.start;\r\n            next = this.start;\r\n            ochar = INVALIDCHAR;\r\n            lastFinalState = DEADSTATE;\r\n            lastFinalPosition = this.start;\r\n            curState = this.transTable[0][1][this.initialInput];\r\n            while (true) {\r\n                char = this.sourceString.charCodeAt(next);\r\n                /** \u8ba1\u7b97\u884c,\u5217\u4f4d\u7f6e **/\r\n                if (ochar !== INVALIDCHAR) {\r\n                    if (char === 0x0d) {\r\n                        this.col = 0;\r\n                        this.line++;\r\n                    }\r\n                    else if (char === 0x0a) {\r\n                        if (ochar !== 0x0d) {\r\n                            this.col = 0;\r\n                            this.line++;\r\n                        }\r\n                    }\r\n                    else {\r\n                        this.col++;\r\n                    }\r\n                }\r\n                ochar = char;\r\n                /** \u8ba1\u7b97\u884c,\u5217\u4f4d\u7f6e--\u7ed3\u675f **/\r\n                nextState = this.trans(curState, char);\r\n                if (nextState === DEADSTATE) {\r\n                    if (begin === lastFinalPosition) {\r\n                        if (this.start === this.sourceString.length) {\r\n                            if (this.ended === false) {\r\n                                this.ended = true;\r\n                                return '<$>';\r\n                            }\r\n                            else {\r\n                                throw new Error('\u5df2\u7ecf\u5230\u8fbe\u672b\u5c3e.');\r\n                            }\r\n                        }\r\n                        throw new Error('\u610f\u5916\u7684\u5b57\u7b26,line:' + this['position'].join(',col:') + 'of ' + this.sourceString.substr(begin, 20));\r\n                    }\r\n                    else {\r\n                        findex = this.finalTable[lastFinalState];\r\n                        this.start = lastFinalPosition;\r\n                        this.oldStart = begin;\r\n                        this.yyText = this.sourceString.substring(this['startIdx'], this['endIdx']);\r\n                        switch (findex) {\r\n                            case 0x2:\r\n                                return 'time';\r\n                            case 0x3:\r\n                                return 'number';\r\n                            case 0x4:\r\n                                return 'hex';\r\n                            case 0x5:\r\n                                return '+';\r\n                            case 0x6:\r\n                                return '-';\r\n                            case 0x7:\r\n                                this.begin('STRING');\r\n                                return 'str_start';\r\n                            case 0x8:\r\n                                return 'str_esc_char';\r\n                            case 0x9:\r\n                                return 'str_esc_unicode';\r\n                            case 0xA:\r\n                                return 'str_esc_ascii';\r\n                            case 0xB:\r\n                                this.begin('INITIAL');\r\n                                return 'str_end';\r\n                            case 0xC:\r\n                                return 'str_seg';\r\n                            case 0xD:\r\n                                return 'set';\r\n                            case 0xE:\r\n                                return 'def';\r\n                            case 0xF:\r\n                                return 'then';\r\n                            case 0x10:\r\n                                return '=';\r\n                            case 0x11:\r\n                                return '(';\r\n                            case 0x12:\r\n                                return ')';\r\n                            case 0x13:\r\n                                return '[';\r\n                            case 0x14:\r\n                                return ']';\r\n                            case 0x15:\r\n                                return '{';\r\n                            case 0x16:\r\n                                return '}';\r\n                            case 0x17:\r\n                                return '.';\r\n                            case 0x18:\r\n                                return ',';\r\n                            case 0x19:\r\n                                return '%';\r\n                            case 0x1A:\r\n                                return 'id';\r\n                        }\r\n                        break;\r\n                    }\r\n                }\r\n                else {\r\n                    findex = this.finalTable[nextState];\r\n                    if (findex != null) {\r\n                        lastFinalState = nextState;\r\n                        lastFinalPosition = next + 1;\r\n                    }\r\n                    next += 1;\r\n                    curState = nextState;\r\n                }\r\n            }\r\n        }\r\n        // return \"\";//\u8fd9\u91cc\u7684\u503c\u4f1a\u5f71\u54cd\u8fd4\u56de\u503c!!\r\n    };\r\n    BasLexer.prototype.trans = function (curState, character) {\r\n        if (isNaN(character)) {\r\n            return DEADSTATE;\r\n        }\r\n        if (character < this.inputTable[0][0] || character > this.inputTable[this.inputTable.length - 1][1]) {\r\n            throw new Error('\u8f93\u5165\u8d85\u51fa\u6709\u6548\u8303\u56f4,line:' + this['position'].join(',col:'));\r\n        }\r\n        if (this.transTable[curState][0] === true) {\r\n            return DEADSTATE;\r\n        }\r\n        var ipt = this.find(character, this.inputTable);\r\n        var ipt2 = this.find(ipt, this.transTable[curState][2]);\r\n        return this.transTable[curState][1][ipt2];\r\n    };\r\n    BasLexer.prototype.find = function (code, seg) {\r\n        var min;\r\n        var max;\r\n        var mid;\r\n        min = 0;\r\n        max = seg.length - 1;\r\n        while (true) {\r\n            mid = (min + max) >>> 1;\r\n            if (seg[mid][0] <= code && seg[mid][1] >= code) {\r\n                return seg[mid][2];\r\n            }\r\n            else if (seg[mid][0] > code) {\r\n                max = mid - 1;\r\n            }\r\n            else {\r\n                min = mid + 1;\r\n            }\r\n        }\r\n        // return 0;\r\n    };\r\n    BasLexer.prototype.begin = function (state) {\r\n        if (state === void 0) { state = null; }\r\n        if (state == null) {\r\n            this['initialState'] = 'INITIAL';\r\n            return;\r\n        }\r\n        this['initialState'] = state;\r\n    };\r\n    Object.defineProperty(BasLexer.prototype, \"initialState\", {\r\n        get: function () {\r\n            return this.initialStateString;\r\n        },\r\n        set: function (value) {\r\n            if (this.initialTable[value] === undefined) {\r\n                throw new Error('\u672a\u5b9a\u4e49\u7684\u8d77\u59cb\u72b6\u6001:' + value);\r\n            }\r\n            this.initialStateString = value;\r\n            this.initialInput = this.initialTable[value];\r\n        },\r\n        enumerable: true,\r\n        configurable: true\r\n    });\r\n    return BasLexer;\r\n}());\r\n/* harmony default export */ __webpack_exports__[\"a\"] = (BasLexer);\r\n\n\n/***/ }),\n/* 5 */\n/***/ (function(module, __webpack_exports__, __webpack_require__) {\n\n\"use strict\";\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_rev__ = __webpack_require__(0);\n\r\nvar BasTransform = /** @class */ (function () {\r\n    function BasTransform(ast, encode) {\r\n        this.ast = ast;\r\n        this.encode = encode;\r\n        this.defTypeInfo = {};\r\n    }\r\n    BasTransform.prototype.transform = function () {\r\n        var ast = this.ast;\r\n        var sets = [];\r\n        var defs = [];\r\n        // ReOrder\r\n        for (var _i = 0, _a = ast.params; _i < _a.length; _i++) {\r\n            var node = _a[_i];\r\n            switch (node.type) {\r\n                case 'SetExpr':\r\n                    {\r\n                        sets.push(this.trans(node.params));\r\n                    }\r\n                    break;\r\n                case 'DefExpr':\r\n                    {\r\n                        var nod = node.params;\r\n                        switch (nod.type) {\r\n                            case 'NormalDefExpr':\r\n                                {\r\n                                    var defType = nod.params[0];\r\n                                    var id = nod.params[1];\r\n                                    switch (defType) {\r\n                                        case 'text':\r\n                                        case 'button':\r\n                                        case 'path':\r\n                                            this.defTypeInfo[id] = defType;\r\n                                            break;\r\n                                    }\r\n                                    defs.push(nod);\r\n                                }\r\n                                break;\r\n                        }\r\n                    }\r\n                    break;\r\n            }\r\n        }\r\n        // trans Defs\r\n        defs = defs.map(this.transDef.bind(this)).filter(function (n) { return n != null; });\r\n        // trans Sets\r\n        sets = sets.map(this.transSet.bind(this)).filter(function (n) { return n != null; });\r\n        return { sets: sets, defs: defs };\r\n    };\r\n    BasTransform.prototype.trans = function (node) {\r\n        if (node.type === 'ThenSetExpr') {\r\n            var left = this.trans(node.params[0]);\r\n            var right = this.trans(node.params[1]);\r\n            if (left.type === 'ThenSetExpr') {\r\n                left.params.push(right);\r\n                return left;\r\n            }\r\n            else {\r\n                node.params = [left, right];\r\n                return node;\r\n            }\r\n        }\r\n        else if (node.type === 'GroupSetExpr') {\r\n            node.params = node.params.map(this.trans.bind(this)).filter(function (n) { return n != null; });\r\n            return node;\r\n        }\r\n        else if (node.type === 'UnitSetExpr') {\r\n            return node;\r\n        }\r\n    };\r\n    BasTransform.prototype.transDef = function (node) {\r\n        if (node.type === 'NormalDefExpr') {\r\n            if (node.params.length === 3) {\r\n                var typeId = node.params[0];\r\n                var name_1 = node.params[1];\r\n                var attrs = node.params[2];\r\n                if (typeId === 'text') {\r\n                    var obj = { type: 'DefText', name: name_1, attrs: {} };\r\n                    for (var _i = 0, attrs_1 = attrs; _i < attrs_1.length; _i++) {\r\n                        var attr = attrs_1[_i];\r\n                        this.transAsetterNV(attr, obj);\r\n                    }\r\n                    return obj;\r\n                }\r\n                else if (typeId === 'button') {\r\n                    var obj = { type: 'DefButton', name: name_1, attrs: {} };\r\n                    for (var _a = 0, attrs_2 = attrs; _a < attrs_2.length; _a++) {\r\n                        var attr = attrs_2[_a];\r\n                        this.transAsetterNV(attr, obj);\r\n                    }\r\n                    return obj;\r\n                }\r\n                else if (typeId === 'path') {\r\n                    var obj = { type: 'DefPath', name: name_1, attrs: {} };\r\n                    for (var _b = 0, attrs_3 = attrs; _b < attrs_3.length; _b++) {\r\n                        var attr = attrs_3[_b];\r\n                        this.transAsetterNV(attr, obj);\r\n                    }\r\n                    return obj;\r\n                }\r\n            }\r\n        }\r\n    };\r\n    // def\r\n    BasTransform.prototype.transAsetterNV = function (attr, obj) {\r\n        if (obj.type === 'DefText') {\r\n            var attrName = attr.params[0];\r\n            var value = attr.params[1];\r\n            switch (attrName) {\r\n                case 'content':\r\n                    obj.attrs['content'] = this.parseString(attr.params[1], false, true);\r\n                    break;\r\n                case 'fontFamily':\r\n                    obj.attrs['fontFamily'] = this.parseString(attr.params[1], true);\r\n                    break;\r\n                case 'fontSize':\r\n                    obj.attrs['fontSize'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'x':\r\n                    obj.attrs['x'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'y':\r\n                    obj.attrs['y'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'alpha':\r\n                    obj.attrs['alpha'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'anchorX':\r\n                    obj.attrs['anchorX'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'anchorY':\r\n                    obj.attrs['anchorY'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'color':\r\n                    obj.attrs['color'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'zIndex':\r\n                    obj.attrs['zIndex'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'parent':\r\n                    obj.attrs['parent'] = this.parseString(attr.params[1]);\r\n                    break;\r\n                case 'bold':\r\n                    obj.attrs['bold'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'textShadow':\r\n                    obj.attrs['textShadow'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'strokeWidth':\r\n                    obj.attrs['strokeWidth'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'strokeColor':\r\n                    obj.attrs['strokeColor'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'rotateX':\r\n                    obj.attrs['rotateX'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'rotateY':\r\n                    obj.attrs['rotateY'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'rotateZ':\r\n                    obj.attrs['rotateZ'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'scale':\r\n                    obj.attrs['scale'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'duration':\r\n                    obj.attrs['duration'] = this.parseTime(attr.params[1]);\r\n                    break;\r\n            }\r\n        }\r\n        else if (obj.type === 'DefButton') {\r\n            var attrName = attr.params[0];\r\n            var value = attr.params[1];\r\n            switch (attrName) {\r\n                case 'text':\r\n                    obj.attrs['text'] = this.parseString(attr.params[1], false, true);\r\n                    break;\r\n                case 'fontSize':\r\n                    obj.attrs['fontSize'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'textColor':\r\n                    obj.attrs['textColor'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'textAlpha':\r\n                    obj.attrs['textAlpha'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'fillColor':\r\n                    obj.attrs['fillColor'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'fillAlpha':\r\n                    obj.attrs['fillAlpha'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'x':\r\n                    obj.attrs['x'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'y':\r\n                    obj.attrs['y'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'duration':\r\n                    obj.attrs['duration'] = this.parseTime(attr.params[1]);\r\n                    break;\r\n                case 'target':\r\n                    obj.attrs['target'] = this.parseObject(attr.params[1]);\r\n                    break;\r\n                case 'zIndex':\r\n                    obj.attrs['zIndex'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'scale':\r\n                    obj.attrs['scale'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n            }\r\n        }\r\n        else if (obj.type === 'DefPath') {\r\n            var attrName = attr.params[0];\r\n            var value = attr.params[1];\r\n            switch (attrName) {\r\n                case 'd':\r\n                    obj.attrs['d'] = this.parseString(attr.params[1], true);\r\n                    break;\r\n                case 'viewBox':\r\n                    obj.attrs['viewBox'] = this.parseString(attr.params[1], true);\r\n                    break;\r\n                case 'fillColor':\r\n                    obj.attrs['fillColor'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'fillAlpha':\r\n                    obj.attrs['fillAlpha'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'borderColor':\r\n                    obj.attrs['borderColor'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n                case 'borderAlpha':\r\n                    obj.attrs['borderAlpha'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'borderWidth':\r\n                    obj.attrs['borderWidth'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'x':\r\n                    obj.attrs['x'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'y':\r\n                    obj.attrs['y'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'scale':\r\n                    obj.attrs['scale'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'width':\r\n                    obj.attrs['width'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'height':\r\n                    obj.attrs['height'] = this.parseNum(attr.params[1]);\r\n                    break;\r\n                case 'duration':\r\n                    obj.attrs['duration'] = this.parseTime(attr.params[1]);\r\n                    break;\r\n                case 'zIndex':\r\n                    obj.attrs['zIndex'] = this.parseInteger(attr.params[1]);\r\n                    break;\r\n            }\r\n        }\r\n    };\r\n    BasTransform.prototype.parseString = function (node, hasSpace, hasSpecial) {\r\n        if (hasSpace === void 0) { hasSpace = false; }\r\n        if (hasSpecial === void 0) { hasSpecial = false; }\r\n        if (node.type === 'SimpleValue') {\r\n            return this.parseString2(node.value, hasSpace, hasSpecial);\r\n        }\r\n    };\r\n    BasTransform.prototype.parseString2 = function (node, hasSpace, hasSpecial) {\r\n        if (hasSpace === void 0) { hasSpace = false; }\r\n        if (hasSpecial === void 0) { hasSpecial = false; }\r\n        if (node.type === 'String') {\r\n            var ret = [];\r\n            for (var _i = 0, _a = node.value; _i < _a.length; _i++) {\r\n                var seg = _a[_i];\r\n                switch (seg.type) {\r\n                    case 'char':\r\n                        {\r\n                            var character = null;\r\n                            switch (seg.value.charAt(1)) {\r\n                                case 'n':\r\n                                    character = '\\n';\r\n                                    break;\r\n                                case 'r':\r\n                                    character = '\\r';\r\n                                    break;\r\n                                case 't':\r\n                                    character = '\\t';\r\n                                    break;\r\n                                case '\\\\':\r\n                                    character = '\\\\';\r\n                                    break;\r\n                                case \"\\'\":\r\n                                    character = \"'\";\r\n                                    break;\r\n                                case '\"':\r\n                                    character = '\"';\r\n                                    break;\r\n                                default:\r\n                                    character = seg.charAt(1);\r\n                                    break;\r\n                            }\r\n                            ret.push(character);\r\n                        }\r\n                        break;\r\n                    case 'unicode':\r\n                        {\r\n                            var codeStr = seg.value.substr(2);\r\n                            ret.push(String.fromCharCode(parseInt(codeStr, 16)));\r\n                        }\r\n                        break;\r\n                    case 'ascii':\r\n                        {\r\n                            var codeStr = seg.value.substr(2);\r\n                            ret.push(String.fromCharCode(parseInt(codeStr, 16)));\r\n                        }\r\n                        break;\r\n                    case 'seg':\r\n                        {\r\n                            ret.push(seg.value);\r\n                        }\r\n                        break;\r\n                }\r\n            }\r\n            return this.encode ? __WEBPACK_IMPORTED_MODULE_0__utils_rev__[\"a\" /* default */].htmlEncode(ret.join(''), hasSpace, hasSpecial) : ret.join('');\r\n        }\r\n    };\r\n    BasTransform.prototype.parseNum = function (node) {\r\n        if (node.type === 'SimpleValue') {\r\n            return this.parseNum2(node.value);\r\n        }\r\n    };\r\n    BasTransform.prototype.parseNum2 = function (node) {\r\n        if (node.type === 'Num') {\r\n            var numSign = node.value[0] === '+' ? 1 : (-1);\r\n            var numStr = node.value[1];\r\n            var numPercent = node.value[2] === '%';\r\n            return {\r\n                'numType': numPercent ? 'percent' : 'number',\r\n                'value': numSign * parseFloat(numStr),\r\n            };\r\n        }\r\n    };\r\n    BasTransform.prototype.parseInteger = function (node) {\r\n        if (node.type === 'SimpleValue') {\r\n            return this.parseInteger2(node.value);\r\n        }\r\n    };\r\n    BasTransform.prototype.parseInteger2 = function (node) {\r\n        if (node.type === 'hex') {\r\n            return parseInt(node.value.substr(2), 16);\r\n        }\r\n        else if (node.type === 'Num') {\r\n            return Math.floor(this.parseNum2(node).value);\r\n        }\r\n    };\r\n    BasTransform.prototype.transSet = function (node) {\r\n        if (node.type === 'ThenSetExpr' || node.type === 'GroupSetExpr') {\r\n            var children = node.params.map(this.transSet.bind(this)).filter(function (n) { return n != null; });\r\n            if (children.length > 0) {\r\n                return {\r\n                    type: node.type === 'ThenSetExpr' ? 'Serial' : 'Parallel',\r\n                    items: children,\r\n                };\r\n            }\r\n        }\r\n        else if (node.type === 'UnitSetExpr') {\r\n            var id = node.params[0];\r\n            var setTargetType = this.defTypeInfo[id];\r\n            var _a = this.parseSetExprParams(node.params[2]), duration = _a[0], easingType = _a[1];\r\n            if (setTargetType === 'text' || setTargetType === 'button' || setTargetType === 'path') {\r\n                var ret = {\r\n                    'type': 'Unit',\r\n                    duration: duration,\r\n                    'defaultEasing': easingType,\r\n                    'targetName': id,\r\n                    'attrs': {},\r\n                };\r\n                for (var _i = 0, _b = node.params[1]; _i < _b.length; _i++) {\r\n                    var nod = _b[_i];\r\n                    this.transAsetter(setTargetType, nod, ret.attrs);\r\n                }\r\n                return ret;\r\n            }\r\n            else {\r\n                return null;\r\n            }\r\n        }\r\n    };\r\n    BasTransform.prototype.parseSetExprParams = function (node) {\r\n        var time = 0;\r\n        var easing = null;\r\n        if ('SetExprParams' === node.type) {\r\n            if (node.params.length >= 1) {\r\n                time = this.parseTime2(node.params[0]);\r\n            }\r\n            if (node.params.length >= 2) {\r\n                easing = this.parseString2(node.params[1]);\r\n            }\r\n        }\r\n        return [time, easing];\r\n    };\r\n    BasTransform.prototype.parseTime = function (node) {\r\n        if (node.type === 'SimpleValue' && node.value.type === 'time') {\r\n            return this.parseTime2(node.value.value);\r\n        }\r\n    };\r\n    BasTransform.prototype.parseTime2 = function (timeStr) {\r\n        var readNum = true;\r\n        var ret = 0;\r\n        var num = 0;\r\n        var tmpStr = '';\r\n        var matchArr = null;\r\n        while (true) {\r\n            if (readNum) {\r\n                matchArr = timeStr.match(/^(\\d*\\.?\\d+(?:[eE][\\+\\-]?\\d+)?)(.*)$/);\r\n            }\r\n            else {\r\n                matchArr = timeStr.match(/^([hms]+)(.*)$/);\r\n            }\r\n            if (matchArr == null) {\r\n                return ret;\r\n            }\r\n            tmpStr = matchArr[1];\r\n            if (readNum) {\r\n                num = parseFloat(tmpStr);\r\n            }\r\n            else {\r\n                switch (tmpStr) {\r\n                    case 'h':\r\n                        ret += num * 3600 * 1000;\r\n                        break;\r\n                    case 'm':\r\n                        ret += num * 60 * 1000;\r\n                        break;\r\n                    case 's':\r\n                        ret += num * 1000;\r\n                        break;\r\n                    case 'ms':\r\n                        ret += num;\r\n                        break;\r\n                }\r\n            }\r\n            timeStr = matchArr[2];\r\n            readNum = !readNum;\r\n        }\r\n    };\r\n    BasTransform.prototype.parseObject = function (node) {\r\n        if (node.type === 'ComplexValue' && node.value.type === 'Object') {\r\n            return this.parseObject2(node.value);\r\n        }\r\n    };\r\n    BasTransform.prototype.parseObject2 = function (node) {\r\n        var objType = node.params[0];\r\n        var objAttrs = node.params[1];\r\n        var obj = {};\r\n        switch (objType) {\r\n            case 'seek': {\r\n                obj['objType'] = 'seek';\r\n                for (var _i = 0, objAttrs_1 = objAttrs; _i < objAttrs_1.length; _i++) {\r\n                    var attr = objAttrs_1[_i];\r\n                    if (attr.type === 'ASetter') {\r\n                        var attrName = attr.params[0];\r\n                        var attrValue = attr.params[1];\r\n                        switch (attrName) {\r\n                            case 'time':\r\n                                obj['time'] = this.parseTime(attrValue);\r\n                                break;\r\n                        }\r\n                    }\r\n                }\r\n                break;\r\n            }\r\n            case 'av': {\r\n                obj['objType'] = 'av';\r\n                for (var _a = 0, objAttrs_2 = objAttrs; _a < objAttrs_2.length; _a++) {\r\n                    var attr = objAttrs_2[_a];\r\n                    if (attr.type === 'ASetter') {\r\n                        var attrName = attr.params[0];\r\n                        var attrValue = attr.params[1];\r\n                        switch (attrName) {\r\n                            case 'av':\r\n                                obj['av'] = this.parseInteger(attrValue);\r\n                                break;\r\n                            case 'page':\r\n                                obj['page'] = this.parseInteger(attrValue);\r\n                                break;\r\n                            case 'time':\r\n                                obj['time'] = this.parseTime(attrValue);\r\n                                break;\r\n                        }\r\n                    }\r\n                }\r\n                break;\r\n            }\r\n            case 'bangumi': {\r\n                obj['objType'] = 'bangumi';\r\n                for (var _b = 0, objAttrs_3 = objAttrs; _b < objAttrs_3.length; _b++) {\r\n                    var attr = objAttrs_3[_b];\r\n                    if (attr.type === 'ASetter') {\r\n                        var attrName = attr.params[0];\r\n                        var attrValue = attr.params[1];\r\n                        switch (attrName) {\r\n                            case 'seasonId':\r\n                                obj['seasonId'] = this.parseInteger(attrValue);\r\n                                break;\r\n                            case 'episodeId':\r\n                                obj['episodeId'] = this.parseInteger(attrValue);\r\n                                break;\r\n                            case 'time':\r\n                                obj['time'] = this.parseTime(attrValue);\r\n                                break;\r\n                        }\r\n                    }\r\n                }\r\n                break;\r\n            }\r\n        }\r\n        return obj;\r\n    };\r\n    // set\r\n    BasTransform.prototype.transAsetter = function (type, node, attrs) {\r\n        if ('ASetter' === node.type) {\r\n            if (node.params.length === 2) {\r\n                var id = node.params[0];\r\n                var _a = this.transAsetterValue(node.params[1]), value = _a[0], easing = _a[1];\r\n                if (type === 'text') {\r\n                    switch (id) {\r\n                        case 'x':\r\n                        case 'y':\r\n                        case 'alpha':\r\n                        case 'color':\r\n                        case 'fontSize':\r\n                        case 'content':\r\n                        case 'rotateX':\r\n                        case 'rotateY':\r\n                        case 'rotateZ':\r\n                        case 'scale':\r\n                            attrs[id] = {\r\n                                'value': value,\r\n                                'easing': easing,\r\n                            };\r\n                            break;\r\n                    }\r\n                }\r\n                else if (type === 'button') {\r\n                    switch (id) {\r\n                        case 'x':\r\n                        case 'y':\r\n                        case 'fontSize':\r\n                        case 'text':\r\n                            attrs[id] = {\r\n                                'value': value,\r\n                                'easing': easing,\r\n                            };\r\n                            break;\r\n                    }\r\n                }\r\n                else if (type === 'path') {\r\n                    switch (id) {\r\n                        case 'x':\r\n                        case 'y':\r\n                            attrs[id] = {\r\n                                'value': value,\r\n                                'easing': easing,\r\n                            };\r\n                            break;\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    };\r\n    BasTransform.prototype.transAsetterValue = function (node) {\r\n        if (node.type === 'SimpleValue') {\r\n            var value = this.transValue(node.value);\r\n            return [value, null];\r\n        }\r\n        else if (node.type === 'ComplexValue') {\r\n            if (node.value.type === 'Array') {\r\n                if (node.value.params.length === 2) {\r\n                    var value = this.transValue(node.value.params[0]);\r\n                    var easing = this.parseString2(node.value.params[1]);\r\n                    return [value, easing];\r\n                }\r\n            }\r\n        }\r\n        return [null, null];\r\n    };\r\n    BasTransform.prototype.transValue = function (node) {\r\n        switch (node.type) {\r\n            case 'String':\r\n                return this.parseString2(node);\r\n            case 'Num':\r\n                return this.parseNum2(node);\r\n            case 'hex':\r\n                return this.parseInteger2(node);\r\n        }\r\n    };\r\n    return BasTransform;\r\n}());\r\n/* harmony default export */ __webpack_exports__[\"a\"] = (BasTransform);\r\n\n\n/***/ })\n/******/ ]);\n//# sourceMappingURL=96f7f115245a5308acfb.worker.js.map",
-                null)
+            // 运行在worker里的bas解释器，已替换为新版本
+            // #metadata# @jsc/video: 2.50.1-28ef9ca4 (2021-01-22T10:42:59.254Z)
+            return e(24)('/*! #metadata# @jsc/video: 2.50.1-28ef9ca4 (2021-01-22T10:42:59.254Z) */!function(e){var t={};function r(a){if(t[a])return t[a].exports;var s=t[a]={i:a,l:!1,exports:{}};return e[a].call(s.exports,s,s.exports,r),s.l=!0,s.exports}r.m=e,r.c=t,r.d=function(e,t,a){r.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:a})},r.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},r.t=function(e,t){if(1&t&&(e=r(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var a=Object.create(null);if(r.r(a),Object.defineProperty(a,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var s in e)r.d(a,s,function(t){return e[t]}.bind(null,s));return a},r.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(t,"a",t),t},r.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},r.p="https://s1.hdslb.com/bfs/static/player/main/",r(r.s=0)}([function(e,t,r){"use strict";r.r(t);var a=function(e,t){var r={};for(var a in e)e.hasOwnProperty(a)&&(r[a]=e[a]);for(var a in t)t.hasOwnProperty(a)&&(r[a]=t[a]);return r},s=function(e,t,r){return r||(e=e.replace(/&/g,"").replace(/</g,"").replace(/>/g,"").replace(/"/g,"").replace(/\'/g,"").replace(/\\//g,"").replace(/:/g,"").replace(/;/g,"")),e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/\'/g,"&#x27;").replace(/\\//g,"&#x2f;").replace(/ /g,t?" ":"&nbsp;").replace(/\\n/g,"<br>")};Object.create;function n(e){var t="function"==typeof Symbol&&Symbol.iterator,r=t&&e[t],a=0;if(r)return r.call(e);if(e&&"number"==typeof e.length)return{next:function(){return e&&a>=e.length&&(e=void 0),{value:e&&e[a++],done:!e}}};throw new TypeError(t?"Object is not iterable.":"Symbol.iterator is not defined.")}function i(e,t){var r="function"==typeof Symbol&&e[Symbol.iterator];if(!r)return e;var a,s,n=r.call(e),i=[];try{for(;(void 0===t||t-- >0)&&!(a=n.next()).done;)i.push(a.value)}catch(e){s={error:e}}finally{try{a&&!a.done&&(r=n.return)&&r.call(n)}finally{if(s)throw s.error}}return i}Object.create;var o=function(){function e(){this.class_names=["text","button","path"],this.variableTable={},this.varibaleRegOrder=0,this.templateTable={},this.tpl_name_id=0,this.obj_name_id=0,this.allowsVariable=[]}return e.prototype.on_String_value=function(e){var t,r,a=[];try{for(var s=n(e),i=s.next();!i.done;i=s.next()){var o=i.value;switch(o.type){case"char":var p=null;switch(o.value.charAt(1)){case"n":p="\\n";break;case"r":p="\\r";break;case"t":p="\\t";break;case"\\\\":p="\\\\";break;case"\'":p="\'";break;case\'"\':p=\'"\';break;default:p=o.charAt(1)}a.push(p);break;case"unicode":var u=o.value.substr(2);a.push(String.fromCharCode(parseInt(u,16)));break;case"ascii":u=o.value.substr(2);a.push(String.fromCharCode(parseInt(u,16)));break;case"seg":a.push(o.value)}}}catch(e){t={error:e}}finally{try{i&&!i.done&&(r=s.return)&&r.call(s)}finally{if(t)throw t.error}}return new l({type:"String",value:a.join("")})},e.prototype.on_Num_value=function(e,t,r){return t=t,new l({type:"Num",value:{numType:(r="%"===r)?"percent":"number",value:(e="+"===e?1:-1)*parseFloat(t)}})},e.prototype.on_Time_value=function(e){for(var t=!0,r=0,a=0,s="",n=null;null!=(n=t?e.match(/^(\\d*\\.?\\d+(?:[eE][\\+\\-]?\\d+)?)(.*)$/):e.match(/^([hms]+)(.*)$/));){if(s=n[1],t)a=parseFloat(s);else switch(s){case"h":r+=3600*a*1e3;break;case"m":r+=60*a*1e3;break;case"s":r+=1e3*a;break;case"ms":r+=a}e=n[2],t=!t}return new l({type:"Time",value:r})},e.prototype.on_Hex_value=function(e){return new l({type:"Hex",value:parseInt(e.substr(2),16)})},e.prototype.on_Object_value=function(e,t){return new l({type:"Object",value:t})},e.prototype.on_Array_value=function(e){return new l({type:"Array",value:e})},e.prototype.on_Variable_value=function(e){return new l({type:"Variable",value:e})},e.prototype.on_KeyValue_list=function(e,t,r){return void 0===r&&(r=null),null==r&&(r=this.peek_allows_varable()),t},e.prototype.on_let_object_binding=function(e,t){t.obj_type;var r=t.name\n;return this.unregister_variable(r),t.name=e,this.register_variable(e,t),t},e.prototype.on_def_object=function(e,t,r){var a={type:"Def"+this.capitalization_str(e),obj_type:e,name:t,attrs:{}},s=this.on_KeyValue_list(e,r,!1);return this.fill_kv_obj(a.attrs,s),this.register_variable(t,a),a},e.prototype.on_def_template=function(e,t,r,a){var s={type:"template",obj_type:e,name:t,attrs:{},tpl_list:[]},n=this.on_KeyValue_list(e,a,!0);return this.check_variables_on_template_body(r,n),this.fill_kv_obj(s.attrs,a),s.tpl_list=r,this.register_template(t,s),s},e.prototype.on_object_modification=function(e,t){if(!this.has_variable_obj(e)){if(-1!==this.class_names.indexOf(e)){var r=this.new_variable_name_of_template_application(e);return this.on_def_object(e,r,t)}return null}var a=this.get_variable_obj(e),s=a.obj_type,n=this.new_variable_name_of_variable_modification(e),i={type:"Def"+this.capitalization_str(s),obj_type:s,name:n,attrs:{}},o=this.on_KeyValue_list(s,t,!1),l=this.merge_list(a.attrs,o);return this.fill_kv_obj(i.attrs,l),this.register_variable(n,i),i},e.prototype.on_tmp_object_modification=function(e,t){var r=e.name,a=this.on_object_modification(r,t);return this.unregister_variable(r),a},e.prototype.on_template_application=function(e,t){var r=this.get_template_obj(e);if(null==r)return null;var a=r.obj_type,s=this.new_variable_name_of_template_application(e),n={type:"Def"+this.capitalization_str(a),obj_type:a,name:s,attrs:{}},i=this.evaluation_template(r.attrs,r.tpl_list,t);return this.fill_kv_obj(n.attrs,i),this.register_variable(s,n),n},e.prototype.on_ArgList=function(e){var t,r,a=[],s=[];try{for(var o=n(e),l=o.next();!l.done;l=o.next()){var p=i(l.value,2),u=p[0],h=p[1];null==u?a.push(h):s.push([u,h])}}catch(e){t={error:e}}finally{try{l&&!l.done&&(r=o.return)&&r.call(o)}finally{if(t)throw t.error}}return{naked_params:a,named_params:s}},e.prototype.on_unit_set_expr=function(e,t,r){var a=i(r,2),s={type:"Unit",duration:a[0],default_easing:a[1],target_name:e,attrs:{}},n=this.get_variable_type(e),o=this.on_KeyValue_list(n,t,!1);return this.fill_kv_obj(s.attrs,o),s},e.prototype.on_temporary_target_set_expr=function(e,t,r){var a=e.obj_type,s=e.name,n=i(r,2),o={type:"Unit",duration:n[0],default_easing:n[1],target_name:s,attrs:{}},l=this.on_KeyValue_list(a,t,!1);return this.fill_kv_obj(o.attrs,l),o},e.prototype.on_then_set_expr=function(e,t){return"Serial"===e.type?(e.items.push(t),e):{type:"Serial",items:[e,t]}},e.prototype.on_group_set_expr=function(e){return{type:"Parallel",items:e}},e.prototype.has_variable_obj=function(e){return this.variableTable.hasOwnProperty(e)},e.prototype.get_variable_obj=function(e){return this.variableTable.hasOwnProperty(e)?this.variableTable[e]:(console.error("var "+e+" is not defined."),null)},e.prototype.get_template_obj=function(e){return this.templateTable.hasOwnProperty(e)?this.templateTable[e]:(console.error("tpl "+e+" is not defined."),null)},e.prototype.get_variable_type=function(e){return this.get_variable_obj(e).obj_type},e.prototype.get_template_type=function(e){return this.get_template_obj(e).obj_type},e.prototype.fill_kv_obj=function(e,t){var r,a;try{for(var s=n(t),o=s.next();!o.done;o=s.next()){var l=i(o.value,2),p=l[0],u=l[1];e[p]=u}}catch(e){r={error:e}}finally{try{o&&!o.done&&(a=s.return)&&a.call(s)}finally{if(r)throw r.error}}},e.prototype.merge_list=function(e,t){var r,a,s={};this.fill_kv_obj(s,t);var o=[];for(var l in e)s.hasOwnProperty(l)?o.push([l,s[l]]):o.push([l,e[l]]);try{for(var p=n(t),u=p.next();!u.done;u=p.next()){var h=i(u.value,2),c=(l=h[0],h[1]);e.hasOwnProperty(l)||o.push([l,c])}}catch(e){r={error:e}}finally{try{u&&!u.done&&(a=p.return)&&a.call(p)}finally{if(r)throw r.error}}return o},e.prototype.evaluation_template=function(e,t,r){var a,s,o,l,p=r.naked_params,u=r.named_params,h={},c=t.map((function(e,t){var r=i(e,2),a=r[0];r[1];return h[a]=t,{key:a,matched:!1}})),f={};try{for(var b=n(u),y=b.next();!y.done;y=b.next()){var m=i(y.value,2),v=m[0],_=m[1];f[v]=_,h.hasOwnProperty(v)?c[h[v]].matched=!0:console.error("看看命名参数是不是没有在定义参数里面..")}}catch(e){a={error:e}}finally{try{\ny&&!y.done&&(s=b.return)&&s.call(b)}finally{if(a)throw a.error}}var d=c.filter((function(e){return!e.matched}));d.length<p.length&&console.error("参数太多了..");for(var g=0;g<p.length&&g<d.length;g++){f[v=d[g].key]=p[g]}var k={};try{for(var x=n(t),w=x.next();!w.done;w=x.next()){var T=i(w.value,2);v=T[0],_=T[1];f.hasOwnProperty(v)?k[v]=f[v]:k[v]=_}}catch(e){o={error:e}}finally{try{w&&!w.done&&(l=x.return)&&l.call(x)}finally{if(o)throw o.error}}var S=[];for(var v in e){var j=e[v];if("Variable"===j.type){var I=j.value;k.hasOwnProperty(I)?S.push([v,k[I]]):console.error("eval template err: no variable named "+I+" is provided.")}else S.push([v,j])}return S},e.prototype.capitalization_str=function(e){return e.substr(0,1).toUpperCase()+e.substr(1)},e.prototype.new_variable_name_of_template_application=function(e){var t="tpl_"+e+"_"+this.tpl_name_id;return this.tpl_name_id+=1,t},e.prototype.new_variable_name_of_variable_modification=function(e){var t="obj_"+e+"_"+this.obj_name_id;return this.obj_name_id+=1,t},e.prototype.register_variable=function(e,t){this.variableTable.hasOwnProperty(e)&&console.log("var "+e+" is already exists, and will be shadowed."),t._reg_order=this.varibaleRegOrder,this.variableTable[e]=t,this.varibaleRegOrder+=1},e.prototype.unregister_variable=function(e){delete this.variableTable[e]},e.prototype.register_template=function(e,t){this.templateTable.hasOwnProperty(e)&&console.log("tpl "+e+" is already exists, and will be shadowed."),this.templateTable[e]=t},e.prototype.on_enter_scope=function(){},e.prototype.on_leave_scope=function(){},e.prototype.on_enter_tpl=function(){this.allowsVariable.push(!0)},e.prototype.on_leave_tpl=function(){this.allowsVariable.pop()},e.prototype.peek_allows_varable=function(){return this.allowsVariable.length>0&&this.allowsVariable[this.allowsVariable.length-1]},e.prototype.check_variables_on_template_body=function(e,t){var r,a,s={};this.fill_kv_obj(s,t);try{for(var o=n(e),l=o.next();!l.done;l=o.next()){var p=i(l.value,2),u=(p[0],p[1]);if("Variable"===u.type){var h=u.value;s.hasOwnProperty(h)||console.error("varibale "+h+" in template\'s body is not present at arguments.")}}}catch(e){r={error:e}}finally{try{l&&!l.done&&(a=o.return)&&a.call(o)}finally{if(r)throw r.error}}},e.prototype.on_Result=function(e){var t=[];for(var r in this.variableTable)t.push(this.variableTable[r]);return t.sort((function(e,t){return e.obj_name_id-t.obj_name_id})),{sets:e.filter((function(e){return"SetExpr"===e.type})).map((function(e){return e.params})),defs:t}},e}(),l=function(){function e(e){this.type=e.type,this.value=e.value}return e.prototype.as_string=function(){if("String"===this.type)return this.value},e.prototype.as_integer=function(){return"Hex"===this.type?this.value:"Num"===this.type?Math.floor(this.value.value):void 0},e.prototype.as_number=function(){if("Num"===this.type)return this.value},e.prototype.as_time=function(){if("Time"===this.type)return this.value},e.prototype.as_object=function(){if("Object"===this.type)return this.value},e}(),p=4294967295,u=4294967295,h=function(){function e(){\nthis.transTable=[[!1,[4294967295,2,1],[[0,42,0],[43,43,1],[44,44,2]]],[!1,[4294967295,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3],[[0,2,0],[3,3,1],[4,4,2],[5,5,3],[6,6,4],[7,7,5],[8,8,6],[9,9,7],[10,10,8],[11,11,9],[12,12,10],[13,13,11],[14,14,12],[15,15,13],[16,16,14],[17,17,15],[18,18,16],[19,19,17],[20,20,18],[21,21,19],[22,22,20],[23,37,21],[38,38,22],[39,39,23],[40,41,24],[42,42,25],[43,44,0]]],[!1,[30,28,29,4294967295],[[0,0,0],[1,20,1],[21,21,2],[22,39,1],[40,40,3],[41,42,1],[43,44,3]]],[!1,[4294967295,31],[[0,41,0],[42,42,1],[43,44,0]]],[!1,[4294967295,4],[[0,39,0],[40,41,1],[42,44,0]]],[!1,[4294967295,14,37,36,35,34,33,32],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,31,0],[32,32,3],[33,34,4],[35,35,5],[36,37,6],[38,38,7],[39,39,1],[40,44,0]]],[!1,[4294967295,38],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!0],[!0],[!0],[!0],[!1,[4294967295,7,39],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,35,1],[36,36,2],[37,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,40],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,35,1],[36,36,2],[37,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,14,37,36,34,33,32],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,31,0],[32,32,3],[33,34,0],[35,35,4],[36,37,5],[38,38,6],[39,39,1],[40,44,0]]],[!1,[4294967295,7,41],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,31,1],[32,32,2],[33,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,42],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,35,1],[36,36,2],[37,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!0],[!0],[!0],[!0],[!0],[!1,[4294967295,7,43],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,30,1],[31,31,2],[32,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,44],[[0,6,0],[7,8,1],[9,13,0],[14,16,1],[17,17,2],[18,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!0],[!0],[!0],[!0],[!0],[!0],[!1,[45,4294967295,47,46],[[0,0,0],[1,1,1],[2,2,0],[3,14,1],[15,15,0],[16,20,1],[21,21,0],[22,27,1],[28,28,2],[29,30,0],[31,33,1],[34,34,3],[35,44,1]]],[!1,[31,48,4294967295],[[0,39,0],[40,40,1],[41,42,0],[43,44,2]]],[!1,[4294967295,38],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,49,50],[[0,15,0],[16,16,1],[17,19,0],[20,20,2],[21,21,0],[22,22,2],[23,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,51,53,52],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,37,0],[38,38,3],[39,39,1],[40,44,0]]],[!1,[4294967295,54],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,55,56],[[0,15,0],[16,16,1],[17,37,0],[38,38,2],[39,39,1],[40,44,0]]],[!1,[4294967295,57,58],[[0,15,0],[16,16,1],[17,37,0],[38,38,2],[39,39,1],[40,44,0]]],[!1,[4294967295,38,37,36,34,33],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,31,0],[32,32,3],[33,34,0],[35,35,4],[36,37,5],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,59],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,2],[16,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,60],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,2],[16,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,61],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,35,1],[36,36,2],[37,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,62],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,26,1],[27,27,2],[28,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,63],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,30,1],[31,31,2],[32,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,64],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,24,1],[25,25,2],[26,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!0],[!1,[4294967295,65],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,66],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,48],[[0,39,0],[40,40,1],[41,44,0]]],[!1,[4294967295,49,37,36,34],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,31,0],[32,32,3],[33,34,0],[35,35,4],[36,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,49],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,51,37,68,67,52],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,34,0],[35,35,3],[36,37,4],[38,38,5],[39,39,1],[40,44,0]]],[!1,[4294967295,69],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!0],[!1,[4294967295,54],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,55,37,34,70,56],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,34,0],[35,35,3],[36,37,4],[38,38,5],[39,39,1],[40,44,0]]],[!1,[4294967295,71],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,57,68,72,58],[[0,15,0],[16,16,1],[17,34,0],[35,35,2],[36,37,3],[38,38,4],[39,39,1],[40,44,0]]],[!1,[4294967295,73],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,74],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,29,1],[30,30,2],[31,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,75],[[0,6,0],[7,8,1],[9,13,0],[14,16,1],[17,17,2],[18,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,76],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,29,1],[30,30,2],[31,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,77],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,78],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,79,80],[[0,15,0],[16,16,1],[17,19,0],[20,20,2],[21,21,0],[22,22,2],[23,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,53],[[0,17,0],[18,18,1],[19,44,0]]],[!1,[4294967295,69,37,68,67],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,34,0],[35,35,3],[36,37,4],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,81,82],[[0,15,0],[16,16,1],[17,19,0],[20,20,2],[21,21,0],[22,22,2],[23,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,71,37,34,70],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,34,0],[35,35,3],[36,37,4],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,83,84],[[0,15,0],[16,16,1],[17,19,0],[20,20,2],[21,21,0],[22,22,2],[23,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,73,68,72],[[0,15,0],[16,16,1],[17,34,0],[35,35,2],[36,37,3],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,85],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,23,1],[24,24,2],[25,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7,86],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,35,1],[36,36,2],[37,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!0],[!1,[4294967295,87],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,79,37,68],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,34,0],[35,35,3],[36,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,79],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,81,37,34],[[0,15,0],[16,16,1],[17,17,0],[18,18,2],[19,34,0],[35,35,3],[36,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,81],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,83,68],[[0,15,0],[16,16,1],[17,34,0],[35,35,2],[36,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,83],[[0,15,0],[16,16,1],[17,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,7],[[0,6,0],[7,8,1],[9,13,0],[14,18,1],[19,22,0],[23,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!1,[4294967295,88],[[0,6,0],[7,8,1],[9,13,0],[14,14,1],[15,15,0],[16,16,1],[17,25,0],[26,27,1],[28,35,0],[36,37,1],[38,38,0],[39,39,1],[40,44,0]]],[!0]],\nthis.finalTable={4:1,5:3,6:26,7:30,8:5,9:7,10:6,11:27,12:30,13:30,14:3,15:30,16:30,17:19,18:22,19:23,20:29,21:20,22:30,23:30,24:24,25:28,26:21,27:25,28:12,29:11,31:0,34:2,36:2,37:2,38:3,39:30,40:30,41:30,42:30,43:30,44:30,45:8,48:0,49:3,53:2,54:4,59:13,60:14,61:30,62:15,63:30,64:30,74:18,75:30,76:30,77:10,85:16,86:17,88:9},this.inputTable=[[0,8,1],[9,9,41],[10,10,40],[11,11,1],[12,12,41],[13,13,40],[14,31,1],[32,32,41],[33,33,1],[34,34,21],[35,35,1],[36,36,23],[37,37,10],[38,38,1],[39,39,2],[40,40,9],[41,41,4],[42,42,1],[43,43,22],[44,44,19],[45,45,20],[46,46,38],[47,47,42],[48,48,39],[49,57,16],[58,58,1],[59,59,5],[60,60,1],[61,61,13],[62,63,1],[64,64,23],[65,68,26],[69,69,37],[70,70,26],[71,87,23],[88,88,33],[89,90,23],[91,91,12],[92,92,0],[93,93,11],[94,94,1],[95,95,23],[96,96,1],[97,97,8],[98,98,26],[99,99,7],[100,100,14],[101,101,36],[102,102,27],[103,103,23],[104,104,32],[105,107,23],[108,108,17],[109,109,35],[110,110,30],[111,111,25],[112,112,31],[113,113,23],[114,114,29],[115,115,18],[116,116,15],[117,117,28],[118,119,23],[120,120,34],[121,121,24],[122,122,23],[123,123,6],[124,124,1],[125,125,3],[126,65535,1]],this.initialTable={STRING:1,INITIAL:2}}return e.lexSeq=function(t){var r=new e;r.source=t;for(var a=[],s=r.token;"<$>"!==s;)a.push({token:s,text:r.yytext,start:r.startIdx,end:r.endIdx}),r.advance(),s=r.token;return a},e.prototype.yyrestart=function(e){void 0===e&&(e=null),null!=e&&(this.sourceString=e),this.ended=!1,this.start=0,this.oldStart=0,this.line=1,this.col=0,this.advanced=!0,this.tokenNameString=null,this.yyObject={},this.initialState="INITIAL"},Object.defineProperty(e.prototype,"source",{set:function(e){this.sourceString=e,this.yyrestart()},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"token",{get:function(){return this.advanced&&(this.tokenNameString=this.next(),this.advanced=!1),this.tokenNameString},enumerable:!1,configurable:!0}),e.prototype.advance=function(){this.advanced=!0},Object.defineProperty(e.prototype,"startIdx",{get:function(){return this.oldStart},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"endIdx",{get:function(){return this.start},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"position",{get:function(){return[this.line,this.col]},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"positionInfo",{get:function(){return this.token+"@row:"+this.position.join("col:")},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"yytext",{get:function(){return this.yyText},set:function(e){this.yyText=e},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"yyleng",{get:function(){return this.endIdx-this.startIdx},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"yy",{get:function(){return this.yyObject},enumerable:!1,configurable:!0}),Object.defineProperty(e.prototype,"tokenName",{get:function(){return this.tokenNameString},enumerable:!1,configurable:!0}),e.prototype.next=function(){for(var e,t,r,a,s,n,i,o,l;;)for(e=null,t=null,r=0,a=this.start,s=this.start,n=u,o=p,l=this.start,i=this.transTable[0][1][this.initialInput];;){if(r=this.sourceString.charCodeAt(s),n!==u&&(13===r?(this.col=0,this.line++):10===r?13!==n&&(this.col=0,this.line++):this.col++),n=r,(t=this.trans(i,r))===p){if(a===l){if(this.start===this.sourceString.length){if(this.ended)throw new Error("已经到达末尾.");return this.ended=!0,"<$>"}throw new Error("意外的字符,line:"+this.position.join(",col:")+"of "+this.sourceString.substr(a,20))}switch(e=this.finalTable[o],this.start=l,this.oldStart=a,this.yyText=this.sourceString.substring(this.startIdx,this.endIdx),e){case 2:return"time";case 3:return"number";case 4:return"hex";case 5:return"+";case 6:return"-";case 7:return this.begin("STRING"),"str_start";case 8:return"str_esc_char";case 9:return"str_esc_unicode";case 10:return"str_esc_ascii";case 11:return this.begin("INITIAL"),"str_end";case 12:return"str_seg";case 13:return"set";case 14:return"let";case 15:return"def";case 16:return"apply";case 17:return"clone";case 18:return"then";case 19:return"=";case 20:return"("\n;case 21:return")";case 22:return"[";case 23:return"]";case 24:return"{";case 25:return"}";case 26:return".";case 27:return",";case 28:return";";case 29:return"%";case 30:return"id"}break}null!=(e=this.finalTable[t])&&(o=t,l=s+1),s+=1,i=t}},e.prototype.trans=function(e,t){if(isNaN(t))return p;if(t<this.inputTable[0][0]||t>this.inputTable[this.inputTable.length-1][1])throw new Error("输入超出有效范围,line:"+this.position.join(",col:"));if(!0===this.transTable[e][0])return p;var r=this.find(t,this.inputTable),a=this.find(r,this.transTable[e][2]);return this.transTable[e][1][a]},e.prototype.find=function(e,t){var r,a,s;for(r=0,a=t.length-1;;){if(t[s=r+a>>>1][0]<=e&&t[s][1]>=e)return t[s][2];t[s][0]>e?a=s-1:r=s+1}},e.prototype.begin=function(e){void 0===e&&(e=null),this.initialState=null!=e?e:"INITIAL"},Object.defineProperty(e.prototype,"initialState",{get:function(){return this.initialStateString},set:function(e){if(void 0===this.initialTable[e])throw new Error("未定义的起始状态:"+e);this.initialStateString=e,this.initialInput=this.initialTable[e]},enumerable:!1,configurable:!0}),e}(),c=function(){function e(){this.ast_helper=new o,this.actionTable=[null,{0:6,1:1,2:2,67:54,68:36,69:20,70:16,8:4,9:8,10:10,76:12,77:32,78:50,73:148,74:44,85:52,89:14,90:150,29:18,101:120,41:150,43:36,47:104,112:40,115:34,116:38,120:56,124:150,125:42},{0:6,2:9,67:54,4:22,69:20,70:16,8:4,9:8,10:10,76:12,77:32,14:9,73:148,18:9,85:52,78:50,24:28,25:9,90:150,74:44,29:18,68:36,89:14,36:26,101:120,41:150,43:36,47:104,112:40,115:34,116:38,120:56,124:150,125:42},{3:25,5:33,6:35,7:37,12:43,16:57,19:68,21:43,23:68,26:68,28:43,30:87,31:68,32:95,35:87,38:87,39:68,40:68,44:66,45:87,47:104,48:106,53:102,54:98,61:96,62:100,64:132,65:134,66:68,71:87,72:87,75:187,79:68,80:201,82:140,86:95,87:112,88:87,92:64,93:94,94:70,95:90,96:92,98:87,101:120,106:239,107:138,109:110,110:108,113:46,114:72,117:136,121:68,122:87},{0:6,2:11,67:54,4:22,69:20,70:16,8:4,9:8,10:10,11:41,68:36,13:49,14:11,73:148,18:11,20:65,77:32,78:50,124:150,24:28,25:11,90:150,27:81,92:161,29:18,33:135,34:30,91:229,36:26,74:44,85:52,76:12,41:150,89:14,43:36,101:120,46:161,47:104,112:40,115:34,99:161,120:56,116:38,125:42},{19:68,23:68,24:28,25:24,29:18,30:89,31:68,35:139,36:26,37:141,39:68,43:36,44:66,45:159,47:104,48:106,53:102,54:98,61:96,62:100,64:132,65:134,66:68,68:36,69:20,70:16,71:183,76:12,77:32,79:68,82:140,87:112,88:225,89:14,92:64,93:94,94:70,95:90,96:92,98:237,101:120,107:138,109:110,110:108,113:46,114:72,115:34,116:38,117:136,121:68,122:48,123:251},{0:6,2:13,67:54,4:22,69:20,70:16,8:4,9:8,10:10,76:12,77:32,14:13,73:148,18:13,85:52,78:50,24:28,25:13,90:150,74:44,29:18,68:36,89:14,36:26,101:120,41:150,43:36,47:104,112:40,115:34,116:38,120:56,124:150,125:42},{3:27,20:67,21:45,27:83,12:45,28:45,15:55},{64:132,65:134,67:54,94:70,117:136,72:185,120:56,111:243,78:50,82:140,85:52,22:71,87:112,26:68,92:64,93:94,86:80,95:90,32:80,33:137,100:84,101:120,38:143,40:68,107:138,44:66,109:110,110:108,47:104,48:106,96:92,114:72,108:76,53:102,54:98,55:173,56:74,57:78,58:82,59:86,60:88,61:96,62:100},{36:39,69:20,70:16,10:39,43:36,76:12,77:32,47:104,115:34,116:38,68:36,101:120,24:39,89:14,29:18},{64:132,65:134,117:136,118:144,77:197,82:140,83:146,84:215,87:112,92:64,93:94,94:231,95:90,96:92,100:84,101:120,107:138,109:110,110:108,47:104,48:106,53:102,54:98,119:142,57:175,58:82,59:86,60:88,61:96,62:100},{0:6,2:15,67:54,68:36,69:20,70:16,8:4,9:8,10:10,76:12,77:32,78:50,73:148,74:44,85:52,89:14,90:150,29:18,101:120,41:150,43:36,47:104,112:40,115:34,116:38,120:56,124:150,125:42},{0:6,2:17,67:54,68:36,69:20,70:16,8:4,9:8,10:10,76:12,77:32,78:50,73:148,74:44,85:52,89:14,90:150,29:18,101:120,41:150,43:36,47:104,112:40,115:34,116:38,120:56,124:150,125:42},{17:59,42:153,46:163},{32:97,75:97,52:97,86:97,80:97,106:97,43:97,68:97},{32:99,80:99,106:99,75:99,52:99,86:99},{32:118,49:114,50:116,52:118,86:118,80:118,106:118,75:118,63:177},{87:221},{32:101,80:101,106:101,75:101,52:101,86:101},{32:103,80:103,106:103,75:103,52:103,86:103},{32:105,97:105,52:105,86:105,80:105,106:105,75:105},{104:126,81:205,105:128,51:130,102:122,103:124},{\n104:126,81:207,105:128,51:130,102:122,103:124},{104:126,81:209,105:128,51:130,102:122,103:124},{104:126,81:211,105:128,51:130,102:122,103:124},{104:126,81:213,105:128,51:130,102:122,103:124},{32:107,80:107,75:107,86:107},{101:120,118:144,109:110,110:108,47:104,48:106,83:146,52:167,53:102,54:98,87:112,84:217,61:96,62:100,119:142},{67:54,85:52,120:56,41:149,90:149,124:149,78:50}],this.gotoTable={64:{52:171},29:{0:5},30:{0:7},31:{2:19},32:{2:21},33:{25:75,18:61,2:23,14:51},34:{79:199,23:73,19:63,39:145,40:147,121:247,26:79,66:179,31:93},35:{68:181,43:155},36:{3:29},37:{4:31},38:{14:53},39:{25:77},40:{12:47,21:69,28:85},41:{32:109,75:109,52:109,86:109,80:109,106:109,43:157,68:157},42:{97:233},43:{32:111,97:235,52:111,86:111,80:111,106:111,75:111},44:{124:253,41:151,90:227},45:{113:245},46:{122:249},47:{32:113},49:{75:189},50:{88:91,98:91,35:91,38:91,71:91,72:91,122:91,45:91,30:91},51:{75:191},52:{32:115,86:219},53:{32:117,86:117},54:{32:119,80:203,86:119},55:{32:121,80:121,106:241,75:193,52:169,86:121},56:{32:123,80:123,75:195,86:123},57:{32:125,80:125,106:125,75:125,52:125,86:125},58:{32:127,80:127,106:127,75:127,52:127,86:127},59:{32:129,80:129,106:129,75:129,52:129,86:129},60:{87:223},61:{51:165},62:{32:131,80:131,75:131,86:131},63:{32:133,80:133,75:133,86:133}},this.prodList=[[65,2],[29,1],[30,2],[30,0],[31,1],[31,1],[33,6],[33,6],[33,5],[33,3],[33,5],[37,0],[39,0],[38,2],[38,1],[36,3],[35,1],[35,3],[35,0],[42,1],[32,7],[32,12],[32,5],[45,0],[46,0],[40,4],[40,4],[40,3],[40,6],[48,3],[48,1],[48,0],[49,1],[34,2],[34,0],[50,3],[50,4],[47,1],[52,3],[52,1],[52,0],[53,1],[53,3],[54,1],[54,1],[51,1],[51,1],[51,1],[55,1],[55,1],[55,1],[55,1],[41,1],[58,1],[57,3],[60,1],[60,0],[59,1],[59,1],[59,0],[43,3],[61,2],[61,2],[61,2],[61,2],[61,0],[56,1],[56,1],[63,4],[62,3],[62,2],[64,3],[64,3],[64,1],[44,1],[44,0]],this.inputTable={"<$>":1,set:2,id:3,"{":4,"}":5,apply:6,"(":7,")":8,then:9,",":10,def:11,let:12,"=":13,time:14,hex:15,number:16,"%":17,"+":18,"-":19,str_start:20,str_end:21,str_esc_char:22,str_esc_unicode:23,str_esc_ascii:24,str_seg:25,"[":26,"]":27,";":28}}return e.parse=function(t){var r=new h;return r.source=t,(new e).parseLexer(r)},e.prototype.parseLexer=function(e){for(var t,r,a,s=[0],n=[];;){if(r=e.token,t=s[s.length-1],null==this.actionTable[this.inputTable[r]][t])throw new Error("Parse Error:"+e.positionInfo);if(1===(a=this.actionTable[this.inputTable[r]][t]))return n.pop();if(1==(1&a))n.push(e.yytext),s.push((a>>>1)-1),e.advance();else if(0==(1&a)){var i=a>>>1,o=this.prodList[i][1],l=null;switch(o>0&&(l=n[n.length-o]),i){case 1:l=this.ast_helper.on_Result(n[n.length-1]);break;case 2:(l=n[n.length-2]).push(n[n.length-1]);break;case 3:l=[];break;case 4:break;case 5:l={type:"SetExpr",params:n[n.length-1]};break;case 6:l=this.ast_helper.on_unit_set_expr(n[n.length-5],n[n.length-3],n[n.length-1]);break;case 7:l=this.ast_helper.on_temporary_target_set_expr(n[n.length-5],n[n.length-3],n[n.length-1]);break;case 8:l={type:"ApplyExpr",params:[n[n.length-4],n[n.length-2]]};break;case 9:l=this.ast_helper.on_then_set_expr(n[n.length-3],n[n.length-1]);break;case 10:l=this.ast_helper.on_group_set_expr(n[n.length-3]);break;case 11:this.ast_helper.on_enter_scope();break;case 12:this.ast_helper.on_leave_scope();break;case 13:(l=n[n.length-2]).push(n[n.length-1]);break;case 14:l=[n[n.length-1]];break;case 15:l=n[n.length-2];break;case 16:l=[n[n.length-1]];break;case 17:l=[n[n.length-3],n[n.length-1]];break;case 18:l=[];break;case 19:break;case 20:l=this.ast_helper.on_def_object(n[n.length-6],n[n.length-5],n[n.length-3]);break;case 21:l=this.ast_helper.on_def_template(n[n.length-11],n[n.length-10],n[n.length-8],n[n.length-4]);break;case 22:l=this.ast_helper.on_let_object_binding(n[n.length-4],n[n.length-2]);break;case 23:this.ast_helper.on_enter_tpl();break;case 24:this.ast_helper.on_leave_tpl();break;case 25:l=this.ast_helper.on_object_modification(n[n.length-4],n[n.length-2]);break;case 26:l=this.ast_helper.on_template_application(n[n.length-4],n[n.length-2]);break;case 27:l=n[n.length-2];break;case 28:\nl=this.ast_helper.on_tmp_object_modification(n[n.length-5],n[n.length-3]);break;case 29:(l=n[n.length-3]).push(n[n.length-1]);break;case 30:l=[n[n.length-1]];break;case 31:l=[];break;case 32:l=this.ast_helper.on_Variable_value(n[n.length-1]);break;case 33:(l=n[n.length-2]).push(n[n.length-1]);break;case 34:l=[];break;case 35:l=[n[n.length-3],n[n.length-1]];break;case 36:l=[n[n.length-4],n[n.length-2]];break;case 37:l=this.ast_helper.on_ArgList(n[n.length-1]);break;case 38:(l=n[n.length-1]).unshift(n[n.length-3]);break;case 39:l=[n[n.length-1]];break;case 40:l=[];break;case 41:l=[null,n[n.length-1]];break;case 42:l=[n[n.length-3],n[n.length-1]];break;case 43:case 44:case 45:case 46:case 47:case 48:case 49:case 50:case 51:break;case 52:l=this.ast_helper.on_Time_value(n[n.length-1]);break;case 53:l=this.ast_helper.on_Hex_value(n[n.length-1]);break;case 54:l=this.ast_helper.on_Num_value(n[n.length-3],n[n.length-2],n[n.length-1]);break;case 55:case 56:case 57:case 58:break;case 59:l="+";break;case 60:l=this.ast_helper.on_String_value(n[n.length-2]);break;case 61:(l=n[n.length-2]).push({type:"char",value:n[n.length-1]});break;case 62:(l=n[n.length-2]).push({type:"unicode",value:n[n.length-1]});break;case 63:(l=n[n.length-2]).push({type:"ascii",value:n[n.length-1]});break;case 64:(l=n[n.length-2]).push({type:"seg",value:n[n.length-1]});break;case 65:l=[];break;case 66:case 67:break;case 68:l=this.ast_helper.on_Object_value(n[n.length-4],this.ast_helper.on_KeyValue_list(n[n.length-4],n[n.length-2]));break;case 69:l=this.ast_helper.on_Array_value(n[n.length-2]);break;case 70:l=this.ast_helper.on_Array_value([]);break;case 71:case 72:(l=n[n.length-3]).push(n[n.length-1]);break;case 73:l=[n[n.length-1]]}for(var p=0;p<o;)s.pop(),n.pop(),p++;if(t=s[s.length-1],null==this.gotoTable[this.prodList[i][0]][t])throw new Error("Goto Error!"+e.positionInfo);a=this.gotoTable[this.prodList[i][0]][t],s.push((a>>>1)-1),n.push(l)}}},e}();!function(){function e(e,t){this.ast=e,this.encode=t,this.defTypeInfo={}}e.prototype.transform=function(){var e,t,r=this.ast,a=[],s=[];try{for(var i=n(r.params),o=i.next();!o.done;o=i.next()){var l=o.value;switch(l.type){case"SetExpr":a.push(this.trans(l.params));break;case"DefExpr":var p=l.params;switch(p.type){case"NormalDefExpr":var u=p.params[0],h=p.params[1];switch(u){case"text":case"button":case"path":this.defTypeInfo[h]=u}s.push(p)}}}}catch(t){e={error:t}}finally{try{o&&!o.done&&(t=i.return)&&t.call(i)}finally{if(e)throw e.error}}return s=s.map(this.transDef.bind(this)).filter((function(e){return null!=e})),{sets:a=a.map(this.transSet.bind(this)).filter((function(e){return null!=e})),defs:s}},e.prototype.trans=function(e){if("ThenSetExpr"===e.type){var t=this.trans(e.params[0]),r=this.trans(e.params[1]);return"ThenSetExpr"===t.type?(t.params.push(r),t):(e.params=[t,r],e)}return"GroupSetExpr"===e.type?(e.params=e.params.map(this.trans.bind(this)).filter((function(e){return null!=e})),e):"UnitSetExpr"===e.type?e:void 0},e.prototype.transDef=function(e){var t,r,a,s,i,o;if("NormalDefExpr"===e.type&&3===e.params.length){var l=e.params[0],p=e.params[1],u=e.params[2];if("text"===l){var h={type:"DefText",name:p,attrs:{}};try{for(var c=n(u),f=c.next();!f.done;f=c.next()){var b=f.value;this.transAsetterNV(b,h)}}catch(e){t={error:e}}finally{try{f&&!f.done&&(r=c.return)&&r.call(c)}finally{if(t)throw t.error}}return h}if("button"===l){h={type:"DefButton",name:p,attrs:{}};try{for(var y=n(u),m=y.next();!m.done;m=y.next()){b=m.value;this.transAsetterNV(b,h)}}catch(e){a={error:e}}finally{try{m&&!m.done&&(s=y.return)&&s.call(y)}finally{if(a)throw a.error}}return h}if("path"===l){h={type:"DefPath",name:p,attrs:{}};try{for(var v=n(u),_=v.next();!_.done;_=v.next()){b=_.value;this.transAsetterNV(b,h)}}catch(e){i={error:e}}finally{try{_&&!_.done&&(o=v.return)&&o.call(v)}finally{if(i)throw i.error}}return h}}},e.prototype.transAsetterNV=function(e,t){if("DefText"===t.type){var r=e.params[0];e.params[1];switch(r){case"content":t.attrs.content=this.parseString(e.params[1],!1,!0);break;case"fontFamily":\nt.attrs.fontFamily=this.parseString(e.params[1],!0);break;case"fontSize":t.attrs.fontSize=this.parseNum(e.params[1]);break;case"x":t.attrs.x=this.parseNum(e.params[1]);break;case"y":t.attrs.y=this.parseNum(e.params[1]);break;case"alpha":t.attrs.alpha=this.parseNum(e.params[1]);break;case"anchorX":t.attrs.anchorX=this.parseNum(e.params[1]);break;case"anchorY":t.attrs.anchorY=this.parseNum(e.params[1]);break;case"color":t.attrs.color=this.parseInteger(e.params[1]);break;case"zIndex":t.attrs.zIndex=this.parseInteger(e.params[1]);break;case"parent":t.attrs.parent=this.parseString(e.params[1]);break;case"bold":t.attrs.bold=this.parseInteger(e.params[1]);break;case"textShadow":t.attrs.textShadow=this.parseInteger(e.params[1]);break;case"strokeWidth":t.attrs.strokeWidth=this.parseInteger(e.params[1]);break;case"strokeColor":t.attrs.strokeColor=this.parseInteger(e.params[1]);break;case"rotateX":t.attrs.rotateX=this.parseNum(e.params[1]);break;case"rotateY":t.attrs.rotateY=this.parseNum(e.params[1]);break;case"rotateZ":t.attrs.rotateZ=this.parseNum(e.params[1]);break;case"scale":t.attrs.scale=this.parseNum(e.params[1]);break;case"duration":t.attrs.duration=this.parseTime(e.params[1])}}else if("DefButton"===t.type){r=e.params[0],e.params[1];switch(r){case"text":t.attrs.text=this.parseString(e.params[1],!1,!0);break;case"fontSize":t.attrs.fontSize=this.parseNum(e.params[1]);break;case"textColor":t.attrs.textColor=this.parseInteger(e.params[1]);break;case"textAlpha":t.attrs.textAlpha=this.parseNum(e.params[1]);break;case"fillColor":t.attrs.fillColor=this.parseInteger(e.params[1]);break;case"fillAlpha":t.attrs.fillAlpha=this.parseNum(e.params[1]);break;case"x":t.attrs.x=this.parseNum(e.params[1]);break;case"y":t.attrs.y=this.parseNum(e.params[1]);break;case"duration":t.attrs.duration=this.parseTime(e.params[1]);break;case"target":t.attrs.target=this.parseObject(e.params[1]);break;case"zIndex":t.attrs.zIndex=this.parseInteger(e.params[1]);break;case"scale":t.attrs.scale=this.parseNum(e.params[1])}}else if("DefPath"===t.type){r=e.params[0],e.params[1];switch(r){case"d":t.attrs.d=this.parseString(e.params[1],!0);break;case"viewBox":t.attrs.viewBox=this.parseString(e.params[1],!0);break;case"fillColor":t.attrs.fillColor=this.parseInteger(e.params[1]);break;case"fillAlpha":t.attrs.fillAlpha=this.parseNum(e.params[1]);break;case"borderColor":t.attrs.borderColor=this.parseInteger(e.params[1]);break;case"borderAlpha":t.attrs.borderAlpha=this.parseNum(e.params[1]);break;case"borderWidth":t.attrs.borderWidth=this.parseNum(e.params[1]);break;case"x":t.attrs.x=this.parseNum(e.params[1]);break;case"y":t.attrs.y=this.parseNum(e.params[1]);break;case"scale":t.attrs.scale=this.parseNum(e.params[1]);break;case"width":t.attrs.width=this.parseNum(e.params[1]);break;case"height":t.attrs.height=this.parseNum(e.params[1]);break;case"duration":t.attrs.duration=this.parseTime(e.params[1]);break;case"zIndex":t.attrs.zIndex=this.parseInteger(e.params[1])}}},e.prototype.parseString=function(e,t,r){if(void 0===t&&(t=!1),void 0===r&&(r=!1),"SimpleValue"===e.type)return this.parseString2(e.value,t,r)},e.prototype.parseString2=function(e,t,r){var a,i;if(void 0===t&&(t=!1),void 0===r&&(r=!1),"String"===e.type){var o=[];try{for(var l=n(e.value),p=l.next();!p.done;p=l.next()){var u=p.value;switch(u.type){case"char":var h=null;switch(u.value.charAt(1)){case"n":h="\\n";break;case"r":h="\\r";break;case"t":h="\\t";break;case"\\\\":h="\\\\";break;case"\'":h="\'";break;case\'"\':h=\'"\';break;default:h=u.charAt(1)}o.push(h);break;case"unicode":var c=u.value.substr(2);o.push(String.fromCharCode(parseInt(c,16)));break;case"ascii":c=u.value.substr(2);o.push(String.fromCharCode(parseInt(c,16)));break;case"seg":o.push(u.value)}}}catch(e){a={error:e}}finally{try{p&&!p.done&&(i=l.return)&&i.call(l)}finally{if(a)throw a.error}}return this.encode?s(o.join(""),t,r):o.join("")}},e.prototype.parseNum=function(e){if("SimpleValue"===e.type)return this.parseNum2(e.value)},e.prototype.parseNum2=function(e){if("Num"===e.type){var t="+"===e.value[0]?1:-1,r=e.value[1];return{\nnumType:"%"===e.value[2]?"percent":"number",value:t*parseFloat(r)}}},e.prototype.parseInteger=function(e){if("SimpleValue"===e.type)return this.parseInteger2(e.value)},e.prototype.parseInteger2=function(e){return"hex"===e.type?parseInt(e.value.substr(2),16):"Num"===e.type?Math.floor(this.parseNum2(e).value):void 0},e.prototype.transSet=function(e){var t,r;if("ThenSetExpr"===e.type||"GroupSetExpr"===e.type){var a=e.params.map(this.transSet.bind(this)).filter((function(e){return null!=e}));if(a.length>0)return{type:"ThenSetExpr"===e.type?"Serial":"Parallel",items:a}}else if("UnitSetExpr"===e.type){var s=e.params[0],o=this.defTypeInfo[s],l=i(this.parseSetExprParams(e.params[2]),2),p=l[0],u=l[1];if("text"===o||"button"===o||"path"===o){var h={type:"Unit",duration:p,defaultEasing:u,targetName:s,attrs:{}};try{for(var c=n(e.params[1]),f=c.next();!f.done;f=c.next()){var b=f.value;this.transAsetter(o,b,h.attrs)}}catch(e){t={error:e}}finally{try{f&&!f.done&&(r=c.return)&&r.call(c)}finally{if(t)throw t.error}}return h}return null}},e.prototype.parseSetExprParams=function(e){var t=0,r=null;return"SetExprParams"===e.type&&(e.params.length>=1&&(t=this.parseTime2(e.params[0])),e.params.length>=2&&(r=this.parseString2(e.params[1]))),[t,r]},e.prototype.parseTime=function(e){if("SimpleValue"===e.type&&"time"===e.value.type)return this.parseTime2(e.value.value)},e.prototype.parseTime2=function(e){for(var t=!0,r=0,a=0,s="",n=null;;){if(null==(n=t?e.match(/^(\\d*\\.?\\d+(?:[eE][\\+\\-]?\\d+)?)(.*)$/):e.match(/^([hms]+)(.*)$/)))return r;if(s=n[1],t)a=parseFloat(s);else switch(s){case"h":r+=3600*a*1e3;break;case"m":r+=60*a*1e3;break;case"s":r+=1e3*a;break;case"ms":r+=a}e=n[2],t=!t}},e.prototype.parseObject=function(e){if("ComplexValue"===e.type&&"Object"===e.value.type)return this.parseObject2(e.value)},e.prototype.parseObject2=function(e){var t,r,a,s,i,o,l=e.params[0],p=e.params[1],u={};switch(l){case"seek":u.objType="seek";try{for(var h=n(p),c=h.next();!c.done;c=h.next()){if("ASetter"===(d=c.value).type){var f=d.params[0],b=d.params[1];switch(f){case"time":u.time=this.parseTime(b)}}}}catch(e){t={error:e}}finally{try{c&&!c.done&&(r=h.return)&&r.call(h)}finally{if(t)throw t.error}}break;case"av":u.objType="av";try{for(var y=n(p),m=y.next();!m.done;m=y.next()){if("ASetter"===(d=m.value).type){f=d.params[0],b=d.params[1];switch(f){case"av":u.av=this.parseInteger(b);break;case"bvid":u.bvid=this.parseInteger(b);break;case"page":u.page=this.parseInteger(b);break;case"time":u.time=this.parseTime(b)}}}}catch(e){a={error:e}}finally{try{m&&!m.done&&(s=y.return)&&s.call(y)}finally{if(a)throw a.error}}break;case"bangumi":u.objType="bangumi";try{for(var v=n(p),_=v.next();!_.done;_=v.next()){var d;if("ASetter"===(d=_.value).type){f=d.params[0],b=d.params[1];switch(f){case"seasonId":u.seasonId=this.parseInteger(b);break;case"episodeId":u.episodeId=this.parseInteger(b);break;case"time":u.time=this.parseTime(b)}}}}catch(e){i={error:e}}finally{try{_&&!_.done&&(o=v.return)&&o.call(v)}finally{if(i)throw i.error}}}return u},e.prototype.transAsetter=function(e,t,r){if("ASetter"===t.type&&2===t.params.length){var a=t.params[0],s=i(this.transAsetterValue(t.params[1]),2),n=s[0],o=s[1];if("text"===e)switch(a){case"x":case"y":case"alpha":case"color":case"fontSize":case"content":case"rotateX":case"rotateY":case"rotateZ":case"scale":r[a]={value:n,easing:o}}else if("button"===e)switch(a){case"x":case"y":case"fontSize":case"text":r[a]={value:n,easing:o}}else if("path"===e)switch(a){case"x":case"y":r[a]={value:n,easing:o}}}},e.prototype.transAsetterValue=function(e){return"SimpleValue"===e.type?[this.transValue(e.value),null]:"ComplexValue"===e.type&&"Array"===e.value.type&&2===e.value.params.length?[this.transValue(e.value.params[0]),this.parseString2(e.value.params[1])]:[null,null]},e.prototype.transValue=function(e){switch(e.type){case"String":return this.parseString2(e);case"Num":return this.parseNum2(e);case"hex":return this.parseInteger2(e)}}}();var f=function(e,t){void 0===t&&(t=!0);var r={x:{numType:"number",value:0},y:{numType:"number",value:0},zIndex:{numType:"number",\nvalue:0},scale:{numType:"number",value:1},duration:void 0},n={content:"请输入内容",alpha:{numType:"number",value:1},color:16777215,anchorX:{numType:"number",value:0},anchorY:{numType:"number",value:0},fontSize:{numType:"number",value:25},fontFamily:"SimHei",bold:{numType:"number",value:1},textShadow:{numType:"number",value:1},strokeWidth:{numType:"number",value:0},strokeColor:16777215,rotateX:{numType:"number",value:0},rotateY:{numType:"number",value:0},rotateZ:{numType:"number",value:0},parent:void 0},i={text:"请输入内容",fontSize:{numType:"number",value:25},textColor:0,textAlpha:{numType:"number",value:1},fillColor:16777215,fillAlpha:{numType:"number",value:1},target:void 0},o={d:void 0,viewBox:void 0,borderColor:0,borderAlpha:{numType:"number",value:1},borderWidth:{numType:"number",value:0},fillColor:16777215,fillAlpha:{numType:"number",value:1}};function l(e){for(var t in e)if(e.hasOwnProperty(t))switch((void 0!==e[t].value&&void 0!==e[t].value.numType&&void 0===e[t].easing||void 0!==e[t].value&&void 0!==e[t].type)&&(e[t]=e[t].value),t){case"content":e[t]=s(e[t],!1,!0);break;case"fontFamily":e[t]=s(e[t],!0,!1);break;case"parent":e[t]=s(e[t],!1,!1);break;case"text":e[t]=s(e[t],!1,!0);break;case"d":case"viewBox":e[t]=s(e[t],!0,!1);break;default:"string"==typeof e[t]&&(e[t]=s(e[t],!1,!1))}}function p(e){l(e.attrs),e.duration=e.duration.value,e.defaultEasing=e.default_easing&&s(e.default_easing.value,!1,!1),e.targetName=e.target_name}try{var u=c.parse(e),h={};h.defs=u.defs;for(var f=0;f<h.defs.length;f++){if(l(h.defs[f].attrs),h.defs[f].attrs.target){for(var b={objType:"seek"},y=0;y<h.defs[f].attrs.target.length;y++){var m=h.defs[f].attrs.target[y];"seasonId"===m[0]||"episodeId"===m[0]?b.objType="bangumi":"av"!==m[0]&&"page"!==m[0]||(b.objType="av"),m[1].value&&m[1].value.value?b[m[0]]=m[1].value.value:m[1].value&&(b[m[0]]=m[1].value)}h.defs[f].attrs.target=b}h.defs[f].attrs=a(r,u.defs[f].attrs),"DefText"===h.defs[f].type?h.defs[f].attrs=a(n,u.defs[f].attrs):"DefButton"===h.defs[f].type?h.defs[f].attrs=a(i,u.defs[f].attrs):"DefPath"===h.defs[f].type&&(h.defs[f].attrs=a(o,u.defs[f].attrs))}h.sets=u.sets;for(f=0;f<h.sets.length;f++)if(h.sets[f].items)for(y=0;y<h.sets[f].items.length;y++)h.sets[f].items[y].attrs&&p(h.sets[f].items[y]);else p(h.sets[f]);return h}catch(e){throw new Error(e.message)}},b=self;b.addEventListener("message",(function(e){var t=e.data;try{var r=f(t.text);t.defs=r.defs,t.sets=r.sets,b.postMessage(t)}catch(e){console.warn("Error in BAS parser: ",e),b.postMessage({error:e.message})}}));t.default={}}]);',null)
         }
     },
     function (m, t, e) {
