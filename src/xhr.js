@@ -36,7 +36,10 @@
                 BLOD.xmlhttpRequest({
                     method: "GET",
                     url: url,
-                    onload: (xhr) => resolve(xhr.responseText),
+                    onload: (xhr) => {
+                        debug.debug(url, String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText);
+                        resolve(xhr.responseText);
+                    },
                     onerror: (xhr) => {
                         toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
                         reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");

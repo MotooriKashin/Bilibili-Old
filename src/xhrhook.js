@@ -1106,7 +1106,7 @@
                 BLOD.__playinfo__ = response;
                 debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
             }
-            catch (e) { debug.error("接触限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+            catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
         // 监听视频地址
         async playinfo(obj) {
