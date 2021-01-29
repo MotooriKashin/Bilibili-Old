@@ -93,7 +93,7 @@
                     onload: (xhr) => resolve(xhr.responseText),
 =======
                     onload: (xhr) => {
-                        debug.debug(url, String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText);
+                        BLOD.GMxhrLog.push([BLOD.timeFormat(new Date()), url, (String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText)]);
                         resolve(xhr.responseText);
                     },
 >>>>>>> ef2d7cf ( 记录跨域url及返回值)
