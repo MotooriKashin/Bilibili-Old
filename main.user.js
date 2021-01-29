@@ -9,6 +9,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 =======
 // @version      4.0.3
@@ -19,6 +20,9 @@
 =======
 // @version      4.1.3
 >>>>>>> 9d7cf0a (修复旧版主页数据)
+=======
+// @version      4.2.2
+>>>>>>> d8eca6e (不再复制下载链接到剪切板)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
 // @version      3.7.7
@@ -101,6 +105,7 @@
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.js
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
+<<<<<<< HEAD
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/download.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
@@ -111,6 +116,9 @@
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/xhr.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/download.js
+=======
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@26b29093f8e975f1bb7968c6b26c1bc977f531c8/src/download.js
+>>>>>>> d8eca6e (不再复制下载链接到剪切板)
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
 <<<<<<< HEAD
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
