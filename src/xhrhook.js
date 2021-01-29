@@ -1082,6 +1082,7 @@
                                     let reBuildPlayerurl = new ReBuildPlayerurl();
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
+                                    e = Array.isArray(e) ? e : [e];
                                     debug.error("Thailand", ...e);
                                     toast.error("拉取Thailand链接失败！", "需要Thailand代理服务器 ಥ_ಥ");
                                 }
