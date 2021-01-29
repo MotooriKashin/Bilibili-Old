@@ -168,7 +168,7 @@
         getIdxs(url) {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET', url.replace('http', 'https'), true);
+                xhr.open('GET', url.replace('http:', 'https:'), true);
                 xhr.setRequestHeader('Range', 'bytes=0-6000');
                 xhr.responseType = 'arraybuffer';
                 xhr.onload = () => resolve(xhr.response);
@@ -1074,10 +1074,8 @@
                                 response = await reBuildPlayerurl.appPlayurl(response);
                             } catch (e) {
                                 e = Array.isArray(e) ? e : [e];
-                                toast.error("解除限制失败 ಥ_ಥ");
-                                debug.msg("解除限制失败 ಥ_ಥ", ...e);
+                                toast.error("解除限制失败 ಥ_ಥ", "尝试重新拉取Thailand地址...");
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
-                                toast("尝试重构playurl...")
                                 let reBuildPlayerurl = new ReBuildPlayerurl();
                                 response = await reBuildPlayerurl.ogvPlayurl(response);
                             }
@@ -1086,7 +1084,7 @@
                         response = { "code": 0, "message": "success", "result": response };
                     }
                 }
-                catch (e) { response = { "code": -404, "message": e, "data": null }; }
+                catch (e) { debug.msg("解除限制失败 ಥ_ಥ", ...e); response = { "code": -404, "message": e, "data": null }; }
                 clearInterval(progress);
                 xhr.responseURL = xhr.url;
                 xhr.response = xhr.responseText = JSON.stringify(response);
