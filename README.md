@@ -91,7 +91,7 @@
 个人目前主要使用平台数据如下
 ```
 Microsoft Windows 8 (Build 6.2.9200.16384) （64 位）  
-Google Chrome 87.0.4280.141 (正式版本) （64 位） (cohort: 87_141_Win)  
+Google Chrome 88.0.4324.104 (正式版本) （64 位） (cohort: Stable)  
 Tampermonkey BETA 4.10.6125
 ```
 平台
@@ -177,6 +177,7 @@ Tampermonkey BETA 4.10.6125
 - [js-md5](https://github.com/emn178/js-md5)（MIT许可）：md5哈希算法
 - [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
 - [esterTion](https://github.com/esterTion/BiliBili_crc2mid)（GFUL许可）：弹幕哈希反查算法的JavaScript实现
+- [miyouzi](https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts)（MIT许可）：APP端DASH sidx解析
 
 ---
 ### B站记忆
@@ -199,6 +200,9 @@ Tampermonkey BETA 4.10.6125
 ---
 ### 版本历史
 **注：部分功能可能需要先在设置里启用！**  
+- 2021-01-29
+   + 不再复制下载链接到剪切板
+   + 重构APP DASH数据：支持播放APP端DASH源(默认仍取flv源)。*Thailand源仍需在对应地区*（[sidx解析](https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts)）
 - 2021-01-25
    + 禁用番剧默认防挡字幕
 - 2021-01-23
