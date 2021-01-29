@@ -14671,6 +14671,7 @@
                                             }
                                         }
                                     }
+<<<<<<< HEAD
                                 }, {
                                     key: "_onProgress",
                                     value: function (e) {
@@ -14687,6 +14688,37 @@
                                                 if (-1 === this._range.to ? this._contentLength = this._totalLength - this._range.from : this._contentLength = this._range.to - this._range.from + 1, t)
                                                     return void this._openSubRange();
                                                 this._onContentLengthKnown && this._onContentLengthKnown(this._contentLength)
+=======
+                                    function R(l) {
+                                        try {
+                                            l && l.mediaType && function () {
+                                                var e = l.mediaType,
+                                                    n = se[e],
+                                                    r = l.segments,
+                                                    t = l.representation && l.representation.index,
+                                                    i = !0,
+                                                    a = [],
+                                                    o = {};
+                                                n.total && (n.segments.forEach(function (e, t) {
+                                                    // e.duration !== r[t].duration && t < n.total - 1 && a.push(t)
+                                                    e.duration && e.duration !== r[t].duration && t < n.total - 1 && Math.ceil(1e3 * Math.abs(e.duration / e.timescale - r[t].duration / r[t].timescale)) > 100 && a.push(t)
+                                                }), a.length && (i = !1, o = {
+                                                    old: n.qualityIndex,
+                                                    new: t
+                                                }));
+                                                var s = 0;
+                                                r && r.length && (s = r[0].startTime / r[0].timescale, K.setStartOffsetTimeForType(e, s));
+                                                var u = {
+                                                    total: r && r.length,
+                                                    segments: r,
+                                                    isDurationAllEqual: i,
+                                                    qualityIndex: t,
+                                                    startOffsetTime: s
+                                                };
+                                                i || (u.notEqualIndexList = a, u.notEqualQualityIndex = o),
+                                                    se[l.mediaType] = u,
+                                                    "function" == typeof ue && ue(e, u)
+>>>>>>> 554feda (Update video.js)
                                             }
                                             var r = e.loaded - this._lastTimeLoaded;
                                             this._lastTimeLoaded = e.loaded,
