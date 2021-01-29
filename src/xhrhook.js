@@ -1935,6 +1935,7 @@
 =======
                 debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
             }
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
 <<<<<<< HEAD
@@ -2056,6 +2057,9 @@
                 "video_codecid": 7,
                 "video_project": true
             }
+=======
+            catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+>>>>>>> ef2d7cf ( 记录跨域url及返回值)
         }
 >>>>>>> 65c15a5 (重构泰国番剧playurl)
 =======

@@ -80,6 +80,7 @@
                     method: "GET",
                     url: url,
 <<<<<<< HEAD
+<<<<<<< HEAD
                     headers: headers,
                     onload: (xhr) => {
                         BLOD.GMxhrLog.push([BLOD.timeFormat(new Date()), url, (String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText)]);
@@ -90,6 +91,12 @@
                         reject(xhr.statusText || "xhr出错！");
 =======
                     onload: (xhr) => resolve(xhr.responseText),
+=======
+                    onload: (xhr) => {
+                        debug.debug(url, String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText);
+                        resolve(xhr.responseText);
+                    },
+>>>>>>> ef2d7cf ( 记录跨域url及返回值)
                     onerror: (xhr) => {
                         toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
                         reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
