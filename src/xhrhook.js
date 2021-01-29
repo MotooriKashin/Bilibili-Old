@@ -194,6 +194,7 @@
                 app.dash.audio = this.fixAudio(app.dash.audio);
                 return app;
             }
+            toast("重构DASH数据中...");
             for (let key in app) this.playurl[key] = app[key];
             // duration向上取整
             this.playurl.dash.duration = Math.ceil(app.timelength / 1000);
@@ -215,6 +216,7 @@
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
                         // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
                         BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        debug("DASH-video：", id, BLOD["sidx" + String(BLOD.cid)][id]);
                     }
                     d.segment_base = {
                         initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
@@ -247,6 +249,7 @@
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
                         BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        debug("DASH-audio：", id, BLOD["sidx" + String(BLOD.cid)][id]);
                     }
                     d.segment_base = {
                         initialization: BLOD["sidx" + String(BLOD.cid)][id][0],
@@ -262,6 +265,7 @@
                     d.mimeType = d.mime_type = d.mimeType || d.mime_type || 'audio/mp4';
                 })(e[i]))
             })
+            toast("等待数据回传...");
             if (arr[0]) await Promise.all(arr);
 
             // video排序
@@ -276,16 +280,18 @@
                 if (hev[i]) video.push(hev[i]);
             }
             this.playurl.dash.video = video;
+            toast.success("DASH数据重构成功！", "正在投喂给播放器...");
             return this.playurl;
         }
         // Thailand playurl
         async ogvPlayurl(ogv) {
+            toast("重构DASH数据中...");
             this.playurl.quality = ogv.data.video_info.quality;
             let num = this.playurl.accept_quality[this.playurl.quality];
             this.playurl.format = this.playurl.accept_format.split(",")[num];
-            this.playurl.timelength = ogv.data.video_info.timelength.
+            this.playurl.timelength = ogv.data.video_info.timelength;
 
-                this.playurl.accept_quality.splice(0, num);
+            this.playurl.accept_quality.splice(0, num);
             this.playurl.support_formats.splice(0, num);
             this.playurl.accept_format = this.playurl.accept_format.split(",");
             this.playurl.accept_format.splice(num, 1);
@@ -306,6 +312,7 @@
                             let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                             let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
                             BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                            debug("DASH-video：", id, BLOD["sidx" + String(BLOD.cid)][id]);
                         }
                         this.playurl.dash.video.push({
                             SegmentBase: {
@@ -349,6 +356,7 @@
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
                         BLOD["sidx" + String(BLOD.cid)][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        debug("DASH-audio：", id, BLOD["sidx" + String(BLOD.cid)][id]);
                     }
                     this.playurl.dash.audio.push({
                         SegmentBase: {
@@ -381,7 +389,9 @@
                     })
                 })(d))
             })
+            toast("等待数据回传...");
             await Promise.all(arr);
+            toast.success("DASH数据重构成功！", "正在投喂给播放器...");
             return this.playurl;
         }
     }
