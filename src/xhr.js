@@ -9,6 +9,7 @@
 
     class Xhr {
         constructor() {
+            BLOD.GMxhrLog = [];
             console.debug('import module "xhr.js"');
         }
         false(url) {
@@ -37,7 +38,7 @@
                     method: "GET",
                     url: url,
                     onload: (xhr) => {
-                        debug.debug(url, String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText);
+                        BLOD.GMxhrLog.push([BLOD.timeFormat(new Date()), url, (String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText)]);
                         resolve(xhr.responseText);
                     },
                     onerror: (xhr) => {
@@ -66,7 +67,7 @@
 
     const exports = () => {
         let xhr = new Xhr();
-        function makeExports(type){
+        function makeExports(type) {
             return function (...msg) {
                 return xhr[type](...msg);
             }
