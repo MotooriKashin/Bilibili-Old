@@ -565,7 +565,11 @@ const objUrl = (url, obj) => {
             return obj;
         }
         // 添加样式
+<<<<<<< HEAD
         addCss(css, id) {
+=======
+        addCss(css) {
+>>>>>>> 63d1ff9 (Update define.js)
             if (!css) return;
             if (!document.head) {
                 if (this.check) return;
@@ -579,6 +583,14 @@ const objUrl = (url, obj) => {
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(css));
             if (document.head) document.head.appendChild(style);
+<<<<<<< HEAD
+=======
+            else {
+                setTimeout(() => {
+                    if (document.head) document.head.appendChild(style);
+                })
+            }
+>>>>>>> 63d1ff9 (Update define.js)
         }
         // json校验
         jsonCheck(data) {
