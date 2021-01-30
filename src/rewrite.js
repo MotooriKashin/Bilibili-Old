@@ -321,11 +321,15 @@
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("playlistdetail")));
 =======
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("playlistdetail")));
+<<<<<<< HEAD
                 toast.warning("无法播单例表！", "这里使用的是一例备份数据以供参考");
 <<<<<<< HEAD
 >>>>>>> 43b3ef7 (启用toast模块)
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                toast.warning("无法获取播单例表！", "这里使用的是一例备份数据以供参考");
+>>>>>>> 69ec956 (Update rewrite.js)
             }
         }
         medialist() {
