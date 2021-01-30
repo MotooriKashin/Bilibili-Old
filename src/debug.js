@@ -97,6 +97,7 @@
             this.container.setAttribute("class", "toast-top-right");
         }
         show(type, ...msg) {
+<<<<<<< HEAD
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
             this.box = document.querySelector("#toast-container");
             let item = document.createElement("div");
@@ -236,6 +237,9 @@
                 return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
             }
             if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
+=======
+            if (!document.body && !this.check) return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
+>>>>>>> 472c9fc (Update debug.js)
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
             this.box = document.querySelector("#toast-container");
             let item = document.createElement("div");
