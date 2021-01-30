@@ -1112,7 +1112,7 @@
                 hookTimeOut.relese();
                 if (response.code !== 0) throw response.message;
                 BLOD.__playinfo__ = response;
-                toast.success("解除限制！", "aid=", BLOD.aid, "cid=", BLOD.cid);
+                toast.success("解除限制！", "aid=" + BLOD.aid, "cid=" + BLOD.cid);
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
