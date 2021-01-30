@@ -1575,7 +1575,11 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("获取直播数据推荐及排行失败！", ...e); }
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("首页推荐", ...e) }
+>>>>>>> efcabf8 (Update xhrhook.js)
         }
 <<<<<<< HEAD
         // 修复番剧季度信息
@@ -1860,6 +1864,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     debug.error("limit", ...e);
                                     toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
 =======
@@ -1867,6 +1872,8 @@
 >>>>>>> efcabf8 (Update xhrhook.js)
 =======
                                     debug.error("区域代理失败", ...e);
+=======
+>>>>>>> efcabf8 (Update xhrhook.js)
                                     toast.error("尝试拉取Thailand链接...", "需要人在当地！");
 >>>>>>> 760e38a (Update JavaScript module)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
@@ -1882,6 +1889,7 @@
                                     e = Array.isArray(e) ? e : [e];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     debug.error("Thailand", ...e);
                                     toast.error("拉取Thailand链接失败！", "需要Thailand代理服务器 ಥ_ಥ");
 =======
@@ -1891,6 +1899,9 @@
                                     debug.error("拉取Thailand失败", ...e);
                                     toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+                                    throw toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
+>>>>>>> efcabf8 (Update xhrhook.js)
                                 }
 =======
                         if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
@@ -1944,6 +1955,7 @@
                 if (response.code !== 0) throw response.message;
                 BLOD.__playinfo__ = response;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 toast.success("解除限制！", "aid=" + BLOD.aid, "cid=" + BLOD.cid);
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
@@ -1952,6 +1964,9 @@
 =======
 =======
                 debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
+=======
+                toast.success("解除限制！", "aid=", BLOD.aid, "cid=", BLOD.cid);
+>>>>>>> efcabf8 (Update xhrhook.js)
             }
 <<<<<<< HEAD
 <<<<<<< HEAD
