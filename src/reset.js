@@ -11,7 +11,7 @@
     console.debug('import module "reset.js"');
 
     BLOD.reset = {
-        // 对象捕获
+        // 对象监听
         getVariable: () => {
             function read(arr) {
                 switch (arr[0]) {
@@ -29,7 +29,7 @@
                 Object.defineProperty(window, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return BLOD.__playinfo__ }, configurable: true });
                 Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
                 if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("对象捕获", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("对象监听", ...e); }
         },
         // 原生脚本替换
         oldScript: (str) => {
@@ -55,7 +55,7 @@
                     sec.innerText = i - 1 + "s";
                     if (i == 0) {
                         node.remove();
-                        toast("移除付费预览提示框")
+                        toast("移除付费预览提示框");
                         return;
                     }
                     i = i - 1;
@@ -63,7 +63,7 @@
                 }
                 new cut();
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("付费预览", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("付费预览", ...e); }
         },
         // 替换顶栏底栏
         resetSction: async () => {
@@ -160,7 +160,7 @@
                     rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
                 }
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·版面", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页分区", ...e); }
         },
         // 修复评论跳转
         fixVideoSeek: (node) => {
@@ -219,7 +219,7 @@
                     node.appendChild(li);
                 }
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区排行", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("分区排行", ...e); }
         },
         // 弹幕反查
         danmkuHashId: async (node) => {
@@ -255,8 +255,7 @@
                     }
                     catch (e) {
                         e = Array.isArray(e) ? e : [e];
-                        toast.error("查询弹幕发送者信息出错！", "crc：" + BLOD.hash[index] + " mid：" + BLOD.midcrc(BLOD.hash[index]), e[0] + " " + e[1]);
-                        debug.error("弹幕反查", ...e)
+                        toast.error("弹幕反查", "crc：" + BLOD.hash[index] + " mid：" + BLOD.midcrc(BLOD.hash[index]), e[0] + " " + e[1], ...e);
                     }
                 })
             })
@@ -374,7 +373,7 @@
                             data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", "application/x-www-form-urlencoded", msg);
                             data = BLOD.jsonCheck(data).ttl;
                             // 熄灭点赞图标并修改显示数据
-                            toast.success("取消点赞！");
+                            toast.warning("取消点赞！");
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                             if (arg.nodeValue.match("万")) return;
@@ -399,7 +398,7 @@
                             moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                         }
                     }
-                    catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
+                    catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("点赞功能", ...e); }
                 }
             }, 100);
         },
@@ -411,7 +410,7 @@
                 data = BLOD.jsonCheck(data);
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
-                toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, BLOD.big ? "生日：" + data.card.birthday : "");
+                if (BLOD.big) toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday);
                 debug.log("注册时间", data.card.name, jointime);
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
@@ -436,7 +435,7 @@
                     }
                 });
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("注册时间", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("注册时间", ...e); }
         },
         // 会员授权
         accesskey: async () => {
@@ -450,18 +449,13 @@
                     page.setAttribute("src", "https://www.biliplus.com/login?act=logout");
                     document.body.appendChild(page);
                     setTimeout(() => { page.remove() }, 3000);
-                    debug.log("取消会员授权");
                     toast.success("已取消会员授权！")
                 }
                 return;
             }
             if (!BLOD.getValue("access_key") || (Date.now() - BLOD.getValue("access_date") > 2160000)) {
                 try {
-                    if (!BLOD.uid) {
-                        debug.log("请先登录，才能授权会员");
-                        toast.warning("请先登录！")
-                        return;
-                    }
+                    if (!BLOD.uid) return toast.warning("请先登录！");
                     let data = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", "", 3)));
                     data = await new Promise((resolve, reject) => {
                         BLOD.xmlhttpRequest({
@@ -479,10 +473,9 @@
                     setTimeout(() => { page.remove() }, 3000);
                     BLOD.setValue("access_key", data.access_key);
                     BLOD.setValue("access_date", Date.now());
-                    debug.log("会员授权成功！");
                     toast.success("授权登录成功！", "有效期30天", "届时可能需要重新授权")
                 }
-                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("登录鉴权", ...e); }
+                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("会员授权", ...e); }
             }
         },
         // 备份播放器设置
@@ -630,7 +623,7 @@
                     }
                 }
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("失效视频·频道", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("失效视频", ...e); }
         },
         // 空间首页展示的失效视频
         home: async (msg) => {
@@ -792,9 +785,9 @@
                 }
                 catch (e) {
                     // 跳转失败，清理残余
+                    e = Array.isArray(e) ? e : [e];
                     BLOD.setValue("medialist", 0);
                     toast.error(...e);
-                    debug.error(e);
                 }
             }
             else {
@@ -868,7 +861,7 @@
                         }
                     }, 100);
                 }
-                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
+                catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("收藏播放页", ...e); }
             }
         },
         // aid变化监听
@@ -885,7 +878,7 @@
         },
         // 收藏播放更新
         restore: async (data) => {
-            toast("更新页面信息...", "部分非关键信息不会去额外获取")
+            toast("更新页面信息...", "部分非关键信息不会去额外获取");
             history.replaceState(null, null, "https://www.bilibili.com/video/av" + BLOD.aid + location.search + location.hash);
             for (let i = 0; i < BLOD.ids.length; i++) if (BLOD.ids[i].aid == BLOD.aid) data = BLOD.ids[i];
             let video_info = document.getElementById("viewbox_report");
@@ -963,7 +956,7 @@
                             child[4].childNodes[0].href = sort[BLOD.tid][2];
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
-                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
+                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("分区信息", ...e); }
                     }
                 }
             }, 1000);
@@ -978,8 +971,7 @@
             window.setInterval = (...args) => {
                 if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){e.triggerSleepCallback()}") {
                     if (!this.clock) {
-                        debug.log("阻止直播间挂机检测", ...args);
-                        toast.warning("成功阻止直播间挂机检测！");
+                        toast.warning("成功阻止直播间挂机检测！", ...args);
                         this.clock++;
                     }
                     return Number.MIN_VALUE;

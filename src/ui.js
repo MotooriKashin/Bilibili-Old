@@ -42,7 +42,7 @@
                 BLOD.setValue("config", config);
                 BLOD.reset.accesskey();
                 table.remove();
-                toast.warning("已恢复默认数据", "刷新页面以立即生效");
+                toast("恢复默认数据！", "刷新页面以立即生效");
             }
             for (let key in config.rewrite) this.setTable(table, BLOD.defaultConfig.rewrite[key], config.rewrite[key], key);
             for (let key in config.reset) this.setTable(table, BLOD.defaultConfig.reset[key], config.reset[key], key);
@@ -51,7 +51,7 @@
                 timer = window.setTimeout(() => {
                     table.setAttribute("hidden", "hidden");
                     BLOD.setValue("config", config);
-                    toast.warning("设置数据已保存", "部分功能需要刷新页面才会生效！")
+                    toast("设置数据已保存！", "可能需要刷新页面才会生效！")
                 }, 500);
             }
         }
@@ -82,11 +82,11 @@
                 else {
                     if (key in config.rewrite) {
                         config.rewrite[key] = 0;
-                        toast.success("禁用功能：" + name[1]);
+                        toast.warning("禁用功能：" + name[1]);
                     }
                     else {
                         config.reset[key] = 0;
-                        toast.success("禁用功能：" + name[1]);
+                        toast.warning("禁用功能：" + name[1]);
                     }
                 }
                 if (key == "accesskey") BLOD.reset.accesskey();

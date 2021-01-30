@@ -20,7 +20,7 @@
             li.firstChild.onclick = () => this.setTable();
         }
         async setTable() {
-            toast("正在获取视频下载地址...")
+            toast("正在获取视频下载地址...");
             let qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
             let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
@@ -49,7 +49,7 @@
                     BLOD.bloburl.xml = "";
                 }
             }
-            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (toast.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
+            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) return toast.warning("未找到任何视频链接 ಥ_ಥ");
             top = document.createElement("div");
             top.setAttribute("id", "bili-old-download-table");
             if (BLOD.mdf.mp4) this.addBox(top, BLOD.mdf.mp4, "mp4", "download-mp4");
@@ -61,8 +61,7 @@
             if (BLOD.mdf.flv) this.addBox(top, BLOD.mdf.flv, "flv", "download-flv");
             if (BLOD.mdf.xml) this.addBox(top, BLOD.mdf.xml, "其他", "download-xml", "360P");
             document.body.appendChild(top);
-            toast.success("成功获取下载视频链接！")
-            toast.info("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
+            toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
             top.onmouseover = () => window.clearTimeout(timer);
             top.onmouseout = () => {
                 timer = window.setTimeout(() => {

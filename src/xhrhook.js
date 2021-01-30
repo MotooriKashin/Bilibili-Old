@@ -19,8 +19,7 @@
             this.hook = setTimeout;
             window.setTimeout = (...args) => {
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
-                    debug.log("过滤拦截播放器强制初始化", ...args);
-                    toast.warning("禁用播放器强制初始化！")
+                    toast.warning("禁用播放器强制初始化！", ...args)
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -33,7 +32,7 @@
     }
 
     // 重构APP端playurl，result/data上层目录需另外构建
-    // [@url] https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
+    // @url https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
     class ReBuildPlayerurl {
         constructor() {
             this.playurl = {
@@ -281,6 +280,7 @@
             }
             this.playurl.dash.video = video;
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
+            debug.log(this.playurl);
             return this.playurl;
         }
         // Thailand playurl
@@ -393,6 +393,7 @@
             toast("等待数据回传...");
             await Promise.all(arr);
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
+            debug.log(this.playurl);
             return this.playurl;
         }
     }
@@ -955,7 +956,6 @@
                 }
                 hook.push(response);
                 toast.warning("拦截直播间视频流！", "关闭【直播拦截】功能可恢复正常！")
-                debug.debug("XHR重定向", "拦截直播媒体", hook);
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
@@ -1063,11 +1063,11 @@
                         if (BLOD.uid && (BLOD.ids.indexOf(1 * BLOD.cid) >= 0) && config.reset.accesskey) accesskey = BLOD.getValue("access_key") || null;
                         let obj = Object.assign(BLOD.urlObj(xhr.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
                         if (BLOD.limit == 2) {
-                            toast.info("尝试解除APP限制...")
+                            toast.info("尝试解除APP限制...", "使用移动端flv接口");
                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
                         } else {
                             try {
-                                toast.info("尝试解除区域限制...");
+                                toast.info("尝试解除区域限制...", "访问代理服务器");
                                 obj.fnval = obj.fnval ? 16 : null;
                                 obj.module = "bangumi";
                                 response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://www.biliplus.com/BPplayurl.php", obj)));
@@ -1076,15 +1076,15 @@
                             } catch (e) {
                                 try {
                                     e = Array.isArray(e) ? e : [e];
-                                    debug.error("limit", ...e);
-                                    toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
+                                    debug.error("区域代理失败", ...e);
+                                    toast.error("尝试拉取Thailand链接...", "需要人在当地！");
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
                                     let reBuildPlayerurl = new ReBuildPlayerurl();
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
                                     e = Array.isArray(e) ? e : [e];
-                                    debug.error("Thailand", ...e);
-                                    toast.error("拉取Thailand链接失败！", "需要Thailand代理服务器 ಥ_ಥ");
+                                    debug.error("拉取Thailand失败", ...e);
+                                    toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
                                 }
                             }
                         }
@@ -1107,7 +1107,7 @@
                 BLOD.__playinfo__ = response;
                 debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
             }
-            catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
         }
         // 监听视频地址
         async playinfo(obj) {
