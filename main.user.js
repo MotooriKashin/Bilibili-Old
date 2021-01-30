@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.2.2
+// @version      4.2.3
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -24,14 +24,14 @@
 // @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
 // @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/initialstate.js
-// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.js
-// @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/debug.js
-// @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
-// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@26b29093f8e975f1bb7968c6b26c1bc977f531c8/src/download.js
-// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c1f59a47d45058ef0691295209ce4ef9eb7e65ef/src/rewrite.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@740027a2cba0900a619538376d33668d15293252/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a09d8eec51dbf532a13eada93d71f9b97fc94420/src/xhrhook.js
+// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@760e38a4b79f4dcf4c6a043ec0f0f02b3fcf7749/src/ui.js
+// @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7109783c748ca0c187af28fec3f923dc69774a03/src/debug.js
+// @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@11a8d1376b69ac6c2fabef4ccc7325c00f6962e9/src/xhr.js
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@760e38a4b79f4dcf4c6a043ec0f0f02b3fcf7749/src/download.js
+// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a2d107a8a6eb1461bdb0506a9b2e6c15c1f15390/src/define.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@69ec9563c834f633c85982eadebaef167066952c/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7109783c748ca0c187af28fec3f923dc69774a03/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@abd96da955ba82e7853a5cfd8722e6bde818bf4a/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@2cfd16b6386b951e3bf80359ef526d312205a91d/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
