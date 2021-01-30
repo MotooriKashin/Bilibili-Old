@@ -183,6 +183,8 @@ Tampermonkey BETA 4.10.6125
 ---
 ### 版本历史
 **注：部分功能可能需要先在设置里启用！**  
+- 2021-01-30
+   + 优化通知信息
 - 2021-01-29
    + 不再复制下载链接到剪切板
    + 重构APP DASH数据：支持播放APP端DASH源(默认仍取flv源)。*Thailand源仍需在对应地区*（[sidx解析](https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts)）
