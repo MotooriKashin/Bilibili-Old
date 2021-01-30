@@ -579,8 +579,12 @@ const objUrl = (url, obj) => {
 =======
         addCss(css, id) {
             if (!css) return;
+<<<<<<< HEAD
             if (!document.head) setTimeout(() => this.addCss(css, id));
 >>>>>>> a2d107a (Update JavaScript module)
+=======
+            if (!document.head && !this.check) setTimeout(() => { this.check = 1; this.addCss(css, id) });
+>>>>>>> 513bb7e (Update define.js)
             let style = document.createElement("style");
             if (id) {
                 if (document.querySelector("#" + id)) return;
@@ -588,6 +592,7 @@ const objUrl = (url, obj) => {
             }
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(css));
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             if (document.head) document.head.appendChild(style);
@@ -607,6 +612,9 @@ const objUrl = (url, obj) => {
 =======
             document.head.appendChild(style);
 >>>>>>> a2d107a (Update JavaScript module)
+=======
+            if (document.head) document.head.appendChild(style);
+>>>>>>> 513bb7e (Update define.js)
         }
         // json校验
         jsonCheck(data) {
