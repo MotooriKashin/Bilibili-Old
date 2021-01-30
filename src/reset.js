@@ -348,11 +348,7 @@
                     try {
                         move.onclick = async () => {
                             // 没有点赞过绑定点赞点击事件
-                            if (!BLOD.uid) {
-                                // 没有登录绑定快捷登录
-                                document.getElementsByClassName("c-icon-move")[0].click();
-                                return;
-                            }
+                            if (!BLOD.uid) return document.getElementsByClassName("c-icon-move")[0].click();
                             // 构造并请求点赞表单
                             let msg = "aid=" + BLOD.aid + "&like=1&csrf=" + BLOD.getCookies().bili_jct;
                             data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", "application/x-www-form-urlencoded", msg);
@@ -753,10 +749,7 @@
                 let danmakus = document.getElementsByClassName("danmu-count")[0].getElementsByTagName("span")[0];
                 if (data == "first") {
                     // 判断是否是首次处理
-                    if (views.innerText == "-" && danmakus.innerText == "-") {
-                        window.setTimeout(() => { BLOD.reset.setBangumi.episodeData("first") }, 100);
-                        return;
-                    }
+                    if (views.innerText == "-" && danmakus.innerText == "-") return window.setTimeout(() => { BLOD.reset.setBangumi.episodeData("first") }, 100);
                     // 备份总播放数和弹幕数
                     views.setAttribute("title", "总播放数 " + views.innerText);
                     danmakus.setAttribute("title", "总弹幕数 " + danmakus.innerText);

@@ -30,10 +30,7 @@
         msg(...msg) {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
             let time = 1 * msg[2] || 3000;
-            if (!node) {
-                this.log(...msg);
-                return;
-            }
+            if (!node)  return this.log(...msg);
             msg.forEach((d) => { d = typeof d == "object" ? "" : d });
             msg[2] = 1 * msg[2] ? "" : msg[2];
             let item = document.createElement("div");
