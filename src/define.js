@@ -576,6 +576,7 @@ const objUrl = (url, obj) => {
                 if (this.check) return;
                 return setTimeout(() => { this.check = 1; this.addCss(css, id) });
             }
+<<<<<<< HEAD
 =======
         addCss(css, id) {
             if (!css) return;
@@ -585,6 +586,8 @@ const objUrl = (url, obj) => {
 =======
             if (!document.head && !this.check) setTimeout(() => { this.check = 1; this.addCss(css, id) });
 >>>>>>> 513bb7e (Update define.js)
+=======
+>>>>>>> fabed72 (UpdateJavaScript module)
             let style = document.createElement("style");
             if (id) {
                 if (document.querySelector("#" + id)) return;

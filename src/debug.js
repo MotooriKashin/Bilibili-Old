@@ -93,6 +93,7 @@
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
         }
+<<<<<<< HEAD
         show(type, ...msg) {
 <<<<<<< HEAD
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
@@ -229,16 +230,22 @@
 >>>>>>> eea4f89 (重绘设置界面)
         show(type, ...msg) {
             if (!BLOD.config.reset.toast) return;
+=======
+        async show(type, ...msg) {
+>>>>>>> fabed72 (UpdateJavaScript module)
             if (!document.body) {
                 if (this.check) return;
                 return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
             }
+<<<<<<< HEAD
             if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
 =======
             if (!document.body && !this.check) return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
 <<<<<<< HEAD
 >>>>>>> 472c9fc (Update debug.js)
 =======
+=======
+>>>>>>> fabed72 (UpdateJavaScript module)
             if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
 >>>>>>> a2d107a (Update JavaScript module)
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
