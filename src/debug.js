@@ -13,7 +13,9 @@
     class Toast {
         constructor() {
             BLOD.addCss(BLOD.getResourceText("toast"))
-            this.timeout = 4;
+            this.timeout = 4; // 通知显示时间，单位/秒
+            this.step = 250; // 通知间的最小间隔，单位/毫秒
+            this.count = 0; // 未显示的通知数
             this.container = document.createElement("div");
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
@@ -25,11 +27,15 @@
             let item = document.createElement("div");
             item.setAttribute("class", "toast toast-" + type);
             item.setAttribute("aria-live", "assertive");
-            item.setAttribute("style", "opacity: .0");
-            item = this.box.insertBefore(item, this.box.firstChild);
-            item.appendChild(this.msg(...msg));
-            this.come(item);
-            setTimeout(() => this.quit(item), this.timeout * 1000);
+            item.setAttribute("style", "opacity: 0.0");
+            setTimeout(() => {
+                if (this.count > 0) this.count--;
+                item = this.box.insertBefore(item, this.box.firstChild);
+                item.appendChild(this.msg(this.count, ...msg));
+                this.come(item);
+                setTimeout(() => this.quit(item), this.timeout * 1000);
+            }, this.count * this.step);
+            this.count++;
         }
         come(item, i = 0) {
             let timer = setInterval(() => {
