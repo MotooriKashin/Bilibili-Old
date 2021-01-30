@@ -86,7 +86,7 @@
             setTimeout(() => {
                 if (this.count > 0) this.count--;
                 item = this.box.insertBefore(item, this.box.firstChild);
-                item.appendChild(this.msg(this.count, ...msg));
+                item.appendChild(this.msg(...msg));
                 this.come(item);
                 setTimeout(() => this.quit(item), this.timeout * 1000);
             }, this.count * this.step);
