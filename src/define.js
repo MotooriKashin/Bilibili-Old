@@ -404,14 +404,17 @@ const objUrl = (url, obj) => {
             return obj;
         }
         // 添加样式
-        async addCss(css) {
+        addCss(css) {
             if (!css) return;
             let style = document.createElement("style");
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(css));
-            setTimeout(() => {
-                if (document.head) document.head.appendChild(style)
-            });
+            if (document.head) document.head.appendChild(style);
+            else {
+                setTimeout(() => {
+                    if (document.head) document.head.appendChild(style);
+                })
+            }
         }
         // json校验
         jsonCheck(data) {
