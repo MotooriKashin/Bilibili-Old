@@ -118,6 +118,7 @@
             div.setAttribute("class", "toast-message");
             div.innerHTML = "";
             msg.forEach(d => {
+                d = d || "";
                 d = String(d);
                 div.innerHTML = div.innerHTML ? div.innerHTML + "<br />" + d : div.innerHTML + d;
             });
