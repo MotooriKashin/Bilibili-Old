@@ -41,11 +41,11 @@
                 if (!BLOD.__INITIAL_STATE__) {
                     page = BLOD.xhr.false(BLOD.objUrl("https://www.biliplus.com/api/view", { id: BLOD.aid }));
                     BLOD.__INITIAL_STATE__ = BLOD.iniState.avPlus(page);
-                    if (!BLOD.config.reset.lostvideo) throw "av/BV号可能无效！";
+                    if (!BLOD.config.reset.lostvideo) return toast.error("av/BV号可能无效！", "设置中启用【失效视频】将尝试访问第三方缓存数据");
                 }
-                if (!BLOD.__INITIAL_STATE__) throw "av/BV号可能无效！";
-                if (BLOD.__INITIAL_STATE__.videoData.redirect_url) throw ["番剧重定向：", BLOD.__INITIAL_STATE__.videoData.redirect_url];
-                if (BLOD.__INITIAL_STATE__.videoData.stein_guide_cid) throw ["忽略互动视频：", "av" + BLOD.aid];
+                if (!BLOD.__INITIAL_STATE__) return toast.error("av/BV号可能无效！");
+                if (BLOD.__INITIAL_STATE__.videoData.redirect_url) return toast.warning("番剧重定向...", BLOD.__INITIAL_STATE__.videoData.redirect_url);
+                if (BLOD.__INITIAL_STATE__.videoData.stein_guide_cid) return toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ");
                 BLOD.aid = BLOD.__INITIAL_STATE__.aid ? BLOD.__INITIAL_STATE__.aid : BLOD.aid;
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
@@ -64,6 +64,7 @@
                 BLOD.reset.fixSort.video();
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -89,12 +90,20 @@
 >>>>>>> a555edd (show up list)
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
         watchlater() {
             try {
                 if (!BLOD.config.rewrite.watchlater) return;
+<<<<<<< HEAD
                 if (!BLOD.uid) throw ["未登录", "无法启用旧版稍后再看"];
                 BLOD.playerSetting();
+=======
+                if (!BLOD.uid) return toast.warning("未登录！", "无法启用稍后再看");
+                BLOD.reset.playerSetting();
+>>>>>>> 760e38a (Update JavaScript module)
                 BLOD.path.name = "watchlater";
 <<<<<<< HEAD
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("watchlater")));
@@ -114,6 +123,7 @@
                 BLOD.reset.setLike();
                 BLOD.reset.fixSort.watchlater();
 <<<<<<< HEAD
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·稍后再看", ...e); }
 =======
             } catch (e) {
@@ -122,6 +132,9 @@
                 BLOD.debug.error("框架·稍后再看", ...e);
             }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
         bangumi() {
             try {
@@ -151,7 +164,11 @@
 <<<<<<< HEAD
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
+=======
+                if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
+>>>>>>> 760e38a (Update JavaScript module)
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 if (page.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.oldScript(BLOD.getResourceText("bangumi")));
@@ -203,6 +220,7 @@
 >>>>>>> 33c5e60 (重写Bangumi数据)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·Bangumi", ...e); }
 =======
             } catch (e) {
@@ -211,6 +229,9 @@
                 BLOD.debug.error("框架·Bangumi", ...e);
             }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
         blackboard() {
             if (BLOD.path[4].startsWith('html5player')) {
@@ -253,8 +274,8 @@
                     catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·嵌入", ...e) }
                     location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": BLOD.aid, "cid": BLOD.cid, "season_type": season_type, "player_type": player_type, "as_wide": 1, }));
                     toast.success("嵌入式播放器", "aid：", BLOD.aid, " cid：", BLOD.cid);
-                    BLOD.debug.log("嵌入播放器", "aid=", BLOD.aid, " cid=", BLOD.cid);
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·嵌入", ...e); }
 =======
@@ -264,6 +285,9 @@
                 BLOD.debug.error("框架·嵌入", ...e);
             }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
         playlist() {
             BLOD.path.name = "playlist";
@@ -342,6 +366,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·主页", ...e) }
 <<<<<<< HEAD
             BLOD.setOnline();
@@ -378,6 +403,9 @@
 =======
                 if (!BLOD.config.rewrite.rank) throw ["未启用排行", location.href];
 =======
+=======
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
         rank() {
             try {
@@ -440,6 +468,7 @@
             }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·排行", ...e); }
 =======
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
@@ -487,6 +516,9 @@
                 BLOD.debug.error("框架·排行", ...e);
             }
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
     }
 

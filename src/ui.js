@@ -99,6 +99,7 @@
                 BLOD.setValue("config", config);
                 BLOD.reset.accesskey();
                 table.remove();
+<<<<<<< HEAD
                 toast.warning("已恢复默认数据", "刷新页面以立即生效");
 <<<<<<< HEAD
 =======
@@ -125,6 +126,9 @@
                 this.flesh();
                 table.remove();
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+                toast("恢复默认数据！", "刷新页面以立即生效");
+>>>>>>> 760e38a (Update JavaScript module)
             }
             table.children[0].children[1].onclick = () => {
                 table.remove();
@@ -171,10 +175,14 @@
                     config[type][d] = 1;
                     BLOD.setValue("config", config);
 <<<<<<< HEAD
+<<<<<<< HEAD
                     toast.warning("设置数据已保存", "部分功能需要刷新页面才会生效！")
 =======
                     toast.success("设置数据已保存", "部分功能需要刷新页面才会生效！")
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                    toast("设置数据已保存！", "可能需要刷新页面才会生效！")
+>>>>>>> 760e38a (Update JavaScript module)
                 }, 500);
             }
         }
@@ -319,11 +327,11 @@
                 else {
                     if (key in config.rewrite) {
                         config.rewrite[key] = 0;
-                        toast.success("禁用功能：" + name[1]);
+                        toast.warning("禁用功能：" + name[1]);
                     }
                     else {
                         config.reset[key] = 0;
-                        toast.success("禁用功能：" + name[1]);
+                        toast.warning("禁用功能：" + name[1]);
                     }
 <<<<<<< HEAD
 =======

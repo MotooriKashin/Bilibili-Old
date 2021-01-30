@@ -41,6 +41,7 @@
             this.hook = setTimeout;
             window.setTimeout = (...args) => {
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
+<<<<<<< HEAD
                     debug.log("过滤拦截播放器强制初始化", ...args);
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -50,6 +51,9 @@
 =======
                     toast.warning("禁用播放器强制初始化！", "等待视频数据返回...")
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+                    toast.warning("禁用播放器强制初始化！", ...args)
+>>>>>>> 760e38a (Update JavaScript module)
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -66,7 +70,7 @@
 >>>>>>> 9f51f48 (reBuildPlayerurl)
 
     // 重构APP端playurl，result/data上层目录需另外构建
-    // [@url] https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
+    // @url https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
     class ReBuildPlayerurl {
         constructor() {
             this.playurl = {
@@ -384,8 +388,12 @@
             this.playurl.dash.video = video;
 <<<<<<< HEAD
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
+<<<<<<< HEAD
 =======
 >>>>>>> 3a04522 (过滤问题音频)
+=======
+            debug.log(this.playurl);
+>>>>>>> 760e38a (Update JavaScript module)
             return this.playurl;
         }
 <<<<<<< HEAD
@@ -653,6 +661,7 @@
             toast("等待数据回传...");
             await Promise.all(arr);
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
+            debug.log(this.playurl);
             return this.playurl;
         }
     }
@@ -1637,7 +1646,6 @@
                 }
                 hook.push(response);
                 toast.warning("拦截直播间视频流！", "关闭【直播拦截】功能可恢复正常！")
-                debug.debug("XHR重定向", "拦截直播媒体", hook);
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
@@ -1834,12 +1842,12 @@
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
                         if (BLOD.limit == 2) {
-                            toast.info("尝试解除APP限制...")
+                            toast.info("尝试解除APP限制...", "使用移动端flv接口");
                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
                         } else {
 <<<<<<< HEAD
                             try {
-                                toast.info("尝试解除区域限制...");
+                                toast.info("尝试解除区域限制...", "访问代理服务器");
                                 obj.fnval = obj.fnval ? 16 : null;
 <<<<<<< HEAD
                                 obj.module = "bangumi";
@@ -1851,11 +1859,16 @@
                                     e = Array.isArray(e) ? e : [e];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     debug.error("limit", ...e);
                                     toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
 =======
                                     toast.error("尝试拉取Thailand链接...", "需要人在当地！");
 >>>>>>> efcabf8 (Update xhrhook.js)
+=======
+                                    debug.error("区域代理失败", ...e);
+                                    toast.error("尝试拉取Thailand链接...", "需要人在当地！");
+>>>>>>> 760e38a (Update JavaScript module)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
 =======
                                     toast.error("代理服务器出错！", ...e);
@@ -1868,11 +1881,16 @@
                                 } catch (e) {
                                     e = Array.isArray(e) ? e : [e];
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     debug.error("Thailand", ...e);
                                     toast.error("拉取Thailand链接失败！", "需要Thailand代理服务器 ಥ_ಥ");
 =======
                                     throw toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
 >>>>>>> efcabf8 (Update xhrhook.js)
+=======
+                                    debug.error("拉取Thailand失败", ...e);
+                                    toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
+>>>>>>> 760e38a (Update JavaScript module)
                                 }
 =======
                         if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
@@ -1935,6 +1953,7 @@
 =======
                 debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
             }
+<<<<<<< HEAD
 <<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
@@ -2060,6 +2079,9 @@
 =======
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
 >>>>>>> ef2d7cf ( 记录跨域url及返回值)
+=======
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
+>>>>>>> 760e38a (Update JavaScript module)
         }
 >>>>>>> 65c15a5 (重构泰国番剧playurl)
 =======
