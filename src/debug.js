@@ -88,7 +88,7 @@
 >>>>>>> 39d1857 (Update debug.js)
     class Toast {
         constructor() {
-            BLOD.addCss(BLOD.getResourceText("toast"))
+            BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
             this.timeout = 4; // 通知显示时间，单位/秒
             this.step = 250; // 通知间的最小间隔，单位/毫秒
             this.count = 0; // 未显示的通知数
@@ -239,7 +239,11 @@
             if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
 =======
             if (!document.body && !this.check) return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
+<<<<<<< HEAD
 >>>>>>> 472c9fc (Update debug.js)
+=======
+            if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
+>>>>>>> a2d107a (Update JavaScript module)
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
             this.box = document.querySelector("#toast-container");
             let item = document.createElement("div");
