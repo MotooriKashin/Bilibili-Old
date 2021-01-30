@@ -67,7 +67,7 @@
     // @url https://github.com/CodeSeven/toastr/
     class Toast {
         constructor() {
-            BLOD.addCss(BLOD.getResourceText("toast"))
+            BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
             this.timeout = 4; // 通知显示时间，单位/秒
             this.step = 250; // 通知间的最小间隔，单位/毫秒
             this.count = 0; // 未显示的通知数
@@ -77,6 +77,7 @@
         }
         show(type, ...msg) {
             if (!document.body && !this.check) return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
+            if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
             this.box = document.querySelector("#toast-container");
             let item = document.createElement("div");
