@@ -582,6 +582,7 @@ const objUrl = (url, obj) => {
             }
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(css));
+<<<<<<< HEAD
             if (document.head) document.head.appendChild(style);
 <<<<<<< HEAD
 =======
@@ -591,6 +592,11 @@ const objUrl = (url, obj) => {
                 })
             }
 >>>>>>> 63d1ff9 (Update define.js)
+=======
+            setTimeout(() => {
+                if (document.head) document.head.appendChild(style);
+            })
+>>>>>>> b65125a (Update define.js)
         }
         // json校验
         jsonCheck(data) {
