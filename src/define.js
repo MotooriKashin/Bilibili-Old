@@ -161,7 +161,7 @@
         // 添加样式
         addCss(css, id) {
             if (!css) return;
-            if (!document.head) setTimeout(() => this.addCss(css, id));
+            if (!document.head && !this.check) setTimeout(() => { this.check = 1; this.addCss(css, id) });
             let style = document.createElement("style");
             if (id) {
                 if (document.querySelector("#" + id)) return;
@@ -169,7 +169,7 @@
             }
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(css));
-            document.head.appendChild(style);
+            if (document.head) document.head.appendChild(style);
         }
         // json校验
         jsonCheck(data) {
