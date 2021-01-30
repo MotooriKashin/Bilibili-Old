@@ -164,12 +164,9 @@
             let style = document.createElement("style");
             style.setAttribute("type", "text/css");
             style.appendChild(document.createTextNode(css));
-            if (document.head) document.head.appendChild(style);
-            else {
-                setTimeout(() => {
-                    if (document.head) document.head.appendChild(style);
-                })
-            }
+            setTimeout(() => {
+                if (document.head) document.head.appendChild(style);
+            })
         }
         // json校验
         jsonCheck(data) {
