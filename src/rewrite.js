@@ -122,7 +122,7 @@
                 }
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("playlistdetail")));
-                toast.warning("无法播单例表！", "这里使用的是一例备份数据以供参考");
+                toast.warning("无法获取播单例表！", "这里使用的是一例备份数据以供参考");
             }
         }
         medialist() {
