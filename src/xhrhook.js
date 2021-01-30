@@ -908,7 +908,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("首页推荐", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("首页推荐", ...e) }
         }
         // 修复番剧季度信息
         season(obj, hook = []) {
@@ -927,7 +927,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("番剧季度信息", ...e) }
         }
         // 修复番剧追番信息
         stat(obj, hook = []) {
@@ -959,7 +959,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("直播拦截", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("直播拦截", ...e) }
         }
         // 修改番剧推荐
         recommend(obj, hook = []) {
@@ -972,7 +972,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧推荐", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("番剧推荐", ...e) }
         }
         // 生成播放信息
         carousel(obj) {
@@ -989,7 +989,7 @@
                     responseXML = parser.parseFromString(xmltext, "text/xml");
                 Object.defineProperty(obj, 'responseXML', { writable: true });
                 obj.responseXML = responseXML;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("播放通知", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("播放通知", ...e) }
         }
         // 禁用防挡字幕
         playerso(obj) {
@@ -1076,19 +1076,26 @@
                             } catch (e) {
                                 try {
                                     e = Array.isArray(e) ? e : [e];
+<<<<<<< HEAD
                                     debug.error("limit", ...e);
                                     toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
+=======
+                                    toast.error("尝试拉取Thailand链接...", "需要人在当地！");
+>>>>>>> efcabf8 (Update xhrhook.js)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
                                     let reBuildPlayerurl = new ReBuildPlayerurl();
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
                                     e = Array.isArray(e) ? e : [e];
+<<<<<<< HEAD
                                     debug.error("Thailand", ...e);
                                     toast.error("拉取Thailand链接失败！", "需要Thailand代理服务器 ಥ_ಥ");
+=======
+                                    throw toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
+>>>>>>> efcabf8 (Update xhrhook.js)
                                 }
                             }
                         }
-                        toast.success("解除区域限制！");
                         response = { "code": 0, "message": "success", "result": response };
                     }
                 }
@@ -1105,7 +1112,7 @@
                 hookTimeOut.relese();
                 if (response.code !== 0) throw response.message;
                 BLOD.__playinfo__ = response;
-                debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
+                toast.success("解除限制！", "aid=", BLOD.aid, "cid=", BLOD.cid);
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
