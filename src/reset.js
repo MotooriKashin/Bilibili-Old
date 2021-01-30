@@ -776,7 +776,7 @@
                 danmakus.innerText = danmaku;
                 debug.debug("播放", view + " 弹幕", danmaku);
             }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分集数据", ...e) }
+            catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("分集数据", ...e) }
         }
     }
 
