@@ -157,16 +157,16 @@
         }
         av(data) {
             data = BLOD.jsonCheck(data).data;
-            this.__INITIAL_STATE__ = this.__INITIAL_STATE__.av;
-            this.__INITIAL_STATE__.aid = data.View.aid;
-            this.__INITIAL_STATE__.related = data.Related || [];
-            this.__INITIAL_STATE__.tags = data.Tags || [];
-            this.__INITIAL_STATE__.upData = data.Card.card || {};
-            this.__INITIAL_STATE__.upData.archiveCount = data.Card.archive_count;
-            this.__INITIAL_STATE__.videoData = data.View || {};
-            this.__INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
+            let __INITIAL_STATE__ = __INITIAL_STATE__.av;
+            __INITIAL_STATE__.aid = data.View.aid;
+            __INITIAL_STATE__.related = data.Related || [];
+            __INITIAL_STATE__.tags = data.Tags || [];
+            __INITIAL_STATE__.upData = data.Card.card || {};
+            __INITIAL_STATE__.upData.archiveCount = data.Card.archive_count;
+            __INITIAL_STATE__.videoData = data.View || {};
+            __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
 
-            return this.__INITIAL_STATE__;
+            return __INITIAL_STATE__;
         }
         avPlus(data) {
             data = BLOD.jsonCheck(data);
@@ -174,34 +174,34 @@
             if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
             if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
 
-            this.__INITIAL_STATE__ = this.__INITIAL_STATE__.av;
-            this.__INITIAL_STATE__.aid = data.aid;
-            this.__INITIAL_STATE__.upData.name = data.author;
-            this.__INITIAL_STATE__.upData.mid = data.mid;
-            this.__INITIAL_STATE__.videoData.aid = data.aid;
-            this.__INITIAL_STATE__.videoData.cid = data.list[0].cid;
-            this.__INITIAL_STATE__.videoData.ctime = data.created;
-            this.__INITIAL_STATE__.videoData.desc = data.description;
-            this.__INITIAL_STATE__.videoData.pages[0].cid = data.list[0].cid;
-            this.__INITIAL_STATE__.videoData.stat.aid = data.aid;
-            this.__INITIAL_STATE__.videoData.stat.coin = data.coins;
-            this.__INITIAL_STATE__.videoData.stat.danmaku = data.video_review;
-            this.__INITIAL_STATE__.videoData.stat.favorite = data.favorites;
-            this.__INITIAL_STATE__.videoData.stat.reply = data.review;
-            this.__INITIAL_STATE__.videoData.stat.view = data.play;
-            this.__INITIAL_STATE__.videoData.tid = data.tid;
-            this.__INITIAL_STATE__.videoData.title = data.title;
-            this.__INITIAL_STATE__.videoData.tname = data.typename;
+            let __INITIAL_STATE__ = __INITIAL_STATE__.av;
+            __INITIAL_STATE__.aid = data.aid;
+            __INITIAL_STATE__.upData.name = data.author;
+            __INITIAL_STATE__.upData.mid = data.mid;
+            __INITIAL_STATE__.videoData.aid = data.aid;
+            __INITIAL_STATE__.videoData.cid = data.list[0].cid;
+            __INITIAL_STATE__.videoData.ctime = data.created;
+            __INITIAL_STATE__.videoData.desc = data.description;
+            __INITIAL_STATE__.videoData.pages[0].cid = data.list[0].cid;
+            __INITIAL_STATE__.videoData.stat.aid = data.aid;
+            __INITIAL_STATE__.videoData.stat.coin = data.coins;
+            __INITIAL_STATE__.videoData.stat.danmaku = data.video_review;
+            __INITIAL_STATE__.videoData.stat.favorite = data.favorites;
+            __INITIAL_STATE__.videoData.stat.reply = data.review;
+            __INITIAL_STATE__.videoData.stat.view = data.play;
+            __INITIAL_STATE__.videoData.tid = data.tid;
+            __INITIAL_STATE__.videoData.title = data.title;
+            __INITIAL_STATE__.videoData.tname = data.typename;
             if (data.v2_app_api) {
-                this.__INITIAL_STATE__.tags = data.v2_app_api.tag;
-                this.__INITIAL_STATE__.videoData = data.v2_app_api
+                __INITIAL_STATE__.tags = data.v2_app_api.tag;
+                __INITIAL_STATE__.videoData = data.v2_app_api
             }
-            this.__INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
+            __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
             // 禁用部分功能
             BLOD.config.reset.like = 0;
             BLOD.avPlus = true;
 
-            return this.__INITIAL_STATE__;
+            return __INITIAL_STATE__;
         }
         bangumi(data, epId) {
             // https://bangumi.bilibili.com/view/web_api/season
@@ -213,51 +213,51 @@
                 if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
             });
 
-            this.__INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
-            this.__INITIAL_STATE__.activity = data.activity || {};
-            this.__INITIAL_STATE__.epId = epId || ids[0];
-            this.__INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
-            this.__INITIAL_STATE__.epList = data.episodes;
-            this.__INITIAL_STATE__.mdId = data.media_id;
-            this.__INITIAL_STATE__.mediaInfo.actors = data.actors;
-            this.__INITIAL_STATE__.mediaInfo.alias = data.alias;
-            this.__INITIAL_STATE__.mediaInfo.areas = data.areas;
-            this.__INITIAL_STATE__.mediaInfo.bkg_cover = data.bkg_cover;
-            this.__INITIAL_STATE__.mediaInfo.cover = data.cover;
-            this.__INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
-            this.__INITIAL_STATE__.mediaInfo.is_paster_ads = data.is_paster_ads;
-            this.__INITIAL_STATE__.mediaInfo.jp_title = data.jp_title;
-            this.__INITIAL_STATE__.mediaInfo.link = data.link;
-            this.__INITIAL_STATE__.mediaInfo.media_id = data.media_id;
-            this.__INITIAL_STATE__.mediaInfo.mode = data.mode;
-            this.__INITIAL_STATE__.mediaInfo.paster_text = data.paster_text;
-            this.__INITIAL_STATE__.mediaInfo.season_id = data.season_id;
-            this.__INITIAL_STATE__.mediaInfo.season_status = data.season_status;
-            this.__INITIAL_STATE__.mediaInfo.season_title = data.season_title;
-            this.__INITIAL_STATE__.mediaInfo.season_type = data.season_type;
-            this.__INITIAL_STATE__.mediaInfo.square_cover = data.square_cover;
-            this.__INITIAL_STATE__.mediaInfo.staff = data.staff;
-            this.__INITIAL_STATE__.mediaInfo.style = data.style;
-            this.__INITIAL_STATE__.mediaInfo.title = data.title;
-            this.__INITIAL_STATE__.mediaInfo.total_ep = data.total_ep;
-            this.__INITIAL_STATE__.mediaRating = data.rating || {};
-            this.__INITIAL_STATE__.newestEp = data.newest_ep;
-            this.__INITIAL_STATE__.payMent = data.payment || {};
-            this.__INITIAL_STATE__.pubInfo = data.publish;
-            this.__INITIAL_STATE__.rightsInfo = data.rights;
-            this.__INITIAL_STATE__.seasonList = data.seasons || [];
-            this.__INITIAL_STATE__.seasonStat = data.stat;
-            this.__INITIAL_STATE__.special = data.bkg_cover ? true : false;
-            this.__INITIAL_STATE__.ssId = data.season_id;
-            this.__INITIAL_STATE__.upInfo = data.up_info;
+            let __INITIAL_STATE__ = __INITIAL_STATE__.bangumi;
+            __INITIAL_STATE__.activity = data.activity || {};
+            __INITIAL_STATE__.epId = epId || ids[0];
+            __INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
+            __INITIAL_STATE__.epList = data.episodes;
+            __INITIAL_STATE__.mdId = data.media_id;
+            __INITIAL_STATE__.mediaInfo.actors = data.actors;
+            __INITIAL_STATE__.mediaInfo.alias = data.alias;
+            __INITIAL_STATE__.mediaInfo.areas = data.areas;
+            __INITIAL_STATE__.mediaInfo.bkg_cover = data.bkg_cover;
+            __INITIAL_STATE__.mediaInfo.cover = data.cover;
+            __INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
+            __INITIAL_STATE__.mediaInfo.is_paster_ads = data.is_paster_ads;
+            __INITIAL_STATE__.mediaInfo.jp_title = data.jp_title;
+            __INITIAL_STATE__.mediaInfo.link = data.link;
+            __INITIAL_STATE__.mediaInfo.media_id = data.media_id;
+            __INITIAL_STATE__.mediaInfo.mode = data.mode;
+            __INITIAL_STATE__.mediaInfo.paster_text = data.paster_text;
+            __INITIAL_STATE__.mediaInfo.season_id = data.season_id;
+            __INITIAL_STATE__.mediaInfo.season_status = data.season_status;
+            __INITIAL_STATE__.mediaInfo.season_title = data.season_title;
+            __INITIAL_STATE__.mediaInfo.season_type = data.season_type;
+            __INITIAL_STATE__.mediaInfo.square_cover = data.square_cover;
+            __INITIAL_STATE__.mediaInfo.staff = data.staff;
+            __INITIAL_STATE__.mediaInfo.style = data.style;
+            __INITIAL_STATE__.mediaInfo.title = data.title;
+            __INITIAL_STATE__.mediaInfo.total_ep = data.total_ep;
+            __INITIAL_STATE__.mediaRating = data.rating || {};
+            __INITIAL_STATE__.newestEp = data.newest_ep;
+            __INITIAL_STATE__.payMent = data.payment || {};
+            __INITIAL_STATE__.pubInfo = data.publish;
+            __INITIAL_STATE__.rightsInfo = data.rights;
+            __INITIAL_STATE__.seasonList = data.seasons || [];
+            __INITIAL_STATE__.seasonStat = data.stat;
+            __INITIAL_STATE__.special = data.bkg_cover ? true : false;
+            __INITIAL_STATE__.ssId = data.season_id;
+            __INITIAL_STATE__.upInfo = data.up_info;
 
-            return this.__INITIAL_STATE__;
+            return __INITIAL_STATE__;
         }
         index(data) {
             data = JSON.parse(data);
-            this.__INITIAL_STATE__ = this.__INITIAL_STATE__.index;
+            let __INITIAL_STATE__ = __INITIAL_STATE__.index;
             data.recommendData && data.recommendData.item.forEach(i => {
-                this.__INITIAL_STATE__.recommendData.push({
+                __INITIAL_STATE__.recommendData.push({
                     aid: BLOD.abv(i.bvid),
                     typename: "",
                     title: i.title,
@@ -276,9 +276,9 @@
                     rights: ""
                 })
             });
-            this.__INITIAL_STATE__.locsData = data.locsData;
-            this.__INITIAL_STATE__.locsData[23] = data.locsData[3197];
-            return this.__INITIAL_STATE__;
+            __INITIAL_STATE__.locsData = data.locsData;
+            __INITIAL_STATE__.locsData[23] = data.locsData[3197];
+            return __INITIAL_STATE__;
         }
     }
 
