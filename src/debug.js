@@ -50,7 +50,7 @@
         msg(...msg) {
             let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
             let time = 1 * msg[2] || 3000;
-            if (!node)  return this.log(...msg);
+            if (!node) return this.log(...msg);
             msg.forEach((d) => { d = typeof d == "object" ? "" : d });
             msg[2] = 1 * msg[2] ? "" : msg[2];
             let item = document.createElement("div");
@@ -93,6 +93,7 @@
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
         show(type, ...msg) {
 <<<<<<< HEAD
@@ -233,6 +234,9 @@
 =======
         async show(type, ...msg) {
 >>>>>>> fabed72 (UpdateJavaScript module)
+=======
+        show(type, ...msg) {
+>>>>>>> 55371da (Update JavaScript module)
             if (!document.body) {
                 if (this.check) return;
                 return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
