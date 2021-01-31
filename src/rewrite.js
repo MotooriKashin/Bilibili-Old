@@ -364,10 +364,14 @@
                 else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (BLOD.config.reset.adloc) for (let key in BLOD.__INITIAL_STATE__.locsData) if (BLOD.__INITIAL_STATE__.locsData[key]) for (let i = BLOD.__INITIAL_STATE__.locsData[key].length - 1; i >= 0; i--) if (BLOD.__INITIAL_STATE__.locsData[key][i].is_ad) { BLOD.debug.debug("移除广告", key, BLOD.__INITIAL_STATE__.locsData[key][i]); BLOD.__INITIAL_STATE__.locsData[key].splice(i, 1); }
 =======
                 if (config.reset.adloc) for (let key in BLOD.__INITIAL_STATE__.locsData) if (BLOD.__INITIAL_STATE__.locsData[key]) for (let i = BLOD.__INITIAL_STATE__.locsData[key].length - 1; i >= 0; i--) if (BLOD.__INITIAL_STATE__.locsData[key][i].is_ad) { debug.debug("移除广告", key, BLOD.__INITIAL_STATE__.locsData[key][i]); BLOD.__INITIAL_STATE__.locsData[key].splice(i, 1); }
 >>>>>>> 55371da (Update JavaScript module)
+=======
+                if (BLOD.config.reset.adloc) for (let key in BLOD.__INITIAL_STATE__.locsData) if (BLOD.__INITIAL_STATE__.locsData[key]) for (let i = BLOD.__INITIAL_STATE__.locsData[key].length - 1; i >= 0; i--) if (BLOD.__INITIAL_STATE__.locsData[key][i].is_ad) { BLOD.debug.debug("移除广告", key, BLOD.__INITIAL_STATE__.locsData[key][i]); BLOD.__INITIAL_STATE__.locsData[key].splice(i, 1); }
+>>>>>>> 2638d63 (fix syntax error)
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.getResourceText("index"));
             }
