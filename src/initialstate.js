@@ -6,6 +6,7 @@
 (function () {
     const BLOD = window.BLOD;
 <<<<<<< HEAD
+<<<<<<< HEAD
     const toast = BLOD.toast;
 
     class IniState {
@@ -294,6 +295,9 @@
         }
 
 =======
+=======
+    const toast = BLOD.toast;
+>>>>>>> 1230922 (fix syntax error)
 
     class IniState {
         constructor() {
@@ -445,19 +449,22 @@
             }
         }
         av(data) {
-            data = BLOD.jsonCheck(data).data;
-            let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
-            __INITIAL_STATE__.aid = data.View.aid;
-            __INITIAL_STATE__.related = data.Related || [];
-            __INITIAL_STATE__.tags = data.Tags || [];
-            __INITIAL_STATE__.upData = data.Card.card || {};
-            __INITIAL_STATE__.upData.archiveCount = data.Card.archive_count;
-            __INITIAL_STATE__.videoData = data.View || {};
-            __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
+            try {
+                data = BLOD.jsonCheck(data).data;
+                let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
+                __INITIAL_STATE__.aid = data.View.aid;
+                __INITIAL_STATE__.related = data.Related || [];
+                __INITIAL_STATE__.tags = data.Tags || [];
+                __INITIAL_STATE__.upData = data.Card.card || {};
+                __INITIAL_STATE__.upData.archiveCount = data.Card.archive_count;
+                __INITIAL_STATE__.videoData = data.View || {};
+                __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
 
-            return __INITIAL_STATE__;
+                return __INITIAL_STATE__;
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
         avPlus(data) {
+<<<<<<< HEAD
 <<<<<<< HEAD
             try {
                 let aid = BLOD.aid, cid = BLOD.cid, dat;
@@ -492,119 +499,139 @@
             // 处理重定向
             if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
             if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
+=======
+            try {
+                data = BLOD.jsonCheck(data);
+                // 处理重定向
+                if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
+                if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
+>>>>>>> 1230922 (fix syntax error)
 
-            let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
-            __INITIAL_STATE__.aid = data.aid;
-            __INITIAL_STATE__.upData.name = data.author;
-            __INITIAL_STATE__.upData.mid = data.mid;
-            __INITIAL_STATE__.videoData.aid = data.aid;
-            __INITIAL_STATE__.videoData.cid = data.list[0].cid;
-            __INITIAL_STATE__.videoData.ctime = data.created;
-            __INITIAL_STATE__.videoData.desc = data.description;
-            __INITIAL_STATE__.videoData.pages[0].cid = data.list[0].cid;
-            __INITIAL_STATE__.videoData.stat.aid = data.aid;
-            __INITIAL_STATE__.videoData.stat.coin = data.coins;
-            __INITIAL_STATE__.videoData.stat.danmaku = data.video_review;
-            __INITIAL_STATE__.videoData.stat.favorite = data.favorites;
-            __INITIAL_STATE__.videoData.stat.reply = data.review;
-            __INITIAL_STATE__.videoData.stat.view = data.play;
-            __INITIAL_STATE__.videoData.tid = data.tid;
-            __INITIAL_STATE__.videoData.title = data.title;
-            __INITIAL_STATE__.videoData.tname = data.typename;
-            if (data.v2_app_api) {
-                __INITIAL_STATE__.tags = data.v2_app_api.tag;
-                __INITIAL_STATE__.videoData = data.v2_app_api
-            }
-            __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
-            // 禁用部分功能
-            BLOD.config.reset.like = 0;
-            BLOD.avPlus = true;
+                let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
+                __INITIAL_STATE__.aid = data.aid || BLOD.aid;
+                __INITIAL_STATE__.upData.name = data.author;
+                __INITIAL_STATE__.upData.mid = data.mid;
+                __INITIAL_STATE__.videoData.aid = data.aid || BLOD.aid;
+                __INITIAL_STATE__.videoData.cid = data.list[0].cid;
+                __INITIAL_STATE__.videoData.ctime = data.created;
+                __INITIAL_STATE__.videoData.desc = data.description;
+                __INITIAL_STATE__.videoData.pages[0].cid = data.list[0].cid;
+                __INITIAL_STATE__.videoData.stat.aid = data.aid;
+                __INITIAL_STATE__.videoData.stat.coin = data.coins;
+                __INITIAL_STATE__.videoData.stat.danmaku = data.video_review;
+                __INITIAL_STATE__.videoData.stat.favorite = data.favorites;
+                __INITIAL_STATE__.videoData.stat.reply = data.review;
+                __INITIAL_STATE__.videoData.stat.view = data.play;
+                __INITIAL_STATE__.videoData.tid = data.tid;
+                __INITIAL_STATE__.videoData.title = data.title;
+                __INITIAL_STATE__.videoData.tname = data.typename;
+                if (data.v2_app_api) {
+                    __INITIAL_STATE__.tags = data.v2_app_api.tag;
+                    __INITIAL_STATE__.videoData = data.v2_app_api
+                }
+                __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
+                // 禁用部分功能
+                BLOD.config.reset.like = 0;
+                BLOD.avPlus = true;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             return this.__INITIAL_STATE__;
 >>>>>>> 55371da (Update JavaScript module)
 =======
             return __INITIAL_STATE__;
 >>>>>>> 2638d63 (fix syntax error)
+=======
+                return __INITIAL_STATE__;
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
+>>>>>>> 1230922 (fix syntax error)
         }
         bangumi(data, epId) {
-            // https://bangumi.bilibili.com/view/web_api/season
-            epId = 1 * epId || null;
-            data = BLOD.jsonCheck(data).result;
-            let ids = [];
-            data.episodes.forEach(d => {
-                ids.push(d.ep_id);
-                if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
-            });
+            try {
+                // https://bangumi.bilibili.com/view/web_api/season
+                epId = 1 * epId || null;
+                data = BLOD.jsonCheck(data).result;
+                let ids = [];
+                data.episodes.forEach(d => {
+                    ids.push(d.ep_id);
+                    if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
+                });
 
-            let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
-            __INITIAL_STATE__.activity = data.activity || {};
-            __INITIAL_STATE__.epId = epId || ids[0];
-            __INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
-            __INITIAL_STATE__.epList = data.episodes;
-            __INITIAL_STATE__.mdId = data.media_id;
-            __INITIAL_STATE__.mediaInfo.actors = data.actors;
-            __INITIAL_STATE__.mediaInfo.alias = data.alias;
-            __INITIAL_STATE__.mediaInfo.areas = data.areas;
-            __INITIAL_STATE__.mediaInfo.bkg_cover = data.bkg_cover;
-            __INITIAL_STATE__.mediaInfo.cover = data.cover;
-            __INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
-            __INITIAL_STATE__.mediaInfo.is_paster_ads = data.is_paster_ads;
-            __INITIAL_STATE__.mediaInfo.jp_title = data.jp_title;
-            __INITIAL_STATE__.mediaInfo.link = data.link;
-            __INITIAL_STATE__.mediaInfo.media_id = data.media_id;
-            __INITIAL_STATE__.mediaInfo.mode = data.mode;
-            __INITIAL_STATE__.mediaInfo.paster_text = data.paster_text;
-            __INITIAL_STATE__.mediaInfo.season_id = data.season_id;
-            __INITIAL_STATE__.mediaInfo.season_status = data.season_status;
-            __INITIAL_STATE__.mediaInfo.season_title = data.season_title;
-            __INITIAL_STATE__.mediaInfo.season_type = data.season_type;
-            __INITIAL_STATE__.mediaInfo.square_cover = data.square_cover;
-            __INITIAL_STATE__.mediaInfo.staff = data.staff;
-            __INITIAL_STATE__.mediaInfo.style = data.style;
-            __INITIAL_STATE__.mediaInfo.title = data.title;
-            __INITIAL_STATE__.mediaInfo.total_ep = data.total_ep;
-            __INITIAL_STATE__.mediaRating = data.rating || {};
-            __INITIAL_STATE__.newestEp = data.newest_ep;
-            __INITIAL_STATE__.payMent = data.payment || {};
-            __INITIAL_STATE__.pubInfo = data.publish;
-            __INITIAL_STATE__.rightsInfo = data.rights;
-            __INITIAL_STATE__.seasonList = data.seasons || [];
-            __INITIAL_STATE__.seasonStat = data.stat;
-            __INITIAL_STATE__.special = data.bkg_cover ? true : false;
-            __INITIAL_STATE__.ssId = data.season_id;
-            __INITIAL_STATE__.upInfo = data.up_info;
+                let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
+                __INITIAL_STATE__.activity = data.activity || {};
+                __INITIAL_STATE__.epId = epId || ids[0];
+                __INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
+                __INITIAL_STATE__.epList = data.episodes;
+                __INITIAL_STATE__.mdId = data.media_id;
+                __INITIAL_STATE__.mediaInfo.actors = data.actors;
+                __INITIAL_STATE__.mediaInfo.alias = data.alias;
+                __INITIAL_STATE__.mediaInfo.areas = data.areas;
+                __INITIAL_STATE__.mediaInfo.bkg_cover = data.bkg_cover;
+                __INITIAL_STATE__.mediaInfo.cover = data.cover;
+                __INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
+                __INITIAL_STATE__.mediaInfo.is_paster_ads = data.is_paster_ads;
+                __INITIAL_STATE__.mediaInfo.jp_title = data.jp_title;
+                __INITIAL_STATE__.mediaInfo.link = data.link;
+                __INITIAL_STATE__.mediaInfo.media_id = data.media_id;
+                __INITIAL_STATE__.mediaInfo.mode = data.mode;
+                __INITIAL_STATE__.mediaInfo.paster_text = data.paster_text;
+                __INITIAL_STATE__.mediaInfo.season_id = data.season_id;
+                __INITIAL_STATE__.mediaInfo.season_status = data.season_status;
+                __INITIAL_STATE__.mediaInfo.season_title = data.season_title;
+                __INITIAL_STATE__.mediaInfo.season_type = data.season_type;
+                __INITIAL_STATE__.mediaInfo.square_cover = data.square_cover;
+                __INITIAL_STATE__.mediaInfo.staff = data.staff;
+                __INITIAL_STATE__.mediaInfo.style = data.style;
+                __INITIAL_STATE__.mediaInfo.title = data.title;
+                __INITIAL_STATE__.mediaInfo.total_ep = data.total_ep;
+                __INITIAL_STATE__.mediaRating = data.rating || {};
+                __INITIAL_STATE__.newestEp = data.newest_ep;
+                __INITIAL_STATE__.payMent = data.payment || {};
+                __INITIAL_STATE__.pubInfo = data.publish;
+                __INITIAL_STATE__.rightsInfo = data.rights;
+                __INITIAL_STATE__.seasonList = data.seasons || [];
+                __INITIAL_STATE__.seasonStat = data.stat;
+                __INITIAL_STATE__.special = data.bkg_cover ? true : false;
+                __INITIAL_STATE__.ssId = data.season_id;
+                __INITIAL_STATE__.upInfo = data.up_info;
 
-            return __INITIAL_STATE__;
+                return __INITIAL_STATE__;
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
         index(data) {
-            data = JSON.parse(data);
-            let __INITIAL_STATE__ = this.__INITIAL_STATE__.index;
-            data.recommendData && data.recommendData.item.forEach(i => {
-                __INITIAL_STATE__.recommendData.push({
-                    aid: BLOD.abv(i.bvid),
-                    typename: "",
-                    title: i.title,
-                    subtitle: "",
-                    play: i.stat.view,
-                    review: "",
-                    video_review: "",
-                    favorites: "",
-                    mid: i.owner.mid,
-                    author: i.owner.name,
-                    creat: "",
-                    pic: i.pic,
-                    coins: "",
-                    duration: i.duration,
-                    badgepay: false,
-                    rights: ""
-                })
-            });
-            __INITIAL_STATE__.locsData = data.locsData;
-            __INITIAL_STATE__.locsData[23] = data.locsData[3197];
-            return __INITIAL_STATE__;
+            try {
+                data = JSON.parse(data);
+                let __INITIAL_STATE__ = this.__INITIAL_STATE__.index;
+                data.recommendData && data.recommendData.item.forEach(i => {
+                    __INITIAL_STATE__.recommendData.push({
+                        aid: BLOD.abv(i.bvid),
+                        typename: "",
+                        title: i.title,
+                        subtitle: "",
+                        play: i.stat.view,
+                        review: "",
+                        video_review: "",
+                        favorites: "",
+                        mid: i.owner.mid,
+                        author: i.owner.name,
+                        creat: "",
+                        pic: i.pic,
+                        coins: "",
+                        duration: i.duration,
+                        badgepay: false,
+                        rights: ""
+                    })
+                });
+                __INITIAL_STATE__.locsData = data.locsData;
+                __INITIAL_STATE__.locsData[23] = data.locsData[3197];
+                return __INITIAL_STATE__;
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
+<<<<<<< HEAD
 >>>>>>> 321e66d (重命名模块)
+=======
+
+>>>>>>> 1230922 (fix syntax error)
     }
 
     const exports = new IniState();
