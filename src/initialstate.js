@@ -157,7 +157,7 @@
         }
         av(data) {
             data = BLOD.jsonCheck(data).data;
-            let __INITIAL_STATE__ = __INITIAL_STATE__.av;
+            let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
             __INITIAL_STATE__.aid = data.View.aid;
             __INITIAL_STATE__.related = data.Related || [];
             __INITIAL_STATE__.tags = data.Tags || [];
@@ -174,7 +174,7 @@
             if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
             if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
 
-            let __INITIAL_STATE__ = __INITIAL_STATE__.av;
+            let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
             __INITIAL_STATE__.aid = data.aid;
             __INITIAL_STATE__.upData.name = data.author;
             __INITIAL_STATE__.upData.mid = data.mid;
@@ -213,7 +213,7 @@
                 if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
             });
 
-            let __INITIAL_STATE__ = __INITIAL_STATE__.bangumi;
+            let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
             __INITIAL_STATE__.activity = data.activity || {};
             __INITIAL_STATE__.epId = epId || ids[0];
             __INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
@@ -255,7 +255,7 @@
         }
         index(data) {
             data = JSON.parse(data);
-            let __INITIAL_STATE__ = __INITIAL_STATE__.index;
+            let __INITIAL_STATE__ = this.__INITIAL_STATE__.index;
             data.recommendData && data.recommendData.item.forEach(i => {
                 __INITIAL_STATE__.recommendData.push({
                     aid: BLOD.abv(i.bvid),
