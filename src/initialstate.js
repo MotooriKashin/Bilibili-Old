@@ -185,6 +185,7 @@
                 __INITIAL_STATE__.videoData.aid = data.aid || BLOD.aid;
                 __INITIAL_STATE__.videoData.cid = data.list[0].cid;
                 __INITIAL_STATE__.videoData.ctime = data.created;
+                __INITIAL_STATE__.videoData.pubdate = data.created;
                 __INITIAL_STATE__.videoData.desc = data.description;
                 __INITIAL_STATE__.videoData.pages[0].cid = data.list[0].cid;
                 __INITIAL_STATE__.videoData.stat.aid = data.aid;
