@@ -1333,7 +1333,11 @@
 
     // 添加UP主列表
     BLOD.reset.uplist = () => {
+<<<<<<< HEAD
         if (!BLOD.staff || !config.reset.uplist) return;
+=======
+        if (!BLOD.staff) return;
+>>>>>>> a555edd (show up list)
         let timer = setInterval(() => {
             let info = document.querySelector("#v_upinfo");
             if (info) {
@@ -1370,6 +1374,7 @@
             }
         }, 100);
     }
+<<<<<<< HEAD
 
     // BV=>av
     class ParameterTrim {
@@ -1613,4 +1618,6 @@
 >>>>>>> 56641b5 (禁用直播间p2p上传)
 
 >>>>>>> d098e8a (禁用直播间挂机检测)
+=======
+>>>>>>> a555edd (show up list)
 })()

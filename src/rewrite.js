@@ -69,6 +69,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 6bab63e (更新标题获取方式)
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·av/BV", ...e) }
 =======
@@ -91,6 +92,9 @@
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
 =======
+=======
+                BLOD.reset.uplist();
+>>>>>>> a555edd (show up list)
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
         }
