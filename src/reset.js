@@ -245,7 +245,8 @@
                         node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
                         onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                         data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: mid })));
-                        onwer.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" class="reply-face"><img src="' +
+                        onwer.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" data-usercard-mid="' +
+                            mid + 'class="reply-face"><img src="' +
                             data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
                             mid + '" href="//space.bilibili.com/' +
                             mid + '" target="_blank" class="' +
@@ -930,7 +931,7 @@
             let sort = JSON.parse(BLOD.getResourceText("sort"));
             let timer = window.setInterval(async () => {
                 let tminfo = document.getElementsByClassName("tm-info");
-                // 判断是否是少后再看页面
+                // 判断是否是稍后再看页面
                 if (tminfo[0] && BLOD.aid) {
                     window.clearInterval(timer);
                     let child = tminfo[0].childNodes;
@@ -1006,4 +1007,43 @@
     }
     if (config.reset.carousel && !BLOD.loc) getLoc();
 
+    // 添加UP主列表
+    BLOD.reset.uplist = () => {
+        if (!BLOD.staff) return;
+        let timer = setInterval(() => {
+            let info = document.querySelector("#v_upinfo");
+            if (info) {
+                clearInterval(timer);
+                let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
+                BLOD.staff.forEach(d => {
+                    let mid = d.mid;
+                    let face = d.face;
+                    let title = d.title;
+                    let vip = (d.vip && d.vip.status) ? 'name-text is-vip' : 'name-text';
+                    let name = d.name;
+                    fl = fl + [
+                        '<div class="up-card">',
+                        '<a href="//space.bilibili.com/',
+                        mid,
+                        '" data-usercard-mid="',
+                        mid,
+                        '" target="_blank" class="avatar"><img src="',
+                        face,
+                        '@48w_48h.webp" /><!----><span class="info-tag">',
+                        title,
+                        '</span><!----></a><div class="avatar"><a href="//space.bilibili.com/',
+                        mid,
+                        '" data-usercard-mid="',
+                        mid,
+                        '" target="_blank" class="',
+                        vip,
+                        '">',
+                        name,
+                        '</a></div></div>'
+                    ].join("")
+                })
+                info.innerHTML = fl + '</div>';
+            }
+        }, 100);
+    }
 })()

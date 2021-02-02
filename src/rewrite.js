@@ -37,6 +37,7 @@
                 BLOD.reset.fixSort.video();
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
+                BLOD.reset.uplist();
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         watchlater() {
