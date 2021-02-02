@@ -168,6 +168,7 @@
                 __INITIAL_STATE__.videoData = data.View || {};
                 __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
 
+                if (__INITIAL_STATE__.videoData.staff) BLOD.staff = __INITIAL_STATE__.videoData.staff;
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }

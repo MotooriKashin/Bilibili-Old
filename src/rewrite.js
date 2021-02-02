@@ -52,6 +52,7 @@
                 BLOD.reset.setMediaList.init();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 6bab63e (更新标题获取方式)
             } catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·av/BV", ...e) }
 =======
@@ -64,6 +65,10 @@
 =======
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·av/BV", ...e); }
 >>>>>>> d0dd290 (优化通知信息)
+=======
+                BLOD.reset.uplist();
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> a555edd (show up list)
         }
         watchlater() {
             try {
