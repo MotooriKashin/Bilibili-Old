@@ -978,7 +978,7 @@
         carousel(obj) {
             if (!config.reset.carousel) return;
             try {
-                let msg = BLOD.randomArray([
+                let msg = BLOD.loc || BLOD.randomArray([
                     ['https://www.bilibili.com/blackboard/activity-4KPC.html', '解锁超清4K画质'],
                     ['https://www.bilibili.com/blackboard/activity-4K120FPS-PC.html', '4K120FPS投稿全量开放'],
                     ['https://www.bilibili.com/blackboard/bilibili2009.html', '十年前的B站长啥样'],
@@ -1132,7 +1132,7 @@
                 clearInterval(timer);
                 xhrHook.jsonp();
             }
-        }, 10);
+        });
         setTimeout(() => clearInterval(timer), 5000);
     }
 })()
