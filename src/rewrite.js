@@ -172,6 +172,7 @@
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
 =======
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
+<<<<<<< HEAD
 >>>>>>> 760e38a (Update JavaScript module)
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
@@ -190,6 +191,14 @@
                 }
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
+                if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+>>>>>>> b1d2ae7 (Update rewrite.js)
+=======
+                if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epList && BLOD.__INITIAL_STATE__.epList[1]) {
+                    BLOD.__INITIAL_STATE__.special = false;
+                    BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined;
+                }
+                window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
 >>>>>>> b1d2ae7 (Update rewrite.js)
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
