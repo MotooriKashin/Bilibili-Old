@@ -108,6 +108,7 @@
                     data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
                 }
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
+<<<<<<< HEAD
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") throw ["忽略互动视频：", location.href];
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
@@ -118,6 +119,15 @@
                 if (BLOD.__INITIAL_STATE__) setBangumi.init(BLOD.__INITIAL_STATE__);
 =======
                 if (data.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+=======
+                if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
+                if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epList && BLOD.__INITIAL_STATE__.epList[1]) {
+                    BLOD.__INITIAL_STATE__.special = false;
+                    BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined;
+                }
+                window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
+                if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+>>>>>>> b1d2ae7 (Update rewrite.js)
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
