@@ -517,7 +517,9 @@
                 url[1] = location.href;
                 // 地址栏
                 if (url[0] != url[1]) {
-                    window.history.replaceState(null, null, BLOD.triming(location.href) + (location.hash.includes("/") ? "" : location.hash));
+                    let href = BLOD.triming(location.href);
+                    if (!href.includes("#") && location.href.includes("#")) href = href + location.hash;
+                    window.history.replaceState(null, null, href);
                     url[0] = location.href;
                 }
                 // a标签
