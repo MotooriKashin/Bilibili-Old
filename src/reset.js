@@ -290,6 +290,9 @@
             // 移除app下载浮动框
             remove("fixed_app_download", "id");
             remove("app-download", "class");
+            // 移除空间登录弹窗
+            remove('van-popover van-popper', "class");
+            remove('lt-row', "class");
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
