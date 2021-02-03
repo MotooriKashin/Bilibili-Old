@@ -1012,7 +1012,7 @@
 
     // 添加UP主列表
     BLOD.reset.uplist = () => {
-        if (!BLOD.staff) return;
+        if (!BLOD.staff || !config.reset.uplist) return;
         let timer = setInterval(() => {
             let info = document.querySelector("#v_upinfo");
             if (info) {
