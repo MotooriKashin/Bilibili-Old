@@ -1334,10 +1334,14 @@
     // 添加UP主列表
     BLOD.reset.uplist = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (!BLOD.staff || !config.reset.uplist) return;
 =======
         if (!BLOD.staff) return;
 >>>>>>> a555edd (show up list)
+=======
+        if (!BLOD.staff || !config.reset.uplist) return;
+>>>>>>> 267bc9c (添加UP主列表开关)
         let timer = setInterval(() => {
             let info = document.querySelector("#v_upinfo");
             if (info) {
