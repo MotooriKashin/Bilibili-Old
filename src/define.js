@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // module "define.js"
 =======
 /*
@@ -18,6 +19,17 @@
 =======
     console.log('import module "define.js"');
 >>>>>>> 604ec62 (fix debug message)
+=======
+/**
+ * @module define
+ * @description 定义了一些简单函数
+ * @author MotooriKashin
+ * @license MIT
+ */
+(function () {
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main */
+>>>>>>> 2f00fde (format with JsDoc)
 
 <<<<<<< HEAD
 const BLOD = window.BLOD;
@@ -258,20 +270,26 @@ const objUrl = (url, obj) => {
         constructor() {
             console.debug('import module "define.js"');
         }
+<<<<<<< HEAD
         // 格式化时间
         timeFormat(time = new Date(), type) {
 <<<<<<< HEAD
 =======
     class Format {
+=======
+>>>>>>> 2f00fde (format with JsDoc)
         /**
          * 格式化时间
          * @param {number} [time] 时间戳(13位)
          * @param {*} [type] 只要有效返回值便加上年月日
          */
         timeFormat(time = new Date().getTime(), type) {
+<<<<<<< HEAD
 >>>>>>> 9448cf0 (refactor some function)
 =======
 >>>>>>> e0a4ccf (使用函数默认参数)
+=======
+>>>>>>> 2f00fde (format with JsDoc)
             let date = new Date(time),
                 Y = date.getFullYear() + '-',
                 M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
@@ -281,11 +299,15 @@ const objUrl = (url, obj) => {
                 s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
             return type ? Y + M + D + h + m + s : h + m + s;
         }
-        // 格式化存储
+        /**
+         * 格式化字节
+         * @param {number} [size] 字节大小/bit
+         */
         sizeFormat(size = 0) {
             let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
             while (dex > 1) {
                 if (size >= vor) {
+                    // @ts-ignore
                     size = (size / dex).toFixed(2);
                     break;
                 }
@@ -295,12 +317,16 @@ const objUrl = (url, obj) => {
             }
             return size + unit[i];
         }
-        // 格式化进位
+        /**
+         * 格式化进位
+         * @param {number} [num] 数字
+         */
         unitFormat(num = 0) {
             num = 1 * num || 0;
             let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
             while (dex > 1) {
                 if (num >= dex) {
+                    // @ts-ignore
                     num = (num / dex).toFixed(1);
                     break;
                 }
@@ -309,7 +335,10 @@ const objUrl = (url, obj) => {
             }
             return num + unit[i];
         }
-        // 冒泡排序
+        /**
+         * 冒泡排序
+         * @param {Array} arr 数组
+         */
         bubbleSort(arr) {
             let temp = [];
             for (let i = 0; i < arr.length - 1; i++) {
@@ -326,7 +355,11 @@ const objUrl = (url, obj) => {
             }
             return arr;
         }
-        // 随机抽取
+        /**
+         * 随机抽取数组元素
+         * @param {Array} arr 目标数组
+         * @param {number} [num] 抽取数目，超过数组元素量时返回随机排列的整个数组
+         */
         randomArray(arr, num) {
             let out = [];
             num = num || 1;
@@ -339,24 +372,44 @@ const objUrl = (url, obj) => {
             return out;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         // av/BV互转 @https://www.zhihu.com/question/381784377/answer/1099438784
         abv(str) {
             if (!str) return;
+=======
+        /**
+         * av/BV互转
+         * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
+         * @param {*} arg av {number} <==> BV {string}
+         * @example <caption>av => BV</caption>
+         * BLOD.abv(51568); // return "BV1hx411c7TB"
+         * @example <caption>BV => av</caption>
+         * BLOD.abv("BV1hx411c7TB"); // return 51568
+         */
+        abv(arg) {
+            if (!arg) return;
+>>>>>>> 2f00fde (format with JsDoc)
             let table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
             let tr = {}, s = [11, 10, 3, 8, 4, 6], xor = 177451812, add = 8728348608;
             for (let i = 0; i < 58; i++) tr[table[i]] = i;
-            if (!(1 * str)) {
+            if (!(1 * arg)) {
                 let r = 0;
-                for (let i = 0; i < 6; i++) r += tr[str[s[i]]] * 58 ** i;
+                for (let i = 0; i < 6; i++) r += tr[arg[s[i]]] * 58 ** i;
                 return (r - add) ^ xor;
             } else {
-                str = (str ^ xor) + add;
+                arg = (arg ^ xor) + add;
                 let r = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
-                for (let i = 0; i < 6; i++) r[s[i]] = table[parseInt(str / 58 ** i) % 58];
+                // @ts-ignore
+                for (let i = 0; i < 6; i++) r[s[i]] = table[parseInt(arg / 58 ** i) % 58];
                 return r.join("");
             }
         }
-        // keysecret
+        /**
+         * URL签名
+         * @param {string} [url] 需要签名的url
+         * @param {Object} [obj] 包含需要往url中添加的参数键值对的数组，已存在的参数直接覆盖
+         * @param {number} [id] 签名用的密钥序号，默认取0
+         */
         urlSign(url, obj, id) {
             if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
             id = 1 * id || 0;
@@ -379,6 +432,7 @@ const objUrl = (url, obj) => {
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
             url = url.split("?")[0];
             delete obj.sign;
+            // @ts-ignore
             for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
             obj = Object.assign(obj, { appkey: key.split(":")[0] });
             Object.keys(obj).sort().map(key => {
@@ -388,20 +442,28 @@ const objUrl = (url, obj) => {
             else obj = Object.assign(_obj, { sign: BLOD.md5(BLOD.objUrl("", _obj) + key.split(":")[1]) });
             return BLOD.objUrl(url, obj);
         }
+<<<<<<< HEAD
         // 对象转链接
 =======
+=======
+>>>>>>> 2f00fde (format with JsDoc)
         /**
          * 将对象键值对转化为URL参数并返回完整URL
          * @param {string} url 原始url，无效则直接输出连接好的参数字符串
          * @param {Object} obj 包含参数键值对的对象，已存在的参数直接覆盖，参数值为 undefined 或 null 则忽略该参数
          */
+<<<<<<< HEAD
 >>>>>>> 9448cf0 (refactor some function)
+=======
+>>>>>>> 2f00fde (format with JsDoc)
         objUrl(url, obj) {
+            let data = this.urlObj(url);
             obj = typeof obj === "object" ? obj : {};
+            data = Object.assign(data, obj);
             let arr = [], i = 0;
-            for (let key in obj) {
-                if (obj[key] !== "undefined" && obj[key] !== null) {
-                    arr[i] = key + "=" + obj[key];
+            for (let key in data) {
+                if (data[key] !== "undefined" && data[key] !== null) {
+                    arr[i] = key + "=" + data[key];
                     i++;
                 }
             }
@@ -410,18 +472,26 @@ const objUrl = (url, obj) => {
             if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
             return url;
         }
-        // 链接转对象
+        /**
+         * 将链接中的参数输出为键值对象，锚直接忽略
+         * @param {string} url 原始url
+         */
         urlObj(url) {
 <<<<<<< HEAD
             url = url || "";
 <<<<<<< HEAD
             url = url.split('#')[0];
+<<<<<<< HEAD
             url = url.split('?')[1] ? url.split('?')[1].split('&') : "";
 =======
             url = url.split('?')[1] ? url.split('?')[1].split('&') : undefined;
 >>>>>>> d6fdcf1 (Update define.js)
 =======
 >>>>>>> aa57aca (Update define.js)
+=======
+            // @ts-ignore
+            url = url.split('?')[1] ? url.split('?')[1].split('&') : undefined;
+>>>>>>> 2f00fde (format with JsDoc)
             let obj = {};
             url = url || "";
             url = url.split('?')[1] ? url.split('?')[1].split('&') : [];
@@ -431,6 +501,7 @@ const objUrl = (url, obj) => {
             });
             return obj;
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
         // cookie对象
 =======
@@ -554,6 +625,11 @@ const objUrl = (url, obj) => {
          * 输出cookies键值对象
          */
 >>>>>>> 9448cf0 (refactor some function)
+=======
+        /**
+         * 输出cookies键值对象
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         getCookies() {
             let cookies = document.cookie.split('; ');
             let obj = cookies.reduce((pre, next) => {
@@ -564,9 +640,17 @@ const objUrl = (url, obj) => {
             }, {});
             return obj;
         }
+<<<<<<< HEAD
         // 添加样式
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+        /**
+         * 添加css样式到<head>标签底部
+         * @param {string} css css代码
+         * @param {string} [id] <style>标签的id属性，用作唯一性检查
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         addCss(css, id) {
 =======
         addCss(css) {
@@ -619,36 +703,55 @@ const objUrl = (url, obj) => {
             if (document.head) document.head.appendChild(style);
 >>>>>>> 513bb7e (Update define.js)
         }
-        // json校验
+        /**
+         * 检查B站后端返回json的有效性，直接抛出错误信息！
+         * @param {string} data json字符串
+         */
         jsonCheck(data) {
             data = JSON.parse(data);
+            // @ts-ignore
             if ("code" in data && data.code !== 0) {
+                // @ts-ignore
                 let msg = data.msg || data.message || "";
+<<<<<<< HEAD
                 BLOD.debug.error("JSON error!", data);
                 throw [data.code, msg];
+=======
+                // @ts-ignore
+                throw [data.code, msg, data]
+>>>>>>> 2f00fde (format with JsDoc)
             }
             return data;
         }
-        // 节点垂直偏移
+        /**
+         * 计算当前节点相对于文档的垂直偏移
+         * @param {HTMLElement} node 节点
+         */
         getTotalTop(node) {
             if (!node) return;
             var sum = 0;
             do {
                 sum += node.offsetTop;
+                // @ts-ignore
                 node = node.offsetParent;
             }
             while (node);
             return sum;
         }
-        // 重写页面
+        /**
+         * 重写页面
+         * @param {string} html 页面文档字符串
+         */
         write(html) {
             document.open();
             document.write(html);
             document.close();
         }
-        // 滚动到播放器
+        /**
+         * 滚动到旧版播放器
+         */
         bofqiToView() {
-            let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi") || "";
+            let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi");
             bofqi ? bofqi.scrollIntoView({ behavior: 'smooth', block: 'center' }) : "";
         }
 <<<<<<< HEAD

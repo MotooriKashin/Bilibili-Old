@@ -1,8 +1,11 @@
-/*
- * @module "rewrite.js"
- * @description 重写模块，按需加载，以rewrite对象挂载在BLOD下
+/**
+ * @module rewrite
+ * @description 按链接进行专门处理：主要是重写页面框架
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
+<<<<<<< HEAD
 <<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
@@ -13,6 +16,11 @@
 >>>>>>> 5ed92f5 (change css method)
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main  */
+    const toast = BLOD.toast; /** @see debug */
+>>>>>>> 2f00fde (format with JsDoc)
 
     class Write {
         constructor() {
@@ -48,6 +56,7 @@
                 if (BLOD.__INITIAL_STATE__.videoData.stein_guide_cid) return toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ");
                 BLOD.aid = BLOD.__INITIAL_STATE__.aid ? BLOD.__INITIAL_STATE__.aid : BLOD.aid;
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
+                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("av")));
@@ -189,6 +198,7 @@
                     BLOD.__INITIAL_STATE__.special = false;
                     BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined;
                 }
+                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
@@ -329,6 +339,7 @@
                     BLOD.debug.error("播单", ...e);
                     BLOD.__INITIAL_STATE__ = JSON.parse(BLOD.getResourceText("playlistjson"));
                 }
+                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("playlistdetail")));
@@ -370,10 +381,12 @@
             try {
                 if (!BLOD.config.rewrite.home) return;
                 BLOD.path.name = "index";
+                // @ts-ignore
                 if (!window.__INITIAL_STATE__) {
                     let page = BLOD.xhr.false(location.href);
                     BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ? page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
                 }
+                // @ts-ignore
                 else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__);
 <<<<<<< HEAD
@@ -384,7 +397,11 @@
 >>>>>>> 55371da (Update JavaScript module)
 =======
                 if (BLOD.config.reset.adloc) for (let key in BLOD.__INITIAL_STATE__.locsData) if (BLOD.__INITIAL_STATE__.locsData[key]) for (let i = BLOD.__INITIAL_STATE__.locsData[key].length - 1; i >= 0; i--) if (BLOD.__INITIAL_STATE__.locsData[key][i].is_ad) { BLOD.debug.debug("移除广告", key, BLOD.__INITIAL_STATE__.locsData[key][i]); BLOD.__INITIAL_STATE__.locsData[key].splice(i, 1); }
+<<<<<<< HEAD
 >>>>>>> 2638d63 (fix syntax error)
+=======
+                // @ts-ignore
+>>>>>>> 2f00fde (format with JsDoc)
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.getResourceText("index"));
             }
@@ -455,6 +472,7 @@
                 if (refer && refer[4] && refer[4] == "all") page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: refer[5], day: 3 })));
                 else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: 0, day: 3 })));
 <<<<<<< HEAD
+<<<<<<< HEAD
                 page.data.list.forEach((function (e, i, l) {
 >>>>>>> 601d064 (修复排行榜页面无数据)
 =======
@@ -471,9 +489,13 @@
                     l[i].video_review = l[i].stat.danmaku;
 <<<<<<< HEAD
 =======
+=======
+                // @ts-ignore
+>>>>>>> 2f00fde (format with JsDoc)
                 page.data.list.forEach(((e, i, l) => {
                     l[i] = Object.assign(l[i], { author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku });
                     if (l[i].others) {
+                        // @ts-ignore
                         l[i].others.forEach(((e, i, l) => {
                             l[i] = Object.assign(l[i], { author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku });
                         }));
@@ -483,11 +505,16 @@
 >>>>>>> 5e07363 (修复排行榜页面无数据)
 =======
                 }))
+<<<<<<< HEAD
 >>>>>>> 5e07363 (修复排行榜页面无数据)
+=======
+                // @ts-ignore
+>>>>>>> 2f00fde (format with JsDoc)
                 BLOD.__INITIAL_STATE__ = { loading: false, rankRouteParams: { arc_type: 0, day: 3, rankTab: "all", rid: 1 * refer[5] || 0, season_type: 1 }, showTypes: true, times: [{ name: "日排行", value: 1 }, { name: "三日排行", value: 3 }, { name: "周排行", value: 7 }, { name: "月排行", value: 30 }], typeList: [{ name: "全部投稿", value: 0 }, { name: "近期投稿", value: 1 }] };
                 BLOD.__INITIAL_STATE__.channels = [{ name: "全站", tid: 0 }, { name: "动画", tid: 1 }, { name: "国创相关", tid: 168 }, { name: "音乐", tid: 3 }, { name: "舞蹈", tid: 129 }, { name: "游戏", tid: 4 }, { name: "科技", tid: 36 }, { name: "数码", tid: 188 }, { name: "生活", tid: 160 }, { name: "美食", tid: 211 }, { name: "鬼畜", tid: 119 }, { name: "时尚", tid: 155 }, { name: "娱乐", tid: 5 }, { name: "影视", tid: 181 }];
                 BLOD.__INITIAL_STATE__.rankList = page.data.list;
                 BLOD.__INITIAL_STATE__.note = page.data.note;
+                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("ranking")));
             }
@@ -545,16 +572,26 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
         }
+        festival() {
+            try {
+                let bfq = document.querySelector("#bilibili-player");
+                let bofqi = document.createElement('iframe');
+                // @ts-ignore
+                bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.aid}&cid=${window.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                bfq.replaceWith(bofqi);
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+        }
     }
 
     const exports = () => {
         let rewrite = new Write();
-        function makeExports(type) {
-            return function (...msg) {
-                return rewrite[type](...msg);
+        let makeExports = (type) => {
+            return (...arg) => {
+                return rewrite[type](...arg);
             }
         }
-        let method = BLOD.write
+        let method = BLOD.write;
         method.av = makeExports("av");
         method.watchlater = makeExports("watchlater");
         method.bangumi = makeExports("bangumi");

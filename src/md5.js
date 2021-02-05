@@ -1,13 +1,16 @@
-/*
- * @module md5.js
- * @description md5模块，按需加载，以md5对象挂载在BLOD或window下
- * @method hex || array || arrayBuffer || base64
- * [js-md5]{@link https://github.com/emn178/js-md5}
+/**
+ * @module md5
+ * @description 计算md5哈希值
+ * @author Motoori Kashin
  * @license MIT
  */
 (function () {
     'use strict';
 
+    /**
+     * @see js-md5 {@link https://github.com/emn178/js-md5}
+     * @license MIT
+     */
     const ERROR = 'input is invalid type';
     const ARRAY_BUFFER = true;
     const HEX_CHARS = '0123456789abcdef'.split('');
@@ -15,6 +18,7 @@
     const SHIFT = [0, 8, 16, 24];
     const OUTPUT_TYPES = ['hex', 'array', 'digest', 'buffer', 'arrayBuffer', 'base64'];
     const BASE64_ENCODE_CHAR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
+    // @ts-ignore
     const root = window.BLOD || window;
 
     let buffer = new ArrayBuffer(68), blocks = new Uint32Array(buffer), buffer8 = new Uint8Array(buffer);
@@ -26,10 +30,13 @@
     };
     let createMethod = function () {
         let method = createOutputMethod('hex');
+        // @ts-ignore
         method.create = function () {
             return new Md5();
         };
+        // @ts-ignore
         method.update = function (message) {
+            // @ts-ignore
             return method.create().update(message);
         };
         for (let i = 0; i < OUTPUT_TYPES.length; ++i) {
@@ -69,7 +76,7 @@
             if (this.finalized) {
                 return;
             }
-            
+
             message = typeof message === 'number' ? message + '' : message;
             let notString, type = typeof message;
             if (type !== 'string') {

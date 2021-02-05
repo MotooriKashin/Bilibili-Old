@@ -1,8 +1,11 @@
-/*
- * @module "ui.js"
- * @description 设置界面模块，只在顶层页面启用，独立生效，不暴露任何内容
+/**
+ * @module ui
+ * @description 设置UI绘制
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
+<<<<<<< HEAD
 <<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
@@ -11,6 +14,11 @@
     const config = BLOD.config; /** @see main */
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main  */
+    const toast = BLOD.toast; /** @see debug */
+>>>>>>> 2f00fde (format with JsDoc)
 
     class Ui {
         constructor() {
@@ -27,6 +35,7 @@
             this.init();
         }
         /**
+<<<<<<< HEAD
          * 恢复默认设置
          */
         flesh() {
@@ -37,6 +46,11 @@
             toast("恢复默认数据！", "刷新页面以立即生效");
         }
 <<<<<<< HEAD
+=======
+         * 绘制设置入口
+         * @param {*} [timer] 相当于变量声明
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         init(timer) {
             let face = document.createElement("div");
             let attribute = {
@@ -86,6 +100,13 @@
             })();
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        /**
+         * 绘制设置面板
+         * @param {*} timer 相当于变量声明
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         table(timer) {
             let table = document.createElement("div");
             let config = BLOD.config;
@@ -93,6 +114,7 @@
             table.setAttribute("id", "ui-table");
             table.innerHTML = '<span style="color : rgb(0,0,0);font-size : 14px;">BilibiliOld 设置</span><span style="color : blue;float : right;font-size : 12px;">恢复默认</span>';
             document.body.appendChild(table);
+            // @ts-ignore
             table.children[1].onclick = () => {
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
@@ -186,6 +208,13 @@
                 }, 500);
             }
         }
+        /**
+         * 绘制设置选项
+         * @param {HTMLElement} table 设置面板节点
+         * @param {Array} name 设置数据数组
+         * @param {number} check 启用与否
+         * @param {string} key 设置主键名称
+         */
         setTable(table, name, check, key) {
             let setTable = document.createElement("div");
             let config = BLOD.config;
@@ -271,7 +300,9 @@
 =======
             setTable.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
             setTable.children[0].innerText = name[1];
+            // @ts-ignore
             setTable.children[1].onclick = () => {
+                // @ts-ignore
                 if (setTable.children[1].checked) {
                     if (key in config.rewrite) {
                         config.rewrite[key] = 1;
@@ -349,6 +380,12 @@
 >>>>>>> 43b3ef7 (启用toast模块)
                 }
             }
+<<<<<<< HEAD
+=======
+            // @ts-ignore
+            if (check) setTable.children[1].checked = true;
+            table.appendChild(setTable);
+>>>>>>> 2f00fde (format with JsDoc)
         }
     }
 

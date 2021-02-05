@@ -1,8 +1,11 @@
-/*
- * @module "reset.js"
- * @description 其他处理，非重写并没有单独模块的部分统一写这里，以reset对象挂载在BLOD下
+/**
+ * @module reset
+ * @description 进行重写页面以外的处理
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
+<<<<<<< HEAD
     const BLOD = window.BLOD;
     const debug = BLOD.debug;
     const config = BLOD.config;
@@ -12,13 +15,23 @@
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
     const toast = BLOD.toast;
+=======
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main  */
+    const debug = BLOD.debug; /** @see debug */
+    const config = BLOD.config; /** @see main */
+    const xhr = BLOD.xhr; /** @see xhr */
+    const toast = BLOD.toast; /** @see debug */
+>>>>>>> 2f00fde (format with JsDoc)
     console.debug('import module "reset.js"');
 =======
     console.log('import module "reset.js"');
 >>>>>>> 604ec62 (fix debug message)
 
     BLOD.reset = {
-        // 对象监听
+        /**
+         * 监听window下的对象
+         */
         getVariable: () => {
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -57,7 +70,10 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("对象监听", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
         },
-        // 原生脚本替换
+        /**
+         * 替换原生脚本，不直接修改页面框架
+         * @param {string} str 页面框架
+         */
         oldScript: (str) => {
             let comment = config.reset.oldreply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a2e5af617381dcede25b968815b3b8af1637c515/src/comment.min.js";
             str = str.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/video.min.js");
@@ -74,7 +90,10 @@
 >>>>>>> 5e07363 (修复排行榜页面无数据)
             return str;
         },
-        // 移除预览提示框
+        /**
+         * 移除付费预览框
+         * @param {HTMLElement} node 预览框节点
+         */
         removePreview: async (node) => {
             try {
                 if (!config.reset.preview) return;
@@ -98,9 +117,12 @@
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("付费预览", ...e); }
         },
-        // 替换顶栏底栏
+        /**
+         * 替换顶栏底栏
+         */
         resetSction: async () => {
             if (!config.reset.grobalboard) return;
+            // @ts-ignore
             if (!window.$) {
                 let jq = document.createElement("script");
                 jq.setAttribute("type", "text/javascript");
@@ -132,7 +154,9 @@
             }
             window.setTimeout(() => { BLOD.reset.resetNodes() }, 3000);
         },
-        // 切P刷新数据
+        /**
+         * 切p监听
+         */
         switchVideo: async () => {
 <<<<<<< HEAD
             if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
@@ -157,17 +181,26 @@
                 }
             });
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+            // @ts-ignore
+>>>>>>> 2f00fde (format with JsDoc)
             if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000)
 =======
             if (config.reset.autoplay) setTimeout(()=>{window.player && window.player.play && window.player.play()},1000)
 >>>>>>> e8b09e7 (添加延时1秒自动播放功能)
         },
-        // 修复主页分区
+        /**
+         * 修复主页分区
+         * @param {HTMLElement} node 分区节点
+         * @param {HTMLElement} [move] 添加的节点，相当于变量声明
+         */
         fixnews: async (node, move) => {
             try {
                 let rank = config.reset.grobalboard ? document.getElementsByClassName("rank-tab")[0] : "";
                 if (node.id == "bili_ad") {
                     let sight = node.getElementsByTagName("a");
+                    // @ts-ignore
                     node = node.getElementsByClassName("name");
                     if (node[0]) node[0].text = "资讯";
                     for (let i = 0; i < sight.length; i++) if (sight[i].href.includes("www.bilibili.com/v/ad/ad/")) sight[i].href = "https://www.bilibili.com/v/information/";
@@ -178,11 +211,14 @@
                 }
                 if (node.className == "report-wrap-module elevator-module") for (let item of node.children[1].children) if (item.innerHTML == "广告") item.innerHTML = "资讯";
                 if (node.id == "bili-header-m") {
+                    // @ts-ignore
                     node = node.getElementsByClassName('nav-name');
                     if (node[0]) {
+                        // @ts-ignore
                         for (let i = 0; i < node.length; i++) {
                             if (node[i].textContent == "科技") {
                                 move = node[i].parentNode.parentNode.children[1].lastChild.cloneNode(true);
+                                // @ts-ignore
                                 move.firstChild.href = move.firstChild.href.replace("technology", "life");
                                 node[i].parentNode.parentNode.children[1].lastChild.remove();
                             }
@@ -198,19 +234,26 @@
                         }
                     }
                 }
+                // @ts-ignore
                 if (rank && rank.children[5]) {
+                    // @ts-ignore
                     rank.children[5].innerText == "知识" ? rank.children[5].innerText = "科技" : "";
+                    // @ts-ignore
                     rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
                 }
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页分区", ...e); }
         },
-        // 修复评论跳转
+        /**
+         * 修复评论跳转链接
+         * @param {HTMLElement} node 评论节点
+         */
         fixVideoSeek: (node) => {
             if (document.querySelector("#bofqi")) {
                 node.querySelectorAll("a.video-seek").forEach(function (v) {
                     v.addEventListener("click", function (e) {
                         BLOD.bofqiToView();
+                        // @ts-ignore
                         window.player.seek(Number(e.target.attributes[2].nodeValue));
                     })
                 })
@@ -231,29 +274,49 @@
 =======
             if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
-        // 重命名评论跳转链接
+        /**
+         * 还原评论跳转链接为av号
+         */
         renameCommentJump: () => {
 >>>>>>> 21becf6 (主动转化av号)
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
                 if (d.href && !d.href.includes(d.innerText)) {
+                    // @ts-ignore
                     d = d.href.split("/");
+                    // @ts-ignore
                     d = d[d.length - 1] || d[d.length - 2];
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                    // @ts-ignore
+>>>>>>> 2f00fde (format with JsDoc)
                     if (config.reset.bvid2av && d.toLowerCase().startsWith('bv')) d = BLOD.abv(d);
+                    // @ts-ignore
                     e[i].title = e[i].innerHTML;
+<<<<<<< HEAD
 =======
 >>>>>>> b883a26 (重命名评论跳转链接)
 =======
                     if (config.reset.bvid2av && d.toLowerCase().startsWith('bv')) d = BLOD.abv(d);
 >>>>>>> 21becf6 (主动转化av号)
+=======
+                    // @ts-ignore
+>>>>>>> 2f00fde (format with JsDoc)
                     e[i].innerHTML = d;
                 }
             })
         },
+<<<<<<< HEAD
 =======
 >>>>>>> 3d73ce2 (restore elec jump)
         // 修复主页排行
+=======
+        /**
+         * 修复主页排行：电视剧、电影、纪录片
+         * @param {HTMLElement} node 分区节点
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         fixrank: async (node) => {
             // 这些分区排行榜已全部采用类似番剧排行的模式，故采用相似的节点覆盖
             let sort = {
@@ -268,6 +331,7 @@
             try {
                 let data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/pgc/season/rank/web/list", { season_type: sort[1], day: 3 }));
                 data = BLOD.jsonCheck(data).data;
+                // @ts-ignore
                 node = node.getElementsByClassName("bangumi-rank-list rank-list")[0];
                 for (let i = 0; i < 8; i++) {
                     let li = document.createElement("li"),
@@ -289,10 +353,18 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("分区排行", ...e); }
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 弹幕反查
+=======
+        /**
+         * 反差弹幕发送者信息
+         * @param {HTMLElement} node 弹幕节点
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         danmkuHashId: async (node) => {
             if (!config.reset.midcrc) return;
             if (!BLOD.midcrc) new Function(BLOD.getResourceText("crc"))();
+            // @ts-ignore
             let index = 1 * node.getAttribute("dmno");
             node.addEventListener("contextmenu", () => {
                 setTimeout(async (data) => {
@@ -300,7 +372,9 @@
                         let descipline = document.createElement("li");
                         let onwer = document.createElement("li");
                         let mid = BLOD.midcrc(BLOD.hash[index]);
+                        // @ts-ignore
                         node = document.getElementsByClassName("bili-old-hash");
+                        // @ts-ignore
                         if (node[0]) for (let i = 0; i < node.length; i++) node[i].remove();
                         if (document.getElementsByClassName("bilibili-player-icon bilibili-player-icon-arrow-down")[0]) return;
                         if (document.getElementsByClassName("bilibili-player-icon bilibili-player-icon-arrow-up")[0]) return;
@@ -308,13 +382,14 @@
                         descipline.innerHTML = '<a class="context-menu-a" href="javascript:void(0);"></a>';
                         onwer.setAttribute("class", "context-line context-menu-function bili-old-hash");
                         onwer.innerHTML = '<a class="context-menu-a js-action" title="" href="//space.bilibili.com/' + mid + '">hash: ' + BLOD.hash[index] + " mid: " + mid + '</a>';
+                        // @ts-ignore
                         node = document.getElementsByClassName("bilibili-player-context-menu-container white")[0];
                         if (!node) return;
                         node.firstChild.insertBefore(descipline, node.firstChild.firstChild);
                         onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                         data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: mid })));
                         onwer.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" data-usercard-mid="' +
-                            mid + 'class="reply-face"><img src="' +
+                            mid + ' class="reply-face"><img src="' +
                             data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
                             mid + '" href="//space.bilibili.com/' +
                             mid + '" target="_blank" class="' +
@@ -329,12 +404,18 @@
                 })
             })
         },
+<<<<<<< HEAD
         // 移除节点
 =======
         /**
          * 移除HTML节点
          */
 >>>>>>> aeac0ec (重构弹幕反查)
+=======
+        /**
+         * 移除HTML节点
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         resetNodes: async () => {
             BLOD.reset.parameterTrim(true);
             let remove = (node, type, hidden, index, callback) => {
@@ -402,9 +483,12 @@
             // 移除新版顶栏
             if (document.querySelector("#bili-header-m") && document.querySelector("#internationalHeader")) document.querySelector("#internationalHeader").remove();
         },
-        // BV超链接转化
+        /**
+         * 识别BV号转化为超链接
+         */
         avdesc: async () => {
             let desc = document.getElementsByClassName("info");
+            // @ts-ignore
             if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
                 if (desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
                     let paster = desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i);
@@ -416,7 +500,10 @@
                 }
             }
         },
-        // 点赞功能
+        /**
+         * 添加点赞功能
+         * @param {*} [data] 相当于声明变量
+         */
         setLike: async (data) => {
             if (!config.reset.like) return;
             let timer = window.setInterval(async () => {
@@ -454,6 +541,7 @@
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
                             if (arg.nodeValue.match("万")) return;
+                            // @ts-ignore
                             let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1;
                             text = document.createTextNode(" 点赞 " + number);
                             arg.replaceWith(text);
@@ -470,6 +558,7 @@
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;display : none;");
                             if (arg.nodeValue.match("万")) return;
+                            // @ts-ignore
                             let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1;
                             text = document.createTextNode(" 点赞 " + number)
                             arg.replaceWith(text);
@@ -574,8 +663,14 @@
                 }
             }, 100);
         },
+<<<<<<< HEAD
 >>>>>>> 43b3ef7 (启用toast模块)
         // 空间注册时间
+=======
+        /**
+         * 获取账号注册时间
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         setJoinTime: async () => {
             if (!BLOD.mid && !config.reset.jointime) return;
             let data = await xhr.GM(BLOD.objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": BLOD.mid }));
@@ -597,6 +692,9 @@
                 if (BLOD.big) toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday);
 >>>>>>> 760e38a (Update JavaScript module)
                 debug.log("注册时间", data.card.name, jointime);
+                // @ts-ignore
+                // @ts-ignore
+                // @ts-ignore
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
                     if (birthday[0]) {
@@ -622,7 +720,9 @@
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("注册时间", ...e); }
         },
-        // 会员授权
+        /**
+         * 授权接触区域限制代理服务器使用B站账号
+         */
         accesskey: async () => {
             if (window.self != window.top) return;
             if (!config.reset.accesskey) {//
@@ -680,13 +780,17 @@
 >>>>>>> 760e38a (Update JavaScript module)
             }
         },
-        // 备份播放器设置
+        /**
+         * 备份旧版播放器设置
+         */
         playerSetting: () => {
             let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
             if (bilibili_player_settings) {
                 bilibili_player_settings = JSON.parse(bilibili_player_settings);
                 // 记录防挡字幕状态
+                // @ts-ignore
                 if (bilibili_player_settings.setting_config && bilibili_player_settings.setting_config.preventshade) BLOD.preventshade = 1;
+                // @ts-ignore
                 if (bilibili_player_settings.video_status.autopart !== "") BLOD.setValue("bilibili_player_settings", bilibili_player_settings);
                 else if (BLOD.getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
             } else if (BLOD.getValue("bilibili_player_settings")) {
@@ -694,7 +798,9 @@
             }
 <<<<<<< HEAD
         },
-        // URL参数清理
+        /**
+         * 清理url无效参数并转化BV为av
+         */
         parameterTrim: () => {
             let url = [];
             if (!BLOD.triming) {
@@ -762,7 +868,11 @@
 
     // 修复失效视频
     BLOD.reset.fixVideoLost = {
-        // 收藏里的失效视频
+        /**
+         * 处理收藏中的失效视频
+         * @param {*} msg 节点事件，包含失效视频节点
+         * @param {*} [data] 相当于声明变量
+         */
         favlist: async (msg, data) => {
             // src判定是否为频道并取消重复处理
             if (!config.reset.lostvideo || BLOD.src) return;
@@ -804,9 +914,14 @@
             msg.target.children[0].setAttribute("target", "_blank");
             msg.target.children[0].setAttribute("class", "cover cover-normal");
         },
-        // 频道里的失效视频
+        /**
+         * 处理频道中的失效视频
+         * @param {string} link 频道列表url
+         */
         channel: async (link) => {
+            // @ts-ignore
             if (!config.reset.lostvideo || BLOD.src == window.src) return;
+            // @ts-ignore
             window.src = BLOD.src;
             try {
                 let data, obj = BLOD.urlObj(link),
@@ -814,12 +929,15 @@
                     mid = obj.mid,
                     pn = obj.pn;
                 let small_item = document.getElementsByClassName("small-item");
+                // @ts-ignore
                 if (small_item[0]) for (let i = 0; i < small_item.length; i++) if (small_item[i].getElementsByClassName("title")[0].title == "已失效视频") break;
                 data = await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/space/channel/video", { "mid": mid, "cid": cid, "pn": pn, "ps": 30, "order": 0 }));
                 data = BLOD.jsonCheck(data).data;
                 for (let i = 0; i < small_item.length; i++) {
+                    // @ts-ignore
                     let aid = small_item[i].getAttribute("data-aid") * 1;
                     let title = data.list.archives[i].title || "av" + aid;
+                    // @ts-ignore
                     if (small_item[i].children[1].title == "已失效视频") {
                         small_item[i].setAttribute("class", "small-item fakeDanmu-item");
                         if (aid) {
@@ -830,6 +948,7 @@
                         }
                         else {
                             // 修复失效视频bv号
+                            // @ts-ignore
                             aid = small_item[i].getAttribute("data-aid");
                             debug.log("失效视频", aid);
                             small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
@@ -842,13 +961,17 @@
                         small_item[i].children[1].setAttribute("target", "_blank");
                         small_item[i].children[1].setAttribute("title", title);
                         small_item[i].children[1].setAttribute("style", "text-decoration : line-through;color : #ff0000;");
+                        // @ts-ignore
                         small_item[i].children[1].text = title;
                     }
                 }
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("失效视频", ...e); }
         },
-        // 空间首页展示的失效视频
+        /**
+         * 处理个人空间主页的失效视频并固定所有失效视频防止被页面改回去
+         * @param {*} msg 节点事件，包含被改回去的失效视频节点
+         */
         home: async (msg) => {
             if (!config.reset.lostvideo) return;
             let channel_item = document.getElementsByClassName("channel-item");
@@ -858,6 +981,7 @@
                     for (let i = 0; i < small_item.length; i++) {
                         if (small_item[i].getAttribute("class") == "small-item disabled") {
                             small_item[i].setAttribute("class", "small-item fakeDanmu-item");
+                            // @ts-ignore
                             let aid = small_item[i].getAttribute("data-aid") * 1;
                             if (aid) {
                                 // 修改失效视频av链接
@@ -867,6 +991,7 @@
                             }
                             else {
                                 // 修改失效视频bv链接
+                                // @ts-ignore
                                 aid = small_item[i].getAttribute("data-aid");
                                 debug.log("失效视频", aid);
                                 small_item[i].children[1].setAttribute("href", "//www.bilibili.com/video/" + aid);
@@ -875,8 +1000,10 @@
                             small_item[i].children[0].setAttribute("target", "_blank");
                             small_item[i].children[0].setAttribute("class", "cover cover-normal");
                             small_item[i].children[1].setAttribute("target", "_blank");
+                            // @ts-ignore
                             small_item[i].children[1].setAttribute("title", small_item[i].children[0].children[0].alt);
                             small_item[i].children[1].setAttribute("style", "text-decoration : line-through;color : #ff0000;");
+                            // @ts-ignore
                             small_item[i].children[1].text = small_item[i].children[0].children[0].alt;
                         }
                     }
@@ -890,6 +1017,10 @@
 
     // 番剧分集数据
     BLOD.reset.setBangumi = {
+        /**
+         * 初始化数据
+         * @param {*} data 番剧数据字符串
+         */
         init: async (data) => {
             if (!config.reset.episodedata) return;
             // 判断是否有分集数据
@@ -905,7 +1036,11 @@
                 window.setTimeout(() => window.clearInterval(timer), 10000);
             }
         },
-        // 分集数据处理
+        /**
+         * 处理分集数据
+         * @param {*} data 用于切p判断处理过与否
+         * @param {*} msg 节点事件，包含当前分p的aid
+         */
         episodeData: async (data, msg) => {
             try {
                 let views = document.getElementsByClassName("view-count")[0].getElementsByTagName("span")[0];
@@ -938,7 +1073,15 @@
 
     // 修复评论楼层
     BLOD.reset.setReplyFloor = {
+<<<<<<< HEAD
         init(reply) {
+=======
+        /**
+         * 初始化评论楼层数据
+         * @param {*} data 评论数据json
+         */
+        init(data) {
+>>>>>>> 2f00fde (format with JsDoc)
             if (!config.reset.replyfloor) return;
 <<<<<<< HEAD
             let floor = {}, key = ["top", "hots", "replies", "root"];
@@ -960,6 +1103,7 @@
             key.forEach((d) => {
                 if (data[d]) {
                     d = Array.isArray(data[d]) ? data[d] : [data[d]]
+                    // @ts-ignore
                     d.forEach((d) => {
                         floor[d.rpid] = d.floor;
                         if (d.replies) {
@@ -972,6 +1116,9 @@
             })
             BLOD.floor = floor;
         },
+        /**
+         * 处理楼中楼
+         */
         fix() {
             if (!config.reset.replyfloor) return;
             let floor = BLOD.floor || {};
@@ -993,6 +1140,7 @@
                         let span = d.querySelector(".floor-date");
                         let id = d.id.split('_')[2];
                         if (span.parentNode.children.length === 1 && floor[id]) {
+                            // @ts-ignore
                             span.parentNode.innerHTML = '<span class="floor-num" style="float: left;color: #aaa;padding-right: 10px;">#' + floor[id] + '</span>' + span.outerHTML;
                         }
                     }
@@ -1022,10 +1170,13 @@
 
     // 构造媒体页
     BLOD.reset.setMediaList = {
+        /**
+         * 构造媒体页数据
+         * @param {*} [data] 判断页面是否已经跳转到av页
+         */
         init: async (data) => {
             if (!BLOD.ml) return;
             if (data) {
-                // 以传参data决定处理类型
                 try {
                     // 获取首个视频av并跳转
                     toast("尝试前往构造媒体页...", "media_id：" + BLOD.ml);
@@ -1075,6 +1226,7 @@
                     }
                     BLOD.ids = value;
                     let timer = window.setInterval(() => {
+                        // @ts-ignore
                         if (window.BilibiliPlayer) {
                             clearInterval(timer);
                             // 将视频列表重构为稍后再看列表
@@ -1099,12 +1251,14 @@
                             // 构造初始化参数并重新初始化播放器
                             BLOD.obj = { "aid": BLOD.ids[0].aid, "cid": BLOD.ids[0].cid, "watchlater": encodeURIComponent(JSON.stringify(toview)) }; // 重构初始化播放器参数
                             toast.success("重构成功！", "二次刷新播放器...");
+                            // @ts-ignore
                             window.BilibiliPlayer(BLOD.obj);
                             let bpui = document.getElementsByClassName("bpui-button-text");
                             let t = setInterval(() => {
                                 // 更新列表名称
                                 if (bpui[1]) {
                                     clearInterval(t);
+                                    // @ts-ignore
                                     bpui[1].firstChild.innerText = "收藏列表";
                                 }
                             }, 100);
@@ -1130,19 +1284,28 @@
 >>>>>>> 760e38a (Update JavaScript module)
             }
         },
-        // aid变化监听
+        /**
+         * 监听媒体页切p
+         */
         fixvar: async () => {
+            // @ts-ignore
             if (!BLOD.aid) BLOD.aid = window.aid ? window.aid : BLOD.aid;
             if (BLOD.oid) {
+                // @ts-ignore
                 if (BLOD.oid != window.aid) {
                     // 收藏播放切p判断
+                    // @ts-ignore
                     BLOD.aid = window.aid ? window.aid : BLOD.aid;
+                    // @ts-ignore
                     BLOD.oid = window.aid;
                     BLOD.reset.setMediaList.restore();
                 }
             }
         },
-        // 收藏播放更新
+        /**
+         * 更新媒体页切p数据
+         * @param {*} data 构造好的媒体页数据
+         */
         restore: async (data) => {
             toast("更新页面信息...", "部分非关键信息不会去额外获取");
             history.replaceState(null, null, "https://www.bilibili.com/video/av" + BLOD.aid + location.search + location.hash);
@@ -1156,14 +1319,18 @@
                 '<div class="number"><span title="总播放数' + data.stat.view + '" class="v play">' + BLOD.unitFormat(data.stat.view) + '</span><span title="总弹幕数' + data.stat.danmaku + '" class="v dm">' + BLOD.unitFormat(data.stat.danmaku) + '</span><span title="本日日排行数据过期后，再纳入本稿件的历史排行数据进行对比得出" class="v rank">最高全站日排行' + data.stat.like + '名</span><span class="line"></span><span class="u like" style="margin-right : 5px;" title="点赞人数' + data.stat.his_rank + '"><i class="l-icon-move" style="width : 22px;height : 22px;background-position : -660px -2068px;"></i><b class="l-icon-moved" style="width : 22px;height : 22px;background-position : -725px -2068px;display : none;"></b> 点赞 ' + BLOD.unitFormat(data.stat.like) + '</span><span report-id="coinbtn1" title="投硬币枚数' + data.stat.coin + '" class="u coin"><i class="c-icon-move"></i><b class="c-icon-moved" style="background-position: -2340px -60px; display: none;"></b> 硬币 ' + BLOD.unitFormat(data.stat.coin) + '</span> <span report-id="collect1" title="收藏人数' + data.stat.favorite + '" class="u fav"><i class="f-icon-move" style="background-position: 0px 0px;"></i><b class="f-icon-moved" style="background-position: -1740px -60px; display: none;"></b> 收藏 ' + BLOD.unitFormat(data.stat.favorite) + '</span></div>';
             up_info.innerHTML = '<div class="u-face fl"><!----><a href="//space.bilibili.com/' + data.owner.mid + '" target="_blank" report-id="head" class="a"><img src="' + data.owner.face + '@68w_68h.webp" width="68" height="68" class="up-face" /><!----><!----><i title="企业/团体认证" class="auth o-auth"></i></a></div>' +
                 '<div class="info"><div class="user clearfix"><a href="//space.bilibili.com/' + data.owner.mid + '" target="_blank" report-id="name" class="name is-vip">' + data.owner.name + '</a><a href="//message.bilibili.com/#whisper/mid' + data.owner.mid + '" target="_blank" report-id="message" class="message icon">发消息</a></div><div class="sign static"><span>up主简介</span><!----></div><div class="number clearfix"><span title="投稿数--">投稿：--</span><span title="粉丝数--">粉丝：--</span></div><div class="btn followe"><a report-id="follow1" class="bi-btn b-gz"><span class="gz">+ 关注</span><span class="ygz">已关注</span><span class="qxgz">取消关注</span></a><a report-id="charge" class="bi-btn b-cd elecrank-btn"><span class="cd">充电</span><span class="wtcd">为TA充电</span></a></div></div>';
+            // @ts-ignore
             arc_toolbar_report.children[0].children[0].title = "分享人数" + data.stat.share;
             arc_toolbar_report.children[0].children[0].innerHTML = '<span class="t">分享</span><span class="num">' + BLOD.unitFormat(data.stat.share) + '</span><i class="icon"></i>';
+            // @ts-ignore
             arc_toolbar_report.children[2].title = "收藏人数" + data.stat.favorite;
             arc_toolbar_report.children[2].innerHTML = '<div class="btn-item"><i class="icon-move f-icon-moved" style="display: none;"></i><b class="icon-move f-icon-move"></b><span class="t">收藏</span><span class="num">' + BLOD.unitFormat(data.stat.favorite) + '</span></div>';
+            // @ts-ignore
             arc_toolbar_report.children[3].title = "投硬币枚数" + data.stat.coin;
             arc_toolbar_report.children[3].innerHTML = '<div class="btn-item"><i class="icon-move c-icon-moved" style="display: none;"></i><b class="icon-move c-icon-move"></b><span class="t">硬币</span><span class="num">' + BLOD.unitFormat(data.stat.coin) + '</span></div>';
             document.getElementById("v_tag").children[0].setAttribute("hidden", "hidden");
             document.getElementById("v_desc").children[1].innerText = data.desc;
+            // @ts-ignore
             new window.bbComment(".comment", window.aid, 1, window.UserStatus.userInfo, "");
             data.stat.like ? video_info.children[2].children[2].setAttribute("style", "display: inline-block;") : video_info.children[2].children[2].setAttribute("style", "display: none;");
             let bpui = document.getElementsByClassName("bpui-button-text");
@@ -1171,6 +1338,7 @@
                 // 更新列表名称
                 if (bpui[1]) {
                     clearInterval(t);
+                    // @ts-ignore
                     bpui[1].firstChild.innerText = "收藏列表";
                 }
             }, 100);
@@ -1178,7 +1346,9 @@
     }
     // 修复分区对照
     BLOD.reset.fixSort = {
-        // av
+        /**
+         * 处理av页
+         */
         video: async () => {
             let sort = JSON.parse(BLOD.getResourceText("sort"));
             let timer = window.setInterval(() => {
@@ -1191,14 +1361,21 @@
                     nodes[1].replaceWith(nodes[0].cloneNode(true));
                     nodes[2].replaceWith(nodes[0].cloneNode(true));
                     nodes[2].childNodes[1].remove();
+                    // @ts-ignore
                     nodes[1].childNodes[0].href = sort[sort[BLOD.tid][0]][2];
+                    // @ts-ignore
                     nodes[1].childNodes[0].innerText = sort[sort[BLOD.tid][0]][1];
+                    // @ts-ignore
                     nodes[2].childNodes[0].href = sort[BLOD.tid][2];
+                    // @ts-ignore
                     nodes[2].childNodes[0].innerText = sort[BLOD.tid][1];
                 }
             }, 1000);
         },
-        // 稍后再看
+        /**
+         * 处理稍后再看
+         * @param {*} [data] 相当于变量声明
+         */
         watchlater: async (data) => {
             let sort = JSON.parse(BLOD.getResourceText("sort"));
             let timer = window.setInterval(async () => {
@@ -1217,9 +1394,13 @@
                             child[2].replaceWith(child[0].cloneNode(true));
                             child[4].replaceWith(child[0].cloneNode(true));
                             child[4].childNodes[1].remove();
+                            // @ts-ignore
                             child[2].childNodes[0].href = sort[sort[BLOD.tid][0]][2];
+                            // @ts-ignore
                             child[2].childNodes[0].innerText = sort[sort[BLOD.tid][0]][1];
+                            // @ts-ignore
                             child[4].childNodes[0].href = sort[BLOD.tid][2];
+                            // @ts-ignore
                             child[4].childNodes[0].innerText = sort[BLOD.tid][1];
                         }
 <<<<<<< HEAD
@@ -1289,6 +1470,12 @@
             }
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        /**
+         * 留待以后释放setInterval方法
+         */
+>>>>>>> 2f00fde (format with JsDoc)
         release() {
 =======
         release(){
@@ -1309,6 +1496,7 @@
     BLOD.reset.fuckp2p = () => {
         if (!config.reset.nop2p) return;
         window.RTCPeerConnection = undefined;
+        // @ts-ignore
         window.RTCDataChannel = () => { };
 <<<<<<< HEAD
         toast.warning("禁用直播间p2p上传！");
