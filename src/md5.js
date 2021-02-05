@@ -18,7 +18,6 @@
     const SHIFT = [0, 8, 16, 24];
     const OUTPUT_TYPES = ['hex', 'array', 'digest', 'buffer', 'arrayBuffer', 'base64'];
     const BASE64_ENCODE_CHAR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
-    // @ts-ignore
     const root = window.BLOD || window;
 
     let buffer = new ArrayBuffer(68), blocks = new Uint32Array(buffer), buffer8 = new Uint8Array(buffer);
@@ -30,13 +29,10 @@
     };
     let createMethod = function () {
         let method = createOutputMethod('hex');
-        // @ts-ignore
         method.create = function () {
             return new Md5();
         };
-        // @ts-ignore
         method.update = function (message) {
-            // @ts-ignore
             return method.create().update(message);
         };
         for (let i = 0; i < OUTPUT_TYPES.length; ++i) {

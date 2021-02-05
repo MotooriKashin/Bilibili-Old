@@ -7,6 +7,7 @@
 (function () {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
 <<<<<<< HEAD
@@ -18,6 +19,8 @@
 >>>>>>> 43b3ef7 (启用toast模块)
 =======
     // @ts-ignore
+=======
+>>>>>>> 39d49de (remove eslint rules)
     const BLOD = window.BLOD; /** @see main  */
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> 2f00fde (format with JsDoc)
@@ -27,7 +30,6 @@
             console.debug('import module "rewrite.js"');
         }
         av() {
-            BLOD.path.name = "av";
             BLOD.ml = BLOD.getValue("medialist");
             BLOD.deleteValue("medialist");
             try {
@@ -40,6 +42,7 @@
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
                 if (!BLOD.config.rewrite.av) return;
+                BLOD.path.name = "av";
                 BLOD.reset.playerSetting();
                 if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4]);
 >>>>>>> 43b3ef7 (启用toast模块)
@@ -56,7 +59,6 @@
                 if (BLOD.__INITIAL_STATE__.videoData.stein_guide_cid) return toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ");
                 BLOD.aid = BLOD.__INITIAL_STATE__.aid ? BLOD.__INITIAL_STATE__.aid : BLOD.aid;
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
-                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("av")));
@@ -198,7 +200,6 @@
                     BLOD.__INITIAL_STATE__.special = false;
                     BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined;
                 }
-                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
@@ -339,7 +340,6 @@
                     BLOD.debug.error("播单", ...e);
                     BLOD.__INITIAL_STATE__ = JSON.parse(BLOD.getResourceText("playlistjson"));
                 }
-                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
                 BLOD.write(BLOD.oldScript(BLOD.getResourceText("playlistdetail")));
@@ -381,12 +381,10 @@
             try {
                 if (!BLOD.config.rewrite.home) return;
                 BLOD.path.name = "index";
-                // @ts-ignore
                 if (!window.__INITIAL_STATE__) {
                     let page = BLOD.xhr.false(location.href);
                     BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ? page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
                 }
-                // @ts-ignore
                 else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__);
 <<<<<<< HEAD
@@ -398,10 +396,13 @@
 =======
                 if (BLOD.config.reset.adloc) for (let key in BLOD.__INITIAL_STATE__.locsData) if (BLOD.__INITIAL_STATE__.locsData[key]) for (let i = BLOD.__INITIAL_STATE__.locsData[key].length - 1; i >= 0; i--) if (BLOD.__INITIAL_STATE__.locsData[key][i].is_ad) { BLOD.debug.debug("移除广告", key, BLOD.__INITIAL_STATE__.locsData[key][i]); BLOD.__INITIAL_STATE__.locsData[key].splice(i, 1); }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 2638d63 (fix syntax error)
 =======
                 // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.getResourceText("index"));
             }
@@ -473,6 +474,7 @@
                 else page = BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: 0, day: 3 })));
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 page.data.list.forEach((function (e, i, l) {
 >>>>>>> 601d064 (修复排行榜页面无数据)
 =======
@@ -492,10 +494,11 @@
 =======
                 // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
                 page.data.list.forEach(((e, i, l) => {
                     l[i] = Object.assign(l[i], { author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku });
                     if (l[i].others) {
-                        // @ts-ignore
                         l[i].others.forEach(((e, i, l) => {
                             l[i] = Object.assign(l[i], { author: l[i].owner.name, coins: l[i].stat.coin, mid: l[i].owner.mid, play: l[i].stat.view, pts: l[i].score, trend: null, video_review: l[i].stat.danmaku });
                         }));
@@ -506,15 +509,17 @@
 =======
                 }))
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 5e07363 (修复排行榜页面无数据)
 =======
                 // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
                 BLOD.__INITIAL_STATE__ = { loading: false, rankRouteParams: { arc_type: 0, day: 3, rankTab: "all", rid: 1 * refer[5] || 0, season_type: 1 }, showTypes: true, times: [{ name: "日排行", value: 1 }, { name: "三日排行", value: 3 }, { name: "周排行", value: 7 }, { name: "月排行", value: 30 }], typeList: [{ name: "全部投稿", value: 0 }, { name: "近期投稿", value: 1 }] };
                 BLOD.__INITIAL_STATE__.channels = [{ name: "全站", tid: 0 }, { name: "动画", tid: 1 }, { name: "国创相关", tid: 168 }, { name: "音乐", tid: 3 }, { name: "舞蹈", tid: 129 }, { name: "游戏", tid: 4 }, { name: "科技", tid: 36 }, { name: "数码", tid: 188 }, { name: "生活", tid: 160 }, { name: "美食", tid: 211 }, { name: "鬼畜", tid: 119 }, { name: "时尚", tid: 155 }, { name: "娱乐", tid: 5 }, { name: "影视", tid: 181 }];
                 BLOD.__INITIAL_STATE__.rankList = page.data.list;
                 BLOD.__INITIAL_STATE__.note = page.data.note;
-                // @ts-ignore
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("ranking")));
             }
@@ -574,12 +579,36 @@
         }
         festival() {
             try {
+                if (!BLOD.config.rewrite.frame) return;
+                BLOD.path.mhead = "festival";
+                if (!window.__INITIAL_STATE__) return setTimeout(() => this.festival(), 100);
+                let ini = [];
+                window.__INITIAL_STATE__.videoSections.forEach(d => {
+                    d.episodes.forEach(d => {
+                        ini.push(d);
+                    });
+                });
                 let bfq = document.querySelector("#bilibili-player");
                 let bofqi = document.createElement('iframe');
-                // @ts-ignore
-                bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.aid}&cid=${window.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.__INITIAL_STATE__.videoInfo.aid}&cid=${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
                 bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                bofqi.setAttribute("id", "bofqi");
                 bfq.replaceWith(bofqi);
+                let epi = document.querySelectorAll('.video-episode-card__info-title');
+                epi.forEach((d, i, e) => {
+                    let item = d.innerText;
+                    ini.forEach(d => {
+                        if (d.title === item) item = d;
+                    })
+                    e[i].onclick = () => {
+                        bfq = document.querySelector("#bofqi");
+                        bofqi = document.createElement('iframe');
+                        bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                        bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                        bofqi.setAttribute("id", "bofqi");
+                        bfq.replaceWith(bofqi);
+                    }
+                })
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
     }
@@ -602,6 +631,7 @@
         method.space = makeExports("space");
         method.index = makeExports("index");
         method.rank = makeExports("rank");
+        method.festival = makeExports("festival");
         return method;
     }
 

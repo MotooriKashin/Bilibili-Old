@@ -6,6 +6,7 @@
  */
 (function () {
 <<<<<<< HEAD
+<<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
 <<<<<<< HEAD
@@ -121,6 +122,8 @@
 >>>>>>> 43b3ef7 (启用toast模块)
 =======
     // @ts-ignore
+=======
+>>>>>>> 39d49de (remove eslint rules)
     const BLOD = window.BLOD; /** @see main */
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> 2f00fde (format with JsDoc)
@@ -144,8 +147,11 @@
 <<<<<<< HEAD
 =======
             node.firstChild.appendChild(li);
+<<<<<<< HEAD
             // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
             li.firstChild.onclick = () => this.setTable();
             // 监听播放器右键菜单创建
             node.addEventListener("DOMNodeInserted", () => {
@@ -463,9 +469,7 @@
          */
 >>>>>>> 2f00fde (format with JsDoc)
         async playurl(type, qn) {
-            // @ts-ignore
             BLOD.aid = BLOD.aid || window.aid;
-            // @ts-ignore
             BLOD.cid = BLOD.cid || window.cid;
             qn = qn || 120;
 =======
@@ -484,18 +488,14 @@
             switch (type) {
                 case 'dash': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80 });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80 });
-                    // @ts-ignore
                     break;
                 case 'flv': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
-                    // @ts-ignore
                     break;
                 case 'off': return BLOD.urlSign("https://interface.bilibili.com/v2/playurl", { cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' });
-                    // @ts-ignore
                     break;
                 case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
                     return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
-                    // @ts-ignore
                     break;
             }
         }
@@ -640,7 +640,6 @@
             }
         }
         let method = makeExports("setTable");
-        // @ts-ignore
         method.init = makeExports("init");
         return method;
     }

@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const BLOD = window.BLOD; /** @see main  */
     const config = BLOD.config; /** @see main  */
     const debug = BLOD.debug; /** @see debug  */
@@ -14,9 +13,12 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
     const root = window.protobuf.Root.fromJSON(JSON.parse(BLOD.getResourceText("protobuf")));
 =======
     const root = window.protobuf.Root.fromJSON(JSON.parse('{"nested":{"bilibili":{"nested":{"DmWebViewReply":{"fields":{"state":{"type":"int32","id":1},"text":{"type":"string","id":2},"textSide":{"type":"string","id":3},"dmSge":{"type":"DmSegConfig","id":4},"flag":{"type":"DanmakuFlagConfig","id":5},"specialDms":{"rule":"repeated","type":"string","id":6},"checkBox":{"type":"bool","id":7},"count":{"type":"int64","id":8},"commandDms":{"rule":"repeated","type":"CommandDm","id":9},"dmSetting":{"type":"DanmuWebPlayerConfig","id":10}}},"CommandDm":{"fields":{"id":{"type":"int64","id":1},"oid":{"type":"int64","id":2},"mid":{"type":"int64","id":3},"command":{"type":"string","id":4},"content":{"type":"string","id":5},"progress":{"type":"int32","id":6},"ctime":{"type":"string","id":7},"mtime":{"type":"string","id":8},"extra":{"type":"string","id":9},"idStr":{"type":"string","id":10}}},"DmSegConfig":{"fields":{"pageSize":{"type":"int64","id":1},"total":{"type":"int64","id":2}}},"DanmakuFlagConfig":{"fields":{"recFlag":{"type":"int32","id":1},"recText":{"type":"string","id":2},"recSwitch":{"type":"int32","id":3}}},"DmSegMobileReply":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}},"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"weight":{"type":"int32","id":9},"action":{"type":"string","id":10},"pool":{"type":"int32","id":11},"idStr":{"type":"string","id":12},"attr":{"type":"int32","id":13}}},"DanmuWebPlayerConfig":{"fields":{"dmSwitch":{"type":"bool","id":1},"aiSwitch":{"type":"bool","id":2},"aiLevel":{"type":"int32","id":3},"blocktop":{"type":"bool","id":4},"blockscroll":{"type":"bool","id":5},"blockbottom":{"type":"bool","id":6},"blockcolor":{"type":"bool","id":7},"blockspecial":{"type":"bool","id":8},"preventshade":{"type":"bool","id":9},"dmask":{"type":"bool","id":10},"opacity":{"type":"float","id":11},"dmarea":{"type":"int32","id":12},"speedplus":{"type":"float","id":13},"fontsize":{"type":"float","id":14},"screensync":{"type":"bool","id":15},"speedsync":{"type":"bool","id":16},"fontfamily":{"type":"string","id":17},"bold":{"type":"bool","id":18},"fontborder":{"type":"int32","id":19},"drawType":{"type":"string","id":20}}}}}}}'));
@@ -335,7 +337,6 @@
             // 构造Promise序列以同时获取所有DASH媒体segment数据
             // 本应由播放器自行获取，B站官方称之为【首帧优化】却在缺失时直接报错导致播放器无法正常载入视频
             let arr = [];
-            // @ts-ignore
             this.playurl.dash.video.forEach((d, i, e) => {
                 arr.push((async (d) => {
                     BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
@@ -372,7 +373,6 @@
                 })(e[i]))
             })
             this.playurl.dash.audio = this.fixAudio(this.playurl.dash.audio);
-            // @ts-ignore
             this.playurl.dash.audio.forEach((d, i, e) => {
                 arr.push((async (d) => {
                     BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
@@ -450,11 +450,8 @@
             this.playurl.accept_quality.splice(0, num);
             this.playurl.support_formats.splice(0, num);
             this.playurl.accept_description.splice(0, num);
-            // @ts-ignore
             this.playurl.accept_format = this.playurl.accept_format.split(",");
-            // @ts-ignore
             this.playurl.accept_format.splice(0, num);
-            // @ts-ignore
             this.playurl.accept_format = this.playurl.accept_format.join(",");
 
             this.playurl.dash.duration = Math.ceil(this.playurl.timelength / 1000);
@@ -720,7 +717,6 @@
 >>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
-            // @ts-ignore
             danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             for (let i = 0; i < danmaku.length; i++) {
@@ -890,7 +886,6 @@
                     //                  =5 一条弹幕数据
                     //                  =7 首个数据包,建立与服务器的连接
                     // return[Buffer] : 包装好的数据
-                    // @ts-ignore
                     liveChatOld.convertToArrayBuffer = function (body, option) {
                         let header = [{ "name": "Header Length", "key": "headerLen", "qg": 2, "offset": 4, "value": 16 }, { "name": "Protocol Version", "key": "ver", "qg": 2, "offset": 6, "value": 1 }, { "name": "Operation", "key": "op", "qg": 4, "offset": 8, "value": option }, { "name": "Sequence Id", "key": "seq", "qg": 4, "offset": 12, "value": 1 }];
                         let headerBuf = new ArrayBuffer(16);
@@ -926,20 +921,15 @@
                 let wsBinaryHeaderList = [{ "name": "Header Length", "key": "headerLen", "bytes": 2, "offset": 4, "value": 18 }, { "name": "Protocol Version", "key": "ver", "bytes": 2, "offset": 6, "value": 1 }, { "name": "Operation", "key": "op", "bytes": 4, "offset": 8, "value": 7 }, { "name": "Sequence Id", "key": "seq", "bytes": 4, "offset": 12, "value": 2 }, { "name": "Compress", "key": "compress", "bytes": 1, "offset": 16, "value": 0 }, { "name": "ContentType", "key": "contentType", "bytes": 1, "offset": 17, "value": 0 }]
                 liveChat = new WebSocket('wss://broadcast.chat.bilibili.com:7823/sub');
                 liveChat.binaryType = "arraybuffer";
-                // @ts-ignore
                 liveChat.heatTimer = -1;
 
                 // 每30秒一个心跳包
-                // @ts-ignore
                 liveChat.heartBeat = function () {
                     var i = this;
                     clearTimeout(this.heatTimer);
-                    // @ts-ignore
                     var e = this.convertToArrayBuffer({}, Pl.WS_OP_HEARTBEAT);
-                    // @ts-ignore
                     this.send(e);
                     this.heatTimer = window.setTimeout((function () {
-                        // @ts-ignore
                         i.heartBeat();
                     }), 1e3 * 30);
                 }
@@ -950,13 +940,11 @@
                         "platform": "web",
                         "accepts": [1000, 1015]
                     };
-                    // @ts-ignore
                     return this.send(this.convertToArrayBuffer(body, 7));
                 }
 
                 liveChat.onmessage = function (i) {
                     try {
-                        // @ts-ignore
                         var t = this.convertToObject(i.data);
                         if (t) {
                             switch (t.op) {
@@ -967,7 +955,6 @@
                                     // this.onHeartBeatReply(t.body);
                                     break;
                                 case Pl.WS_OP_CONNECT_SUCCESS:
-                                    // @ts-ignore
                                     this.heartBeat();
                                     break;
                                 // 旧播放器只能处理(连接成功，心跳响应，实时弹幕)三种响应信息
@@ -1007,7 +994,6 @@
 
                 // jsc-player > i.prototype.convertToArrayBuffer,新版播放器的请求头信息更多,需要18字节
                 // 基本与liveChatOld.convertToArrayBuffer相同
-                // @ts-ignore
                 liveChat.convertToArrayBuffer = function (body, option) {
                     let headerBuf = new ArrayBuffer(Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH);
                     let viewer = new DataView(headerBuf, Pl.WS_PACKAGE_OFFSET);
@@ -1023,7 +1009,6 @@
 
                 // jsc-player > i.prototype.convertToObject
                 // convertToArrayBuffer对应的解码函数
-                // @ts-ignore
                 liveChat.convertToObject = function (i) {
                     var e = new DataView(i), t = {};
                     t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET);
@@ -1031,11 +1016,9 @@
                         4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset))
                     }));
                     if (t.op && t.op === Pl.WS_OP_BATCH_DATA) {
-                        // @ts-ignore
                         t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH, t.packetLen);
                     }
                     else if (t.op && Pl.WS_OP_DATA === t.op) {
-                        // @ts-ignore
                         t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
                     }
                     else if (t.op && t.op === Pl.WS_OP_OGVCMD_REPLY) {
@@ -1045,7 +1028,6 @@
                         t.body = [];
                         for (var a = Pl.WS_PACKAGE_OFFSET, r = t.packetLen, n = "", l = ""; a < i.byteLength; a += r) {
                             r = e.getInt32(a);
-                            // @ts-ignore
                             n = e.getInt16(a + Pl.WS_HEADER_OFFSET);
                             try {
                                 l = JSON.parse(decoder.decode(i.slice(a + n, a + r)));
@@ -1060,7 +1042,6 @@
                 }
 
                 // jsc-player > i.prototype.parseDanmaku
-                // @ts-ignore
                 liveChat.parseDanmaku = function (i, e, t, a) {
                     for (var r, n = [], l = t; l < i.byteLength; l += a) {
                         a = e.getInt32(l);
@@ -1087,15 +1068,17 @@
                     loadTime = new Date();
                     let Segments = [];
                     getSegDanmaku(function (protoSegments) {
-                        // @ts-ignore
                         loadTime = new Date() - loadTime;
                         parseTime = new Date();
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // @ts-ignore
+=======
+>>>>>>> 39d49de (remove eslint rules)
                         Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
                         //将av300000(2012年7月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
                         if (BLOD.aid < 300000) {
@@ -1134,6 +1117,7 @@
                             };
                         });
 <<<<<<< HEAD
+<<<<<<< HEAD
                         //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
                         if (BLOD.aid < 400000) {
                             specialEffects(danmaku);
@@ -1142,6 +1126,8 @@
 =======
                         // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
@@ -1250,10 +1236,9 @@
                     if (BLOD.pgc && BLOD.__INITIAL_STATE__.rightsInfo.watch_platform && !BLOD.limit) BLOD.limit = 2;
 >>>>>>> d8a708d (无区域限制也单解除app限制)
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
-                    // @ts-ignore
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
-                    // @ts-ignore
                     if (BLOD.limit) this.url = url;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1269,23 +1254,21 @@
                     if (this.url) this.send = () => xhrHook.sendPlayurl(this);
                     // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+                    if (this.url) this.send = () => xhrHook.sendPlayurl(this);
+>>>>>>> 39d49de (remove eslint rules)
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
                 }
                 // 新版弹幕兼容pakku.js
                 if (url.includes("list.so")) {
                     // pakku.js会在页面上挂一个xhrhook.js来修改xhr对象，这里利用这个特征实现新版弹幕兼容pakku.js
-                    // @ts-ignore
                     if (this.pakku_url && config.reset.danmuku) {
                         // 更改pakku.js请求的url，使它过滤分段弹幕
-                        // @ts-ignore
                         this.pakku_url = url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid + "&segment_index=1";
                         this.responseType = "arraybuffer";
-                        // @ts-ignore
                         this.callback = this.pakku_load_callback[0];
-                        // @ts-ignore
                         this.respondDanmaku = function (xml) {
                             this.response = this.responseText = xml;
-                            // @ts-ignore
                             this.callback();
                             BLOD.xml = xml;
 <<<<<<< HEAD
@@ -1295,14 +1278,12 @@
 >>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
                         }
                         // 将pakku.js返回的数据转换回xml
-                        // @ts-ignore
                         this.pakku_load_callback[0] = function () {
                             toXml(protoSeg.decode(new Uint8Array(this.response)).elems).then((xml) => this.respondDanmaku(xml));
                         }
                         // 处理send方法，针对实例而不再针对所有XMLHttpRequest
 <<<<<<< HEAD
                         // 处理pakku.js处于“休眠中”的情况
-                        // @ts-ignore
                         this.pakku_send = () => xhrHook.sendDanmuku(this);
 =======
                         if (this.segRequestOnlyOnce) {
@@ -1534,20 +1515,21 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
             window.$.ajaxSetup({
                 beforeSend: function (xhr) {
                     // 拦截日志上传
-                    // @ts-ignore
                     if (this.url.includes("data.bilibili.com/log/web")) xhr.abort();
 =======
             window.$.ajaxSetup({
                 beforeSend: function () {
 >>>>>>> d418687 (jsonp hook全部使用新方法)
                     // 广告区转资讯区
-                    // @ts-ignore
                     if (this.url.includes("region") && this.url.includes("rid=165")) this.url = this.url.replace("rid=165", "rid=202");
                     // 取消原创排行榜
                     if (this.url.includes("region") && this.url.includes("original=1")) this.url = this.url.replace("original=1", "original=0");
@@ -1568,11 +1550,9 @@
                     if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid')) {
 >>>>>>> 5d32692 (修复评论区点赞/点踩误伤)
                         this.url = this.url + '&mobi_app=android';
-                        // @ts-ignore
                         let jsonpCallback = this.jsonpCallback;
                         let call = window[jsonpCallback];
                         if (call) {
-                            // @ts-ignore
                             window[jsonpCallback] = function (v) {
                                 if (v && v.data && v.data.replies && v.data.mode === 1) v.data.mode = 3;
 <<<<<<< HEAD
@@ -1584,7 +1564,6 @@
                                 if (BLOD.topReply && !v.data.upper.top.replies) v.data.upper.top.replies = BLOD.topReply;
 >>>>>>> dc1272d (备份并恢复置顶评论)
                                 BLOD.reset.setReplyFloor.init(v)
-                                // @ts-ignore
                                 return call.call(this, v);
                             }
                         }
@@ -2307,16 +2286,18 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
 })()
 =======
 =======
     // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> 39d49de (remove eslint rules)
     if (window.$ && window.$.ajax) xhrHook.jsonp();
     else {
         let timer = setInterval(() => {
-            // @ts-ignore
             if (window.$) {
                 clearInterval(timer);
                 xhrHook.jsonp();

@@ -6,12 +6,15 @@
  */
 (function () {
 <<<<<<< HEAD
+<<<<<<< HEAD
     const BLOD = window.BLOD;
 <<<<<<< HEAD
 <<<<<<< HEAD
     const toast = BLOD.toast;
 =======
     // @ts-ignore
+=======
+>>>>>>> 39d49de (remove eslint rules)
     const BLOD = window.BLOD; /** @see main  */
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> 2f00fde (format with JsDoc)
