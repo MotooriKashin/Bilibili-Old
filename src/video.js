@@ -7861,12 +7861,9 @@
                                         }
                                     }, i.prototype.setDefaultQualityFor = function (e, t) {
                                         void 0 === t && (t = 0);
-                                        var n = this.getQualityIndexFromQualityNumber(t, e);
+                                        var n = this.getQualityIndexFromQualityNumber(t);
                                         try {
-                                            var r = (this.state.mpd && this.state.mpd[e]).length;
-                                            r && (n = Math.min(n, r - 1)),
-                                            n >= 0 ? (this.state.currentQualityIndex[e] = n,
-                                            this.player.setDefaultQualityFor(e, n)) : this.error({
+                                            0 <= n ? (this.state.currentQualityIndex.video = n, this.player.setDefaultQualityFor(e, n)) : this.error({
                                                 msg: "Call setDefaultQualityFor function error, quality: " + t
                                             })
                                         } catch (e) {
@@ -8051,7 +8048,6 @@
                                         var n = window.dashjs,
                                             r = this.state;
                                         this.state.defaultQuality = this.getQualityIndexFromQualityNumber(r.defaultQuality);
-                                        this.state.defaultAudioQuality = this.getQualityIndexFromQualityNumber(r.defaultAudioQuality, h.STRING.AUDIO);
                                         try {
                                             var i = n.MediaPlayer().create();
                                             this.player = i,
@@ -8279,8 +8275,6 @@
                                                     this.state.manifestInfo = l,
                                                     this.state.qualityNumberMap = d,
                                                     this.setDefaultQualityFor("video", this.state.defaultQuality)
-                                                    // 设置加载的音频质量
-                                                    this.setDefaultQualityFor("audio", this.state.defaultAudioQuality)
                                             }
                                         } catch (u) {
                                             this.error({
@@ -8521,7 +8515,6 @@
                                         videoInfoScheduleTime: 1e3
                                     }, this.state = {
                                         defaultQuality: 0,
-                                        defaultAudioQuality: 0,
                                         stableBufferTime: 60,
                                         isAutoPlay: !1,
                                         abrStrategy: h.STRING.ABR_THROUGHPUT,
@@ -52242,14 +52235,9 @@
                     configurable: !0
                 }), W.prototype.load = function () {
                     var t = this;
-                    // 获取audio[0]的清晰度id，修改自最新版播放器代码：
-                    // var s = Number(null === (r = null === (n = null === (t = null === (e = this.data.mediaDataSource) || void 0 === e ? void 0 : e.url) || void 0 === t ? void 0 : t.audio) || void 0 === n ? void 0 : n[0]) || void 0 === r ? void 0 : r.id) || 30280;
-                    var audioQuality = this.data.mediaDataSource && this.data.mediaDataSource.url && this.data.mediaDataSource.url.audio && this.data.mediaDataSource.url.audio[0];
-                    audioQuality = audioQuality ? audioQuality.id : 30280;
                     !G.isSuperQuality(this.data.quality) && this.data.quality > G.gtNeedBigWidth && (this.data.quality = G.gtNeedBigWidth),
                         this.dashPlayer = new Q.a(this.video, {
                             defaultQuality: this.data.quality,
-                            defaultAudioQuality: audioQuality,
                             isAutoPlay: !1,
                             isDynamic: !1,
                             abrStrategy: Q.a.STRING.ABR_DYNAMIC,
