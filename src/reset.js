@@ -120,15 +120,18 @@
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; BLOD.hash = []; };
+            // @ts-ignore
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
             if (config.reset.midcrc && !config.reset.danmuku && !BLOD.hash[0]) xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v1/dm/list.so", { oid: BLOD.cid }));
             setTimeout(() => {
                 if (config.reset.viewbofqi) BLOD.bofqiToView();
                 if (config.reset.widescreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff")) {
+                    // @ts-ignore
                     document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen").click();
                 }
                 if (config.reset.danmakuoff && !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off")) {
                     if (document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")) {
+                        // @ts-ignore
                         document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click();
                     }
                 }
@@ -211,6 +214,7 @@
          */
         renameCommentJump: () => {
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
+                // @ts-ignore
                 if (d.href && !d.href.includes(d.innerText)) {
                     // @ts-ignore
                     d = d.href.split("/");
@@ -296,7 +300,7 @@
                         onwer = node.firstChild.insertBefore(onwer, node.firstChild.firstChild);
                         data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: mid })));
                         onwer.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" data-usercard-mid="' +
-                            mid + ' class="reply-face"><img src="' +
+                            mid + '" class="reply-face"><img src="' +
                             data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
                             mid + '" href="//space.bilibili.com/' +
                             mid + '" target="_blank" class="' +
@@ -409,6 +413,7 @@
                     try {
                         move.onclick = async () => {
                             // 没有点赞过绑定点赞点击事件
+                            // @ts-ignore
                             if (!BLOD.uid) return document.getElementsByClassName("c-icon-move")[0].click();
                             // 构造并请求点赞表单
                             let msg = "aid=" + BLOD.aid + "&like=1&csrf=" + BLOD.getCookies().bili_jct;
@@ -474,6 +479,7 @@
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
                 if (BLOD.big) toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday);
                 debug.log("注册时间", data.card.name, jointime);
+                // @ts-ignore
                 // @ts-ignore
                 // @ts-ignore
                 // @ts-ignore
@@ -1025,6 +1031,7 @@
             arc_toolbar_report.children[3].title = "投硬币枚数" + data.stat.coin;
             arc_toolbar_report.children[3].innerHTML = '<div class="btn-item"><i class="icon-move c-icon-moved" style="display: none;"></i><b class="icon-move c-icon-move"></b><span class="t">硬币</span><span class="num">' + BLOD.unitFormat(data.stat.coin) + '</span></div>';
             document.getElementById("v_tag").children[0].setAttribute("hidden", "hidden");
+            // @ts-ignore
             document.getElementById("v_desc").children[1].innerText = data.desc;
             // @ts-ignore
             new window.bbComment(".comment", window.aid, 1, window.UserStatus.userInfo, "");
