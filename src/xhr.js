@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const BLOD = window.BLOD; /** @see main  */
     const toast = BLOD.toast; /** @see debug */
 
@@ -93,13 +92,9 @@
             }
         }
         let method = makeExports("true");
-        // @ts-ignore
         method.true = makeExports("true");
-        // @ts-ignore
         method.false = makeExports("false");
-        // @ts-ignore
         method.GM = makeExports("GM");
-        // @ts-ignore
         method.post = makeExports("post");
         return method;
     }

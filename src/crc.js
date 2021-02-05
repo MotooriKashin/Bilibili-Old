@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const root = window.BLOD || window; /** @see main */
 
     /**

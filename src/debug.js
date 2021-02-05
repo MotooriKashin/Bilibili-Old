@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const BLOD = window.BLOD; /** @see main */
 
     class Debug {
@@ -49,15 +48,10 @@
             }
         }
         let method = makeExports("log");
-        // @ts-ignore
         method.log = makeExports("log");
-        // @ts-ignore
         method.error = makeExports("error");
-        // @ts-ignore
         method.warn = makeExports("warn");
-        // @ts-ignore
         method.debug = makeExports("debug");
-        // @ts-ignore
         method.msg = makeExports("msg");
         return method;
     }
@@ -154,13 +148,9 @@
             }
         }
         let method = makeExports("info");
-        // @ts-ignore
         method.info = makeExports("info");
-        // @ts-ignore
         method.error = makeExports("error");
-        // @ts-ignore
         method.success = makeExports("success");
-        // @ts-ignore
         method.warning = makeExports("warning");
         return method;
     }

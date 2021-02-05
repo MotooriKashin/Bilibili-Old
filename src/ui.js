@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const BLOD = window.BLOD; /** @see main  */
     const toast = BLOD.toast; /** @see debug */
 
@@ -47,7 +46,6 @@
             table.setAttribute("id", "ui-table");
             table.innerHTML = '<span style="color : rgb(0,0,0);font-size : 14px;">BilibiliOld 设置</span><span style="color : blue;float : right;font-size : 12px;">恢复默认</span>';
             document.body.appendChild(table);
-            // @ts-ignore
             table.children[1].onclick = () => {
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
@@ -88,9 +86,7 @@
             }
             setTable.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
             setTable.children[0].innerText = name[1];
-            // @ts-ignore
             setTable.children[1].onclick = () => {
-                // @ts-ignore
                 if (setTable.children[1].checked) {
                     if (key in config.rewrite) {
                         config.rewrite[key] = 1;
@@ -112,7 +108,6 @@
                 }
                 if (key == "accesskey") BLOD.reset.accesskey();
             }
-            // @ts-ignore
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
         }

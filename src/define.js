@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const BLOD = window.BLOD; /** @see main */
 
     class Define {
@@ -35,7 +34,6 @@
             let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
             while (dex > 1) {
                 if (size >= vor) {
-                    // @ts-ignore
                     size = (size / dex).toFixed(2);
                     break;
                 }
@@ -54,7 +52,6 @@
             let unit = ["", "万", "亿"], i = unit.length - 1, dex = 10000 ** i;
             while (dex > 1) {
                 if (num >= dex) {
-                    // @ts-ignore
                     num = (num / dex).toFixed(1);
                     break;
                 }
@@ -119,7 +116,6 @@
             } else {
                 arg = (arg ^ xor) + add;
                 let r = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
-                // @ts-ignore
                 for (let i = 0; i < 6; i++) r[s[i]] = table[parseInt(arg / 58 ** i) % 58];
                 return r.join("");
             }
@@ -150,7 +146,6 @@
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
             url = url.split("?")[0];
             delete obj.sign;
-            // @ts-ignore
             for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
             obj = Object.assign(obj, { appkey: key.split(":")[0] });
             Object.keys(obj).sort().map(key => {
@@ -188,7 +183,6 @@
         urlObj(url) {
             url = url || "";
             url = url.split('#')[0];
-            // @ts-ignore
             url = url.split('?')[1] ? url.split('?')[1].split('&') : undefined;
             let obj = {};
             if (url) for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
@@ -206,6 +200,20 @@
                 return pre;
             }, {});
             return obj;
+        }
+        /**
+         * 添加新的DOM节点
+         * @param {string} type 节点tag名称
+         * @param {Object} arb 节点属性对象
+         * @param {boolean} [fir] 是否在body中置顶
+         * @param {HTMLElement} [rep] 被替换的节点：将忽略fir参数
+         */
+        addElement(type, arb, fir, rep) {
+            arb = arb || {};
+            let emt = document.createElement(type);
+            for (let key in arb) emt.setAttribute(key, arb[key]);
+            if (rep) return rep.replaceWith(emt);
+            fir ? document.body.insertBefore(emt, document.body.firstChild) : document.body.appendChild(emt);
         }
         /**
          * 添加css样式到<head>标签底部
@@ -233,11 +241,8 @@
          */
         jsonCheck(data) {
             data = JSON.parse(data);
-            // @ts-ignore
             if ("code" in data && data.code !== 0) {
-                // @ts-ignore
                 let msg = data.msg || data.message || "";
-                // @ts-ignore
                 throw [data.code, msg, data]
             }
             return data;
@@ -251,7 +256,6 @@
             var sum = 0;
             do {
                 sum += node.offsetTop;
-                // @ts-ignore
                 node = node.offsetParent;
             }
             while (node);
@@ -291,6 +295,7 @@
     BLOD.objUrl = makeExports("objUrl");
     BLOD.urlObj = makeExports("urlObj");
     BLOD.getCookies = makeExports("getCookies");
+    BLOD.addElement = makeExports("addElement");
     BLOD.addCss = makeExports("addCss");
     BLOD.jsonCheck = makeExports("jsonCheck");
     BLOD.getTotalTop = makeExports("getTotalTop");

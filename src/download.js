@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    // @ts-ignore
     const BLOD = window.BLOD; /** @see main */
     const toast = BLOD.toast; /** @see debug */
 
@@ -23,7 +22,6 @@
             li.innerHTML = '<a class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
             node.firstChild.appendChild(li);
-            // @ts-ignore
             li.firstChild.onclick = () => this.setTable();
         }
         /**
@@ -185,9 +183,7 @@
          * @param {number} [qn] 画质参数
          */
         async playurl(type, qn) {
-            // @ts-ignore
             BLOD.aid = BLOD.aid || window.aid;
-            // @ts-ignore
             BLOD.cid = BLOD.cid || window.cid;
             qn = qn || 120;
             type = type || "mp4";
@@ -195,18 +191,14 @@
             switch (type) {
                 case 'dash': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80 });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80 });
-                    // @ts-ignore
                     break;
                 case 'flv': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
-                    // @ts-ignore
                     break;
                 case 'off': return BLOD.urlSign("https://interface.bilibili.com/v2/playurl", { cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' });
-                    // @ts-ignore
                     break;
                 case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
                     return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
-                    // @ts-ignore
                     break;
             }
         }
@@ -257,7 +249,6 @@
             }
         }
         let method = makeExports("setTable");
-        // @ts-ignore
         method.init = makeExports("init");
         return method;
     }
