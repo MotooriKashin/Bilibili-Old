@@ -1,11 +1,13 @@
-/*
- * @module "initialstate.js"
- * @description initialstate数据配置，以iniState对象挂载在BLOD下
+/**
+ * @module initialstate
+ * @description __INITIAL_STATE__数据配置
+ * @author Motoori Kashin
+ * @license MIT
  */
-
 (function () {
-    const BLOD = window.BLOD;
-    const toast = BLOD.toast;
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main  */
+    const toast = BLOD.toast; /** @see debug */
 
     class IniState {
         constructor() {
@@ -156,6 +158,10 @@
                 }
             }
         }
+        /**
+         * 构造av页数据，使用B站API
+         * @param {*} data 远程返回的json字符串
+         */
         av(data) {
             try {
                 data = BLOD.jsonCheck(data).data;
@@ -172,6 +178,10 @@
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
+        /**
+         * 构造av页数据，使用Biliplus源
+         * @param {*} data 远程返回的json字符串
+         */
         avPlus(data) {
             try {
                 data = BLOD.jsonCheck(data);
@@ -210,6 +220,11 @@
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
+        /**
+         * 构造bangumi数据
+         * @param {*} data 远程返回的json字符串
+         * @param {number} [epId] epid数据
+         */
         bangumi(data, epId) {
             try {
                 // https://bangumi.bilibili.com/view/web_api/season
@@ -262,6 +277,10 @@
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
+        /**
+         * 构造主页数据
+         * @param {*} data 远程返回的json字符串
+         */
         index(data) {
             try {
                 data = JSON.parse(data);

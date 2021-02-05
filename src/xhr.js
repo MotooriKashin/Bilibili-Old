@@ -1,17 +1,23 @@
-/*
- * @module "xhr.js"
- * @description xhr封装，以xhr对象挂载在BLOD下
- * @method xhr/xhr.true [异步请求] || xhr.false [同步请求] || xhr.GM [跨域请求] || xhr.post [表单请求]
+/**
+ * @module xhr
+ * @description XMLHttpRequest封装
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD;
-    const toast = BLOD.toast;
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main  */
+    const toast = BLOD.toast; /** @see debug */
 
     class Xhr {
         constructor() {
             BLOD.GMxhrLog = [];
             console.debug('import module "xhr.js"');
         }
+        /**
+         * 同步链接
+         * @param {string} url 
+         */
         false(url) {
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, false);
@@ -19,6 +25,10 @@
             xhr.send(null);
             return xhr.responseText;
         }
+        /**
+         * 异步链接
+         * @param {string} url 
+         */
         true(url) {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
@@ -32,6 +42,10 @@
                 xhr.send();
             });
         }
+        /**
+         * 跨域链接
+         * @param {string} url 
+         */
         GM(url) {
             return new Promise((resolve, reject) => {
                 BLOD.xmlhttpRequest({
@@ -48,6 +62,12 @@
                 });
             })
         }
+        /**
+         * post方法
+         * @param {string} url 
+         * @param {*} header 
+         * @param {*} data 
+         */
         post(url, header, data) {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
@@ -67,15 +87,19 @@
 
     const exports = () => {
         let xhr = new Xhr();
-        function makeExports(type) {
-            return function (...msg) {
-                return xhr[type](...msg);
+        let makeExports = (type) => {
+            return (...arg) => {
+                return xhr[type](...arg);
             }
         }
         let method = makeExports("true");
+        // @ts-ignore
         method.true = makeExports("true");
+        // @ts-ignore
         method.false = makeExports("false");
+        // @ts-ignore
         method.GM = makeExports("GM");
+        // @ts-ignore
         method.post = makeExports("post");
         return method;
     }

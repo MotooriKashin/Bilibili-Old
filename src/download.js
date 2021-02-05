@@ -1,24 +1,34 @@
-/*
- * @module "download.js"
- * @description 下载组件，按需加载，挂载在BLOD下
- * @method download.init [添加播放器右键菜单] || download [呼出下载面板]
+/**
+ * @module download
+ * @description 下载模块：获取下载链接，绘制下载面板
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD;
-    const toast = BLOD.toast;
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main */
+    const toast = BLOD.toast; /** @see debug */
 
     class Download {
         constructor() {
             console.debug('import module "download.js"')
         }
+        /**
+         * 添加播放器右键下载菜单
+         * @param {HTMLElement} node 右键菜单节点
+         */
         init(node) {
             if (!BLOD.config.reset.download) return;
             let li = document.createElement("li");
             li.innerHTML = '<a class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
             node.firstChild.appendChild(li);
+            // @ts-ignore
             li.firstChild.onclick = () => this.setTable();
         }
+        /**
+         * 呼出下载面板
+         */
         async setTable() {
             toast("正在获取视频下载地址...");
             let qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
@@ -73,6 +83,12 @@
                 }, 1000)
             }
         }
+        /**
+         * 读取远程数据
+         * @param {Object[]} path 远程函数的json数组，第一个为mp4
+         * @param {Object} qua 视频画质对照表
+         * @param {Object} bps 音频音质对照表
+         */
         quee(path, qua, bps) {
             if (path[0] && path[0].durl) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
@@ -86,6 +102,12 @@
                 }
             }
         }
+        /**
+         * 读取DASH数据
+         * @param {Object} path 原始json
+         * @param {Object} qua 视频画质对照表
+         * @param {Object} bps 音频音质对照表
+         */
         dash(path, qua, bps) {
             if (!path.dash) return;
             BLOD.mdf.dash = BLOD.mdf.dash || {};
@@ -109,6 +131,11 @@
                 for (let i = 0; i < BLOD.mdf.dash.aac.length; i++) if (BLOD.mdf.dash.aac[i][0] in bps) BLOD.mdf.dash.aac[i][0] = bps[BLOD.mdf.dash.aac[i][0]];
             }
         }
+        /**
+         * 读取flv数据，可能包含mp4
+         * @param {Object} path 原始json
+         * @param {Object} qua 画质对照表
+         */
         durl(path, qua) {
             if (!path.durl) return;
             if (path.durl[0] && path.durl[0].url.includes("mp4?")) {
@@ -119,6 +146,9 @@
                 for (let i = 0; i < path.durl.length; i++) BLOD.mdf.flv.push([qua[path.durl[i].url.match(/[0-9]+\.flv/)[0].split(".")[0]], path.durl[i].url.replace("http:", ""), BLOD.sizeFormat(path.durl[i].size), ".flv"]);
             }
         }
+        /**
+         * 读取其他数据：如弹幕、字幕、封面...
+         */
         other() {
             if (!BLOD.config.reset.dlother) return;
             BLOD.mdf.xml = [];
@@ -136,6 +166,10 @@
                 if (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.subtitle && BLOD.__INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < BLOD.__INITIAL_STATE__.videoData.subtitle.list.length; i++) BLOD.mdf.xml.push([BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), "--------", ".json"]);
             }
         }
+        /**
+         * 获取在线数据
+         * @param  {...any} arg 直接传递给this.playurl
+         */
         async geturl(...arg) {
             let url = await this.playurl(...arg);
             try {
@@ -145,8 +179,15 @@
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("下载拉取", ...e); }
         }
+        /**
+         * 构造在线数据url
+         * @param {string} [type = mp4 | flv | dash | off] 视频格式
+         * @param {number} [qn] 画质参数
+         */
         async playurl(type, qn) {
+            // @ts-ignore
             BLOD.aid = BLOD.aid || window.aid;
+            // @ts-ignore
             BLOD.cid = BLOD.cid || window.cid;
             qn = qn || 120;
             type = type || "mp4";
@@ -154,17 +195,29 @@
             switch (type) {
                 case 'dash': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80 });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80 });
+                    // @ts-ignore
                     break;
                 case 'flv': if (BLOD.pgc) return BLOD.objUrl("https://api.bilibili.com/pgc/player/web/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
                 else return BLOD.objUrl("https://api.bilibili.com/x/player/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json' });
+                    // @ts-ignore
                     break;
                 case 'off': return BLOD.urlSign("https://interface.bilibili.com/v2/playurl", { cid: BLOD.cid, otype: 'json', qn: qn, quality: qn, type: '' });
+                    // @ts-ignore
                     break;
                 case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
                     return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
+                    // @ts-ignore
                     break;
             }
         }
+        /**
+         * 绘制下载面板项目
+         * @param {HTMLElement} top 下载面板节点
+         * @param {object} item 文件类型原始数据
+         * @param {string} name 文件类型显示名称
+         * @param {string} type 文件类型：className
+         * @param {string} [quatily] 指定文件档次：影响该文件样式颜色
+         */
         addBox(top, item, name, type, quatily) {
             let qua = quatily;
             let box = document.createElement("div");
@@ -198,12 +251,13 @@
 
     const exports = () => {
         let download = new Download();
-        function makeExports(type) {
-            return function (...msg) {
+        let makeExports = (type) => {
+            return (...msg) => {
                 return download[type](...msg);
             }
         }
         let method = makeExports("setTable");
+        // @ts-ignore
         method.init = makeExports("init");
         return method;
     }

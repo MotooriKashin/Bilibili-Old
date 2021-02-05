@@ -1,15 +1,12 @@
-/*
- * @module "debug.js"
- * @description 调试模块，以debug对象挂在在BLOD下，基本同console，其中debug.msg发送旧版播放器通知框
- * @method debug/debug.log || debug.error || debug.warn || debug.debug || debug.msg
- * --------------------------------------------------------------------------------
- * 
- * @description 使用原生JavaScript实现[toastr]的功能
- * @url https://github.com/CodeSeven/toastr/ MIT license
- * @method toast/toast.info || toast.success || toast.warning || toast.error
+/**
+ * @module debug
+ * @description 调试模块：封装了console和toastr
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD;
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main */
 
     class Debug {
         constructor() {
@@ -46,22 +43,30 @@
 
     const debug = () => {
         let debug = new Debug();
-        function makeExports(type) {
-            return function (...msg) {
+        let makeExports = (type) => {
+            return (...msg) => {
                 return debug[type](...msg);
             }
         }
         let method = makeExports("log");
+        // @ts-ignore
         method.log = makeExports("log");
+        // @ts-ignore
         method.error = makeExports("error");
+        // @ts-ignore
         method.warn = makeExports("warn");
+        // @ts-ignore
         method.debug = makeExports("debug");
+        // @ts-ignore
         method.msg = makeExports("msg");
         return method;
     }
     BLOD.debug = debug();
 
-    // @url https://github.com/CodeSeven/toastr/
+    /**
+     * @see toastr {@link https://github.com/CodeSeven/toastr/}
+     * @license BSD-3-Clause
+     */
     class Toast {
         constructor() {
             BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
@@ -72,6 +77,10 @@
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
         }
+        /**
+         * @param {string} [type = info | success | warning | error] 通知类型
+         * @param  {...string} msg 通知内容
+         */
         show(type, ...msg) {
             if (!document.body) {
                 if (this.check) return;
@@ -129,25 +138,29 @@
 
     const toast = () => {
         let toast = new Toast();
-        function makeExports(type) {
-            return function (...msg) {
+        let makeExports = (type) => {
+            return (...arg) => {
                 switch (type) {
-                    case "info": BLOD.debug.debug(...msg);
+                    case "info": BLOD.debug.debug(...arg);
                         break;
-                    case "error": BLOD.debug.error(...msg);
+                    case "error": BLOD.debug.error(...arg);
                         break;
-                    case "success": BLOD.debug(...msg);
+                    case "success": BLOD.debug(...arg);
                         break;
-                    case "warning": BLOD.debug.warn(...msg);
+                    case "warning": BLOD.debug.warn(...arg);
                         break;
                 }
-                return toast.show(type, ...msg);
+                return toast.show(type, ...arg);
             }
         }
         let method = makeExports("info");
+        // @ts-ignore
         method.info = makeExports("info");
+        // @ts-ignore
         method.error = makeExports("error");
+        // @ts-ignore
         method.success = makeExports("success");
+        // @ts-ignore
         method.warning = makeExports("warning");
         return method;
     }

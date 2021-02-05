@@ -1,15 +1,22 @@
-/*
- * @module "ui.js"
- * @description 设置界面模块，只在顶层页面启用，独立生效，不暴露任何内容
+/**
+ * @module ui
+ * @description 设置UI绘制
+ * @author Motoori Kashin
+ * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD;
-    const toast = BLOD.toast;
+    // @ts-ignore
+    const BLOD = window.BLOD; /** @see main  */
+    const toast = BLOD.toast; /** @see debug */
 
     class Ui {
         constructor() {
             console.debug('import module "ui.js"');
         }
+        /**
+         * 绘制设置入口
+         * @param {*} [timer] 相当于变量声明
+         */
         init(timer) {
             let face = document.createElement("div");
             let attribute = {
@@ -29,6 +36,10 @@
                 setTimeout(() => { document.body ? document.body.appendChild(face) : timer() }, 100);
             })();
         }
+        /**
+         * 绘制设置面板
+         * @param {*} timer 相当于变量声明
+         */
         table(timer) {
             let table = document.createElement("div");
             let config = BLOD.config;
@@ -36,6 +47,7 @@
             table.setAttribute("id", "ui-table");
             table.innerHTML = '<span style="color : rgb(0,0,0);font-size : 14px;">BilibiliOld 设置</span><span style="color : blue;float : right;font-size : 12px;">恢复默认</span>';
             document.body.appendChild(table);
+            // @ts-ignore
             table.children[1].onclick = () => {
                 for (let key in BLOD.defaultConfig.rewrite) if (key in config.rewrite) config.rewrite[key] = BLOD.defaultConfig.rewrite[key][0];
                 for (let key in BLOD.defaultConfig.reset) if (key in config.reset) config.reset[key] = BLOD.defaultConfig.reset[key][0];
@@ -55,6 +67,13 @@
                 }, 500);
             }
         }
+        /**
+         * 绘制设置选项
+         * @param {HTMLElement} table 设置面板节点
+         * @param {Array} name 设置数据数组
+         * @param {number} check 启用与否
+         * @param {string} key 设置主键名称
+         */
         setTable(table, name, check, key) {
             let setTable = document.createElement("div");
             let config = BLOD.config;
@@ -69,7 +88,9 @@
             }
             setTable.onmouseout = () => document.getElementById("ui-state") ? document.getElementById("ui-state").remove() : "";
             setTable.children[0].innerText = name[1];
+            // @ts-ignore
             setTable.children[1].onclick = () => {
+                // @ts-ignore
                 if (setTable.children[1].checked) {
                     if (key in config.rewrite) {
                         config.rewrite[key] = 1;
@@ -91,6 +112,7 @@
                 }
                 if (key == "accesskey") BLOD.reset.accesskey();
             }
+            // @ts-ignore
             if (check) setTable.children[1].checked = true;
             table.appendChild(setTable);
         }
