@@ -15,11 +15,11 @@
         getVariable: () => {
             function read(arr) {
                 switch (arr[0]) {
-                    case "aid": BLOD.aid = BLOD.aid = arr[1];
+                    case "aid": BLOD.aid = arr[1];
                         break;
-                    case "cid": BLOD.cid = BLOD.cid = arr[1];
+                    case "cid": BLOD.cid = arr[1];
                         break;
-                    case "__playinfo__": BLOD.__playinfo__ = BLOD.__playinfo__ || arr[1];
+                    case "__playinfo__": BLOD.__playinfo__ = arr[1];
                         break;
                 }
             }
