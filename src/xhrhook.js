@@ -1127,18 +1127,20 @@
                             } catch (e) {
                                 try {
                                     e = Array.isArray(e) ? e : [e];
-                                    toast.error("尝试拉取Thailand链接...", "需要人在当地！");
+                                    toast.error("代理服务器出错！", ...e);
+                                    toast("尝试拉取Thailand链接...");
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
                                     let reBuildPlayerurl = new ReBuildPlayerurl();
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
                                     e = Array.isArray(e) ? e : [e];
-                                    throw toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
+                                    throw toast.error("拉取Thailand链接失败！", ...e);
                                 }
                             }
                         }
                         response = { "code": 0, "message": "success", "result": response };
                     }
+                    else if (BLOD.vip) response = BLOD.free && (await BLOD.free());
                 }
                 catch (e) {
                     response = { "code": -404, "message": e, "data": null };
@@ -1154,8 +1156,7 @@
                 if (response.code !== 0) throw response.message;
                 BLOD.__playinfo__ = response;
                 toast.success("解除限制！", "aid=" + BLOD.aid, "cid=" + BLOD.cid);
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
         }
         /**
          * 监听playurl
