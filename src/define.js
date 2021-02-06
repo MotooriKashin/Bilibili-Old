@@ -141,7 +141,9 @@
                 '244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36',
                 '16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d', // blink
                 'c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726', // thuwp
-                '2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7' // thailand
+                '2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7', // thailand
+                '40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.', // app stream
+                'c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5', // thailand stream
             ][id], key = "";
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
             url = url.split("?")[0];
