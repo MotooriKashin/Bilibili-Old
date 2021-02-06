@@ -269,7 +269,10 @@
                         e.data.dashSymbol = true;
                         e.data.p = 1;
                         e.data.pre_ad = "";
+<<<<<<< HEAD
                         history.replaceState(null, null, BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": e.data.aid, "cid": e.data.cid }));
+=======
+>>>>>>> e878ee3 (Update rewrite.js)
                         window.player = new window.BilibiliPlayer(e.data);
                     }
                 })
@@ -602,6 +605,8 @@
                     })
                     e[i].onclick = () => {
                         bfq = document.querySelector("#bofqi");
+                        bfq && toast(item.title, "av" + item.aid, "UP主：" + item.author.name);
+                        return bfq.contentWindow.postMessage({ aid: item.aid, cid: item.cid });
                         bofqi = document.createElement('iframe');
                         bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
                         bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
