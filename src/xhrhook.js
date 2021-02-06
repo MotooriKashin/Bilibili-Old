@@ -772,7 +772,7 @@
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
-            let total = player.getDuration() / pageSize + 1;
+            let total = (player.getDuration() - 1) / pageSize + 1;
             let allrequset = [];
             let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid;
             for (let index = 1; index <= total; index++) {
