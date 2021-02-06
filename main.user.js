@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.2.8
+// @version      4.2.9
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -12,11 +12,11 @@
 // @require      https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @resource     toast https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/toastr.min.css
-// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/av.html
-// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/watchlater.html
-// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/bangumi.html
-// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/cinema.html
-// @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/playlist.html
+// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/av.html
+// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/watchlater.html
+// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/bangumi.html
+// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/cinema.html
+// @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.html
 // @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/playlistdetail.html
 // @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/index.html
 // @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/ranking.html
@@ -29,10 +29,10 @@
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/xhr.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/define.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e878ee347eb1dfd5cf6c05eb59aa5cadec2ad076/src/rewrite.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b490b1955b635c682401c963fe0b59d156a6c4cd/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/xhrhook.js
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@267bc9cd6fd8817688ec9ea44732ca9d2750716b/src/config.json
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
