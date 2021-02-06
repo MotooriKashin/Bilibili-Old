@@ -140,6 +140,16 @@
                 if (BLOD.path[4].includes("3521416") && BLOD.path[4].includes("6041635")) {
                     location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": 3521416, "cid": 192446449 }));
                 }
+                window.addEventListener('message', (e) => {
+                    if (e.data.cid) {
+                        window.__playinfo__ = undefined;
+                        e.data.as_wide = 1;
+                        e.data.dashSymbol = true;
+                        e.data.p = 1;
+                        e.data.pre_ad = "";
+                        window.player = new window.BilibiliPlayer(e.data);
+                    }
+                })
             }
             try {
 <<<<<<< HEAD
@@ -305,7 +315,47 @@
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("ranking")));
             }
+<<<<<<< HEAD
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); BLOD.debug.error("框架·排行", ...e); }
+=======
+            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+        }
+        festival() {
+            try {
+                if (!BLOD.config.rewrite.frame) return;
+                BLOD.path.mhead = "festival";
+                if (!window.__INITIAL_STATE__) return setTimeout(() => this.festival(), 100);
+                let ini = [];
+                window.__INITIAL_STATE__.videoSections.forEach(d => {
+                    d.episodes.forEach(d => {
+                        ini.push(d);
+                    });
+                });
+                let bfq = document.querySelector("#bilibili-player");
+                let bofqi = document.createElement('iframe');
+                bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.__INITIAL_STATE__.videoInfo.aid}&cid=${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                bofqi.setAttribute("id", "bofqi");
+                bfq.replaceWith(bofqi);
+                let epi = document.querySelectorAll('.video-episode-card__info-title');
+                epi.forEach((d, i, e) => {
+                    let item = d.innerText;
+                    ini.forEach(d => {
+                        if (d.title === item) item = d;
+                    })
+                    e[i].onclick = () => {
+                        bfq = document.querySelector("#bofqi");
+                        bfq && toast(item.title, "av" + item.aid, "UP主：" + item.author.name);
+                        return bfq.contentWindow.postMessage({ aid: item.aid, cid: item.cid });
+                        bofqi = document.createElement('iframe');
+                        bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                        bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                        bofqi.setAttribute("id", "bofqi");
+                        bfq.replaceWith(bofqi);
+                    }
+                })
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
+>>>>>>> e878ee3 (Update rewrite.js)
         }
     }
 
