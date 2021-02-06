@@ -2016,6 +2016,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     debug.error("limit", ...e);
                                     toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
 =======
@@ -2027,6 +2028,10 @@
 >>>>>>> efcabf8 (Update xhrhook.js)
                                     toast.error("尝试拉取Thailand链接...", "需要人在当地！");
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+                                    toast.error("代理服务器出错！", ...e);
+                                    toast("尝试拉取Thailand链接...");
+>>>>>>> 8e2de3c (remove bangumi bofqi style)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
 =======
                                     toast.error("代理服务器出错！", ...e);
@@ -2038,6 +2043,7 @@
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
                                     e = Array.isArray(e) ? e : [e];
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2053,6 +2059,9 @@
 =======
                                     throw toast.error("拉取Thailand链接失败！", "无效Thailand代理服务器 ಥ_ಥ");
 >>>>>>> efcabf8 (Update xhrhook.js)
+=======
+                                    throw toast.error("拉取Thailand链接失败！", ...e);
+>>>>>>> 8e2de3c (remove bangumi bofqi style)
                                 }
 =======
                         if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
@@ -2087,6 +2096,7 @@
                         }
                         response = { "code": 0, "message": "success", "result": response };
                     }
+                    else if (BLOD.vip) response = BLOD.free && (await BLOD.free());
                 }
 <<<<<<< HEAD
                 catch (e) {
@@ -2108,6 +2118,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
                 toast.success("解除限制！", "aid=" + BLOD.aid, "cid=" + BLOD.cid);
+<<<<<<< HEAD
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
@@ -2248,6 +2259,9 @@
 =======
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
+>>>>>>> 8e2de3c (remove bangumi bofqi style)
         }
 <<<<<<< HEAD
 >>>>>>> 65c15a5 (重构泰国番剧playurl)

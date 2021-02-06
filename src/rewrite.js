@@ -214,6 +214,7 @@
                 }
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
 >>>>>>> b1d2ae7 (Update rewrite.js)
 =======
@@ -245,6 +246,10 @@
 >>>>>>> 9d47e69 (修复专栏评论区头像框)
 =======
 >>>>>>> 5ed92f5 (change css method)
+=======
+                if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+                else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
+>>>>>>> 8e2de3c (remove bangumi bofqi style)
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
 =======
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : "";
