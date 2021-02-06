@@ -86,6 +86,16 @@
                 if (BLOD.path[4].includes("3521416") && BLOD.path[4].includes("6041635")) {
                     location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": 3521416, "cid": 192446449 }));
                 }
+                window.addEventListener('message', (e) => {
+                    if (e.data.cid) {
+                        window.__playinfo__ = undefined;
+                        e.data.as_wide = 1;
+                        e.data.dashSymbol = true;
+                        e.data.p = 1;
+                        e.data.pre_ad = "";
+                        window.player = new window.BilibiliPlayer(e.data);
+                    }
+                })
             }
             try {
                 if (!BLOD.config.rewrite.frame) return;
@@ -218,6 +228,8 @@
                     })
                     e[i].onclick = () => {
                         bfq = document.querySelector("#bofqi");
+                        bfq && toast(item.title, "av" + item.aid, "UP主：" + item.author.name);
+                        return bfq.contentWindow.postMessage({ aid: item.aid, cid: item.cid });
                         bofqi = document.createElement('iframe');
                         bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
                         bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
