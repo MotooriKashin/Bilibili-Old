@@ -5,7 +5,7 @@
  * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD; /** @see main  */
+    const BLOD = window.BLOD; /** @see main*/
     const toast = BLOD.toast; /** @see debug */
 
     class Write {
@@ -36,6 +36,8 @@
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("av")));
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                if (BLOD.config.reset.playerStyle) BLOD.addCss("#bofqi .player {width: 980px;height: 620px;display: block;}@media screen and (min-width:1400px) {#bofqi .player {width: 1294px;height: 792px}#__bofqi {min-height: 760px;}.bili-wrapper {width: 1294px;}.bgray-btn-wrap {margin-left: 647px !important;}.fixed-nav-m {margin-left: 657px;}.bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}}@media screen and (min-width:2800px) {#bofqi .player {width: 1934px;height: 1152px}#__bofqi {min-height: 1120px;}.bili-wrapper {width: 1934px;}.bgray-btn-wrap {margin-left: 967px !important;}.fixed-nav-m {margin-left: 977px;}.bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}}.video-info-m .number .like b,.video-info-m .number .like i {background: url(//static.hdslb.com/images/base/icons.png);}");
+                else BLOD.addCss("#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background : url(//static.hdslb.com/images/base/icons.png);}");
                 BLOD.reset.fixSort.video();
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
@@ -49,6 +51,8 @@
                 BLOD.reset.playerSetting();
                 BLOD.path.name = "watchlater";
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("watchlater")));
+                if (BLOD.config.reset.playerStyle) BLOD.addCss("#bofqi .player {width: 980px;height: 620px;display: block;}@media screen and (min-width:1400px) {#bofqi .player {width: 1294px;height: 792px}#__bofqi {min-height: 760px;}.bili-wrapper {width: 1294px;}.bgray-btn-wrap {margin-left: 647px !important;}.fixed-nav-m {margin-left: 657px;}.bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}}@media screen and (min-width:2800px) {#bofqi .player {width: 1934px;height: 1152px}#__bofqi {min-height: 1120px;}.bili-wrapper {width: 1934px;}.bgray-btn-wrap {margin-left: 967px !important;}.fixed-nav-m {margin-left: 977px;}.bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}}");
+                else BLOD.addCss("#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}}");
                 BLOD.reset.setLike();
                 BLOD.reset.fixSort.watchlater();
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
@@ -74,8 +78,14 @@
                     BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined;
                 }
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
-                if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
-                else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
+                if (!BLOD.__INITIAL_STATE__.special) {
+                    BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
+                    if (BLOD.config.reset.playerStyle) BLOD.addCss("@media screen and (min-width:1400px) {#bofqi .player {height: 792px}#app .bangumi-player {width: 1294px;height: 792px;}#app .bangumi-player.mini-player {width: 320px;height: 270px;}#app #bangumi_player {min-height: 792px;}#app #bangumi_media {width: 1294px;}#app #bangumi_detail {width: 1294px;}#app .bangumi-header {width: 1294px;}#app .other-wrapper {width: 1294px;}.bili-header-m .bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}.bgray-btn-wrap {margin-left: 647px !important;}.bangumi-nav-right {margin-left: 72px;}}@media screen and (min-width:2800px) {#bofqi .player {height: 1152px}#app .bangumi-player {width: 1934px;height: 1152px;}#app .bangumi-player.mini-player {width: 320px;height: 270px;}#app #bangumi_player {min-height: 1152px;}#app #bangumi_media {width: 1934px;}#app #bangumi_detail {width: 1934px;}#app .other-wrapper {width: 1934px;}#app .bangumi-header {width: 1934px;}.bili-header-m .bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}.bgray-btn-wrap {margin-left: 967px !important;}.bangumi-nav-right {margin-left: 392px;}}");
+                }
+                else {
+                    BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
+                    if (BLOD.config.reset.playerStyle) BLOD.addCss("@media screen and (min-width:1400px) {#bofqi .player {height: 792px}#app .bangumi-player {width: 1294px;height: 792px;}#app .bangumi-player.mini-player {width: 320px;height: 270px;}#app #bangumi_player {min-height: 792px;background-position: center 0 !important;background-size: cover !important;}#app #bangumi_media {width: 1294px;}#app #bangumi_detail {width: 1294px;}#app .bangumi-header {width: 1294px;}#app .other-wrapper {width: 1294px;}.bili-header-m .bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}.bgray-btn-wrap {margin-left: 647px !important;}.bangumi-nav-right {margin-left: 72px;}}@media screen and (min-width:2800px) {#bofqi .player {height: 1152px}#app .bangumi-player {width: 1934px;height: 1152px;}#app .bangumi-player.mini-player {width: 320px;height: 270px;}#app #bangumi_player {min-height: 1152px;background-position: center 0 !important;background-size: cover !important;}#app #bangumi_media {width: 1934px;}#app #bangumi_detail {width: 1934px;}#app .other-wrapper {width: 1934px;}#app .bangumi-header {width: 1934px;}.bili-header-m .bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}.bgray-btn-wrap {margin-left: 967px !important;}.bangumi-nav-right {margin-left: 392px;}}");
+                }
                 document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
 
@@ -108,8 +118,7 @@
                     BLOD.aid = 1 * obj.aid || (obj.aid ? BLOD.abv(obj.aid) : undefined) || (obj.bvid ? BLOD.abv(obj.bvid) : undefined);
                     BLOD.cid = obj.cid || "";
                     try {
-                        BLOD.cid = BLOD.cid || BLOD.jsonCheck(BLOD.xhr.false(
-                            BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": BLOD.aid }))).data[0].cid
+                        BLOD.cid = BLOD.cid || BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": BLOD.aid }))).data[0].cid
                     }
                     catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·嵌入", ...e) }
                     location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": BLOD.aid, "cid": BLOD.cid, "season_type": season_type, "player_type": player_type, "as_wide": 1, }));
@@ -217,7 +226,7 @@
                 let bfq = document.querySelector("#bilibili-player");
                 let bofqi = document.createElement('iframe');
                 bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.__INITIAL_STATE__.videoInfo.aid}&cid=${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
-                bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                bofqi.setAttribute("style", "width: 906px; height: 556px;border:none;");
                 bofqi.setAttribute("id", "bofqi");
                 bfq.replaceWith(bofqi);
                 let epi = document.querySelectorAll('.video-episode-card__info-title');
@@ -232,7 +241,7 @@
                         return bfq.contentWindow.postMessage({ aid: item.aid, cid: item.cid });
                         bofqi = document.createElement('iframe');
                         bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
-                        bofqi.setAttribute("style", "width: 906px; height: 556px;  border:none;");
+                        bofqi.setAttribute("style", "width: 906px; height: 556px;border:none;");
                         bofqi.setAttribute("id", "bofqi");
                         bfq.replaceWith(bofqi);
                     }
