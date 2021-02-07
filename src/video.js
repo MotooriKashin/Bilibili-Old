@@ -11663,6 +11663,7 @@
                                         },
                                         updateSegmentList: s,
                                         setCurrentTime: function (e) {
+                                            y.getCachedDurationOffset("duration") && (e = Math.min(y.getCachedDurationOffset("duration"), e));
                                             b = e
                                         },
                                         getCurrentTime: function () {
@@ -12062,7 +12063,17 @@
                                                                         d = n[c].subsegment_duration, f = n[c].referenced_size, (u = new T.default).duration = d, u.startTime = a, u.timescale = i, l = o + f - 1, u.mediaRange = o + "-" + l, s.push(u), a += d, o += f;
                                                                     return s
                                                                 }
-                                                                    (h, p), c(n, d, f))
+                                                                (h, p), (function () {
+                                                                    try {
+                                                                        var S = n[n.length - 1]
+                                                                            , R = (S.duration + S.startTime) / S.timescale;
+                                                                        d.adaptation.period.min ? d.adaptation.period.min = Math.min(d.adaptation.period.min, R) : d.adaptation.period.min = R;
+                                                                        d.adaptation.period.duration = parseFloat(d.adaptation.period.min.toFixed(5)),
+                                                                            _("Set real min period duration " + d.adaptation.period.duration)
+                                                                    } catch (e) {
+                                                                        _("Set real period error " + e)
+                                                                    }
+                                                                })(), c(n, d, f))
                                                     } else
                                                         r(), v.mediaSourceError("Error parsing " + f + " response.", I.default.MEDIA_DECODE_ERROR)
                                                 },
@@ -15273,6 +15284,12 @@
                                                 }));
                                                 var s = 0;
                                                 r && r.length && (s = r[0].startTime / r[0].timescale, K.setStartOffsetTimeForType(e, s));
+                                                // 用最后一个分段的起点和时长，计算视频真正的长度
+                                                var lastSeg = l.segments && l.segments[l.segments.length - 1];
+                                                var realDuration = parseFloat(((lastSeg.duration + lastSeg.startTime) / lastSeg.timescale).toFixed(5));
+                                                // 音视频流会分别计算出两个时长，取其中最短的
+                                                minDuration = Math.min(minDuration, realDuration);
+                                                J.setCachedDurationOffset("duration", minDuration);
                                                 var u = {
                                                     total: r && r.length,
                                                     segments: r,
@@ -15332,7 +15349,8 @@
                                             video: {},
                                             audio: {}
                                         },
-                                        ue = null;
+                                        ue = null,
+                                        minDuration = Infinity;
                                     return j = !(Q = G = U = !(B = {
                                         initialize: function (e, t, n) {
                                             F = new Date,
@@ -16281,6 +16299,42 @@
                                                 }
                                                 p = [],
                                                     g = null
+                                            },
+                                            setAppendWindowEnd: function t(n) {
+                                                function h(e, t) {
+                                                    var n = void 0
+                                                      , r = function() {
+                                                        e.updating || (clearInterval(n),
+                                                        t())
+                                                    };
+                                                    if (e.updating)
+                                                        if ("function" == typeof e.addEventListener)
+                                                            try {
+                                                                e.addEventListener("updateend", (function n() {
+                                                                    e.updating || (e.removeEventListener("updateend", n, !1),
+                                                                    t())
+                                                                }
+                                                                ), !1)
+                                                            } catch (e) {
+                                                                n = setInterval(r, 50)
+                                                            }
+                                                        else
+                                                            n = setInterval(r, 50);
+                                                    else
+                                                        t()
+                                                }
+                                                n <= 0 || h(c, (function() {
+                                                    if ("open" === i.readyState)
+                                                        // 设置SourceBuffer.appendWindowEnd，防止请求超出时长范围的分段
+                                                        c.appendWindowEnd = n;
+                                                    else
+                                                        var r = setTimeout((function() {
+                                                            clearTimeout(r),
+                                                            t(n)
+                                                        }
+                                                        ), 50)
+                                                }
+                                                ))
                                             },
                                             updateTimestampOffset: function (e) {
                                                 c.timestampOffset === e || isNaN(e) || d(c, function () {
@@ -17751,7 +17805,9 @@
                                         E(G.getRepresentationInfoForQuality(V).MSETimeOffset)
                                     }
                                     function t(e) {
-                                        e.fragmentModel === G.getFragmentModel() && (q("Init fragment finished loading saving to", Q + "'s init cache"), ie.save(e.chunk), q("Append Init fragment", Q, " with representationId:", e.chunk.representationId, " and quality:", e.chunk.quality), l(e.chunk))
+                                        e.fragmentModel === G.getFragmentModel() && (q("Init fragment finished loading saving to", Q + "'s init cache"), ie.save(e.chunk), q("Append Init fragment", Q, " with representationId:", e.chunk.representationId, " and quality:", e.chunk.quality),
+                                        J && J.setAppendWindowEnd(L.getCachedDurationOffset("duration")),
+                                        l(e.chunk))
                                     }
                                     function r(e) {
                                         if (e.fragmentModel === G.getFragmentModel()) {
@@ -20910,7 +20966,8 @@
                                         L = void 0,
                                         P = void 0,
                                         F = void 0,
-                                        B = void 0;
+                                        B = void 0,
+                                        CachedDurationOffset = [];
                                     return e = {
                                         setABRStrategy: function (e) {
                                             S = e
@@ -21151,7 +21208,21 @@
                                         getManifestUpdateRetryInterval: function () {
                                             return B
                                         },
-                                        reset: function () { }
+                                        reset: function () { },
+                                        // 用于存取时长数据
+                                        setCachedDurationOffset: function (e, t) {
+                                            t = parseFloat(t.toFixed(5)),
+                                                CachedDurationOffset[e] = t
+                                        },
+                                        getCachedDurationOffset: function (e) {
+                                            return e ? CachedDurationOffset[e] : CachedDurationOffset
+                                        },
+                                        clearCachedDruationOffset: function () {
+                                            CachedDurationOffset = {
+                                                offset: 0,
+                                                duration: 0
+                                            }
+                                        }
                                     },
                                         l = r = !(a = !(o = [])),
                                         S = U.default.ABR_STRATEGY_DYNAMIC,
@@ -30052,16 +30123,19 @@
                                                 if (p = "https", "string" == typeof a.url)
                                                     a.url = a.url.replace(/http:\/\//g, "https://");
                                                 else {
-                                                    var g = a.url,
-                                                        m = function (e) {
-                                                            return e && e.map && e.map(function (e) {
-                                                                return e.baseUrl && (e.baseUrl = e.baseUrl.replace(/http:\/\//g, "https://")),
-                                                                    Array.isArray(e.backupUrl) && (e.backupUrl = e.backupUrl.map(function (e) {
-                                                                        return e.replace(/http:\/\//g, "https://")
-                                                                    })),
-                                                                    e
-                                                            })
-                                                        };
+                                                    var g = a.url;
+                                                    // 主动将视频时长的数据减少一秒
+                                                    a.url && a.url.duration && (a.url.duration = a.url.duration - 1),
+                                                        a.duration = a.url && a.url.duration > 0 ? 1e3 * a.url.duration : n.timelength || 0;
+                                                    m = function (e) {
+                                                        return e && e.map && e.map(function (e) {
+                                                            return e.baseUrl && (e.baseUrl = e.baseUrl.replace(/http:\/\//g, "https://")),
+                                                                Array.isArray(e.backupUrl) && (e.backupUrl = e.backupUrl.map(function (e) {
+                                                                    return e.replace(/http:\/\//g, "https://")
+                                                                })),
+                                                                e
+                                                        })
+                                                    };
                                                     a.url.video = m(g.video),
                                                         a.url.audio = m(g.audio)
                                                 }
