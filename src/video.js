@@ -12071,6 +12071,7 @@
                                                                         d = n[c].subsegment_duration, f = n[c].referenced_size, (u = new T.default).duration = d, u.startTime = a, u.timescale = i, l = o + f - 1, u.mediaRange = o + "-" + l, s.push(u), a += d, o += f;
                                                                     return s
                                                                 }
+<<<<<<< HEAD
                                                                     (h, p), (function () {
                                                                         try {
                                                                             var S = n[n.length - 1]
@@ -12082,6 +12083,19 @@
                                                                             _("Set real period error " + e)
                                                                         }
                                                                     })(), c(n, d, f))
+=======
+                                                                (h, p), (function () {
+                                                                    try {
+                                                                        var S = n[n.length - 1]
+                                                                            , R = (S.duration + S.startTime) / S.timescale;
+                                                                        d.adaptation.period.min ? d.adaptation.period.min = Math.min(d.adaptation.period.min, R) : d.adaptation.period.min = R;
+                                                                        d.adaptation.period.duration = parseFloat(d.adaptation.period.min.toFixed(5)),
+                                                                            _("Set real min period duration " + d.adaptation.period.duration)
+                                                                    } catch (e) {
+                                                                        _("Set real period error " + e)
+                                                                    }
+                                                                })(), c(n, d, f))
+>>>>>>> e3f979d (Update video.js)
                                                     } else
                                                         r(), v.mediaSourceError("Error parsing " + f + " response.", I.default.MEDIA_DECODE_ERROR)
                                                 },
@@ -14708,6 +14722,12 @@
                                                 }));
                                                 var s = 0;
                                                 r && r.length && (s = r[0].startTime / r[0].timescale, K.setStartOffsetTimeForType(e, s));
+                                                // 用最后一个分段的起点和时长，计算视频真正的长度
+                                                var lastSeg = l.segments && l.segments[l.segments.length - 1];
+                                                var realDuration = parseFloat(((lastSeg.duration + lastSeg.startTime) / lastSeg.timescale).toFixed(5));
+                                                // 音视频流会分别计算出两个时长，取其中最短的
+                                                minDuration = Math.min(minDuration, realDuration);
+                                                J.setCachedDurationOffset("duration", minDuration);
                                                 var u = {
                                                     total: r && r.length,
                                                     segments: r,
@@ -14741,6 +14761,7 @@
                                             t[r] < e ? i = r + 1 : a = r - 1
                                         }
                                     }
+<<<<<<< HEAD
                                 }, {
                                     key: "_onLoad",
                                     value: function (e) {
@@ -14753,6 +14774,708 @@
                                                 if (0 === t && (this._zeroSpeedChunkCount++, 3 <= this._zeroSpeedChunkCount && (t = this._speedSampler.currentKBps)), 0 !== t) {
                                                     var n = this._normalizeSpeed(t);
                                                     this._currentSpeedNormalized !== n && (this._currentSpeedNormalized = n, this._currentChunkSizeKB = n)
+=======
+                                    var S = "You must first call initialize() and set a source before calling this method",
+                                        b = "You must first call initialize() and set a valid source and view before calling this method",
+                                        w = "You must first call attachView() to set the video element before calling this method",
+                                        C = "You must first call attachSource() with a valid source before calling this method",
+                                        D = "MediaPlayer not initialized!",
+                                        O = "MediaPlayer Invalid Arguments!",
+                                        N = this.context,
+                                        M = (0, we.default)(N).getInstance(),
+                                        L = (0, be.default)(N).getInstance(),
+                                        P = L.log,
+                                        F = NaN,
+                                        B = void 0,
+                                        k = void 0,
+                                        x = void 0,
+                                        U = void 0,
+                                        Q = void 0,
+                                        G = void 0,
+                                        j = void 0,
+                                        q = void 0,
+                                        V = void 0,
+                                        K = void 0,
+                                        H = void 0,
+                                        Y = void 0,
+                                        z = void 0,
+                                        W = void 0,
+                                        X = void 0,
+                                        J = void 0,
+                                        Z = void 0,
+                                        $ = void 0,
+                                        ee = void 0,
+                                        te = void 0,
+                                        ne = void 0,
+                                        re = void 0,
+                                        ie = void 0,
+                                        ae = void 0,
+                                        oe = void 0,
+                                        se = {
+                                            video: {},
+                                            audio: {}
+                                        },
+                                        ue = null,
+                                        minDuration = Infinity;
+                                    return j = !(Q = G = U = !(B = {
+                                        initialize: function (e, t, n) {
+                                            F = new Date,
+                                                $ = $ || (0, _e.default)(N).getInstance(),
+                                                Z = (0, me.default)(N).getInstance(),
+                                                $.supportsMediaSource() ? U || (U = !0, V = (0, Fe.default)(N).getInstance(), q = q || (0, Re.default)(N).getInstance(), te = te || (0, ce.default)(N).getInstance(), K = K || (0, pe.default)(N).getInstance(), W = (0, Me.default)(N).getInstance(), re = (0, Le.default)(N).getInstance({
+                                                    mediaController: K,
+                                                    timelineConverter: V,
+                                                    adapter: W
+                                                }), ie = (0, Ee.default)(N).getInstance(), ne = (0, Pe.default)(N).getInstance({
+                                                    manifestModel: ie,
+                                                    dashManifestModel: re
+                                                }), X = (0, Te.default)(N).getInstance(), oe = (0, Se.default)(N).getInstance({
+                                                    mediaPlayerModel: J
+                                                }), W.setConfig({
+                                                    dashManifestModel: re
+                                                }), X.setConfig({
+                                                    adapter: W
+                                                }), l(), a(void 0 === n || n), e && h(e), t && g(t), P("[dash.js " + r() + "] MediaPlayer has been initialized")) : Z.capabilityError("mediasource")
+                                        },
+                                        setConfig: function (e) {
+                                            e && (e.capabilities && ($ = e.capabilities), e.streamController && (ee = e.streamController), e.playbackController && (te = e.playbackController), e.mediaPlayerModel && (J = e.mediaPlayerModel), e.abrController && (q = e.abrController), e.mediaController && (K = e.mediaController))
+                                        },
+                                        on: function (e, t, n) {
+                                            M.on(e, t, n)
+                                        },
+                                        off: function (e, t, n) {
+                                            M.off(e, t, n)
+                                        },
+                                        extend: function (e, t, n) {
+                                            Oe.default.extend(e, t, n, N)
+                                        },
+                                        attachView: h,
+                                        attachSource: g,
+                                        isReady: t,
+                                        preload: function () {
+                                            if (ae.getElement() || Q)
+                                                return !1;
+                                            if (!k)
+                                                throw C;
+                                            T()
+                                        },
+                                        play: function () {
+                                            if (!G)
+                                                throw b;
+                                            (!j || e() && G) && te.play()
+                                        },
+                                        isPaused: e,
+                                        pause: function () {
+                                            if (!G)
+                                                throw b;
+                                            te.pause()
+                                        },
+                                        isSeeking: function () {
+                                            if (!G)
+                                                throw b;
+                                            return te.isSeeking()
+                                        },
+                                        isDynamic: function () {
+                                            if (!G)
+                                                throw b;
+                                            return te.getIsDynamic()
+                                        },
+                                        seek: function (e) {
+                                            if (!G)
+                                                throw b;
+                                            if ("number" != typeof e || isNaN(e))
+                                                throw O;
+                                            var t = te.getIsDynamic() ? o(e) : e;
+                                            te.seek(t)
+                                        },
+                                        setPlaybackRate: function (e) {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            c().playbackRate = e
+                                        },
+                                        getPlaybackRate: function () {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            return c().playbackRate
+                                        },
+                                        setMute: function (e) {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            c().muted = e
+                                        },
+                                        isMuted: function () {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            return c().muted
+                                        },
+                                        setVolume: function (e) {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            c().volume = e
+                                        },
+                                        getVolume: function () {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            return c().volume
+                                        },
+                                        time: n,
+                                        duration: i,
+                                        timeAsUTC: function () {
+                                            if (!G)
+                                                throw b;
+                                            return n() < 0 ? NaN : E(n())
+                                        },
+                                        durationAsUTC: function () {
+                                            if (!G)
+                                                throw b;
+                                            return E(i())
+                                        },
+                                        getActiveStream: A,
+                                        getDVRWindowSize: function () {
+                                            var e = y();
+                                            return e ? e.manifestInfo.DVRWindowSize : 0
+                                        },
+                                        getDVRSeekOffset: o,
+                                        convertToTimeCode: function (e) {
+                                            e = Math.max(e, 0);
+                                            var t = Math.floor(e / 3600),
+                                                n = Math.floor(e % 3600 / 60),
+                                                r = Math.floor(e % 3600 % 60);
+                                            return (0 === t ? "" : t < 10 ? "0" + t.toString() + ":" : t.toString() + ":") + (n < 10 ? "0" + n.toString() : n.toString()) + ":" + (r < 10 ? "0" + r.toString() : r.toString())
+                                        },
+                                        formatUTC: function (e, t, n) {
+                                            var r = !(arguments.length <= 3 || void 0 === arguments[3]) && arguments[3],
+                                                i = new Date(1e3 * e),
+                                                a = i.toLocaleDateString(t),
+                                                o = i.toLocaleTimeString(t, {
+                                                    hour12: n
+                                                });
+                                            return r ? o + " " + a : o
+                                        },
+                                        getVersion: r,
+                                        getDebug: function () {
+                                            return L
+                                        },
+                                        getBufferLength: function (e) {
+                                            var t,
+                                                n = [le.default.VIDEO, le.default.AUDIO, le.default.FRAGMENTED_TEXT];
+                                            return e ? -1 === n.indexOf(e) ? (P("Warning  - getBufferLength requested for invalid type"), NaN) : (t = d().getCurrentBufferLevel(f(e))) || NaN : (t = n.map(function (e) {
+                                                return 0 < p(e).length ? d().getCurrentBufferLevel(f(e)) : Number.MAX_VALUE
+                                            }).reduce(function (e, t) {
+                                                return Math.min(e, t)
+                                            })) === Number.MAX_VALUE ? NaN : t
+                                        },
+                                        getVideoContainer: function () {
+                                            return ae ? ae.getVideoContainer() : null
+                                        },
+                                        getTTMLRenderingDiv: function () {
+                                            return ae ? ae.getTTMLRenderingDiv() : null
+                                        },
+                                        getVideoElement: c,
+                                        getSource: function () {
+                                            if (!k)
+                                                throw C;
+                                            return k
+                                        },
+                                        setLiveDelayFragmentCount: function (e) {
+                                            J.setLiveDelayFragmentCount(e)
+                                        },
+                                        setLiveDelay: function (e) {
+                                            J.setLiveDelay(e)
+                                        },
+                                        getLiveDelay: function () {
+                                            return J.getLiveDelay()
+                                        },
+                                        getCurrentLiveLatency: function () {
+                                            if (!U)
+                                                throw D;
+                                            return G ? te.getCurrentLiveLatency() : NaN
+                                        },
+                                        useSuggestedPresentationDelay: function (e) {
+                                            J.setUseSuggestedPresentationDelay(e)
+                                        },
+                                        enableLastBitrateCaching: function (e, t) {
+                                            J.setLastBitrateCachingInfo(e, t)
+                                        },
+                                        enableLastMediaSettingsCaching: function (e, t) {
+                                            J.setLastMediaSettingsCachingInfo(e, t)
+                                        },
+                                        setMaxAllowedBitrateFor: function (e, t) {
+                                            q.setMaxAllowedBitrateFor(e, t)
+                                        },
+                                        getMaxAllowedBitrateFor: function (e) {
+                                            return q.getMaxAllowedBitrateFor(e)
+                                        },
+                                        getTopBitrateInfoFor: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            return q.getTopBitrateInfoFor(e)
+                                        },
+                                        setMinAllowedBitrateFor: function (e, t) {
+                                            q.setMinAllowedBitrateFor(e, t)
+                                        },
+                                        getMinAllowedBitrateFor: function (e) {
+                                            return q.getMinAllowedBitrateFor(e)
+                                        },
+                                        setMaxAllowedRepresentationRatioFor: function (e, t) {
+                                            q.setMaxAllowedRepresentationRatioFor(e, t)
+                                        },
+                                        getMaxAllowedRepresentationRatioFor: function (e) {
+                                            return q.getMaxAllowedRepresentationRatioFor(e)
+                                        },
+                                        setAutoPlay: a,
+                                        getAutoPlay: function () {
+                                            return j
+                                        },
+                                        setScheduleWhilePaused: function (e) {
+                                            J.setScheduleWhilePaused(e)
+                                        },
+                                        getScheduleWhilePaused: function () {
+                                            return J.getScheduleWhilePaused()
+                                        },
+                                        getDashMetrics: d,
+                                        getMetricsFor: f,
+                                        getQualityFor: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            return q.getQualityFor(e, ee.getActiveStreamInfo())
+                                        },
+                                        setQualityFor: function (e, t) {
+                                            if (!Q)
+                                                throw S;
+                                            q.setPlaybackQuality(e, ee.getActiveStreamInfo(), t)
+                                        },
+                                        updatePortalSize: function () {
+                                            q.setElementSize(),
+                                                q.setWindowResizeEventCalled(!0)
+                                        },
+                                        getLimitBitrateByPortal: function () {
+                                            return q.getLimitBitrateByPortal()
+                                        },
+                                        setLimitBitrateByPortal: function (e) {
+                                            q.setLimitBitrateByPortal(e)
+                                        },
+                                        getUsePixelRatioInLimitBitrateByPortal: function () {
+                                            return q.getUsePixelRatioInLimitBitrateByPortal()
+                                        },
+                                        setUsePixelRatioInLimitBitrateByPortal: function (e) {
+                                            q.setUsePixelRatioInLimitBitrateByPortal(e)
+                                        },
+                                        getBitrateInfoListFor: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            var t = A();
+                                            return t ? t.getBitrateListFor(e) : []
+                                        },
+                                        setInitialBitrateFor: function (e, t) {
+                                            q.setInitialBitrateFor(e, t)
+                                        },
+                                        getInitialBitrateFor: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            return q.getInitialBitrateFor(e)
+                                        },
+                                        setInitialRepresentationRatioFor: function (e, t) {
+                                            q.setInitialRepresentationRatioFor(e, t)
+                                        },
+                                        getInitialRepresentationRatioFor: function (e) {
+                                            return q.getInitialRepresentationRatioFor(e)
+                                        },
+                                        getStreamsFromManifest: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            return W.getStreamsInfo(e)
+                                        },
+                                        getTracksFor: p,
+                                        getTracksForTypeFromManifest: function (e, t, n) {
+                                            if (!Q)
+                                                throw S;
+                                            return (n = n || W.getStreamsInfo(t, 1)[0]) ? W.getAllMediaInfoForType(n, e, t) : []
+                                        },
+                                        getCurrentTrackFor: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            var t = ee.getActiveStreamInfo();
+                                            return t ? K.getCurrentTrackFor(e, t) : null
+                                        },
+                                        setInitialMediaSettingsFor: function (e, t) {
+                                            if (!U)
+                                                throw D;
+                                            K.setInitialSettings(e, t)
+                                        },
+                                        getInitialMediaSettingsFor: function (e) {
+                                            if (!U)
+                                                throw D;
+                                            return K.getInitialSettings(e)
+                                        },
+                                        setCurrentTrack: function (e) {
+                                            if (!Q)
+                                                throw S;
+                                            K.setTrack(e)
+                                        },
+                                        getTrackSwitchModeFor: function (e) {
+                                            if (!U)
+                                                throw D;
+                                            return K.getSwitchMode(e)
+                                        },
+                                        setTrackSwitchModeFor: function (e, t) {
+                                            if (!U)
+                                                throw D;
+                                            K.setSwitchMode(e, t)
+                                        },
+                                        setSelectionModeForInitialTrack: function (e) {
+                                            if (!U)
+                                                throw D;
+                                            K.setSelectionModeForInitialTrack(e)
+                                        },
+                                        getSelectionModeForInitialTrack: function () {
+                                            if (!U)
+                                                throw D;
+                                            return K.getSelectionModeForInitialTrack()
+                                        },
+                                        setFastSwitchEnabled: function (e) {
+                                            J.setFastSwitchEnabled(e)
+                                        },
+                                        getFastSwitchEnabled: function () {
+                                            return J.getFastSwitchEnabled()
+                                        },
+                                        setMovingAverageMethod: function (e) {
+                                            e === le.default.MOVING_AVERAGE_SLIDING_WINDOW || e === le.default.MOVING_AVERAGE_EWMA ? J.setMovingAverageMethod(e) : P("Warning: Ignoring setMovingAverageMethod(" + e + ") - unknown value.")
+                                        },
+                                        getMovingAverageMethod: function () {
+                                            return J.getMovingAverageMethod()
+                                        },
+                                        getAutoSwitchQualityFor: function (e) {
+                                            return q.getAutoSwitchBitrateFor(e)
+                                        },
+                                        setAutoSwitchQualityFor: function (e, t) {
+                                            q.setAutoSwitchBitrateFor(e, t)
+                                        },
+                                        setABRStrategy: function (e) {
+                                            e === le.default.ABR_STRATEGY_DYNAMIC || e === le.default.ABR_STRATEGY_BOLA || e === le.default.ABR_STRATEGY_THROUGHPUT ? J.setABRStrategy(e) : P("Warning: Ignoring setABRStrategy(" + e + ") - unknown value.")
+                                        },
+                                        getABRStrategy: function () {
+                                            return J.getABRStrategy()
+                                        },
+                                        useDefaultABRRules: function (e) {
+                                            J.setUseDefaultABRRules(e)
+                                        },
+                                        addABRCustomRule: function (e, t, n) {
+                                            J.addABRCustomRule(e, t, n)
+                                        },
+                                        removeABRCustomRule: function (e) {
+                                            J.removeABRCustomRule(e)
+                                        },
+                                        removeAllABRCustomRule: function () {
+                                            J.removeAllABRCustomRule()
+                                        },
+                                        setBandwidthSafetyFactor: function (e) {
+                                            J.setBandwidthSafetyFactor(e)
+                                        },
+                                        getBandwidthSafetyFactor: function () {
+                                            return J.getBandwidthSafetyFactor()
+                                        },
+                                        getAverageThroughput: function (e) {
+                                            var t = q.getThroughputHistory();
+                                            return t ? t.getAverageThroughput(e) : 0
+                                        },
+                                        setAbandonLoadTimeout: function (e) {
+                                            J.setAbandonLoadTimeout(e)
+                                        },
+                                        retrieveManifest: function (e, n) {
+                                            var r = _(),
+                                                i = this;
+                                            M.on(Ce.default.INTERNAL_MANIFEST_LOADED, function e(t) {
+                                                t.error ? n(null, t.error) : n(t.manifest),
+                                                    M.off(Ce.default.INTERNAL_MANIFEST_LOADED, e, i),
+                                                    r.reset()
+                                            }, i),
+                                                (0, ye.default)(N).getInstance().initialize(e),
+                                                r.load(e)
+                                        },
+                                        addUTCTimingSource: s,
+                                        removeUTCTimingSource: u,
+                                        clearDefaultUTCTimingSources: function () {
+                                            J.setUTCTimingSources([])
+                                        },
+                                        restoreDefaultUTCTimingSources: l,
+                                        setBufferToKeep: function (e) {
+                                            J.setBufferToKeep(e)
+                                        },
+                                        setBufferAheadToKeep: function (e) {
+                                            J.setBufferAheadToKeep(e)
+                                        },
+                                        setBufferPruningInterval: function (e) {
+                                            J.setBufferPruningInterval(e)
+                                        },
+                                        setStableBufferTime: function (e) {
+                                            J.setStableBufferTime(e)
+                                        },
+                                        getStableBufferTime: function () {
+                                            return J.getStableBufferTime()
+                                        },
+                                        setBufferTimeAtTopQuality: function (e) {
+                                            J.setBufferTimeAtTopQuality(e)
+                                        },
+                                        getBufferTimeAtTopQuality: function () {
+                                            return J.getBufferTimeAtTopQuality()
+                                        },
+                                        setBufferTimeAtTopQualityLongForm: function (e) {
+                                            J.setBufferTimeAtTopQualityLongForm(e)
+                                        },
+                                        getBufferTimeAtTopQualityLongForm: function () {
+                                            return J.getBufferTimeAtTopQualityLongForm()
+                                        },
+                                        setFragmentLoaderRetryAttempts: function (e) {
+                                            J.setFragmentRetryAttempts(e)
+                                        },
+                                        setFragmentLoaderRetryInterval: function (e) {
+                                            J.setFragmentRetryInterval(e)
+                                        },
+                                        setManifestLoaderRetryAttempts: function (e) {
+                                            J.setManifestRetryAttempts(e)
+                                        },
+                                        setManifestLoaderRetryInterval: function (e) {
+                                            J.setManifestRetryInterval(e)
+                                        },
+                                        setXHRWithCredentialsForType: function (e, t) {
+                                            J.setXHRWithCredentialsForType(e, t)
+                                        },
+                                        getXHRWithCredentialsForType: function (e) {
+                                            return J.getXHRWithCredentialsForType(e)
+                                        },
+                                        setJumpGaps: function (e) {
+                                            J.setJumpGaps(e)
+                                        },
+                                        getJumpGaps: function () {
+                                            return J.getJumpGaps()
+                                        },
+                                        setSmallGapLimit: function (e) {
+                                            J.setSmallGapLimit(e)
+                                        },
+                                        getSmallGapLimit: function () {
+                                            return J.getSmallGapLimit()
+                                        },
+                                        getLowLatencyEnabled: function () {
+                                            return J.getLowLatencyEnabled()
+                                        },
+                                        setLowLatencyEnabled: function (e) {
+                                            return J.setLowLatencyEnabled(e)
+                                        },
+                                        setPreloadData: function (e) {
+                                            return J.setPreloadData(e)
+                                        },
+                                        setManifestUpdateRetryInterval: function (e) {
+                                            J.setManifestUpdateRetryInterval(e)
+                                        },
+                                        getManifestUpdateRetryInterval: function () {
+                                            return J.getManifestUpdateRetryInterval()
+                                        },
+                                        setLongFormContentDurationThreshold: function (e) {
+                                            J.setLongFormContentDurationThreshold(e)
+                                        },
+                                        setSegmentOverlapToleranceTime: function (e) {
+                                            J.setSegmentOverlapToleranceTime(e)
+                                        },
+                                        setCacheLoadThresholdForType: function (e, t) {
+                                            J.setCacheLoadThresholdForType(e, t)
+                                        },
+                                        getProtectionController: function () {
+                                            return v()
+                                        },
+                                        attachProtectionController: function (e) {
+                                            H = e
+                                        },
+                                        setProtectionData: function (e) {
+                                            x = e,
+                                                ee && ee.setProtectionData(x)
+                                        },
+                                        enableManifestDateHeaderTimeSource: function (e) {
+                                            J.setUseManifestDateHeaderTimeSource(e)
+                                        },
+                                        attachVideoContainer: function (e) {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            ae.setVideoContainer(e)
+                                        },
+                                        attachTTMLRenderingDiv: function (e) {
+                                            if (!ae.getElement())
+                                                throw w;
+                                            ae.setTTMLRenderingDiv(e)
+                                        },
+                                        getUseDeadTimeLatencyForAbr: function () {
+                                            return q.getUseDeadTimeLatency()
+                                        },
+                                        setUseDeadTimeLatencyForAbr: function (e) {
+                                            q.setUseDeadTimeLatency(e)
+                                        },
+                                        getThumbnail: function (e) {
+                                            if (e < 0)
+                                                return null;
+                                            var t = te.getIsDynamic() ? o(e) : e,
+                                                n = ee.getStreamForTime(t);
+                                            if (null === n)
+                                                return null;
+                                            var r = n.getThumbnailController(),
+                                                i = n.getStreamInfo();
+                                            if (!r || !i)
+                                                return null;
+                                            var a = ee.getTimeRelativeToStreamId(t, n.getId());
+                                            return r.get(a)
+                                        },
+                                        setDefaultQualityFor: function (e, t) {
+                                            (q = q || (0, Re.default)(N).getInstance()).setDefaultQualityFor(e, t)
+                                        },
+                                        getDefaultQualityFor: function (e) {
+                                            return q.getDefaultQualityFor(e)
+                                        },
+                                        getDroppedFramesInfo: function () {
+                                            return q.getDroppedFramesInfo()
+                                        },
+                                        getCurrentSegmentInfoFor: function (e) {
+                                            return q.getCurrentSegmentInfoFor(e)
+                                        },
+                                        onInitSegmentsLoaded: function (e) {
+                                            ue = e
+                                        },
+                                        getThroughputDict: function (e) {
+                                            var t = q.getThroughputHistory();
+                                            return t ? t.getDict(e) : {}
+                                        },
+                                        getInitializeDate: I,
+                                        reset: function () {
+                                            g(null),
+                                                h(null),
+                                                x = null,
+                                                H && (H.reset(), H = null),
+                                                Y && (Y.reset(), Y = null),
+                                                M.off(Ce.default.SEGMENTS_LOADED, R, B)
+                                        }
+                                    })),
+                                        W = x = H = null,
+                                        Ce.default.extend(De.default),
+                                        J = (0, Ae.default)(N).getInstance(),
+                                        ae = (0, Ie.default)(N).getInstance(),
+                                        M.on(Ce.default.SEGMENTS_LOADED, R, B),
+                                        B
+                                }
+                                Object.defineProperty(n, "__esModule", {
+                                    value: !0
+                                });
+                                var le = r(e(59)),
+                                    de = r(e(61)),
+                                    fe = r(e(48)),
+                                    ce = r(e(69)),
+                                    he = r(e(71)),
+                                    pe = r(e(67)),
+                                    ge = r(e(50)),
+                                    me = r(e(103)),
+                                    _e = r(e(101)),
+                                    ve = r(e(108)),
+                                    ye = r(e(79)),
+                                    Ee = r(e(76)),
+                                    Ae = r(e(77)),
+                                    Te = r(e(78)),
+                                    Re = r(e(62)),
+                                    Ie = r(e(80)),
+                                    Se = r(e(102)),
+                                    be = r(e(7)),
+                                    we = r(e(8)),
+                                    Ce = r(e(12)),
+                                    De = r(e(53)),
+                                    Oe = r(e(9)),
+                                    Ne = e(10),
+                                    Me = r(e(14)),
+                                    Le = r(e(20)),
+                                    Pe = r(e(16)),
+                                    Fe = r(e(38)),
+                                    Be = e(130),
+                                    ke = r(e(1)),
+                                    xe = r(e(5));
+                                i.__dashjs_factory_name = "MediaPlayer";
+                                var a = Oe.default.getClassFactory(i);
+                                a.events = De.default,
+                                    Oe.default.updateClassFactory(i.__dashjs_factory_name, a),
+                                    n.default = a,
+                                    t.exports = n.default
+                            }, {
+                                1: 1,
+                                10: 10,
+                                101: 101,
+                                102: 102,
+                                103: 103,
+                                108: 108,
+                                12: 12,
+                                130: 130,
+                                14: 14,
+                                16: 16,
+                                20: 20,
+                                38: 38,
+                                48: 48,
+                                5: 5,
+                                50: 50,
+                                53: 53,
+                                59: 59,
+                                61: 61,
+                                62: 62,
+                                67: 67,
+                                69: 69,
+                                7: 7,
+                                71: 71,
+                                76: 76,
+                                77: 77,
+                                78: 78,
+                                79: 79,
+                                8: 8,
+                                80: 80,
+                                9: 9
+                            }
+                            ],
+                            53: [function (e, t, n) {
+                                "use strict";
+                                Object.defineProperty(n, "__esModule", {
+                                    value: !0
+                                });
+                                var r,
+                                    i = e(13),
+                                    a = new (function (e, t) {
+                                        if ("function" != typeof t && null !== t)
+                                            throw new TypeError("Super expression must either be null or a function, not " + Fe(t));
+                                        e.prototype = Object.create(t && t.prototype, {
+                                            constructor: {
+                                                value: e,
+                                                enumerable: !1,
+                                                writable: !0,
+                                                configurable: !0
+                                            }
+                                        }),
+                                            t && (Object.setPrototypeOf ? Object.setPrototypeOf(e, t) : e.__proto__ = t)
+                                    }
+                                        (o, ((r = i) && r.__esModule ? r : {
+                                            default:
+                                                r
+                                        }).default), o);
+                                function o() {
+                                    (function (e, t) {
+                                        if (!(e instanceof t))
+                                            throw new TypeError("Cannot call a class as a function")
+                                    })(this, o),
+                                        function (e, t, n) {
+                                            for (var r = !0; r;) {
+                                                var i = e,
+                                                    a = t,
+                                                    o = n;
+                                                r = !1,
+                                                    null === i && (i = Function.prototype);
+                                                var s = Object.getOwnPropertyDescriptor(i, a);
+                                                if (void 0 !== s) {
+                                                    if ("value" in s)
+                                                        return s.value;
+                                                    var u = s.get;
+                                                    if (void 0 === u)
+                                                        return;
+                                                    return u.call(o)
+>>>>>>> e3f979d (Update video.js)
                                                 }
                                                 var r = e.target.response,
                                                     i = this._range.from + this._receivedLength;
@@ -14939,6 +15662,7 @@
                                             var n = i._mediaElement.currentTime;
                                             t.info.endDts >= 1e3 * (n + i._config.lazyLoadMaxDuration) && null == i._progressChecker && (s.default.v(i.TAG, "Maximum buffering duration exceeded, suspend transmuxing task"), i._suspendTransmuxer())
                                         }
+<<<<<<< HEAD
                                     }), this._transmuxer.on(c.default.LOADING_COMPLETE, function (e, t, n) {
                                         i._msectl.endOfStream(),
                                             i._emitter.emit(d.default.LOADING_COMPLETE, {
@@ -14947,6 +15671,178 @@
                                                 from: e,
                                                 to: t
                                             });
+=======
+                                        var i = void 0;
+                                        if (t.updating)
+                                            if ("function" == typeof t.addEventListener)
+                                                try {
+                                                    t.addEventListener("updateend", function e() {
+                                                        t.updating || (t.removeEventListener("updateend", e, !1), n())
+                                                    }, !1)
+                                                } catch (e) {
+                                                    i = setInterval(r, 50)
+                                                }
+                                            else
+                                                i = setInterval(r, 50);
+                                        else
+                                            n()
+                                    }
+                                    var n = this.context,
+                                        r = (0, o.default)(n).getInstance().log,
+                                        f = (0, s.default)(n).getInstance(),
+                                        c = void 0,
+                                        h = void 0,
+                                        p = [],
+                                        g = e,
+                                        a = {
+                                            getAllBufferRanges: l,
+                                            getBuffer: function () {
+                                                return c
+                                            },
+                                            append: function (e) {
+                                                p.push(e),
+                                                    h || d(c, function s() {
+                                                        var t = this,
+                                                            u = this;
+                                                        0 < p.length && function () {
+                                                            h = !0;
+                                                            var a = p[0];
+                                                            p.splice(0, 1);
+                                                            var o = [],
+                                                                e = function () {
+                                                                    var e,
+                                                                        t,
+                                                                        n,
+                                                                        r,
+                                                                        i = l();
+                                                                    e = u,
+                                                                        n = i,
+                                                                        r = a,
+                                                                        (t = o) && 0 < t.length && t.length < n.length && function (e, t) {
+                                                                            for (var n = 0; n < e.length; n++) {
+                                                                                var r = Math.round(e.start(n)),
+                                                                                    i = Math.round(e.end(n));
+                                                                                if (i === t.start || r === t.end || t.start >= r && t.end <= i)
+                                                                                    return !0
+                                                                            }
+                                                                            return !1
+                                                                        }
+                                                                            (t, r) && f.trigger(_.default.SOURCEBUFFER_REMOVE_COMPLETED, {
+                                                                                buffer: e,
+                                                                                from: n.end(n.length - 2),
+                                                                                to: n.start(n.length - 1),
+                                                                                unintended: !0
+                                                                            }),
+                                                                        0 < p.length ? s.call(this) : (h = !1, g && g({
+                                                                            chunk: a
+                                                                        }))
+                                                                };
+                                                            try {
+                                                                0 === a.bytes.length ? e.call(t) : (o = l(), c.appendBuffer ? c.appendBuffer(a.bytes) : c.append(a.bytes, a), d(c, e.bind(t)))
+                                                            } catch (e) {
+                                                                r('SourceBuffer append failed "' + e + '"'),
+                                                                    0 < p.length ? s() : h = !1,
+                                                                    g && g({
+                                                                        chunk: a,
+                                                                        error: new m.default(e.code, e.message, null)
+                                                                    })
+                                                            }
+                                                        }
+                                                            ()
+                                                    }
+                                                        .bind(this))
+                                            },
+                                            remove: function (t, n, e) {
+                                                var r = this;
+                                                d(c, function () {
+                                                    try {
+                                                        0 <= t && t < n && (e || "ended" !== i.readyState) && c.remove(t, n),
+                                                            d(c, function () {
+                                                                f.trigger(_.default.SOURCEBUFFER_REMOVE_COMPLETED, {
+                                                                    buffer: r,
+                                                                    from: t,
+                                                                    to: n,
+                                                                    unintended: !1
+                                                                })
+                                                            })
+                                                    } catch (e) {
+                                                        f.trigger(_.default.SOURCEBUFFER_REMOVE_COMPLETED, {
+                                                            buffer: r,
+                                                            from: t,
+                                                            to: n,
+                                                            unintended: !1,
+                                                            error: new m.default(e.code, e.message, null)
+                                                        })
+                                                    }
+                                                })
+                                            },
+                                            abort: function () {
+                                                try {
+                                                    "open" === i.readyState ? c.abort() : c.setTextTrack && "ended" === i.readyState && c.abort()
+                                                } catch (e) {
+                                                    r('SourceBuffer append abort failed: "' + e + '"')
+                                                }
+                                                p = []
+                                            },
+                                            reset: function () {
+                                                if (c) {
+                                                    try {
+                                                        i.removeSourceBuffer(c)
+                                                    } catch (e) {
+                                                        r("Failed to remove source buffer from media source.")
+                                                    }
+                                                    h = !1,
+                                                        c = null
+                                                }
+                                                p = [],
+                                                    g = null
+                                            },
+                                            setAppendWindowEnd: function t(n) {
+                                                function h(e, t) {
+                                                    var n = void 0
+                                                      , r = function() {
+                                                        e.updating || (clearInterval(n),
+                                                        t())
+                                                    };
+                                                    if (e.updating)
+                                                        if ("function" == typeof e.addEventListener)
+                                                            try {
+                                                                e.addEventListener("updateend", (function n() {
+                                                                    e.updating || (e.removeEventListener("updateend", n, !1),
+                                                                    t())
+                                                                }
+                                                                ), !1)
+                                                            } catch (e) {
+                                                                n = setInterval(r, 50)
+                                                            }
+                                                        else
+                                                            n = setInterval(r, 50);
+                                                    else
+                                                        t()
+                                                }
+                                                n <= 0 || h(c, (function() {
+                                                    if ("open" === i.readyState)
+                                                        // 设置SourceBuffer.appendWindowEnd，防止请求超出时长范围的分段
+                                                        c.appendWindowEnd = n;
+                                                    else
+                                                        var r = setTimeout((function() {
+                                                            clearTimeout(r),
+                                                            t(n)
+                                                        }
+                                                        ), 50)
+                                                }
+                                                ))
+                                            },
+                                            updateTimestampOffset: function (e) {
+                                                c.timestampOffset === e || isNaN(e) || d(c, function () {
+                                                    c.timestampOffset = e
+                                                })
+                                            }
+                                        };
+                                    return function () {
+                                        h = !1;
+                                        var e = t.codec;
+>>>>>>> e3f979d (Update video.js)
                                         try {
                                             var r = i._mediaInfo.metadata.filesize;
                                             r && t && r !== t + 1 && i._emitter.emit(d.default.ERROR, g.ErrorTypes.OTHER_ERROR, g.ErrorDetails.ABNORMAL_SEGMENT_BYTELENGTH, {
@@ -16002,6 +16898,7 @@
                                                 } else
                                                     i = 0
                                             }
+<<<<<<< HEAD
                                             if (l) {
                                                 var m = h - i,
                                                     _ = this._videoSegmentInfoList.getLastSegmentBefore(h);
@@ -16017,6 +16914,33 @@
                                                                 pts: y
                                                             }),
                                                             c += v.byteLength
+=======
+                                        else
+                                            J = (0, pe.default)(O).create(i.bind(this));
+                                        E(G.getRepresentationInfoForQuality(V).MSETimeOffset)
+                                    }
+                                    function t(e) {
+                                        e.fragmentModel === G.getFragmentModel() && (q("Init fragment finished loading saving to", Q + "'s init cache"), ie.save(e.chunk), q("Append Init fragment", Q, " with representationId:", e.chunk.representationId, " and quality:", e.chunk.quality),
+                                        J && J.setAppendWindowEnd(L.getCachedDurationOffset("duration")),
+                                        l(e.chunk))
+                                    }
+                                    function r(e) {
+                                        if (e.fragmentModel === G.getFragmentModel()) {
+                                            var t = e.chunk,
+                                                n = t.bytes,
+                                                r = t.quality,
+                                                i = G.getRepresentationInfoForQuality(r),
+                                                a = k.getEventsFor(i.mediaInfo, G),
+                                                o = k.getEventsFor(i, G);
+                                            if (a && 0 < a.length || o && 0 < o.length) {
+                                                var s = function (e, t, n, r) {
+                                                    for (var i = Math.max(!t || isNaN(t.startTime) ? 0 : t.startTime, 0), a = [], o = [], s = n.concat(r), u = 0, l = s.length; u < l; u++)
+                                                        a[s[u].schemeIdUri] = s[u];
+                                                    var d = (0, ye.default)(O).getInstance().parse(e).getBoxes("emsg");
+                                                    for (u = 0, l = d.length; u < l; u++) {
+                                                        var f = k.getEvent(d[u], a, i);
+                                                        f && o.push(f)
+>>>>>>> e3f979d (Update video.js)
                                                     }
                                                 } else
                                                     l = !1
@@ -18298,11 +19222,95 @@
                                             this.nrRollUpRows = null,
                                             this.reset()
                                     }
+<<<<<<< HEAD
                                     i.prototype = {
                                         reset: function () {
                                             for (var e = 0; e < 15; e++)
                                                 this.rows[e].clear();
                                             this.currRow = 14
+=======
+                                }
+                                Object.defineProperty(n, "__esModule", {
+                                    value: !0
+                                });
+                                var a = r(e(8)),
+                                    o = r(e(12)),
+                                    s = r(e(9));
+                                i.__dashjs_factory_name = "ManifestModel",
+                                    n.default = s.default.getSingletonFactory(i),
+                                    t.exports = n.default
+                            }, {
+                                12: 12,
+                                8: 8,
+                                9: 9
+                            }
+                            ],
+                            77: [function (e, t, n) {
+                                "use strict";
+                                function r(e) {
+                                    return e && e.__esModule ? e : {
+                                        default:
+                                            e
+                                    }
+                                }
+                                function k(e, t, n) {
+                                    return t in e ? Object.defineProperty(e, t, {
+                                        value: n,
+                                        enumerable: !0,
+                                        configurable: !0,
+                                        writable: !0
+                                    }) : e[t] = n,
+                                        e
+                                }
+                                function i() {
+                                    function i(e) {
+                                        var t = void 0;
+                                        for (t = 0; t < D.length; t++)
+                                            if (D[t].rulename === e)
+                                                return t;
+                                        return -1
+                                    }
+                                    var e,
+                                        t,
+                                        n,
+                                        r = void 0,
+                                        a = void 0,
+                                        o = void 0,
+                                        s = void 0,
+                                        u = void 0,
+                                        l = void 0,
+                                        d = void 0,
+                                        f = void 0,
+                                        c = void 0,
+                                        h = void 0,
+                                        p = void 0,
+                                        g = void 0,
+                                        m = void 0,
+                                        _ = void 0,
+                                        v = void 0,
+                                        y = void 0,
+                                        E = void 0,
+                                        A = void 0,
+                                        T = void 0,
+                                        R = void 0,
+                                        I = void 0,
+                                        S = void 0,
+                                        b = void 0,
+                                        w = void 0,
+                                        C = void 0,
+                                        D = void 0,
+                                        O = void 0,
+                                        N = void 0,
+                                        M = void 0,
+                                        L = void 0,
+                                        P = void 0,
+                                        F = void 0,
+                                        B = void 0,
+                                        CachedDurationOffset = [];
+                                    return e = {
+                                        setABRStrategy: function (e) {
+                                            S = e
+>>>>>>> e3f979d (Update video.js)
                                         },
                                         equals: function (e) {
                                             for (var t = !0, n = 0; n < 15; n++)
@@ -18715,7 +19723,133 @@
                                                     s && (127 & l) + (127 & d) != 0 && (0 == u ? (r[0].push(l), r[0].push(d)) : 1 == u && (r[1].push(l), r[1].push(d)))
                                             }
                                             return r
+<<<<<<< HEAD
                                         }
+=======
+                                        },
+                                        setUTCTimingSources: function (e) {
+                                            o = e
+                                        },
+                                        getUTCTimingSources: function () {
+                                            return o
+                                        },
+                                        setXHRWithCredentialsForType: function t(e, n) {
+                                            e ? w[e] = !!n : Object.keys(w).forEach(function (e) {
+                                                t(e, n)
+                                            })
+                                        },
+                                        getXHRWithCredentialsForType: function (e) {
+                                            var t = w[e];
+                                            return void 0 === t ? w.default : t
+                                        },
+                                        setFastSwitchEnabled: function (e) {
+                                            C = e
+                                        },
+                                        getFastSwitchEnabled: function () {
+                                            return C
+                                        },
+                                        setMovingAverageMethod: function (e) {
+                                            O = e
+                                        },
+                                        getMovingAverageMethod: function () {
+                                            return O
+                                        },
+                                        setJumpGaps: function (e) {
+                                            M = e
+                                        },
+                                        getJumpGaps: function () {
+                                            return M
+                                        },
+                                        setSmallGapLimit: function (e) {
+                                            L = e
+                                        },
+                                        getSmallGapLimit: function () {
+                                            return L
+                                        },
+                                        getLowLatencyEnabled: function () {
+                                            return P
+                                        },
+                                        setLowLatencyEnabled: function (e) {
+                                            P = e
+                                        },
+                                        getPreloadData: function () {
+                                            return F
+                                        },
+                                        setPreloadData: function (e) {
+                                            F = e
+                                        },
+                                        setManifestUpdateRetryInterval: function (e) {
+                                            B = e
+                                        },
+                                        getManifestUpdateRetryInterval: function () {
+                                            return B
+                                        },
+                                        reset: function () { },
+                                        // 用于存取时长数据
+                                        setCachedDurationOffset: function (e, t) {
+                                            t = parseFloat(t.toFixed(5)),
+                                                CachedDurationOffset[e] = t
+                                        },
+                                        getCachedDurationOffset: function (e) {
+                                            return e ? CachedDurationOffset[e] : CachedDurationOffset
+                                        },
+                                        clearCachedDruationOffset: function () {
+                                            CachedDurationOffset = {
+                                                offset: 0,
+                                                duration: 0
+                                            }
+                                        }
+                                    },
+                                        l = r = !(a = !(o = [])),
+                                        S = U.default.ABR_STRATEGY_DYNAMIC,
+                                        h = {
+                                            enabled: !(C = !(b = !0)),
+                                            ttl: 36e4
+                                        },
+                                        p = {
+                                            enabled: !0,
+                                            ttl: 36e4
+                                        },
+                                        s = 4,
+                                        u = void 0,
+                                        d = 20,
+                                        f = 80,
+                                        c = 10,
+                                        g = NaN,
+                                        m = 30,
+                                        _ = 60,
+                                        v = 600,
+                                        y = .2,
+                                        A = 1e4,
+                                        M = !(I = 50),
+                                        L = E = .8,
+                                        w = {
+                                            default:
+                                                !(B = 100)
+                                        },
+                                        D = [],
+                                        O = U.default.MOVING_AVERAGE_SLIDING_WINDOW,
+                                        P = !1,
+                                        k(t = {}, x.HTTPRequest.MPD_TYPE, 3),
+                                        k(t, x.HTTPRequest.XLINK_EXPANSION_TYPE, 1),
+                                        k(t, x.HTTPRequest.MEDIA_SEGMENT_TYPE, 3),
+                                        k(t, x.HTTPRequest.INIT_SEGMENT_TYPE, 3),
+                                        k(t, x.HTTPRequest.BITSTREAM_SWITCHING_SEGMENT_TYPE, 3),
+                                        k(t, x.HTTPRequest.INDEX_SEGMENT_TYPE, 3),
+                                        k(t, x.HTTPRequest.OTHER_TYPE, 3),
+                                        T = t,
+                                        k(n = {}, x.HTTPRequest.MPD_TYPE, 500),
+                                        k(n, x.HTTPRequest.XLINK_EXPANSION_TYPE, 500),
+                                        k(n, x.HTTPRequest.MEDIA_SEGMENT_TYPE, 1e3),
+                                        k(n, x.HTTPRequest.INIT_SEGMENT_TYPE, 1e3),
+                                        k(n, x.HTTPRequest.BITSTREAM_SWITCHING_SEGMENT_TYPE, 1e3),
+                                        k(n, x.HTTPRequest.INDEX_SEGMENT_TYPE, 1e3),
+                                        k(n, x.HTTPRequest.OTHER_TYPE, 1e3),
+                                        R = n,
+                                        (N = {})[U.default.VIDEO] = 50,
+                                        N[U.default.AUDIO] = 5,
+                                        e
+>>>>>>> e3f979d (Update video.js)
                                 }
                                     (void 0 === n ? (void 0).cea608parser = {}
                                         : n)
@@ -52913,16 +54047,19 @@
                                                 if (p = "https", "string" == typeof a.url)
                                                     a.url = a.url.replace(/http:\/\//g, "https://");
                                                 else {
-                                                    var g = a.url,
-                                                        m = function (e) {
-                                                            return e && e.map && e.map(function (e) {
-                                                                return e.baseUrl && (e.baseUrl = e.baseUrl.replace(/http:\/\//g, "https://")),
-                                                                    Array.isArray(e.backupUrl) && (e.backupUrl = e.backupUrl.map(function (e) {
-                                                                        return e.replace(/http:\/\//g, "https://")
-                                                                    })),
-                                                                    e
-                                                            })
-                                                        };
+                                                    var g = a.url;
+                                                    // 主动将视频时长的数据减少一秒
+                                                    a.url && a.url.duration && (a.url.duration = a.url.duration - 1),
+                                                        a.duration = a.url && a.url.duration > 0 ? 1e3 * a.url.duration : n.timelength || 0;
+                                                    m = function (e) {
+                                                        return e && e.map && e.map(function (e) {
+                                                            return e.baseUrl && (e.baseUrl = e.baseUrl.replace(/http:\/\//g, "https://")),
+                                                                Array.isArray(e.backupUrl) && (e.backupUrl = e.backupUrl.map(function (e) {
+                                                                    return e.replace(/http:\/\//g, "https://")
+                                                                })),
+                                                                e
+                                                        })
+                                                    };
                                                     a.url.video = m(g.video),
                                                         a.url.audio = m(g.audio)
                                                 }
