@@ -1314,13 +1314,37 @@
                         BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                     });
                 }
-                // 历史弹幕下载
+                // 历史弹幕
                 if (url.includes("history?type=")) {
-                    this.addEventListener("load", function () {
-                        BLOD.xml = this.response;
-                        BLOD.hash = [];
-                        BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
-                    });
+                    let param = BLOD.urlObj(url);
+                    if (param.date) {
+                        Object.defineProperty(this, "response", { writable: true });
+                        Object.defineProperty(this, "readyState", { writable: true });
+                        Object.defineProperty(this, "status", { writable: true });
+                        Object.defineProperty(this, "send", { writable: true });
+                        this.readyState = 4;
+                        this.status = 200;
+                        this.send = () => { };
+                        let historyXhr = this;
+                        
+                        let seg = new XMLHttpRequest();
+                        seg.addEventListener("load", function () {
+                            let segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
+                            BLOD.hash = [];
+                            for (let i = 0; i < segDanmaku.length; i++) {
+                                BLOD.hash.push(segDanmaku[i].midHash);
+                            }
+                            toXml(segDanmaku).then((xml) => {
+                                historyXhr.response = xml;
+                                historyXhr.dispatchEvent(new ProgressEvent("load"));
+                                BLOD.xml = xml;
+                            });
+                        });
+                        seg.withCredentials = true;
+                        seg.responseType = "arraybuffer";
+                        seg.open("get", "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date);
+                        seg.send();
+                    }
                 }
                 return open.call(this, method, url, ...rest);
             }
