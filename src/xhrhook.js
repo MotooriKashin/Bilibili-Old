@@ -14,8 +14,10 @@
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
-    // hook setTimeout过滤旧版播放器强制初始化错误
-    // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
+    /**
+     * hook setTimeout过滤旧版播放器强制初始化错误
+     * @see indefined {@link https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894}
+     */
     class HookTimeOut {
         constructor() {
             this.hook = setTimeout;
@@ -33,8 +35,10 @@
         }
     }
 
-    // 重构APP端playurl，result/data上层目录需另外构建
-    // @url https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
+    /**
+     * 重构APP端playurl，result/data上层目录需另外构建
+     * @see miyouzi {@link https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts}
+     */
     class ReBuildPlayerurl {
         constructor() {
             this.playurl = {
@@ -453,7 +457,7 @@
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
-            let total = player.getDuration() / pageSize + 1;
+            let total = window.player.getDuration() / pageSize + 1;
             let allrequset = [];
             let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid;
             function pushReq(url, index) {
@@ -875,18 +879,17 @@
                         this.readyState = 4;
                         this.status = 200;
                         this.send = () => { };
-                        let historyXhr = this;
-                        
+
                         let seg = new XMLHttpRequest();
-                        seg.addEventListener("load", function () {
+                        seg.addEventListener("load", () => {
                             let segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
                             BLOD.hash = [];
                             for (let i = 0; i < segDanmaku.length; i++) {
                                 BLOD.hash.push(segDanmaku[i].midHash);
                             }
                             toXml(segDanmaku).then((xml) => {
-                                historyXhr.response = xml;
-                                historyXhr.dispatchEvent(new ProgressEvent("load"));
+                                this.response = xml;
+                                this.dispatchEvent(new ProgressEvent("load"));
                                 BLOD.xml = xml;
                             });
                         });
