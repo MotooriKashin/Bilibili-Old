@@ -253,6 +253,7 @@ const objUrl = (url, obj) => {
         return BLOD.objUrl(url, obj);
     }
 
+<<<<<<< HEAD
     // 对象转链接
     BLOD.objUrl = (url, obj) => {
         obj = typeof obj === "object" ? obj : {};
@@ -277,6 +278,9 @@ const objUrl = (url, obj) => {
     class Format {
 =======
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+    class Format {
+>>>>>>> 9448cf0 (refactor some function)
         /**
          * 格式化时间
          * @param {number} [time] 时间戳(13位)
@@ -375,6 +379,7 @@ const objUrl = (url, obj) => {
             if (!str) return;
 =======
         /**
+<<<<<<< HEAD
          * av/BV互转
          * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
          * @param {*} arg av {number} <==> BV {string}
@@ -443,6 +448,8 @@ const objUrl = (url, obj) => {
 =======
 >>>>>>> 2f00fde (format with JsDoc)
         /**
+=======
+>>>>>>> 9448cf0 (refactor some function)
          * 将对象键值对转化为URL参数并返回完整URL
          * @param {string} url 原始url，无效则直接输出连接好的参数字符串
          * @param {Object} obj 包含参数键值对的对象，已存在的参数直接覆盖，参数值为 undefined 或 null 则忽略该参数
@@ -501,8 +508,11 @@ const objUrl = (url, obj) => {
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // cookie对象
 =======
+=======
+>>>>>>> 9448cf0 (refactor some function)
     }
 
     class Abv {
@@ -523,10 +533,15 @@ const objUrl = (url, obj) => {
          * @param {*} input av/BV
          */
         check(input) {
+<<<<<<< HEAD
             if (/^[aA][vV][0-9]+$/.test(input) || /^\d+$/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
             if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(input)) return this.bvToAv("BV" + input);
             if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(input)) return this.bvToAv(input);
             throw input;
+=======
+            if (/[bB][vV][fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) return this.bvToAv(input);
+            if (/[aA][vV][0-9]+/.test(input) || /[0-9]+/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
+>>>>>>> 9448cf0 (refactor some function)
         }
         /**
          * BV => av
@@ -553,6 +568,10 @@ const objUrl = (url, obj) => {
 
     class UrlSign {
         constructor() {
+<<<<<<< HEAD
+=======
+            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
+>>>>>>> 9448cf0 (refactor some function)
             this.keySecret = [
                 "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
                 "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
@@ -568,6 +587,10 @@ const objUrl = (url, obj) => {
                 "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.",
                 "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"
             ]
+<<<<<<< HEAD
+=======
+            this.md5 = BLOD.md5;
+>>>>>>> 9448cf0 (refactor some function)
         }
         /**
          * 签名加密url
@@ -576,14 +599,21 @@ const objUrl = (url, obj) => {
          * @param {number} [id] 签名密钥ID
          */
         sign(url, obj = {}, id = 0) {
+<<<<<<< HEAD
             if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
+=======
+>>>>>>> 9448cf0 (refactor some function)
             let table = {};
             this.restoreKey(Number(id));
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
             url = url.split("?")[0];
             delete obj.sign;
             obj.appkey = this.key;
+<<<<<<< HEAD
             Object.keys(obj).sort().map(key => { table[key] = obj[key] });
+=======
+            Object.keys(obj).sort().map(key => table[key] = obj[key]);
+>>>>>>> 9448cf0 (refactor some function)
             if (id === 3 && table.api) table.sign = BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(table.api) }) + this.secret);
             else table.sign = BLOD.md5(BLOD.objUrl("", table) + this.secret);
             return BLOD.objUrl(url, table);
@@ -725,6 +755,7 @@ const objUrl = (url, obj) => {
                 let msg = data.msg || data.message || "";
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 BLOD.debug.error("JSON error!", data);
                 throw [data.code, msg];
 =======
@@ -733,6 +764,10 @@ const objUrl = (url, obj) => {
 >>>>>>> 39d49de (remove eslint rules)
                 throw [data.code, msg, data]
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+                BLOD.debug.error("JSON error!", data);
+                throw [data.code, msg];
+>>>>>>> 9448cf0 (refactor some function)
             }
             return data;
         }
@@ -995,6 +1030,7 @@ BLOD.xhr = xhr;
 
     let define = new Define();
 <<<<<<< HEAD
+<<<<<<< HEAD
     let makeExports = (type) => {
         return function (...msg) {
             return define[type](...msg);
@@ -1019,6 +1055,8 @@ BLOD.xhr = xhr;
 })()
 >>>>>>> dbc2aff (修复区域限制番剧“请求被拦截”错误)
 =======
+=======
+>>>>>>> 9448cf0 (refactor some function)
     let format = new Format();
     let abv = new Abv();
     let urlSign = new UrlSign();
@@ -1039,5 +1077,9 @@ BLOD.xhr = xhr;
     BLOD.getTotalTop = (node) => { return define.getTotalTop(node) };
     BLOD.write = (html) => { return define.write(html) };
     BLOD.bofqiToView = () => { return define.bofqiToView() };
+<<<<<<< HEAD
+})()
+>>>>>>> 9448cf0 (refactor some function)
+=======
 })()
 >>>>>>> 9448cf0 (refactor some function)
