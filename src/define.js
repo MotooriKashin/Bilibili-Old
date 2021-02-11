@@ -610,10 +610,14 @@ const objUrl = (url, obj) => {
             delete obj.sign;
             obj.appkey = this.key;
 <<<<<<< HEAD
+<<<<<<< HEAD
             Object.keys(obj).sort().map(key => { table[key] = obj[key] });
 =======
             Object.keys(obj).sort().map(key => table[key] = obj[key]);
 >>>>>>> 9448cf0 (refactor some function)
+=======
+            Object.keys(obj).sort().map(key => { table[key] = obj[key] });
+>>>>>>> b786ef3 (fix syntax error)
             if (id === 3 && table.api) table.sign = BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(table.api) }) + this.secret);
             else table.sign = BLOD.md5(BLOD.objUrl("", table) + this.secret);
             return BLOD.objUrl(url, table);
