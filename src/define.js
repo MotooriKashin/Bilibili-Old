@@ -249,12 +249,22 @@ const objUrl = (url, obj) => {
                 i++;
 =======
 
+<<<<<<< HEAD
     class Define {
         constructor() {
             console.debug('import module "define.js"');
         }
         // 格式化时间
         timeFormat(time = new Date(), type) {
+=======
+    class Format {
+        /**
+         * 格式化时间
+         * @param {number} [time] 时间戳(13位)
+         * @param {*} [type] 只要有效返回值便加上年月日
+         */
+        timeFormat(time = new Date().getTime(), type) {
+>>>>>>> 9448cf0 (refactor some function)
             let date = new Date(time),
                 Y = date.getFullYear() + '-',
                 M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
@@ -321,6 +331,7 @@ const objUrl = (url, obj) => {
             }
             return out;
         }
+<<<<<<< HEAD
         // av/BV互转 @https://www.zhihu.com/question/381784377/answer/1099438784
         abv(str) {
             if (!str) return;
@@ -371,6 +382,13 @@ const objUrl = (url, obj) => {
             return BLOD.objUrl(url, obj);
         }
         // 对象转链接
+=======
+        /**
+         * 将对象键值对转化为URL参数并返回完整URL
+         * @param {string} url 原始url，无效则直接输出连接好的参数字符串
+         * @param {Object} obj 包含参数键值对的对象，已存在的参数直接覆盖，参数值为 undefined 或 null 则忽略该参数
+         */
+>>>>>>> 9448cf0 (refactor some function)
         objUrl(url, obj) {
             obj = typeof obj === "object" ? obj : {};
             let arr = [], i = 0;
@@ -394,7 +412,128 @@ const objUrl = (url, obj) => {
             if (url) for (let i = 0; i < url.length; i++) obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
             return obj;
         }
+<<<<<<< HEAD
         // cookie对象
+=======
+    }
+
+    class Abv {
+        /**
+         * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
+         */
+        constructor() {
+            this.base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
+            this.digitMap = [11, 10, 3, 8, 4, 6];
+            this.xor = 177451812;
+            this.add = 8728348608;
+            this.bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
+            this.table = {};
+            for (let i = 0; i < 58; i++) this.table[this.base58Table[i]] = i;
+        }
+        /**
+         * 输入av/BV，输出对应转化结果
+         * @param {*} input av/BV
+         */
+        check(input) {
+            if (/[bB][vV][fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) return this.bvToAv(input);
+            if (/[aA][vV][0-9]+/.test(input) || /[0-9]+/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
+        }
+        /**
+         * BV => av
+         * @param {string} BV 完整12位BV号
+         * @return {number} 纯数字av号，不带av前缀
+         */
+        bvToAv(BV) {
+            let r = 0;
+            for (let i = 0; i < 6; i++) r += this.table[BV[this.digitMap[i]]] * 58 ** i;
+            return (r - this.add) ^ this.xor;
+        }
+        /**
+         * av => BV
+         * @param {number} av av号，可以带av前缀
+         * @return {string} 完整12位BV号
+         */
+        avToBv(av) {
+            let bv = Array.from(this.bvidTemplate);
+            av = (av ^ this.xor) + this.add;
+            for (let i = 0; i < 6; i++) bv[this.digitMap[i]] = this.base58Table[parseInt(av / 58 ** i) % 58];
+            return bv.join("");
+        }
+    }
+
+    class UrlSign {
+        constructor() {
+            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
+            this.keySecret = [
+                "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
+                "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
+                "157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/",
+                "351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50",
+                "4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.",
+                "12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051",
+                "bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22",
+                "244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36",
+                "16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d",
+                "c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726",
+                "2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7",
+                "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.",
+                "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"
+            ]
+            this.md5 = BLOD.md5;
+        }
+        /**
+         * 签名加密url
+         * @param {string} url 需要签名的url链接，可以带参数
+         * @param {object} [obj] url的参数键值对，可以覆盖原有参数
+         * @param {number} [id] 签名密钥ID
+         */
+        sign(url, obj = {}, id = 0) {
+            let table = {};
+            this.restoreKey(Number(id));
+            obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
+            url = url.split("?")[0];
+            delete obj.sign;
+            obj.appkey = this.key;
+            Object.keys(obj).sort().map(key => table[key] = obj[key]);
+            if (id === 3 && table.api) table.sign = BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(table.api) }) + this.secret);
+            else table.sign = BLOD.md5(BLOD.objUrl("", table) + this.secret);
+            return BLOD.objUrl(url, table);
+        }
+        /**
+         * 提取签名密钥
+         * @param {number} [index] 签名密钥ID
+         */
+        restoreKey(index = 0) {
+            index = index < this.keySecret.length ? index : 0;
+            let table = this.keySecret[index];
+            let key = ''
+            this.key = '';
+            this.secret = '';
+            for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
+            this.key = key.split(':')[0];
+            this.secret = key.split(':')[1];
+        }
+        /**
+         * 混淆签名密钥
+         * @param {string} key appkey
+         * @param {string} secret appcecret
+         */
+        mixKey(key, secret) {
+            let table = key + ":" + secret;
+            let str = '';
+            for (let i = table.length - 1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() - 2);
+            return str;
+        }
+    }
+
+
+
+
+    class Define {
+        /**
+         * 输出cookies键值对象
+         */
+>>>>>>> 9448cf0 (refactor some function)
         getCookies() {
             let cookies = document.cookie.split('; ');
             let obj = cookies.reduce((pre, next) => {
@@ -426,7 +565,8 @@ const objUrl = (url, obj) => {
             data = JSON.parse(data);
             if ("code" in data && data.code !== 0) {
                 let msg = data.msg || data.message || "";
-                throw [data.code, msg, data]
+                BLOD.debug.error("JSON error!", data);
+                throw [data.code, msg];
             }
             return data;
         }
@@ -680,6 +820,7 @@ BLOD.xhr = xhr;
     }
 
     let define = new Define();
+<<<<<<< HEAD
     let makeExports = (type) => {
         return function (...msg) {
             return define[type](...msg);
@@ -702,3 +843,26 @@ BLOD.xhr = xhr;
     BLOD.bofqiToView = makeExports("bofqiToView");
 })()
 >>>>>>> dbc2aff (修复区域限制番剧“请求被拦截”错误)
+=======
+    let format = new Format();
+    let abv = new Abv();
+    let urlSign = new UrlSign();
+
+    BLOD.timeFormat = (...arg) => { return format.timeFormat(...arg) };
+    BLOD.sizeFormat = (...arg) => { return format.sizeFormat(...arg) };
+    BLOD.unitFormat = (...arg) => { return format.unitFormat(...arg) };
+    BLOD.bubbleSort = (...arg) => { return format.bubbleSort(...arg) };
+    BLOD.randomArray = (...arg) => { return format.randomArray(...arg) };
+    BLOD.objUrl = (...arg) => { return format.objUrl(...arg) };
+    BLOD.urlObj = (...arg) => { return format.urlObj(...arg) };
+    BLOD.abv = (input) => { return abv.check(input) };
+    BLOD.urlSign = (...arg) => { return urlSign.sign(...arg) };
+    BLOD.getCookies = () => { return define.getCookies() };
+    BLOD.addElement = (...arg) => { return define.addElement(...arg) };
+    BLOD.addCss = (...arg) => { return define.addCss(...arg) };
+    BLOD.jsonCheck = (...arg) => { return define.jsonCheck(...arg) };
+    BLOD.getTotalTop = (node) => { return define.getTotalTop(node) };
+    BLOD.write = (html) => { return define.write(html) };
+    BLOD.bofqiToView = () => { return define.bofqiToView() };
+})()
+>>>>>>> 9448cf0 (refactor some function)
