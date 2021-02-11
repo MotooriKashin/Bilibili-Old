@@ -494,7 +494,7 @@ const objUrl = (url, obj) => {
             url = url.split("?")[0];
             delete obj.sign;
             obj.appkey = this.key;
-            Object.keys(obj).sort().map(key => table[key] = obj[key]);
+            Object.keys(obj).sort().map(key => { table[key] = obj[key] });
             if (id === 3 && table.api) table.sign = BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(table.api) }) + this.secret);
             else table.sign = BLOD.md5(BLOD.objUrl("", table) + this.secret);
             return BLOD.objUrl(url, table);
