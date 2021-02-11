@@ -362,7 +362,7 @@
                     ini.forEach(d => {
                         if (d.title === item) item = d;
                     })
-                    e[i].onclick = () => {
+                    e[i].parentNode.parentNode.onclick = () => {
                         bfq = document.querySelector("#bofqi");
                         bfq && toast(item.title, "av" + item.aid, "UP主：" + item.author.name);
                         return bfq.contentWindow.postMessage({ aid: item.aid, cid: item.cid });
