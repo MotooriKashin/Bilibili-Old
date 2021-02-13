@@ -480,6 +480,7 @@ const objUrl = (url, obj) => {
          */
         urlObj(url) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             url = url || "";
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -502,16 +503,22 @@ const objUrl = (url, obj) => {
 >>>>>>> 2f00fde (format with JsDoc)
             let obj = {};
 <<<<<<< HEAD
+=======
+            let obj = {};
+>>>>>>> aa57aca (Update define.js)
             url = url || "";
             url = url.split('?')[1] ? url.split('?')[1].split('&') : [];
             url.forEach(d => {
                 if (d.includes("#")) d = d.split("#")[0];
                 if (d) obj[d.split('=')[0]] = d.split('=')[1] || "";
             });
+<<<<<<< HEAD
 =======
             if (url) for (let i = 0; i < url.length; i++)  obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
             for (let key in obj) if (obj[key].includes("#")) obj[key] = obj[key].split("#");
 >>>>>>> d6fdcf1 (Update define.js)
+=======
+>>>>>>> aa57aca (Update define.js)
             return obj;
         }
 <<<<<<< HEAD
