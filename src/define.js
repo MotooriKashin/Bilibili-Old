@@ -118,11 +118,13 @@
          * @param {string} url 原始url
          */
         urlObj(url) {
-            url = url || "";
-            url = url.split('?')[1] ? url.split('?')[1].split('&') : undefined;
             let obj = {};
-            if (url) for (let i = 0; i < url.length; i++)  obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
-            for (let key in obj) if (obj[key].includes("#")) obj[key] = obj[key].split("#");
+            url = url || "";
+            url = url.split('?')[1] ? url.split('?')[1].split('&') : [];
+            url.forEach(d => {
+                if (d.includes("#")) d = d.split("#")[0];
+                if (d) obj[d.split('=')[0]] = d.split('=')[1] || "";
+            });
             return obj;
         }
     }
