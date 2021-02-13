@@ -2325,6 +2325,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
 })()
 =======
@@ -2349,3 +2350,7 @@
 =======
 })()
 >>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
+=======
+    if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
+})()
+>>>>>>> ea9e6ef (Update xhrhook.js)
