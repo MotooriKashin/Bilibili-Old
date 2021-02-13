@@ -405,6 +405,7 @@ const objUrl = (url, obj) => {
         }
         // 链接转对象
         urlObj(url) {
+<<<<<<< HEAD
             url = url || "";
 <<<<<<< HEAD
             url = url.split('#')[0];
@@ -412,9 +413,15 @@ const objUrl = (url, obj) => {
 =======
             url = url.split('?')[1] ? url.split('?')[1].split('&') : undefined;
 >>>>>>> d6fdcf1 (Update define.js)
+=======
+>>>>>>> aa57aca (Update define.js)
             let obj = {};
-            if (url) for (let i = 0; i < url.length; i++)  obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
-            for (let key in obj) if (obj[key].includes("#")) obj[key] = obj[key].split("#");
+            url = url || "";
+            url = url.split('?')[1] ? url.split('?')[1].split('&') : [];
+            url.forEach(d => {
+                if (d.includes("#")) d = d.split("#")[0];
+                if (d) obj[d.split('=')[0]] = d.split('=')[1] || "";
+            });
             return obj;
         }
 <<<<<<< HEAD
