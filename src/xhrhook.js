@@ -885,6 +885,8 @@
                         seg.send();
                     }
                 }
+                // 监听页面多次重写jsonp
+                if (window.$ && (xhrHook.$ != window.$)) { xhrHook.jsonp(); xhrHook.$ = window.$; }
                 return open.call(this, method, url, ...rest);
             }
         }
@@ -1167,14 +1169,5 @@
     if (config.reset.danmuku && Worker) xhrHook.worker();
     xhrHook.open();
 
-    if (window.$ && window.$.ajax) xhrHook.jsonp();
-    else {
-        let timer = setInterval(() => {
-            if (window.$) {
-                clearInterval(timer);
-                xhrHook.jsonp();
-            }
-        });
-        setTimeout(() => clearInterval(timer), 5000);
-    }
+    if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
 })()
