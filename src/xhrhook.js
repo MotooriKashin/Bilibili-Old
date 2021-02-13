@@ -446,7 +446,7 @@
                     xhr.addEventListener("load", function () {
                         // api的segment_index从1开始
                         // 这个数组中从0开始存储分段数据
-                        protoSegments[index - 1] = xhr.response;
+                        protoSegments.push(xhr.response);
                         resolve();
                     });
                     xhr.open("get", url);
