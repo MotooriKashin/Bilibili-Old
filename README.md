@@ -187,6 +187,7 @@ Tampermonkey BETA 4.10.6125
    + 修复BAS/代码弹幕丢失问题
    + 适配10位BV号
    + 自动生成bvid对应的aid
+   + 完善对jsonp的hook，监听页面反复修改`jQuery.ajax`
 - 2021-02-12
    + 优化拜年祭切P监听
 - 2021-02-10
