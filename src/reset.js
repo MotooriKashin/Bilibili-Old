@@ -808,9 +808,13 @@
                     mas = mas.join("/");
                     if (!obj) return mas;
 <<<<<<< HEAD
+<<<<<<< HEAD
                     if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
 =======
 >>>>>>> b883a26 (重命名评论跳转链接)
+=======
+                    if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
+>>>>>>> 9ad46e3 (Update reset.js)
                     // 参数清理
                     parameters.forEach(d => {
                         obj[d] = null;
