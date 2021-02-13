@@ -534,6 +534,7 @@ const objUrl = (url, obj) => {
          */
         check(input) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (/^[aA][vV][0-9]+$/.test(input) || /^\d+$/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
             if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(input)) return this.bvToAv("BV" + input);
             if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(input)) return this.bvToAv(input);
@@ -542,6 +543,13 @@ const objUrl = (url, obj) => {
             if (/[bB][vV][fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) return this.bvToAv(input);
             if (/[aA][vV][0-9]+/.test(input) || /[0-9]+/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
 >>>>>>> 9448cf0 (refactor some function)
+=======
+            if (/[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) {
+                if (/[bB][vV]/.test(input)) return this.bvToAv(input);
+                return this.bvToAv("BV" + input);
+            }
+            if (/[aA][vV][0-9]+/.test(input) || /^\d+$/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
+>>>>>>> 0ac7dcc (Update define.js)
         }
         /**
          * BV => av
