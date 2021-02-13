@@ -1218,17 +1218,4 @@
     xhrHook.open();
 
     if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
-<<<<<<< HEAD
-=======
-    else {
-        let timer = setInterval(() => {
-            if (window.$ && window.$.ajaxSetup) {
-                clearInterval(timer);
-                xhrHook.jsonp();
-                xhrHook.$ = window.$;
-            }
-        });
-        setTimeout(() => clearInterval(timer), 5000);
-    }
->>>>>>> 6439f5a479e64c8fbd0efe6dc7643ef1d3cdb2a7
 })()
