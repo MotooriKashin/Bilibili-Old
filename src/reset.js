@@ -570,6 +570,7 @@
                     });
                     mas = mas.join("/");
                     if (!obj) return mas;
+                    if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
                     // 参数清理
                     parameters.forEach(d => {
                         obj[d] = null;
