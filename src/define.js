@@ -435,8 +435,11 @@ const objUrl = (url, obj) => {
          * @param {*} input av/BV
          */
         check(input) {
-            if (/[bB][vV][fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) return this.bvToAv(input);
-            if (/[aA][vV][0-9]+/.test(input) || /[0-9]+/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
+            if (/[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) {
+                if (/[bB][vV]/.test(input)) return this.bvToAv(input);
+                return this.bvToAv("BV" + input);
+            }
+            if (/[aA][vV][0-9]+/.test(input) || /^\d+$/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
         }
         /**
          * BV => av
