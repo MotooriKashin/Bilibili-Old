@@ -920,6 +920,17 @@
                             }
                         }
                     }
+                    // 替换旧版顶栏动图彩蛋
+                    if (config.reset.indexIcon && this.url.includes("api.bilibili.com/x/web-interface/index/icon")) {
+                        let jsonpCallback = this.jsonpCallback;
+                        let call = window[jsonpCallback];
+                        if (call) {
+                            window[jsonpCallback] = function (v) {
+                                v.data = BLOD.randomArray(JSON.parse(BLOD.getResourceText("icon")).fix, 1)[0];
+                                return call.call(this, v);
+                            }
+                        }
+                    }
                 }
             })
         }
