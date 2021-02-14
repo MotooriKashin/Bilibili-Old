@@ -31,12 +31,13 @@
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aa57aca5b82e2c8f400066f2380f9323f4f5259b/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dc620f0c9b5fd077f43515080730cb3eaf630876/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@9ad46e37ceb6df52285b02730708b775a1e32e5f/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@1db98defd9a055c22cf515fea803aa684190ea41/src/xhrhook.js
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/config.json
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ff0b9e2da1d40717e5bcc7e4f8ee4a46af12eaea/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@95c99964865e1f522e98ca3a5aea4fb32f88235e/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
 // @resource     protobuf https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/protobuf.json
+// @resource     icon https://www.bilibili.com/index/index-icon.json
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_getResourceURL
