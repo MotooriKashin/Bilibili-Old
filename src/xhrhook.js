@@ -747,6 +747,8 @@
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 let _url = url, hook = [_url, ""];
                 let obj = BLOD.urlObj(url);
+                if (obj.aid) BLOD.aid = obj.aid;
+                if (obj.cid) BLOD.aid = obj.cid;
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
                     url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
