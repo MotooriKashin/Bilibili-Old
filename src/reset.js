@@ -13,20 +13,7 @@
     BLOD.reset = {
         // 对象捕获
         getVariable: () => {
-            function read(arr) {
-                switch (arr[0]) {
-                    case "aid": BLOD.aid = arr[1];
-                        break;
-                    case "cid": BLOD.cid = arr[1];
-                        break;
-                    case "__playinfo__": BLOD.__playinfo__ = arr[1];
-                        break;
-                }
-            }
             try {
-                Object.defineProperty(window, "aid", { set: (value) => { read(["aid", value]) }, get: () => { return BLOD.aid }, configurable: true });
-                Object.defineProperty(window, "cid", { set: (value) => { read(["cid", value]) }, get: () => { return BLOD.cid }, configurable: true });
-                Object.defineProperty(window, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return BLOD.__playinfo__ }, configurable: true });
                 Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
                 if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("对象捕获", ...e) }
