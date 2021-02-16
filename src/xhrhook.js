@@ -446,7 +446,10 @@
      */
     const getSegDanmaku = (onload) => {
         let protoSegments = [];
-        getSegConfig().then(getAllSeg);
+        getSegConfig().then(getAllSeg).catch((e) => {
+            toast.error("载入弹幕失败", "请尝试刷新页面");
+            toast.error(e);
+        });
         function getSegConfig() {
             return new Promise(function (resolve) {
                 let xhr = new XMLHttpRequest();
@@ -889,7 +892,14 @@
 
                         let seg = new XMLHttpRequest();
                         seg.addEventListener("load", () => {
-                            let segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
+                            let segDanmaku;
+                            try {
+                                segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
+                            } catch (e) {
+                                toast.error("载入历史弹幕失败", "请尝试刷新页面");
+                                toast.error(e);
+                                return;
+                            }
                             BLOD.hash = [];
                             for (let i = 0; i < segDanmaku.length; i++) {
                                 BLOD.hash.push(segDanmaku[i].midHash);
