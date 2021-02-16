@@ -426,7 +426,10 @@
      */
     const getSegDanmaku = (onload) => {
         let protoSegments = [];
-        getSegConfig().then(getAllSeg);
+        getSegConfig().then(getAllSeg).catch((e) => {
+            toast.error("载入弹幕失败", "请尝试刷新页面");
+            toast.error(e);
+        });
         function getSegConfig() {
             return new Promise(function (resolve) {
                 let xhr = new XMLHttpRequest();
@@ -869,8 +872,20 @@
                         let historyXhr = this;
                         
                         let seg = new XMLHttpRequest();
+<<<<<<< HEAD
                         seg.addEventListener("load", function () {
                             let segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
+=======
+                        seg.addEventListener("load", () => {
+                            let segDanmaku;
+                            try {
+                                segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
+                            } catch (e) {
+                                toast.error("载入历史弹幕失败", "请尝试刷新页面");
+                                toast.error(e);
+                                return;
+                            }
+>>>>>>> 5e8f294 (载入弹幕失败时弹出提示)
                             BLOD.hash = [];
                             for (let i = 0; i < segDanmaku.length; i++) {
                                 BLOD.hash.push(segDanmaku[i].midHash);
