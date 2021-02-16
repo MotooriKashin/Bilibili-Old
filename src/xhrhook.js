@@ -740,8 +740,18 @@
      */
     const getSegDanmaku = (onload) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
         function request(url) {
             return new Promise(function (resolve, reject) {
+=======
+        let protoSegments = [];
+        getSegConfig().then(getAllSeg).catch((e) => {
+            toast.error("载入弹幕失败", "请尝试刷新页面");
+            toast.error(e);
+        });
+        function getSegConfig() {
+            return new Promise(function (resolve) {
+>>>>>>> 5e8f294 (载入弹幕失败时弹出提示)
                 let xhr = new XMLHttpRequest();
                 xhr.addEventListener("load", () => {
                     if (xhr.status == 200)
@@ -1395,9 +1405,12 @@
                         
                         let seg = new XMLHttpRequest();
 <<<<<<< HEAD
+<<<<<<< HEAD
                         seg.addEventListener("load", function () {
                             let segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
 =======
+=======
+>>>>>>> 5e8f294 (载入弹幕失败时弹出提示)
                         seg.addEventListener("load", () => {
                             let segDanmaku;
                             try {
@@ -1406,6 +1419,7 @@
                                 toast.error("载入历史弹幕失败", "请尝试刷新页面");
                                 toast.error(e);
                                 return;
+<<<<<<< HEAD
 =======
                         let response, accesskey = "";
                         try {
@@ -1419,6 +1433,9 @@
 >>>>>>> 5cf66d3 (优化xhr send响应模拟)
                             }
 <<<<<<< HEAD
+>>>>>>> 5e8f294 (载入弹幕失败时弹出提示)
+=======
+                            }
 >>>>>>> 5e8f294 (载入弹幕失败时弹出提示)
                             BLOD.hash = [];
                             for (let i = 0; i < segDanmaku.length; i++) {
