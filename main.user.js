@@ -97,7 +97,7 @@
 >>>>>>> 98ce3b2 (替换动图彩蛋)
 =======
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bddda7e4ccbc2fb300573df7be063cdc55cad893/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@67a8cac4ee7230a1ace40a7ff2a8c64572bf113e/src/xhrhook.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@8a8909d0f7aa6c1d687a9da22746d421412ba0a4/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@984976e2b1b58a36caabb8deb2884acc401060e7/src/config.json
 >>>>>>> 105384b (完善xhr封装，载入弹幕失败时弹出提示，在下载的弹幕里保留/n)
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
