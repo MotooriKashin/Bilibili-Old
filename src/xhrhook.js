@@ -454,6 +454,9 @@
                     else
                         reject("HTTP" + xhr.status);
                 });
+                xhr.addEventListener("error", () => {
+                    reject("HTTP Error", xhr.statusText);
+                });
                 xhr.responseType = "arraybuffer";
                 xhr.open("get", url);
                 xhr.send();
