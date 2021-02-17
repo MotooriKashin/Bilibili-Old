@@ -1090,9 +1090,9 @@
 =======
 >>>>>>> 39d49de (remove eslint rules)
                         Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
-                        //将av300000(2012年7月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
-                        if (BLOD.aid < 300000) {
-                            for (let i in Segments) {
+                        //将av400000(2012年11月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
+                        if (BLOD.aid < 400000) {
+                            for (let i = 0; i < Segments.length; i++) {
                                 if (Segments[i].content.includes('/n')) {
                                     Segments[i].pool = 1;
                                 }
@@ -1103,6 +1103,7 @@
                         let danmaku = Segments.map(function (v) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                             if(v.pool == 1) {
                                 v.content = v.content.replaceAll('/n', '\n');
@@ -1111,6 +1112,8 @@
                                 v.content = v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\r');
 >>>>>>> 2df4d62 (不再使用replaceAll)
                             }
+=======
+>>>>>>> 67a8cac (Update xhrhook.js)
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
 >>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
@@ -1122,7 +1125,11 @@
                                 mode: v.mode,
                                 size: v.fontsize,
                                 stime: v.progress / 1000,
+<<<<<<< HEAD
                                 text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
+=======
+                                text: v.pool == 1 ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
+>>>>>>> 67a8cac (Update xhrhook.js)
                                 uid: v.midHash
                             };
                         });
