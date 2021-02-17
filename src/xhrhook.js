@@ -445,24 +445,7 @@
      * @param  {Function} onload 得到所有弹幕之后触发的回调函数
      */
     const getSegDanmaku = (onload) => {
-        function request(url) {
-            return new Promise(function (resolve, reject) {
-                let xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", () => {
-                    if (xhr.status == 200)
-                        resolve(new Uint8Array(xhr.response));
-                    else
-                        reject("HTTP" + xhr.status);
-                });
-                xhr.addEventListener("error", () => {
-                    reject("HTTP Error", xhr.statusText);
-                });
-                xhr.responseType = "arraybuffer";
-                xhr.open("get", url);
-                xhr.send();
-            });
-        }
-
+        let request = (url) => BLOD.xhr.true(url, "arraybuffer");
         let DmWebViewReply = "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid
         request(DmWebViewReply).then(getAllSeg).catch((e) => {
             toast.error("载入弹幕失败", "请尝试刷新页面");
@@ -470,7 +453,7 @@
         });
         // 获得所有分段
         function getAllSeg(config) {
-            config = protoView.decode(config);
+            config = protoView.decode(new Uint8Array(config));
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
@@ -887,16 +870,9 @@
                         this.status = 200;
                         this.send = () => { };
 
-                        let seg = new XMLHttpRequest();
-                        seg.addEventListener("load", () => {
-                            let segDanmaku;
-                            try {
-                                segDanmaku = protoSeg.decode(new Uint8Array(seg.response)).elems;
-                            } catch (e) {
-                                toast.error("载入历史弹幕失败", "请尝试刷新页面");
-                                toast.error(e);
-                                return;
-                            }
+                        let history = "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date;
+                        BLOD.xhr.true(history, "arraybuffer").then((seg) => {
+                            let segDanmaku = protoSeg.decode(new Uint8Array(seg)).elems;
                             BLOD.hash = [];
                             for (let i = 0; i < segDanmaku.length; i++) {
                                 BLOD.hash.push(segDanmaku[i].midHash);
@@ -906,11 +882,10 @@
                                 this.dispatchEvent(new ProgressEvent("load"));
                                 BLOD.xml = xml;
                             });
+                        }).catch((e) => {
+                            toast.error("载入历史弹幕失败", "请尝试刷新页面");
+                            toast.error(e);
                         });
-                        seg.withCredentials = true;
-                        seg.responseType = "arraybuffer";
-                        seg.open("get", "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date);
-                        seg.send();
                     }
                 }
                 // 监听页面多次重写jsonp

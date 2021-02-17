@@ -28,12 +28,13 @@
          * 异步链接
          * @param {string} url 
          */
-        true(url) {
+        true(url, responseType = "text") {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
+                xhr.responseType = responseType;
                 xhr.withCredentials = true;
-                xhr.onload = () => resolve(xhr.responseText);
+                xhr.onload = () => resolve(xhr.response);
                 xhr.onerror = () => {
                     toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
                     reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
