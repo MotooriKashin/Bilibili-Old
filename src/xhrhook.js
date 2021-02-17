@@ -425,6 +425,7 @@
      * @param  {Function} onload 得到所有弹幕之后触发的回调函数
      */
     const getSegDanmaku = (onload) => {
+<<<<<<< HEAD
         function request(url) {
             return new Promise(function (resolve, reject) {
                 let xhr = new XMLHttpRequest();
@@ -443,6 +444,9 @@
             });
         }
 
+=======
+        let request = (url) => BLOD.xhr.true(url, "arraybuffer", {}, false);
+>>>>>>> 8a8909d (Update xhrhook.js)
         let DmWebViewReply = "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid
         request(DmWebViewReply).then(getAllSeg).catch((e) => {
             toast.error("载入弹幕失败", "请尝试刷新页面");
