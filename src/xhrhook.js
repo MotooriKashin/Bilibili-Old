@@ -695,9 +695,9 @@
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
                         Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
-                        //将av300000(2012年7月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
-                        if (BLOD.aid < 300000) {
-                            for (let i in Segments) {
+                        //将av400000(2012年11月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
+                        if (BLOD.aid < 400000) {
+                            for (let i = 0; i < Segments.length; i++) {
                                 if (Segments[i].content.includes('/n')) {
                                     Segments[i].pool = 1;
                                 }
@@ -705,9 +705,6 @@
                         }
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
-                            if (v.pool == 1) {
-                                v.content = v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n');
-                            }
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
                             return {
@@ -718,7 +715,7 @@
                                 mode: v.mode,
                                 size: v.fontsize,
                                 stime: v.progress / 1000,
-                                text: v.content,
+                                text: v.pool == 1 ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                                 uid: v.midHash
                             };
                         });
