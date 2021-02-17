@@ -425,55 +425,49 @@
      * @param  {Function} onload 得到所有弹幕之后触发的回调函数
      */
     const getSegDanmaku = (onload) => {
-        let protoSegments = [];
-        getSegConfig().then(getAllSeg).catch((e) => {
-            toast.error("载入弹幕失败", "请尝试刷新页面");
-            toast.error(e);
-        });
-        function getSegConfig() {
-            return new Promise(function (resolve) {
+        function request(url) {
+            return new Promise(function (resolve, reject) {
                 let xhr = new XMLHttpRequest();
-                xhr.addEventListener("load", function () {
-                    let res = protoView.decode(new Uint8Array(xhr.response));
-                    resolve(res);
+                xhr.addEventListener("load", () => {
+                    if (xhr.status == 200)
+                        resolve(new Uint8Array(xhr.response));
+                    else
+                        reject("HTTP" + xhr.status);
                 });
-                xhr.open("get", "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid);
                 xhr.responseType = "arraybuffer";
+                xhr.open("get", url);
                 xhr.send();
             });
         }
+
+        let DmWebViewReply = "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid
+        request(DmWebViewReply).then(getAllSeg).catch((e) => {
+            toast.error("载入弹幕失败", "请尝试刷新页面");
+            toast.error(e);
+        });
         // 获得所有分段
         function getAllSeg(config) {
+            config = protoView.decode(config);
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
             let total = player.getDuration() / pageSize + 1;
             let allrequset = [];
             let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid;
-            function pushReq(url) {
-                allrequset.push(new Promise(function (resolve) {
-                    let xhr = new XMLHttpRequest();
-                    xhr.addEventListener("load", function () {
-                        protoSegments.push(xhr.response);
-                        resolve();
-                    });
-                    xhr.open("get", url);
-                    xhr.responseType = "arraybuffer";
-                    xhr.send();
-                }));
-            }
             for (let index = 1; index <= total; index++) {
-                pushReq(reqUrl + "&segment_index=" + index);
+                allrequset.push(request(reqUrl + "&segment_index=" + index));
             }
             // BAS弹幕
             if (config.specialDms.length > 0) {
                 for (let index = 0; index < config.specialDms.length; index++) {
                     // 下发的是http链接，但会被chrome的安全措施拦掉，于是替换成https
-                    pushReq(config.specialDms[index].replace("http", "https"));
+                    allrequset.push(request(config.specialDms[index].replace("http", "https")));
                 }
             }
             // 完成所有的网络请求大概要300ms
-            return Promise.all(allrequset).then(function () { onload(protoSegments); });
+            return Promise.all(allrequset).then((segments) => {
+                onload(segments);
+            });
         }
     }
 
