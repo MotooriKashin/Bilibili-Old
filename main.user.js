@@ -10,6 +10,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 =======
 // @version      4.0.3
@@ -23,6 +24,9 @@
 =======
 // @version      4.2.2
 >>>>>>> d8eca6e (不再复制下载链接到剪切板)
+=======
+// @version      4.3.6
+>>>>>>> 105384b (完善xhr封装，载入弹幕失败时弹出提示，在下载的弹幕里保留/n)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
 // @version      3.7.7
@@ -82,14 +86,20 @@
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/initialstate.js
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/ui.js
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/debug.js
-// @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/xhr.js
+// @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@67a8cac4ee7230a1ace40a7ff2a8c64572bf113e/src/xhr.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@39d49dec855e76fca6af28812a77afb71eb49069/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aa57aca5b82e2c8f400066f2380f9323f4f5259b/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dc620f0c9b5fd077f43515080730cb3eaf630876/src/rewrite.js
+<<<<<<< HEAD
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@9ad46e37ceb6df52285b02730708b775a1e32e5f/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ff0b9e2da1d40717e5bcc7e4f8ee4a46af12eaea/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@95c99964865e1f522e98ca3a5aea4fb32f88235e/src/config.json
 >>>>>>> 98ce3b2 (替换动图彩蛋)
+=======
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bddda7e4ccbc2fb300573df7be063cdc55cad893/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@67a8cac4ee7230a1ace40a7ff2a8c64572bf113e/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@984976e2b1b58a36caabb8deb2884acc401060e7/src/config.json
+>>>>>>> 105384b (完善xhr封装，载入弹幕失败时弹出提示，在下载的弹幕里保留/n)
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
