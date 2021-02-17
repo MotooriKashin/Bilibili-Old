@@ -741,6 +741,7 @@
     const getSegDanmaku = (onload) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         function request(url) {
             return new Promise(function (resolve, reject) {
 =======
@@ -768,6 +769,9 @@
             });
         }
 
+=======
+        let request = (url) => BLOD.xhr.true(url, "arraybuffer", {}, false);
+>>>>>>> 8a8909d (Update xhrhook.js)
 =======
         let request = (url) => BLOD.xhr.true(url, "arraybuffer", {}, false);
 >>>>>>> 8a8909d (Update xhrhook.js)
