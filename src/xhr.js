@@ -53,8 +53,8 @@
                 xhr.onload = () => resolve(xhr.response);
 >>>>>>> 8699635 (完善xhr封装)
                 xhr.onerror = () => {
-                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
+                    reject(xhr.statusText || url);
                 }
                 xhr.send();
             });
@@ -79,8 +79,8 @@
                         resolve(xhr.responseText);
                     },
                     onerror: (xhr) => {
-                        toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                        reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                        toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
+                        reject(xhr.statusText || url);
                     }
                 });
             })
@@ -104,8 +104,8 @@
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.responseText);
                 xhr.onerror = () => {
-                    toast.error("XMLHttpRequest 错误！", "method：POST", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
+                    toast.error("XMLHttpRequest 错误！", "method：POST", "url：" + url, xhr.statusText || "");
+                    reject(xhr.statusText || url);
                 }
                 xhr.send(data);
             });
