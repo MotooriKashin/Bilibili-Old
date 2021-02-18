@@ -175,18 +175,7 @@
          * @param {string} url
          */
         getIdxs(url) {
-            return new Promise((resolve, reject) => {
-                let xhr = new XMLHttpRequest();
-                xhr.open('GET', url.replace('http:', 'https:'), true);
-                xhr.setRequestHeader('Range', 'bytes=0-6000');
-                xhr.responseType = 'arraybuffer';
-                xhr.onload = () => resolve(xhr.response);
-                xhr.onerror = () => {
-                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
-                }
-                xhr.send();
-            })
+            BLOD.xhr(url, 'arraybuffer', { 'Range': 'bytes=0-6000' }, false);
         }
         /**
          * 过滤问题音频
