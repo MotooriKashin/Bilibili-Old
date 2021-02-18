@@ -247,6 +247,7 @@
 >>>>>>> 2f00fde (format with JsDoc)
         getIdxs(url) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             BLOD.xhr(url, 'arraybuffer', { 'Range': 'bytes=0-6000' }, false);
 =======
         /**
@@ -287,6 +288,9 @@
 >>>>>>> 3a04522 (过滤问题音频)
             })
             return arr;
+=======
+            BLOD.xhr(url, 'arraybuffer', { 'Range': 'bytes=0-6000' }, false);
+>>>>>>> 329dfbe (修正xhr错误输出)
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
