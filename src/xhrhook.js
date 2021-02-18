@@ -1093,20 +1093,56 @@
                         });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // @ts-ignore
 =======
 >>>>>>> 39d49de (remove eslint rules)
                         Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
                         //将av400000(2012年11月)之前视频中含有"/n"的弹幕打上“字幕弹幕”标记，使播放器能正确渲染
+=======
+                        //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
+>>>>>>> bda4b6f (调整普权弹幕显示效果)
                         if (BLOD.aid < 400000) {
+                            // 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
                             for (let i = 0; i < Segments.length; i++) {
                                 if (Segments[i].content.includes('/n')) {
                                     Segments[i].pool = 1;
+                                    Segments[i].zIndex = Segments[i].progress;
+                                }
+                            }
+                            // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
+                            let progress;
+                            Segments.sort((a, b) => a.progress - b.progress);
+                            for (let i = 0; i < Segments.length - 1; i++) {
+                                if (Segments[i].progress == Segments[i + 1].progress) {
+                                    progress = Segments[i].progress;
+                                    i = search(i);
+                                }
+                            }
+                            function search(i) {
+                                if (Segments[i].progress == Segments[i + 1].progress) {
+                                    setzIndex(i);
+                                    return search(i + 1);
+                                }
+                                setzIndex(i);
+                                return i;
+                            }
+                            function setzIndex(i) {
+                                let textData = Segments[i];
+                                if (textData.pool == 1) {
+                                    if (textData.content.includes("█") || textData.content.includes("▂"))
+                                        textData.zIndex = progress;
+                                    else
+                                        textData.zIndex = progress + 1;
                                 }
                             }
                         }
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+                        Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
+>>>>>>> bda4b6f (调整普权弹幕显示效果)
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
 <<<<<<< HEAD
@@ -1137,8 +1173,13 @@
                                 text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
 =======
                                 text: v.pool == 1 ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
+<<<<<<< HEAD
 >>>>>>> 67a8cac (Update xhrhook.js)
                                 uid: v.midHash
+=======
+                                uid: v.midHash,
+                                zIndex: v.zIndex
+>>>>>>> bda4b6f (调整普权弹幕显示效果)
                             };
                         });
 <<<<<<< HEAD
