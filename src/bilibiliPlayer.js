@@ -3813,11 +3813,7 @@ function Fa() {
                 }
                 var d = this.Ro(this.textData, this.f);
                 this.element = d.Am;
-                if (this.textData.class == 1) 
-                    if(!(this.textData.text.includes("█") || this.textData.text.includes("▂")))
-                        d.Am.style.zIndex = "1001";
-                    else
-                        d.Am.style.zIndex = "1000";
+                if (this.textData.zIndex) d.Am.style.zIndex = this.textData.zIndex;
                 this.width = d.width;
                 this.height = d.height;
                 this.textData.bc ? (this.vc = this.f.height, this.cf = this.f.width, this.Wb = d.height, this.Df = d.width, this.gu = this.FK, this.hm = "Y", this.im = "X") : (this.vc = this.f.width, this.cf = this.f.height, this.Wb = d.width, this.Df = d.height, this.gu = this.GK, this.hm = "X", this.im = "Y");
