@@ -355,7 +355,7 @@
                             if (!BLOD.uid) return document.getElementsByClassName("c-icon-move")[0].click();
                             // 构造并请求点赞表单
                             let msg = "aid=" + BLOD.aid + "&like=1&csrf=" + BLOD.getCookies().bili_jct;
-                            data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", "application/x-www-form-urlencoded", msg);
+                            data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", msg);
                             data = BLOD.jsonCheck(data).ttl;
                             // 点亮点赞图标并修改显示数据
                             toast.success("点赞成功！");
@@ -371,7 +371,7 @@
                             // 点赞过绑定取消点赞点击事件
                             // 构造并请求取消点赞表单
                             let msg = "aid=" + BLOD.aid + "&like=2&csrf=" + BLOD.getCookies().bili_jct;
-                            data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", "application/x-www-form-urlencoded", msg);
+                            data = await xhr.post("https://api.bilibili.com/x/web-interface/archive/like", msg);
                             data = BLOD.jsonCheck(data).ttl;
                             // 熄灭点赞图标并修改显示数据
                             toast.success("取消点赞！");
