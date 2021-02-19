@@ -183,6 +183,7 @@
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
 <<<<<<< HEAD
+<<<<<<< HEAD
         post(url, headers = { "Content-type": "application/x-www-form-urlencoded" }, data, credentials = true) {
 >>>>>>> 8699635 (完善xhr封装)
 =======
@@ -191,6 +192,9 @@
 =======
         post(url, headers = { "Content-type": "application/x-www-form-urlencoded" }, data, credentials = true) {
 >>>>>>> 8699635 (完善xhr封装)
+=======
+        post(url, data, headers = { "Content-type": "application/x-www-form-urlencoded" }, credentials = true) {
+>>>>>>> 1989337 (修复点赞功能)
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('post', url, true);
