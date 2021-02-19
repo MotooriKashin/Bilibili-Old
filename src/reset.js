@@ -562,7 +562,7 @@
                 let parameters = JSON.parse(BLOD.getResourceText("search"));
                 BLOD.triming = (url) => {
                     let obj = BLOD.urlObj(url);
-                    var mas = url.split("?")[0];
+                    var mas = url.split("#")[0].split("?")[0];
                     mas = mas.split("/");
                     // BV => av
                     mas.forEach((d, i, mas) => {
