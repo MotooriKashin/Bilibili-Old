@@ -459,6 +459,7 @@
 <<<<<<< HEAD
             // 移除空间登录弹窗
 <<<<<<< HEAD
+<<<<<<< HEAD
             remove('van-popover van-popper', "class");
             remove('lt-row', "class");
 =======
@@ -467,6 +468,9 @@
 >>>>>>> 248dd3c (优化BV=>av)
 =======
             if (BLOD.path.name == "space") {
+=======
+            if (BLOD.path[2] == 'space.bilibili.com') {
+>>>>>>> a8f8605 (改进空间识别)
                 remove('van-popover van-popper', "class");
                 remove('lt-row', "class");
             }
