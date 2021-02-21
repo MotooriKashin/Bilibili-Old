@@ -709,16 +709,17 @@ const objUrl = (url, obj) => {
         /**
          * 添加新的DOM节点
          * @param {string} type 节点tag名称
-         * @param {Object} arb 节点属性对象
-         * @param {boolean} [fir] 是否在body中置顶
+         * @param {Object} [arb] 节点属性对象
+         * @param {HTMLElement} [tar] 宿主节点名称
+         * @param {boolean} [fir] 是否在宿主中置顶
          * @param {HTMLElement} [rep] 被替换的节点：将忽略fir参数
          */
-        addElement(type, arb, fir, rep) {
-            arb = arb || {};
+        addElement(type, arb = {}, tar = document.body, fir = false, rep) {
             let emt = document.createElement(type);
             for (let key in arb) emt.setAttribute(key, arb[key]);
             if (rep) return rep.replaceWith(emt);
-            fir ? document.body.insertBefore(emt, document.body.firstChild) : document.body.appendChild(emt);
+            fir ? tar.insertBefore(emt, tar.firstChild) : tar.appendChild(emt);
+            return emt;
         }
         /**
          * 添加css样式到<head>标签底部

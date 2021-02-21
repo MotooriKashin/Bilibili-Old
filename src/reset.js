@@ -138,18 +138,18 @@
             let newFoot = document.querySelector(".international-footer");
             if (!BLOD.head && newHead) {
                 BLOD.head = true;
-                if (!window.$) BLOD.addElement("script", emap[0], true);
+                if (!window.$) BLOD.addElement("script", emap[0], undefined, true);
                 newHead.setAttribute("style", "visibility:hidden;");
                 if (document.querySelector(".mini-type") && !location.href.includes("blackboard/topic_list") && !location.href.includes("blackboard/x/act_list")) {
                     emap[1].class = "z-top-container";
                 }
                 if (BLOD.path.mhead) emap[1].class = "z-top-container";
-                BLOD.addElement("div", emap[1], true);
-                BLOD.addElement("script", emap[2], true);
+                BLOD.addElement("div", emap[1], undefined, true);
+                BLOD.addElement("script", emap[2], undefined, true);
             }
             if (!BLOD.foot && newFoot) {
                 BLOD.foot = true;
-                BLOD.addElement("div", emap[3], false, newFoot);
+                BLOD.addElement("div", emap[3], undefined, false, newFoot);
                 BLOD.addElement("script", emap[4])
             }
         },
@@ -458,12 +458,19 @@
             remove("app-download", "class");
 <<<<<<< HEAD
             // 移除空间登录弹窗
+<<<<<<< HEAD
             remove('van-popover van-popper', "class");
             remove('lt-row', "class");
 =======
             // 移除登录弹窗
             if (BLOD.load) remove("lt-row", "class");
 >>>>>>> 248dd3c (优化BV=>av)
+=======
+            if (BLOD.path.name == "space") {
+                remove('van-popover van-popper', "class");
+                remove('lt-row', "class");
+            }
+>>>>>>> 8001703 (修复新版首页渲染错误)
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
