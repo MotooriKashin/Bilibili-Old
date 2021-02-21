@@ -319,7 +319,7 @@
             remove("fixed_app_download", "id");
             remove("app-download", "class");
             // 移除空间登录弹窗
-            if (BLOD.path.name == "space") {
+            if (BLOD.path[2] == 'space.bilibili.com') {
                 remove('van-popover van-popper', "class");
                 remove('lt-row', "class");
             }
