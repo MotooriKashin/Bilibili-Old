@@ -163,6 +163,7 @@
             location.replace(location.href.replace("s/video", "video"));
         }
         space() {
+            BLOD.path.name = "space";
             BLOD.mid = BLOD.path[3] ? 1 * BLOD.path[3] : BLOD.mid;
             BLOD.reset.setJoinTime();
         }
