@@ -59,7 +59,10 @@
   height: 24px;
   font-size: 15px;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 #BLOD-UI-flesh {
   cursor: pointer;
   position: absolute;
@@ -68,7 +71,10 @@
   font-size: 14px;
   color: blue;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 #BLOD-UI-close {
   cursor: pointer;
   position: absolute;
@@ -111,10 +117,15 @@
   padding: 5px;
   margin-left: 5px;
 }
+<<<<<<< HEAD
 
 #BLOD-UI-right input {
   display: inline;
   appearance: auto;
+=======
+#BLOD-UI-right input {
+  display: inline;
+>>>>>>> eea4f89 (重绘设置界面)
 }
 
 #BLOD-UI-right label {
@@ -165,7 +176,12 @@
   background-size: cover !important;
 }
 
+<<<<<<< HEAD
 .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
+=======
+.bb-comment .comment-header .header-page,
+.comment-bilibili-fold .comment-header .header-page {
+>>>>>>> eea4f89 (重绘设置界面)
   float: right;
   line-height: 36px;
 }
@@ -303,23 +319,35 @@
   white-space: nowrap;
   overflow: auto;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 .up-info-m .up-card {
   display: inline-block;
   margin-top: 10px;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 .up-info-m .avatar img {
   cursor: pointer;
   width: 40px;
   height: 40px;
   border-radius: 50%;
 }
+<<<<<<< HEAD
 
 .up-info-m .avatar {
   position: relative;
 }
 
+=======
+.up-info-m .avatar {
+  position: relative;
+}
+>>>>>>> eea4f89 (重绘设置界面)
 .up-info-m .avatar .info-tag {
   position: absolute;
   background: #fff;
@@ -333,7 +361,10 @@
   right: -10px;
   white-space: nowrap;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 .up-info-m .avatar {
   width: 60px;
   height: 30px;
@@ -344,7 +375,10 @@
   -ms-flex-align: start;
   align-items: flex-start;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 .up-info-m .avatar .name-text {
   font-family: PingFangSC-Regular, sans-serif;
   line-height: 30px;
@@ -357,12 +391,19 @@
   -webkit-box-orient: vertical;
   white-space: nowrap;
 }
+<<<<<<< HEAD
 
 .up-info-m .avatar .name-text.is-vip, .up-info-m .avatar .name-text:hover {
   color: #fb7299;
 }
 <<<<<<< HEAD
 
+=======
+.up-info-m .avatar .name-text.is-vip,
+.up-info-m .avatar .name-text:hover {
+  color: #fb7299;
+}
+>>>>>>> eea4f89 (重绘设置界面)
 .up-info-m .title {
   display: block;
   font-size: 14px;
@@ -372,6 +413,7 @@
   height: 24px;
   font-weight: 400;
   padding: 8px 0;
+<<<<<<< HEAD
 }
 
 .BLOD-dl-settings {
@@ -552,5 +594,7 @@
     height: 24px;
     font-weight: 400;
     padding: 8px 0;
+=======
+>>>>>>> eea4f89 (重绘设置界面)
 }
 >>>>>>> a555edd (show up list)

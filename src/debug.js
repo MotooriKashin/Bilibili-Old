@@ -100,9 +100,9 @@
 >>>>>>> 2f00fde (format with JsDoc)
     class Toast {
         constructor() {
+            this.default = { timeout: 4, step: 250 };
+            this.change(BLOD.getValue("toast"));
             BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
-            this.timeout = 4; // 通知显示时间，单位/秒
-            this.step = 250; // 通知间的最小间隔，单位/毫秒
             this.count = 0; // 未显示的通知数
             this.container = document.createElement("div");
             this.container.setAttribute("id", "toast-container");
@@ -243,6 +243,20 @@
 =======
 >>>>>>> 2f00fde (format with JsDoc)
         /**
+         * 调整设置
+         * @param {object} config 设置键值对
+         */
+        change(config) {
+            if (config) {
+                this.config = config;
+                this.timeout = this.config.timeout; // 通知显示时间，单位/秒
+                this.step = this.config.step; // 通知间的最小间隔，单位/毫秒
+                BLOD.setValue("toast", this.config);
+                return config;
+            }
+            else return this.change(this.default);
+        }
+        /**
          * @param {string} [type = info | success | warning | error] 通知类型
          * @param  {...string} msg 通知内容
          */
@@ -252,12 +266,15 @@
 >>>>>>> 2f00fde (format with JsDoc)
         show(type, ...msg) {
             if (!BLOD.config.reset.toast) return;
+<<<<<<< HEAD
 =======
         async show(type, ...msg) {
 >>>>>>> fabed72 (UpdateJavaScript module)
 =======
         show(type, ...msg) {
 >>>>>>> 55371da (Update JavaScript module)
+=======
+>>>>>>> eea4f89 (重绘设置界面)
             if (!document.body) {
                 if (this.check) return;
                 return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
@@ -367,6 +384,9 @@
         method.success = makeExports("success");
         method.warning = makeExports("warning");
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> eea4f89 (重绘设置界面)
         method.change = (config) => { return toast.change(config) }
         method.config = toast.config;
         return method;
