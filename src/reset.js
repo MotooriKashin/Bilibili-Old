@@ -457,6 +457,7 @@
             remove("fixed_app_download", "id");
             remove("app-download", "class");
 <<<<<<< HEAD
+<<<<<<< HEAD
             // 移除空间登录弹窗
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -471,6 +472,10 @@
 =======
             if (BLOD.path[2] == 'space.bilibili.com') {
 >>>>>>> a8f8605 (改进空间识别)
+=======
+            // 移除登录弹窗
+            if (BLOD.load) {
+>>>>>>> 983a4bd (页面载入再移除)
                 remove('van-popover van-popper', "class");
                 remove('lt-row', "class");
             }
