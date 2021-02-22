@@ -188,7 +188,7 @@
                     if (!/^\d+$/.test(step.value) || step.value > 1000 || step.value < 50) return;
                     BLOD.toast.config.step = step.value;
                     BLOD.toast.change(BLOD.toast.config);
-                    toast.success("调整通知延时：" + step.value + " 豪秒");
+                    toast.success("调整通知延时：" + step.value + " 毫秒");
                 }
                 let button = BLOD.addElement("div", {}, right);
                 button.innerHTML = '<label><input type="button" value="恢复默认" /></label>';
