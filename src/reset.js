@@ -318,8 +318,8 @@
             // 移除app下载浮动框
             remove("fixed_app_download", "id");
             remove("app-download", "class");
-            // 移除空间登录弹窗
-            if (BLOD.path[2] == 'space.bilibili.com') {
+            // 移除登录弹窗
+            if (BLOD.load) {
                 remove('van-popover van-popper', "class");
                 remove('lt-row', "class");
             }
