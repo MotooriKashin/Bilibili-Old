@@ -195,6 +195,19 @@
                 this.checked("download", right);
                 this.checked("dlother", right);
                 this.checked("novideo", right);
+                let custom = BLOD.addElement("div", {}, right);
+                custom.innerHTML = '自定义链接<input type="url" placeholder="http://www.example.com"> <button>下载</button>';
+                let commit = custom.querySelector("button");
+                let input = custom.querySelector("input");
+                let callback = () => {
+                    if (!BLOD.download) new Function(BLOD.getResourceText("download"))();
+                    if (input.value) BLOD.download(input.value);
+                    else toast.warning("请输入有效的视频链接", "支持完整av/BV/bangumi链接，如https://www.bilibili.com/video/av50619577", "也支持视频关键参数，如aid、bvid、ssid、epid");
+                }
+                commit.onclick = callback;
+                input.onkeydown = (e) => {
+                    if (e.which == 13) callback();
+                }
             }
         }
         /**
