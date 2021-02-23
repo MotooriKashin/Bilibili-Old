@@ -475,9 +475,14 @@
 =======
             // 移除登录弹窗
             if (BLOD.load) {
+<<<<<<< HEAD
 >>>>>>> 983a4bd (页面载入再移除)
                 remove('van-popover van-popper', "class");
                 remove('lt-row', "class");
+=======
+                if (document.querySelector(".unlogin-popover")) document.querySelector(".unlogin-popover").parentNode.remove();
+                remove("lt-row", "class");
+>>>>>>> 586ca6b (节点误伤)
             }
 >>>>>>> 8001703 (修复新版首页渲染错误)
             // 移除直播水印
