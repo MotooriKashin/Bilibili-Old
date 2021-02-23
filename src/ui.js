@@ -139,6 +139,7 @@
                 right.innerHTML = '';
                 this.checked("download", right);
                 this.checked("dlother", right);
+                this.checked("novideo", right);
             }
         }
         /**
