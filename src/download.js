@@ -9,7 +9,7 @@
 
     class Download {
         constructor() {
-            console.debug('import module "download.js"')
+            console.debug('import module "download.js"');
         }
         init(node) {
             if (!BLOD.config.reset.download) return;
@@ -92,6 +92,11 @@
             BLOD.mdf.dash = BLOD.mdf.dash || {};
             if (path.dash.video) {
                 for (let i = 0; i < path.dash.video.length; i++) {
+                    // 随机抽取下载链接
+                    if (path.dash.video[i].backupUrl && path.dash.video[i].backupUrl[0]) {
+                        path.dash.video[i].backupUrl.push(path.dash.video[i].baseUrl);
+                        path.dash.video[i].baseUrl = BLOD.randomArray(path.dash.video[i].backupUrl)[0];
+                    }
                     if (path.dash.video[i].codecs.startsWith("avc")) {
                         BLOD.mdf.dash.avc = BLOD.mdf.dash.avc || [];
                         BLOD.mdf.dash.avc.push([qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8), ".m4v"]);
@@ -103,6 +108,10 @@
             }
             if (path.dash.audio) {
                 for (let i = 0; i < path.dash.audio.length; i++) {
+                    if (path.dash.audio[i].backupUrl && path.dash.audio[i].backupUrl[0]) {
+                        path.dash.audio[i].backupUrl.push(path.dash.audio[i].baseUrl);
+                        path.dash.audio[i].baseUrl = BLOD.randomArray(path.dash.audio[i].backupUrl)[0];
+                    }
                     BLOD.mdf.dash.aac = BLOD.mdf.dash.aac || [];
                     BLOD.mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8), ".m4a"]);
                 }
