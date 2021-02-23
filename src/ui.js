@@ -269,8 +269,12 @@
                 if (state) state.remove();
             }
             if (config[type][d]) div.children[0].children[0].checked = true;
+<<<<<<< HEAD
             div.onclick = () => {
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+            div.querySelector("input").onclick = () => {
+>>>>>>> f270261 (input监听问题)
                 if (config[type][d]) {
                     toast.warning("禁用功能：" + BLOD.defaultConfig[type][d][1]);
                     config[type][d] = 0;

@@ -125,7 +125,11 @@
 =======
 #BLOD-UI-right input {
   display: inline;
+<<<<<<< HEAD
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+  appearance: auto;
+>>>>>>> f270261 (input监听问题)
 }
 
 #BLOD-UI-right label {
