@@ -1056,12 +1056,13 @@
         carousel(obj) {
             if (!config.reset.carousel) return;
             try {
-                let msg = BLOD.loc || BLOD.randomArray([
+                let msg = BLOD.loc || [];
+                msg.push(...BLOD.randomArray([
                     ['https://www.bilibili.com/blackboard/activity-4KPC.html', '解锁超清4K画质'],
                     ['https://www.bilibili.com/blackboard/activity-4K120FPS-PC.html', '4K120FPS投稿全量开放'],
                     ['https://www.bilibili.com/blackboard/bilibili2009.html', '十年前的B站长啥样'],
                     ['https://www.bilibili.com/blackboard/html5playerhelp.html', 'HTML5播放器试用'],
-                ], 2);
+                ], 2));
                 let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
                 let parser = new DOMParser(),
                     responseXML = parser.parseFromString(xmltext, "text/xml");
