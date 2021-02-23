@@ -109,6 +109,21 @@
             }
         }
         /**
+         * 浮动信息
+         * @param {HTMLElement} div 鼠标所在节点
+         * @param {string} msg 浮动信息字符串，可以包含HTML节点
+         */
+        state(div, msg) {
+            div.onmouseover = () => {
+                let state = BLOD.addElement("div", { id: "BLOD-UI-state" });
+                state.innerHTML = msg;
+            }
+            div.onmouseout = () => {
+                let state = document.querySelector("#BLOD-UI-state");
+                if (state) state.remove();
+            }
+        }
+        /**
          * 绘制设置入口
          */
 =======
@@ -260,14 +275,7 @@
             type = type ? "rewrite" : "reset";
             let div = BLOD.addElement("div", style, tar);
             div.innerHTML = `<label><input type="checkbox" />${BLOD.defaultConfig[type][d][1]}</label>`;
-            div.onmouseover = () => {
-                let state = BLOD.addElement("div", { id: "BLOD-UI-state" });
-                state.innerHTML = BLOD.defaultConfig[type][d][2];
-            }
-            div.onmouseout = () => {
-                let state = document.querySelector("#BLOD-UI-state");
-                if (state) state.remove();
-            }
+            this.state(div, BLOD.defaultConfig[type][d][2]);
             if (config[type][d]) div.children[0].children[0].checked = true;
 <<<<<<< HEAD
             div.onclick = () => {
@@ -327,6 +335,7 @@
 =======
                 let custom = BLOD.addElement("div", {}, right);
                 custom.innerHTML = '自定义链接<input type="url" placeholder="http://www.example.com"> <button>下载</button>';
+                this.state(custom, "输入视频所在链接URL，回车或者点击“下载”按钮即可</br>暂不支持获取弹幕等其他信息")
                 let commit = custom.querySelector("button");
                 let input = custom.querySelector("input");
                 let callback = () => {
@@ -510,6 +519,25 @@
                 right.innerHTML = '';
                 this.checked("limit", right);
                 this.checked("accesskey", right, false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
+                let thaiLand = BLOD.addElement("div", {}, right);
+                thaiLand.innerHTML = '代理服务器（东南亚）<input type="url" placeholder="http://www.example.com"> <button>保存</button>'
+                this.state(thaiLand, "请输入解除限制时所需的东南亚代理服务器地址，用以解除东南亚区域番剧限制</br>东南亚番剧账户与主站不互通，只能播放480P，启用账号授权也无效！</br>链接有效形式如输入框提示：需带http/https头，末尾无需斜杠！")
+                let commit = thaiLand.querySelector("button");
+                let input = thaiLand.querySelector("input");
+                input.value = BLOD.getValue("thaiLand") || "";
+                let callback = () => {
+                    if (input.value && /^http.+$/.test(input.value)) {
+                        if (input.value[input.value.length - 1] == "/") input.value = input.value.substr(0, input.value.length - 1);
+                        BLOD.setValue("thaiLand", input.value);
+                        toast.success("代理服务器（东南亚）已保存！", "URL：" + input.value);
+                    } else {
+                        toast.warning("请输入有效服务器链接！")
+                    }
+                }
+                commit.onclick = callback;
+                input.onkeydown = (e) => {
+                    if (e.which == 13) callback();
+                }
             }
         }
         /**
@@ -527,6 +555,7 @@
                 this.checked("toast", right);
                 let timeout = BLOD.addElement("div", {}, right);
                 timeout.innerHTML = '<label>通知时长：<input type="number" min="1" max="30" />秒</label>';
+                this.state(timeout, "调整每条通知浮动时长，单位/秒");
                 timeout = timeout.children[0].children[0];
                 timeout.value = BLOD.toast.config.timeout;
                 timeout.oninput = () => {
@@ -537,6 +566,7 @@
                 }
                 let step = BLOD.addElement("div", {}, right);
                 step.innerHTML = '<label>同时出现通知延时：<input type="number" min="50" max="1000" step="50"/>豪秒</label>';
+                this.state(step, "调整多条通知同时出现的时间间隔，方便逐条阅读每条通知内容，单位/毫秒")
                 step = step.children[0].children[0];
                 step.value = BLOD.toast.config.step;
                 step.oninput = () => {

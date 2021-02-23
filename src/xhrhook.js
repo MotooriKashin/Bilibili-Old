@@ -244,6 +244,7 @@
          * 获取链接ids
          * @param {string} url
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
         getIdxs(url) {
 <<<<<<< HEAD
@@ -255,10 +256,15 @@
          * @param {string} url 下载链接
          * @param {number} duration 媒体时长
          */
+=======
+>>>>>>> 57513a7 (Thailand server)
         getIdxs(url, duration) {
             let range = Math.round(duration * 3.5);
             range = range < 6000 ? 6000 : range;
             return BLOD.xhr(url, 'arraybuffer', { 'Range': `bytes=0-${range}` }, false);
+<<<<<<< HEAD
+>>>>>>> 57513a7 (Thailand server)
+=======
 >>>>>>> 57513a7 (Thailand server)
         }
 <<<<<<< HEAD
@@ -2128,11 +2134,16 @@
 =======
                                     toast.error("代理服务器出错！", ...e);
                                     toast("尝试拉取Thailand链接...");
+<<<<<<< HEAD
 >>>>>>> 8e2de3c (remove bangumi bofqi style)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
 =======
                                     toast.error("代理服务器出错！", ...e);
                                     toast("尝试拉取Thailand链接...");
+                                    let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
+                                    response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/playurl`, { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
+>>>>>>> 57513a7 (Thailand server)
+=======
                                     let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/playurl`, { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
 >>>>>>> 57513a7 (Thailand server)
