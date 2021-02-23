@@ -111,6 +111,7 @@
 }
 #BLOD-UI-right input {
   display: inline;
+  appearance: auto;
 }
 
 #BLOD-UI-right label {

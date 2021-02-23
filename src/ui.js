@@ -149,7 +149,7 @@
                 if (state) state.remove();
             }
             if (config[type][d]) div.children[0].children[0].checked = true;
-            div.onclick = () => {
+            div.querySelector("input").onclick = () => {
                 if (config[type][d]) {
                     toast.warning("禁用功能：" + BLOD.defaultConfig[type][d][1]);
                     config[type][d] = 0;
