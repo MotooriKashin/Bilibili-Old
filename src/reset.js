@@ -592,6 +592,17 @@
                 if (!config.reset.bvid2av) return;
                 document.querySelectorAll("a").forEach(d => {
                     if (d.href && url.indexOf(d.href) < 0) {
+                        if (d.href.includes("account.bilibili.com/login?act=exit")) {
+                            d.href = "javascript:void(0);";
+                            d.onclick = async () => {
+                                toast.warning("正在退出登录！")
+                                let data = BLOD.jsonCheck(await xhr.post("https://passport.bilibili.com/login/exit/v2", "biliCSRF=" + BLOD.getCookies().bili_jct + "&gourl=" + encodeURIComponent(location.href)));
+                                if (data.status) {
+                                    toast.success("退出登录！");
+                                    setTimeout(() => location.reload(), 1000);
+                                }
+                            }
+                        }
                         let hash = d.href.includes("#") ? "#" + d.href.split("#")[1] : "";
                         hash = hash.includes("/") ? "" : hash;
                         d.href = BLOD.triming(d.href);
