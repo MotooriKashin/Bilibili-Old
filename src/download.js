@@ -131,9 +131,12 @@
     class Download {
         constructor() {
             console.debug('import module "download.js"');
+<<<<<<< HEAD
             this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
             this.config = BLOD.getValue("download") || {};
+=======
+>>>>>>> 1173f8f (随机选择下载链接)
         }
         /**
          * 添加播放器右键下载菜单
