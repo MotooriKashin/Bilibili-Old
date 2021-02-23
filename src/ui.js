@@ -314,7 +314,11 @@
                 right.innerHTML = '';
                 this.checked("download", right);
                 this.checked("dlother", right);
+<<<<<<< HEAD
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+                this.checked("novideo", right);
+>>>>>>> 9d0f0f6 (修复拦截视频设置)
             }
         }
         /**
