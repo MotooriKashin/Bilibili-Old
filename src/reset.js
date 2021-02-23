@@ -320,8 +320,8 @@
             remove("app-download", "class");
             // 移除登录弹窗
             if (BLOD.load) {
-                remove('van-popover van-popper', "class");
-                remove('lt-row', "class");
+                if (document.querySelector(".unlogin-popover")) document.querySelector(".unlogin-popover").parentNode.remove();
+                remove("lt-row", "class");
             }
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
