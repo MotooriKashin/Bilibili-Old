@@ -165,8 +165,19 @@
                 30016: [640, 360], // 360P
             }
         }
+<<<<<<< HEAD
         getIdxs(url) {
             BLOD.xhr(url, 'arraybuffer', { 'Range': 'bytes=0-6000' }, false);
+=======
+        /**
+         * 获取链接ids
+         * @param {string} url
+         */
+        getIdxs(url, duration) {
+            let range = Math.round(duration * 3.5);
+            range = range < 6000 ? 6000 : range;
+            return BLOD.xhr(url, 'arraybuffer', { 'Range': `bytes=0-${range}` }, false);
+>>>>>>> 57513a7 (Thailand server)
         }
         fixAudio(audio) {
             // 多余的音频会造成DASH闪退
@@ -197,7 +208,7 @@
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                     if (d.SegmentBase) BLOD["sidx" + String(BLOD.cid)][id] = [d.SegmentBase.Initialization, d.SegmentBase.indexRange]
                     if (!BLOD["sidx" + String(BLOD.cid)][id]) {
-                        let data = new Uint8Array(await this.getIdxs(d.base_url));
+                        let data = new Uint8Array(await this.getIdxs(d.base_url, this.playurl.dash.duration));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                         // 首个“sidx”出现4字节之前的部分为索引奇石点
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
@@ -233,7 +244,7 @@
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                     if (d.SegmentBase) BLOD["sidx" + String(BLOD.cid)][id] = [d.SegmentBase.Initialization, d.SegmentBase.indexRange]
                     if (!BLOD["sidx" + String(BLOD.cid)][id]) {
-                        let data = new Uint8Array(await this.getIdxs(d.base_url));
+                        let data = new Uint8Array(await this.getIdxs(d.base_url, this.playurl.dash.duration));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
@@ -297,7 +308,7 @@
                         BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                         let id = d.dash_video.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                         if (!BLOD["sidx" + String(BLOD.cid)][id]) {
-                            let data = new Uint8Array(await this.getIdxs(d.dash_video.base_url));
+                            let data = new Uint8Array(await this.getIdxs(d.dash_video.base_url, this.playurl.dash.duration));
                             let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                             let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                             let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
@@ -341,7 +352,7 @@
                     BLOD["sidx" + String(BLOD.cid)] = BLOD["sidx" + String(BLOD.cid)] || {};
                     let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                     if (!BLOD["sidx" + String(BLOD.cid)][id]) {
-                        let data = new Uint8Array(await this.getIdxs(d.base_url));
+                        let data = new Uint8Array(await this.getIdxs(d.base_url, this.playurl.dash.duration));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
@@ -1156,12 +1167,19 @@
                                 try {
                                     e = Array.isArray(e) ? e : [e];
 <<<<<<< HEAD
+<<<<<<< HEAD
                                     debug.error("limit", ...e);
                                     toast.error("拉取视频链接出错！", "尝试拉取Thailand链接...");
 =======
                                     toast.error("尝试拉取Thailand链接...", "需要人在当地！");
 >>>>>>> efcabf8 (Update xhrhook.js)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
+=======
+                                    toast.error("代理服务器出错！", ...e);
+                                    toast("尝试拉取Thailand链接...");
+                                    let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
+                                    response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/playurl`, { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
+>>>>>>> 57513a7 (Thailand server)
                                     let reBuildPlayerurl = new ReBuildPlayerurl();
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
