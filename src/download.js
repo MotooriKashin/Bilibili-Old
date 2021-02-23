@@ -132,11 +132,16 @@
         constructor() {
             console.debug('import module "download.js"');
 <<<<<<< HEAD
+<<<<<<< HEAD
             this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
             this.config = BLOD.getValue("download") || {};
 =======
 >>>>>>> 1173f8f (随机选择下载链接)
+=======
+            this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
+            this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
+>>>>>>> b93be8e (自定义下载)
         }
         /**
          * 添加播放器右键下载菜单
@@ -178,6 +183,7 @@
         /**
          * 呼出下载面板
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
         async setTable() {
             toast("正在获取视频下载地址...");
@@ -194,6 +200,11 @@
 >>>>>>> b93be8e (自定义下载)
 =======
 >>>>>>> 882179f (修复语法错误)
+=======
+        async setTable(url) {
+            if (url) return this.custom(url);
+            toast("正在获取视频下载地址...");
+>>>>>>> b93be8e (自定义下载)
             let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
             if (!BLOD.mdf) {
                 path = path || {}
@@ -203,6 +214,7 @@
                 BLOD.mdf = {};
                 BLOD.mdf.quee = BLOD.mdf.quee || await Promise.all(pro);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 this.quee(BLOD.mdf.quee);
                 this.durl(path);
                 this.dash(path);
@@ -211,6 +223,11 @@
                 this.durl(path, qua);
                 this.dash(path, qua, bps);
 >>>>>>> 2ea7cf7 (添加视频拦截功能)
+=======
+                this.quee(BLOD.mdf.quee);
+                this.durl(path);
+                this.dash(path);
+>>>>>>> b93be8e (自定义下载)
             }
             this.other();
             this.item();
@@ -325,9 +342,8 @@
         /**
          * 读取远程数据
          * @param {Object[]} path 远程函数的json数组，第一个为mp4
-         * @param {Object} qua 视频画质对照表
-         * @param {Object} bps 音频音质对照表
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
         quee(path, qua, bps) {
 =======
@@ -335,6 +351,9 @@
          * 读取远程数据
          * @param {Object[]} path 远程函数的json数组，第一个为mp4
          */
+        quee(path) {
+>>>>>>> b93be8e (自定义下载)
+=======
         quee(path) {
 >>>>>>> b93be8e (自定义下载)
             if (path[0] && path[0].durl) {
@@ -345,6 +364,7 @@
                 for (let i = 1; i < path.length; i++) {
                     let data = path[i].data || (path[i].durl && path[i]) || path[i].result || {};
 <<<<<<< HEAD
+<<<<<<< HEAD
                     this.durl(data);
                     this.dash(data);
 =======
@@ -352,6 +372,10 @@
                     this.durl(data, qua);
                     this.dash(data, qua, bps);
 >>>>>>> 2ea7cf7 (添加视频拦截功能)
+=======
+                    this.durl(data);
+                    this.dash(data);
+>>>>>>> b93be8e (自定义下载)
                 }
             }
         }
@@ -361,9 +385,8 @@
         /**
          * 读取DASH数据
          * @param {Object} path 原始json
-         * @param {Object} qua 视频画质对照表
-         * @param {Object} bps 音频音质对照表
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
         dash(path, qua, bps) {
 =======
@@ -371,6 +394,9 @@
          * 读取DASH数据
          * @param {Object} path 原始json
          */
+        dash(path) {
+>>>>>>> b93be8e (自定义下载)
+=======
         dash(path) {
 >>>>>>> b93be8e (自定义下载)
             if (!path.dash) return;
@@ -410,8 +436,8 @@
         /**
          * 读取flv数据，可能包含mp4
          * @param {Object} path 原始json
-         * @param {Object} qua 画质对照表
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
         durl(path, qua) {
 =======
@@ -419,6 +445,9 @@
          * 读取flv数据，可能包含mp4
          * @param {Object} path 原始json
          */
+        durl(path) {
+>>>>>>> b93be8e (自定义下载)
+=======
         durl(path) {
 >>>>>>> b93be8e (自定义下载)
             if (!path.durl) return;
@@ -470,6 +499,7 @@
          * @param {string} [type = mp4 | flv | dash | off] 视频格式
          * @param {number} [qn] 画质参数
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
         async playurl(type, qn) {
             BLOD.aid = BLOD.aid || window.aid;
@@ -481,10 +511,15 @@
          * @param {string} [type = mp4 | flv | dash | off] 视频格式
          * @param {number} [qn] 画质参数
          */
+=======
+>>>>>>> b93be8e (自定义下载)
         async playurl(type, aid, cid, qn) {
             BLOD.aid = aid || BLOD.aid || window.aid;
             BLOD.cid = cid || BLOD.cid || window.cid;
             qn = qn || 125;
+<<<<<<< HEAD
+>>>>>>> b93be8e (自定义下载)
+=======
 >>>>>>> b93be8e (自定义下载)
             type = type || "mp4";
             if (!BLOD.cid) return;
