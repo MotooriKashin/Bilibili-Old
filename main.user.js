@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.4.5
+// @version      4.4.6
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -30,7 +30,7 @@
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b93be8e5a601edaa25778c141bd96cab448edc36/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@800170381b90aeac0a829849828c9ed33609c9c0/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a8f8605aea395f1cfc1e566a3fdeac26e04415d0/src/rewrite.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@586ca6bd86a37d58d4fdd33f948804b42c28319b/src/reset.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@248dd3cf47afd779dc7871da4e5a9e646a8dcc01/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@57513a72440b0aa4d799c7defc0ceed9805925fd/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b7d60c98612604351aaea4ad9bbc0d13d0839036/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
@@ -181,13 +181,12 @@
     if (config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
     new Function(GM_getResourceText("ui"))();
     new Function(GM_getResourceText("xhrhook"))();
-    window.addEventListener("load", () => { BLOD.load = true });
+    window.addEventListener("load", () => { BLOD.load = true; BLOD.reset.parameterTrim(true); });
     document.addEventListener("DOMNodeInserted", (msg) => {
         // 去除预览提示框
         if (/bilibili-player-video-toast-pay/.test(msg.target.className)) BLOD.reset.removePreview(msg.target);
         // 版面替换
         BLOD.reset.resetSction();
-        if (msg.target.id == "bili-header-m") if (document.getElementById("internationalHeader")) document.getElementById("internationalHeader").remove();
         // 切p监听
         if (/bilibili-player-video-btn-start/.test(msg.target.className)) BLOD.reset.switchVideo();
         // 创建播放器右键下载菜单
