@@ -264,6 +264,7 @@
         },
         // 移除节点
         resetNodes: async () => {
+            BLOD.reset.parameterTrim(true);
             let remove = (node, type, hidden, index, callback) => {
                 index ? index : index = 0;
                 switch (type) {
@@ -291,9 +292,14 @@
             // 移除app下载浮动框
             remove("fixed_app_download", "id");
             remove("app-download", "class");
+<<<<<<< HEAD
             // 移除空间登录弹窗
             remove('van-popover van-popper', "class");
             remove('lt-row', "class");
+=======
+            // 移除登录弹窗
+            if (BLOD.load) remove("lt-row", "class");
+>>>>>>> 248dd3c (优化BV=>av)
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
@@ -309,6 +315,8 @@
                 let blur = document.getElementsByClassName("blur-bg");
                 if (blur[0]) blur[0].removeAttribute("style");
             }
+            // 移除新版顶栏
+            if (document.querySelector("#bili-header-m") && document.querySelector("#internationalHeader")) document.querySelector("#internationalHeader").remove();
         },
         // BV超链接转化
         avdesc: async () => {
@@ -554,6 +562,7 @@
             } else if (BLOD.getValue("bilibili_player_settings")) {
                 localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
             }
+<<<<<<< HEAD
         },
         // URL参数清理
         parameterTrim: () => {
@@ -613,6 +622,8 @@
             }
             trim();
             setTimeout(() => { window.onclick = trim });
+=======
+>>>>>>> 248dd3c (优化BV=>av)
         }
     }
 
@@ -1129,4 +1140,93 @@
             }
         }, 100);
     }
+
+    // BV=>av
+    class ParameterTrim {
+        constructor() {
+            this.param = JSON.parse(BLOD.getResourceText("search"));
+            this.url = [];
+            this.run();
+        }
+        /**
+         * 处理入口
+         * @param {*} a 有效则处理a标签
+         */
+        run(a) {
+            this.loca();
+            if (config.reset.bvid2av && a) this.aitm();
+        }
+        /**
+         * 处理地址栏
+         */
+        loca() {
+            this.url[1] = location.href;
+            if (this.url[0] != this.url[1]) {
+                let href = this.triming(location.href);
+                if (!href.includes("#") && location.href.includes("#")) href = href + location.hash;
+                window.history.replaceState(null, null, href);
+                this.url[0] = location.href;
+            }
+        }
+        /**
+         * 处理a标签
+         */
+        aitm() {
+            document.querySelectorAll("a").forEach(d => {
+                if (d.href && this.url.indexOf(d.href) < 0) {
+                    this.logout(d);
+                    let hash = d.href.includes("#") ? "#" + d.href.split("#")[1] : "";
+                    hash = hash.includes("/") ? "" : hash;
+                    d.href = this.triming(d.href);
+                    if (d.href.includes("?")) d.href = d.href + hash;
+                    this.url.push(d.href);
+                }
+            })
+        }
+        /**
+         * BV=>av
+         * @param {string} url 被转化的链接
+         */
+        triming(url) {
+            let obj = this.search(url);
+            url = url.split("?")[0].split("/");
+            url.forEach((d, i, e) => {
+                if (d.includes("#")) d = d.split("#")[0];
+                if (d.toLowerCase().startsWith('bv')) e[i] = "av" + BLOD.abv(d);
+            });
+            url = url.join("/");
+            return BLOD.objUrl(url, obj);
+        }
+        /**
+         * 清除无用参数
+         * @param {string} url 带参数的链接
+         */
+        search(url) {
+            let obj = BLOD.urlObj(url);
+            if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
+            this.param.forEach(d => {
+                obj[d] = null;
+            })
+            return obj;
+        }
+        /**
+         * 代理退出登录
+         * @param {HTMLElement} he a标签
+         */
+        logout(he) {
+            if (he.href.includes("account.bilibili.com/login?act=exit")) {
+                he.href = "javascript:void(0);";
+                he.onclick = async () => {
+                    toast.warning("正在退出登录！")
+                    let data = BLOD.jsonCheck(await xhr.post("https://passport.bilibili.com/login/exit/v2", "biliCSRF=" + BLOD.getCookies().bili_jct + "&gourl=" + encodeURIComponent(location.href)));
+                    if (data.status) {
+                        toast.success("退出登录！");
+                        setTimeout(() => location.reload(), 1000);
+                    }
+                }
+            }
+        }
+    }
+    const parameterTrim = new ParameterTrim()
+    BLOD.reset.parameterTrim = (a) => { return parameterTrim.run(a) };
 })()
