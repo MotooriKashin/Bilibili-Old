@@ -315,8 +315,11 @@
 >>>>>>> 43b3ef7 (启用toast模块)
                 if (!BLOD.config.rewrite.frame) return;
                 BLOD.reset.playerSetting();
+<<<<<<< HEAD
 >>>>>>> 43b3ef7 (启用toast模块)
                 BLOD.path.name = "blackboard";
+=======
+>>>>>>> 9d0dbb0 (整理重写标记)
                 if (BLOD.path[4].startsWith('newplayer')) {
                     let obj = BLOD.urlObj(location.href),
                         season_type = obj.season_type || null,
@@ -401,7 +404,6 @@
         }
         s() {
             if (!BLOD.config.reset.static) return;
-            BLOD.path.name = "s";
             location.replace(location.href.replace("s/video", "video"));
         }
         space() {

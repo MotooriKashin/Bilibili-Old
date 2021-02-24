@@ -465,6 +465,7 @@
             remove('lt-row', "class");
 =======
             // 移除登录弹窗
+<<<<<<< HEAD
             if (BLOD.load) remove("lt-row", "class");
 >>>>>>> 248dd3c (优化BV=>av)
 =======
@@ -489,6 +490,12 @@
 =======
             if (BLOD.load) remove("lt-row", "class");
 >>>>>>> 248dd3c (优化BV=>av)
+=======
+            if (config.reset.grobalboard && BLOD.load) {
+                if (document.querySelector(".unlogin-popover")) document.querySelector(".unlogin-popover").parentNode.remove()
+                remove("lt-row", "class");
+            }
+>>>>>>> 9d0dbb0 (整理重写标记)
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
