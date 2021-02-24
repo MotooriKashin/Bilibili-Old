@@ -474,6 +474,7 @@
 >>>>>>> a8f8605 (改进空间识别)
 =======
             // 移除登录弹窗
+<<<<<<< HEAD
             if (BLOD.load) {
 <<<<<<< HEAD
 >>>>>>> 983a4bd (页面载入再移除)
@@ -485,6 +486,9 @@
 >>>>>>> 586ca6b (节点误伤)
             }
 >>>>>>> 8001703 (修复新版首页渲染错误)
+=======
+            if (BLOD.load) remove("lt-row", "class");
+>>>>>>> 248dd3c (优化BV=>av)
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
@@ -809,6 +813,7 @@
                 localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
         },
         /**
          * 清理url无效参数并转化BV为av
@@ -877,6 +882,8 @@
             }
             trim();
             setTimeout(() => { window.onclick = trim });
+=======
+>>>>>>> 248dd3c (优化BV=>av)
 =======
 >>>>>>> 248dd3c (优化BV=>av)
         }
@@ -1549,6 +1556,9 @@
         }, 100);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 248dd3c (优化BV=>av)
 
     // BV=>av
     class ParameterTrim {
@@ -1638,6 +1648,7 @@
     }
     const parameterTrim = new ParameterTrim()
     BLOD.reset.parameterTrim = (a) => { return parameterTrim.run(a) };
+<<<<<<< HEAD
 
     // 载入本地弹幕
     class LocalDm {
@@ -1794,4 +1805,6 @@
 >>>>>>> d098e8a (禁用直播间挂机检测)
 =======
 >>>>>>> a555edd (show up list)
+=======
+>>>>>>> 248dd3c (优化BV=>av)
 })()
