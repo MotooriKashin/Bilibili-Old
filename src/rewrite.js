@@ -104,7 +104,6 @@
             try {
                 if (!BLOD.config.rewrite.frame) return;
                 BLOD.reset.playerSetting();
-                BLOD.path.name = "blackboard";
                 if (BLOD.path[4].startsWith('newplayer')) {
                     let obj = BLOD.urlObj(location.href),
                         season_type = obj.season_type || null,
@@ -159,7 +158,6 @@
         }
         s() {
             if (!BLOD.config.reset.static) return;
-            BLOD.path.name = "s";
             location.replace(location.href.replace("s/video", "video"));
         }
         space() {
