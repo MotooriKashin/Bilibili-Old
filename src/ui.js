@@ -109,14 +109,14 @@
             if (table) return;
             table = BLOD.addElement("div", { id: "BLOD-UI-table" });
             table.innerHTML = '<div class="BLOD-UI-title">Bilibili Old<span id="BLOD-UI-flesh">恢复默认</span><b id="BLOD-UI-close">❌</b></div><div><div id="BLOD-UI-left"><ul><li>重写</li></ul></div><div id="BLOD-UI-right"></div></div>';
-            let left = table.children[1].children[0].children[0];
-            let right = table.children[1].children[1];
-            left.children[0].setAttribute("id", "BLOD-UI-menu");
-            left.children[0].onclick = () => {
+            this.left = table.children[1].children[0].children[0];
+            this.right = table.children[1].children[1];
+            this.left.children[0].setAttribute("id", "BLOD-UI-menu");
+            this.left.children[0].onclick = () => {
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
-                left.children[0].setAttribute("id", "BLOD-UI-menu");
-                right.innerHTML = '';
-                for (let key in config.rewrite) { this.checked(key, right, true) }
+                this.left.children[0].setAttribute("id", "BLOD-UI-menu");
+                this.right.innerHTML = '';
+                for (let key in config.rewrite) { this.checked(key, this.right, true) }
             }
             table.children[0].children[0].onclick = () => {
                 this.flesh();
@@ -128,19 +128,19 @@
                 toast("设置已保存", "部分功能可能需要刷新才会生效！")
             }
             this.menu.forEach((d, i) => {
-                let li = BLOD.addElement("li", {}, left);
+                let li = BLOD.addElement("li", {}, this.left);
                 li.innerHTML = d;
                 li.onclick = () => {
                     document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                     li.setAttribute("id", "BLOD-UI-menu");
-                    right.innerHTML = '';
-                    this.item[i].forEach(d => { this.checked(d, right) });
+                    this.right.innerHTML = '';
+                    this.item[i].forEach(d => { this.checked(d, this.right) });
                 }
             })
-            this.download(left, right);
-            this.limit(left, right);
-            this.toast(left, right);
-            left.children[0].click();
+            this.download(this.left, this.right);
+            this.limit(this.left, this.right);
+            this.toast(this.left, this.right);
+            this.left.children[0].click();
         }
         /**
          * 创建复选框
@@ -190,20 +190,18 @@
         }
         /**
          * 下载菜单，这里之后可能会定制其他功能
-         * @param {HTMLElement} left 菜单左边节点
-         * @param {HTMLElement} right 菜单右侧节点
          */
-        download(left, right) {
-            let li = BLOD.addElement("li", {}, left);
+        download() {
+            let li = BLOD.addElement("li", {}, this.left);
             li.innerHTML = "下载";
             li.onclick = () => {
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 li.setAttribute("id", "BLOD-UI-menu");
-                right.innerHTML = '';
-                this.checked("download", right);
-                this.checked("dlother", right);
-                this.checked("novideo", right);
-                let custom = BLOD.addElement("div", {}, right);
+                this.right.innerHTML = '';
+                this.checked("download", this.right);
+                this.checked("dlother", this.right);
+                this.checked("novideo", this.right);
+                let custom = BLOD.addElement("div", {}, this.right);
                 custom.innerHTML = '自定义链接<input type="url" placeholder="http://www.example.com"> <button>下载</button>';
                 this.state(custom, "输入视频所在链接URL，回车或者点击“下载”按钮即可</br>暂不支持获取弹幕等其他信息")
                 let commit = custom.querySelector("button");
@@ -221,15 +219,14 @@
         }
         /**
          * 区域限制，这里之后可能会定制其他功能
-         * @param {HTMLElement} left 菜单左边节点
-         * @param {HTMLElement} right 菜单右侧节点
          */
-        limit(left, right) {
-            let li = BLOD.addElement("li", {}, left);
+        limit() {
+            let li = BLOD.addElement("li", {}, this.left);
             li.innerHTML = "区域";
             li.onclick = () => {
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 li.setAttribute("id", "BLOD-UI-menu");
+<<<<<<< HEAD
                 right.innerHTML = '';
                 this.checked("limit", right);
                 this.checked("accesskey", right, false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
@@ -237,6 +234,12 @@
 >>>>>>> eea4f89 (重绘设置界面)
 =======
                 let thaiLand = BLOD.addElement("div", {}, right);
+=======
+                this.right.innerHTML = '';
+                this.checked("limit", this.right);
+                this.checked("accesskey", this.right, false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
+                let thaiLand = BLOD.addElement("div", {}, this.right);
+>>>>>>> 69fdcaa (Feature refactor)
                 thaiLand.innerHTML = '代理服务器（东南亚）<input type="url" placeholder="http://www.example.com"> <button>保存</button>'
                 this.state(thaiLand, "请输入解除限制时所需的东南亚代理服务器地址，用以解除东南亚区域番剧限制</br>东南亚番剧账户与主站不互通，只能播放480P，启用账号授权也无效！</br>链接有效形式如输入框提示：需带http/https头，末尾无需斜杠！")
                 let commit = thaiLand.querySelector("button");
@@ -260,18 +263,16 @@
         }
         /**
          * 其他功能，这里之后可能会定制其他功能
-         * @param {HTMLElement} left 菜单左边节点
-         * @param {HTMLElement} right 菜单右侧节点
          */
-        toast(left, right) {
-            let li = BLOD.addElement("li", {}, left);
+        toast() {
+            let li = BLOD.addElement("li", {}, this.left);
             li.innerHTML = "其他";
             li.onclick = () => {
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 li.setAttribute("id", "BLOD-UI-menu");
-                right.innerHTML = '';
-                this.checked("toast", right);
-                let timeout = BLOD.addElement("div", {}, right);
+                this.right.innerHTML = '';
+                this.checked("toast", this.right);
+                let timeout = BLOD.addElement("div", {}, this.right);
                 timeout.innerHTML = '<label>通知时长：<input type="number" min="1" max="30" />秒</label>';
                 this.state(timeout, "调整每条通知浮动时长，单位/秒");
                 timeout = timeout.children[0].children[0];
@@ -282,7 +283,7 @@
                     BLOD.toast.change(BLOD.toast.config);
                     toast.success("调整通知时长：" + timeout.value + " 秒");
                 }
-                let step = BLOD.addElement("div", {}, right);
+                let step = BLOD.addElement("div", {}, this.right);
                 step.innerHTML = '<label>同时出现通知延时：<input type="number" min="50" max="1000" step="50"/>豪秒</label>';
                 this.state(step, "调整多条通知同时出现的时间间隔，方便逐条阅读每条通知内容，单位/毫秒")
                 step = step.children[0].children[0];
@@ -293,6 +294,7 @@
                     BLOD.toast.change(BLOD.toast.config);
                     toast.success("调整通知延时：" + step.value + " 毫秒");
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
                 else {
                     if (key in config.rewrite) {
@@ -305,6 +307,9 @@
                     }
 =======
                 let button = BLOD.addElement("div", {}, right);
+=======
+                let button = BLOD.addElement("div", {}, this.right);
+>>>>>>> 69fdcaa (Feature refactor)
                 button.innerHTML = '<label><input type="button" value="恢复默认" /></label>';
                 button.onclick = () => {
                     let config = BLOD.toast.change();
