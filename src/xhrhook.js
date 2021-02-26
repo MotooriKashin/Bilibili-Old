@@ -1118,18 +1118,18 @@
                                 }
                             }
                             // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
-                            let progress;
                             Segments.sort((a, b) => a.progress - b.progress);
                             for (let i = 0; i < Segments.length - 1; i++) {
                                 if (Segments[i].progress == Segments[i + 1].progress) {
-                                    progress = Segments[i].progress;
                                     i = search(i);
                                 }
                             }
                             function search(i) {
                                 if (Segments[i].progress == Segments[i + 1].progress) {
-                                    setzIndex(i);
-                                    return search(i + 1);
+                                    if (i + 1 < Segments.length) {
+                                        setzIndex(i);
+                                        return search(i + 1);
+                                    }
                                 }
                                 setzIndex(i);
                                 return i;
@@ -1138,9 +1138,9 @@
                                 let textData = Segments[i];
                                 if (textData.pool == 1) {
                                     if (textData.content.includes("█") || textData.content.includes("▂"))
-                                        textData.zIndex = progress;
+                                        textData.zIndex = Segments[i].progress;
                                     else
-                                        textData.zIndex = progress + 1;
+                                        textData.zIndex = Segments[i].progress + 1;
                                 }
                             }
                         }
