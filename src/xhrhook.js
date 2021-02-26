@@ -1125,11 +1125,9 @@
                                 }
                             }
                             function search(i) {
-                                if (Segments[i].progress == Segments[i + 1].progress) {
-                                    if (i + 1 < Segments.length) {
+                                if (i + 1 < Segments.length && Segments[i].progress == Segments[i + 1].progress) {
                                         setzIndex(i);
                                         return search(i + 1);
-                                    }
                                 }
                                 setzIndex(i);
                                 return i;
