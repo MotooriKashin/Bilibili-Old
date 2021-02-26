@@ -23964,12 +23964,12 @@ function Fa() {
                         h === this.current.timestamp && e.addClass("day-enable js-action");
                         h === this.active.timestamp && e.addClass("active")
                     }
-                    h = g.a.Ag(new Date(1E3 * this.Id().timestamp), "yyyy-MM").split("-").map(Number);
-                    e = h[1];
-                    c = h[0] - 1;
+                    h = g.a.Ag(new Date(1E3 * __INITIAL_STATE__.videoData.pubdate), "yyyy-MM").split("-").map(Number);
+                    let month = h[1];
+                    let year = h[0];
                     h = parseInt(b.eq(0).attr("data-timestamp"),
                         10);
-                    (this.zn = +g.a.Ag(new Date(1E3 * h), "yyyyMM") > 100 * c + e) ? this.template.prev.removeClass("disabled") : this.template.prev.addClass("disabled");
+                    (this.zn = +g.a.Ag(new Date(1E3 * h), "yyyyMM") > 100 * year + month) ? this.template.prev.removeClass("disabled") : this.template.prev.addClass("disabled");
                     h = parseInt(b.last().attr("data-timestamp"), 10);
                     (this.md = h < this.Id().timestamp) ? this.template.next.removeClass("disabled") : this.template.next.addClass("disabled")
                 } else
