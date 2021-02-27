@@ -724,7 +724,7 @@
                             }
                             function setzIndex(i) {
                                 let textData = Segments[i];
-                                if (textData.pool == 1) {
+                                if (textData.zIndex) {
                                     if (textData.content.includes("█") || textData.content.includes("▂"))
                                         textData.zIndex = Segments[i].progress;
                                     else
