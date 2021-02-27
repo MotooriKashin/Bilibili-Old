@@ -284,6 +284,8 @@
             if (config.reset.nopkvm) remove("chaos-pk-vm", "id", null, null, () => toast.warning("拦截大乱斗！"));
             // 隐藏联系客服
             remove("contact-help", "class", true);
+            // 隐藏历史记录搜索功能
+            if (config.reset.searchHistory) remove("b-head-search", "class");
             // 移除新版提示
             remove("new-entry", "class");
             if (BLOD.path.name == "index") remove("ver", "class");

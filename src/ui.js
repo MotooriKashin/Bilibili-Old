@@ -21,7 +21,7 @@
                 ["static", "viewbofqi", "widescreen", "electric", "panel", "autoplay", "playerStyle"],
                 ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff"],
                 ["replyfloor", "preview", "jointime", "lostvideo", "bvid2av", "like", "heartbeat", "carousel"],
-                ["grobalboard", "headblur", "episodedata", "adloc", "history", "oldreply", "uplist", "indexIcon", "commentjump"],
+                ["grobalboard", "headblur", "episodedata", "adloc", "history", "oldreply", "uplist", "indexIcon", "commentjump", "searchHistory"],
                 ["roomplay", "nosleep", "noanchor", "nopkvm", "nop2p"],
             ]
             this.init();
