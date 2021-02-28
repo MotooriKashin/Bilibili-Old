@@ -101,6 +101,7 @@
         },
         // 切P刷新数据
         switchVideo: async () => {
+            if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; BLOD.hash = []; };
@@ -1231,4 +1232,66 @@
     }
     const parameterTrim = new ParameterTrim()
     BLOD.reset.parameterTrim = (a) => { return parameterTrim.run(a) };
+
+    // 载入本地弹幕
+    class LocalDm {
+        constructor() {
+            if (document.querySelector("#local-danmaku")) return;
+            this.element = '<label class="button" role="button" title="载入本地弹幕">本地弹幕<input id="local-danmaku" type="file" accept=".xml" /></label>';
+            this.style = '.bpui-checkbox-text.local-danmaku label{ cursor: pointer; } .bpui-checkbox-text.local-danmaku #local-danmaku { opacity:0; width: 0; }';
+            let icon = document.querySelector(".bilibili-player-iconfont-danmaku");
+            icon.onmouseover = () => {
+                if (this.timer) return;
+                this.timer = setTimeout(() => this.init(), 100);
+            }
+        }
+        /**
+         * 初始化按钮
+         */
+        init() {
+            this.parrent = document.querySelector(".bilibili-player-danmaku-setting-lite");
+            if (!this.parrent) return;
+            BLOD.addCss(this.style, "localDmStyle");
+            this.parrent = this.parrent.children[2];
+            this.node = BLOD.addElement("span", { class: "bpui-checkbox-text local-danmaku" }, this.parrent);
+            this.node.innerHTML = this.element;
+            this.input = this.node.querySelector("#local-danmaku");
+            this.input.onchange = () => { this.change() }
+        }
+        /**
+         * 读取文件地址
+         */
+        async change() {
+            const file = this.input.files;
+            if (file.length === 0) {
+                this.input.value = "";
+                return toast.warning("请选择本地弹幕文件！拓展名 .xml");
+            }
+            if (!/\.xml$/.test(file[0].name)) {
+                this.input.value = "";
+                return toast.warning("这貌似不是一个有效的弹幕文件 →_→");
+            }
+            let data = await this.readFile(file[0]);
+            // 调用弹幕控制接口
+            toast.success("载入本地弹幕：" + file[0].name)
+            BLOD.loadLocalDm && BLOD.loadLocalDm(data, config.reset.concatDanmaku);
+        }
+        /**
+         * 读取文件内容
+         * @param {File} file 记录本地文件信息的 file 对象
+         */
+        readFile(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) reject(toast.error('无效文件路径！'));
+                const reader = new FileReader();
+                reader.readAsText(file, 'utf-8');
+                reader.onload = () => {
+                    resolve(reader.result);
+                }
+                reader.onerror = () => {
+                    reject(toast.error('读取文件出错，请重试！'));
+                }
+            })
+        }
+    }
 })()

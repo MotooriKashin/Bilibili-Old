@@ -210,7 +210,7 @@
                     if (!BLOD["sidx" + String(BLOD.cid)][id]) {
                         let data = new Uint8Array(await this.getIdxs(d.base_url, this.playurl.dash.duration));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
-                        // 首个“sidx”出现4字节之前的部分为索引奇石点
+                        // 首个“sidx”出现4字节之前的部分为索引起始点
                         let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
                         // 首个“mooc”出现前5字节结束索引
                         let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
@@ -698,7 +698,7 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
-                        
+
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
                             // 记录弹幕池哈希值

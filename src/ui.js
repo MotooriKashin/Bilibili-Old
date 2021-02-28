@@ -15,11 +15,11 @@
     class Ui {
         constructor() {
             console.debug('import module "ui.js"');
-            // 将设置进行分类
+            // 将设置以主键名进行分类，未分类的将单独绘制
             this.menu = ["播放", "弹幕", "修复", "样式", "直播"];
             this.item = [
                 ["static", "viewbofqi", "widescreen", "electric", "panel", "autoplay", "playerStyle"],
-                ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff"],
+                ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff", "localDanmaku", "concatDanmaku"],
                 ["replyfloor", "preview", "jointime", "lostvideo", "bvid2av", "like", "heartbeat", "carousel"],
                 ["grobalboard", "headblur", "episodedata", "adloc", "history", "oldreply", "uplist", "indexIcon", "commentjump", "searchHistory"],
                 ["roomplay", "nosleep", "noanchor", "nopkvm", "nop2p"],
@@ -116,7 +116,7 @@
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 this.left.children[0].setAttribute("id", "BLOD-UI-menu");
                 this.right.innerHTML = '';
-                for (let key in config.rewrite) { this.checked(key, this.right, true) }
+                for (let key in config.rewrite) { this.checked(key, true) }
             }
             table.children[0].children[0].onclick = () => {
                 this.flesh();
@@ -134,7 +134,7 @@
                     document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                     li.setAttribute("id", "BLOD-UI-menu");
                     this.right.innerHTML = '';
-                    this.item[i].forEach(d => { this.checked(d, this.right) });
+                    this.item[i].forEach(d => { this.checked(d) });
                 }
             })
             this.download(this.left, this.right);
@@ -145,15 +145,14 @@
         /**
          * 创建复选框
          * @param {string} d 设置选项主键名
-         * @param {HTMLElement} tar 复选框所在父节点
          * @param {boolean} [type] 有效则主键在config.rewrite下
          * @param {object} [style] 该功能定制css样式
          * @param {Function} [en] 启用功能时的回调，传入该功能节点作为参数以修改修改显示
          * @param {Function} [dis] 禁用该功能时的回调，传入该功能节点作为参数以修改修改显示
          */
-        checked(d, tar, type, style = {}, en = () => { }, dis = () => { }) {
+        checked(d, type, style = {}, en = () => { }, dis = () => { }) {
             type = type ? "rewrite" : "reset";
-            let div = BLOD.addElement("div", style, tar);
+            let div = BLOD.addElement("div", style, this.right);
             div.innerHTML = `<label><input type="checkbox" />${BLOD.defaultConfig[type][d][1]}</label>`;
             this.state(div, BLOD.defaultConfig[type][d][2]);
             if (config[type][d]) div.children[0].children[0].checked = true;
@@ -198,9 +197,9 @@
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 li.setAttribute("id", "BLOD-UI-menu");
                 this.right.innerHTML = '';
-                this.checked("download", this.right);
-                this.checked("dlother", this.right);
-                this.checked("novideo", this.right);
+                this.checked("download");
+                this.checked("dlother");
+                this.checked("novideo");
                 let custom = BLOD.addElement("div", {}, this.right);
                 custom.innerHTML = '自定义链接<input type="url" placeholder="http://www.example.com"> <button>下载</button>';
                 this.state(custom, "输入视频所在链接URL，回车或者点击“下载”按钮即可</br>暂不支持获取弹幕等其他信息")
@@ -236,8 +235,8 @@
                 let thaiLand = BLOD.addElement("div", {}, right);
 =======
                 this.right.innerHTML = '';
-                this.checked("limit", this.right);
-                this.checked("accesskey", this.right, false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
+                this.checked("limit");
+                this.checked("accesskey", false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
                 let thaiLand = BLOD.addElement("div", {}, this.right);
 >>>>>>> 69fdcaa (Feature refactor)
                 thaiLand.innerHTML = '代理服务器（东南亚）<input type="url" placeholder="http://www.example.com"> <button>保存</button>'
@@ -271,7 +270,7 @@
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 li.setAttribute("id", "BLOD-UI-menu");
                 this.right.innerHTML = '';
-                this.checked("toast", this.right);
+                this.checked("toast");
                 let timeout = BLOD.addElement("div", {}, this.right);
                 timeout.innerHTML = '<label>通知时长：<input type="number" min="1" max="30" />秒</label>';
                 this.state(timeout, "调整每条通知浮动时长，单位/秒");
