@@ -1236,6 +1236,7 @@
     // 载入本地弹幕
     class LocalDm {
         constructor() {
+            if (!BLOD.setDanmaku) return debug.warn("无法启动本地弹幕功能");
             if (document.querySelector("#local-danmaku")) return;
             this.element = '<label class="button" role="button" title="载入本地弹幕">本地弹幕<input id="local-danmaku" type="file" accept=".xml" /></label>';
             this.style = '.bpui-checkbox-text.local-danmaku label{ cursor: pointer; } .bpui-checkbox-text.local-danmaku #local-danmaku { opacity:0; width: 0; }';
@@ -1275,6 +1276,8 @@
             // 调用弹幕控制接口
             toast.success("载入本地弹幕：" + file[0].name)
             BLOD.loadLocalDm && BLOD.loadLocalDm(data, config.reset.concatDanmaku);
+            // 成功载入清除上传文件控件内容
+            this.input.value = "";
         }
         /**
          * 读取文件内容
@@ -1290,6 +1293,8 @@
                 }
                 reader.onerror = () => {
                     reject(toast.error('读取文件出错，请重试！'));
+                    // 成功失败清除上传文件控件内容
+                    this.input.value = ""
                 }
             })
         }

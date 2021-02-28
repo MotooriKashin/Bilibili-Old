@@ -746,7 +746,7 @@
                                 xml = new DOMParser().parseFromString(xml, "application/xml");
                                 let dm = xml.querySelectorAll("d");
                                 if (dm.length == 0) {
-                                    toast("从弹幕文件中没有获取到任何弹幕");
+                                    toast.warning("从弹幕文件中没有获取到任何弹幕");
                                     return;
                                 }
                                 let danmaku = [];
@@ -777,7 +777,7 @@
                                  */
                                 // BLOD.setDanmaku = (dm) => {......}
 
-                                BLOD.setDanmaku(danmaku, append);
+                                BLOD.setDanmaku && BLOD.setDanmaku(danmaku, append);
                             }
                         }
 
