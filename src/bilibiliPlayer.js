@@ -21409,6 +21409,19 @@ function Fa() {
                         // 在播放器的右键log中打印相关信息
                         d.trigger(l.a.h.ae, !0, "addTime:" + (+new Date - e) + ",num:" + dm.length);
                     }
+                    /**
+                     * 偏移弹幕的出现时间
+                     * @param  {Number} t 以秒为单位的偏移时间
+                     */
+                    BLOD.offsetDanmaku = (t) => {
+                        c.clear();
+                        let parsedDm = c.g.xd; // 弹幕渲染器使用的弹幕数据，只有修改它才能产生偏移效果
+                        let dm = c.g.G; // 弹幕原始数据，同样修改一遍，用来刷新弹幕列表
+                        for (let i = 0; i < dm.length; i++) {
+                            parsedDm[i].stime = dm[i].stime = parsedDm[i].stime + t;
+                        }
+                        c.list.update(!1, 0);
+                    }
                     if (c.c.kk) c.o([], 0), d.trigger(l.a.h.ae, !0);
                     else if (e.safari && !e.il || !Worker || e.te || e.Ac || "chrome" === e.browser && 45 > e.version) (new B.a({
                         url: g,
