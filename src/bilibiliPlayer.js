@@ -21391,6 +21391,24 @@ function Fa() {
                     d.trigger(l.a.h.Zl);
                     this.c.template.qb.removeClass("disabled").html("\u5f39\u5e55\u5217\u8868\u88c5\u586b\u4e2d...");
                     var g = k ? 0 === k ? this.f.url : this.ty(k) : this.f.url;
+                    // 21483行的success函数的复制品
+                    BLOD.setDanmaku = (dm, append = false) => {
+                        c.clear(); // 清屏
+                        var e = +new Date;
+                        if(append) {
+                            c.g.G = c.g.G.concat(dm);
+                            c.list.G = c.list.G.concat(dm);
+                        }else {
+                            c.g.G = dm; // 设置弹幕渲染器使用的弹幕数组
+                            c.list.G = dm; // 设置右侧弹幕列表展示的弹幕数组
+                        }
+                        c.lm(); // 弹幕渲染器预处理弹幕
+                        c.list.update(!1, 0); // 刷新右侧弹幕列表
+                        c.c.template.Iy.html(c.g.G.length); // 设置播放器右上角的弹幕数量
+                        c.c.I.uB(c.g.G.length); // 设置弹幕数量的dom节点的title属性 (div.bilibili-player-danmaku-number)
+                        // 在播放器的右键log中打印相关信息
+                        d.trigger(l.a.h.ae, !0, "addTime:" + (+new Date - e) + ",num:" + dm.length);
+                    }
                     if (c.c.kk) c.o([], 0), d.trigger(l.a.h.ae, !0);
                     else if (e.safari && !e.il || !Worker || e.te || e.Ac || "chrome" === e.browser && 45 > e.version) (new B.a({
                         url: g,
