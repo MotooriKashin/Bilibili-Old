@@ -158,11 +158,15 @@
          */
         switchVideo: async () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; };
 =======
+=======
+            if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
+>>>>>>> 07154fd (添加读取本地弹幕功能)
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; BLOD.hash = []; };
@@ -1656,6 +1660,9 @@
     const parameterTrim = new ParameterTrim()
     BLOD.reset.parameterTrim = (a) => { return parameterTrim.run(a) };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 07154fd (添加读取本地弹幕功能)
 
     // 载入本地弹幕
     class LocalDm {
@@ -1666,7 +1673,10 @@
             let icon = document.querySelector(".bilibili-player-iconfont-danmaku");
             icon.onmouseover = () => {
                 if (this.timer) return;
+<<<<<<< HEAD
                 if (!BLOD.setDanmaku) return debug.warn("无法启动本地弹幕功能");
+=======
+>>>>>>> 07154fd (添加读取本地弹幕功能)
                 this.timer = setTimeout(() => this.init(), 100);
             }
         }
@@ -1698,6 +1708,7 @@
             }
             let data = await this.readFile(file[0]);
             // 调用弹幕控制接口
+<<<<<<< HEAD
             if (!BLOD.loadLocalDm) {
                 this.input.value = "";
                 return toast.error("载入本地弹幕失败：本地弹幕组件丢失！");
@@ -1730,6 +1741,10 @@
             }
             // 成功载入清除上传文件控件内容
             this.input.value = "";
+=======
+            toast.success("载入本地弹幕：" + file[0].name)
+            BLOD.loadLocalDm && BLOD.loadLocalDm(data, config.reset.concatDanmaku);
+>>>>>>> 07154fd (添加读取本地弹幕功能)
         }
         /**
          * 读取文件内容
@@ -1745,12 +1760,16 @@
                 }
                 reader.onerror = () => {
                     reject(toast.error('读取文件出错，请重试！'));
+<<<<<<< HEAD
                     // 成功失败清除上传文件控件内容
                     this.input.value = ""
+=======
+>>>>>>> 07154fd (添加读取本地弹幕功能)
                 }
             })
         }
     }
+<<<<<<< HEAD
 
     class DanmkuHashId {
         /**
@@ -1814,4 +1833,6 @@
 >>>>>>> a555edd (show up list)
 =======
 >>>>>>> 248dd3c (优化BV=>av)
+=======
+>>>>>>> 07154fd (添加读取本地弹幕功能)
 })()

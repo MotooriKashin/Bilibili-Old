@@ -1101,6 +1101,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // @ts-ignore
 =======
@@ -1151,6 +1152,9 @@
 =======
                         
 >>>>>>> 8c128d1 (修改bilibiliPlayer.js，提供设置弹幕的途径)
+=======
+
+>>>>>>> 07154fd (添加读取本地弹幕功能)
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
 <<<<<<< HEAD
