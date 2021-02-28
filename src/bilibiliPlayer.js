@@ -21418,7 +21418,8 @@ function Fa() {
                         let parsedDm = c.g.xd; // 弹幕渲染器使用的弹幕数据，只有修改它才能产生偏移效果
                         let dm = c.g.G; // 弹幕原始数据，同样修改一遍，用来刷新弹幕列表
                         for (let i = 0; i < dm.length; i++) {
-                            parsedDm[i].stime = dm[i].stime = parsedDm[i].stime + t;
+                            parsedDm[i].stime += t;
+                            dm[i].stime += t;
                         }
                         c.list.update(!1, 0);
                     }
