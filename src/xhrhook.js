@@ -698,41 +698,7 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
-                        //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
-                        if (BLOD.aid < 400000) {
-                            // 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
-                            for (let i = 0; i < Segments.length; i++) {
-                                if (Segments[i].content.includes('/n')) {
-                                    Segments[i].pool = 1;
-                                    Segments[i].zIndex = Segments[i].progress;
-                                }
-                            }
-                            // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
-                            Segments.sort((a, b) => a.progress - b.progress);
-                            for (let i = 0; i < Segments.length - 1; i++) {
-                                if (Segments[i].progress == Segments[i + 1].progress) {
-                                    i = search(i);
-                                }
-                            }
-                            function search(i) {
-                                if (i + 1 < Segments.length && Segments[i].progress == Segments[i + 1].progress) {
-                                        setzIndex(i);
-                                        return search(i + 1);
-                                }
-                                setzIndex(i);
-                                return i;
-                            }
-                            function setzIndex(i) {
-                                let textData = Segments[i];
-                                if (textData.zIndex) {
-                                    if (textData.content.includes("█") || textData.content.includes("▂"))
-                                        textData.zIndex = Segments[i].progress;
-                                    else
-                                        textData.zIndex = Segments[i].progress + 1;
-                                }
-                            }
-                        }
-                        Segments.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
+                        
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
                             // 记录弹幕池哈希值
@@ -745,12 +711,17 @@
                                 mode: v.mode,
                                 size: v.fontsize,
                                 stime: v.progress / 1000,
-                                text: v.pool == 1 ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
-                                uid: v.midHash,
-                                zIndex: v.zIndex
+                                text: v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n'),
+                                uid: v.midHash
                             };
                         });
+                        //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
+                        if (BLOD.aid < 400000) {
+                            specialEffects(danmaku);
+                        }
+                        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
                         parseTime = new Date() - parseTime;
+
                         list_so.onmessage({
                             data: {
                                 code: 0,
@@ -760,10 +731,83 @@
                                 sendTip: "",
                                 state: 0,
                                 textSide: "",
-                                total: Segments.length.toString()
+                                total: danmaku.length.toString()
                             }
                         });
                         toXml(Segments).then((result) => (BLOD.xml = result));
+
+                        if (!BLOD.loadLocalDm) {
+                            /**
+                             * 加载本地弹幕
+                             * @param  {String} 读取本地弹幕文件得到的字符串
+                             * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
+                             */
+                            BLOD.loadLocalDm = function (xml, append) {
+                                xml = new DOMParser().parseFromString(xml, "application/xml");
+                                let dm = xml.querySelectorAll("d");
+                                let danmaku = [];
+                                BLOD.hash = [];
+                                let attr, v;
+                                for (let i = 0; i < dm.length; i++) {
+                                    v = dm[i];
+                                    attr = v.getAttribute('p').split(",");
+                                    BLOD.hash.push(v.midHash);
+                                    danmaku[i] = {
+                                        class: attr[5],
+                                        color: parseInt(attr[3]),
+                                        date: parseInt(attr[4]),
+                                        dmid: attr[7],
+                                        mode: parseInt(attr[1]),
+                                        size: parseInt(attr[2]),
+                                        stime: parseFloat(attr[0]),
+                                        text: v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n'),
+                                        uid: attr[6]
+                                    };
+                                }
+                                specialEffects(danmaku);
+                                danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+                                /**
+                                 * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
+                                 * @param  {Array} dm 弹幕数组
+                                 * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
+                                 */
+                                // BLOD.setDanmaku = (dm) => {......}
+
+                                BLOD.setDanmaku(danmaku, append);
+                            }
+                        }
+
+                        function specialEffects(dm) {
+                            // 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
+                            for (let i = 0; i < dm.length; i++) {
+                                if (dm[i].text.includes('\n')) {
+                                    dm[i].class = 1;
+                                    dm[i].zIndex = dm[i].stime * 1000;
+                                }
+                            }
+                            // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
+                            dm.sort((a, b) => a.stime - b.stime);
+                            for (let i = 0; i < dm.length - 1; i++) {
+                                if (dm[i].stime == dm[i + 1].stime) {
+                                    i = search(i);
+                                }
+                            }
+                            function search(i) {
+                                if (i + 1 < dm.length && dm[i].stime == dm[i + 1].stime) {
+                                    setzIndex(i);
+                                    return search(i + 1);
+                                }
+                                setzIndex(i);
+                                return i;
+                            }
+                            function setzIndex(i) {
+                                let textData = dm[i];
+                                if (textData.zIndex) {
+                                    if (!(textData.text.includes("█") || textData.text.includes("▂")))
+                                        textData.zIndex = textData.zIndex + 1;
+                                }
+                            }
+                        }
                     });
                 } else {
                     workerPostMsg.call(this, aMessage, transferList);
