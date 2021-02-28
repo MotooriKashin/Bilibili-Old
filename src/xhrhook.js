@@ -1237,6 +1237,10 @@
                             BLOD.loadLocalDm = function (xml, append) {
                                 xml = new DOMParser().parseFromString(xml, "application/xml");
                                 let dm = xml.querySelectorAll("d");
+                                if (dm.length == 0) {
+                                    toast("从弹幕文件中没有获取到任何弹幕");
+                                    return;
+                                }
                                 let danmaku = [];
                                 BLOD.hash = [];
                                 let attr, v;
