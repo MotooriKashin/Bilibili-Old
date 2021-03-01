@@ -1274,8 +1274,12 @@
             }
             let data = await this.readFile(file[0]);
             // 调用弹幕控制接口
-            toast.success("载入本地弹幕：" + file[0].name)
-            BLOD.loadLocalDm && BLOD.loadLocalDm(data, config.reset.concatDanmaku);
+            if (!BLOD.loadLocalDm) {
+                this.input.value = "";
+                return toast.error("载入本地弹幕失败：本地弹幕组件丢失！");
+            }
+            toast("本地弹幕：" + file[0].name, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
+            BLOD.loadLocalDm(data, config.reset.concatDanmaku);
             // 成功载入清除上传文件控件内容
             this.input.value = "";
         }
