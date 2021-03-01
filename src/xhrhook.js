@@ -828,6 +828,7 @@
             return;
         }
         let danmaku = [];
+<<<<<<< HEAD
         let attr, v, mode;
         for (let i = 0; i < dm.length; i++) {
             v = dm[i];
@@ -842,14 +843,34 @@
                 size: parseInt(attr[2]),
                 stime: parseFloat(attr[0]),
                 text: (mode != 8 && mode != 9) ? v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent,
+=======
+        BLOD.hash = [];
+        let attr, v;
+        for (let i = 0; i < dm.length; i++) {
+            v = dm[i];
+            attr = v.getAttribute('p').split(",");
+            BLOD.hash.push(v.midHash);
+            danmaku[i] = {
+                class: attr[5],
+                color: parseInt(attr[3]),
+                date: parseInt(attr[4]),
+                dmid: attr[7],
+                mode: parseInt(attr[1]),
+                size: parseInt(attr[2]),
+                stime: parseFloat(attr[0]),
+                text: v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n'),
+>>>>>>> cea14d1 (调整本地弹幕组件初始化时机)
                 uid: attr[6]
             };
         }
         specialEffects(danmaku);
+<<<<<<< HEAD
         // 弹幕池属性在原生代码中，通过.gb而不是.class引用
         for (let i = 0; i < danmaku.length; i++) {
             danmaku[i].gb = danmaku[i].class;
         }
+=======
+>>>>>>> cea14d1 (调整本地弹幕组件初始化时机)
         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
@@ -864,6 +885,7 @@
 
     /**
      * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
+<<<<<<< HEAD
      * @param {[]} dm 弹幕数组
      */
     function specialEffects(dm) {
@@ -873,6 +895,35 @@
             if (textData.text.includes('\n')) {
                 textData.class = 1;
                 textData.zIndex = textData.stime * 1000;
+=======
+     * @param {array} dm 弹幕数组
+     */
+    function specialEffects(dm) {
+        for (let i = 0; i < dm.length; i++) {
+            if (dm[i].text.includes('\n')) {
+                dm[i].class = 1;
+                dm[i].zIndex = dm[i].stime * 1000;
+            }
+        }
+        // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
+        dm.sort((a, b) => a.stime - b.stime);
+        for (let i = 0; i < dm.length - 1; i++) {
+            if (dm[i].stime == dm[i + 1].stime) {
+                i = search(i);
+            }
+        }
+        function search(i) {
+            if (i + 1 < dm.length && dm[i].stime == dm[i + 1].stime) {
+                setzIndex(i);
+                return search(i + 1);
+            }
+            setzIndex(i);
+            return i;
+        }
+        function setzIndex(i) {
+            let textData = dm[i];
+            if (textData.zIndex) {
+>>>>>>> cea14d1 (调整本地弹幕组件初始化时机)
                 if (!(textData.text.includes("█") || textData.text.includes("▂")))
                     textData.zIndex = textData.zIndex + 1;
             }
@@ -1231,83 +1282,6 @@
                             }
                         });
                         toXml(Segments).then((result) => (BLOD.xml = result));
-
-                        if (!BLOD.loadLocalDm) {
-                            /**
-                             * 加载本地弹幕
-                             * @param  {String} 读取本地弹幕文件得到的字符串
-                             * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
-                             */
-                            BLOD.loadLocalDm = function (xml, append) {
-                                xml = new DOMParser().parseFromString(xml, "application/xml");
-                                let dm = xml.querySelectorAll("d");
-                                if (dm.length == 0) {
-                                    toast.warning("从弹幕文件中没有获取到任何弹幕");
-                                    return;
-                                }
-                                let danmaku = [];
-                                BLOD.hash = [];
-                                let attr, v;
-                                for (let i = 0; i < dm.length; i++) {
-                                    v = dm[i];
-                                    attr = v.getAttribute('p').split(",");
-                                    BLOD.hash.push(v.midHash);
-                                    danmaku[i] = {
-                                        class: attr[5],
-                                        color: parseInt(attr[3]),
-                                        date: parseInt(attr[4]),
-                                        dmid: attr[7],
-                                        mode: parseInt(attr[1]),
-                                        size: parseInt(attr[2]),
-                                        stime: parseFloat(attr[0]),
-                                        text: v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n'),
-                                        uid: attr[6]
-                                    };
-                                }
-                                specialEffects(danmaku);
-                                danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
-                                /**
-                                 * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
-                                 * @param  {Array} dm 弹幕数组
-                                 * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
-                                 */
-                                // BLOD.setDanmaku = (dm) => {......}
-
-                                BLOD.setDanmaku && BLOD.setDanmaku(danmaku, append);
-                            }
-                        }
-
-                        function specialEffects(dm) {
-                            // 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
-                            for (let i = 0; i < dm.length; i++) {
-                                if (dm[i].text.includes('\n')) {
-                                    dm[i].class = 1;
-                                    dm[i].zIndex = dm[i].stime * 1000;
-                                }
-                            }
-                            // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
-                            dm.sort((a, b) => a.stime - b.stime);
-                            for (let i = 0; i < dm.length - 1; i++) {
-                                if (dm[i].stime == dm[i + 1].stime) {
-                                    i = search(i);
-                                }
-                            }
-                            function search(i) {
-                                if (i + 1 < dm.length && dm[i].stime == dm[i + 1].stime) {
-                                    setzIndex(i);
-                                    return search(i + 1);
-                                }
-                                setzIndex(i);
-                                return i;
-                            }
-                            function setzIndex(i) {
-                                let textData = dm[i];
-                                if (textData.zIndex) {
-                                    if (!(textData.text.includes("█") || textData.text.includes("▂")))
-                                        textData.zIndex = textData.zIndex + 1;
-                                }
-                            }
-                        }
                     });
                 } else {
                     workerPostMsg.call(this, aMessage, transferList);
