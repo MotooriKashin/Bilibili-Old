@@ -1236,13 +1236,13 @@
     // 载入本地弹幕
     class LocalDm {
         constructor() {
-            if (!BLOD.setDanmaku) return debug.warn("无法启动本地弹幕功能");
             if (document.querySelector("#local-danmaku")) return;
             this.element = '<label class="button" role="button" title="载入本地弹幕">本地弹幕<input id="local-danmaku" type="file" accept=".xml" /></label>';
             this.style = '.bpui-checkbox-text.local-danmaku label{ cursor: pointer; } .bpui-checkbox-text.local-danmaku #local-danmaku { opacity:0; width: 0; }';
             let icon = document.querySelector(".bilibili-player-iconfont-danmaku");
             icon.onmouseover = () => {
                 if (this.timer) return;
+                if (!BLOD.setDanmaku) return debug.warn("无法启动本地弹幕功能");
                 this.timer = setTimeout(() => this.init(), 100);
             }
         }
