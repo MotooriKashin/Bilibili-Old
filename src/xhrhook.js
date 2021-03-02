@@ -1296,6 +1296,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (obj.aid) BLOD.aid = obj.aid;
                 if (obj.cid) BLOD.aid = obj.cid;
 =======
@@ -1310,6 +1311,10 @@
                 BLOD.aid = obj.aid || BLOD.aid;
                 BLOD.cid = obj.cid || BLOD.cid;
 >>>>>>> 292effc (优化aid/cid获取)
+=======
+                if (!BLOD.aid) BLOD.aid = obj.avid || obj.aid || BLOD.aid;
+                if (!BLOD.cid) BLOD.cid = obj.cid || BLOD.cid;
+>>>>>>> 7666368 (优化aid监听)
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat')) {
                     if (config.reset.heartbeat) {
