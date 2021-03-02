@@ -310,9 +310,13 @@
                         e.data.p = 1;
                         e.data.pre_ad = "";
 <<<<<<< HEAD
+<<<<<<< HEAD
                         history.replaceState(null, null, BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": e.data.aid, "cid": e.data.cid }));
 =======
 >>>>>>> e878ee3 (Update rewrite.js)
+=======
+                        history.replaceState(null, null, BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": e.data.aid, "cid": e.data.cid }));
+>>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
                         window.player = new window.BilibiliPlayer(e.data);
                     }
                 })

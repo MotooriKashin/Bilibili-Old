@@ -1313,8 +1313,12 @@
 >>>>>>> 292effc (优化aid/cid获取)
 =======
                 if (!BLOD.aid) BLOD.aid = obj.avid || obj.aid || BLOD.aid;
+<<<<<<< HEAD
                 if (!BLOD.cid) BLOD.cid = obj.cid || BLOD.cid;
 >>>>>>> 7666368 (优化aid监听)
+=======
+                if (!BLOD.cid) BLOD.cid = obj.cid || window.cid || BLOD.cid;
+>>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat')) {
                     if (config.reset.heartbeat) {
