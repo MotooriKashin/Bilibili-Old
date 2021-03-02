@@ -17,23 +17,8 @@
          * 监听window下的对象
          */
         getVariable: () => {
-            function read(arr) {
-                switch (arr[0]) {
-                    case "aid": BLOD.aid = arr[1];
-                        break;
-                    case "cid": BLOD.cid = arr[1];
-                        break;
-                    case "__playinfo__": BLOD.__playinfo__ = arr[1];
-                        break;
-                }
-            }
-            try {
-                Object.defineProperty(window, "aid", { set: (value) => { read(["aid", value]) }, get: () => { return BLOD.aid }, configurable: true });
-                Object.defineProperty(window, "cid", { set: (value) => { read(["cid", value]) }, get: () => { return BLOD.cid }, configurable: true });
-                Object.defineProperty(window, "__playinfo__", { set: (value) => { read(["__playinfo__", value]) }, get: () => { return BLOD.__playinfo__ }, configurable: true });
-                Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
-                if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("对象监听", ...e); }
+            Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
+            if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
         },
         /**
          * 替换原生脚本，不直接修改页面框架
@@ -896,11 +881,11 @@
          * 监听媒体页切p
          */
         fixvar: async () => {
-            if (!BLOD.aid) BLOD.aid = window.aid ? window.aid : BLOD.aid;
+            if (!BLOD.aid) BLOD.aid = window.aid || BLOD.aid;
             if (BLOD.oid) {
                 if (BLOD.oid != window.aid) {
                     // 收藏播放切p判断
-                    BLOD.aid = window.aid ? window.aid : BLOD.aid;
+                    BLOD.aid = window.aid || BLOD.aid;
                     BLOD.oid = window.aid;
                     BLOD.reset.setMediaList.restore();
                 }
