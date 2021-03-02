@@ -215,7 +215,8 @@ Tampermonkey BETA 4.10.6128
 
 ---
 
-### 版本历史
+<details>
+<summary>版本历史</summary>
 
 **注：部分功能可能需要先在设置里启用！**
 
@@ -700,3 +701,4 @@ Tampermonkey BETA 4.10.6128
   - 实现稍后再看页面
 - 2019-12-27
   - 实现 av 页
+</details>
