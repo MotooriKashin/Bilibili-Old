@@ -38,6 +38,7 @@
         getVariable: () => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             function read(arr) {
                 switch (arr[0]) {
                     case "aid": BLOD.aid = arr[1];
@@ -72,6 +73,10 @@
 =======
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("对象监听", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+            Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
+            if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
+>>>>>>> 4d7e937 (优化aid/cid监听)
         },
         /**
          * 替换原生脚本，不直接修改页面框架
@@ -1306,11 +1311,11 @@
          * 监听媒体页切p
          */
         fixvar: async () => {
-            if (!BLOD.aid) BLOD.aid = window.aid ? window.aid : BLOD.aid;
+            if (!BLOD.aid) BLOD.aid = window.aid || BLOD.aid;
             if (BLOD.oid) {
                 if (BLOD.oid != window.aid) {
                     // 收藏播放切p判断
-                    BLOD.aid = window.aid ? window.aid : BLOD.aid;
+                    BLOD.aid = window.aid || BLOD.aid;
                     BLOD.oid = window.aid;
                     BLOD.reset.setMediaList.restore();
                 }

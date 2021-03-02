@@ -1294,12 +1294,17 @@
                 let _url = url, hook = [_url, ""];
                 let obj = BLOD.urlObj(url);
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (obj.aid) BLOD.aid = obj.aid;
                 if (obj.cid) BLOD.aid = obj.cid;
 =======
                 if (!BLOD.aid) BLOD.aid = obj.avid || obj.aid || BLOD.aid;
                 if (!BLOD.cid) BLOD.cid = obj.cid || window.cid || BLOD.cid;
 >>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
+=======
+                BLOD.aid = obj.aid || window.aid || BLOD.aid;
+                BLOD.cid = obj.cid || window.cid || BLOD.cid;
+>>>>>>> 4d7e937 (优化aid/cid监听)
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat')) {
                     if (config.reset.heartbeat) {
