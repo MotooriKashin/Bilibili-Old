@@ -824,8 +824,13 @@
             XMLHttpRequest.prototype.open = function (method, url, ...rest) {
                 let _url = url, hook = [_url, ""];
                 let obj = BLOD.urlObj(url);
+<<<<<<< HEAD
                 if (obj.aid) BLOD.aid = obj.aid;
                 if (obj.cid) BLOD.aid = obj.cid;
+=======
+                if (!BLOD.aid) BLOD.aid = obj.avid || obj.aid || BLOD.aid;
+                if (!BLOD.cid) BLOD.cid = obj.cid || window.cid || BLOD.cid;
+>>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
                     url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');

@@ -173,6 +173,7 @@
                         e.data.dashSymbol = true;
                         e.data.p = 1;
                         e.data.pre_ad = "";
+                        history.replaceState(null, null, BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": e.data.aid, "cid": e.data.cid }));
                         window.player = new window.BilibiliPlayer(e.data);
                     }
                 })
