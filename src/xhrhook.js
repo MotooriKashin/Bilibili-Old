@@ -1295,6 +1295,7 @@
                 let obj = BLOD.urlObj(url);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (obj.aid) BLOD.aid = obj.aid;
                 if (obj.cid) BLOD.aid = obj.cid;
 =======
@@ -1305,6 +1306,10 @@
                 BLOD.aid = obj.aid || window.aid || BLOD.aid;
                 BLOD.cid = obj.cid || window.cid || BLOD.cid;
 >>>>>>> 4d7e937 (优化aid/cid监听)
+=======
+                BLOD.aid = obj.aid || BLOD.aid;
+                BLOD.cid = obj.cid || BLOD.cid;
+>>>>>>> 292effc (优化aid/cid获取)
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat')) {
                     if (config.reset.heartbeat) {
