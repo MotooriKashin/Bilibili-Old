@@ -53,8 +53,8 @@
                 xhr.onload = () => resolve(xhr.response);
 >>>>>>> 8699635 (完善xhr封装)
                 xhr.onerror = () => {
-                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
-                    reject(xhr.statusText || url);
+                    toast.error("method：GET", "url：" + url, xhr.statusText || "");
+                    reject(xhr.statusText || "xhr出错！");
                 }
                 xhr.send();
             });
@@ -79,8 +79,8 @@
                         resolve(xhr.responseText);
                     },
                     onerror: (xhr) => {
-                        toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
-                        reject(xhr.statusText || url);
+                        toast.error("method：GET", "url：" + url, xhr.statusText || "");
+                        reject(xhr.statusText || "xhr出错！");
                     }
                 });
             })
@@ -108,8 +108,8 @@
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.responseText);
                 xhr.onerror = () => {
-                    toast.error("XMLHttpRequest 错误！", "method：POST", "url：" + url, xhr.statusText || "");
-                    reject(xhr.statusText || url);
+                    toast.error("method：POST", "url：" + url, xhr.statusText || "");
+                    reject(xhr.statusText || "xhr出错！");
                 }
                 xhr.send(data);
             });
