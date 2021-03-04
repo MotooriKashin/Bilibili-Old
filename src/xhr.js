@@ -85,6 +85,7 @@
 >>>>>>> 8699635 (完善xhr封装)
                 xhr.onerror = () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
                     toast.error("method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
 =======
@@ -96,6 +97,10 @@
                     toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || url);
 >>>>>>> 329dfbe (修正xhr错误输出)
+=======
+                    toast.error("method：GET", "url：" + url, xhr.statusText || "");
+                    reject(xhr.statusText || "xhr出错！");
+>>>>>>> 67135fe (优化xhr错误提示)
                 }
                 xhr.send();
             });
@@ -136,6 +141,7 @@
                     },
                     onerror: (xhr) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
                         toast.error("method：GET", "url：" + url, xhr.statusText || "");
                         reject(xhr.statusText || "xhr出错！");
 =======
@@ -157,6 +163,10 @@
                         toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
                         reject(xhr.statusText || url);
 >>>>>>> 329dfbe (修正xhr错误输出)
+=======
+                        toast.error("method：GET", "url：" + url, xhr.statusText || "");
+                        reject(xhr.statusText || "xhr出错！");
+>>>>>>> 67135fe (优化xhr错误提示)
                     }
                 });
             })
@@ -204,6 +214,7 @@
                 xhr.onerror = () => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     toast.error("method：POST", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
 =======
@@ -214,6 +225,10 @@
                     toast.error("XMLHttpRequest 错误！", "method：POST", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || url);
 >>>>>>> 329dfbe (修正xhr错误输出)
+=======
+                    toast.error("method：POST", "url：" + url, xhr.statusText || "");
+                    reject(xhr.statusText || "xhr出错！");
+>>>>>>> 67135fe (优化xhr错误提示)
                 }
                 xhr.send(data);
             });
