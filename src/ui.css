@@ -504,6 +504,7 @@
   vertical-align: baseline;
 }
 
+<<<<<<< HEAD
 .BLOD-dl-settings a {
   color: #1890ff;
 }
@@ -602,3 +603,101 @@
 >>>>>>> eea4f89 (重绘设置界面)
 }
 >>>>>>> a555edd (show up list)
+=======
+.BLOD-dl-settings {
+	pointer-events: initial;
+	opacity: 1;
+	transform-origin: bottom;
+    transform: translateX(-50%) scale(1);
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    color: black;
+    background: #fff;
+    top: 20%;
+    left: 50%;
+    cursor: initial;
+    box-shadow: rgb(0 0 0 / 20%) 0 4px 8px 0;
+    padding: 8px;
+    z-index: 10010;
+    transition: .3s cubic-bezier(.18,.89,.32,1.28);
+	max-width: 25%;
+}
+.BLOD-dl-settings textarea {
+	resize: none;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #dfdfdf;
+    flex: 1 0 0;
+    width: 90%;
+    height: 50px;
+}
+.BLOD-dl-settings>* {
+    margin: 8px;
+}
+.BLOD-dl-settings h1 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: black;
+	text-align: center;
+}
+.BLOD-dl-settings * {
+    transition: .2s ease-out;
+    -webkit-tap-highlight-color: transparent!important;
+}
+.BLOD-dl-settings h2 {
+    font-size: 11pt;
+    font-weight: 700;
+    color: black;
+	text-align: center;
+}
+.BLOD-dl-settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+}
+.BLOD-dl-settings-item input[type=text] {
+    flex-grow: 1;
+    margin-left: 24px;
+	border-radius: 4px;
+	touch-action: manipulation;
+}
+.BLOD-dl-settings input[type=text] {
+    background: 0 0;
+    color: black;
+    border: 1px solid #8884;
+    padding: 4px;
+    margin-left: 8px;
+	border-radius: 4px;
+	touch-action: manipulation;
+}
+.final-dir {
+    white-space: normal;
+    word-break: break-all;
+	vertical-align: baseline;
+}
+.BLOD-dl-settings a {
+	color: #1890ff;
+}
+.BLOD-dl-settings .operations {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.BLOD-dl-settings .button, .BLOD-dl-settings button {
+    border: none;
+    outline: 0!important;
+    padding: 6px 16px;
+    font-size: 10pt;
+    cursor: pointer;
+    background-color: transparent;
+    color: black;
+    box-shadow: 0 0 0 1px #8884;
+	border-radius: 4px
+}
+.BLOD-dl-settings .button:hover, .BLOD-dl-settings button:hover{
+	background: #1890ff;
+}
+>>>>>>> 238e40a (支持ef2下载工具)

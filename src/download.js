@@ -128,6 +128,112 @@
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> 2f00fde (format with JsDoc)
 
+    class Ef2 {
+        constructor() {
+            if (!window.Base64) new Function(BLOD.getResourceText("base64"))();
+            this.pro = "ef2://";
+            this.data = "";
+        }
+        /**
+         * 下载对象键值对转ef2链接
+         * @param {{}} obj 下载对象键值对
+         * @returns {string} ef2链接字符串
+         */
+        encode(obj) {
+            this.data = "";
+            for (let key in obj) {
+                if (obj[key]) {
+                    if (typeof (obj[key]) == 'string') {
+                        // 处理路径中潜在的空格
+                        if (obj[key].includes(" ") && !obj[key].includes("\"")) obj[key] = "\"" + obj[key] + "\"";
+                        // 处理保存目录可能错将反斜杠写成斜杠的情况
+                        if (obj.o && obj.o.includes("/")) obj.o = obj.o.replace(/\//g, "\\");
+                        // 处理保存目录时最后一级目录可能带了反斜杠将双引号转义了的情况
+                        if (obj.o && obj.o[obj.o.length - 1] == "\"" && obj.o[obj.o.length - 2] == "\\") obj.o = obj.o.substr(0, obj.length - 2) + "\"";
+                        // 处理以双斜杠开头的链接（IDM 需要协议头要么完整要么干脆不带）
+                        if (obj.u && obj.u.startsWith("//")) obj.u = "https:" + obj.u;
+                    }
+                    switch (key) {
+                        case "u": this.data = this.data + "-u " + obj[key] + " "; // 下载链接（URL）
+
+                            break;
+                        case "a": this.data = this.data + "-a " + obj[key] + " "; // user-agent
+
+                            break;
+                        case "c": this.data = this.data + "-c " + obj[key] + " "; // cookies
+
+                            break;
+                        case "d": this.data = this.data + "-d " + obj[key] + " "; // post 数据（如果使用 POST 方法）
+
+                            break;
+                        case "r": this.data = this.data + "-r " + obj[key] + " "; // referer
+
+                            break;
+                        case "U": this.data = this.data + "-u " + obj[key] + " "; // 账户名称（服务器鉴权——基本不可能用到）
+
+                            break;
+                        case "P": this.data = this.data + "-p " + obj[key] + " "; // 账户密钥（服务器鉴权——基本不可能用到）
+
+                            break;
+                        case "o": this.data = this.data + "-o " + obj[key] + " "; // 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
+
+                            break;
+                        case "s": this.data = this.data + "-s " + obj[key] + " "; // 文件名（包括推展名）
+
+                            break;
+                        case "f": this.data = this.data + "-f "; // 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
+
+                            break;
+                        case "q": this.data = this.data + "-q "; // 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
+
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+            if (this.data && this.data.endsWith(" ")) this.data = this.data.substr(0, this.data.length - 1);
+            return this.pro + window.Base64.encode(this.data)
+        }
+        /**
+         * ef2链接转对象键值对
+         * @param {string} str ef2链接字符串
+         * @returns {{}} 下载对象键值对
+         */
+        decode(str) {
+            this.arr = [];
+            this.obj = {};
+            str = str.replace("ef2://", "");
+            str = window.Base64.decode(str);
+            if (!str.startsWith(" ")) str = " " + str;
+            this.arr = str.split(" -");
+            this.arr.forEach(d => {
+                if (d && d.endsWith(" ")) d = d.substr(0, d.length - 1);
+                if (d[0]) this.obj[d.substr(0, 1)] = d[2] ? d.substr(2, d.length - 2) : true;
+            });
+            return this.obj;
+        }
+        /**
+         * 使用参数而不是对象键值对构造ef2
+         * @param {string} u 下载链接（URL）
+         * @param {string} [a] user-agent
+         * @param {string} [c] cookies
+         * @param {string} [d] post数据（如果使用 POST 方法）
+         * @param {string} [r] referer
+         * @param {string} [U] 账户名称（服务器鉴权——基本不可能用到）
+         * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
+         * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
+         * @param {string} [s] 文件名（包括推展名）
+         * @param {*} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
+         * @param {*} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
+         * @returns {string} ef2链接字符串
+         */
+        encodePara(u, a, c, d, r, U, P, o, s, f, q) {
+            this.temp = { u, a, c, d, r, U, P, o, s, f, q }
+            return this.encode(this.temp);
+        }
+    }
     class Download {
         constructor() {
             console.debug('import module "download.js"');
@@ -141,7 +247,11 @@
 =======
             this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
+<<<<<<< HEAD
 >>>>>>> b93be8e (自定义下载)
+=======
+            this.config = BLOD.getValue("download") || {};
+>>>>>>> 238e40a (支持ef2下载工具)
         }
         /**
          * 添加播放器右键下载菜单
@@ -573,7 +683,11 @@
                 }, box);
                 a.href = d[1];
                 a.innerHTML = '<div class="download-quality ' + quatily + '">' + d[0] + '</div><div class="download-size">' + d[2] + '</div>';
+<<<<<<< HEAD
                 if (window.self == window.top && BLOD.config.reset.ef2 && name != "其他") {
+=======
+                if (window.self == window.top && BLOD.config.reset.ef2) {
+>>>>>>> 238e40a (支持ef2下载工具)
                     a.href = "javaScript:void(0);";
                     a.onclick = () => { this.ef2Set(d); return false; }
                 }
@@ -584,6 +698,7 @@
          * @param {[]} item 预先构造的下载数据：0，画质；1，URL；2，大小；3：拓展名
          */
         ef2Set(item) {
+<<<<<<< HEAD
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -592,6 +707,16 @@
             let d1 = BLOD.addElement("div", {}, d0);
             let d2 = BLOD.addElement("div", {}, d0);
             let d3 = BLOD.addElement("div", {}, d0);
+=======
+            if (!this.ef2) this.ef2 = new Ef2();
+            if (item[1].startsWith("//")) item[1] = "https:" + item[1];
+            let ui = BLOD.addElement("div", { class: "BLOD-dl-settings" });
+            let title = BLOD.addElement("h1", {}, ui);
+            let name = BLOD.addElement("h2", {}, ui);
+            let d1 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
+            let d2 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
+            let d3 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
+>>>>>>> 238e40a (支持ef2下载工具)
             let d4 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d5 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d6 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
@@ -607,6 +732,7 @@
                 this.config.r = d6.value;
                 this.config.o = d7.value;
                 this.config.s = d8.value;
+<<<<<<< HEAD
                 let url = BLOD.ef2.encode(this.config);
                 db.href = url;
                 db.innerHTML = BLOD.ef2.data;
@@ -615,6 +741,16 @@
             name.innerHTML = "ef2参数[选填]";
             d1.innerHTML = "格式：" + item[3];
             d2.innerHTML = "质量：" + item[0];
+=======
+                let url = this.ef2.encode(this.config);
+                db.href = url;
+                db.innerHTML = this.ef2.data;
+            }
+            title.innerHTML = BLOD.title.split("_哔哩")[0];
+            name.innerHTML = "ef2参数[选填]";
+            d1.innerHTML = "格式：" + item[3];
+            d2.innerHTML = "画质：" + item[0];
+>>>>>>> 238e40a (支持ef2下载工具)
             d3.innerHTML = "大小：" + item[2];
             d4.innerHTML = 'URL<input type="text" placeholder="https://www.example.com" title="这里仍可以全选然后右键IDM下载" />';
             d4 = d4.children[0];
@@ -622,7 +758,11 @@
             d4.readonly = "readonly";
             d5.innerHTML = 'User Agent<input type="text" placeholder="UA必须有效！" title="一般输入浏览器UA即可" />';
             d5 = d5.children[0];
+<<<<<<< HEAD
             d5.value = (this.config.a || navigator.userAgent).replace(/\"/g, "");
+=======
+            d5.value = this.config.a || navigator.userAgent;
+>>>>>>> 238e40a (支持ef2下载工具)
             d5.oninput = () => { this.flash() };
             d6.innerHTML = 'Referer<input type="text" placeholder="Referer必须在B站域名下" title="不妨使用B站顶级域名" />';
             d6 = d6.children[0];
@@ -630,7 +770,11 @@
             d6.oninput = () => { this.flash() };
             d7.innerHTML = '保存位置<input type="text"  placeholder="Windows用的反斜杠地址，可以不填！" title="可以不填，后面IDM对话框操作更方便" />';
             d7 = d7.children[0];
+<<<<<<< HEAD
             d7.value = (this.config.o || "").replace(/\"/g, "");
+=======
+            d7.value = this.config.o || "";
+>>>>>>> 238e40a (支持ef2下载工具)
             d7.oninput = () => { this.flash() };
             d8.innerHTML = '文件名<input type="text"  placeholder="xxx.xxx" title="重命名文件，包括拓展名" />';
             d8 = d8.children[0];
@@ -654,11 +798,19 @@
             db = db.children[0];
             dc.innerHTML = `<div class="button" title="左键点击调用IDM">开始下载</div><div class="button" title="退出">我点错了</div>`;
             this.flash();
+<<<<<<< HEAD
+=======
+            ui.scrollIntoView({ behavior: 'smooth', block: 'center' });
+>>>>>>> 238e40a (支持ef2下载工具)
             dc.children[0].onclick = () => {
                 // 缺少拓展名主动补上默认拓展名
                 if (d8.value && !d8.value.includes(".")) d8.value = d8.value + item[3];
                 this.flash();
                 BLOD.setValue("download", {
+<<<<<<< HEAD
+=======
+                    u: d4.value,
+>>>>>>> 238e40a (支持ef2下载工具)
                     a: d5.value,
                     r: d6.value,
                     o: d7.value

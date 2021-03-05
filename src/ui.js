@@ -367,6 +367,7 @@
                 this.checked("download");
                 this.checked("dlother");
                 this.checked("novideo");
+                this.checked("ef2");
                 let custom = BLOD.addElement("div", {}, this.right);
 >>>>>>> 69fdcaa (Feature refactor)
                 custom.innerHTML = '自定义链接<input type="url" placeholder="http://www.example.com"> <button>下载</button>';
