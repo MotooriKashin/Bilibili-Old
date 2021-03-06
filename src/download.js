@@ -497,7 +497,6 @@
                 if (d8.value && !d8.value.includes(".")) d8.value = d8.value + item[3];
                 this.flash();
                 BLOD.setValue("download", {
-                    u: d4.value,
                     a: d5.value,
                     r: d6.value,
                     o: d7.value
