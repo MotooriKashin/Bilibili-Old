@@ -684,10 +684,14 @@
                 a.href = d[1];
                 a.innerHTML = '<div class="download-quality ' + quatily + '">' + d[0] + '</div><div class="download-size">' + d[2] + '</div>';
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (window.self == window.top && BLOD.config.reset.ef2 && name != "其他") {
 =======
                 if (window.self == window.top && BLOD.config.reset.ef2) {
 >>>>>>> 238e40a (支持ef2下载工具)
+=======
+                if (window.self == window.top && BLOD.config.reset.ef2 && name != "其他") {
+>>>>>>> db9d8c3 (ef2排除非视频文件)
                     a.href = "javaScript:void(0);";
                     a.onclick = () => { this.ef2Set(d); return false; }
                 }
@@ -713,10 +717,17 @@
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings" });
             let title = BLOD.addElement("h1", {}, ui);
             let name = BLOD.addElement("h2", {}, ui);
+<<<<<<< HEAD
             let d1 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d2 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d3 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
 >>>>>>> 238e40a (支持ef2下载工具)
+=======
+            let d0 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
+            let d1 = BLOD.addElement("div", {}, d0);
+            let d2 = BLOD.addElement("div", {}, d0);
+            let d3 = BLOD.addElement("div", {}, d0);
+>>>>>>> db9d8c3 (ef2排除非视频文件)
             let d4 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d5 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d6 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
@@ -749,8 +760,12 @@
             title.innerHTML = BLOD.title.split("_哔哩")[0];
             name.innerHTML = "ef2参数[选填]";
             d1.innerHTML = "格式：" + item[3];
+<<<<<<< HEAD
             d2.innerHTML = "画质：" + item[0];
 >>>>>>> 238e40a (支持ef2下载工具)
+=======
+            d2.innerHTML = "质量：" + item[0];
+>>>>>>> db9d8c3 (ef2排除非视频文件)
             d3.innerHTML = "大小：" + item[2];
             d4.innerHTML = 'URL<input type="text" placeholder="https://www.example.com" title="这里仍可以全选然后右键IDM下载" />';
             d4 = d4.children[0];
