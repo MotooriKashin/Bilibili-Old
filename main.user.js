@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.5.0
+// @version      4.5.1
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -32,7 +32,7 @@
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@9f9eb36444dea7cafb548565d7b8072cd788e4fb/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@fc46cfbce9361a5daaa11ade2b42216bf7d6ebed/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@fc46cfbce9361a5daaa11ade2b42216bf7d6ebed/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@fc46cfbce9361a5daaa11ade2b42216bf7d6ebed/src/xhrhook.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a499bf4c34af5399ee1ee7e99c6d524efde2a083/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@238e40a89b7bb3548031ba4290df13b88b62b31b/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
