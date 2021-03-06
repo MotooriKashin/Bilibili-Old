@@ -21388,45 +21388,77 @@ function Fa() {
                         d = this.c,
                         e = b.a.browser.version,
                         k = this.f.timestamp;
-                    d.trigger(l.a.h.Zl);
-                    this.c.template.qb.removeClass("disabled").html("\u5f39\u5e55\u5217\u8868\u88c5\u586b\u4e2d...");
-                    var g = k ? 0 === k ? this.f.url : this.ty(k) : this.f.url;
-                    // 21483行的success函数的复制品
-                    BLOD.setDanmaku = (dm, append = false) => {
+                    /**
+                     * 设置弹幕池
+                     * @param  {Array} dm 弹幕数组
+                     * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
+                     */
+                    BLOD.setDanmaku = (danmaku, append = false) => {
                         c.clear(); // 清屏
-                        c.g.xd.length = 0;
-                        c.list.G = [];
                         var e = +new Date;
-                        if (append) {
-                            c.g.G = c.g.G.concat(dm);
-                            c.list.G = c.list.G.concat(dm);
-                        } else {
-                            c.g.G = dm; // 设置弹幕渲染器使用的弹幕数组
-                            c.list.G = dm; // 设置右侧弹幕列表展示的弹幕数组
+                        if (!append) {
+                            // 清除原有弹幕
+                            c.g.G = [];
+                            c.g.xd.splice(0, c.g.xd.length);
                         }
-                        c.lm(); // 弹幕渲染器预处理弹幕
+                        let dm, basDM = [], commonDM = [];
+                        for (let i = 0; i < danmaku.length; i++) {
+                            dm = Object.assign({}, danmaku[i]);
+                            if (dm.mode == 7) {
+                                // 添加高级弹幕
+                                dm.stime *= 1E3;
+                                c.c.P.wj(dm);
+                            }
+                            else if (dm.mode == 9) {
+                                basDM.push(dm);
+                            } else {
+                                commonDM.push(dm);
+                            }
+                        }
+                        // 添加普通弹幕
+                        commonDM = commonDM.concat(c.g.xd);
+                        commonDM.sort((a, b) => a.stime - b.stime);
+                        for (let i = 0; i < commonDM.length; i++) {
+                            c.g.xd[i] = commonDM[i];
+                        }
+                        c.c.Ma && c.c.Ma.add({ va: basDM }); // 添加bas弹幕
+                        c.g.G = danmaku.concat(c.g.G); // 设置弹幕原始数据
+                        c.list.G = danmaku.concat(c.g.G); // 设置右侧弹幕列表的弹幕数据
                         c.list.update(!1, 0); // 刷新右侧弹幕列表
                         c.c.template.Iy.html(c.g.G.length); // 设置播放器右上角的弹幕数量
                         c.c.I.uB(c.g.G.length); // 设置弹幕数量的dom节点的title属性 (div.bilibili-player-danmaku-number)
                         // 在播放器的右键log中打印相关信息
-                        d.trigger(l.a.h.ae, !0, "addTime:" + (+new Date - e) + ",num:" + dm.length);
+                        d.trigger(l.a.h.ae, !0, "addTime:" + (+new Date - e) + ",num:" + danmaku.length);
                     }
                     /**
                      * 偏移弹幕的出现时间
                      * @param  {Number} t 以秒为单位的偏移时间
                      */
                     BLOD.offsetDanmaku = (t) => {
-                        c.clear();
-                        let parsedDm = c.g.xd; // 弹幕渲染器使用的弹幕数据，只有修改它才能产生偏移效果
-                        let dm = c.g.G; // 弹幕原始数据，同样修改一遍，用来刷新弹幕列表
-                        for (let i = 0; i < dm.length; i++) {
-                            dm[i].stime += t;
+                        c.g.clear(); // 清除普通弹幕
+                        // 清除已渲染的高级弹幕
+                        let advdmRender = c.c.P.P;
+                        "div" === advdmRender.Yb() ? advdmRender.canvas && (advdmRender.canvas.innerHTML = "") : advdmRender.Sc && advdmRender.Sc.clearRect(0,
+                            0, advdmRender.canvas.width, advdmRender.canvas.height);
+                        // 清除已渲染的bas弹幕
+                        c.c.Ma && c.c.Ma.wrap && (c.c.Ma.wrap.innerHTML = "");
+                        function offset(array) {
+                            for (let i = 0; i < array.length; i++) {
+                                array[i].stime += t;
+                            }
                         }
-                        for (let i = 0; i < parsedDm.length; i++) {
-                            parsedDm[i].stime += t;
+                        offset(c.g.xd); // 弹幕渲染器使用的弹幕数据，只有修改它才能产生偏移效果
+                        offset(c.g.G);  // 弹幕原始数据，同样修改一遍，用来刷新右侧弹幕列表
+                        c.c.Ma && offset(c.c.Ma.dmList); // 偏移bas弹幕
+                        let advDM = c.c.P.P.Ga;          // 偏移高级弹幕，单位为毫秒
+                        for (let i = 0; i < advDM.length; i++) {
+                            advDM[i].Xq.stime += t * 1E3;
                         }
                         c.list.update(!1, 0);
                     }
+                    d.trigger(l.a.h.Zl);
+                    this.c.template.qb.removeClass("disabled").html("\u5f39\u5e55\u5217\u8868\u88c5\u586b\u4e2d...");
+                    var g = k ? 0 === k ? this.f.url : this.ty(k) : this.f.url;
                     if (c.c.kk) c.o([], 0), d.trigger(l.a.h.ae, !0);
                     else if (e.safari && !e.il || !Worker || e.te || e.Ac || "chrome" === e.browser && 45 > e.version) (new B.a({
                         url: g,
@@ -24000,14 +24032,23 @@ function Fa() {
                         h === this.current.timestamp && e.addClass("day-enable js-action");
                         h === this.active.timestamp && e.addClass("active")
                     }
-                    // 移除日期向前判断
-                    //h = g.a.Ag(new Date(1E3 * this.Id().timestamp), "yyyy-MM").split("-").map(Number);
-                    //e = h[1];
-                    //c = h[0] - 1;
-                    //h = parseInt(b.eq(0).attr("data-timestamp"),10);
-                    //(this.zn = +g.a.Ag(new Date(1E3 * h), "yyyyMM") > 100 * c + e) ? this.template.prev.removeClass("disabled") : this.template.prev.addClass("disabled");
-                    this.zn = true;
-                    this.template.prev.removeClass("disabled");
+                    let pubdate = new Date(2009, 0);
+                    if (window.__INITIAL_STATE__) {
+                        if (__INITIAL_STATE__.videoData && __INITIAL_STATE__.videoData.pubdate) {
+                            pubdate = new Date(1E3 * __INITIAL_STATE__.videoData.pubdate);
+                        } else if (__INITIAL_STATE__.epInfo && __INITIAL_STATE__.epInfo.pub_real_time) {
+                            pubdate = new Date(__INITIAL_STATE__.epInfo.pub_real_time);
+                        }
+                    } else {
+                        let time = document.querySelector("div.tm-info.tminfo > time");
+                        time && (pubdate = new Date(time.innerHTML));
+                    }
+                    h = g.a.Ag(pubdate, "yyyy-MM").split("-").map(Number);
+                    let month = h[1];
+                    let year = h[0];
+                    h = parseInt(b.eq(0).attr("data-timestamp"),
+                        10);
+                    (this.zn = +g.a.Ag(new Date(1E3 * h), "yyyyMM") > 100 * year + month) ? this.template.prev.removeClass("disabled") : this.template.prev.addClass("disabled");
                     h = parseInt(b.last().attr("data-timestamp"), 10);
                     (this.md = h < this.Id().timestamp) ? this.template.next.removeClass("disabled") : this.template.next.addClass("disabled")
                 } else

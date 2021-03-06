@@ -491,24 +491,29 @@
         }
         let danmaku = [];
         BLOD.hash = [];
-        let attr, v;
+        let attr, v, mode;
         for (let i = 0; i < dm.length; i++) {
             v = dm[i];
             attr = v.getAttribute('p').split(",");
             BLOD.hash.push(v.midHash);
+            mode = parseInt(attr[1]);
             danmaku[i] = {
-                class: attr[5],
+                class: parseInt(attr[5]),
                 color: parseInt(attr[3]),
                 date: parseInt(attr[4]),
                 dmid: attr[7],
-                mode: parseInt(attr[1]),
+                mode: mode,
                 size: parseInt(attr[2]),
                 stime: parseFloat(attr[0]),
-                text: v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n'),
+                text: (mode != 8 && mode != 9) ? v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent,
                 uid: attr[6]
             };
         }
         specialEffects(danmaku);
+        // 弹幕池属性在原生代码中，通过.gb而不是.class引用
+        for (let i = 0; i < danmaku.length; i++) {
+            danmaku[i].gb = danmaku[i].class;
+        }
         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
@@ -526,30 +531,12 @@
      * @param {array} dm 弹幕数组
      */
     function specialEffects(dm) {
+        let textData;
         for (let i = 0; i < dm.length; i++) {
-            if (dm[i].text.includes('\n')) {
-                dm[i].class = 1;
-                dm[i].zIndex = dm[i].stime * 1000;
-            }
-        }
-        // 使同时出现的普权弹幕中，文字总是显示在█和▂的上面
-        dm.sort((a, b) => a.stime - b.stime);
-        for (let i = 0; i < dm.length - 1; i++) {
-            if (dm[i].stime == dm[i + 1].stime) {
-                i = search(i);
-            }
-        }
-        function search(i) {
-            if (i + 1 < dm.length && dm[i].stime == dm[i + 1].stime) {
-                setzIndex(i);
-                return search(i + 1);
-            }
-            setzIndex(i);
-            return i;
-        }
-        function setzIndex(i) {
-            let textData = dm[i];
-            if (textData.zIndex) {
+            textData = dm[i];
+            if (textData.text.includes('\n')) {
+                textData.class = 1;
+                textData.zIndex = textData.stime * 1000;
                 if (!(textData.text.includes("█") || textData.text.includes("▂")))
                     textData.zIndex = textData.zIndex + 1;
             }
@@ -789,7 +776,7 @@
                                 mode: v.mode,
                                 size: v.fontsize,
                                 stime: v.progress / 1000,
-                                text: v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n'),
+                                text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                                 uid: v.midHash
                             };
                         });
