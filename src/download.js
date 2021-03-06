@@ -832,9 +832,12 @@
                 this.flash();
                 BLOD.setValue("download", {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     u: d4.value,
 >>>>>>> 238e40a (支持ef2下载工具)
+=======
+>>>>>>> 9ef3f55 (去除不该保存的下载配置)
                     a: d5.value,
                     r: d6.value,
                     o: d7.value
