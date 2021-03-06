@@ -177,7 +177,6 @@
 
     class UrlSign {
         constructor() {
-            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
             this.keySecret = [
                 "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
                 "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
@@ -193,7 +192,6 @@
                 "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.",
                 "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"
             ]
-            this.md5 = BLOD.md5;
         }
         /**
          * 签名加密url
@@ -202,6 +200,7 @@
          * @param {number} [id] 签名密钥ID
          */
         sign(url, obj = {}, id = 0) {
+            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
             let table = {};
             this.restoreKey(Number(id));
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
