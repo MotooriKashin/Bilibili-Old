@@ -234,6 +234,8 @@
             return this.encode(this.temp);
         }
     }
+    BLOD.ef2 = new Ef2();
+
     class Download {
         constructor() {
             console.debug('import module "download.js"');
@@ -703,6 +705,7 @@
          */
         ef2Set(item) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -713,6 +716,8 @@
             let d3 = BLOD.addElement("div", {}, d0);
 =======
             if (!this.ef2) this.ef2 = new Ef2();
+=======
+>>>>>>> 9f9eb36 (Syntax error)
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -744,6 +749,7 @@
                 this.config.o = d7.value;
                 this.config.s = d8.value;
 <<<<<<< HEAD
+<<<<<<< HEAD
                 let url = BLOD.ef2.encode(this.config);
                 db.href = url;
                 db.innerHTML = BLOD.ef2.data;
@@ -754,10 +760,13 @@
             d2.innerHTML = "质量：" + item[0];
 =======
                 let url = this.ef2.encode(this.config);
+=======
+                let url = BLOD.ef2.encode(this.config);
+>>>>>>> 9f9eb36 (Syntax error)
                 db.href = url;
-                db.innerHTML = this.ef2.data;
+                db.innerHTML = BLOD.ef2.data;
             }
-            title.innerHTML = BLOD.title.split("_哔哩")[0];
+            title.innerHTML = document.title.split("_哔哩")[0];
             name.innerHTML = "ef2参数[选填]";
             d1.innerHTML = "格式：" + item[3];
 <<<<<<< HEAD

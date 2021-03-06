@@ -598,9 +598,12 @@ const objUrl = (url, obj) => {
     class UrlSign {
         constructor() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
 >>>>>>> 9448cf0 (refactor some function)
+=======
+>>>>>>> 9f9eb36 (Syntax error)
             this.keySecret = [
                 "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
                 "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
@@ -617,9 +620,12 @@ const objUrl = (url, obj) => {
                 "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"
             ]
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             this.md5 = BLOD.md5;
 >>>>>>> 9448cf0 (refactor some function)
+=======
+>>>>>>> 9f9eb36 (Syntax error)
         }
         /**
          * 签名加密url
@@ -629,9 +635,13 @@ const objUrl = (url, obj) => {
          */
         sign(url, obj = {}, id = 0) {
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
 =======
 >>>>>>> 9448cf0 (refactor some function)
+=======
+            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
+>>>>>>> 9f9eb36 (Syntax error)
             let table = {};
             this.restoreKey(Number(id));
             obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
