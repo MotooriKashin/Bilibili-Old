@@ -113,6 +113,8 @@
             return this.encode(this.temp);
         }
     }
+    BLOD.ef2 = new Ef2();
+
     class Download {
         constructor() {
             console.debug('import module "download.js"');
@@ -419,7 +421,6 @@
          * @param {[]} item 预先构造的下载数据：0，画质；1，URL；2，大小；3：拓展名
          */
         ef2Set(item) {
-            if (!this.ef2) this.ef2 = new Ef2();
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -443,11 +444,11 @@
                 this.config.r = d6.value;
                 this.config.o = d7.value;
                 this.config.s = d8.value;
-                let url = this.ef2.encode(this.config);
+                let url = BLOD.ef2.encode(this.config);
                 db.href = url;
-                db.innerHTML = this.ef2.data;
+                db.innerHTML = BLOD.ef2.data;
             }
-            title.innerHTML = BLOD.title.split("_哔哩")[0];
+            title.innerHTML = document.title.split("_哔哩")[0];
             name.innerHTML = "ef2参数[选填]";
             d1.innerHTML = "格式：" + item[3];
             d2.innerHTML = "质量：" + item[0];
