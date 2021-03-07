@@ -21388,18 +21388,33 @@ function Fa() {
                         d = this.c,
                         e = b.a.browser.version,
                         k = this.f.timestamp;
+                    
+                    /**
+                     * 清屏（不清除弹幕池）
+                     */
+                    function clear() {
+                        c.g.clear(); // 清除普通弹幕
+                        // 清除已渲染的高级弹幕
+                        let advdmRender = c.c.P.P;
+                        "div" === advdmRender.Yb() ? advdmRender.canvas && (advdmRender.canvas.innerHTML = "") : advdmRender.Sc && advdmRender.Sc.clearRect(0,
+                            0, advdmRender.canvas.width, advdmRender.canvas.height);
+                        // 清除已渲染的bas弹幕
+                        c.c.Ma && c.c.Ma.wrap && (c.c.Ma.wrap.innerHTML = "");
+                    }
                     /**
                      * 设置弹幕池
                      * @param  {Array} dm 弹幕数组
                      * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
                      */
                     BLOD.setDanmaku = (danmaku, append = false) => {
-                        c.clear(); // 清屏
+                        clear();
                         var e = +new Date;
                         if (!append) {
-                            // 清除原有弹幕
+                            // 清空弹幕池
                             c.g.G = [];
                             c.g.xd.splice(0, c.g.xd.length);
+                            c.c.P.clear(); // 清除高级弹幕
+                            c.c.Ma && c.c.Ma.dmList.splice(0, c.c.Ma.dmList.length); // 清除bas弹幕
                         }
                         let dm, basDM = [], commonDM = [];
                         for (let i = 0; i < danmaku.length; i++) {
@@ -21435,13 +21450,7 @@ function Fa() {
                      * @param  {Number} t 以秒为单位的偏移时间
                      */
                     BLOD.offsetDanmaku = (t) => {
-                        c.g.clear(); // 清除普通弹幕
-                        // 清除已渲染的高级弹幕
-                        let advdmRender = c.c.P.P;
-                        "div" === advdmRender.Yb() ? advdmRender.canvas && (advdmRender.canvas.innerHTML = "") : advdmRender.Sc && advdmRender.Sc.clearRect(0,
-                            0, advdmRender.canvas.width, advdmRender.canvas.height);
-                        // 清除已渲染的bas弹幕
-                        c.c.Ma && c.c.Ma.wrap && (c.c.Ma.wrap.innerHTML = "");
+                        clear();
                         function offset(array) {
                             for (let i = 0; i < array.length; i++) {
                                 array[i].stime += t;
