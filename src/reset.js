@@ -1287,6 +1287,30 @@
             }
             toast("本地弹幕：" + file[0].name, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
             BLOD.loadLocalDm(data, config.reset.concatDanmaku);
+            this.offset = 0; // 记录或重置弹幕偏移时间
+            if (!BLOD.offsetDanmaku) return toast.error("绑定键盘事件失败：弹幕偏移组件丢失！")
+            else {
+                toast("已绑定键盘事件", "可以通过键盘 , 和 . 两个键（即上标为 < 和 > 的两个键）提前或延后弹幕偏移，频度1秒/次");
+                if (!this.keyboard) {
+                    this.keyboard = true;
+                    document.addEventListener("keydown", (ev) => {
+                        switch (ev.key) {
+                            case ",":
+                                BLOD.offsetDanmaku(-1);
+                                this.offset--;
+                                debug.msg("弹幕偏移：", this.offset + " 秒");
+                                break;
+                            case ".":
+                                BLOD.offsetDanmaku(1);
+                                this.offset++;
+                                debug.msg("弹幕偏移：", this.offset + " 秒");
+                                break;
+                            default:
+                                break;
+                        }
+                    })
+                }
+            }
             // 成功载入清除上传文件控件内容
             this.input.value = "";
         }
