@@ -1733,6 +1733,9 @@
             toast("本地弹幕：" + file[0].name, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
             BLOD.loadLocalDm(data, config.reset.concatDanmaku);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 452f843 (弹幕偏移绑定键盘)
             this.offset = 0; // 记录或重置弹幕偏移时间
             if (!BLOD.offsetDanmaku) return toast.error("绑定键盘事件失败：弹幕偏移组件丢失！")
             else {
@@ -1757,6 +1760,7 @@
                     })
                 }
             }
+<<<<<<< HEAD
             // 成功载入清除上传文件控件内容
             this.input.value = "";
 =======
@@ -1767,6 +1771,8 @@
 =======
 =======
 >>>>>>> cea14d1 (调整本地弹幕组件初始化时机)
+=======
+>>>>>>> 452f843 (弹幕偏移绑定键盘)
             // 成功载入清除上传文件控件内容
             this.input.value = "";
 >>>>>>> 5ce0509 (细节处理)
