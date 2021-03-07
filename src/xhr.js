@@ -188,8 +188,8 @@
         /**
          * post方法
          * @param {string} url 链接url
-         * @param {object} [headers] 设定请求头，注意有些属性是不可修改的
          * @param {*} [data] 所需提交的数据，post方法专属
+         * @param {object} [headers] 设定请求头，注意有些属性是不可修改的
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
 <<<<<<< HEAD

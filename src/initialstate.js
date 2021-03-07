@@ -236,56 +236,107 @@
          * @param {number} [epId] epid数据
          */
         bangumi(data, epId) {
-            try {
-                // https://bangumi.bilibili.com/view/web_api/season
-                epId = 1 * epId || null;
-                data = BLOD.jsonCheck(data).result;
-                let ids = [];
-                data.episodes.forEach(d => {
-                    ids.push(d.ep_id);
-                    if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
-                });
+            // https://bangumi.bilibili.com/view/web_api/season
+            epId = 1 * epId || null;
+            data = BLOD.jsonCheck(data).result;
+            let ids = [];
+            data.episodes.forEach(d => {
+                ids.push(d.ep_id);
+                if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
+            });
 
-                let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
-                __INITIAL_STATE__.activity = data.activity || {};
-                __INITIAL_STATE__.epId = epId || ids[0];
-                __INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
-                __INITIAL_STATE__.epList = data.episodes;
-                __INITIAL_STATE__.mdId = data.media_id;
-                __INITIAL_STATE__.mediaInfo.actors = data.actors;
-                __INITIAL_STATE__.mediaInfo.alias = data.alias;
-                __INITIAL_STATE__.mediaInfo.areas = data.areas;
-                __INITIAL_STATE__.mediaInfo.bkg_cover = data.bkg_cover;
-                __INITIAL_STATE__.mediaInfo.cover = data.cover;
-                __INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
-                __INITIAL_STATE__.mediaInfo.is_paster_ads = data.is_paster_ads;
-                __INITIAL_STATE__.mediaInfo.jp_title = data.jp_title;
-                __INITIAL_STATE__.mediaInfo.link = data.link;
-                __INITIAL_STATE__.mediaInfo.media_id = data.media_id;
-                __INITIAL_STATE__.mediaInfo.mode = data.mode;
-                __INITIAL_STATE__.mediaInfo.paster_text = data.paster_text;
-                __INITIAL_STATE__.mediaInfo.season_id = data.season_id;
-                __INITIAL_STATE__.mediaInfo.season_status = data.season_status;
-                __INITIAL_STATE__.mediaInfo.season_title = data.season_title;
-                __INITIAL_STATE__.mediaInfo.season_type = data.season_type;
-                __INITIAL_STATE__.mediaInfo.square_cover = data.square_cover;
-                __INITIAL_STATE__.mediaInfo.staff = data.staff;
-                __INITIAL_STATE__.mediaInfo.style = data.style;
-                __INITIAL_STATE__.mediaInfo.title = data.title;
-                __INITIAL_STATE__.mediaInfo.total_ep = data.total_ep;
-                __INITIAL_STATE__.mediaRating = data.rating || {};
-                __INITIAL_STATE__.newestEp = data.newest_ep;
-                __INITIAL_STATE__.payMent = data.payment || {};
-                __INITIAL_STATE__.pubInfo = data.publish;
-                __INITIAL_STATE__.rightsInfo = data.rights;
-                __INITIAL_STATE__.seasonList = data.seasons || [];
-                __INITIAL_STATE__.seasonStat = data.stat;
-                __INITIAL_STATE__.special = data.bkg_cover ? true : false;
-                __INITIAL_STATE__.ssId = data.season_id;
-                __INITIAL_STATE__.upInfo = data.up_info;
+            let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
+            __INITIAL_STATE__.activity = data.activity || {};
+            __INITIAL_STATE__.epId = epId || ids[0];
+            __INITIAL_STATE__.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
+            __INITIAL_STATE__.epList = data.episodes;
+            __INITIAL_STATE__.mdId = data.media_id;
+            __INITIAL_STATE__.mediaInfo.actors = data.actors;
+            __INITIAL_STATE__.mediaInfo.alias = data.alias;
+            __INITIAL_STATE__.mediaInfo.areas = data.areas;
+            __INITIAL_STATE__.mediaInfo.bkg_cover = data.bkg_cover;
+            __INITIAL_STATE__.mediaInfo.cover = data.cover;
+            __INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
+            __INITIAL_STATE__.mediaInfo.is_paster_ads = data.is_paster_ads;
+            __INITIAL_STATE__.mediaInfo.jp_title = data.jp_title;
+            __INITIAL_STATE__.mediaInfo.link = data.link;
+            __INITIAL_STATE__.mediaInfo.media_id = data.media_id;
+            __INITIAL_STATE__.mediaInfo.mode = data.mode;
+            __INITIAL_STATE__.mediaInfo.paster_text = data.paster_text;
+            __INITIAL_STATE__.mediaInfo.season_id = data.season_id;
+            __INITIAL_STATE__.mediaInfo.season_status = data.season_status;
+            __INITIAL_STATE__.mediaInfo.season_title = data.season_title;
+            __INITIAL_STATE__.mediaInfo.season_type = data.season_type;
+            __INITIAL_STATE__.mediaInfo.square_cover = data.square_cover;
+            __INITIAL_STATE__.mediaInfo.staff = data.staff;
+            __INITIAL_STATE__.mediaInfo.style = data.style;
+            __INITIAL_STATE__.mediaInfo.title = data.title;
+            __INITIAL_STATE__.mediaInfo.total_ep = data.total_ep;
+            __INITIAL_STATE__.mediaRating = data.rating || {};
+            __INITIAL_STATE__.newestEp = data.newest_ep;
+            __INITIAL_STATE__.payMent = data.payment || {};
+            __INITIAL_STATE__.pubInfo = data.publish;
+            __INITIAL_STATE__.rightsInfo = data.rights;
+            __INITIAL_STATE__.seasonList = data.seasons || [];
+            __INITIAL_STATE__.seasonStat = data.stat;
+            __INITIAL_STATE__.special = data.bkg_cover ? true : false;
+            __INITIAL_STATE__.ssId = data.season_id;
+            __INITIAL_STATE__.upInfo = data.up_info;
 
-                return __INITIAL_STATE__;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
+            return __INITIAL_STATE__;
+        }
+        thaiBangumi(data, epId) {
+            // https://api.global.bilibili.com/view/web_api/season
+            epId = 1 * epId || null;
+            data = BLOD.jsonCheck(data).result;
+            let ids = [], epList = [];
+            data.modules.forEach(d => {
+                d.data.episodes.forEach(d => {
+                    d.ctime = "";
+                    d.duration = 1;
+                    d.ep_id = d.id;
+                    d.episode_status = d.status;
+                    d.index = d.title;
+                    d.index_title = d.long_title;
+                    d.mid = 2;
+                    d.page = 1;
+                    d.premiere = false;
+                    d.pub_real_time = "";
+                    d.section_id = 0;
+                    d.section_type = 0;
+                    d.vid = "";
+                    epList.push(d);
+                    ids.push(d.id);
+                })
+            });
+            let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
+            __INITIAL_STATE__.activity = data.activity_dialog || {};
+            __INITIAL_STATE__.epId = epId || ids[0];
+            __INITIAL_STATE__.epInfo = epList[ids.indexOf(epId)] || epList[0];
+            __INITIAL_STATE__.epList = epList;
+            __INITIAL_STATE__.mediaInfo.actors = data.actor.info;
+            __INITIAL_STATE__.mediaInfo.alias = data.alias;
+            __INITIAL_STATE__.mediaInfo.areas = data.areas;
+            __INITIAL_STATE__.mediaInfo.cover = data.cover;
+            __INITIAL_STATE__.mediaInfo.evaluate = data.evaluate;
+            __INITIAL_STATE__.mediaInfo.link = data.link;
+            __INITIAL_STATE__.mediaInfo.mode = data.mode;
+            __INITIAL_STATE__.mediaInfo.season_id = data.season_id;
+            __INITIAL_STATE__.mediaInfo.season_status = data.season_status;
+            __INITIAL_STATE__.mediaInfo.season_title = data.season_title;
+            __INITIAL_STATE__.mediaInfo.staff = data.staff;
+            __INITIAL_STATE__.mediaInfo.style = data.styles;
+            __INITIAL_STATE__.mediaInfo.title = data.title;
+            __INITIAL_STATE__.mediaInfo.total_ep = ids.length;
+            __INITIAL_STATE__.newestEp = data.new_ep;
+            __INITIAL_STATE__.pubInfo = data.publish;
+            __INITIAL_STATE__.pubInfo.is_started = 1;
+            __INITIAL_STATE__.rightsInfo = data.rights;
+            __INITIAL_STATE__.seasonStat = data.stat;
+            __INITIAL_STATE__.ssId = data.season_id;
+
+
+            return __INITIAL_STATE__;
         }
         /**
          * 构造主页数据

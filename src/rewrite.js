@@ -15,6 +15,7 @@
 =======
     const BLOD = window.BLOD; /** @see main*/
     const toast = BLOD.toast; /** @see debug */
+<<<<<<< HEAD
 >>>>>>> 5ed92f5 (change css method)
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
@@ -28,6 +29,9 @@
 >>>>>>> 5ed92f5 (change css method)
     const toast = BLOD.toast; /** @see debug */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+    const config = BLOD.config; /** @see config */
+>>>>>>> 136df39 (Thailand bangumi season)
 
     class Write {
         constructor() {
@@ -188,6 +192,7 @@
                 let data = (BLOD.uid && BLOD.xhr.false(location.href).match(/last_ep_id\"\:[0-9]+/)) || [];
                 let id = BLOD.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : null;
                 id = id || (data[0] && data[0].split(":")[1]) || null;
+<<<<<<< HEAD
 =======
                 let data;
 >>>>>>> 33c5e60 (重写Bangumi数据)
@@ -220,6 +225,28 @@
 =======
                 if (data.match('"specialCover":""') || !BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
 =======
+=======
+                try {
+                    if (BLOD.path[5].startsWith('ss')) {
+                        data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: location.href.match(/[0-9]+/)[0] }));
+                    } else if (BLOD.path[5].startsWith('ep')) {
+                        data = BLOD.xhr.false(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: location.href.match(/[0-9]+/)[0] }));
+                    }
+                    BLOD.__INITIAL_STATE__ = BLOD.iniState.bangumi(data, id);
+                } catch (e) {
+                    let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
+                    if (!config.reset.limit) throw e
+                    try {
+                        if (BLOD.path[5].startsWith('ss')) {
+                            data = BLOD.xhr.false(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { season_id: location.href.match(/[0-9]+/)[0] }));
+                        } else if (BLOD.path[5].startsWith('ep')) {
+                            data = BLOD.xhr.false(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { ep_id: location.href.match(/[0-9]+/)[0] }));
+                        }
+                        BLOD.__INITIAL_STATE__ = BLOD.iniState.thaiBangumi(data, id);
+                        BLOD.limit = 2;
+                    } catch (no) { throw e }
+                }
+>>>>>>> 136df39 (Thailand bangumi season)
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epList && BLOD.__INITIAL_STATE__.epList[1]) {
                     BLOD.__INITIAL_STATE__.special = false;
