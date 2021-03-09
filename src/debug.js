@@ -73,7 +73,7 @@
         }
         /**
          * 调整设置
-         * @param {object} config 设置键值对
+         * @param {{}} config 设置键值对
          */
         change(config) {
             if (config) {

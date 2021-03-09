@@ -531,7 +531,7 @@
     BLOD.reset.fixVideoLost = {
         /**
          * 处理收藏中的失效视频
-         * @param {*} msg 节点事件，包含失效视频节点
+         * @param {Event} msg 节点事件，包含失效视频节点
          * @param {*} [data] 相当于声明变量
          */
         favlist: async (msg, data) => {
@@ -624,7 +624,7 @@
         },
         /**
          * 处理个人空间主页的失效视频并固定所有失效视频防止被页面改回去
-         * @param {*} msg 节点事件，包含被改回去的失效视频节点
+         * @param {Event} msg 节点事件，包含被改回去的失效视频节点
          */
         home: async (msg) => {
             if (!config.reset.lostvideo) return;
@@ -689,7 +689,7 @@
         /**
          * 处理分集数据
          * @param {*} data 用于切p判断处理过与否
-         * @param {*} msg 节点事件，包含当前分p的aid
+         * @param {Event} msg 节点事件，包含当前分p的aid
          */
         episodeData: async (data, msg) => {
             try {
@@ -725,7 +725,7 @@
     BLOD.reset.setReplyFloor = {
         /**
          * 初始化评论楼层数据
-         * @param {*} data 评论数据json
+         * @param {{}} data 评论数据json
          */
         init(data) {
             if (!config.reset.replyfloor) return;
@@ -895,7 +895,7 @@
         },
         /**
          * 更新媒体页切p数据
-         * @param {*} data 构造好的媒体页数据
+         * @param {{}} data 构造好的媒体页数据
          */
         restore: async (data) => {
             toast("更新页面信息...", "部分非关键信息不会去额外获取");

@@ -29,7 +29,7 @@
          * 异步链接
          * @param {string} url 链接url
          * @param {string} [responseType] 设定服务器返回值
-         * @param {object} [headers] 设定请求头键值对，注意有些属性是不可修改的
+         * @param {{}} [headers] 设定请求头键值对，注意有些属性是不可修改的
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
         true(url, responseType = "text", headers = {}, credentials = true) {
@@ -50,7 +50,7 @@
         /**
          * 跨域链接
          * @param {string} url 链接url
-         * @param {object} [headers] 设定请求头：user-agent, referer, ...
+         * @param {{}} [headers] 设定请求头：user-agent, referer, ...
          */
         GM(url, headers = {}) {
             return new Promise((resolve, reject) => {
@@ -73,7 +73,7 @@
          * post方法
          * @param {string} url 链接url
          * @param {*} [data] 所需提交的数据，post方法专属
-         * @param {object} [headers] 设定请求头，注意有些属性是不可修改的
+         * @param {{}} [headers] 设定请求头，注意有些属性是不可修改的
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
         post(url, data, headers = { "Content-type": "application/x-www-form-urlencoded" }, credentials = true) {
