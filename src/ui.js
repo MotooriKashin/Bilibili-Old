@@ -283,7 +283,7 @@
 =======
 >>>>>>> 07154fd (添加读取本地弹幕功能)
          * @param {boolean} [type] 有效则主键在config.rewrite下
-         * @param {object} [style] 该功能定制css样式
+         * @param {{}} [style] 该功能定制css样式
          * @param {Function} [en] 启用功能时的回调，传入该功能节点作为参数以修改修改显示
          * @param {Function} [dis] 禁用该功能时的回调，传入该功能节点作为参数以修改修改显示
          */

@@ -170,7 +170,7 @@
         }
         /**
          * 构造av页数据，使用B站API
-         * @param {*} data 远程返回的json字符串
+         * @param {string} data 远程返回的json字符串
          */
         av(data) {
             try {
@@ -190,7 +190,7 @@
         }
         /**
          * 构造av页数据，使用Biliplus源
-         * @param {*} data 远程返回的json字符串
+         * @param {string} data 远程返回的json字符串
          */
         avPlus(data) {
             try {
@@ -232,7 +232,7 @@
         }
         /**
          * 构造bangumi数据
-         * @param {*} data 远程返回的json字符串
+         * @param {string} data 远程返回的json字符串
          * @param {number} [epId] epid数据
          */
         bangumi(data, epId) {
@@ -285,6 +285,12 @@
 
             return __INITIAL_STATE__;
         }
+        /**
+         * 处理泰区隐藏番剧
+         * @param {string} data xhr返回的json字符串
+         * @param {number} epId epid数据
+         * @returns 
+         */
         thaiBangumi(data, epId) {
             // https://api.global.bilibili.com/view/web_api/season
             epId = 1 * epId || null;
@@ -340,7 +346,7 @@
         }
         /**
          * 构造主页数据
-         * @param {*} data 远程返回的json字符串
+         * @param {string} data 远程返回的json字符串
          */
         index(data) {
             try {

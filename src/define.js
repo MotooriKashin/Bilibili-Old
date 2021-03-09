@@ -284,7 +284,7 @@ const objUrl = (url, obj) => {
         /**
          * 格式化时间
          * @param {number} [time] 时间戳(13位)
-         * @param {*} [type] 只要有效返回值便加上年月日
+         * @param {boolean} [type] 只要有效返回值便加上年月日
          */
         timeFormat(time = new Date().getTime(), type) {
 <<<<<<< HEAD
@@ -338,7 +338,7 @@ const objUrl = (url, obj) => {
         }
         /**
          * 冒泡排序
-         * @param {Array} arr 数组
+         * @param {[]} arr 数组
          */
         bubbleSort(arr) {
             let temp = [];
@@ -358,7 +358,7 @@ const objUrl = (url, obj) => {
         }
         /**
          * 随机抽取数组元素
-         * @param {Array} arr 目标数组
+         * @param {[]} arr 目标数组
          * @param {number} [num] 抽取数目，超过数组元素量时返回随机排列的整个数组
          */
         randomArray(arr, num) {
@@ -452,7 +452,7 @@ const objUrl = (url, obj) => {
 >>>>>>> 9448cf0 (refactor some function)
          * 将对象键值对转化为URL参数并返回完整URL
          * @param {string} url 原始url，无效则直接输出连接好的参数字符串
-         * @param {Object} obj 包含参数键值对的对象，已存在的参数直接覆盖，参数值为 undefined 或 null 则忽略该参数
+         * @param {{}} obj 包含参数键值对的对象，已存在的参数直接覆盖，参数值为 undefined 或 null 则忽略该参数
          */
 <<<<<<< HEAD
 >>>>>>> 9448cf0 (refactor some function)
@@ -545,7 +545,7 @@ const objUrl = (url, obj) => {
         }
         /**
          * 输入av/BV，输出对应转化结果
-         * @param {*} input av/BV
+         * @param {string | number} input av/BV
          */
         check(input) {
 <<<<<<< HEAD
@@ -630,7 +630,7 @@ const objUrl = (url, obj) => {
         /**
          * 签名加密url
          * @param {string} url 需要签名的url链接，可以带参数
-         * @param {object} [obj] url的参数键值对，可以覆盖原有参数
+         * @param {{}} [obj] url的参数键值对，可以覆盖原有参数
          * @param {number} [id] 签名密钥ID
          */
         sign(url, obj = {}, id = 0) {
@@ -719,7 +719,7 @@ const objUrl = (url, obj) => {
         /**
          * 添加新的DOM节点
          * @param {string} type 节点tag名称
-         * @param {Object} [arb] 节点属性对象
+         * @param {{}} [arb] 节点属性对象
          * @param {HTMLElement} [tar] 宿主节点名称
          * @param {boolean} [fir] 是否在宿主中置顶
          * @param {HTMLElement} [rep] 被替换的节点：将忽略fir参数

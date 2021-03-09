@@ -225,8 +225,8 @@
          * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
          * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
          * @param {string} [s] 文件名（包括推展名）
-         * @param {*} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
-         * @param {*} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
+         * @param {boolean}} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
+         * @param {boolean} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
          * @returns {string} ef2链接字符串
          */
         encodePara(u, a, c, d, r, U, P, o, s, f, q) {
@@ -504,7 +504,7 @@
 =======
         /**
          * 读取DASH数据
-         * @param {Object} path 原始json
+         * @param {{}} path 原始json
          */
         dash(path) {
 >>>>>>> b93be8e (自定义下载)
@@ -555,7 +555,7 @@
 =======
         /**
          * 读取flv数据，可能包含mp4
-         * @param {Object} path 原始json
+         * @param {{}} path 原始json
          */
         durl(path) {
 >>>>>>> b93be8e (自定义下载)
@@ -652,7 +652,7 @@
         /**
          * 绘制下载面板项目
          * @param {HTMLElement} top 下载面板节点
-         * @param {object} item 文件类型原始数据
+         * @param {{}} item 文件类型原始数据
          * @param {string} name 文件类型显示名称
          * @param {string} type 文件类型：className
          * @param {string} [quatily] 指定文件档次：影响该文件样式颜色
