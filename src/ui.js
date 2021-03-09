@@ -563,11 +563,11 @@
                 this.state(thaiLand, "请输入解除限制时所需的东南亚代理服务器地址，用以解除东南亚区域番剧限制</br>东南亚番剧账户与主站不互通，只能播放480P，启用账号授权也无效！</br>链接有效形式如输入框提示：需带http/https头，末尾无需斜杠！")
                 let commit = thaiLand.querySelector("button");
                 let input = thaiLand.querySelector("input");
-                input.value = BLOD.getValue("thaiLand") || "";
+                input.value = decodeURI(BLOD.getValue("thaiLand") || "");
                 let callback = () => {
                     if (input.value && /^http.+$/.test(input.value)) {
                         if (input.value[input.value.length - 1] == "/") input.value = input.value.substr(0, input.value.length - 1);
-                        BLOD.setValue("thaiLand", input.value);
+                        BLOD.setValue("thaiLand", encodeURI(input.value));
                         toast.success("代理服务器（东南亚）已保存！", "URL：" + input.value);
                     } else {
                         toast.warning("请输入有效服务器链接！")
