@@ -727,7 +727,7 @@
 >>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
-            danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
+            danmaku.sort((a, b) => (a.idStr > b.idStr ? 1 : -1));
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
@@ -878,11 +878,15 @@
             danmaku[i].gb = danmaku[i].class;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> cea14d1 (调整本地弹幕组件初始化时机)
 =======
 >>>>>>> a499bf4 (本地弹幕bug修复&优化 #84)
         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+=======
+        danmaku.sort((a, b) => (a.dmid > b.dmid ? 1 : -1));
+>>>>>>> 4978e59 (临时取出所有bigint)
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
          * @param  {Array} dm 弹幕数组
@@ -1281,6 +1285,7 @@
                         if (BLOD.aid < 400000) {
                             specialEffects(danmaku);
                         }
+<<<<<<< HEAD
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
 <<<<<<< HEAD
 =======
@@ -1290,6 +1295,9 @@
 >>>>>>> 39d49de (remove eslint rules)
 =======
 >>>>>>> 8c128d1 (修改bilibiliPlayer.js，提供设置弹幕的途径)
+=======
+                        danmaku.sort((a, b) => (a.dmid > b.dmid ? 1 : -1));
+>>>>>>> 4978e59 (临时取出所有bigint)
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
