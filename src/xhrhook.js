@@ -31,9 +31,12 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     // hook setTimeout过滤旧版播放器强制初始化错误
     // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
 =======
+=======
+>>>>>>> 6a3a64a (BigInt polyfill)
     if (!BigInt) BigInt = (n) => { return Number(n) }
 
     /**
@@ -242,7 +245,8 @@
 =======
         /**
          * 获取链接ids
-         * @param {string} url
+         * @param {string} url 下载链接
+         * @param {number} duration 媒体时长
          */
 <<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
@@ -305,7 +309,7 @@
 =======
         /**
          * 过滤问题音频
-         * @param {Array} audio 音频数据数组
+         * @param {[]} audio 音频数据数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
         fixAudio(audio) {
@@ -327,7 +331,7 @@
 =======
         /**
          * 重构APP端数据
-         * @param {*} app 原始数据对象
+         * @param {{}} app 原始数据对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         async appPlayurl(app) {
@@ -447,7 +451,7 @@
 =======
         /**
          * 重构Thailand数据
-         * @param {*} ogv 原始数据
+         * @param {{}} ogv 原始数据
          */
 >>>>>>> 2f00fde (format with JsDoc)
         async ogvPlayurl(ogv) {
@@ -727,7 +731,7 @@
 >>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
-            danmaku.sort((a, b) => (a.idStr > b.idStr ? 1 : -1));
+            danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
@@ -879,6 +883,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> cea14d1 (调整本地弹幕组件初始化时机)
 =======
@@ -887,6 +892,9 @@
 =======
         danmaku.sort((a, b) => (a.dmid > b.dmid ? 1 : -1));
 >>>>>>> 4978e59 (临时取出所有bigint)
+=======
+        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+>>>>>>> 6a3a64a (BigInt polyfill)
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
          * @param  {Array} dm 弹幕数组
@@ -901,6 +909,7 @@
     /**
      * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
 <<<<<<< HEAD
+<<<<<<< HEAD
      * @param {[]} dm 弹幕数组
      */
     function specialEffects(dm) {
@@ -912,6 +921,9 @@
                 textData.zIndex = textData.stime * 1000;
 =======
      * @param {array} dm 弹幕数组
+=======
+     * @param {[]} dm 弹幕数组
+>>>>>>> 6a3a64a (BigInt polyfill)
      */
     function specialEffects(dm) {
         let textData;
@@ -1286,6 +1298,7 @@
                             specialEffects(danmaku);
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
 <<<<<<< HEAD
 =======
@@ -1298,6 +1311,9 @@
 =======
                         danmaku.sort((a, b) => (a.dmid > b.dmid ? 1 : -1));
 >>>>>>> 4978e59 (临时取出所有bigint)
+=======
+                        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+>>>>>>> 6a3a64a (BigInt polyfill)
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
@@ -1857,8 +1873,8 @@
 =======
         /**
          * 处理主页正在直播数据
-         * @param {*} obj XMLHttpRequest对象
-         * @param {Array} hook 处理纪录数组
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
         biliIndexRec(obj, hook = []) {
@@ -1898,8 +1914,8 @@
 =======
         /**
          * 处理番剧季度信息
-         * @param {*} obj XMLHttpRequest对象
-         * @param {Array} hook 处理纪录数组
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
         season(obj, hook = []) {
@@ -1933,8 +1949,8 @@
 =======
         /**
          * 处理番剧追番信息
-         * @param {*} obj XMLHttpRequest对象
-         * @param {Array} hook 处理纪录数组
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
         stat(obj, hook = []) {
@@ -1962,8 +1978,8 @@
 =======
         /**
          * 处理直播间数据
-         * @param {*} obj XMLHttpRequest对象
-         * @param {Array} hook 处理纪录数组
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
         getRoomPlayInfo(obj, hook = []) {
@@ -1996,8 +2012,8 @@
 =======
         /**
          * 处理番剧推荐数据
-         * @param {*} obj XMLHttpRequest对象
-         * @param {Array} hook 处理纪录数组
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
         recommend(obj, hook = []) {
@@ -2024,7 +2040,7 @@
 =======
         /**
          * 构造旧版播放器通知数据
-         * @param {*} obj XMLHttpRequest对象
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         carousel(obj) {
@@ -2057,7 +2073,7 @@
 =======
         /**
          * 禁用防挡字幕
-         * @param {*} obj XMLHttpRequest对象
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         playerso(obj) {
@@ -2088,7 +2104,7 @@
 =======
         /**
          * 处理番剧信息数据
-         * @param {*} obj XMLHttpRequest对象
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         status(obj) {
@@ -2127,7 +2143,7 @@
 =======
         /**
          * 模拟弹幕响应
-         * @param {*} xhr XMLHttpRequest对象
+         * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         async sendDanmuku(xhr) {
@@ -2189,7 +2205,7 @@
 =======
         /**
          * 模拟playurl响应
-         * @param {*} xhr XMLHttpRequest对象
+         * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         async sendPlayurl(xhr) {
@@ -2502,7 +2518,7 @@
 =======
         /**
          * 监听playurl
-         * @param {*} obj XMLHttpRequest对象
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
         async playinfo(obj) {
