@@ -12,8 +12,17 @@
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
+<<<<<<< HEAD
     // hook setTimeout过滤旧版播放器强制初始化错误
     // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
+=======
+    if (!BigInt) BigInt = (n) => { return Number(n) }
+
+    /**
+     * hook setTimeout过滤旧版播放器强制初始化错误
+     * @see indefined {@link https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894}
+     */
+>>>>>>> 6a3a64a (BigInt polyfill)
     class HookTimeOut {
         constructor() {
             this.hook = setTimeout;
@@ -171,7 +180,8 @@
 =======
         /**
          * 获取链接ids
-         * @param {string} url
+         * @param {string} url 下载链接
+         * @param {number} duration 媒体时长
          */
         getIdxs(url, duration) {
             let range = Math.round(duration * 3.5);
@@ -179,6 +189,13 @@
             return BLOD.xhr(url, 'arraybuffer', { 'Range': `bytes=0-${range}` }, false);
 >>>>>>> 57513a7 (Thailand server)
         }
+<<<<<<< HEAD
+=======
+        /**
+         * 过滤问题音频
+         * @param {[]} audio 音频数据数组
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         fixAudio(audio) {
             // 多余的音频会造成DASH闪退
             let arr = [];
@@ -187,7 +204,14 @@
             })
             return arr;
         }
+<<<<<<< HEAD
         // APP端playurl
+=======
+        /**
+         * 重构APP端数据
+         * @param {{}} app 原始数据对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         async appPlayurl(app) {
             if (app.durl) return app;
             if (app.dash.duration) {
@@ -283,7 +307,14 @@
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
             return this.playurl;
         }
+<<<<<<< HEAD
         // Thailand playurl
+=======
+        /**
+         * 重构Thailand数据
+         * @param {{}} ogv 原始数据
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         async ogvPlayurl(ogv) {
             toast("重构DASH数据中...");
             this.playurl.quality = ogv.data.video_info.quality;
@@ -398,12 +429,12 @@
     }
     /**
      * 生成xml形式的弹幕
-     * @param  {Array} danmaku protoSeg.decode(new Uint8Array(this.response)).elems
+     * @param  {[]} danmaku protoSeg.decode(new Uint8Array(this.response)).elems
      * @returns {Promise<String>} 委托对象，表示生成的xml形式的弹幕字符串
      */
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
-            danmaku.sort((a, b) => (a.idStr > b.idStr ? 1 : -1));
+            danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
@@ -514,7 +545,7 @@
         for (let i = 0; i < danmaku.length; i++) {
             danmaku[i].gb = danmaku[i].class;
         }
-        danmaku.sort((a, b) => (a.dmid > b.dmid ? 1 : -1));
+        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
          * @param  {Array} dm 弹幕数组
@@ -528,7 +559,7 @@
 
     /**
      * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
-     * @param {array} dm 弹幕数组
+     * @param {[]} dm 弹幕数组
      */
     function specialEffects(dm) {
         let textData;
@@ -784,7 +815,7 @@
                         if (BLOD.aid < 400000) {
                             specialEffects(danmaku);
                         }
-                        danmaku.sort((a, b) => (a.dmid > b.dmid ? 1 : -1));
+                        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
@@ -1017,7 +1048,15 @@
                 }
             })
         }
+<<<<<<< HEAD
         // 首页正在直播
+=======
+        /**
+         * 处理主页正在直播数据
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         biliIndexRec(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1038,7 +1077,15 @@
                 obj.response = obj.responseText = JSON.stringify(response);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("首页推荐", ...e) }
         }
+<<<<<<< HEAD
         // 修复番剧季度信息
+=======
+        /**
+         * 处理番剧季度信息
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         season(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1057,7 +1104,15 @@
                 obj.response = obj.responseText = JSON.stringify(response);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("番剧季度信息", ...e) }
         }
+<<<<<<< HEAD
         // 修复番剧追番信息
+=======
+        /**
+         * 处理番剧追番信息
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         stat(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1070,7 +1125,15 @@
                 obj.response = obj.responseText = JSON.stringify(response);
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧季度信息", ...e) }
         }
+<<<<<<< HEAD
         // 修改直播数据
+=======
+        /**
+         * 处理直播间数据
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         getRoomPlayInfo(obj, hook = []) {
             if (!config.reset.roomplay) return;
             try {
@@ -1089,7 +1152,15 @@
                 obj.response = obj.responseText = JSON.stringify(response);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("直播拦截", ...e) }
         }
+<<<<<<< HEAD
         // 修改番剧推荐
+=======
+        /**
+         * 处理番剧推荐数据
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         * @param {[]} hook 处理纪录数组
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         recommend(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1102,7 +1173,14 @@
                 obj.response = obj.responseText = JSON.stringify(response);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("番剧推荐", ...e) }
         }
+<<<<<<< HEAD
         // 生成播放信息
+=======
+        /**
+         * 构造旧版播放器通知数据
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         carousel(obj) {
             if (!config.reset.carousel) return;
             try {
@@ -1120,7 +1198,14 @@
                 obj.responseXML = responseXML;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("播放通知", ...e) }
         }
+<<<<<<< HEAD
         // 禁用防挡字幕
+=======
+        /**
+         * 禁用防挡字幕
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         playerso(obj) {
             if (BLOD.preventshade) return;
             let response = obj.responseText;
@@ -1131,6 +1216,13 @@
                 obj.response = obj.responseText = response;
             }
         }
+<<<<<<< HEAD
+=======
+        /**
+         * 处理番剧信息数据
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         status(obj) {
             try {
                 let response = BLOD.jsonCheck(obj.responseText);
@@ -1153,7 +1245,14 @@
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("强制启用播放器", ...e) }
         }
+<<<<<<< HEAD
         // 模拟弹幕响应
+=======
+        /**
+         * 模拟弹幕响应
+         * @param {XMLHttpRequest} xhr XMLHttpRequest对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         async sendDanmuku(xhr) {
             // 安装并启用了pakku.js，并且将其设置成“休眠中”状态，才会运行这里的代码
             // pakku.js处于“工作中”状态时，不会调用send()，而是向回调函数直接投喂过滤之后的弹幕
@@ -1170,7 +1269,14 @@
                 toXml(Segments).then((xml) => xhr.respondDanmaku(xml));
             });
         }
+<<<<<<< HEAD
         // 代理playurl响应
+=======
+        /**
+         * 模拟playurl响应
+         * @param {XMLHttpRequest} xhr XMLHttpRequest对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         async sendPlayurl(xhr) {
             try {
                 let hookTimeOut = new HookTimeOut(),
@@ -1252,7 +1358,14 @@
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
         }
+<<<<<<< HEAD
         // 监听视频地址
+=======
+        /**
+         * 监听playurl
+         * @param {XMLHttpRequest} obj XMLHttpRequest对象
+         */
+>>>>>>> 6a3a64a (BigInt polyfill)
         async playinfo(obj) {
             try {
                 if (!obj.response) throw obj;
