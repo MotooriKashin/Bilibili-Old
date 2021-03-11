@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.5.2
+// @version      4.5.3
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -177,6 +177,7 @@
         }
     }
 
+    document.domain = "bilibili.com";
     // 写入全局样式
     BLOD.addCss(BLOD.getResourceText("css"));
     new Function(GM_getResourceText("ui"))();
