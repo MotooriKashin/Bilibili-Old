@@ -794,11 +794,8 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
                         });
-
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
-                            // 记录弹幕池哈希值
-                            BLOD.hash.push(v.midHash);
                             return {
                                 class: v.pool,
                                 color: v.color,
@@ -816,6 +813,11 @@
                             specialEffects(danmaku);
                         }
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+                        BLOD.hash = [];
+                        for(let i = 0; i < danmaku.length; i++) {
+                            // 记录弹幕池哈希值
+                            BLOD.hash[i] = danmaku[i].uid;
+                        }
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
