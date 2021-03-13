@@ -1188,6 +1188,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // @ts-ignore
 =======
@@ -1259,6 +1260,10 @@
                             // 记录弹幕池哈希值
                             BLOD.hash.push(v.midHash);
 >>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
+=======
+                        // 将弹幕转换为旧格式
+                        let danmaku = Segments.map(function (v) {
+>>>>>>> 290b5a1 (Update xhrhook.js)
                             return {
                                 class: v.pool,
                                 color: v.color,
@@ -1313,7 +1318,15 @@
 >>>>>>> 4978e59 (临时取出所有bigint)
 =======
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
+=======
+                        BLOD.hash = [];
+                        for(let i = 0; i < danmaku.length; i++) {
+                            // 记录弹幕池哈希值
+                            BLOD.hash[i] = danmaku[i].uid;
+                        }
+>>>>>>> 290b5a1 (Update xhrhook.js)
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
