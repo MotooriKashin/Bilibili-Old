@@ -14,6 +14,7 @@
         // 对象捕获
         getVariable: () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
             function read(arr) {
                 switch (arr[0]) {
                     case "aid": BLOD.aid = arr[1];
@@ -34,6 +35,10 @@
 =======
             Object.defineProperty(window, "aid", { set: (v) => { BLOD.aid = v }, get: () => { return BLOD.aid } });
             Object.defineProperty(window, "cid", { set: (v) => { BLOD.cid = v }, get: () => { return BLOD.cid } });
+=======
+            Object.defineProperty(window, "aid", { set: (v) => { BLOD.aid = v }, get: () => { return BLOD.aid }, configurable: true });
+            Object.defineProperty(window, "cid", { set: (v) => { BLOD.cid = v }, get: () => { return BLOD.cid }, configurable: true });
+>>>>>>> 693f2f4 (Object defineProperty configurable)
             Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
             if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
 >>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
