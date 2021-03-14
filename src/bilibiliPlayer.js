@@ -21438,7 +21438,7 @@ function Fa() {
                         }
                         c.c.Ma && c.c.Ma.add({ va: basDM }); // 添加bas弹幕
                         c.g.G = danmaku.concat(c.g.G); // 设置弹幕原始数据
-                        c.list.G = danmaku.concat(c.g.G); // 设置右侧弹幕列表的弹幕数据
+                        c.list.G = c.g.G; // 设置右侧弹幕列表的弹幕数据
                         c.list.update(!1, 0); // 刷新右侧弹幕列表
                         c.c.template.Iy.html(c.g.G.length); // 设置播放器右上角的弹幕数量
                         c.c.I.uB(c.g.G.length); // 设置弹幕数量的dom节点的title属性 (div.bilibili-player-danmaku-number)
@@ -30578,7 +30578,15 @@ function Fa() {
                                                         text: e
                                                     };
                                                 b && (g.mid = b[0], g.uname = b[1]);
-                                                Number(d.Sa) !== Number(g.Xc) && d.g.add(g)
+                                                if (g.mode == 7) {
+                                                    d.g.g.G.push(g);
+                                                    d.g.list.update(!1, 0);
+                                                    g = Object.assign({}, g);
+                                                    g.stime *= 1000;
+                                                    d.P.wj(g);
+                                                } else {
+                                                    Number(d.Sa) !== Number(g.Xc) && d.g.add(g)
+                                                }
                                             }
                                         } catch (x) {
                                             void 0
