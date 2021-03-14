@@ -177,7 +177,7 @@
         }
     }
 
-    document.domain = "bilibili.com";
+    if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
     // 写入全局样式
     BLOD.addCss(BLOD.getResourceText("css"));
     new Function(GM_getResourceText("ui"))();
