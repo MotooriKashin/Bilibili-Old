@@ -422,7 +422,7 @@
          */
         ef2Set(item) {
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
-            let ui = BLOD.addElement("div", { class: "BLOD-dl-settings" });
+            let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
             let title = BLOD.addElement("h1", {}, ui);
             let name = BLOD.addElement("h2", {}, ui);
             let d0 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
@@ -491,7 +491,6 @@
             db = db.children[0];
             dc.innerHTML = `<div class="button" title="左键点击调用IDM">开始下载</div><div class="button" title="退出">我点错了</div>`;
             this.flash();
-            ui.scrollIntoView({ behavior: 'smooth', block: 'center' });
             dc.children[0].onclick = () => {
                 // 缺少拓展名主动补上默认拓展名
                 if (d8.value && !d8.value.includes(".")) d8.value = d8.value + item[3];
