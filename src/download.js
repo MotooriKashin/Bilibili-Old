@@ -783,10 +783,14 @@
             d5.innerHTML = 'User Agent<input type="text" placeholder="UA必须有效！" title="一般输入浏览器UA即可" />';
             d5 = d5.children[0];
 <<<<<<< HEAD
+<<<<<<< HEAD
             d5.value = (this.config.a || navigator.userAgent).replace(/\"/g, "");
 =======
             d5.value = this.config.a || navigator.userAgent;
 >>>>>>> 238e40a (支持ef2下载工具)
+=======
+            d5.value = this.config.a.replace(/\"/g, "") || navigator.userAgent;
+>>>>>>> 189d010 (No quotation marks to show)
             d5.oninput = () => { this.flash() };
             d6.innerHTML = 'Referer<input type="text" placeholder="Referer必须在B站域名下" title="不妨使用B站顶级域名" />';
             d6 = d6.children[0];
@@ -795,10 +799,14 @@
             d7.innerHTML = '保存位置<input type="text"  placeholder="Windows用的反斜杠地址，可以不填！" title="可以不填，后面IDM对话框操作更方便" />';
             d7 = d7.children[0];
 <<<<<<< HEAD
+<<<<<<< HEAD
             d7.value = (this.config.o || "").replace(/\"/g, "");
 =======
             d7.value = this.config.o || "";
 >>>>>>> 238e40a (支持ef2下载工具)
+=======
+            d7.value = this.config.o.replace(/\"/g, "") || "";
+>>>>>>> 189d010 (No quotation marks to show)
             d7.oninput = () => { this.flash() };
             d8.innerHTML = '文件名<input type="text"  placeholder="xxx.xxx" title="重命名文件，包括拓展名" />';
             d8 = d8.children[0];
