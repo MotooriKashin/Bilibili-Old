@@ -521,12 +521,10 @@
             return;
         }
         let danmaku = [];
-        BLOD.hash = [];
         let attr, v, mode;
         for (let i = 0; i < dm.length; i++) {
             v = dm[i];
             attr = v.getAttribute('p').split(",");
-            BLOD.hash.push(v.midHash);
             mode = parseInt(attr[1]);
             danmaku[i] = {
                 class: parseInt(attr[5]),
@@ -690,8 +688,6 @@
                                 case Pl.WS_OP_DATA:
                                 case Pl.WS_OP_BATCH_DATA:
                                     t.body.forEach(function (v) {
-                                        // 记录实时弹幕哈希值
-                                        BLOD.hash.push(v[0].split(",")[7]);
                                         liveChatOld.onmessage({
                                             data: liveChatOld.convertToArrayBuffer({
                                                 cmd: 'DM',
@@ -813,11 +809,6 @@
                             specialEffects(danmaku);
                         }
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
-                        BLOD.hash = [];
-                        for(let i = 0; i < danmaku.length; i++) {
-                            // 记录弹幕池哈希值
-                            BLOD.hash[i] = danmaku[i].uid;
-                        }
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
@@ -936,8 +927,6 @@
                             this.response = this.responseText = xml;
                             this.callback();
                             BLOD.xml = xml;
-                            BLOD.hash = [];
-                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                         }
                         // 将pakku.js返回的数据转换回xml
                         this.pakku_load_callback[0] = function () {
@@ -952,8 +941,6 @@
                         // 备份弹幕
                         this.addEventListener("load", function () {
                             BLOD.xml = this.response;
-                            BLOD.hash = [];
-                            BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
                         });
                     }
                 }
@@ -968,6 +955,7 @@
                         this.readyState = 4;
                         this.status = 200;
                         this.send = () => { };
+<<<<<<< HEAD
                         let historyXhr = this;
                         
                         let seg = new XMLHttpRequest();
@@ -989,6 +977,12 @@
                             for (let i = 0; i < segDanmaku.length; i++) {
                                 BLOD.hash.push(segDanmaku[i].midHash);
                             }
+=======
+
+                        let history = "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date;
+                        BLOD.xhr.true(history, "arraybuffer").then((seg) => {
+                            let segDanmaku = protoSeg.decode(new Uint8Array(seg)).elems;
+>>>>>>> aeac0ec (重构弹幕反查)
                             toXml(segDanmaku).then((xml) => {
                                 historyXhr.response = xml;
                                 historyXhr.dispatchEvent(new ProgressEvent("load"));

@@ -116,9 +116,8 @@
             if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
-            if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; BLOD.hash = []; };
+            if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; };
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
-            if (config.reset.midcrc && !config.reset.danmuku && !BLOD.hash[0]) xhr.true(BLOD.objUrl("https://api.bilibili.com/x/v1/dm/list.so", { oid: BLOD.cid }));
             setTimeout(() => {
                 if (config.reset.viewbofqi) BLOD.bofqiToView();
                 if (config.reset.widescreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff")) {
@@ -234,6 +233,7 @@
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区排行", ...e) }
         },
+<<<<<<< HEAD
         // 弹幕反查
         danmkuHashId: async (node) => {
             if (!config.reset.midcrc) return;
@@ -276,6 +276,11 @@
             })
         },
         // 移除节点
+=======
+        /**
+         * 移除HTML节点
+         */
+>>>>>>> aeac0ec (重构弹幕反查)
         resetNodes: async () => {
             BLOD.reset.parameterTrim(true);
             let remove = (node, type, hidden, index, callback) => {
@@ -1339,4 +1344,37 @@
             })
         }
     }
+
+    class DanmkuHashId {
+        /**
+         * 反差弹发送者信息
+         * @param {string} crc 8 位 crc32 哈希值
+         * @returns 预生成的占位文本
+         */
+        constructor(crc) {
+            if (!BLOD.midcrc) new Function(BLOD.getResourceText("crc"))();
+            this.hash = crc;
+            this.mid = BLOD.midcrc(this.hash);
+            this.getInfo();
+            return [this.hash, this.mid];;
+        }
+        async getInfo() {
+            try {
+                this.node = document.querySelector(".bilibili-player-context-menu-container.white.active");
+                if (!this.node) return setTimeout(() => { this.getInfo() }, 100);
+                this.node = this.node.querySelector("li");
+                this.data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
+                this.node.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" data-usercard-mid="' +
+                    this.mid + '" class="reply-face"><img src="' +
+                    this.data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
+                    this.mid + '" href="//space.bilibili.com/' +
+                    this.mid + '" target="_blank" class="' +
+                    (this.data.data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + this.data.data.card.name + '</a> ' +
+                    this.data.data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
+                    this.data.data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
+
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("弹幕反查", ...e); }
+        }
+    }
+    BLOD.danmkuHashId = (crc) => { let check = new DanmkuHashId(crc); return "hash: " + check[0] + " mid: " + check[1] }
 })()

@@ -1412,9 +1412,9 @@
                                 [1, 0],
                                 [1, 0]
                             ] : [
-                                    [.9, .1],
-                                    [.6, .4]
-                                ];
+                                [.9, .1],
+                                [.6, .4]
+                            ];
                             if (a.length) return b = [d.outerHeight(!1), d.outerWidth(!1)], d = [a[0].offsetTop + x(d)[0], a[0].offsetLeft + x(d)[1]], a = [a.parent()[0].offsetHeight, a.parent()[0].offsetWidth], e = [b[0] < a[0] ? e[0] : e[1], b[1] < a[1] ? e[0] : e[1]], 0 > d[0] - a[0] * e[0][0] && 0 <= d[0] + b[0] - a[0] * e[0][1] && 0 > d[1] - a[1] * e[1][0] && 0 <= d[1] + b[1] - a[1] * e[1][1]
                         },
                         mcsOverflow: c.expr[":"].mcsOverflow || function (a) {
@@ -9240,8 +9240,8 @@ function Fa() {
                 this.f = c && c.kb && c.kb instanceof Array ? $.extend({
                     kb: []
                 }, c) : {
-                        kb: []
-                    };
+                    kb: []
+                };
                 this.container = b.template.Ea;
                 this.cp = this.ka = !1;
                 this.kb = {};
@@ -14416,8 +14416,8 @@ function Fa() {
                     return function (b, c) {
                         c = Object.assign({}, x, "object" ===
                             (void 0 === c ? "undefined" : g(c)) ? c : {
-                                text: c
-                            });
+                            text: c
+                        });
                         if ("length" in b)
                             for (var d = 0; d < b.length; d++) "canvas" === b[d].nodeName.toLowerCase() ? n(b[d], c) : b[d].appendChild(q(c));
                         else "canvas" === b.nodeName.toLowerCase() ? n(b, c) : b.appendChild(q(c))
@@ -21388,7 +21388,7 @@ function Fa() {
                         d = this.c,
                         e = b.a.browser.version,
                         k = this.f.timestamp;
-                    
+
                     /**
                      * 清屏（不清除弹幕池）
                      */
@@ -22121,7 +22121,7 @@ function Fa() {
                                 k = [];
                             var g = d.ea;
                             g = 1 === g.container.find(b).length ? g.G : d.G;
-                            var h = g[f];
+                            var h = g[f]; // h.uid: 所选弹幕所对应的 8 位crc哈希值
                             if (!h) return !0;
                             for (var l = d.c.Na.di(h), f = 0; f < g.length; f++) g[f].selected && k.push(g[f]);
                             g = [{
@@ -22201,6 +22201,16 @@ function Fa() {
                             }, {
                                 type: "descipline"
                             });
+                            // 创建弹幕反查节点
+                            if (BLOD && BLOD.config.reset.midcrc) {
+                                g.unshift({
+                                    type: "descipline"
+                                });
+                                g.unshift({
+                                    type: "function",
+                                    text: BLOD.danmkuHashId(h.uid)
+                                });
+                            }
                             return g.reverse()
                         }
                     });
@@ -28605,9 +28615,9 @@ function Fa() {
                     Yd: b.ttl,
                     data: b[c]
                 } : {
-                        code: b.code,
-                        message: b.message
-                    } : null
+                    code: b.code,
+                    message: b.message
+                } : null
             };
             return c
         }(m.a);
@@ -29919,84 +29929,84 @@ function Fa() {
                         data: ""
                     }]
                 } : {
-                            kb: [{
-                                name: "mimeType",
-                                type: "text",
-                                title: "Mime Type",
-                                data: ""
-                            }, {
-                                name: "playerType",
-                                type: "text",
-                                title: "Player Type",
-                                data: ""
-                            }, {
-                                name: "resolution",
-                                type: "text",
-                                title: "Resolution",
-                                data: ""
-                            }, {
-                                name: "fps",
-                                type: "text",
-                                title: "FPS",
-                                data: ""
-                            }, {
-                                name: "videoProfile",
-                                type: "text",
-                                title: "Video Profile",
-                                data: ""
-                            }, {
-                                name: "audioSampling",
-                                type: "text",
-                                title: "Audio Sampling",
-                                data: ""
-                            }, {
-                                name: "videoDatarate",
-                                type: "text",
-                                title: "Video DataRate",
-                                data: ""
-                            }, {
-                                name: "audioDatarate",
-                                type: "text",
-                                title: "Audio DataRate",
-                                data: ""
-                            }, {
-                                name: "segments",
-                                type: "text",
-                                title: "Segments",
-                                data: ""
-                            }, {
-                                name: "loader",
-                                type: "text",
-                                title: "Loader",
-                                data: ""
-                            }, {
-                                name: "streamType",
-                                type: "text",
-                                title: "Stream Type",
-                                data: ""
-                            }, {
-                                name: "streamHost",
-                                type: "text",
-                                title: "Stream Host",
-                                data: ""
-                            }, {
-                                name: "connectionSpeed",
-                                type: "graph",
-                                title: "Connection Speed",
-                                Vi: "KB/s",
-                                data: 0
-                            }, {
-                                name: "droppedFrames",
-                                type: "text",
-                                title: "Dropped Frames",
-                                data: ""
-                            }, {
-                                name: "Log",
-                                type: "log",
-                                title: "Log",
-                                data: ""
-                            }]
-                        }
+                    kb: [{
+                        name: "mimeType",
+                        type: "text",
+                        title: "Mime Type",
+                        data: ""
+                    }, {
+                        name: "playerType",
+                        type: "text",
+                        title: "Player Type",
+                        data: ""
+                    }, {
+                        name: "resolution",
+                        type: "text",
+                        title: "Resolution",
+                        data: ""
+                    }, {
+                        name: "fps",
+                        type: "text",
+                        title: "FPS",
+                        data: ""
+                    }, {
+                        name: "videoProfile",
+                        type: "text",
+                        title: "Video Profile",
+                        data: ""
+                    }, {
+                        name: "audioSampling",
+                        type: "text",
+                        title: "Audio Sampling",
+                        data: ""
+                    }, {
+                        name: "videoDatarate",
+                        type: "text",
+                        title: "Video DataRate",
+                        data: ""
+                    }, {
+                        name: "audioDatarate",
+                        type: "text",
+                        title: "Audio DataRate",
+                        data: ""
+                    }, {
+                        name: "segments",
+                        type: "text",
+                        title: "Segments",
+                        data: ""
+                    }, {
+                        name: "loader",
+                        type: "text",
+                        title: "Loader",
+                        data: ""
+                    }, {
+                        name: "streamType",
+                        type: "text",
+                        title: "Stream Type",
+                        data: ""
+                    }, {
+                        name: "streamHost",
+                        type: "text",
+                        title: "Stream Host",
+                        data: ""
+                    }, {
+                        name: "connectionSpeed",
+                        type: "graph",
+                        title: "Connection Speed",
+                        Vi: "KB/s",
+                        data: 0
+                    }, {
+                        name: "droppedFrames",
+                        type: "text",
+                        title: "Dropped Frames",
+                        data: ""
+                    }, {
+                        name: "Log",
+                        type: "log",
+                        title: "Log",
+                        data: ""
+                    }]
+                }
             },
             ep: function (e,
                 g, h) {
@@ -30547,58 +30557,58 @@ function Fa() {
                     },
                     fallback: function () { }
                 } : {
-                        rid: d.f.j,
-                        url: ("https:" === d.window.location.protocol ? "wss://" + d.I.status().mu : "ws://" + d.I.status().ob) + "/sub",
-                        uid: Number(d.I.status().uid) ? Number(d.I.status().uid) : 0,
-                        roomId: d.f.j,
-                        retry: !0,
-                        aid: d.f.aid,
-                        from: 7,
-                        onReceivedMessage: function (b) {
-                            if (b) {
-                                var c = b.info;
-                                switch (b.cmd) {
-                                    case "DM":
-                                        try {
-                                            if (c instanceof Array) {
-                                                b = void 0;
-                                                var e = c[1];
-                                                "string" === typeof c[2] && (b = c[2].split(","));
-                                                var f = c[0].split(","),
-                                                    g = {
-                                                        stime: parseFloat(f[0]),
-                                                        mode: Number(f[1]),
-                                                        size: Number(f[2]),
-                                                        color: Number(f[3]),
-                                                        date: Number(f[4]),
-                                                        Xc: f[5],
-                                                        gb: Number(f[6]),
-                                                        uid: f[7],
-                                                        dmid: f[8],
-                                                        text: e
-                                                    };
-                                                b && (g.mid = b[0], g.uname = b[1]);
-                                                if (g.mode == 7) {
-                                                    d.g.g.G.push(g);
-                                                    d.g.list.update(!1, 0);
-                                                    g = Object.assign({}, g);
-                                                    g.stime *= 1000;
-                                                    d.P.wj(g);
-                                                } else {
-                                                    Number(d.Sa) !== Number(g.Xc) && d.g.add(g)
-                                                }
+                    rid: d.f.j,
+                    url: ("https:" === d.window.location.protocol ? "wss://" + d.I.status().mu : "ws://" + d.I.status().ob) + "/sub",
+                    uid: Number(d.I.status().uid) ? Number(d.I.status().uid) : 0,
+                    roomId: d.f.j,
+                    retry: !0,
+                    aid: d.f.aid,
+                    from: 7,
+                    onReceivedMessage: function (b) {
+                        if (b) {
+                            var c = b.info;
+                            switch (b.cmd) {
+                                case "DM":
+                                    try {
+                                        if (c instanceof Array) {
+                                            b = void 0;
+                                            var e = c[1];
+                                            "string" === typeof c[2] && (b = c[2].split(","));
+                                            var f = c[0].split(","),
+                                                g = {
+                                                    stime: parseFloat(f[0]),
+                                                    mode: Number(f[1]),
+                                                    size: Number(f[2]),
+                                                    color: Number(f[3]),
+                                                    date: Number(f[4]),
+                                                    Xc: f[5],
+                                                    gb: Number(f[6]),
+                                                    uid: f[7],
+                                                    dmid: f[8],
+                                                    text: e
+                                                };
+                                            b && (g.mid = b[0], g.uname = b[1]);
+                                            if (g.mode == 7) {
+                                                d.g.g.G.push(g);
+                                                d.g.list.update(!1, 0);
+                                                g = Object.assign({}, g);
+                                                g.stime *= 1000;
+                                                d.P.wj(g);
+                                            } else {
+                                                Number(d.Sa) !== Number(g.Xc) && d.g.add(g)
                                             }
-                                        } catch (x) {
-                                            void 0
                                         }
-                                }
+                                    } catch (x) {
+                                        void 0
+                                    }
                             }
-                        },
-                        onHeartBeatReply: function (b) {
-                            d.template.En.html(b.count || 1)
-                        },
-                        fallback: function () { }
-                    };
+                        }
+                    },
+                    onHeartBeatReply: function (b) {
+                        d.template.En.html(b.count || 1)
+                    },
+                    fallback: function () { }
+                };
                 this.jH = new g.a(this.f);
                 d.bind(h.a.h.Lc,
                     function () {
