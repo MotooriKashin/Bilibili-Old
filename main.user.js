@@ -11,6 +11,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 =======
 // @version      4.0.3
@@ -27,6 +28,9 @@
 =======
 // @version      4.3.6
 >>>>>>> 105384b (完善xhr封装，载入弹幕失败时弹出提示，在下载的弹幕里保留/n)
+=======
+// @version      4.5.6
+>>>>>>> 4be3950 (重构弹幕反查功能)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
 // @version      3.7.7
@@ -76,6 +80,7 @@
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@def1a67c0f583f7bf41ae1eefe10e19964c24805/src/ui.js
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/xhr.js
+<<<<<<< HEAD
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@de3c58eea2d340c845d7528f93835c75ef5ba302/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@136df39a3d9732d9be02f8c7e0d196ed25555d22/src/rewrite.js
@@ -100,6 +105,14 @@
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@8a8909d0f7aa6c1d687a9da22746d421412ba0a4/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@984976e2b1b58a36caabb8deb2884acc401060e7/src/config.json
 >>>>>>> 105384b (完善xhr封装，载入弹幕失败时弹出提示，在下载的弹幕里保留/n)
+=======
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e2f7dbf90b6d6e00de01011bd2eae8476ad3beef/src/download.js
+// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/define.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@136df39a3d9732d9be02f8c7e0d196ed25555d22/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/config.json
+>>>>>>> 4be3950 (重构弹幕反查功能)
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
@@ -4316,9 +4329,12 @@
 >>>>>>> baff4af (模块化脚本以便维护)
         // 修复分区排行
         if (msg.target.id == "bili_movie" || msg.target.id == "bili_teleplay" || msg.target.id == "bili_documentary") BLOD.reset.fixrank(msg.target);
+<<<<<<< HEAD
         // 弹幕哈希反查
         if (/danmaku-info-row/.test(msg.target.className)) BLOD.reset.danmkuHashId(msg.target);
 >>>>>>> 9571161 (重构代码，方便维护；)
+=======
+>>>>>>> 4be3950 (重构弹幕反查功能)
         // 其他节点监听
         BLOD.reset.resetNodes();
         // 收藏页切p监听
