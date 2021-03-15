@@ -833,6 +833,7 @@
         }
         let danmaku = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
         let attr, v, mode;
         for (let i = 0; i < dm.length; i++) {
             v = dm[i];
@@ -849,11 +850,12 @@
                 text: (mode != 8 && mode != 9) ? v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent,
 =======
         BLOD.hash = [];
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
         let attr, v, mode;
         for (let i = 0; i < dm.length; i++) {
             v = dm[i];
             attr = v.getAttribute('p').split(",");
-            BLOD.hash.push(v.midHash);
             mode = parseInt(attr[1]);
             danmaku[i] = {
                 class: parseInt(attr[5]),
@@ -1319,6 +1321,7 @@
 =======
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
                         BLOD.hash = [];
@@ -1327,6 +1330,8 @@
                             BLOD.hash[i] = danmaku[i].uid;
                         }
 >>>>>>> 290b5a1 (Update xhrhook.js)
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
                         parseTime = new Date() - parseTime;
 
                         list_so.onmessage({
@@ -1490,10 +1495,13 @@
                             this.callback();
                             BLOD.xml = xml;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                             BLOD.hash = [];
                             BLOD.xml.match(/d p=".+?"/g).forEach((v) => { BLOD.hash.push(v.split(",")[6]) });
 >>>>>>> 640403b (尝试修复“字幕弹幕”显示效果)
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
                         }
                         // 将pakku.js返回的数据转换回xml
                         this.pakku_load_callback[0] = function () {
@@ -1523,6 +1531,7 @@
                         // 备份弹幕
                         this.addEventListener("load", function () {
                             BLOD.xml = this.response;
+<<<<<<< HEAD
 =======
                     // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
                     // 可以直接记录弹幕数据
@@ -1592,6 +1601,8 @@
                         protoSegments.forEach(function (seg) {
                             Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
 >>>>>>> 891da5e (完善伪造xhr响应event流程)
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
                         });
                     }
                 }
@@ -1608,6 +1619,7 @@
                         this.readyState = 4;
                         this.status = 200;
                         this.send = () => { };
+<<<<<<< HEAD
 <<<<<<< HEAD
                         let historyXhr = this;
                         
@@ -1650,10 +1662,15 @@
                                 BLOD.hash.push(segDanmaku[i].midHash);
                             }
 =======
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
 
                         let history = "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date;
                         BLOD.xhr.true(history, "arraybuffer").then((seg) => {
                             let segDanmaku = protoSeg.decode(new Uint8Array(seg)).elems;
+<<<<<<< HEAD
+>>>>>>> aeac0ec (重构弹幕反查)
+=======
 >>>>>>> aeac0ec (重构弹幕反查)
                             toXml(segDanmaku).then((xml) => {
                                 historyXhr.response = xml;

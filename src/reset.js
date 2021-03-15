@@ -178,6 +178,7 @@
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; };
+<<<<<<< HEAD
 =======
 =======
             if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
@@ -193,6 +194,8 @@
 >>>>>>> 3b21571 (Update reset.js)
 =======
 >>>>>>> 39d49de (remove eslint rules)
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
             setTimeout(() => {
                 if (config.reset.viewbofqi) BLOD.bofqiToView();
@@ -379,6 +382,7 @@
         // 弹幕反查
 =======
         /**
+<<<<<<< HEAD
          * 反差弹幕发送者信息
          * @param {HTMLElement} node 弹幕节点
          */
@@ -431,6 +435,8 @@
 >>>>>>> aeac0ec (重构弹幕反查)
 =======
         /**
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
          * 移除HTML节点
          */
 >>>>>>> 2f00fde (format with JsDoc)
@@ -1811,6 +1817,9 @@
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
 
     class DanmkuHashId {
         /**
@@ -1820,12 +1829,15 @@
          */
         constructor(crc) {
             if (!BLOD.midcrc) new Function(BLOD.getResourceText("crc"))();
+<<<<<<< HEAD
             // 设置正在查询的弹幕数量
             DanmkuHashId.count = DanmkuHashId.count ? DanmkuHashId.count + 1 : 1;
             // 当前查询弹幕排序
             this.count = DanmkuHashId.count;
             // 临时缓存已查询的 mid
             DanmkuHashId.catch = DanmkuHashId.catch || {};
+=======
+>>>>>>> aeac0ec (重构弹幕反查)
             this.hash = crc;
             this.mid = BLOD.midcrc(this.hash);
             this.getInfo();
@@ -1833,6 +1845,7 @@
         }
         async getInfo() {
             try {
+<<<<<<< HEAD
                 this.node = document.querySelector(".bilibili-player-context-menu-container.active");
                 if (!this.node) return setTimeout(() => { this.getInfo() }, 100);
                 this.node = this.node.children[0];
@@ -1876,4 +1889,23 @@
 >>>>>>> 248dd3c (优化BV=>av)
 =======
 >>>>>>> 07154fd (添加读取本地弹幕功能)
+=======
+                this.node = document.querySelector(".bilibili-player-context-menu-container.white.active");
+                if (!this.node) return setTimeout(() => { this.getInfo() }, 100);
+                this.node = this.node.querySelector("li");
+                this.data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
+                this.node.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" data-usercard-mid="' +
+                    this.mid + '" class="reply-face"><img src="' +
+                    this.data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
+                    this.mid + '" href="//space.bilibili.com/' +
+                    this.mid + '" target="_blank" class="' +
+                    (this.data.data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + this.data.data.card.name + '</a> ' +
+                    this.data.data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
+                    this.data.data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
+
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("弹幕反查", ...e); }
+        }
+    }
+    BLOD.danmkuHashId = (crc) => { let check = new DanmkuHashId(crc); return "hash: " + check[0] + " mid: " + check[1] }
+>>>>>>> aeac0ec (重构弹幕反查)
 })()
