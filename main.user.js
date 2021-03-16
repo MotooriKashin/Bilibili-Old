@@ -12,6 +12,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 =======
 // @version      4.0.3
@@ -31,6 +32,9 @@
 =======
 // @version      4.5.6
 >>>>>>> 4be3950 (重构弹幕反查功能)
+=======
+// @version      4.5.7
+>>>>>>> 03a7b88 (弹幕反查支持滚动弹幕)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 =======
 // @version      3.7.7
@@ -109,7 +113,7 @@
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e2f7dbf90b6d6e00de01011bd2eae8476ad3beef/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@136df39a3d9732d9be02f8c7e0d196ed25555d22/src/rewrite.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/reset.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dd93080a333a4b127841c55d218a5c6b9b00660c/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/config.json
 >>>>>>> 4be3950 (重构弹幕反查功能)
