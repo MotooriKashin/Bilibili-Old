@@ -354,7 +354,7 @@
                                                         (this, e) : function () {
                                                             throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.")
                                                         }
-                                                            ())
+                                                        ())
                                         }
                                         return Q.prototype.then = y,
                                             Q.all = function (e) {
@@ -12063,17 +12063,17 @@
                                                                         d = n[c].subsegment_duration, f = n[c].referenced_size, (u = new T.default).duration = d, u.startTime = a, u.timescale = i, l = o + f - 1, u.mediaRange = o + "-" + l, s.push(u), a += d, o += f;
                                                                     return s
                                                                 }
-                                                                (h, p), (function () {
-                                                                    try {
-                                                                        var S = n[n.length - 1]
-                                                                            , R = (S.duration + S.startTime) / S.timescale;
-                                                                        d.adaptation.period.min ? d.adaptation.period.min = Math.min(d.adaptation.period.min, R) : d.adaptation.period.min = R;
-                                                                        d.adaptation.period.duration = parseFloat(d.adaptation.period.min.toFixed(5)),
-                                                                            _("Set real min period duration " + d.adaptation.period.duration)
-                                                                    } catch (e) {
-                                                                        _("Set real period error " + e)
-                                                                    }
-                                                                })(), c(n, d, f))
+                                                                    (h, p), (function () {
+                                                                        try {
+                                                                            var S = n[n.length - 1]
+                                                                                , R = (S.duration + S.startTime) / S.timescale;
+                                                                            d.adaptation.period.min ? d.adaptation.period.min = Math.min(d.adaptation.period.min, R) : d.adaptation.period.min = R;
+                                                                            d.adaptation.period.duration = parseFloat(d.adaptation.period.min.toFixed(5)),
+                                                                                _("Set real min period duration " + d.adaptation.period.duration)
+                                                                        } catch (e) {
+                                                                            _("Set real period error " + e)
+                                                                        }
+                                                                    })(), c(n, d, f))
                                                     } else
                                                         r(), v.mediaSourceError("Error parsing " + f + " response.", I.default.MEDIA_DECODE_ERROR)
                                                 },
@@ -12811,7 +12811,7 @@
                                                         d.path = [e.period.index, e.index, s],
                                                         n.push(d)
                                                 }
-                                            return n
+                                            return n;
                                         },
                                         getAdaptationsForPeriod: function (e) {
                                             var t = e && w(e.index) ? e.mpd.manifest.Period_asArray[e.index] : null,
@@ -16303,16 +16303,16 @@
                                             setAppendWindowEnd: function t(n) {
                                                 function h(e, t) {
                                                     var n = void 0
-                                                      , r = function() {
-                                                        e.updating || (clearInterval(n),
-                                                        t())
-                                                    };
+                                                        , r = function () {
+                                                            e.updating || (clearInterval(n),
+                                                                t())
+                                                        };
                                                     if (e.updating)
                                                         if ("function" == typeof e.addEventListener)
                                                             try {
                                                                 e.addEventListener("updateend", (function n() {
                                                                     e.updating || (e.removeEventListener("updateend", n, !1),
-                                                                    t())
+                                                                        t())
                                                                 }
                                                                 ), !1)
                                                             } catch (e) {
@@ -16323,14 +16323,14 @@
                                                     else
                                                         t()
                                                 }
-                                                n <= 0 || h(c, (function() {
+                                                n <= 0 || h(c, (function () {
                                                     if ("open" === i.readyState)
                                                         // 设置SourceBuffer.appendWindowEnd，防止请求超出时长范围的分段
                                                         c.appendWindowEnd = n;
                                                     else
-                                                        var r = setTimeout((function() {
+                                                        var r = setTimeout((function () {
                                                             clearTimeout(r),
-                                                            t(n)
+                                                                t(n)
                                                         }
                                                         ), 50)
                                                 }
@@ -17449,8 +17449,8 @@
                                         $ = void 0,
                                         ee = void 0,
                                         te = {
-                                            video: 0,
-                                            audio: 0
+                                            video: 3, // 修改为默认3 30080 1080P
+                                            audio: 2 // 修改为默认2 30280 320kbps
                                         },
                                         ne = {
                                             video: {},
@@ -17806,8 +17806,8 @@
                                     }
                                     function t(e) {
                                         e.fragmentModel === G.getFragmentModel() && (q("Init fragment finished loading saving to", Q + "'s init cache"), ie.save(e.chunk), q("Append Init fragment", Q, " with representationId:", e.chunk.representationId, " and quality:", e.chunk.quality),
-                                        J && J.setAppendWindowEnd(L.getCachedDurationOffset("duration")),
-                                        l(e.chunk))
+                                            J && J.setAppendWindowEnd(L.getCachedDurationOffset("duration")),
+                                            l(e.chunk))
                                     }
                                     function r(e) {
                                         if (e.fragmentModel === G.getFragmentModel()) {
@@ -21708,7 +21708,7 @@
                                                         }
                                                             (a || 1), o.paused || ((n = document.createEvent("Event")).initEvent("playing", !0, !1), o.dispatchEvent(n))))
                                                     }
-                                                        (e)
+                                                    (e)
                                             }
                                                 (e, t)
                                         },
@@ -22529,7 +22529,7 @@
                                                     return e + t
                                                 }) / i.length : NaN
                                             }
-                                                (e, t, n)
+                                            (e, t, n)
                                     }
                                     function r(e, t) {
                                         return n(!0, e, t)

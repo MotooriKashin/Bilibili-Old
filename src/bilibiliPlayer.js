@@ -51185,8 +51185,8 @@ else {
                 cb = void 0,
                 db = void 0,
                 eb = {
-                    video: 0,
-                    audio: 0
+                    video: 3, // 修改为默认3 30080 1080P
+                    audio: 2 // 修改为默认2 30280 320kbps
                 },
                 fb = {
                     video: {},
