@@ -85,6 +85,7 @@
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/xhr.js
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@de3c58eea2d340c845d7528f93835c75ef5ba302/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@136df39a3d9732d9be02f8c7e0d196ed25555d22/src/rewrite.js
@@ -111,6 +112,9 @@
 >>>>>>> 105384b (完善xhr封装，载入弹幕失败时弹出提示，在下载的弹幕里保留/n)
 =======
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e2f7dbf90b6d6e00de01011bd2eae8476ad3beef/src/download.js
+=======
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@55468a67e314a3fb4906d27c3bc6c54e1965ede1/src/download.js
+>>>>>>> 3c5d685 (优化播放器右键下载视频实现)
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@136df39a3d9732d9be02f8c7e0d196ed25555d22/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dd93080a333a4b127841c55d218a5c6b9b00660c/src/reset.js
