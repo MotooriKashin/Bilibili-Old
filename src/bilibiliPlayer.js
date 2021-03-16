@@ -21897,6 +21897,20 @@ function Fa() {
                                     c.Zv() ? c.lF() : c.OF()
                                 }
                             });
+                            if (BLOD && BLOD.config.reset.midcrc) {
+                                // 反查移动弹幕
+                                let dm = [];
+                                h.forEach(d => {
+                                    dm.push(d);
+                                    if (d.type == "danmaku") {
+                                        dm.push({
+                                            text: BLOD.danmkuHashId(d.g.textData.uid),
+                                            type: "function"
+                                        });
+                                    }
+                                })
+                                h = dm;
+                            }
                             return h
                         }
                     })
