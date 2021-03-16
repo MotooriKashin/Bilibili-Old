@@ -355,10 +355,14 @@
                                                             throw new TypeError("Failed to construct 'Promise': Please use the 'new' operator, this object constructor cannot be called as a function.")
                                                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                                                         ())
 =======
                                                             ())
 >>>>>>> 0007be8 (重构清晰度数据)
+=======
+                                                        ())
+>>>>>>> 0cef498 (提升DASH默认音轨ID)
                                         }
                                         return Q.prototype.then = y,
                                             Q.all = function (e) {
@@ -12072,6 +12076,9 @@
                                                                     return s
                                                                 }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 0cef498 (提升DASH默认音轨ID)
                                                                     (h, p), (function () {
                                                                         try {
                                                                             var S = n[n.length - 1]
@@ -12083,6 +12090,7 @@
                                                                             _("Set real period error " + e)
                                                                         }
                                                                     })(), c(n, d, f))
+<<<<<<< HEAD
 =======
                                                                 (h, p), (function () {
                                                                     try {
@@ -12096,6 +12104,8 @@
                                                                     }
                                                                 })(), c(n, d, f))
 >>>>>>> e3f979d (Update video.js)
+=======
+>>>>>>> 0cef498 (提升DASH默认音轨ID)
                                                     } else
                                                         r(), v.mediaSourceError("Error parsing " + f + " response.", I.default.MEDIA_DECODE_ERROR)
                                                 },
@@ -15800,16 +15810,16 @@
                                             setAppendWindowEnd: function t(n) {
                                                 function h(e, t) {
                                                     var n = void 0
-                                                      , r = function() {
-                                                        e.updating || (clearInterval(n),
-                                                        t())
-                                                    };
+                                                        , r = function () {
+                                                            e.updating || (clearInterval(n),
+                                                                t())
+                                                        };
                                                     if (e.updating)
                                                         if ("function" == typeof e.addEventListener)
                                                             try {
                                                                 e.addEventListener("updateend", (function n() {
                                                                     e.updating || (e.removeEventListener("updateend", n, !1),
-                                                                    t())
+                                                                        t())
                                                                 }
                                                                 ), !1)
                                                             } catch (e) {
@@ -15820,14 +15830,14 @@
                                                     else
                                                         t()
                                                 }
-                                                n <= 0 || h(c, (function() {
+                                                n <= 0 || h(c, (function () {
                                                     if ("open" === i.readyState)
                                                         // 设置SourceBuffer.appendWindowEnd，防止请求超出时长范围的分段
                                                         c.appendWindowEnd = n;
                                                     else
-                                                        var r = setTimeout((function() {
+                                                        var r = setTimeout((function () {
                                                             clearTimeout(r),
-                                                            t(n)
+                                                                t(n)
                                                         }
                                                         ), 50)
                                                 }
@@ -16752,6 +16762,248 @@
                                     value: function (e) {
                                         return f.box(f.types.mdat, e)
                                     }
+<<<<<<< HEAD
+=======
+                                    var A = this.context,
+                                        T = (0, me.default)(A).getInstance(),
+                                        R = (0, ue.default)(A).getInstance(),
+                                        I = void 0,
+                                        S = void 0,
+                                        b = void 0,
+                                        w = void 0,
+                                        C = void 0,
+                                        D = void 0,
+                                        O = void 0,
+                                        N = void 0,
+                                        M = void 0,
+                                        L = void 0,
+                                        P = void 0,
+                                        F = void 0,
+                                        B = void 0,
+                                        t = void 0,
+                                        k = void 0,
+                                        x = void 0,
+                                        U = void 0,
+                                        Q = void 0,
+                                        G = void 0,
+                                        j = void 0,
+                                        q = void 0,
+                                        V = void 0,
+                                        K = void 0,
+                                        H = void 0,
+                                        Y = void 0,
+                                        z = void 0,
+                                        W = void 0,
+                                        X = void 0,
+                                        J = void 0,
+                                        Z = void 0,
+                                        $ = void 0,
+                                        ee = void 0,
+                                        te = {
+                                            video: 3, // 修改为默认3 30080 1080P
+                                            audio: 2 // 修改为默认2 30280 320kbps
+                                        },
+                                        ne = {
+                                            video: {},
+                                            audio: {}
+                                        };
+                                    return I = {
+                                        isPlayingAtTopQuality: function (e) {
+                                            var t = e.id,
+                                                n = _(ie.default.AUDIO),
+                                                r = _(ie.default.VIDEO);
+                                            return n === f(ie.default.AUDIO, t) && r === f(ie.default.VIDEO, t)
+                                        },
+                                        updateTopQualityIndex: function (e) {
+                                            var t = e.type,
+                                                n = e.streamInfo.id,
+                                                r = e.representationCount - 1;
+                                            return function (e, t, n) {
+                                                D[t] = D[t] || {},
+                                                    D[t][e] = n
+                                            }
+                                                (t, n, r),
+                                                r
+                                        },
+                                        getThroughputHistory: function () {
+                                            return W
+                                        },
+                                        getBitrateList: g,
+                                        getQualityForBitrate: d,
+                                        getMaxAllowedBitrateFor: i,
+                                        getTopBitrateInfoFor: function (e) {
+                                            if (e && L && L[e]) {
+                                                var t = L[e].getStreamInfo();
+                                                if (t.id) {
+                                                    var n = f(e, t.id),
+                                                        r = g(L[e].getMediaInfo());
+                                                    return r[n] ? r[n] : null
+                                                }
+                                            }
+                                            return null
+                                        },
+                                        getMinAllowedBitrateFor: a,
+                                        setMaxAllowedBitrateFor: function (e, t) {
+                                            N.max = N.max || {},
+                                                N.max[e] = t
+                                        },
+                                        setMinAllowedBitrateFor: function (e, t) {
+                                            N.min = N.min || {},
+                                                N.min[e] = t
+                                        },
+                                        getMaxAllowedIndexFor: o,
+                                        getMinAllowedIndexFor: c,
+                                        getMaxAllowedRepresentationRatioFor: s,
+                                        setMaxAllowedRepresentationRatioFor: function (e, t) {
+                                            M.max = M.max || {},
+                                                M.max[e] = t
+                                        },
+                                        getInitialBitrateFor: function (e) {
+                                            var t = K.getSavedBitrateSettings(e);
+                                            if (!N.hasOwnProperty(e))
+                                                if (M.hasOwnProperty(e)) {
+                                                    var n = Q.getValue(),
+                                                        r = G.getAdaptationForType(n, 0, e).Representation;
+                                                    if (Array.isArray(r)) {
+                                                        var i = Math.max(Math.round(r.length * M[e]) - 1, 0);
+                                                        N[e] = r[i].bandwidth
+                                                    } else
+                                                        N[e] = 0
+                                                } else
+                                                    isNaN(t) ? N[e] = e === ie.default.VIDEO ? 1e3 : 100 : N[e] = t;
+                                            return N[e]
+                                        },
+                                        setInitialBitrateFor: function (e, t) {
+                                            N[e] = t
+                                        },
+                                        getInitialRepresentationRatioFor: function (e) {
+                                            return M.hasOwnProperty(e) ? M[e] : null
+                                        },
+                                        setInitialRepresentationRatioFor: function (e, t) {
+                                            M[e] = t
+                                        },
+                                        setAutoSwitchBitrateFor: function (e, t) {
+                                            C[e] = t
+                                        },
+                                        getAutoSwitchBitrateFor: h,
+                                        getUseDeadTimeLatency: function () {
+                                            return $
+                                        },
+                                        setUseDeadTimeLatency: function (e) {
+                                            $ = e
+                                        },
+                                        setLimitBitrateByPortal: function (e) {
+                                            B = e
+                                        },
+                                        getLimitBitrateByPortal: function () {
+                                            return B
+                                        },
+                                        getUsePixelRatioInLimitBitrateByPortal: function () {
+                                            return t
+                                        },
+                                        setUsePixelRatioInLimitBitrateByPortal: function (e) {
+                                            t = e
+                                        },
+                                        getQualityFor: _,
+                                        getAbandonmentStateFor: function (e) {
+                                            return P[e] ? P[e].state : null
+                                        },
+                                        setPlaybackQuality: u,
+                                        checkPlaybackQuality: function (e) {
+                                            if (e && L && L[e]) {
+                                                var t = L[e].getStreamInfo(),
+                                                    n = t ? t.id : null,
+                                                    r = _(e),
+                                                    i = (0, de.default)(A).create({
+                                                        abrController: I,
+                                                        streamProcessor: L[e],
+                                                        currentValue: r,
+                                                        switchHistory: Y[e],
+                                                        droppedFramesHistory: z,
+                                                        useBufferOccupancyABR: m(e)
+                                                    });
+                                                if (z) {
+                                                    var a = q.getPlaybackQuality();
+                                                    a && z.push(H, a)
+                                                }
+                                                if (h(e)) {
+                                                    var o = c(e),
+                                                        s = f(e, n),
+                                                        u = b.getMaxQuality(i),
+                                                        l = u.quality;
+                                                    if (void 0 !== o && l < o && (l = o), s < l && (l = s), Y[e].push({
+                                                        oldValue: r,
+                                                        newValue: l
+                                                    }), l > fe.default.NO_CHANGE && l != r)
+                                                        P[e].state !== ve && l === r || p(e, r, l, s, u.reason);
+                                                    else if (T.getLogToBrowserConsole()) {
+                                                        var d = Z.getCurrentBufferLevel(J.getReadOnlyMetricsFor(e));
+                                                        S("AbrController (" + e + ") stay on " + r + "/" + s + " (buffer: " + d + ")")
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        getTopQualityIndexFor: f,
+                                        setElementSize: v,
+                                        setWindowResizeEventCalled: function (e) {
+                                            k = e
+                                        },
+                                        createAbrRulesCollection: function () {
+                                            (b = (0, re.default)(A).create({
+                                                metricsModel: J,
+                                                dashMetrics: Z,
+                                                mediaPlayerModel: V,
+                                                adapter: j
+                                            })).initialize()
+                                        },
+                                        registerStreamType: function (e, t) {
+                                            Y[e] = (0, ce.default)(A).create(),
+                                                L[e] = t,
+                                                P[e] = P[e] || {},
+                                                P[e].state = ve,
+                                                X[e] = !1,
+                                                R.on(le.default.LOADING_PROGRESS, y, this),
+                                                e == ie.default.VIDEO && (R.on(le.default.QUALITY_CHANGE_RENDERED, n, this), z = (0, he.default)(A).create(), v()),
+                                                R.on(le.default.METRIC_ADDED, r, this),
+                                                W = (0, pe.default)(A).create({
+                                                    mediaPlayerModel: V
+                                                })
+                                        },
+                                        unRegisterStreamType: function (e) {
+                                            delete L[e]
+                                        },
+                                        setDefaultQualityFor: function (e, t) {
+                                            te[e] = Number(t) || 0,
+                                                S("Set default quality for " + e + " - " + te[e])
+                                        },
+                                        getDefaultQualityFor: E,
+                                        getDroppedFramesInfo: function () {
+                                            return z && z.getFrameInfo && z.getFrameInfo() || {}
+                                        },
+                                        setCurrentSegmentInfoFor: function (e, t) {
+                                            ne[e] = t
+                                        },
+                                        getCurrentSegmentInfoFor: function (e) {
+                                            return ne[e]
+                                        },
+                                        getInitializeDate: function () {
+                                            return ee
+                                        },
+                                        setConfig: function (e) {
+                                            e && (e.streamController && (w = e.streamController), e.domStorage && (K = e.domStorage), e.mediaPlayerModel && (V = e.mediaPlayerModel), e.metricsModel && (J = e.metricsModel), e.dashMetrics && (Z = e.dashMetrics), e.dashManifestModel && (G = e.dashManifestModel), e.adapter && (j = e.adapter), e.manifestModel && (Q = e.manifestModel), e.videoModel && (q = e.videoModel), e.initializeDate && (ee = e.initializeDate))
+                                        },
+                                        reset: function () {
+                                            e(),
+                                                R.off(le.default.LOADING_PROGRESS, y, this),
+                                                R.off(le.default.QUALITY_CHANGE_RENDERED, n, this),
+                                                R.off(le.default.METRIC_ADDED, r, this),
+                                                b && b.reset()
+                                        }
+                                    },
+                                        S = T.log.bind(I),
+                                        e(),
+                                        I
+>>>>>>> 0cef498 (提升DASH默认音轨ID)
                                 }
                                 ]), f);
                             function f() {
@@ -16921,8 +17173,8 @@
                                     }
                                     function t(e) {
                                         e.fragmentModel === G.getFragmentModel() && (q("Init fragment finished loading saving to", Q + "'s init cache"), ie.save(e.chunk), q("Append Init fragment", Q, " with representationId:", e.chunk.representationId, " and quality:", e.chunk.quality),
-                                        J && J.setAppendWindowEnd(L.getCachedDurationOffset("duration")),
-                                        l(e.chunk))
+                                            J && J.setAppendWindowEnd(L.getCachedDurationOffset("duration")),
+                                            l(e.chunk))
                                     }
                                     function r(e) {
                                         if (e.fragmentModel === G.getFragmentModel()) {
@@ -20230,6 +20482,10 @@
                                                         i = a + 1;
                                                         break
                                                     }
+<<<<<<< HEAD
+=======
+                                                    (e)
+>>>>>>> 0cef498 (提升DASH默认音轨ID)
                                             }
                                             e.boxes.splice(i, 0, t)
                                         }
@@ -20418,6 +20674,7 @@
                                             var r = this._readUint(8);
                                             t += String.fromCharCode(r)
                                         }
+<<<<<<< HEAD
                                         return t
                                     },
                                     o.prototype._readTemplate = function (e) {
@@ -20460,6 +20717,48 @@
                                                     break;
                                                 default:
                                                     this._offset + this.size > this._raw.buffer.byteLength ? (this._incomplete = !0, this._root._incomplete = !0) : this._raw = new DataView(this._raw.buffer, this._offset, this.size)
+=======
+                                            (e, t) : function (e, t, n) {
+                                                var r = function (e, t, n) {
+                                                    var r = void 0,
+                                                        i = void 0;
+                                                    if (i = e ? (r = g[t], n ? s : d) : (r = m[t], f), r) {
+                                                        if (i >= r.length)
+                                                            i = r.length;
+                                                        else if (e)
+                                                            for (var a = 1; a < i; ++a) {
+                                                                var o = r[a] / r[a - 1];
+                                                                if ((h <= o || o <= 1 / c) && (i += 1) === r.length)
+                                                                    break
+                                                            }
+                                                    } else
+                                                        i = 0;
+                                                    return i
+                                                }
+                                                    (e, t, n),
+                                                    i = (e ? g : m)[t];
+                                                return 0 !== r && i && 0 !== i.length ? (i = i.slice(-r)).reduce(function (e, t) {
+                                                    return e + t
+                                                }) / i.length : NaN
+                                            }
+                                            (e, t, n)
+                                    }
+                                    function r(e, t) {
+                                        return n(!0, e, t)
+                                    }
+                                    function l(e) {
+                                        g[e] = g[e] || [],
+                                            m[e] = m[e] || [],
+                                            _[e] = _[e] || {
+                                                fastEstimate: 0,
+                                                slowEstimate: 0,
+                                                totalWeight: 0
+                                            },
+                                            v[e] = v[e] || {
+                                                fastEstimate: 0,
+                                                slowEstimate: 0,
+                                                totalWeight: 0
+>>>>>>> 0cef498 (提升DASH默认音轨ID)
                                             }
                                             this._incomplete || (this._boxProcessors[this.type] && this._boxProcessors[this.type].call(this), -1 !== this._boxContainers.indexOf(this.type) ? this._parseContainerBox() : this._data = this._readData())
                                         }
