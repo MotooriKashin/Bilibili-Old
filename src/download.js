@@ -265,6 +265,7 @@
             li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             node.firstChild.appendChild(li);
 <<<<<<< HEAD
@@ -272,13 +273,18 @@
 >>>>>>> 2f00fde (format with JsDoc)
 =======
 >>>>>>> 39d49de (remove eslint rules)
+=======
+>>>>>>> 55468a6 (优化播放器右键下载视频实现)
             li.firstChild.onclick = () => this.setTable();
             // 监听播放器右键菜单创建
             node.addEventListener("DOMNodeInserted", () => {
                 if (this.add) return;
                 this.add = setTimeout(() => {
                     if (node.querySelector(".context-menu-danmaku")) return;
+<<<<<<< HEAD
                     if (node.contains(li)) return;
+=======
+>>>>>>> 55468a6 (优化播放器右键下载视频实现)
                     node.firstChild.appendChild(li);
                 }, 100);
             });
@@ -286,7 +292,11 @@
             node.addEventListener("DOMNodeRemoved", () => {
                 if (!this.add) return;
                 this.add = undefined;
+<<<<<<< HEAD
                 if (node.contains(li)) li.remove();
+=======
+                try { li.remove(); } catch (e) { }
+>>>>>>> 55468a6 (优化播放器右键下载视频实现)
             })
         }
 <<<<<<< HEAD
