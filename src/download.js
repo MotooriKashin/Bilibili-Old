@@ -125,10 +125,23 @@
         init(node) {
             if (!BLOD.config.reset.download) return;
             let li = document.createElement("li");
-            li.innerHTML = '<a class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
+            li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
-            node.firstChild.appendChild(li);
             li.firstChild.onclick = () => this.setTable();
+            // 监听播放器右键菜单创建
+            node.addEventListener("DOMNodeInserted", () => {
+                if (this.add) return;
+                this.add = setTimeout(() => {
+                    if (node.querySelector(".context-menu-danmaku")) return;
+                    node.firstChild.appendChild(li);
+                }, 100);
+            });
+            // 监听播放器右键菜单移除
+            node.addEventListener("DOMNodeRemoved", () => {
+                if (!this.add) return;
+                this.add = undefined;
+                try { li.remove(); } catch (e) { }
+            })
         }
 <<<<<<< HEAD
         async setTable() {
