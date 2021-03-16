@@ -1830,14 +1830,20 @@
         constructor(crc) {
             if (!BLOD.midcrc) new Function(BLOD.getResourceText("crc"))();
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dd93080 (反差滚动弹幕)
             // 设置正在查询的弹幕数量
             DanmkuHashId.count = DanmkuHashId.count ? DanmkuHashId.count + 1 : 1;
             // 当前查询弹幕排序
             this.count = DanmkuHashId.count;
             // 临时缓存已查询的 mid
             DanmkuHashId.catch = DanmkuHashId.catch || {};
+<<<<<<< HEAD
 =======
 >>>>>>> aeac0ec (重构弹幕反查)
+=======
+>>>>>>> dd93080 (反差滚动弹幕)
             this.hash = crc;
             this.mid = BLOD.midcrc(this.hash);
             this.getInfo();
@@ -1845,6 +1851,7 @@
         }
         async getInfo() {
             try {
+<<<<<<< HEAD
 <<<<<<< HEAD
                 this.node = document.querySelector(".bilibili-player-context-menu-container.active");
                 if (!this.node) return setTimeout(() => { this.getInfo() }, 100);
@@ -1891,21 +1898,40 @@
 >>>>>>> 07154fd (添加读取本地弹幕功能)
 =======
                 this.node = document.querySelector(".bilibili-player-context-menu-container.white.active");
+=======
+                this.node = document.querySelector(".bilibili-player-context-menu-container.active");
+>>>>>>> dd93080 (反差滚动弹幕)
                 if (!this.node) return setTimeout(() => { this.getInfo() }, 100);
-                this.node = this.node.querySelector("li");
-                this.data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
-                this.node.innerHTML = '<div style="min-height:0px;z-index:-5;" class="bb-comment"><div style="padding-top:10px;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;" data-usercard-mid="' +
+                this.node = this.node.children[0];
+                let j = 0; // 找到的节点序号
+                for (let i = this.node.children.length - 1; i >= 0; i--) {
+                    if (this.node.children[i].textContent.includes("mid")) {
+                        this.dm = this.node.children[i];
+                        j++;
+                        if (this.count === j) break;
+                    }
+                }
+                if (this.dm.tagName != "LI") return;
+                DanmkuHashId.catch[this.mid] = DanmkuHashId.catch[this.mid] || BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
+                this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' +
                     this.mid + '" class="reply-face"><img src="' +
-                    this.data.data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
+                    DanmkuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
                     this.mid + '" href="//space.bilibili.com/' +
                     this.mid + '" target="_blank" class="' +
-                    (this.data.data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + this.data.data.card.name + '</a> ' +
-                    this.data.data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
-                    this.data.data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
-
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("弹幕反查", ...e); }
+                    (DanmkuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmkuHashId.catch[this.mid].data.card.name + '</a> ' +
+                    DanmkuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
+                    DanmkuHashId.catch[this.mid].data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
+                DanmkuHashId.count--;
+            } catch (e) { DanmkuHashId.count--; e = Array.isArray(e) ? e : [e]; toast.error("弹幕反查", ...e); }
         }
     }
+<<<<<<< HEAD
     BLOD.danmkuHashId = (crc) => { let check = new DanmkuHashId(crc); return "hash: " + check[0] + " mid: " + check[1] }
 >>>>>>> aeac0ec (重构弹幕反查)
+=======
+    BLOD.danmkuHashId = (crc) => {
+        let check = new DanmkuHashId(crc);
+        return "hash: " + check[0] + " mid: " + check[1];
+    }
+>>>>>>> dd93080 (反差滚动弹幕)
 })()
