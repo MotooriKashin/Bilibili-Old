@@ -133,6 +133,7 @@
                 if (this.add) return;
                 this.add = setTimeout(() => {
                     if (node.querySelector(".context-menu-danmaku")) return;
+                    if (node.contains(li)) return;
                     node.firstChild.appendChild(li);
                 }, 100);
             });
@@ -140,7 +141,7 @@
             node.addEventListener("DOMNodeRemoved", () => {
                 if (!this.add) return;
                 this.add = undefined;
-                try { li.remove(); } catch (e) { }
+                if (node.contains(li)) li.remove();
             })
         }
 <<<<<<< HEAD

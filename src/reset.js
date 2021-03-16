@@ -1377,6 +1377,7 @@
                         if (this.count === j) break;
                     }
                 }
+                if (!this.dm) return setTimeout(() => { this.getInfo() }, 100);
                 if (this.dm.tagName != "LI") return;
                 DanmkuHashId.catch[this.mid] = DanmkuHashId.catch[this.mid] || BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
                 this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' +
