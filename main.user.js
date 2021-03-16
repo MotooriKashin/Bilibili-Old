@@ -86,6 +86,9 @@
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/xhr.js
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c7e7ed0 (修复ef2下载配置读取错误)
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@de3c58eea2d340c845d7528f93835c75ef5ba302/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7db1d486f06e92b7af9469991b87945ec51f5712/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@136df39a3d9732d9be02f8c7e0d196ed25555d22/src/rewrite.js
