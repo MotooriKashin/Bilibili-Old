@@ -13,6 +13,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // @version      4.5.7
 =======
 // @version      4.0.3
@@ -51,6 +52,9 @@
 >>>>>>> 3d73ce2 (restore elec jump)
 =======
 // @version      4.0.0
+=======
+// @version      4.5.8
+>>>>>>> 94626ff (初始化模块哈希值)
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 >>>>>>> baff4af (模块化脚本以便维护)
 // @author       MotooriKashin, wly5556
@@ -68,11 +72,12 @@
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @resource     base64 https://cdn.jsdelivr.net/npm/js-base64@3.6.0/base64.min.js
 // @resource     toast https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/toastr.min.css
-// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/av.html
-// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/watchlater.html
-// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/bangumi.html
-// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5ed92f5b1aee2dcfaabd858de0c6939059d32a7e/src/cinema.html
+// @resource     av https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/av.html
+// @resource     watchlater https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/watchlater.html
+// @resource     bangumi https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/bangumi.html
+// @resource     cinema https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/cinema.html
 // @resource     playlist https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.html
+<<<<<<< HEAD
 // @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/playlistdetail.html
 // @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/index.html
 // @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d0103554eb230ce97920b3d978a2a8669dc9608/src/ranking.html
@@ -124,6 +129,24 @@
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@aeac0ec333ad045dce0424194729614702f10c14/src/config.json
 >>>>>>> 4be3950 (重构弹幕反查功能)
+=======
+// @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlistdetail.html
+// @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/index.html
+// @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ranking.html
+// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.css
+// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
+// @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
+// @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/initialstate.js
+// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.js
+// @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/debug.js
+// @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/download.js
+// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/config.json
+>>>>>>> 94626ff (初始化模块哈希值)
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
