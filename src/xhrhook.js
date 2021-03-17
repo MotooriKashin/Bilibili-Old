@@ -1074,7 +1074,7 @@
                 Object.defineProperty(obj, 'response', { writable: true });
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("首页推荐", ...e) }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("获取直播数据推荐及排行失败！", ...e); }
         }
 <<<<<<< HEAD
         // 修复番剧季度信息
