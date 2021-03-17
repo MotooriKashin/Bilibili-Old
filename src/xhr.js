@@ -13,63 +13,18 @@
             BLOD.GMxhrLog = [];
             console.debug('import module "xhr.js"');
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * 同步链接
-         * @param {string} url 链接url
-         * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        false(url) {
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 同步链接
          * @param {string} url 链接url
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
         false(url, credentials = true) {
-<<<<<<< HEAD
->>>>>>> 8699635 (完善xhr封装)
-=======
-        false(url, credentials = true) {
->>>>>>> 8699635 (完善xhr封装)
-=======
->>>>>>> e82fc36 (基变出错！)
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, false);
             xhr.withCredentials = credentials;
             xhr.send(null);
             return xhr.responseText;
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * 异步链接
-         * @param {string} url 链接url
-         * @param {string} [responseType] 设定服务器返回值
-         * @param {object} [headers] 设定请求头键值对，注意有些属性是不可修改的
-         * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        true(url) {
-            return new Promise((resolve, reject) => {
-                let xhr = new XMLHttpRequest();
-                xhr.open('get', url, true);
-                xhr.withCredentials = true;
-                xhr.onload = () => resolve(xhr.responseText);
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 异步链接
          * @param {string} url 链接url
@@ -81,134 +36,39 @@
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
-<<<<<<< HEAD
-=======
-        true(url, responseType = "text", headers = {}, credentials = true) {
-            return new Promise((resolve, reject) => {
-                let xhr = new XMLHttpRequest();
-                xhr.open('get', url, true);
->>>>>>> 8699635 (完善xhr封装)
-=======
->>>>>>> e82fc36 (基变出错！)
                 xhr.responseType = responseType;
                 for (let key in headers) if (key && headers[key]) xhr.setRequestHeader(key, headers[key]);
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.response);
-<<<<<<< HEAD
->>>>>>> 8699635 (完善xhr封装)
                 xhr.onerror = () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
                     toast.error("method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
-                xhr.onerror = () => {
-                    toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
->>>>>>> 43b3ef7 (启用toast模块)
-=======
-                    toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
-                    reject(xhr.statusText || url);
->>>>>>> 329dfbe (修正xhr错误输出)
-=======
-                    toast.error("method：GET", "url：" + url, xhr.statusText || "");
-                    reject(xhr.statusText || "xhr出错！");
->>>>>>> 67135fe (优化xhr错误提示)
                 }
                 xhr.send();
             });
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
         /**
          * 跨域链接
          * @param {string} url 链接url
          * @param {{}} [headers] 设定请求头：user-agent, referer, ...
          */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        GM(url) {
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
-        /**
-         * 跨域链接
-         * @param {string} url 链接url
-         * @param {object} [headers] 设定请求头：user-agent, referer, ...
-         */
         GM(url, headers = {}) {
-<<<<<<< HEAD
->>>>>>> 8699635 (完善xhr封装)
-=======
-        GM(url, headers = {}) {
->>>>>>> 8699635 (完善xhr封装)
-=======
->>>>>>> e82fc36 (基变出错！)
             return new Promise((resolve, reject) => {
                 BLOD.xmlhttpRequest({
                     method: "GET",
                     url: url,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     headers: headers,
                     onload: (xhr) => {
                         BLOD.GMxhrLog.push([BLOD.timeFormat(new Date()), url, (String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText)]);
                         resolve(xhr.responseText);
                     },
                     onerror: (xhr) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
                         toast.error("method：GET", "url：" + url, xhr.statusText || "");
                         reject(xhr.statusText || "xhr出错！");
-=======
-                    onload: (xhr) => resolve(xhr.responseText),
-=======
-=======
-                    headers: headers,
->>>>>>> 8699635 (完善xhr封装)
-                    onload: (xhr) => {
-                        BLOD.GMxhrLog.push([BLOD.timeFormat(new Date()), url, (String(xhr.responseText).startsWith("{") ? JSON.parse(xhr.responseText) : xhr.responseText)]);
-                        resolve(xhr.responseText);
-                    },
->>>>>>> ef2d7cf ( 记录跨域url及返回值)
-                    onerror: (xhr) => {
-                        toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                        reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
->>>>>>> 43b3ef7 (启用toast模块)
-=======
-                        toast.error("XMLHttpRequest 错误！", "method：GET", "url：" + url, xhr.statusText || "");
-                        reject(xhr.statusText || url);
->>>>>>> 329dfbe (修正xhr错误输出)
-=======
-                        toast.error("method：GET", "url：" + url, xhr.statusText || "");
-                        reject(xhr.statusText || "xhr出错！");
->>>>>>> 67135fe (优化xhr错误提示)
                     }
                 });
             })
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * post方法
-         * @param {string} url 链接url
-         * @param {object} [headers] 设定请求头，注意有些属性是不可修改的
-         * @param {*} [data] 所需提交的数据，post方法专属
-         * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        post(url, header, data) {
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * post方法
          * @param {string} url 链接url
@@ -216,22 +76,7 @@
          * @param {{}} [headers] 设定请求头，注意有些属性是不可修改的
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
-<<<<<<< HEAD
-<<<<<<< HEAD
-        post(url, headers = { "Content-type": "application/x-www-form-urlencoded" }, data, credentials = true) {
->>>>>>> 8699635 (完善xhr封装)
-=======
         post(url, data, headers = { "Content-type": "application/x-www-form-urlencoded" }, credentials = true) {
-<<<<<<< HEAD
->>>>>>> 1989337 (修复点赞功能)
-=======
-        post(url, headers = { "Content-type": "application/x-www-form-urlencoded" }, data, credentials = true) {
->>>>>>> 8699635 (完善xhr封装)
-=======
-        post(url, data, headers = { "Content-type": "application/x-www-form-urlencoded" }, credentials = true) {
->>>>>>> 1989337 (修复点赞功能)
-=======
->>>>>>> e82fc36 (基变出错！)
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('post', url, true);
@@ -239,23 +84,8 @@
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.responseText);
                 xhr.onerror = () => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     toast.error("method：POST", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
-=======
-                    toast.error("XMLHttpRequest 错误！", "method：POST url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
-                    reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
->>>>>>> 43b3ef7 (启用toast模块)
-=======
-                    toast.error("XMLHttpRequest 错误！", "method：POST", "url：" + url, xhr.statusText || "");
-                    reject(xhr.statusText || url);
->>>>>>> 329dfbe (修正xhr错误输出)
-=======
-                    toast.error("method：POST", "url：" + url, xhr.statusText || "");
-                    reject(xhr.statusText || "xhr出错！");
->>>>>>> 67135fe (优化xhr错误提示)
                 }
                 xhr.send(data);
             });

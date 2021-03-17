@@ -1,50 +1,12 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-/*
- * @module "debug.js"
- * @description 调试模块，以debug对象挂在在BLOD下，基本同console，其中debug.msg发送旧版播放器通知框
- * @method debug/debug.log || debug.error || debug.warn || debug.debug || debug.msg
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- * --------------------------------------------------------------------------------
- * 
- * @description 使用原生JavaScript实现[toastr]的功能
- * @url https://github.com/CodeSeven/toastr/ MIT license
- * @method toast/toast.info || toast.success || toast.warning || toast.error
-=======
->>>>>>> 49b0faa (restore comment bangumi jump)
-=======
- * @description2 使用原生JavaScript实现[toastr]的功能
- * @url https://github.com/CodeSeven/toastr/ MIT license
- * @method2 toast/toast.info || toast.success || toast.warning || toast.error
->>>>>>> 43b3ef7 (启用toast模块)
-=======
- * --------------------------------------------------------------------------------
- * 
- * @description 使用原生JavaScript实现[toastr]的功能
- * @url https://github.com/CodeSeven/toastr/ MIT license
- * @method toast/toast.info || toast.success || toast.warning || toast.error
->>>>>>> 39d1857 (Update debug.js)
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
 /**
  * @module debug
  * @description 调试模块：封装了console和toastr
  * @author Motoori Kashin
  * @license MIT
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-=======
->>>>>>> e82fc36 (基变出错！)
  */
 (function () {
     const BLOD = window.BLOD; /** @see main */
 
-<<<<<<< HEAD
-    // @url https://cdnjs.com/libraries/toastr.js
-=======
     class Debug {
         constructor() {
             console.debug('import module "debug.js"');
@@ -95,21 +57,10 @@
     }
     BLOD.debug = debug();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // @url https://github.com/CodeSeven/toastr/
->>>>>>> 39d1857 (Update debug.js)
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
     /**
      * @see toastr {@link https://github.com/CodeSeven/toastr/}
      * @license BSD-3-Clause
      */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-=======
->>>>>>> e82fc36 (基变出错！)
     class Toast {
         constructor() {
             this.default = { timeout: 4, step: 250 };
@@ -120,143 +71,6 @@
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        show(type, ...msg) {
-<<<<<<< HEAD
-            if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
-            this.box = document.querySelector("#toast-container");
-            let item = document.createElement("div");
-            item.setAttribute("class", "toast toast-" + type);
-            item.setAttribute("aria-live", "assertive");
-            item.setAttribute("style", "opacity: 0.0");
-            setTimeout(() => {
-                if (this.count > 0) this.count--;
-                item = this.box.insertBefore(item, this.box.firstChild);
-                item.appendChild(this.msg(...msg));
-                this.come(item);
-                setTimeout(() => this.quit(item), this.timeout * 1000);
-            }, this.count * this.step);
-            this.count++;
-        }
-        come(item, i = 0) {
-            let timer = setInterval(() => {
-                i++;
-                item.setAttribute("style", "opacity: ." + i);
-                if (i === 8) {
-                    clearInterval(timer);
-                    item.removeAttribute("style");
-                }
-            }, 50)
-        }
-        quit(item, i = 8) {
-            let timer = setInterval(() => {
-                i--;
-                item.setAttribute("style", "opacity: ." + i);
-                if(i === 0) {
-                    clearInterval(timer);
-                    item.remove();
-                    if (!this.box.firstChild) this.box.remove();
-                }
-            }, 50)
-        }
-        msg(...msg) {
-            let div = document.createElement("div");
-            div.setAttribute("class", "toast-message");
-            div.innerHTML = "";
-            msg.forEach(d => {
-                d = String(d);
-                div.innerHTML = div.innerHTML ? div.innerHTML + "<br />" + d : div.innerHTML + d;
-            });
-            return div;
-        }
-    }
-
-<<<<<<< HEAD
-    class Debug {
-        constructor() {
-            console.debug('import module "debug.js"');
-        }
-        log(...msg) {
-            console.log("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
-        }
-        error(...msg) {
-            console.error("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
-        }
-        warn(...msg) {
-            console.warn("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
-        }
-        debug(...msg) {
-            console.debug("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
-        }
-        msg(...msg) {
-            let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
-            let time = 1 * msg[2] || 3000;
-            if (!node) return this.log(...msg);
-            msg.forEach((d) => { d = typeof d == "object" ? "" : d });
-            msg[2] = 1 * msg[2] ? "" : msg[2];
-            let item = document.createElement("div");
-            node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
-            item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
-            item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
-            msg[0] ? item.children[0].children[0].innerHTML = msg[0] : "";
-            msg[1] ? item.children[0].children[1].innerHTML = msg[1] : "";
-            msg[2] ? item.children[0].children[2].innerHTML = msg[2] : item.children[0].children[2].remove();
-            setTimeout(() => item.remove(), time);
-        }
-    }
-
-    const debug = () => {
-        let debug = new Debug();
-        function makeExports(type) {
-            return function (...msg) {
-                return debug[type](...msg);
-            }
-        }
-        let method = makeExports("log");
-        method.log = makeExports("log");
-        method.error = makeExports("error");
-        method.warn = makeExports("warn");
-        method.debug = makeExports("debug");
-        method.msg = makeExports("msg");
-        return method;
-    }
-<<<<<<< HEAD
-    BLOD.debug = debug();
-
-    // @url https://github.com/CodeSeven/toastr/
-    class Toast {
-        constructor() {
-            this.default = { timeout: 4, step: 250 };
-            this.change(BLOD.getValue("toast"));
-            BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
-            this.count = 0; // 未显示的通知数
-            this.container = document.createElement("div");
-            this.container.setAttribute("id", "toast-container");
-            this.container.setAttribute("class", "toast-top-right");
-        }
-<<<<<<< HEAD
-=======
-        /**
-         * 调整设置
-         * @param {object} config 设置键值对
-         */
-        change(config) {
-            if (config) {
-                this.config = config;
-                this.timeout = this.config.timeout; // 通知显示时间，单位/秒
-                this.step = this.config.step; // 通知间的最小间隔，单位/毫秒
-                BLOD.setValue("toast", this.config);
-                return config;
-            }
-            else return this.change(this.default);
-        }
-=======
->>>>>>> 2f00fde (format with JsDoc)
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 调整设置
          * @param {{}} config 设置键值对
@@ -275,39 +89,13 @@
          * @param {string} [type = info | success | warning | error] 通知类型
          * @param  {...string} msg 通知内容
          */
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> eea4f89 (重绘设置界面)
-=======
->>>>>>> 2f00fde (format with JsDoc)
-=======
->>>>>>> e82fc36 (基变出错！)
         show(type, ...msg) {
             if (!BLOD.config.reset.toast) return;
-<<<<<<< HEAD
-=======
-        async show(type, ...msg) {
->>>>>>> fabed72 (UpdateJavaScript module)
-=======
-        show(type, ...msg) {
->>>>>>> 55371da (Update JavaScript module)
-=======
->>>>>>> eea4f89 (重绘设置界面)
             if (!document.body) {
                 if (this.check) return;
                 return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
             }
-<<<<<<< HEAD
             if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
-=======
-            if (!document.body && !this.check) return setTimeout(() => { this.check = 1; this.show(type, ...msg) });
-<<<<<<< HEAD
->>>>>>> 472c9fc (Update debug.js)
-=======
-=======
->>>>>>> fabed72 (UpdateJavaScript module)
-            if (!document.querySelector("toastr-style")) BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
->>>>>>> a2d107a (Update JavaScript module)
             if (!document.querySelector("#toast-container")) document.body.appendChild(this.container);
             this.box = document.querySelector("#toast-container");
             let item = document.createElement("div");
@@ -356,27 +144,11 @@
             return div;
         }
     }
-=======
->>>>>>> 55a5f69 (添加toast模块)
 
-=======
->>>>>>> 39d1857 (Update debug.js)
     const toast = () => {
         let toast = new Toast();
-<<<<<<< HEAD
-<<<<<<< HEAD
-        function makeExports(type) {
-            return function (...msg) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 39d1857 (Update debug.js)
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         let makeExports = (type) => {
             return (...arg) => {
->>>>>>> 2f00fde (format with JsDoc)
                 switch (type) {
                     case "info": BLOD.debug.debug(...arg);
                         break;
@@ -387,19 +159,7 @@
                     case "warning": BLOD.debug.warn(...arg);
                         break;
                 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 55a5f69 (添加toast模块)
-=======
->>>>>>> 39d1857 (Update debug.js)
-                return toast.show(type, ...msg);
-=======
                 return toast.show(type, ...arg);
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-=======
->>>>>>> e82fc36 (基变出错！)
             }
         }
         let method = makeExports("info");
@@ -407,23 +167,10 @@
         method.error = makeExports("error");
         method.success = makeExports("success");
         method.warning = makeExports("warning");
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> eea4f89 (重绘设置界面)
         method.change = (config) => { return toast.change(config) }
         method.config = toast.config;
         return method;
     }
-<<<<<<< HEAD
-=======
-        return method;
-    }
-
-    BLOD.debug = exports();
->>>>>>> 55a5f69 (添加toast模块)
-=======
->>>>>>> 39d1857 (Update debug.js)
     BLOD.toast = toast();
 
 })()

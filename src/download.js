@@ -5,16 +5,8 @@
  * @license MIT
  */
 (function () {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    const BLOD = window.BLOD;
-    const toast = BLOD.toast;
-<<<<<<< HEAD
-=======
     const BLOD = window.BLOD; /** @see main */
     const toast = BLOD.toast; /** @see debug */
->>>>>>> e82fc36 (基变出错！)
 
     class Ef2 {
         constructor() {
@@ -113,126 +105,6 @@
          * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
          * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
          * @param {string} [s] 文件名（包括推展名）
-<<<<<<< HEAD
-         * @param {*} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
-         * @param {*} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
-         * @returns {string} ef2链接字符串
-         */
-        encodePara(u, a, c, d, r, U, P, o, s, f, q) {
-            this.temp = { u, a, c, d, r, U, P, o, s, f, q }
-            return this.encode(this.temp);
-        }
-    }
-    BLOD.ef2 = new Ef2();
-=======
->>>>>>> 43b3ef7 (启用toast模块)
-=======
-    // @ts-ignore
-=======
->>>>>>> 39d49de (remove eslint rules)
-    const BLOD = window.BLOD; /** @see main */
-    const toast = BLOD.toast; /** @see debug */
->>>>>>> 2f00fde (format with JsDoc)
-
-    class Ef2 {
-        constructor() {
-            if (!window.Base64) new Function(BLOD.getResourceText("base64"))();
-            this.pro = "ef2://";
-            this.data = "";
-        }
-        /**
-         * 下载对象键值对转ef2链接
-         * @param {{}} obj 下载对象键值对
-         * @returns {string} ef2链接字符串
-         */
-        encode(obj) {
-            this.data = "";
-            for (let key in obj) {
-                if (obj[key]) {
-                    if (typeof (obj[key]) == 'string') {
-                        // 处理路径中潜在的空格
-                        if (obj[key].includes(" ") && !obj[key].includes("\"")) obj[key] = "\"" + obj[key] + "\"";
-                        // 处理保存目录可能错将反斜杠写成斜杠的情况
-                        if (obj.o && obj.o.includes("/")) obj.o = obj.o.replace(/\//g, "\\");
-                        // 处理保存目录时最后一级目录可能带了反斜杠将双引号转义了的情况
-                        if (obj.o && obj.o[obj.o.length - 1] == "\"" && obj.o[obj.o.length - 2] == "\\") obj.o = obj.o.substr(0, obj.length - 2) + "\"";
-                        // 处理以双斜杠开头的链接（IDM 需要协议头要么完整要么干脆不带）
-                        if (obj.u && obj.u.startsWith("//")) obj.u = "https:" + obj.u;
-                    }
-                    switch (key) {
-                        case "u": this.data = this.data + "-u " + obj[key] + " "; // 下载链接（URL）
-
-                            break;
-                        case "a": this.data = this.data + "-a " + obj[key] + " "; // user-agent
-
-                            break;
-                        case "c": this.data = this.data + "-c " + obj[key] + " "; // cookies
-
-                            break;
-                        case "d": this.data = this.data + "-d " + obj[key] + " "; // post 数据（如果使用 POST 方法）
-
-                            break;
-                        case "r": this.data = this.data + "-r " + obj[key] + " "; // referer
-
-                            break;
-                        case "U": this.data = this.data + "-u " + obj[key] + " "; // 账户名称（服务器鉴权——基本不可能用到）
-
-                            break;
-                        case "P": this.data = this.data + "-p " + obj[key] + " "; // 账户密钥（服务器鉴权——基本不可能用到）
-
-                            break;
-                        case "o": this.data = this.data + "-o " + obj[key] + " "; // 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
-
-                            break;
-                        case "s": this.data = this.data + "-s " + obj[key] + " "; // 文件名（包括推展名）
-
-                            break;
-                        case "f": this.data = this.data + "-f "; // 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
-
-                            break;
-                        case "q": this.data = this.data + "-q "; // 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
-
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
-            }
-            if (this.data && this.data.endsWith(" ")) this.data = this.data.substr(0, this.data.length - 1);
-            return this.pro + window.Base64.encode(this.data)
-        }
-        /**
-         * ef2链接转对象键值对
-         * @param {string} str ef2链接字符串
-         * @returns {{}} 下载对象键值对
-         */
-        decode(str) {
-            this.arr = [];
-            this.obj = {};
-            str = str.replace("ef2://", "");
-            str = window.Base64.decode(str);
-            if (!str.startsWith(" ")) str = " " + str;
-            this.arr = str.split(" -");
-            this.arr.forEach(d => {
-                if (d && d.endsWith(" ")) d = d.substr(0, d.length - 1);
-                if (d[0]) this.obj[d.substr(0, 1)] = d[2] ? d.substr(2, d.length - 2) : true;
-            });
-            return this.obj;
-        }
-        /**
-         * 使用参数而不是对象键值对构造ef2
-         * @param {string} u 下载链接（URL）
-         * @param {string} [a] user-agent
-         * @param {string} [c] cookies
-         * @param {string} [d] post数据（如果使用 POST 方法）
-         * @param {string} [r] referer
-         * @param {string} [U] 账户名称（服务器鉴权——基本不可能用到）
-         * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
-         * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
-         * @param {string} [s] 文件名（包括推展名）
-=======
->>>>>>> e82fc36 (基变出错！)
          * @param {boolean}} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
          * @param {boolean} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
          * @returns {string} ef2链接字符串
@@ -247,21 +119,9 @@
     class Download {
         constructor() {
             console.debug('import module "download.js"');
-<<<<<<< HEAD
-<<<<<<< HEAD
             this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
             this.config = BLOD.getValue("download") || {};
-=======
->>>>>>> 1173f8f (随机选择下载链接)
-=======
-            this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
-            this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
-<<<<<<< HEAD
->>>>>>> b93be8e (自定义下载)
-=======
-            this.config = BLOD.getValue("download") || {};
->>>>>>> 238e40a (支持ef2下载工具)
         }
         /**
          * 添加播放器右键下载菜单
@@ -272,27 +132,13 @@
             let li = document.createElement("li");
             li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            node.firstChild.appendChild(li);
-<<<<<<< HEAD
-            // @ts-ignore
->>>>>>> 2f00fde (format with JsDoc)
-=======
->>>>>>> 39d49de (remove eslint rules)
-=======
->>>>>>> 55468a6 (优化播放器右键下载视频实现)
             li.firstChild.onclick = () => this.setTable();
             // 监听播放器右键菜单创建
             node.addEventListener("DOMNodeInserted", () => {
                 if (this.add) return;
                 this.add = setTimeout(() => {
                     if (node.querySelector(".context-menu-danmaku")) return;
-<<<<<<< HEAD
                     if (node.contains(li)) return;
-=======
->>>>>>> 55468a6 (优化播放器右键下载视频实现)
                     node.firstChild.appendChild(li);
                 }, 100);
             });
@@ -300,47 +146,15 @@
             node.addEventListener("DOMNodeRemoved", () => {
                 if (!this.add) return;
                 this.add = undefined;
-<<<<<<< HEAD
                 if (node.contains(li)) li.remove();
-=======
-                try { li.remove(); } catch (e) { }
->>>>>>> 55468a6 (优化播放器右键下载视频实现)
             })
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * 呼出下载面板
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        async setTable() {
-            toast("正在获取视频下载地址...");
-            let qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
-            let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 呼出下载面板
          */
         async setTable(url) {
             if (url) return this.custom(url);
             toast("正在获取视频下载地址...");
-<<<<<<< HEAD
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> 882179f (修复语法错误)
-=======
-        async setTable(url) {
-            if (url) return this.custom(url);
-            toast("正在获取视频下载地址...");
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> e82fc36 (基变出错！)
             let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
             if (!BLOD.mdf) {
                 path = path || {}
@@ -349,21 +163,9 @@
                 path && !path.dash && pro.push(this.geturl("dash"));
                 BLOD.mdf = {};
                 BLOD.mdf.quee = BLOD.mdf.quee || await Promise.all(pro);
-<<<<<<< HEAD
-<<<<<<< HEAD
                 this.quee(BLOD.mdf.quee);
                 this.durl(path);
                 this.dash(path);
-=======
-                this.quee(BLOD.mdf.quee, qua, bps);
-                this.durl(path, qua);
-                this.dash(path, qua, bps);
->>>>>>> 2ea7cf7 (添加视频拦截功能)
-=======
-                this.quee(BLOD.mdf.quee);
-                this.durl(path);
-                this.dash(path);
->>>>>>> b93be8e (自定义下载)
             }
             this.other();
             this.item();
@@ -431,19 +233,7 @@
                     BLOD.bloburl.xml = "";
                 }
             }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (toast.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
-=======
-            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (tosat.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
->>>>>>> 43b3ef7 (启用toast模块)
-=======
             if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) return toast.warning("未找到任何视频链接 ಥ_ಥ");
->>>>>>> 760e38a (Update JavaScript module)
-=======
-            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) return toast.warning("未找到任何视频链接 ಥ_ಥ");
->>>>>>> e82fc36 (基变出错！)
             top = document.createElement("div");
             top.setAttribute("id", "bili-old-download-table");
             if (BLOD.mdf.mp4) this.addBox(top, BLOD.mdf.mp4, "mp4", "download-mp4");
@@ -455,20 +245,7 @@
             if (BLOD.mdf.flv) this.addBox(top, BLOD.mdf.flv, "flv", "download-flv");
             if (BLOD.mdf.xml) this.addBox(top, BLOD.mdf.xml, "其他", "download-xml", "360P");
             document.body.appendChild(top);
-<<<<<<< HEAD
-<<<<<<< HEAD
-            toast.success("成功获取下载视频链接！")
-<<<<<<< HEAD
-            toast.info("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
-=======
-            toast.info("请右键复制下载或者右键IDM下载链接","直接复制链接无效！", "直接左键点击无效！")
->>>>>>> 43b3ef7 (启用toast模块)
-=======
             toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
->>>>>>> 760e38a (Update JavaScript module)
-=======
-            toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
->>>>>>> e82fc36 (基变出错！)
             top.onmouseover = () => window.clearTimeout(timer);
             top.onmouseout = () => {
                 timer = window.setTimeout(() => {
@@ -480,32 +257,11 @@
                 }, 1000)
             }
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * 读取远程数据
-         * @param {Object[]} path 远程函数的json数组，第一个为mp4
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        quee(path, qua, bps) {
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 读取远程数据
          * @param {Object[]} path 远程函数的json数组，第一个为mp4
          */
         quee(path) {
-<<<<<<< HEAD
->>>>>>> b93be8e (自定义下载)
-=======
-        quee(path) {
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> e82fc36 (基变出错！)
             if (path[0] && path[0].durl) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
                 BLOD.mdf.mp4.push(["1080P", path[0].durl[0].url.replace("http:", ""), BLOD.sizeFormat(path[0].durl[0].size), ".mp4"]);
@@ -513,48 +269,16 @@
             if (path[1]) {
                 for (let i = 1; i < path.length; i++) {
                     let data = path[i].data || (path[i].durl && path[i]) || path[i].result || {};
-<<<<<<< HEAD
-<<<<<<< HEAD
                     this.durl(data);
                     this.dash(data);
-=======
-                    BLOD.mdf.flvq = data.quality || (data.data ? data.data.quality : (data.result ? data.result.quality : ""));
-                    this.durl(data, qua);
-                    this.dash(data, qua, bps);
->>>>>>> 2ea7cf7 (添加视频拦截功能)
-=======
-                    this.durl(data);
-                    this.dash(data);
->>>>>>> b93be8e (自定义下载)
                 }
             }
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * 读取DASH数据
-         * @param {Object} path 原始json
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        dash(path, qua, bps) {
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 读取DASH数据
          * @param {{}} path 原始json
          */
         dash(path) {
-<<<<<<< HEAD
->>>>>>> b93be8e (自定义下载)
-=======
-        dash(path) {
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> e82fc36 (基变出错！)
             if (!path.dash) return;
             BLOD.mdf.dash = BLOD.mdf.dash || {};
             if (path.dash.video) {
@@ -586,32 +310,11 @@
                 for (let i = 0; i < BLOD.mdf.dash.aac.length; i++) if (BLOD.mdf.dash.aac[i][0] in this.bps) BLOD.mdf.dash.aac[i][0] = this.bps[BLOD.mdf.dash.aac[i][0]];
             }
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        /**
-         * 读取flv数据，可能包含mp4
-         * @param {Object} path 原始json
-         */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        durl(path, qua) {
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
         /**
          * 读取flv数据，可能包含mp4
          * @param {{}} path 原始json
          */
         durl(path) {
-<<<<<<< HEAD
->>>>>>> b93be8e (自定义下载)
-=======
-        durl(path) {
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> e82fc36 (基变出错！)
             if (!path.durl) return;
             if (path.durl[0] && path.durl[0].url.includes("mp4?")) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
@@ -653,42 +356,15 @@
                 return BLOD.jsonCheck(data);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("下载拉取", ...e); }
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
         /**
          * 构造在线数据url
          * @param {string} [type = mp4 | flv | dash | off] 视频格式
          * @param {number} [qn] 画质参数
          */
-<<<<<<< HEAD
->>>>>>> 2f00fde (format with JsDoc)
-        async playurl(type, qn) {
-            BLOD.aid = BLOD.aid || window.aid;
-            BLOD.cid = BLOD.cid || window.cid;
-            qn = qn || 120;
-=======
-=======
->>>>>>> e82fc36 (基变出错！)
-        /**
-         * 构造在线数据url
-         * @param {string} [type = mp4 | flv | dash | off] 视频格式
-         * @param {number} [qn] 画质参数
-         */
-=======
->>>>>>> b93be8e (自定义下载)
         async playurl(type, aid, cid, qn) {
             BLOD.aid = aid || BLOD.aid || window.aid;
             BLOD.cid = cid || BLOD.cid || window.cid;
             qn = qn || 125;
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> b93be8e (自定义下载)
-=======
->>>>>>> e82fc36 (基变出错！)
             type = type || "mp4";
             if (!BLOD.cid) return;
             switch (type) {
@@ -741,15 +417,7 @@
                 }, box);
                 a.href = d[1];
                 a.innerHTML = '<div class="download-quality ' + quatily + '">' + d[0] + '</div><div class="download-size">' + d[2] + '</div>';
-<<<<<<< HEAD
-<<<<<<< HEAD
                 if (window.self == window.top && BLOD.config.reset.ef2 && name != "其他") {
-=======
-                if (window.self == window.top && BLOD.config.reset.ef2) {
->>>>>>> 238e40a (支持ef2下载工具)
-=======
-                if (window.self == window.top && BLOD.config.reset.ef2 && name != "其他") {
->>>>>>> db9d8c3 (ef2排除非视频文件)
                     a.href = "javaScript:void(0);";
                     a.onclick = () => { this.ef2Set(d); return false; }
                 }
@@ -760,8 +428,6 @@
          * @param {[]} item 预先构造的下载数据：0，画质；1，URL；2，大小；3：拓展名
          */
         ef2Set(item) {
-<<<<<<< HEAD
-<<<<<<< HEAD
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -770,25 +436,6 @@
             let d1 = BLOD.addElement("div", {}, d0);
             let d2 = BLOD.addElement("div", {}, d0);
             let d3 = BLOD.addElement("div", {}, d0);
-=======
-            if (!this.ef2) this.ef2 = new Ef2();
-=======
->>>>>>> 9f9eb36 (Syntax error)
-            if (item[1].startsWith("//")) item[1] = "https:" + item[1];
-            let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
-            let title = BLOD.addElement("h1", {}, ui);
-            let name = BLOD.addElement("h2", {}, ui);
-<<<<<<< HEAD
-            let d1 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
-            let d2 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
-            let d3 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
->>>>>>> 238e40a (支持ef2下载工具)
-=======
-            let d0 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
-            let d1 = BLOD.addElement("div", {}, d0);
-            let d2 = BLOD.addElement("div", {}, d0);
-            let d3 = BLOD.addElement("div", {}, d0);
->>>>>>> db9d8c3 (ef2排除非视频文件)
             let d4 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d5 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
             let d6 = BLOD.addElement("div", { class: "BLOD-dl-settings-item" }, ui);
@@ -804,8 +451,6 @@
                 this.config.r = d6.value;
                 this.config.o = d7.value;
                 this.config.s = d8.value;
-<<<<<<< HEAD
-<<<<<<< HEAD
                 let url = BLOD.ef2.encode(this.config);
                 db.href = url;
                 db.innerHTML = BLOD.ef2.data;
@@ -814,23 +459,6 @@
             name.innerHTML = "ef2参数[选填]";
             d1.innerHTML = "格式：" + item[3];
             d2.innerHTML = "质量：" + item[0];
-=======
-                let url = this.ef2.encode(this.config);
-=======
-                let url = BLOD.ef2.encode(this.config);
->>>>>>> 9f9eb36 (Syntax error)
-                db.href = url;
-                db.innerHTML = BLOD.ef2.data;
-            }
-            title.innerHTML = document.title.split("_哔哩")[0];
-            name.innerHTML = "ef2参数[选填]";
-            d1.innerHTML = "格式：" + item[3];
-<<<<<<< HEAD
-            d2.innerHTML = "画质：" + item[0];
->>>>>>> 238e40a (支持ef2下载工具)
-=======
-            d2.innerHTML = "质量：" + item[0];
->>>>>>> db9d8c3 (ef2排除非视频文件)
             d3.innerHTML = "大小：" + item[2];
             d4.innerHTML = 'URL<input type="text" placeholder="https://www.example.com" title="这里仍可以全选然后右键IDM下载" />';
             d4 = d4.children[0];
@@ -838,15 +466,7 @@
             d4.readonly = "readonly";
             d5.innerHTML = 'User Agent<input type="text" placeholder="UA必须有效！" title="一般输入浏览器UA即可" />';
             d5 = d5.children[0];
-<<<<<<< HEAD
-<<<<<<< HEAD
             d5.value = (this.config.a || navigator.userAgent).replace(/\"/g, "");
-=======
-            d5.value = this.config.a || navigator.userAgent;
->>>>>>> 238e40a (支持ef2下载工具)
-=======
-            d5.value = this.config.a.replace(/\"/g, "") || navigator.userAgent;
->>>>>>> 189d010 (No quotation marks to show)
             d5.oninput = () => { this.flash() };
             d6.innerHTML = 'Referer<input type="text" placeholder="Referer必须在B站域名下" title="不妨使用B站顶级域名" />';
             d6 = d6.children[0];
@@ -854,15 +474,7 @@
             d6.oninput = () => { this.flash() };
             d7.innerHTML = '保存位置<input type="text"  placeholder="Windows用的反斜杠地址，可以不填！" title="可以不填，后面IDM对话框操作更方便" />';
             d7 = d7.children[0];
-<<<<<<< HEAD
-<<<<<<< HEAD
             d7.value = (this.config.o || "").replace(/\"/g, "");
-=======
-            d7.value = this.config.o || "";
->>>>>>> 238e40a (支持ef2下载工具)
-=======
-            d7.value = this.config.o.replace(/\"/g, "") || "";
->>>>>>> 189d010 (No quotation marks to show)
             d7.oninput = () => { this.flash() };
             d8.innerHTML = '文件名<input type="text"  placeholder="xxx.xxx" title="重命名文件，包括拓展名" />';
             d8 = d8.children[0];
@@ -886,25 +498,11 @@
             db = db.children[0];
             dc.innerHTML = `<div class="button" title="左键点击调用IDM">开始下载</div><div class="button" title="退出">我点错了</div>`;
             this.flash();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-            ui.scrollIntoView({ behavior: 'smooth', block: 'center' });
->>>>>>> 238e40a (支持ef2下载工具)
-=======
->>>>>>> e2f7dbf (Never scroll to ef2 table)
             dc.children[0].onclick = () => {
                 // 缺少拓展名主动补上默认拓展名
                 if (d8.value && !d8.value.includes(".")) d8.value = d8.value + item[3];
                 this.flash();
                 BLOD.setValue("download", {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    u: d4.value,
->>>>>>> 238e40a (支持ef2下载工具)
-=======
->>>>>>> 9ef3f55 (去除不该保存的下载配置)
                     a: d5.value,
                     r: d6.value,
                     o: d7.value

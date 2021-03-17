@@ -97,7 +97,6 @@ _以下问题这里可能处于并将长期处于无法解决状态，请多担�
 
 1. 刷新能解决一半问题，**页面载入异常时请先尝试刷新，硬刷新更佳(`Shift + F5`或`Ctrl + Shift + R`)。** 跨版本升级脚本报错可能是模块未同步更新导致的，可以尝试卸载本脚本，然后重新安装以刷新模块缓存。
 2. 由于实现机制做不到在浏览器访问新版页面之前启用旧版页面，所以旧版页面载入比较慢且新版页面可能一闪而过，主要取决于网络连接速度及网络延迟。
-<<<<<<< HEAD
 3. Firefox 79 及后续部分版本无法良好支持旧版播放页面，但目前 83 版已恢复正常。
 4. 旧版播放器已失去官方维护，版本停留在`2019-10-31 07:38:36`，所以新版播放器互动视频、全景视频、高能进度条等功能是不支持的，互动视频脚本已主动忽略不会启用旧版，全景视频无法移动视角，CC 字幕有[Bilibili CC 字幕工具](https://greasyfork.org/scripts/378513)提供第三方支持。
 5. 对于 HDR 画质，由于只有 hev(h.265)格式，绝大部分浏览器都不支持，所以虽然已经使旧版播放器获取到了该画质选项，也是切换不了的，即使提示切换成功，播放的仍是切换之前的画质。
@@ -108,18 +107,6 @@ _以下问题这里可能处于并将长期处于无法解决状态，请多担�
 10. 查询弹幕发送者功能是通过哈希反推，存在哈希碰撞的可能性，所以结果未必可靠，仅供参考。
 11. 10 月港澳台新番为生肉+CC 字幕形式，要使旧版播放器支持 CC 字幕请务必安装[Bilibili CC 字幕工具](https://greasyfork.org/scripts/378513)以载入字幕。
 12. 旧版弹幕默认接口已获取不到 90 分钟以后的弹幕数据，对于时长大于 90 分钟的电影等视频，会出现 90 分钟以后无弹幕的情况，只能在设置里启用“新版弹幕”解决。另外旧版实时弹幕也已失效，同样可在设置里启用“实时弹幕”加以修复。
-=======
-3. Firefox 79及后续版本无法良好支持旧版播放页面，原因暂时不得而知，猜测可能与vue有关。
-3. 旧版播放器已失去官方维护，版本停留在`2019-10-31 07:38:36`，所以新版播放器互动视频、全景视频、高能进度条等功能是不支持的，互动视频脚本已主动忽略不会启用旧版，全景视频无法移动视角，CC字幕有[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)提供第三方支持。
-4. 对于HDR画质，由于只有hev(h.265)格式，绝大部分浏览器都不支持，所以虽然已经使旧版播放器获取到了该画质选项，也是切换不了的，即使提示切换成功，播放的仍是切换之前的画质。
-5. 主页内容改版极大，旧版很多接口已出现问题，脚本已将被废弃的广告区替换为资讯区的内容，但B站并不提供资讯区的排行所以右边排行榜无法获取。推荐视频不再提供三日/昨日/一周分类，已屏蔽对应的切换按钮。
-6. 旧版播放页面的充电接口是失效的，为避免财产损失请不要使用，新版播放页面也不提供充电入口，需要给UP主充电请移步对应的空间。
-7. 替换嵌入播放器后顶层页面对于播放器的控制将失效，脚本也无暇去一一适配，不过涉及的页面也不多，已知的只有拜年祭2020专题页面。
-8. 收藏列表的播放页面并不存在对应的旧版，脚本使用重定向到av页并载入稍后再看列表进行模拟，但并不完美，请尽量不要在播放列表太大时启用。已知稍后再看列表上限是100，用来模拟容量为999的收藏列表极为卡顿。
-9. 查询弹幕发送者功能是通过哈希反推，存在哈希碰撞的可能性，所以结果未必可靠，仅供参考。
-10. 10月港澳台新番为生肉+CC字幕形式，虽然尝试解除了区域+APP限制，要正常体验还请务必安装[Bilibili CC字幕工具](https://greasyfork.org/scripts/378513)以载入字幕。另外本脚本“解除限制”暂只支持非会员番剧，使用更专业的脚本后请务必关闭该设置，以免发生干扰。
-11. 旧版弹幕默认接口已获取不到90分钟以后的弹幕数据，对于时长大于90分钟的电影等视频，会出现90分钟以后无弹幕的情况，只能在设置里启用“新版弹幕”解决。另外旧版实时弹幕也已失效，同样可在设置里启用“实时弹幕”加以修复。
->>>>>>> b29f633 (改进评论区楼层修复方式)
 
 ---
 
@@ -128,15 +115,9 @@ _以下问题这里可能处于并将长期处于无法解决状态，请多担�
 个人目前主要使用平台数据如下
 
 ```
-<<<<<<< HEAD
 Microsoft Windows 8 (Build 6.2.9200.16384) （64 位）
 Google Chrome 88.0.4324.190 (正式版本) （64 位） (cohort: Stable)
 Tampermonkey BETA 4.10.6128
-=======
-Microsoft Windows 8 (Build 6.2.9200.0) （64 位）  
-Google Chrome 87.0.4280.88 (正式版本) （64 位） (cohort: Stable)  
-Tampermonkey BETA 4.10.6122
->>>>>>> b29f633 (改进评论区楼层修复方式)
 ```
 
 平台
@@ -151,7 +132,6 @@ Tampermonkey BETA 4.10.6122
 - `GM_setValue()`方法失效，无法保存数据到脚本管理器
 - `addEventListener`、`document.onclick`等回调失效
 
-<<<<<<< HEAD
 | 脚本/扩展                                                        | 兼容性     | 详细                                                       |
 | ---------------------------------------------------------------- | ---------- | ---------------------------------------------------------- |
 | [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)  | 部分失效   | 在旧版页面无法修改设置 “简化主页”冲突 快捷键拓展部分未适配 |
@@ -159,15 +139,6 @@ Tampermonkey BETA 4.10.6122
 | [Bilibili 修车插件](https://greasyfork.org/scripts/374449)       | 失效       | 因本脚步修改了原生脚本而失效                               |
 | [IDM Integration Module](http://www.internetdownloadmanager.com) | 浮动条失效 | 无法嗅探旧版页面媒体                                       |
 | [smoothscroll](http://iamdustan.com/smoothscroll/)               | 完全失效   | 平滑滚动失效                                               |
-=======
-| 脚本/扩展 | 兼容性 | 详细 |
-| ---- | ---- | ---- |
-| [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved) | 部分失效 | 在旧版页面无法修改设置 “简化主页”冲突 快捷键拓展部分未适配|
-| [解除B站区域限制](https://greasyfork.org/scripts/25718) | 正常 | 偶尔不会在旧版页面绘制设置入口 可前往媒体页调整设置 |
-| [Bilibili 修车插件](https://greasyfork.org/scripts/374449) | 正常 | 建议`run-at document-start` 建议只在需要时启用该脚本|
-| [IDM Integration Module](http://www.internetdownloadmanager.com) | 浮动条失效 | 无法嗅探旧版页面媒体 |
-| [smoothscroll](http://iamdustan.com/smoothscroll/) | 完全失效 | 平滑滚动失效 |
->>>>>>> a13136a (Update README.md)
 
 ---
 
@@ -180,7 +151,6 @@ Tampermonkey BETA 4.10.6122
   - bili_jct：用于与 B 站后端进行操作验证
 
 脚本申请了跨域资源
-<<<<<<< HEAD
 
 - `GM_xmlhttpRequest`（`@connect`）：xhr 跨域
 
@@ -193,34 +163,6 @@ Tampermonkey BETA 4.10.6122
     - html：旧版网页框架，修改自[Wayback Machine](https://archive.org/web/)缓存
     - json：各种配置数据，包括脚本默认设置
     - js：各个功能模块，可以按需加载
-=======
-- `GM_xmlhttpRequest`：xhr跨域，相关`@connect`元数据如下：
-   - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：用于获取缓存的失效视频标题和封面
-   - [mcbbs](https://www.mcbbs.net)：用于获取APP端的鉴权`access_key`，只在解除限制功能同时开启“会员授权”时
-   - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限B站数据
-
-- (仅模块化版本)`GM_getResourceURL`/`GM_getResourceURL`：资源跨域，相关`@resource`元数据如下：
-   - [av.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/av.html)：旧版av的html框架文件
-   - [watchlater.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/watchlater.html)：旧版稍后再看的html框架文件
-   - [bangumi.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/bangumi.html)/[cinema.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/cinema.html)：旧版bangumi的html框架文件
-   - [playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.html)/[playlist.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlistdetail.html)：播单的html框架文件
-   - [index.html](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/index.html)：旧版主页的html框架文件
-   - [ui.css](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.css)：脚本依赖的css样式
-   - [crc.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/crc.js)：弹幕反查crc逆向模块
-   - [md5.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/md5.js)：md5模块
-   - [__INITIAL_STATE__.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/__INITIAL_STATE__.js)：\_\_INITIAL\_STATE\_\_配置模块
-   - [ui.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/ui.js)：设置界面模块
-   - [debug.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/debug.js)：调试模块
-   - [xhr.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhr.js)：xhr封装模块
-   - [download.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/download.js)：下载模块
-   - [rewrite.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/rewrite.js)：重写模块
-   - [define.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/define.js)：函数声明模块
-   - [reset.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/reset.js)：其他处理模块
-   - [xhrhook.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/xhrhook.js)：xhrhook模块
-   - [config.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/config.json)：脚本默认设置数据
-   - [playlist.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/playlist.json)：一例播单数据备份
-   - [sort.json](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/sort.json)：失效分区对照表
->>>>>>> 49b0faa (restore comment bangumi jump)
 
 脚本引用了部分公开库
 
@@ -275,8 +217,6 @@ Tampermonkey BETA 4.10.6122
 - 2020 年 02 月 08 日：关闭旧版历史弹幕池，部分高级弹幕、历史弹幕从此消失。
 
 ---
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 <details>
 <summary>版本历史</summary>
@@ -284,20 +224,9 @@ Tampermonkey BETA 4.10.6122
 **注：部分功能可能需要先在设置里启用！**
 
 <pre>
-<<<<<<< HEAD
-<<<<<<< HEAD
 - 2021-03-16
   - 弹幕反查支持滚动弹幕，BAS、代码弹幕这些不触发右键菜单的除外
   - 优化播放器右键下载视频实现，不在右键弹幕时呼出
-<<<<<<< HEAD
-=======
->>>>>>> 4be3950 (重构弹幕反查功能)
-=======
-- 2021-03-16
-  - 弹幕反查支持滚动弹幕，BAS、代码弹幕这些不触发右键菜单的除外
->>>>>>> 03a7b88 (弹幕反查支持滚动弹幕)
-=======
->>>>>>> 3c5d685 (优化播放器右键下载视频实现)
 - 2021-03-15
   - 重构弹幕反查功能，直接写入托管的原生脚本
 - 2021-03-14
@@ -445,42 +374,6 @@ Tampermonkey BETA 4.10.6122
   - 使用模块化版本重构主体版本以方便维护
   - 修复失效视频支持使用缓存数据直接重写 av 页（甚至评论还在！如[av51568](https://www.bilibili.com/video/av51568)）
   - 主动跳转 av 到可能有效的 bangumi（主要针对区域限制番剧，如[av713102937](https://www.bilibili.com/video/av713102937)）
-=======
-### 版本历史
-**注：部分功能可能需要先在设置里启用！**  
-<<<<<<< HEAD
-=======
-- 2020-12-16
-   + 过滤旧版播放器强制初始化代码，以以兼容Bilibili CC字幕工具
-   + 不再托管bilibiliPlayer.min.js以尝试处理"蓝条消失术"
-- 2020-12-14
-   + 修复评论查看更多错误
-   + 修复无效bvid导致的视频播放出错
-   + 修复区域限制番剧“请求被拦截”错误
->>>>>>> 3301427 (过滤旧版播放器强制初始化代码)
-- 2020-12-13
-   + 修复按时间排序置顶评论楼中楼
-- 2020-12-11
-   + 添加拦截视频功能，可以在不播放视频的情况下进入播放页调用视频下载功能，用完请立刻关闭！切记！
-- 2020-12-10
-   + 使用new Function()模块化脚本，脚本主体从此只负责引入模块、初始化及暴露接口
-   + [5d32692](https://github.com/MotooriKashin/Bilibili-Old/commit/5d3269259f98725aa2df5df5aeef5d3e29b538fb)修复评论区点赞/点踩误伤
-- 2020-12-08
-   + 改进评论区楼层修复方式
-      + 支持上古评论按评论数排序
-      + 支持任意楼中楼
-- 2020-12-07
-   + 优化xhr send响应模拟
-- 2020-12-06
-   + 提供未登录情况下所能播放的画质，仅DASH模式下，虽然仍显示为480P，实际载入的为能获取到载入的最高画质
-   + 移除画质切换列表的“登录”和“大会员”提示框，只是移除，不是破解！
-- 2020-12-05
-   + 修复生成xml弹幕时因没有转义弹幕中的特殊字符而产生的各种问题
-- 2020-12-04
-   + 使用模块化版本重构主体版本以方便维护
-   + 修复失效视频支持使用缓存数据直接重写av页（甚至评论还在！如[av51568](https://www.bilibili.com/video/av51568)）
-   + 主动跳转av到可能有效的bangumi（主要针对区域限制番剧，如[av713102937](https://www.bilibili.com/video/av713102937)）
->>>>>>> 9571161 (重构代码，方便维护；)
 - 2020-12-03
   - 修复排行榜页面无数据
 - 2020-11-30
@@ -493,13 +386,6 @@ Tampermonkey BETA 4.10.6122
   - 重新实现跳过充电鸣谢功能
 - 2020-11-26
   - 修复评论区 bangumi 跳转
-=======
-### 版本历史
-- 2020-11-27
-   + 重新实现跳过充电鸣谢功能
-- 2020-11-26
-   + 修复评论区bangumi跳转
->>>>>>> 49b0faa (restore comment bangumi jump)
 - 2020-11-23
   - 修复评论区缺失的样式（B 站前端工程师抄 CSS 抄漏了！大概）
   - BV 转 av 支持页面所有链接并清理多余参数
