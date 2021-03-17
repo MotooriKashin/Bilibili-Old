@@ -2367,7 +2367,7 @@
                         }
                         response = { "code": 0, "message": "success", "result": response };
                     }
-                    else if (BLOD.vip) response = BLOD.free && (await BLOD.free());
+                    else if (BLOD.vip) response = BLOD.free && (await BLOD.free(BLOD.urlObj(xhr.url)));
                 }
 <<<<<<< HEAD
                 catch (e) {
