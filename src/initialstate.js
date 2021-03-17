@@ -17,7 +17,10 @@
 >>>>>>> 39d49de (remove eslint rules)
     const BLOD = window.BLOD; /** @see main  */
     const toast = BLOD.toast; /** @see debug */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
 
     class IniState {
         constructor() {

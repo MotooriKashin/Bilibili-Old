@@ -7,6 +7,7 @@
 (function () {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     const BLOD = window.BLOD;
     const debug = BLOD.debug;
     const config = BLOD.config;
@@ -20,22 +21,29 @@
     // @ts-ignore
 =======
 >>>>>>> 39d49de (remove eslint rules)
+=======
+>>>>>>> e82fc36 (基变出错！)
     const BLOD = window.BLOD; /** @see main  */
     const debug = BLOD.debug; /** @see debug */
     const config = BLOD.config; /** @see main */
     const xhr = BLOD.xhr; /** @see xhr */
     const toast = BLOD.toast; /** @see debug */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
     console.debug('import module "reset.js"');
 =======
     console.log('import module "reset.js"');
 >>>>>>> 604ec62 (fix debug message)
+=======
+    console.debug('import module "reset.js"');
+>>>>>>> e82fc36 (基变出错！)
 
     BLOD.reset = {
         /**
          * 监听window下的对象
          */
         getVariable: () => {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -81,6 +89,8 @@
 >>>>>>> 760e38a (Update JavaScript module)
 =======
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
             Object.defineProperty(window, "aid", { set: (v) => { BLOD.aid = v }, get: () => { return BLOD.aid }, configurable: true });
             Object.defineProperty(window, "cid", { set: (v) => { BLOD.cid = v }, get: () => { return BLOD.cid }, configurable: true });
 >>>>>>> 693f2f4 (Object defineProperty configurable)
@@ -211,6 +221,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             // @ts-ignore
 >>>>>>> 2f00fde (format with JsDoc)
@@ -220,6 +231,9 @@
 =======
             if (config.reset.autoplay) setTimeout(()=>{window.player && window.player.play && window.player.play()},1000)
 >>>>>>> e8b09e7 (添加延时1秒自动播放功能)
+=======
+            if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000)
+>>>>>>> e82fc36 (基变出错！)
         },
         /**
          * 修复主页分区
@@ -286,6 +300,7 @@
             if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 重命名评论跳转链接
         renameCommentJump: () => {
 =======
@@ -297,6 +312,8 @@
 =======
             if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 还原评论跳转链接为av号
          */
@@ -334,15 +351,21 @@
             })
         },
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 3d73ce2 (restore elec jump)
         // 修复主页排行
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 修复主页排行：电视剧、电影、纪录片
          * @param {HTMLElement} node 分区节点
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         fixrank: async (node) => {
             // 这些分区排行榜已全部采用类似番剧排行的模式，故采用相似的节点覆盖
             let sort = {
@@ -377,6 +400,7 @@
             }
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("分区排行", ...e); }
         },
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         // 弹幕反查
@@ -434,12 +458,17 @@
          */
 >>>>>>> aeac0ec (重构弹幕反查)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
 =======
 >>>>>>> aeac0ec (重构弹幕反查)
          * 移除HTML节点
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         resetNodes: async () => {
             BLOD.reset.parameterTrim(true);
             let remove = (node, type, hidden, index, callback) => {
@@ -483,6 +512,7 @@
             remove("app-download", "class");
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             // 移除空间登录弹窗
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -499,6 +529,8 @@
             if (BLOD.path[2] == 'space.bilibili.com') {
 >>>>>>> a8f8605 (改进空间识别)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
             // 移除登录弹窗
 <<<<<<< HEAD
             if (BLOD.load) {
@@ -520,7 +552,10 @@
                 if (document.querySelector(".unlogin-popover")) document.querySelector(".unlogin-popover").parentNode.remove()
                 remove("lt-row", "class");
             }
+<<<<<<< HEAD
 >>>>>>> 9d0dbb0 (整理重写标记)
+=======
+>>>>>>> e82fc36 (基变出错！)
             // 移除直播水印
             remove("bilibili-live-player-video-logo", "class");
             // 移除失效顶栏
@@ -636,6 +671,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
                 }
             }, 100);
@@ -711,6 +747,8 @@
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("点赞功能", ...e); }
 >>>>>>> a895602 (优化通知信息)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("点赞功能", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
                 }
@@ -723,7 +761,10 @@
         /**
          * 获取账号注册时间
          */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         setJoinTime: async () => {
             if (!BLOD.mid && !config.reset.jointime) return;
             let data = await xhr.GM(BLOD.objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": BLOD.mid }));
@@ -731,6 +772,7 @@
                 data = BLOD.jsonCheck(data);
                 // 格式化时间戳，不是13位，主动补位
                 let jointime = BLOD.timeFormat(data.card.regtime * 1000, 1);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -744,6 +786,9 @@
 =======
                 if (BLOD.big) toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday);
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+                if (BLOD.big) toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday);
+>>>>>>> e82fc36 (基变出错！)
                 debug.log("注册时间", data.card.name, jointime);
                 document.addEventListener("DOMNodeInserted", (msg) => {
                     let birthday = document.getElementsByClassName("birthday");
@@ -810,10 +855,13 @@
                     BLOD.setValue("access_date", Date.now());
                     toast.success("授权登录成功！", "有效期30天", "届时可能需要重新授权")
 <<<<<<< HEAD
+<<<<<<< HEAD
                 }
 <<<<<<< HEAD
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("登录鉴权", ...e); }
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                 }
 <<<<<<< HEAD
                 catch (e) {
@@ -844,6 +892,7 @@
             } else if (BLOD.getValue("bilibili_player_settings")) {
                 localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
             }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         },
@@ -918,6 +967,8 @@
 >>>>>>> 248dd3c (优化BV=>av)
 =======
 >>>>>>> 248dd3c (优化BV=>av)
+=======
+>>>>>>> e82fc36 (基变出错！)
         }
     }
 
@@ -1118,8 +1169,11 @@
     // 修复评论楼层
     BLOD.reset.setReplyFloor = {
 <<<<<<< HEAD
+<<<<<<< HEAD
         init(reply) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 初始化评论楼层数据
          * @param {{}} data 评论数据json
@@ -1307,6 +1361,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
 =======
                 catch (e) {
@@ -1319,6 +1374,8 @@
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("收藏模拟", ...e); }
 >>>>>>> a895602 (优化通知信息)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("收藏播放页", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
             }
@@ -1429,6 +1486,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         catch (e) { e = Array.isArray(e) ? e : [e]; toast.error(...e); debug.error("分区·稍后再看", ...e); }
 =======
                         catch (e) {
@@ -1446,6 +1504,9 @@
 =======
                         catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("分区信息", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+                        catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("分区信息", ...e); }
+>>>>>>> e82fc36 (基变出错！)
                     }
                 }
             }, 1000);
@@ -1462,6 +1523,7 @@
                 if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){e.triggerSleepCallback()}") {
 <<<<<<< HEAD
                     if (!this.clock) {
+<<<<<<< HEAD
 <<<<<<< HEAD
                         debug.log("阻止直播间挂机检测", ...args);
                         toast.warning("成功阻止直播间挂机检测！");
@@ -1484,6 +1546,9 @@
 =======
                         toast.warning("成功阻止直播间挂机检测！", ...args);
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+                        toast.warning("成功阻止直播间挂机检测！", ...args);
+>>>>>>> e82fc36 (基变出错！)
                         this.clock++;
                     }
                     return Number.MIN_VALUE;
@@ -1493,11 +1558,17 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 留待以后释放setInterval方法
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+        /**
+         * 留待以后释放setInterval方法
+         */
+>>>>>>> e82fc36 (基变出错！)
         release() {
 =======
         release(){

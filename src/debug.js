@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*
  * @module "debug.js"
  * @description 调试模块，以debug对象挂在在BLOD下，基本同console，其中debug.msg发送旧版播放器通知框
@@ -26,12 +27,17 @@
  * @method toast/toast.info || toast.success || toast.warning || toast.error
 >>>>>>> 39d1857 (Update debug.js)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
 /**
  * @module debug
  * @description 调试模块：封装了console和toastr
  * @author Motoori Kashin
  * @license MIT
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
  */
 (function () {
     const BLOD = window.BLOD; /** @see main */
@@ -90,14 +96,20 @@
     BLOD.debug = debug();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     // @url https://github.com/CodeSeven/toastr/
 >>>>>>> 39d1857 (Update debug.js)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
     /**
      * @see toastr {@link https://github.com/CodeSeven/toastr/}
      * @license BSD-3-Clause
      */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
     class Toast {
         constructor() {
             this.default = { timeout: 4, step: 250 };
@@ -108,6 +120,7 @@
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -242,6 +255,8 @@
         }
 =======
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 调整设置
          * @param {{}} config 设置键值对
@@ -261,9 +276,12 @@
          * @param  {...string} msg 通知内容
          */
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> eea4f89 (重绘设置界面)
 =======
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         show(type, ...msg) {
             if (!BLOD.config.reset.toast) return;
 <<<<<<< HEAD
@@ -346,6 +364,7 @@
     const toast = () => {
         let toast = new Toast();
 <<<<<<< HEAD
+<<<<<<< HEAD
         function makeExports(type) {
             return function (...msg) {
 <<<<<<< HEAD
@@ -353,6 +372,8 @@
 =======
 >>>>>>> 39d1857 (Update debug.js)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         let makeExports = (type) => {
             return (...arg) => {
 >>>>>>> 2f00fde (format with JsDoc)
@@ -375,7 +396,10 @@
                 return toast.show(type, ...msg);
 =======
                 return toast.show(type, ...arg);
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
             }
         }
         let method = makeExports("info");

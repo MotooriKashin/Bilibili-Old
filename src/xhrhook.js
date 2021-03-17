@@ -32,27 +32,34 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     // hook setTimeout过滤旧版播放器强制初始化错误
     // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
 =======
 =======
 >>>>>>> 6a3a64a (BigInt polyfill)
+=======
+>>>>>>> e82fc36 (基变出错！)
     if (!BigInt) BigInt = (n) => { return Number(n) }
 
     /**
      * hook setTimeout过滤旧版播放器强制初始化错误
      * @see indefined {@link https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894}
      */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
     // hook setTimeout过滤旧版播放器强制初始化错误
     // @url https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894
 >>>>>>> d9f62f5 (过滤旧版播放器强制初始化错误)
+=======
+>>>>>>> e82fc36 (基变出错！)
     class HookTimeOut {
         constructor() {
             this.hook = setTimeout;
             window.setTimeout = (...args) => {
                 if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
+<<<<<<< HEAD
 <<<<<<< HEAD
                     debug.log("过滤拦截播放器强制初始化", ...args);
 <<<<<<< HEAD
@@ -66,6 +73,9 @@
 =======
                     toast.warning("禁用播放器强制初始化！", ...args)
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+                    toast.warning("禁用播放器强制初始化！", ...args)
+>>>>>>> e82fc36 (基变出错！)
                     return Number.MIN_VALUE;
                 }
                 return this.hook.call(window, ...args);
@@ -78,11 +88,19 @@
     }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 9f51f48 (reBuildPlayerurl)
 
     // 重构APP端playurl，result/data上层目录需另外构建
     // @url https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts
+=======
+
+    /**
+     * 重构APP端playurl，result/data上层目录需另外构建
+     * @see miyouzi {@link https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts}
+     */
+>>>>>>> e82fc36 (基变出错！)
     class ReBuildPlayerurl {
         constructor() {
             this.playurl = {
@@ -242,6 +260,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 获取链接ids
@@ -255,6 +274,8 @@
 <<<<<<< HEAD
             BLOD.xhr(url, 'arraybuffer', { 'Range': 'bytes=0-6000' }, false);
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 获取链接ids
          * @param {string} url 下载链接
@@ -267,16 +288,21 @@
             range = range < 6000 ? 6000 : range;
             return BLOD.xhr(url, 'arraybuffer', { 'Range': `bytes=0-${range}` }, false);
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 57513a7 (Thailand server)
 =======
 >>>>>>> 57513a7 (Thailand server)
         }
 <<<<<<< HEAD
 =======
+=======
+        }
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 过滤问题音频
          * @param {[]} audio 音频数据数组
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
         fixAudio(audio) {
             // 多余的音频会造成DASH闪退
@@ -312,6 +338,8 @@
          * @param {[]} audio 音频数据数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         fixAudio(audio) {
             let arr = [];
             audio.forEach(d => {
@@ -320,13 +348,17 @@
             return arr;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 3a04522 (过滤问题音频)
         // APP端playurl
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 重构APP端数据
          * @param {{}} app 原始数据对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -334,6 +366,8 @@
          * @param {{}} app 原始数据对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         async appPlayurl(app) {
             if (app.durl) return app;
             if (app.dash.duration) {
@@ -430,23 +464,31 @@
             }
             this.playurl.dash.video = video;
 <<<<<<< HEAD
+<<<<<<< HEAD
             toast.success("DASH数据重构成功！", "正在投喂给播放器...");
 <<<<<<< HEAD
 =======
 >>>>>>> 3a04522 (过滤问题音频)
 =======
+=======
+            toast.success("DASH数据重构成功！", "正在投喂给播放器...");
+>>>>>>> e82fc36 (基变出错！)
             debug.log(this.playurl);
 >>>>>>> 760e38a (Update JavaScript module)
             return this.playurl;
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // Thailand playurl
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 重构Thailand数据
          * @param {{}} ogv 原始数据
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -454,6 +496,8 @@
          * @param {{}} ogv 原始数据
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         async ogvPlayurl(ogv) {
             toast("重构DASH数据中...");
             this.playurl.quality = ogv.data.video_info.quality;
@@ -756,6 +800,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         function request(url) {
             return new Promise(function (resolve, reject) {
 =======
@@ -789,6 +834,9 @@
 =======
         let request = (url) => BLOD.xhr.true(url, "arraybuffer", {}, false);
 >>>>>>> 8a8909d (Update xhrhook.js)
+=======
+        let request = (url) => BLOD.xhr.true(url, "arraybuffer", {}, false);
+>>>>>>> e82fc36 (基变出错！)
         let DmWebViewReply = "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid
         request(DmWebViewReply).then(getAllSeg).catch((e) => {
             toast.error("载入弹幕失败", "请尝试刷新页面");
@@ -796,11 +844,19 @@
         });
         // 获得所有分段
         function getAllSeg(config) {
+<<<<<<< HEAD
             config = protoView.decode(config);
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
             let total = player.getDuration() / pageSize + 1;
+=======
+            config = protoView.decode(new Uint8Array(config));
+            // dmSge.total代表的分片总数，有时错误地为100
+            // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
+            let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
+            let total = window.player.getDuration() / pageSize + 1;
+>>>>>>> e82fc36 (基变出错！)
             let allrequset = [];
             let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid;
             for (let index = 1; index <= total; index++) {
@@ -1362,6 +1418,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (obj.aid) BLOD.aid = obj.aid;
                 if (obj.cid) BLOD.aid = obj.cid;
 =======
@@ -1377,13 +1434,18 @@
                 BLOD.cid = obj.cid || BLOD.cid;
 >>>>>>> 292effc (优化aid/cid获取)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                 if (!BLOD.aid) BLOD.aid = obj.avid || obj.aid || BLOD.aid;
 <<<<<<< HEAD
                 if (!BLOD.cid) BLOD.cid = obj.cid || BLOD.cid;
 >>>>>>> 7666368 (优化aid监听)
 =======
                 if (!BLOD.cid) BLOD.cid = obj.cid || window.cid || BLOD.cid;
+<<<<<<< HEAD
 >>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
+=======
+>>>>>>> e82fc36 (基变出错！)
                 // 替换视频心跳
                 if (url.includes('api.bilibili.com/x/report/web/heartbeat')) {
                     if (config.reset.heartbeat) {
@@ -1621,6 +1683,7 @@
                         this.send = () => { };
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         let historyXhr = this;
                         
                         let seg = new XMLHttpRequest();
@@ -1664,10 +1727,13 @@
 =======
 =======
 >>>>>>> aeac0ec (重构弹幕反查)
+=======
+>>>>>>> e82fc36 (基变出错！)
 
                         let history = "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date;
                         BLOD.xhr.true(history, "arraybuffer").then((seg) => {
                             let segDanmaku = protoSeg.decode(new Uint8Array(seg)).elems;
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> aeac0ec (重构弹幕反查)
 =======
@@ -1694,6 +1760,17 @@
                         BLOD.__playinfo__ = response;
                         debug.log("解除限制", "aid=", BLOD.aid, "cid=", BLOD.cid);
 >>>>>>> 49b0faa (restore comment bangumi jump)
+=======
+                            toXml(segDanmaku).then((xml) => {
+                                this.response = xml;
+                                this.dispatchEvent(new ProgressEvent("load"));
+                                BLOD.xml = xml;
+                            });
+                        }).catch((e) => {
+                            toast.error("载入历史弹幕失败", "请尝试刷新页面");
+                            toast.error(e);
+                        });
+>>>>>>> e82fc36 (基变出错！)
                     }
 =======
                 else if (this.url) {
@@ -1892,13 +1969,17 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 首页正在直播
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 处理主页正在直播数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -1907,6 +1988,8 @@
          * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         biliIndexRec(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1937,13 +2020,17 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 修复番剧季度信息
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 处理番剧季度信息
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -1952,6 +2039,8 @@
          * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         season(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1972,13 +2061,17 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 修复番剧追番信息
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 处理番剧追番信息
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -1987,6 +2080,8 @@
          * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         stat(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -2001,13 +2096,17 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 修改直播数据
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 处理直播间数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -2016,6 +2115,8 @@
          * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         getRoomPlayInfo(obj, hook = []) {
             if (!config.reset.roomplay) return;
             try {
@@ -2035,13 +2136,17 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 修改番剧推荐
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 处理番剧推荐数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -2050,6 +2155,8 @@
          * @param {[]} hook 处理纪录数组
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         recommend(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -2064,12 +2171,16 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 生成播放信息
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 构造旧版播放器通知数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -2077,6 +2188,8 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         carousel(obj) {
             if (!config.reset.carousel) return;
             try {
@@ -2097,12 +2210,16 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 禁用防挡字幕
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 禁用防挡字幕
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -2110,6 +2227,8 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         playerso(obj) {
             if (BLOD.preventshade) return;
 =======
@@ -2127,11 +2246,15 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 处理番剧信息数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
 >>>>>>> d635135 (禁用防挡字幕)
@@ -2141,6 +2264,8 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         status(obj) {
             try {
                 let response = BLOD.jsonCheck(obj.responseText);
@@ -2167,12 +2292,16 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 模拟弹幕响应
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 模拟弹幕响应
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -2180,6 +2309,8 @@
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         async sendDanmuku(xhr) {
             // 安装并启用了pakku.js，并且将其设置成“休眠中”状态，才会运行这里的代码
             // pakku.js处于“工作中”状态时，不会调用send()，而是向回调函数直接投喂过滤之后的弹幕
@@ -2208,12 +2339,16 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // 代理playurl响应
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 模拟playurl响应
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
             let callBack = xhr.callBack;
@@ -2242,6 +2377,8 @@
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         async sendPlayurl(xhr) {
             try {
                 let hookTimeOut = new HookTimeOut(),
@@ -2264,8 +2401,11 @@
                         let obj = Object.assign(BLOD.urlObj(xhr.url), BLOD.__INITIAL_STATE__.rightsInfo.watch_platform ? { access_key: accesskey, fnval: null, fnver: null, module: "pgc", platform: "android_i" } : { access_key: accesskey, module: "pgc" })
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+>>>>>>> e82fc36 (基变出错！)
                         if (BLOD.limit == 2) {
                             toast.info("尝试解除APP限制...", "使用移动端flv接口");
                             response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
@@ -2282,6 +2422,7 @@
                             } catch (e) {
                                 try {
                                     e = Array.isArray(e) ? e : [e];
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2305,19 +2446,25 @@
 >>>>>>> 8e2de3c (remove bangumi bofqi style)
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl("https://api.global.bilibili.com/intl/gateway/v2/ogv/playurl", { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                                     toast.error("代理服务器出错！", ...e);
                                     toast("尝试拉取Thailand链接...");
                                     let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/playurl`, { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
+<<<<<<< HEAD
 >>>>>>> 57513a7 (Thailand server)
 =======
                                     let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
                                     response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/playurl`, { aid: obj.avid || BLOD.aid, ep_id: obj.ep_id, download: 1 })));
 >>>>>>> 57513a7 (Thailand server)
+=======
+>>>>>>> e82fc36 (基变出错！)
                                     let reBuildPlayerurl = new ReBuildPlayerurl();
                                     response = await reBuildPlayerurl.ogvPlayurl(response);
                                 } catch (e) {
                                     e = Array.isArray(e) ? e : [e];
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -2337,6 +2484,9 @@
 =======
                                     throw toast.error("拉取Thailand链接失败！", ...e);
 >>>>>>> 8e2de3c (remove bangumi bofqi style)
+=======
+                                    throw toast.error("拉取Thailand链接失败！", ...e);
+>>>>>>> e82fc36 (基变出错！)
                                 }
 =======
                         if (BLOD.limit == 2) response = BLOD.jsonCheck(await BLOD.xhr.GM(BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurl", Object.assign(obj, { module: null }), 1)));
@@ -2393,6 +2543,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
                 toast.success("解除限制！", "aid=" + BLOD.aid, "cid=" + BLOD.cid);
+<<<<<<< HEAD
 <<<<<<< HEAD
             }
             catch (e) { toast.error("解除限制失败", e); e = Array.isArray(e) ? e : [e]; debug.error("解除限制", ...e) }
@@ -2535,19 +2686,25 @@
             catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
 >>>>>>> 760e38a (Update JavaScript module)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("解除限制失败", ...e); }
 >>>>>>> 8e2de3c (remove bangumi bofqi style)
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 65c15a5 (重构泰国番剧playurl)
 =======
 >>>>>>> 9f51f48 (reBuildPlayerurl)
         // 监听视频地址
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 监听playurl
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
+<<<<<<< HEAD
 >>>>>>> 6a3a64a (BigInt polyfill)
 =======
         /**
@@ -2555,6 +2712,8 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         async playinfo(obj) {
             try {
                 if (!obj.response) throw obj;

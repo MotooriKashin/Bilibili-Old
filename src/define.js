@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // module "define.js"
 =======
 /*
@@ -20,6 +21,8 @@
     console.log('import module "define.js"');
 >>>>>>> 604ec62 (fix debug message)
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
 /**
  * @module define
  * @description 定义了一些简单函数
@@ -28,6 +31,7 @@
  */
 (function () {
     const BLOD = window.BLOD; /** @see main */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
 
 <<<<<<< HEAD
@@ -141,8 +145,42 @@ const bubbleSort = (arr) => {
                     bool = false;
                 }
 >>>>>>> bc602f1 (添加参数无效判定)
+=======
+
+    class Format {
+        /**
+         * 格式化时间
+         * @param {number} [time] 时间戳(13位)
+         * @param {boolean} [type] 只要有效返回值便加上年月日
+         */
+        timeFormat(time = new Date().getTime(), type) {
+            let date = new Date(time),
+                Y = date.getFullYear() + '-',
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-',
+                D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ',
+                h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':',
+                m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':',
+                s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+            return type ? Y + M + D + h + m + s : h + m + s;
+        }
+        /**
+         * 格式化字节
+         * @param {number} [size] 字节大小/bit
+         */
+        sizeFormat(size = 0) {
+            let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1000 ** i;
+            while (dex > 1) {
+                if (size >= vor) {
+                    size = (size / dex).toFixed(2);
+                    break;
+                }
+                dex = dex / 1024;
+                vor = vor / 1000;
+                i--;
+>>>>>>> e82fc36 (基变出错！)
             }
         }
+<<<<<<< HEAD
         if (bool) break;
     }
 <<<<<<< HEAD
@@ -319,6 +357,8 @@ const objUrl = (url, obj) => {
             }
             return size + unit[i];
         }
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 格式化进位
          * @param {number} [num] 数字
@@ -368,6 +408,7 @@ const objUrl = (url, obj) => {
             while (out.length < num) {
                 var temp = (Math.random() * arr.length) >> 0;
                 out.push(arr.splice(temp, 1)[0]);
+<<<<<<< HEAD
 >>>>>>> dbc2aff (修复区域限制番剧“请求被拦截”错误)
             }
             return out;
@@ -450,14 +491,23 @@ const objUrl = (url, obj) => {
         /**
 =======
 >>>>>>> 9448cf0 (refactor some function)
+=======
+            }
+            return out;
+        }
+        /**
+>>>>>>> e82fc36 (基变出错！)
          * 将对象键值对转化为URL参数并返回完整URL
          * @param {string} url 原始url，无效则直接输出连接好的参数字符串
          * @param {{}} obj 包含参数键值对的对象，已存在的参数直接覆盖，参数值为 undefined 或 null 则忽略该参数
          */
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 9448cf0 (refactor some function)
 =======
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
         objUrl(url, obj) {
             let data = this.urlObj(url);
             obj = typeof obj === "object" ? obj : {};
@@ -479,6 +529,7 @@ const objUrl = (url, obj) => {
          * @param {string} url 原始url
          */
         urlObj(url) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             url = url || "";
@@ -506,12 +557,16 @@ const objUrl = (url, obj) => {
 =======
             let obj = {};
 >>>>>>> aa57aca (Update define.js)
+=======
+            let obj = {};
+>>>>>>> e82fc36 (基变出错！)
             url = url || "";
             url = url.split('?')[1] ? url.split('?')[1].split('&') : [];
             url.forEach(d => {
                 if (d.includes("#")) d = d.split("#")[0];
                 if (d) obj[d.split('=')[0]] = d.split('=')[1] || "";
             });
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
             if (url) for (let i = 0; i < url.length; i++)  obj[url[i].split('=')[0]] = url[i].split('=')[1] || "";
@@ -528,6 +583,10 @@ const objUrl = (url, obj) => {
 =======
 =======
 >>>>>>> 9448cf0 (refactor some function)
+=======
+            return obj;
+        }
+>>>>>>> e82fc36 (基变出错！)
     }
 
     class Abv {
@@ -551,12 +610,16 @@ const objUrl = (url, obj) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 72dd737 (Update define.js)
+=======
+>>>>>>> e82fc36 (基变出错！)
             if (/^[aA][vV][0-9]+$/.test(input) || /^\d+$/.test(input)) return this.avToBv(Number(/[0-9]+/.exec(input)[0]));
             if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(input)) return this.bvToAv("BV" + input);
             if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(input)) return this.bvToAv(input);
             throw input;
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
             if (/[bB][vV][fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{10}/.test(input)) return this.bvToAv(input);
@@ -571,6 +634,8 @@ const objUrl = (url, obj) => {
 >>>>>>> 0ac7dcc (Update define.js)
 =======
 >>>>>>> 72dd737 (Update define.js)
+=======
+>>>>>>> e82fc36 (基变出错！)
         }
         /**
          * BV => av
@@ -592,6 +657,7 @@ const objUrl = (url, obj) => {
             av = (av ^ this.xor) + this.add;
             for (let i = 0; i < 6; i++) bv[this.digitMap[i]] = this.base58Table[parseInt(av / 58 ** i) % 58];
             return bv.join("");
+<<<<<<< HEAD
         }
     }
 
@@ -924,6 +990,8 @@ const toXml = (danmaku, cid) => {
             d.setAttribute("p", attr.join(","));
             d.appendChild(dom.createTextNode(dmk.content));
             root.appendChild(d);
+=======
+>>>>>>> e82fc36 (基变出错！)
         }
         resolve(new XMLSerializer().serializeToString(dom));
     });
@@ -945,6 +1013,7 @@ const jsonCheck = (data, toast) => {
          if (toast) debug.msg("xhr错误：", data.code + " " + msg);
         throw [data.code, msg, data]
     }
+<<<<<<< HEAD
 <<<<<<< HEAD
     return data;
 }
@@ -980,6 +1049,71 @@ const tryModule = (name, callback) => {
         document.write(html);
         document.close();
 >>>>>>> bc602f1 (添加参数无效判定)
+=======
+
+    class UrlSign {
+        constructor() {
+            this.keySecret = [
+                "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
+                "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
+                "157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/",
+                "351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50",
+                "4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.",
+                "12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051",
+                "bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22",
+                "244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36",
+                "16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d",
+                "c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726",
+                "2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7",
+                "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.",
+                "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"
+            ]
+        }
+        /**
+         * 签名加密url
+         * @param {string} url 需要签名的url链接，可以带参数
+         * @param {{}} [obj] url的参数键值对，可以覆盖原有参数
+         * @param {number} [id] 签名密钥ID
+         */
+        sign(url, obj = {}, id = 0) {
+            if (!BLOD.md5) new Function(BLOD.getResourceText("md5"))();
+            let table = {};
+            this.restoreKey(Number(id));
+            obj = (obj && typeof obj === "object") ? Object.assign(obj, BLOD.urlObj(url)) : BLOD.urlObj(url);
+            url = url.split("?")[0];
+            delete obj.sign;
+            obj.appkey = this.key;
+            Object.keys(obj).sort().map(key => { table[key] = obj[key] });
+            if (id === 3 && table.api) table.sign = BLOD.md5(BLOD.objUrl("", { api: decodeURIComponent(table.api) }) + this.secret);
+            else table.sign = BLOD.md5(BLOD.objUrl("", table) + this.secret);
+            return BLOD.objUrl(url, table);
+        }
+        /**
+         * 提取签名密钥
+         * @param {number} [index] 签名密钥ID
+         */
+        restoreKey(index = 0) {
+            index = index < this.keySecret.length ? index : 0;
+            let table = this.keySecret[index];
+            let key = ''
+            this.key = '';
+            this.secret = '';
+            for (let i = table.length - 1; i >= 0; i--) key = key + String.fromCharCode(table[i].charCodeAt() + 2);
+            this.key = key.split(':')[0];
+            this.secret = key.split(':')[1];
+        }
+        /**
+         * 混淆签名密钥
+         * @param {string} key appkey
+         * @param {string} secret appcecret
+         */
+        mixKey(key, secret) {
+            let table = key + ":" + secret;
+            let str = '';
+            for (let i = table.length - 1; i >= 0; i--) str = str + String.fromCharCode(table[i].charCodeAt() - 2);
+            return str;
+        }
+>>>>>>> e82fc36 (基变出错！)
     }
 }
 // 播放器通知
@@ -1050,6 +1184,7 @@ const xhr = {
             xhr.send(data);
         });
     }
+<<<<<<< HEAD
 }
 // 暴露接口
 BLOD.timeFormat = timeFormat;
@@ -1101,6 +1236,10 @@ BLOD.xhr = xhr;
 =======
 =======
 >>>>>>> 9448cf0 (refactor some function)
+=======
+
+    let define = new Define();
+>>>>>>> e82fc36 (基变出错！)
     let format = new Format();
     let abv = new Abv();
     let urlSign = new UrlSign();
@@ -1122,8 +1261,12 @@ BLOD.xhr = xhr;
     BLOD.write = (html) => { return define.write(html) };
     BLOD.bofqiToView = () => { return define.bofqiToView() };
 <<<<<<< HEAD
+<<<<<<< HEAD
 })()
 >>>>>>> 9448cf0 (refactor some function)
 =======
 })()
 >>>>>>> 9448cf0 (refactor some function)
+=======
+})()
+>>>>>>> e82fc36 (基变出错！)

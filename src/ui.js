@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
 =======
@@ -19,9 +20,14 @@
     // @ts-ignore
 =======
 >>>>>>> 39d49de (remove eslint rules)
+=======
+>>>>>>> e82fc36 (基变出错！)
     const BLOD = window.BLOD; /** @see main  */
     const toast = BLOD.toast; /** @see debug */
+<<<<<<< HEAD
 >>>>>>> 2f00fde (format with JsDoc)
+=======
+>>>>>>> e82fc36 (基变出错！)
 
     class Ui {
         constructor() {
@@ -64,6 +70,7 @@
             toast("恢复默认数据！", "刷新页面以立即生效");
 >>>>>>> eea4f89 (重绘设置界面)
         }
+<<<<<<< HEAD
         /**
 <<<<<<< HEAD
          * 恢复默认设置
@@ -97,6 +104,8 @@
             }
             face.innerHTML = "<i></i><span>设置</span>";
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 浮动信息
          * @param {HTMLElement} div 鼠标所在节点
@@ -111,6 +120,7 @@
                 let state = document.querySelector("#BLOD-UI-state");
                 if (state) state.remove();
             }
+<<<<<<< HEAD
         }
         /**
          * 浮动信息
@@ -126,6 +136,8 @@
                 let state = document.querySelector("#BLOD-UI-state");
                 if (state) state.remove();
             }
+=======
+>>>>>>> e82fc36 (基变出错！)
         }
         /**
          * 绘制设置入口
@@ -142,13 +154,17 @@
             div.onclick = () => this.table();
             div.innerHTML = "<i></i><span>设置</span>";
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> eea4f89 (重绘设置界面)
 =======
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+>>>>>>> e82fc36 (基变出错！)
             (timer = () => {
                 setTimeout(() => { document.body ? document.body.appendChild(div) : timer() }, 100);
             })();
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -174,6 +190,8 @@
                 toast.warning("已恢复默认数据", "刷新页面以立即生效");
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 绘制设置面板
          */
@@ -197,6 +215,7 @@
             table.children[0].children[0].onclick = () => {
                 this.flesh();
                 table.remove();
+<<<<<<< HEAD
 >>>>>>> eea4f89 (重绘设置界面)
 =======
                 toast("恢复默认数据！", "刷新页面以立即生效");
@@ -222,6 +241,8 @@
                 this.flesh();
                 table.remove();
 >>>>>>> eea4f89 (重绘设置界面)
+=======
+>>>>>>> e82fc36 (基变出错！)
             }
             table.children[0].children[1].onclick = () => {
                 table.remove();
@@ -277,11 +298,14 @@
          * @param {string} d 设置选项主键名
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
          * @param {HTMLElement} tar 复选框所在父节点
 >>>>>>> eea4f89 (重绘设置界面)
 =======
 >>>>>>> 07154fd (添加读取本地弹幕功能)
+=======
+>>>>>>> e82fc36 (基变出错！)
          * @param {boolean} [type] 有效则主键在config.rewrite下
          * @param {{}} [style] 该功能定制css样式
          * @param {Function} [en] 启用功能时的回调，传入该功能节点作为参数以修改修改显示
@@ -328,6 +352,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     toast.warning("设置数据已保存", "部分功能需要刷新页面才会生效！")
 =======
                     toast.success("设置数据已保存", "部分功能需要刷新页面才会生效！")
@@ -337,6 +362,8 @@
 >>>>>>> 760e38a (Update JavaScript module)
                 }, 500);
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                     en(div);
                 }
             }
@@ -382,6 +409,7 @@
                 commit.onclick = callback;
                 input.onkeydown = (e) => {
                     if (e.which == 13) callback();
+<<<<<<< HEAD
                 }
 >>>>>>> b93be8e (自定义下载)
             }
@@ -435,6 +463,8 @@
                 commit.onclick = callback;
                 input.onkeydown = (e) => {
                     if (e.which == 13) callback();
+=======
+>>>>>>> e82fc36 (基变出错！)
                 }
             }
         }
@@ -448,6 +478,7 @@
                 document.querySelector("#BLOD-UI-menu") && document.querySelector("#BLOD-UI-menu").removeAttribute("id");
                 li.setAttribute("id", "BLOD-UI-menu");
 <<<<<<< HEAD
+<<<<<<< HEAD
                 right.innerHTML = '';
                 this.checked("limit", right);
                 this.checked("accesskey", right, false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
@@ -456,11 +487,16 @@
 =======
                 let thaiLand = BLOD.addElement("div", {}, right);
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                 this.right.innerHTML = '';
                 this.checked("limit");
                 this.checked("accesskey", false, {}, BLOD.reset.accesskey, BLOD.reset.accesskey);
                 let thaiLand = BLOD.addElement("div", {}, this.right);
+<<<<<<< HEAD
 >>>>>>> 69fdcaa (Feature refactor)
+=======
+>>>>>>> e82fc36 (基变出错！)
                 thaiLand.innerHTML = '代理服务器（东南亚）<input type="url" placeholder="http://www.example.com"> <button>保存</button>'
                 this.state(thaiLand, "请输入解除限制时所需的东南亚代理服务器地址，用以解除东南亚区域番剧限制</br>东南亚番剧账户与主站不互通，只能播放480P，启用账号授权也无效！</br>链接有效形式如输入框提示：需带http/https头，末尾无需斜杠！")
                 let commit = thaiLand.querySelector("button");
@@ -491,7 +527,10 @@
                 input.onkeydown = (e) => {
                     if (e.which == 13) callback();
                 }
+<<<<<<< HEAD
 >>>>>>> 57513a7 (Thailand server)
+=======
+>>>>>>> e82fc36 (基变出错！)
             }
         }
         /**
@@ -527,6 +566,7 @@
                     BLOD.toast.change(BLOD.toast.config);
                     toast.success("调整通知延时：" + step.value + " 毫秒");
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 else {
@@ -618,15 +658,21 @@
 =======
                 let button = BLOD.addElement("div", {}, this.right);
 >>>>>>> 69fdcaa (Feature refactor)
+=======
+                let button = BLOD.addElement("div", {}, this.right);
+>>>>>>> e82fc36 (基变出错！)
                 button.innerHTML = '<label><input type="button" value="恢复默认" /></label>';
                 button.onclick = () => {
                     let config = BLOD.toast.change();
                     timeout.value = config.timeout;
                     step.value = config.step;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> eea4f89 (重绘设置界面)
 =======
 >>>>>>> 43b3ef7 (启用toast模块)
+=======
+>>>>>>> e82fc36 (基变出错！)
                 }
             }
 <<<<<<< HEAD

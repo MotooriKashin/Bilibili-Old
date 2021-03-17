@@ -15,6 +15,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 同步链接
@@ -25,22 +26,28 @@
 >>>>>>> 2f00fde (format with JsDoc)
         false(url) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 同步链接
          * @param {string} url 链接url
          * @param {boolean} [credentials] 设定是否携带cookies，默认为 true
          */
         false(url, credentials = true) {
+<<<<<<< HEAD
 >>>>>>> 8699635 (完善xhr封装)
 =======
         false(url, credentials = true) {
 >>>>>>> 8699635 (完善xhr封装)
+=======
+>>>>>>> e82fc36 (基变出错！)
             const xhr = new XMLHttpRequest();
             xhr.open('GET', url, false);
             xhr.withCredentials = credentials;
             xhr.send(null);
             return xhr.responseText;
         }
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -61,6 +68,8 @@
                 xhr.onload = () => resolve(xhr.responseText);
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 异步链接
          * @param {string} url 链接url
@@ -72,16 +81,20 @@
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
+<<<<<<< HEAD
 =======
         true(url, responseType = "text", headers = {}, credentials = true) {
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('get', url, true);
 >>>>>>> 8699635 (完善xhr封装)
+=======
+>>>>>>> e82fc36 (基变出错！)
                 xhr.responseType = responseType;
                 for (let key in headers) if (key && headers[key]) xhr.setRequestHeader(key, headers[key]);
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.response);
+<<<<<<< HEAD
 >>>>>>> 8699635 (完善xhr封装)
                 xhr.onerror = () => {
 <<<<<<< HEAD
@@ -89,6 +102,8 @@
                     toast.error("method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
                 xhr.onerror = () => {
                     toast.error("XMLHttpRequest 错误！", "method：GET url：" + url, xhr.statusText || "net::ERR_CONNECTION_TIMED_OUT");
                     reject(xhr.statusText || url + " net::ERR_CONNECTION_TIMED_OUT");
@@ -107,6 +122,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 跨域链接
@@ -117,16 +133,21 @@
 >>>>>>> 2f00fde (format with JsDoc)
         GM(url) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 跨域链接
          * @param {string} url 链接url
          * @param {object} [headers] 设定请求头：user-agent, referer, ...
          */
         GM(url, headers = {}) {
+<<<<<<< HEAD
 >>>>>>> 8699635 (完善xhr封装)
 =======
         GM(url, headers = {}) {
 >>>>>>> 8699635 (完善xhr封装)
+=======
+>>>>>>> e82fc36 (基变出错！)
             return new Promise((resolve, reject) => {
                 BLOD.xmlhttpRequest({
                     method: "GET",
@@ -173,6 +194,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * post方法
@@ -185,6 +207,8 @@
 >>>>>>> 2f00fde (format with JsDoc)
         post(url, header, data) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * post方法
          * @param {string} url 链接url
@@ -198,6 +222,7 @@
 >>>>>>> 8699635 (完善xhr封装)
 =======
         post(url, data, headers = { "Content-type": "application/x-www-form-urlencoded" }, credentials = true) {
+<<<<<<< HEAD
 >>>>>>> 1989337 (修复点赞功能)
 =======
         post(url, headers = { "Content-type": "application/x-www-form-urlencoded" }, data, credentials = true) {
@@ -205,6 +230,8 @@
 =======
         post(url, data, headers = { "Content-type": "application/x-www-form-urlencoded" }, credentials = true) {
 >>>>>>> 1989337 (修复点赞功能)
+=======
+>>>>>>> e82fc36 (基变出错！)
             return new Promise((resolve, reject) => {
                 let xhr = new XMLHttpRequest();
                 xhr.open('post', url, true);

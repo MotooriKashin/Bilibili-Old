@@ -7,9 +7,14 @@
 (function () {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     const BLOD = window.BLOD;
     const toast = BLOD.toast;
 <<<<<<< HEAD
+=======
+    const BLOD = window.BLOD; /** @see main */
+    const toast = BLOD.toast; /** @see debug */
+>>>>>>> e82fc36 (基变出错！)
 
     class Ef2 {
         constructor() {
@@ -108,6 +113,7 @@
          * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
          * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
          * @param {string} [s] 文件名（包括推展名）
+<<<<<<< HEAD
          * @param {*} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
          * @param {*} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
          * @returns {string} ef2链接字符串
@@ -225,6 +231,8 @@
          * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
          * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
          * @param {string} [s] 文件名（包括推展名）
+=======
+>>>>>>> e82fc36 (基变出错！)
          * @param {boolean}} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
          * @param {boolean} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
          * @returns {string} ef2链接字符串
@@ -301,6 +309,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 呼出下载面板
@@ -313,12 +322,15 @@
             let bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 呼出下载面板
          */
         async setTable(url) {
             if (url) return this.custom(url);
             toast("正在获取视频下载地址...");
+<<<<<<< HEAD
 >>>>>>> b93be8e (自定义下载)
 =======
 >>>>>>> 882179f (修复语法错误)
@@ -327,6 +339,8 @@
             if (url) return this.custom(url);
             toast("正在获取视频下载地址...");
 >>>>>>> b93be8e (自定义下载)
+=======
+>>>>>>> e82fc36 (基变出错！)
             let path = BLOD.__playinfo__ ? (BLOD.__playinfo__.data || (BLOD.__playinfo__.durl && BLOD.__playinfo__) || BLOD.__playinfo__.result) : {};
             if (!BLOD.mdf) {
                 path = path || {}
@@ -419,6 +433,7 @@
             }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (toast.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
 =======
             if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) throw (tosat.warning("未找到任何视频链接 ಥ_ಥ"), BLOD.mdf);
@@ -426,6 +441,9 @@
 =======
             if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) return toast.warning("未找到任何视频链接 ಥ_ಥ");
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) return toast.warning("未找到任何视频链接 ಥ_ಥ");
+>>>>>>> e82fc36 (基变出错！)
             top = document.createElement("div");
             top.setAttribute("id", "bili-old-download-table");
             if (BLOD.mdf.mp4) this.addBox(top, BLOD.mdf.mp4, "mp4", "download-mp4");
@@ -438,6 +456,7 @@
             if (BLOD.mdf.xml) this.addBox(top, BLOD.mdf.xml, "其他", "download-xml", "360P");
             document.body.appendChild(top);
 <<<<<<< HEAD
+<<<<<<< HEAD
             toast.success("成功获取下载视频链接！")
 <<<<<<< HEAD
             toast.info("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
@@ -447,6 +466,9 @@
 =======
             toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
 >>>>>>> 760e38a (Update JavaScript module)
+=======
+            toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
+>>>>>>> e82fc36 (基变出错！)
             top.onmouseover = () => window.clearTimeout(timer);
             top.onmouseout = () => {
                 timer = window.setTimeout(() => {
@@ -460,6 +482,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 读取远程数据
@@ -469,15 +492,20 @@
 >>>>>>> 2f00fde (format with JsDoc)
         quee(path, qua, bps) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 读取远程数据
          * @param {Object[]} path 远程函数的json数组，第一个为mp4
          */
         quee(path) {
+<<<<<<< HEAD
 >>>>>>> b93be8e (自定义下载)
 =======
         quee(path) {
 >>>>>>> b93be8e (自定义下载)
+=======
+>>>>>>> e82fc36 (基变出错！)
             if (path[0] && path[0].durl) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
                 BLOD.mdf.mp4.push(["1080P", path[0].durl[0].url.replace("http:", ""), BLOD.sizeFormat(path[0].durl[0].size), ".mp4"]);
@@ -503,6 +531,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 读取DASH数据
@@ -512,15 +541,20 @@
 >>>>>>> 2f00fde (format with JsDoc)
         dash(path, qua, bps) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 读取DASH数据
          * @param {{}} path 原始json
          */
         dash(path) {
+<<<<<<< HEAD
 >>>>>>> b93be8e (自定义下载)
 =======
         dash(path) {
 >>>>>>> b93be8e (自定义下载)
+=======
+>>>>>>> e82fc36 (基变出错！)
             if (!path.dash) return;
             BLOD.mdf.dash = BLOD.mdf.dash || {};
             if (path.dash.video) {
@@ -554,6 +588,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 读取flv数据，可能包含mp4
@@ -563,15 +598,20 @@
 >>>>>>> 2f00fde (format with JsDoc)
         durl(path, qua) {
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 读取flv数据，可能包含mp4
          * @param {{}} path 原始json
          */
         durl(path) {
+<<<<<<< HEAD
 >>>>>>> b93be8e (自定义下载)
 =======
         durl(path) {
 >>>>>>> b93be8e (自定义下载)
+=======
+>>>>>>> e82fc36 (基变出错！)
             if (!path.durl) return;
             if (path.durl[0] && path.durl[0].url.includes("mp4?")) {
                 BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
@@ -615,6 +655,7 @@
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         /**
          * 构造在线数据url
@@ -628,6 +669,8 @@
             BLOD.cid = BLOD.cid || window.cid;
             qn = qn || 120;
 =======
+=======
+>>>>>>> e82fc36 (基变出错！)
         /**
          * 构造在线数据url
          * @param {string} [type = mp4 | flv | dash | off] 视频格式
@@ -640,9 +683,12 @@
             BLOD.cid = cid || BLOD.cid || window.cid;
             qn = qn || 125;
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b93be8e (自定义下载)
 =======
 >>>>>>> b93be8e (自定义下载)
+=======
+>>>>>>> e82fc36 (基变出错！)
             type = type || "mp4";
             if (!BLOD.cid) return;
             switch (type) {
