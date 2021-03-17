@@ -1926,10 +1926,14 @@
                 Object.defineProperty(obj, 'responseText', { writable: true });
                 obj.response = obj.responseText = JSON.stringify(response);
 <<<<<<< HEAD
+<<<<<<< HEAD
             } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("获取直播数据推荐及排行失败！", ...e); }
 =======
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("首页推荐", ...e) }
 >>>>>>> efcabf8 (Update xhrhook.js)
+=======
+            } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("获取直播数据推荐及排行失败！", ...e); }
+>>>>>>> e7f1346 (Bebug message)
         }
 <<<<<<< HEAD
 <<<<<<< HEAD
