@@ -843,9 +843,12 @@
                 if (!BLOD.cid) BLOD.cid = obj.cid || window.cid || BLOD.cid;
 >>>>>>> fc46cfb (修复拜年祭页面切P弹幕错误)
                 // 替换视频心跳
-                if (url.includes('api.bilibili.com/x/report/web/heartbeat') && config.reset.heartbeat) {
-                    url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
-                    debug.debug("XHR重定向", "替换视频心跳", [_url, url]);
+                if (url.includes('api.bilibili.com/x/report/web/heartbeat')) {
+                    if (config.reset.heartbeat) {
+                        url = url.replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
+                        debug.debug("XHR重定向", "替换视频心跳", [_url, url]);
+                    }
+                    if (BLOD.vip) this.send = () => true;
                 }
                 // 显示历史视频
                 if (url.includes('api.bilibili.com/x/web-interface/history/cursor') && url.includes("business") && config.reset.history) {
