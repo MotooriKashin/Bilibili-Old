@@ -120,7 +120,7 @@
         constructor() {
             console.debug('import module "download.js"');
             this.qua = { 208: "1080P", 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
-            this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
+            this.bps = { 30216: "64kbps", 30257: "64kbps", 30232: "128kbps", 30259: "128kbps", 30260: "320kbps", 30280: "320kbps" };
             this.config = BLOD.getValue("download") || {};
         }
         /**
@@ -211,9 +211,9 @@
                 }
                 if (this.aid && this.cid) {
                     BLOD.mdf = {};
-                    let pro = [this.geturl("", this.aid, this.cid), this.geturl("flv", this.aid, this.cid), this.geturl("dash", this.aid, this.cid)];
-                    BLOD.mdf.quee = BLOD.mdf.quee || await Promise.all(pro);
-                    this.quee(BLOD.mdf.quee);
+                    this.record = this.record || {};
+                    this.record[this.cid] = this.record[this.cid] || await Promise.all([this.geturl("", this.aid, this.cid), this.geturl("flv", this.aid, this.cid), this.geturl("dash", this.aid, this.cid)]);
+                    this.quee(this.record[this.cid]);
                     this.item();
                     BLOD.pgc = undefined;
                 } else {
@@ -482,11 +482,11 @@
             d4 = d4.children[0];
             d4.value = item[1];
             d4.readonly = "readonly";
-            d5.innerHTML = 'User Agent<input type="text" placeholder="UA必须有效！" title="一般输入浏览器UA即可" />';
+            d5.innerHTML = 'User Agent<input type="text" placeholder="必须有效" title="一般输入浏览器UA即可" />';
             d5 = d5.children[0];
             d5.value = (para.a || this.config.a || navigator.userAgent).replace(/\"/g, "");
             d5.oninput = () => { this.flash() };
-            d6.innerHTML = 'Referer<input type="text" placeholder="Referer必须在B站域名下" title="不妨使用B站顶级域名" />';
+            d6.innerHTML = 'Referer<input type="text" placeholder="有时必须填又有时必须不填" title="不妨使用B站顶级域名" />';
             d6 = d6.children[0];
             d6.value = para.hasOwnProperty("r") ? para.r : (this.config.r || "https://www.bilibili.com/");
             d6.oninput = () => { this.flash() };
