@@ -26784,7 +26784,7 @@
                                         i.gray_html5_compatible()
                                 }).fail(function () {
                                     $.ajax({
-                                        url: r.upgrade ? "".concat(r.gray_config_html5.new_player, "?").concat(n) : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@latest/src/bilibiliPlayer.min.js",
+                                        url: r.upgrade ? "".concat(r.gray_config_html5.new_player, "?").concat(n) : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/bilibiliPlayer.min.js",
                                         cache: !0,
                                         type: "get",
                                         dataType: "script",
