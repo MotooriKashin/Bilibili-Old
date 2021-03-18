@@ -38,7 +38,7 @@
                 vor = vor / 1000;
                 i--;
             }
-            return size + unit[i];
+            return size ? size + unit[i] : "N/A";
         }
         /**
          * 格式化进位

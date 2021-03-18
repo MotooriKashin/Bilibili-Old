@@ -119,7 +119,7 @@
     class Download {
         constructor() {
             console.debug('import module "download.js"');
-            this.qua = { 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
+            this.qua = { 208: "1080P", 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             this.bps = { 30216: "64kbps", 30232: "128kbps", 30280: "320kbps" };
             this.config = BLOD.getValue("download") || {};
         }
@@ -259,20 +259,16 @@
         }
         /**
          * 读取远程数据
-         * @param {Object[]} path 远程函数的json数组，第一个为mp4
+         * @param {[{}]} path 远程函数的json数组，分发下载数据
          */
         quee(path) {
-            if (path[0] && path[0].durl) {
-                BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
-                BLOD.mdf.mp4.push(["1080P", path[0].durl[0].url.replace("http:", ""), BLOD.sizeFormat(path[0].durl[0].size), ".mp4"]);
-            }
-            if (path[1]) {
-                for (let i = 1; i < path.length; i++) {
-                    let data = path[i].data || (path[i].durl && path[i]) || path[i].result || {};
+            path.forEach(d => {
+                if (d) {
+                    let data = d.data || (d.durl && d) || d.result || {};
                     this.durl(data);
                     this.dash(data);
                 }
-            }
+            })
         }
         /**
          * 读取DASH数据
@@ -284,27 +280,42 @@
             if (path.dash.video) {
                 for (let i = 0; i < path.dash.video.length; i++) {
                     // 随机抽取下载链接
+                    if (!path.dash.video[i].baseUrl && path.dash.video[i].base_url) path.dash.video[i].baseUrl = path.dash.video[i].base_url;
+                    if (!path.dash.video[i].backupUrl && path.dash.video[i].backup_url) path.dash.video[i].backupUrl = path.dash.video[i].backup_url;
                     if (path.dash.video[i].backupUrl && path.dash.video[i].backupUrl[0]) {
                         path.dash.video[i].backupUrl.push(path.dash.video[i].baseUrl);
                         path.dash.video[i].baseUrl = BLOD.randomArray(path.dash.video[i].backupUrl)[0];
                     }
-                    if (path.dash.video[i].codecs.startsWith("avc")) {
-                        BLOD.mdf.dash.avc = BLOD.mdf.dash.avc || [];
-                        BLOD.mdf.dash.avc.push([this.qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8), ".m4v"]);
+                    if (path.dash.video[i].codecs) {
+                        if (path.dash.video[i].codecs.startsWith("avc")) {
+                            BLOD.mdf.dash.avc = BLOD.mdf.dash.avc || [];
+                            BLOD.mdf.dash.avc.push([this.qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8) || "N/A", ".m4v"]);
+                        } else {
+                            BLOD.mdf.dash.hev = BLOD.mdf.dash.hev || [];
+                            BLOD.mdf.dash.hev.push([this.qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8) || "N/A", ".m4v"]);
+                        }
                     } else {
-                        BLOD.mdf.dash.hev = BLOD.mdf.dash.hev || [];
-                        BLOD.mdf.dash.hev.push([this.qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8), ".m4v"]);
+                        // 对于不提供编码信息的链接采取如下逻辑归类：判断其id与下一个文件id相同则取avc，不同取hev。
+                        if (path.dash.video[i + 1] && path.dash.video[i + 1].id == path.dash.video[i].id) {
+                            BLOD.mdf.dash.avc = BLOD.mdf.dash.avc || [];
+                            BLOD.mdf.dash.avc.push([this.qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8) || "N/A", ".m4v"]);
+                        } else {
+                            BLOD.mdf.dash.hev = BLOD.mdf.dash.hev || [];
+                            BLOD.mdf.dash.hev.push([this.qua[path.dash.video[i].id], path.dash.video[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.video[i].bandwidth * path.dash.duration / 8) || "N/A", ".m4v"]);
+                        }
                     }
                 }
             }
             if (path.dash.audio) {
                 for (let i = 0; i < path.dash.audio.length; i++) {
+                    if (!path.dash.audio[i].baseUrl && path.dash.audio[i].base_url) path.dash.audio[i].baseUrl = path.dash.audio[i].base_url;
+                    if (!path.dash.audio[i].backupUrl && path.dash.audio[i].backup_url) path.dash.audio[i].backupUrl = path.dash.audio[i].backup_url;
                     if (path.dash.audio[i].backupUrl && path.dash.audio[i].backupUrl[0]) {
                         path.dash.audio[i].backupUrl.push(path.dash.audio[i].baseUrl);
                         path.dash.audio[i].baseUrl = BLOD.randomArray(path.dash.audio[i].backupUrl)[0];
                     }
                     BLOD.mdf.dash.aac = BLOD.mdf.dash.aac || [];
-                    BLOD.mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8), ".m4a"]);
+                    BLOD.mdf.dash.aac.push([path.dash.audio[i].id, path.dash.audio[i].baseUrl.replace("http:", ""), BLOD.sizeFormat(path.dash.audio[i].bandwidth * path.dash.duration / 8) || "N/A", ".m4a"]);
                 }
                 BLOD.mdf.dash.aac = BLOD.bubbleSort(BLOD.mdf.dash.aac).reverse();
                 for (let i = 0; i < BLOD.mdf.dash.aac.length; i++) if (BLOD.mdf.dash.aac[i][0] in this.bps) BLOD.mdf.dash.aac[i][0] = this.bps[BLOD.mdf.dash.aac[i][0]];
@@ -316,12 +327,14 @@
          */
         durl(path) {
             if (!path.durl) return;
-            if (path.durl[0] && path.durl[0].url.includes("mp4?")) {
-                BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
-                BLOD.mdf.mp4.push([this.qua[path.quality], path.durl[0].url.replace("http:", ""), BLOD.sizeFormat(path.durl[0].size), ".mp4"]);
-            } else {
-                BLOD.mdf.flv = [];
-                for (let i = 0; i < path.durl.length; i++) BLOD.mdf.flv.push([this.qua[path.durl[i].url.match(/[0-9]+\.flv/)[0].split(".")[0]], path.durl[i].url.replace("http:", ""), BLOD.sizeFormat(path.durl[i].size), ".flv"]);
+            if (path.durl[0]) {
+                if (path.durl[0].url.includes("mp4?")) {
+                    BLOD.mdf.mp4 = BLOD.mdf.mp4 || [];
+                    BLOD.mdf.mp4.push([this.qua[path.quality], path.durl[0].url.replace("http:", ""), BLOD.sizeFormat(path.durl[0].size) || "N/A", ".mp4"]);
+                } else {
+                    BLOD.mdf.flv = [];
+                    for (let i = 0; i < path.durl.length; i++) BLOD.mdf.flv.push([this.qua[path.durl[i].url.match(/[0-9]+\.flv/)[0].split(".")[0]], path.durl[i].url.replace("http:", ""), BLOD.sizeFormat(path.durl[i].size) || "N/A", ".flv"]);
+                }
             }
         }
         /**
@@ -335,13 +348,13 @@
                 BLOD.bloburl.xml = URL.createObjectURL(blob);
                 BLOD.mdf.xml.push(["弹幕", BLOD.bloburl.xml, BLOD.sizeFormat(blob.size), ".xml"]);
             } else {
-                BLOD.mdf.xml.push(["弹幕", "//api.bilibili.com/x/v1/dm/list.so?oid=" + BLOD.cid, "--------", ".xml"]);
+                BLOD.mdf.xml.push(["弹幕", "//api.bilibili.com/x/v1/dm/list.so?oid=" + BLOD.cid, BLOD.sizeFormat(), ".xml"]);
             }
             if (BLOD.__INITIAL_STATE__) {
-                BLOD.mdf.xml.push(["封面", (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.pic || BLOD.__INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), "--------", ".jpg"]);
-                if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), "--------", ".jpg"]);
-                if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.specialCover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.specialCover.replace("http:", ""), "--------"], ".jpg");
-                if (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.subtitle && BLOD.__INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < BLOD.__INITIAL_STATE__.videoData.subtitle.list.length; i++) BLOD.mdf.xml.push([BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), "--------", ".json"]);
+                BLOD.mdf.xml.push(["封面", (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.pic || BLOD.__INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
+                if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
+                if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.specialCover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.specialCover.replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
+                if (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.subtitle && BLOD.__INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < BLOD.__INITIAL_STATE__.videoData.subtitle.list.length; i++) BLOD.mdf.xml.push([BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), BLOD.sizeFormat(), ".json"]);
             }
         }
         /**
@@ -378,6 +391,9 @@
                     break;
                 case 'mp4': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
                     return BLOD.urlSign("https://app.bilibili.com/v2/playurlproj", { cid: BLOD.cid, otype: 'json', platform: 'android_i', qn: 208 });
+                    break;
+                case 'tv': if (BLOD.pgc) return BLOD.urlSign("https://api.bilibili.com/pgc/player/api/playurltv", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80, platform: "android", mobi_app: "android_tv_yst", build: 102801 });
+                    return BLOD.objUrl("https://api.bilibili.com/x/tv/ugc/playurl", { avid: BLOD.aid, cid: BLOD.cid, qn: qn, fourk: 1, otype: 'json', fnver: 0, fnval: 80, platform: "android", mobi_app: "android_tv_yst", build: 102801 });
                     break;
             }
         }
@@ -419,15 +435,16 @@
                 a.innerHTML = '<div class="download-quality ' + quatily + '">' + d[0] + '</div><div class="download-size">' + d[2] + '</div>';
                 if (window.self == window.top && BLOD.config.reset.ef2 && name != "其他") {
                     a.href = "javaScript:void(0);";
-                    a.onclick = () => { this.ef2Set(d); return false; }
+                    a.onclick = () => { this.ef2Set(d, this.config[name]); return false; }
                 }
             })
         }
         /**
          * 绘制ef2面板
          * @param {[]} item 预先构造的下载数据：0，画质；1，URL；2，大小；3：拓展名
+         * @param {{}} [para] 预配置的ef2参数：user-agent、referer……
          */
-        ef2Set(item) {
+        ef2Set(item, para = {}) {
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -451,6 +468,7 @@
                 this.config.r = d6.value;
                 this.config.o = d7.value;
                 this.config.s = d8.value;
+                if (para.hasOwnProperty("c")) this.config.c = para.c;
                 let url = BLOD.ef2.encode(this.config);
                 db.href = url;
                 db.innerHTML = BLOD.ef2.data;
@@ -466,11 +484,11 @@
             d4.readonly = "readonly";
             d5.innerHTML = 'User Agent<input type="text" placeholder="UA必须有效！" title="一般输入浏览器UA即可" />';
             d5 = d5.children[0];
-            d5.value = (this.config.a || navigator.userAgent).replace(/\"/g, "");
+            d5.value = (para.a || this.config.a || navigator.userAgent).replace(/\"/g, "");
             d5.oninput = () => { this.flash() };
             d6.innerHTML = 'Referer<input type="text" placeholder="Referer必须在B站域名下" title="不妨使用B站顶级域名" />';
             d6 = d6.children[0];
-            d6.value = this.config.r || "https://www.bilibili.com/";
+            d6.value = para.hasOwnProperty("r") ? para.r : (this.config.r || "https://www.bilibili.com/");
             d6.oninput = () => { this.flash() };
             d7.innerHTML = '保存位置<input type="text"  placeholder="Windows用的反斜杠地址，可以不填！" title="可以不填，后面IDM对话框操作更方便" />';
             d7 = d7.children[0];
