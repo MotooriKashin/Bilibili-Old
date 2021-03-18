@@ -2,7 +2,7 @@
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面。
 尽量调用 B 站原生脚本进行重写，再尝试修复一些失效功能。  
-版本更新时部分涉及原生脚本的修改以及其他模块的改进由于 CDN 可能会有 24h 以内的延迟。
+版本更新时部分涉及原生脚本的修改以及其他模块的改进由于 CDN 可能会有 24h 以内的延迟。*其实可以使用`purge`立即刷新，详见[模块问题](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src)*
 
 ---
 
