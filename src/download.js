@@ -246,7 +246,6 @@
             if (BLOD.mdf.flv) this.addBox(top, BLOD.mdf.flv, "flv", "download-flv");
             if (BLOD.mdf.xml) this.addBox(top, BLOD.mdf.xml, "其他", "download-xml", "360P");
             document.body.appendChild(top);
-            toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！", "直接左键点击无效！")
             top.onmouseover = () => window.clearTimeout(timer);
             top.onmouseout = () => {
                 timer = window.setTimeout(() => {
@@ -257,6 +256,8 @@
                     }
                 }, 1000)
             }
+            if (window.self == window.top && BLOD.config.reset.ef2) return toast.success("点击对应链接进入ef2下载面板", "没有 ef2 + IDM 请在设置里关闭ef2功能");
+            return toast.success("请右键复制下载或者右键IDM下载链接", "直接复制链接无效！直接左键点击无效！", "下载 -403 可尝试在设置里启用 ef2 功能")
         }
         /**
          * 读取远程数据
