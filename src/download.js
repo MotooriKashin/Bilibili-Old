@@ -176,6 +176,7 @@
          */
         async custom(url) {
             if (url && !url.includes("?")) url = "?" + url;
+            if (this.data) this.data = undefined;
             let obj = BLOD.urlObj(url);
             BLOD.pgc = undefined;
             this.aid = url.match(/[aA][vV][0-9]+/) ? url.match(/[aA][vV][0-9]+/)[0].match(/\d+/)[0] : undefined;
