@@ -189,7 +189,7 @@
 
 #bili-old-download-table {
   position: fixed;
-  z-index: 3300;
+  z-index: 11113;
   bottom: 0;
   background: #f6f6f6;
   width: 100%;
@@ -389,7 +389,7 @@
   cursor: initial;
   box-shadow: rgb(0 0 0 / 20%) 0 4px 8px 0;
   padding: 8px;
-  z-index: 10010;
+  z-index: 11114;
   transition: .3s cubic-bezier(.18, .89, .32, 1.28);
   max-width: 320px;
 }
