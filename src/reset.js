@@ -1355,7 +1355,10 @@
                 }
                 if (this.aid && this.cid) {
                     BLOD.getSegDanmaku(this.aid, this.cid).then(d => {
-                        console.log("弹幕数据", d);
+                        BLOD.toXml(d).then(d => {
+                            toast("在线弹幕：aid=" + this.aid + " cid=" + this.cid, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
+                            BLOD.loadLocalDm(d, config.reset.concatDanmaku);
+                        })
                     })
                 } else {
                     toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！");
