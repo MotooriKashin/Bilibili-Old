@@ -435,40 +435,50 @@
         });
     }
     /**
-     * 请求该视频所有的分段弹幕
-     * @param  {Function} onload 得到所有弹幕之后触发的回调函数
+     * 获取 proto 弹幕
+     * @param {number} [aid] 弹幕所对应视频的 aid，当前视频请留空
+     * @param {number} [cid] 弹幕所对应视频的 cid，当前视频请留空
+     * @returns {Promise<[{}]>} 弹幕数组：Promise
      */
-    const getSegDanmaku = (onload) => {
-        let request = (url) => BLOD.xhr.true(url, "arraybuffer", {}, false);
-        let DmWebViewReply = "https://api.bilibili.com/x/v2/dm/web/view?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid
-        request(DmWebViewReply).then(getAllSeg).catch((e) => {
-            toast.error("载入弹幕失败", "请尝试刷新页面");
-            toast.error(e);
-        });
-        // 获得所有分段
-        function getAllSeg(config) {
+    const getSegDanmaku = BLOD.getSegDanmaku = async (aid = BLOD.aid, cid = BLOD.cid) => {
+        try {
+            // 判断参数是否有效
+            aid = aid || BLOD.aid;
+            cid = cid || BLOD.cid;
+            if (!aid || !cid) throw ["弹幕参数错误！", "aid：" + aid, "cid：" + cid];
+            // 首先获取弹幕分片总数
+            let config = await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/view", {
+                type: 1,
+                oid: cid,
+                pid: aid
+            }), "arraybuffer", {}, false);
             config = protoView.decode(new Uint8Array(config));
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
             let total = window.player.getDuration() / pageSize + 1;
-            let allrequset = [];
-            let reqUrl = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid;
+            let allrequset = [], allDanmaku = [];
             for (let index = 1; index <= total; index++) {
-                allrequset.push(request(reqUrl + "&segment_index=" + index));
+                allrequset.push(BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
+                    type: 1,
+                    oid: cid,
+                    pid: aid,
+                    segment_index: index
+                }), "arraybuffer", {}, false));
             }
             // BAS弹幕
             if (config.specialDms.length > 0) {
                 for (let index = 0; index < config.specialDms.length; index++) {
                     // 下发的是http链接，但会被chrome的安全措施拦掉，于是替换成https
-                    allrequset.push(request(config.specialDms[index].replace("http", "https")));
+                    allrequset.push(BLOD.xhr(config.specialDms[index].replace("http", "https"), "arraybuffer", {}, false));
                 }
             }
-            // 完成所有的网络请求大概要300ms
-            return Promise.all(allrequset).then((segments) => {
-                onload(segments);
+            // 解码弹幕
+            (await Promise.all(allrequset)).forEach(d => {
+                if (d) allDanmaku = allDanmaku.concat(protoSeg.decode(new Uint8Array(d)).elems);
             });
-        }
+            return allDanmaku;
+        } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("获取新版弹幕", ...e); }
     }
     /**
      * 加载本地弹幕
@@ -745,13 +755,9 @@
                 if (aMessage.url && aMessage.url.includes("list.so")) {
                     list_so = this;
                     loadTime = new Date();
-                    let Segments = [];
-                    getSegDanmaku(function (protoSegments) {
+                    getSegDanmaku().then(Segments => {
                         loadTime = new Date() - loadTime;
                         parseTime = new Date();
-                        protoSegments.forEach(function (seg) {
-                            Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems);
-                        });
                         // 将弹幕转换为旧格式
                         let danmaku = Segments.map(function (v) {
                             return {
@@ -772,7 +778,6 @@
                         }
                         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
                         parseTime = new Date() - parseTime;
-
                         list_so.onmessage({
                             data: {
                                 code: 0,
@@ -786,7 +791,7 @@
                             }
                         });
                         toXml(Segments).then((result) => (BLOD.xml = result));
-                    });
+                    })
                 } else {
                     workerPostMsg.call(this, aMessage, transferList);
                 }
@@ -1158,11 +1163,8 @@
             xhr.readyState = 4;
             xhr.status = 200;
             xhr.abort();
-            getSegDanmaku((protoSegments) => {
-                let Segments = [];
-                protoSegments.forEach(seg => (Segments = Segments.concat(protoSeg.decode(new Uint8Array(seg)).elems)));
-                toXml(Segments).then((xml) => xhr.respondDanmaku(xml));
-            });
+            let Segments = await getSegDanmaku();
+            toXml(Segments).then((xml) => xhr.respondDanmaku(xml));
         }
         /**
          * 模拟playurl响应
