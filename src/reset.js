@@ -1385,7 +1385,7 @@
             this.div.innerHTML = `<a href=${BLOD.bloburl.xml} target="_blank" download="${this.cid}.xml">获取在线弹幕成功，可以右键另存为文件！</a>`;
             if (BLOD.cid && window.player) {
                 let config = BLOD.getValue("onlineDanmaku") || {};
-                config[this.cid] = [this.aid, this.cid];
+                config[BLOD.cid] = [this.aid, this.cid];
                 BLOD.setValue("onlineDanmaku", config);
             }
         }
