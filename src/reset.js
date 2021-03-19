@@ -1282,6 +1282,7 @@
          * @param {HTMLElement} [right] 用于创建下载所获得弹幕所在的父节点
          */
         constructor(url, right) {
+            toast("正在解析链接：" + url);
             if (url && !url.includes("?")) url = "?" + url;
             this.url = url;
             this.obj = BLOD.urlObj(url);
@@ -1291,7 +1292,6 @@
                 window.URL.revokeObjectURL(BLOD.bloburl.xml);
                 BLOD.bloburl.xml = "";
             }
-            toast("正在解析链接：" + this.url);
             this.init(url);
         }
         async init() {
@@ -1385,7 +1385,7 @@
             this.div.innerHTML = `<a href=${BLOD.bloburl.xml} target="_blank" download="${this.cid}.xml">获取在线弹幕成功，可以右键另存为文件！</a>`;
             if (BLOD.cid && window.player) {
                 let config = BLOD.getValue("onlineDanmaku") || {};
-                config.cid = [this.aid, this.cid];
+                config[this.cid] = [this.aid, this.cid];
                 BLOD.setValue("onlineDanmaku", config);
             }
         }
