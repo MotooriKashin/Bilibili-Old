@@ -137,17 +137,19 @@
          * 创建输入框
          * @param {string} name 输入框前面的提示文字
          * @param {string} [type] 输入框类型，text、url、file、checkbox。。。
-         * @param {string} [placeholder] 输入框预显示文本
+         * @param {string} [placeholder] 输入框置空时显示的文本
+         * @param {string} [value] 输入框预显示的文本
          * @param {string} [button] 输入框按钮上的文字
          * @param {string} [toast] 鼠标移到输入框时显示的提示
          * @param {Function} [callback] 输入框输入文本处理程序
          */
-        input(name, type = "text", placeholder = "", button = "确认", toast, callback) {
+        input(name, type = "text", placeholder = "", value = "", button = "确认", toast, callback) {
             let custom = BLOD.addElement("div", {}, this.right);
             custom.innerHTML = `${name}<input type="${type}" placeholder="${placeholder}"> <button>${button}</button>`;
             if (toast) this.state(custom, toast);
             let commit = custom.querySelector("button");
             let input = custom.querySelector("input");
+            if (value) input.value = value;
             if (callback) {
                 commit.onclick = () => callback(input.value);
                 input.onkeydown = (e) => {
@@ -161,7 +163,9 @@
         danmaku() {
             if (window.player && BLOD.path.name) {
                 // 载入本地弹幕（仅当播放器存在时）
-                this.input("载入其他视频弹幕", "url", "av2", "载入", "为当前视频载入其他视频弹幕，请输入对应视频链接</br>支持短链接，如av50619577或者ss3398</br>也支持参数形式，如aid=50619577或者ssid=3398", (value) => {
+                let config = BLOD.getValue("onlineDanmaku") || {};
+                let value = (BLOD.cid && config[BLOD.cid]) ? "aid=" + config[BLOD.cid][0] + "&cid=" + config[BLOD.cid][1] : "";
+                this.input("载入其他视频弹幕", "url", "av2", value, "载入", "为当前视频载入其他视频弹幕，请输入对应视频链接</br>支持短链接，如av50619577或者ss3398</br>也支持参数形式，如aid=50619577或者ssid=3398", (value) => {
                     new BLOD.onlineDanmaku(value, this.right);
                 })
             }
@@ -180,7 +184,7 @@
                 this.checked("dlother");
                 this.checked("novideo");
                 this.checked("ef2");
-                this.input("自定义链接", "url", "http://www.example.com", "下载", "输入视频所在链接URL，回车或者点击“下载”按钮即可</br>暂不支持获取弹幕等其他信息", (value) => {
+                this.input("自定义链接", "url", "http://www.example.com", "", "下载", "输入视频所在链接URL，回车或者点击“下载”按钮即可</br>暂不支持获取弹幕等其他信息", (value) => {
                     if (!BLOD.download) new Function(BLOD.getResourceText("download"))();
                     if (value) BLOD.download(value);
                     else toast.warning("请输入有效的视频链接", "</br>支持短链接，如av50619577或者ss3398", "也支持参数形式，如aid=50619577或者ssid=3398");

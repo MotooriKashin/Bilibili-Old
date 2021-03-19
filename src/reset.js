@@ -1286,10 +1286,12 @@
             this.url = url;
             this.obj = BLOD.urlObj(url);
             this.node = right;
+            if (document.querySelector("#BLOD-dm-dl")) document.querySelector("#BLOD-dm-dl").remove();
             if (BLOD.bloburl.xml) {
                 window.URL.revokeObjectURL(BLOD.bloburl.xml);
                 BLOD.bloburl.xml = "";
             }
+            toast("正在解析链接：" + this.url);
             this.init(url);
         }
         async init() {
@@ -1368,7 +1370,7 @@
                         })
                     })
                 } else {
-                    toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！");
+                    toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！", "若是第三方接口抽风也可重试看看");
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("在线弹幕", ...e); }
         }
@@ -1377,10 +1379,15 @@
          * @param {string} xml xml格式的弹幕文件
          */
         async download(xml) {
-            this.div = BLOD.addElement("div", {}, this.node);
+            this.div = BLOD.addElement("div", { id: "BLOD-dm-dl" }, this.node);
             this.blob = new Blob([xml]);
             BLOD.bloburl.xml = URL.createObjectURL(this.blob);
             this.div.innerHTML = `<a href=${BLOD.bloburl.xml} target="_blank" download="${this.cid}.xml">获取在线弹幕成功，可以右键另存为文件！</a>`;
+            if (BLOD.cid && window.player) {
+                let config = BLOD.getValue("onlineDanmaku") || {};
+                config.cid = [this.aid, this.cid];
+                BLOD.setValue("onlineDanmaku", config);
+            }
         }
     }
     BLOD.onlineDanmaku = OnlineDanmaku;
