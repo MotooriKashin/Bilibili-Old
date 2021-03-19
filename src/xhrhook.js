@@ -458,6 +458,8 @@
             let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
             let total = (window.player && window.player.getDuration && (window.player.getDuration() / pageSize + 1)) || config.dmSge.total;
             let allrequset = [], allDanmaku = [];
+            // 其他视频的分片总数已经不能从当前window下获取
+            if (BLOD.aid && (aid != BLOD.aid)) total = config.dmSge.total;
             for (let index = 1; index <= total; index++) {
                 allrequset.push(BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
                     type: 1,
