@@ -99,7 +99,7 @@
          * 切p监听
          */
         switchVideo: async () => {
-            if (config.reset.localDanmaku) setTimeout(() => { new LocalDm() }, 1000)
+            if (config.reset.localDanmaku) setTimeout(() => { new LocalDanmaku() }, 1000)
             if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
             if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; };
@@ -1127,7 +1127,7 @@
     BLOD.reset.parameterTrim = (a) => { return parameterTrim.run(a) };
 
     // 载入本地弹幕
-    class LocalDm {
+    class LocalDanmaku {
         constructor() {
             if (document.querySelector("#local-danmaku")) return;
             this.element = '<label class="button" role="button" title="载入本地弹幕">本地弹幕<input id="local-danmaku" type="file" accept=".xml" /></label>';
@@ -1221,6 +1221,7 @@
         }
     }
 
+    // 弹幕反查
     class DanmkuHashId {
         /**
          * 反差弹发送者信息
@@ -1272,4 +1273,95 @@
         let check = new DanmkuHashId(crc);
         return "hash: " + check[0] + " mid: " + check[1];
     }
+
+    // 在线弹幕
+    class OnlineDanmaku {
+        /**
+         * 所需获取弹幕的对应链接
+         * @param {string} url 所需获取弹幕的对应链接
+         */
+        constructor(url) {
+            if (url && !url.includes("?")) url = "?" + url;
+            this.url = url;
+            this.obj = BLOD.urlObj(url);
+            this.init(url);
+        }
+        async init() {
+            // 从所有可能的aid形式中获取aid
+            this.aid = this.url.match(/[aA][vV][0-9]+/) ? this.url.match(/[aA][vV][0-9]+/)[0].match(/\d+/)[0] : undefined;
+            this.aid = this.aid || this.obj.aid || undefined;
+            this.aid = this.aid || (/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/.test(this.url) ? BLOD.abv(this.url.match(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/)[0]) : undefined);
+            this.aid = this.aid || (this.obj.bvid ? BLOD.abv(this.obj.bvid) : undefined);
+            try {
+                if (this.aid) {
+                    // 直接能获取aid的情况，尝试获取cid
+                    this.cid = this.obj.cid || undefined;
+                    if (!this.cid) {
+                        this.p = this.obj.p || 1;
+                        try {
+                            // 尝试访问B站服务器获取信息
+                            this.data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": this.aid }))).data[this.p - 1];
+                            this.cid = this.data.cid;
+                            toast("正在请求av视频数据", "分P名称：" + this.data.part);
+                        } catch (e) {
+                            e = Array.isArray(e) ? e : [e];
+                            debug.error("获取视频信息出错：aid：" + this.aid, "HOST：https://api.bilibili.com/x/player/pagelist", ...e);
+                            try {
+                                // 尝试访问BIliPlus获取信息
+                                this.data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://www.biliplus.com/api/view", { "id": this.aid })));
+                                this.data = (this.data.list && this.data.list[this.p - 1]) || (this.data.v2_app_api && this.data.v2_app_api.pages && this.data.v2_app_api.pages[this.p - 1]);
+                                this.cid = this.data.cid;
+                                toast("正在请求av视频数据", "分P名称：" + this.data.part);
+                            } catch (e) {
+                                e = Array.isArray(e) ? e : [e];
+                                debug.error("获取视频信息出错：aid：" + this.aid, "HOST：https://www.biliplus.com/api/view", ...e);
+                            }
+                        }
+                    }
+                } else {
+                    // 输入的是番剧ss/ep链接的情况，尝试获取aid、cid
+                    this.ssid = this.url.match(/[sS][sS][0-9]+/) ? this.url.match(/[sS][sS][0-9]+/)[0].match(/\d+/)[0] : undefined;
+                    this.ssid = this.ssid || this.obj.season_id || undefined;
+                    this.epid = this.url.match(/[eE][pP][0-9]+/) ? this.url.match(/[eE][pP][0-9]+/)[0].match(/\d+/)[0] : undefined;
+                    this.epid = this.epid || this.obj.ep_id || undefined;
+                    try {
+                        // 尝试访问bangumi接口
+                        if (this.epid) this.data = await BLOD.xhr(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: this.ssid }));
+                        else if (this.ssid) this.data = await BLOD.xhr(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: this.epid }));
+                        if (this.data) {
+                            this.data = BLOD.iniState.bangumi(this.data, this.epid);
+                            this.aid = this.data.epInfo.aid;
+                            this.cid = this.data.epInfo.cid;
+                            toast("正在请求Bangumi数据", "系列名称：" + this.data.mediaInfo.title, "分p名称：" + this.data.epInfo.index_title);
+                        }
+                    } catch (e) {
+                        e = Array.isArray(e) ? e : [e];
+                        if (this.epid) debug.error("获取视频信息出错：ssid：" + this.ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                        else if (this.ssid) debug.error("获取视频信息出错：ssid：" + this.ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                        try {
+                            // 尝试访问泰区接口，需要泰区代理服务器或者节点
+                            let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
+                            if (this.epid) {
+                                this.data = await BLOD.xhr(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { ep_id: this.epid }));
+                            } else if (this.ssid) {
+                                this.data = await BLOD.xhr(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { season_id: this.ssid }));
+                            }
+                            this.data = BLOD.iniState.thaiBangumi(this.data, this.epid);
+                            this.aid = this.data.epInfo.aid;
+                            this.cid = this.data.epInfo.cid;
+                            toast("正在请求Bangumi数据", "系列名称：" + this.data.mediaInfo.title, "分p名称：" + this.data.epInfo.index_title);
+                        } catch (e) { }
+                    }
+                }
+                if (this.aid && this.cid) {
+                    BLOD.getSegDanmaku(this.aid, this.cid).then(d => {
+                        console.log("弹幕数据", d);
+                    })
+                } else {
+                    toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！");
+                }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("在线弹幕", ...e); }
+        }
+    }
+    BLOD.onlineDanmaku = OnlineDanmaku;
 })()

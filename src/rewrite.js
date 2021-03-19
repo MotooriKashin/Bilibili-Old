@@ -86,7 +86,7 @@
                             data = BLOD.xhr.false(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { ep_id: location.href.match(/[0-9]+/)[0] }));
                         }
                         BLOD.__INITIAL_STATE__ = BLOD.iniState.thaiBangumi(data, id);
-                        BLOD.limit = 2;
+                        BLOD.limit = 1;
                     } catch (no) { throw e }
                 }
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
