@@ -1279,11 +1279,17 @@
         /**
          * 所需获取弹幕的对应链接
          * @param {string} url 所需获取弹幕的对应链接
+         * @param {HTMLElement} [right] 用于创建下载所获得弹幕所在的父节点
          */
-        constructor(url) {
+        constructor(url, right) {
             if (url && !url.includes("?")) url = "?" + url;
             this.url = url;
             this.obj = BLOD.urlObj(url);
+            this.node = right;
+            if (BLOD.bloburl.xml) {
+                window.URL.revokeObjectURL(BLOD.bloburl.xml);
+                BLOD.bloburl.xml = "";
+            }
             this.init(url);
         }
         async init() {
@@ -1357,6 +1363,7 @@
                     BLOD.getSegDanmaku(this.aid, this.cid).then(d => {
                         BLOD.toXml(d).then(d => {
                             toast("在线弹幕：aid=" + this.aid + " cid=" + this.cid, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
+                            this.download(d);
                             BLOD.loadLocalDm(d, config.reset.concatDanmaku);
                         })
                     })
@@ -1364,6 +1371,16 @@
                     toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！");
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("在线弹幕", ...e); }
+        }
+        /**
+         * 回显弹幕链接到设置面板
+         * @param {string} xml xml格式的弹幕文件
+         */
+        async download(xml) {
+            this.div = BLOD.addElement("div", {}, this.node);
+            this.blob = new Blob([xml]);
+            BLOD.bloburl.xml = URL.createObjectURL(this.blob);
+            this.div.innerHTML = `<a href=${BLOD.bloburl.xml} target="_blank" download="${this.cid}.xml">获取在线弹幕成功，可以右键另存为文件！</a>`;
         }
     }
     BLOD.onlineDanmaku = OnlineDanmaku;

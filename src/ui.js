@@ -162,7 +162,7 @@
             if (window.player && BLOD.path.name) {
                 // 载入本地弹幕（仅当播放器存在时）
                 this.input("载入其他视频弹幕", "url", "av2", "载入", "为当前视频载入其他视频弹幕，请输入对应视频链接</br>支持短链接，如av50619577或者ss3398</br>也支持参数形式，如aid=50619577或者ssid=3398", (value) => {
-                    new BLOD.onlineDanmaku(value);
+                    new BLOD.onlineDanmaku(value, this.right);
                 })
             }
         }
