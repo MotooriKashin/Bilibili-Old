@@ -1,4 +1,4 @@
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-pass-green.svg?longCache=true) ![Chrome 87](https://img.shields.io/badge/Google_Chrome_87-pass-green.svg?longCache=true) ![Firefox 83](https://img.shields.io/badge/Mozilla_Firefox_83-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-pass-green.svg?longCache=true) ![Chrome 89](https://img.shields.io/badge/Google_Chrome_89-pass-green.svg?longCache=true) ![Firefox 83](https://img.shields.io/badge/Mozilla_Firefox_83-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.10-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面。
 尽量调用 B 站原生脚本进行重写，再尝试修复一些失效功能。  
@@ -38,6 +38,7 @@
   - 修复旧版播放器实时弹幕
   - 修正旧版播放器高级/字幕/BAS弹幕
   - 旧版播放器支持载入本地弹幕文件
+  - 旧版播放器支持载入其他视频弹幕
   - 历史记录页面只显示视频历史
   - 反查弹幕发送者信息
   - 自动宽频
@@ -116,8 +117,8 @@ _以下问题这里可能处于并将长期处于无法解决状态，请多担�
 
 ```
 Microsoft Windows 8 (Build 6.2.9200.16384) （64 位）
-Google Chrome 88.0.4324.190 (正式版本) （64 位） (cohort: Stable)
-Tampermonkey BETA 4.10.6128
+Google Chrome 89.0.4389.90 (正式版本) （64 位） (cohort: Stable)
+Tampermonkey BETA 4.10.6132
 ```
 
 平台
@@ -224,6 +225,8 @@ Tampermonkey BETA 4.10.6128
 **注：部分功能可能需要先在设置里启用！**
 
 <pre>
+- 2021-03-19
+  - 支持载入其他视频弹幕，包括已失效的视频。
 - 2021-03-16
   - 弹幕反查支持滚动弹幕，BAS、代码弹幕这些不触发右键菜单的除外
   - 优化播放器右键下载视频实现，不在右键弹幕时呼出

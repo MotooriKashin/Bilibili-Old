@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.5.8
+// @version      4.5.9
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -25,15 +25,15 @@
 // @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
 // @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/initialstate.js
-// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ui.js
+// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6ea9f9fc58b8b22ba9062438016954dbf317af23/src/ui.js
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
-// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/download.js
+// @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@096fab8395293ecfa3de660958b98c26646336e7/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/define.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/rewrite.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhrhook.js
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/config.json
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@d187a7aae02e8326ee201987296289ea34506eae/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@9688223b785a8c8bafd97d7d6a0f7749983ddeaf/src/reset.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ed56e920e4de88574cc837f5dc9e610c149e5ccc/src/xhrhook.js
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@f6c19c89100673e518b4825a0dabe12c42254a88/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     search https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/search.json
