@@ -1550,10 +1550,9 @@
         async done(boolean) {
             try {
                 // 历史弹幕里不包含代码弹幕必须额外处理
-                toast("正在获取BAS/代码弹幕专宝。。。")
-                this.danmaku = this.danmaku.concat(await BLOD.getSegDanmaku());
+                toast("正在获取BAS/代码弹幕专包。。。")
+                this.danmaku = this.danmaku.concat(await BLOD.getSegDanmaku(undefined, undefined, true));
                 toast("数据返回！正在整合。。。")
-                this.danmaku = Array.from(new Set(this.danmaku));
             } catch (e) { }
             let danmaku = AllDanmaku.format(this.danmaku, BLOD.aid);
             if (boolean) toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + BLOD.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");

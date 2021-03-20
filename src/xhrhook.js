@@ -438,9 +438,10 @@
      * 获取 proto 弹幕
      * @param {number} [aid] 弹幕所对应视频的 aid，当前视频请留空
      * @param {number} [cid] 弹幕所对应视频的 cid，当前视频请留空
+     * @param {boolean} [bas] 是否只获取BAS/代码弹幕，默认请留空
      * @returns {Promise<[{}]>} 弹幕数组：Promise
      */
-    const getSegDanmaku = BLOD.getSegDanmaku = async (aid = BLOD.aid, cid = BLOD.cid) => {
+    const getSegDanmaku = BLOD.getSegDanmaku = async (aid = BLOD.aid, cid = BLOD.cid, bas = false) => {
         try {
             // 判断参数是否有效
             aid = aid || BLOD.aid;
@@ -460,13 +461,16 @@
             let allrequset = [], allDanmaku = [];
             // 其他视频的分片总数已经不能从当前window下获取
             if (BLOD.aid && (aid != BLOD.aid)) total = config.dmSge.total;
-            for (let index = 1; index <= total; index++) {
-                allrequset.push(BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
-                    type: 1,
-                    oid: cid,
-                    pid: aid,
-                    segment_index: index
-                }), "arraybuffer", {}, false));
+            if (!bas) {
+                // 特殊情况下只需要BAS/高级弹幕时 bas为真
+                for (let index = 1; index <= total; index++) {
+                    allrequset.push(BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
+                        type: 1,
+                        oid: cid,
+                        pid: aid,
+                        segment_index: index
+                    }), "arraybuffer", {}, false));
+                }
             }
             // BAS弹幕
             if (config.specialDms.length > 0) {
