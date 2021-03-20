@@ -952,7 +952,8 @@
             window.setInterval = (...args) => {
                 if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){e.triggerSleepCallback()}") {
                     if (!this.clock) {
-                        toast.warning("成功阻止直播间挂机检测！", ...args);
+                        toast.warning("成功阻止直播间挂机检测！");
+                        debug(...args);
                         this.clock++;
                     }
                     return Number.MIN_VALUE;
@@ -1403,9 +1404,18 @@
 
     // 全弹幕装填
     class AllDanmaku {
-        constructor(delay) {
+        /**
+         * 全弹幕入口
+         * @param {number} delay 接口冷却时间，单位：秒
+         * @param {HTMLElement} [button] 调用按钮，用于获取中临时禁用
+         * @returns 返回函数本身，操作都在异步了所以返回值意义不大
+         */
+        constructor(delay, button) {
             this.delay = delay || 5;
-            toast("正常尝试获取全部弹幕...", "获取延时请尽量调大，以免短时间内大量请求被临时封端口！");
+            this.button = button;
+            // 异步获取中，临时禁用按钮
+            this.button && this.button.setAttribute("disabled", true);
+            toast("正常尝试获取全部弹幕请耐心等待。。。", "获取延时请尽量调大，以免短时间内大量请求被临时封端口！");
             this.pubdate = new Date(2009, 0);
             if (window.__INITIAL_STATE__) {
                 if (window.__INITIAL_STATE__.videoData && window.__INITIAL_STATE__.videoData.pubdate) {
@@ -1425,19 +1435,23 @@
             if (!this.pubdate) return toast.warning("投稿日期获取失败！无法获取全部弹幕！");
             this.init();
         }
+        /**
+         * 按日期拉取弹幕
+         * @returns 调用月份判断
+         */
         async init() {
             try {
                 // 获取当日日期
                 this.arrT = this.time.split("-");
                 // 如果年份小于投稿日，说明获取成功
-                if (this.arrT[0] < this.arrP[0]) return this.done();
+                if (this.arrT[0] < this.arrP[0]) return this.done(1);
                 // 年份相等但月份小于投稿日说明获取成功
-                if (this.arrT[0] == this.arrP[0] && this.arrT[1] < this.arrP[1]) return this.done();
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] < this.arrP[1]) return this.done(1);
                 // 年月都相等，但日期小于投稿日说明获取成功
-                if (this.arrT[0] == this.arrP[0] && this.arrT[1] == this.arrP[1] && this.arrT[2] <= this.arrP[2]) return this.done();
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] == this.arrP[1] && this.arrT[2] < this.arrP[2]) return this.done(1);
                 // 日期未早于投稿日，正常请求日期数据
                 toast("正在获取 " + this.time + " 日的弹幕。。。", "已获取弹幕数：" + BLOD.unitFormat(this.danmaku.length));
-                let danmaku = await BLOD.getHistoryDanmaku(this.time);
+                let danmaku = (this.time == this.today) ? await BLOD.getSegDanmaku() : await BLOD.getHistoryDanmaku(this.time);
                 danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? -1 : 1));
                 // 取最早一条弹幕的时间
                 this.time = BLOD.timeFormat(danmaku[danmaku.length - 1].ctime * 1000, 1).split(" ")[0];
@@ -1446,27 +1460,33 @@
                 // 如果当天不是投稿日，转入月份请求
                 if (this.pubdate != this.today) return this.month();
                 // 否则结束弹幕获取，当前弹幕就是能获取到的全弹幕
-                this.done();
+                this.done(1);
             } catch (e) {
                 e = Array.isArray(e) ? e : [e];
                 toast.error("全弹幕装填", ...e);
                 // 弹幕获取出错，载入已获取的弹幕
                 if (this.danmaku[0]) {
                     toast.warning("弹幕获取出错！", "保留并载入已获取的弹幕");
-                    this.done();
+                    this.done(false);
                 } else {
+                    // 失败退出，取消按钮禁用
+                    this.button && this.button.removeAttribute("disabled");
                     toast.error("弹幕获取出错！", "已退出！");
                 }
             }
         }
+        /**
+         * 按月份判断有弹幕时间
+         * @returns 调用获取日期弹幕或者循环月份判断
+         */
         async month() {
             try {
                 // 如果年份小于投稿日，说明获取成功
-                if (this.arrT[0] < this.arrP[0]) return this.done();
+                if (this.arrT[0] < this.arrP[0]) return this.done(1);
                 // 年份相等但月份小于投稿日说明获取成功
-                if (this.arrT[0] == this.arrP[0] && this.arrT[1] < this.arrP[1]) return this.done();
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] < this.arrP[1]) return this.done(1);
                 // 年月都相等，但日期小于投稿日说明获取成功
-                if (this.arrT[0] == this.arrP[0] && this.arrT[1] == this.arrP[1] && this.arrT[2] <= this.arrP[2]) return this.done();
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] == this.arrP[1] && this.arrT[2] < this.arrP[2]) return this.done(1);
                 // 日期未早于投稿日，正常请求月份数据
                 let data = await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/history/index", {
                     type: 1,
@@ -1488,6 +1508,7 @@
                         // 延时转入日期请求
                         this.time = this.timeT;
                         this.timeT = undefined;
+                        toast("技能冷却中。。。请稍待 " + this.delay + " 秒钟");
                         return setTimeout(() => this.init(), this.delay * 1000);
                     } else {
                         // 当月有弹幕但都不在已请求日之前，月份 -1 重载
@@ -1509,13 +1530,27 @@
                 // 弹幕获取出错，载入已获取的弹幕
                 if (this.danmaku[0]) {
                     toast.warning("弹幕获取出错！", "保留并载入已获取的弹幕");
-                    this.done();
+                    this.done(flase);
                 } else {
+                    // 失败退出，取消按钮禁用
+                    this.button && this.button.removeAttribute("disabled");
                     toast.error("弹幕获取出错！", "已退出！");
                 }
             }
         }
-        done() { console.log(this.danmaku) }
+        /**
+         * 载入弹幕
+         * @param {Boolean} [boolean] 判断获取成功还是失败，成功请传入真值。
+         */
+        done(boolean) {
+            BLOD.toXml(d).then(d => {
+                if (boolean) toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + BLOD.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");
+                BLOD.xml = d;
+                BLOD.loadLocalDm(d);
+                // 成功获取弹幕，取消按钮禁用
+                this.button && this.button.removeAttribute("disabled");
+            })
+        }
     }
     BLOD.AllDanmaku = AllDanmaku;
 })()
