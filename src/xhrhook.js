@@ -559,7 +559,7 @@
             type: 1,
             oid: cid,
             date: date
-        }))
+        }), "arraybuffer");
         return protoSeg.decode(new Uint8Array(dm)).elems;
     }
 

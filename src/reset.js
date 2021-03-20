@@ -1427,25 +1427,26 @@
         }
         async init() {
             try {
-                // 获取当日弹幕
+                // 获取当日日期
                 this.arrT = this.time.split("-");
-                if (this.arrT[0] >= this.arrP[0]) {
-                    if (this.arrT[1] >= this.arrP[1]) {
-                        if (this.arrT[2] >= this.arrP[2]) {
-                            toast("正在获取 " + this.time + " 日的弹幕。。。", "已获取弹幕数：" + BLOD.unitFormat(this.danmaku.length));
-                            let danmaku = await BLOD.getHistoryDanmaku(this.time);
-                            danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? -1 : 1));
-                            // 取最早一条弹幕的时间
-                            this.time = BLOD.timeFormat(danmaku[danmaku.length - 1].ctime * 1000, 1).split(" ")[0];
-                            this.danmaku = this.danmaku.concat(danmaku);
-                            this.arrT = this.time.split("-");
-                            // 如果当天不是投稿日，转入月份请求
-                            if (this.pubdate != this.today) return this.month();
-                            // 否则结束弹幕获取，当前弹幕就是能获取到的全弹幕
-                            this.done();
-                        }
-                    }
-                }
+                // 如果年份小于投稿日，说明获取成功
+                if (this.arrT[0] < this.arrP[0]) return this.done();
+                // 年份相等但月份小于投稿日说明获取成功
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] < this.arrP[1]) return this.done();
+                // 年月都相等，但日期小于投稿日说明获取成功
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] == this.arrP[1] && this.arrT[2] <= this.arrP[2]) return this.done();
+                // 日期未早于投稿日，正常请求日期数据
+                toast("正在获取 " + this.time + " 日的弹幕。。。", "已获取弹幕数：" + BLOD.unitFormat(this.danmaku.length));
+                let danmaku = await BLOD.getHistoryDanmaku(this.time);
+                danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? -1 : 1));
+                // 取最早一条弹幕的时间
+                this.time = BLOD.timeFormat(danmaku[danmaku.length - 1].ctime * 1000, 1).split(" ")[0];
+                this.danmaku = this.danmaku.concat(danmaku);
+                this.arrT = this.time.split("-");
+                // 如果当天不是投稿日，转入月份请求
+                if (this.pubdate != this.today) return this.month();
+                // 否则结束弹幕获取，当前弹幕就是能获取到的全弹幕
+                this.done();
             } catch (e) {
                 e = Array.isArray(e) ? e : [e];
                 toast.error("全弹幕装填", ...e);
@@ -1460,49 +1461,48 @@
         }
         async month() {
             try {
-                if (this.arrT[0] >= this.arrP[0]) {
-                    if (this.arrT[1] >= this.arrP[1]) {
-                        if (this.arrT[2] >= this.arrP[2]) {
-                            // 日期未早于投稿日，正常请求月份数据
-                            let data = await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/history/index", {
-                                type: 1,
-                                oid: BLOD.cid,
-                                month: this.arrT.slice(0, 2).join("-")
-                            }))
-                            data = BLOD.jsonCheck(data).data;
-                            if (data[0]) {
-                                // 当月有弹幕，进入日期判断
-                                for (let i = data.length - 1; i >= 0; i--) {
-                                    let date = data[i].split("-");
-                                    if (date[2] < this.arrT[2]) {
-                                        // 当日在已获取弹幕之前，记录并跳出循环
-                                        this.timeT = data[i];
-                                        break;
-                                    }
-                                    if (this.timeT) {
-                                        // 延时转入日期请求
-                                        this.time = this.timeT;
-                                        this.timeT = undefined;
-                                        return setTimeout(() => this.init(), this.delay * 1000);
-                                    } else {
-                                        // 当月有弹幕但都不在已请求日之前，月份 -1 重载
-                                        if (this.arrT[1] > 1) this.arrT[1]--;
-                                        else this.arrT = [this.arrT[0] - 1, 12, 31];
-                                        return this.month();
-                                    }
-                                }
-                            } else {
-                                // 当月无弹幕直接月份 -1 重载
-                                if (this.arrT[1] > 1) this.arrT[1]--;
-                                else this.arrT = [this.arrT[0] - 1, 12, 31];
-                                return this.month();
-                            }
+                // 如果年份小于投稿日，说明获取成功
+                if (this.arrT[0] < this.arrP[0]) return this.done();
+                // 年份相等但月份小于投稿日说明获取成功
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] < this.arrP[1]) return this.done();
+                // 年月都相等，但日期小于投稿日说明获取成功
+                if (this.arrT[0] == this.arrP[0] && this.arrT[1] == this.arrP[1] && this.arrT[2] <= this.arrP[2]) return this.done();
+                // 日期未早于投稿日，正常请求月份数据
+                let data = await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/history/index", {
+                    type: 1,
+                    oid: BLOD.cid,
+                    month: this.arrT.slice(0, 2).join("-")
+                }))
+                data = BLOD.jsonCheck(data).data;
+                if (data[0]) {
+                    // 当月有弹幕，进入日期判断
+                    for (let i = data.length - 1; i >= 0; i--) {
+                        let date = data[i].split("-");
+                        if (date[2] < this.arrT[2]) {
+                            // 当日在已获取弹幕之前，记录并跳出循环
+                            this.timeT = data[i];
+                            break;
                         }
                     }
+                    if (this.timeT) {
+                        // 延时转入日期请求
+                        this.time = this.timeT;
+                        this.timeT = undefined;
+                        return setTimeout(() => this.init(), this.delay * 1000);
+                    } else {
+                        // 当月有弹幕但都不在已请求日之前，月份 -1 重载
+                        if (this.arrT[1] > 1) this.arrT[1]--;
+                        else this.arrT = [this.arrT[0] - 1, 12, 31];
+                        return this.month();
+                    }
+                } else {
+                    // 当月无弹幕直接月份 -1 重载，月份等于 1 则取上年最后一天
+                    if (this.arrT[1] > 1) {
+                        this.arrT[1]--;
+                        if (this.arrT[1] < 10) this.arrT[1] = "0" + String(this.arrT[1])
+                    } else this.arrT = [this.arrT[0] - 1, 12, 31];
+                    return this.month();
                 }
-                // 重载日期已在投稿日期之前，说明全弹幕获取成功
-                toast.success("全弹幕获取完成！", "总弹幕数：" + BLOD.unitFormat(this.danmaku.length));
-                this.done();
             } catch (e) {
                 e = Array.isArray(e) ? e : [e];
                 toast.error("全弹幕装填", ...e);
