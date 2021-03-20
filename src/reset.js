@@ -1373,11 +1373,10 @@
                 }
                 if (this.aid && this.cid) {
                     BLOD.getSegDanmaku(this.aid, this.cid).then(d => {
-                        BLOD.toXml(d).then(d => {
-                            toast("在线弹幕：aid=" + this.aid + " cid=" + this.cid, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
-                            this.download(d);
-                            BLOD.loadLocalDm(d, config.reset.concatDanmaku);
-                        })
+                        let danmaku = AllDanmaku.format(d, this.aid);
+                        toast("在线弹幕：aid=" + this.aid + " cid=" + this.cid, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
+                        BLOD.setDanmaku(danmaku);
+                        this.download(d);
                     })
                 } else {
                     toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！", "若是第三方接口抽风也可重试看看");
@@ -1386,11 +1385,12 @@
         }
         /**
          * 回显弹幕链接到设置面板
-         * @param {string} xml xml格式的弹幕文件
+         * @param {[]} arr 新版弹幕数组
          */
-        async download(xml) {
+        async download(arr) {
+            arr = await BLOD.toXml(arr);
             this.div = BLOD.addElement("div", { id: "BLOD-dm-dl" }, this.node);
-            this.blob = new Blob([xml]);
+            this.blob = new Blob([arr]);
             BLOD.bloburl.xml = URL.createObjectURL(this.blob);
             this.div.innerHTML = `<a href=${BLOD.bloburl.xml} target="_blank" download="${this.cid}.xml">获取在线弹幕成功，可以右键另存为文件！</a>`;
             if (BLOD.cid && window.player) {
@@ -1415,7 +1415,9 @@
             this.button = button;
             // 异步获取中，临时禁用按钮
             this.button && this.button.setAttribute("disabled", true);
-            toast("正常尝试获取全部弹幕请耐心等待。。。", "获取延时请尽量调大，以免短时间内大量请求被临时封端口！");
+            let state = document.querySelector("BLOD-UI-state");
+            if (state) state.remove();
+            toast("正在尝试获取全部弹幕请耐心等待。。。", "获取延时请尽量调大，以免短时间内大量请求被临时封端口！");
             this.pubdate = new Date(2009, 0);
             if (window.__INITIAL_STATE__) {
                 if (window.__INITIAL_STATE__.videoData && window.__INITIAL_STATE__.videoData.pubdate) {
@@ -1547,13 +1549,50 @@
          * @param {Boolean} [boolean] 判断获取成功还是失败，成功请传入真值。
          */
         done(boolean) {
-            BLOD.toXml(this.danmaku).then(d => {
-                if (boolean) toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + BLOD.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");
-                BLOD.xml = d;
-                BLOD.loadLocalDm(d);
-                // 成功获取弹幕，取消按钮禁用
-                this.button && this.button.removeAttribute("disabled");
-            })
+            let danmaku = AllDanmaku.format(this.danmaku, BLOD.aid);
+            if (boolean) toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + BLOD.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");
+            BLOD.setDanmaku(danmaku);
+            // 成功获取弹幕，取消按钮禁用
+            this.button && this.button.removeAttribute("disabled");
+            BLOD.toXml(this.danmaku).then(d => { BLOD.xml = d });
+        }
+        /**
+         * 将新版弹幕数组转化为旧版弹幕数组
+         * @param {[]} dm 新版弹幕数组
+         * @param {number} [aid] 视频aid，默认取当前视频aid
+         * @returns {[]} 旧版弹幕数组
+         */
+        static format(dm, aid) {
+            aid = aid || BLOD.aid
+            let danmaku = dm.map(function (v) {
+                return {
+                    class: v.pool,
+                    color: v.color,
+                    date: v.ctime,
+                    dmid: v.idStr,
+                    mode: v.mode,
+                    size: v.fontsize,
+                    stime: v.progress / 1000,
+                    text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
+                    uid: v.midHash
+                };
+            });
+            //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
+            if (aid && aid < 400000) {
+                let textData;
+                for (let i = 0; i < danmaku.length; i++) {
+                    textData = danmaku[i];
+                    if (textData.text.includes('\n')) {
+                        textData.class = 1;
+                        textData.zIndex = textData.stime * 1000;
+                        if (!(textData.text.includes("█") || textData.text.includes("▂"))) {
+                            textData.zIndex = textData.zIndex + 1;
+                        }
+                    }
+                }
+            }
+            danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+            return danmaku;
         }
     }
     BLOD.AllDanmaku = AllDanmaku;
