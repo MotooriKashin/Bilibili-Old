@@ -546,6 +546,23 @@
         }
     }
 
+    /**
+     * 获取历史弹幕
+     * @param {string} date 历史弹幕日期，yyyy-mm-dd格式：如 2009-06-24
+     * @param {number} [cid] 弹幕所在视频的 cid，不填则去当前视频的cid
+     * @returns {Promise<[{}]>} 解析好的弹幕数组
+     */
+    BLOD.getHistoryDanmaku = async (date, cid = BLOD.cid) => {
+        if (!date || !BLOD.uid) return;
+        cid = cid || BLOD.cid;
+        let dm = await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/history/seg.so", {
+            type: 1,
+            oid: cid,
+            date: date
+        }))
+        return protoSeg.decode(new Uint8Array(dm)).elems;
+    }
+
     class Xhrhook {
         constructor() {
             console.debug('import module "xhrhook.js"');
