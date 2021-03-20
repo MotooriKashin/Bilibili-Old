@@ -952,8 +952,7 @@
             window.setInterval = (...args) => {
                 if (args[1] && args[1] == 300000 && args[0] && args[0].toString() == "function(){e.triggerSleepCallback()}") {
                     if (!this.clock) {
-                        toast.warning("成功阻止直播间挂机检测！");
-                        debug(...args);
+                        toast.warning("成功阻止直播间挂机检测！", ...args);
                         this.clock++;
                     }
                     return Number.MIN_VALUE;
@@ -1415,7 +1414,7 @@
             this.button = button;
             // 异步获取中，临时禁用按钮
             this.button && this.button.setAttribute("disabled", true);
-            let state = document.querySelector("BLOD-UI-state");
+            let state = document.querySelector("#BLOD-UI-state");
             if (state) state.remove();
             toast("正在尝试获取全部弹幕请耐心等待。。。", "获取延时请尽量调大，以免短时间内大量请求被临时封端口！");
             this.pubdate = new Date(2009, 0);

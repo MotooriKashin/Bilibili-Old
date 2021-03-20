@@ -86,7 +86,7 @@
                 table.remove();
             }
             table.children[0].children[1].onclick = () => {
-                let state = document.querySelector("BLOD-UI-state");
+                let state = document.querySelector("#BLOD-UI-state");
                 if (state) state.remove();
                 table.remove();
                 toast("设置已保存", "部分功能可能需要刷新才会生效！")
