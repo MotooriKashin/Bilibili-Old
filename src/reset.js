@@ -1374,7 +1374,7 @@
                     BLOD.getSegDanmaku(this.aid, this.cid).then(d => {
                         let danmaku = AllDanmaku.format(d, this.aid);
                         toast("在线弹幕：aid=" + this.aid + " cid=" + this.cid, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
-                        BLOD.setDanmaku(danmaku);
+                        BLOD.setDanmaku(danmaku, config.reset.concatDanmaku);
                         this.download(d);
                     })
                 } else {
