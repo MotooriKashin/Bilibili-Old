@@ -171,7 +171,7 @@
                 // 载入全弹幕装填功能（仅当播放器存在时）
                 let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: space-between;white-space: nowrap;" }, this.right);
                 div.innerHTML = '<label><input type="button" value="全弹幕装填"></label><label>接口冷却时间：<input type="number" min="1" max="60" step="1">秒</label>';
-                BLOD.state(div, "为当前视频装填全部历史弹幕，可能会耗费一定时间，具体取决与视频历史弹幕总量以及设定的接口冷却时间</br>接口冷却时间请尽量设置大一点，以免短时间内大量请求触发【临时端口封禁】，默认5秒/次</br>端口封禁时间未知，短时间内（24h?）请不要再使用该功能！");
+                this.state(div, "为当前视频装填全部历史弹幕，可能会耗费一定时间，具体取决与视频历史弹幕总量以及设定的接口冷却时间</br>接口冷却时间请尽量设置大一点，以免短时间内大量请求触发【临时端口封禁】，默认5秒/次</br>端口封禁时间未知，短时间内（24h?）请不要再使用该功能！</br>另外由于历史弹幕池一天上限1000，若是那天发送弹幕数超过1000而又已被挤出普通弹幕池的话将无法获取，所以最终弹幕总量可能小于实际弹幕总量");
                 let button = div.children[0].children[0];
                 let step = div.children[1].children[0];
                 let delay = BLOD.getValue("allDanmaku") || {};
