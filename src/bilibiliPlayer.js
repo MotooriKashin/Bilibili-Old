@@ -21406,7 +21406,8 @@ function Fa() {
                      * @param  {Array} dm 弹幕数组
                      * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
                      */
-                    BLOD.setDanmaku = (danmaku, append = false) => {
+                    BLOD.setDanmaku = (danmaku = [], append = false) => {
+                        if (danmaku.length == 0) return;
                         clear();
                         var e = +new Date;
                         if (!append) {
@@ -21417,6 +21418,15 @@ function Fa() {
                             c.c.Ma && c.c.Ma.dmList.splice(0, c.c.Ma.dmList.length); // 清除bas弹幕
                         }
                         let dm, basDM = [], commonDM = [];
+                        // 弹幕池属性(class)在原生代码中，通过.gb引用（而不是.class）
+                        // 在原生载入弹幕的实现中，确实是把这个属性保存到class中，然后再去遍历一次数组进行“重命名”
+                        // 于是这里依照原生代码处理一遍弹幕数据，保证引用它的有关功能正常运行（例如同屏弹幕调整功能）
+                        // 相关原生代码可在文件内搜索 h.gb = b.danmakuArray[q]["class"]
+                        if (danmaku[0].class) {
+                            for (let i = 0; i < danmaku.length; i++) {
+                                danmaku[i].gb = danmaku[i].class;
+                            }
+                        }
                         for (let i = 0; i < danmaku.length; i++) {
                             dm = Object.assign({}, danmaku[i]);
                             if (dm.mode == 7) {
@@ -30603,11 +30613,7 @@ function Fa() {
                                                 };
                                             b && (g.mid = b[0], g.uname = b[1]);
                                             if (g.mode == 7) {
-                                                d.g.g.G.push(g);
-                                                d.g.list.update(!1, 0);
-                                                g = Object.assign({}, g);
-                                                g.stime *= 1000;
-                                                d.P.wj(g);
+                                                BLOD.setDanmaku && BLOD.setDanmaku([g], true);
                                             } else {
                                                 Number(d.Sa) !== Number(g.Xc) && d.g.add(g)
                                             }

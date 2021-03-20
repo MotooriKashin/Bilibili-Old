@@ -517,10 +517,6 @@
             };
         }
         specialEffects(danmaku);
-        // 弹幕池属性在原生代码中，通过.gb而不是.class引用
-        for (let i = 0; i < danmaku.length; i++) {
-            danmaku[i].gb = danmaku[i].class;
-        }
         danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
