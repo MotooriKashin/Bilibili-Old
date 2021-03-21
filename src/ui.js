@@ -287,7 +287,6 @@
             }
         }
         async other() {
-            BLOD.addElement("hr", {}, this.right);
             try {
                 // 获取番剧情报
                 if (this.bangumi) {
@@ -302,11 +301,12 @@
                         }
                     })
                 }
+                BLOD.addElement("hr", {}, this.right);
                 this.bangumi.forEach(d => {
                     let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: center;white-space: nowrap;" }, this.right);
                     div.innerHTML = `<a href="${d.link}" target="_blank">${d.title}</a>`;
                 })
-                BLOD.addElement("div", { style: " position: absolute; bottom: 5 %; left: 58 %; transform: translateX(-50 %); font- family: fangsong;" }).innerHTML = "永言配命 自求多福";
+                BLOD.addElement("div", { style: " position: absolute; bottom: 5 %; left: 58 %; transform: translateX(-50 %); font- family: fangsong;" }, this.right).innerHTML = "永言配命 自求多福";
             } catch (e) { }
         }
     }
