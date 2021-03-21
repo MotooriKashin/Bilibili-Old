@@ -292,24 +292,28 @@
                 // 获取番剧情报
                 if (!this.bangumi) {
                     this.bangumi = [];
-                    this.appdata = this.appdata || await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/pgc/page/bangumi", { build: 6205500, c_locale: "zh_CN", channel: "master", fnval: 464, fnver: 0, fourk: 1, mobi_app: "android", platform: "android", qn: 0, s_locale: "zh_CN" }));
-                    this.appdata.modules.forEach(d => {
+                    this.appdata = this.appdata || BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/pgc/page/bangumi", { build: 6205500, c_locale: "zh_CN", channel: "master", fnval: 464, fnver: 0, fourk: 1, mobi_app: "android", platform: "android", qn: 0, s_locale: "zh_CN" })));
+                    this.appdata.result.modules.forEach(d => {
                         if (d.title.includes("功能入口")) {
                             d.items.forEach(d => {
                                 if (d.title.includes("新番")) this.bangumi.push(d);
                                 if (d.title.includes("限免")) this.bangumi.push(d);
+                                if (d.title.includes("推荐")) this.bangumi.push(d);
                             })
                         }
                     })
                 }
                 BLOD.addElement("hr", {}, this.right);
+                BLOD.addElement("br", {}, this.right);
                 this.bangumi.forEach(d => {
                     if (d) {
+                        if (d.link.includes("bilibili:/")) return;
+                        d.link = d.link.replace("http:", "https://").replace("m.bili", "www.bili");
                         let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: center;white-space: nowrap;" }, this.right);
                         div.innerHTML = `<a href="${d.link}" target="_blank">${d.title}</a>`;
                     }
                 })
-                BLOD.addElement("div", { style: " position: absolute; bottom: 5 %; left: 58 %; transform: translateX(-50 %); font- family: fangsong;" }, this.right).innerHTML = "永言配命 自求多福";
+                BLOD.addElement("div", { style: "position: absolute;bottom: 5%;left: 58%;transform: translateX(-50%);font-family: fangsong;" }, this.right).innerHTML = "永言配命 自求多福";
             } catch (e) { }
         }
     }
