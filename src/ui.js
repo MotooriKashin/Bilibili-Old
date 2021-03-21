@@ -164,13 +164,14 @@
          */
         danmaku() {
             if (window.player && BLOD.path.name) {
-                // 载入本地弹幕
+                // 载入其他视频弹幕
                 let config = BLOD.getValue("onlineDanmaku") || {};
                 let value = (BLOD.cid && config[BLOD.cid]) ? "aid=" + config[BLOD.cid][0] + "&cid=" + config[BLOD.cid][1] : "";
                 this.input("载入其他视频弹幕", "url", "av2", value, "载入", "为当前视频载入其他视频弹幕，请输入对应视频链接</br>支持短链接，如av50619577或者ss3398</br>也支持参数形式，如aid=50619577或者ssid=3398", (value) => {
                     new BLOD.onlineDanmaku(value, this.right);
                 })
-                // 载入全弹幕装填功能（仅当播放器存在时）
+                if (!BLOD.uid) return;
+                // 载入全弹幕装填功能
                 let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: space-between;white-space: nowrap;" }, this.right);
                 div.innerHTML = '<label><input type="button" value="全弹幕装填"></label><label>接口冷却时间：<input type="number" min="1" max="60" step="1">秒</label>';
                 this.state(div, "为当前视频装填全部历史弹幕，可能会耗费一定时间，具体取决与视频历史弹幕总量以及设定的接口冷却时间。</br>※接口冷却时间请尽量设置大一点，以免短时间内大量请求触发【临时端口封禁】，默认5秒/次。</br>※端口封禁时间未知，若被禁短时间内（24h?）请不要再使用该功能！</br>※另外由于历史弹幕池一天有上限，若是那天发送弹幕数超过上限而又已被挤出普通弹幕池的话将无法获取，而新版历史弹幕改版时很多代码弹幕就此丢失(ಥ_ಥ)，所以最终弹幕总量可能小于实际弹幕总量。");
