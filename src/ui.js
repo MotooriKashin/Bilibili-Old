@@ -289,7 +289,7 @@
         async other() {
             try {
                 // 获取番剧情报
-                if (this.bangumi) {
+                if (!this.bangumi) {
                     this.bangumi = [];
                     this.appdata = this.appdata || await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/pgc/page/bangumi", { build: 6205500, c_locale: "zh_CN", channel: "master", fnval: 464, fnver: 0, fourk: 1, mobi_app: "android", platform: "android", qn: 0, s_locale: "zh_CN" }));
                     this.appdata.modules.forEach(d => {
@@ -303,8 +303,10 @@
                 }
                 BLOD.addElement("hr", {}, this.right);
                 this.bangumi.forEach(d => {
-                    let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: center;white-space: nowrap;" }, this.right);
-                    div.innerHTML = `<a href="${d.link}" target="_blank">${d.title}</a>`;
+                    if (d) {
+                        let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: center;white-space: nowrap;" }, this.right);
+                        div.innerHTML = `<a href="${d.link}" target="_blank">${d.title}</a>`;
+                    }
                 })
                 BLOD.addElement("div", { style: " position: absolute; bottom: 5 %; left: 58 %; transform: translateX(-50 %); font- family: fangsong;" }, this.right).innerHTML = "永言配命 自求多福";
             } catch (e) { }
