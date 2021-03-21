@@ -178,19 +178,19 @@
     class UrlSign {
         constructor() {
             this.keySecret = [
-                "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
-                "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
-                "157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/",
-                "351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50",
-                "4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.",
-                "12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051",
-                "bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22",
-                "244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36",
-                "16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d",
-                "c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726",
-                "2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7",
-                "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.",
-                "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"
+                "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg", // iVGU...uDCf
+                "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``", // bb31...2e27
+                "157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/", // 1d8b...3436
+                "351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50", // 27eb...f8c3
+                "4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.", // 07da...829f
+                "12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051", // 3720...f8d7
+                "bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22", // 4409...12b8
+                "244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36", // 85eb...034e
+                "16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d", // fb06...edbc
+                "c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726", // 8495...8eb7
+                "2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7", // 9e5d...f5c4
+                "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.", // 07da...829f
+                "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5"  // 7d08...1b1c
             ]
         }
         /**
@@ -238,9 +238,7 @@
             return str;
         }
     }
-
-
-
+    BLOD.UrlSign = UrlSign;
 
     class Define {
         /**
@@ -339,7 +337,6 @@
     let define = new Define();
     let format = new Format();
     let abv = new Abv();
-    let urlSign = new UrlSign();
 
     BLOD.timeFormat = (...arg) => { return format.timeFormat(...arg) };
     BLOD.sizeFormat = (...arg) => { return format.sizeFormat(...arg) };
@@ -349,7 +346,7 @@
     BLOD.objUrl = (...arg) => { return format.objUrl(...arg) };
     BLOD.urlObj = (...arg) => { return format.urlObj(...arg) };
     BLOD.abv = (input) => { return abv.check(input) };
-    BLOD.urlSign = (...arg) => { return urlSign.sign(...arg) };
+    BLOD.urlSign = (...arg) => { return (new BLOD.UrlSign()).sign(...arg) };
     BLOD.getCookies = () => { return define.getCookies() };
     BLOD.addElement = (...arg) => { return define.addElement(...arg) };
     BLOD.addCss = (...arg) => { return define.addCss(...arg) };
