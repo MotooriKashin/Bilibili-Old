@@ -23,20 +23,38 @@
         debug(...msg) {
             console.debug("[" + BLOD.timeFormat(new Date()) + "]", ...msg);
         }
-        msg(...msg) {
-            let node = document.getElementsByClassName("bilibili-player-video-toast-bottom")[0];
-            let time = 1 * msg[2] || 3000;
-            if (!node) return this.log(...msg);
-            msg.forEach((d) => { d = typeof d == "object" ? "" : d });
-            msg[2] = 1 * msg[2] ? "" : msg[2];
-            let item = document.createElement("div");
-            node.children[0] ? node.children[0].replaceWith(item) : node.appendChild(item);
-            item.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
-            item.innerHTML = '<div class="bilibili-player-video-toast-item-text"><span class="video-float-hint-text"></span><span class="video-float-hint-btn hint-red"></span><span class="video-float-hint-btn"></span></div>';
-            msg[0] ? item.children[0].children[0].innerHTML = msg[0] : "";
-            msg[1] ? item.children[0].children[1].innerHTML = msg[1] : "";
-            msg[2] ? item.children[0].children[2].innerHTML = msg[2] : item.children[0].children[2].remove();
-            setTimeout(() => item.remove(), time);
+        /**
+         * 旧版播放器消息
+         * @param {number} [time] 消息停留时间，单位/秒，默认为 3
+         * @param {string} text 所需显示的消息
+         * @param {string} [red] 所需显示的消息，标红
+         * @param {string} [yellow] 所需显示的消失，标黄
+         * @param {Boolean} [replace] 是否替换当前已显示的消息，默认为真
+         * @param {Function} [callback] 红色消息被点击时的回调函数，用于交互
+         * @returns 旧版播放器不存在时将所有消息打印到控制台
+         */
+        msg(time = 3, text, red, yellow, replace = true, callback) {
+            this.node = document.querySelector(".bilibili-player-video-toast-bottom");
+            time = time * 3 || 3000;
+            if (!node) return this.log(text, red, yellow);
+            if (replace) {
+                if (this.node.children[0]) this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node, false, this.node.children[0]);
+                else this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node);
+            } else this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node);
+            this.node.innerHTML = '<div class="bilibili-player-video-toast-item-text"></div>';
+            this.item = this.node.children[0];
+            if (text) BLOD.addElement("span", { class: "video-float-hint-text" }, this.item);
+            if (red) this.target = BLOD.addElement("span", { class: "video-float-hint-btn hint-red" }, this.item);
+            if (yellow) BLOD.addElement("span", { class: "video-float-hint-btn" }, this.item);
+            if (callback) {
+                this.target.setAttribute("style", "cursor: pointer;");
+                this.target.onclick = () => {
+                    this.node.remove();
+                    clearTimeout(this.timeout);
+                    callback();
+                }
+            }
+            this.timeout = setTimeout(() => this.node.remove(), time);
         }
     }
 

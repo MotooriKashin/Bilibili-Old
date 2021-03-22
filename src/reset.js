@@ -103,8 +103,18 @@
          */
         switchVideo: async () => {
             if (config.reset.localDanmaku) setTimeout(() => { new LocalDanmaku() }, 1000)
-            if (BLOD.avPlus) debug.msg("视频已失效", "缓存信息仅供参考", 300000);
-            if (config.reset.novideo) debug.msg("临时拦截视频载入", "下载完成后务必在设置中关闭！", 300000);
+            if (BLOD.avPlus) {
+                debug.msg(300, "视频已失效！", "加载弹幕", "缓存信息仅供参考", true, () => {
+                    new OnlineDanmaku("aid=" + BLOD.aid + "&cid=" + BLOD.cid);
+                })
+            }
+            if (config.reset.novideo) {
+                debug.msg(300, "拦截视频页媒体载入用于呼出下载面板", "取消拦截", null, true, () => {
+                    config.reset.novideo = 0;
+                    BLOD.setValue("config", config);
+                    window.BilibiliPlayer({ aid: BLOD.aid, cid: BLOD.cid });
+                })
+            }
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; };
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
             setTimeout(() => {
@@ -1196,12 +1206,12 @@
                             case ",":
                                 BLOD.offsetDanmaku(-1);
                                 this.offset--;
-                                debug.msg("弹幕偏移：", this.offset + " 秒");
+                                debug.msg(undefined, "弹幕偏移：", this.offset + " 秒");
                                 break;
                             case ".":
                                 BLOD.offsetDanmaku(1);
                                 this.offset++;
-                                debug.msg("弹幕偏移：", this.offset + " 秒");
+                                debug.msg(undefined, "弹幕偏移：", this.offset + " 秒");
                                 break;
                             default:
                                 break;
@@ -1390,6 +1400,7 @@
          * @param {[]} arr 新版弹幕数组
          */
         async download(arr) {
+            if (!this.node) return;
             arr = await BLOD.toXml(arr);
             this.div = BLOD.addElement("div", { id: "BLOD-dm-dl" }, this.node);
             this.blob = new Blob([arr]);
