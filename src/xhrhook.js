@@ -831,6 +831,15 @@
                     }
                     if (BLOD.vip) this.send = () => true;
                 }
+                // 拦截日志上报
+                if (url.includes("data.bilibili.com/log")) {
+                    this.send = () => {
+                        Object.defineProperty(this, "response", { writable: true });
+                        Object.defineProperty(obj, 'responseText', { writable: true });
+                        this.response = this.responseText = "ok";
+                        return this.dispatchEvent(new ProgressEvent("load"));
+                    };
+                }
                 // 显示历史视频
                 if (url.includes('api.bilibili.com/x/web-interface/history/cursor') && url.includes("business") && config.reset.history) {
                     let max = obj.max || "", view_at = obj.view_at || "";
