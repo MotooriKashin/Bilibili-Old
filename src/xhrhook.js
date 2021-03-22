@@ -563,7 +563,7 @@
         return protoSeg.decode(new Uint8Array(dm)).elems;
     }
 
-    class Xhrhook {
+    class XhrHook {
         constructor() {
             console.debug('import module "xhrhook.js"');
         }
@@ -832,13 +832,8 @@
                     if (BLOD.vip) this.send = () => true;
                 }
                 // 拦截日志上报
-                if (url.includes("data.bilibili.com/log")) {
-                    this.send = () => {
-                        Object.defineProperty(this, "response", { writable: true });
-                        Object.defineProperty(obj, 'responseText', { writable: true });
-                        this.response = this.responseText = "ok";
-                        return this.dispatchEvent(new ProgressEvent("load"));
-                    };
+                if (url.includes("data.bilibili.com") || url.includes("data.bilivideo.com")) {
+                    this.send = () => true;
                 }
                 // 显示历史视频
                 if (url.includes('api.bilibili.com/x/web-interface/history/cursor') && url.includes("business") && config.reset.history) {
@@ -848,12 +843,12 @@
                 }
                 // 修改正在直播
                 if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.biliIndexRec(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.biliIndexRec(this, hook) });
                     url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web');
                 }
                 // 修改直播动态
                 if (url.includes('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.biliIndexRec(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.biliIndexRec(this, hook) });
                     url = hook[1] = url.replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
                 }
                 // 重定向番剧信息
@@ -863,29 +858,29 @@
                 }
                 // 重定向追番信息
                 if (url.includes('bangumi.bilibili.com/ext/web_api/season_count?')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.stat(this, hook) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.stat(this, hook) });
                     url = hook[1] = url.replace('bangumi.bilibili.com/ext/web_api/season_count', 'api.bilibili.com/pgc/web/season/stat');
                 }
                 // 修改番剧推荐
                 if (url.includes('api.bilibili.com/pgc/web/recommend/related/recommend')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.recommend(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.recommend(this) });
                 }
                 // 修改直播数据
                 if (url.includes('api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.getRoomPlayInfo(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.getRoomPlayInfo(this) });
                 }
                 // 修改播放器通知
                 if (url.includes('api.bilibili.com/x/player/carousel')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.carousel(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.carousel(this) });
                 }
                 // 修改区域限制
                 if (url.includes('season/user/status?')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.status(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.status(this) });
                     url = hook[1] = url.replace('bangumi.bilibili.com/view/web_api/season/user/status', 'api.bilibili.com/pgc/view/web/season/user/status');
                 }
                 // 禁用防挡字幕
                 if (url.includes('api.bilibili.com/x/player.so')) {
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playerso(this) });
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.playerso(this) });
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
@@ -895,7 +890,6 @@
                     BLOD.aid = obj.avid || BLOD.aid || null;
                     BLOD.bvid = obj.bvid || (BLOD.aid && BLOD.abv(BLOD.aid)) || BLOD.bvid || null;
                     if (config.reset.novideo && !obj.sign) {
-                        toast.warning("拦截视频链接！", "下载功能在播放器右键菜单", "关闭设置【视频拦截】即可恢复正常！")
                         obj = Object.assign(obj, { aid: 1, cid: 1, ep_id: 1 });
                     }
                     url = BLOD.objUrl(url.split("?")[0], obj);
@@ -905,8 +899,8 @@
                     BLOD.vip = BLOD.big > 1 ? true : BLOD.vip;
                     if (BLOD.big > 1 || (BLOD.vip && BLOD.ids.indexOf(1 * BLOD.cid) >= 0)) this.url = url;
                     if (BLOD.limit) this.url = url;
-                    if (this.url) this.send = () => xhrHook.sendPlayurl(this);
-                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) xhrHook.playinfo(this, url) });
+                    if (this.url) this.send = () => XhrHook.sendPlayurl(this);
+                    this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.playinfo(this, url) });
                 }
                 // 新版弹幕兼容pakku.js
                 if (url.includes("list.so")) {
@@ -927,7 +921,7 @@
                         }
                         // 处理send方法，针对实例而不再针对所有XMLHttpRequest
                         // 处理pakku.js处于“休眠中”的情况
-                        this.pakku_send = () => xhrHook.sendDanmuku(this);
+                        this.pakku_send = () => XhrHook.sendDanmuku(this);
                     }
                     else {
                         // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
@@ -971,8 +965,6 @@
         jsonp() {
             window.$.ajaxSetup({
                 beforeSend: function (xhr) {
-                    // 拦截日志上传
-                    if (this.url.includes("data.bilibili.com/log/web")) xhr.abort();
                     // 广告区转资讯区
                     if (this.url.includes("region") && this.url.includes("rid=165")) this.url = this.url.replace("rid=165", "rid=202");
                     // 取消原创排行榜
@@ -1012,12 +1004,19 @@
                 }
             })
         }
+        sendBeacon() {
+            let sendBeacon = Navigator.prototype.sendBeacon;
+            Navigator.prototype.sendBeacon = function (url, data) {
+                if (url.includes("data.bilibili.com")) return true;
+                else return sendBeacon.call(this, url, data);
+            }
+        }
         /**
          * 处理主页正在直播数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
-        biliIndexRec(obj, hook = []) {
+        static biliIndexRec(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
                 let response = obj.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
@@ -1042,7 +1041,7 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
-        season(obj, hook = []) {
+        static season(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
                 let response = BLOD.jsonCheck(obj.responseText);
@@ -1065,7 +1064,7 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
-        stat(obj, hook = []) {
+        static stat(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
                 let response = BLOD.jsonCheck(obj.responseText);
@@ -1082,7 +1081,7 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
-        getRoomPlayInfo(obj, hook = []) {
+        static getRoomPlayInfo(obj, hook = []) {
             if (!config.reset.roomplay) return;
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
@@ -1104,7 +1103,7 @@
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          * @param {[]} hook 处理纪录数组
          */
-        recommend(obj, hook = []) {
+        static recommend(obj, hook = []) {
             try {
                 hook.push(BLOD.jsonCheck(obj.responseText));
                 let response = BLOD.jsonCheck(obj.responseText);
@@ -1120,7 +1119,7 @@
          * 构造旧版播放器通知数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
-        carousel(obj) {
+        static carousel(obj) {
             if (!config.reset.carousel) return;
             try {
                 let msg = BLOD.loc || [];
@@ -1141,7 +1140,7 @@
          * 禁用防挡字幕
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
-        playerso(obj) {
+        static playerso(obj) {
             if (BLOD.preventshade) return;
             let response = obj.responseText;
             if (response.includes("<bottom>1</bottom>")) {
@@ -1155,7 +1154,7 @@
          * 处理番剧信息数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
-        status(obj) {
+        static status(obj) {
             try {
                 let response = BLOD.jsonCheck(obj.responseText);
                 if (response.result) {
@@ -1181,7 +1180,7 @@
          * 模拟弹幕响应
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
-        async sendDanmuku(xhr) {
+        static async sendDanmuku(xhr) {
             // 安装并启用了pakku.js，并且将其设置成“休眠中”状态，才会运行这里的代码
             // pakku.js处于“工作中”状态时，不会调用send()，而是向回调函数直接投喂过滤之后的弹幕
             Object.defineProperty(xhr, "response", { writable: true });
@@ -1198,7 +1197,7 @@
          * 模拟playurl响应
          * @param {XMLHttpRequest} xhr XMLHttpRequest对象
          */
-        async sendPlayurl(xhr) {
+        static async sendPlayurl(xhr) {
             try {
                 let hookTimeOut = new HookTimeOut(),
                     response = {},
@@ -1268,7 +1267,7 @@
          * 监听playurl
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
          */
-        async playinfo(obj) {
+        static async playinfo(obj) {
             try {
                 if (!obj.response) throw obj;
                 BLOD.__playinfo__ = typeof obj.response == "object" ? obj.response : BLOD.jsonCheck(obj.response);
@@ -1278,13 +1277,14 @@
         }
     }
 
-    let xhrHook = new Xhrhook();
+    let xhrHook = new XhrHook();
     // 分别hook WebSocket、worker、XMLHttpRequest.open
     // jQuery的jsonp非原生对象，延时5s捕获到再hook
     // XMLHttpRequest.send直接在XMLHttpRequest.open对应实例进行处理
     if (config.reset.livechat) xhrHook.webSocket();
     if (config.reset.danmuku && Worker) xhrHook.worker();
     xhrHook.open();
+    xhrHook.sendBeacon()
 
     if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
 })()

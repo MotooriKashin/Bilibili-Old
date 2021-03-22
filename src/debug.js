@@ -34,21 +34,31 @@
          * @returns 旧版播放器不存在时将所有消息打印到控制台
          */
         msg(time = 3, text, red, yellow, replace = true, callback) {
+            BLOD.config.reset.preview = 0;
             this.node = document.querySelector(".bilibili-player-video-toast-bottom");
-            time = time * 3 || 3000;
-            if (!node) return this.log(text, red, yellow);
+            time = time * 1000 || 3000;
+            if (!this.node) return this.log(text, red, yellow);
             if (replace) {
                 if (this.node.children[0]) this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node, false, this.node.children[0]);
                 else this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node);
             } else this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node);
             this.node.innerHTML = '<div class="bilibili-player-video-toast-item-text"></div>';
             this.item = this.node.children[0];
-            if (text) BLOD.addElement("span", { class: "video-float-hint-text" }, this.item);
-            if (red) this.target = BLOD.addElement("span", { class: "video-float-hint-btn hint-red" }, this.item);
-            if (yellow) BLOD.addElement("span", { class: "video-float-hint-btn" }, this.item);
+            if (text) {
+                this.text = BLOD.addElement("span", { class: "video-float-hint-text" }, this.item);
+                this.text.innerHTML = text;
+            }
+            if (red) {
+                this.red = BLOD.addElement("span", { class: "video-float-hint-btn hint-red" }, this.item);
+                this.red.innerHTML = red;
+            }
+            if (yellow) {
+                this.yellow = BLOD.addElement("span", { class: "video-float-hint-btn" }, this.item);
+                this.yellow.innerHTML = yellow;
+            }
             if (callback) {
-                this.target.setAttribute("style", "cursor: pointer;");
-                this.target.onclick = () => {
+                this.red.setAttribute("style", "cursor: pointer;");
+                this.red.onclick = () => {
                     this.node.remove();
                     clearTimeout(this.timeout);
                     callback();
