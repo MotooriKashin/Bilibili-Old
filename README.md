@@ -228,7 +228,7 @@ Tampermonkey BETA 4.10.6132
 <pre>
 - 2021-03-22
   - 重构视频拦截功能
-  - BigInt Pollyfill
+  - BigInt Polyfill
 - 2021-03-20
   - 添加全弹幕装填功能，说是全弹幕，其实如果一天弹幕池超过上限，那部分弹幕就获取不到，而新版历史弹幕池改版代码/BAS弹幕也有丢失
   - 重定向area标签`bilibili.tv`到`bilibili.com`，主要针对上古网页
