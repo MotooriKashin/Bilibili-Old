@@ -332,6 +332,38 @@
             let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi");
             bofqi ? bofqi.scrollIntoView({ behavior: 'smooth', block: 'center' }) : "";
         }
+        /**
+         * 比较大小，仅用于弹幕排序
+         * @param {string} num1 数字字符串 1
+         * @param {string} num2 数字字符串 2
+         * @returns {boolean} 前者大于后者返回真，否则返回假，相等也返回假
+         */
+        bigInt(num1, num2) {
+            // 判断输入是否纯数字
+            let egx = /^\d+$/;
+            if (!egx.test(num1) || !egx.test(num2)) throw "请输入数字字符串";
+            // 强制转化输入为字符串
+            if (typeof num1 !== "string") num1 = String(num1);
+            if (typeof num2 !== "string") num2 = String(num2);
+            // 去除数字开头占位的0
+            num1 = num1.replace(/^0+/, "");
+            num2 = num2.replace(/^0+/, "");
+            // 数位不同，前者大为真，否则为假
+            if (num1.length > num2.length) return true;
+            else if (num1.length < num2.length) return false;
+            else {
+                // 数位相同，逐位比较
+                for (let i = 0; i < num1.length; i++) {
+                    // 任意一位前者大为真
+                    if (num1[i] > num2[i]) return true;
+                    // 任意一位前者小为假
+                    if (num1[i] < num2[i]) return false;
+                    // 仅当位相等时继续比较下一位
+                }
+                // 包括相等情况返回假
+                return false;
+            }
+        }
     }
 
     let define = new Define();
@@ -354,4 +386,5 @@
     BLOD.getTotalTop = (node) => { return define.getTotalTop(node) };
     BLOD.write = (html) => { return define.write(html) };
     BLOD.bofqiToView = () => { return define.bofqiToView() };
+    BLOD.bigInt = (num1, num2) => { return define.bigInt(num1, num2) };
 })()

@@ -12,8 +12,6 @@
     const toast = BLOD.toast; /** @see debug */
     console.debug('import module "reset.js"');
 
-    if (!BigInt) BigInt = (n) => { return Number(n) }
-
     BLOD.reset = {
         /**
          * 监听window下的对象
@@ -1467,7 +1465,7 @@
                 // 日期未早于投稿日，正常请求日期数据
                 toast("正在获取 " + this.time + " 日的弹幕。。。");
                 let danmaku = await BLOD.getHistoryDanmaku(this.time);
-                danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? -1 : 1));
+                danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? -1 : 1));
                 // 取最早一条弹幕的时间
                 this.time = BLOD.timeFormat(danmaku[danmaku.length - 1].ctime * 1000, 1).split(" ")[0];
                 this.danmaku = this.danmaku.concat(danmaku);
@@ -1610,7 +1608,7 @@
                     }
                 }
             }
-            danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+            danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? -1 : 1));
             return danmaku;
         }
     }

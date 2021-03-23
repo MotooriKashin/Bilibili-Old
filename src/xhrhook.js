@@ -14,8 +14,6 @@
     const protoSeg = root.lookupType('bilibili.DmSegMobileReply');
     const protoView = root.lookupType('bilibili.DmWebViewReply');
 
-    if (!BigInt) BigInt = (n) => { return Number(n) }
-
     /**
      * hook setTimeout过滤旧版播放器强制初始化错误
      * @see indefined {@link https://github.com/indefined/UserScripts/issues/39#issuecomment-745279894}
@@ -417,7 +415,7 @@
      */
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
-            danmaku.sort((a, b) => (BigInt(a.idStr) > BigInt(b.idStr) ? 1 : -1));
+            danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? 1 : -1));
             let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
@@ -517,7 +515,7 @@
             };
         }
         specialEffects(danmaku);
-        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+        danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? 1 : -1));
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
          * @param  {Array} dm 弹幕数组
@@ -795,7 +793,7 @@
                         if (BLOD.aid < 400000) {
                             specialEffects(danmaku);
                         }
-                        danmaku.sort((a, b) => (BigInt(a.dmid) > BigInt(b.dmid) ? 1 : -1));
+                        danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? 1 : -1));
                         parseTime = new Date() - parseTime;
                         list_so.onmessage({
                             data: {
