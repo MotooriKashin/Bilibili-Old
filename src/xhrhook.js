@@ -515,7 +515,7 @@
             };
         }
         specialEffects(danmaku);
-        danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? 1 : -1));
+        danmaku.sort((a, b) => (BLOD.bigInt(a.dmid, b.dmid) ? 1 : -1));
         /**
          * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
          * @param  {Array} dm 弹幕数组
@@ -793,7 +793,7 @@
                         if (BLOD.aid < 400000) {
                             specialEffects(danmaku);
                         }
-                        danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? 1 : -1));
+                        danmaku.sort((a, b) => (BLOD.bigInt(a.dmid, b.dmid) ? 1 : -1));
                         parseTime = new Date() - parseTime;
                         list_so.onmessage({
                             data: {

@@ -1608,7 +1608,7 @@
                     }
                 }
             }
-            danmaku.sort((a, b) => (BLOD.bigInt(a.idStr, b.idStr) ? -1 : 1));
+            danmaku.sort((a, b) => (BLOD.bigInt(a.dmid, b.dmid) ? -1 : 1));
             return danmaku;
         }
     }
