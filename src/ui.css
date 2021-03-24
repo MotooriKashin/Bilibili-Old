@@ -115,6 +115,8 @@
 #BLOD-UI-right input {
   display: inline;
   appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
 }
 
 #BLOD-UI-right label {
