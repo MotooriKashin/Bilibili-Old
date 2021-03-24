@@ -114,9 +114,9 @@
 
 #BLOD-UI-right input {
   display: inline;
-  appearance: auto;
-  -webkit-appearance: auto;
-  -moz-appearance: auto;
+  appearance: checkbox;
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
 }
 
 #BLOD-UI-right label {
