@@ -1335,7 +1335,7 @@
                             e = Array.isArray(e) ? e : [e];
                             debug.error("获取视频信息出错：aid：" + this.aid, "HOST：https://api.bilibili.com/x/player/pagelist", ...e);
                             try {
-                                // 尝试访问BIliPlus获取信息
+                                // 尝试访问BiliPlus获取信息
                                 this.data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://www.biliplus.com/api/view", { "id": this.aid })));
                                 this.data = (this.data.list && this.data.list[this.p - 1]) || (this.data.v2_app_api && this.data.v2_app_api.pages && this.data.v2_app_api.pages[this.p - 1]);
                                 this.cid = this.data.cid;
