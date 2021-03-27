@@ -21422,7 +21422,7 @@ function Fa() {
                         // 在原生载入弹幕的实现中，确实是把这个属性保存到class中，然后再去遍历一次数组进行“重命名”
                         // 于是这里依照原生代码处理一遍弹幕数据，保证引用它的有关功能正常运行（例如同屏弹幕调整功能）
                         // 相关原生代码可在文件内搜索 h.gb = b.danmakuArray[q]["class"]
-                        if (danmaku[0].class) {
+                        if (danmaku[0].class != undefined) {
                             for (let i = 0; i < danmaku.length; i++) {
                                 danmaku[i].gb = danmaku[i].class;
                             }

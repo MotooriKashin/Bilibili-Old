@@ -339,15 +339,6 @@
          * @returns {boolean} 前者大于后者返回真，否则返回假，相等也返回假
          */
         bigInt(num1, num2) {
-            // 判断输入是否纯数字
-            let egx = /^\d+$/;
-            if (!egx.test(num1) || !egx.test(num2)) throw "请输入数字字符串";
-            // 强制转化输入为字符串
-            if (typeof num1 !== "string") num1 = String(num1);
-            if (typeof num2 !== "string") num2 = String(num2);
-            // 去除数字开头占位的0
-            num1 = num1.replace(/^0+/, "");
-            num2 = num2.replace(/^0+/, "");
             // 数位不同，前者大为真，否则为假
             if (num1.length > num2.length) return true;
             else if (num1.length < num2.length) return false;
@@ -363,6 +354,24 @@
                 // 包括相等情况返回假
                 return false;
             }
+        }
+        /**
+         * 将弹幕数组按弹幕id升序排序
+         * @param  {[]} danmaku 要排序的弹幕数组
+         * @param  {string} key 弹幕id的属性名，应为dmid或idStr
+         */
+        sortDmById(danmaku, key) {
+            let egx = /^\d+$/;
+            for (let i = 0, d; i < danmaku.length; i++) {
+                d = danmaku[i];
+                // 判断输入是否纯数字
+                if (!egx.test(d[key])) throw "请输入数字字符串";
+                // 强制转化输入为字符串
+                if (typeof d[key] !== "string") d[key] = String(d[key]);
+                // 去除数字开头占位的0
+                d[key] = d[key].replace(/^0+/, "");
+            }
+            danmaku.sort((a, b) => this.bigInt(a[key], b[key]) ? 1 : -1);
         }
     }
 
@@ -387,4 +396,5 @@
     BLOD.write = (html) => { return define.write(html) };
     BLOD.bofqiToView = () => { return define.bofqiToView() };
     BLOD.bigInt = (num1, num2) => { return define.bigInt(num1, num2) };
+    BLOD.sortDmById = (danmaku, key) => { return define.sortDmById(danmaku, key) };
 })()
