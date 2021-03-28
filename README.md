@@ -2,7 +2,7 @@
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面。
 尽量调用 B 站原生脚本进行重写，再尝试修复一些失效功能。  
-版本更新时部分涉及原生脚本的修改以及其他模块的改进由于 CDN 可能会有 24h 以内的延迟。*其实可以使用`purge`立即刷新，详见[模块问题](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src)*
+版本更新时部分涉及原生脚本的修改以及其他模块的改进由于 CDN 可能会有 24h 以内的延迟。*可以使用`purge`立即刷新，详见[模块问题](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src)*
 
 ---
 
@@ -57,7 +57,7 @@ _功能详情请在设置里查看，部分功能默认不生效也请在设置�
 **图示是调出设置的方法，若是还不够明白，可以戳[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif)。**
 
 - 脚本有些功能不默认开启，有需要请自行在设置里启用。
-- 选项滑块选项右切即开启该功能，鼠标放在指定功能上会弹出详细说明。
+- 选项勾选即开启该功能，鼠标放在指定功能上会弹出详细说明。
 - 调整设置后移开鼠标，设置界面会自动关闭并保存设置数据。
 - 部分功能需要**刷新**页面才会生效。
 - 设置数据储存在脚本管理器中。
@@ -88,8 +88,7 @@ _功能详情请在设置里查看，部分功能默认不生效也请在设置�
 
 _设置里启用“其他下载”将在下载面板上提供媒体资源之外的内容下载选项，包括弹幕、封面、CC 字幕。对于弹幕额外开启“新版弹幕”的话提供的是新版 proto 弹幕转化而来的 xml 文件。_  
 
-设置里启用“ef2辅助IDM下载”会将下载链接替换为自定义的[`ef2`](https://github.com/MotooriKashin/ef2)链接。  
-**通过ef2协议，脚本终于解决了无法左键点击下载视频的问题！！！**，并且一定程度上缓解了右键另存为仍然-403的错误
+若下载频繁出现-403错误，可以尝试使用[`ef2`](https://github.com/MotooriKashin/ef2)配合IDM进行下载。
 
 ---
 
@@ -196,6 +195,7 @@ Tampermonkey BETA 4.10.6132
 - [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
 - [esterTion](https://github.com/esterTion/BiliBili_crc2mid)（GFUL 许可）：弹幕哈希反查算法的 JavaScript 实现
 - [miyouzi](https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts)（MIT 许可）：APP 端 DASH sidx 解析
+- [js-base64](https://github.com/dankogai/js-base64)（BSD-3-Clause 许可）：Base64 算法
 
 ---
 
@@ -216,7 +216,7 @@ Tampermonkey BETA 4.10.6132
 - 2020 年 10 月 27 日：评论区右上角小页码区消失。
 - 2020 年 11 月 20 日：评论区 av/BV 链接替换为标题。
 - 2020 年 12 月 03 日：404 mylist，少了个考古工具
-- 2020 年 02 月 08 日：关闭旧版历史弹幕池，部分高级弹幕、历史弹幕从此消失。
+- 2021 年 02 月 08 日：关闭旧版历史弹幕池，部分高级弹幕、历史弹幕从此消失。
 
 ---
 
