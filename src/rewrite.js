@@ -180,7 +180,7 @@
             location.replace(location.href.replace("s/video", "video"));
         }
         space() {
-            BLOD.mid = BLOD.path[3].split("?")[0] ? 1 * BLOD.path[3] : BLOD.mid;
+            BLOD.mid = (BLOD.path[3] && BLOD.path[3].split("?")[0]) || BLOD.mid;
             BLOD.reset.setJoinTime();
         }
         index() {
