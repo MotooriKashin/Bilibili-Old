@@ -133,6 +133,8 @@
             li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
             li.firstChild.onclick = () => this.setTable();
+            li.onmouseover = () => li.setAttribute("class", "context-line context-menu-function bili-old-download hover");
+            li.onmouseout = () => li.setAttribute("class", "context-line context-menu-function bili-old-download");
             // 监听播放器右键菜单创建
             node.addEventListener("DOMNodeInserted", () => {
                 if (this.add) return;
