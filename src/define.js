@@ -329,7 +329,8 @@
          * 滚动到旧版播放器
          */
         bofqiToView() {
-            let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi");
+            if (window.self != window.top && BLOD.config.reset.viewbofqi != 2) return;
+            let bofqi = document.querySelector("#__bofqi") || document.querySelector(".bangumi_player") || document.querySelector("#bofqi") || document.querySelector("#bilibiliPlayer");
             bofqi ? bofqi.scrollIntoView({ behavior: 'smooth', block: 'center' }) : "";
         }
         /**

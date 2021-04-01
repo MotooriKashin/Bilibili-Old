@@ -15,7 +15,7 @@
             // 将设置以主键名进行分类，未分类的将单独绘制
             this.menu = ["播放", "弹幕", "修复", "样式", "直播"];
             this.item = [
-                ["static", "viewbofqi", "widescreen", "electric", "panel", "autoplay", "playerStyle"],
+                ["static", "widescreen", "electric", "panel", "autoplay", "playerStyle"],
                 ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff", "localDanmaku", "concatDanmaku"],
                 ["replyfloor", "preview", "jointime", "lostvideo", "bvid2av", "like", "heartbeat", "carousel"],
                 ["grobalboard", "headblur", "episodedata", "adloc", "history", "oldreply", "uplist", "indexIcon", "commentjump", "searchHistory"],
@@ -99,6 +99,7 @@
                     li.setAttribute("id", "BLOD-UI-menu");
                     this.right.innerHTML = '';
                     this.item[i].forEach(d => { this.checked(d) });
+                    if (i == 0) this.play();
                     if (i == 1) this.danmaku();
                 }
             })
@@ -158,6 +159,42 @@
                     if (e.which == 13) callback(input.value);
                 }
             }
+        }
+        /**
+         * 播放菜单，这里可能之后会定制其他功能
+         */
+        play() {
+            let div = BLOD.addElement("div", {}, this.right);
+            div.innerHTML = '<label><input type="checkbox" />自动滚动到播放器</label><label><input type="checkbox" style="opacity: 0;" />对子页面生效</label>';
+            this.state(div, BLOD.defaultConfig[type][d][2]);
+            if (config.reset.viewbofqi) {
+                div.children[0].children[0].checked = true;
+                div.children[1].children[0].setAttribute("style", "opacity: 1;");
+                if (config.reset.viewbofqi == 2) div.children[1].children[0].checked = true;
+            }
+            div.querySelector("input").onclick = () => {
+                if (config.reset.viewbofqi) {
+                    toast.warning("禁用功能：自动滚动到播放器");
+                    config.reset.viewbofqi = 0;
+                    div.children[1].children[0].setAttribute("style", "opacity: 0;");
+                    div.children[1].children[0].checked = false;
+                    BLOD.setValue("config", config);
+                } else {
+                    toast.success("启用功能：自动滚动到播放器");
+                    config.reset.viewbofqi = 1;
+                    div.children[1].children[0].setAttribute("style", "opacity: 1;");
+                    BLOD.setValue("config", config);
+                }
+            }
+            div.children[1].children[0].onclick = () => {
+                if (config.reset.viewbofqi == 1) {
+                    config.reset.viewbofqi = 2;
+                    BLOD.setValue("config", config);
+                } else {
+                    config.reset.viewbofqi = 1;
+                    BLOD.setValue("config", config);
+                }
+            };
         }
         /**
          * 弹幕菜单，这里可能之后会定制其他功能
