@@ -165,24 +165,24 @@
          */
         play() {
             let div = BLOD.addElement("div", {}, this.right);
-            div.innerHTML = '<label><input type="checkbox" />自动滚动到播放器</label><label><input type="checkbox" style="opacity: 0;" />对子页面生效</label>';
-            this.state(div, BLOD.defaultConfig[type][d][2]);
+            div.innerHTML = '<label><input type="checkbox" />自动滚动到播放器</label><label style="opacity: 0;"><input type="checkbox" />对子页面生效</label>';
+            this.state(div, BLOD.defaultConfig.reset.viewbofqi[2]);
             if (config.reset.viewbofqi) {
                 div.children[0].children[0].checked = true;
-                div.children[1].children[0].setAttribute("style", "opacity: 1;");
+                div.children[1].setAttribute("style", "opacity: 1;");
                 if (config.reset.viewbofqi == 2) div.children[1].children[0].checked = true;
             }
             div.querySelector("input").onclick = () => {
                 if (config.reset.viewbofqi) {
                     toast.warning("禁用功能：自动滚动到播放器");
                     config.reset.viewbofqi = 0;
-                    div.children[1].children[0].setAttribute("style", "opacity: 0;");
+                    div.children[1].setAttribute("style", "opacity: 0;");
                     div.children[1].children[0].checked = false;
                     BLOD.setValue("config", config);
                 } else {
                     toast.success("启用功能：自动滚动到播放器");
                     config.reset.viewbofqi = 1;
-                    div.children[1].children[0].setAttribute("style", "opacity: 1;");
+                    div.children[1].setAttribute("style", "opacity: 1;");
                     BLOD.setValue("config", config);
                 }
             }
