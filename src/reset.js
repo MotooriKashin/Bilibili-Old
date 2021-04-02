@@ -1467,6 +1467,7 @@
                 toast("正在获取 " + this.time + " 日的弹幕。。。");
                 let danmaku = await BLOD.getHistoryDanmaku(this.time);
                 BLOD.sortDmById(danmaku, "idStr");
+                danmaku.reverse();
                 // 取最早一条弹幕的时间
                 this.time = BLOD.timeFormat(danmaku[danmaku.length - 1].ctime * 1000, 1).split(" ")[0];
                 this.danmaku = this.danmaku.concat(danmaku);
