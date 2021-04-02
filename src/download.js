@@ -237,7 +237,7 @@
                     BLOD.bloburl.xml = "";
                 }
             }
-            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash) return toast.warning("未找到任何视频链接 ಥ_ಥ");
+            if (!BLOD.mdf.mp4 && !BLOD.mdf.flv && !BLOD.mdf.dash && !BLOD.mdf.xml) return toast.warning("未找到任何视频链接 ಥ_ಥ");
             top = document.createElement("div");
             top.setAttribute("id", "bili-old-download-table");
             if (BLOD.mdf.mp4) this.addBox(top, BLOD.mdf.mp4, "mp4", "download-mp4");
