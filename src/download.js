@@ -356,7 +356,8 @@
                 BLOD.mdf.xml.push(["弹幕", "//api.bilibili.com/x/v1/dm/list.so?oid=" + BLOD.cid, BLOD.sizeFormat(), ".xml"]);
             }
             if (BLOD.__INITIAL_STATE__) {
-                BLOD.mdf.xml.push(["封面", (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.pic || BLOD.__INITIAL_STATE__.mediaInfo.cover).replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
+                if (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.pic) BLOD.mdf.xml.push(["封面", BLOD.__INITIAL_STATE__.videoData.pic.replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
+                if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.cover) BLOD.mdf.xml.push(["封面", BLOD.__INITIAL_STATE__.mediaInfo.cover.replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
                 if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover.replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
                 if (BLOD.__INITIAL_STATE__.mediaInfo && BLOD.__INITIAL_STATE__.mediaInfo.specialCover) BLOD.mdf.xml.push(["海报", BLOD.__INITIAL_STATE__.mediaInfo.specialCover.replace("http:", ""), BLOD.sizeFormat(), ".jpg"]);
                 if (BLOD.__INITIAL_STATE__.videoData && BLOD.__INITIAL_STATE__.videoData.subtitle && BLOD.__INITIAL_STATE__.videoData.subtitle.list) for (let i = 0; i < BLOD.__INITIAL_STATE__.videoData.subtitle.list.length; i++) BLOD.mdf.xml.push([BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].lan_doc, BLOD.__INITIAL_STATE__.videoData.subtitle.list[i].subtitle_url.replace("http:", ""), BLOD.sizeFormat(), ".json"]);

@@ -1398,8 +1398,9 @@
          * @param {[]} arr 新版弹幕数组
          */
         async download(arr) {
-            if (!this.node) return;
             arr = await BLOD.toXml(arr);
+            BLOD.xml = arr;
+            if (!this.node) return;
             this.div = BLOD.addElement("div", { id: "BLOD-dm-dl" }, this.node);
             this.blob = new Blob([arr]);
             BLOD.bloburl.xml = URL.createObjectURL(this.blob);
