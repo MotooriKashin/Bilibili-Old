@@ -4945,7 +4945,7 @@ function Fa() {
                 if (b.text && !b.canvas) {
                     f = b.size * f * c.fontSize * (c.Uh ? this.parent.getBoundingClientRect().height / 440 : 1);
                     q.font = (c.bold ? "bold" : "normal") + " " + f + "px " + c.fontFamily;
-                    var u = b.text.split("\r");
+                    var u = b.text.replace("\r", "\n").split("\n");
                     if (b.bc) {
                         var B = this.AM(b.text);
                         var A = [];
