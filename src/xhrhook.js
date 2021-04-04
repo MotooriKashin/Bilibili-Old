@@ -882,8 +882,10 @@
                 }
                 // 监听视频链接
                 if (url.includes("/playurl?")) {
-                    obj.fourk = obj.sign ? null : 1;
-                    obj.fnval = obj.fnval ? 80 : null;
+                    if (!obj.sign) {
+                        obj.fourk = 1;
+                        obj.fnval = obj.fnval ? 80 : null;
+                    }
                     BLOD.cid = obj.cid || BLOD.cid;
                     BLOD.aid = obj.avid || BLOD.aid || null;
                     BLOD.bvid = obj.bvid || (BLOD.aid && BLOD.abv(BLOD.aid)) || BLOD.bvid || null;
