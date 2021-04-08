@@ -21,7 +21,7 @@
             Object.defineProperty(window, "cid", { set: (v) => { BLOD.cid = v }, get: () => { return BLOD.cid }, configurable: true });
             Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
             if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
-            if (config.reset.novideo) Object.defineProperty(window, "__playinfo__", { set: () => { }, get: () => { return undefined }, configurable: true });
+            if (config.reset.novideo || config.reset.forceFlv) Object.defineProperty(window, "__playinfo__", { set: () => { }, get: () => { return undefined }, configurable: true });
         },
         /**
          * 替换原生脚本，不直接修改页面框架
