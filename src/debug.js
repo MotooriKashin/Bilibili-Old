@@ -129,7 +129,7 @@
             let item = document.createElement("div");
             item.setAttribute("class", "toast toast-" + type);
             item.setAttribute("aria-live", "assertive");
-            item.setAttribute("style", "opacity: 0.0");
+            item.setAttribute("style", "visibility: hidden;position: absolute");
             setTimeout(() => {
                 if (this.count > 0) this.count--;
                 item = this.box.insertBefore(item, this.box.firstChild);
@@ -139,26 +139,40 @@
             }, this.count * this.step);
             this.count++;
         }
+        /**
+         * 展开toast通知
+         * @param {HTMLElement} item 通知节点
+         * @param {number} [i] 声明用，禁填！
+         */
         come(item, i = 0) {
+            let height = item.clientHeight;
+            item.setAttribute("style", "display: none;");
             let timer = setInterval(() => {
                 i++;
-                item.setAttribute("style", "opacity: ." + i);
-                if (i === 8) {
+                if ((i / 60 * height) < 30) return;
+                item.setAttribute("style", "height: " + i / 60 * height + "px;");
+                if (i === 60) {
                     clearInterval(timer);
                     item.removeAttribute("style");
                 }
-            }, 50)
+            })
         }
-        quit(item, i = 8) {
+        /**
+         * 收起toast通知
+         * @param {HTMLElement} item 通知节点
+         * @param {number} [i] 声明用，禁填！
+         */
+        quit(item, i = 60) {
+            let height = item.clientHeight;
             let timer = setInterval(() => {
                 i--;
-                item.setAttribute("style", "opacity: ." + i);
-                if (i === 0) {
+                item.setAttribute("style", "height: " + i / 60 * height + "px;");
+                if ((i / 60 * height) < 30) {
                     clearInterval(timer);
                     item.remove();
                     if (!this.box.firstChild) this.box.remove();
                 }
-            }, 50)
+            })
         }
         msg(...msg) {
             let div = document.createElement("div");
