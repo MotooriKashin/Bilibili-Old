@@ -103,7 +103,7 @@
             data = Object.assign(data, obj);
             let arr = [], i = 0;
             for (let key in data) {
-                if (data[key] !== "undefined" && data[key] !== null) {
+                if (data[key] !== undefined && data[key] !== null) {
                     arr[i] = key + "=" + data[key];
                     i++;
                 }

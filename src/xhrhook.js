@@ -886,8 +886,8 @@
                         obj.fourk = 1;
                         obj.fnval = obj.fnval ? 80 : null;
                         if (config.reset.forceFlv) {
-                            obj.fnval = undefined;
-                            obj.fnver = undefined;
+                            obj.fnval = null;
+                            obj.fnver = null;
                         }
                     }
                     BLOD.cid = obj.cid || BLOD.cid;
