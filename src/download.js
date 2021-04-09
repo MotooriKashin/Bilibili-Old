@@ -105,7 +105,7 @@
          * @param {string} [P] 账户密钥（服务器鉴权——基本不可能用到）
          * @param {string} [o] 保存目录（由于反斜杠也是 JavaScript 的转义符，请使用双反斜杠输入！）
          * @param {string} [s] 文件名（包括推展名）
-         * @param {boolean}} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
+         * @param {boolean} [f] 禁用 IDM 对话框，直接后台下载（键值请使用 true 或任何 js 认为的真值）
          * @param {boolean} [q] 添加到队列而不立即下载（键值请使用 true 或任何 js 认为的真值）
          * @returns {string} ef2链接字符串
          */

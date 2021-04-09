@@ -1051,7 +1051,18 @@
     // BV=>av
     class ParameterTrim {
         constructor() {
-            this.param = JSON.parse(BLOD.getResourceText("search"));
+            this.param = [
+                "spm_id_from",
+                "from_source",
+                "msource",
+                "bsource",
+                "seid",
+                "source",
+                "session_id",
+                "visit_id",
+                "sourceFrom",
+                "from_spmid"
+            ];
             this.url = [];
             this.run();
         }
@@ -1121,7 +1132,8 @@
             let obj = BLOD.urlObj(url);
             if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
             this.param.forEach(d => {
-                obj[d] = null;
+                if (obj[d]) obj[d] = null;
+                if (obj.from && obj.from == "search") obj.from == null;
             })
             return obj;
         }
