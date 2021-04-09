@@ -451,7 +451,7 @@
          * @param {[]} item 预先构造的下载数据：0，画质；1，URL；2，大小；3：拓展名
          * @param {{}} [para] 预配置的ef2参数：user-agent、referer……
          */
-        ef2Set(name, item, para = {}) {
+        ef2Set(mode, item, para = {}) {
             if (item[1].startsWith("//")) item[1] = "https:" + item[1];
             let ui = BLOD.addElement("div", { class: "BLOD-dl-settings", style: "top: " + (self.pageYOffset + window.screen.height * 0.1) + "px" });
             let title = BLOD.addElement("h1", {}, ui);
@@ -482,7 +482,7 @@
             }
             title.innerHTML = document.title.split("_哔哩")[0];
             name.innerHTML = "ef2参数[选填]";
-            d1.innerHTML = "格式：" + name;
+            d1.innerHTML = "格式：" + mode;
             d2.innerHTML = "质量：" + item[0];
             d3.innerHTML = "大小：" + item[2];
             d4.innerHTML = 'URL<input type="text" placeholder="https://www.example.com" title="这里仍可以全选然后右键IDM下载" />';
