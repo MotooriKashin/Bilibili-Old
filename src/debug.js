@@ -95,6 +95,7 @@
             this.change(BLOD.getValue("toast"));
             BLOD.addCss(BLOD.getResourceText("toast"), "toastr-style");
             this.count = 0; // 未显示的通知数
+            this.sence = 60; // 动效计数
             this.container = document.createElement("div");
             this.container.setAttribute("id", "toast-container");
             this.container.setAttribute("class", "toast-top-right");
@@ -142,16 +143,15 @@
         /**
          * 展开toast通知
          * @param {HTMLElement} item 通知节点
-         * @param {number} [i] 声明用，禁填！
+         * @param {number} [i] 声明用，禁填！设定将一个通知分成i等分0->i逐渐展开动效
          */
         come(item, i = 0) {
             let height = item.clientHeight;
             item.setAttribute("style", "display: none;");
             let timer = setInterval(() => {
                 i++;
-                if ((i / 60 * height) < 30) return;
-                item.setAttribute("style", "height: " + i / 60 * height + "px;");
-                if (i === 60) {
+                item.setAttribute("style", "padding-top: " + i / 4 + "px;padding-bottom: " + i / 4 + "px;height: " + i / 60 * height + "px;");
+                if (i === this.sence) {
                     clearInterval(timer);
                     item.removeAttribute("style");
                 }
@@ -160,14 +160,14 @@
         /**
          * 收起toast通知
          * @param {HTMLElement} item 通知节点
-         * @param {number} [i] 声明用，禁填！
+         * @param {number} [i] 声明用，禁填！设定将一个通知分成i等分i->0逐渐收起动效
          */
-        quit(item, i = 60) {
+        quit(item, i = this.sence) {
             let height = item.clientHeight;
             let timer = setInterval(() => {
                 i--;
-                item.setAttribute("style", "height: " + i / 60 * height + "px;");
-                if ((i / 60 * height) < 30) {
+                item.setAttribute("style", "padding-top: " + i / 4 + "px;padding-bottom: " + i / 4 + "px;height: " + i / 60 * height + "px;");
+                if (i === 0) {
                     clearInterval(timer);
                     item.remove();
                     if (!this.box.firstChild) this.box.remove();
