@@ -991,23 +991,6 @@
         toast.warning("禁用直播间p2p上传！");
     }
 
-    // 获取播放通知信息
-    const getLoc = async () => {
-        try {
-            let loc = await BLOD.xhr("https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=142%2C2837%2C2836%2C2870%2C2953%2C2954%2C2955%2C2956");
-            loc = JSON.parse(loc).data;
-            for (let key in loc) {
-                if (loc[key] && loc[key][0]) {
-                    BLOD.loc = BLOD.loc || [];
-                    loc[key].forEach(d => {
-                        if (d.url) BLOD.loc.push([d.url, d.name]);
-                    });
-                }
-            }
-        } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("播放信息", ...e) }
-    }
-    if (config.reset.carousel && !BLOD.loc) getLoc();
-
     // 添加UP主列表
     BLOD.reset.uplist = () => {
         if (!BLOD.staff || !config.reset.uplist) return;
