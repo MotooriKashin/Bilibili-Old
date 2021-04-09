@@ -1114,9 +1114,9 @@
         search(url) {
             let obj = BLOD.urlObj(url);
             if (obj.bvid) obj.aid = BLOD.abv(obj.bvid);
+            if (obj.from && obj.from == "search") obj.from = null;
             this.param.forEach(d => {
                 if (obj[d]) obj[d] = null;
-                if (obj.from && obj.from == "search") obj.from == null;
             })
             return obj;
         }
