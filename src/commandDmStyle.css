@@ -1,0 +1,121 @@
+.vote-dialog {
+    overflow: hidden;
+    border-radius: 1rem;
+    background-color: #F5F5F5;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    position: absolute;
+    padding: 0.8rem 1rem;
+    cursor: default;
+    pointer-events: all;
+  }
+  
+  .vote-dialog-show {
+    animation: opacity-animation 0.2s
+  }
+  
+  .vote-panel {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .vote-title {
+    font-weight: bolder;
+    margin-bottom: 0.5rem;
+  }
+  
+  .vote-option {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .vote-button {
+    text-align: center;
+    min-width: 85px;
+    display: inline-block;
+    padding: 0.3rem 2rem;
+    border: 1px solid #00A1D6;
+    border-radius: 5px;
+    margin: 0.2rem 0;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+  .vote-button:hover {
+    background-color: #1baada;
+    color: #F5F5F5;
+    transition: all 0.15s ease-out;
+  }
+  
+  .vote-button::before {
+    position: absolute;
+    padding: 0 1.8rem;
+    left: 0;
+    content: attr(idx);
+  }
+  
+  .vote-progress-bg {
+    border-radius: 5px;
+    min-width: 85px;
+    margin: 0.2rem 0;
+    border: 1px solid #1a1a1a6b;
+    background-color: white;
+  }
+  
+  .vote-progress {
+    transition: width 0.3s;
+    animation: opacity-animation 0.5s;
+    overflow: hidden;
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #d3d3d3;
+    text-align: left;
+    overflow: visible;
+  }
+  
+  .vote-progress-blue {
+    background-color: #9fdef3;
+  }
+  
+  .vote-progress-desc {
+    margin: 0.3rem 0.8rem;
+  }
+  
+  @keyframes opacity-animation {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .vote-result {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    right: 1rem;
+    margin-left: 1rem;
+    justify-content: space-evenly;
+  }
+  
+  .vote-count {
+    white-space: nowrap;
+    text-align: right;
+    width: fit-content;
+    display: inline-block;
+    padding: 0.5rem 0;
+  }
+  
+  .bilibili-player-video-popup {
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
