@@ -406,6 +406,13 @@
   height: 50px;
 }
 
+.BLOD-dl-settings input {
+  display: inline;
+  appearance: checkbox;
+  -webkit-appearance: checkbox;
+  -moz-appearance: checkbox;
+}
+
 .BLOD-dl-settings>* {
   margin: 8px;
 }
