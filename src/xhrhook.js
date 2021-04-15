@@ -450,7 +450,7 @@
                 type: 1,
                 oid: cid,
                 pid: aid
-            }), "arraybuffer", {}, false);
+            }), "arraybuffer", {}, true);
             config = protoView.decode(new Uint8Array(config));
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
