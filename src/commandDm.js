@@ -198,7 +198,7 @@
         cnt: 22343      <= 投票总人数
         duration: 5000
         icon: "http://i0.hdslb.com/bfs/album/5ec559dbd4d54f8c1e76021d52eb9807de94bfb9.png"
-        my_vote: 0      <= 0：未投票 1：已投票
+        my_vote: 0      <= 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
         options: Array(2) ->
             0: {idx: 1, desc: "好玩", cnt: 15782}
             1: {idx: 2, desc: "非常好玩", cnt: 6595}
@@ -220,7 +220,7 @@
             this.voteId = extra.vote_id;
             this.options = extra.options;
             this.question = extra.question;
-            this.myVote = extra.my_vote;
+            this.myVote = extra.my_vote; // 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
             this.duration = extra.duration / 1e3 || 5;
             this.mid = extra.mid;
             this.from = from || 0;
@@ -250,20 +250,21 @@
             let optionDiv = divClass("vote-option");
             let result = divClass("vote-result");
             result.style.display = "none";
-            let button = [];
-            for (let i = 0, btn, count, opt; i < this.options.length; i++) {
+            let button = [], count = [];
+            for (let i = 0, btn, cnt, opt; i < this.options.length; i++) {
                 // 投票按钮
                 opt = this.options[i];
                 btn = divClass("vote-button");
                 btn.innerHTML = opt.desc;
                 btn.setAttribute("idx", opt.idx);
-                btn.onclick = () => this.goVote(i);
+                btn.onclick = () => this.goVote(opt.idx, i);
                 button[i] = btn;
                 optionDiv.appendChild(btn);
                 // 结果数据
-                count = divClass("vote-count");
-                count.innerHTML = opt.cnt + "票";
-                result.appendChild(count);
+                cnt = divClass("vote-count");
+                cnt.innerHTML = opt.cnt;
+                count[i] = cnt;
+                result.appendChild(cnt);
             }
             panel.appendChild(optionDiv);
             panel.appendChild(result);
@@ -274,30 +275,83 @@
             this.dialog = dialog;
             this.result = result;
             this.button = button;
+            this.count = count;
+            this.progress = [];
+            // 已投票则直接显示结果
+            if (this.myVote !== 0) {
+                this.showResult();
+                this.progress[this.myVote - 1].className = "vote-progress vote-progress-blue";
+            };
         }
-        goVote(i) {
-            // 发送投票操作到服务器...
-            this.showResult(i);
+        goVote(idx, i) {
+            // 发送投票操作到服务器
+            let url = "//api.bilibili.com/x/web-interface/view/dm/vote";
+            BLOD.xhr.post(url,
+                BLOD.objUrl(null, {
+                    aid: String(BLOD.aid),
+                    cid: BLOD.cid,
+                    progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
+                    vote: idx,
+                    vote_id: this.voteId,
+                    csrf: BLOD.getCookies().bili_jct
+                })).then((resp) => {
+                    resp = JSON.parse(resp);
+                    if (resp.code === 0) {
+                        this.progress[i].className = "vote-progress vote-progress-blue";
+                    }
+                }).catch((e) => {
+                    BLOD.debug.error("投票失败", e);
+                });
+            this.myVote = idx;
+            this.showResult();
+            this.to += 5;
         }
-        showResult(selected) {
+        showResult() {
             this.result.style.display = "flex";
             // 显示票数、比例条
             for (let i = 0, progress, desc; i < this.button.length; i++) {
                 this.button[i].onclick = null;
                 this.button[i].innerHTML = "";
                 this.button[i].className = "vote-progress-bg";
-                progress = divClass(i === selected ? "vote-progress vote-progress-blue" : "vote-progress");
-                progress.style.width = "0";
+                progress = divClass("vote-progress");
                 desc = divClass("vote-progress-desc");
                 desc.innerHTML = this.options[i].desc;
                 progress.appendChild(desc);
                 this.button[i].appendChild(progress);
-                requestAnimationFrame(() => progress.style.width = (this.options[i].cnt / this.total * 100) + "%");
+                this.progress[i] = progress;
             }
+            this.resultAnimation();
+        }
+        /**
+         * 投票结果的动画
+         */
+        resultAnimation() {
+            // 投票比例条型图向右展开
+            for (let i = 0; i < this.progress.length; i++) {
+                this.progress[i].style.width = "0";
+                requestAnimationFrame(() => this.progress[i].style.width = (this.options[i].cnt / this.total * 100) + "%");
+            }
+            // 右侧票数递增动画，持续0.8秒
+            let start = performance.now();
+            let frame = (t) => {
+                let percentage = (t - start) * 0.00125;
+                if (percentage < 1)
+                    requestAnimationFrame(frame);
+                else
+                    percentage = 1;
+
+                for (let i = 0; i < this.count.length; i++) {
+                    this.count[i].innerHTML = Math.floor(this.options[i].cnt * percentage);
+                }
+            }
+            requestAnimationFrame(frame);
         }
         show() {
             this.dialog.style.display = "flex";
             this.dialog.className = "vote-dialog vote-dialog-show";
+            if (this.myVote !== 0) {
+                this.resultAnimation();
+            }
         }
         hide() {
             this.dialog.style.display = "none";
