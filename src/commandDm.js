@@ -188,6 +188,9 @@
         return div;
     }
 
+    function isLogin() {
+        return BLOD.uid !== undefined;
+    }
 
     /*
     投票弹幕的extra属性的例子
@@ -280,29 +283,35 @@
             };
         }
         goVote(idx, i) {
-            // 发送投票操作到服务器
-            let url = "//api.bilibili.com/x/web-interface/view/dm/vote";
-            BLOD.xhr.post(url,
-                BLOD.objUrl(null, {
-                    aid: String(BLOD.aid),
-                    cid: BLOD.cid,
-                    progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
-                    vote: idx,
-                    vote_id: this.voteId,
-                    csrf: BLOD.getCookies().bili_jct
-                })).then((resp) => {
-                    resp = JSON.parse(resp);
-                    if (resp.code === 0) {
-                        this.progress[i].className = "vote-progress vote-progress-blue";
-                    } else {
-                        BLOD.toast.error("投票失败", resp.code, resp.message);
-                    }
-                }).catch((e) => {
-                    BLOD.toast.error("投票失败", e);
-                });
-            this.myVote = idx;
-            this.showResult();
-            this.to += 5; //点击投票后推迟5秒消失，防止结果消失太快来不及看
+            if (isLogin()) {
+                // 发送投票操作到服务器
+                let url = "//api.bilibili.com/x/web-interface/view/dm/vote";
+                BLOD.xhr.post(url,
+                    BLOD.objUrl(null, {
+                        aid: String(BLOD.aid),
+                        cid: BLOD.cid,
+                        progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
+                        vote: idx,
+                        vote_id: this.voteId,
+                        csrf: BLOD.getCookies().bili_jct
+                    })).then((resp) => {
+                        resp = JSON.parse(resp);
+                        if (resp.code === 0) {
+                            this.progress[i].className = "vote-progress vote-progress-blue";
+                        } else {
+                            BLOD.toast.error("投票失败", resp.code, resp.message);
+                        }
+                    }).catch((e) => {
+                        BLOD.toast.error("投票失败", e);
+                    });
+                this.myVote = idx;
+                this.showResult();
+                this.to += 5; //点击投票后推迟5秒消失，防止结果消失太快来不及看
+            }
+            else {
+                BLOD.toast.info("请先登录");
+                window.biliQuickLogin ? window.biliQuickLogin() : $.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin());
+            }
         }
         showResult() {
             this.result.style.display = "flex";
@@ -404,7 +413,7 @@
             */
             let button = divClass("link-button");
             let img = document.createElement("img");
-            img.src = "https://space.bilibili.com/favicon.ico";
+            img.src = "https://static.hdslb.com/images/favicon.ico";
             let span = document.createElement("span");
             span.innerHTML = this.content;
             button.appendChild(img);
