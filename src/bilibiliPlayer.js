@@ -5386,9 +5386,6 @@ function Fa() {
                     b = Object(h.a)(b, null);
                     var f = new g.a(b, c);
                     $.extend(this, {
-                        bind: function(b, c) {
-                            return f.bind(b, c);
-                        },
                         play: function () {
                             return f.play()
                         },

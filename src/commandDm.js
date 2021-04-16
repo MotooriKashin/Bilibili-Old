@@ -1,5 +1,5 @@
 (function () {
-    // 测试用例 (av374310136)
+    // 测试用例
     const commandDmForTest = [
         {
             "id": "45699475678691336",
@@ -36,6 +36,18 @@
             "mtime": "2021-02-26 10:57:59",
             "extra": "{\"icon\":\"http://i0.hdslb.com/bfs/face/1f0ff00ad152f286f1dc47af2aadc0abfe221921.jpg\"}",
             "idStr": "45700004947951621"
+        },
+        {
+            "id": null,
+            "oid": null,
+            "mid": null,
+            "command": "#LINK#",
+            "content": "关联视频跳转",
+            "progress": 5000,
+            "ctime": null,
+            "mtime": null,
+            "extra": "{\"aid\":2,\"title\":\"字幕君交流场所\",\"icon\":\"http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png\",\"bvid\":\"BV1xx411c7mD\",\"posX\":333.5,\"posY\":93.7}",
+            "idStr": null
         }
     ];
 
@@ -52,8 +64,9 @@
     function init() {
         if (window.__INITIAL_STATE__ && __INITIAL_STATE__.videoData && window.player) {
             console.log('import module "commandDm.js"');
+            if (popupDiv === undefined)
+                popupDiv = initCountainer();
             player = window.player;
-            popupDiv = initCountainer();
             bindEvents();
         }
     }
@@ -89,15 +102,17 @@
             VIDEO_MEDIA_SEEK: "video_media_seek",
             VIDEO_MEDIA_SEEKED: "video_media_seeked",
             VIDEO_MEDIA_ENDED: "video_media_ended",
-            VIDEO_RESIZE: "video_resize",
-            VIDEO_PLAYER_RESIZE: "video_player_resize",
+            VIDEO_RESIZE: "video_resize",                   // 等价于 onresize
+            VIDEO_PLAYER_RESIZE: "video_player_resize",     // 播放器大小调整完成之后触发，不会执行多次，缺点是切换到mini播放器时只触发video_resize，不会触发video_player_resize，导致互动弹幕界面缩放不正确
+            VIDEO_DESTROY: "video_destroy"
         };
-        player.bind(EVENT.VIDEO_MEDIA_PLAYING, play);
-        player.bind(EVENT.VIDEO_MEDIA_PAUSE, pause);
-        player.bind(EVENT.VIDEO_MEDIA_SEEK, pause);
-        player.bind(EVENT.VIDEO_MEDIA_SEEKED, play);
-        player.bind(EVENT.VIDEO_MEDIA_ENDED, pause);
-        player.bind(EVENT.VIDEO_PLAYER_RESIZE, resize);
+        player.addEventListener(EVENT.VIDEO_MEDIA_PLAYING, play);
+        player.addEventListener(EVENT.VIDEO_MEDIA_PAUSE, pause);
+        player.addEventListener(EVENT.VIDEO_MEDIA_SEEK, pause);
+        player.addEventListener(EVENT.VIDEO_MEDIA_SEEKED, play);
+        player.addEventListener(EVENT.VIDEO_MEDIA_ENDED, pause);
+        player.addEventListener(EVENT.VIDEO_PLAYER_RESIZE, resize);
+        player.addEventListener(EVENT.VIDEO_DESTROY, destroy)
     }
 
     /**
@@ -127,6 +142,7 @@
                 case "#RESERVE#":
                     break;
                 case "#LINK#":
+                    result.push(new Link(cdm, extra, from));
                     break;
                 case "#ACTOR#":
                     break;
@@ -184,6 +200,18 @@
                 cdm.hide();
             }
         }
+    }
+
+    function destroy() {
+        playing = false;
+        for (let i = 0; i < commandDm.visible.length; i++) {
+            commandDm.visible[i].destroy();
+        }
+        for (let i = 0; i < commandDm.hidden.length; i++) {
+            commandDm.hidden[i].destroy();
+        }
+        commandDm.visible.splice(0, commandDm.visible.length);
+        commandDm.hidden.splice(0, commandDm.hidden.length);
     }
 
     function divClass(className) {
@@ -298,13 +326,15 @@
                     resp = JSON.parse(resp);
                     if (resp.code === 0) {
                         this.progress[i].className = "vote-progress vote-progress-blue";
+                    } else {
+                        BLOD.debug.error("投票失败", resp.code, resp.message);
                     }
                 }).catch((e) => {
                     BLOD.debug.error("投票失败", e);
                 });
             this.myVote = idx;
             this.showResult();
-            this.to += 5;
+            this.to += 5; //点击投票后推迟5秒消失，防止结果消失太快来不及看
         }
         showResult() {
             this.result.style.display = "flex";
@@ -356,6 +386,7 @@
         hide() {
             this.dialog.style.display = "none";
             this.dialog.className = "vote-dialog";
+            this.to = this.from + this.duration; // 重设消失时间
         }
         resize(scaleX, scaleY) {
             this.dialog.style.left = (this.pos_x * scaleX) + "px";
@@ -363,8 +394,6 @@
             this.dialog.style.transform = "translateX(-50%) translateY(-50%) scale(" + (scaleX + scaleY) / 2 + ")";
         }
         destroy() {
-            this.dialog.remove();
-            this.dialog = null;
         }
     }
 
@@ -376,12 +405,72 @@
 
     }
 
+    /*
+    extra = {
+        aid: 2
+        bvid: "BV1xx411c7mD"
+        icon: "http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png"
+        posX: 333.5
+        posY: 93.7
+        title: "字幕君交流场所"
+    }
+    */
+
+    /**
+     * 关联视频跳转按钮
+     */
+    class Link {
+        constructor(cdm, extra, from) {
+            this.content = cdm.content;
+            this.aid = extra.aid;
+            this.from = from || 0;
+            this.to = from + 5;
+            this.pos_x = extra.posX || 200;
+            this.pos_y = extra.posY || 200;
+
+            /*
+                <div class="link-button">
+                    <img src="https://space.bilibili.com/favicon.ico">
+                    <span>关联视频跳转</span>
+                </div>
+            */
+            let button = divClass("link-button");
+            let img = document.createElement("img");
+            img.src = "https://space.bilibili.com/favicon.ico";
+            let span = document.createElement("span");
+            span.innerHTML = this.content;
+            button.appendChild(img);
+            button.appendChild(span);
+            button.style.display = "none";
+            button.onclick = () => window.open("https://www.bilibili.com/video/av" + this.aid);
+            popupDiv.appendChild(button);
+            this.button = button;
+        }
+        show() {
+            this.button.style.display = "block";
+        }
+        hide() {
+            this.button.style.display = "none";
+        }
+        resize(scaleX, scaleY) {
+            this.button.style.left = (this.pos_x * scaleX) + "px";
+            this.button.style.top = (this.pos_y * scaleY) + "px";
+            this.button.style.transform = "translateX(-50%) translateY(-50%) scale(" + Math.min(1.5, (scaleX + scaleY) / 2) + ")";
+        }
+        destroy() {
+        }
+    }
+
     /**
      * 程序入口
      * @param  {[]} cdm 互动弹幕原始数据，留空则载入测试用数据
      */
-    BLOD.test = (cdm) => {
-        init();
+    BLOD.test = (cdm, aid, cid) => {
+        if (aid != BLOD.aid || cid != BLOD.cid) {
+            // 正在“载入其他视频弹幕”，不必处理互动弹幕
+            return;
+        }
+        init(); // 切P后整个播放器会被销毁重建，需要重新绑定事件
         load(cdm ? cdm : commandDmForTest);
     }
 })()
