@@ -53,6 +53,7 @@
 
     var player, popupDiv;
     var playing = false;
+    var visible = true;
     var commandDm = {
         visible: [], // 可见的互动弹幕
         hidden: []   // 未显示的互动弹幕
@@ -112,7 +113,22 @@
         player.addEventListener(EVENT.VIDEO_MEDIA_SEEKED, play);
         player.addEventListener(EVENT.VIDEO_MEDIA_ENDED, pause);
         player.addEventListener(EVENT.VIDEO_PLAYER_RESIZE, resize);
-        player.addEventListener(EVENT.VIDEO_DESTROY, destroy)
+        player.addEventListener(EVENT.VIDEO_DESTROY, destroy);
+        // 开启/关闭弹幕事件
+        document.querySelector("div.bilibili-player-video-control > div.bilibili-player-video-btn.bilibili-player-video-btn-danmaku").addEventListener(
+            "click",
+            (event) => {
+                let option = event.target.getAttribute("name");
+                if (option == "ctlbar_danmuku_close") {
+                    visible = false;
+                    pause();
+                    popupDiv.style.display = "none";
+                } else if (option == "ctlbar_danmuku_on") {
+                    visible = true;
+                    play();
+                    popupDiv.style.display = "";
+                }
+            });
     }
 
     /**
@@ -154,8 +170,10 @@
     }
 
     function play() {
-        playing = true;
-        loop();
+        if (visible) {
+            playing = true;
+            loop();
+        }
     }
 
     function pause() {
@@ -442,7 +460,10 @@
             button.appendChild(img);
             button.appendChild(span);
             button.style.display = "none";
-            button.onclick = () => window.open("https://www.bilibili.com/video/av" + this.aid);
+            button.onclick = () => {
+                player.pause();
+                window.open("https://www.bilibili.com/video/av" + this.aid);
+            };
             popupDiv.appendChild(button);
             this.button = button;
         }
