@@ -352,7 +352,6 @@
                 })
                 let div = BLOD.addElement("div", { "style": "display: flex;align-items: center;justify-content: space-around;white-space: nowrap;" }, this.right);
                 div.innerHTML = '<a href="https://www.bilibili.com/h5/weekly-recommend" target="_blank">每周必看</a><a href="https://www.bilibili.com/h5/good-history" target="_blank">入站必刷</a>'
-                BLOD.addElement("div", { style: "position: absolute;bottom: 5%;left: 58%;transform: translateX(-50%);font-family: fangsong;" }, this.right).innerHTML = "永言配命 自求多福";
             } catch (e) { }
         }
     }
