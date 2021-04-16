@@ -477,6 +477,10 @@
                     allrequset.push(BLOD.xhr(config.specialDms[index].replace("http", "https"), "arraybuffer", {}, false));
                 }
             }
+            // 互动弹幕
+            if (BLOD.config.reset.commandDm && config.commandDms.length > 0) {
+                BLOD.loadCommandDm(config.commandDms, aid, cid);
+            }
             // 解码弹幕
             (await Promise.all(allrequset)).forEach(d => {
                 if (d) allDanmaku = allDanmaku.concat(protoSeg.decode(new Uint8Array(d)).elems);

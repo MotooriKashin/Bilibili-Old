@@ -4,6 +4,8 @@
   background-color: #f5f5f5;
   display: flex;
   flex-direction: column;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
   position: absolute;
   padding: 0.8rem 1rem;
@@ -104,6 +106,8 @@
 .vote-count {
   white-space: nowrap;
   text-align: right;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
   display: inline-block;
   padding: 0.5rem 0;

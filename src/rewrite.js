@@ -44,6 +44,10 @@
                 BLOD.reset.setLike();
                 BLOD.reset.setMediaList.init();
                 BLOD.reset.uplist();
+                if (BLOD.config.reset.commandDm) {
+                    BLOD.addCss(BLOD.getResourceText("commandDmStyle"));
+                    new Function(BLOD.getResourceText("commandDm"))();
+                }
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         watchlater() {

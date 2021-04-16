@@ -1,55 +1,4 @@
 (function () {
-    // 测试用例
-    const commandDmForTest = [
-        {
-            "id": "45699475678691336",
-            "oid": "302685251",
-            "mid": "29959830",
-            "command": "#VOTE#",
-            "content": "投票弹幕",
-            "progress": 153000,
-            "ctime": "2021-02-26 10:36:48",
-            "mtime": "2021-03-25 18:22:42",
-            "extra": "{\"vote_id\":703019,\"question\":\"你觉得这个功能好玩吗？\",\"cnt\":22348,\"options\":[{\"idx\":1,\"desc\":\"好玩\",\"cnt\":15786},{\"idx\":2,\"desc\":\"非常好玩\",\"cnt\":6596}],\"icon\":\"http://i0.hdslb.com/bfs/album/5ec559dbd4d54f8c1e76021d52eb9807de94bfb9.png\",\"my_vote\":1,\"pub_dynamic\":false,\"posX\":194,\"posY\":196.49823321554769,\"duration\":5000}",
-            "idStr": "45699475678691335"
-        },
-        {
-            "id": "45699503076933640",
-            "oid": "302685251",
-            "mid": "29959830",
-            "command": "#ATTENTION#",
-            "content": "关注弹幕",
-            "progress": 261400,
-            "ctime": "2021-02-26 10:37:40",
-            "mtime": "2021-02-26 10:59:45",
-            "extra": "{\"duration\":5000,\"posX\":129,\"posY\":180,\"icon\":\"http://i0.hdslb.com/bfs/album/ea58d134636f05ddc208a13889dd054ae45eb6ef.png\",\"type\":2}",
-            "idStr": "45699503076933639"
-        },
-        {
-            "id": "45700004947951624",
-            "oid": "302685251",
-            "mid": "29959830",
-            "command": "#UP#",
-            "content": "哈哈哈，糟了被发现了",
-            "progress": 28186,
-            "ctime": "2021-02-26 10:53:38",
-            "mtime": "2021-02-26 10:57:59",
-            "extra": "{\"icon\":\"http://i0.hdslb.com/bfs/face/1f0ff00ad152f286f1dc47af2aadc0abfe221921.jpg\"}",
-            "idStr": "45700004947951621"
-        },
-        {
-            "id": null,
-            "oid": null,
-            "mid": null,
-            "command": "#LINK#",
-            "content": "关联视频跳转",
-            "progress": 5000,
-            "ctime": null,
-            "mtime": null,
-            "extra": "{\"aid\":2,\"title\":\"字幕君交流场所\",\"icon\":\"http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png\",\"bvid\":\"BV1xx411c7mD\",\"posX\":333.5,\"posY\":93.7}",
-            "idStr": null
-        }
-    ];
 
     var player, popupDiv;
     var playing = false;
@@ -71,6 +20,7 @@
             bindEvents();
         }
     }
+
     /**
      * 添加互动弹幕
      * @param  {[]} commandDmRaw 从服务器获得的互动弹幕数据
@@ -484,14 +434,16 @@
 
     /**
      * 程序入口
-     * @param  {[]} cdm 互动弹幕原始数据，留空则载入测试用数据
+     * @param  {[]} cdm 互动弹幕原始数据
+     * @param {String} aid aid
+     * @param {String} cid cid
      */
-    BLOD.test = (cdm, aid, cid) => {
-        if (aid != BLOD.aid || cid != BLOD.cid) {
+    BLOD.loadCommandDm = (cdm, aid, cid) => {
+        if (aid != BLOD.aid || cid != BLOD.cid || popupDiv !== undefined) {
             // 正在“载入其他视频弹幕”，不必处理互动弹幕
             return;
         }
         init(); // 切P后整个播放器会被销毁重建，需要重新绑定事件
-        load(cdm ? cdm : commandDmForTest);
+        load(cdm);
     }
 })()
