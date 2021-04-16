@@ -295,10 +295,10 @@
                     if (resp.code === 0) {
                         this.progress[i].className = "vote-progress vote-progress-blue";
                     } else {
-                        BLOD.debug.error("投票失败", resp.code, resp.message);
+                        BLOD.toast.error("投票失败", resp.code, resp.message);
                     }
                 }).catch((e) => {
-                    BLOD.debug.error("投票失败", e);
+                    BLOD.toast.error("投票失败", e);
                 });
             this.myVote = idx;
             this.showResult();
