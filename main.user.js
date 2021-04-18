@@ -25,15 +25,15 @@
 // @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
 // @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/initialstate.js
-// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@753cb563c1aa6536566572e3624371ff2885e2e2/src/ui.js
+// @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@05a493119f139c1f6ac0dd52dd2089442d8a0022/src/ui.js
 // @resource     debug https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@4bca5f5184c7f3368f46ebb613b94580febc8d8b/src/debug.js
 // @resource     xhr https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/xhr.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c67c01a0460dddfa48abb29efa6415c2ebaf1a81/src/download.js
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6c8defcbc30c9e0cda074fc7fd811b6f00b98548/src/define.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7ce2ae09aa3c239ab536b17b91c203a8105dfbdc/src/rewrite.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@05a493119f139c1f6ac0dd52dd2089442d8a0022/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a90e64ef8ebabcebf57c52dc4ab4631e72238c6c/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a90e64ef8ebabcebf57c52dc4ab4631e72238c6c/src/xhrhook.js
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@753cb563c1aa6536566572e3624371ff2885e2e2/src/config.json
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@05a493119f139c1f6ac0dd52dd2089442d8a0022/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     protobuf https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/protobuf.json
@@ -177,6 +177,9 @@
             BLOD.rewrite.index();
         }
     }
+
+    // 处理消息页面样式
+    if (BLOD.path[2] == "message.bilibili.com") BLOD.addCss(".container[data-v-6969394c] { height: calc(100vh - 42px) !important;} .container[data-v-1c9150a9] { height: calc(100vh - 42px) !important;}");
 
     if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
     // 写入全局样式
