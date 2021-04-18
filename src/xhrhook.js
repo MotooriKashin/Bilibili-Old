@@ -885,7 +885,7 @@
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.playerso(this) });
                 }
                 // 修复番剧推荐
-                if (BLOD.path.name = "bangumi" && url.includes('comment.bilibili.com/playtag')) {
+                if (BLOD.path.name == "bangumi" && url.includes('comment.bilibili.com/playtag')) {
                     url = "https://comment.bilibili.com/playtag,2-2?html5=1";
                     BLOD.reset.pgcRecommend();
                 }
