@@ -62,6 +62,8 @@
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
                 BLOD.reset.setLike();
                 BLOD.reset.fixSort.watchlater();
+                // mini播放器样式
+                BLOD.addCss(".bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {top: 30px;height: 240px;} .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-bas-danmaku {top: 30px;height: 240px;} .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-adv-danmaku {top: 30px;height: 240px;}");
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         bangumi() {
