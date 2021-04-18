@@ -113,8 +113,6 @@
                     window.BilibiliPlayer({ aid: BLOD.aid, cid: BLOD.cid });
                 })
             }
-            // 修复番剧推荐
-            if (BLOD.path.name = "bangumi") BLOD.reset.pgcRecommend();
             if (config.reset.download) { BLOD.xml = ""; BLOD.mdf = ""; };
             if (config.reset.selectdanmu && document.getElementsByClassName("bilibili-player-filter-btn")[1]) document.getElementsByClassName("bilibili-player-filter-btn")[1].click();
             setTimeout(() => {
@@ -693,9 +691,10 @@
     // 修复番剧推荐
     BLOD.reset.pgcRecommend = async () => {
         try {
-            window.__INITIAL_STATE__.pgcRecommend = window.__INITIAL_STATE__.pgcRecommend || await xhr(BLOD.objUrl("https://api.bilibili.com/pgc/web/recommend/related/recommend"), { season_id: window.__INITIAL_STATE__.ssId });
-            window.__INITIAL_STATE__.pgcRecommend = BLOD.jsonCheck(window.__INITIAL_STATE__.pgcRecommend).result.season;
-            let element = "";
+            window.__INITIAL_STATE__.pgcRecommend = window.__INITIAL_STATE__.pgcRecommend || BLOD.jsonCheck(await xhr(BLOD.objUrl("https://api.bilibili.com/pgc/web/recommend/related/recommend", { season_id: window.__INITIAL_STATE__.ssId }))).result;
+            let node = document.querySelector(".mCSB_container");
+            if (!node) return setTimeout(() => BLOD.reset.pgcRecommend());
+            let element = '';
             window.__INITIAL_STATE__.pgcRecommend.forEach(d => {
                 let temp = `<a class="bilibili-player-recommend-video" href="${d.url}" target="_blank">
                     <div class="bilibili-player-recommend-left">
@@ -704,25 +703,23 @@
                     </div>
                     <div class="bilibili-player-recommend-right">
                     <div class="bilibili-player-recommend-title" title="${d.title}">${d.title}</div>
-                    <div class="bilibili-player-recommend-click"><i class="bilibili-player-iconfont icon-12iconplayed"></i>${BLOD.sizeFormat(d.stat.view)}</div>
-                    <div class="bilibili-player-recommend-danmaku"><i class="bilibili-player-iconfont icon-12icondanmu"></i>${BLOD.sizeFormat(d.stat.danmaku)}</div>
+                    <div class="bilibili-player-recommend-click"><i class="bilibili-player-iconfont icon-12iconplayed"></i>${BLOD.unitFormat(d.stat.view)}</div>
+                    <div class="bilibili-player-recommend-danmaku"><i class="bilibili-player-iconfont icon-12icondanmu"></i>${BLOD.unitFormat(d.stat.danmaku)}</div>
                     </div></a>`;
                 element = element + temp;
             });
-            document.querySelector("#mCSB_1_container").innerHTML = element;
-        } catch (e) {
-            e = Array.isArray(e) ? e : [e];
-            debug.error("番剧推荐", ...e);
-            try {
-                if (!window.__INITIAL_STATE__.avRecommend) {
-                    let data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/tag/info"), { tag_name: encodeURI(window.__INITIAL_STATE__.mediaInfo.title) });
-                    data = BLOD.jsonCheck(data);
-                    data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/web-interface/tag/top"), { pn: 1, ps: 8, tid: data.data.tag_id });
-                    window.__INITIAL_STATE__.avRecommend = BLOD.jsonCheck(data).data;
-                }
-                let element = "";
-                window.__INITIAL_STATE__.avRecommend.forEach(d => {
-                    let temp = `<li class="recom-item">
+            node.innerHTML = element;
+        } catch (e) { e = Array.isArray(e) ? e : [e]; debug.error("番剧推荐", ...e); }
+        try {
+            if (!window.__INITIAL_STATE__.avRecommend) {
+                let data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/tag/info", { tag_name: encodeURI(window.__INITIAL_STATE__.mediaInfo.title) }));
+                data = BLOD.jsonCheck(data);
+                data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/web-interface/tag/top", { tid: data.data.tag_id }));
+                window.__INITIAL_STATE__.avRecommend = BLOD.jsonCheck(data).data;
+            }
+            let element = "";
+            window.__INITIAL_STATE__.avRecommend.forEach(d => {
+                let temp = `<li class="recom-item">
                     <a href="https://www.bilibili.com/video/av${d.aid}" target="_blank" title="${d.title}">
                     <div class="recom-img"><div class="common-lazy-img">
                     <img alt="${d.title}" src="${d.pic.replace("http:", "")}@224w_140h.webp" lazy="loaded">
@@ -730,14 +727,13 @@
                     <div class="recom-info">
                     <div class="info-title">${d.title}</div>
                     <div class="info-count">
-                    <div class="play-count"><i></i><span>>${BLOD.sizeFormat(d.stat.view)}</span></div>
-                    <div class="danmu-count"><i></i><span>>${BLOD.sizeFormat(d.stat.danmaku)}</span></div>
+                    <div class="play-count"><i></i><span>${BLOD.unitFormat(d.stat.view)}</span></div>
+                    <div class="danmu-count"><i></i><span>${BLOD.unitFormat(d.stat.danmaku)}</span></div>
                     </div></div></a></li>`;
-                    element = element + temp;
-                });
-                document.querySelector(".recom-list.clearfix").innerHTML = element;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("番剧推荐", ...e); }
-        }
+                element = element + temp;
+            });
+            document.querySelector(".recom-list.clearfix").innerHTML = element;
+        } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("番剧推荐", ...e); }
     }
 
     // 修复评论楼层
