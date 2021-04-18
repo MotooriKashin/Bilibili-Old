@@ -96,7 +96,7 @@
                     } catch (no) { throw e }
                 }
                 if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epInfo && BLOD.__INITIAL_STATE__.epInfo.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
-                if (BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epList && BLOD.__INITIAL_STATE__.epList[1]) {
+                if (!config.reset.bangumiCover && BLOD.__INITIAL_STATE__ && BLOD.__INITIAL_STATE__.epList && BLOD.__INITIAL_STATE__.epList[1]) {
                     BLOD.__INITIAL_STATE__.special = false;
                     BLOD.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined;
                 }
