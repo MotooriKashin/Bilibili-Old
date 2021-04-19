@@ -110,10 +110,7 @@
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         blackboard() {
-            if (BLOD.path[4].startsWith('html5player')) {
-                if (BLOD.path[4].includes("3521416") && BLOD.path[4].includes("6041635")) {
-                    location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": 3521416, "cid": 192446449 }));
-                }
+            if (BLOD.path[4].startsWith('activity-ancient-player')) {
                 window.addEventListener('message', (e) => {
                     if (e.data.cid) {
                         window.__playinfo__ = undefined;
@@ -121,15 +118,18 @@
                         e.data.dashSymbol = true;
                         e.data.p = 1;
                         e.data.pre_ad = "";
-                        history.replaceState(null, null, BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": e.data.aid, "cid": e.data.cid }));
+                        history.replaceState(null, null, BLOD.objUrl("https://www.bilibili.com/blackboard/activity-ancient-player.html", { "aid": e.data.aid, "cid": e.data.cid }));
                         window.player = new window.BilibiliPlayer(e.data);
                     }
                 })
             }
             try {
                 if (!BLOD.config.rewrite.frame) return;
+                // 避免远古播放器死循环
+                if (BLOD.path[4].includes('ancient')) return;
                 BLOD.reset.playerSetting();
-                if (BLOD.path[4].startsWith('newplayer')) {
+                // 替换所有符合特征的嵌入播放器
+                if (BLOD.path[4].includes('player.')) {
                     let obj = BLOD.urlObj(location.href),
                         season_type = obj.season_type || null,
                         player_type = obj.player_type || null;
@@ -139,7 +139,7 @@
                         BLOD.cid = BLOD.cid || BLOD.jsonCheck(BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": BLOD.aid }))).data[0].cid
                     }
                     catch (e) { e = Array.isArray(e) ? e : [e]; BLOD.debug.error("框架·嵌入", ...e) }
-                    location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/html5player.html", { "aid": BLOD.aid, "cid": BLOD.cid, "season_type": season_type, "player_type": player_type, "as_wide": 1, }));
+                    location.replace(BLOD.objUrl("https://www.bilibili.com/blackboard/activity-ancient-player.html", { "aid": BLOD.aid, "cid": BLOD.cid, "season_type": season_type, "player_type": player_type, "as_wide": 1, }));
                     toast.success("嵌入式播放器", "aid：", BLOD.aid, " cid：", BLOD.cid);
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
@@ -242,7 +242,7 @@
                 });
                 let bfq = document.querySelector("#bilibili-player");
                 let bofqi = document.createElement('iframe');
-                bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.__INITIAL_STATE__.videoInfo.aid}&cid=${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                bofqi.src = `https://www.bilibili.com/blackboard/activity-ancient-player.html?aid=${window.__INITIAL_STATE__.videoInfo.aid}&cid=${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
                 bofqi.setAttribute("style", "width: 906px; height: 556px;border:none;");
                 bofqi.setAttribute("id", "bofqi");
                 bfq.replaceWith(bofqi);
@@ -257,7 +257,7 @@
                         bfq && toast(item.title, "av" + item.aid, "UP主：" + item.author.name);
                         return bfq.contentWindow.postMessage({ aid: item.aid, cid: item.cid });
                         bofqi = document.createElement('iframe');
-                        bofqi.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+                        bofqi.src = `https://www.bilibili.com/blackboard/activity-ancient-player.html?aid=${item.aid}&cid=${item.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
                         bofqi.setAttribute("style", "width: 906px; height: 556px;border:none;");
                         bofqi.setAttribute("id", "bofqi");
                         bfq.replaceWith(bofqi);
