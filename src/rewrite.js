@@ -17,7 +17,7 @@
                 if (!BLOD.config.rewrite.av) return;
                 BLOD.importModule("iniState"); // 数据模块
                 BLOD.path.name = "av";
-                if (config.reset.novideo || config.reset.forceFlv) BLOD.getVariable(window, "__playinfo__");
+                if (config.reset.novideo || config.reset.forceFlv) BLOD.getVariable(window, "__playinfo__", undefined, [undefined]);
                 BLOD.playerSetting();
                 if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4]);
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
@@ -35,7 +35,7 @@
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("av")));
-                if (document.title.includes("出错")) document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.config.reset.playerStyle) BLOD.addCss("#bofqi .player {width: 980px;height: 620px;display: block;}@media screen and (min-width:1400px) {#bofqi .player {width: 1294px;height: 792px}#__bofqi {min-height: 760px;}.bili-wrapper {width: 1294px;}.bgray-btn-wrap {margin-left: 647px !important;}.fixed-nav-m {margin-left: 657px;}.bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}}@media screen and (min-width:2800px) {#bofqi .player {width: 1934px;height: 1152px}#__bofqi {min-height: 1120px;}.bili-wrapper {width: 1934px;}.bgray-btn-wrap {margin-left: 967px !important;}.fixed-nav-m {margin-left: 977px;}.bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}}.video-info-m .number .like b,.video-info-m .number .like i {background: url(//static.hdslb.com/images/base/icons.png);}");
                 else BLOD.addCss("#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background : url(//static.hdslb.com/images/base/icons.png);}");
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
@@ -104,7 +104,7 @@
                 if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
-                if (document.title.includes("出错")) document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 // 分集数据
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }

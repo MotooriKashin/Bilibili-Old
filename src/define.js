@@ -370,7 +370,7 @@
         jsonCheck(data) {
             data = typeof data === "string" ? JSON.parse(data) : data;
             if ("code" in data && data.code !== 0) {
-                let msg = data.msg ?? data.message ?? "";
+                let msg = data.msg || data.message || "";
                 BLOD.debug.error("JSON error!", data);
                 throw [data.code, msg];
             }
@@ -452,13 +452,13 @@
         /**
          * 代理退出登录
          * @param {string} [referer] 退出成功后跳转的页面
-         * @returns {void} 无
+         * @returns {Promise<void>} 无
          */
         async loginExit(referer) {
             if (!BLOD.uid) return BLOD.toast.warning("本就未登录，无法退出登录！");
             BLOD.toast.warning("正在退出登录...");
             let data = BLOD.jsonCheck(await xhr.post("https://passport.bilibili.com/login/exit/v2", "biliCSRF=" + BLOD.getCookies().bili_jct + "&gourl=" + encodeURIComponent(location.href)));
-            if (data?.status) {
+            if (data.status) {
                 BLOD.toast.success("退出登录！");
                 if (referer) return location.replace(referer);
                 setTimeout(() => location.reload(), 1000);
@@ -468,14 +468,15 @@
          * 变量捕获
          * @param {object} origin 变量所属对象
          * @param {string} target 变量名称
-         * @param {*} [record] 用于记录变量赋值的变量
-         * @param {*} [result] 固定变量的值：仅用于强制指定变量的值，否则请留空！
+         * @param {string} [record] 挂在于BLOD的用于记录变量赋值的变量，留空则取target
+         * @param {[]} [result] 固定变量的值（包含于数组之内）：仅用于强制指定变量的值，否则请留空！
          * @param {Boolean} [configurable] 改变量是否可以重新捕获，默认为真
          */
-        getVariable(origin, target, record, result, configurable = true) {
+        getVariable(origin, target, record, result = [], configurable = true) {
             let obj = {};
-            if (record) obj.set = (v) => { record = v };
-            obj.get = () => { return result ?? record };
+            record = record || target;
+            obj.set = (v) => { BLOD.record = v };
+            obj.get = () => { return result[0] || BLOD.record };
             obj.configurable = configurable;
             Object.defineProperty(origin, target, obj);
         }
@@ -814,10 +815,10 @@
     BLOD.xhr.GM = (url, headers) => { return xhr.GM(url, headers) }
 
     // 捕获全局变量
-    define.getVariable(window, "aid", BLOD.aid); // aid
-    define.getVariable(window, "cid", BLOD.cid); // cid
+    define.getVariable(window, "aid"); // aid
+    define.getVariable(window, "cid"); // cid
     // 禁用BV
-    define.getVariable(window, "__BILI_CONFIG__", undefined, { "show_bv": false });
+    define.getVariable(window, "__BILI_CONFIG__", undefined, [{ "show_bv": false }]);
 
     // 初始化toast
     toast.change(BLOD.getValue("toast"));

@@ -1149,14 +1149,7 @@
         logout(he) {
             if (he.href.includes("account.bilibili.com/login?act=exit")) {
                 he.href = "javascript:void(0);";
-                he.onclick = async () => {
-                    toast.warning("正在退出登录！")
-                    let data = BLOD.jsonCheck(await xhr.post("https://passport.bilibili.com/login/exit/v2", "biliCSRF=" + BLOD.getCookies().bili_jct + "&gourl=" + encodeURIComponent(location.href)));
-                    if (data.status) {
-                        toast.success("退出登录！");
-                        setTimeout(() => location.reload(), 1000);
-                    }
-                }
+                he.onclick = define.loginExit();
             }
         }
     }
