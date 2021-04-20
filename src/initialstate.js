@@ -10,8 +10,6 @@
 
     class IniState {
         constructor() {
-            console.debug('import module "initialstate.js"');
-
             this.__INITIAL_STATE__ = {
                 av: {
                     aid: 0,

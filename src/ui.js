@@ -11,7 +11,6 @@
 
     class Ui {
         constructor() {
-            console.debug('import module "ui.js"');
             // 将设置以主键名进行分类，未分类的将单独绘制
             this.menu = ["播放", "弹幕", "修复", "样式", "直播"];
             this.item = [
@@ -242,7 +241,7 @@
                 this.checked("novideo");
                 this.checked("ef2");
                 this.input("自定义链接", "url", "http://www.example.com", "", "下载", "输入视频所在链接URL，回车或者点击“下载”按钮即可</br>暂不支持获取弹幕等其他信息", (value) => {
-                    if (!BLOD.download) new Function(BLOD.getResourceText("download"))();
+                    BLOD.importModule("download");
                     if (value) BLOD.download(value);
                     else toast.warning("请输入有效的视频链接", "</br>支持短链接，如av50619577或者ss3398", "也支持参数形式，如aid=50619577或者ssid=3398");
                 })

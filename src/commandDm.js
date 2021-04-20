@@ -13,7 +13,6 @@
      */
     function init() {
         if (window.__INITIAL_STATE__ && __INITIAL_STATE__.videoData && window.player) {
-            console.log('import module "commandDm.js"');
             if (popupDiv === undefined)
                 popupDiv = initCountainer();
             player = window.player;

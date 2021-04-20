@@ -10,16 +10,14 @@
     const config = BLOD.config; /** @see config */
 
     class Write {
-        constructor() {
-            console.debug('import module "rewrite.js"');
-        }
         av() {
             BLOD.ml = BLOD.getValue("medialist");
             BLOD.deleteValue("medialist");
             try {
                 if (!BLOD.config.rewrite.av) return;
                 BLOD.path.name = "av";
-                BLOD.reset.playerSetting();
+                if (config.reset.novideo || config.reset.forceFlv) BLOD.getVariable(window, "__playinfo__");
+                BLOD.playerSetting();
                 if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4]);
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
@@ -36,7 +34,7 @@
                 BLOD.tid = BLOD.__INITIAL_STATE__.videoData.tid ? BLOD.__INITIAL_STATE__.videoData.tid : BLOD.tid;
                 window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__;
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("av")));
-                document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                if (document.title.includes("出错")) document.title = BLOD.title || BLOD.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 if (BLOD.config.reset.playerStyle) BLOD.addCss("#bofqi .player {width: 980px;height: 620px;display: block;}@media screen and (min-width:1400px) {#bofqi .player {width: 1294px;height: 792px}#__bofqi {min-height: 760px;}.bili-wrapper {width: 1294px;}.bgray-btn-wrap {margin-left: 647px !important;}.fixed-nav-m {margin-left: 657px;}.bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}}@media screen and (min-width:2800px) {#bofqi .player {width: 1934px;height: 1152px}#__bofqi {min-height: 1120px;}.bili-wrapper {width: 1934px;}.bgray-btn-wrap {margin-left: 967px !important;}.fixed-nav-m {margin-left: 977px;}.bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}}.video-info-m .number .like b,.video-info-m .number .like i {background: url(//static.hdslb.com/images/base/icons.png);}");
                 else BLOD.addCss("#bofqi .player {width:980px;height:620px;display:block;}@media screen and (min-width:1400px){#bofqi .player{width:1160px;height:720px}} .video-info-m .number .like b, .video-info-m .number .like i {background : url(//static.hdslb.com/images/base/icons.png);}");
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
@@ -46,7 +44,7 @@
                 BLOD.reset.uplist();
                 if (BLOD.config.reset.commandDm) {
                     BLOD.addCss(BLOD.getResourceText("commandDmStyle"));
-                    new Function(BLOD.getResourceText("commandDm"))();
+                    BLOD.importModule("commandDm");
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
@@ -54,7 +52,7 @@
             try {
                 if (!BLOD.config.rewrite.watchlater) return;
                 if (!BLOD.uid) return toast.warning("未登录！", "无法启用稍后再看");
-                BLOD.reset.playerSetting();
+                BLOD.playerSetting();
                 BLOD.path.name = "watchlater";
                 BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("watchlater")));
                 if (BLOD.config.reset.playerStyle) BLOD.addCss("#bofqi .player {width: 980px;height: 620px;display: block;}@media screen and (min-width:1400px) {#bofqi .player {width: 1294px;height: 792px}#__bofqi {min-height: 760px;}.bili-wrapper {width: 1294px;}.bgray-btn-wrap {margin-left: 647px !important;}.fixed-nav-m {margin-left: 657px;}.bili-wrapper {width: 1294px !important;}.primary-menu {width: 1294px !important;}}@media screen and (min-width:2800px) {#bofqi .player {width: 1934px;height: 1152px}#__bofqi {min-height: 1120px;}.bili-wrapper {width: 1934px;}.bgray-btn-wrap {margin-left: 967px !important;}.fixed-nav-m {margin-left: 977px;}.bili-wrapper {width: 1934px !important;}.primary-menu {width: 1934px !important;}} .video-info-module .number .like b, .video-info-module .number .like i { display: inline-block;vertical-align: middle; margin-top: -3px; margin-right: 3px; background : url(//static.hdslb.com/images/base/icons.png);}");
@@ -69,7 +67,7 @@
         bangumi() {
             try {
                 if (!BLOD.config.rewrite.bangumi) return;
-                BLOD.reset.playerSetting();
+                BLOD.playerSetting();
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
                 let data = (BLOD.uid && BLOD.xhr.false(location.href).match(/last_ep_id\"\:[0-9]+/)) || [];
@@ -104,7 +102,7 @@
                 if (!BLOD.__INITIAL_STATE__.special) BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("bangumi")));
                 else BLOD.write(BLOD.reset.oldScript(BLOD.getResourceText("cinema")));
                 if (BLOD.config.reset.oldreply) BLOD.addCss(".bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {width: 48px;height: 48px;border-radius: 50%;}.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {width: 86px;height: 86px;position: absolute;top: -19px;left: -19px;display: block;}.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {border: 0;border-radius: 0;width: 86px;height: 86px;}")
-                document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
+                if (document.title.includes("出错")) document.title = BLOD.title || BLOD.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                 // 分集数据
                 if (BLOD.__INITIAL_STATE__) BLOD.reset.setBangumi.init(BLOD.__INITIAL_STATE__);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
@@ -127,7 +125,7 @@
                 if (!BLOD.config.rewrite.frame) return;
                 // 避免远古播放器死循环
                 if (BLOD.path[4].includes('ancient')) return;
-                BLOD.reset.playerSetting();
+                BLOD.playerSetting();
                 // 替换所有符合特征的嵌入播放器
                 if (BLOD.path[4].includes('player.')) {
                     let obj = BLOD.urlObj(location.href),

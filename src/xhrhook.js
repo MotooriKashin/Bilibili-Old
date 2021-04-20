@@ -566,9 +566,6 @@
     }
 
     class XhrHook {
-        constructor() {
-            console.debug('import module "xhrhook.js"');
-        }
         webSocket() {
             let decoder = new TextDecoder();
             let encoder = new TextEncoder();

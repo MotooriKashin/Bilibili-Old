@@ -10,19 +10,8 @@
     const config = BLOD.config; /** @see main */
     const xhr = BLOD.xhr; /** @see xhr */
     const toast = BLOD.toast; /** @see debug */
-    console.debug('import module "reset.js"');
 
     BLOD.reset = {
-        /**
-         * 监听window下的对象
-         */
-        getVariable: () => {
-            Object.defineProperty(window, "aid", { set: (v) => { BLOD.aid = v }, get: () => { return BLOD.aid }, configurable: true });
-            Object.defineProperty(window, "cid", { set: (v) => { BLOD.cid = v }, get: () => { return BLOD.cid }, configurable: true });
-            Object.defineProperty(window, "__BILI_CONFIG__", { get: () => { return { "show_bv": false } }, configurable: true });
-            if (BLOD.path[2] == "live.bilibili.com" && config.reset.roomplay) Object.defineProperty(window, "__NEPTUNE_IS_MY_WAIFU__", { get: () => { return undefined }, configurable: true });
-            if (config.reset.novideo) Object.defineProperty(window, "__playinfo__", { set: () => { }, get: () => { return undefined }, configurable: true });
-        },
         /**
          * 替换原生脚本，不直接修改页面框架
          * @param {string} str 页面框架
@@ -475,21 +464,6 @@
                     toast.success("授权登录成功！", "有效期30天", "届时可能需要重新授权")
                 }
                 catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("会员授权", ...e); }
-            }
-        },
-        /**
-         * 备份旧版播放器设置
-         */
-        playerSetting: () => {
-            let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
-            if (bilibili_player_settings) {
-                bilibili_player_settings = JSON.parse(bilibili_player_settings);
-                // 记录防挡字幕状态
-                if (bilibili_player_settings.setting_config && bilibili_player_settings.setting_config.preventshade) BLOD.preventshade = 1;
-                if (bilibili_player_settings.video_status.autopart !== "") BLOD.setValue("bilibili_player_settings", bilibili_player_settings);
-                else if (BLOD.getValue("bilibili_player_settings")) localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
-            } else if (BLOD.getValue("bilibili_player_settings")) {
-                localStorage.setItem("bilibili_player_settings", JSON.stringify(BLOD.getValue("bilibili_player_settings")));
             }
         }
     }
@@ -1293,7 +1267,7 @@
          * @returns 预生成的占位文本
          */
         constructor(crc) {
-            if (!BLOD.midcrc) new Function(BLOD.getResourceText("crc"))();
+            BLOD.importModule("crc");
             // 设置正在查询的弹幕数量
             DanmkuHashId.count = DanmkuHashId.count ? DanmkuHashId.count + 1 : 1;
             // 当前查询弹幕排序
