@@ -271,7 +271,7 @@
                 remove("lt-row", "class");
             }
             // 移除直播水印
-            remove("bilibili-live-player-video-logo", "class");
+            remove("web-player-icon-roomStatus", "class");
             // 移除失效顶栏
             remove("bili-header-m report-wrap-module", "class", false, 1);
             // 移除主页昨日榜
