@@ -69,21 +69,6 @@
         title: document.title.includes("出错") ? null : document.title
     }
     /**
-     * 获取全cookies
-     * @returns {Promise<{}>} 完全的cookies对象
-     */
-    BLOD.cookie = () => {
-        return new Promise((resolve, reject) => {
-            GM_cookie.list({}, e => {
-                let obj = {};
-                e.forEach(d => {
-                    obj[d.name] = d.value;
-                });
-                resolve(obj);
-            });
-        })
-    }
-    /**
      * 导入模块
      * @param {string} moduleName 模块名字，由`@resource`源数据定义
      * @returns {void} void
