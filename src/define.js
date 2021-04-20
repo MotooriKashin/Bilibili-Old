@@ -469,14 +469,15 @@
          * @param {object} origin 变量所属对象
          * @param {string} target 变量名称
          * @param {string} [record] 挂在于BLOD的用于记录变量赋值的变量，留空则取target
-         * @param {[]} [result] 固定变量的值（包含于数组之内）：仅用于强制指定变量的值，否则请留空！
+         * @param {[]} [result] 固定变量的值（无效值包含于数组之内）：仅用于强制指定变量的值，否则请留空！
          * @param {Boolean} [configurable] 改变量是否可以重新捕获，默认为真
          */
         getVariable(origin, target, record, result = [], configurable = true) {
             let obj = {};
             record = record || target;
-            obj.set = (v) => { BLOD.record = v };
-            obj.get = () => { return result[0] || BLOD.record };
+            result = Array.isArray(result) ? result : [result];
+            obj.set = (v) => { BLOD[record] = v };
+            obj.get = () => { return result ? result[0] : BLOD[record] };
             obj.configurable = configurable;
             Object.defineProperty(origin, target, obj);
         }
