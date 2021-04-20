@@ -15,6 +15,7 @@
             BLOD.deleteValue("medialist");
             try {
                 if (!BLOD.config.rewrite.av) return;
+                BLOD.importModule("iniState"); // 数据模块
                 BLOD.path.name = "av";
                 if (config.reset.novideo || config.reset.forceFlv) BLOD.getVariable(window, "__playinfo__");
                 BLOD.playerSetting();
@@ -67,6 +68,7 @@
         bangumi() {
             try {
                 if (!BLOD.config.rewrite.bangumi) return;
+                BLOD.importModule("iniState"); // 数据模块
                 BLOD.playerSetting();
                 BLOD.path.name = "bangumi";
                 BLOD.pgc = true;
@@ -190,6 +192,7 @@
         index() {
             try {
                 if (!BLOD.config.rewrite.home) return;
+                BLOD.importModule("iniState"); // 数据模块
                 BLOD.path.name = "index";
                 if (!window.__INITIAL_STATE__) {
                     let page = BLOD.xhr.false(location.href);

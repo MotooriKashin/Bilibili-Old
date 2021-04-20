@@ -1,4 +1,11 @@
+/**
+ * @module commandDm
+ * @description 载入互动弹幕
+ * @author wly5556
+ * @license MIT
+ */
 (function () {
+    const BLOD = window.BLOD; /** @see main*/
 
     var player, popupDiv;
     var playing = false;
