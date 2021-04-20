@@ -118,7 +118,7 @@
             BLOD.rewrite.s();
         }
         if (BLOD.path[2] == 'space.bilibili.com') {
-            if (!BLOD.rewrite) BLOD.rewrite.space();
+            BLOD.rewrite.space();
         }
         if (BLOD.path[2] == 'www.bilibili.com' && (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.'))) {
             BLOD.rewrite.index();
