@@ -763,7 +763,6 @@
     }
 
     // 模块初始化
-    BLOD = BLOD ?? window;
     let config = new Config();
     let format = new ForMat();
     let define = new Define();
