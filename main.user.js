@@ -68,14 +68,25 @@
         module: [],
         title: document.title.includes("出错") ? null : document.title
     }
+    // 获取模块列表
+    const modules = {};
+    GM_info.script.resources.forEach(d => { if (d.meta === "text/javascript") modules[d.name] = d.url; })
     /**
      * 导入模块
-     * @param {string} moduleName 模块名字，由`@resource`源数据定义
-     * @returns {void} void
+     * @param {string} [moduleName] 模块名字，由`@resource`源数据定义
+     * @returns {void | {}} void 不传入参数时返回未载入模块列表对象
      */
     BLOD.importModule = (moduleName) => {
         try {
+            if (!moduleName) {
+                for (let key in modules) if (BLOD.module.includes(key)) delete modules[key];
+                return modules;
+            }
             if (BLOD.module.includes(moduleName)) return;
+            if (!modules[moduleName]) {
+                if (BLOD.debug) return BLOD.debug.error("载入失败！未知模块", moduleName);
+                else return console.error("载入失败！未知模块", moduleName);
+            }
             new Function(BLOD.getResourceText(moduleName))();
             BLOD.module.push(moduleName);
             if (BLOD.debug) BLOD.debug.info("载入模块", moduleName);
