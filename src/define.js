@@ -472,10 +472,10 @@
          * @param {[]} [result] 固定变量的值（无效值包含于数组之内）：仅用于强制指定变量的值，否则请留空！
          * @param {Boolean} [configurable] 改变量是否可以重新捕获，默认为真
          */
-        getVariable(origin, target, record, result = [], configurable = true) {
+        getVariable(origin, target, record, result, configurable = true) {
             let obj = {};
             record = record || target;
-            result = Array.isArray(result) ? result : [result];
+            if (result) result = Array.isArray(result) ? result : [result];
             obj.set = (v) => { BLOD[record] = v };
             obj.get = () => { return result ? result[0] : BLOD[record] };
             obj.configurable = configurable;
