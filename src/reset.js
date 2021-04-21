@@ -1634,9 +1634,10 @@
     class ReplyList {
         constructor() {
             // 拦截评论脚本
+            if (window.bbComment) return this.cover();
             Object.defineProperty(window, "bbComment", {
                 set: () => { this.cover() },
-                get: () => 1,
+                get: () => undefined,
                 configurable: true
             })
         }
