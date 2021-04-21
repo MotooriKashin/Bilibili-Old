@@ -1626,4 +1626,24 @@
         }
     }
     BLOD.AllDanmaku = AllDanmaku;
+
+    /**
+     * @class ReplyList
+     * @description 恢复评论翻页
+     */
+    class ReplyList {
+        constructor() {
+            // 拦截评论脚本
+            Object.defineProperty(window, "bbComment", {
+                set: () => { this.cover() },
+                get: () => 1,
+                configurable: true
+            })
+        }
+        cover() {
+            delete window.bbComment; // 取消拦截
+            BLOD.importModule("reply"); // 载入新评论脚本
+        }
+    }
+    BLOD.replyList = () => { new ReplyList() }
 })()
