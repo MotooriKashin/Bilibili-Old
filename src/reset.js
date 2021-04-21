@@ -1633,6 +1633,8 @@
      */
     class ReplyList {
         constructor() {
+            if (BLOD.path.name) return;
+            if (!config.reset.replyList) return;
             // 拦截评论脚本
             if (window.bbComment) return this.cover();
             Object.defineProperty(window, "bbComment", {
