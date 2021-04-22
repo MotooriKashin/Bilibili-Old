@@ -672,7 +672,7 @@
             window.__INITIAL_STATE__.pgcRecommend.forEach(d => {
                 let temp = `<a class="bilibili-player-recommend-video" href="${d.url}" target="_blank">
                     <div class="bilibili-player-recommend-left">
-                    <img src="${d.cover}@160w_100h.webp" alt="${d.title}" class="mCS_img_loaded" />
+                    <img src="${d.new_ep.cover}@160w_100h.webp" alt="${d.title}" class="mCS_img_loaded" />
                     <span class="player-tooltips-trigger"><i class="bilibili-player-iconfont icon-22wait-normal"></i></span>
                     </div>
                     <div class="bilibili-player-recommend-right">
