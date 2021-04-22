@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.7.1
+// @version      4.7.2
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -85,8 +85,8 @@
             }
             if (BLOD.module.includes(moduleName)) return;
             if (!modules[moduleName]) {
-                if (BLOD.debug) return BLOD.debug.error("载入失败！未知模块", moduleName);
-                else return console.error("载入失败！未知模块", moduleName);
+                if (BLOD.debug) BLOD.debug.error("未知模块！", moduleName);
+                else console.error("未知模块！", moduleName);
             }
             new Function(BLOD.getResourceText(moduleName))();
             BLOD.module.push(moduleName);
