@@ -85,14 +85,15 @@
             }
             if (BLOD.module.includes(moduleName)) return;
             let module = BLOD.getResourceText(moduleName);
-            if (!module) {
-                if (BLOD.debug) return BLOD.debug.error("载入失败！未知模块", moduleName);
-                else return console.error("载入失败！未知模块", moduleName);
-            }
             new Function(module)();
             BLOD.module.push(moduleName);
-            if (BLOD.debug) BLOD.debug.info("载入模块", moduleName);
-            else console.info("载入模块", moduleName);
+            if (!module) {
+                if (BLOD.debug) BLOD.debug.warn("载入失败！未知模块", moduleName);
+                else console.warn("载入失败！未知模块", moduleName);
+            } else {
+                if (BLOD.debug) BLOD.debug.info("载入模块", moduleName);
+                else console.info("载入模块", moduleName);
+            }
         } catch (e) {
             if (BLOD.toast) BLOD.toast.error(`载入 ${moduleName} 模块失败！`, e);
             else console.error(`载入 ${moduleName} 模块失败！`, e);
