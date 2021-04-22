@@ -84,11 +84,12 @@
                 return modules;
             }
             if (BLOD.module.includes(moduleName)) return;
-            if (!modules[moduleName]) {
-                if (BLOD.debug) BLOD.debug.error("未知模块！", moduleName);
-                else console.error("未知模块！", moduleName);
+            let module = BLOD.getResourceText(moduleName);
+            if (!module) {
+                if (BLOD.debug) return BLOD.debug.error("载入失败！未知模块", moduleName);
+                else return console.error("载入失败！未知模块", moduleName);
             }
-            new Function(BLOD.getResourceText(moduleName))();
+            new Function(module)();
             BLOD.module.push(moduleName);
             if (BLOD.debug) BLOD.debug.info("载入模块", moduleName);
             else console.info("载入模块", moduleName);
