@@ -154,7 +154,10 @@
 
     // 处理消息页面样式
     if (BLOD.path[2] == "message.bilibili.com") BLOD.addCss(".container[data-v-6969394c] { height: calc(100vh - 42px) !important;} .container[data-v-1c9150a9] { height: calc(100vh - 42px) !important;}");
+    // 处理排行榜页面样式
+    if (BLOD.path[5] == "rank") BLOD.addCss("@media screen and (min-width: 1654px){.main-inner {width: 1160px !important;}}");
     if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
+    
     // 恢复评论翻页
     BLOD.replyList();
     // 写入全局样式
