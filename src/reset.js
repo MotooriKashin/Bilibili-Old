@@ -1149,7 +1149,7 @@
         logout(he) {
             if (he.href.includes("account.bilibili.com/login?act=exit")) {
                 he.href = "javascript:void(0);";
-                he.onclick = define.loginExit();
+                he.onclick = () => BLOD.loginExit();
             }
         }
     }
