@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.7.3
+// @version      4.7.4
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -27,10 +27,10 @@
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/initialstate.js
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d1fef3b96f443024e4c31fd5735ac4db94f8ed0/src/ui.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/download.js
-// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6e808e3c243251bf93fa3b894edde9ddfd956996/src/define.js
+// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c4906b1061705ab6e41f2eab15afe4c99aef7860/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5766444fa6f7fad84fd4a98781b4e58b0254a165/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e3c70e3b94d6e90cdd70c643a27f7e7bd970b597/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/xhrhook.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@fc2b4b3e908ff834525121a85c3bda13686e7af5/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d1fef3b96f443024e4c31fd5735ac4db94f8ed0/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
@@ -157,7 +157,7 @@
     // 处理排行榜页面样式
     if (BLOD.path[5] == "rank") BLOD.addCss("@media screen and (min-width: 1654px){.main-inner {width: 1160px !important;}}");
     if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
-    
+
     // 恢复评论翻页
     BLOD.replyList();
     // 写入全局样式
