@@ -416,7 +416,7 @@
     const toXml = BLOD.toXml = (danmaku) => {
         return new Promise(function (resolve) {
             BLOD.sortDmById(danmaku, "idStr");
-            let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>'
+            let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + BLOD.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n'
             for (let i = 0; i < danmaku.length; i++) {
                 attr[0] = danmaku[i].progress / 1000;
                 attr[1] = danmaku[i].mode;
@@ -426,7 +426,7 @@
                 attr[5] = danmaku[i].pool;
                 attr[6] = danmaku[i].midHash;
                 attr[7] = danmaku[i].idStr;
-                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>';
+                xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>\r\n';
             }
             xml += "</i>";
             resolve(xml);
