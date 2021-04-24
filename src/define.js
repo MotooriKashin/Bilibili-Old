@@ -711,7 +711,7 @@
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.response);
                 xhr.onerror = () => {
-                    toast.error("method：GET", "url：" + url, xhr.statusText || "");
+                    BLOD.toast.error("method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
                 }
                 xhr.send();
@@ -734,7 +734,7 @@
                         resolve(xhr.responseText);
                     },
                     onerror: (xhr) => {
-                        toast.error("method：GET", "url：" + url, xhr.statusText || "");
+                        BLOD.toast.error("method：GET", "url：" + url, xhr.statusText || "");
                         reject(xhr.statusText || "xhr出错！");
                     }
                 });
@@ -756,7 +756,7 @@
                 xhr.withCredentials = credentials;
                 xhr.onload = () => resolve(xhr.responseText);
                 xhr.onerror = () => {
-                    toast.error("method：POST", "url：" + url, xhr.statusText || "");
+                    BLOD.toast.error("method：POST", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");
                 }
                 xhr.send(data);
