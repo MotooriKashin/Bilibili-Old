@@ -802,6 +802,7 @@
     BLOD.debug.debug = (...data) => { debug.debug(...data) }
     BLOD.debug.warn = (...data) => { debug.warn(...data) }
     BLOD.debug.error = (...data) => { debug.error(...data) }
+    BLOD.debug.msg = (time, text, red, yellow, replace, callback) => { debug.msg(time, text, red, yellow, replace, callback) }
     BLOD.toast = (...data) => { toast.show("info", ...data); debug.log(...data) }
     BLOD.toast.info = (...data) => { toast.show("info", ...data); debug.log(...data) }
     BLOD.toast.success = (...data) => { toast.show("success", ...data); debug.info(...data) }
