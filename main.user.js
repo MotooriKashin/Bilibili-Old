@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      4.7.5
+// @version      4.7.6
 // @description  恢复Bilibili旧版页面，包括主页和播放页
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -27,9 +27,9 @@
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/initialstate.js
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d1fef3b96f443024e4c31fd5735ac4db94f8ed0/src/ui.js
 // @resource     download https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/download.js
-// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c4906b1061705ab6e41f2eab15afe4c99aef7860/src/define.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5766444fa6f7fad84fd4a98781b4e58b0254a165/src/rewrite.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@9f6e4f944416b65f7ef0a563a3c22017b2d03dc1/src/reset.js
+// @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ef585d49530682659dc9ee1f676f3903a23fad3d/src/define.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31fdfacbba12ad32bae963b1a88fc31b67541e21/src/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31fdfacbba12ad32bae963b1a88fc31b67541e21/src/reset.js
 // @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@fc2b4b3e908ff834525121a85c3bda13686e7af5/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d1fef3b96f443024e4c31fd5735ac4db94f8ed0/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
@@ -185,13 +185,13 @@
         if (msg.relatedNode.className == "info-sec-av") BLOD.reset.setBangumi.episodeData("", msg);
         // 失效分区转换
         if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module" || msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") BLOD.reset.fixnews(msg.target);
-        // 修复评论楼层&修复评论空降坐标
+        // 修复评论楼层&还原评论跳转链接
         if ((/l_id/.test(msg.target.id) || /reply-wrap/.test(msg.target.className))) {
             clearTimeout(BLOD.timer);
             BLOD.timer = setTimeout(() => {
                 delete BLOD.timer;
                 BLOD.reset.setReplyFloor.fix();
-                BLOD.reset.fixVideoSeek(msg.target.parentNode);
+                BLOD.reset.renameCommentJump();
             }, 100)
         }
         // 修复分区排行
