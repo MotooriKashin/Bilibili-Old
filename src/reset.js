@@ -166,23 +166,19 @@
         },
         /**
          * 修复评论跳转链接
-         * @param {HTMLElement} node 评论节点
          */
-        fixVideoSeek: (node) => {
-            if (document.querySelector("#bofqi")) {
-                node.querySelectorAll("a.video-seek").forEach(function (v) {
-                    v.addEventListener("click", function (e) {
-                        BLOD.bofqiToView();
-                        window.player.seek(Number(e.target.attributes[2].nodeValue));
-                    })
-                })
+        fixVideoSeek: () => {
+            if (window.commentAgent) return;
+            if (window.player) window.commentAgent = {
+                seek: (t) => window.player.seek(t)
             }
-            if (config.reset.commentjump) BLOD.reset.renameCommentJump();
         },
         /**
          * 还原评论跳转链接为av号
          */
         renameCommentJump: () => {
+            BLOD.reset.fixVideoSeek();
+            if (config.reset.commentjump) return;
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
                 if (d.href && !d.href.includes(d.innerText)) {
                     d = d.href.split("/");
