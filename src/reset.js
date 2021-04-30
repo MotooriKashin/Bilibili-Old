@@ -168,16 +168,14 @@
          * 修复评论跳转链接
          */
         fixVideoSeek: () => {
-            if (window.commentAgent) return;
-            if (window.player) window.commentAgent = {
-                seek: (t) => window.player.seek(t)
+            window.commentAgent = {
+                seek: (t) => window.player && window.player.seek(t)
             }
         },
         /**
          * 还原评论跳转链接为av号
          */
         renameCommentJump: () => {
-            BLOD.reset.fixVideoSeek();
             if (config.reset.commentjump) return;
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
                 if (d.href && !d.href.includes(d.innerText)) {
