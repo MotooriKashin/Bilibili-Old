@@ -505,19 +505,3 @@
 .BLOD-dl-settings .button:hover, .BLOD-dl-settings button:hover {
   background: #1890ff;
 }
-
-/* 导航栏消息样式 */
-
-.im-root, .im-root .im-list-box * {
-  font-size: 12px;
-  line-height: 42px;
-}
-
-.im-root .im-list-box {
-  width: 100%;
-}
-
-.im-root .im-list-box .im-list {
-  line-height: 42px;
-  height: 42px;
-}
