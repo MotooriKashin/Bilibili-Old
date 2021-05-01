@@ -21,7 +21,7 @@
 // @resource     playlistdetail https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlistdetail.html
 // @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/index.html
 // @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ranking.html
-// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e9d748a53cb6c7dbab2eca04bee5a6b2d374e97d/src/ui.css
+// @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d6e3ca0d90aa4928519e7eabf7fa60a4fbd52ef/src/ui.css
 // @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
 // @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/initialstate.js
@@ -157,7 +157,8 @@
     // 处理排行榜页面样式
     if (BLOD.path[5] == "rank") BLOD.addCss("@media screen and (min-width: 1654px){.main-inner {width: 1160px !important;}}");
     if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
-
+    // 修复导航栏消息样式
+    if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync")) BLOD.addCss(".im-root, .im-root .im-list-box * { font-size: 12px; line-height: 42px; }.im-root .im-list-box { width: 100%;}.im-root .im-list-box .im-list { line-height: 42px; height: 42px;}");
     // 恢复评论翻页
     BLOD.replyList();
     // 写入全局样式
