@@ -155,3 +155,14 @@
 .link-button > img {
   transform: scale(0.7) translateY(-1px);
 }
+
+.danmaku-up-icon::before {
+  content: "UP主";
+  background-color: #00a1d6;
+  border-radius: 5px;
+  font-size: 0.8em;
+  padding: 0.1em;
+  transform: translateY(-0.1em);
+  display: inline-block;
+  box-shadow: #888888c7 0px 0px 6px;
+}

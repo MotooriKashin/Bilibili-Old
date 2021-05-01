@@ -24920,7 +24920,8 @@ function Fa() {
                 d[2] = "1px 1px 2px " +
                     e + ",0 0 1px " + e;
                 var f = !0;
-                this.kA ? (e = this.kA, f = !1, e.innerHTML = "") : (e = document.createElement("div"), e.className = "bilibili-danmaku");
+                // this.kA -> 超出屏幕左端，已经空闲的弹幕节点
+                this.kA ? (e = this.kA, f = !1, e.innerHTML = "", (e.className != "bilibili-danmaku") && (e.className = "bilibili-danmaku")) : (e = document.createElement("div"), e.className = "bilibili-danmaku");
                 b.AH && (e.className = e.className + " " + b.AH);
                 var g = "-webkit-touch-callout: none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;position: absolute; white-space: pre; pointer-events: none;-webkit-perspective:500px;display:none;will-change: transform;";
                 b.text && (e.innerText = b.text.replace(/\r/g, "\r\n"));

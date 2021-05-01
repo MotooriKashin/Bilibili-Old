@@ -478,14 +478,17 @@
                 }
             }
             // 互动弹幕
+            let commandDanmaku = [];
             if (BLOD.config.reset.commandDm && config.commandDms.length > 0) {
-                BLOD.loadCommandDm(config.commandDms, aid, cid);
+                // BLOD.loadCommandDm()返回能够利用现有弹幕渲染器去渲染的互动弹幕（例如具有“UP主”特殊标识的弹幕）
+                // 随后把这部分弹幕合并到总弹幕数据中
+                commandDanmaku = BLOD.loadCommandDm(config.commandDms, aid, cid);
             }
             // 解码弹幕
             (await Promise.all(allrequset)).forEach(d => {
                 if (d) allDanmaku = allDanmaku.concat(protoSeg.decode(new Uint8Array(d)).elems);
             });
-            return allDanmaku;
+            return allDanmaku.concat(commandDanmaku);
         } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("获取新版弹幕", ...e); }
     }
     /**

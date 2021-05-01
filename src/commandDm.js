@@ -4,6 +4,7 @@
  * @author wly5556
  * @license MIT
  */
+//# sourceURL=commandDm.js
 (function () {
     const BLOD = window.BLOD; /** @see main*/
 
@@ -30,10 +31,13 @@
     /**
      * 添加互动弹幕
      * @param  {[]} commandDmRaw 从服务器获得的互动弹幕数据
+     * @returns {[]} 带特殊标志的弹幕，利用播放器自带的弹幕渲染器渲染
      */
     function load(commandDmRaw) {
-        commandDm.hidden = parseDm(commandDmRaw);
+        let dm = parseDm(commandDmRaw);
+        commandDm.hidden = dm.popupWindow;
         resize();
+        return dm.specialDanmaku;
     }
 
     /**
@@ -50,7 +54,7 @@
     }
 
     /**
-     * 绑定播放器事件，使用window.player.bind
+     * 绑定播放器事件，使用window.player.addEventListener
      */
     function bindEvents() {
         const EVENT = {
@@ -90,10 +94,10 @@
     /**
      * 生成互动弹幕的UI组件，各种后续处理
      * @param {[]} commandDmRaw 互动弹幕原始数据
-     * @returns {[]} 包含UI组件对象，都实现了相应的show() hide() destroy() resize()
+     * @returns {{popupWindow: [], specialDanmaku: []}} popupWindow: 互动弹窗的UI对象 specialDanmaku: 带特殊标志的弹幕，利用播放器自带的弹幕渲染器渲染
      */
     function parseDm(commandDmRaw) {
-        let result = [];
+        let popupWindow = [], specialDanmaku = [];
         for (let i = 0, cdm, extra, from; i < commandDmRaw.length; i++) {
             cdm = commandDmRaw[i];
             extra = JSON.parse(cdm.extra);
@@ -106,15 +110,25 @@
                 case "#MANAGERFOLLOW#":
                     break;
                 case "#VOTE#": // 投票弹幕
-                    result.push(new Vote(cdm, extra, from));
+                    popupWindow.push(new Vote(cdm, extra, from));
                     break;
                 // 5种特殊的滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
                 case "#UP#":
+                    // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
+                    // b.AH && (e.className = e.className + " " + b.AH);
+                    cdm.AH = "danmaku-up-icon";
+                    cdm.color = 16777215;
+                    cdm.pool = 0;
+                    cdm.fontsize = 25;
+                    cdm.ctime = 0;
+                    cdm.mode = 1;
+                    // cdm.midHash
+                    specialDanmaku.push(cdm);
                     break;
                 case "#RESERVE#":
                     break;
                 case "#LINK#":
-                    result.push(new Link(cdm, extra, from));
+                    popupWindow.push(new Link(cdm, extra, from));
                     break;
                 case "#ACTOR#":
                     break;
@@ -122,7 +136,7 @@
                     break;
             }
         }
-        return result;
+        return { popupWindow: popupWindow, specialDanmaku: specialDanmaku };
     }
 
     function play() {
@@ -198,6 +212,11 @@
         return BLOD.uid !== undefined;
     }
 
+    function post(url, data, contentType = "application/x-www-form-urlencoded") {
+        data.csrf = BLOD.getCookies().bili_jct;
+        return BLOD.xhr.post(url, BLOD.objUrl(null, data), { "Content-type": contentType });
+    }
+
     /*
     投票弹幕的extra属性的例子
         cnt: 22343      <= 投票总人数
@@ -219,15 +238,12 @@
      */
     class Vote {
         constructor(cdm, extra, from) {
-            // 这堆属性的定义代码是复制过来的，多余的属性留着备用
             this.total = extra.cnt;
-            this.dmid = cdm.idStr;
             this.voteId = extra.vote_id;
             this.options = extra.options;
             this.question = extra.question;
             this.myVote = extra.my_vote; // 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
             this.duration = extra.duration / 1e3 || 5;
-            this.mid = extra.mid;
             this.from = from || 0;
             this.to = from + (extra.duration / 1e3 || 5);
             this.pos_x = extra.posX || 200;
@@ -290,31 +306,27 @@
         }
         goVote(idx, i) {
             if (isLogin()) {
+                this.total += 1;
+                this.options[i].cnt += 1;
                 // 发送投票操作到服务器
                 let url = "//api.bilibili.com/x/web-interface/view/dm/vote";
-                BLOD.xhr.post(url,
-                    BLOD.objUrl(null, {
-                        aid: String(BLOD.aid),
-                        cid: BLOD.cid,
-                        progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
-                        vote: idx,
-                        vote_id: this.voteId,
-                        csrf: BLOD.getCookies().bili_jct
-                    })).then((resp) => {
-                        resp = JSON.parse(resp);
-                        if (resp.code === 0) {
-                            this.progress[i].className = "vote-progress vote-progress-blue";
-                        } else {
-                            BLOD.toast.error("投票失败", resp.code, resp.message);
-                        }
-                    }).catch((e) => {
-                        BLOD.toast.error("投票失败", e);
-                    });
+                post(url, {
+                    aid: BLOD.aid,
+                    cid: BLOD.cid,
+                    progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
+                    vote: idx,
+                    vote_id: this.voteId
+                }).then((resp) => {
+                    resp = JSON.parse(resp);
+                    biliAPI.verify(resp, "投票");
+                    this.progress[i].className = "vote-progress vote-progress-blue";
+                });
                 this.myVote = idx;
                 this.showResult();
                 this.to += 5; //点击投票后推迟5秒消失，防止结果消失太快来不及看
             }
             else {
+                player.pause();
                 BLOD.toast.info("请先登录");
                 window.biliQuickLogin ? window.biliQuickLogin() : $.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin());
             }
@@ -371,6 +383,9 @@
             this.dialog.className = "vote-dialog";
             this.to = this.from + this.duration; // 重设消失时间
         }
+        /**
+         * 根据视频区域大小等比缩放投票界面
+         */
         resize(scaleX, scaleY) {
             this.dialog.style.left = (this.pos_x * scaleX) + "px";
             this.dialog.style.top = (this.pos_y * scaleY) + "px";
@@ -380,29 +395,103 @@
         }
     }
 
-    class Attention {
-
+    /**
+     * 用于获取收藏列表有关信息
+     */
+    class favList {
+        static list = []
+        static defaultFolderId = 0
+        static get() {
+            if (this.list.length > 0) return Promise.resolve(this.list);
+            return BLOD.xhr.true(BLOD.objUrl("//api.bilibili.com/x/v3/fav/folder/created/list-all", {
+                type: 2,
+                rid: BLOD.aid,
+                up_mid: BLOD.uid
+            })).then((resp) => {
+                resp = JSON.parse(resp);
+                biliAPI.verify(resp, "获取收藏列表");
+                this.list = resp.data.list;
+                this.list.forEach(v => v.attr === 1 && (this.defaultFolderId = v.id));
+                return this.list;
+            });
+        }
+        static getDefaultFolder() {
+            if (this.defaultFolderId !== 0) return Promise.resolve(this.defaultFolderId);
+            return this.get().then(() => { return this.defaultFolderId });
+        }
     }
 
-    class Up {
+    /**
+     * @see https://github.com/SocialSisterYi/bilibili-API-collect
+     */
+    class biliAPI {
+        static verify(resp, msg) {
+            if (resp.code !== 0) {
+                BLOD.toast.error(msg + "失败", resp.code, resp.message);
+                throw msg + "失败";
+            }
+            return resp;
+        }
+        static like(bool) {
+            bool = bool ? 1 : 2;
+            return post("//api.bilibili.com/x/web-interface/archive/like", {
+                aid: BLOD.aid,
+                like: bool
+            }, "application/json; charset=utf-8").then((resp) => biliAPI.verify(resp, "点赞"));
+        }
+        static follow() {
+            return post("//api.bilibili.com/x/relation/modify", {
+                aid: BLOD.aid,
+                fid: window.getAuthorInfo().mid,
+                act: 1,
+                re_src: 14
+            }).then((resp) => {
+                resp = JSON.parse(resp);
+                return biliAPI.verify(resp, "关注");
+            });
+        }
+        static coin() {
 
+        }
+        static fav() {
+            return post("//api.bilibili.com/x/v3/fav/resource/deal", {
+                rid: BLOD.aid,
+                type: 2,
+                add_media_ids: favList.defaultFolderId,
+            }).then((resp) => {
+                resp = JSON.parse(resp);
+                return biliAPI.verify(resp, "收藏");
+            });
+        }
+        static triple() {
+            return post("//api.bilibili.com/x/web-interface/archive/like/triple", {
+                aid: BLOD.aid
+            }, "application/json; charset=utf-8").then((resp) => {
+                biliAPI.verify(resp, "三连");
+                var d = resp.data;
+                if (d.coin && d.like && d.fav) return;
+                if (!d.coin) BLOD.toast.error("投币失败");
+                if (!d.like) BLOD.toast.error("点赞失败");
+                if (!d.fav) BLOD.toast.error("收藏失败");
+                return d;
+            });
+        }
     }
-
-    /*
-    extra = {
-        aid: 2
-        bvid: "BV1xx411c7mD"
-        icon: "http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png"
-        posX: 333.5
-        posY: 93.7
-        title: "字幕君交流场所"
-    }
-    */
 
     /**
      * 关联视频跳转按钮
      */
     class Link {
+        /*
+            extra = {
+                aid: 2
+                bvid: "BV1xx411c7mD"
+                icon: "http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png"
+                posX: 333.5
+                posY: 93.7
+                title: "字幕君交流场所"
+            }
+        */
         constructor(cdm, extra, from) {
             this.content = cdm.content;
             this.aid = extra.aid;
@@ -410,10 +499,9 @@
             this.to = from + 5;
             this.pos_x = extra.posX || 200;
             this.pos_y = extra.posY || 200;
-
             /*
                 <div class="link-button">
-                    <img src="https://space.bilibili.com/favicon.ico">
+                    <img src="https://static.hdslb.com/images/favicon.ico">
                     <span>关联视频跳转</span>
                 </div>
             */
@@ -438,6 +526,9 @@
         hide() {
             this.button.style.display = "none";
         }
+        /**
+         * 根据视频区域大小缩放，放大倍数限制在最大1.5倍
+         */
         resize(scaleX, scaleY) {
             this.button.style.left = (this.pos_x * scaleX) + "px";
             this.button.style.top = (this.pos_y * scaleY) + "px";
@@ -452,13 +543,14 @@
      * @param  {[]} cdm 互动弹幕原始数据
      * @param {String} aid aid
      * @param {String} cid cid
+     * @returns {[]} 带特殊标志的弹幕，利用播放器自带的弹幕渲染器渲染
      */
     BLOD.loadCommandDm = (cdm, aid, cid) => {
         if (aid != BLOD.aid || cid != BLOD.cid || popupDiv !== undefined) {
             // 正在“载入其他视频弹幕”，不必处理互动弹幕
             return;
         }
-        init(); // 切P后整个播放器会被销毁重建，需要重新绑定事件
-        load(cdm);
+        init(); // 由于切P后整个播放器会被销毁重建，每次载入互动弹幕都需要重新绑定事件
+        return load(cdm);
     }
 })()
