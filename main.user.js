@@ -158,7 +158,7 @@
     if (BLOD.path[5] == "rank") BLOD.addCss("@media screen and (min-width: 1654px){.main-inner {width: 1160px !important;}}");
     if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
     // 修复导航栏消息样式
-    if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync")) BLOD.addCss(".im-root, .im-root .im-list-box * { font-size: 12px; line-height: 42px; }.im-root .im-list-box { width: 100%;}.im-root .im-list-box .im-list { line-height: 42px; height: 42px;}");
+    if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync")) BLOD.addCss(".im-root,.im-root .im-list-box * {font-size:12px;line-height:42px;}.im-root .im-list-box {width:100%;}.im-root .im-list-box .im-list {line-height:42px;height:42px;}.im-root .im-list-box .im-notify.im-number { height: 14px; line-height: 13px; border-radius: 10px; padding: 1px 3px; font-size: 12px; min-width: 20px; text-align: center; color: #fff;}.im-root .im-list-box .im-notify.im-number.im-center { top: 14px; left: 80px;}.im-root .im-list-box .im-notify.im-dot { top: 11px; right: -10px; width: 8px; height: 8px; border-radius: 100%;}.im-root .im-list-box .im-notify.im-dot.im-center { top: 16px; right: 20px;}");
     // 恢复评论翻页
     BLOD.replyList();
     // 写入全局样式
