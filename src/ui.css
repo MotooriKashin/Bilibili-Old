@@ -1,3 +1,5 @@
+/* 脚本UI */
+
 #BLOD-UI-face {
   box-sizing: content-box;
   color: #fff;
@@ -162,10 +164,14 @@
   border-color: #00a1d6;
 }
 
+/* 导航封面 */
+
 .bili-header-m .head-banner {
   background-position: center 0 !important;
   background-size: cover !important;
 }
+
+/* 评论小页码区 */
 
 .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
   float: right;
@@ -185,9 +191,13 @@
   margin: 12px 15px 0;
 }
 
+/* 搜索框 */
+
 .search-wrap .search-block .input-wrap input {
   font: 400 13.3333px Arial !important;
 }
+
+/* 下载面板 */
 
 #bili-old-download-table {
   position: fixed;
@@ -301,6 +311,8 @@
   padding: 1px 3px;
 }
 
+/* 合作UP主 */
+
 .up-info-m .up-card-box {
   white-space: nowrap;
   overflow: auto;
@@ -374,6 +386,8 @@
   font-weight: 400;
   padding: 8px 0;
 }
+
+/* ef2面板 */
 
 .BLOD-dl-settings {
   pointer-events: initial;
@@ -490,4 +504,20 @@
 
 .BLOD-dl-settings .button:hover, .BLOD-dl-settings button:hover {
   background: #1890ff;
+}
+
+/* 导航栏消息样式 */
+
+.im-root, .im-root .im-list-box * {
+  font-size: 12px;
+  line-height: 42px;
+}
+
+.im-root .im-list-box {
+  width: 100%;
+}
+
+.im-root .im-list-box .im-list {
+  line-height: 42px;
+  height: 42px;
 }
