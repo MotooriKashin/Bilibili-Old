@@ -780,8 +780,8 @@
                         loadTime = new Date() - loadTime;
                         parseTime = new Date();
                         // 将弹幕转换为旧格式
-                        let danmaku = Segments.map(function (v) {
-                            return {
+                        let danmaku = Segments.map((v) => {
+                            let result = {
                                 class: v.pool,
                                 color: v.color,
                                 date: v.ctime,
@@ -792,6 +792,8 @@
                                 text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                                 uid: v.midHash
                             };
+                            if(v.AH !== undefined) result.AH = v.AH;
+                            return result;
                         });
                         //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
                         if (BLOD.aid < 400000) {
