@@ -19,7 +19,7 @@
                 BLOD.path.name = "av";
                 if (config.reset.novideo || config.reset.forceFlv) BLOD.getVariable(window, "__playinfo__", undefined, [undefined]);
                 BLOD.playerSetting();
-                if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4]);
+                if (BLOD.path[4].toLowerCase().startsWith('bv')) BLOD.aid = BLOD.abv(BLOD.path[4].split("#")[0].split("*")[0]);
                 BLOD.aid = BLOD.aid || BLOD.path[4].match(/[0-9]+/)[0];
                 let page = BLOD.xhr.false(BLOD.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: BLOD.aid }));
                 BLOD.__INITIAL_STATE__ = BLOD.iniState.av(page);
