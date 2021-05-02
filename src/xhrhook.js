@@ -792,7 +792,7 @@
                                 text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                                 uid: v.midHash
                             };
-                            if(v.AH !== undefined) result.AH = v.AH;
+                            if (v.AH !== undefined) result.AH = v.AH;
                             return result;
                         });
                         //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
@@ -991,7 +991,7 @@
                     // 清除远古动态
                     if (this.url.includes("api.bilibili.com/x/web-feed/feed/unread")) this.url = this.url.replace("feed/unread", "article/unread");
                     // 修复评论楼层并修复mode返回值
-                    if (config.reset.replyfloor && this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid')) {
+                    if (this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid') && !this.url.includes('android')) {
                         this.url = this.url + '&mobi_app=android';
                         let jsonpCallback = this.jsonpCallback;
                         let call = window[jsonpCallback];
