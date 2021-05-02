@@ -991,7 +991,7 @@
                     // 清除远古动态
                     if (this.url.includes("api.bilibili.com/x/web-feed/feed/unread")) this.url = this.url.replace("feed/unread", "article/unread");
                     // 修复评论楼层并修复mode返回值
-                    if (this.url.includes('api.bilibili.com/x/v2/reply') && this.url.includes('oid') && !this.url.includes('android')) {
+                    if (this.url.includes('api.bilibili.com/x/v2/reply?') && this.url.includes('oid') && !this.url.includes('android')) {
                         this.url = this.url + '&mobi_app=android';
                         let jsonpCallback = this.jsonpCallback;
                         let call = window[jsonpCallback];
