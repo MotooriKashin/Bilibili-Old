@@ -106,14 +106,13 @@
         }
     }
 
-    const exports = () => {
+    const exports = (() => {
         let midcrc = new Midcrc();
-        return (() => {
-            return (input) => {
-                return midcrc.run(input);
-            }
-        })()
-    }
-    root.midcrc = exports();
-
+        return {
+            midcrc: input => midcrc.run(input),
+            crc32: input => midcrc.crc32(input)
+        }
+    })()
+    root.midcrc = exports.midcrc;
+    root.crc32 = exports.crc32;
 })()

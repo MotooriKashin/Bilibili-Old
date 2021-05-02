@@ -113,7 +113,7 @@
                     popupWindow.push(new Vote(cdm, extra, from));
                     break;
                 // 5种特殊的滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
-                case "#UP#":
+                case "#UP#":  // “UP主”标识弹幕
                     // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
                     // b.AH && (e.className = e.className + " " + b.AH);
                     cdm.AH = "danmaku-up-icon";
@@ -122,7 +122,8 @@
                     cdm.fontsize = 25;
                     cdm.ctime = 0;
                     cdm.mode = 1;
-                    // cdm.midHash
+                    BLOD.importModule("crc");
+                    cdm.midHash = BLOD.crc32 && ((BLOD.crc32(cdm.mid) ^ -1) >>> 0).toString(16);
                     specialDanmaku.push(cdm);
                     break;
                 case "#RESERVE#":
