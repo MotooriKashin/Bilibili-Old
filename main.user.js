@@ -22,7 +22,7 @@
 // @resource     index https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/index.html
 // @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/ranking.html
 // @resource     css https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d6e3ca0d90aa4928519e7eabf7fa60a4fbd52ef/src/ui.css
-// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/crc.js
+// @resource     crc https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@261bc396b2c589368322269205aeaacdf5e3d092/src/crc.js
 // @resource     md5 https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/md5.js
 // @resource     iniState https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c6d7983fa9c946501253d5bd9d525ea6acfae014/src/initialstate.js
 // @resource     ui https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d1fef3b96f443024e4c31fd5735ac4db94f8ed0/src/ui.js
@@ -30,14 +30,14 @@
 // @resource     define https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ef585d49530682659dc9ee1f676f3903a23fad3d/src/define.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31fdfacbba12ad32bae963b1a88fc31b67541e21/src/rewrite.js
 // @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31fdfacbba12ad32bae963b1a88fc31b67541e21/src/reset.js
-// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@fc2b4b3e908ff834525121a85c3bda13686e7af5/src/xhrhook.js
+// @resource     xhrhook https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@261bc396b2c589368322269205aeaacdf5e3d092/src/xhrhook.js
 // @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0d1fef3b96f443024e4c31fd5735ac4db94f8ed0/src/config.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/playlist.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/sort.json
 // @resource     protobuf https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/protobuf.json
 // @resource     icon https://www.bilibili.com/index/index-icon.json
-// @resource     commandDm https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@57a5abc79c5ce6282ac05a75fd601deb2abfa7fa/src/commandDm.js
-// @resource     commandDmStyle https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@753cb563c1aa6536566572e3624371ff2885e2e2/src/commandDmStyle.css
+// @resource     commandDm https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@261bc396b2c589368322269205aeaacdf5e3d092/src/commandDm.js
+// @resource     commandDmStyle https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@261bc396b2c589368322269205aeaacdf5e3d092/src/commandDmStyle.css
 // @resource     reply https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/comment.min.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
