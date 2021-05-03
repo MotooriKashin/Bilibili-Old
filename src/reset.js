@@ -176,7 +176,7 @@
          * 还原评论跳转链接为av号
          */
         renameCommentJump: () => {
-            if (config.reset.commentjump) return;
+            if (!config.reset.commentjump) return;
             document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
                 if (d.href && !d.href.includes(d.innerText)) {
                     d = d.href.split("/");
