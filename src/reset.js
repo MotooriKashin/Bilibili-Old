@@ -57,7 +57,6 @@
          */
         resetSction: async () => {
             if (!config.reset.grobalboard) return;
-            if (BLOD.path.name) return;
             if (BLOD.head && BLOD.foot) return;
             let emap = [
                 { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" },
