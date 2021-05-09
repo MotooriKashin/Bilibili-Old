@@ -170,8 +170,11 @@
                 this.durl(path);
                 this.dash(path);
             } else if (this.pn != this.getQuality()) {
+                toast("清晰地切换，重新获取flv数据");
                 this.pn = this.getQuality();
-                this.durl(await this.geturl("flv", undefined, undefined, this.pn));
+                let data = await this.geturl("flv", undefined, undefined, this.pn)
+                data = data.data || (data.durl && data) || data.result || {}
+                this.durl(data);
             }
             this.other();
             this.item();
