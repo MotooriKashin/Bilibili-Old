@@ -121,6 +121,7 @@
             this.qua = { 208: "1080P", 192: "720P", 125: "HDR", 120: "4K", 116: "1080P60", 112: "1080P+", 80: "1080P", 74: "720P60", 64: "720P", 48: "720P", 32: "480P", 16: "360P", 15: "360P" };
             this.bps = { 30216: "64kbps", 30257: "64kbps", 30232: "128kbps", 30259: "128kbps", 30260: "320kbps", 30280: "320kbps" };
             this.config = BLOD.getValue("download") || {};
+            this.pn = this.getQuality();
         }
         /**
          * 添加播放器右键下载菜单
@@ -160,13 +161,17 @@
             if (!BLOD.mdf) {
                 path = path || {}
                 let pro = [this.geturl()];
-                path && !path.durl && pro.push(this.geturl("flv"));
+                this.pn = this.getQuality();
+                path && !path.durl && pro.push(this.geturl("flv", undefined, undefined, this.pn));
                 path && !path.dash && pro.push(this.geturl("dash"));
                 BLOD.mdf = {};
                 BLOD.mdf.quee = BLOD.mdf.quee || await Promise.all(pro);
                 this.quee(BLOD.mdf.quee);
                 this.durl(path);
                 this.dash(path);
+            } else if (this.pn != this.getQuality()) {
+                this.pn = this.getQuality();
+                this.durl(await this.geturl("flv", undefined, undefined, this.pn));
             }
             this.other();
             this.item();
@@ -535,6 +540,15 @@
                 ui.remove();
             }
             dc.children[1].onclick = () => { ui.remove() }
+        }
+        /**
+         * 读取本地清晰度数据
+         * @returns {string} 清晰地数据字符串
+         */
+        getQuality() {
+            let pn = JSON.parse(localStorage.getItem("bilibili_player_settings"));
+            pn = (pn && pn.setting_config) ? pn.setting_config.defquality : 125;
+            return pn;
         }
     }
 
