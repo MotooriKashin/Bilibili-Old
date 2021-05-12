@@ -5,7 +5,6 @@
  * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD;
     const BLOD = window.BLOD; /** @see main  */
     const debug = BLOD.debug; /** @see debug  */
     const toast = BLOD.toast; /** @see debug  */
