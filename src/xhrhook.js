@@ -875,6 +875,10 @@
                 }
                 // 修改播放器通知
                 if (url.includes('api.bilibili.com/x/player/carousel')) {
+                    if (BLOD.path.name) {
+                        BLOD.importModule("closedCaption");
+                        BLOD.updateSubtitle();
+                    }
                     this.addEventListener('readystatechange', () => { if (this.readyState === 4) XhrHook.carousel(this) });
                 }
                 // 修改区域限制
