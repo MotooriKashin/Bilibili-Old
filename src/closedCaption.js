@@ -323,7 +323,7 @@
         async getCaption() {
             try {
                 let data = await this.getCaptionView();
-                this.captions = data.data.subtitle.subtitles;
+                BLOD.subtitle = this.captions = data.data.subtitle.subtitles;
                 let i = 0; // 指示字幕语言记录
                 this.captions.forEach((d, j) => {
                     if (d.lan == this.subtitlePrefer) i = j;
@@ -336,7 +336,7 @@
                     });
                     let anchor = document.querySelector(".bilibili-player-video-btn-quality");
                     this.initUI();
-                    anchor.insertAdjacentElement("afterend", this.element.node);
+                    if (!document.querySelector("#bilibili-player-subtitle-btn")) anchor.insertAdjacentElement("afterend", this.element.node);
                 }
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("CC字幕", ...e); }
         }
