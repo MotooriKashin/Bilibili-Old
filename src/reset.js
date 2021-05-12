@@ -1246,7 +1246,7 @@
     }
 
     // 弹幕反查
-    class DanmkuHashId {
+    class DanmakuHashId {
         /**
          * 反差弹发送者信息
          * @param {string} crc 8 位 crc32 哈希值
@@ -1255,11 +1255,11 @@
         constructor(crc) {
             BLOD.importModule("crc");
             // 设置正在查询的弹幕数量
-            DanmkuHashId.count = DanmkuHashId.count ? DanmkuHashId.count + 1 : 1;
+            DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
             // 当前查询弹幕排序
-            this.count = DanmkuHashId.count;
+            this.count = DanmakuHashId.count;
             // 临时缓存已查询的 mid
-            DanmkuHashId.catch = DanmkuHashId.catch || {};
+            DanmakuHashId.catch = DanmakuHashId.catch || {};
             this.hash = crc;
             this.mid = BLOD.midcrc(this.hash);
             this.getInfo();
@@ -1280,21 +1280,21 @@
                 }
                 if (!this.dm) return setTimeout(() => { this.getInfo() }, 100);
                 if (this.dm.tagName != "LI") return;
-                DanmkuHashId.catch[this.mid] = DanmkuHashId.catch[this.mid] || BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
+                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid })));
                 this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' +
                     this.mid + '" class="reply-face"><img src="' +
-                    DanmkuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
+                    DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
                     this.mid + '" href="//space.bilibili.com/' +
                     this.mid + '" target="_blank" class="' +
-                    (DanmkuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmkuHashId.catch[this.mid].data.card.name + '</a> ' +
-                    DanmkuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
-                    DanmkuHashId.catch[this.mid].data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
-                DanmkuHashId.count--;
-            } catch (e) { DanmkuHashId.count--; e = Array.isArray(e) ? e : [e]; toast.error("弹幕反查", ...e); }
+                    (DanmakuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmakuHashId.catch[this.mid].data.card.name + '</a> ' +
+                    DanmakuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
+                    DanmakuHashId.catch[this.mid].data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
+                DanmakuHashId.count--;
+            } catch (e) { DanmakuHashId.count--; e = Array.isArray(e) ? e : [e]; toast.error("弹幕反查", ...e); }
         }
     }
-    BLOD.danmkuHashId = (crc) => {
-        let check = new DanmkuHashId(crc);
+    BLOD.danmakuHashId = (crc) => {
+        let check = new DanmakuHashId(crc);
         return "hash: " + check[0] + " mid: " + check[1];
     }
 

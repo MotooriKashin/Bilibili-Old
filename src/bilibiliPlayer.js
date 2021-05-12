@@ -21916,7 +21916,7 @@ function Fa() {
                                     dm.push(d);
                                     if (d.type == "danmaku") {
                                         dm.push({
-                                            text: BLOD.danmkuHashId(d.g.textData.uid),
+                                            text: BLOD.danmakuHashId(d.g.textData.uid),
                                             type: "function"
                                         });
                                     }
@@ -22234,7 +22234,7 @@ function Fa() {
                                 });
                                 g.unshift({
                                     type: "function",
-                                    text: BLOD.danmkuHashId(h.uid)
+                                    text: BLOD.danmakuHashId(h.uid)
                                 });
                             }
                             return g.reverse()
