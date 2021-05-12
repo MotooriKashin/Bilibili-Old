@@ -875,7 +875,7 @@
                 }
                 // 修改播放器通知
                 if (url.includes('api.bilibili.com/x/player/carousel')) {
-                    if (BLOD.path.name) {
+                    if (config.reset.closedCaption && BLOD.path.name) {
                         BLOD.importModule("closedCaption");
                         BLOD.updateSubtitle();
                     }
