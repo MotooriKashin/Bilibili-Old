@@ -160,14 +160,14 @@
                 this.element.span.innerHTML = this.iconOn;
                 this.setCaption(caption);
                 this.text.innerHTML = caption.lan_doc;
-                this.element.language.children[2].removeAttribute("disabled");
+                this.element.language.children[2].disabled = false;
             }
             else {
                 this.on = false;
                 this.element.span.innerHTML = this.iconOff;
                 this.setCaption();
                 this.text.innerHTML = "关闭";
-                this.element.language.children[2].setAttribute("disabled", "disabled");
+                this.element.language.children[2].disabled = true;
             }
         }
         /**
@@ -186,6 +186,11 @@
             <a class="bpui-button" href="https://member.bilibili.com/v2#/zimu/my-zimu/zimu-editor?cid=${BLOD.cid}&aid=${BLOD.aid}" target="_blank" title="" style="margin-right: 0px; height: 24px; padding: 0px 6px;">添加字幕</a>`;
             let list = this.element.language.children[1].children[2];
             this.text = this.element.language.children[1].children[0];
+            this.element.language.children[2].onclick = () => {
+                BLOD.importModule("download");
+                BLOD.config.reset.dlother = 1; // 开启其他下载
+                BLOD.download(); // 拉起下载面板
+            }
             list.children[0].onclick = () => {
                 this.text.innerHTML = "关闭";
                 this.setCaption();
@@ -303,10 +308,12 @@
          */
         async getCaptionView() {
             try {
+                // 网页端接口
                 return BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/player/v2", { cid: BLOD.cid, aid: BLOD.aid })));
             } catch (e) {
                 e = Array.isArray(e) ? e : [e];
                 debug.error("CC字幕接口", ...e);
+                // 移动端接口
                 return BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: BLOD.cid, aid: BLOD.aid, type: 1 })));
             }
         }
@@ -317,12 +324,13 @@
             try {
                 let data = await this.getCaptionView();
                 this.captions = data.data.subtitle.subtitles;
-                let i = 0;
+                let i = 0; // 指示字幕语言记录
                 this.captions.forEach((d, j) => {
                     if (d.lan == this.subtitlePrefer) i = j;
                 })
                 if (this.captions[i]) await this.setCaption(this.captions[i]);
                 if (this.caption) {
+                    // 只在有字幕时添加面板
                     window.player.addEventListener('video_resize', (event) => {
                         this.changeResize(event);
                     });
@@ -337,14 +345,14 @@
          * @param {{}} [caption] CC字幕对象
          */
         async setCaption(caption) {
-            let data = { body: [] };
+            let data = { body: [] }; // 空字幕
             if (caption && caption.subtitle_url) {
                 this.data[caption.subtitle_url] = this.data[caption.subtitle_url] || await BLOD.xhr.true(caption.subtitle_url, "json", undefined, false);
                 data = this.data[caption.subtitle_url] || data;
             }
-            window.player.updateSubtitle(data);
+            window.player.updateSubtitle(data); // 投喂字幕数据给播放器
             if (caption && caption.subtitle_url) {
-                this.caption = caption;
+                this.caption = caption; // 记忆当前字幕
                 debug.msg(3, "载入字幕", this.captions[0].lan_doc);
             } else debug.msg(3, "关闭字幕");
         }
