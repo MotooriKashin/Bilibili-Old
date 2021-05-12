@@ -338,8 +338,8 @@
         addElement(type, arb = {}, tar = document.body, fir = false, rep) {
             let emt = document.createElement(type);
             for (let key in arb) emt.setAttribute(key, arb[key]);
-            if (rep) return rep.replaceWith(emt);
-            fir ? tar.insertBefore(emt, tar.firstChild) : tar.appendChild(emt);
+            if (rep) rep.replaceWith(emt);
+            else fir ? tar.insertBefore(emt, tar.firstChild) : tar.appendChild(emt);
             return emt;
         }
         /**
