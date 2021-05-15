@@ -24118,11 +24118,14 @@ function Fa() {
                         c.preventDefault();
                         d = $(c.currentTarget);
                         b(d);
-                        l = window.setInterval(function () {
+                        l || (l = window.setInterval(function () {
                             b(d)
-                        }, 250)
+                        }, 250))
                     }), this.c.ab.on("mouseup", function () {
-                        l && clearInterval(l)
+                        if (l) {
+                            clearInterval(l);
+                            l = undefined;
+                        }
                     });
                 this.c.ab.on("click contextmenu", function (b) {
                     b = b.target;
