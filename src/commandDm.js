@@ -31,13 +31,10 @@
     /**
      * 添加互动弹幕
      * @param  {[]} commandDmRaw 从服务器获得的互动弹幕数据
-     * @returns {[]} 带特殊标志的弹幕，利用播放器自带的弹幕渲染器渲染
      */
     function load(commandDmRaw) {
-        let dm = parseDm(commandDmRaw);
-        commandDm.hidden = dm.popupWindow;
+        commandDm.hidden = parseDm(commandDmRaw);
         resize();
-        return dm.specialDanmaku;
     }
 
     /**
@@ -94,10 +91,10 @@
     /**
      * 生成互动弹幕的UI组件，各种后续处理
      * @param {[]} commandDmRaw 互动弹幕原始数据
-     * @returns {{popupWindow: [], specialDanmaku: []}} popupWindow: 互动弹窗的UI对象 specialDanmaku: 带特殊标志的弹幕，利用播放器自带的弹幕渲染器渲染
+     * @returns [] 互动弹窗的UI对象
      */
     function parseDm(commandDmRaw) {
-        let popupWindow = [], specialDanmaku = [];
+        let popupWindow = [];
         for (let i = 0, cdm, extra, from; i < commandDmRaw.length; i++) {
             cdm = commandDmRaw[i];
             extra = JSON.parse(cdm.extra);
@@ -112,20 +109,7 @@
                 case "#VOTE#": // 投票弹幕
                     popupWindow.push(new Vote(cdm, extra, from));
                     break;
-                // 5种特殊的滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
-                case "#UP#":  // “UP主”标识弹幕
-                    // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
-                    // b.AH && (e.className = e.className + " " + b.AH);
-                    cdm.AH = "danmaku-up-icon";
-                    cdm.color = 16777215;
-                    cdm.pool = 0;
-                    cdm.fontsize = 25;
-                    cdm.ctime = 0;
-                    cdm.mode = 1;
-                    BLOD.importModule("crc");
-                    cdm.midHash = BLOD.crc32 && ((BLOD.crc32(cdm.mid) ^ -1) >>> 0).toString(16);
-                    specialDanmaku.push(cdm);
-                    break;
+                // 滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
                 case "#RESERVE#":
                     break;
                 case "#LINK#":
@@ -137,7 +121,7 @@
                     break;
             }
         }
-        return { popupWindow: popupWindow, specialDanmaku: specialDanmaku };
+        return popupWindow;
     }
 
     function play() {
@@ -544,7 +528,6 @@
      * @param  {[]} cdm 互动弹幕原始数据
      * @param {String} aid aid
      * @param {String} cid cid
-     * @returns {[]} 带特殊标志的弹幕，利用播放器自带的弹幕渲染器渲染
      */
     BLOD.loadCommandDm = (cdm, aid, cid) => {
         if (aid != BLOD.aid || cid != BLOD.cid || popupDiv !== undefined) {
@@ -552,6 +535,6 @@
             return;
         }
         init(); // 由于切P后整个播放器会被销毁重建，每次载入互动弹幕都需要重新绑定事件
-        return load(cdm);
+        load(cdm);
     }
 })()

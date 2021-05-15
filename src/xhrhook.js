@@ -478,17 +478,31 @@
                 }
             }
             // 互动弹幕
-            let commandDanmaku = [];
-            if (BLOD.config.reset.commandDm && config.commandDms.length > 0) {
-                // BLOD.loadCommandDm()返回能够利用现有弹幕渲染器去渲染的互动弹幕（例如具有“UP主”特殊标识的弹幕）
-                // 随后把这部分弹幕合并到总弹幕数据中
-                commandDanmaku = BLOD.loadCommandDm(config.commandDms, aid, cid);
+            let upHighlightDm = []; // 带有蓝色“UP主”特殊标记的弹幕
+            if (config.commandDms.length > 0) {
+                for (let i = 0; i < config.commandDms.length; i++) {
+                    let cdm = config.commandDms[i];
+                    if (cdm.command == "#UP#") {
+                        cdm.styleClass = "danmaku-up-icon";
+                        cdm.color = 16777215;
+                        cdm.pool = 0;
+                        cdm.fontsize = 25;
+                        cdm.ctime = new Date(cdm.mtime).getTime() / 1000;
+                        cdm.mode = 1;
+                        BLOD.importModule("crc");
+                        cdm.midHash = BLOD.crc32 && ((BLOD.crc32(cdm.mid) ^ -1) >>> 0).toString(16);
+                        upHighlightDm.push(cdm);
+                        config.commandDms.splice(i, 1);
+                    }
+                }
+                if (BLOD.loadCommandDm)
+                    BLOD.loadCommandDm(config.commandDms, aid, cid);
             }
             // 解码弹幕
             (await Promise.all(allrequset)).forEach(d => {
                 if (d) allDanmaku = allDanmaku.concat(protoSeg.decode(new Uint8Array(d)).elems);
             });
-            return allDanmaku.concat(commandDanmaku);
+            return allDanmaku.concat(upHighlightDm);
         } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("获取新版弹幕", ...e); }
     }
     /**
@@ -792,7 +806,9 @@
                                 text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                                 uid: v.midHash
                             };
-                            if (v.AH !== undefined) result.AH = v.AH;
+                            // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
+                            // b.AH && (e.className = e.className + " " + b.AH);
+                            if (v.styleClass !== undefined) result.AH = v.styleClass;
                             return result;
                         });
                         //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
