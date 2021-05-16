@@ -48,6 +48,42 @@
                     BLOD.addCss(BLOD.getResourceText("commandDmStyle"));
                     BLOD.importModule("commandDm");
                 }
+                // hook webpackJsonp() 以修改video.b1b7706abd590dd295794f540f7669a5d8d978b3.js的部分代码
+                // @see https://blog.mutoo.im/2018/08/code-injection-with-webpackjsonp-and-jquery/
+                let webpackJsonpFunction;
+                Object.defineProperty(window, "webpackJsonp", {
+                    get() {
+                        if (webpackJsonpFunction) {
+                            return (chunkIds, moreModules, executeModules) => {
+                                function inject(index, replaceFn) {
+                                    let code = moreModules[index].toString();
+                                    moreModules[index] = new Function("t", "e", "i", "(" + replaceFn(code) + ")(t,e,i)");
+                                }
+                                // length == 716 -> vendor.js
+                                //        == 717 -> video.b1b7706abd590dd295794f540f7669a5d8d978b3.js
+                                if (moreModules.length == 717) {
+                                    // 暴露UI组件
+                                    // .onCoinSuccess(n)   页面变为已投币n枚的状态
+                                    // .onFollow()         变为已关注状态
+                                    // .favSubmit(bool)    设置收藏状态，参数bool: true -> “已收藏”状态 false -> 未收藏状态
+                                    inject(274, code => code.replace("init:function(){", "init:function(){BLOD.biliUIcomponents=this;"));
+                                    // 修复：收藏视频时，在“添加到收藏夹”弹窗中，如果将视频从收藏夹A删除，并同时添加到收藏夹B，点击确定后窗口不消失的问题
+                                    /* 报错原因示意：
+                                        jQuery.when(deferredA,deferredB).done((resultA,resultB) => {
+                                            let codeA = resultA[0].code; // Cannot read property 'code' of undefined
+                                            let codeA = resultA.code;    // 本应该写成这样
+                                        })
+                                    */
+                                    inject(251, code => code.replace("e[0].code", "e.code").replace("i[0].code", "i.code"));
+                                }
+                                return webpackJsonpFunction(chunkIds, moreModules, executeModules);
+                            }
+                        }
+                    },
+                    set(func) {
+                        webpackJsonpFunction = func;
+                    }
+                });
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         watchlater() {
