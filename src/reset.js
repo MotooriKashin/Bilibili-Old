@@ -659,7 +659,9 @@
     BLOD.reset.pgcRecommend = async () => {
         try {
             window.__INITIAL_STATE__.pgcRecommend = window.__INITIAL_STATE__.pgcRecommend || BLOD.jsonCheck(await xhr(BLOD.objUrl("https://api.bilibili.com/pgc/web/recommend/related/recommend", { season_id: window.__INITIAL_STATE__.ssId }))).result;
-            let node = document.querySelector(".mCSB_container");
+            let node = document.querySelector(".bilibili-player-recommend");
+            if (!node) return setTimeout(() => BLOD.reset.pgcRecommend());
+            node = node.querySelector(".mCSB_container");
             if (!node) return setTimeout(() => BLOD.reset.pgcRecommend());
             let element = '';
             window.__INITIAL_STATE__.pgcRecommend.forEach(d => {
