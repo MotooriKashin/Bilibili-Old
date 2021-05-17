@@ -230,6 +230,8 @@ Tampermonkey BETA 4.10.6132
 **注：部分功能可能需要先在设置里启用！**
 
 <pre>
+- 2021-05-17
+  - 修复番剧推荐误伤弹幕列表的情况
 - 2021-05-12
   - 移植CC字幕模块 感谢[indefined](https://github.com/indefined/UserScripts/tree/master/bilibiliCCHelper)
 - 2021-05-09
