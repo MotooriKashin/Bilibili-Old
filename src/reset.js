@@ -1091,6 +1091,8 @@
          */
         aitm() {
             document.querySelectorAll("a").forEach(d => {
+                if (d.href && d.href.includes("bilibili.tv")) d.href = d.href.replace("bilibili.tv", "bilibili.com");
+                if (d.href && d.href.includes("www.bilibili.com/tag")) d.href = d.href.replace("tag", "topic");
                 if (d.href && this.url.indexOf(d.href) < 0) {
                     this.logout(d);
                     let hash = d.href.includes("#") ? "#" + d.href.split("#")[1] : "";
@@ -1107,7 +1109,7 @@
          */
         area() {
             document.querySelectorAll("area").forEach(d => {
-                if (d.href && d.href.includes("bilibili.tv")) d.href = d.href.replace("bilibili.tv", "bilibili.com")
+                if (d.href && d.href.includes("bilibili.tv")) d.href = d.href.replace("bilibili.tv", "bilibili.com");
             })
         }
         /**
