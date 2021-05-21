@@ -373,8 +373,8 @@
                         data = BLOD.jsonCheck(await xhr.true(BLOD.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": BLOD.aid }))).data;
                         if (data == 1) {
                             // 点赞过点亮图标
-                            move.setAttribute("style", "width : 22px;height : 22px;background-position : -660px -2068px;display : none;");
-                            moved.setAttribute("style", "width : 22px;height : 22px;background-position : -725px -2068px;");
+                            move.setAttribute("style", "width : 22px;height : 22px;display : none;");
+                            moved.setAttribute("style", "width : 22px;height : 22px;" + on);
                         }
                     }
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("点赞功能", ...e); }
