@@ -319,7 +319,7 @@
                     let arg = text;
                     // 创建点赞数据相关节点并初始化
                     span.setAttribute("class", "u like");
-                    span.setAttribute("style", "margin-right : 5px;");
+                    span.setAttribute("style", "margin-left : 24px;margin-right : 10px;");
                     span.appendChild(move);
                     span.appendChild(moved);
                     span.appendChild(text);
