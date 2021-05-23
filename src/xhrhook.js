@@ -429,7 +429,7 @@
                 xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>\r\n';
             }
             xml += "</i>";
-            resolve(xml.replace(/[\u0000-\u001F\u007F-\u009F]/g, ""));
+            resolve(xml.replace(/\u001c/g, ""));
         });
     }
     /**
