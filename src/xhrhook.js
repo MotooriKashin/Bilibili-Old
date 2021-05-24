@@ -1046,6 +1046,24 @@
                 else return sendBeacon.call(this, url, data);
             }
         }
+        fetch() {
+            let _fetch = fetch;
+            fetch = function (url) {
+                if (!url.includes('api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo')) return _fetch(url);
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open("get", url);
+                    xhr.onload = () => resolve({
+                        ok: true,
+                        status: xhr.status,
+                        statusText: xhr.statusText,
+                        body: new ReadableStream(xhr.response),
+                        json: () => Promise.resolve(JSON.parse(xhr.responseText)),
+                        text: () => Promise.resolve(xhr.responseText)
+                    })
+                })
+            }
+        }
         /**
          * 处理主页正在直播数据
          * @param {XMLHttpRequest} obj XMLHttpRequest对象
@@ -1317,6 +1335,7 @@
     if (config.reset.livechat) xhrHook.webSocket();
     if (config.reset.danmuku && Worker) xhrHook.worker();
     xhrHook.open();
+    xhrHook.fetch();
     xhrHook.sendBeacon()
 
     if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
