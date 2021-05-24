@@ -328,7 +328,7 @@
                     moved.setAttribute("class", "l-icon-moved");
                     moved.setAttribute("style", "width : 22px;height : 22px;display : none;");
                     try {
-                        move.onclick = async () => {
+                        let like = async () => {
                             // 没有点赞过绑定点赞点击事件
                             if (!BLOD.uid) return document.getElementsByClassName("c-icon-move")[0].click();
                             // 构造并请求点赞表单
@@ -337,6 +337,7 @@
                             data = BLOD.jsonCheck(data).ttl;
                             // 点亮点赞图标并修改显示数据
                             toast.success("点赞成功！");
+                            span.onclick = () => dislike();
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;display : none;");
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;" + on);
                             if (arg.nodeValue.match("万")) return;
@@ -345,7 +346,7 @@
                             arg.replaceWith(text);
                             arg = text;
                         }
-                        moved.onclick = async () => {
+                        let dislike = async () => {
                             // 点赞过绑定取消点赞点击事件
                             // 构造并请求取消点赞表单
                             let msg = "aid=" + BLOD.aid + "&like=2&csrf=" + BLOD.getCookies().bili_jct;
@@ -353,6 +354,7 @@
                             data = BLOD.jsonCheck(data).ttl;
                             // 熄灭点赞图标并修改显示数据
                             toast.warning("取消点赞！");
+                            span.onclick = () => like();
                             document.getElementsByClassName("l-icon-move")[0].setAttribute("style", "width : 22px;height : 22px;" + off);
                             document.getElementsByClassName("l-icon-moved")[0].setAttribute("style", "width : 22px;height : 22px;display : none;");
                             if (arg.nodeValue.match("万")) return;
@@ -375,7 +377,8 @@
                             // 点赞过点亮图标
                             move.setAttribute("style", "width : 22px;height : 22px;display : none;");
                             moved.setAttribute("style", "width : 22px;height : 22px;" + on);
-                        }
+                            span.onclick = () => dislike();
+                        } else span.onclick = () => like();
                     }
                     catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("点赞功能", ...e); }
                 }
