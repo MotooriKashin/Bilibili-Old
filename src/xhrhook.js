@@ -1335,7 +1335,7 @@
     if (config.reset.livechat) xhrHook.webSocket();
     if (config.reset.danmuku && Worker) xhrHook.worker();
     xhrHook.open();
-    xhrHook.fetch();
+    if (config.reset.roomplay) xhrHook.fetch();
     xhrHook.sendBeacon()
 
     if (window.$ && window.$.ajaxSetup) xhrHook.jsonp();
