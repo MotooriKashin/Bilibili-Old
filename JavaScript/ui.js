@@ -15,7 +15,7 @@
             this.menu = ["播放", "弹幕", "修复", "样式", "直播"];
             this.item = [
                 ["static", "widescreen", "electric", "panel", "autoplay", "playerStyle", "forceFlv", "closedCaption"],
-                ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff", "localDanmaku", "concatDanmaku", "commandDm"],
+                ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff", "localDanmaku", "concatDanmaku", "commandDm", "indiRecommand"],
                 ["replyList", "preview", "jointime", "lostvideo", "bvid2av", "like", "heartbeat", "carousel"],
                 ["grobalboard", "headblur", "episodedata", "adloc", "history", "oldreply", "uplist", "indexIcon", "commentjump", "searchHistory", "bangumiCover"],
                 ["roomplay", "nosleep", "noanchor", "nopkvm", "nop2p"],
