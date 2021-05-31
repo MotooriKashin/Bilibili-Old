@@ -119,8 +119,8 @@ _以下问题这里可能处于并将长期处于无法解决状态，请多担�
 
 ```
 Microsoft Windows 8 (Build 6.2.9200.16384) （64 位）
-Google Chrome 89.0.4389.90 (正式版本) （64 位） (cohort: Stable)
-Tampermonkey BETA 4.10.6132
+Google Chrome 91.0.4472.77 (正式版本) （64 位） (cohort: 91_Win_77)
+Tampermonkey BETA 4.10.6137
 ```
 
 平台
@@ -230,6 +230,8 @@ Tampermonkey BETA 4.10.6132
 **注：部分功能可能需要先在设置里启用！**
 
 <pre>
+- 2021-05-25
+  - 重构全部模块，与之前的版本破坏性不兼容
 - 2021-05-25
   - 修复直播间清晰地切换
 - 2021-05-22
