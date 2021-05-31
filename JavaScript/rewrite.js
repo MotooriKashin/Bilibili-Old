@@ -495,7 +495,7 @@
                 if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module") this.fixnews(msg.target);
                 // 覆盖个性化推荐
                 if (/bili-wrapper/.test(msg.target.className)) setTimeout(() => {
-                    document.querySelector(".rec-btn.next").click();
+                    if (BLOD.uid) document.querySelector(".rec-btn.next").click();
                     BLOD.removeElement("rec-btn prev", "class", true);
                     BLOD.removeElement("rec-btn next", "class", true);
                 });

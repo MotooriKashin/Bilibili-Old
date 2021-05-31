@@ -869,7 +869,7 @@
                 if (v[d]) {
                     d = Array.isArray(v[d]) ? v[d] : [v[d]]
                     d.forEach((d) => {
-                        floor[d.rpid] = d.floor;
+                        this.floor[d.rpid] = d.floor;
                         if (d.replies) {
                             d.replies.forEach((d) => {
                                 this.floor[d.rpid] = d.floor;
