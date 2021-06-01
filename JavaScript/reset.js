@@ -480,11 +480,10 @@
          * @param {[]} audio 音频数据数组
          */
         fixAudio(audio) {
-            let arr = [];
-            audio.forEach(d => {
+            return audio.reduce((arr, d) => {
                 if (d.id == 30232 || d.id == 30280 || d.id == 30216) arr.push(d);
-            })
-            return arr;
+                return arr;
+            }, [])
         }
         /**
          * 重构APP端数据

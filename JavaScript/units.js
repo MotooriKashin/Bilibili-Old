@@ -319,14 +319,13 @@
          * @param {{}} 包含参数键值对的对象，原URL不含参数则返回空对象
          */
         urlObj(url) {
-            let obj = {};
             url = url || "";
             url = url.split('?')[1] ? url.split('?')[1].split('&') : [];
-            url.forEach(d => {
+            return url.reduce((o, d) => {
                 if (d.includes("#")) d = d.split("#")[0];
-                if (d) obj[d.split('=')[0]] = d.split('=')[1] || "";
-            });
-            return obj;
+                if (d) o[d.split('=')[0]] = d.split('=')[1] || "";
+                return o;
+            }, {});
         }
     }
     new ForMat();
@@ -370,13 +369,12 @@
          */
         getCookies() {
             let cookies = document.cookie.split('; ');
-            let obj = cookies.reduce((pre, next) => {
+            return cookies.reduce((pre, next) => {
                 let key = next.split('=')[0];
                 let val = next.split('=')[1];
                 pre[key] = val;
                 return pre;
             }, {});
-            return obj;
         }
         /**
          * 添加新的DOM节点
