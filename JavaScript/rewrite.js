@@ -492,13 +492,9 @@
             })
             BLOD.joinNode((msg) => {
                 // 失效分区转换
-                if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module") this.fixnews(msg.target);
+                if (msg.target.id == "bili_ad" || msg.target.className == "report-wrap-module elevator-module") this.fixNews(msg.target);
                 // 覆盖个性化推荐
-                if (/bili-wrapper/.test(msg.target.className)) setTimeout(() => {
-                    if (BLOD.uid && config.reset.indiRecommand) document.querySelector(".rec-btn.next").click();
-                    BLOD.removeElement("rec-btn prev", "class", true);
-                    BLOD.removeElement("rec-btn next", "class", true);
-                });
+                if (/bili-wrapper/.test(msg.target.className)) this.fixRecommand();
             })
         }
         /**
@@ -1121,7 +1117,7 @@
          * 替换主页分区
          * @param {HTMLElement} node 分区节点
          */
-        async fixnews(node) {
+        async fixNews(node) {
             try {
                 if (node.id == "bili_ad") {
                     let sight = node.getElementsByTagName("a");
@@ -1135,8 +1131,36 @@
                     document.querySelector(".icon.icon_t.icon-ad").setAttribute("style", BLOD.GM.getResourceText("news") + "background-position: unset");
                 }
                 if (node.className == "report-wrap-module elevator-module") for (let item of node.children[1].children) if (item.innerHTML == "广告") item.innerHTML = "资讯";
-            }
-            catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页分区", ...e); }
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页分区", ...e); }
+        }
+        /**
+         * 处理主页个性化推荐
+         */
+        async fixRecommand() {
+            try {
+                debugger
+                let node = document.querySelector(".recommend-module.clearfix"); // 父节点
+                let prev = BLOD.addElement("span", { class: "rec-btn prev" }, node, false, document.querySelector(".rec-btn.prev")); // 替换切换按钮
+                let next = BLOD.addElement("span", { class: "rec-btn next" }, node, false, document.querySelector(".rec-btn.next")); // 替换切换按钮
+                prev.innerHTML = next.innerHTML = "切换"; // 命名按钮
+                prev.onclick = next.onclick = async () => {
+                    // 按钮单击回调
+                    document.querySelectorAll(".groom-module.home-card").forEach(d => d.remove()); // 移除现有数据
+                    let wait = BLOD.addElement("div", { class: "load-state" }, node, true); // 添加loading临时节点
+                    wait.innerHTML = '<span class="loading">正在加载...</span><!----><!---->'; // 写入loading提示
+                    this.indexRecommend = this.indexRecommend && this.indexRecommend.length > 20 ? this.indexRecommend : BLOD.jsonCheck(await xhr("https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3", undefined, undefined, !config.reset.indiRecommand)).data.item; // 请求推荐数据，分情况，个性化推荐每次都请求，全站推荐只请求一次
+                    this.indexFlag = this.indexRecommend.length < 20 ? 10 : this.indexFlag || ((BLOD.uid && config.reset.indiRecommand) ? 10 : 20); // 设置遍历起始点，个性化推荐固定为10
+                    wait.remove(); // 移除loading节点
+                    for (let i = this.indexFlag - 1; i >= this.indexFlag - 10; i--) {
+                        // 依次创建推荐数据，长度固定为10
+                        BLOD.addElement("div", { class: "groom-module home-card" }, node, true).innerHTML = `<a href="//www.bilibili.com/video/av${this.indexRecommend[i].aid}" target="_blank" title="${this.indexRecommend[i].title}">
+                        <img src="${this.indexRecommend[i].pic.replace("http:", "")}@160w_100h.webp" alt="${this.indexRecommend[i].title}" width="160" height="100" class="pic">
+                        "><!----><div class="card-mark"><p class="title">${this.indexRecommend[i].title}</p><p class="author">up主：${this.indexRecommend[i].owner.name}</p><p class="play">播放：${BLOD.unitFormat(this.indexRecommend[i].stat.view)}</p></div></a><div class="watch-later-trigger w-later"></div></div>`
+                    }
+                    this.indexFlag = this.indexRecommend.length < 20 ? 10 : this.indexFlag < 30 ? this.indexFlag + 10 : 10; // 对于全站推荐，刷新遍历起始点
+                }
+                if (BLOD.uid && config.reset.indiRecommand) prev.click(); // 移除个性化推荐
+            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页推荐", ...e); }
         }
     }
     new Rewrite();

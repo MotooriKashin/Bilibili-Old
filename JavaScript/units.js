@@ -353,7 +353,7 @@
             BLOD.joinNormal(() => BLOD.addCss(BLOD.GM.getResourceText("css")));
 
             BLOD.getCookies = () => this.getCookies();
-            BLOD.addElement = (type, arb, tar, fir) => this.addElement(type, arb, tar, fir);
+            BLOD.addElement = (type, arb, tar, fir, rep) => this.addElement(type, arb, tar, fir, rep);
             BLOD.removeElement = (name, type, hidden, index, callback) => this.removeElement(name, type, hidden, index, callback);
             BLOD.addCss = (css, id) => this.addCss(css, id);
             BLOD.jsonCheck = (data) => this.jsonCheck(data);
