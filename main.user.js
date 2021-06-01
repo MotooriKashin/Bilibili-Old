@@ -15,7 +15,6 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_deleteValue
-// @grant        GM_cookie
 // @run-at       document-start
 // @license      MIT License
 // @resource     icon https://www.bilibili.com/index/index-icon.json
@@ -64,7 +63,6 @@
             getValue: GM_getValue,
             setValue: GM_setValue,
             deleteValue: GM_deleteValue,
-            cookie: GM_cookie
         },
         Handler: [GM.info.scriptHandler, GM.info.version].join(" "),
         Name: GM.info.script.name,
@@ -80,7 +78,6 @@
     class Main {
         constructor() {
             BLOD.write = (html) => this.write(html);
-            BLOD.cookies = () => this.cookies();
             BLOD.importModule = (name) => this.importModule(name);
             BLOD.joinNode = (callback) => this.joinNode(callback);
             BLOD.joinNormal = (callback) => this.joinNormal(callback);
@@ -94,21 +91,6 @@
             document.open();
             document.write(html);
             document.close();
-        }
-        /**
-         * 获取所有cookie，包括HttpOnly
-         * @returns {Promise<{}>} 所有cookie组成的对象
-         */
-        cookies() {
-            return new Promise((resolve, reject) => {
-                GM_cookie.list({}, e => {
-                    let obj = {};
-                    e.forEach(d => {
-                        obj[d.name] = d.value;
-                    });
-                    resolve(obj);
-                });
-            })
         }
         /**
          * 载入模块，重复的模块自动忽略
