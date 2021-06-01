@@ -1152,7 +1152,7 @@
                     wait.remove(); // 移除loading节点
                     for (let i = this.indexFlag - 1; i >= this.indexFlag - 10; i--) {
                         // 依次创建推荐数据，长度固定为10
-                        BLOD.addElement("div", { class: "groom-module home-card" }, node, true).innerHTML = `<a href="//www.bilibili.com/video/av${this.indexRecommend[i].aid}" target="_blank" title="${this.indexRecommend[i].title}">
+                        BLOD.addElement("div", { class: "groom-module home-card" }, node, true).innerHTML = `<a href="//www.bilibili.com/video/av${this.indexRecommend[i].aid || this.indexRecommend[i].id}" target="_blank" title="${this.indexRecommend[i].title}">
                         <img src="${this.indexRecommend[i].pic.replace("http:", "")}@160w_100h.webp" alt="${this.indexRecommend[i].title}" width="160" height="100" class="pic">
                         "><!----><div class="card-mark"><p class="title">${this.indexRecommend[i].title}</p><p class="author">up主：${this.indexRecommend[i].owner.name}</p><p class="play">播放：${BLOD.unitFormat(this.indexRecommend[i].stat.view)}</p></div></a><div class="watch-later-trigger w-later"></div></div>`
                     }
