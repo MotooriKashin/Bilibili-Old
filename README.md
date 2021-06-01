@@ -10,7 +10,7 @@
 
 ### 效果预览
 
-![binguo.png](https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/src/preview.png)
+![binguo.png](https://camo.githubusercontent.com/5bd74317c382795af16cbf72d7b81fb169b0ed0cf89937ba52c833bb6adb810c/68747470733a2f2f63646e2e6a7364656c6976722e6e65742f67682f4d6f746f6f72694b617368696e2f42696c6962696c692d4f6c642f7372632f707265766965772e706e67)
 
 ### 脚本实现
 
