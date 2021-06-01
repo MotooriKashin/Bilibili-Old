@@ -1138,7 +1138,6 @@
          */
         async fixRecommand() {
             try {
-                debugger
                 let node = document.querySelector(".recommend-module.clearfix"); // 父节点
                 let prev = BLOD.addElement("span", { class: "rec-btn prev" }, node, false, document.querySelector(".rec-btn.prev")); // 替换切换按钮
                 let next = BLOD.addElement("span", { class: "rec-btn next" }, node, false, document.querySelector(".rec-btn.next")); // 替换切换按钮
