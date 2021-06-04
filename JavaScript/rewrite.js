@@ -1131,8 +1131,21 @@
                     rcon.innerHTML = '<div class="r-con"><header style="margin-bottom: 14px"><h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3></header><div class="carousel-module"><div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp" width="260" height="280"/></a></div></div></div>';
                     document.getElementById("ranking_ad").replaceWith(rcon);
                     document.querySelector(".icon.icon_t.icon-ad").setAttribute("style", BLOD.GM.getResourceText("news") + "background-position: unset");
+                    sight = document.querySelector("#bili_technology").querySelector(".name");
+                    sight.href = "//www.bilibili.com/v/knowledge/";
+                    sight.innerHTML = "知识";
+                    sight = document.querySelector("#bili_digital").querySelector(".name");
+                    sight.href = "//www.bilibili.com/v/tech/";
+                    sight.innerHTML = "科技";
                 }
-                if (node.className == "report-wrap-module elevator-module") for (let item of node.children[1].children) if (item.innerHTML == "广告") item.innerHTML = "资讯";
+                if (node.className == "report-wrap-module elevator-module") {
+                    for (let item of node.children[1].children) {
+                        if (item.innerHTML == "广告") item.innerHTML = "资讯";
+                        if (item.innerHTML == "科技") item.innerHTML = "知识";
+                        if (item.innerHTML == "数码") item.innerHTML = "科技";
+                    }
+                }
+
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页分区", ...e); }
         }
         /**

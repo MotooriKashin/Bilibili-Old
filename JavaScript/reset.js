@@ -230,16 +230,13 @@
                 { type: "text/javascript", src: "//static.hdslb.com/common/js/footer.js" }
             ]
             this.id = BLOD.joinNode(() => this.replace()); // 节点变动监听
-            BLOD.joinNode((msg) => {
-                // 修复顶栏文字
-                if (msg.target.id == "bili-header-m" || msg.target.className == "no-data loading") this.fixTypo(msg.target);
-            })
         }
         /**
          * 替换顶栏底栏
          * @returns {void}
          */
         replace() {
+            if (!this.typo && document.querySelector("#bili-header-m")) { this.typo = true; this.fixTypo() }
             if (config.reset.headblur && !this.tag) {
                 // 顶栏透明
                 this.blur = document.querySelector(".blur-bg");
@@ -274,35 +271,47 @@
         }
         /**
          * 修复顶栏文字
-         * @param {HTMLElement} node 分区节点
          */
-        fixTypo(node) {
-            let rank = config.reset.grobalboard ? document.getElementsByClassName("rank-tab")[0] : "";
+        fixTypo() {
             let move;
-            if (node.id == "bili-header-m") {
-                node = node.getElementsByClassName('nav-name');
-                if (node[0]) {
-                    for (let i = 0; i < node.length; i++) {
-                        if (node[i].textContent == "科技") {
-                            move = node[i].parentNode.parentNode.children[1].lastChild.cloneNode(true);
-                            move.firstChild.href = move.firstChild.href.replace("technology", "life");
-                            node[i].parentNode.parentNode.children[1].lastChild.remove();
-                        }
-                        if (node[i].textContent == "广告") {
-                            node[i].textContent = "资讯";
-                            node[i].parentNode.href = "//www.bilibili.com/v/information/";
-                        }
-                        if (node[i].textContent == "生活") {
-                            let sight = node[i].parentNode.parentNode.children[1];
-                            sight.insertBefore(move, sight.lastChild)
-                        }
-                        if (node[i].textContent == "娱乐") node[i].parentNode.parentNode.children[1].lastChild.remove();
+            let node = document.querySelector("#bili-header-m").getElementsByClassName('nav-name');
+            if (node[0]) {
+                for (let i = 0; i < node.length; i++) {
+                    if (node[i].textContent == "科技") {
+                        node[i].textContent = "知识";
+                        node[i].parentNode.href = "//www.bilibili.com/v/knowledge/";
+                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/knowledge/science/"><span>科学科普</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/social_science/"><span>社科·法律·心理</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/humanity_history/"><span>人文历史</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/business/"><span>财经商业</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/campus/"><span>校园学习</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/career/"><span>职业职场</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/design/"><span>设计·创意</span></a></li>
+                        <li><a href="//www.bilibili.com/v/knowledge/skill/"><span>野生技能协会</span></a></li>`
                     }
+                    if (node[i].textContent == "数码") {
+                        node[i].textContent = "科技";
+                        node[i].parentNode.href = "//www.bilibili.com/v/tech/";
+                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/tech/digital/"><span>数码</span></a></li>
+                        <li><a href="//www.bilibili.com/v/tech/application/"><span>软件应用</span></a></li>
+                        <li><a href="//www.bilibili.com/v/tech/computer_tech/"><span>计算机技术</span></a></li>
+                        <li><a href="//www.bilibili.com/v/tech/industry/"><span>工业·工程·机械</span></a></li>
+                        <li><a href="//www.bilibili.com/v/tech/diy/"><span>极客DIY</span></a></li>`
+                    }
+                    if (node[i].textContent == "广告") {
+                        node[i].textContent = "资讯";
+                        node[i].parentNode.href = "//www.bilibili.com/v/information/";
+                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/information/hotspot/"><span>热点</span></a></li>
+                        <li><a href="//www.bilibili.com/v/information/global/"><span>环球</span></a></li>
+                        <li><a href="//www.bilibili.com/v/information/social/"><span>社会</span></a></li>
+                        <li><a href="//www.bilibili.com/v/information/multiple/"><span>综合</span></a></li>`
+                    }
+                    if (node[i].textContent == "生活") {
+                        node[i].parentNode.parentNode.children[1].children[2].remove(); // 移除美食圈
+                        node[i].parentNode.parentNode.children[1].children[2].remove(); // 移除动物圈
+                    }
+                    if (node[i].textContent == "娱乐") node[i].parentNode.parentNode.children[1].lastChild.remove();
                 }
-            }
-            if (rank && rank.children[5]) {
-                rank.children[5].innerText == "知识" ? rank.children[5].innerText = "科技" : "";
-                rank.children[6].innerText == "知识" ? rank.children[6].innerText = "科技" : "";
             }
         }
     }

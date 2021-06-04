@@ -2,161 +2,291 @@
     "1": [
         1,
         "动画",
-        "https://www.bilibili.com/v/douga/"
+        "//www.bilibili.com/v/douga/"
     ],
     "3": [
         3,
         "音乐",
-        "https://www.bilibili.com/v/music/"
+        "//www.bilibili.com/v/music/"
     ],
     "29": [
         3,
         "音乐现场",
-        "https://www.bilibili.com/v/music/live"
+        "//www.bilibili.com/v/music/live"
     ],
     "36": [
         36,
         "科技",
-        "https://www.bilibili.com/v/technology"
+        "//www.bilibili.com/v/technology"
+    ],
+    "75": [
+        217,
+        "动物综合",
+        "//www.bilibili.com/v/animal/animal_composite/"
+    ],
+    "76": [
+        211,
+        "美食制作",
+        "//www.bilibili.com/v/food/make/"
     ],
     "86": [
         1,
         "特摄",
-        "https://www.bilibili.com/v/douga/"
+        "//www.bilibili.com/v/douga/"
     ],
     "95": [
         188,
-        "手机平板",
-        "https://www.bilibili.com/v/digital/mobile/"
+        "数码",
+        "//www.bilibili.com/v/digital/mobile/"
     ],
     "129": [
         129,
         "舞蹈",
-        "https://www.bilibili.com/v/dance"
+        "//www.bilibili.com/v/dance"
+    ],
+    "138": [
+        160,
+        "搞笑",
+        "//www.bilibili.com/v/life/funny"
     ],
     "155": [
         155,
         "时尚",
-        "https://www.bilibili.com/v/fashion"
+        "//www.bilibili.com/v/fashion"
     ],
     "160": [
         160,
         "生活",
-        "https://www.bilibili.com/v/life"
+        "//www.bilibili.com/v/life"
     ],
     "168": [
         168,
         "国创",
-        "https://www.bilibili.com/guochuang"
+        "//www.bilibili.com/guochuang"
     ],
     "176": [
         160,
-        "汽车",
-        "https://www.bilibili.com/v/life/automobile"
+        "汽车生活",
+        "//www.bilibili.com/v/car/life/"
     ],
     "188": [
         188,
         "数码",
-        "https://www.bilibili.com/v/digital"
+        "//www.bilibili.com/v/digital"
     ],
     "189": [
         188,
         "电脑装机",
-        "https://www.bilibili.com/v/digital/pc"
+        "//www.bilibili.com/v/digital/pc"
     ],
     "190": [
         188,
         "数码摄影",
-        "https://www.bilibili.com/v/digital/photography"
+        "//www.bilibili.com/v/digital/photography"
     ],
     "191": [
         188,
         "影音智能",
-        "https://www.bilibili.com/v/digital/intelligence_av"
+        "//www.bilibili.com/v/digital/intelligence_av"
     ],
     "192": [
         155,
         "风尚标",
-        "https://www.bilibili.com/v/fashion/trends"
+        "//www.bilibili.com/v/fashion/trends"
     ],
     "193": [
         3,
         "MV",
-        "https://www.bilibili.com/v/music/mv"
+        "//www.bilibili.com/v/music/mv"
     ],
     "194": [
         3,
         "电音",
-        "https://www.bilibili.com/v/music/electronic"
+        "//www.bilibili.com/v/music/electronic"
     ],
     "195": [
         168,
         "动态漫·广播剧",
-        "https://www.bilibili.com/v/guochuang/motioncomic"
+        "//www.bilibili.com/v/guochuang/motioncomic"
     ],
     "198": [
         129,
         "街舞",
-        "https://www.bilibili.com/v/dance/hiphop"
+        "//www.bilibili.com/v/dance/hiphop"
     ],
     "199": [
         129,
         "明星舞蹈",
-        "https://www.bilibili.com/v/dance/star"
+        "//www.bilibili.com/v/dance/star"
     ],
     "200": [
         129,
         "中国舞",
-        "https://www.bilibili.com/v/dance/china"
+        "//www.bilibili.com/v/dance/china"
     ],
     "201": [
         36,
         "科学科普",
-        "https://www.bilibili.com/v/technology/science"
+        "//www.bilibili.com/v/technology/science"
     ],
     "202": [
         202,
         "资讯",
-        "https://www.bilibili.com/v/information/"
+        "//www.bilibili.com/v/information/"
     ],
     "203": [
         202,
         "热点",
-        "https://www.bilibili.com/v/information/hotspot/"
+        "//www.bilibili.com/v/information/hotspot/"
     ],
     "204": [
         202,
         "环球",
-        "https://www.bilibili.com/v/information/global/"
+        "//www.bilibili.com/v/information/global/"
     ],
     "205": [
         202,
         "社会",
-        "https://www.bilibili.com/v/information/social/"
+        "//www.bilibili.com/v/information/social/"
     ],
     "206": [
         202,
         "综合",
-        "https://www.bilibili.com/v/information/multiple/"
+        "//www.bilibili.com/v/information/multiple/"
     ],
     "207": [
         36,
         "财经",
-        "https://www.bilibili.com/v/technology/finance"
+        "//www.bilibili.com/v/technology/finance"
     ],
     "208": [
         36,
         "校园学习",
-        "https://www.bilibili.com/v/technology/campus"
+        "//www.bilibili.com/v/technology/campus"
     ],
     "209": [
         36,
         "职业职场",
-        "https://www.bilibili.com/v/technology/career"
+        "//www.bilibili.com/v/technology/career"
     ],
     "210": [
         1,
         "手办·模玩",
-        "https://www.bilibili.com/v/douga/garage_kit"
+        "//www.bilibili.com/v/douga/garage_kit"
+    ],
+    "211": [
+        211,
+        "美食",
+        "//www.bilibili.com/v/food"
+    ],
+    "212": [
+        211,
+        "美食侦探",
+        "//www.bilibili.com/v/food/detective/"
+    ],
+    "213": [
+        211,
+        "美食测评",
+        "//www.bilibili.com/v/food/measurement/"
+    ],
+    "214": [
+        211,
+        "田园美食",
+        "//www.bilibili.com/v/food/rural/"
+    ],
+    "215": [
+        211,
+        "美食记录",
+        "//www.bilibili.com/v/food/record/"
+    ],
+    "216": [
+        119,
+        "鬼畜剧场",
+        "//www.bilibili.com/v/kichiku/theatre/"
+    ],
+    "217": [
+        217,
+        "动物圈",
+        "//www.bilibili.com/v/animal"
+    ],
+    "218": [
+        217,
+        "喵星人",
+        "//www.bilibili.com/v/animal/cat/"
+    ],
+    "219": [
+        217,
+        "汪星人",
+        "//www.bilibili.com/v/animal/dog/"
+    ],
+    "220": [
+        217,
+        "大熊猫",
+        "//www.bilibili.com/v/animal/panda/"
+    ],
+    "221": [
+        217,
+        "野生动物",
+        "//www.bilibili.com/v/animal/wild_animal/"
+    ],
+    "222": [
+        217,
+        "爬宠",
+        "//www.bilibili.com/v/animal/reptiles/"
+    ],
+    "223": [
+        223,
+        "汽车",
+        "//www.bilibili.com/v/car"
+    ],
+    "224": [
+        223,
+        "汽车文化",
+        "//www.bilibili.com/v/car/culture/"
+    ],
+    "225": [
+        223,
+        "汽车极客",
+        "//www.bilibili.com/v/car/geek/"
+    ],
+    "226": [
+        223,
+        "智能出行",
+        "//www.bilibili.com/v/car/smart/"
+    ],
+    "227": [
+        223,
+        "购车攻略",
+        "//www.bilibili.com/v/car/strategy/"
+    ],
+    "228": [
+        36,
+        "人文历史",
+        "//www.bilibili.com/v/knowledge/humanity_history/"
+    ],
+    "229": [
+        36,
+        "设计·创意",
+        "//www.bilibili.com/v/knowledge/design/"
+    ],
+    "230": [
+        188,
+        "软件应用",
+        "//www.bilibili.com/v/tech/application/"
+    ],
+    "231": [
+        188,
+        "计算机技术",
+        "//www.bilibili.com/v/tech/computer_tech/"
+    ],
+    "232": [
+        188,
+        "工业·工程·机械",
+        "//www.bilibili.com/v/tech/computer_tech/"
+    ],
+    "233": [
+        188,
+        "极客DIY",
+        "//www.bilibili.com/v/tech/diy/"
     ]
 }
