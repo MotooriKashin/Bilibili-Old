@@ -1172,7 +1172,7 @@
                             t;
                         i._hideLoading(),
                             i.loaded = !0,
-                            d.data && d.data.control && d.data.control.web_selection && (d.code = -404), // 置空无效评论，触发重载
+                            d.data && d.data.control && d.data.control.web_selection && !d.data.replies && (d.code = -404), // 置空无效评论，触发重载
                             d && 0 === d.code ? d.data && (d.data.cursor && (d.data.top && (d.data.upper.top = d.data.top.upper || null, d.data.top = d.data.top.admin || null)), i.mode = d.data.mode || d.data.cursor.mode, i.blacklist = d.data.blacklist || 0, i.assist = d.data.assist || 0, i.pageInfo = d.data.page || (d.data.cursor ? {
                                 acount: d.data.cursor.all_count, // 评论数
                                 count: i.count || d.data.cursor.all_count, // 有效评论数
