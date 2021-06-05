@@ -169,6 +169,10 @@
         av(data) {
             try {
                 data = BLOD.jsonCheck(data).data;
+                if (!data.View.cid && data.View.forward) {
+                    toast.warning("视频撞车了！正在跳转至原视频~");
+                    location.href = `https://www.bilibili.com/video/av${data.View.forward}`;
+                }
                 let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
                 __INITIAL_STATE__.aid = data.View.aid;
                 __INITIAL_STATE__.related = data.Related || [];
