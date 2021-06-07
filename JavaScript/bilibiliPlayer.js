@@ -22157,7 +22157,7 @@ function Fa() {
                                     new c.a(b[0], {
                                         text: function () {
                                             e.u("list_contextmenu_copy");
-                                            return 6 < h.mode ? "<? \u9ad8\u7ea7\u5f39\u5e55 />" : h.text
+                                            return h.text
                                         }
                                     })
                                 }
