@@ -478,7 +478,7 @@
         async loginExit(referer) {
             if (!BLOD.uid) return BLOD.toast.warning("本就未登录，无法退出登录！");
             BLOD.toast.warning("正在退出登录...");
-            let data = BLOD.jsonCheck(await xhr.post("https://passport.bilibili.com/login/exit/v2", "biliCSRF=" + BLOD.getCookies().bili_jct + "&gourl=" + encodeURIComponent(location.href)));
+            let data = BLOD.jsonCheck(await BLOD.xhr.post("https://passport.bilibili.com/login/exit/v2", "biliCSRF=" + BLOD.getCookies().bili_jct + "&gourl=" + encodeURIComponent(location.href)));
             if (data.status) {
                 BLOD.toast.success("退出登录！");
                 if (referer) return location.replace(referer);
