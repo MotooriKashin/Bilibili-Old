@@ -178,6 +178,7 @@
                     })
                 }
             }
+            if (/dmid/.test(location.href) && /dm_progress/.test(location.href)) BLOD.joinSwitchVideo(() => this.loadByDmid()); // 处理弹幕跳转
         }
         /**
          * av/BV
@@ -1213,6 +1214,21 @@
                 }
                 if (BLOD.uid && config.reset.indiRecommand) prev.click(); // 移除个性化推荐
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("主页推荐", ...e); }
+        }
+        async loadByDmid() {
+            if (!window.player || !window.player.seek) return setTimeout(() => { this.loadByDmid() }, 100); // 检查跳转引擎
+            if (this.dmid) return; // 检查重复标记
+            this.dmid = BLOD.urlObj(location.href).dmid; // 获取dmid
+            this.progress = Number(BLOD.urlObj(location.href).dm_progress); // 获取时间轴信息
+            if (this.progress) {
+                // 时间轴有效直接跳转
+                return window.player.seek(this.progress / 1000 - .2);
+            }
+            if (this.dmid) {
+                this.progress = await xhr(`https://api.bilibili.com/x/v2/dm/thumbup/detail?oid=${BLOD.cid}&dmid=${this.dmid}`); // 获取时间轴信息
+                this.progress = BLOD.jsonCheck(this.progress).data.progress; // 检查xhr返回值并转化为json
+                this.progress && window.player.seek(this.progress / 1000 - .2);
+            }
         }
     }
     new Rewrite();
