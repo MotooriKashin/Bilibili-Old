@@ -40,7 +40,8 @@
                         }
                     }
                 });
-                if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000)
+                if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000) // 自动播放
+                if (config.reset.closedCaption && BLOD.path.name) BLOD.importModule("closedCaption"); // 添加cc字幕
             })
         }
         /**

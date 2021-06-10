@@ -15,6 +15,7 @@
      */
     class ClosedCaption {
         constructor() {
+            BLOD.xhrhook((xhr, args) => { if (args[1].includes('api.bilibili.com/x/player/carousel')) this.getCaption(); }); // CC字幕入口
             this.element = {}; // 节点集合
             this.data = {}; // 字幕缓存
             this.resizeRate = 100; // 字幕大小倍率
@@ -94,8 +95,6 @@
                 position: 'bc'
             };
             this.subtitlePrefer = BLOD.GM.getValue("subtitlePrefer"); // 默认语言
-
-            this.getCaption(); // CC字母入口
         }
         /**
          * 绘制字幕面板

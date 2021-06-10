@@ -39,27 +39,24 @@
                     }
                     if (BLOD.vip) xhr.send = () => true;
                 }
-                if (args[1].includes('api.bilibili.com/x/player/carousel')) {
-                    if (config.reset.closedCaption && BLOD.path.name) BLOD.importModule("closedCaption"); // 添加cc字幕
-                    if (config.reset.carousel) {
-                        // 修复播放器通知
-                        xhr.addEventListener('readystatechange', () => {
-                            if (xhr.readyState === 4) {
-                                try {
-                                    let fix = BLOD.randomArray(JSON.parse(BLOD.GM.getResourceText("icon")).fix, 2);
-                                    let msg = [];
-                                    fix.forEach(d => {
-                                        msg.push([d.links[0], d.title]);
-                                    })
-                                    let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
-                                    let parser = new DOMParser(),
-                                        responseXML = parser.parseFromString(xmltext, "text/xml");
-                                    Object.defineProperty(xhr, 'responseXML', { writable: true });
-                                    xhr.responseXML = responseXML;
-                                } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("播放通知", ...e) }
-                            }
-                        });
-                    }
+                if (config.reset.carousel && args[1].includes('api.bilibili.com/x/player/carousel')) {
+                    // 修复播放器通知
+                    xhr.addEventListener('readystatechange', () => {
+                        if (xhr.readyState === 4) {
+                            try {
+                                let fix = BLOD.randomArray(JSON.parse(BLOD.GM.getResourceText("icon")).fix, 2);
+                                let msg = [];
+                                fix.forEach(d => {
+                                    msg.push([d.links[0], d.title]);
+                                })
+                                let xmltext = '<msg><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2320" id="314825"><![CDATA[<a href="' + msg[0][0] + '" target="_blank"><font color="#FFFFFF">' + msg[0][1] + '</font></a>]]></item><item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="2321" id="314372"><![CDATA[<a href="' + msg[1][0] + '" target="_blank"><font color="#FFFFFF">' + msg[1][1] + '</font></a>]]></item></msg>';
+                                let parser = new DOMParser(),
+                                    responseXML = parser.parseFromString(xmltext, "text/xml");
+                                Object.defineProperty(xhr, 'responseXML', { writable: true });
+                                xhr.responseXML = responseXML;
+                            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("播放通知", ...e) }
+                        }
+                    });
                 }
                 // 修改区域限制
                 if (args[1].includes('season/user/status?')) {
