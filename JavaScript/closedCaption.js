@@ -351,6 +351,7 @@
                 data = this.data[caption.subtitle_url] || data;
             }
             window.player.updateSubtitle(data); // 投喂字幕数据给播放器
+            window.player.pause(); window.player.play(); // 刷新一次播放状态
             if (caption && caption.subtitle_url) {
                 this.caption = caption; // 记忆当前字幕
                 debug.msg(3, "载入字幕", this.captions[0].lan_doc);
