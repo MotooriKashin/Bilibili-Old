@@ -498,6 +498,7 @@
             BLOD.sortDmById = (danmaku, key) => this.sortDmById(danmaku, key);
             BLOD.toXml = danmaku => this.toXml(danmaku);
             BLOD.getHistoryDanmaku = (date, cid) => this.getHistoryDanmaku(date, cid);
+            BLOD.loadLocalDm = (xml, append) => this.loadLocalDm(xml, append);
 
             BLOD.xhrhook((xhr, args) => {
                 // 新版弹幕兼容pakku.js
