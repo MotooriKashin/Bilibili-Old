@@ -858,7 +858,7 @@
 
     /**
      * @class RelpyFloor
-     * @description 修复评论楼层，大部分已由原声脚本负责，这里只负责远古评论楼中楼
+     * @description 修复评论楼层，大部分已由原生脚本负责，这里只负责远古评论楼中楼
      */
     class RelpyFloor {
         constructor() {

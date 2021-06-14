@@ -18,8 +18,35 @@
    - `joinNode` 方法接收一个回调函数并在每次DOM有变化时执行该回调函数，并将`Event`信息作为第一个参数传递给该回调函数。
       - 如某个模块的一个动能`Toast`是在页面插入了一个`class="example"`的div节点时将该节点移除，那么添加回调的方法可能是`BLOD.joinNode((e) => { if(e.target.className=="example") e.target.remove()})`
 
-此外，`xhrhook`模块也提供了添加XMLHttpRequest hook的类似方法`xhrhook`和`jsonphook`，后者用于hook jQuery提供的ajax。具体使用方法参考`xhrhook`模块相关代码，这里不再详细说明。
+此外，`xhrhook`模块也提供了添加XMLHttpRequest hook的类似方法`xhrhook`和`jsonphook`，后者用于hook jQuery提供的ajax。具体使用方法参考`xhrhook`模块相关代码，参见下文。
 
 更新模块时请在`main.user.js`元数据`@resource`标签中添加上该模块此次变动的commit散列值，并增加`@version`的版本号以通知用户检查更新。由于模块分发使用的是`jsdelivr`CDN，所以如果不添加散列值会存在24小时以内的延时，如果要立刻刷新请访问对应模块的`purge`服务器，如`https://purge.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/xhrhook.js`
 
 以上就是本脚本模块系统的大概说明，原则上任何单独的功能都可以拆分进一个模块以便维护。
+
+### 功能回调
+由于本脚本重写页面必须在大部分功能执行之前执行，而页面重写完成的时机其实是不确定的，所以本脚本定义了几个方法接收回调函数来添加到运行时机队列里，以便各模块适时启动核心功能。
+1. `joinNormal`
+   - 该方法接收一个回调函数，以在页面重写操作后第一时间运行（此时新的DOM未必完全生成）
+   - 使用方法`BLOD.joinNormal(fun)`，`fun`即为所需执行的函数。
+   - 示例如上文
+   - 这里不适合执行任何需要操作DOM的代码，除非添加其他如`addEventListener`之类的回调。
+2. `joinNode`
+   - 同样接收一个回调函数，不同的时函数的第一个参数将被传入变动节点的`event`信息。
+   - 运行时机是任意`DOM`有变动时都会执行回调，所以在回调函数中请自行用条件判断一下该`DOM`变动的`event`信息是否是合适的运行时机。
+   - `event`参数最常用的便是其`target`属性，就是变动的`DOM`对象，如果该对象恰好是需要的，再执行相应的代码。
+   - 实例如上文
+3. `joinSwitchVideo`
+   - 同样接收一个回调函数，以在播放器刷新时运行。切P时播放器会刷新，所以本质是切P监听，适合需要在页面切P时再次运行的代码，此时页面节点基本上都可以正常获取到了（除了播放器上的部分组件按钮，这些可以在此基础上继续使用`setTimeout`等回调延时判断）
+4. `xhrhook`
+   - 同样接收一个回调函数，以在页面发起**任意**XMLHttpRequest时运行，具体是调用`open`方法时，所以此时可以修改该xhr的链接或者使用进阶方法拦截或者修改xhr返回值。
+   - 会传递两个参数给回调函数
+      1. XMLHttpRequest对象本身，用于进阶操作。
+      2. 以数组形式传递的原`open`方法的参数，其中数组的第二个元素几位xhr的url链接，可以直接重定向。
+   - **由于本方法在任意xhr发起时都会调用，所以请务必使用url（即参数2数组的第二的元素）来判断该xhr是否是需要hook的xhr！**
+5. `jsonphook`
+   - 类似于`xhrhook`，不过hook的时jQuery库所使用的Ajax。
+   - 会传递两个参数给回调函数
+      1. Ajax对象本身，基本用不到。
+      2. Ajax实例对象，其url属性就是目标URL。
+   - **由于本方法在任意Ajax发起时都会调用，所以请务必使用url（即参数2数组的第二的元素）来判断该Ajax是否是需要hook的Ajax！
