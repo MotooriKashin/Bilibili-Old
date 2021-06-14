@@ -237,6 +237,8 @@
          * @returns {void}
          */
         replace() {
+            // 鼠标悬停在顶栏头像上时，头像的放大动画
+            let avatarAnimation = () => BLOD.addCss(".bili-header-m .profile-info .i-face .face{border:2px solid #00000000}.bili-header-m .profile-info .i-face .pendant{transform:scale(0.5);width:112px;height:112px;left:-38px;bottom:-46px;opacity:0;transition:opacity .1s ease-in}.bili-header-m .profile-info.on .i-face{left:8px;top:0;height:32px;width:32px;transform:translateY(10px) translateX(-22px) scale(2);transform-origin:top left}.bili-header-m .profile-info.on .i-face .legalize{transform:scale(0.5) translate(10px,15px)}.bili-header-m .profile-info.on .i-face .pendant{opacity:1}.bili-header-m .profile-info.on .i-face.scale-in{transform:translateY(5px) translateX(-20px) scale(1.75)}.bili-header-m .profile-info.on .scale-in .face{height:32px;width:32px}.bili-header-m .profile-info.on .i-face.scale-in .legalize{transform:scale(0.5) translate(38px,48px)}");
             if (!this.typo && document.querySelector("#bili-header-m")) { this.typo = true; this.fixTypo() }
             if (!this.tag) {
                 this.blur = document.querySelector(".blur-bg");
@@ -249,8 +251,7 @@
                         // 使顶栏模糊效果不再错位
                         BLOD.addCss("@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {.blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}}");
                     }
-                    // 鼠标悬停在顶栏头像上时，头像的放大动画
-                    BLOD.addCss(".bili-header-m .profile-info .i-face .face{border:2px solid #00000000}.bili-header-m .profile-info .i-face .pendant{transform:scale(0.5);width:112px;height:112px;left:-38px;bottom:-46px;opacity:0;transition:opacity .1s ease-in}.bili-header-m .profile-info.on .i-face{left:8px;top:0;height:32px;width:32px;transform:translateY(10px) translateX(-22px) scale(2);transform-origin:top left}.bili-header-m .profile-info.on .i-face .legalize{transform:scale(0.5) translate(10px,15px)}.bili-header-m .profile-info.on .i-face .pendant{opacity:1}.bili-header-m .profile-info.on .i-face.scale-in{transform:translateY(5px) translateX(-20px) scale(1.75)}.bili-header-m .profile-info.on .scale-in .face{height:32px;width:32px}.bili-header-m .profile-info.on .i-face.scale-in .legalize{transform:scale(0.5) translate(38px,48px)}");
+                    avatarAnimation();
                 }
             }
             if (!config.reset.grobalboard) return;
@@ -260,6 +261,7 @@
             if (document.querySelector("#bili-header-m") && document.querySelector("#internationalHeader")) {
                 document.querySelector("#internationalHeader").remove(); // 重写完成移除新版顶栏
                 BLOD.quitNode(this.id) // 取消节点监听
+                avatarAnimation();
             }
             if (this.head && !this.flag1) {
                 this.flag1 = true; // 标记重写过
