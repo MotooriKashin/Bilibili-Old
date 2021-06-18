@@ -187,6 +187,7 @@
          */
         av() {
             try {
+                if (/\/s\//.test(location.href)) location.replace(location.href.replace("s/video", "video")); // 重定向SEO页面
                 BLOD.path.name = true; // 重写指示，有些操作无需再重写页面生效
                 this.ml = BLOD.GM.getValue("medialist"); // 读取临时储存，检查是否medialist跳转而来
                 BLOD.GM.deleteValue("medialist"); // 清除临时储存
@@ -397,14 +398,6 @@
             }
             // 新版稍后再看跳转到旧版稍后再看
             if (BLOD.path[5].startsWith("watchlater") && config.rewrite.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
-        }
-        /**
-         * SOE静态页面
-         * @returns {void}
-         */
-        s() {
-            if (!config.reset.static) return;
-            location.replace(location.href.replace("s/video", "video"));
         }
         /**
          * 个人主页
