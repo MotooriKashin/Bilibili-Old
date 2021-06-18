@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      5.0.5
+// @version      5.0.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -36,13 +36,13 @@
 // @resource     player https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/HTML/player.html
 // @resource     ranking https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/HTML/ranking.html
 // @resource     read https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/HTML/read.html
-// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0df7558c7cc667d14f66ee4ee45caa7316d4502d/Json/config.json
+// @resource     config https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@f73d7ee4c67d503c38ad89839b1097ded1270079/Json/config.json
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/sort.json
 // @resource     protobuf https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/protobuf.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/playlist.json
 // @resource     units https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@01028efdb83d657e3cd7c5f1c73d54d04fcf5c37/JavaScript/units.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7003d1bc296569a0a020066bdebf28bb4b1caba6/JavaScript/reset.js
-// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@7003d1bc296569a0a020066bdebf28bb4b1caba6/JavaScript/rewrite.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b1555a5b8c6e627eef4925a7f5b416d7a8729f39/JavaScript/reset.js
+// @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@f73d7ee4c67d503c38ad89839b1097ded1270079/JavaScript/rewrite.js
 // @resource     initialstate https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@091a67c249380d37b7b9adf7e68158862819c62d/JavaScript/initialstate.js
 // @resource     commandDm https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/commandDm.js
 // @resource     reply https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/comment.js
