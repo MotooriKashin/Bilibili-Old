@@ -337,9 +337,10 @@
         }
         /**
          * 鼠标悬停在顶栏头像上时，头像的放大动画
+         * @see 带注释css： https://github.com/MotooriKashin/Bilibili-Old/commit/b4009bb2dda204139e89f934afa206b302246911
          */
         avatarAnimation() {
-            BLOD.addCss(".bili-header-m .profile-info .i-face .face{border:2px solid #00000000}.bili-header-m .profile-info .i-face .pendant{transform:scale(0.5);width:112px;height:112px;left:-38px;bottom:-46px;opacity:0;transition:opacity .1s ease-in}.bili-header-m .profile-info.on .i-face{left:8px;top:0;height:32px;width:32px;transform:translateY(10px) translateX(-22px) scale(2);transform-origin:top left}.bili-header-m .profile-info.on .i-face .legalize{transform:scale(0.5) translate(10px,15px)}.bili-header-m .profile-info.on .i-face .pendant{opacity:1}.bili-header-m .profile-info.on .i-face.scale-in{transform:translateY(5px) translateX(-20px) scale(1.75)}.bili-header-m .profile-info.on .scale-in .face{height:32px;width:32px}.bili-header-m .profile-info.on .i-face.scale-in .legalize{transform:scale(0.5) translate(38px,48px)}");
+            BLOD.addCss(".bili-header-m .profile-info .i-face .face{border:0}.bili-header-m .profile-info .i-face .pendant{transform:scale(0.5);width:112px;height:112px;left:-41px;bottom:-46px;opacity:0;transition:opacity .1s ease-in}.bili-header-m .profile-info.on .i-face{left:8px;top:0;height:32px;width:32px;transform:translateY(10px) translateX(-16px) scale(2);transform-origin:top left}.bili-header-m .profile-info.on .i-face .legalize{transform:scale(0.5) translate(10px,15px)}.bili-header-m .profile-info.on .i-face .pendant{opacity:1}.bili-header-m .profile-info.on .i-face .face{border:0;box-shadow:0 0 0 2px #fff}.bili-header-m .profile-info.on .i-face.scale-in{transform:translateY(5px) translateX(-16px) scale(1.75)}.bili-header-m .profile-info.on .scale-in .face{height:32px;width:32px}.bili-header-m .profile-info.on .i-face.scale-in .legalize{transform:scale(0.5) translate(38px,48px)}");
         }
     }
     new Sction();
