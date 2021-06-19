@@ -168,7 +168,8 @@
          */
         search(url) {
             let obj = BLOD.urlObj(url); // 参数对象
-            if (obj.bvid) obj.aid = BLOD.abv(obj.bvid); // 存在bvid，添加aid
+            obj.bvid && (obj.aid = BLOD.abv(obj.bvid)); // 存在bvid，添加aid
+            obj.aid && !Number(obj.aid) && (obj.aid = BLOD.abv(obj.aid)); // aid误为bvid，转化
             if (obj.from && obj.from == "search") obj.from = null; // 清理无效from参数
             this.param.forEach(d => {
                 if (obj[d]) obj[d] = null; // 移除无效参数
