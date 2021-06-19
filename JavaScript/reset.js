@@ -231,6 +231,19 @@
                 { type: "text/javascript", src: "//static.hdslb.com/common/js/footer.js" }
             ]
             this.id = BLOD.joinNode(() => this.replace()); // 节点变动监听
+            BLOD.jsonphook((xhr, jsonp) => {
+                // 修复资讯区更新数目
+                if (jsonp.url.includes('api.bilibili.com/x/web-interface/online')) {
+                    let jsonpCallback = jsonp.jsonpCallback;
+                    let call = window[jsonpCallback];
+                    if (call) {
+                        window[jsonpCallback] = function (v) {
+                            v.data && (v.data.region_count[165] = v.data.region_count[202]);
+                            return call.call(jsonp, v);
+                        }
+                    }
+                }
+            });
         }
         /**
          * 替换顶栏底栏
