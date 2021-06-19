@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      5.0.6
+// @version      5.0.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -40,8 +40,8 @@
 // @resource     sort https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/sort.json
 // @resource     protobuf https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/protobuf.json
 // @resource     playlistjson https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/playlist.json
-// @resource     units https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@01028efdb83d657e3cd7c5f1c73d54d04fcf5c37/JavaScript/units.js
-// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b1555a5b8c6e627eef4925a7f5b416d7a8729f39/JavaScript/reset.js
+// @resource     units https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@20d41166ffe5c1168dfbaea6937cfda589de4602/JavaScript/units.js
+// @resource     reset https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3db80db76bced2ec0f2b1acf54928637e4863c60/JavaScript/reset.js
 // @resource     rewrite https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@f73d7ee4c67d503c38ad89839b1097ded1270079/JavaScript/rewrite.js
 // @resource     initialstate https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@091a67c249380d37b7b9adf7e68158862819c62d/JavaScript/initialstate.js
 // @resource     commandDm https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/commandDm.js
