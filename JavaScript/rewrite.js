@@ -716,6 +716,8 @@
          * 添加点赞功能
          */
         async setLike() {
+            if (this.like) return;
+            this.like = true; // 避免切P重复调用
             let node = document.querySelector(".coin");
             let number = document.querySelector(".number");
             let span = document.createElement("span");
