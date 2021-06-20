@@ -762,7 +762,7 @@
                 xhr.responseType = responseType;
                 for (let key in headers) if (key && headers[key]) xhr.setRequestHeader(key, headers[key]);
                 xhr.withCredentials = credentials;
-                xhr.onload = () => resolve(xhr.response);
+                xhr.addEventListener("load", () => resolve(xhr.response));
                 xhr.onerror = () => {
                     BLOD.toast.error("method：GET", "url：" + url, xhr.statusText || "");
                     reject(xhr.statusText || "xhr出错！");

@@ -375,52 +375,75 @@
             // hook postMessage来得到旧播放器创建的 获取list.so 的worker对象
             let workerPostMsg = Worker.prototype.postMessage;
             let list_so;
-            let loadTime, parseTime; // 旧播放器需要得到耗时数据(网络请求，数据处理)
             Worker.prototype.postMessage = function (aMessage, transferList) {
                 if (aMessage.url && aMessage.url.includes("list.so")) {
                     list_so = this;
-                    loadTime = new Date();
-                    BLOD.getSegDanmaku().then(Segments => {
+                    let mapDanmaku = Segments => Segments.map((v) => {
+                        let result = {
+                            class: v.pool,
+                            color: v.color,
+                            date: v.ctime,
+                            dmid: v.idStr,
+                            mode: v.mode,
+                            size: v.fontsize,
+                            stime: v.progress / 1000,
+                            text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
+                            uid: v.midHash
+                        };
+                        // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
+                        // b.AH && (e.className = e.className + " " + b.AH);
+                        if (v.styleClass !== undefined) result.AH = v.styleClass;
+                        return result;
+                    });
+                    let triggerOnMsg = (danmaku, loadTime, parseTime) => list_so.onmessage({
+                        data: {
+                            code: 0,
+                            danmakuArray: danmaku,
+                            loadTime: loadTime,
+                            parseTime: parseTime,
+                            sendTip: "",
+                            state: 0,
+                            textSide: "",
+                            total: danmaku.length.toString()
+                        }
+                    });
+                    let loadDanmaku = (loadTime) => BLOD.getSegDanmaku().then(Segments => {
+                        // 旧播放器需要得到耗时数据(网络请求，数据处理)
                         loadTime = new Date() - loadTime;
-                        parseTime = new Date();
-                        // 将弹幕转换为旧格式
-                        let danmaku = Segments.map((v) => {
-                            let result = {
-                                class: v.pool,
-                                color: v.color,
-                                date: v.ctime,
-                                dmid: v.idStr,
-                                mode: v.mode,
-                                size: v.fontsize,
-                                stime: v.progress / 1000,
-                                text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
-                                uid: v.midHash
-                            };
-                            // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
-                            // b.AH && (e.className = e.className + " " + b.AH);
-                            if (v.styleClass !== undefined) result.AH = v.styleClass;
-                            return result;
-                        });
+                        let parseTime = new Date();
+                        let danmaku = mapDanmaku(Segments);
                         //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
                         if (BLOD.aid < 400000) {
                             BLOD.specialEffects(danmaku);
                         }
                         BLOD.sortDmById(danmaku, "dmid");
                         parseTime = new Date() - parseTime;
-                        list_so.onmessage({
-                            data: {
-                                code: 0,
-                                danmakuArray: danmaku,
-                                loadTime: loadTime,
-                                parseTime: parseTime,
-                                sendTip: "",
-                                state: 0,
-                                textSide: "",
-                                total: danmaku.length.toString()
+                        triggerOnMsg(danmaku, loadTime, parseTime);
+                        BLOD.toXml(Segments).then((result) => (BLOD.xml = result));
+                    });
+                    if (XMLHttpRequest.prototype.pakku_send === undefined) {
+                        loadDanmaku(new Date());
+                    }
+                    else {
+                        // 让pakku.js载入弹幕
+                        let url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid + "&segment_index=1";
+                        BLOD.xhr.true(url, "arraybuffer").then((response) => {
+                            let Segments = BLOD.segDmDecode(response);
+                            // pakku.js处于“休眠中”时，不会修改响应数据，这时的response仅仅是第一个分段的弹幕数据
+                            // 这种情况下需要主动去加载全部的分段(loadDanmaku)
+                            let i = 1;
+                            for (; i < Segments.length; i++) {
+                                // pakku.js处理过的弹幕，在出现时间上按升序排列，可以用这个特征加以区别是否应该载入完整的弹幕
+                                if (Segments[i - 1].progress > Segments[i].progress) break;
+                            }
+                            if (i != Segments.length)
+                                loadDanmaku(new Date());
+                            else {
+                                triggerOnMsg(mapDanmaku(Segments), "(pakku.js)", "(pakku.js)");
+                                BLOD.toXml(Segments).then((result) => (BLOD.xml = result));
                             }
                         });
-                        BLOD.toXml(Segments).then((result) => (BLOD.xml = result));
-                    })
+                    }
                 } else {
                     workerPostMsg.call(this, aMessage, transferList);
                 }
@@ -499,49 +522,16 @@
             BLOD.toXml = danmaku => this.toXml(danmaku);
             BLOD.getHistoryDanmaku = (date, cid) => this.getHistoryDanmaku(date, cid);
             BLOD.loadLocalDm = (xml, append) => this.loadLocalDm(xml, append);
+            BLOD.segDmDecode = (response) => this.segDmDecode(response);
 
             BLOD.xhrhook((xhr, args) => {
                 // 新版弹幕兼容pakku.js
                 if (args[1].includes("list.so")) {
-                    // pakku.js会在页面上挂一个xhrhook.js来修改xhr对象，这里利用这个特征实现新版弹幕兼容pakku.js
-                    if (xhr.pakku_url && config.reset.danmuku) {
-                        // 更改pakku.js请求的url，使它过滤分段弹幕
-                        xhr.pakku_url = args[1] = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + BLOD.cid + "&pid=" + BLOD.aid + "&segment_index=1";
-                        xhr.responseType = "arraybuffer";
-                        xhr.callback = xhr.pakku_load_callback[0];
-                        xhr.respondDanmaku = (xml) => {
-                            xhr.response = xhr.responseText = xml;
-                            xhr.callback();
-                            BLOD.xml = xml;
-                        }
-                        // 将pakku.js返回的数据转换回xml
-                        xhr.pakku_load_callback[0] = () => {
-                            this.protoInit(); // 初始化弹幕引擎
-                            this.toXml(this.protoSeg.decode(new Uint8Array(xhr.response)).elems).then((xml) => xhr.respondDanmaku(xml));
-                        }
-                        // 处理send方法，针对实例而不再针对所有XMLHttpRequest
-                        // 处理pakku.js处于“休眠中”的情况
-                        xhr.pakku_send = async () => {
-                            // 安装并启用了pakku.js，并且将其设置成“休眠中”状态，才会运行这里的代码
-                            // pakku.js处于“工作中”状态时，不会调用send()，而是向回调函数直接投喂过滤之后的弹幕
-                            Object.defineProperty(xhr, "response", { writable: true });
-                            Object.defineProperty(xhr, "responseText", { writable: true });
-                            Object.defineProperty(xhr, "readyState", { writable: true });
-                            Object.defineProperty(xhr, "status", { writable: true });
-                            xhr.readyState = 4;
-                            xhr.status = 200;
-                            xhr.abort();
-                            let Segments = await this.getSegDanmaku();
-                            this.toXml(Segments).then((xml) => xhr.respondDanmaku(xml));
-                        }
-                    }
-                    else {
-                        // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
-                        // 备份弹幕
-                        xhr.addEventListener("load", () => {
-                            BLOD.xml = xhr.response;
-                        });
-                    }
+                    // 在历史弹幕面板切换回当天的弹幕时，播放器不通过web worker加载弹幕，而是直接请求list.so
+                    // 备份弹幕
+                    xhr.addEventListener("load", () => {
+                        BLOD.xml = xhr.response;
+                    });
                 }
                 // 历史弹幕
                 if (args[1].includes("history?type=")) {
@@ -592,7 +582,14 @@
                     xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>\r\n';
                 }
                 xml += "</i>";
-                resolve(xml.replace(/\u001c/g, ""));
+                /**
+                 * remove-invalid-xml-characters.js
+                 * @link https://gist.github.com/john-doherty/b9195065884cdbfd2017a4756e6409cc
+                 * @license MIT
+                 * @see https://en.wikipedia.org/wiki/Valid_characters_in_XML
+                 */
+                var regex = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;
+                resolve(xml.replace(regex, ''));
             });
         }
         /**
@@ -729,14 +726,13 @@
          */
         async getHistoryDanmaku(date, cid = BLOD.cid) {
             if (!date || !BLOD.uid) return;
-            this.protoInit(); // 初始化弹幕引擎
             cid = cid || BLOD.cid;
             let dm = await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/web/history/seg.so", {
                 type: 1,
                 oid: cid,
                 date: date
             }), "arraybuffer");
-            return this.protoSeg.decode(new Uint8Array(dm)).elems;
+            return this.segDmDecode(dm);
         }
         /**
          * 
@@ -796,6 +792,10 @@
                         textData.zIndex = textData.zIndex + 1;
                 }
             }
+        }
+        segDmDecode(response) {
+            this.protoInit(); // 初始化弹幕引擎
+            return this.protoSeg.decode(new Uint8Array(response)).elems;
         }
     }
     new Danmaku();
