@@ -161,6 +161,7 @@
             if (config.rewrite.home && BLOD.path[2] == 'www.bilibili.com' && (!BLOD.path[3] || (BLOD.path[3].startsWith('\?') || BLOD.path[3].startsWith('\#') || BLOD.path[3].startsWith('index.')))) this.index();
             if (config.rewrite.rank && /\/v\/popular\//.test(location.href)) this.rank();
             if (/live\.bilibili\.com/.test(location.href)) this.live();
+            if (/\/medialist\/play\//.test(location.href)) this.medialist();
 
             if (BLOD.path[2] == "message.bilibili.com") BLOD.addCss(".container[data-v-6969394c] { height: calc(100vh - 42px) !important;} .container[data-v-1c9150a9] { height: calc(100vh - 42px) !important;}"); // 修复消息页样式
             if (window.self == window.top && BLOD.path[2] == 'www.bilibili.com') document.domain = "bilibili.com"; // 处理子页面跨域
@@ -789,15 +790,15 @@
             if (data) {
                 try {
                     // 获取首个视频av并跳转
-                    toast("尝试前往构造媒体页...", "media_id：" + BLOD.ml);
-                    data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/v1/medialist/detail", { "media_id": BLOD.ml, "pn": 1, "ps": 1 }));
+                    toast("尝试前往构造媒体页...", "media_id：" + this.ml);
+                    data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/v1/medialist/detail", { "media_id": this.ml, "pn": 1, "ps": 1 }));
                     data = BLOD.jsonCheck(data).data;
                     location.replace("https://www.bilibili.com/video/av" + data.medias[0].id);
                 }
                 catch (e) {
                     // 跳转失败，清理残余
                     e = Array.isArray(e) ? e : [e];
-                    BLOD.setValue("medialist", 0);
+                    BLOD.GM.setValue("medialist", 0);
                     toast.error(...e);
                 }
             } else {
@@ -805,7 +806,7 @@
                     toast("重构媒体页信息中...")
                     let avs = [], value = [], promises = [];
                     // 获取收藏列表，这里获取只能获取到aid
-                    data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/v1/medialist/resource/ids4Player", { "media_id": BLOD.ml }));
+                    data = await xhr(BLOD.objUrl("https://api.bilibili.com/x/v1/medialist/resource/ids4Player", { "media_id": this.ml }));
                     data = BLOD.jsonCheck(data).data;
                     for (let i = 0; i < data.medias.length; i++) {
                         BLOD.ids[i] = data.medias[i].id;
