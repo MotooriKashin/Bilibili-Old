@@ -8,6 +8,7 @@
     const BLOD = window.BLOD; /** @see main  */
     const config = BLOD.config; /** @see main */
     const toast = BLOD.toast; /** @see debug */
+    const debug = BLOD.debug; /** @see debug */
 
     class Ui {
         constructor() {
@@ -188,6 +189,7 @@
          * @param {string} [button] 输入框按钮上的文字
          * @param {string} [toast] 鼠标移到输入框时显示的提示
          * @param {Function} [callback] 输入框输入文本处理程序
+         * @returns {HTMLElement} 输入框所在div
          */
         input(name, type = "text", placeholder = "", value = "", button = "确认", toast, callback) {
             let custom = BLOD.addElement("div", {}, this.right);
@@ -202,6 +204,7 @@
                     if (e.which == 13) callback(input.value);
                 }
             }
+            return custom;
         }
         /**
          * 播放菜单，这里可能之后会定制其他功能
@@ -237,7 +240,23 @@
                     config.reset.viewbofqi = 1;
                     BLOD.GM.setValue("config", config);
                 }
-            };
+            }
+            if (window.player && BLOD.path.name) {
+                // 添加载入其他视频按钮
+                let vcon = BLOD.GM.getValue("onlineVideo") || {};
+                const cid = BLOD.cid; // 记录cid备用
+                let value = (BLOD.cid && vcon[BLOD.cid]) ? "aid=" + vcon[BLOD.cid][0] + "&cid=" + vcon[BLOD.cid][1] : "";
+                this.input("载入其他视频", "url", "av2", value, "载入", "在当前播放器载入其他站内视频</br>支持短链接，如av50619577或者ss3398，也支持参数形式，如aid=50619577或者ssid=3398</br>※注意！将一并获取对应视频弹幕，可配合“载入其他视频弹幕”功能使用切换或合并弹幕源。", (value) => {
+                    BLOD.urlInputCheck(value).then(d => {
+                        if (!d.cid) return toast.warning("未能获取到任何视频信息", "请检查输入的视频链接是否有效！", "若是第三方接口抽风也可重试看看");
+                        d.aid && d.cid && window.GrayManager && window.GrayManager.reload(`cid=${d.cid}&aid=${d.aid}`);
+                        window.BiliCm && window.BiliCm.Core && window.BiliCm.Core.reset();
+                        vcon[cid] = [d.aid, d.cid];
+                        BLOD.GM.setValue("onlineVideo", vcon);
+                        debug.msg(3, "载入在线视频", `av${d.aid}`);
+                    })
+                });
+            }
         }
         /**
          * 弹幕菜单，这里可能之后会定制其他功能

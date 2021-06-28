@@ -317,6 +317,7 @@
          * 将链接中的参数输出为键值对象，锚直接忽略
          * @param {string} url 原始URL
          * @param {{}} 包含参数键值对的对象，原URL不含参数则返回空对象
+         * @returns {{}} 参数对象
          */
         urlObj(url) {
             url = url || "";
@@ -362,6 +363,7 @@
             BLOD.playerSetting = () => this.playerSetting();
             BLOD.loginExit = (referer) => this.loginExit(referer);
             BLOD.biliQuickLogin = () => this.biliQuickLogin();
+            BLOD.urlInputCheck = (input) => this.urlInputCheck(input);
         }
         /**
          * 输出cookies对象
@@ -446,6 +448,86 @@
                 throw [data.code, msg];
             }
             return data;
+        }
+        /**
+         * 根据输入链接提取参数信息
+         * @param {string} input 输入的在线视频链接，支持短链接，如av50619577或者ss3398，也支持参数形式，如aid=50619577或者ssid=3398
+         * @returns {{}} 含有aid，cid信息的对象，可能也包括bvid，ssid，epid，p……
+         */
+        async urlInputCheck(input) {
+            let aid, cid, ssid, epid, p;
+            BLOD.toast("正在解析链接：" + input);
+            if (input && !input.includes("?")) input = "?" + input; // 重整化输入便于提取参数
+            let obj = BLOD.urlObj(input); // 获取参数对象
+            aid = input.match(/[aA][vV][0-9]+/) ? input.match(/[aA][vV][0-9]+/)[0].match(/\d+/)[0] : undefined;
+            aid = aid || obj.aid || undefined;
+            aid = aid || (/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/.test(input) ? BLOD.abv(input.match(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/)[0]) : undefined);
+            aid = aid || (obj.bvid ? BLOD.abv(obj.bvid) : undefined);
+            try {
+                if (aid) {
+                    // 直接获取到cid的情况
+                    cid = cid = obj.cid || undefined;
+                    if (!cid) {
+                        p = obj.p || 1;
+                        try {
+                            // 尝试访问B站服务器获取信息
+                            let data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }))).data[p - 1];
+                            cid = data.cid;
+                            BLOD.toast("正在请求av视频数据", "分P名称：" + data.part);
+                        } catch (e) {
+                            e = Array.isArray(e) ? e : [e];
+                            debug.error("获取视频信息出错：aid：" + aid, "HOST：https://api.bilibili.com/x/player/pagelist", ...e);
+                            try {
+                                // 尝试访问BiliPlus获取信息
+                                let data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://www.biliplus.com/api/view", { "id": aid })));
+                                data = (data.list && data.list[p - 1]) || (data.v2_app_api && data.v2_app_api.pages && data.v2_app_api.pages[p - 1]);
+                                cid = data.cid;
+                                BLOD.toast("正在请求av视频数据", "分P名称：" + data.part);
+                            } catch (e) {
+                                e = Array.isArray(e) ? e : [e];
+                                debug.error("获取视频信息出错：aid：" + aid, "HOST：https://www.biliplus.com/api/view", ...e);
+                            }
+                        }
+                    }
+                } else {
+                    // 输入的是番剧ss/ep链接的情况，尝试获取aid、cid
+                    ssid = input.match(/[sS][sS][0-9]+/) ? input.match(/[sS][sS][0-9]+/)[0].match(/\d+/)[0] : undefined;
+                    ssid = ssid || obj.season_id || undefined;
+                    epid = input.match(/[eE][pP][0-9]+/) ? input.match(/[eE][pP][0-9]+/)[0].match(/\d+/)[0] : undefined;
+                    epid = epid || obj.ep_id || undefined;
+                    try {
+                        // 尝试访问bangumi接口
+                        let data;
+                        if (ssid) data = await BLOD.xhr(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: ssid }));
+                        else if (epid) data = await BLOD.xhr(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: epid }));
+                        if (data) {
+                            data = BLOD.iniState.bangumi(data, epid);
+                            aid = data.epInfo.aid;
+                            cid = data.epInfo.cid;
+                            BLOD.toast("正在请求Bangumi数据", "系列名称：" + data.mediaInfo.title, "分p名称：" + data.epInfo.index_title);
+                        }
+                    } catch (e) {
+                        e = Array.isArray(e) ? e : [e];
+                        let data;
+                        if (epid) debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                        else if (ssid) debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                        try {
+                            // 尝试访问泰区接口，需要泰区代理服务器或者节点
+                            let thai = BLOD.GM.getValue("thaiLand") || "https://api.global.bilibili.com";
+                            if (epid) {
+                                data = await BLOD.xhr(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { ep_id: epid }));
+                            } else if (ssid) {
+                                data = await BLOD.xhr(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { season_id: ssid }));
+                            }
+                            data = BLOD.iniState.thaiBangumi(data, epid);
+                            aid = data.epInfo.aid;
+                            cid = data.epInfo.cid;
+                            BLOD.toast("正在请求Bangumi数据", "系列名称：" + data.mediaInfo.title, "分p名称：" + data.epInfo.index_title);
+                        } catch (e) { }
+                    }
+                }
+            } catch (e) { }
+            return { aid, cid, ssid, epid, p }
         }
         /**
          * 计算当前节点相对于文档的垂直偏移

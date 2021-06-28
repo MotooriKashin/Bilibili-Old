@@ -25,7 +25,7 @@
                 if (config.reset.novideo) {
                     debug.msg(300, "拦截视频页媒体载入用于呼出下载面板", "取消拦截", null, true, () => {
                         config.reset.novideo = 0;
-                        BLOD.setValue("config", config);
+                        BLOD.GM.setValue("config", config);
                         window.BilibiliPlayer({ aid: BLOD.aid, cid: BLOD.cid });
                     })
                 }
@@ -964,19 +964,19 @@
     new RelpyFloor();
 
     /**
-     * @class LocalDanmaku
-     * @description 使旧版播放器支持载入本地弹幕
+     * @class LocalMedia
+     * @description 使旧版播放器支持载入本地视频或弹幕
      */
-    class LocalDanmaku {
+    class LocalMedia {
         constructor() {
             if (document.querySelector("#local-danmaku")) return;
-            this.element = '<label class="button" role="button" title="载入本地弹幕">本地弹幕<input id="local-danmaku" type="file" accept=".xml" /></label>';
+            this.element = '<label class="button" role="button" title="载入本地视频或弹幕">本地文件<input id="local-danmaku" type="file" accept=".mp4,.xml,.json" multiple/></label>';
             this.style = '.bpui-checkbox-text.local-danmaku label{ cursor: pointer; } .bpui-checkbox-text.local-danmaku #local-danmaku { opacity:0; width: 0; }';
             let icon = document.querySelector(".bilibili-player-iconfont-danmaku");
             if (!icon) return;
             icon.onmouseover = () => {
                 if (this.timer) return;
-                if (!BLOD.setDanmaku) return debug.warn("无法启动本地弹幕功能");
+                if (!BLOD.setDanmaku) return debug.warn("无法启动本地文件功能");
                 this.timer = setTimeout(() => this.init(), 100);
             }
         }
@@ -996,24 +996,68 @@
         /**
          * 读取文件地址
          */
-        async change() {
+        change() {
             const file = this.input.files;
             if (file.length === 0) {
                 this.input.value = "";
-                return toast.warning("请选择本地弹幕文件！拓展名 .xml");
+                return toast.warning("请选择本地视频或弹幕文件！", "视频：.mp4（且符合浏览器支持的编码）", "弹幕：.xml, .json");
             }
-            if (!/\.xml$/.test(file[0].name)) {
+            this.data = Array.from(file).reduce((d, i) => {
+                /\.xml$/.test(i.name) && d.xml.push(i); // xml弹幕
+                /\.json$/.test(i.name) && d.json.push(i); // json弹幕
+                /\.mp4$/.test(i.name) && d.mp4.push(i); // mp4视频
+                return d;
+            }, { mp4: [], xml: [], json: [] })
+            if (!this.data.mp4[0] && !this.data.json[0] && !this.data.mp4[0]) {
                 this.input.value = "";
-                return toast.warning("这貌似不是一个有效的弹幕文件 →_→");
+                return toast.warning("未能识别到任何有效文件信息 →_→");
             }
-            let data = await this.readFile(file[0]);
-            // 调用弹幕控制接口
+            this.video();
+            this.danmaku();
+            // 成功载入清除上传文件控件内容
+            this.input.value = "";
+        }
+        /**
+         * 读取文件内容
+         * @param {File} file 记录本地文件信息的 file 对象
+         */
+        readFile(file) {
+            return new Promise((resolve, reject) => {
+                if (!file) reject(toast.error('无效文件路径！'));
+                const reader = new FileReader();
+                reader.readAsText(file, 'utf-8');
+                reader.onload = () => {
+                    resolve(reader.result);
+                }
+                reader.onerror = () => {
+                    reject(toast.error('读取文件出错，请重试！'));
+                    // 成功失败清除上传文件控件内容
+                    this.input.value = ""
+                }
+            })
+        }
+        /**
+         * 载入弹幕
+         * @returns {void}
+         */
+        async danmaku() {
             if (!BLOD.loadLocalDm) {
                 this.input.value = "";
                 return toast.error("载入本地弹幕失败：本地弹幕组件丢失！");
             }
-            toast("本地弹幕：" + file[0].name, "载入模式：" + (config.reset.concatDanmaku ? "与当前弹幕合并" : "替换当前弹幕"));
-            BLOD.loadLocalDm(data, config.reset.concatDanmaku);
+            if (!this.data.xml[0] && !this.data.json[0]) return;
+            this.data.xml.forEach(async (d, i) => {
+                // 读取xml弹幕
+                let data = await this.readFile(d);
+                toast("本地弹幕：" + d.name, "载入模式：" + ((i || config.reset.concatDanmaku) ? "与当前弹幕合并" : "替换当前弹幕"));
+                BLOD.loadLocalDm(data, i || config.reset.concatDanmaku);
+            })
+            this.data.json.forEach(async (d, i) => {
+                // 读取json弹幕
+                let data = await this.readFile(d) || [];
+                toast("本地弹幕：" + d.name, "载入模式：" + ((this.data.xml[0] || i || config.reset.concatDanmaku) ? "与当前弹幕合并" : "替换当前弹幕"));
+                BLOD.setDanmaku(data, this.data.xml[0] || i || config.reset.concatDanmaku);
+            })
             this.offset = 0; // 记录或重置弹幕偏移时间
             if (!BLOD.offsetDanmaku) return toast.error("绑定键盘事件失败：弹幕偏移组件丢失！")
             else {
@@ -1038,30 +1082,38 @@
                     })
                 }
             }
-            // 成功载入清除上传文件控件内容
-            this.input.value = "";
         }
         /**
-         * 读取文件内容
-         * @param {File} file 记录本地文件信息的 file 对象
+         * 载入视频
          */
-        readFile(file) {
-            return new Promise((resolve, reject) => {
-                if (!file) reject(toast.error('无效文件路径！'));
-                const reader = new FileReader();
-                reader.readAsText(file, 'utf-8');
-                reader.onload = () => {
-                    resolve(reader.result);
-                }
-                reader.onerror = () => {
-                    reject(toast.error('读取文件出错，请重试！'));
-                    // 成功失败清除上传文件控件内容
-                    this.input.value = ""
-                }
-            })
+        video() {
+            if (this.data.mp4) {
+                toast.warning("载入本地视频中...", "请无视控制台大量报错！")
+                let video = document.querySelector("video");
+                video.src = URL.createObjectURL(this.data.mp4[0]);
+                toast.success("本地视频：" + this.data.mp4[0].name);
+                document.querySelector(".bilibili-player-video-progress").addEventListener("click", e => {
+                    // 修复鼠标事件
+                    video.currentTime = document.querySelector(".bpui-slider-handle").style.left / 100 * video.duration;
+                })
+                document.querySelector(".bilibili-player-video-time-total").textContent = this.time(video.duration); // 修复总时长
+            }
+        }
+        /**
+         * 格式化时间轴
+         * @param {number} time 时间/秒
+         * @returns {number} mm:ss
+         */
+        time(time) {
+            time = Number(time) || 0;
+            let s = time % 60;
+            let m = (time - s) / 60;
+            s = (Array(2).join('0') + s).slice(-2);
+            m = m < 10 ? (Array(2).join('0') + m).slice(-2) : m;
+            return `${m}:${s}`
         }
     }
-    if (config.reset.localDanmaku) BLOD.joinSwitchVideo(() => setTimeout(() => { new LocalDanmaku() }, 1000));
+    if (config.reset.localDanmaku) BLOD.joinSwitchVideo(() => setTimeout(() => { new LocalMedia() }, 1000));
 
     /**
      * @class DanmakuHashId
@@ -1194,10 +1246,7 @@
          * @param {HTMLElement} [right] 用于创建下载所获得弹幕所在的父节点
          */
         constructor(url, right) {
-            toast("正在解析链接：" + url);
-            if (url && !url.includes("?")) url = "?" + url;
             this.url = url;
-            this.obj = BLOD.urlObj(url);
             this.node = right;
             if (document.querySelector("#BLOD-dm-dl")) document.querySelector("#BLOD-dm-dl").remove();
             if (BLOD.bloburl.xml) {
@@ -1207,72 +1256,9 @@
             this.init(url);
         }
         async init() {
-            // 从所有可能的aid形式中获取aid
-            this.aid = this.url.match(/[aA][vV][0-9]+/) ? this.url.match(/[aA][vV][0-9]+/)[0].match(/\d+/)[0] : undefined;
-            this.aid = this.aid || this.obj.aid || undefined;
-            this.aid = this.aid || (/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/.test(this.url) ? BLOD.abv(this.url.match(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/)[0]) : undefined);
-            this.aid = this.aid || (this.obj.bvid ? BLOD.abv(this.obj.bvid) : undefined);
             try {
-                if (this.aid) {
-                    // 直接能获取aid的情况，尝试获取cid
-                    this.cid = this.obj.cid || undefined;
-                    if (!this.cid) {
-                        this.p = this.obj.p || 1;
-                        try {
-                            // 尝试访问B站服务器获取信息
-                            this.data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": this.aid }))).data[this.p - 1];
-                            this.cid = this.data.cid;
-                            toast("正在请求av视频数据", "分P名称：" + this.data.part);
-                        } catch (e) {
-                            e = Array.isArray(e) ? e : [e];
-                            debug.error("获取视频信息出错：aid：" + this.aid, "HOST：https://api.bilibili.com/x/player/pagelist", ...e);
-                            try {
-                                // 尝试访问BiliPlus获取信息
-                                this.data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://www.biliplus.com/api/view", { "id": this.aid })));
-                                this.data = (this.data.list && this.data.list[this.p - 1]) || (this.data.v2_app_api && this.data.v2_app_api.pages && this.data.v2_app_api.pages[this.p - 1]);
-                                this.cid = this.data.cid;
-                                toast("正在请求av视频数据", "分P名称：" + this.data.part);
-                            } catch (e) {
-                                e = Array.isArray(e) ? e : [e];
-                                debug.error("获取视频信息出错：aid：" + this.aid, "HOST：https://www.biliplus.com/api/view", ...e);
-                            }
-                        }
-                    }
-                } else {
-                    // 输入的是番剧ss/ep链接的情况，尝试获取aid、cid
-                    this.ssid = this.url.match(/[sS][sS][0-9]+/) ? this.url.match(/[sS][sS][0-9]+/)[0].match(/\d+/)[0] : undefined;
-                    this.ssid = this.ssid || this.obj.season_id || undefined;
-                    this.epid = this.url.match(/[eE][pP][0-9]+/) ? this.url.match(/[eE][pP][0-9]+/)[0].match(/\d+/)[0] : undefined;
-                    this.epid = this.epid || this.obj.ep_id || undefined;
-                    try {
-                        // 尝试访问bangumi接口
-                        if (this.epid) this.data = await BLOD.xhr(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: this.ssid }));
-                        else if (this.ssid) this.data = await BLOD.xhr(BLOD.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: this.epid }));
-                        if (this.data) {
-                            this.data = BLOD.iniState.bangumi(this.data, this.epid);
-                            this.aid = this.data.epInfo.aid;
-                            this.cid = this.data.epInfo.cid;
-                            toast("正在请求Bangumi数据", "系列名称：" + this.data.mediaInfo.title, "分p名称：" + this.data.epInfo.index_title);
-                        }
-                    } catch (e) {
-                        e = Array.isArray(e) ? e : [e];
-                        if (this.epid) debug.error("获取视频信息出错：ssid：" + this.ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
-                        else if (this.ssid) debug.error("获取视频信息出错：ssid：" + this.ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
-                        try {
-                            // 尝试访问泰区接口，需要泰区代理服务器或者节点
-                            let thai = BLOD.getValue("thaiLand") || "https://api.global.bilibili.com";
-                            if (this.epid) {
-                                this.data = await BLOD.xhr(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { ep_id: this.epid }));
-                            } else if (this.ssid) {
-                                this.data = await BLOD.xhr(BLOD.objUrl(`${thai}/intl/gateway/v2/ogv/view/app/season`, { season_id: this.ssid }));
-                            }
-                            this.data = BLOD.iniState.thaiBangumi(this.data, this.epid);
-                            this.aid = this.data.epInfo.aid;
-                            this.cid = this.data.epInfo.cid;
-                            toast("正在请求Bangumi数据", "系列名称：" + this.data.mediaInfo.title, "分p名称：" + this.data.epInfo.index_title);
-                        } catch (e) { }
-                    }
-                }
+                let obj = await BLOD.urlInputCheck(this.url);
+                this.aid = obj.aid; this.cid = obj.cid;
                 if (this.aid && this.cid) {
                     BLOD.getSegDanmaku(this.aid, this.cid).then(d => {
                         let danmaku = AllDanmaku.format(d, this.aid);
@@ -1298,9 +1284,9 @@
             BLOD.bloburl.xml = URL.createObjectURL(this.blob);
             this.div.innerHTML = `<a href=${BLOD.bloburl.xml} target="_blank" download="${this.cid}.xml">获取在线弹幕成功，可以右键另存为文件！</a>`;
             if (BLOD.cid && window.player) {
-                let config = BLOD.getValue("onlineDanmaku") || {};
+                let config = BLOD.GM.getValue("onlineDanmaku") || {};
                 config[BLOD.cid] = [this.aid, this.cid];
-                BLOD.setValue("onlineDanmaku", config);
+                BLOD.GM.setValue("onlineDanmaku", config);
             }
         }
     }
