@@ -1054,10 +1054,11 @@
             })
             this.data.json.forEach(async (d, i) => {
                 // 读取json弹幕
-                let data = await this.readFile(d) || [];
+                let data = JSON.parse(await this.readFile(d)) || [];
                 toast("本地弹幕：" + d.name, "载入模式：" + ((this.data.xml[0] || i || config.reset.concatDanmaku) ? "与当前弹幕合并" : "替换当前弹幕"));
                 BLOD.setDanmaku(data, this.data.xml[0] || i || config.reset.concatDanmaku);
             })
+            debug.msg();
             this.offset = 0; // 记录或重置弹幕偏移时间
             if (!BLOD.offsetDanmaku) return toast.error("绑定键盘事件失败：弹幕偏移组件丢失！")
             else {

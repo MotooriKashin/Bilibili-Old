@@ -643,6 +643,7 @@
             this.node = document.querySelector(".bilibili-player-video-toast-bottom");
             time = time * 1000 || 3000;
             if (!this.node) return this.log(text, red, yellow);
+            if (!text && this.node.children[0]) return this.node.children[0].remove();
             if (replace) {
                 if (this.node.children[0]) this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node, false, this.node.children[0]);
                 else this.node = BLOD.addElement("div", { class: "bilibili-player-video-toast-item bilibili-player-video-toast-pay" }, this.node);
