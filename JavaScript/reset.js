@@ -1008,7 +1008,7 @@
                 /\.mp4$/.test(i.name) && d.mp4.push(i); // mp4视频
                 return d;
             }, { mp4: [], xml: [], json: [] })
-            if (!this.data.mp4[0] && !this.data.json[0] && !this.data.mp4[0]) {
+            if (!this.data.xml[0] && !this.data.json[0] && !this.data.mp4[0]) {
                 this.input.value = "";
                 return toast.warning("未能识别到任何有效文件信息 →_→");
             }
@@ -1088,7 +1088,7 @@
          * 载入视频
          */
         video() {
-            if (this.data.mp4) {
+            if (this.data.mp4[0]) {
                 toast.warning("载入本地视频中...", "请无视控制台大量报错！")
                 let video = document.querySelector("video");
                 video.src = URL.createObjectURL(this.data.mp4[0]);
