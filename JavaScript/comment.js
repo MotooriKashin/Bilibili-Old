@@ -1167,13 +1167,12 @@
                 i.next = i.sort ? r : null
                 i.loading = !0,
                     e && $(window).scrollTop(i.$root.offset().top),
-                    (i.mobile ? this._getReplyByCursor() : this._getReplyByPage(r)).done(function (d) {
+                    (i.sort ? this._getReplyByCursor() : this._getReplyByPage(r)).done(function (d) {
                         var n,
                             t;
                         i._hideLoading(),
                             i.loaded = !0,
-                            d.data && d.data.control && d.data.control.web_selection && !d.data.replies && (d.code = -404), // 置空无效评论，触发重载
-                            d && 0 === d.code ? d.data && (d.data.cursor && (d.data.top && (d.data.upper.top = d.data.top.upper || null, d.data.top = d.data.top.admin || null)), i.mode = d.data.mode || d.data.cursor.mode, i.blacklist = d.data.blacklist || 0, i.assist = d.data.assist || 0, i.pageInfo = d.data.page || (d.data.cursor ? {
+                            d && 0 === d.code ? d.data && (d.data.cursor && (d.data.top && (d.data.upper.top = d.data.top.upper || null, d.data.top = d.data.top.admin || null)), i.mode = d.data.mode || d.data.cursor.mode, i.blacklist = d.data.blacklist || 0, i.assist = d.data.assist || 0, i.pageInfo = d.data.page || (i.pageInfo.count && i.pageInfo) || (d.data.cursor ? {
                                 acount: d.data.cursor.all_count, // 评论数
                                 count: i.count || d.data.cursor.all_count, // 有效评论数
                                 num: d.data.cursor.next - 1, // 页码
@@ -1186,7 +1185,7 @@
                                 web_selection: !1
                             }, $(i._createReplyBox({
                                 forbid: !0
-                            })).insertBefore(i.$root.find(".comment-list")), i.$root.find(".comment-header .tabs-order .hot-sort").html("评论关闭"), i.$root.find(".comment-header .tabs-order .new-sort").hide(), i._renderReplyList([]), i.mobile ? "" : (i.mobile = 1, i.loadPage(r, e)))
+                            })).insertBefore(i.$root.find(".comment-list")), i.$root.find(".comment-header .tabs-order .hot-sort").html("评论关闭"), i.$root.find(".comment-header .tabs-order .new-sort").hide(), i._renderReplyList([]))
                     }).fail(function () {
                         i.loaded || i._showLoading('<span>加载失败，<a class="reload-comment">点击重试</a></span>')
                     }).always(function () {
