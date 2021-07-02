@@ -444,7 +444,15 @@
             else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
             BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__); // 重构__INITIAL_STATE__
             // 移除广告
-            if (BLOD.config.reset.adloc) for (let key in BLOD.__INITIAL_STATE__.locsData) if (BLOD.__INITIAL_STATE__.locsData[key]) for (let i = BLOD.__INITIAL_STATE__.locsData[key].length - 1; i >= 0; i--) if (BLOD.__INITIAL_STATE__.locsData[key][i].is_ad) { BLOD.debug.debug("移除广告", key, BLOD.__INITIAL_STATE__.locsData[key][i]); BLOD.__INITIAL_STATE__.locsData[key].splice(i, 1); }
+            if (BLOD.config.reset.adloc) {
+                for (let key in BLOD.__INITIAL_STATE__.locsData) {
+                    if (Array.isArray(BLOD.__INITIAL_STATE__.locsData[key])) {
+                        BLOD.__INITIAL_STATE__.locsData[key] = BLOD.__INITIAL_STATE__.locsData[key].filter(d => {
+                            return d.is_ad ? (debug.debug("移除广告", key, d) && false) : true;
+                        })
+                    }
+                }
+            }
             window.__INITIAL_STATE__ = BLOD.__INITIAL_STATE__; //写入旧版__INITIAL_STATE__
             BLOD.write(BLOD.GM.getResourceText("index")); // 重写主页
             let rid = BLOD.joinNode(() => {

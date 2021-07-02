@@ -371,7 +371,7 @@
                     })
                 });
                 __INITIAL_STATE__.locsData = data.locsData;
-                __INITIAL_STATE__.locsData[23] = data.locsData[3197];
+                __INITIAL_STATE__.locsData[23] = data.locsData[3197].filter(d => d.url);
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
