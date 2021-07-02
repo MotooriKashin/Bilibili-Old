@@ -1163,7 +1163,7 @@
                 })) + '" />', "</div>", '<div class="textarea-container">', t ? '<div class="baffle-wrap"><div class="baffle">' + (e.isSub ? r : t) + "</div></div>" : "", '<i class="ipt-arrow"></i>', '<textarea cols="80" name="msg" rows="5" placeholder="' + i + '" class="ipt-txt"></textarea>', '<button type="submit" class="comment-submit" ' + (n ? 'disabled="disabled"' : "") + ">发表评论</button>", "</div>", o, !e.isSub && this.dynamicRepost ? a : "", "</div>"].join("")
             },
             g.prototype.loadPage = function (r, e) {
-                var i = this;
+                var i = this; debugger
                 i.next = i.sort ? r : null
                 i.loading = !0,
                     e && $(window).scrollTop(i.$root.offset().top),
@@ -1172,9 +1172,9 @@
                             t;
                         i._hideLoading(),
                             i.loaded = !0,
-                            d && 0 === d.code ? d.data && (d.data.cursor && (d.data.top && (d.data.upper.top = d.data.top.upper || null, d.data.top = d.data.top.admin || null)), i.mode = d.data.mode || d.data.cursor.mode, i.blacklist = d.data.blacklist || 0, i.assist = d.data.assist || 0, i.pageInfo = d.data.page || (i.pageInfo.count && i.pageInfo) || (d.data.cursor ? {
+                            d && 0 === d.code ? d.data && (d.data.cursor && (d.data.top && (d.data.upper.top = d.data.top.upper || null, d.data.top = d.data.top.admin || null)), i.mode = d.data.mode || d.data.cursor.mode, i.blacklist = d.data.blacklist || 0, i.assist = d.data.assist || 0, i.pageInfo = d.data.page || (d.data.cursor ? {
                                 acount: d.data.cursor.all_count, // 评论数
-                                count: i.count || d.data.cursor.all_count, // 有效评论数
+                                count: i.pageInfo.count || d.data.cursor.all_count, // 有效评论数
                                 num: d.data.cursor.next - 1, // 页码
                                 size: 20
                             } : {}), i.readOnly = d.data.config.read_only, i.folder = d.data.folder || {}, i.showBv = d.data.show_bvid || !1, n = i.pageInfo.num * i.pageInfo.size >= i.pageInfo.count, (t = d.data.control) && (i.control.bg_text = t.bg_text, i.control.child_input_text = t.child_input_text, i.control.input_disable = t.input_disable, i.control.root_input_text = t.root_input_text, i.control.web_selection = t.web_selection), i._renderTabs(d), i._renderNotice(d.data.notice), i._updateReplyListByData(d.data, r, n), i.next = (i.sort && d.data.cursor) ? d.data.cursor.next : null, i._renderTopPagination(i.pageInfo), i._renderBottomPagination(i.pageInfo), i._fixEmojiPosition(), $(".common .b-head .results").html(d.data.page ? d.data.page.acount : d.data.cursor ? d.data.cursor.all_count : 0).show(), $(".common .b-head .del-log").remove(), i.$root.find(".bb-comment > .comment-send").remove(), $(i._createReplyBox()).insertBefore(i.$root.find(".comment-list")), i.trigger("pageLoaded", n, d.data)) : (i.$root.find(".bb-comment > .comment-send").remove(), i.control = {
