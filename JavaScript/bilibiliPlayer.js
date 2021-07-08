@@ -13442,6 +13442,23 @@ function Fa() {
                 e.nb(function (b) {
                     c.En.text(b.BK)
                 });
+                c.En.lastUpdate = 0;
+                c.En.parent().mouseenter(() => {
+                    if (Date.now() - c.En.lastUpdate > 10000) {
+                        c.En.lastUpdate = Date.now();
+                        if (BLOD) {
+                            BLOD.xhr.true(BLOD.objUrl("https://api.bilibili.com/x/player/online/total", {
+                                cid: BLOD.cid,
+                                bvid: BLOD.bvid,
+                                ts: Math.ceil(Date.now() / 30 / 1e3)
+                            })).then((data) => {
+                                data = JSON.parse(data);
+                                if (data.code === 0)
+                                    c.En.parent().attr("title", "WEB端同时观看人数：" + data.data.count + "\n全站同时观看人数（包含移动端等）：" + data.data.total);
+                            });
+                        }
+                    }
+                });
                 this.c.f.La ? (h.a.show(this.CB), h.a.hide(this.Ie), this.vr.addClass("active")) : this.c.f.R ? (h.a.show(this.Zz), h.a.hide(this.Ie), this.ur.addClass("active")) : (h.a.show(this.vo),
                     h.a.hide(this.Ie), this.jn.addClass("active"));
                 this.hn.removeClass("active");
