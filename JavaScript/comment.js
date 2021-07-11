@@ -1166,7 +1166,7 @@
                 var i = this;
                 i.next = i.sort ? r : null;
                 i.loading = !0;
-                if (!i.pageInfo.count && !i.firstLoadx) return this._getReplyByPage(r).done(function (d) { d && 0 === d.code && (i.pageInfo.count = d.data.page.count) }).always(function () { i.firstLoadx = !0; i.loadPage(r, e) }); // 首次评论跳转时间排序以获取页码总数
+                if (!i.pageInfo.count && !i.firstLoadx) return i.sort = 0, this._getReplyByPage(r).done(function (d) { d && 0 === d.code && (i.pageInfo.count = d.data.page.count) }).always(function () { i.sort = 2; i.firstLoadx = !0; i.loadPage(r, e) }); // 首次评论跳转时间排序以获取页码总数
                 e && $(window).scrollTop(i.$root.offset().top),
                     (i.sort ? this._getReplyByCursor() : this._getReplyByPage(r)).done(function (d) {
                         var n,
