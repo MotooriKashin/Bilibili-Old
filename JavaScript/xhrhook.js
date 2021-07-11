@@ -390,6 +390,8 @@
                             text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                             uid: v.midHash
                         };
+                        // 添加图片弹幕信息
+                        if (v.action && v.action.startsWith("picture:")) result.picture = "//" + v.action.split(":")[1];
                         // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
                         // b.AH && (e.className = e.className + " " + b.AH);
                         if (v.styleClass !== undefined) result.AH = v.styleClass;
