@@ -782,7 +782,7 @@
          */
         async bigvip(xhr, url) {
             this.defineProperty(xhr) // 解锁XMLHttpRequest只读属性
-            this.response = BLOD.bigvip ? await BLOD.bigvip(BLOD.urlObj(url)) : { "code": -404, "message": e, "data": null };
+            this.response = BLOD.bigvip ? await BLOD.bigvip(BLOD.urlObj(url)) : { "code": -404, "message": "错误", "data": null };
             BLOD.__playinfo__ = this.response; // 记录播放地址
             this.postResponse(xhr, url); // 推送给播放器
         }
