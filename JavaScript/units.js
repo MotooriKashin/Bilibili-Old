@@ -476,7 +476,7 @@
                             BLOD.toast("正在请求av视频数据", "分P名称：" + data.part);
                         } catch (e) {
                             e = Array.isArray(e) ? e : [e];
-                            debug.error("获取视频信息出错：aid：" + aid, "HOST：https://api.bilibili.com/x/player/pagelist", ...e);
+                            BLOD.debug.error("获取视频信息出错：aid：" + aid, "HOST：https://api.bilibili.com/x/player/pagelist", ...e);
                             try {
                                 // 尝试访问BiliPlus获取信息
                                 let data = BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://www.biliplus.com/api/view", { "id": aid })));
@@ -485,7 +485,7 @@
                                 BLOD.toast("正在请求av视频数据", "分P名称：" + data.part);
                             } catch (e) {
                                 e = Array.isArray(e) ? e : [e];
-                                debug.error("获取视频信息出错：aid：" + aid, "HOST：https://www.biliplus.com/api/view", ...e);
+                                BLOD.debug.error("获取视频信息出错：aid：" + aid, "HOST：https://www.biliplus.com/api/view", ...e);
                             }
                         }
                     }
@@ -509,8 +509,8 @@
                     } catch (e) {
                         e = Array.isArray(e) ? e : [e];
                         let data;
-                        if (epid) debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
-                        else if (ssid) debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                        if (epid) BLOD.debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                        else if (ssid) BLOD.debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
                         try {
                             // 尝试访问泰区接口，需要泰区代理服务器或者节点
                             let thai = BLOD.GM.getValue("thaiLand") || "https://api.global.bilibili.com";
