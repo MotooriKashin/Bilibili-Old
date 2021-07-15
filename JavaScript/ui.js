@@ -321,7 +321,7 @@
                 li.setAttribute("id", "BLOD-UI-menu");
                 this.right.innerHTML = '';
                 this.checked("limit");
-                this.checked("accesskey", false, {}, config.reset.accesskey, config.reset.accesskey);
+                this.checked("accesskey", false, {}, () => this.accesskey(), () => this.accesskey());
                 let thaiLand = BLOD.addElement("div", {}, this.right);
                 thaiLand.innerHTML = '代理服务器（东南亚）<input type="url" placeholder="http://www.example.com"> <button>保存</button>'
                 this.state(thaiLand, "请输入解除限制时所需的东南亚代理服务器地址，用以解除东南亚区域番剧限制</br>东南亚番剧账户与主站不互通，只能播放480P，启用账号授权也无效！</br>链接有效形式如输入框提示：需带http/https头，末尾无需斜杠！")
