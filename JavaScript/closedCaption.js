@@ -15,7 +15,7 @@
      */
     class ClosedCaption {
         constructor() {
-            BLOD.xhrhook((xhr, args) => { if (args[1].includes('api.bilibili.com/x/player/carousel')) this.getCaption(); }); // CC字幕入口
+            BLOD.ClosedCaption = (data) => this.getCaption(data); // CC字幕入口
             this.element = {}; // 节点集合
             this.data = {}; // 字幕缓存
             this.resizeRate = 100; // 字幕大小倍率
@@ -303,26 +303,10 @@
             }
         }
         /**
-         * 查询有无弹幕，暂未支持泰区
-         * @returns {Promise<{}>}} 字幕结果返回
-         */
-        async getCaptionView() {
-            try {
-                // 网页端接口
-                return BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/player/v2", { cid: BLOD.cid, aid: BLOD.aid })));
-            } catch (e) {
-                e = Array.isArray(e) ? e : [e];
-                debug.error("CC字幕接口", ...e);
-                // 移动端接口
-                return BLOD.jsonCheck(await BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: BLOD.cid, aid: BLOD.aid, type: 1 })));
-            }
-        }
-        /**
          * 获取CC字幕信息
          */
-        async getCaption() {
+        async getCaption(data) {
             try {
-                let data = await this.getCaptionView();
                 BLOD.subtitle = this.captions = data.data.subtitle.subtitles || [];
                 let i = 0; // 指示字幕语言记录
                 this.captions.forEach((d, j) => {

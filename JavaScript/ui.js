@@ -15,7 +15,7 @@
             // 将设置以主键名进行分类，未分类的将单独绘制
             this.menu = ["播放", "弹幕", "修复", "样式", "直播"];
             this.item = [
-                ["widescreen", "electric", "panel", "autoplay", "playerStyle", "forceFlv", "closedCaption", "localDanmaku"],
+                ["widescreen", "electric", "panel", "autoplay", "playerStyle", "forceFlv", "closedCaption", "localDanmaku", "segProgress"],
                 ["danmuku", "livechat", "selectdanmu", "midcrc", "danmakuoff", "concatDanmaku", "commandDm"],
                 ["replyList", "preview", "jointime", "lostvideo", "bvid2av", "like", "heartbeat", "carousel"],
                 ["grobalboard", "headblur", "episodedata", "adloc", "history", "oldreply", "uplist", "indexIcon", "commentjump", "searchHistory", "bangumiCover", "indiRecommand"],
