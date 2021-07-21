@@ -1531,9 +1531,10 @@
             if (!SegProgress.cssInited) {
                 SegProgress.cssInited = true;
                 BLOD.addCss(`.bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
-                            .bilibili-progress-segmentation:hover > div{border-width:0 1px 3px 1px}
+                            .bilibili-progress-segmentation:hover > div > div{border-color:#fb7299;border-style:solid;border-width:0 2px;width:100%;height:3px;top:6px;left:-2px;position:relative;background:#fb7299}
+                            .bilibili-progress-segmentation > div{box-sizing:border-box;border-style:solid;border-color:#fb7299;border-left-width:2px;position:absolute;width:100%;height:6px;top:12px}
                             .bilibili-progress-detail-chapter{top:-96px;position:absolute;width:100%;font-size:17px;font-weight:bold;color:#fff;text-shadow:0 0 5px #000}
-                            .bilibili-progress-seg-highlight{border-style:solid;border-color:#fb7299;border-width:0 1px;position:absolute;width:100%;height:6px;top:12px}
+                            .bilibili-progress-segmentation:last-child > div{border-right-width:2px}
                             .bilibili-player-filter-chapter:hover{color:#00a1d6}
                             .bilibili-player-chapterList{position:relative;height:100%;width:100%;overflow:auto}
                             .bilibili-player-chapterList::-webkit-scrollbar{width:6px}
@@ -1550,7 +1551,7 @@
             }
             let duration = view_points[view_points.length - 1].to;
             let ratio = player.getDuration() / duration / duration;
-            let sliderTracker = document.querySelector(".bpui-slider-tracker");  // 播放器进度条的div
+            let sliderTracker = document.querySelector(".bilibili-player-video-progress .bpui-slider-tracker");  // 播放器进度条的div  // 播放器进度条的div
             let chptName = document.createElement("div"); // 显示在视频预览缩略图上方的看点标题
             chptName.className = "bilibili-progress-detail-chapter";
             document.querySelector(".bilibili-player-video-progress-detail").appendChild(chptName);
@@ -1561,7 +1562,7 @@
                 seg.className = "bilibili-progress-segmentation";
                 seg.style.width = (v.to - v.from) * ratio * 100 + "%";
                 seg.style.left = v.from * ratio * 100 + "%";
-                seg.innerHTML = '<div class="bilibili-progress-seg-highlight"></div>';
+                seg.innerHTML = '<div><div></div></div>';
                 seg.onmouseenter = (content => () => chptName.innerHTML = content)(v.content)
                 sliderTracker.appendChild(seg);
             }
