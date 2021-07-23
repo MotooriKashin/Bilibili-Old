@@ -15,10 +15,21 @@
      */
     class ClosedCaption {
         constructor() {
-            BLOD.ClosedCaption = (data) => this.getCaption(data); // CC字幕入口
+            BLOD.ClosedCaption = (data) => {
+                this.temp = data;
+                this.flag++;
+                this.flag % 2 === 0 && this.getCaption(data); // CC字幕入口
+            }
+            BLOD.xhrhook((xhr, args) => {
+                if (args[1].includes('api.bilibili.com/x/player.so')) {
+                    this.flag++;
+                    this.flag % 2 === 0 && this.getCaption(this.temp);
+                }
+            })
             this.element = {}; // 节点集合
             this.data = {}; // 字幕缓存
             this.resizeRate = 100; // 字幕大小倍率
+            this.flag = 0; // 调用检查
             this.style = `/*对齐，悬停按钮显示菜单*/
             #subtitle-setting-panel>div>* {margin-right: 5px;}
             #bilibili-player-subtitle-btn:hover>#subtitle-setting-panel {display: block!important;}

@@ -42,6 +42,7 @@
                 });
                 if (config.reset.autoplay) setTimeout(() => { window.player && window.player.play && window.player.play() }, 1000) // 自动播放
                 if ((config.reset.closedCaption || config.reset.segProgress) && BLOD.path.name) {
+                    if (config.reset.closedCaption) BLOD.importModule("closedCaption"); // 添加cc字幕
                     //查询有无字幕，暂未支持泰区
                     BLOD.xhr(BLOD.objUrl("https://api.bilibili.com/x/player/v2", { cid: BLOD.cid, aid: BLOD.aid }))
                         .catch(e => {
@@ -52,7 +53,6 @@
                         }).then((videoInfo) => {
                             videoInfo = BLOD.jsonCheck(videoInfo);
                             if (config.reset.closedCaption) {
-                                BLOD.importModule("closedCaption"); // 添加cc字幕
                                 BLOD.ClosedCaption(videoInfo);
                             }
                             if (config.reset.segProgress)
@@ -1640,11 +1640,11 @@
             class timer {
                 static handle
                 static start() { if (!timer.handle) timer.handle = setInterval(refreshState, 3000) }
-                static stop() { if(timer.handle) { clearInterval(timer.handle); timer.handle = null } }
+                static stop() { if (timer.handle) { clearInterval(timer.handle); timer.handle = null } }
             }
             player.addEventListener("video_media_playing", timer.start);
             player.addEventListener("video_media_pause", timer.stop);
-            if(player.getState() == "PLAYING") timer.start();
+            if (player.getState() == "PLAYING") timer.start();
         }
     }
 
