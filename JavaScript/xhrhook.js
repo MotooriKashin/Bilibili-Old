@@ -378,25 +378,6 @@
             Worker.prototype.postMessage = function (aMessage, transferList) {
                 if (aMessage.url && aMessage.url.includes("list.so")) {
                     list_so = this;
-                    let mapDanmaku = Segments => Segments.map((v) => {
-                        let result = {
-                            class: v.pool,
-                            color: v.color,
-                            date: v.ctime,
-                            dmid: v.idStr,
-                            mode: v.mode,
-                            size: v.fontsize,
-                            stime: v.progress / 1000,
-                            text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
-                            uid: v.midHash
-                        };
-                        // 添加图片弹幕信息
-                        if (v.action && v.action.startsWith("picture:")) result.picture = "//" + v.action.split(":")[1];
-                        // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
-                        // b.AH && (e.className = e.className + " " + b.AH);
-                        if (v.styleClass !== undefined) result.AH = v.styleClass;
-                        return result;
-                    });
                     let triggerOnMsg = (danmaku, loadTime, parseTime) => list_so.onmessage({
                         data: {
                             code: 0,
@@ -407,21 +388,15 @@
                             state: 0,
                             textSide: "",
                             total: danmaku.length.toString()
-                        }
-                    });
+                        }});
                     let loadDanmaku = (loadTime) => BLOD.getSegDanmaku().then(Segments => {
                         // 旧播放器需要得到耗时数据(网络请求，数据处理)
                         loadTime = new Date() - loadTime;
                         let parseTime = new Date();
-                        let danmaku = mapDanmaku(Segments);
-                        //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
-                        if (BLOD.aid < 400000) {
-                            BLOD.specialEffects(danmaku);
-                        }
-                        BLOD.sortDmById(danmaku, "dmid");
+                        let danmaku = BLOD.AllDanmaku.format(Segments);
                         parseTime = new Date() - parseTime;
                         triggerOnMsg(danmaku, loadTime, parseTime);
-                        BLOD.toXml(Segments).then((result) => (BLOD.xml = result));
+                        BLOD.toXml(Segments).then(result => BLOD.xml = result);
                     });
                     if (XMLHttpRequest.prototype.pakku_send === undefined) {
                         loadDanmaku(new Date());
@@ -441,7 +416,7 @@
                             if (i != Segments.length)
                                 loadDanmaku(new Date());
                             else {
-                                triggerOnMsg(mapDanmaku(Segments), "(pakku.js)", "(pakku.js)");
+                                triggerOnMsg(BLOD.AllDanmaku.format(Segments), "(pakku.js)", "(pakku.js)");
                                 BLOD.toXml(Segments).then((result) => (BLOD.xml = result));
                             }
                         });
@@ -548,13 +523,10 @@
                         xhr.send = () => { };
 
                         let history = "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + BLOD.cid + "&date=" + param.date;
-                        BLOD.xhr(history, "arraybuffer").then((seg) => {
-                            let segDanmaku = this.protoSeg.decode(new Uint8Array(seg)).elems;
-                            this.toXml(segDanmaku).then((xml) => {
-                                xhr.response = xml;
-                                xhr.dispatchEvent(new ProgressEvent("load"));
-                                BLOD.xml = xml;
-                            });
+                        BLOD.xhr(history, "arraybuffer").then(seg => {
+                            let segDm = this.protoSeg.decode(new Uint8Array(seg)).elems;
+                            BLOD.setDanmaku(BLOD.AllDanmaku.format(segDm));
+                            this.toXml(segDm).then(xml => BLOD.xml = xml);
                         }).catch((e) => {
                             toast.error("载入历史弹幕失败", "请尝试刷新页面");
                             toast.error(e);

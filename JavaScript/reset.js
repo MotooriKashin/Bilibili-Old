@@ -1485,7 +1485,7 @@
         static format(dm, aid) {
             aid = aid || BLOD.aid
             let danmaku = dm.map(function (v) {
-                return {
+                let result = {
                     class: v.pool,
                     color: v.color,
                     date: v.ctime,
@@ -1496,20 +1496,16 @@
                     text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
                     uid: v.midHash
                 };
+                // 添加图片弹幕信息
+                if (v.action && v.action.startsWith("picture:")) result.picture = "//" + v.action.split(":")[1];
+                // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
+                // b.AH && (e.className = e.className + " " + b.AH);
+                if (v.styleClass !== undefined) result.AH = v.styleClass;
+                return result;
             });
             //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
             if (aid && aid < 400000) {
-                let textData;
-                for (let i = 0; i < danmaku.length; i++) {
-                    textData = danmaku[i];
-                    if (textData.text.includes('\n')) {
-                        textData.class = 1;
-                        textData.zIndex = textData.stime * 1000;
-                        if (!(textData.text.includes("█") || textData.text.includes("▂"))) {
-                            textData.zIndex = textData.zIndex + 1;
-                        }
-                    }
-                }
+                BLOD.specialEffects(danmaku);
             }
             BLOD.sortDmById(danmaku, "dmid");
             return danmaku;
