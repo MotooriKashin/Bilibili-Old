@@ -24386,10 +24386,14 @@ function Fa() {
                 var f = new k.a;
                 f.postMessage(b);
                 f.onmessage = function (d) {
-                    if (0 <
-                        c.xd.length) {
-                        d = 0;
-                        for (var e = b.length; d < e; d++) c.xd.Gk(b[d])
+                    if (0 < c.xd.length) {
+                        if (d.data.length > c.xd.length) {
+                            let dm = c.xd.splice(0, c.xd.length);
+                            c.xd.push.apply(c.xd,d.data);
+                            for (let d = 0, e = dm.length; d < e; d++) c.xd.Gk(dm[d]);
+                        } else {
+                            for (let d = 0, e = b.length; d < e; d++) c.xd.Gk(b[d]);
+                        }
                     } else c.xd.push.apply(c.xd, d.data);
                     f.terminate()
                 }
