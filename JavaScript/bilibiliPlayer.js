@@ -6745,25 +6745,7 @@ function Fa() {
                     }
                 };
             e.prototype.EF = function () {
-                var b = this;
-                this.ke.load({
-                    p: this.f.p - 1
-                }, function (c, f, d) {
-                    b.ze();
-                    b.xh();
-                    c && (b.f.aid = c);
-                    b.f.j = f;
-                    b.f.autoplay = !0;
-                    b.f.p = d;
-                    b.f.vq = !0;
-                    b.ce(b.state);
-                    b.track && b.track.view();
-                    c && (b.window.aid = c);
-                    if ("function" === typeof b.window.callSpecPart) try {
-                        b.window.callSpecPart(d, b), b.window.cid =
-                            f
-                    } catch (pa) { }
-                }, null, !0)
+                this.Eq({ p: this.f.p - 1 }, null, !0)
             };
             e.prototype.yF = function (b, c, f) {
                 this.Eq({
