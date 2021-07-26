@@ -59,7 +59,7 @@
                                 new SegProgress(videoInfo); // 添加分段进度条
                         });
                 }
-                MediaControl.run();
+                if(BLOD.path.name) MediaControl.run();
             })
         }
         /**
@@ -1649,7 +1649,7 @@
         static inited = false
         static playList
         static run() {
-            if (player != undefined && player.getPlaylist && player.getPlaylist() != null) {
+            if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
                 if ("mediaSession" in navigator) {
                     let videoData = BLOD.__INITIAL_STATE__.videoData;
                     if (!MediaControl.inited) {
