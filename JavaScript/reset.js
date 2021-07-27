@@ -59,7 +59,6 @@
                                 new SegProgress(videoInfo); // 添加分段进度条
                         });
                 }
-                if(BLOD.path.name) MediaControl.run();
             })
         }
         /**
@@ -1642,42 +1641,6 @@
             player.addEventListener("video_media_playing", timer.start);
             player.addEventListener("video_media_pause", timer.stop);
             if (player.getState() == "PLAYING") timer.start();
-        }
-    }
-
-    class MediaControl {
-        static inited = false
-        static playList
-        static run() {
-            if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
-                if ("mediaSession" in navigator) {
-                    let videoData = BLOD.__INITIAL_STATE__.videoData;
-                    if (!MediaControl.inited) {
-                        MediaControl.inited = true;
-                        MediaControl.playList = player.getPlaylist();
-                        navigator.mediaSession.metadata = new MediaMetadata({
-                            title: videoData.title,
-                            artist: videoData.owner.name,
-                            album: MediaControl.playList[player.getPlaylistIndex()].part,
-                            artwork: [{ src: videoData.pic, sizes: "320x180" }]
-                        });
-                        navigator.mediaSession.setActionHandler('play', () => player.play());
-                        navigator.mediaSession.setActionHandler('pause', () => player.pause());
-                        navigator.mediaSession.setActionHandler('seekbackward', () => player.seek(player.getCurrentTime() - 10));
-                        navigator.mediaSession.setActionHandler('seekforward', () => player.seek(player.getCurrentTime() + 10));
-                        navigator.mediaSession.setActionHandler('previoustrack', () => player.prev());
-                        navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
-                    } else {
-                        let partIndex = player.getPlaylistIndex();
-                        function check() { // 要等到新的分p载入完成，getPlaylistIndex()的值才会更新
-                            if (player.getPlaylistIndex() != partIndex)
-                                navigator.mediaSession.metadata.album = MediaControl.playList[player.getPlaylistIndex()].part;
-                            else setTimeout(check, 1000);
-                        }
-                        check();
-                    }
-                }
-            } else setTimeout(MediaControl.run, 1000);
         }
     }
 })();

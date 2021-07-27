@@ -235,6 +235,7 @@
                         if (jsonp.url.includes("api.bilibili.com/x/web-interface/elec/show")) jsonp.url = BLOD.objUrl(jsonp.url.split("?")[0], Object.assign(BLOD.urlObj(jsonp.url), { aid: 1, mid: 1 }));
                     })
                 }
+                this.mediaControl();
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         /**
@@ -1320,6 +1321,46 @@
                     webpackJsonpFunction = func;
                 }
             });
+        }
+        mediaControl() {
+            if ("mediaSession" in navigator) {
+                function trial(fn) {
+                    let limit = 7;
+                    function task() { if (!fn() && --limit > 0) setTimeout(task, 1000) }
+                    task();
+                }
+                trial(() => {
+                    if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
+                        let videoData = BLOD.__INITIAL_STATE__.videoData;
+                        let playList = player.getPlaylist();
+                        let partIndex = player.getPlaylistIndex();
+                        navigator.mediaSession.metadata = new MediaMetadata({
+                            title: videoData.title,
+                            artist: videoData.owner.name,
+                            album: playList[player.getPlaylistIndex()].part,
+                            artwork: [{ src: videoData.pic, sizes: "320x180" }]
+                        });
+                        navigator.mediaSession.setActionHandler('play', () => player.play());
+                        navigator.mediaSession.setActionHandler('pause', () => player.pause());
+                        navigator.mediaSession.setActionHandler('seekbackward', () => player.seek(player.getCurrentTime() - 10));
+                        navigator.mediaSession.setActionHandler('seekforward', () => player.seek(player.getCurrentTime() + 10));
+                        navigator.mediaSession.setActionHandler('previoustrack', () => player.prev());
+                        navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
+                        BLOD.joinSwitchVideo(() => {
+                            // 要等到新的分p载入完成，getPlaylistIndex()的值才会更新
+                            trial(() => {
+                                let pid = player.getPlaylistIndex();
+                                if (pid != partIndex) {
+                                    partIndex = pid;
+                                    navigator.mediaSession.metadata.album = playList[player.getPlaylistIndex()].part;
+                                    return true;
+                                }
+                            });
+                        });
+                        return true;
+                    }
+                });
+            }
         }
     }
     new Rewrite();
