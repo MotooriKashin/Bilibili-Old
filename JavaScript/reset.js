@@ -1518,7 +1518,6 @@
      * @description 实现分段进度条功能
      */
     class SegProgress {
-        static cssInited = false
         constructor(resp) {
             if (!resp.data.view_points || resp.data.view_points.length == 0) return;
             this.init(resp.data.view_points);
@@ -1634,7 +1633,6 @@
             player.addEventListener("video_media_seeked", refreshState);
             chptPanel.onmouseenter = refreshState;
             class timer {
-                static handle
                 static start() { if (!timer.handle) timer.handle = setInterval(refreshState, 3000) }
                 static stop() { if (timer.handle) { clearInterval(timer.handle); timer.handle = null } }
             }
@@ -1643,4 +1641,5 @@
             if (player.getState() == "PLAYING") timer.start();
         }
     }
+    SegProgress.cssInited = false;
 })();
