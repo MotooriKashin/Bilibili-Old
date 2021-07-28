@@ -235,7 +235,10 @@
                         if (jsonp.url.includes("api.bilibili.com/x/web-interface/elec/show")) jsonp.url = BLOD.objUrl(jsonp.url.split("?")[0], Object.assign(BLOD.urlObj(jsonp.url), { aid: 1, mid: 1 }));
                     })
                 }
-                this.mediaControl();
+                this.mediaControl(__INITIAL_STATE__.videoData.title,
+                    __INITIAL_STATE__.videoData.name,
+                    (pid, playList) => playList[pid].part,
+                    () => [{ src: __INITIAL_STATE__.videoData.pic, sizes: "320x180" }]);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         /**
@@ -326,8 +329,11 @@
                         args[1] = "https://comment.bilibili.com/playtag,2-2?html5=1";
                         this.pgcRecommend();
                     }
-
                 })
+                this.mediaControl(__INITIAL_STATE__.mediaInfo.title,
+                    __INITIAL_STATE__.mediaInfo.jp_title,
+                    pid => __INITIAL_STATE__.epList[pid].index_title,
+                    pid => [{ src: __INITIAL_STATE__.epList[pid].cover, sizes: "960x600" }]);
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         /**
@@ -1322,7 +1328,7 @@
                 }
             });
         }
-        mediaControl() {
+        mediaControl(title, artist, chapterName, coverUrl) {
             if ("mediaSession" in navigator) {
                 function trial(fn) {
                     let limit = 7;
@@ -1331,14 +1337,13 @@
                 }
                 trial(() => {
                     if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
-                        let videoData = BLOD.__INITIAL_STATE__.videoData;
                         let playList = player.getPlaylist();
                         let partIndex = player.getPlaylistIndex();
                         navigator.mediaSession.metadata = new MediaMetadata({
-                            title: videoData.title,
-                            artist: videoData.owner.name,
-                            album: playList[player.getPlaylistIndex()].part,
-                            artwork: [{ src: videoData.pic, sizes: "320x180" }]
+                            title: title,
+                            artist: artist,
+                            album: chapterName(partIndex, playList),
+                            artwork: coverUrl(partIndex, playList)
                         });
                         navigator.mediaSession.setActionHandler('play', () => player.play());
                         navigator.mediaSession.setActionHandler('pause', () => player.pause());
@@ -1352,7 +1357,8 @@
                                 let pid = player.getPlaylistIndex();
                                 if (pid != partIndex) {
                                     partIndex = pid;
-                                    navigator.mediaSession.metadata.album = playList[player.getPlaylistIndex()].part;
+                                    navigator.mediaSession.metadata.album = chapterName(partIndex, playList);
+                                    navigator.mediaSession.metadata.artwork = coverUrl(partIndex, playList);
                                     return true;
                                 }
                             });
