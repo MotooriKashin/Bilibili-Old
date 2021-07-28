@@ -238,7 +238,8 @@
                 this.mediaControl(__INITIAL_STATE__.videoData.title,
                     __INITIAL_STATE__.videoData.name,
                     (pid, playList) => playList[pid].part,
-                    () => [{ src: __INITIAL_STATE__.videoData.pic, sizes: "320x180" }]);
+                    () => [{ src: __INITIAL_STATE__.videoData.pic, sizes: "320x180" }],
+                    () => player.getPlaylistIndex());
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         /**
@@ -330,10 +331,14 @@
                         this.pgcRecommend();
                     }
                 })
+                let epListMap = [];
+                __INITIAL_STATE__.epList.forEach((v, i) => epListMap[v.cid] = i);
                 this.mediaControl(__INITIAL_STATE__.mediaInfo.title,
                     __INITIAL_STATE__.mediaInfo.jp_title,
                     pid => __INITIAL_STATE__.epList[pid].index_title,
-                    pid => [{ src: __INITIAL_STATE__.epList[pid].cover, sizes: "960x600" }]);
+                    pid => [{ src: __INITIAL_STATE__.epList[pid].cover, sizes: "960x600" }],
+                    () => epListMap[BLOD.cid]);
+                Object.defineProperty(window, "pageno", { get: () => epListMap[BLOD.cid] + 1 });
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("页面重写", ...e); }
         }
         /**
@@ -1328,7 +1333,7 @@
                 }
             });
         }
-        mediaControl(title, artist, chapterName, coverUrl) {
+        mediaControl(title, artist, chapterName, coverUrl, getPlaylistIndex) {
             if ("mediaSession" in navigator) {
                 function trial(fn) {
                     let limit = 7;
@@ -1338,7 +1343,7 @@
                 trial(() => {
                     if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
                         let playList = player.getPlaylist();
-                        let partIndex = player.getPlaylistIndex();
+                        let partIndex = getPlaylistIndex();
                         navigator.mediaSession.metadata = new MediaMetadata({
                             title: title,
                             artist: artist,
@@ -1354,7 +1359,7 @@
                         BLOD.joinSwitchVideo(() => {
                             // 要等到新的分p载入完成，getPlaylistIndex()的值才会更新
                             trial(() => {
-                                let pid = player.getPlaylistIndex();
+                                let pid = getPlaylistIndex();
                                 if (pid != partIndex) {
                                     partIndex = pid;
                                     navigator.mediaSession.metadata.album = chapterName(partIndex, playList);
