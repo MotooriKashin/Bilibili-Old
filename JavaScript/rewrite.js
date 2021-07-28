@@ -673,6 +673,7 @@
             data = `<div class="page-container">${bars + upinfo + head + body + tag}</div>`; // 总合成
             delete window.webpackJsonp; // 移除原生页面残留
             BLOD.write(this.oldScript(BLOD.GM.getResourceText("read")).replace(`<div class="page-container"></div>`, data)); // 重写专栏
+            if (config.reset.oldreply) BLOD.addCss(this.oldreply); // 修正旧版评论样式
         }
         /**
          * 替换原生脚本，不直接修改页面框架
