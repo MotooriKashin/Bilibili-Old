@@ -14,6 +14,20 @@
 			"type": "shell",
 			"command": "node",
 			"args": [
+				"${workspaceFolder}\\build\\resource.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"tsc"
+			],
+			"detail": "生成@resource清单",
+			"label": "resource",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
 				"${workspaceFolder}\\build\\build.js"
 			],
 			"group": {
@@ -21,7 +35,7 @@
 				"isDefault": true
 			},
 			"dependsOn": [
-				"tsc"
+				"resource"
 			],
 			"detail": "生成最终文件",
 			"label": "build",
