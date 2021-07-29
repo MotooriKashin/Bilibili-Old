@@ -90,6 +90,8 @@ declare namespace API {
     const Handler: string;
     const Name: string;
     const Virsion: string;
+    let xhr: xhr;
+    let toast: toast;
     /**
      * 导入模块
      * @param moduleName 模块名字
@@ -157,9 +159,9 @@ interface GMxhrResponse {
      */
     responseHeaders: any;
     /**
-     * the response data as object if details.responseType was set
+     * the response data as object if details.responseType was set: ArrayBuffer | Blob | JSON | string
      */
-    response: ArrayBuffer | Blob | JSON | string;
+    response: any;
     /**
      * the response data as XML document
      */
@@ -326,9 +328,19 @@ interface GMxhrDetails {
      */
     onload?: (response: GMxhrResponse) => void;
 }
-
 interface ModuleValue {
     [name: string]: any
+}
+interface xhr {
+    (details: xhrDetails): Promise<any>;
+    GM?: (details: GMxhrDetails) => Promise<any>;
+}
+interface toast {
+    (...msg: string[]): void;
+    info?: (...msg: string[]) => void;
+    success?: (...msg: string[]) => void;
+    warning?: (...msg: string[]) => void;
+    error?: (...msg: string[]) => void;
 }
 declare namespace config {
     let toast: number;
