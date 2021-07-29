@@ -28,7 +28,8 @@
 			"type": "shell",
 			"command": "node",
 			"args": [
-				"${workspaceFolder}\\build\\build.js"
+				"${workspaceFolder}\\build\\build.js",
+				"${workspaceFolder}"
 			],
 			"group": {
 				"kind": "build",
@@ -39,6 +40,34 @@
 			],
 			"detail": "生成最终文件",
 			"label": "build",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\build\\build-local.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"resource"
+			],
+			"detail": "生成本地版本",
+			"label": "build-local",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\build\\build-online.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"resource"
+			],
+			"detail": "生成在线版本",
+			"label": "build-online",
 			"problemMatcher": []
 		},
 		{
