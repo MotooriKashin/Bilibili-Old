@@ -7,7 +7,7 @@ const del = ["index.js", "comment.js", "bilibiliPlayer.js"];
 /**
  * 要求哈希表的子目录
  */
-const path = ["HTML", "Json", "JavaScript"]
+const path = ["CSS", "image", "HTML", "Json", "JavaScript"]
 
 /**
  * 获取文件的`commit`哈希值

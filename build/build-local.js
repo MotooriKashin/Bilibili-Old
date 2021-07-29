@@ -17,7 +17,12 @@ fs.readFile("./JavaScript/index.js", "utf-8", (err, data) => {
                 break;
             case "json": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/Json/${d}\r\n`;
                 break;
-            case "html": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/HTML/${d}\r\n`
+            case "html": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/HTML/${d}\r\n`;
+                break;
+            case "css": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/CSS/${d}\r\n`;
+                break;
+            default: s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/image/${d}\r\n`;
+                break;
         }
         return s;
     }, content) + "// ==/UserScript==\r\n" + data.replace("\"use strict\";", "");
