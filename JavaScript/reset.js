@@ -232,7 +232,7 @@
             BLOD.download.right(msg.target);
         }
         // 移除登录弹窗
-        if (!BLOD.uid && (/van-popover-\d+/.test(msg.target.id) || /lt-row/.test(msg.target.className))) msg.target.style.opacity = 0;
+        if (!BLOD.uid && (/van-popover-\d+/.test(msg.target.id) || /lt-row/.test(msg.target.className))) msg.target.style.display = 'none';
     });
 
     /**

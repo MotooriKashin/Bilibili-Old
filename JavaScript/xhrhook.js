@@ -100,6 +100,15 @@
                         }
                     });
                 }
+                // // 动态跳转向相簿
+                // if (args[1].includes('api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail')) {
+                //     xhr.addEventListener('readystatechange', () => {
+                //         if (xhr.readyState === 4) {
+                //             let response = JSON.parse(xhr.responseText);
+                //             location.href = `https://h.bilibili.com/${response.data.card.desc.rid_str}`;
+                //         }
+                //     });
+                // }
                 // 监听视频链接
                 if (args[1].includes("/playurl?")) {
                     if (!obj.sign) {
@@ -388,7 +397,8 @@
                             state: 0,
                             textSide: "",
                             total: danmaku.length.toString()
-                        }});
+                        }
+                    });
                     let loadDanmaku = (loadTime) => BLOD.getSegDanmaku().then(Segments => {
                         // 旧播放器需要得到耗时数据(网络请求，数据处理)
                         loadTime = new Date() - loadTime;
