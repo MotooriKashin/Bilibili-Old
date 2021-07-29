@@ -1,4 +1,4 @@
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-pass-green.svg?longCache=true) ![Chrome 89](https://img.shields.io/badge/Google_Chrome_91-pass-green.svg?longCache=true) ![Firefox 83](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.10](https://img.shields.io/badge/Tampermonkey_4.13-pass-green.svg?longCache=true)
+![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-pass-green.svg?longCache=true) ![Chrome 91](https://img.shields.io/badge/Google_Chrome_91-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.13-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面，即2020年改版之前的页面，尤其是还原当时的播放器样式。
 
@@ -97,7 +97,7 @@ Tampermonkey BETA 4.10.6137
 - `GM_xmlhttpRequest`（`@connect`）：Tampermonkey提供的跨域Ajax。
   - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：用于获取缓存的失效视频标题和封面
   - [mcbbs](https://www.mcbbs.net)：用于获取 APP 端的鉴权`access_key`，只在解除限制功能同时开启“会员授权”时
-  - [bilibili](https://www.bilibili.com)：用于获取无[CROS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限 B 站数据
+  - [bilibili](https://www.bilibili.com)：用于获取无[CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限 B 站数据
 - `GM_getResourceURL`/`GM_getResourceText`（`@resource`）：脚本运行的模块依赖，全部保存在Tampermonkey本地。
     - html：旧版网页框架，修改自[Wayback Machine](https://archive.org/web/)缓存
     - json：各种配置数据，包括脚本默认设置
@@ -108,8 +108,8 @@ Tampermonkey BETA 4.10.6137
 - [toastr](https://github.com/CodeSeven/toastr/)：实现通知模块
   
 脚本使用了部分原生脚本历史版本并可能进行了修改  
-- [comment.min.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/comment.min.js) 2019 年 12 月的备份，进行了部分修改用以找回新版移除评论区小页码区域及恢复旧版评论排序
-- [video.min.js](https://github.com/MotooriKashin/Bilibili-Old/tree/master/src/video.min.js) 2019 年 12 月的备份，进行了部分修改以支持 4K、HDR 清晰度
+- [comment.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/JavaScript/comment.js) 2019 年 12 月的备份，进行了部分修改用以找回新版移除评论区小页码区域及恢复旧版评论排序
+- [video.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/JavaScript/video.js) 2019 年 12 月的备份，进行了部分修改以支持 4K、HDR 清晰度
 
 ---
 
