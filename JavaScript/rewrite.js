@@ -236,7 +236,7 @@
                     })
                 }
                 this.mediaControl(__INITIAL_STATE__.videoData.title,
-                    __INITIAL_STATE__.videoData.name,
+                    __INITIAL_STATE__.videoData.owner.name,
                     (pid, playList) => playList[pid].part,
                     () => [{ src: __INITIAL_STATE__.videoData.pic, sizes: "320x180" }],
                     () => player.getPlaylistIndex());
