@@ -452,7 +452,6 @@
                 }
             })
             if (BLOD.mid && config.reset.jointime) {
-                // 添加注册时间
                 try {
                     let data = await xhr.GM(BLOD.objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": BLOD.mid }));
                     data = BLOD.jsonCheck(data);
@@ -461,13 +460,12 @@
                     if (BLOD.big) toast(data.card.name + " mid：" + BLOD.mid, "注册时间：" + jointime, "生日：" + data.card.birthday);
                     debug.log("注册时间", data.card.name, jointime);
                     document.addEventListener("DOMNodeInserted", (msg) => {
-                        let birthday = document.querySelector(".birthday");
-                        if (birthday) {
-                            if (document.querySelector(".jointime")) return;
+                        let node = document.querySelector(".user-info-title");
+                        if (node) {
+                            if (document.querySelector(".info-jointime")) return;
                             else {
-                                let div = BLOD.addElement("div", { class: "item jointime" }, birthday.parentNode);
-                                div.innerHTML = `<span class="icon"></span><span class="text">${jointime}</span>`;
-                                BLOD.addCss(".user .info .meta .row {height : 88px;white-space : normal;}.user .info .jointime .icon {background-position : -209px -84px;}.user .info .jointime .text {color : #00a1d6;}}")
+                                let span = BLOD.addElement("span", { class: "info-jointime" }, node);
+                                span.innerText = jointime;
                             }
                         }
                     });
