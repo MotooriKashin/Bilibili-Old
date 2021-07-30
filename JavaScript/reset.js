@@ -127,7 +127,7 @@
             this.location(); // 优先处理地址栏
             BLOD.joinNormal(() => this.aitem()); // 正常回调
             BLOD.joinSwitchVideo(() => { this.location(); this.aitem(); }); // 切P回调
-            BLOD.joinNode(() => { this.aitem() }); // 节点变动回调
+            //BLOD.joinNode(() => { this.aitem() }); // 节点变动回调
         }
         /**
          * 处理地址栏
