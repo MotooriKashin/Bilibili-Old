@@ -141,6 +141,7 @@
     BLOD.importModule("ui") // UI模块
 
     normals.forEach(d => d());
-    document.addEventListener("DOMNodeInserted", (msg) => { nodes.forEach(d => d(msg)) });
-
+    (new MutationObserver(d => d.forEach(d => {
+        d.addedNodes[0] && nodes.forEach(f => f({ target: d.addedNodes[0], relatedNode: d.addedNodes[0].parentNode }))
+    }))).observe(document, { childList: true, subtree: true })
 })();
