@@ -23,36 +23,36 @@
     });
     class API {
         /**
+         * 基础模块，依序载入
+         */
+        static baseModule = ["xhr.js", "toast.js"];
+        /**
          * 引入模块列表，用于查重
          */
-        static modules;
+        static modules = [];
         /**
          * 本地模块列表
          */
-        static moduleList;
+        static moduleList = [];
         /**
          * 页面`head`
          */
         static cssFlag;
-        GM;
-        Handler;
-        Name;
-        Virsion;
+        GM = GM;
+        Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
+        Name = GM.info.script.name;
+        Virsion = GM.info.script.version;
         constructor() {
-            API.modules = [];
             API.moduleList = GM.info.script.resources.reduce((s, d) => { s.push(d.name); return s; }, []);
-            this.GM = GM;
-            this.Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
-            this.Name = GM.info.script.name;
-            this.Virsion = GM.info.script.version;
-            API.initConfig();
+            API.moduleList[0] ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
+            API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
         }
         /**
          * 获取模块
          * @param name 模块名字
          */
         static getModule(name) {
-            return GM.getValue("module")[name] || GM.getResourceText(name);
+            return GM.getValue("module", {})[name] || GM.getResourceText(name);
         }
         /**
          * 脚本初始化
@@ -62,6 +62,45 @@
             Object.entries(localConfig).forEach(d => config[d[0]] = d[1]);
             Object.entries(this.getModule('config')).forEach(d => {
                 config.hasOwnProperty(d[0]) || (config[d[0]] = d[1][0]);
+            });
+        }
+        /**
+         * 初始化基础模块
+         */
+        static initModule() {
+            let host = "https://cdn.jsdelivr.net/gh/MotooriKashin@ts/Bilibili-Old";
+            let module = {};
+            API.baseModule.forEach((d, i, o) => {
+                let obj = {
+                    url: "",
+                    onload: data => {
+                        module[d] = data.response;
+                        if (i === o.length - 1) {
+                            GM.setValue("module", data.response);
+                            alert(`${GM.info.script.name}：脚本初始化成功`);
+                        }
+                    },
+                    onerror: d => console.error(`${GM.info.script.name}：脚本${d}加载失败！`)
+                };
+                switch (d.split(".")[1]) {
+                    case "js":
+                        obj.url = `${host}/JavaScript/${d}`;
+                        break;
+                    case "json":
+                        obj.url = `${host}/Json/${d}`;
+                        obj.responseType = "json";
+                        break;
+                    case "html":
+                        obj.url = `${host}/HTML/${d}`;
+                        break;
+                    case "css":
+                        obj.url = `${host}/CSS/${d}`;
+                        break;
+                    default:
+                        obj.url = `${host}/image/${d}`;
+                        break;
+                }
+                GM.xmlHttpRequest(obj);
             });
         }
         /**

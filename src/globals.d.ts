@@ -331,23 +331,24 @@ interface GMxhrDetails {
 interface ModuleValue {
     [name: string]: any
 }
-interface xhr {
-    (details: xhrDetails): Promise<any>;
-    GM?: (details: GMxhrDetails) => Promise<any>;
-}
-interface toast {
-    (...msg: string[]): void;
-    info?: (...msg: string[]) => void;
-    success?: (...msg: string[]) => void;
-    warning?: (...msg: string[]) => void;
-    error?: (...msg: string[]) => void;
-}
-declare namespace config {
-    let toast: number;
-}
 declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
 declare function GM_getResourceText(name: string): string;
 declare function GM_getResourceURL(name: string): string;
 declare function GM_getValue<T>(name: string, defaultValue?: T): T;
 declare function GM_setValue<T>(name: string, value: T): void;
 declare function GM_deleteValue(name: string): void;
+
+interface xhr {
+    (details: xhrDetails): Promise<any>;
+    GM(details: GMxhrDetails): Promise<any>;
+}
+interface toast {
+    (...msg: string[]): void;
+    info(...msg: string[]): void;
+    success(...msg: string[]): void;
+    warning(...msg: string[]): void;
+    error(...msg: string[]): void;
+}
+declare namespace config {
+    let toast: number;
+}
