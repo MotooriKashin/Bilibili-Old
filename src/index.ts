@@ -37,21 +37,24 @@
          * 页面`head`
          */
         static cssFlag: number;
+        local: boolean = false;
         GM = GM;
         Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
         Name: string = GM.info.script.name;
         Virsion: string = GM.info.script.version;
         constructor() {
             API.moduleList = GM.info.script.resources.reduce((s: string[], d) => { s.push(d.name); return s }, []);
-            API.moduleList[0] ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue<ModuleValue>("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
-            API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
+            this.local = API.moduleList[0] ? false : true;
+            !this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue<ModuleValue>("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
+            API.moduleList[0] && API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
+            config.developer && (unsafeWindow.BLOD = this);
         }
         /**
          * 获取模块
          * @param name 模块名字
          */
         static getModule(name: string) {
-            return GM.getValue<ModuleValue>("module", {})[name] || GM.getResourceText(name);
+            return GM.getValue<ModuleValue>("module", {})[name] || ((name.includes("json") && GM.getResourceText(name)) ? JSON.parse(GM.getResourceText(name)) : GM.getResourceText(name));
         }
         /**
          * 脚本初始化
@@ -59,7 +62,7 @@
         static initConfig() {
             let localConfig = GM.getValue<{ [name: string]: number }>('config', {});
             Object.entries(localConfig).forEach(d => config[d[0]] = d[1]);
-            Object.entries<[number, string, string]>(this.getModule('config')).forEach(d => {
+            Object.entries<[number, string, string]>(this.getModule('config.json')).forEach(d => {
                 config.hasOwnProperty(d[0]) || (config[d[0]] = d[1][0]);
             })
         }
@@ -75,7 +78,7 @@
                     onload: data => {
                         module[d] = data.response;
                         if (i === o.length - 1) {
-                            GM.setValue<{ module: any }>("module", data.response);
+                            GM.setValue<ModuleValue>("module", module);
                             alert(`${GM.info.script.name}：脚本初始化成功`);
                         }
                     },

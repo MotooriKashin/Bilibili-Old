@@ -23,17 +23,17 @@ class Toast {
     /**
      * 未呈现通知计数
      */
-    static count;
+    static count = 0;
     /**
      * 动画呈现帧数
      */
-    static sence;
+    static sence = 60;
     /**
      * 配置数据代理，用来监听修改
      */
     config;
     constructor() {
-        Toast.config = GM.getValue("toast", {});
+        Toast.config = GM.getValue("toast", { timeout: 4, step: 250 });
         this.config = new Proxy(Toast.config, {
             set: (_target, p, value) => {
                 Toast.config[p] = value;
@@ -42,8 +42,6 @@ class Toast {
             },
             get: (_target, p) => Toast.config[p]
         });
-        Toast.count = 0;
-        Toast.sence = 60;
         Toast.init();
     }
     static init() {
@@ -112,14 +110,10 @@ class Toast {
             s = s + (i ? "<br />" : "") + String(d);
             return s;
         }, "");
-        msg.forEach(d => {
-            d = d || "";
-            d = String(d);
-            div.innerHTML = div.innerHTML ? div.innerHTML + "<br />" + d : div.innerHTML + d;
-        });
         return div;
     }
 }
+new Toast();
 const toast = (...msg) => Toast.show("info", ...msg);
 toast.info = (...msg) => Toast.show("info", ...msg);
 toast.success = (...msg) => Toast.show("success", ...msg);
