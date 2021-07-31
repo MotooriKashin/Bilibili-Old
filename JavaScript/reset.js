@@ -125,9 +125,13 @@
             this.url = [];
 
             this.location(); // 优先处理地址栏
-            BLOD.joinNormal(() => this.aitem()); // 正常回调
+            BLOD.joinNormal(() => {
+                window.onload = () => {
+                    this.aitem(); // 页面载入完成回调
+                    BLOD.joinNode((e) => this.aitem(e.target));// 节点变动回调
+                }
+            });
             BLOD.joinSwitchVideo(() => { this.location(); this.aitem(); }); // 切P回调
-            //BLOD.joinNode(() => { this.aitem() }); // 节点变动回调
         }
         /**
          * 处理地址栏
@@ -143,9 +147,12 @@
         }
         /**
          * 处理a标签
+         * @param {HTMLElement} [node] 插入节点
          */
-        aitem() {
-            document.querySelectorAll("a").forEach(d => {
+        aitem(node = document) {
+            let arr = node.querySelectorAll ? node.querySelectorAll("a") : [];
+            node.tagName == "A" && arr.push && arr.push(node);
+            arr.forEach(d => {
                 if (d.href && d.href.includes("bilibili.tv")) d.href = d.href.replace("bilibili.tv", "bilibili.com"); // 修复tv域名残留
                 if (d.href && d.href.includes("www.bilibili.com/tag")) d.href = d.href.replace("tag", "topic"); // 修复topic链接
                 if (d.href && d.href.includes("account.bilibili.com/login?act=exit")) {
