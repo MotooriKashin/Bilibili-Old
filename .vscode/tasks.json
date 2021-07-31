@@ -69,16 +69,6 @@
 			"detail": "生成在线版本",
 			"label": "build-online",
 			"problemMatcher": []
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "tsconfig.json",
-			"option": "watch",
-			"problemMatcher": [
-				"$tsc-watch"
-			],
-			"detail": "监视并编译模块",
-			"label": "tsc: 监视"
 		}
 	]
 }
