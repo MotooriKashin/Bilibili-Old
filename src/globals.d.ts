@@ -92,13 +92,14 @@ declare namespace API {
     const Virsion: string;
     let xhr: xhr;
     let toast: toast;
+    let debug: debug;
     /**
      * 导入模块
      * @param moduleName 模块名字
      * @param args 传递给模块的变量
      * @returns 模块返回值或者提示信息
      */
-    function importModule(moduleName?: string | undefined, args?: { [key: string]: object; }): any;
+    function importModule(moduleName?: string, args?: { [key: string]: object; }): any;
     /**
      * 获取`cookies`信息
      * @returns `cookies`对象
@@ -114,7 +115,7 @@ declare namespace API {
      * @param replaced 被替换的节点，忽略父节点参数
      * @returns 所添加的节点
      */
-    function addElement(div: string, attribute?: { [name: string]: string; } | undefined, parrent?: HTMLElement | undefined, innerHTML?: string | undefined, top?: boolean | undefined, replaced?: HTMLElement | undefined): void | HTMLElement;
+    function addElement(div: string, attribute?: { [name: string]: string; }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
     /**
      * 移除或隐藏页面节点
      * @param name 检索名称
@@ -123,13 +124,13 @@ declare namespace API {
      * @param index 检索结果有复数个时的序号
      * @param callback 移除后的回调函数
      */
-    function removeElement(name: string, type: 'class' | 'id' | 'tag', hidden?: boolean, index?: number, callback?: (() => void) | undefined): void;
+    function removeElement(name: string, type: 'class' | 'id' | 'tag', hidden?: boolean, index?: number, callback?: () => void): void;
     /**
      * 添加CSS样式
      * @param text 样式
      * @param id 唯一ID，防止重复
      */
-    function addCss(text: string, id?: string | undefined): number | undefined;
+    function addCss(text: string, id?: string): number;
     /**
      * json化xhr返回值
      * @param data xhr返回的response
@@ -142,7 +143,7 @@ declare namespace API {
      * @param type 是否包含年月日
      * @returns 时:分:秒 | 年-月-日 时:分:秒
      */
-    function timeFormat(time: number | undefined, type?: boolean): string;
+    function timeFormat(time?: number, type?: boolean): string;
     /**
      * 格式化字节
      * @param size 字节/B
@@ -387,13 +388,24 @@ interface xhr {
     (details: xhrDetails): Promise<any>;
     GM(details: GMxhrDetails): Promise<any>;
 }
+interface debug {
+    (...data: string[]): void;
+    log(...data: string[]): void;
+    info(...data: string[]): void;
+    debug(...data: string[]): void;
+    warn(...data: string[]): void;
+    error(...data: string[]): void;
+    msg(time: number, text: string, red?: string, yellow?: string, replace?: boolean, callback?: (() => {})): void;
+}
 interface toast {
     (...msg: string[]): void;
     info(...msg: string[]): void;
     success(...msg: string[]): void;
     warning(...msg: string[]): void;
     error(...msg: string[]): void;
+    config: { timeout: number, step: number }
 }
 declare namespace config {
     let toast: number;
+    let preview: number;
 }

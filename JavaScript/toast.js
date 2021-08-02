@@ -32,11 +32,11 @@ class Toast {
         let config = GM.getValue("toast", { timeout: 4, step: 250 });
         Toast.config = new Proxy(config, {
             set: (_target, p, value) => {
-                Toast.config[p] = value;
-                GM.setValue("toast", Toast.config);
+                config[p] = value;
+                GM.setValue("toast", config);
                 return true;
             },
-            get: (_target, p) => Toast.config[p]
+            get: (_target, p) => config[p]
         });
         Toast.init();
     }
@@ -115,4 +115,5 @@ toast.info = (...msg) => Toast.show("info", ...msg);
 toast.success = (...msg) => Toast.show("success", ...msg);
 toast.warning = (...msg) => Toast.show("warning", ...msg);
 toast.error = (...msg) => Toast.show("error", ...msg);
+toast.config = Toast.config;
 API.toast = toast;

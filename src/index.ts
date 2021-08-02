@@ -24,7 +24,7 @@
         /**
          * 基础模块，依序载入
          */
-        static baseModule: string[] = ["xhr.js", "toast.js"];
+        static baseModule: string[] = ["xhr.js", "toast.js", "format.js", "debug.js"];
         /**
          * 引入模块列表，用于查重
          */
@@ -42,12 +42,13 @@
         Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
         Name: string = GM.info.script.name;
         Virsion: string = GM.info.script.version;
+        config: { [name: string]: number } = config;
         constructor() {
             API.moduleList = GM.info.script.resources.reduce((s: string[], d) => { s.push(d.name); return s }, []);
-            this.local = API.moduleList[0] ? false : true;
-            !this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue<ModuleValue>("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
+            this.local = API.moduleList[0] ? true : false;
+            this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue<ModuleValue>("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
             API.moduleList[0] && API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
-            config.developer && (unsafeWindow.BLOD = this);
+            (this.local || config.developer) && (unsafeWindow.BLOD = this);
         }
         /**
          * 获取模块
@@ -139,7 +140,7 @@
          * @param replaced 被替换的节点，忽略父节点参数
          * @returns 所添加的节点
          */
-        addElement(div: string, attribute?: { [name: string]: string }, parrent?: HTMLElement, innerHTML?: string, top?: boolean, replaced?: HTMLElement) {
+        addElement(div: string, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element) {
             let element = document.createElement(div);
             attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
             parrent = parrent || document.body;

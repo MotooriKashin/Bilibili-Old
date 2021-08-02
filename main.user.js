@@ -45,7 +45,7 @@
         /**
          * 基础模块，依序载入
          */
-        static baseModule = ["xhr.js", "toast.js"];
+        static baseModule = ["xhr.js", "toast.js", "format.js", "debug.js"];
         /**
          * 引入模块列表，用于查重
          */
@@ -63,12 +63,13 @@
         Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
         Name = GM.info.script.name;
         Virsion = GM.info.script.version;
+        config = config;
         constructor() {
             API.moduleList = GM.info.script.resources.reduce((s, d) => { s.push(d.name); return s; }, []);
-            this.local = API.moduleList[0] ? false : true;
-            !this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
+            this.local = API.moduleList[0] ? true : false;
+            this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
             API.moduleList[0] && API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
-            config.developer && (unsafeWindow.BLOD = this);
+            (this.local || config.developer) && (unsafeWindow.BLOD = this);
         }
         /**
          * 获取模块

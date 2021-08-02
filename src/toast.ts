@@ -2,7 +2,7 @@ class Toast {
     /**
      * 配置数据
      */
-    static config: { [name: string]: any };
+    static config: { timeout: number, step: number };
     /**
      * 通知节点，初始化专用
      */
@@ -28,14 +28,14 @@ class Toast {
      */
     static sence: number = 60;
     constructor() {
-        let config = GM.getValue<{}>("toast", { timeout: 4, step: 250 });
+        let config = GM.getValue<{ timeout: number, step: number }>("toast", { timeout: 4, step: 250 });
         Toast.config = new Proxy(config, {
-            set: (_target, p: string, value) => {
-                Toast.config[p] = value;
-                GM.setValue<{}>("toast", Toast.config);
+            set: (_target, p: "timeout" | "step", value) => {
+                config[p] = value;
+                GM.setValue<{ timeout: number, step: number }>("toast", config);
                 return true;
             },
-            get: (_target, p: string) => Toast.config[p]
+            get: (_target, p: "timeout" | "step") => config[p]
         });
         Toast.init();
     }
@@ -110,4 +110,5 @@ toast.info = (...msg: string[]) => Toast.show("info", ...msg);
 toast.success = (...msg: string[]) => Toast.show("success", ...msg);
 toast.warning = (...msg: string[]) => Toast.show("warning", ...msg);
 toast.error = (...msg: string[]) => Toast.show("error", ...msg);
+toast.config = Toast.config;
 API.toast = toast;

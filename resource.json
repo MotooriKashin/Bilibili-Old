@@ -1,5 +1,7 @@
 {
-	"config.json": "fcf165baeb6ff3bc6cbb2a7b86679d49e768668c",
-	"toast.js": "5d0869978cfa544e320ae24ef749e016891bb736",
+	"config.json": "49b0f3b2e9f4aabb4328af56a4a6c8cf6b392293",
+	"debug.js": "49b0f3b2e9f4aabb4328af56a4a6c8cf6b392293",
+	"format.js": "31971f7d2debb38b5fdb525fe701094c858b9ca1",
+	"toast.js": "49b0f3b2e9f4aabb4328af56a4a6c8cf6b392293",
 	"xhr.js": "5d0869978cfa544e320ae24ef749e016891bb736"
 }
