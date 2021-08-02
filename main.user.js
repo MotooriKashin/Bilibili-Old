@@ -17,11 +17,11 @@
 // @grant        GM_deleteValue
 // @run-at       document-start
 // @license      MIT
-// @resource     config.json https://github.com/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/Json/config.json
-// @resource     debug.js https://github.com/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/debug.js
-// @resource     format.js https://github.com/MotooriKashin/Bilibili-Old@31971f7d2debb38b5fdb525fe701094c858b9ca1/JavaScript/format.js
-// @resource     toast.js https://github.com/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/toast.js
-// @resource     xhr.js https://github.com/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/xhr.js
+// @resource     config.json https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/Json/config.json
+// @resource     debug.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/debug.js
+// @resource     format.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31971f7d2debb38b5fdb525fe701094c858b9ca1/JavaScript/format.js
+// @resource     toast.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/toast.js
+// @resource     xhr.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/xhr.js
 // ==/UserScript==
 
 GM.xmlHttpRequest = GM_xmlhttpRequest;
