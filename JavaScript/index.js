@@ -5,6 +5,9 @@ GM.getResourceURL = GM_getResourceURL;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
+/**
+ * 核心模块
+ */
 const baseModule = ["xhr.js", "toast.js", "format.js", "debug.js"];
 /**
  * 脚本配置数据
@@ -34,13 +37,37 @@ class Main {
      * 页面`head`
      */
     static cssFlag;
-    local = false;
     GM = GM;
     Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
     Name = GM.info.script.name;
     Virsion = GM.info.script.version;
     config = config;
     constructor() {
+        /**
+         * 读取模块列表
+         */
+        Main.moduleList = GM.info.script.resources.reduce((s, d) => { s.push(d.name); return s; }, []);
+        /**
+         * 初始化脚本设置
+         */
+        Main.initConfig();
+        /**
+         * 开发者模式暴露核心变量
+         */
+        config.developer && (unsafeWindow.API = this);
+        /**
+         * 载入基础模块
+         */
+        baseModule.forEach(d => this.importModule(d));
+    }
+    /**
+     * 初始化脚本设置
+     */
+    static initConfig() {
+        let doc = JSON.parse(GM.getResourceText("config.json") || "{}");
+        let ini = GM.getValue("config", {});
+        Object.entries(ini).forEach(k => config[k[0]] = k[1]);
+        Object.entries(doc).forEach(k => config[k[0]] || (config[k[0]] = k[1][0]));
     }
     /**
      * 导入模块

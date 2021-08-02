@@ -4,6 +4,9 @@ GM.getResourceURL = GM_getResourceURL;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
+/**
+ * 核心模块
+ */
 const baseModule: string[] = ["xhr.js", "toast.js", "format.js", "debug.js"];
 /**
  * 脚本配置数据
@@ -15,7 +18,7 @@ const CONFIG: { [name: string]: number } = {};
 const config: { [name: string]: number } = new Proxy(CONFIG, {
     set: (_target, p: string, value) => {
         CONFIG[p] = value;
-        GM.setValue<{}>("config", CONFIG);
+        GM.setValue<{ [name: string]: number }>("config", CONFIG);
         return true;
     },
     get: (_target, p: string) => CONFIG[p]
@@ -33,13 +36,37 @@ class Main {
      * 页面`head`
      */
     static cssFlag: number;
-    local: boolean = false;
     GM = GM;
     Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
     Name: string = GM.info.script.name;
     Virsion: string = GM.info.script.version;
     config: { [name: string]: number } = config;
     constructor() {
+        /**
+         * 读取模块列表
+         */
+        Main.moduleList = GM.info.script.resources.reduce((s: string[], d) => { s.push(d.name); return s }, [])
+        /**
+         * 初始化脚本设置
+         */
+        Main.initConfig();
+        /**
+         * 开发者模式暴露核心变量
+         */
+        config.developer && (unsafeWindow.API = this)
+        /**
+         * 载入基础模块
+         */
+        baseModule.forEach(d => this.importModule(d));
+    }
+    /**
+     * 初始化脚本设置
+     */
+    static initConfig() {
+        let doc: { [name: string]: [number, string, string] } = JSON.parse(GM.getResourceText("config.json") || "{}");
+        let ini: { [name: string]: number } = GM.getValue<{ [name: string]: number }>("config", {});
+        Object.entries(ini).forEach(k => config[k[0]] = k[1]);
+        Object.entries(doc).forEach(k => config[k[0]] || (config[k[0]] = k[1][0]));
     }
     /**
      * 导入模块
