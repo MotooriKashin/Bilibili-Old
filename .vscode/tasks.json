@@ -55,20 +55,6 @@
 			"detail": "生成本地版本",
 			"label": "build-local",
 			"problemMatcher": []
-		},
-		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\build\\build-online.js",
-				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"resource"
-			],
-			"detail": "生成在线版本",
-			"label": "build-online",
-			"problemMatcher": []
 		}
 	]
 }

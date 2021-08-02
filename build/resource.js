@@ -39,7 +39,7 @@ function dirPath(path) {
                 return s;
             }, [])).then(d => {
                 s(d.reduce((s, d, i) => {
-                    s[files[i]] = d;
+                    s[`${path}/${files[i]}`] = d;
                     return s;
                 }, {}))
             })

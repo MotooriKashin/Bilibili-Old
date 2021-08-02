@@ -4,7 +4,7 @@
 // @version      5.0.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin
-// @homepage     https://github.com/MotooriKashin/Bilibili-Old/
+// @homepage     https://github.com/MotooriKashin/Bilibili-Old
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @match        *://*.bilibili.com/*
@@ -17,6 +17,11 @@
 // @grant        GM_deleteValue
 // @run-at       document-start
 // @license      MIT
+// @resource     config.json https://github.com/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/Json/config.json
+// @resource     debug.js https://github.com/MotooriKashin/Bilibili-Old@6ca2f51c9915e40cc4b632cec3a87c2ae116f15d/JavaScript/debug.js
+// @resource     format.js https://github.com/MotooriKashin/Bilibili-Old@31971f7d2debb38b5fdb525fe701094c858b9ca1/JavaScript/format.js
+// @resource     toast.js https://github.com/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/JavaScript/toast.js
+// @resource     xhr.js https://github.com/MotooriKashin/Bilibili-Old@5d0869978cfa544e320ae24ef749e016891bb736/JavaScript/xhr.js
 // ==/UserScript==
 
 (function () {
@@ -26,6 +31,7 @@
     GM.getValue = GM_getValue;
     GM.setValue = GM_setValue;
     GM.deleteValue = GM_deleteValue;
+    const baseModule = ["xhr.js", "toast.js", "format.js", "debug.js"];
     /**
      * 脚本配置数据
      */
@@ -43,13 +49,9 @@
     });
     class API {
         /**
-         * 基础模块，依序载入
+         * 已引入模块列表
          */
-        static baseModule = ["xhr.js", "toast.js", "format.js", "debug.js"];
-        /**
-         * 引入模块列表，用于查重
-         */
-        static modules = [];
+        static modules = {};
         /**
          * 本地模块列表
          */
@@ -65,67 +67,6 @@
         Virsion = GM.info.script.version;
         config = config;
         constructor() {
-            API.moduleList = GM.info.script.resources.reduce((s, d) => { s.push(d.name); return s; }, []);
-            this.local = API.moduleList[0] ? true : false;
-            this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
-            API.moduleList[0] && API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
-            (this.local || config.developer) && (unsafeWindow.BLOD = this);
-        }
-        /**
-         * 获取模块
-         * @param name 模块名字
-         */
-        static getModule(name) {
-            return GM.getValue("module", {})[name] || ((name.includes("json") && GM.getResourceText(name)) ? JSON.parse(GM.getResourceText(name)) : GM.getResourceText(name));
-        }
-        /**
-         * 脚本初始化
-         */
-        static initConfig() {
-            let localConfig = GM.getValue('config', {});
-            Object.entries(localConfig).forEach(d => config[d[0]] = d[1]);
-            Object.entries(this.getModule('config.json')).forEach(d => {
-                config.hasOwnProperty(d[0]) || (config[d[0]] = d[1][0]);
-            });
-        }
-        /**
-         * 初始化基础模块
-         */
-        static initModule() {
-            let host = "https://cdn.jsdelivr.net/gh/MotooriKashin@ts/Bilibili-Old";
-            let module = {};
-            API.baseModule.forEach((d, i, o) => {
-                let obj = {
-                    url: "",
-                    onload: data => {
-                        module[d] = data.response;
-                        if (i === o.length - 1) {
-                            GM.setValue("module", module);
-                            alert(`${GM.info.script.name}：脚本初始化成功`);
-                        }
-                    },
-                    onerror: d => console.error(`${GM.info.script.name}：脚本${d}加载失败！`)
-                };
-                switch (d.split(".")[1]) {
-                    case "js":
-                        obj.url = `${host}/JavaScript/${d}`;
-                        break;
-                    case "json":
-                        obj.url = `${host}/Json/${d}`;
-                        obj.responseType = "json";
-                        break;
-                    case "html":
-                        obj.url = `${host}/HTML/${d}`;
-                        break;
-                    case "css":
-                        obj.url = `${host}/CSS/${d}`;
-                        break;
-                    default:
-                        obj.url = `${host}/image/${d}`;
-                        break;
-                }
-                GM.xmlHttpRequest(obj);
-            });
         }
         /**
          * 导入模块
@@ -134,9 +75,9 @@
          * @returns 模块返回值或者提示信息
          */
         importModule(moduleName, args = {}) {
-            return moduleName ? API.modules.includes(moduleName) ? true : (API.moduleList.includes(moduleName) ?
-                (API.modules.push(moduleName),
-                    new Function("API", "GM", "config", "importModule", ...Object.keys(args), API.getModule(moduleName))(this, GM, config, this.importModule, ...Object.keys(args).reduce((s, d) => {
+            return moduleName ? API.modules[moduleName] ? API.modules[moduleName] : (API.moduleList.includes(moduleName) ?
+                (API.modules[moduleName] =
+                    new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))(this, GM, config, this.importModule, ...Object.keys(args).reduce((s, d) => {
                         s.push(args[d]);
                         return s;
                     }, []))) : new Error(`未知模块：${moduleName}`)) : API.modules;

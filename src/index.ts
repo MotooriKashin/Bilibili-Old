@@ -5,6 +5,7 @@
     GM.getValue = GM_getValue;
     GM.setValue = GM_setValue;
     GM.deleteValue = GM_deleteValue;
+    const baseModule: string[] = ["xhr.js", "toast.js", "format.js", "debug.js"];
     /**
      * 脚本配置数据
      */
@@ -22,13 +23,9 @@
     })
     class API {
         /**
-         * 基础模块，依序载入
+         * 已引入模块列表
          */
-        static baseModule: string[] = ["xhr.js", "toast.js", "format.js", "debug.js"];
-        /**
-         * 引入模块列表，用于查重
-         */
-        static modules: string[] = [];
+        static modules: { [name: string]: any } = {};
         /**
          * 本地模块列表
          */
@@ -44,62 +41,6 @@
         Virsion: string = GM.info.script.version;
         config: { [name: string]: number } = config;
         constructor() {
-            API.moduleList = GM.info.script.resources.reduce((s: string[], d) => { s.push(d.name); return s }, []);
-            this.local = API.moduleList[0] ? true : false;
-            this.local ? API.initConfig() : (API.moduleList = Object.keys(GM.getValue<ModuleValue>("module", {})), API.baseModule.every(v => API.moduleList.includes(v)) ? API.initConfig() : API.initModule());
-            API.moduleList[0] && API.baseModule.forEach(d => this.importModule(d)); // 加载基础模块
-            (this.local || config.developer) && (unsafeWindow.BLOD = this);
-        }
-        /**
-         * 获取模块
-         * @param name 模块名字
-         */
-        static getModule(name: string) {
-            return GM.getValue<ModuleValue>("module", {})[name] || ((name.includes("json") && GM.getResourceText(name)) ? JSON.parse(GM.getResourceText(name)) : GM.getResourceText(name));
-        }
-        /**
-         * 脚本初始化
-         */
-        static initConfig() {
-            let localConfig = GM.getValue<{ [name: string]: number }>('config', {});
-            Object.entries(localConfig).forEach(d => config[d[0]] = d[1]);
-            Object.entries<[number, string, string]>(this.getModule('config.json')).forEach(d => {
-                config.hasOwnProperty(d[0]) || (config[d[0]] = d[1][0]);
-            })
-        }
-        /**
-         * 初始化基础模块
-         */
-        static initModule() {
-            let host = "https://cdn.jsdelivr.net/gh/MotooriKashin@ts/Bilibili-Old";
-            let module: ModuleValue = {};
-            API.baseModule.forEach((d, i, o) => {
-                let obj: GMxhrDetails = {
-                    url: "",
-                    onload: data => {
-                        module[d] = data.response;
-                        if (i === o.length - 1) {
-                            GM.setValue<ModuleValue>("module", module);
-                            alert(`${GM.info.script.name}：脚本初始化成功`);
-                        }
-                    },
-                    onerror: d => console.error(`${GM.info.script.name}：脚本${d}加载失败！`)
-                };
-                switch (d.split(".")[1]) {
-                    case "js": obj.url = `${host}/JavaScript/${d}`;
-                        break;
-                    case "json": obj.url = `${host}/Json/${d}`;
-                        obj.responseType = "json";
-                        break;
-                    case "html": obj.url = `${host}/HTML/${d}`;
-                        break;
-                    case "css": obj.url = `${host}/CSS/${d}`;
-                        break;
-                    default: obj.url = `${host}/image/${d}`;
-                        break;
-                }
-                GM.xmlHttpRequest(obj);
-            })
         }
         /**
          * 导入模块
@@ -108,10 +49,10 @@
          * @returns 模块返回值或者提示信息
          */
         importModule(moduleName?: string, args: { [key: string]: object } = {}) {
-            return moduleName ? API.modules.includes(moduleName) ? true : (
+            return moduleName ? API.modules[moduleName] ? API.modules[moduleName] : (
                 API.moduleList.includes(moduleName) ?
-                    (API.modules.push(moduleName),
-                        new Function("API", "GM", "config", "importModule", ...Object.keys(args), API.getModule(moduleName))
+                    (API.modules[moduleName] =
+                        new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))
                             (this, GM, config, this.importModule, ...Object.keys(args).reduce((s: object[], d) => {
                                 s.push(args[d]);
                                 return s;

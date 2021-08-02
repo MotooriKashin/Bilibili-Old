@@ -1,3 +1,4 @@
+// 构建本地版文件，模块直接从本地加载，要求允许脚本管理器访问本地文件
 const fs = require("fs");
 const meta = require("../meta.json");
 const resource = require("../resource.json")
@@ -12,19 +13,9 @@ fs.readFile("./JavaScript/index.js", "utf-8", (err, data) => {
         return s;
     }, "// ==UserScript==\r\n");
     content = Object.keys(resource).reduce((s, d) => {
-        switch (d.split(".")[1]) {
-            case "js": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/JavaScript/${d}\r\n`;
-                break;
-            case "json": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/Json/${d}\r\n`;
-                break;
-            case "html": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/HTML/${d}\r\n`;
-                break;
-            case "css": s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/CSS/${d}\r\n`;
-                break;
-            default: s = `${s}// @resource     ${d} file:///${process.argv[2].replace(/\\/g, "/")}/image/${d}\r\n`;
-                break;
-        }
+        let arr = d.split("/");
+        s = `${s}// @resource     ${arr[arr.length - 1]} file:///${process.argv[2].replace(/\\/g, "/")}/${d}\r\n`;
         return s;
     }, content) + "// ==/UserScript==\r\n" + data.replace("\"use strict\";", "");
-    fs.writeFile("./local.user.js", content, (err) => { if (err) throw err })
+    fs.writeFile("./main.user.js", content, (err) => { if (err) throw err })
 })
