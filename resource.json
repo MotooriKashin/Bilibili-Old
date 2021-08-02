@@ -1,7 +1,7 @@
 {
 	"Json/config.json": "70a46babfe48664f815ec29198ff766964902bfb",
-	"JavaScript/debug.js": "e7e074d6bf454a5c16025e6bb480827b323aa0d4",
-	"JavaScript/format.js": "31971f7d2debb38b5fdb525fe701094c858b9ca1",
-	"JavaScript/toast.js": "e7e074d6bf454a5c16025e6bb480827b323aa0d4",
-	"JavaScript/xhr.js": "e7e074d6bf454a5c16025e6bb480827b323aa0d4"
+	"JavaScript/core/debug.js": "bb1c290402bb368a34f317e707c2cd7ccc39e3d0",
+	"JavaScript/core/format.js": "bb1c290402bb368a34f317e707c2cd7ccc39e3d0",
+	"JavaScript/core/toast.js": "bb1c290402bb368a34f317e707c2cd7ccc39e3d0",
+	"JavaScript/core/xhr.js": "bb1c290402bb368a34f317e707c2cd7ccc39e3d0"
 }

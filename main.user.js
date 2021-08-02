@@ -18,10 +18,10 @@
 // @run-at       document-start
 // @license      MIT
 // @resource     config.json https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@70a46babfe48664f815ec29198ff766964902bfb/Json/config.json
-// @resource     debug.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/debug.js
-// @resource     format.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31971f7d2debb38b5fdb525fe701094c858b9ca1/JavaScript/format.js
-// @resource     toast.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/toast.js
-// @resource     xhr.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/xhr.js
+// @resource     debug.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bb1c290402bb368a34f317e707c2cd7ccc39e3d0/JavaScript/core/debug.js
+// @resource     format.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bb1c290402bb368a34f317e707c2cd7ccc39e3d0/JavaScript/core/format.js
+// @resource     toast.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bb1c290402bb368a34f317e707c2cd7ccc39e3d0/JavaScript/core/toast.js
+// @resource     xhr.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bb1c290402bb368a34f317e707c2cd7ccc39e3d0/JavaScript/core/xhr.js
 // ==/UserScript==
 
 GM.xmlHttpRequest = GM_xmlhttpRequest;
@@ -30,10 +30,6 @@ GM.getResourceURL = GM_getResourceURL;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
-/**
- * 核心模块
- */
-const baseModule = ["xhr.js", "toast.js", "format.js", "debug.js"];
 /**
  * 脚本配置数据
  */
@@ -54,6 +50,7 @@ class Main {
      * 已引入模块列表
      */
     static modules = {};
+    static codeModule = [];
     /**
      * 本地模块列表
      */
@@ -71,7 +68,11 @@ class Main {
         /**
          * 读取模块列表
          */
-        Main.moduleList = GM.info.script.resources.reduce((s, d) => { s.push(d.name); return s; }, []);
+        Main.moduleList = GM.info.script.resources.reduce((s, d) => {
+            d.url.includes("core") && Main.codeModule.push(d.name);
+            s.push(d.name);
+            return s;
+        }, []);
         /**
          * 初始化脚本设置
          */
@@ -83,7 +84,7 @@ class Main {
         /**
          * 载入基础模块
          */
-        baseModule.forEach(d => this.importModule(d));
+        Main.codeModule.forEach(d => this.importModule(d));
     }
     /**
      * 初始化脚本设置

@@ -11,6 +11,7 @@
    - Visual Studio Code
    - node.js
    - git
+   - npm tsc
 2. 源文件目录：
    - src：typescript代码目录
    - JavaScript：typescript原文件编译的js输出目录，自动生成，请勿手动修改！（B站原生脚本除外）
