@@ -29,7 +29,7 @@ class Toast {
      */
     static sence = 60;
     constructor() {
-        let config = GM.getValue("toast", { timeout: 4, step: 250 });
+        let config = GM.getValue("toast", { switch: 1, timeout: 4, step: 250 });
         Toast.config = new Proxy(config, {
             set: (_target, p, value) => {
                 config[p] = value;
@@ -50,7 +50,7 @@ class Toast {
         this.style.setAttribute("href", "https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/toastr.min.css");
     }
     static show(type, ...msg) {
-        if (!config.toast)
+        if (!this.config.switch)
             return;
         if (!document.body) {
             if (this.check)

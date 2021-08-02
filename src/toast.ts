@@ -2,7 +2,7 @@ class Toast {
     /**
      * 配置数据
      */
-    static config: { timeout: number, step: number };
+    static config: { switch: number, timeout: number, step: number };
     /**
      * 通知节点，初始化专用
      */
@@ -28,14 +28,14 @@ class Toast {
      */
     static sence: number = 60;
     constructor() {
-        let config = GM.getValue<{ timeout: number, step: number }>("toast", { timeout: 4, step: 250 });
+        let config = GM.getValue<{ switch: number, timeout: number, step: number }>("toast", { switch: 1, timeout: 4, step: 250 });
         Toast.config = new Proxy(config, {
-            set: (_target, p: "timeout" | "step", value) => {
+            set: (_target, p: "timeout" | "step" | "switch", value) => {
                 config[p] = value;
-                GM.setValue<{ timeout: number, step: number }>("toast", config);
+                GM.setValue<{ switch: number, timeout: number, step: number }>("toast", config);
                 return true;
             },
-            get: (_target, p: "timeout" | "step") => config[p]
+            get: (_target, p: "timeout" | "step" | "switch") => config[p]
         });
         Toast.init();
     }
@@ -49,7 +49,7 @@ class Toast {
         this.style.setAttribute("href", "https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/toastr.min.css")
     }
     static show(type: "info" | "success" | "warning" | "error", ...msg: string[]) {
-        if (!config.toast) return;
+        if (!this.config.switch) return;
         if (!document.body) {
             if (this.check) return;
             return setTimeout(() => { this.check = true; this.show(type, ...msg) });

@@ -403,7 +403,7 @@ interface toast {
     success(...msg: string[]): void;
     warning(...msg: string[]): void;
     error(...msg: string[]): void;
-    config: { timeout: number, step: number }
+    config: { switch: number, timeout: number, step: number }
 }
 declare namespace config {
     let toast: number;
