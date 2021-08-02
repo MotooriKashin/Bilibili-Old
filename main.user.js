@@ -17,7 +17,7 @@
 // @grant        GM_deleteValue
 // @run-at       document-start
 // @license      MIT
-// @resource     config.json https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/Json/config.json
+// @resource     config.json https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@70a46babfe48664f815ec29198ff766964902bfb/Json/config.json
 // @resource     debug.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/debug.js
 // @resource     format.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@31971f7d2debb38b5fdb525fe701094c858b9ca1/JavaScript/format.js
 // @resource     toast.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/toast.js
@@ -30,6 +30,9 @@ GM.getResourceURL = GM_getResourceURL;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
+/**
+ * 核心模块
+ */
 const baseModule = ["xhr.js", "toast.js", "format.js", "debug.js"];
 /**
  * 脚本配置数据
@@ -59,13 +62,37 @@ class Main {
      * 页面`head`
      */
     static cssFlag;
-    local = false;
     GM = GM;
     Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
     Name = GM.info.script.name;
     Virsion = GM.info.script.version;
     config = config;
     constructor() {
+        /**
+         * 读取模块列表
+         */
+        Main.moduleList = GM.info.script.resources.reduce((s, d) => { s.push(d.name); return s; }, []);
+        /**
+         * 初始化脚本设置
+         */
+        Main.initConfig();
+        /**
+         * 开发者模式暴露核心变量
+         */
+        config.developer && (unsafeWindow.API = this);
+        /**
+         * 载入基础模块
+         */
+        baseModule.forEach(d => this.importModule(d));
+    }
+    /**
+     * 初始化脚本设置
+     */
+    static initConfig() {
+        let doc = JSON.parse(GM.getResourceText("config.json") || "{}");
+        let ini = GM.getValue("config", {});
+        Object.entries(ini).forEach(k => config[k[0]] = k[1]);
+        Object.entries(doc).forEach(k => config[k[0]] || (config[k[0]] = k[1][0]));
     }
     /**
      * 导入模块

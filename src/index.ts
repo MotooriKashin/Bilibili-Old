@@ -5,10 +5,6 @@ GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
 /**
- * 核心模块
- */
-const baseModule: string[] = ["xhr.js", "toast.js", "format.js", "debug.js"];
-/**
  * 脚本配置数据
  */
 const CONFIG: { [name: string]: number } = {};
@@ -28,6 +24,7 @@ class Main {
      * 已引入模块列表
      */
     static modules: { [name: string]: any } = {};
+    static codeModule: string[] = [];
     /**
      * 本地模块列表
      */
@@ -45,7 +42,11 @@ class Main {
         /**
          * 读取模块列表
          */
-        Main.moduleList = GM.info.script.resources.reduce((s: string[], d) => { s.push(d.name); return s }, [])
+        Main.moduleList = GM.info.script.resources.reduce((s: string[], d) => {
+            d.url.includes("core") && Main.codeModule.push(d.name);
+            s.push(d.name);
+            return s;
+        }, [])
         /**
          * 初始化脚本设置
          */
@@ -57,7 +58,7 @@ class Main {
         /**
          * 载入基础模块
          */
-        baseModule.forEach(d => this.importModule(d));
+        Main.codeModule.forEach(d => this.importModule(d))
     }
     /**
      * 初始化脚本设置
