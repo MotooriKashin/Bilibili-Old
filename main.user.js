@@ -18,10 +18,10 @@
 // @run-at       document-start
 // @license      MIT
 // @resource     config.json https://github.com/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/Json/config.json
-// @resource     debug.js https://github.com/MotooriKashin/Bilibili-Old@6ca2f51c9915e40cc4b632cec3a87c2ae116f15d/JavaScript/debug.js
+// @resource     debug.js https://github.com/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/debug.js
 // @resource     format.js https://github.com/MotooriKashin/Bilibili-Old@31971f7d2debb38b5fdb525fe701094c858b9ca1/JavaScript/format.js
-// @resource     toast.js https://github.com/MotooriKashin/Bilibili-Old@a187cf05ddf3f9d65ff1ef0a7c495d81f19ed2e9/JavaScript/toast.js
-// @resource     xhr.js https://github.com/MotooriKashin/Bilibili-Old@5d0869978cfa544e320ae24ef749e016891bb736/JavaScript/xhr.js
+// @resource     toast.js https://github.com/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/toast.js
+// @resource     xhr.js https://github.com/MotooriKashin/Bilibili-Old@e7e074d6bf454a5c16025e6bb480827b323aa0d4/JavaScript/xhr.js
 // ==/UserScript==
 
 GM.xmlHttpRequest = GM_xmlhttpRequest;
