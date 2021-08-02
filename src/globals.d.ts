@@ -136,6 +136,51 @@ declare namespace API {
      * @returns 转化成`json`的xhr.response
      */
     function jsonCheck(data: String | JSON): { [name: string]: unknown; };
+    /**
+     * 格式化时间
+     * @param time 时间戳
+     * @param type 是否包含年月日
+     * @returns 时:分:秒 | 年-月-日 时:分:秒
+     */
+    function timeFormat(time: number | undefined, type?: boolean): string;
+    /**
+     * 格式化字节
+     * @param size 字节/B
+     * @returns n B | K | M | G
+     */
+    function sizeFormat(size?: number): string;
+    /**
+     * 格式化进位
+     * @param num 实数
+     * @returns n 万 | 亿
+     */
+    function unitFormat(num?: number): string;
+    /**
+     * 冒泡排序
+     * @param arr 待排序数组
+     * @returns 排序结果
+     */
+    function bubbleSort(arr: number[]): number[];
+    /**
+     * 随机截取制定大小子数组
+     * @param arr 母数组
+     * @param num 子数组大小
+     * @returns 子数组
+     */
+    function randomArray(arr: any[], num: number): any[];
+    /**
+     * search参数对象拼合回URL
+     * @param url URL主体，可含search参数
+     * @param obj search参数对象
+     * @returns 拼合的URL
+     */
+    function objUrl(url: string, obj: { [name: string]: string }): string;
+    /**
+     * 提取URL search参数对象
+     * @param url 原URL
+     * @returns search参数对象
+     */
+    function urlObj(url?: string): { [name: string]: string };
 }
 interface GMxhrResponse {
     /**

@@ -28,13 +28,9 @@ class Toast {
      * 动画呈现帧数
      */
     static sence = 60;
-    /**
-     * 配置数据代理，用来监听修改
-     */
-    config;
     constructor() {
-        Toast.config = GM.getValue("toast", { timeout: 4, step: 250 });
-        this.config = new Proxy(Toast.config, {
+        let config = GM.getValue("toast", { timeout: 4, step: 250 });
+        Toast.config = new Proxy(config, {
             set: (_target, p, value) => {
                 Toast.config[p] = value;
                 GM.setValue("toast", Toast.config);
