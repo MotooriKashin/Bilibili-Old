@@ -110,10 +110,10 @@ class Toast {
     }
 }
 new Toast();
-const toast = (...msg) => Toast.show("info", ...msg);
-toast.info = (...msg) => Toast.show("info", ...msg);
-toast.success = (...msg) => Toast.show("success", ...msg);
-toast.warning = (...msg) => Toast.show("warning", ...msg);
-toast.error = (...msg) => Toast.show("error", ...msg);
-toast.config = Toast.config;
-API.toast = toast;
+const _toast = (...msg) => Toast.show("info", ...msg);
+_toast.info = (...msg) => Toast.show("info", ...msg);
+_toast.success = (...msg) => Toast.show("success", ...msg);
+_toast.warning = (...msg) => Toast.show("warning", ...msg);
+_toast.error = (...msg) => Toast.show("error", ...msg);
+_toast.config = Toast.config;
+API.toast = _toast;

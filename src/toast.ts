@@ -105,10 +105,11 @@ class Toast {
     }
 }
 new Toast();
-const toast = (...msg: string[]) => Toast.show("info", ...msg);
-toast.info = (...msg: string[]) => Toast.show("info", ...msg);
-toast.success = (...msg: string[]) => Toast.show("success", ...msg);
-toast.warning = (...msg: string[]) => Toast.show("warning", ...msg);
-toast.error = (...msg: string[]) => Toast.show("error", ...msg);
-toast.config = Toast.config;
-API.toast = toast;
+const _toast = (...msg: string[]) => Toast.show("info", ...msg);
+_toast.info = (...msg: string[]) => Toast.show("info", ...msg);
+_toast.success = (...msg: string[]) => Toast.show("success", ...msg);
+_toast.warning = (...msg: string[]) => Toast.show("warning", ...msg);
+_toast.error = (...msg: string[]) => Toast.show("error", ...msg);
+_toast.config = Toast.config;
+declare namespace API { let toast: typeof _toast }
+API.toast = _toast;

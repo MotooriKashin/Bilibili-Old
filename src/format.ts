@@ -124,6 +124,15 @@ class Format {
         }, {});
     }
 }
+declare namespace API {
+    let timeFormat: typeof Format.timeFormat;
+    let sizeFormat: typeof Format.sizeFormat;
+    let unitFormat: typeof Format.unitFormat;
+    let bubbleSort: typeof Format.bubbleSort;
+    let randomArray: typeof Format.randomArray;
+    let objUrl: typeof Format.objUrl;
+    let urlObj: typeof Format.urlObj;
+}
 API.timeFormat = (time?: number, type?: boolean) => Format.timeFormat(time, type);
 API.sizeFormat = (size?: number) => Format.sizeFormat(size);
 API.unitFormat = (num?: number) => Format.unitFormat(num);

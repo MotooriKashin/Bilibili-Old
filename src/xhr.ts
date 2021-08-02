@@ -36,6 +36,12 @@ class Xhr {
         })
     }
 }
-const xhr = (details: xhrDetails) => Xhr.xhr(details);
-xhr.GM = (details: GMxhrDetails) => Xhr.GM(details);
-API.xhr = xhr;
+/**
+ * `XMLHttpRequest`的`Promise`封装
+ * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
+ * @returns `Promise`托管的请求结果或者报错信息
+ */
+const _xhr = (details: xhrDetails) => Xhr.xhr(details);
+_xhr.GM = Xhr.GM;
+declare namespace API { let xhr: typeof _xhr; }
+API.xhr = _xhr;

@@ -1,27 +1,26 @@
-interface GMWindow extends Window { BLOD: {} }
+interface GMWindow extends Window { [name: string]: any }
 declare const unsafeWindow: GMWindow;
 /**
  * Tampermonkey APIs
  */
 declare namespace GM {
-    function xmlHttpRequest(details: GMxhrDetails): { abort: () => void };
-    function getResourceText(name: string): string;
-    function getResourceURL(name: string): string;
-    function getValue<T>(name: string, defaultValue?: T): T;
-    function setValue<T>(name: string, value: T): void;
-    function deleteValue(name: string): void;
-    namespace info {
-        const downloadMode: string;
-        const isFirstPartyIsolation: boolean;
-        const isIncognito: boolean;
-        const scriptHandler: string;
-        const scriptMetaStr: string;
-        const scriptSource: string;
-        const scriptUpdateURL: string;
-        const scriptWillUpdate: string;
-        const version: string;
-        function toString(): string;
-        const script: {
+    let xmlHttpRequest: typeof GM_xmlhttpRequest;
+    let getResourceText: typeof GM_getResourceText;
+    let getResourceURL: typeof GM_getResourceURL;
+    let getValue: typeof GM_getValue;
+    let setValue: typeof GM_setValue;
+    let deleteValue: typeof GM_deleteValue;
+    const info: {
+        downloadMode: string;
+        isFirstPartyIsolation: boolean;
+        isIncognito: boolean;
+        scriptHandler: string;
+        scriptMetaStr: string;
+        scriptSource: string;
+        scriptUpdateURL: string;
+        scriptWillUpdate: string;
+        version: string;
+        script: {
             antifeatures: {};
             author: string;
             blockers: [];
@@ -83,6 +82,13 @@ declare namespace GM {
         }
     }
 }
+declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
+declare function GM_getResourceText(name: string): string;
+declare function GM_getResourceURL(name: string): string;
+declare function GM_getValue<T>(name: string, defaultValue?: T): T;
+declare function GM_setValue<T>(name: string, value: T): void;
+declare function GM_deleteValue(name: string): void;
+
 /**
  * Global APIs and propertys
  */
@@ -90,98 +96,7 @@ declare namespace API {
     const Handler: string;
     const Name: string;
     const Virsion: string;
-    let xhr: xhr;
-    let toast: toast;
-    let debug: debug;
-    /**
-     * 导入模块
-     * @param moduleName 模块名字
-     * @param args 传递给模块的变量
-     * @returns 模块返回值或者提示信息
-     */
-    function importModule(moduleName?: string, args?: { [key: string]: object; }): any;
-    /**
-     * 获取`cookies`信息
-     * @returns `cookies`对象
-     */
-    function getCookies(): { [name: string]: string; }
-    /**
-     * 添加网页节点
-     * @param div 节点名字
-     * @param attribute 节点属性组成的对象
-     * @param parrent 父节点
-     * @param innerHTML 节点的`innerHTML`
-     * @param top 是否在父节点置顶
-     * @param replaced 被替换的节点，忽略父节点参数
-     * @returns 所添加的节点
-     */
-    function addElement(div: string, attribute?: { [name: string]: string; }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
-    /**
-     * 移除或隐藏页面节点
-     * @param name 检索名称
-     * @param type 检索类型`class`、`id`还是`div`
-     * @param hidden 隐藏而不移除
-     * @param index 检索结果有复数个时的序号
-     * @param callback 移除后的回调函数
-     */
-    function removeElement(name: string, type: 'class' | 'id' | 'tag', hidden?: boolean, index?: number, callback?: () => void): void;
-    /**
-     * 添加CSS样式
-     * @param text 样式
-     * @param id 唯一ID，防止重复
-     */
-    function addCss(text: string, id?: string): number;
-    /**
-     * json化xhr返回值
-     * @param data xhr返回的response
-     * @returns 转化成`json`的xhr.response
-     */
-    function jsonCheck(data: String | JSON): { [name: string]: unknown; };
-    /**
-     * 格式化时间
-     * @param time 时间戳
-     * @param type 是否包含年月日
-     * @returns 时:分:秒 | 年-月-日 时:分:秒
-     */
-    function timeFormat(time?: number, type?: boolean): string;
-    /**
-     * 格式化字节
-     * @param size 字节/B
-     * @returns n B | K | M | G
-     */
-    function sizeFormat(size?: number): string;
-    /**
-     * 格式化进位
-     * @param num 实数
-     * @returns n 万 | 亿
-     */
-    function unitFormat(num?: number): string;
-    /**
-     * 冒泡排序
-     * @param arr 待排序数组
-     * @returns 排序结果
-     */
-    function bubbleSort(arr: number[]): number[];
-    /**
-     * 随机截取制定大小子数组
-     * @param arr 母数组
-     * @param num 子数组大小
-     * @returns 子数组
-     */
-    function randomArray(arr: any[], num: number): any[];
-    /**
-     * search参数对象拼合回URL
-     * @param url URL主体，可含search参数
-     * @param obj search参数对象
-     * @returns 拼合的URL
-     */
-    function objUrl(url: string, obj: { [name: string]: string }): string;
-    /**
-     * 提取URL search参数对象
-     * @param url 原URL
-     * @returns search参数对象
-     */
-    function urlObj(url?: string): { [name: string]: string };
+    const GM: typeof globalThis.GM;
 }
 interface GMxhrResponse {
     /**
@@ -373,39 +288,4 @@ interface GMxhrDetails {
      * callback to be executed if the request was loaded
      */
     onload?: (response: GMxhrResponse) => void;
-}
-interface ModuleValue {
-    [name: string]: any
-}
-declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
-declare function GM_getResourceText(name: string): string;
-declare function GM_getResourceURL(name: string): string;
-declare function GM_getValue<T>(name: string, defaultValue?: T): T;
-declare function GM_setValue<T>(name: string, value: T): void;
-declare function GM_deleteValue(name: string): void;
-
-interface xhr {
-    (details: xhrDetails): Promise<any>;
-    GM(details: GMxhrDetails): Promise<any>;
-}
-interface debug {
-    (...data: string[]): void;
-    log(...data: string[]): void;
-    info(...data: string[]): void;
-    debug(...data: string[]): void;
-    warn(...data: string[]): void;
-    error(...data: string[]): void;
-    msg(time: number, text: string, red?: string, yellow?: string, replace?: boolean, callback?: (() => {})): void;
-}
-interface toast {
-    (...msg: string[]): void;
-    info(...msg: string[]): void;
-    success(...msg: string[]): void;
-    warning(...msg: string[]): void;
-    error(...msg: string[]): void;
-    config: { switch: number, timeout: number, step: number }
-}
-declare namespace config {
-    let toast: number;
-    let preview: number;
 }

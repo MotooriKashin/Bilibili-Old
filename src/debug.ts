@@ -35,11 +35,12 @@ function bfqmsg(time: number = 3, text: string, red: string = "", yellow: string
     yellow && (API.addElement("span", { class: "video-float-hint-btn" }, item, yellow));
     timeout = setTimeout(() => node && node.remove(), time);
 }
-const debug = (...data: string[]) => Debug.log(...data);
-debug.log = (...data: string[]) => Debug.log(...data);
-debug.info = (...data: string[]) => Debug.info(...data);
-debug.debug = (...data: string[]) => Debug.debug(...data);
-debug.warn = (...data: string[]) => Debug.warn(...data);
-debug.error = (...data: string[]) => Debug.error(...data);
-debug.msg = (time: number, text: string, red?: string, yellow?: string, replace?: boolean, callback?: (() => {})) => bfqmsg(time, text, red, yellow, replace, callback);
-API.debug = debug;
+const _debug = (...data: string[]) => Debug.log(...data);
+_debug.log = Debug.log;
+_debug.info = Debug.info;
+_debug.debug = Debug.debug;
+_debug.warn = Debug.warn;
+_debug.error = Debug.error;
+_debug.msg = bfqmsg;
+declare namespace API { let debug: typeof _debug }
+API.debug = _debug;

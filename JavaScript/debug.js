@@ -42,11 +42,11 @@ function bfqmsg(time = 3, text, red = "", yellow = "", replace = true, callback)
     yellow && (API.addElement("span", { class: "video-float-hint-btn" }, item, yellow));
     timeout = setTimeout(() => node && node.remove(), time);
 }
-const debug = (...data) => Debug.log(...data);
-debug.log = (...data) => Debug.log(...data);
-debug.info = (...data) => Debug.info(...data);
-debug.debug = (...data) => Debug.debug(...data);
-debug.warn = (...data) => Debug.warn(...data);
-debug.error = (...data) => Debug.error(...data);
-debug.msg = (time, text, red, yellow, replace, callback) => bfqmsg(time, text, red, yellow, replace, callback);
-API.debug = debug;
+const _debug = (...data) => Debug.log(...data);
+_debug.log = Debug.log;
+_debug.info = Debug.info;
+_debug.debug = Debug.debug;
+_debug.warn = Debug.warn;
+_debug.error = Debug.error;
+_debug.msg = bfqmsg;
+API.debug = _debug;
