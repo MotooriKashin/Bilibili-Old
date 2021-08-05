@@ -1350,42 +1350,52 @@
         }
         mediaControl(title, artist, chapterName, coverUrl, getPlaylistIndex) {
             if ("mediaSession" in navigator) {
-                function trial(fn) {
-                    let limit = 7;
-                    function task() { if (!fn() && --limit > 0) setTimeout(task, 1000) }
-                    task();
-                }
-                trial(() => {
-                    if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
-                        let playList = player.getPlaylist();
-                        let partIndex = getPlaylistIndex();
-                        navigator.mediaSession.metadata = new MediaMetadata({
-                            title: title,
-                            artist: artist,
-                            album: chapterName(partIndex, playList),
-                            artwork: coverUrl(partIndex, playList)
-                        });
-                        navigator.mediaSession.setActionHandler('play', () => player.play());
-                        navigator.mediaSession.setActionHandler('pause', () => player.pause());
-                        navigator.mediaSession.setActionHandler('seekbackward', () => player.seek(player.getCurrentTime() - 10));
-                        navigator.mediaSession.setActionHandler('seekforward', () => player.seek(player.getCurrentTime() + 10));
-                        navigator.mediaSession.setActionHandler('previoustrack', () => player.prev());
-                        navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
-                        BLOD.joinSwitchVideo(() => {
-                            // 要等到新的分p载入完成，getPlaylistIndex()的值才会更新
-                            trial(() => {
-                                let pid = getPlaylistIndex();
-                                if (pid != partIndex) {
-                                    partIndex = pid;
-                                    navigator.mediaSession.metadata.album = chapterName(partIndex, playList);
-                                    navigator.mediaSession.metadata.artwork = coverUrl(partIndex, playList);
-                                    return true;
-                                }
-                            });
-                        });
-                        return true;
+                if (document.visibilityState == "visible") {
+                    function trial(fn) {
+                        let limit = 7;
+                        function task() { if (!fn() && --limit > 0) setTimeout(task, 1000) }
+                        task();
                     }
-                });
+                    trial(() => {
+                        if (window.player != undefined && player.getPlaylist && player.getPlaylist() != null) {
+                            let playList = player.getPlaylist();
+                            let partIndex = getPlaylistIndex();
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: title,
+                                artist: artist,
+                                album: chapterName(partIndex, playList),
+                                artwork: coverUrl(partIndex, playList)
+                            });
+                            navigator.mediaSession.setActionHandler('play', () => player.play());
+                            navigator.mediaSession.setActionHandler('pause', () => player.pause());
+                            navigator.mediaSession.setActionHandler('seekbackward', () => player.seek(player.getCurrentTime() - 10));
+                            navigator.mediaSession.setActionHandler('seekforward', () => player.seek(player.getCurrentTime() + 10));
+                            navigator.mediaSession.setActionHandler('previoustrack', () => player.prev());
+                            navigator.mediaSession.setActionHandler('nexttrack', () => player.next());
+                            BLOD.joinSwitchVideo(() => {
+                                // 要等到新的分p载入完成，getPlaylistIndex()的值才会更新
+                                trial(() => {
+                                    let pid = getPlaylistIndex();
+                                    if (pid != partIndex) {
+                                        partIndex = pid;
+                                        navigator.mediaSession.metadata.album = chapterName(partIndex, playList);
+                                        navigator.mediaSession.metadata.artwork = coverUrl(partIndex, playList);
+                                        return true;
+                                    }
+                                });
+                            });
+                            return true;
+                        }
+                    });
+                } else {
+                    let listener = () => {
+                        if (document.visibilityState == "visible") {
+                            document.removeEventListener("visibilitychange", listener);
+                            this.mediaControl(title, artist, chapterName, coverUrl, getPlaylistIndex);
+                        }
+                    }
+                    document.addEventListener("visibilitychange", listener);
+                }
             }
         }
     }
