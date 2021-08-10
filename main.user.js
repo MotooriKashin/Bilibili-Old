@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      5.1.7
+// @version      5.1.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old/
@@ -89,6 +89,17 @@
          * @param {string} html 页面文档字符串
          */
         write(html) {
+            delete unsafeWindow.webpackJsonp;
+            delete unsafeWindow._babelPolyfill;
+            delete unsafeWindow.player;
+            delete unsafeWindow.BPlayer;
+            delete unsafeWindow.GrayManager;
+            delete unsafeWindow.EmbedPlayer;
+            delete unsafeWindow.PlayerAgent;
+            delete unsafeWindow.dashjs;
+            delete unsafeWindow.bPlayer;
+            delete unsafeWindow.flvjs;
+            delete unsafeWindow.BilibiliPlayer;
             document.open();
             document.write(html);
             document.close();
