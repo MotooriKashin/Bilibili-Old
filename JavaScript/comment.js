@@ -1486,7 +1486,7 @@
                 var t = ['<div class="reply-item reply-wrap" data-id="' + e.rpid + '" data-index="' + n + '">', '<a href="//space.bilibili.com/' + e.mid + '" data-usercard-mid="' + e.mid + '" target="_blank" class="reply-face">', '<img src="' + f.trimHttp(f.webp(e.member.avatar, {
                     w: 52,
                     h: 52
-                })) + '" alt="">', "</a>", '<div class="reply-con">', '<div class="user">', '<a href="//space.bilibili.com/' + e.mid + '" target="_blank" data-usercard-mid="' + e.mid + '" class="name ' + this._createVipClass(e.member.vip.vipType, e.member.vip.vipStatus, e.member.vip.themeType) + '">' + f.unhtml(e.member.uname) + "</a>", '<a class="level-link" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + e.member.level_info.current_level + '"></i></a>', this._createSubMsgContent(e), "</div>", "</div>", '<div class="info">', e.floor ? '<span class="floor">#' + e.floor + "</span>" : "", this._createPlatformDom(e.content.plat), '<span class="time">' + this._formateTime(e.ctime) + "</span>", '<span class="like ' + (1 == e.action ? "liked" : "") + '"><i></i><span>' + (e.like || "") + "</span></span>", '<span class="hate ' + (2 == e.action ? "hated" : "") + '"><i></i></span>', '<span class="reply btn-hover">回复</span>', '<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(e.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(e.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(e.mid) ? '<li class="del" data-mid="' + e.mid + '">删除</li>' : "") + "</ul></div></div>", "</div>", "</div>"].join("");
+                })) + '" alt="">', "</a>", '<div class="reply-con">', '<div class="user">', '<a href="//space.bilibili.com/' + e.mid + '" target="_blank" data-usercard-mid="' + e.mid + '" class="name ' + this._createVipClass(e.member.vip.vipType, e.member.vip.vipStatus, e.member.vip.themeType) + '">' + f.unhtml(e.member.uname) + "</a>", '<a class="level-link" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + e.member.level_info.current_level + '"></i></a>', this._createSubMsgContent(e), "</div>", "</div>", '<div class="info">', e.floor ? '<span class="floor">#' + e.floor + "</span>" : "", this._createPlatformDom(e.content.plat), '<span class="time">' + this._formateTime(e.ctime) + "</span>", '<span class="like ' + (1 == e.action ? "liked" : "") + '"><i></i><span>' + (e.like || "") + "</span></span>", '<span class="hate ' + (2 == e.action ? "hated" : "") + '"><i></i></span>', '<span class="reply btn-hover">回复</span>', e.dialog != e.rpid ? '<span class="dialog btn-hover" dialog="' + e.dialog + '">查看对话</span>' : '','<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(e.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(e.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(e.mid) ? '<li class="del" data-mid="' + e.mid + '">删除</li>' : "") + "</ul></div></div>", "</div>", "</div>"].join("");
                 return f.browser.version.mobile && (t = ['<div class="reply-item reply-wrap" data-id="' + e.rpid + '" data-index="' + n + '">', '<div class="reply-con">', '<div class="user">', '<a href="//space.bilibili.com/' + e.mid + '" target="_blank" data-usercard-mid="' + e.mid + '" class="name ' + this._createVipClass(e.member.vip.vipType, e.member.vip.vipStatus, e.member.vip.themeType) + '">' + f.unhtml(e.member.uname) + "</a>", '<a class="level-link" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + e.member.level_info.current_level + '"></i>', '<div class="right"><span class="time">' + this._formateMobileTime(e.ctime) + "</span></div>", "</a>", this._createSubMsgContent(e), "</div>", '<div class="info">', '<span class="like ' + (1 == e.action ? "liked" : "") + '"><i></i><span>' + (e.like || "") + "</span></span>", '<span class="reply btn-hover">回复</span>', '<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(e.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(e.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(e.mid) ? '<li class="del" data-mid="' + e.mid + '">删除</li>' : "") + "</ul></div></div>", "</div>", "</div>", "</div>"].join("")),
                     t
             },
@@ -2228,6 +2228,103 @@
                             rpid: r
                         }))
                     }),
+                    n.on("click.dialog", ".dialog", function () {
+                        let clickTarget = this;
+                        clickTarget.innerHTML = "正在载入……";
+                        let rootid = clickTarget.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id"); // 楼中楼所属的父级评论的id
+                        let dialogid = clickTarget.getAttribute("dialog");
+                        // 载入所需的样式
+                        if (!l.commentDialogStyleInited) {
+                            let style = document.createElement("style");
+                            style.setAttribute("type", "text/css");
+                            style.innerHTML = `
+                            .comment-dialog .dialog{display:none!important}
+                            .comment-dialog > .comment-list{transform:translateY(-13px)}
+                            .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}
+                            .comment-dialog-container{width:600px;z-index:100000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}
+                            .comment-dialog-container.hidden{opacity:0}`;
+                            document.head.appendChild(style);
+                            l.commentDialogStyleInited = true;
+                        }
+                        let container = document.createElement("div");
+                        container.className = "comment-dialog-container hidden";
+                        // 为了利用已有的评论区样式、与样式的选择器匹配上，悬浮窗的dom树与评论区的相同
+                        container.innerHTML = `
+                        <div class="comment-dialog bb-comment">
+                        <div class="comment-list">
+                        <div class="list-item" data-id="${rootid}">
+                        <div class="con" style="border:none;margin:0;padding:0;">
+                        <div class="reply-box">
+                        </div></div></div></div></div>`;
+                        document.body.appendChild(container);
+                        let replyBox = container.getElementsByClassName("reply-box")[0];
+                        setTimeout(() => {
+                            let closeWindow = e => {
+                                // 点击了悬浮窗以外区域则关闭窗口
+                                if (!container.contains(e.target) && e.target != container) {
+                                    container.className = "comment-dialog-container hidden";
+                                    setTimeout(() => container.remove(), 100);
+                                    clickTarget.innerHTML = "查看对话"
+                                    window.removeEventListener('click', closeWindow, false);
+                                }
+                            };
+                            window.addEventListener('click', closeWindow);
+                        }, 0);
+                        /**
+                         * 从minFloor层开始，向后获取20条对话的数据
+                         * @param  {number} minFloor 起始楼层
+                         */
+                        function fetchDialog(minFloor) {
+                            // https://github.com/czp3009/bilibili-api/blob/master/src/main/kotlin/com/hiczp/bilibili/api/main/MainAPI.kt
+                            return $.ajax({
+                                url: "//api.bilibili.com/x/v2/reply/dialog/cursor",
+                                type: "GET",
+                                data: {
+                                    type: l.pageType,
+                                    oid: l.oid,
+                                    root: rootid,
+                                    dialog: dialogid,
+                                    size: 20,
+                                    min_floor: minFloor
+                                },
+                                xhrFields: { withCredentials: true }
+                            });
+                        }
+                        /**
+                         * 修复当评论中含有大型表情图片时头像框的错位
+                         * @see l._fixEmojiPosition
+                         * @param  {HTMLElement} node
+                         */
+                        function fixEmojiPosition(node) {
+                            node = $(node);
+                            node.find(".reply-item").each(function (e, n) {
+                                var t = $(n).find(".reply-face"),
+                                    r = $(n).find(".user"),
+                                    n = $(n).find(".name");
+                                t && r && n && (10 < n.offset().top - r.offset().top ? t.css("top", "32px") : t.css("top", "0"))
+                            });
+                        }
+                        fetchDialog(0).done(resp => {
+                            if (resp.code == 0 && resp.data.replies && resp.data.replies.length > 0) {
+                                replyBox.innerHTML = l._createSubReplyList(resp.data.replies, resp.data.replies.length, true, rootid, null, false);
+                                l._registerEvent(container);
+                                container.className = "comment-dialog-container";
+                                fixEmojiPosition(replyBox);
+                                function nextPage(minFloor) {
+                                    if (minFloor < resp.data.dialog.max_floor) {
+                                        fetchDialog(minFloor + 1).done(resp => {
+                                            if (resp.code == 0 && resp.data.replies && resp.data.replies.length > 0) {
+                                                replyBox.insertAdjacentHTML("beforeend", l._createSubReplyList(resp.data.replies, resp.data.replies.length, true, rootid, null, false));
+                                                nextPage(resp.data.cursor.max_floor);
+                                            }
+                                        });
+                                    } else fixEmojiPosition(replyBox);
+                                }
+                                nextPage(resp.data.cursor.max_floor);
+                            }
+                        });
+                    })
+                    ,
                     n.on("click", ".follow-btn", function () {
                         var t,
                             r;
