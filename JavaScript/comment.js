@@ -2241,7 +2241,7 @@
                             .comment-dialog .dialog{display:none!important}
                             .comment-dialog > .comment-list{transform:translateY(-13px)}
                             .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}
-                            .comment-dialog-container{width:600px;z-index:100000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}
+                            .comment-dialog-container{width:600px;z-index:10000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}
                             .comment-dialog-container.hidden{opacity:0}`;
                             document.head.appendChild(style);
                             l.commentDialogStyleInited = true;
