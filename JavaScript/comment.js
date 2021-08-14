@@ -886,6 +886,10 @@
                     dm: 0
                 },
                 this.next = null; // 时间排序索引
+                let operationListStyle = document.createElement("style");
+                operationListStyle.setAttribute("type", "text/css");
+                operationListStyle.innerHTML = ".operation.btn-hide-re .opera-list {visibility: visible}";
+                document.head.appendChild(operationListStyle);
             var d = this;
             return window.jQuery ? (h(), _(), this.start(e, r)) : ((o = document.createElement("script")).setAttribute("src", "//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery3.3.1.min.js"), document.body.appendChild(o), o.onload = function () {
                 _(),
@@ -2417,12 +2421,17 @@
                         })) : l.quickLogin()
                     }),
                     n.on("click.operation", ".spot", function (e) {
-                        $(".opera-list").hide(),
-                            $(this).siblings(".opera-list").show(),
-                            e.stopPropagation(),
-                            $(this).hasClass("more-operation") && (e = +$(this).parents(".reply-wrap:eq(0)").attr("data-id"), f.customReport("replyCardMoreClick", {
-                                rpid: e
-                            }))
+                        let operalist = this.parentNode.getElementsByClassName("opera-list")[0];
+                        if(l.lastClickOperation != this || (operalist && operalist.style.display == "none")) {
+                            $(".opera-list").hide(),
+                                $(this).siblings(".opera-list").show(),
+                                e.stopPropagation(),
+                                $(this).hasClass("more-operation") && (e = +$(this).parents(".reply-wrap:eq(0)").attr("data-id"), f.customReport("replyCardMoreClick", {
+                                    rpid: e
+                                }));
+                            l.lastClickOperation = this;
+                        } else
+                            operalist && (operalist.style.display = "none");
                     }),
                     n.off("mouseleave.operation").on("mouseleave.operation", ".opera-list", function (e) {
                         $(".opera-list").hide()
