@@ -223,7 +223,7 @@
                 })
                 this.fixVideoSeek(); // 修复评论跳转链接
                 this.videoSort(); // 修复分区数据
-                if (config.reset.like) BLOD.joinSwitchVideo(() => this.setLike()); // 切P回调添加点赞功能
+                if (config.reset.like) this.setLike(); // 切P回调添加点赞功能
                 if (this.ml) this.setMediaList(); // 如果存在媒体缓存，构造媒体页
                 if (BLOD.staff && config.reset.uplist) this.uplist(); // 添加UP主列表
                 if (config.reset.commandDm) this.commandDm(); // 添加互动弹幕
@@ -354,7 +354,7 @@
             if (config.reset.oldreply) BLOD.addCss(this.oldreply); // 修正旧版评论样式
             this.fixVideoSeek(); // 修复评论跳转链接
             this.watchlaterSort(); // 修复分区数据
-            if (config.reset.like) BLOD.joinSwitchVideo(() => this.setLike()); // 切P回调添加点赞功能
+            if (config.reset.like) this.setLike(); // 切P回调添加点赞功能
             BLOD.addCss(this.miniPlayer); // 修正mini播放器大小
         }
         /**
@@ -770,7 +770,7 @@
          * 添加点赞功能
          */
         async setLike() {
-            if (this.like) return;
+            if (!document.querySelector(".v.play")) setTimeout(() => this.setLike(), 100);
             this.like = true; // 避免切P重复调用
             let node = document.querySelector(".coin");
             let number = document.querySelector(".number");
