@@ -1,9 +1,9 @@
 class Debug {
-    static log(...data: string[]) { console.log(`%c[${API.timeFormat()}]`, "color: blue;", ...data) }
-    static info(...data: string[]) { console.info(`%c[${API.timeFormat()}]`, "color: green;", ...data) }
-    static debug(...data: string[]) { console.debug(`[${API.timeFormat()}]`, ...data) }
-    static warn(...data: string[]) { console.warn(`[${API.timeFormat()}]`, ...data) }
-    static error(...data: string[]) { console.error(`[${API.timeFormat()}]`, ...data); }
+    static log(...data: any[]) { console.log(`%c[${API.timeFormat()}]`, "color: blue;", ...data) }
+    static info(...data: any[]) { console.info(`%c[${API.timeFormat()}]`, "color: green;", ...data) }
+    static debug(...data: any[]) { console.debug(`[${API.timeFormat()}]`, ...data) }
+    static warn(...data: any[]) { console.warn(`[${API.timeFormat()}]`, ...data) }
+    static error(...data: any[]) { console.error(`[${API.timeFormat()}]`, ...data); }
 }
 /**
  * 旧版播放器弹窗消息
@@ -35,7 +35,7 @@ function bfqmsg(time: number = 3, text: string, red: string = "", yellow: string
     yellow && (API.addElement("span", { class: "video-float-hint-btn" }, item, yellow));
     timeout = setTimeout(() => node && node.remove(), time);
 }
-const _debug = (...data: string[]) => Debug.log(...data);
+const _debug = (...data: any[]) => Debug.log(...data);
 _debug.log = Debug.log;
 _debug.info = Debug.info;
 _debug.debug = Debug.debug;

@@ -28,15 +28,6 @@ class Toast {
      */
     static sence: number = 60;
     constructor() {
-        let config = GM.getValue<{ switch: number, timeout: number, step: number }>("toast", { switch: 1, timeout: 4, step: 250 });
-        Toast.config = new Proxy(config, {
-            set: (_target, p: "timeout" | "step" | "switch", value) => {
-                config[p] = value;
-                GM.setValue<{ switch: number, timeout: number, step: number }>("toast", config);
-                return true;
-            },
-            get: (_target, p: "timeout" | "step" | "switch") => config[p]
-        });
         Toast.init();
     }
     static init() {
@@ -49,7 +40,7 @@ class Toast {
         this.style.setAttribute("href", "https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/toastr.min.css")
     }
     static show(type: "info" | "success" | "warning" | "error", ...msg: string[]) {
-        if (!this.config.switch) return;
+        if (!config.toastcheck) return;
         if (!document.body) {
             if (this.check) return;
             return setTimeout(() => { this.check = true; this.show(type, ...msg) });
@@ -66,8 +57,8 @@ class Toast {
             item = this.box.insertBefore(item, this.box.firstChild);
             item.appendChild(this.msg(...msg));
             this.come(item);
-            setTimeout(() => this.quit(item), this.config.timeout * 1000);
-        }, this.count * this.config.step);
+            setTimeout(() => this.quit(item), (Number(config.toasttimeout) || 4) * 1000);
+        }, this.count * (Number(config.toaststep) || 250));
         this.count++;
     }
     static come(item: HTMLDivElement, i: number = 0) {
@@ -113,3 +104,35 @@ _toast.error = (...msg: string[]) => Toast.show("error", ...msg);
 _toast.config = Toast.config;
 declare namespace API { let toast: typeof _toast }
 API.toast = _toast;
+API.addSetting({
+    key: "toast",
+    sort: { key: "common", name: "通用" },
+    label: "浮动通知",
+    svg: '<svg viewBox="0 0 24 24"><g><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></g></svg>',
+    type: "sort",
+    float: '开启后脚本将推送右上角浮动通知消息。',
+    sub: '<a href="//github.com/CodeSeven/toastr/" target="_blank">toastr</a>',
+    list: [
+        {
+            key: "toastcheck",
+            sort: { key: "common", name: "通用" },
+            label: "浮动通知开关",
+            type: "switch",
+            value: true
+        }, {
+            key: "toasttimeout",
+            sort: { key: "common", name: "通用" },
+            label: "通知时长：/s",
+            type: "input",
+            value: "4",
+            input: { type: "number", min: 1, max: 30 }
+        }, {
+            key: "toaststep",
+            sort: { key: "common", name: "通用" },
+            label: "通知间隔：/ms",
+            type: "input",
+            value: "250",
+            input: { type: "number", min: 50, max: 1000, step: 50 }
+        }
+    ]
+})

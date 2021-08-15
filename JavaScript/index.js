@@ -10,7 +10,8 @@ GM.deleteValue = GM_deleteValue;
  */
 const CONFIG = {};
 /**
- * 脚本配置数据代理，用于监听变化
+ * 用户配置数据
+ * 模块添加的设置选项被用户自定义后将保存在此变量中，形式 key:value
  */
 const config = new Proxy(CONFIG, {
     set: (_target, p, value) => {
@@ -20,6 +21,11 @@ const config = new Proxy(CONFIG, {
     },
     get: (_target, p) => CONFIG[p]
 });
+/**
+ * 注册的设置内容
+ * **注意：该变量仅在`index.js`和`ui.js`中可用**
+ */
+const setting = [];
 class Main {
     /**
      * 已引入模块列表
@@ -41,34 +47,25 @@ class Main {
     config = config;
     constructor() {
         /**
+         * 初始化shezhi
+         */
+        Object.entries(GM.getValue("config", {})).forEach(k => config[k[0]] = k[1]);
+        /**
          * 读取模块列表
          */
         Main.moduleList = GM.info.script.resources.reduce((s, d) => {
-            d.url.includes("core") && Main.codeModule.push(d.name);
+            d.url.includes("core") && !d.url.includes("ui.js") && Main.codeModule.push(d.name);
             s.push(d.name);
             return s;
         }, []);
         /**
-         * 初始化脚本设置
+         * 载入UI模块，该模块含有不应暴露给其他模块的专属变量
          */
-        Main.initConfig();
-        /**
-         * 开发者模式暴露核心变量
-         */
-        config.developer && (unsafeWindow.API = this);
+        this.importModule("ui.js", { setting });
         /**
          * 载入基础模块
          */
         Main.codeModule.forEach(d => this.importModule(d));
-    }
-    /**
-     * 初始化脚本设置
-     */
-    static initConfig() {
-        let doc = JSON.parse(GM.getResourceText("config.json") || "{}");
-        let ini = GM.getValue("config", {});
-        Object.entries(ini).forEach(k => config[k[0]] = k[1]);
-        Object.entries(doc).forEach(k => config[k[0]] || (config[k[0]] = k[1][0]));
     }
     /**
      * 导入模块
@@ -174,6 +171,13 @@ class Main {
             throw [result.code, msg];
         }
         return result;
+    }
+    /**
+     * 注册设置到面板
+     * @param obj 设置内容对象
+     */
+    addSetting(obj) {
+        setting.push(obj);
     }
 }
 const main = new Main();

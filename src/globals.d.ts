@@ -1,7 +1,6 @@
-interface GMWindow extends Window { [name: string]: any }
-declare const unsafeWindow: GMWindow;
 /**
  * Tampermonkey APIs
+ * *禁止模块顶层定义同名变量*
  */
 declare namespace GM {
     let xmlHttpRequest: typeof GM_xmlhttpRequest;
