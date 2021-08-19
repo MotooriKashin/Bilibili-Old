@@ -2,6 +2,17 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"type": "shell",
+			"command": "Remove-Item",
+			"args": [
+				"${workspaceFolder}\\JavaScript\\*",
+				"-recurse"
+			],
+			"detail": "清理生成目录",
+			"label": "clear",
+			"problemMatcher": []
+		},
+		{
 			"type": "typescript",
 			"tsconfig": "tsconfig.json",
 			"problemMatcher": [
