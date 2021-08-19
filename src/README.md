@@ -20,7 +20,7 @@
     <summary>查看示例</summary>
     <pre>
 // a.js       
-importModule("b.js",{ debug: console.log, x: x });
+importModule("b.js",{ debug: console.log, x: 1 });
 // b.js
 debug(x); // 控制台打印"1"
     </pre>
