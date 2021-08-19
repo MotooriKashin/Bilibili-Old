@@ -1,0 +1,169 @@
+/* 互动弹幕相关样式 */
+.vote-dialog {
+  overflow: hidden;
+  border-radius: 1rem;
+  background-color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  position: absolute;
+  padding: 0.8rem 1rem;
+  cursor: default;
+}
+
+.vote-dialog-show {
+  animation: opacity-animation 0.2s;
+}
+
+.vote-panel {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.vote-title {
+  font-weight: bolder;
+  margin-bottom: 0.5rem;
+}
+
+.vote-option {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.vote-button {
+  text-align: center;
+  min-width: 85px;
+  display: inline-block;
+  padding: 0.3rem 2rem;
+  border: 1px solid #00a1d6;
+  border-radius: 5px;
+  margin: 0.2rem 0;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.vote-button:hover {
+  background-color: #1baada;
+  color: #f5f5f5;
+  transition: all 0.15s ease-out;
+}
+
+.vote-button::before {
+  position: absolute;
+  padding: 0 1.8rem;
+  left: 0;
+  content: attr(idx);
+}
+
+.vote-progress-bg {
+  border-radius: 5px;
+  min-width: 85px;
+  margin: 0.2rem 0;
+  border: 1px solid #1a1a1a6b;
+  background-color: white;
+}
+
+.vote-progress {
+  transition: width 0.3s, background-color 0.2s;
+  animation: opacity-animation 0.5s;
+  overflow: hidden;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #d3d3d3;
+  text-align: left;
+  overflow: visible;
+}
+
+.vote-progress-blue {
+  background-color: #9fdef3;
+}
+
+.vote-progress-desc {
+  margin: 0.3rem 0.8rem;
+}
+
+@keyframes opacity-animation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.vote-result {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  right: 1rem;
+  margin-left: 1rem;
+  justify-content: space-evenly;
+}
+
+.vote-count {
+  white-space: nowrap;
+  text-align: right;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  display: inline-block;
+  padding: 0.5rem 0;
+}
+
+.vote-count::after {
+  content: "票";
+}
+
+.bilibili-player-video-popup {
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bilibili-player-video-popup > * {
+  pointer-events: all;
+}
+
+.link-button {
+  animation: opacity-animation 0.2s;
+  position: absolute;
+  left: 40%;
+  top: 20%;
+  background-color: #f5f5f5;
+  padding: 0.4rem 1rem;
+  border-radius: 0.6rem;
+  font-size: large;
+  box-shadow: #888888c7 0px 0px 6px;
+}
+
+.link-button:hover {
+  color: #00a1d6;
+  cursor: pointer;
+}
+
+.link-button > * {
+  vertical-align: middle;
+}
+
+.link-button > img {
+  transform: scale(0.7) translateY(-1px);
+}
+
+.danmaku-up-icon::before {
+  content: "UP主";
+  background-color: #00a1d6;
+  border-radius: 5px;
+  font-size: 0.8em;
+  padding: 0.1em;
+  transform: translateY(-0.1em);
+  display: inline-block;
+  box-shadow: #888888c7 0px 0px 6px;
+}
