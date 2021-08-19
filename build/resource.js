@@ -7,7 +7,7 @@ const del = ["JavaScript/index.js", "JavaScript/comment.js", "JavaScript/bilibil
 /**
  * 要求哈希表的子目录
  */
-const path = ["CSS", "image", "HTML", "Json", "JavaScript"];
+const path = ["CSS", "HTML", "Json", "JavaScript"];
 
 class File {
     constructor() {
