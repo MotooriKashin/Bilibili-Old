@@ -134,11 +134,11 @@
         }
     }
     Toast.init();
-    const toast = (...msg: string[]) => Toast.show("info", ...msg);
-    toast.info = (...msg: string[]) => Toast.show("info", ...msg);
-    toast.success = (...msg: string[]) => Toast.show("success", ...msg);
-    toast.warning = (...msg: string[]) => Toast.show("warning", ...msg);
-    toast.error = (...msg: string[]) => Toast.show("error", ...msg);
+    const toast = (...msg: string[]) => { API.debug.debug(...msg); Toast.show("info", ...msg) };
+    toast.info = (...msg: string[]) => { API.debug.debug(...msg); Toast.show("info", ...msg) };
+    toast.success = (...msg: string[]) => { API.debug.log(...msg); Toast.show("success", ...msg) };
+    toast.warning = (...msg: string[]) => { API.debug.warn(...msg); Toast.show("warning", ...msg) };
+    toast.error = (...msg: string[]) => { API.debug.error(...msg); Toast.show("error", ...msg) };
     API.toast = toast;
 })();
 declare namespace API {
@@ -147,27 +147,27 @@ declare namespace API {
      * @param msg 通知内容
      */
     let toast: {
-        (...msg: string[]): number | undefined;
+        (...msg: string[]): void;
         /**
          * 蓝标通知
          * @param msg 通知内容
          */
-        info(...msg: string[]): number | undefined;
+        info(...msg: string[]): void;
         /**
          * 绿标通知
          * @param msg 通知内容
          */
-        success(...msg: string[]): number | undefined;
+        success(...msg: string[]): void;
         /**
          * 黄标通知
          * @param msg 通知内容
          */
-        warning(...msg: string[]): number | undefined;
+        warning(...msg: string[]): void;
         /**
          * 红标通知
          * @param msg 通知内容
          */
-        error(...msg: string[]): number | undefined;
+        error(...msg: string[]): void;
     }
 }
 declare namespace config {

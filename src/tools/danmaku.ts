@@ -334,7 +334,7 @@ declare namespace API {
      * @param xml 读取本地弹幕文件得到的字符串
      * @param append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
      */
-    function loadLocalDm(xml: string, append: boolean): number | undefined;
+    function loadLocalDm(xml: string, append: boolean): void;
     /**
      * 解码proto弹幕
      * @param response 二进制文件

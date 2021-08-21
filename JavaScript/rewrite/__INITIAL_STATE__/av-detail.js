@@ -81,6 +81,7 @@
                 embedPlayer: 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=0&aid=0&pre_ad=")'
             }
         };
+        // @ts-ignore：传递的参数
         let data = API.jsonCheck(__INITIAL_STATE__).data;
         if (!data.View.cid && data.View.forward) {
             API.toast.warning("视频撞车了！正在跳转至原视频~");

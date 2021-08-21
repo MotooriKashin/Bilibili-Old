@@ -15,4 +15,7 @@
     // av页
     if (config.av && /\/video\/[AaBb][Vv]/.test(location.href))
         API.importModule("av.js");
+    // bangumi
+    if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href))
+        API.importModule("bangumi.js");
 })();

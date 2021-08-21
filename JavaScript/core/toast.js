@@ -138,10 +138,10 @@
         }
     }
     Toast.init();
-    const toast = (...msg) => Toast.show("info", ...msg);
-    toast.info = (...msg) => Toast.show("info", ...msg);
-    toast.success = (...msg) => Toast.show("success", ...msg);
-    toast.warning = (...msg) => Toast.show("warning", ...msg);
-    toast.error = (...msg) => Toast.show("error", ...msg);
+    const toast = (...msg) => { API.debug.debug(...msg); Toast.show("info", ...msg); };
+    toast.info = (...msg) => { API.debug.debug(...msg); Toast.show("info", ...msg); };
+    toast.success = (...msg) => { API.debug.log(...msg); Toast.show("success", ...msg); };
+    toast.warning = (...msg) => { API.debug.warn(...msg); Toast.show("warning", ...msg); };
+    toast.error = (...msg) => { API.debug.error(...msg); Toast.show("error", ...msg); };
     API.toast = toast;
 })();

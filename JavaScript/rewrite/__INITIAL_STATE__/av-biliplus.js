@@ -81,6 +81,7 @@
                 embedPlayer: 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=0&aid=0&pre_ad=")'
             }
         };
+        // @ts-ignore：传递参数
         let data = API.jsonCheck(__INITIAL_STATE__);
         // 处理重定向
         data.v2_app_api && data.v2_app_api.redirect_url && (location.href = data.v2_app_api.redirect_url);

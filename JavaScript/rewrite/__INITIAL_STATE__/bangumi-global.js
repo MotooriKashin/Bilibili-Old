@@ -3,7 +3,7 @@
  * 本模块负责重构bangumi页__INITIAL_STATE__
  * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 同时传入的还有以`epid`的名义指定回目，默认值为0即第一回
- * 原始数据对应来源`//bangumi.bilibili.com/view/web_api/season?season_id/ep_id`
+ * 原始数据对应来源`//api.global.bilibili.com/view/web_api/season?season_id/ep_id`
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  * 由于数据来源于Ajax，具有非常高的不确定性，主体代码请务必写在`try{}catch{}`结构中以免报错
  */
@@ -74,50 +74,53 @@
         };
         // @ts-expect-error：传递参数
         let epId = Number(epid) || null, data = API.jsonCheck(__INITIAL_STATE__).result;
-        API.vipCid = [];
-        let ids = data.episodes.reduce((s, d) => {
-            s.push(d.ep_id);
-            (d.badge == "会员" || d.badge_type) && API.vipCid.push(d.cid);
-            return s;
-        }, []);
-        result.activity = data.activity || {};
+        let ids = [], epList = [];
+        data.modules.forEach((d) => {
+            d.data.episodes.forEach((d) => {
+                d.ctime = "";
+                d.duration = 1;
+                d.ep_id = d.id;
+                d.episode_status = d.status;
+                d.index = d.title;
+                d.index_title = d.long_title;
+                d.mid = 2;
+                d.page = 1;
+                d.premiere = false;
+                d.pub_real_time = "";
+                d.section_id = 0;
+                d.section_type = 0;
+                d.vid = "";
+                epList.push(d);
+                ids.push(d.id);
+            });
+        });
+        result.activity = data.activity_dialog || {};
         result.epId = epId || ids[0];
-        result.epInfo = data.episodes[ids.indexOf(epId)] || data.episodes[0];
-        result.epList = data.episodes;
-        result.mdId = data.media_id;
-        result.mediaInfo.actors = data.actors;
+        result.epInfo = epId ? epList[ids.indexOf(epId)] : epList[0];
+        result.epList = epList;
+        result.mediaInfo.actors = data.actor.info;
         result.mediaInfo.alias = data.alias;
         result.mediaInfo.areas = data.areas;
-        result.mediaInfo.bkg_cover = data.bkg_cover;
         result.mediaInfo.cover = data.cover;
         result.mediaInfo.evaluate = data.evaluate;
-        result.mediaInfo.is_paster_ads = data.is_paster_ads;
-        result.mediaInfo.jp_title = data.jp_title;
         result.mediaInfo.link = data.link;
-        result.mediaInfo.media_id = data.media_id;
         result.mediaInfo.mode = data.mode;
-        result.mediaInfo.paster_text = data.paster_text;
         result.mediaInfo.season_id = data.season_id;
         result.mediaInfo.season_status = data.season_status;
         result.mediaInfo.season_title = data.season_title;
-        result.mediaInfo.season_type = data.season_type;
-        result.mediaInfo.square_cover = data.square_cover;
         result.mediaInfo.staff = data.staff;
-        result.mediaInfo.style = data.style;
+        result.mediaInfo.style = data.styles;
         result.mediaInfo.title = data.title;
-        result.mediaInfo.total_ep = data.total_ep;
-        result.mediaRating = data.rating || {};
-        result.newestEp = data.newest_ep;
-        result.payMent = data.payment || {};
+        result.mediaInfo.total_ep = ids.length;
+        result.newestEp = data.new_ep;
         result.pubInfo = data.publish;
-        result.seasonList = data.seasons || [];
+        result.pubInfo.is_started = 1;
+        result.rightsInfo = data.right;
         result.seasonStat = data.stat;
-        result.special = data.bkg_cover ? true : false;
         result.ssId = data.season_id;
-        result.upInfo = data.up_info;
         API.__INITIAL_STATE__ = result;
     }
     catch (e) {
-        API.debug.trace(e, "bangumi-season.js", true);
+        API.debug.trace(e, "bangumi-global.js", true);
     }
 })();

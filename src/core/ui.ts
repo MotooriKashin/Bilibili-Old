@@ -2,35 +2,6 @@
  * 本模块负责绘制设置界面
  */
 (function () {
-    // 注册通用设置菜单
-    API.addMenu({ key: "common", name: "通用", svg: '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>' });
-    // 注册开发者模式设置
-    API.addSetting({
-        key: "developer",
-        sort: "common",
-        label: "开发者模式",
-        svg: '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>',
-        type: "switch",
-        value: false,
-        float: '开发者模式将暴露核心变量 <b>API</b> 到页面顶级对象 window，可以借此在控制台调试部分功能。',
-        sub: '暴露 API 到 window',
-        action: (value) => {
-            value ? (!(<any>window).API && ((<any>window).API = API)) : (window.API && delete (<any>window).API)
-        }
-    })
-    // 注册原生脚本代理设置
-    API.addSetting({
-        key: "proxyScript",
-        sort: "common",
-        label: "代理原生脚本",
-        sub: "修正部分代码",
-        type: "switch",
-        value: false,
-        svg: `<svg viewBox="0 0 24 24"><g><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></g></svg>`,
-        float: '脚本很多功能依赖调用B站原生脚本实现，但部分脚本功能面临失效，常规手段难以修复ಥ_ಥ。故而对这部分脚本进行代码修正，然后托管到第三方CDN。</br><strong>禁用后将导致部分功能异常！</strong>'
-    })
-    config.developer && (window.API = API);
-
     class Ui {
         /**
          * UI顶层
@@ -67,6 +38,15 @@
                 API.addCss(GM.getResourceText("ui.css"))
             })
         }
+        static resetSetting() {
+            document.querySelector(".border-box")?.remove();
+            Object.keys(config).forEach(d => {
+                delete (<any>config)[d];
+            })
+            GM.deleteValue("config");
+            GM.deleteValue("history");
+            location.reload();
+        }
         /**
          * 呈现设置界面  
          * 指定 key 将直接滚动到指定设置
@@ -75,13 +55,26 @@
         draw(key?: string) {
             document.querySelector(".border-box")?.remove();
             Ui.borderBox();
-            setting.reduce((s: string[], d) => {
-                !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
+            setting.reduce((s: string[], d: any) => {
+                d.sort && !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
                 Ui.index(d);
                 return s;
             }, [])
             document.body.appendChild(Ui.box);
-            key && Ui.item.querySelector(`.value-contain.${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+            key && Ui.item.querySelector(`.value-contain.${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            Ui.tool.childNodes.forEach((d, i) => {
+                (i < (Ui.tool.childNodes.length - 1)) && ((<HTMLDivElement>d).style.opacity = "0");
+            });
+            (<HTMLDivElement>Ui.tool).onmouseover = () => {
+                Ui.tool.childNodes.forEach((d, i) => {
+                    (i < (Ui.tool.childNodes.length - 1)) && ((<HTMLDivElement>d).style.opacity = "1");
+                });
+            }
+            (<HTMLDivElement>Ui.tool).onmouseout = () => {
+                Ui.tool.childNodes.forEach((d, i) => {
+                    (i < (Ui.tool.childNodes.length - 1)) && ((<HTMLDivElement>d).style.opacity = "0");
+                });
+            }
         }
         /**
          * 绘制设置按钮
@@ -107,7 +100,7 @@
          * @param node 父节点
          * @returns 设置节点
          */
-        static index(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut, node?: Element) {
+        static index(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon, node?: Element) {
             let result: HTMLDivElement;
             switch (obj.type) {
                 case "action": result = Ui.action(obj, node);
@@ -125,6 +118,8 @@
                 case "sort": result = Ui.sort(obj, node);
                     break;
                 case "switch": result = Ui.switch(obj, node);
+                    break;
+                case "icon": result = Ui.toolIcon(obj);
                     break;
             }
             return result;
@@ -161,6 +156,7 @@
             div.setAttribute("title", obj.title);
             this.tool.insertBefore(div, this.tool.firstChild);
             div.onclick = () => obj.action(this.box);
+            return div;
         }
         /**
          * 添加菜单栏
@@ -298,7 +294,7 @@
             obj.float && this.float(div, obj.float);
             node && node.appendChild(div);
             select.onchange = () => {
-                (<any>config)[obj.key] = select.value;
+                obj.value = select.value, (<any>config)[obj.key] = select.value;
                 obj.action && obj.action.call(div, select.value);
             }
             return div;
@@ -321,7 +317,7 @@
             div.innerHTML += `<div class="label">${obj.label}</div>
             <div class="anchor">
                 <div class="icon">
-                    <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"role="none"style="pointer-events: none; display: block; width: 100%; height: 100%;">
+                    <svg viewBox="0 0 24 24">
                         <g><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></g>
                     </svg>
                 </div>
@@ -373,7 +369,7 @@
             obj.svg && div.appendChild(this.icon(obj.svg));
             let html = `<div style="padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;">${obj.label}</div>
             <div class="textbox">`;
-            obj.key ? (html += `<input list="list-${obj.key}"></input><datalist id="list-${obj.key}"></datalist><div class="icon" title="清除历史"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"style="pointer-events: none; display: block; width: 100%; height: 100%;"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg></div></div>`) : div.innerHTML += `<input></input></div>`;
+            obj.key ? (html += `<input list="list-${obj.key}"></input><datalist id="list-${obj.key}"></datalist><div class="icon" title="清除历史"><svg viewBox="0 0 24 24"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg></div></div>`) : div.innerHTML += `<input></input></div>`;
             obj.title && (html += `<div class="button">${obj.title}</div>`);
             div.innerHTML += html;
             (history = this.history[obj.key] || [],
@@ -386,8 +382,9 @@
             node && node.appendChild(div);
             let input = div.querySelector("input") as HTMLInputElement;
             let clear = div.querySelector('.icon[title="清除历史"]') as HTMLDivElement
-            obj.value && (input.value = obj.value);
-            (input.parentNode as HTMLDivElement).onmouseover = () => history[0] && (clear.style.display = "block");
+            obj.hasOwnProperty("value") && (input.value = <string>obj.value);
+            Object.entries(obj.input).forEach(d => { input.setAttribute(d[0], d[1]) });
+            (input.parentNode as HTMLDivElement).onmouseover = () => history.length > 0 && (clear.style.display = "block");
             (input.parentNode as HTMLDivElement).onmouseout = () => clear.style.display = "none";
             clear.onclick = () => {
                 history = this.history[obj.key] = [];
@@ -395,14 +392,16 @@
                 clear.style.display = "none";
             }
             input.onchange = () => {
-                obj.value && ((<any>config)[obj.key] = input.value);
+                if (obj.pattern && !obj.pattern.test(input.value)) return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
+                obj.hasOwnProperty("value") && (obj.value = input.value, (<any>config)[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                 API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
             }
             obj.title && ((div.querySelector(".button") as HTMLDivElement).onclick = () => {
                 if (!input.value || ((<any>config)[obj.key] == input.value)) return;
-                obj.value && ((<any>config)[obj.key] = input.value);
+                if (obj.pattern && !obj.pattern.test(input.value)) return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
+                obj.hasOwnProperty("value") && (obj.value = input.value, (<any>config)[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                 API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
@@ -465,7 +464,7 @@
             (div.querySelectorAll<HTMLDivElement>(".checkbox") as NodeListOf<HTMLDivElement>).forEach(d => {
                 d.onclick = () => {
                     obj.value.includes(d.innerText) ? obj.value.splice(obj.value.indexOf(d.innerText), 1) : obj.value.push(d.innerText);
-                    (<any>config)[obj.key] = obj.value;
+                    obj.value == obj.value, (<any>config)[obj.key] = obj.value;
                     obj.action && obj.action.call(div, obj.value)
                 }
             })
@@ -474,6 +473,45 @@
     }
     const ui = new Ui();
     API.showSetting = (key?: string) => ui.draw(key);
+    // 注册通用设置菜单
+    API.addMenu({ key: "common", name: "通用", svg: '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>' });
+    // 注册开发者模式设置
+    API.addSetting({
+        key: "developer",
+        sort: "common",
+        label: "开发者模式",
+        svg: '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>',
+        type: "switch",
+        value: false,
+        float: '开发者模式将暴露核心变量 <b>API</b> 到页面顶级对象 window，可以借此在控制台调试部分功能。',
+        sub: '暴露 API 到 window',
+        action: (value) => {
+            value ? (!(<any>window).API && ((<any>window).API = API)) : (window.API && delete (<any>window).API)
+        }
+    })
+    // 注册原生脚本代理设置
+    API.addSetting({
+        key: "proxyScript",
+        sort: "common",
+        label: "代理原生脚本",
+        sub: "修正部分代码",
+        type: "switch",
+        value: false,
+        svg: `<svg viewBox="0 0 24 24"><g><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></g></svg>`,
+        float: '脚本很多功能依赖调用B站原生脚本实现，但部分脚本功能面临失效，常规手段难以修复ಥ_ಥ。故而对这部分脚本进行代码修正，然后托管到第三方CDN。</br><strong>禁用后将导致部分功能异常！</strong>'
+    })
+    config.developer && (window.API = API);
+    API.addSetting({
+        type: "action",
+        key: "reset",
+        svg: '<svg viewBox="0 0 24 24"><g><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"></path></g></svg>',
+        label: "默认设置",
+        sub: "需要刷新",
+        title: "恢复",
+        sort: "common",
+        float: '恢复所有设置到默认状态。</br>※ <strong>该操作会自动刷新页面！</strong>',
+        action: () => Ui.resetSetting()
+    })
 })();
 declare namespace API {
     /**
@@ -693,7 +731,7 @@ interface ItemIpt {
      * 用于给`input`标签添加的属性  
      * 请自行通过合适的属性来指定`input`类型及其他要求
      */
-    input: { [name: string]: string | number };
+    input: input;
     /**
      * 回调函数，用于接受用户输入内容以执行操作  
      * 将输入值作为参数传递  
@@ -713,6 +751,10 @@ interface ItemIpt {
      * 这意味着本设置将保存到本地 config
      */
     value?: string;
+    /**
+     * 用于判断输入的正则表达式
+     */
+    pattern?: RegExp;
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等
@@ -770,4 +812,118 @@ interface ItemMut extends ItemComment {
      * 设置节点本身将作为`this`传递
      */
     action?: (value: string[]) => void
+}
+/**
+ * input标签的可选属性
+ */
+interface input {
+    /**
+     * 选择提交的文件类型，仅限type="file"  
+     * `audio/*` `video/*` `image/*` `MIME_type`  
+     */
+    accept?: string;
+    /**
+     * 图像输入的替代文本，仅限type="image"
+     */
+    alt?: string;
+    /**
+     * 自动完成输入
+     */
+    autocomplete?: "on" | "off";
+    /**
+     * 页面加载时自动焦点
+     */
+    autofocus?: "autofocus";
+    /**
+     * 页面加载时自动选中，仅限ype="checkbox"或type="radio"
+     */
+    checked?: "checked";
+    /**
+     * 禁用输入框
+     */
+    disabled?: "disabled";
+    /**
+     * 所属的表单，复数时以逗号间隔
+     */
+    form?: string;
+    /**
+     * 提交表单时的URL，仅限type="submit"或type="image"
+     */
+    formaction?: string;
+    /**
+     * 表单数据使用的编码，仅限type="submit"或type="image"
+     */
+    formenctypeNew?: string;
+    /**
+     * 表单提交使用的HTTP方法，仅限type="submit"或type="image"
+     */
+    formmethod?: "GET" | "POST";
+    /**
+     * 覆盖表单标签的`novalidate`属性
+     */
+    formnovalidate?: "formnovalidate";
+    /**
+     * 由谁处理表单相应，取值内置关键词或对应的`framename`
+     */
+    formtarget?: "_blank" | "_self" | "_parent" | "_top" | string;
+    /**
+     * 元素高度：/px，仅限type="image"
+     */
+    height?: number;
+    /**
+     * 绑定的<datalist>元素的id
+     */
+    list?: string;
+    /**
+     * 接受输入的最大值
+     */
+    max?: number | string;
+    /**
+     * 输入框最大字符数
+     */
+    maxlength?: number;
+    /**
+     * 接受输入的最小值
+     */
+    min?: number | string;
+    /**
+     * 允许多个输入，仅限type="file"或type="email"
+     */
+    multiple?: "multiple";
+    /**
+     * 元素名称
+     */
+    name?: string;
+    /**
+     * 输入提示信息
+     */
+    placeholder?: string;
+    /**
+     * 只读元素
+     */
+    readonly?: "readonly";
+    /**
+     * 禁止空提交
+     */
+    required?: "required";
+    /**
+     * 元素可见宽度
+     */
+    size?: number;
+    /**
+     * 提交按钮的图片URL
+     */
+    src?: string;
+    /**
+     * 输入的合法间隔
+     */
+    step?: number;
+    /**
+     * 输入框类型
+     */
+    type?: "button" | "checkbox" | "color" | "date" | "datetime" | "datetime-local" | "email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week"
+    /**
+     * 元素的宽度：/px，仅限type="image"
+     */
+    width?: number;
 }

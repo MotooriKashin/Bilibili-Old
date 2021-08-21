@@ -13,6 +13,8 @@
     config.logReport && API.importModule("sendBeacon.js");
     // av页
     if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) API.importModule("av.js");
+    // bangumi
+    if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) API.importModule("bangumi.js");
 })();
 declare namespace API {
     /**
@@ -45,13 +47,3 @@ declare namespace API {
      */
     let tid: string | number;
 }
-/**
- * 传递给__INITIAL_STATE__重构模块的原始数据  
- * **注意：此变量仅在__INITIAL_STATE__重构模块中可用！**
- */
-declare const __INITIAL_STATE__: any;
-/**
- * 传递给bangumi页__INITIAL_STATE__重构模块的回目数据
- * **注意：此变量仅在bangumi页的__INITIAL_STATE__重构模块中可用！**
- */
-declare const epid: number;

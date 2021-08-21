@@ -28,7 +28,7 @@
     /**
      * 注册的设置内容  
      */
-    const setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut)[] = [];
+    const setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[] = [];
     class API {
         /**
          * 已引入模块列表
@@ -187,7 +187,7 @@
          * 注册设置到面板
          * @param obj 设置内容对象
          */
-        addSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut) {
+        addSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon) {
             setting.push(obj);
             API.setting(obj);
         }
@@ -262,7 +262,8 @@
             if (typeof callback === "function") API.normal.push(callback)
         }
     }
-    new API()
+    new API();
+
 })();
 /**
  * Tampermonkey 提供的高级API的封装
@@ -441,7 +442,7 @@ declare namespace API {
      * 注册设置到面板
      * @param obj 设置内容对象
      */
-    function addSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut): void;
+    function addSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon): void;
     /**
      * 注册设置菜单，即设置面板左侧的菜单  
      * 一个设置菜单名称只需注册一次  
@@ -535,4 +536,4 @@ declare namespace config { }
  * 注册的设置内容  
  * **注意：该变量仅在`index.js`和`ui.js`中可用**
  */
-declare const setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut)[]
+declare const setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[]

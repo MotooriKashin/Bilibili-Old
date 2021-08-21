@@ -114,6 +114,7 @@
     padding-bottom: 10px;
     padding-inline-start: 23px;
     padding-top: 10px;
+    cursor: pointer;
 }
 .item-menu .menuitem:hover{
     background-color: rgb(0,0,0,6%);

@@ -16,7 +16,7 @@
      * 初始化互动弹幕功能
      */
     function init() {
-        if (window.__INITIAL_STATE__ && __INITIAL_STATE__.videoData && window.player) {
+        if (window.__INITIAL_STATE__ && window.__INITIAL_STATE__.videoData && window.player) {
             if (popupDiv === undefined)
                 popupDiv = initCountainer();
             player = window.player;

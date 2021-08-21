@@ -2,7 +2,6 @@
  * 本模块负责注册av页相关设置
  */
 (function () {
-    // 注册设置项
     API.addSetting({
         key: "av",
         sort: "rewrite",

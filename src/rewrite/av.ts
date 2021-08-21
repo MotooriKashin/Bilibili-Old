@@ -62,7 +62,7 @@
                 title: API.__INITIAL_STATE__.videoData.title,
                 artist: API.__INITIAL_STATE__.videoData.owner.name,
                 chapterName: (pid: any, playList: any[]) => playList[pid].part,
-                coverUrl: () => [{ src: __INITIAL_STATE__.videoData.pic, sizes: "320x180" }],
+                coverUrl: () => [{ src: (<AV__INITIAL_STATE__>API.__INITIAL_STATE__).videoData.pic, sizes: "320x180" }],
                 getPlaylistIndex: () => (<any>window).player.getPlaylistIndex()
             })
             // 跳过充电鸣谢
