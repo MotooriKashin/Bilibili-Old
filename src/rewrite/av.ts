@@ -3,7 +3,11 @@
  * 其他只在重写过的旧版页面生效的功能可添加在本模块中，但更推荐编写在单独的模块中然后将引导代码写在本模块中。
  * */
 (function () {
-    API.importModule("register.js");
+    // 重定向SEO页面
+    if (/\/s\//.test(location.href)) location.replace(location.href.replace("s/video", "video"));
+    API.path.name = "av";
+    API.getVariable({ origin: window, target: "aid" });
+    API.getVariable({ origin: window, target: "cid" });
     // 备份还原旧版播放器设置数据
     API.importModule("playerSetting.js");
     // 获取aid
@@ -42,7 +46,7 @@
             // 修复评论跳转
             (<any>window).commentAgent = { seek: (t: any) => (<any>window).player && (<any>window).player.seek(t) };
             // 添加点赞功能
-            API.importModule("enLike.js");
+            config.enlike && API.importModule("enLike.js");
             // 构造媒体页
             GM.getValue<number>("medialist", 0) && API.importModule("mediaList.js");
             // 和作UP主

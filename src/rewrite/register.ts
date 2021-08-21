@@ -1,7 +1,6 @@
 /**
- * 本模块是负责集中注册来自`rewrite.js`的相关设置项及设置菜单类别  
- * 由于`rewrite.js`中要注册的内容过多，故集中在一个模块中以方便处理  
- * 注册菜单及设置其他可以在任意模块中，怎么方便怎么来
+ * 本模块是负责集中注册脚本设置中的菜单项并引入各个设置项注册模块  
+ * 本模块通过关键词`-setting`引入所有注册设置的模块  
  */
 (function () {
     // 注册菜单
@@ -29,94 +28,5 @@
             svg: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>`
         }
     ].forEach((d: Menuitem) => API.addMenu(d));
-    // 注册设置项
-    API.addSetting({
-        key: "av",
-        sort: "rewrite",
-        label: "av/BV",
-        type: "switch",
-        value: true,
-        float: '重写以恢复旧版av视频播放页。'
-    })
-    API.addSetting({
-        key: "lostVideo",
-        sort: "restore",
-        label: "失效视频信息",
-        sub: `封面和标题`,
-        type: "switch",
-        value: false,
-        float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
-    })
-    API.addSetting({
-        key: "oldReply",
-        sort: "style",
-        label: "旧版评论样式",
-        sub: `先时间后热度`,
-        type: "switch",
-        value: false,
-        float: '使用旧版评论样式，优先按时间排序。</br>此版本不会再维护！'
-    })
-    API.addSetting({
-        key: "upList",
-        sort: "style",
-        label: "UP主列表",
-        sub: "展示视频合作者",
-        type: "switch",
-        value: false
-    })
-    API.addSetting({
-        key: "commandDm",
-        sort: "danmaku",
-        label: "互动弹幕",
-        sub: "投票弹窗等",
-        type: "switch",
-        value: false,
-        float: `启用后，可以使用新版播放器新增的 弹幕投票弹窗 和 关联视频跳转按钮 两项功能。</br>其他类型的互动弹幕如引导关注、三连按钮等目前还没有在脚本中实现，正在逐步开发中。</br>脚本实现的互动弹幕外观上与新播放器有较大差别，如果有建议或者遇上bug，欢迎反馈。</br>※需要同时开启新版proto弹幕。`
-    })
-    API.addSetting({
-        key: "liveDm",
-        sort: "danmaku",
-        label: "实时弹幕",
-        type: "switch",
-        value: true,
-        float: `hook WebSocket以修复实时弹幕`
-    })
-    API.addSetting({
-        key: "electric",
-        sort: "player",
-        label: "跳过充电鸣谢",
-        type: "switch",
-        value: false
-    })
-
+    GM.info.script.resources.forEach(d => d.url.includes("-setting") && API.importModule(d.name));
 })();
-declare namespace config {
-    /**
-     * 重写：av/BV
-     */
-    let av: boolean;
-    /**
-     * 修复：失效视频信息
-     */
-    let lostVideo: boolean;
-    /**
-     * 样式：旧版评论
-     */
-    let oldReply: boolean;
-    /**
-     * 样式：UP主列表
-     */
-    let upList: boolean;
-    /**
-     * 弹幕：互动弹幕
-     */
-    let commandDm: boolean;
-    /**
-     * 弹幕：实时弹幕
-     */
-    let liveDm: boolean;
-    /**
-     * 播放：跳过充电鸣谢
-     */
-    let electric: boolean;
-}

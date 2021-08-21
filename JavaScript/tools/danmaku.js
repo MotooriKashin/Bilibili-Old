@@ -230,7 +230,7 @@
                     mode: mode,
                     size: parseInt(attr[2]),
                     stime: parseFloat(attr[0]),
-                    text: (mode != 8 && mode != 9) ? v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent,
+                    text: ((mode != 8 && mode != 9) ? v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent),
                     uid: attr[6]
                 };
             }
@@ -241,7 +241,7 @@
              * @param  {Array} dm 弹幕数组
              * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
              */
-            // BLOD.setDanmaku = (dm) => {......}
+            // setDanmaku = (dm) => {......}
             if (!window.setDanmaku)
                 return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
             window.setDanmaku(danmaku, append);

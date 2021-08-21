@@ -8,14 +8,11 @@
     API.importModule("abv.js");
     API.importModule("open.js");
     API.importModule("jsonp.js");
+    config.protoDm && API.importModule("protoDm.js");
     config.liveDm && API.importModule("webSocket.js");
+    config.logReport && API.importModule("sendBeacon.js");
     // av页
-    if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) {
-        // 重定向SEO页面
-        if (/\/s\//.test(location.href)) location.replace(location.href.replace("s/video", "video"));
-        API.path.name = "av";
-        API.importModule("av.js");
-    }
+    if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) API.importModule("av.js");
 })();
 declare namespace API {
     /**

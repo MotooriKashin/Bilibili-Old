@@ -216,7 +216,7 @@
                     mode: mode,
                     size: parseInt(attr[2]),
                     stime: parseFloat(attr[0]),
-                    text: (mode != 8 && mode != 9) ? (<string>v.textContent).replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent,
+                    text: <string>((mode != 8 && mode != 9) ? (<string>v.textContent).replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent),
                     uid: attr[6]
                 };
             }
@@ -227,10 +227,10 @@
              * @param  {Array} dm 弹幕数组
              * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
              */
-            // BLOD.setDanmaku = (dm) => {......}
+            // setDanmaku = (dm) => {......}
 
-            if (!(<any>window).setDanmaku) return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-            (<any>window).setDanmaku(danmaku, append);
+            if (!window.setDanmaku) return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
+            window.setDanmaku(danmaku, append);
         }
         /**
          * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
@@ -260,7 +260,7 @@
         danmakuFormat(dm: any[], aid?: number | string) {
             aid = aid || API.aid
             let danmaku = dm.map(function (v) {
-                let result: dammaku = {
+                let result: danmaku = {
                     class: v.pool,
                     color: v.color,
                     date: v.ctime,
@@ -346,21 +346,30 @@ declare namespace API {
      * @param aid 视频aid，默认取当前视频aid
      * @returns 旧版弹幕数组
      */
-    function danmakuFormat(dm: any[], aid?: number | string): dammaku[];
+    function danmakuFormat(dm: any[], aid?: number | string): danmaku[];
 }
 /**
  * 旧版播放器对应的弹幕对象
  */
-interface dammaku {
-    class: string;
-    color: string;
-    date: string;
+interface danmaku {
+    class: number;
+    color: number;
+    date: number;
     dmid: string;
-    mode: string;
-    size: string;
+    mode: number;
+    size: number;
     stime: number;
     text: string;
     uid: string;
     picture?: string;
     AH?: string
+}
+interface Window {
+    /**
+     * 实时修改播放器弹幕  
+     * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
+     * @param danmaku 弹幕列表
+     * @param append 添加弹幕还是替换，默认替换
+     */
+    setDanmaku: (danmaku: danmaku[], append?: boolean) => void
 }
