@@ -24,5 +24,7 @@
 任务`build-loacl`生成本地调试版脚本覆盖`main.user.js` **本地调试版本需要授予Tampermonkey访问本地文件权限！**  
 任务`tsc`编译ts源码为js模块  
 任务`clear`清理生成目录  
-
-注意：`main.user.js`和`resource.json`两个文件依赖于其他文件的信息生成，必须单独放在最后提交，如果有其他文件变动，不要手滑把这两个文件一起提交了！
+一般流程：修改ts等源码 -> 执行任务`tsc` -> git提交  
+如果确认要推送新版脚本：(接上面的流程) -> 执行任务`build` -> git提交`main.user.js`和`resource.json` -> git推送到远程仓库  
+如果要本地调试，可将任务`build`替换为任务`build-loacl`，**此时生成的`main.user.js`仅作调试用，不可以推送到远程仓库！**  
+注意：`main.user.js`和`resource.json`两个文件依赖于其他文件的信息生成，必须单独放在最后提交，如果有其他文件变动，不要手滑把这两个文件一起提交了！  
