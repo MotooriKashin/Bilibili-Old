@@ -28,6 +28,15 @@
         sort: "restore",
         float: '在空间显示对应账号的注册时间。'
     })
+    API.addSetting({
+        key: "lostVideo",
+        sort: "restore",
+        label: "失效视频信息",
+        sub: `封面和标题`,
+        type: "switch",
+        value: false,
+        float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
+    })
 })();
 declare namespace config {
     /**
@@ -42,4 +51,8 @@ declare namespace config {
      * 修复：注册时间
      */
     let jointime: boolean;
+    /**
+     * 修复：失效视频信息
+     */
+    let lostVideo: boolean;
 }

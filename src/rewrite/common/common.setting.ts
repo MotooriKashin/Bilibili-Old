@@ -3,22 +3,13 @@
  */
 (function () {
     API.addSetting({
-        key: "lostVideo",
-        sort: "restore",
-        label: "失效视频信息",
-        sub: `封面和标题`,
-        type: "switch",
-        value: false,
-        float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
-    })
-    API.addSetting({
         key: "oldReply",
         sort: "style",
         label: "旧版评论样式",
         sub: `先时间后热度`,
         type: "switch",
         value: false,
-        float: '使用旧版评论样式，优先按时间排序。</br>此版本不会再维护！'
+        float: '使用旧版评论样式，优先按时间排序。</br>此版本不会再维护！</br>※ 依赖开启"原生脚本代理"。'
     })
     API.addSetting({
         key: "protoDm",
@@ -57,10 +48,6 @@
     })
 })();
 declare namespace config {
-    /**
-     * 修复：失效视频信息
-     */
-    let lostVideo: boolean;
     /**
      * 样式：旧版评论
      */

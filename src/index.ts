@@ -134,7 +134,8 @@
             attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
             parrent = parrent || document.body;
             innerHTML && (element.innerHTML = innerHTML);
-            return replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+            replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+            return element;
         }
         /**
          * 移除或隐藏页面节点
@@ -225,7 +226,7 @@
          * @param callback 添加节点后执行的回调函数
          * @returns 注册编号，用于使用`removeObserver`销毁监听
          */
-        observerAddedNodes(callback: Function) {
+        observerAddedNodes(callback: (node: HTMLElement) => void) {
             if (typeof callback === "function") API.nodelist.push(callback);
             return API.nodelist.length - 1;
         }
@@ -461,7 +462,7 @@ declare namespace API {
      * @param callback 添加节点后执行的回调函数
      * @returns 注册编号，用于使用`removeObserver`销毁监听
      */
-    function observerAddedNodes(callback: Function): number;
+    function observerAddedNodes(callback: (node: HTMLElement) => void): number;
     /**
      * 销毁`observerAddedNodes`监听
      * @param id 注册`observerAddedNodes`监听是返回的编号

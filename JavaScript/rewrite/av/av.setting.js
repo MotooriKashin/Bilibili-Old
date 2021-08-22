@@ -34,4 +34,12 @@
         value: false,
         float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。"
     });
+    API.addSetting({
+        key: "medialist",
+        sort: "rewrite",
+        label: "medialist",
+        type: "switch",
+        value: false,
+        float: "用旧版av页重构medialist页面。"
+    });
 })();

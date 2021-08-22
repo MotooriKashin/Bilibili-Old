@@ -3,7 +3,10 @@
  */
 (async function () {
     if (!document.querySelector(".user-info-title")) {
-        await new Promise(r => { document.querySelector(".user-info-title") && r(true) })
+
+        await new Promise(r => {
+            API.runWhile(() => document.querySelector(".user-info-title"), r)
+        })
     }
     try {
         let data = API.jsonCheck(await API.xhr.GM({ url: API.objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": <string>API.mid }) }));

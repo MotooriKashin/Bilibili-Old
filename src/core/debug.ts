@@ -46,7 +46,7 @@
      */
     function trace(e: Error, label: string = "", toast: boolean = false) {
         let err = Array.isArray(e) ? e : [e];
-        toast ? API.toast.error(label, ...err) : API.debug(label, ...err);
+        toast ? API.toast.error(label, ...err) : API.debug.error(label, ...err);
     }
     const debug = (...data: any[]) => Debug.log(...data);
     debug.log = (...data: any[]) => Debug.log(...data);

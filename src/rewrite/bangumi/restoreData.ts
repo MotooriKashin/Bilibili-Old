@@ -42,7 +42,7 @@
         result = API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/tag/top", { tid: result.data.tag_id }) })).data;
         if (!document.querySelector(".bilibili-player-recommend")) {
             await new Promise(r => {
-                document.querySelector(".bilibili-player-recommend") && r(true);
+                API.runWhile(() => document.querySelector(".bilibili-player-recommend"), r);
             })
         }
         result = result.reduce((s: string, d: any) => {
@@ -76,7 +76,9 @@
         }, '')
         let item = <HTMLDivElement>document.querySelector(".bilibili-player-recommend");
         if (!item.querySelector(".mCSB_container")) {
-            await new Promise(r => { item.querySelector(".mCSB_container") && r(true) })
+            await new Promise(r => {
+                API.runWhile(() => item.querySelector(".mCSB_container"), r, 500, 0);
+            })
         }
         // @ts-ignorei：前面判定了存在节点
         item.querySelector(".mCSB_container").innerHTML = data;

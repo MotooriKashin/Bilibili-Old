@@ -132,7 +132,8 @@
             attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
             parrent = parrent || document.body;
             innerHTML && (element.innerHTML = innerHTML);
-            return replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+            replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+            return element;
         }
         /**
          * 移除或隐藏页面节点

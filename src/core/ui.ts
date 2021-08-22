@@ -39,7 +39,7 @@
             })
         }
         static resetSetting() {
-            document.querySelector(".border-box")?.remove();
+            document.querySelector(".ui-border-box")?.remove();
             Object.keys(config).forEach(d => {
                 delete (<any>config)[d];
             })
@@ -53,7 +53,7 @@
          * @param key 设置主键，添加设置时那个key，用于直接滚动到该设置
          */
         draw(key?: string) {
-            document.querySelector(".border-box")?.remove();
+            document.querySelector(".ui-border-box")?.remove();
             Ui.borderBox();
             setting.reduce((s: string[], d: any) => {
                 d.sort && !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
@@ -129,7 +129,7 @@
          */
         static borderBox() {
             this.box = document.createElement("div");
-            this.box.setAttribute("class", "border-box")
+            this.box.setAttribute("class", "ui-border-box")
             this.box.innerHTML = `<div class="box-tool"></div>
             <div class="box-content">
                 <div class="box-contain">
@@ -471,6 +471,7 @@
             return div;
         }
     }
+    if (window.self != window.top) return;
     const ui = new Ui();
     API.showSetting = (key?: string) => ui.draw(key);
     // 注册通用设置菜单

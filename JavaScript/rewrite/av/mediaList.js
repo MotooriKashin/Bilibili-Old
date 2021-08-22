@@ -3,6 +3,19 @@
  * 本模块负责基于av页重构为媒体页
  */
 (function () {
+    if (API.path[5].startsWith("ml")) {
+        const ml = Number(API.path[5].match(/[0-9]+/)[0]);
+        // 保存收藏号并调用av跳转
+        if (!config.medialist)
+            return;
+        GM.setValue("medialist", ml);
+        return API.runWhile(() => window.aid, () => location.replace(`https://www.bilibili.com/video/${window.aid}`));
+    }
+    // 新版稍后再看跳转到旧版稍后再看
+    if (API.path[5].startsWith("watchlater") && config.watchlater)
+        location.replace("https://www.bilibili.com/watchlater/#/");
+    if (!/\/video\/[AaBb][Vv]/.test(location.href))
+        return;
     let mid = GM.getValue("medialist", 0);
     GM.deleteValue("medialist");
     try {

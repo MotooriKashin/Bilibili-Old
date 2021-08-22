@@ -3,6 +3,8 @@
     position: fixed;
     right: 40px;
     bottom: 60px;
+    height: 20px;
+    width: 20px;
     border: 1px solid #e9eaec;
     border-radius: 50%;
     box-shadow: 0 0 12px 4px rgb(106,115,133,22%);
@@ -10,6 +12,8 @@
     cursor: pointer;
     animation: roll 1s ease-out;
     transition: opacity .3s ease-out;
+    background: none;
+    z-index: 999;
 }
 @keyframes roll{
     30%,60%,90%{
@@ -23,7 +27,7 @@
     }
 }
 /* 控制面板 */
-.border-box {
+.ui-border-box {
     left: 50%;
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
@@ -32,15 +36,16 @@
     padding: 0;
     border: 0;
     position: fixed;
-    z-index: 699;
+    z-index: 999;
     display: block;
     box-sizing: border-box;
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 6px 12px 0 rgba(106,115,133,22%);
     transition: transform 0.3s ease-in;
+    font: 12px Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif;
 }
-.border-box .box-tool{
+.ui-border-box .box-tool{
     position: absolute;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -60,14 +65,14 @@
 .box-tool div:hover{
     background-color: rgba(0,0,0,10%);
 }
-.border-box .box-content{
+.ui-border-box .box-content{
     position: relative;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     overflow: hidden;
     background-color: #fff;
 }
-.border-box .box-contain{
+.ui-border-box .box-contain{
     padding-bottom: 15px;
     background-image: url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/bg.c4f9c6c..png);
     background-position: top center;
@@ -148,17 +153,17 @@
     user-select: text;
 }
 /* 图标专用 */
-.icon{
+.icon-svg,.ui-border-box .icon{
     align-items: center;
     border-radius: 50%;
     display: flex;
     height: 20px;
     justify-content: center;
-    padding-inline-start: 0;
     padding-inline-end: 12px;
     position: relative;
     width: 20px;
     box-sizing: content-box;
+    background: none;
 }
 /* 选中蓝点 */
 .selected{
@@ -451,7 +456,7 @@
     top: 0;
     right: 0;
     position: fixed;
-    z-index: 700;
+    z-index: 1111;
     min-width: 40px;
     min-height: 30px;
     display: block;

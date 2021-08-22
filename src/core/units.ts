@@ -110,7 +110,7 @@
                 callback();
             }
         }, delay);
-        setTimeout(() => clearInterval(timer), stop * 1000)
+        stop && setTimeout(() => clearInterval(timer), stop * 1000)
     }
 })();
 declare namespace API {
