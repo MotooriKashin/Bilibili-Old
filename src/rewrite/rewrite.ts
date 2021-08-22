@@ -11,10 +11,21 @@
     config.protoDm && API.importModule("protoDm.js");
     config.liveDm && API.importModule("webSocket.js");
     config.logReport && API.importModule("sendBeacon.js");
-    // av页
-    if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) API.importModule("av.js");
-    // bangumi
-    if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) API.importModule("bangumi.js");
+    // 页面分离引导
+    switch (true) {
+        case (config.av && /\/video\/[AaBb][Vv]/.test(location.href)): API.importModule("av.js");
+            break;
+        case (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)): API.importModule("bangumi.js");
+            break;
+        case (config.watchlater && /\/watchlater\//.test(location.href)): API.importModule("watchlater.js");
+            break;
+        case (config.player && /player\./.test(location.href)): API.importModule("player.js");
+            break;
+        case (/space\.bilibili\.com/.test(location.href)): API.importModule("space.js");
+            break;
+        case (config.index && API.path[2] == 'www.bilibili.com' && (!API.path[3] || (API.path[3].startsWith('\?') || API.path[3].startsWith('\#') || API.path[3].startsWith('index.')))): API.importModule("index.js");
+            break;
+    }
 })();
 declare namespace API {
     /**

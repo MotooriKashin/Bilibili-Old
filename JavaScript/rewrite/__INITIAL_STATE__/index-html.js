@@ -37,5 +37,14 @@
     });
     result.locsData = data.locsData;
     result.locsData[23] = data.locsData[3197].filter((d) => d.url);
+    if (config.indexLoc) {
+        for (let key in result.locsData) {
+            if (Array.isArray(result.locsData[key])) {
+                result.locsData[key] = result.locsData[key].filter(d => {
+                    return d.is_ad ? (API.debug.debug("移除广告", key, d), false) : true;
+                });
+            }
+        }
+    }
     API.__INITIAL_STATE__ = result;
 })();

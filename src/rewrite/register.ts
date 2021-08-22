@@ -1,11 +1,11 @@
 /**
  * 本模块是负责集中注册脚本设置中的菜单项并引入各个设置项注册模块  
- * 本模块通过关键词`-setting`引入所有注册设置的模块  
- * 也就是说跟注册设置项相关的功能可以新建一个名字中带有`-setting`关键词的模块  
+ * 本模块通过关键词`.setting`引入所有注册设置的模块  
+ * 也就是说跟注册设置项相关的功能可以新建一个名字中带有`.setting`关键词的模块  
  * **由于项目通过文件名索引模块，新建模块时绝不可以出现同名文件，整个项目绝不能出现同名文件！**
  */
 (function () {
-    // 注册菜单
+    // 注册菜单，添加项请一并补充下面`settingSort`的可能值
     [
         {
             key: "rewrite",
@@ -30,5 +30,10 @@
             svg: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>`
         }
     ].forEach((d: Menuitem) => API.addMenu(d));
-    GM.info.script.resources.forEach(d => d.url.includes("-setting") && API.importModule(d.name));
+    GM.info.script.resources.forEach(d => d.url.includes(".setting") && API.importModule(d.name));
 })();
+/**
+ * 已注册的菜单，通过`addMenu`新建项请补充这里的可能值  
+ * **本变量仅作为类型声明接口类似的东西存在，不可参与到任何实际运行代码中！**
+ */
+declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"

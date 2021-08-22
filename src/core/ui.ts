@@ -593,9 +593,9 @@ interface ItemComment {
     /**
      * 菜单归属分类菜单  
      * 可以使用已有的，参见`API.settingMenu`  
-     * 若要新建，请先使用`API.addMenu`，其中`key`值即是
+     * 若要新建，请到`register.ts`中添加，并补充`settingSort`声明的可能值
      */
-    sort: string;
+    sort: typeof settingSort;
     /**
      * 设置 svg 图片
      */

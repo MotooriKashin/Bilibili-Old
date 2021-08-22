@@ -129,7 +129,7 @@
          * @param replaced 被替换的节点，忽略父节点参数
          * @returns 所添加的节点
          */
-        addElement(div: string, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element) {
+        addElement(div: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element) {
             let element = document.createElement(div);
             attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
             parrent = parrent || document.body;
@@ -410,7 +410,7 @@ declare namespace API {
      * @param replaced 被替换的节点，忽略父节点参数
      * @returns 所添加的节点
      */
-    function addElement(div: string, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
+    function addElement(div: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
     /**
      * 导入模块
      * @param moduleName 模块名字
