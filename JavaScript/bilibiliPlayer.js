@@ -29958,6 +29958,11 @@ function Fa() {
                         title: "Dropped Frames",
                         data: ""
                     }, {
+                        name: "bufferHealth",
+                        type: "text",
+                        title: "Buffer Health",
+                        data: ""
+                    }, {
                         name: "Log",
                         type: "log",
                         title: "Log",
@@ -30131,6 +30136,9 @@ function Fa() {
                 }, {
                     name: "connectionSpeed",
                     data: Math.round(h.speed / 8)
+                }, {
+                    name: "bufferHealth",
+                    data: h.bufferHealth + " s"
                 }]));
                 return b
             }

@@ -23408,6 +23408,7 @@
                                                 r = o.manifestInfo.duration >= l.getLongFormContentDurationThreshold() ? l.getBufferTimeAtTopQualityLongForm() : l.getBufferTimeAtTopQuality();
                                             else
                                                 r = l.getStableBufferTime()
+                                            if (i.id == "120") r = 40;
                                         }
                                         return r
                                     }
