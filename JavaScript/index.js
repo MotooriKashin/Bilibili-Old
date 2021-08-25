@@ -34,7 +34,7 @@
         /**
          * 已引入模块列表
          */
-        static modules = {};
+        static modules = [];
         /**
          * 核心模块
          */
@@ -93,17 +93,22 @@
         }
         /**
          * 导入模块
+         * **通常模块只能载入一次，可通过设定force参数为真来二次载入该模块**
          * @param moduleName 模块名字
          * @param args 传递给模块的变量，以键值对形式，键名即模块中能接受到的变量名
+         * @param force 是否强制重新载入
          * @returns 提示信息
          */
-        importModule(moduleName, args = {}) {
-            return moduleName ? API.modules.hasOwnProperty(moduleName) ? API.modules[moduleName] : (API.moduleList.includes(moduleName) ?
-                (API.modules[moduleName] =
-                    new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))(this, GM, config, this.importModule, ...Object.keys(args).reduce((s, d) => {
-                        s.push(args[d]);
-                        return s;
-                    }, []))) : new Error(`未知模块：${moduleName}`)) : API.modules;
+        importModule(moduleName, args = {}, force = false) {
+            if (!moduleName)
+                return API.modules;
+            if (API.modules.includes(moduleName) && !force)
+                return;
+            API.modules.push(moduleName);
+            (force || API.moduleList.includes(moduleName)) ? new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))(this, GM, config, this.importModule, ...Object.keys(args).reduce((s, d) => {
+                s.push(args[d]);
+                return s;
+            }, [])) : new Error(`未知模块：${moduleName}`);
         }
         /**
          * 获取`cookies`信息

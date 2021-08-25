@@ -26,7 +26,7 @@
                 let danmaku: any = API.danmakuFormat(Segments);
                 parseTime = (<any>new Date()) - parseTime;
                 triggerOnMsg(danmaku, loadTime, parseTime);
-                API.toXml(Segments).then((result: any) => API.xml = result);
+                API.danmaku = danmaku;
             });
             if ((<any>XMLHttpRequest.prototype).pakku_send === undefined) {
                 loadDanmaku(new Date());
@@ -46,8 +46,7 @@
                     if (i != Segments.length)
                         loadDanmaku(new Date());
                     else {
-                        triggerOnMsg(API.danmakuFormat(Segments), "(pakku.js)", "(pakku.js)");
-                        API.toXml(Segments).then((result: any) => (API.xml = result));
+                        triggerOnMsg(API.danmaku = API.danmakuFormat(Segments), "(pakku.js)", "(pakku.js)");
                     }
                 });
             }
@@ -58,7 +57,7 @@
 })();
 declare namespace API {
     /**
-     * xml格式的当前弹幕
+     * 纪录弹幕用于下载
      */
-    let xml: string
+    let danmaku: danmaku[]
 }

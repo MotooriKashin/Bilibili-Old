@@ -27,7 +27,7 @@
                 let danmaku = API.danmakuFormat(Segments);
                 parseTime = new Date() - parseTime;
                 triggerOnMsg(danmaku, loadTime, parseTime);
-                API.toXml(Segments).then((result) => API.xml = result);
+                API.danmaku = danmaku;
             });
             if (XMLHttpRequest.prototype.pakku_send === undefined) {
                 loadDanmaku(new Date());
@@ -48,8 +48,7 @@
                     if (i != Segments.length)
                         loadDanmaku(new Date());
                     else {
-                        triggerOnMsg(API.danmakuFormat(Segments), "(pakku.js)", "(pakku.js)");
-                        API.toXml(Segments).then((result) => (API.xml = result));
+                        triggerOnMsg(API.danmaku = API.danmakuFormat(Segments), "(pakku.js)", "(pakku.js)");
                     }
                 });
             }

@@ -18,6 +18,9 @@
 			"problemMatcher": [
 				"$tsc"
 			],
+			"dependsOn": [
+				"clear"
+			],
 			"detail": "编译ts文件",
 			"label": "tsc"
 		},
@@ -27,9 +30,6 @@
 			"args": [
 				"${workspaceFolder}\\build\\resource.js",
 				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"tsc"
 			],
 			"detail": "生成@resource清单",
 			"label": "resource",

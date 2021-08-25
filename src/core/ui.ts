@@ -2,6 +2,8 @@
  * 本模块负责绘制设置界面
  */
 (function () {
+    // @ts-ignore 传递参数
+    const SETTING: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[] = setting;
     class Ui {
         /**
          * UI顶层
@@ -55,7 +57,7 @@
         draw(key?: string) {
             document.querySelector(".ui-border-box")?.remove();
             Ui.borderBox();
-            setting.reduce((s: string[], d: any) => {
+            SETTING.reduce((s: string[], d: any) => {
                 d.sort && !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
                 Ui.index(d);
                 return s;
@@ -346,13 +348,18 @@
         static action(obj: ItemPus, node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
+            let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
             div.setAttribute("class", `value-contain ${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             div.innerHTML += `<div class="label">${obj.label}</div><div class="action">${obj.title}</div>`;
             obj.sub && ((div.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(div, obj.float);
             node && node.appendChild(div);
-            (div.querySelector(".action") as HTMLDivElement).onclick = () => obj.action.call(div,);
+            (div.querySelector(".action") as HTMLDivElement).onclick = () => {
+                (<HTMLDivElement>div.querySelector(".action")).setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => (<HTMLDivElement>div.querySelector(".action")).removeAttribute("disabled"), disabled * 1000);
+                obj.action.call(div);
+            }
             return div;
         }
         /**
@@ -365,6 +372,7 @@
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             let history: string[] = [];
+            let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
             div.setAttribute("class", `value-contain ${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             let html = `<div style="padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;">${obj.label}</div>
@@ -395,15 +403,17 @@
                 if (obj.pattern && !obj.pattern.test(input.value)) return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                 obj.hasOwnProperty("value") && (obj.value = input.value, (<any>config)[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                API.toast.warning(`数值已变更：${input.value}`);
+                !obj.action && API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
             }
             obj.title && ((div.querySelector(".button") as HTMLDivElement).onclick = () => {
                 if (!input.value || ((<any>config)[obj.key] == input.value)) return;
                 if (obj.pattern && !obj.pattern.test(input.value)) return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
+                (<HTMLDivElement>div.querySelector(".button")).setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => (<HTMLDivElement>div.querySelector(".button")).removeAttribute("disabled"), disabled * 1000);
                 obj.hasOwnProperty("value") && (obj.value = input.value, (<any>config)[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                API.toast.warning(`数值已变更：${input.value}`);
+                !obj.action && API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
             })
             return div;
@@ -697,9 +707,15 @@ interface ItemPus extends ItemComment {
      */
     title: string;
     /**
-     * 点击按钮执行的回调函数
+     * 点击按钮执行的回调函数  
+     * 设置节点本身将作为this传入
      */
-    action: () => void
+    action: () => void,
+    /**
+     * 点击按钮后临时禁用按钮多长时间，单位：/s，默认为 3  
+     * 0 表示一直禁用直到刷新面板
+     */
+    disabled?: number;
 }
 /**
  * 输入框设置项，用以提供一个输入框与用户交互等
@@ -756,6 +772,11 @@ interface ItemIpt {
      * 用于判断输入的正则表达式
      */
     pattern?: RegExp;
+    /**
+     * 点击按钮后临时禁用按钮多长时间，单位：/s，默认为 3  
+     * 0 表示一直禁用直到刷新面板
+     */
+    disabled?: number;
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等
@@ -778,7 +799,8 @@ interface ItemFie extends ItemComment {
      */
     multiple?: boolean;
     /**
-     * 点击按钮执行的回调函数
+     * 点击按钮执行的回调函数  
+     * 设置节点本身将作为this传递
      * 将文件列表`input.files`作为参数传递
      */
     action: (files: FileList) => void

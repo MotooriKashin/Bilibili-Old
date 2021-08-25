@@ -19,7 +19,7 @@
      * @param replace 替换已有消息
      * @param callback 红色消息回调
      */
-    function msg(time = 3, text, red = "", yellow = "", replace = true, callback) {
+    function msg(time = 3, text = "", red = "", yellow = "", replace = true, callback) {
         let node = document.querySelector(".bilibili-player-video-toast-bottom");
         time = time * 1000 || 3000;
         if (!node)

@@ -285,6 +285,23 @@
             this.sortDmById(danmaku, "dmid");
             return danmaku;
         }
+        /**
+         * 载入在线弹幕
+         * @param url 其他弹幕所在视URL
+         */
+        async onlineDanmaku(url: string) {
+            try {
+                API.importModule("urlInputCheck.js");
+                let obj = await API.urlInputCheck(url);
+                if (obj.aid && obj.cid) {
+                    API.getSegDanmaku(obj.aid, obj.cid).then(d => {
+                        d = API.danmakuFormat(<any[]>d, obj.aid);
+                        window.setDanmaku(d, config.concatDanmaku);
+                        API.danmaku = d;
+                    })
+                }
+            } catch (e) { API.debug.trace(e, "onlineDanmaku.js") }
+        }
     }
     const DM = new Danmaku();
     API.getSegDanmaku = (aid = API.aid, cid = API.cid, bas = false) => DM.getSegDanmaku(aid, cid, bas);
@@ -295,6 +312,7 @@
     API.loadLocalDm = (xml: string, append: boolean) => DM.loadLocalDm(xml, append);
     API.segDmDecode = (response: any) => DM.segDmDecode(response);
     API.danmakuFormat = (dm: any[], aid?: number | string) => DM.danmakuFormat(dm, aid);
+    API.onlineDanmaku = (url: string) => DM.onlineDanmaku(url);
 })();
 declare namespace API {
     /**
@@ -347,6 +365,11 @@ declare namespace API {
      * @returns 旧版弹幕数组
      */
     function danmakuFormat(dm: any[], aid?: number | string): danmaku[];
+    /**
+     * 载入在线弹幕
+     * @param url 其他视频URL
+     */
+    function onlineDanmaku(url: string): void;
 }
 /**
  * 旧版播放器对应的弹幕对象

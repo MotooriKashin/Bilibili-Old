@@ -301,6 +301,26 @@
             this.sortDmById(danmaku, "dmid");
             return danmaku;
         }
+        /**
+         * 载入在线弹幕
+         * @param url 其他弹幕所在视URL
+         */
+        async onlineDanmaku(url) {
+            try {
+                API.importModule("urlInputCheck.js");
+                let obj = await API.urlInputCheck(url);
+                if (obj.aid && obj.cid) {
+                    API.getSegDanmaku(obj.aid, obj.cid).then(d => {
+                        d = API.danmakuFormat(d, obj.aid);
+                        window.setDanmaku(d, config.concatDanmaku);
+                        API.danmaku = d;
+                    });
+                }
+            }
+            catch (e) {
+                API.debug.trace(e, "onlineDanmaku.js");
+            }
+        }
     }
     const DM = new Danmaku();
     API.getSegDanmaku = (aid = API.aid, cid = API.cid, bas = false) => DM.getSegDanmaku(aid, cid, bas);
@@ -311,4 +331,5 @@
     API.loadLocalDm = (xml, append) => DM.loadLocalDm(xml, append);
     API.segDmDecode = (response) => DM.segDmDecode(response);
     API.danmakuFormat = (dm, aid) => DM.danmakuFormat(dm, aid);
+    API.onlineDanmaku = (url) => DM.onlineDanmaku(url);
 })();

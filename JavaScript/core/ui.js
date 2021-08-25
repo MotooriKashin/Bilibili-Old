@@ -356,13 +356,18 @@
         static action(obj, node) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
+            let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
             div.setAttribute("class", `value-contain ${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             div.innerHTML += `<div class="label">${obj.label}</div><div class="action">${obj.title}</div>`;
             obj.sub && (div.querySelector(".label").innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(div, obj.float);
             node && node.appendChild(div);
-            div.querySelector(".action").onclick = () => obj.action.call(div);
+            div.querySelector(".action").onclick = () => {
+                div.querySelector(".action").setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => div.querySelector(".action").removeAttribute("disabled"), disabled * 1000);
+                obj.action.call(div);
+            };
             return div;
         }
         /**
@@ -375,6 +380,7 @@
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             let history = [];
+            let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
             div.setAttribute("class", `value-contain ${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             let html = `<div style="padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;">${obj.label}</div>
@@ -406,7 +412,7 @@
                     return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                 obj.hasOwnProperty("value") && (obj.value = input.value, config[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                API.toast.warning(`数值已变更：${input.value}`);
+                !obj.action && API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
             };
             obj.title && (div.querySelector(".button").onclick = () => {
@@ -414,9 +420,11 @@
                     return;
                 if (obj.pattern && !obj.pattern.test(input.value))
                     return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
+                div.querySelector(".button").setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => div.querySelector(".button").removeAttribute("disabled"), disabled * 1000);
                 obj.hasOwnProperty("value") && (obj.value = input.value, config[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                API.toast.warning(`数值已变更：${input.value}`);
+                !obj.action && API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
             });
             return div;

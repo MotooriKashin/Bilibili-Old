@@ -8,7 +8,7 @@
          * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
          * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外
          */
-        static xhr(details: xhrDetails) {
+        static xhr(details: xhrDetails): any {
             if (details.hasOwnProperty("async") && Boolean(details.async) === false) {
                 let xhr = new XMLHttpRequest();
                 xhr.open(details.method || 'GET', details.url, false);

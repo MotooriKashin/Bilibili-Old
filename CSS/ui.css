@@ -242,6 +242,12 @@
 .button:active{
     box-shadow: 0 0 1px 1px rgba(0,0,0,10%);
 }
+.button[disabled],.action[disabled]{
+    pointer-events: none;
+    background-color: rgba(19, 1, 1, 0.1);
+    border: 1px solid rgba(0,0,0,.1);
+    color: white;
+}
 /* 下拉箭头 */
 .anchor {
     cursor: pointer;

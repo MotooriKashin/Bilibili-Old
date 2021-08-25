@@ -18,7 +18,7 @@
      * @param replace 替换已有消息
      * @param callback 红色消息回调
      */
-    function msg(time: number = 3, text: string, red: string = "", yellow: string = "", replace: boolean = true, callback?: () => {}) {
+    function msg(time: number = 3, text: string = "", red: string = "", yellow: string = "", replace: boolean = true, callback?: () => void) {
         let node = document.querySelector(".bilibili-player-video-toast-bottom");
         time = time * 1000 || 3000;
         if (!node) return Debug.log(text, red, yellow); // 播放器不存在，打印消息到控制台
@@ -71,11 +71,11 @@ declare namespace API {
          * @param time 弹窗时长/s
          * @param text 一般消息
          * @param red 红色消息
-         * @param yellow 红色消息
+         * @param yellow 黄色消息
          * @param replace 替换已有消息
          * @param callback 红色消息回调
          */
-        msg(time: number, text: string, red?: string, yellow?: string, replace?: boolean, callback?: (() => {})): void;
+        msg(time?: number, text?: string, red?: string, yellow?: string, replace?: boolean, callback?: () => void): void;
         /**
          * 跟踪错误信息
          * @param e 错误信息

@@ -162,12 +162,13 @@ declare namespace API {
     function runWhile(term: Function, callback: Function, delay?: number, stop?: number): void;
 }
 /**
- * 导入模块
+ * 导入模块  
+ * **通常模块只能载入一次，可通过设定force参数为真来二次载入该模块**
  * @param moduleName 模块名字
- * @param args 传递给模块的变量
- * @returns 模块返回值或者提示信息
+ * @param args 传递给模块的变量，以键值对形式，键名即模块中能接受到的变量名
+ * @param force 是否强制重新载入
  */
-declare const importModule: (moduleName?: string, args?: { [key: string]: any }) => any;
+declare const importModule: (moduleName?: string, args?: { [key: string]: any }, force?: boolean) => any;
 /**
  * 函数`getVariable`参数
  */

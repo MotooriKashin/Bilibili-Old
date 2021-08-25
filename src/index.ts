@@ -33,7 +33,7 @@
         /**
          * 已引入模块列表
          */
-        static modules: { [name: string]: any } = {};
+        static modules: any[] = [];
         /**
          * 核心模块
          */
@@ -91,21 +91,22 @@
             this.observerAddedNodes((msg: HTMLElement) => API.switchVideo(msg))
         }
         /**
-         * 导入模块
+         * 导入模块  
+         * **通常模块只能载入一次，可通过设定force参数为真来二次载入该模块**
          * @param moduleName 模块名字
          * @param args 传递给模块的变量，以键值对形式，键名即模块中能接受到的变量名
+         * @param force 是否强制重新载入
          * @returns 提示信息
          */
-        importModule(moduleName?: string, args: { [key: string]: any } = {}) {
-            return moduleName ? API.modules.hasOwnProperty(moduleName) ? API.modules[moduleName] : (
-                API.moduleList.includes(moduleName) ?
-                    (API.modules[moduleName] =
-                        new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))
-                            (this, GM, config, this.importModule, ...Object.keys(args).reduce((s: object[], d) => {
-                                s.push(args[d]);
-                                return s;
-                            }, []))) : new Error(`未知模块：${moduleName}`)
-            ) : API.modules;
+        importModule(moduleName?: string, args: { [key: string]: any } = {}, force: boolean = false) {
+            if (!moduleName) return API.modules;
+            if (API.modules.includes(moduleName) && !force) return;
+            API.modules.push(moduleName);
+            (force || API.moduleList.includes(moduleName)) ? new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))
+                (this, GM, config, this.importModule, ...Object.keys(args).reduce((s: object[], d) => {
+                    s.push(args[d]);
+                    return s;
+                }, [])) : new Error(`未知模块：${moduleName}`);
         }
         /**
          * 获取`cookies`信息
@@ -413,12 +414,13 @@ declare namespace API {
      */
     function addElement(div: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
     /**
-     * 导入模块
+     * 导入模块  
+     * **通常模块只能载入一次，可通过设定force参数为真来二次载入该模块**
      * @param moduleName 模块名字
      * @param args 传递给模块的变量，以键值对形式，键名即模块中能接受到的变量名
-     * @returns 提示信息
+     * @param force 是否强制重新载入
      */
-    function importModule(moduleName?: string | undefined, args?: { [key: string]: any }): any;
+    function importModule(moduleName?: string | undefined, args?: { [key: string]: any }, force?: boolean): any;
     /**
      * 获取`cookies`信息
      * @returns `cookies`对象
@@ -533,8 +535,3 @@ declare const unsafeWindow: Window & {
  * 脚本设置数据
  */
 declare namespace config { }
-/**
- * 注册的设置内容  
- * **注意：该变量仅在`index.js`和`ui.js`中可用**
- */
-declare const setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[]
