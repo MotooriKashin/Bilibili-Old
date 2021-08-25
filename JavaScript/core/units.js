@@ -90,9 +90,9 @@
         html = GM.getResourceText(html);
         if (!config.proxyScript)
             return html;
-        let comment = config.oldReply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/comment.min.js";
-        html = html.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/video.min.js");
-        html = html.replace("//static.hdslb.com/player/js/bilibiliPlayer.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/bilibiliPlayer.min.js");
+        let comment = config.oldReply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3eb91157fcb3772b55382cf137267ff0d0d51f96/JavaScript/comment.min.js";
+        html = html.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3eb91157fcb3772b55382cf137267ff0d0d51f96/JavaScript/video.min.js");
+        html = html.replace("//static.hdslb.com/player/js/bilibiliPlayer.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3eb91157fcb3772b55382cf137267ff0d0d51f96/JavaScript/bilibiliPlayer.min.js");
         // CDN未更新前，两种conment.js都匹配一次
         html = html.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
         html = html.replace("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js", comment);

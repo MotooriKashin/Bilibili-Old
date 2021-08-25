@@ -12,6 +12,7 @@
             input: { type: "url", placeholder: "URL" },
             title: "载入",
             action: (url) => {
+                if (!<any>window.setDanmaku) return API.toast.warning("未成功代理原生脚本，已停止！", "请检查“代理原生脚本”设置项");
                 API.importModule("danmaku.js");
                 API.onlineDanmaku(url);
             }
@@ -38,6 +39,7 @@
                 type: "action",
                 title: "开始",
                 action: function () {
+                    if (!<any>window.setDanmaku) return API.toast.warning("未成功代理原生脚本，已停止！", "请检查“代理原生脚本”设置项");
                     API.importModule("allDanmaku.js");
                     API.allDanmaku();
                 },
@@ -50,9 +52,11 @@
             label: "载入本地文件",
             sub: "视频/弹幕",
             type: "file",
+            accept: [".mp4", ".xml", ".json"],
             float: '使用旧版播放器播放本地视频或者弹幕文件。</br>※ 视频只能为mp4格式，且编码格式被浏览器所兼容。</br>※ 若载入弹幕文件，参见弹幕设置是否合并弹幕。',
             title: "文件",
             action: (files) => {
+                (!<any>window.setDanmaku) && API.toast.warning("未成功代理原生脚本，无法载入弹幕文件！", "请检查“代理原生脚本”设置项");
                 API.importModule("localMedia.js");
                 API.localMedia(files);
             }
