@@ -13,6 +13,8 @@
             input: { type: "url", placeholder: "URL" },
             title: "载入",
             action: (url) => {
+                if (!window.player?.setDanmaku)
+                    return API.toast.warning("内部组件丢失，已停止！");
                 API.importModule("danmaku.js");
                 API.onlineDanmaku(url);
             }
@@ -39,6 +41,8 @@
                     type: "action",
                     title: "开始",
                     action: function () {
+                        if (!window.player?.setDanmaku)
+                            return API.toast.warning("内部组件丢失，已停止！");
                         API.importModule("allDanmaku.js");
                         API.allDanmaku();
                     },
@@ -55,6 +59,7 @@
             float: '使用旧版播放器播放本地视频或者弹幕文件。</br>※ 视频只能为mp4格式，且编码格式被浏览器所兼容。</br>※ 若载入弹幕文件，参见弹幕设置是否合并弹幕。',
             title: "文件",
             action: (files) => {
+                (!window.player?.setDanmaku) && API.toast.warning("内部组件丢失，无法载入弹幕文件！");
                 API.importModule("localMedia.js");
                 API.localMedia(files);
             }

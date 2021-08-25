@@ -242,9 +242,9 @@
              * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
              */
             // setDanmaku = (dm) => {......}
-            if (!window.setDanmaku)
+            if (!window.player?.setDanmaku)
                 return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-            window.setDanmaku(danmaku, append);
+            window.player?.setDanmaku(danmaku, append);
         }
         /**
          * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
@@ -312,7 +312,7 @@
                 if (obj.aid && obj.cid) {
                     API.getSegDanmaku(obj.aid, obj.cid).then(d => {
                         d = API.danmakuFormat(d, obj.aid);
-                        window.setDanmaku(d, config.concatDanmaku);
+                        window.player?.setDanmaku(d, config.concatDanmaku);
                         API.danmaku = d;
                     });
                 }

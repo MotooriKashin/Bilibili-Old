@@ -7,5 +7,5 @@
     API.getVariable({ origin: window, target: "cid" });
     // 备份还原旧版播放器设置数据
     API.importModule("playerSetting.js");
-    API.rewriteHTML(API.getHTMLFrame("player.html"));
+    API.rewriteHTML(GM.getResourceText("player.html"));
 })();

@@ -7857,10 +7857,10 @@
                                         try {
                                             var r = (this.state.mpd && this.state.mpd[e]).length;
                                             r && (n = Math.min(n, r - 1)),
-                                            n >= 0 ? (this.state.currentQualityIndex[e] = n,
-                                            this.player.setDefaultQualityFor(e, n)) : this.error({
-                                                msg: "Call setDefaultQualityFor function error, quality: " + t
-                                            })
+                                                n >= 0 ? (this.state.currentQualityIndex[e] = n,
+                                                    this.player.setDefaultQualityFor(e, n)) : this.error({
+                                                        msg: "Call setDefaultQualityFor function error, quality: " + t
+                                                    })
                                         } catch (e) {
                                             this.error({
                                                 msg: "Call setDefaultQualityFor function error, quality: " + t + ", qualityIndex = " + n,
@@ -8271,8 +8271,8 @@
                                                     this.state.manifestInfo = l,
                                                     this.state.qualityNumberMap = d,
                                                     this.setDefaultQualityFor("video", this.state.defaultQuality)
-                                                    // 设置加载的音频质量，使右键统计信息里面能显示正确的音频码率
-                                                    this.setDefaultQualityFor("audio", this.state.defaultAudioQuality)
+                                                // 设置加载的音频质量，使右键统计信息里面能显示正确的音频码率
+                                                this.setDefaultQualityFor("audio", this.state.defaultAudioQuality)
                                             }
                                         } catch (u) {
                                             this.error({
@@ -26792,7 +26792,7 @@
                                         i.gray_html5_compatible()
                                 }).fail(function () {
                                     $.ajax({
-                                        url: r.upgrade ? "".concat(r.gray_config_html5.new_player, "?").concat(n) : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/bilibiliPlayer.min.js",
+                                        url: r.upgrade ? "".concat(r.gray_config_html5.new_player, "?").concat(n) : "//static.hdslb.com/player/js/bilibiliPlayer.min.js",
                                         cache: !0,
                                         type: "get",
                                         dataType: "script",

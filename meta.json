@@ -22,7 +22,6 @@
     "resource": [
         "protobuf https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js",
         "base64 https://cdn.jsdelivr.net/npm/js-base64@3.6.0/base64.min.js",
-        "icon https://www.bilibili.com/index/index-icon.json",
-        "reply https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/comment.js"
+        "icon https://www.bilibili.com/index/index-icon.json"
     ]
 }

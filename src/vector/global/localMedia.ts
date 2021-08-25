@@ -66,11 +66,11 @@
                 // 读取json弹幕
                 let data = JSON.parse(await this.readFile(d)) || [];
                 API.toast("本地弹幕：" + d.name, "载入模式：" + ((this.data.xml[0] || i || config.concatDanmaku) ? "与当前弹幕合并" : "替换当前弹幕"));
-                window.setDanmaku(data, <any>this.data.xml[0] || Boolean(i) || config.concatDanmaku);
+                window.player?.setDanmaku(data, <any>this.data.xml[0] || Boolean(i) || config.concatDanmaku);
             })
             API.debug.msg();
             this.offset = 0; // 记录或重置弹幕偏移时间
-            if (!window.offsetDanmaku) return API.toast.error("绑定键盘事件失败：弹幕偏移组件丢失！")
+            if (!window.player?.offsetDanmaku) return API.toast.error("绑定键盘事件失败：弹幕偏移组件丢失！")
             else {
                 API.toast("已绑定键盘事件", "可以通过键盘 , 和 . 两个键（即上标为 < 和 > 的两个键）提前或延后弹幕偏移，频度1秒/次");
                 if (!this.keyboard) {
@@ -78,12 +78,12 @@
                     document.addEventListener("keydown", (ev) => {
                         switch (ev.key) {
                             case ",":
-                                window.offsetDanmaku(-1);
+                                window.player.offsetDanmaku(-1);
                                 this.offset--;
                                 API.debug.msg(undefined, "弹幕偏移：", this.offset + " 秒");
                                 break;
                             case ".":
-                                window.offsetDanmaku(1);
+                                window.player.offsetDanmaku(1);
                                 this.offset++;
                                 API.debug.msg(undefined, "弹幕偏移：", this.offset + " 秒");
                                 break;
@@ -123,14 +123,6 @@
     const localMedia = new LocalMedia()
     API.localMedia = (files: FileList) => localMedia.change(files);
 })();
-interface Window {
-    /**
-     * 实时修改播放器弹幕
-     * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
-     * @param time 弹幕偏移，正相关
-     */
-    offsetDanmaku: (time: number) => void;
-}
 declare namespace API {
     /**
      * 载入本地文件

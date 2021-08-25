@@ -24,7 +24,7 @@
         result.rankList = data.data.list;
         result.note = data.data.note;
         window.__INITIAL_STATE__ = result;
-        API.rewriteHTML(API.getHTMLFrame("ranking.html"));
+        API.rewriteHTML(GM.getResourceText("ranking.html"));
         API.addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
     }
     catch (e) {

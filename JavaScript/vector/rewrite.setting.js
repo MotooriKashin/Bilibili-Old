@@ -4,22 +4,13 @@
  */
 (function () {
     API.addSetting({
-        key: "oldReply",
-        sort: "style",
-        label: "启用旧版评论样式",
-        sub: `指的是先时间后热度的排序`,
-        type: "switch",
-        value: false,
-        float: '使用旧版评论样式，优先按时间排序。</br>此版本不会再维护！</br>※ 依赖开启"原生脚本代理"。'
-    });
-    API.addSetting({
         key: "protoDm",
         sort: "danmaku",
         label: "启用新版弹幕",
         sub: "proto弹幕",
         type: "switch",
         value: true,
-        float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能默认启用。</br>※ <strong>部分功能依赖启用“代理原生脚本。</strong>”`
+        float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能默认启用。</br>”`
     });
     API.addSetting({
         key: "liveDm",
@@ -131,7 +122,7 @@
         sub: "可以选择跳转而不必一直下拉",
         type: "switch",
         value: true,
-        float: '恢复旧版翻页评论区，仅控制非重写页面，重写页面默认开启。'
+        float: '恢复旧版翻页评论区。'
     });
     API.addSetting({
         key: "section",

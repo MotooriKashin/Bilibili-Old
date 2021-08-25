@@ -21408,7 +21408,7 @@ function Fa() {
                      * @param  {Array} dm 弹幕数组
                      * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
                      */
-                    window.setDanmaku = (danmaku = [], append = false) => {
+                    window.player.setDanmaku = (danmaku = [], append = false) => {
                         if (danmaku.length == 0) return;
                         clear();
                         var e = +new Date;
@@ -21461,7 +21461,7 @@ function Fa() {
                      * 偏移弹幕的出现时间
                      * @param  {Number} t 以秒为单位的偏移时间
                      */
-                    window.offsetDanmaku = (t) => {
+                    window.player.offsetDanmaku = (t) => {
                         clear();
                         function offset(array) {
                             for (let i = 0; i < array.length; i++) {

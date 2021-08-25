@@ -5,8 +5,6 @@ const fs = require("fs");
  */
 const del = [
     "JavaScript/index.js",
-    "JavaScript/comment.js",
-    "JavaScript/bilibiliPlayer.js",
     "JavaScript/video.js"
 ];
 /**

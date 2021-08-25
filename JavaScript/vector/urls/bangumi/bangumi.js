@@ -56,7 +56,7 @@
                 return API.toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
             config.bangumiEplist && API.__INITIAL_STATE__?.epList[1] && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
             window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
-            API.__INITIAL_STATE__.special ? API.rewriteHTML(API.getHTMLFrame("bangumi-special.html")) : API.rewriteHTML(API.getHTMLFrame("bangumi.html"));
+            API.__INITIAL_STATE__.special ? API.rewriteHTML(GM.getResourceText("bangumi-special.html")) : API.rewriteHTML(GM.getResourceText("bangumi.html"));
             document.title = API.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
             // 分集数据
             config.episodeData && API.importModule("episodeData.js");

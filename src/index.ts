@@ -107,6 +107,7 @@
                     s.push(args[d]);
                     return s;
                 }, [])) : new Error(`未知模块：${moduleName}`);
+            (<any>this).debug && (<any>this).debug(moduleName);
         }
         /**
          * 获取`cookies`信息
@@ -198,17 +199,22 @@
          * @param html 字符串形式的网页文本
          */
         rewriteHTML(html: string) {
-            delete unsafeWindow.webpackJsonp;
-            delete unsafeWindow._babelPolyfill;
-            delete unsafeWindow.player;
-            delete unsafeWindow.BPlayer;
-            delete unsafeWindow.GrayManager;
-            delete unsafeWindow.EmbedPlayer;
-            delete unsafeWindow.PlayerAgent;
-            delete unsafeWindow.dashjs;
-            delete unsafeWindow.bPlayer;
-            delete unsafeWindow.flvjs;
-            delete unsafeWindow.BilibiliPlayer;
+            [
+                "bbComment",
+                "webpackJsonp",
+                "webpackLogReporter",
+                "_babelPolyfill",
+                "player",
+                "BPlayer",
+                "bPlayer",
+                "GrayManager",
+                "EmbedPlayer",
+                "PlayerAgent",
+                "dashjs",
+                "flvjs",
+                "BilibiliPlayer"
+                // @ts-ignore 由TamperMonkey提供
+            ].forEach(d => { delete unsafeWindow[d] })
             document.open();
             document.write(html);
             document.close();
@@ -482,55 +488,6 @@ declare namespace API {
      */
     function runAfterRewrite(callback: Function): void;
 }
-/**
- * **此顶层对象仅在`index.js`中可用，模块中直接使用`window`即可**
- */
-declare const unsafeWindow: Window & {
-    /**
-     * `webpack`污染对象
-     */
-    webpackJsonp?: object;
-    /**
-     * `webpack`的Polyfill标记
-     */
-    _babelPolyfill?: boolean;
-    /**
-     * B站播放器
-     */
-    player?: object;
-    /**
-     * B站播放器
-     */
-    BPlayer?: object;
-    /**
-     * B站播放器控制台
-     */
-    GrayManager?: object;
-    /**
-     * B站播放器脚本初始化
-     */
-    EmbedPlayer?: object;
-    /**
-     * 新版B站播放器
-     */
-    PlayerAgent?: object;
-    /**
-     * B站播放器组件`dashjs`
-     */
-    dashjs?: object;
-    /**
-     * B站播放器
-     */
-    bPlayer?: object;
-    /**
-     * B站播放器组件`flvjs`
-     */
-    flvjs?: object;
-    /**
-     * B站播放器类
-     */
-    BilibiliPlayer?: object;
-};
 /**
  * 脚本设置数据
  */

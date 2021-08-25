@@ -10,9 +10,8 @@
     API.getVariable({ origin: window, target: "cid" });
     // 备份还原旧版播放器设置数据
     API.importModule("playerSetting.js");
-    API.rewriteHTML(API.getHTMLFrame("watchlater.html"));
+    API.rewriteHTML(GM.getResourceText("watchlater.html"));
     API.addCss(GM.getResourceText("bofqi.css"));
-    config.oldReply && API.addCss(GM.getResourceText("oldReply.css"));
     // 修复评论跳转
     window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
     // 添加点赞功能

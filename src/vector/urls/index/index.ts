@@ -18,7 +18,7 @@
         const isINDEX__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__ | INDEX__INITIAL_STATE__): pet is INDEX__INITIAL_STATE__ => true;
         if (isINDEX__INITIAL_STATE__(API.__INITIAL_STATE__)) {
             (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
-            API.rewriteHTML(API.getHTMLFrame("index.html"));
+            API.rewriteHTML(GM.getResourceText("index.html"));
             // 移除无效节点
             API.runWhile(() => document.querySelector(".ver"), () => document.querySelector(".ver")?.remove());
             API.runWhile(() => document.querySelector("#fixed_app_download"), () => document.querySelector("#fixed_app_download")?.remove());

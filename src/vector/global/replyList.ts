@@ -15,7 +15,9 @@
         }
         cover() {
             delete (<any>window).bbComment; // 取消拦截
-            API.importModule("reply"); // 载入新评论脚本
+            API.importModule("comment.js"); // 载入新评论脚本
+            API.addCss(`.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {float: right;line-height: 36px;}`);
         }
     }
+    new ReplyList().init();
 })();

@@ -9,9 +9,9 @@
     API.importModule("worker.js");
     // 修复历史弹幕
     let id = API.xhrhook(["history?type="], function (args) {
-        if (!window.setDanmaku) {
+        if (!window.player?.setDanmaku) {
             API.removeXhrhook(id);
-            return API.toast.warning("未启用“原生脚本代理”，无法修复历史弹幕！", "请在设置中开启相关支持后刷新页面重试。");
+            return API.toast.warning("内部组件丢失！");
         }
         let param = API.urlObj(args[1]);
         if (param.date) {
@@ -28,7 +28,7 @@
                 responseType: "arraybuffer"
             }).then((seg) => {
                 let segDm = API.segDmDecode(seg);
-                window.setDanmaku(API.danmaku = API.danmakuFormat(segDm));
+                window.player?.setDanmaku(API.danmaku = API.danmakuFormat(segDm));
             }).catch((e) => {
                 API.toast.error("载入历史弹幕失败", "请尝试刷新页面");
                 API.toast.error(e);

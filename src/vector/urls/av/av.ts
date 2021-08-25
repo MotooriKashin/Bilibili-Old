@@ -37,10 +37,9 @@
             API.aid = API.__INITIAL_STATE__.aid;
             API.tid = API.__INITIAL_STATE__.videoData.tid;
             (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
-            API.rewriteHTML(API.getHTMLFrame("av.html"));
+            API.rewriteHTML(GM.getResourceText("av.html"));
             document.title = API.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
             API.addCss(GM.getResourceText("bofqi.css"));
-            config.oldReply && API.addCss(GM.getResourceText("oldReply.css"));
             // 移除失效顶栏
             API.runWhile(() => document.getElementsByClassName("bili-header-m report-wrap-module")[1], () => document.getElementsByClassName("bili-header-m report-wrap-module")[1].remove());
             // 修复评论跳转

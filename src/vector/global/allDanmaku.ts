@@ -157,7 +157,7 @@
             } catch (e) { }
             let danmaku = API.danmakuFormat(this.danmaku, API.aid);
             if (boolean) API.toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + API.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");
-            window.setDanmaku(danmaku);
+            window.player?.setDanmaku(danmaku);
             API.danmaku = danmaku;
             this.callback && this.callback();
         }

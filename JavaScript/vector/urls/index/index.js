@@ -21,7 +21,7 @@
         const isINDEX__INITIAL_STATE__ = (pet) => true;
         if (isINDEX__INITIAL_STATE__(API.__INITIAL_STATE__)) {
             window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
-            API.rewriteHTML(API.getHTMLFrame("index.html"));
+            API.rewriteHTML(GM.getResourceText("index.html"));
             // 移除无效节点
             API.runWhile(() => document.querySelector(".ver"), () => document.querySelector(".ver")?.remove());
             API.runWhile(() => document.querySelector("#fixed_app_download"), () => document.querySelector("#fixed_app_download")?.remove());

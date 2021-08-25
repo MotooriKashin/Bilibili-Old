@@ -82,23 +82,6 @@
         window.biliQuickLogin ? window.biliQuickLogin() : window.$ ? window.$.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin()) : false;
     };
     /**
-     * 获取网页框架
-     * @param html 网页框架名
-     * @returns 网页框架文本
-     */
-    API.getHTMLFrame = (html) => {
-        html = GM.getResourceText(html);
-        if (!config.proxyScript)
-            return html;
-        let comment = config.oldReply ? "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js" : "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3eb91157fcb3772b55382cf137267ff0d0d51f96/JavaScript/comment.min.js";
-        html = html.replace("//static.hdslb.com/js/video.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3eb91157fcb3772b55382cf137267ff0d0d51f96/JavaScript/video.min.js");
-        html = html.replace("//static.hdslb.com/player/js/bilibiliPlayer.min.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3eb91157fcb3772b55382cf137267ff0d0d51f96/JavaScript/bilibiliPlayer.min.js");
-        // CDN未更新前，两种conment.js都匹配一次
-        html = html.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
-        html = html.replace("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js", comment);
-        return html;
-    };
-    /**
      * 循环检查然后执行回调函数
      * @param term 检查为真的条件
      * @param callback 条件为真时执行的回调函数

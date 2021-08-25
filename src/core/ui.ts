@@ -500,17 +500,6 @@
             value ? (!(<any>window).API && ((<any>window).API = API)) : (window.API && delete (<any>window).API)
         }
     })
-    // 注册原生脚本代理设置
-    API.addSetting({
-        key: "proxyScript",
-        sort: "common",
-        label: "代理原生脚本",
-        sub: "修正部分代码",
-        type: "switch",
-        value: false,
-        svg: `<svg viewBox="0 0 24 24"><g><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></g></svg>`,
-        float: '脚本很多功能依赖调用B站原生脚本实现，但部分脚本功能面临失效，常规手段难以修复ಥ_ಥ。故而对这部分脚本进行代码修正，然后托管到第三方CDN。</br><strong>禁用后将导致部分功能异常！</strong>'
-    })
     config.developer && (window.API = API);
     API.addSetting({
         type: "action",
@@ -536,10 +525,6 @@ declare namespace config {
      * 通用：开发者模式
      */
     let developer: boolean;
-    /**
-     * 通用：原生脚本代理
-     */
-    let proxyScript: boolean;
 }
 /**
  * 工具栏按钮

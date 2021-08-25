@@ -57,6 +57,5 @@
         spoiler: "0"
     }
     data = `<div class="page-container">${bars + upinfo + head + body + tag}</div>`; // 总合成
-    API.rewriteHTML(API.getHTMLFrame("read.html").replace(`<div class="page-container"></div>`, data));
-    config.oldReply && API.addCss(GM.getResourceText("oldReply.css"));
+    API.rewriteHTML(GM.getResourceText("read.html").replace(`<div class="page-container"></div>`, data));
 })();

@@ -229,8 +229,8 @@
              */
             // setDanmaku = (dm) => {......}
 
-            if (!window.setDanmaku) return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-            window.setDanmaku(danmaku, append);
+            if (!window.player?.setDanmaku) return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
+            window.player?.setDanmaku(danmaku, append);
         }
         /**
          * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
@@ -296,7 +296,7 @@
                 if (obj.aid && obj.cid) {
                     API.getSegDanmaku(obj.aid, obj.cid).then(d => {
                         d = API.danmakuFormat(<any[]>d, obj.aid);
-                        window.setDanmaku(d, config.concatDanmaku);
+                        window.player?.setDanmaku(d, config.concatDanmaku);
                         API.danmaku = d;
                     })
                 }
@@ -388,11 +388,19 @@ interface danmaku {
     AH?: string
 }
 interface Window {
-    /**
-     * 实时修改播放器弹幕  
-     * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
-     * @param danmaku 弹幕列表
-     * @param append 添加弹幕还是替换，默认替换
-     */
-    setDanmaku: (danmaku: danmaku[], append?: boolean) => void
+    player: {
+        /**
+         * 实时修改播放器弹幕
+         * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
+         * @param danmaku 弹幕列表
+         * @param append 添加弹幕还是替换，默认替换
+         */
+        setDanmaku: (danmaku: danmaku[], append?: boolean) => void;
+        /**
+         * 实时修改播放器弹幕
+         * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
+         * @param time 弹幕偏移，正相关
+         */
+        offsetDanmaku: (time: number) => void;
+    }
 }
