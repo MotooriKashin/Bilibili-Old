@@ -15,6 +15,7 @@
         type: "switch",
         key: "searchHistory",
         label: "去除历史记录页面搜索框",
+        sub: "其实留着也没什么",
         value: false,
         sort: "style"
     });

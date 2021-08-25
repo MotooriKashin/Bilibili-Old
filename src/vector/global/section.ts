@@ -12,7 +12,6 @@
             (<HTMLDivElement>document.querySelector("#internationalHeader")).remove();
             API.addCss(GM.getResourceText("avatarAnimation.css"));
         })
-        API.importModule("infoNewNumber.js");
     })
     API.runWhile(() => document.querySelector(".international-footer"), () => {
         if (API.path.name) return;

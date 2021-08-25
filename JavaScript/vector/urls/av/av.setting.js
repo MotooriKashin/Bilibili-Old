@@ -23,6 +23,7 @@
         key: "electric",
         sort: "player",
         label: "跳过充电鸣谢",
+        sub: "在视频末尾",
         type: "switch",
         value: false
     });
@@ -30,6 +31,7 @@
         key: "enlike",
         sort: "player",
         label: "添加点赞功能",
+        sub: "自制、简陋",
         type: "switch",
         value: false,
         float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。"

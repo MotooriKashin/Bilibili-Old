@@ -202,7 +202,7 @@
     font-weight: 400;
 }
 /* 按钮 */
-.button, .action{
+.xbutton, .xaction{
     line-height: 154%;
     align-items: center;
     border-radius: 4px;
@@ -220,29 +220,29 @@
     position: relative;
     user-select: none;
 }
-.action {
+.xaction {
     border: none;
     background-color: rgb(26,115,232);
     color: #fff;
 }
-.button {
+.xbutton {
     background-color: #fff;
     color: rgb(26,115,232);
     border: 1px solid rgba(0,0,0,6%);
 }
-.action:hover{
+.xaction:hover{
     background-color: rgb(72,115,232);
 }
-.button:hover{
+.xbutton:hover{
     background-color: rgba(26,115,232,6%);
 }
-.action:active{
+.xaction:active{
     box-shadow: 0 0 1px 1px rgba(72,115,232,80%);
 }
-.button:active{
+.xbutton:active{
     box-shadow: 0 0 1px 1px rgba(0,0,0,10%);
 }
-.button[disabled],.action[disabled]{
+.xbutton[disabled],.xaction[disabled]{
     pointer-events: none;
     background-color: rgba(19, 1, 1, 0.1);
     border: 1px solid rgba(0,0,0,.1);

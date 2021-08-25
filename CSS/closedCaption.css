@@ -20,7 +20,7 @@
 /*复选框和其对应标签样式*/
 #subtitle-setting-panel input[type="checkbox"]{display:none;}
 #subtitle-setting-panel input ~ label {cursor:pointer;}
-#subtitle-setting-panel input:checked ~ label:before {content: '\\2714';}
+#subtitle-setting-panel input:checked ~ label:before {content: '\2714';}
 #subtitle-setting-panel input ~ label:before{
     width: 12px;
     height:12px;

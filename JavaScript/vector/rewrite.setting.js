@@ -6,8 +6,8 @@
     API.addSetting({
         key: "oldReply",
         sort: "style",
-        label: "旧版评论样式",
-        sub: `先时间后热度`,
+        label: "启用旧版评论样式",
+        sub: `指的是先时间后热度的排序`,
         type: "switch",
         value: false,
         float: '使用旧版评论样式，优先按时间排序。</br>此版本不会再维护！</br>※ 依赖开启"原生脚本代理"。'
@@ -15,7 +15,7 @@
     API.addSetting({
         key: "protoDm",
         sort: "danmaku",
-        label: "新版弹幕",
+        label: "启用新版弹幕",
         sub: "proto弹幕",
         type: "switch",
         value: true,
@@ -24,7 +24,8 @@
     API.addSetting({
         key: "liveDm",
         sort: "danmaku",
-        label: "实时弹幕",
+        label: "修复实时弹幕",
+        sub: "及时接收别人新发的弹幕",
         type: "switch",
         value: true,
         float: `修复旧版播放器实时弹幕。`
@@ -32,7 +33,7 @@
     API.addSetting({
         key: "commandDm",
         sort: "danmaku",
-        label: "互动弹幕",
+        label: "添加互动弹幕",
         sub: "投票弹窗等",
         type: "switch",
         value: false,
@@ -50,8 +51,8 @@
     API.addSetting({
         key: "heartbeat",
         sort: "restore",
-        label: "视频心跳",
-        sub: "不记录播放历史时",
+        label: "修复视频心跳",
+        sub: "出现不记录播放历史症状时的选择",
         float: "尝试修复可能被广告拦截扩展误伤的视频心跳。",
         type: "switch",
         value: false
@@ -59,7 +60,8 @@
     API.addSetting({
         key: "noVideo",
         sort: "player",
-        label: "拦截视频",
+        label: "拦截视频载入",
+        sub: "用于临时不加载视频进入视频页面",
         float: "拦截播放器载入视频，强行使视频失效。",
         type: "switch",
         value: false
@@ -67,7 +69,8 @@
     API.addSetting({
         key: "bannerGif",
         sort: "style",
-        label: "替换顶栏动图",
+        label: "丰富顶栏动图",
+        sub: '搜索框下gif',
         float: "替换顶栏动图接口，避免单调。",
         type: "switch",
         value: true
@@ -75,50 +78,57 @@
     API.addSetting({
         key: "danmakuFirst",
         sort: "style",
-        label: "展开弹幕列表",
+        label: "自动切换到弹幕列表",
+        sub: "默认是展示推荐视频",
         float: "自动从推荐视频切换到播放弹幕列表。",
         type: "switch",
         value: false
     });
     API.addSetting({
-        key: "showBofqi",
-        sort: "style",
-        label: "自动滚动到播放器",
-        type: "switch",
-        value: false
-    });
-    API.addSetting({
-        key: "screenWide",
-        sort: "style",
-        label: "自动宽屏",
-        type: "switch",
-        value: false
-    });
-    API.addSetting({
-        key: "noDanmaku",
-        sort: "style",
-        label: "自动关弹幕",
-        type: "switch",
-        value: false
-    });
-    API.addSetting({
-        key: "autoPlay",
-        sort: "style",
-        label: "自动播放",
-        type: "switch",
-        value: false
+        type: "sort",
+        key: "autoDo",
+        label: "自动化操作",
+        sort: "player",
+        sub: "进入播放页面及切P时",
+        list: [{
+                key: "showBofqi",
+                sort: "style",
+                label: "自动滚动到播放器",
+                type: "switch",
+                value: false
+            }, {
+                key: "screenWide",
+                sort: "style",
+                label: "自动宽屏",
+                type: "switch",
+                value: false
+            }, {
+                key: "noDanmaku",
+                sort: "style",
+                label: "自动关弹幕",
+                type: "switch",
+                value: false
+            }, {
+                key: "autoPlay",
+                sort: "style",
+                label: "自动播放",
+                type: "switch",
+                value: false
+            }]
     });
     API.addSetting({
         key: "segProgress",
         sort: "player",
         label: "分段进度条",
+        sub: "仅限看点视频",
         type: "switch",
         value: false
     });
     API.addSetting({
         key: "replyList",
         sort: "style",
-        label: "翻页评论",
+        label: "恢复评论翻页",
+        sub: "可以选择跳转而不必一直下拉",
         type: "switch",
         value: true,
         float: '恢复旧版翻页评论区，仅控制非重写页面，重写页面默认开启。'
@@ -126,7 +136,8 @@
     API.addSetting({
         key: "section",
         sort: "style",
-        label: "旧版顶栏底栏",
+        label: "统一换回旧版顶栏",
+        sub: "针对未重写的页面",
         type: "switch",
         value: true,
         float: '非重写页面顶栏底栏也替换为旧版。'
@@ -135,6 +146,7 @@
         key: "concatDanmaku",
         sort: "danmaku",
         label: "合并载入弹幕",
+        sub: "本地弹幕/在线弹幕",
         type: "switch",
         value: false,
         float: '载入本地弹幕文件或者在线弹幕时是否与播放器当前弹幕合并。'
@@ -143,6 +155,7 @@
         key: "danmakuHashId",
         sort: "danmaku",
         label: "反查弹幕发送者",
+        sub: "结果仅供参考！",
         type: "switch",
         value: false,
         float: '旧版播放器上右键弹幕将显示弹幕发送者。</br>※ 使用哈希逆向算法，存在碰撞可能性，所示信息仅供参考，或者干脆查不出来。'

@@ -9,6 +9,7 @@
     API.importModule("abv.js");
     API.importModule("open.js");
     API.importModule("jsonp.js");
+    API.importModule("infoNewNumber.js");
     config.protoDm && API.importModule("protoDm.js");
     config.liveDm && API.importModule("webSocket.js");
     config.logReport && API.importModule("sendBeacon.js");

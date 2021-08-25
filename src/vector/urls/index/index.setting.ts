@@ -13,16 +13,17 @@
     API.addSetting({
         type: "switch",
         key: "indexLoc",
-        label: "主页广告",
+        label: "过滤主页广告",
         sub: "banner+recommand",
         value: false,
         sort: "style",
-        float: '重写以恢复旧版主页'
+        float: '当然指的是旧版主页。'
     })
     API.addSetting({
         type: "switch",
         key: "privateRecommend",
         label: "禁用主页个性化推荐",
+        sub: "还是习惯全站统一推荐",
         value: false,
         sort: "style",
         float: '禁用旧版主页banner右边的个性化推荐，恢复全站统一推荐。'

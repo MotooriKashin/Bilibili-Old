@@ -14,7 +14,9 @@
     API.addSetting({
         key: "limit",
         sort: "player",
-        label: "区域/平台限制",
+        label: "解除区域/平台限制",
+        sub: "港澳台？泰版？仅限APP？",
+        float: "同类功能脚本可能会冲突，使用专用脚本切莫开启本功能！",
         type: "sort",
         list: [
             {
@@ -23,7 +25,7 @@
                 label: "解除限制",
                 type: "switch",
                 value: false,
-                sub: "区域/APP"
+                sub: "区域+APP"
             }, {
                 key: "limitServer",
                 sort: "player",
@@ -40,6 +42,7 @@
         key: "bangumiEplist",
         sort: "player",
         label: "保留番剧回目列表",
+        sub: "牺牲特殊背景图",
         type: "switch",
         value: false,
         float: '部分带特殊背景图片的番剧会隐藏播放器下方的番剧回目列表，二者不可得兼，只能选一。'
@@ -48,6 +51,7 @@
         key: "episodeData",
         sort: "style",
         label: "显示番剧分集数据",
+        sub: "原本是合集数据",
         type: "switch",
         value: false,
         float: '有分集数据时将bangumi播放、弹幕数替换为当集数据。原合集数据将显示在鼠标焦点信息上。'

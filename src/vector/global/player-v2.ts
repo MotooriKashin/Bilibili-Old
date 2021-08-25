@@ -5,6 +5,8 @@
  */
 (function () {
     API.switchVideo(() => {
+        let ready = false; // 载入时机标记
+        API.xhrhook(["api.bilibili.com/x/player/carousel.so"], function (args) { ready = true });
         API.xhr({
             url: API.objUrl("https://api.bilibili.com/x/player/v2", { cid: <any>API.cid, aid: <any>API.aid }),
             responseType: "json"
@@ -15,10 +17,12 @@
                 responseType: "json"
             })
         }).then((data: any) => {
-            // CC字幕
-            data?.data?.subtitle?.subtitles && (API.importModule("closedCaption.js"), API.closedCaption(data));
-            // 分段进度条
-            data?.data?.view_points[1] && (API.importModule("segProgress.js"), API.segProgress(data))
+            API.runWhile(() => ready, () => {
+                // CC字幕
+                data?.data?.subtitle?.subtitles && (API.importModule("closedCaption.js"), API.closedCaption(data));
+                // 分段进度条
+                data?.data?.view_points[1] && (API.importModule("segProgress.js"), API.segProgress(data))
+            })
         })
     })
 })();

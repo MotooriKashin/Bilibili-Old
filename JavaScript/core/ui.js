@@ -3,6 +3,8 @@
  * 本模块负责绘制设置界面
  */
 (function () {
+    // @ts-ignore 传递参数
+    const SETTING = setting;
     class Ui {
         /**
          * UI顶层
@@ -56,13 +58,13 @@
         draw(key) {
             document.querySelector(".ui-border-box")?.remove();
             Ui.borderBox();
-            setting.reduce((s, d) => {
+            SETTING.reduce((s, d) => {
                 d.sort && !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
                 Ui.index(d);
                 return s;
             }, []);
             document.body.appendChild(Ui.box);
-            key && Ui.item.querySelector(`.value-contain.${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            key && Ui.item.querySelector(`.value-contain-${key}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             Ui.tool.childNodes.forEach((d, i) => {
                 (i < (Ui.tool.childNodes.length - 1)) && (d.style.opacity = "0");
             });
@@ -258,7 +260,7 @@
         static switch(obj, node) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             div.innerHTML += `<div class="label">${obj.label}</div>
             <div class="switch">
@@ -293,7 +295,7 @@
         static row(obj, node) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             div.innerHTML += `<div class="label">${obj.label}</div><div class="row"><select>`;
             obj.sub && (div.querySelector(".label").innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
@@ -321,7 +323,7 @@
             let sec = document.createElement("div");
             let flag = false;
             let item;
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             sec.setAttribute("class", "vaule-sec-contain");
             obj.svg && div.appendChild(this.icon(obj.svg));
             div.innerHTML += `<div class="label">${obj.label}</div>
@@ -357,15 +359,15 @@
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
-            div.innerHTML += `<div class="label">${obj.label}</div><div class="action">${obj.title}</div>`;
+            div.innerHTML += `<div class="label">${obj.label}</div><div class="xaction">${obj.title}</div>`;
             obj.sub && (div.querySelector(".label").innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(div, obj.float);
             node && node.appendChild(div);
-            div.querySelector(".action").onclick = () => {
-                div.querySelector(".action").setAttribute("disabled", "disabled");
-                disabled && setTimeout(() => div.querySelector(".action").removeAttribute("disabled"), disabled * 1000);
+            div.querySelector(".xaction").onclick = () => {
+                div.querySelector(".xaction").setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => div.querySelector(".xaction").removeAttribute("disabled"), disabled * 1000);
                 obj.action.call(div);
             };
             return div;
@@ -381,12 +383,12 @@
             let div = document.createElement("div");
             let history = [];
             let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             let html = `<div style="padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;">${obj.label}</div>
             <div class="textbox">`;
             obj.key ? (html += `<input list="list-${obj.key}"></input><datalist id="list-${obj.key}"></datalist><div class="icon" title="清除历史"><svg viewBox="0 0 24 24"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg></div></div>`) : div.innerHTML += `<input></input></div>`;
-            obj.title && (html += `<div class="button">${obj.title}</div>`);
+            obj.title && (html += `<div class="xbutton">${obj.title}</div>`);
             div.innerHTML += html;
             (history = this.history[obj.key] || [],
                 history.reduce((s, d) => {
@@ -415,13 +417,13 @@
                 !obj.action && API.toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(div, input.value);
             };
-            obj.title && (div.querySelector(".button").onclick = () => {
+            obj.title && (div.querySelector(".xbutton").onclick = () => {
                 if (!input.value || (config[obj.key] == input.value))
                     return;
                 if (obj.pattern && !obj.pattern.test(input.value))
                     return API.toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
-                div.querySelector(".button").setAttribute("disabled", "disabled");
-                disabled && setTimeout(() => div.querySelector(".button").removeAttribute("disabled"), disabled * 1000);
+                div.querySelector(".xbutton").setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => div.querySelector(".xbutton").removeAttribute("disabled"), disabled * 1000);
                 obj.hasOwnProperty("value") && (obj.value = input.value, config[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                 !obj.action && API.toast.warning(`数值已变更：${input.value}`);
@@ -438,16 +440,16 @@
         static file(obj, node) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
-            div.innerHTML += `<div class="label">${obj.label}</div><div class="button">${obj.title}</div><input type="file" style="width: 0;"></input>`;
+            div.innerHTML += `<div class="label">${obj.label}</div><div class="xbutton">${obj.title}</div><input type="file" style="width: 0;"></input>`;
             obj.sub && (div.querySelector(".label").innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             let input = div.querySelector("input");
             obj.accept && (input.accept = obj.accept.join(","));
             obj.multiple && (input.multiple = true);
             obj.float && this.float(div, obj.float);
             node && node.appendChild(div);
-            div.querySelector(".button").onclick = () => input.click();
+            div.querySelector(".xbutton").onclick = () => input.click();
             input.onclick = () => input.value = "";
             input.onchange = () => input.files && obj.action.call(div, input.files);
             return div;
@@ -461,7 +463,7 @@
         static multi(obj, node) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
-            div.setAttribute("class", `value-contain ${obj.key}`);
+            div.setAttribute("class", `value-contain value-contain-${obj.key}`);
             obj.svg && div.appendChild(this.icon(obj.svg));
             div.innerHTML += `<div class="label">${obj.label}</div>`;
             obj.sub && (div.querySelector(".label").innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
@@ -528,8 +530,8 @@
         type: "action",
         key: "reset",
         svg: '<svg viewBox="0 0 24 24"><g><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"></path></g></svg>',
-        label: "默认设置",
-        sub: "需要刷新",
+        label: "恢复出厂设置",
+        sub: "将强制刷新页面！",
         title: "恢复",
         sort: "common",
         float: '恢复所有设置到默认状态。</br>※ <strong>该操作会自动刷新页面！</strong>',
