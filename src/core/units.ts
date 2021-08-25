@@ -93,7 +93,6 @@
         // CDN未更新前，两种conment.js都匹配一次
         html = html.replace("//static.hdslb.com/phoenix/dist/js/comment.min.js", comment);
         html = html.replace("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js", comment);
-        html = html.replace("//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js", "//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/JavaScript/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js");
         return html;
     }
     /**

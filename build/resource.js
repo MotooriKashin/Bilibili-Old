@@ -3,7 +3,12 @@ const fs = require("fs");
 /**
  * 无需包含的文件名(含拓展名)
  */
-const del = ["JavaScript/index.js", "JavaScript/comment.js", "JavaScript/bilibiliPlayer.js"];
+const del = [
+    "JavaScript/index.js",
+    "JavaScript/comment.js",
+    "JavaScript/bilibiliPlayer.js",
+    "JavaScript/video.js"
+];
 /**
  * 要求哈希表的子目录
  */

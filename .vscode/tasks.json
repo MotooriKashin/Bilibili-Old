@@ -6,7 +6,11 @@
 			"command": "Remove-Item",
 			"args": [
 				"${workspaceFolder}\\JavaScript\\*",
-				"-recurse"
+				"-recurse",
+				"-Exclude",
+				"bilibiliPlayer.js",
+				",comment.js",
+				",video.js"
 			],
 			"detail": "清理生成目录",
 			"label": "clear",
@@ -21,6 +25,10 @@
 			"dependsOn": [
 				"clear"
 			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"detail": "编译ts文件",
 			"label": "tsc"
 		},
@@ -42,10 +50,6 @@
 				"${workspaceFolder}\\build\\build.js",
 				"${workspaceFolder}"
 			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
 			"dependsOn": [
 				"resource"
 			],

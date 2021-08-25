@@ -9,13 +9,13 @@
     try {
         if (refer && refer[4] && refer[4] == "all") {
             data = API.jsonCheck(API.xhr({
-                url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: refer[5], day: "3" }),
+                url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: refer[5], day: "3", type: "1", arc_type: "0" }),
                 async: false
             }));
         }
         else {
             data = API.jsonCheck(API.xhr({
-                url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", { rid: "0", day: "3" }),
+                url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", { rid: "0", day: "3", type: "1", arc_type: "0" }),
                 async: false
             }));
         }
