@@ -1,6 +1,8 @@
 {
+	"CSS/alert.css": "a12b90370941013aa1da4a92eadee4c69f076cdf",
 	"CSS/avatarAnimation.css": "ec8a4659e8e4a3639212ae8d6fa0c315cf0abf42",
 	"CSS/bofqi.css": "fe766e479b51386d6881be99b3bff57029dd491b",
+	"CSS/button.css": "a12b90370941013aa1da4a92eadee4c69f076cdf",
 	"CSS/closedCaption.css": "7680bdf776ed3b4db310743231be291a70808154",
 	"CSS/commandDm.css": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"CSS/danmukaHashId.css": "ec8a4659e8e4a3639212ae8d6fa0c315cf0abf42",
@@ -13,5 +15,5 @@
 	"Json/videoSort.json": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"dist/module/rewrite.js": "964c234ae6a09fe4ce03be9a0c7da4d82f8ea402",
 	"dist/module/setting.js": "964c234ae6a09fe4ce03be9a0c7da4d82f8ea402",
-	"dist/module/ui.js": "964c234ae6a09fe4ce03be9a0c7da4d82f8ea402"
+	"dist/module/ui.js": "a12b90370941013aa1da4a92eadee4c69f076cdf"
 }
