@@ -220,10 +220,6 @@ debug.warn = (...data) => Debug.warn(...data);
 debug.error = (...data) => Debug.error(...data);
 class Toast {
     /**
-     * 配置数据
-     */
-    static config;
-    /**
      * 通知节点，初始化专用
      */
     static container;
@@ -322,6 +318,37 @@ toast.info = (...msg) => { debug.debug(...msg); Toast.show("info", ...msg); };
 toast.success = (...msg) => { debug.log(...msg); Toast.show("success", ...msg); };
 toast.warning = (...msg) => { debug.warn(...msg); Toast.show("warning", ...msg); };
 toast.error = (...msg) => { debug.error(...msg); Toast.show("error", ...msg); };
+registerSetting({
+    type: "sort",
+    key: "toast",
+    label: "浮动通知",
+    sub: '<a href="https://github.com/CodeSeven/toastr">toastr</a>',
+    svg: '<svg viewBox="0 0 16 16"><path d="M8 16a2 2 0 001.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 008 16z"></path><path fill-rule="evenodd" d="M8 1.5A3.5 3.5 0 004.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.018.018 0 00-.003.01l.001.006c0 .002.002.004.004.006a.017.017 0 00.006.004l.007.001h10.964l.007-.001a.016.016 0 00.006-.004.016.016 0 00.004-.006l.001-.007a.017.017 0 00-.003-.01l-1.703-2.554a1.75 1.75 0 01-.294-.97V5A3.5 3.5 0 008 1.5zM3 5a5 5 0 0110 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.518 1.518 0 0113.482 13H2.518a1.518 1.518 0 01-1.263-2.36l1.703-2.554A.25.25 0 003 7.947V5z"></path></svg>',
+    sort: "common",
+    list: [{
+            type: "switch",
+            key: "toastcheck",
+            label: "通知开关",
+            sort: "common",
+            value: true,
+        }, {
+            type: "input",
+            key: "toasttimeout",
+            label: "通知开关：/s",
+            sort: "common",
+            value: "4",
+            input: { type: "number", min: 1, max: 30 },
+            pattern: /^\d+$/
+        }, {
+            type: "input",
+            key: "toaststep",
+            label: "通知延时：/ms",
+            sort: "common",
+            value: "250",
+            input: { type: "number", min: 100, max: 1000 },
+            pattern: /^\d+$/
+        }]
+});
 class API {
     static modules = GM.getValue("modules", {});
     static inModules = [];
@@ -411,14 +438,35 @@ class API {
         }, delay);
         stop && setTimeout(() => clearInterval(timer), stop * 1000);
     }
+    async alert(text, title = API.Name) {
+        return new Promise((r) => {
+            const root = this.addElement("div");
+            const div = root.attachShadow({ mode: "closed" });
+            const table = this.addElement("div", { class: "table" }, div, `
+            <div class="title">${title}</div>
+            <div class="text">${text}</div>
+            <div class="act">
+                <div class="button">确认</div>
+                <div class="button">取消</div>
+                </div>
+            `);
+            table.querySelectorAll("button").forEach((d, i) => {
+                i ? (d.onclick = () => { root.remove(), r(false); }) : (d.onclick = () => (root.remove(), r(true)));
+            });
+            this.addElement("style", {}, div).textContent = Reflect.get(API.modules, "alert.css") + Reflect.get(API.modules, "button.css");
+        });
+    }
+    getModule(name) {
+        return Reflect.get(API.modules, name);
+    }
     static importModule(name, args = {}, force = false) {
         if (!name)
-            return API.modules;
+            return Object.keys(API.modules);
         if (API.inModules.includes(name) && !force)
             return;
-        if (API.modules.includes(name)) {
+        if (Reflect.has(API.modules, name)) {
             API.inModules.push(name);
-            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), GM.getResourceText(name))(API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s, d) => {
+            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(API.modules, name))(API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s, d) => {
                 s.push(args[d]);
                 return s;
             }, []));
@@ -458,8 +506,8 @@ class API {
             let keys = Object.keys(resource);
             let list = keys.reduce((s, d) => {
                 let str = d.split("/");
-                Reflect.get(resource, d) != Reflect.get(this.resource, d) && (d.includes(".js") ?
-                    API.modules.includes(str[str.length - 1]) && s.push([str[str.length - 1], d]) :
+                Reflect.get(resource, d) != Reflect.get(this.resource, d) && (d.endsWith(".js") ?
+                    Reflect.has(API.modules, str[str.length - 1]) && s.push([str[str.length - 1], d]) :
                     s.push([str[str.length - 1], d]));
                 return s;
             }, []);
@@ -487,10 +535,10 @@ class API {
             }
             let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
             let module = await xhr.GM({
-                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, name)}/${temp}`
+                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${temp}`
             });
-            name.endsWith(".json") ? (module = JSON.parse(module), GM.setValue(name.replace(".json", ""), module)) : GM.setValue("modulus", API.modules);
-            this.modules.push(name);
+            name.endsWith(".json") ? (GM.setValue(name.replace(".json", ""), JSON.parse(module))) : Reflect.set(API.modules, name, module);
+            GM.setValue("modules", API.modules);
         }
         catch (e) {
             toast.error(`更新模块${name}失败，请检查网络！`);
@@ -507,7 +555,7 @@ class API {
                 return true;
             }
         });
-        Reflect.has(API.modules, "rewrite.js") ? this.importModule("rewrite.js") : API.firstInit();
+        Reflect.has(API.modules, "rewrite.js") ? this.importModule("rewrite.js") : this.alert(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“默认允许全部域名”</strong>`).then(d => { d && API.firstInit(); });
     }
 }
 new API();

@@ -835,14 +835,6 @@ declare const debug: {
 };
 declare class Toast {
     /**
-     * 配置数据
-     */
-    static config: {
-        switch: number;
-        timeout: number;
-        step: number;
-    };
-    /**
      * 通知节点，初始化专用
      */
     static container: HTMLElement;
@@ -919,11 +911,11 @@ declare class API {
     }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | HTMLAnchorElement | HTMLAppletElement | HTMLScriptElement | HTMLEmbedElement | HTMLFormElement | HTMLHeadElement | HTMLAreaElement | HTMLObjectElement | HTMLLinkElement | HTMLTrackElement | HTMLProgressElement | HTMLAudioElement | HTMLBaseElement | HTMLQuoteElement | HTMLBodyElement | HTMLBRElement | HTMLButtonElement | HTMLTableCaptionElement | HTMLTableColElement | HTMLDataElement | HTMLDataListElement | HTMLModElement | HTMLDetailsElement | HTMLDialogElement | HTMLDirectoryElement | HTMLDivElement | HTMLDListElement | HTMLFieldSetElement | HTMLFontElement | HTMLFrameElement | HTMLFrameSetElement | HTMLHeadingElement | HTMLHRElement | HTMLHtmlElement | HTMLIFrameElement | HTMLInputElement | HTMLLabelElement | HTMLLegendElement | HTMLLIElement | HTMLMapElement | HTMLMarqueeElement | HTMLMenuElement | HTMLMetaElement | HTMLMeterElement | HTMLOListElement | HTMLOptGroupElement | HTMLOptionElement | HTMLOutputElement | HTMLParagraphElement | HTMLParamElement | HTMLPictureElement | HTMLPreElement | HTMLSelectElement | HTMLSlotElement | HTMLSourceElement | HTMLSpanElement | HTMLStyleElement | HTMLTableElement | HTMLTableSectionElement | HTMLTableDataCellElement | HTMLTemplateElement | HTMLTextAreaElement | HTMLTableHeaderCellElement | HTMLTimeElement | HTMLTitleElement | HTMLTableRowElement | HTMLUListElement;
     addCss(txt: string, id?: string, parrent?: Node): Promise<void>;
     runWhile(check: any, callback: Function, delay?: number, stop?: number): void;
+    alert(text: string, title?: string): Promise<boolean>;
+    getModule(name: string): string;
     static importModule(name?: string, args?: {
         [key: string]: any;
-    }, force?: boolean): {
-        [name: string]: any;
-    };
+    }, force?: boolean): string[];
     static firstInit(): Promise<void>;
     static updateModule(...msg: string[]): Promise<void>;
     static downloadModule(name: string, url?: string): Promise<void>;

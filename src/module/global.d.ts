@@ -421,4 +421,18 @@ declare namespace API {
      * @param force 是否强制导入，默认否。指定该值可以二次导入已导入过的模块
      */
     function importModule(name?: string, args?: { [key: string]: any }, force?: boolean): { [name: string]: any };
+    /**
+     * 弹出提示框  
+     * 仿造alert制作的提示框，但不具备中断页面的能力，异步返回用户点击的按钮布尔值
+     * @param title 提示标题，默认为脚本名称
+     * @param text 提示内容
+     * @returns Promise代理的布尔值，取决于用户的点击的按钮
+     */
+    function alert(text: string, title?: string): Promise<boolean>;
+    /**
+     * 获取模块文本，类似于GM.getResourceText  
+     * 一般用于获取css文件
+     * @param name 模块名字（含拓展名）
+     */
+    function getModule(name: string): string;
 }

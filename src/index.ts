@@ -81,12 +81,33 @@ class API {
         }, delay);
         stop && setTimeout(() => clearInterval(timer), stop * 1000)
     }
+    async alert(text: string, title: string = API.Name) {
+        return new Promise((r: (value: boolean) => void) => {
+            const root = this.addElement("div")
+            const div = root.attachShadow({ mode: "closed" });
+            const table = this.addElement("div", { class: "table" }, div, `
+            <div class="title">${title}</div>
+            <div class="text">${text}</div>
+            <div class="act">
+                <div class="button">确认</div>
+                <div class="button">取消</div>
+                </div>
+            `);
+            table.querySelectorAll("button").forEach((d, i) => {
+                i ? (d.onclick = () => { root.remove(), r(false) }) : (d.onclick = () => (root.remove(), r(true)))
+            })
+            this.addElement("style", {}, div).textContent = Reflect.get(API.modules, "alert.css") + Reflect.get(API.modules, "button.css");
+        })
+    }
+    getModule(name: string) {
+        return <string>Reflect.get(API.modules, name);
+    }
     static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
-        if (!name) return API.modules;
+        if (!name) return Object.keys(API.modules);
         if (API.inModules.includes(name) && !force) return;
-        if (API.modules.includes(name)) {
+        if (Reflect.has(API.modules, name)) {
             API.inModules.push(name);
-            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), GM.getResourceText(name))
+            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(API.modules, name))
                 (API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s: object[], d) => {
                     s.push(args[d]);
                     return s;
@@ -126,8 +147,8 @@ class API {
             let list = keys.reduce((s: [string, string][], d) => {
                 let str = d.split("/");
                 Reflect.get(resource, d) != Reflect.get(this.resource, d) && (
-                    d.includes(".js") ?
-                        API.modules.includes(str[str.length - 1]) && s.push([str[str.length - 1], d]) :
+                    d.endsWith(".js") ?
+                        Reflect.has(API.modules, str[str.length - 1]) && s.push([str[str.length - 1], d]) :
                         s.push([str[str.length - 1], d])
                 );
                 return s;
@@ -152,10 +173,12 @@ class API {
             }
             let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
             let module = await xhr.GM({
-                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, name)}/${temp}`
+                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${temp}`
             })
-            name.endsWith(".json") ? (module = JSON.parse(module), GM.setValue(name.replace(".json", ""), module)) : GM.setValue("modulus", API.modules);
-            this.modules.push(name);
+            name.endsWith(".json") ? (
+                GM.setValue(name.replace(".json", ""), JSON.parse(module))
+            ) : Reflect.set(API.modules, name, module);
+            GM.setValue("modules", API.modules)
         } catch (e) { toast.error(`更新模块${name}失败，请检查网络！`) }
     }
     constructor() {
@@ -172,7 +195,7 @@ class API {
                 return true;
             }
         })
-        Reflect.has(API.modules, "rewrite.js") ? this.importModule("rewrite.js") : API.firstInit();
+        Reflect.has(API.modules, "rewrite.js") ? this.importModule("rewrite.js") : this.alert(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“默认允许全部域名”</strong>`).then(d => { d && API.firstInit() })
     }
 }
 new API();
