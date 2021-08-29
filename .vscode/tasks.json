@@ -5,7 +5,7 @@
 			"type": "shell",
 			"command": "Remove-Item",
 			"args": [
-				"${workspaceFolder}\\JavaScript\\*",
+				"${workspaceFolder}\\dist\\*",
 				"-recurse",
 				"-Exclude",
 				"bilibiliPlayer.js",
@@ -18,19 +18,31 @@
 		},
 		{
 			"type": "typescript",
-			"tsconfig": "tsconfig.json",
+			"tsconfig": "src/module/tsconfig.json",
 			"problemMatcher": [
 				"$tsc"
 			],
 			"dependsOn": [
 				"clear"
 			],
+			"detail": "编译模块文件",
+			"label": "tsc-module"
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "src/tsconfig.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"dependsOn": [
+				"tsc-module"
+			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "编译ts文件",
-			"label": "tsc"
+			"detail": "编译index",
+			"label": "tsc-index"
 		},
 		{
 			"type": "shell",
@@ -39,7 +51,7 @@
 				"${workspaceFolder}\\build\\resource.js",
 				"${workspaceFolder}"
 			],
-			"detail": "生成@resource清单",
+			"detail": "发布前置：记录模块最新提交数据",
 			"label": "resource",
 			"problemMatcher": []
 		},
@@ -53,22 +65,8 @@
 			"dependsOn": [
 				"resource"
 			],
-			"detail": "生成最终文件",
+			"detail": "发布：生成最终脚本文件",
 			"label": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\build\\build-local.js",
-				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"resource"
-			],
-			"detail": "生成本地版本",
-			"label": "build-local",
 			"problemMatcher": []
 		}
 	]

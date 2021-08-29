@@ -1,24 +1,3 @@
-// ==UserScript==
-// @name         Bilibili 旧播放页
-// @namespace    MotooriKashin
-// @version      5.0.0
-// @description  恢复Bilibili旧版页面，为了那些念旧的人。
-// @author       MotooriKashin
-// @homepage     https://github.com/MotooriKashin/Bilibili-Old
-// @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
-// @icon         https://static.hdslb.com/images/favicon.ico
-// @match        *://*.bilibili.com/*
-// @connect      *
-// @grant        GM_xmlhttpRequest
-// @grant        GM_getResourceText
-// @grant        GM_getResourceURL
-// @grant        GM_getValue
-// @grant        GM_setValue
-// @grant        GM_deleteValue
-// @run-at       document-start
-// @license      MIT
-// ==/UserScript==
-
 GM.xmlHttpRequest = GM_xmlhttpRequest;
 GM.getResourceText = GM_getResourceText;
 GM.getResourceURL = GM_getResourceURL;

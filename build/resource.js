@@ -1,16 +1,13 @@
 const { exec } = require("child_process");
 const fs = require("fs");
 /**
- * 无需包含的文件名(含拓展名)
+ * 无需包含的文件或拓展名拓展名
  */
-const del = [
-    "JavaScript/index.js",
-    "JavaScript/video.js"
-];
+const extend = [".d.ts", ".map", "index.js"];
 /**
  * 要求哈希表的子目录
  */
-const path = ["CSS", "HTML", "Json", "JavaScript"];
+const path = ["CSS", "HTML", "Json", "dist"];
 
 class File {
     constructor() {
@@ -33,7 +30,7 @@ class File {
     async readir(path) {
         let arr = (await File.getDir(path)).reduce((s, d) => {
             d = d.split("./")[1];
-            !del.includes(d) && s.push(d);
+            !extend.find(b => d.includes(b)) && s.push(d);
             return s;
         }, []);
         let hash = await Promise.all(arr.reduce((s, d) => {

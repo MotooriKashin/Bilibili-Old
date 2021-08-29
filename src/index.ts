@@ -1,494 +1,178 @@
-(function () {
-    GM.xmlHttpRequest = GM_xmlhttpRequest;
-    GM.getResourceText = GM_getResourceText;
-    GM.getResourceURL = GM_getResourceURL;
-    GM.getValue = GM_getValue;
-    GM.setValue = GM_setValue;
-    GM.deleteValue = GM_deleteValue;
-    /**
-     * 脚本配置数据
-     */
-    const CONFIG: { [name: string]: any } = {};
-    /**
-     * 用户配置数据  
-     * 模块添加的设置选项被用户自定义后将保存在此变量中，形式 key:value
-     */
-    const config: { [name: string]: any } = new Proxy(CONFIG, {
-        set: (_target, p: string, value) => {
-            CONFIG[p] = value;
-            GM.setValue<{ [name: string]: any }>("config", CONFIG);
-            return true;
-        },
-        get: (_target, p: string) => CONFIG[p]
-    })
-    /**
-     * 初始化用户设置
-     */
-    Object.entries(GM.getValue<{ [name: string]: any }>("config", {})).forEach(k => config[k[0]] = k[1]);
-    /**
-     * 注册的设置内容  
-     */
-    const setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[] = [];
-    class API {
-        /**
-         * 已引入模块列表
-         */
-        static modules: any[] = [];
-        /**
-         * 核心模块
-         */
-        static codeModule: string[] = [];
-        /**
-         * 本地模块列表
-         */
-        static moduleList: string[] = [];
-        /**
-         * 页面`head`
-         */
-        static cssFlag: number;
-        static nodelist: any[] = [];
-        static switchlist: any[] = [];
-        static normal: any[] = [];
-        GM = GM;
-        Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
-        Name: string = GM.info.script.name;
-        Virsion: string = GM.info.script.version;
-        config: { [name: string]: any } = config;
-        settingMenu: { [name: string]: Menuitem } = {};
-        constructor() {
-            /**
-             * 初始化shezhi
-             */
-            Object.entries(GM.getValue("config", {})).forEach(k => config[k[0]] = k[1]);
-            /**
-             * 模块分离
-             */
-            API.moduleList = GM.info.script.resources.reduce((s: string[], d) => {
-                d.url.includes("core") && API.codeModule.push(d.name);
-                s.push(d.name);
-                return s;
-            }, [])
-            /**
-             * 载入UI模块，该模块含有不应暴露给其他模块的专属变量  
-             */
-            this.importModule("ui.js", { setting });
-            /**
-             * 载入基础模块
-             */
-            API.codeModule.forEach(d => this.importModule(d));
-            /**
-             * 载入重写模块
-             */
-            this.importModule("rewrite.js");
-            API.normal.forEach(d => d());
-            /**
-             * 执行节点监听
-             */
-            API.observerAddedNodes();
-            /**
-             * 添加切P回调
-             */
-            this.observerAddedNodes((msg: HTMLElement) => API.switchVideo(msg))
+class API {
+    static modules: { [name: string]: any } = GM.getValue("modules", {});
+    static inModules: string[] = [];
+    static resource: { [name: string]: string } = GM.getValue("resource", {});
+    static toModules: string[] = [];
+    static updating: boolean = false;
+    static Virsion: string = GM.info.script.version;
+    static API: Object;
+    static Name: string = GM.info.script.name;
+    static apply: { [name: string]: string } = GM.getValue("apply", {});
+    Name = API.Name;
+    Virsion: string = API.Virsion;
+    Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
+    registerSetting = registerSetting;
+    registerMenu = registerMenu;
+    importModule = API.importModule;
+    timeFormat = (time?: number, type?: boolean) => Format.timeFormat(time, type);
+    sizeFormat = (size?: number) => Format.sizeFormat(size);
+    unitFormat = (num?: number) => Format.unitFormat(num);
+    bubbleSort = (arr: number[]) => Format.bubbleSort(arr);
+    randomArray = (arr: any[], num: number) => Format.randomArray(arr, num);
+    objUrl = (url: string, obj: { [name: string]: string }) => Format.objUrl(url, obj);
+    urlObj = (url?: string) => Format.urlObj(url);
+    trace = (e: Error, label: string = "", toastr: boolean = false) => { toastr ? toast.error(label, ...(Array.isArray(e) ? e : [e])) : Debug.error(label, ...(Array.isArray(e) ? e : [e])) }
+    bofqiMessage(msg?: string | [string?, string?, string?], time = 3, callback?: () => void, replace = true) {
+        let node = document.querySelector(".bilibili-player-video-toast-bottom");
+        if (!node) {
+            if (msg) {
+                if (Array.isArray(msg)) return Debug.log(...msg);
+                return Debug.log(msg)
+            }
+            return;
         }
-        /**
-         * 导入模块  
-         * **通常模块只能载入一次，可通过设定force参数为真来二次载入该模块**
-         * @param moduleName 模块名字
-         * @param args 传递给模块的变量，以键值对形式，键名即模块中能接受到的变量名
-         * @param force 是否强制重新载入
-         * @returns 提示信息
-         */
-        importModule(moduleName?: string, args: { [key: string]: any } = {}, force: boolean = false) {
-            if (!moduleName) return API.modules;
-            if (API.modules.includes(moduleName) && !force) return;
-            API.modules.push(moduleName);
-            (force || API.moduleList.includes(moduleName)) ? new Function("API", "GM", "config", "importModule", ...Object.keys(args), GM.getResourceText(moduleName))
-                (this, GM, config, this.importModule, ...Object.keys(args).reduce((s: object[], d) => {
+        if (!msg) node.childNodes.forEach(d => d.remove());
+        const ele = document.createElement("div");
+        ele.setAttribute("class", "bilibili-player-video-toast-item-text");
+        msg = Array.isArray(msg) ? msg : [msg];
+        if (!msg[0]) return;
+        replace && node.childNodes.forEach(d => d.remove());
+        ele.innerHTML = <string>msg.reduce((s, d, i) => {
+            if (d) {
+                switch (i) {
+                    case 0: s += `<span class="video-float-hint-text">${d}</span>`;
+                        break;
+                    case 1: s += `<span class="video-float-hint-btn hint-red;">${d}</span>`;
+                        break;
+                    case 2: s += `<span class="video-float-hint-btn">${d}</span>`;
+                        break;
+                }
+            }
+            return s;
+        }, '');
+        node.appendChild(ele);
+        callback && (ele.style.cursor = "pointer") && (ele.onclick = () => callback());
+        (time !== 0) && setTimeout(() => ele.remove(), time * 100);
+    }
+    addElement(tag: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element) {
+        let element = document.createElement(tag);
+        attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
+        parrent = parrent || document.body;
+        innerHTML && (element.innerHTML = innerHTML);
+        replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+        return element;
+    }
+    async addCss(txt: string, id?: string, parrent?: Node) {
+        if (!parrent && !document.head) {
+            await new Promise(r => this.runWhile(document.body, r));
+        }
+        parrent = parrent || document.head;
+        const style = document.createElement("style");
+        style.setAttribute("type", "text/css");
+        style.appendChild(document.createTextNode(txt));
+        parrent.appendChild(style);
+    }
+    runWhile(check: any, callback: Function, delay: number = 100, stop: number = 180) {
+        let timer = setInterval(() => {
+            if (check) {
+                clearInterval(timer);
+                callback();
+            }
+        }, delay);
+        stop && setTimeout(() => clearInterval(timer), stop * 1000)
+    }
+    static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
+        if (!name) return API.modules;
+        if (API.inModules.includes(name) && !force) return;
+        if (API.modules.includes(name)) {
+            API.inModules.push(name);
+            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), GM.getResourceText(name))
+                (API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s: object[], d) => {
                     s.push(args[d]);
                     return s;
-                }, [])) : new Error(`未知模块：${moduleName}`);
-            (<any>this).debug && (<any>this).debug(moduleName);
-        }
-        /**
-         * 获取`cookies`信息
-         * @returns `cookies`对象
-         */
-        getCookies() {
-            return document.cookie.split('; ').reduce((s: { [name: string]: string }, d) => {
-                let key = d.split('=')[0];
-                let val = d.split('=')[1];
-                s[key] = val;
+                }, []))
+        } else {
+            let modules = Reflect.ownKeys(API.resource).reduce((s: { [key: string]: string }, d: string) => {
+                let str = d.split("/");
+                Reflect.set(s, str[str.length - 1], d);
                 return s;
             }, {});
-        }
-        /**
-         * 添加网页节点
-         * @param div 节点名字
-         * @param attribute 节点属性组成的对象
-         * @param parrent 父节点
-         * @param innerHTML 节点的`innerHTML`
-         * @param top 是否在父节点置顶
-         * @param replaced 被替换的节点，忽略父节点参数
-         * @returns 所添加的节点
-         */
-        addElement(div: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element) {
-            let element = document.createElement(div);
-            attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
-            parrent = parrent || document.body;
-            innerHTML && (element.innerHTML = innerHTML);
-            replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
-            return element;
-        }
-        /**
-         * 移除或隐藏页面节点
-         * @param name 检索名称
-         * @param type 检索类型`class`、`id`还是`div`
-         * @param hidden 隐藏而不移除
-         * @param index 检索结果有复数个时的序号
-         * @param callback 移除后的回调函数
-         */
-        removeElement(name: string, type: 'class' | 'id' | 'tag', hidden: boolean = false, index: number = 0, callback?: () => void) {
-            let node: HTMLElement | Element | null;
-            switch (type) {
-                case "id": node = document.querySelector("#" + name); break;
-                case "class": name = name.replace(/ /g, "."); node = document.querySelectorAll("." + name)[index]; break;
-                case "tag": node = document.querySelectorAll(name)[index]; break;
+            if (Reflect.has(modules, name)) {
+                API.downloadModule(name, Reflect.get(modules, name));
+                toast.warning(`正在添加模块${Reflect.get(modules, name)}！请稍候~`);
+            } else {
+                API.toModules.push(name);
+                !API.updating && API.updateModule();
             }
-            if (!node || node.getAttribute("hidden")) return;
-            hidden ? node.setAttribute("hidden", "hidden") : node.remove();
-            callback && callback();
-        }
-        /**
-         * 添加CSS样式
-         * @param text 样式
-         * @param id 样子在页面中唯一ID，防止重复
-         */
-        addCss(text: string, id?: string) {
-            if (!document.head) {
-                if (API.cssFlag) return;
-                return setTimeout(() => { API.cssFlag = 1; this.addCss(text, id) });
-            }
-            let style = document.createElement("style");
-            if (id) {
-                if (document.querySelector("#" + id)) return;
-                style.setAttribute("id", id);
-            }
-            style.setAttribute("type", "text/css");
-            style.appendChild(document.createTextNode(text));
-            if (document.head) document.head.appendChild(style);
-        }
-        /**
-         * 注册设置菜单，即设置面板左侧的菜单  
-         * 一个设置菜单名称只需注册一次  
-         * 但请不要在按需加载的模块中注册给其他模块用的菜单
-         * @param obj 设置菜单内容
-         */
-        addMenu(obj: Menuitem) {
-            this.settingMenu[obj.key] = obj;
-        }
-        /**
-         * 注册设置到面板
-         * @param obj 设置内容对象
-         */
-        addSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon) {
-            setting.push(obj);
-            API.setting(obj);
-        }
-        /**
-         * 重写页面框架
-         * @param html 字符串形式的网页文本
-         */
-        rewriteHTML(html: string) {
-            [
-                "bbComment",
-                "webpackJsonp",
-                "webpackLogReporter",
-                "_babelPolyfill",
-                "player",
-                "BPlayer",
-                "bPlayer",
-                "GrayManager",
-                "EmbedPlayer",
-                "PlayerAgent",
-                "dashjs",
-                "flvjs",
-                "BilibiliPlayer"
-                // @ts-ignore 由TamperMonkey提供
-            ].forEach(d => { delete unsafeWindow[d] })
-            document.open();
-            document.write(html);
-            document.close();
-        }
-        /**
-         * 初始化默认设置
-         * @param obj 设置内容
-         */
-        static setting(obj: { [name: string]: any }) {
-            obj.hasOwnProperty("key") && obj.hasOwnProperty("value") && (config.hasOwnProperty(obj.key) ? (obj.value = config[obj.key]) : (config[obj.key] = obj.value));
-            obj.type && obj.type == "sort" && obj.list.forEach((d: { [name: string]: any }) => this.setting(d));
-        }
-        /**
-         * 注册节点添加监听  
-         * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
-         * @param callback 添加节点后执行的回调函数
-         * @returns 注册编号，用于使用`removeObserver`销毁监听
-         */
-        observerAddedNodes(callback: (node: HTMLElement) => void) {
-            if (typeof callback === "function") API.nodelist.push(callback);
-            return API.nodelist.length - 1;
-        }
-        /**
-         * 销毁`observerAddedNodes`监听
-         * @param id 注册`observerAddedNodes`监听是返回的编号
-         */
-        removeObserver(id: number) {
-            API.nodelist.splice(id, 1);
-        }
-        static observerAddedNodes() {
-            (new MutationObserver(d => d.forEach(d => {
-                d.addedNodes[0] && API.nodelist.forEach(async f => f(d.addedNodes[0]))
-            }))).observe(document, { childList: true, subtree: true });
-        }
-        /**
-         * 注册切P回调
-         * @param callback 切P时的回调函数
-         */
-        switchVideo(callback: Function) {
-            if (typeof callback === "function") API.switchlist.push(callback);
-        }
-        static switchVideo(node: HTMLElement) {
-            if (/bilibili-player-video-btn-start/.test(node.className)) {
-                this.switchlist.forEach(d => d());
-            }
-        }
-        /**
-         * 重写完页面后执行回调函数  
-         * 由于重写会覆盖页面，所以一些操作必须重写后再执行
-         * @param callback 需要执行的回调函数
-         */
-        runAfterRewrite(callback: Function) {
-            if (typeof callback === "function") API.normal.push(callback)
         }
     }
-    new API();
-
-})();
-/**
- * Tampermonkey 提供的高级API的封装
- */
-declare namespace GM {
-    let xmlHttpRequest: typeof GM_xmlhttpRequest;
-    let getResourceText: typeof GM_getResourceText;
-    let getResourceURL: typeof GM_getResourceURL;
-    let getValue: typeof GM_getValue;
-    let setValue: typeof GM_setValue;
-    let deleteValue: typeof GM_deleteValue;
-    const info: {
-        downloadMode: string;
-        isFirstPartyIsolation: boolean;
-        isIncognito: boolean;
-        scriptHandler: string;
-        scriptMetaStr: string;
-        scriptSource: string;
-        scriptUpdateURL: string;
-        scriptWillUpdate: string;
-        version: string;
-        script: {
-            antifeatures: {};
-            author: string;
-            blockers: [];
-            copyright: string;
-            description: string;
-            description_i18n: {};
-            evilness: number;
-            excludes: [];
-            grant: [];
-            header: string;
-            homepage: string;
-            icon: string;
-            icon64: string;
-            includes: [];
-            lastModified: number;
-            matches: [];
-            name: string;
-            name_i18n: [];
-            namespace: string;
-            options: {
-                check_for_updates: boolean;
-                comment: string;
-                compat_foreach: boolean;
-                compat_metadata: boolean;
-                compat_prototypes: boolean;
-                compat_wrappedjsobject: boolean;
-                compatopts_for_requires: boolean;
-                noframes: boolean;
-                override: {
-                    merge_connects: boolean;
-                    merge_excludes: boolean;
-                    merge_includes: boolean;
-                    merge_matches: boolean;
-                    orig_connects: [];
-                    orig_excludes: [];
-                    orig_includes: [];
-                    orig_matches: [];
-                    orig_noframes: boolean;
-                    orig_run_at: string;
-                    use_blockers: [];
-                    use_connects: [];
-                    use_excludes: [];
-                    use_includes: [];
-                    use_matches: [];
-                }
-                run_at: string;
+    static async firstInit() {
+        ["rewrite.js", "ui.js", "setting.js"].forEach(d => this.toModules.push(d));
+        await this.updateModule(`脚本首次运行初始化中~`, `感谢您使用 ${this.Name}！当前版本：${this.Virsion}`);
+        toast.warning(`正在载入默认设置项~`);
+        this.importModule("setting.js");
+        LOADING.forEach(d => this.downloadModule(d));
+        Reflect.has(API.modules, "rewrite.js") && toast.success(`初始化成功，刷新页面即可生效~`);
+    }
+    static async updateModule(...msg: string[]) {
+        try {
+            msg[0] && toast.warning(...msg);
+            this.updating = true;
+            let resource: { [key: string]: string } = await xhr.GM({
+                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ts/resource.json',
+                responseType: 'json'
+            })
+            let keys = Object.keys(resource);
+            let list = keys.reduce((s: [string, string][], d) => {
+                let str = d.split("/");
+                Reflect.get(resource, d) != Reflect.get(this.resource, d) && (
+                    d.includes(".js") ?
+                        API.modules.includes(str[str.length - 1]) && s.push([str[str.length - 1], d]) :
+                        s.push([str[str.length - 1], d])
+                );
+                return s;
+            }, []);
+            GM.setValue("resource", this.resource = resource);
+            this.toModules.forEach(d => {
+                keys.find(b => b.includes(d)) && (list.push([d, keys.find(b => b.includes(d))]), toast.warning(`正在添加模块${d}！请稍候~`));
+            })
+            this.toModules = [];
+            await Promise.all(list.reduce((s: Promise<void>[], d) => {
+                s.push(this.downloadModule(d[0], d[1]));
+                return s;
+            }, []));
+            this.updating = false;
+            toast.success(`脚本及其模块已更新至最新版~`);
+        } catch (e) { this.updating = false; toast.error(`检查更新出错！`, e) }
+    }
+    static async downloadModule(name: string, url?: string) {
+        try {
+            if (!url) {
+                url = Object.keys(this.resource).find(d => d.includes("name"));
             }
-            position: number;
-            requires: [];
-            resources: [{ [name: string]: string }];
-            "run-at": string;
-            supportURL: string;
-            sync: { imported: string };
-            unwrap: boolean;
-            updateURL: string;
-            uuid: string;
-            version: string;
-            webRequest: string;
-        }
+            let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
+            let module = await xhr.GM({
+                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, name)}/${temp}`
+            })
+            name.endsWith(".json") ? (module = JSON.parse(module), GM.setValue(name.replace(".json", ""), module)) : GM.setValue("modulus", API.modules);
+            this.modules.push(name);
+        } catch (e) { toast.error(`更新模块${name}失败，请检查网络！`) }
+    }
+    constructor() {
+        API.API = new Proxy(this, {
+            get: (target, p) => {
+                return Reflect.get(window, p) || Reflect.get(this, p) || (
+                    Reflect.has(API.apply, p) ? (
+                        this.importModule(Reflect.get(API.apply, p), {}, true),
+                        Reflect.get(this, p)
+                    ) : new Error(`对象API上不存在方法${String(p)}，请检查源代码！`));
+            },
+            set: (_target, p, value) => {
+                !Reflect.has(window, p) && Reflect.set(this, p, value);
+                return true;
+            }
+        })
+        Reflect.has(API.modules, "rewrite.js") ? this.importModule("rewrite.js") : API.firstInit();
     }
 }
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
-declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
-declare function GM_getResourceText(name: string): string;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
-declare function GM_getResourceURL(name: string): string;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
-declare function GM_getValue<T>(name: string, defaultValue?: T): T;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
-declare function GM_setValue<T>(name: string, value: T): void;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
-declare function GM_deleteValue(name: string): void;
-/**
- * 用于模块间交互数据的变量，可以直接在模块中使用  
- * 模块间以`API`属性的方式暴露任何其他模块需要的数据
- */
-declare namespace API {
-    /**
-     * 已注册的设置菜单数据
-     */
-    let settingMenu: { [name: string]: Menuitem };
-    /**
-     * 脚本设置数据
-     */
-    let config: { [name: string]: any };
-    /**
-     * Tampermonkey 提供的高级API的封装
-     */
-    let GM: typeof globalThis.GM;
-    /**
-     * 脚本管理器信息
-     */
-    let Handler: string;
-    /**
-     * 脚本名称
-     */
-    let Name: string;
-    /**
-     * 脚本版本
-     */
-    let Virsion: string;
-    /**
-     * 添加网页节点
-     * @param div 节点名字
-     * @param attribute 节点属性组成的对象
-     * @param parrent 父节点
-     * @param innerHTML 节点的`innerHTML`
-     * @param top 是否在父节点置顶
-     * @param replaced 被替换的节点，忽略父节点参数
-     * @returns 所添加的节点
-     */
-    function addElement(div: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Element, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
-    /**
-     * 导入模块  
-     * **通常模块只能载入一次，可通过设定force参数为真来二次载入该模块**
-     * @param moduleName 模块名字
-     * @param args 传递给模块的变量，以键值对形式，键名即模块中能接受到的变量名
-     * @param force 是否强制重新载入
-     */
-    function importModule(moduleName?: string | undefined, args?: { [key: string]: any }, force?: boolean): any;
-    /**
-     * 获取`cookies`信息
-     * @returns `cookies`对象
-     */
-    function getCookies(): { [name: string]: string };
-    /**
-     * 移除或隐藏页面节点
-     * @param name 检索名称
-     * @param type 检索类型`class`、`id`还是`div`
-     * @param hidden 隐藏而不移除
-     * @param index 检索结果有复数个时的序号
-     * @param callback 移除后的回调函数
-     */
-    function removeElement(name: string, type: 'class' | 'id' | 'tag', hidden?: boolean, index?: number, callback?: (() => void)): void;
-    /**
-     * 添加CSS样式
-     * @param text 样式
-     * @param id 样子在页面中唯一ID，防止重复
-     */
-    function addCss(text: string, id?: string): number | undefined;
-    /**
-     * 注册设置到面板
-     * @param obj 设置内容对象
-     */
-    function addSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon): void;
-    /**
-     * 注册设置菜单，即设置面板左侧的菜单  
-     * 一个设置菜单名称只需注册一次  
-     * 但请不要在按需加载的模块中注册给其他模块用的菜单
-     * @param obj 设置菜单内容
-     */
-    function addMenu(obj: Menuitem): void;
-    /**
-     * 重写页面框架
-     * @param html 字符串形式的网页文本
-     */
-    function rewriteHTML(html: string): void;
-    /**
-     * 注册节点添加监听  
-     * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
-     * @param callback 添加节点后执行的回调函数
-     * @returns 注册编号，用于使用`removeObserver`销毁监听
-     */
-    function observerAddedNodes(callback: (node: HTMLElement) => void): number;
-    /**
-     * 销毁`observerAddedNodes`监听
-     * @param id 注册`observerAddedNodes`监听是返回的编号
-     */
-    function removeObserver(id: number): void;
-    /**
-     * 注册切P回调
-     * @param callback 切P时的回调函数
-     */
-    function switchVideo(callback: Function): void;
-    /**
-     * 重写完页面后执行回调函数
-     * 由于重写会覆盖页面，所以一些操作必须重写后再执行
-     * @param callback 需要执行的回调函数
-     */
-    function runAfterRewrite(callback: Function): void;
-}
-/**
- * 脚本设置数据
- */
-declare namespace config { }
+new API();
