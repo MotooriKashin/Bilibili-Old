@@ -26,8 +26,8 @@
 	"Json/apply.json": "b008766fc0e5155611b608ab09d76d61844b5748",
 	"Json/protobuf.json": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"Json/videoSort.json": "fe766e479b51386d6881be99b3bff57029dd491b",
-	"dist/module/manage.js": "b008766fc0e5155611b608ab09d76d61844b5748",
+	"dist/module/manage.js": "0e0c06e2b8c5b36f80f4a39dde65ae37af1e5ca7",
 	"dist/module/rewrite.js": "b008766fc0e5155611b608ab09d76d61844b5748",
 	"dist/module/setting.js": "b008766fc0e5155611b608ab09d76d61844b5748",
-	"dist/module/ui.js": "b008766fc0e5155611b608ab09d76d61844b5748"
+	"dist/module/ui.js": "0e0c06e2b8c5b36f80f4a39dde65ae37af1e5ca7"
 }
