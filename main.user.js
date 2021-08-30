@@ -385,6 +385,7 @@ class API {
     Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
     registerSetting = registerSetting;
     registerMenu = registerMenu;
+    runWhile = API.runWhile;
     importModule = API.importModule;
     timeFormat = (time, type) => Format.timeFormat(time, type);
     sizeFormat = (size) => Format.sizeFormat(size);
@@ -442,22 +443,44 @@ class API {
     }
     async addCss(txt, id, parrent) {
         if (!parrent && !document.head) {
-            await new Promise(r => this.runWhile(document.body, r));
+            await new Promise(r => this.runWhile(() => document.body, r));
         }
         parrent = parrent || document.head;
         const style = document.createElement("style");
         style.setAttribute("type", "text/css");
+        id && !parrent.querySelector(`#${id}`) && style.setAttribute("id", id);
         style.appendChild(document.createTextNode(txt));
         parrent.appendChild(style);
     }
-    runWhile(check, callback, delay = 100, stop = 180) {
+    static runWhile(check, callback, delay = 100, stop = 180) {
         let timer = setInterval(() => {
-            if (check) {
+            if (check()) {
                 clearInterval(timer);
                 callback();
             }
         }, delay);
         stop && setTimeout(() => clearInterval(timer), stop * 1000);
+    }
+    async alert(text, title = API.Name) {
+        return new Promise((r) => {
+            const root = this.addElement("div");
+            const div = root.attachShadow({ mode: "closed" });
+            const table = this.addElement("div", { class: "table" }, div, `
+            <div class="title">${title}</div>
+            <div class="text">${text}</div>
+            <div class="act">
+                <div class="button">确认</div>
+                <div class="button">取消</div>
+                </div>
+            `);
+            this.addCss('.table {display: flex;flex-direction: column;box-sizing: border-box;top: 50%;background: #FFFFFF;box-shadow: 0 3px 12px 0 rgb(0 0 0 / 20%);border-radius: 10px;width: 300px;height: auto;padding: 18px;position: fixed;left: 50%;transform: translateX(-50%) translateY(-50%);z-index: 1024;}.title {line-height: 22px;margin-left: 2px;margin-bottom: 10px;font-size: 14px;}.text {margin-bottom: 3px;height: 40px;margin-left: 2px;}.act {line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;height: 32px;justify-content: center;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;border: none;color: #fff;justify-content: space-around;}.button, .action{line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;height: 32px;justify-content: center;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;}.action {border: none;background-color: rgb(26,115,232);color: #fff;}.button {background-color: #fff;color: rgb(26,115,232);border: 1px solid rgba(0,0,0,6%);}.action:hover{background-color: rgb(72,115,232);}.button:hover{background-color: rgba(26,115,232,6%);}.action:active{box-shadow: 0 0 1px 1px rgba(72,115,232,80%);}.button:active{box-shadow: 0 0 1px 1px rgba(0,0,0,10%);}.button[disabled],.xaction[disabled]{pointer-events: none;background-color: rgba(19, 1, 1, 0.1);border: 1px solid rgba(0,0,0,.1);color: white;}', '', div);
+            table.querySelectorAll(".button").forEach((d, i) => {
+                i ? (d.onclick = () => { root.remove(), r(false); }) : (d.onclick = () => (root.remove(), r(true)));
+            });
+        });
+    }
+    getModule(name) {
+        return Reflect.get(API.modules, name);
     }
     static importModule(name, args = {}, force = false) {
         if (!name)
@@ -466,7 +489,7 @@ class API {
             return;
         if (Reflect.has(API.modules, name)) {
             API.inModules.push(name);
-            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), GM.getResourceText(name))(API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s, d) => {
+            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(API.modules, name))(API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s, d) => {
                 s.push(args[d]);
                 return s;
             }, []));
@@ -544,6 +567,13 @@ class API {
             toast.error(`更新模块${name}失败，请检查网络！`);
         }
     }
+    static init() {
+        this.importModule("rewrite.js");
+        window.self === window.top && this.runWhile(() => document.body, () => {
+            this.importModule("setting.js");
+            this.importModule("ui.js", { MENU, SETTING });
+        });
+    }
     constructor() {
         API.API = new Proxy(this, {
             get: (target, p) => {
@@ -555,7 +585,7 @@ class API {
                 return true;
             }
         });
-        Reflect.has(API.modules, "rewrite.js") ? this.importModule("rewrite.js") : API.firstInit();
+        Reflect.has(API.modules, "rewrite.js") ? API.init() : this.runWhile(() => document.body, () => this.alert(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“默认允许全部域名”</strong>`).then(d => { d && API.firstInit(); }));
     }
 }
 new API();
