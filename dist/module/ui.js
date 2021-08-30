@@ -178,14 +178,14 @@
         static float(node, data) {
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
-            API.addElement("div", { class: "float" }, root, `<div class="arrow"></div><div class="message">${data}</div>`);
+            const real = API.addElement("div", { class: "float" }, root, `<div class="arrow"></div><div class="message">${data}</div>`);
             API.addCss(API.getModule("ui-float.css"), "", root);
             node.onmouseover = (ev) => {
                 document.body.appendChild(div);
-                let rect = div.getBoundingClientRect();
-                div.style.left = `${node.getBoundingClientRect().x + ev.offsetX}px`;
-                div.style.top = `${node.getBoundingClientRect().y + ev.offsetY - rect.height}px`;
-                div.style.width = `${Math.sqrt(rect.width * rect.height) * 4 / 3}px`;
+                let rect = real.getBoundingClientRect();
+                real.style.left = `${node.getBoundingClientRect().x + ev.offsetX}px`;
+                real.style.top = `${node.getBoundingClientRect().y + ev.offsetY - rect.height}px`;
+                real.style.width = `${Math.sqrt(rect.width * rect.height) * 4 / 3}px`;
             };
             node.onmouseout = () => div.remove();
         }

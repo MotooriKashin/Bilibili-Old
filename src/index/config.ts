@@ -48,6 +48,11 @@ interface ToolIcon {
      * 鼠标单击时的回调
      */
     action: (node: HTMLDivElement) => void;
+    /**
+     * 所依赖的模块名称（带拓展名）  
+     * 脚本会基于此提前从服务器获取模块到本地  
+     */
+    depends?: string[];
 }
 /**
  * 菜单项
@@ -82,6 +87,11 @@ interface ItemPic {
      * 图片 URL
      */
     src: string;
+    /**
+     * 所依赖的模块名称（带拓展名）  
+     * 脚本会基于此提前从服务器获取模块到本地  
+     */
+    depends?: string[];
 }
 interface ItemCommon {
     /**
@@ -113,6 +123,11 @@ interface ItemCommon {
      * ※ 理论上支持所有能以<div>为父节点的标签
      */
     float?: string;
+    /**
+     * 所依赖的模块名称（带拓展名）  
+     * 脚本会基于此提前从服务器获取模块到本地  
+     */
+    depends?: string[];
 }
 /**
  * 开关类菜单项，用以给用户判断是否开启某些功能等  
@@ -135,11 +150,6 @@ interface ItemSwh extends ItemCommon {
      * 设置节点本身将作为`this`传递
      */
     action?: (value: Boolean) => void;
-    /**
-     * 所依赖的模块名称（带拓展名）  
-     * `value`为true时脚本会基于此提前从服务器获取模块到本地  
-     */
-    depends?: string[]
 }
 /**
  * 下拉框类菜单项，用于给用户从多个数值选一个等  
@@ -251,6 +261,11 @@ interface ItemIpt {
      * 0 表示一直禁用直到刷新面板
      */
     disabled?: number;
+    /**
+     * 所依赖的模块名称（带拓展名）  
+     * 脚本会基于此提前从服务器获取模块到本地  
+     */
+    depends?: string[];
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等

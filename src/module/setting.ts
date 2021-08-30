@@ -25,6 +25,21 @@
             value ? (!(<any>window).API && ((<any>window).API = API)) : ((<any>window).API && delete (<any>window).API)
         }
     })
+    API.registerSetting({
+        key: "localModule",
+        sort: "common",
+        label: "安装本地模块",
+        svg: '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>',
+        type: 'file',
+        title: '选择',
+        accept: [".js", ".css", ".json"],
+        multiple: true,
+        depends: ["manage.js"],
+        float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css和json。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。',
+        action: (files) => {
+            API.localModule(files);
+        }
+    })
 })();
 /**
  * 已注册的菜单，通过`registerMenu`新建项请补充这里的可能值
@@ -60,6 +75,11 @@ interface ToolIcon {
      * 鼠标单击时的回调
      */
     action: (node: HTMLDivElement) => void;
+    /**
+     * 所依赖的模块名称（带拓展名）  
+     * 脚本会基于此提前从服务器获取模块到本地  
+     */
+    depends?: string[];
 }
 /**
  * 菜单项
@@ -125,6 +145,11 @@ interface ItemCommon {
      * ※ 理论上支持所有能以<div>为父节点的标签
      */
     float?: string;
+    /**
+     * 所依赖的模块名称（带拓展名）  
+     * 脚本会基于此提前从服务器获取模块到本地  
+     */
+    depends?: string[]
 }
 /**
  * 开关类菜单项，用以给用户判断是否开启某些功能等  
@@ -147,11 +172,6 @@ interface ItemSwh extends ItemCommon {
      * 设置节点本身将作为`this`传递
      */
     action?: (value: Boolean) => void;
-    /**
-     * 所依赖的模块名称（带拓展名）  
-     * `value`为true时脚本会基于此提前从服务器获取模块到本地  
-     */
-    depends?: string[]
 }
 /**
  * 下拉框类菜单项，用于给用户从多个数值选一个等  

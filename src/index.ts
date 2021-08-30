@@ -142,7 +142,7 @@ class API {
             msg[0] && toast.warning(...msg);
             this.updating = true;
             let resource: { [key: string]: string } = await xhr.GM({
-                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ts/resource.json',
+                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@4b9945f9474f3717dcd65d572e0580428add425c/resource.json',
                 responseType: 'json'
             })
             let keys = Object.keys(resource);
@@ -173,7 +173,7 @@ class API {
             if (!url) {
                 url = Object.keys(this.resource).find(d => d.includes("name"));
             }
-            let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
+            let temp = url.endsWith(".js") ? url.replace(".js", ".js") : url;
             let module = await xhr.GM({
                 url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${temp}`
             })
@@ -185,7 +185,10 @@ class API {
     }
     static init() {
         this.importModule("rewrite.js");
-        window.self === window.top && this.runWhile(() => document.body, () => this.importModule("ui.js", { MENU }));
+        window.self === window.top && this.runWhile(() => document.body, () => {
+            this.importModule("setting.js");
+            this.importModule("ui.js", { MENU, SETTING });
+        });
     }
     constructor() {
         API.API = new Proxy(this, {

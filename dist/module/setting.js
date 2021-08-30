@@ -24,4 +24,19 @@
             value ? (!window.API && (window.API = API)) : (window.API && delete window.API);
         }
     });
+    API.registerSetting({
+        key: "localModule",
+        sort: "common",
+        label: "安装本地模块",
+        svg: '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>',
+        type: 'file',
+        title: '选择',
+        accept: [".js", ".css", ".json"],
+        multiple: true,
+        depends: ["manage.js"],
+        float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css和json。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。',
+        action: (files) => {
+            API.localModule(files);
+        }
+    });
 })();
