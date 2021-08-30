@@ -442,14 +442,14 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-file.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            real.innerHTML += `<div class="label">${obj.label}</div><div class="xbutton">${obj.title}</div><input type="file" style="width: 0;"></input>`;
+            real.innerHTML += `<div class="label">${obj.label}</div><div class="button">${obj.title}</div><input type="file" style="width: 0;"></input>`;
             obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             let input = real.querySelector("input") as HTMLInputElement;
             obj.accept && (input.accept = obj.accept.join(","));
             obj.multiple && (input.multiple = true);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            (real.querySelector(".xbutton") as HTMLDivElement).onclick = () => input.click();
+            (real.querySelector(".button") as HTMLDivElement).onclick = () => input.click();
             input.onclick = () => input.value = "";
             input.onchange = () => input.files && obj.action.call(real, input.files);
             return div;

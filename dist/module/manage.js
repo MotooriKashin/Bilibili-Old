@@ -27,7 +27,7 @@
             return s;
         }, []))).forEach((d, i) => {
             try {
-                Reflect.set(module, data.json[i].name, d);
+                Reflect.set(module, data.txt[i].name, d);
                 toast.success(`成功本地安装模块 ${data.json[i]}`);
             }
             catch (e) {
