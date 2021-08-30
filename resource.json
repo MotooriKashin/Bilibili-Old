@@ -23,10 +23,11 @@
 	"CSS/ui-stage.css": "5dbdda0daebbd63c50933265a122f84234419057",
 	"CSS/ui-switch.css": "5dbdda0daebbd63c50933265a122f84234419057",
 	"CSS/ui.css": "5dbdda0daebbd63c50933265a122f84234419057",
-	"Json/apply.json": "964c234ae6a09fe4ce03be9a0c7da4d82f8ea402",
+	"Json/apply.json": "b008766fc0e5155611b608ab09d76d61844b5748",
 	"Json/protobuf.json": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"Json/videoSort.json": "fe766e479b51386d6881be99b3bff57029dd491b",
-	"dist/module/rewrite.js": "964c234ae6a09fe4ce03be9a0c7da4d82f8ea402",
-	"dist/module/setting.js": "964c234ae6a09fe4ce03be9a0c7da4d82f8ea402",
-	"dist/module/ui.js": "df63e453c494531a80b5c6be43e7beca39e62efd"
+	"dist/module/manage.js": "b008766fc0e5155611b608ab09d76d61844b5748",
+	"dist/module/rewrite.js": "b008766fc0e5155611b608ab09d76d61844b5748",
+	"dist/module/setting.js": "b008766fc0e5155611b608ab09d76d61844b5748",
+	"dist/module/ui.js": "b008766fc0e5155611b608ab09d76d61844b5748"
 }

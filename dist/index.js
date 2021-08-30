@@ -547,6 +547,7 @@ class API {
         }
     }
     static init() {
+        this.importModule("rewrite.js");
         window.self === window.top && this.runWhile(() => document.body, () => {
             this.importModule("setting.js");
             this.importModule("ui.js", { MENU, SETTING });
