@@ -892,6 +892,7 @@ declare class API {
     Handler: string;
     registerSetting: typeof registerSetting;
     registerMenu: typeof registerMenu;
+    runWhile: typeof API.runWhile;
     importModule: typeof API.importModule;
     timeFormat: (time?: number, type?: boolean) => string;
     sizeFormat: (size?: number) => string;
@@ -910,7 +911,7 @@ declare class API {
         [name: string]: string;
     }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | HTMLAnchorElement | HTMLAppletElement | HTMLScriptElement | HTMLEmbedElement | HTMLFormElement | HTMLHeadElement | HTMLAreaElement | HTMLObjectElement | HTMLLinkElement | HTMLTrackElement | HTMLProgressElement | HTMLAudioElement | HTMLBaseElement | HTMLQuoteElement | HTMLBodyElement | HTMLBRElement | HTMLButtonElement | HTMLTableCaptionElement | HTMLTableColElement | HTMLDataElement | HTMLDataListElement | HTMLModElement | HTMLDetailsElement | HTMLDialogElement | HTMLDirectoryElement | HTMLDivElement | HTMLDListElement | HTMLFieldSetElement | HTMLFontElement | HTMLFrameElement | HTMLFrameSetElement | HTMLHeadingElement | HTMLHRElement | HTMLHtmlElement | HTMLIFrameElement | HTMLInputElement | HTMLLabelElement | HTMLLegendElement | HTMLLIElement | HTMLMapElement | HTMLMarqueeElement | HTMLMenuElement | HTMLMetaElement | HTMLMeterElement | HTMLOListElement | HTMLOptGroupElement | HTMLOptionElement | HTMLOutputElement | HTMLParagraphElement | HTMLParamElement | HTMLPictureElement | HTMLPreElement | HTMLSelectElement | HTMLSlotElement | HTMLSourceElement | HTMLSpanElement | HTMLStyleElement | HTMLTableElement | HTMLTableSectionElement | HTMLTableDataCellElement | HTMLTemplateElement | HTMLTextAreaElement | HTMLTableHeaderCellElement | HTMLTimeElement | HTMLTitleElement | HTMLTableRowElement | HTMLUListElement;
     addCss(txt: string, id?: string, parrent?: Node): Promise<void>;
-    runWhile(check: any, callback: Function, delay?: number, stop?: number): void;
+    static runWhile(check: Function, callback: Function, delay?: number, stop?: number): void;
     alert(text: string, title?: string): Promise<boolean>;
     getModule(name: string): string;
     static importModule(name?: string, args?: {
@@ -919,5 +920,6 @@ declare class API {
     static firstInit(): Promise<void>;
     static updateModule(...msg: string[]): Promise<void>;
     static downloadModule(name: string, url?: string): Promise<void>;
+    static init(): void;
     constructor();
 }

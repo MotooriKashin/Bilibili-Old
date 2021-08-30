@@ -1,0 +1,30 @@
+.contain {
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 6%);
+  display: flex;
+  min-height: 24px;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  background-color: transparent !important;
+}
+.label {
+  flex: 1;
+  flex-basis: 0.000000001px;
+  padding-block-end: 12px;
+  padding-block-start: 12px;
+}
+.sub {
+  color: rgb(95, 99, 104);
+  font-weight: 400;
+}
+.anchor {
+  cursor: pointer;
+  transition: transform 120ms ease 180ms, box-shadow 120ms ease 180ms;
+}
+.anchor.focus {
+  transform: rotateX(180deg);
+}
+.anchor:active {
+  box-shadow: 0 0 4px 4px rgba(241, 243, 244, 80%);
+}

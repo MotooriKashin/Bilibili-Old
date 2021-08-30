@@ -1,0 +1,39 @@
+.float {
+  top: 0;
+  right: 0;
+  position: fixed;
+  z-index: 1111;
+  min-width: 40px;
+  min-height: 30px;
+  display: block;
+  padding: 8px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #e9eaec;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px 0 rgb(106, 115, 133, 22%);
+  user-select: text;
+  pointer-events: none;
+}
+.arrow {
+  left: 16%;
+  top: 100%;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 8px solid #fff;
+  position: absolute;
+  user-select: text;
+}
+.message {
+  margin-top: -4px;
+  box-sizing: border-box;
+  height: 100%;
+  position: relative;
+  user-select: text;
+  word-wrap: break-word;
+  word-break: break-all;
+  font-size: 12px;
+  line-height: 1.15;
+}

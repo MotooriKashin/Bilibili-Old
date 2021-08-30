@@ -1,499 +1,89 @@
-/* 设置入口 */
-.setting-entry.icon{
-    position: fixed;
-    right: 40px;
-    bottom: 60px;
-    height: 20px;
-    width: 20px;
-    border: 1px solid #e9eaec;
-    border-radius: 50%;
-    box-shadow: 0 0 12px 4px rgb(106,115,133,22%);
-    padding: 10px;
-    cursor: pointer;
-    animation: roll 1s ease-out;
-    transition: opacity .3s ease-out;
-    background: none;
-    z-index: 999;
+.box {
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  min-width: 600px;
+  min-height: 400px;
+  padding: 0;
+  border: 0;
+  position: fixed;
+  z-index: 999;
+  display: block;
+  box-sizing: border-box;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
+  transition: transform 0.3s ease-in;
+  font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,
+    Heiti SC, WenQuanYi Micro Hei, sans-serif;
 }
-@keyframes roll{
-    30%,60%,90%{
-        transform:scale(1) rotate(0deg);
-    }
-    10%,40%,70%{
-        transform:scale(1.11) rotate(-180deg);
-    }
-    20%,50%,80%{
-        transform:scale(0.9) rotate(-360deg);
-    }
+.tool {
+  position: absolute;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+  display: inline-flex;
+  z-index: 1;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
 }
-/* 控制面板 */
-.ui-border-box {
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    min-width: 600px;
-    min-height: 400px;
-    padding: 0;
-    border: 0;
-    position: fixed;
-    z-index: 999;
-    display: block;
-    box-sizing: border-box;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px 0 rgba(106,115,133,22%);
-    transition: transform 0.3s ease-in;
-    font: 12px Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif;
+.tool div {
+  padding: 10px;
+  transform: scale(0.8);
+  pointer-events: visible;
 }
-.ui-border-box .box-tool{
-    position: absolute;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    overflow: hidden;
-    width: 100%;
-    display: inline-flex;
-    z-index: 1;
-    align-items: center;
-    justify-content: flex-end;
-    pointer-events: none;
+.tool div:hover {
+  background-color: rgba(0, 0, 0, 10%);
 }
-.box-tool div{
-    padding: 10px;
-    transform: scale(0.8);
-    pointer-events: visible;
+.content {
+  position: relative;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
 }
-.box-tool div:hover{
-    background-color: rgba(0,0,0,10%);
+.contain {
+  padding-bottom: 15px;
+  background-image: url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/bg.c4f9c6c..png);
+  background-position: top center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+  height: 385px;
 }
-.ui-border-box .box-content{
-    position: relative;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-    overflow: hidden;
-    background-color: #fff;
+.menu::-webkit-scrollbar,
+.item-contain::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
 }
-.ui-border-box .box-contain{
-    padding-bottom: 15px;
-    background-image: url(//s1.hdslb.com/bfs/static/blive/blfe-live-room/static/img/bg.c4f9c6c..png);
-    background-position: top center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: flex;
-    align-items: flex-start;
-    flex: 1;
-    height: 385px;
+.menu {
+  flex: 1 1 0;
+  flex-basis: calc(480px * 0.2);
+  height: 100%;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: fit-content;
+  overflow: auto;
 }
-.item-menu::-webkit-scrollbar,.item-contain::-webkit-scrollbar {
-    width: 0 !important;
-    height: 0 !important;
+.item {
+  flex: 4 4 0;
+  flex-basis: calc(480px * 0.8);
+  height: 100%;
+  box-sizing: border-box;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  overflow: auto;
 }
-.box-contain .item-menu{
-    flex: 1 1 0;
-    flex-basis: calc(480px * 0.2);
-    height: 100%;
-    position: sticky;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    min-width: fit-content;
-    overflow: auto;
+.selected {
+  color: rgb(51, 103, 214) !important;
 }
-.box-contain .item-contain{
-    flex: 4 4 0;
-    flex-basis: calc(480px * 0.8);
-    height: 100%;
-    box-sizing: border-box;
-    display: block;
-    margin: 0 auto;
-    position: relative;
-    overflow: auto;
-}
-.item-menu .menuitem{
-    align-items: center;
-    color: #000;
-    display: flex;
-    font-weight: 500;
-    margin-inline-end: 2px;
-    margin-inline-start: 1px;
-    min-height: 20px;
-    padding-bottom: 10px;
-    padding-inline-start: 23px;
-    padding-top: 10px;
-    cursor: pointer;
-}
-.item-menu .menuitem:hover{
-    background-color: rgb(0,0,0,6%);
-}
-.item-contain .menu-contain{
-    margin-bottom: 3px;
-    padding-inline-start: 20px;
-    padding-inline-end: 20px;
-    display: flex;
-    flex-direction: column;
-    outline: none;
-    position: relative;
-}
-.menu-contain .menu-header .title{
-    color:#000;
-    font-size: 108%;
-    font-weight: 400;
-    letter-spacing: .25px;
-    margin-bottom: 12px;
-    margin-top: 21px;
-    outline: none;
-    padding-bottom: 4px;
-    padding-top: 8px;
-}
-.menu-contain .menu-card{
-    border-radius: 4px;
-    box-shadow: 0px 0px 1px 1px rgba(60,64,67,30%);
-    flex: 1;
-    color: #000;
-    line-height: 154%;
-    user-select: text;
-}
-/* 图标专用 */
-.icon-svg,.ui-border-box .icon{
-    align-items: center;
-    border-radius: 50%;
-    display: flex;
-    height: 20px;
-    justify-content: center;
-    padding-inline-end: 12px;
-    position: relative;
-    width: 20px;
-    box-sizing: content-box;
-    background: none;
-}
-/* 选中蓝点 */
-.selected{
-    color: rgb(51, 103, 214) !important;
-}
-.selected > .icon{
-    fill: rgb(51, 103, 214) !important;
-}
-/* 通用条目 */
-.value-contain {
-    align-items: center;
-    border-top: 1px solid rgba(0,0,0,6%);
-    display: flex;
-    min-height: 24px;
-    padding: 0 20px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    background-color: transparent !important;
-}
-.value-contain.picture{
-    line-height: 0;
-    padding-top: 16px;
-}
-.value-contain.picture img{
-    border-radius: 4px;
-    width: 100%;
-}
-.value-contain .label{
-    flex: 1;
-    flex-basis: 0.000000001px;
-    padding-block-end: 12px;
-    padding-block-start: 12px;
-}
-.value-contain .label .sub{
-    color: rgb(95,99,104);
-    font-weight: 400;
-}
-/* 按钮 */
-.xbutton, .xaction{
-    line-height: 154%;
-    align-items: center;
-    border-radius: 4px;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-flex;
-    flex-shrink: 0;
-    font-weight: 500;
-    height: 32px;
-    justify-content: center;
-    min-width: 5.14em;
-    outline-width: 0;
-    overflow: hidden;
-    padding: 8px 16px;
-    position: relative;
-    user-select: none;
-}
-.xaction {
-    border: none;
-    background-color: rgb(26,115,232);
-    color: #fff;
-}
-.xbutton {
-    background-color: #fff;
-    color: rgb(26,115,232);
-    border: 1px solid rgba(0,0,0,6%);
-}
-.xaction:hover{
-    background-color: rgb(72,115,232);
-}
-.xbutton:hover{
-    background-color: rgba(26,115,232,6%);
-}
-.xaction:active{
-    box-shadow: 0 0 1px 1px rgba(72,115,232,80%);
-}
-.xbutton:active{
-    box-shadow: 0 0 1px 1px rgba(0,0,0,10%);
-}
-.xbutton[disabled],.xaction[disabled]{
-    pointer-events: none;
-    background-color: rgba(19, 1, 1, 0.1);
-    border: 1px solid rgba(0,0,0,.1);
-    color: white;
-}
-/* 下拉箭头 */
-.anchor {
-    cursor: pointer;
-    transition: transform 120ms ease 180ms, box-shadow 120ms ease 180ms;
-}
-.anchor.focus {
-    transform: rotateX(180deg);
-}
-.anchor:active{
-    box-shadow: 0 0 4px 4px rgba(241,243,244,80%);
-}
-/* 滑块开关 */
-.switch{
-    cursor: pointer;
-    display: block;
-    min-width: 34px;
-    outline: none;
-    position: relative;
-    width: 34px;
-}
-.switch .bar{
-    background-color: rgb(189,193,198);
-    border-radius: 8px;
-    height: 12px;
-    left: 3px;
-    position: absolute;
-    top: 2px;
-    transition: background-color linear 80ms;
-    width: 28px;
-    z-index: 0;
-}
-.switch .bar[checked]{
-    background-color: rgb(26,115,232);
-    opacity: 0.5;
-}
-.switch .bar:active{
-    box-shadow: 0 0 1px 1px rgba(26,115,232,80%);
-}
-.switch .knob{
-    background-color: #fff;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,40%);
-    display: block;
-    height: 16px;
-    position: relative;
-    transition: transform linear 80ms, background-color linear 80ms;
-    width: 16px;
-    z-index: 1;
-}
-.switch .knob[checked]{
-    background-color: rgb(26,115,232);
-    transform: translate3d(18px, 0, 0);
-}
-.switch .knob:active{
-    box-shadow: 0 0 1px 1px rgba(26,115,232,80%);
-}
-.switch .knob i{
-    color: rgba(128,134,139,15%);
-    height: 40px;
-    left: -12px;
-    pointer-events: none;
-    top: -12px;
-    transition: color linear 80ms;
-    width: 40px;
-    border-radius: 50%;
-    bottom: 0;
-    display: block;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    transform: translate3d(0, 0, 0);
-}
-.switch .knob i[checked]{
-    color: rgb(26,115,232);
-}
-.switch .knob i:active{
-    box-shadow: 0 0 1px 1px rgba(26,115,232,80%);
-}
-/* 下拉框 */
-.row{
-    align-items: center;
-    display: inline-flex;
-}
-.row select{
-    background-color: rgb(241,243,244);
-    background-size: 10px;
-    border: none;
-    border-radius: 4px;
-    color: rgb(32,33,36);
-    cursor: pointer;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    max-width: 100%;
-    outline: none;
-    padding-bottom: 6px;
-    padding-inline-end: 21px;
-    padding-inline-start: 8px;
-    padding-top: 6px;
-    width: 200px;
-}
-.row select option{
-    background-color: #fff;
-}
-/* 二级组合框 */
-.vaule-sec-contain {
-    display: block;
-    padding-block-end: 0;
-    padding-block-start: 0;
-    padding-inline-end: 20px;
-    padding-inline-start: 20px;
-    border-top: 1px solid rgba(0,0,0,6%);
-}
-/* 输入框 */
-.textbox {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    background-color: transparent;
-    box-sizing: border-box;
-    padding: 0;
-    flex: 1;
-    flex-basis: 0.000000001px;
-    padding-block-end: 12px;
-    padding-block-start: 12px;
-}
-.textbox input{
-    background-color: transparent;
-    box-sizing: border-box;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    line-height: inherit;
-    min-height: auto;
-    outline: none;
-    padding-bottom: 6px;
-    padding-inline-end: 8px;
-    padding-inline-start: 8px;
-    padding-top: 6px;
-    text-align: inherit;
-    text-overflow: ellipsis;
-    width: 100%;
-    border-radius: 4px;
-    border: 1px solid rgba(136,136,136,0.13333);
-    box-shadow: 0 4px 12px 0 rgb(0,0,0,5%);
-    transition: box-shadow 120ms ease 180ms;
-}
-.textbox input:focus{
-    box-shadow: inset 0 0 1px 1px rgba(26,115,232,80%);
-}
-.textbox .icon {
-    cursor: pointer;
-    outline: none;
-    padding: 0;
-    pointer-events: auto;
-    position: absolute;
-    right: 12px;
-    background-color: white;
-}
-.textbox .icon:hover{
-    background-color: rgba(0,0,0,10%);
-    box-shadow: 0 1 12px 12px rgb(0,0,0,10%);
-}
-/* 复选框 */
-.checkbox {
-    align-items: center;
-    display: flex;
-    min-height: auto;
-    padding: 0;
-    cursor: pointer;
-}
-.checkbox .checklabel{
-    height: 16px;
-    margin-block-start: 0px;
-    position: relative;
-    width: 16px;
-    border-radius: 50%;
-}
-.checklabel .disc-border{
-    border: 2px solid rgb(95,99,104);
-    box-sizing: border-box;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-}
-.checklabel .disc-border[checked]{
-    border-color: rgb(26,115,232);
-}
-.checklabel .disc {
-    background-color: transparent;
-    position: absolute;
-    top: 0;
-    transform: scale(0);
-    transition: border-color 200ms, transform 200ms;
-    box-sizing: border-box;
-    height: 16px;
-    width: 16px;
-    border-radius: 50%;
-}
-.checklabel .disc[checked] {
-    background-color: rgb(26,115,232);
-    transform: scale(0.5);
-}
-.checkbox .checkvalue{
-    flex: 1;
-    margin-inline-start: 5px;
-    margin-inline-end: 5px;
-}
-/* 浮动信息 */
-.dialog-float{
-    top: 0;
-    right: 0;
-    position: fixed;
-    z-index: 1111;
-    min-width: 40px;
-    min-height: 30px;
-    display: block;
-    padding: 8px;
-    box-sizing: border-box;
-    background: #fff;
-    border: 1px solid #e9eaec;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px 0 rgb(106,115,133,22%);
-    user-select: text;
-	pointer-events: none;
-}
-.dialog-float .arrow{
-    left: 16%;
-    top: 100%;
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 8px solid #fff;
-    position: absolute;
-    user-select: text;
-}
-.dialog-float .message{
-    margin-top: -4px;
-    box-sizing: border-box;
-    height: 100%;
-    position: relative;
-    user-select: text;
-    word-wrap: break-word;
-    word-break: break-all;
-    font-size: 12px;
-    line-height: 1.15;
+.selected > .icon {
+  fill: rgb(51, 103, 214) !important;
 }

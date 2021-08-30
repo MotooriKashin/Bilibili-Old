@@ -1,0 +1,33 @@
+.stage {
+  position: fixed;
+  right: 40px;
+  bottom: 60px;
+  height: 20px;
+  width: 20px;
+  border: 1px solid #e9eaec;
+  border-radius: 50%;
+  box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);
+  padding: 10px;
+  cursor: pointer;
+  animation: roll 1s ease-out;
+  transition: opacity 0.3s ease-out;
+  background: none;
+  z-index: 999;
+}
+@keyframes roll {
+  30%,
+  60%,
+  90% {
+    transform: scale(1) rotate(0deg);
+  }
+  10%,
+  40%,
+  70% {
+    transform: scale(1.11) rotate(-180deg);
+  }
+  20%,
+  50%,
+  80% {
+    transform: scale(0.9) rotate(-360deg);
+  }
+}

@@ -1,0 +1,16 @@
+.contain {
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 6%);
+  display: flex;
+  min-height: 24px;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  background-color: transparent !important;
+  line-height: 0;
+  padding-top: 16px;
+}
+.contain img {
+  border-radius: 4px;
+  width: 100%;
+}

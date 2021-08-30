@@ -4,6 +4,15 @@
  */
 declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live";
 /**
+ * 已注册设置项
+ */
+declare namespace config {
+    /**
+     * 开发者模式
+     */
+    let developer: boolean;
+}
+/**
  * 工具栏按钮
  */
 interface ToolIcon {

@@ -1,0 +1,45 @@
+.contain {
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 6%);
+  display: flex;
+  min-height: 24px;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  background-color: transparent !important;
+}
+.label {
+  flex: 1;
+  flex-basis: 0.000000001px;
+  padding-block-end: 12px;
+  padding-block-start: 12px;
+}
+.sub {
+  color: rgb(95, 99, 104);
+  font-weight: 400;
+}
+.row {
+  align-items: center;
+  display: inline-flex;
+}
+select {
+  background-color: rgb(241, 243, 244);
+  background-size: 10px;
+  border: none;
+  border-radius: 4px;
+  color: rgb(32, 33, 36);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  max-width: 100%;
+  outline: none;
+  padding-bottom: 6px;
+  padding-inline-end: 21px;
+  padding-inline-start: 8px;
+  padding-top: 6px;
+  width: 200px;
+}
+option {
+  background-color: #fff;
+}

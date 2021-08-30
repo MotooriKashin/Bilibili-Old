@@ -204,11 +204,11 @@ interface GMxhrDetails {
  */
 declare namespace GM {
     function xmlHttpRequest(details: GMxhrDetails): { abort: () => void };
-    function GM_getResourceText(name: string): string;
-    function GM_getResourceURL(name: string): string;
-    function GM_getValue<T>(name: string, defaultValue?: T): T;
-    function GM_setValue<T>(name: string, value: T): void;
-    function GM_deleteValue(name: string): void;
+    function getResourceText(name: string): string;
+    function getResourceURL(name: string): string;
+    function getValue<T>(name: string, defaultValue?: T): T;
+    function setValue<T>(name: string, value: T): void;
+    function deleteValue(name: string): void;
     const info: {
         downloadMode: string;
         isFirstPartyIsolation: boolean;
@@ -406,13 +406,13 @@ declare namespace API {
      */
     function addCss(txt: string, id?: string, parrent?: Node): Promise<void>;
     /**
-     * 添加条件回调，条件为真时执行回调函数，用于检测函数运行时机。
-     * @param check 一个任意表达式，将以一定间隔轮询该表达式，知道该值为真，执行回调函数
+     * 添加条件回调，条件为真时执行回调函数，用于检测函数运行时机  
+     * @param check 一个返回布尔值的函数，用于轮询，当函数返回值为真时执行回调函数
      * @param callback 待执行的回调函数
      * @param delay 轮询间隔：/ms，默认100ms
      * @param stop 轮询最大延时：/ms，多长时间后终止轮询，不做无谓的等待，默认180ms，即3分钟。为0时永不终止直到为真。
      */
-    function runWhile(check: any, callback: Function, delay?: number, stop?: number): void;
+    function runWhile(check: Function, callback: Function, delay?: number, stop?: number): void;
     /**
      * 标准导入模块函数  
      * 对于按需加载的模块，如果已在`apply.json`中配置好其暴露的属性/方法信息，那么无需主动导入模块，脚本会在调用到对应属性/方法时自动加载模块！
