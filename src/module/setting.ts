@@ -25,6 +25,7 @@
             value ? (!(<any>window).API && ((<any>window).API = API)) : ((<any>window).API && delete (<any>window).API)
         }
     })
+    config.developer && ((<any>window).API = API);
     API.registerSetting({
         key: "localModule",
         sort: "common",

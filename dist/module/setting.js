@@ -24,6 +24,7 @@
             value ? (!window.API && (window.API = API)) : (window.API && delete window.API);
         }
     });
+    config.developer && (window.API = API);
     API.registerSetting({
         key: "localModule",
         sort: "common",

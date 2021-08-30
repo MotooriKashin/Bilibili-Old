@@ -39,7 +39,6 @@
                 },
                 get: (_target, p: string) => history[p]
             })
-            Ui.borderBox();
             this.stage();
         }
         /**
@@ -65,6 +64,7 @@
          */
         display(key?: string) {
             document.querySelector("#ui-border-box")?.remove();
+            Ui.borderBox();
             setting.reduce((s: string[], d: any) => {
                 d.sort && !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
                 Ui.index(d);
@@ -245,28 +245,25 @@
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
             const real = API.addElement("div", { class: "contain" }, root);
-            API.addCss(API.getModule("ui-switch.css"), "", real);
+            API.addCss(API.getModule("ui-switch.css"), "", root);
             Reflect.set(this.list, obj.key, real);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            real.innerHTML += `<div class="label">${obj.label}</div>
-            <div class="switch">
-                <span class="bar"></span>
-                <span class="knob"><i class="circle"></i></span>
-            </div>`;
-            obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
-            config[obj.key] && ((real.querySelector(".bar") as HTMLDivElement).setAttribute("checked", "checked"),
-                (real.querySelector(".knob") as HTMLDivElement).setAttribute("checked", "checked"),
-                (real.querySelector(".circle") as HTMLDivElement).setAttribute("checked", "checked"))
+            const label = API.addElement("div", { class: "label" }, real, obj.label);
+            const value = API.addElement("div", { class: "switch" }, real, `<span class="bar"></span><span class="knob"><i class="circle"></i></span>`)
+            obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+            config[obj.key] && (value.children[0].setAttribute("checked", "checked"),
+                value.children[1].setAttribute("checked", "checked"),
+                value.children[1].children[0].setAttribute("checked", "checked"))
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
             real.onclick = () => {
                 config[obj.key] = !config[obj.key];
-                config[obj.key] ? ((real.querySelector(".bar") as HTMLDivElement).setAttribute("checked", "checked"),
-                    (real.querySelector(".knob") as HTMLDivElement).setAttribute("checked", "checked"),
-                    (real.querySelector(".circle") as HTMLDivElement).setAttribute("checked", "checked")) :
-                    ((real.querySelector(".bar") as HTMLDivElement).removeAttribute("checked"),
-                        (real.querySelector(".knob") as HTMLDivElement).removeAttribute("checked"),
-                        (real.querySelector(".circle") as HTMLDivElement).removeAttribute("checked"));
+                config[obj.key] ? (value.children[0].setAttribute("checked", "checked"),
+                    value.children[1].setAttribute("checked", "checked"),
+                    value.children[1].children[0].setAttribute("checked", "checked")) :
+                    (value.children[0].removeAttribute("checked"),
+                        value.children[1].removeAttribute("checked"),
+                        value.children[1].children[0].removeAttribute("checked"));
                 obj.action && obj.action.call(real, config[obj.key]);
             }
             return div;
@@ -285,11 +282,13 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-row.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            let html = `<div class="label">${obj.label}</div><div class="row"><select>`;
-            obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
-            obj.list.forEach(d => html += `<option>${d}</option>`)
-            real.innerHTML += html + '</select></div>';
-            let select = real.querySelector("select") as HTMLSelectElement;
+            const label = API.addElement("div", { class: "label" }, real, obj.label);
+            const value = API.addElement("div", { class: "row" }, real);
+            obj.sub && API.addElement("div", { class: "sub" }, label, obj.sub);
+            let select = obj.list.reduce((s, d) => {
+                API.addElement("option", {}, s, d);
+                return s;
+            }, <HTMLSelectElement>API.addElement("select", {}, value))
             select.value = config[obj.key];
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
@@ -319,15 +318,10 @@
             API.addElement("div", { class: "contain" }, secroot);
             API.addCss(API.getModule("ui-sort-body.css"), "", secroot);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            real.innerHTML += `<div class="label">${obj.label}</div>
-            <div class="anchor">
-                <div class="icon">
-                    <svg viewBox="0 0 24 24">
-                        <g><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></g>
-                    </svg>
-                </div>
-            </div>`;
-            obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+            const label = API.addElement("div", { class: "label" }, real, obj.label);
+            const value = API.addElement("div", { class: "anchor" }, real);
+            value.appendChild(this.icon(`<svg viewBox="0 0 24 24"><g><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></g></svg>`))
+            obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div) && node.appendChild(sec);
             item = obj.list.reduce((s: HTMLDivElement[], d) => {
@@ -336,7 +330,7 @@
                 s.push(temp);
                 return s;
             }, []);
-            (real.querySelector(".anchor") as HTMLDivElement).onclick = () => {
+            value.onclick = () => {
                 flag = !flag;
                 flag ? item.forEach(d => d.style.display = "flex") : item.forEach(d => d.style.display = "none")
             }
@@ -357,13 +351,14 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-action.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            real.innerHTML += `<div class="label">${obj.label}</div><div class="action">${obj.title}</div>`;
-            obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+            const label = API.addElement("div", { class: "label" }, real, obj.label);
+            const value = API.addElement("div", { class: "action" }, real, obj.title);
+            obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
             (real.querySelector(".action") as HTMLDivElement).onclick = () => {
-                (<HTMLDivElement>real.querySelector(".action")).setAttribute("disabled", "disabled");
-                disabled && setTimeout(() => (<HTMLDivElement>real.querySelector(".action")).removeAttribute("disabled"), disabled * 1000);
+                value.setAttribute("disabled", "disabled");
+                disabled && setTimeout(() => value.removeAttribute("disabled"), disabled * 1000);
                 obj.action.call(real);
             }
             return div;
@@ -384,30 +379,32 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-input.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            let html = `<div style="padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;">${obj.label}</div>
-            <div class="textbox">`;
-            obj.key ? (html += `<input list="list-${obj.key}"></input><datalist id="list-${obj.key}"></datalist><div class="icon" title="清除历史"><svg viewBox="0 0 24 24"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg></div></div>`) : html += `<input></input></div>`;
-            obj.title && (html += `<div class="button">${obj.title}</div>`);
-            real.innerHTML += html;
+            API.addElement("div", { style: "padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;" }, real, obj.label);
+            const value = API.addElement("div", { class: "textbox" }, real);
+            obj.key ? (API.addElement("input", { list: `list-${obj.key}` }, value),
+                API.addElement("datalist", { id: `list-${obj.key}` }, value),
+                value.appendChild(this.icon(`<svg viewBox="0 0 24 24"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg>`)))
+                : API.addElement("input", {}, value);
+            obj.title && API.addElement("div", { class: "button" }, value);
             (history = this.history[obj.key] || [],
                 history.reduce((s, d) => {
-                    s.innerHTML += `<option value="${d}"></option>`
+                    API.addElement("option", { value: d })
                     return s;
-                }, real.querySelector("datalist") as HTMLDataListElement),
-                (real.querySelector('.icon[title="清除历史"]') as HTMLDivElement).style.display = "none");
+                }, value.children[1]),
+                (<HTMLDivElement>value.children[2]).style.display = "none");
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            let input = real.querySelector("input") as HTMLInputElement;
-            let clear = real.querySelector('.icon[title="清除历史"]') as HTMLDivElement
+            let input = <HTMLInputElement>value.children[0];
+            let clear = <HTMLDivElement>value.children[2];
             obj.hasOwnProperty("value") && (input.value = <string>config[obj.key]);
             Object.entries(obj.input).forEach(d => { input.setAttribute(d[0], d[1]) });
-            (input.parentNode as HTMLDivElement).onmouseover = () => history.length > 0 && (clear.style.display = "block");
-            (input.parentNode as HTMLDivElement).onmouseout = () => clear.style.display = "none";
-            clear.onclick = () => {
+            value.onmouseover = () => history.length > 0 && (clear && (clear.style.display = "block"));
+            value.onmouseout = () => { clear && (clear.style.display = "none"); }
+            clear && (clear.onclick = () => {
                 history = this.history[obj.key] = [];
                 real.querySelectorAll("option").forEach(d => d.remove());
                 clear.style.display = "none";
-            }
+            });
             input.onchange = () => {
                 if (obj.pattern && !obj.pattern.test(input.value)) return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                 obj.hasOwnProperty("value") && (config[obj.key] = input.value, (<any>config)[obj.key] = input.value);
@@ -441,14 +438,15 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-file.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            real.innerHTML += `<div class="label">${obj.label}</div><div class="button">${obj.title}</div><input type="file" style="width: 0;"></input>`;
-            obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
-            let input = real.querySelector("input") as HTMLInputElement;
+            const label = API.addElement("div", { class: "label" }, real, obj.label);
+            const value = API.addElement("div", { class: "button" }, real, obj.title);
+            const input = <HTMLInputElement>API.addElement("input", { type: "file", style: "width: 0;" }, real);
+            obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.accept && (input.accept = obj.accept.join(","));
             obj.multiple && (input.multiple = true);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            (real.querySelector(".button") as HTMLDivElement).onclick = () => input.click();
+            value.onclick = () => input.click();
             input.onclick = () => input.value = "";
             input.onchange = () => input.files && obj.action.call(real, input.files);
             return div;
@@ -467,22 +465,19 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-multi.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            real.innerHTML += `<div class="label">${obj.label}</div>`;
-            obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+            const label = API.addElement("div", { class: "label" }, real, obj.label);
+            const value = API.addElement("div", { class: "checkbox" }, real);
+            obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.list.forEach(d => {
-                real.innerHTML += config[obj.key].includes(d) ? `<div class="checkbox">
-                    <div class="checklabel">
+                config[obj.key].includes(d) ? API.addElement("div", { class: "checkbox" }, real, `<div class="checklabel">
                         <div class="disc-border" checked></div>
                         <div class="disc" checked></div>
                     </div>
-                    <div class="checkvalue">${d}</div>
-                </div>` : `<div class="checkbox">
-                    <div class="checklabel">
+                    <div class="checkvalue">${d}</div>`) : API.addElement("div", { class: "checkbox" }, real, `<div class="checklabel">
                         <div class="disc-border"></div>
                         <div class="disc"></div>
                     </div>
-                    <div class="checkvalue">${d}</div>
-                </div>`
+                    <div class="checkvalue">${d}</div>`);
             })
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
