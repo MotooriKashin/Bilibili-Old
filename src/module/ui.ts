@@ -254,21 +254,20 @@
                 <span class="knob"><i class="circle"></i></span>
             </div>`;
             obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
-            obj.value && ((real.querySelector(".bar") as HTMLDivElement).setAttribute("checked", "checked"),
+            config[obj.key] && ((real.querySelector(".bar") as HTMLDivElement).setAttribute("checked", "checked"),
                 (real.querySelector(".knob") as HTMLDivElement).setAttribute("checked", "checked"),
                 (real.querySelector(".circle") as HTMLDivElement).setAttribute("checked", "checked"))
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
             real.onclick = () => {
-                obj.value = !obj.value;
-                obj.value ? ((real.querySelector(".bar") as HTMLDivElement).setAttribute("checked", "checked"),
+                config[obj.key] = !config[obj.key];
+                config[obj.key] ? ((real.querySelector(".bar") as HTMLDivElement).setAttribute("checked", "checked"),
                     (real.querySelector(".knob") as HTMLDivElement).setAttribute("checked", "checked"),
                     (real.querySelector(".circle") as HTMLDivElement).setAttribute("checked", "checked")) :
                     ((real.querySelector(".bar") as HTMLDivElement).removeAttribute("checked"),
                         (real.querySelector(".knob") as HTMLDivElement).removeAttribute("checked"),
                         (real.querySelector(".circle") as HTMLDivElement).removeAttribute("checked"));
-                Reflect.set(config, obj.key, obj.value);
-                obj.action && obj.action.call(real, obj.value);
+                obj.action && obj.action.call(real, config[obj.key]);
             }
             return div;
         }
@@ -291,11 +290,11 @@
             obj.list.forEach(d => html += `<option>${d}</option>`)
             real.innerHTML += html + '</select></div>';
             let select = real.querySelector("select") as HTMLSelectElement;
-            select.value = obj.value;
+            select.value = config[obj.key];
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
             select.onchange = () => {
-                obj.value = select.value, (<any>config)[obj.key] = select.value;
+                config[obj.key] = select.value, (<any>config)[obj.key] = select.value;
                 obj.action && obj.action.call(real, select.value);
             }
             return div;
@@ -400,7 +399,7 @@
             node && node.appendChild(div);
             let input = real.querySelector("input") as HTMLInputElement;
             let clear = real.querySelector('.icon[title="清除历史"]') as HTMLDivElement
-            obj.hasOwnProperty("value") && (input.value = <string>obj.value);
+            obj.hasOwnProperty("value") && (input.value = <string>config[obj.key]);
             Object.entries(obj.input).forEach(d => { input.setAttribute(d[0], d[1]) });
             (input.parentNode as HTMLDivElement).onmouseover = () => history.length > 0 && (clear.style.display = "block");
             (input.parentNode as HTMLDivElement).onmouseout = () => clear.style.display = "none";
@@ -411,7 +410,7 @@
             }
             input.onchange = () => {
                 if (obj.pattern && !obj.pattern.test(input.value)) return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
-                obj.hasOwnProperty("value") && (obj.value = input.value, (<any>config)[obj.key] = input.value);
+                obj.hasOwnProperty("value") && (config[obj.key] = input.value, (<any>config)[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                 !obj.action && toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(real, input.value);
@@ -421,7 +420,7 @@
                 if (obj.pattern && !obj.pattern.test(input.value)) return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                 (<HTMLDivElement>real.querySelector(".button")).setAttribute("disabled", "disabled");
                 disabled && setTimeout(() => (<HTMLDivElement>real.querySelector(".button")).removeAttribute("disabled"), disabled * 1000);
-                obj.hasOwnProperty("value") && (obj.value = input.value, (<any>config)[obj.key] = input.value);
+                obj.hasOwnProperty("value") && (config[obj.key] = input.value, (<any>config)[obj.key] = input.value);
                 !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                 !obj.action && toast.warning(`数值已变更：${input.value}`);
                 obj.action && obj.action.call(real, input.value);
@@ -471,7 +470,7 @@
             real.innerHTML += `<div class="label">${obj.label}</div>`;
             obj.sub && ((real.querySelector(".label") as HTMLDivElement).innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.list.forEach(d => {
-                real.innerHTML += obj.value.includes(d) ? `<div class="checkbox">
+                real.innerHTML += config[obj.key].includes(d) ? `<div class="checkbox">
                     <div class="checklabel">
                         <div class="disc-border" checked></div>
                         <div class="disc" checked></div>
@@ -489,9 +488,8 @@
             node && node.appendChild(div);
             (real.querySelectorAll<HTMLDivElement>(".checkbox") as NodeListOf<HTMLDivElement>).forEach(d => {
                 d.onclick = () => {
-                    obj.value.includes(d.innerText) ? obj.value.splice(obj.value.indexOf(d.innerText), 1) : obj.value.push(d.innerText);
-                    obj.value == obj.value, (<any>config)[obj.key] = obj.value;
-                    obj.action && obj.action.call(real, obj.value)
+                    config[obj.key].includes(d.innerText) ? config[obj.key].splice(config[obj.key].indexOf(d.innerText), 1) : config[obj.key].push(d.innerText);
+                    obj.action && obj.action.call(real, config[obj.key])
                 }
             })
             return div;

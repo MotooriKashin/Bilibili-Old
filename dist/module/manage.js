@@ -15,26 +15,26 @@
         }, []))).forEach((d, i) => {
             try {
                 GM.setValue(data.json[i].name.replace(".json", ""), JSON.parse(d));
-                toast.success(`成功本地安装模块 ${data.json[i]}`);
+                toast.success(`成功本地安装模块 ${data.json[i].name}`);
             }
             catch (e) {
                 API.trace(e, "localModule");
             }
         });
-        const module = GM.getValue("module", {});
+        const module = GM.getValue("modules", {});
         (await Promise.all(data.txt.reduce((s, d) => {
             s.push(readFile(d));
             return s;
         }, []))).forEach((d, i) => {
             try {
                 Reflect.set(module, data.txt[i].name, d);
-                toast.success(`成功本地安装模块 ${data.json[i]}`);
+                toast.success(`成功本地安装模块 ${data.txt[i].name}`);
             }
             catch (e) {
                 API.trace(e, "localModule");
             }
         });
-        GM.setValue("module", module);
+        GM.setValue("modules", module);
     }
     function readFile(file) {
         return new Promise((resolve, reject) => {
