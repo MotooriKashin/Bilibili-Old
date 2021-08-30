@@ -22,9 +22,10 @@
 			"problemMatcher": [
 				"$tsc"
 			],
-			"dependsOn": [
-				"clear"
-			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
 			"detail": "编译模块文件",
 			"label": "tsc-module"
 		},
@@ -34,13 +35,6 @@
 			"problemMatcher": [
 				"$tsc"
 			],
-			"dependsOn": [
-				"tsc-module"
-			],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
 			"detail": "编译index",
 			"label": "tsc-index"
 		},
@@ -50,6 +44,9 @@
 			"args": [
 				"${workspaceFolder}\\build\\resource.js",
 				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"tsc-index"
 			],
 			"detail": "发布前置：记录模块最新提交数据",
 			"label": "resource",

@@ -28,7 +28,7 @@
         /**
          * 设置项表
          */
-        static list;
+        static list = {};
         constructor() {
             const history = GM.getValue("history", {});
             Ui.history = new Proxy(history, {

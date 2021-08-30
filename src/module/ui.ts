@@ -28,7 +28,7 @@
         /**
          * 设置项表
          */
-        static list: { [name: string]: HTMLDivElement };
+        static list: { [name: string]: HTMLDivElement } = {};
         constructor() {
             const history: { [name: string]: string[] } = GM.getValue<{ [name: string]: string[] }>("history", {})
             Ui.history = new Proxy(history, {
