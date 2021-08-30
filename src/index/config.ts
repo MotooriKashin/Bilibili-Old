@@ -1,3 +1,10 @@
+/**
+ * 脚本第一次初始化时默认下载的模块列表。
+ */
+const COM = ["rewrite.js", "ui.js", "setting.js"];
+/**
+ * 脚本设置数据，关联设置项的key:value
+ */
 const CONFIG: { [name: string]: any } = {};
 const config: { [name: string]: any } = new Proxy(CONFIG, {
     set: (_target, p: string, value) => {
@@ -9,11 +16,14 @@ const config: { [name: string]: any } = new Proxy(CONFIG, {
 })
 Object.entries(GM.getValue<{ [name: string]: any }>("config", {})).forEach(k => Reflect.set(config, k[0], k[1]));
 const SETTING: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[] = [];
+/**
+ * 默认启用的功能所对应的模块
+ */
 const LOADING: string[] = [];
 function modifyConfig(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon) {
     Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value"));
     Reflect.has(obj, "list") && (<typeof SETTING>Reflect.get(obj, "list")).forEach(d => modifyConfig(d));
-    Reflect.has(obj, "depends") && Reflect.get(config, Reflect.get(obj, "key")) && LOADING.push(Reflect.get(obj, "key"));
+    Reflect.has(obj, "depends") && LOADING.push(...Reflect.get(obj, "depends"));
 }
 function registerSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon) {
     SETTING.push(obj);

@@ -8,6 +8,8 @@ class API {
     static API: Object;
     static Name: string = GM.info.script.name;
     static apply: { [name: string]: string } = GM.getValue("apply", {});
+    GM = GM;
+    config = config;
     Name = API.Name;
     Virsion: string = API.Virsion;
     Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
@@ -121,7 +123,7 @@ class API {
                 return s;
             }, {});
             if (Reflect.has(modules, name)) {
-                API.downloadModule(name, Reflect.get(modules, name));
+                API.downloadModule(name, Reflect.get(modules, name)).then(d => toast.success(`模块${Reflect.get(modules, name)}安装成功！`, "您现在可以重试刚才的操作了~"))
                 toast.warning(`正在添加模块${Reflect.get(modules, name)}！请稍候~`);
             } else {
                 API.toModules.push(name);
@@ -130,7 +132,7 @@ class API {
         }
     }
     static async firstInit() {
-        ["rewrite.js", "ui.js", "setting.js"].forEach(d => this.toModules.push(d));
+        COM.forEach(d => !this.toModules.includes(d) && this.toModules.push(d));
         await this.updateModule(`脚本首次运行初始化中~`, `感谢您使用 ${this.Name}！当前版本：${this.Virsion}`);
         toast.warning(`正在载入默认设置项~`);
         this.importModule("setting.js");
@@ -157,7 +159,7 @@ class API {
             }, []);
             GM.setValue("resource", this.resource = resource);
             this.toModules.forEach(d => {
-                keys.find(b => b.includes(d)) && (list.push([d, keys.find(b => b.includes(d))]), toast.warning(`正在添加模块${d}！请稍候~`));
+                keys.find(b => b.includes(d)) && list.push([d, keys.find(b => b.includes(d))]);
             })
             this.toModules = [];
             await Promise.all(list.reduce((s: Promise<void>[], d) => {
@@ -171,7 +173,7 @@ class API {
     static async downloadModule(name: string, url?: string) {
         try {
             if (!url) {
-                url = Object.keys(this.resource).find(d => d.includes("name"));
+                url = Object.keys(this.resource).find(d => d.includes(name));
             }
             let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
             let module = await xhr.GM({
@@ -204,7 +206,7 @@ class API {
                 return true;
             }
         })
-        Reflect.has(API.modules, "rewrite.js") ? API.init() : this.runWhile(() => document.body, () => this.alert(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“默认允许全部域名”</strong>`).then(d => { d && API.firstInit() }));
+        Reflect.has(API.modules, "rewrite.js") ? API.init() : this.runWhile(() => document.body, () => this.alert(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“总是允许全部域名”</strong>`).then(d => { d && API.firstInit() }));
     }
 }
 new API();
