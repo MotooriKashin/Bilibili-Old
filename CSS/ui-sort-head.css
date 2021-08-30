@@ -13,6 +13,7 @@
   flex-basis: 0.000000001px;
   padding-block-end: 12px;
   padding-block-start: 12px;
+  padding-inline-start: 12px;
 }
 .sub {
   color: rgb(95, 99, 104);
@@ -22,9 +23,9 @@
   cursor: pointer;
   transition: transform 120ms ease 180ms, box-shadow 120ms ease 180ms;
 }
-.anchor.focus {
+.anchor[checked] {
   transform: rotateX(180deg);
 }
-.anchor:active {
+.anchor:hover {
   box-shadow: 0 0 4px 4px rgba(241, 243, 244, 80%);
 }

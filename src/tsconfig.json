@@ -5,8 +5,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitUseStrict": true,
-    "outFile": "../dist/index.js",
-    "declaration": true
+    "outFile": "../dist/index.js"
   },
   "files": [
     "index/API.ts",

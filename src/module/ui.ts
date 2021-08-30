@@ -113,7 +113,7 @@
          * @param obj 按钮配置数据
          */
         static toolIcon(obj: ToolIcon) {
-            let div = this.icon(obj.svg)
+            const div = this.icon(obj.svg);
             div.setAttribute("title", obj.title);
             this.tool.insertBefore(div, this.tool.firstChild);
             div.onclick = () => obj.action(this.box);
@@ -315,7 +315,7 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-sort-head.css"), "", root);
             const secroot = sec.attachShadow({ mode: "closed" });
-            API.addElement("div", { class: "contain" }, secroot);
+            const secreal = API.addElement("div", { class: "contain" }, secroot);
             API.addCss(API.getModule("ui-sort-body.css"), "", secroot);
             obj.svg && real.appendChild(this.icon(obj.svg));
             const label = API.addElement("div", { class: "label" }, real, obj.label);
@@ -325,14 +325,15 @@
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div) && node.appendChild(sec);
             item = obj.list.reduce((s: HTMLDivElement[], d) => {
-                let temp = this.index(d, sec);
+                let temp = this.index(d, secreal);
                 temp.style.display = "none";
                 s.push(temp);
                 return s;
             }, []);
             value.onclick = () => {
                 flag = !flag;
-                flag ? item.forEach(d => d.style.display = "flex") : item.forEach(d => d.style.display = "none")
+                flag ? value.setAttribute("checked", "checked") : value.removeAttribute("checked");
+                flag ? item.forEach(d => d.style.display = "block") : item.forEach(d => d.style.display = "none")
             }
             return div;
         }

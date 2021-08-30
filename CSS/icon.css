@@ -1,19 +1,11 @@
-.icon{
-    align-items: center;
-    border-radius: 50%;
-    display: flex;
-    height: 20px;
-    justify-content: center;
-    padding-inline-end: 12px;
-    position: relative;
-    width: 20px;
-    box-sizing: content-box;
-    background: none;
-}
-/* 选中蓝点 */
-.selected{
-    color: rgb(51, 103, 214) !important;
-}
-.selected > .icon{
-    fill: rgb(51, 103, 214) !important;
+.icon {
+  align-items: center;
+  border-radius: 50%;
+  display: flex;
+  height: 20px;
+  justify-content: center;
+  position: relative;
+  width: 20px;
+  box-sizing: content-box;
+  background: none;
 }

@@ -142,7 +142,7 @@ class API {
             msg[0] && toast.warning(...msg);
             this.updating = true;
             let resource: { [key: string]: string } = await xhr.GM({
-                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ts/resource.json',
+                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3aae686389585c4fcc13b5754a8143f654e0f8e9/resource.json',
                 responseType: 'json'
             })
             let keys = Object.keys(resource);
@@ -173,7 +173,7 @@ class API {
             if (!url) {
                 url = Object.keys(this.resource).find(d => d.includes("name"));
             }
-            let temp = url.endsWith(".js") ? url.replace(".js", ".js") : url;
+            let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
             let module = await xhr.GM({
                 url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${temp}`
             })

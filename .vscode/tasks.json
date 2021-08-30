@@ -22,6 +22,9 @@
 			"problemMatcher": [
 				"$tsc"
 			],
+			"dependsOn": [
+				"clear"
+			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -63,6 +66,19 @@
 				"resource"
 			],
 			"detail": "发布：生成最终脚本文件",
+			"label": "merge",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "Remove-Item",
+			"args": [
+				"${workspaceFolder}\\dist\\index.js"
+			],
+			"dependsOn": [
+				"merge"
+			],
+			"detail": "发布同时清理临时文件",
 			"label": "build",
 			"problemMatcher": []
 		}

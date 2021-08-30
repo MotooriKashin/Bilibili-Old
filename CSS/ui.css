@@ -30,6 +30,7 @@
   pointer-events: none;
 }
 .tool div {
+  border-radius: 50%;
   padding: 10px;
   transform: scale(0.8);
   pointer-events: visible;
@@ -56,7 +57,7 @@
   height: 385px;
 }
 .menu::-webkit-scrollbar,
-.item-contain::-webkit-scrollbar {
+.item::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
 }

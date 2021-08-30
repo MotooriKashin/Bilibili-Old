@@ -13,6 +13,7 @@
   flex-basis: 0.000000001px;
   padding-block-end: 12px;
   padding-block-start: 12px;
+  padding-inline-start: 12px;
 }
 .sub {
   color: rgb(95, 99, 104);

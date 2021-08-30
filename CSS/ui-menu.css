@@ -1,6 +1,5 @@
 .menuitem {
   align-items: center;
-  color: #000;
   display: flex;
   font-weight: 500;
   margin-inline-end: 2px;
@@ -13,4 +12,7 @@
 }
 .menuitem:hover {
   background-color: rgb(0, 0, 0, 6%);
+}
+.menuitem > div {
+  padding-inline-end: 12px;
 }
