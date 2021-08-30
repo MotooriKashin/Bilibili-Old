@@ -28,6 +28,6 @@
 	"Json/videoSort.json": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"dist/module/manage.js": "039967827e7bb108982d419d7ce758c9f0735b03",
 	"dist/module/rewrite.js": "b008766fc0e5155611b608ab09d76d61844b5748",
-	"dist/module/setting.js": "b008766fc0e5155611b608ab09d76d61844b5748",
-	"dist/module/ui.js": "039967827e7bb108982d419d7ce758c9f0735b03"
+	"dist/module/setting.js": "6a6908436c31e7cbd80c658f6ec42de0dbd0dee2",
+	"dist/module/ui.js": "6a6908436c31e7cbd80c658f6ec42de0dbd0dee2"
 }
