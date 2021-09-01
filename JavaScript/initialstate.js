@@ -159,7 +159,8 @@
                 avPlus: (data) => this.avPlus(data),
                 bangumi: (data, epId) => this.bangumi(data, epId),
                 thaiBangumi: (data, epId) => this.thaiBangumi(data, epId),
-                index: (data) => this.index(data)
+                index: (data) => this.index(data),
+                indexnew: (arr)=>this.indexnew(arr)
             };
         }
         /**
@@ -375,7 +376,34 @@
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
-
+        indexnew(arr) {
+            arr = JSON.parse(arr);
+            let result = this.__INITIAL_STATE__.index
+            result.recommendData = arr[1].response.item.reduce((s, d) => {
+                s.push({
+                        aid: BLOD.abv(d.bvid),
+                        typename: "",
+                        title: d.title,
+                        subtitle: "",
+                        play: d.stat.view,
+                        review: "",
+                        video_review: "",
+                        favorites: "",
+                        mid: d.owner.mid,
+                        author: d.owner.name,
+                        creat: "",
+                        pic: d.pic,
+                        coins: "",
+                        duration: d.duration,
+                        badgepay: false,
+                        rights: ""
+                })
+                return s;
+            }, []);
+            result.locsData[23] = arr[2].response[4694]; //滚动推荐
+            result.locsData[34] = arr[3].response[34]; // 推广
+            return result;
+        }
     }
     new IniState();
 

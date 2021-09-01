@@ -481,12 +481,17 @@
             BLOD.path.name = true; // 重写指示，有些操作无需再重写页面生效
             BLOD.importModule("initialstate"); // 准备__INITIAL_STATE__重构
             // 获取__INITIAL_STATE__
-            if (!window.__INITIAL_STATE__) {
+            if (!window.__INITIAL_STATE__ && !window.__INITIAL_DATA__) {
                 let page = xhr.false(location.href);
                 BLOD.__INITIAL_STATE__ = page.includes("__INITIAL_STATE__=") ? page.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
+                BLOD.__INITIAL_DATA__ = page.includes("__INITIAL_DATA__=") ? page.match(/INITIAL_DATA__=.+?<\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\/script>/, "") : "";
             }
-            else BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
-            BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__); // 重构__INITIAL_STATE__
+            else {
+                BLOD.__INITIAL_STATE__ = JSON.stringify(window.__INITIAL_STATE__);
+                BLOD.__INITIAL_DATA__ = JSON.stringify(window.__INITIAL_DATA__);
+            }
+            BLOD.__INITIAL_STATE__ && (BLOD.__INITIAL_STATE__ = BLOD.iniState.index(BLOD.__INITIAL_STATE__)); // 重构__INITIAL_STATE__
+            BLOD.__INITIAL_DATA__ && (BLOD.__INITIAL_STATE__ = BLOD.iniState.indexnew(BLOD.__INITIAL_DATA__));
             // 移除广告
             if (BLOD.config.reset.adloc) {
                 for (let key in BLOD.__INITIAL_STATE__.locsData) {
