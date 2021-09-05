@@ -1,19 +1,21 @@
-.vote-dialog {
-  overflow: hidden;
+.commandDm-popup {
   border-radius: 1rem;
   background-color: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
   position: absolute;
-  padding: 0.8rem 1rem;
   cursor: default;
+  opacity: 0;
+  transition: opacity 0.2s;
+  padding: 0.8rem 1rem;
 }
 
-.vote-dialog-show {
-  animation: opacity-animation 0.2s;
+.commandDm-popup.on {
+  opacity: 1;
+}
+
+.vote-dialog {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .vote-panel {
@@ -22,7 +24,8 @@
   width: 100%;
 }
 
-.vote-title {
+.vote-title,
+.grade-title {
   font-weight: bolder;
   margin-bottom: 0.5rem;
 }
@@ -64,6 +67,7 @@
   margin: 0.2rem 0;
   border: 1px solid #1a1a1a6b;
   background-color: white;
+  position: relative;
 }
 
 .vote-progress {
@@ -75,6 +79,7 @@
   background-color: #d3d3d3;
   text-align: left;
   overflow: visible;
+  position: relative;
 }
 
 .vote-progress-blue {
@@ -82,6 +87,7 @@
 }
 
 .vote-progress-desc {
+  display: inline-block;
   margin: 0.3rem 0.8rem;
 }
 
@@ -94,23 +100,11 @@
   }
 }
 
-.vote-result {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  right: 1rem;
-  margin-left: 1rem;
-  justify-content: space-evenly;
-}
-
 .vote-count {
-  white-space: nowrap;
-  text-align: right;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
   display: inline-block;
-  padding: 0.5rem 0;
+  position: absolute;
+  right: 0.8rem;
+  top: 0.3rem;
 }
 
 .vote-count::after {
@@ -165,4 +159,68 @@
   transform: translateY(-0.1em);
   display: inline-block;
   box-shadow: #888888c7 0px 0px 6px;
+}
+
+.grade-score-area > div {
+  display: inline-block;
+  position: relative;
+  width: 41px;
+  transition: width 0.3s;
+}
+
+.grade-score-area.pointer {
+  cursor: pointer;
+}
+
+.grade-score-area > div:last-child {
+  width: 20px;
+}
+
+.grade-score-area .score-button {
+  filter: grayscale(1);
+}
+
+.grade-score-area .highlight .score-button {
+  filter: none;
+}
+
+.grade-score-area .bg {
+  position: absolute;
+  left: 0;
+  filter: blur(9px);
+  visibility: hidden;
+}
+
+.grade-score-area .highlight .bg {
+  visibility: visible;
+}
+
+.grade-score-info {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.6rem;
+  opacity: 0;
+}
+
+@keyframes grade-score-showup {
+  0% {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grade-score-hit {
+  0% {
+    filter: brightness(1);
+  }
+  30% {
+    filter: brightness(1.5);
+  }
+  100% {
+    filter: brightness(1);
+  }
 }
