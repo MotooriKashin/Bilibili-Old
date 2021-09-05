@@ -12,7 +12,10 @@
             this.__INITIAL_STATE__ = {
                 av: {
                     aid: 0,
-                    comment: { count: 0, list: [] },
+                    comment: {
+                        count: 0,
+                        list: []
+                    },
                     error: {},
                     isClient: false,
                     p: "",
@@ -25,7 +28,12 @@
                         name: "",
                         mid: 0,
                         DisplayRank: "0",
-                        Official: { desc: "", role: 0, title: "", type: -1 },
+                        Official: {
+                            desc: "",
+                            role: 0,
+                            title: "",
+                            type: -1
+                        },
                         approve: false,
                         archiveCount: 0,
                         article: 0,
@@ -35,33 +43,96 @@
                         description: "",
                         fans: 44616,
                         friend: 10,
-                        level_info: { current_exp: 0, current_level: 6, current_min: 0, next_exp: 0 },
-                        nameplate: { condition: "", image: "", image_small: "", level: "", name: "", mid: 0 },
-                        official_verify: { desc: "", type: -1 },
-                        pendant: { expire: 0, image: "", image_enhance: "", image_enhance_frame: "", name: "", pid: 0 },
+                        level_info: {
+                            current_exp: 0,
+                            current_level: 6,
+                            current_min: 0,
+                            next_exp: 0
+                        },
+                        nameplate: {
+                            condition: "",
+                            image: "",
+                            image_small: "",
+                            level: "",
+                            name: "",
+                            mid: 0
+                        },
+                        official_verify: {
+                            desc: "",
+                            type: -1
+                        },
+                        pendant: {
+                            expire: 0,
+                            image: "",
+                            image_enhance: "",
+                            image_enhance_frame: "",
+                            name: "",
+                            pid: 0
+                        },
                         place: "",
                         rank: 10000,
                         regtime: 0,
                         sex: "保密",
                         sign: "",
                         spacesta: 0,
-                        vip: { accessStatus: 0, dueRemark: "", theme_type: 0, vipStatus: 0, vipStatusWarn: "", vipType: 1 }
+                        vip: {
+                            accessStatus: 0,
+                            dueRemark: "",
+                            theme_type: 0,
+                            vipStatus: 0,
+                            vipStatusWarn: "",
+                            vipType: 1
+                        }
                     },
                     videoData: {
                         aid: 0,
                         cid: 0,
-                        config: { relates_title: "相关推荐", share_style: 1 },
+                        config: {
+                            relates_title: "相关推荐",
+                            share_style: 1
+                        },
                         copyright: 2,
                         ctime: "",
                         desc: "",
-                        dimension: { height: 1080, rotate: 0, width: 1920 },
+                        dimension: {
+                            height: 1080,
+                            rotate: 0,
+                            width: 1920
+                        },
                         duration: 360,
                         dynamic: "",
                         owner: {},
-                        pages: [{ cid: 0, dimension: { height: 1080, rotate: 0, width: 1920 }, duration: 360, from: "vupload", page: 1, part: "", vid: "", weblink: "" }],
+                        pages: [{
+                            cid: 0,
+                            dimension: {
+                                height: 1080,
+                                rotate: 0,
+                                width: 1920
+                            },
+                            duration: 360,
+                            from: "vupload",
+                            page: 1,
+                            part: "",
+                            vid: "",
+                            weblink: ""
+                        }
+                        ],
                         pic: "",
                         pubdate: "",
-                        rights: { autoplay: 0, bp: 0, download: 0, elec: 0, hd5: 0, is_cooperation: 0, movie: 0, no_background: 0, no_reprint: 0, pay: 0, ugc_pay: 0, ugc_pay_preview: 0 },
+                        rights: {
+                            autoplay: 0,
+                            bp: 0,
+                            download: 0,
+                            elec: 0,
+                            hd5: 0,
+                            is_cooperation: 0,
+                            movie: 0,
+                            no_background: 0,
+                            no_reprint: 0,
+                            pay: 0,
+                            ugc_pay: 0,
+                            ugc_pay_preview: 0
+                        },
                         stat: {
                             aid: 0,
                             coin: 0,
@@ -91,7 +162,13 @@
                     epId: 0,
                     epInfo: {},
                     epList: [],
-                    epStat: { isPay: true, isVip: false, payPack: 0, status: 1, vipNeedPay: false },
+                    epStat: {
+                        isPay: true,
+                        isVip: false,
+                        payPack: 0,
+                        status: 1,
+                        vipNeedPay: false
+                    },
                     isPlayerTrigger: false,
                     loginInfo: {},
                     mdId: 0,
@@ -133,9 +210,25 @@
                     seasonStat: {},
                     special: false,
                     spending: 0,
-                    sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } },
+                    sponsorTotal: {
+                        code: 0,
+                        result: {
+                            ep_bp: 0,
+                            list: [],
+                            mine: {},
+                            users: 0
+                        }
+                    },
                     sponsorTotalCount: 0,
-                    sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } },
+                    sponsorWeek: {
+                        code: 0,
+                        result: {
+                            ep_bp: 0,
+                            list: [],
+                            mine: {},
+                            users: 0
+                        }
+                    },
                     ssId: 0,
                     ssStat: {},
                     upInfo: {},
@@ -149,7 +242,31 @@
                 index: {
                     recommendData: [],
                     locsData: {
-                        31: [{ id: 36585, contract_id: "", pos_num: 1, name: "小黑屋弹幕举报", pic: "https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg", litpic: "", url: "https://www.bilibili.com/blackboard/activity-dmjbfj.html", style: 0, agency: "", label: "", intro: "", creative_type: 0, request_id: "1546354354629q172a23a61a62q626", src_id: 32, area: 0, is_ad_loc: true, ad_cb: "", title: "", server_type: 0, cm_mark: 0, stime: 1520478000, mid: "14629218" }]
+                        31: [{
+                            id: 36585,
+                            contract_id: "",
+                            pos_num: 1,
+                            name: "小黑屋弹幕举报",
+                            pic: "https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg",
+                            litpic: "",
+                            url: "https://www.bilibili.com/blackboard/activity-dmjbfj.html",
+                            style: 0,
+                            agency: "",
+                            label: "",
+                            intro: "",
+                            creative_type: 0,
+                            request_id: "1546354354629q172a23a61a62q626",
+                            src_id: 32,
+                            area: 0,
+                            is_ad_loc: true,
+                            ad_cb: "",
+                            title: "",
+                            server_type: 0,
+                            cm_mark: 0,
+                            stime: 1520478000,
+                            mid: "14629218"
+                        }
+                        ]
                     },
                 }
             }
@@ -160,7 +277,7 @@
                 bangumi: (data, epId) => this.bangumi(data, epId),
                 thaiBangumi: (data, epId) => this.thaiBangumi(data, epId),
                 index: (data) => this.index(data),
-                indexnew: (arr)=>this.indexnew(arr)
+                indexnew: (arr) => this.indexnew(arr)
             };
         }
         /**
@@ -183,9 +300,13 @@
                 __INITIAL_STATE__.videoData = data.View || {};
                 __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
 
-                if (__INITIAL_STATE__.videoData.staff) BLOD.staff = __INITIAL_STATE__.videoData.staff;
+                if (__INITIAL_STATE__.videoData.staff)
+                    BLOD.staff = __INITIAL_STATE__.videoData.staff;
                 return __INITIAL_STATE__;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
+            } catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error("__INITIAL_STATE__", ...e);
+            }
         }
         /**
          * 构造av页数据，使用Biliplus源
@@ -195,8 +316,10 @@
             try {
                 data = BLOD.jsonCheck(data);
                 // 处理重定向
-                if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
-                if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
+                if (data.v2_app_api && data.v2_app_api.redirect_url)
+                    location.href = data.v2_app_api.redirect_url;
+                if (data.bangumi && data.bangumi.ogv_play_url)
+                    location.href = data.bangumi.ogv_play_url;
 
                 let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
                 __INITIAL_STATE__.aid = data.aid || BLOD.aid;
@@ -227,7 +350,10 @@
                 BLOD.avPlus = true;
 
                 return __INITIAL_STATE__;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
+            } catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error("__INITIAL_STATE__", ...e);
+            }
         }
         /**
          * 构造bangumi数据
@@ -241,7 +367,8 @@
             let ids = [];
             data.episodes.forEach(d => {
                 ids.push(d.ep_id);
-                if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
+                if (d.badge == "会员" || d.badge_type)
+                    BLOD.ids.push(d.cid)
             });
 
             let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
@@ -288,13 +415,14 @@
          * 处理泰区隐藏番剧
          * @param {string} data xhr返回的json字符串
          * @param {number} epId epid数据
-         * @returns 
+         * @returns
          */
         thaiBangumi(data, epId) {
             // https://api.global.bilibili.com/view/web_api/season
             epId = 1 * epId || null;
             data = BLOD.jsonCheck(data).result;
-            let ids = [], epList = [];
+            let ids = [],
+                epList = [];
             data.modules.forEach(d => {
                 d.data.episodes.forEach(d => {
                     d.ctime = "";
@@ -340,7 +468,6 @@
             __INITIAL_STATE__.seasonStat = data.stat;
             __INITIAL_STATE__.ssId = data.season_id;
 
-
             return __INITIAL_STATE__;
         }
         /**
@@ -374,34 +501,42 @@
                 __INITIAL_STATE__.locsData = data.locsData;
                 __INITIAL_STATE__.locsData[23] = data.locsData[3197].filter(d => d.url);
                 return __INITIAL_STATE__;
-            } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
+            } catch (e) {
+                e = Array.isArray(e) ? e : [e];
+                toast.error("__INITIAL_STATE__", ...e);
+            }
         }
         indexnew(arr) {
             arr = JSON.parse(arr);
             let result = this.__INITIAL_STATE__.index
-            result.recommendData = arr[1].response.item.reduce((s, d) => {
-                s.push({
-                        aid: BLOD.abv(d.bvid),
-                        typename: "",
-                        title: d.title,
-                        subtitle: "",
-                        play: d.stat.view,
-                        review: "",
-                        video_review: "",
-                        favorites: "",
-                        mid: d.owner.mid,
-                        author: d.owner.name,
-                        creat: "",
-                        pic: d.pic,
-                        coins: "",
-                        duration: d.duration,
-                        badgepay: false,
-                        rights: ""
-                })
-                return s;
-            }, []);
-            result.locsData[23] = arr[2].response[4694]; //滚动推荐
-            result.locsData[34] = arr[3].response[34]; // 推广
+            arr.forEach(d => {
+                if (d.response.item) {
+                    d.response.item.forEach(d => {
+                        result.recommendData.push({
+                            aid: BLOD.abv(d.bvid),
+                            typename: "",
+                            title: d.title,
+                            subtitle: "",
+                            play: d.stat.view,
+                            review: "",
+                            video_review: "",
+                            favorites: "",
+                            mid: d.owner.mid,
+                            author: d.owner.name,
+                            creat: "",
+                            pic: d.pic,
+                            coins: "",
+                            duration: d.duration,
+                            badgepay: false,
+                            rights: ""
+                        })
+                    });
+                }
+                if (d.response[4694])
+                    result.locsData[23] = d.response[4694]; //滚动推荐
+                if (d.response[34])
+                    result.locsData[34] = d.response[34]; // 推广
+            });
             return result;
         }
     }
