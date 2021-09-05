@@ -2242,6 +2242,9 @@
                             let style = document.createElement("style");
                             style.setAttribute("type", "text/css");
                             style.innerHTML = `
+                            html[lab-style*=dark] .comment-dialog-container,.comment-dialog{background-color:var(--dark-3)}
+                            html[lab-style*=dark] .comment-dialog .opera-list{background-color:var(--dark-4);color:var(--dark-font-0)}
+                            html[lab-style*=dark] .comment-dialog .opera-list li:hover{background-color:var(--dark-3)}
                             .comment-dialog .dialog{display:none!important}
                             .comment-dialog > .comment-list{transform:translateY(-13px)}
                             .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}

@@ -8,7 +8,7 @@
 (function () {
     const BLOD = window.BLOD; /** @see main*/
 
-    var player, popupDiv;
+    var player, widgetContainer;
     var playing = false;
     var visible = true;
     var commandDm = {
@@ -21,8 +21,8 @@
      */
     function init() {
         if (window.__INITIAL_STATE__ && __INITIAL_STATE__.videoData && window.player) {
-            if (popupDiv === undefined)
-                popupDiv = initCountainer();
+            if (widgetContainer === undefined)
+                widgetContainer = initCountainer();
             player = window.player;
             bindEvents();
         }
@@ -44,10 +44,10 @@
     function initCountainer() {
         let videoWrap = document.getElementsByClassName("bilibili-player-video-wrap")[0];
         if (!videoWrap) return;
-        let popupDiv = document.createElement("div");
-        popupDiv.className = "bilibili-player-video-popup";
-        videoWrap.appendChild(popupDiv);
-        return popupDiv;
+        let widgetContainer = document.createElement("div");
+        widgetContainer.className = "bilibili-player-video-popup";
+        videoWrap.appendChild(widgetContainer);
+        return widgetContainer;
     }
 
     /**
@@ -79,11 +79,11 @@
                 if (option == "ctlbar_danmuku_close") {
                     visible = false;
                     pause();
-                    popupDiv.style.display = "none";
+                    widgetContainer.style.display = "none";
                 } else if (option == "ctlbar_danmuku_on") {
                     visible = true;
                     play();
-                    popupDiv.style.display = "";
+                    widgetContainer.style.display = "";
                 }
             });
     }
@@ -106,8 +106,11 @@
                 case "#ACTORFOLLOW#":
                 case "#MANAGERFOLLOW#":
                     break;
-                case "#VOTE#": // 投票弹幕
+                case "#VOTE#": // 投票弹窗
                     popupWindow.push(new Vote(cdm, extra, from));
+                    break;
+                case "#GRADE#": // 评分弹窗
+                    popupWindow.push(new Grade(cdm, extra, from));
                     break;
                 // 滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
                 case "#RESERVE#":
@@ -141,8 +144,8 @@
      */
     function resize() {
         // 获得当前播放器显示分辨率与最小分辨率(680x504)时的缩放比，用于UI缩放
-        let scaleX = popupDiv.clientWidth / 680;
-        let scaleY = popupDiv.clientHeight / 504;
+        let scaleX = widgetContainer.clientWidth / 680;
+        let scaleY = widgetContainer.clientHeight / 504;
         for (let i = 0; i < commandDm.visible.length; i++) {
             commandDm.visible[i].resize(scaleX, scaleY);
         }
@@ -193,8 +196,12 @@
         return div;
     }
 
-    function isLogin() {
-        return BLOD.uid !== undefined;
+    function isLoggedin() {
+        if (BLOD.uid !== undefined) return true;
+        player.pause();
+        BLOD.toast.info("请先登录");
+        window.biliQuickLogin ? window.biliQuickLogin() : $.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin());
+        return false;
     }
 
     function post(url, data, contentType = "application/x-www-form-urlencoded") {
@@ -202,62 +209,75 @@
         return BLOD.xhr.post(url, BLOD.objUrl(null, data), { "Content-type": contentType });
     }
 
-    /*
-    投票弹幕的extra属性的例子
-        cnt: 22343      <= 投票总人数
-        duration: 5000
-        icon: "http://i0.hdslb.com/bfs/album/5ec559dbd4d54f8c1e76021d52eb9807de94bfb9.png"
-        my_vote: 0      <= 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
-        options: Array(2) ->
-            0: {idx: 1, desc: "好玩", cnt: 15782}
-            1: {idx: 2, desc: "非常好玩", cnt: 6595}
-        posX: 194
-        posY: 196.49823321554769
-        pub_dynamic: false
-        question: "你觉得这个功能好玩吗？"
-        vote_id: 703019
-    */
-
-    /** 
-     * 投票互动UI
+    /**
+     * 弹窗组件
      */
-    class Vote {
+    class PopupWindow {
+        popup;
         constructor(cdm, extra, from) {
-            this.total = extra.cnt;
-            this.voteId = extra.vote_id;
-            this.options = extra.options;
-            this.question = extra.question;
-            this.myVote = extra.my_vote; // 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
             this.duration = extra.duration / 1e3 || 5;
             this.from = from || 0;
             this.to = from + (extra.duration / 1e3 || 5);
             this.pos_x = extra.posX || 200;
             this.pos_y = extra.posY || 200;
-            /*
-            创建UI，结构如下
-                <div class="vote-dialog" style="display: none;">
-                    <div class="vote-title">投票标题</div>
-                    <div class="vote-panel">
-                        <div class="vote-option">
-                            <div class="vote-button" idx="1">选项A</div>  <= idx：选项的序号
-                            <div class="vote-button" idx="2">选项B</div>
-                        </div>
-                        <div class="vote-result" style="display: none;">
-                            <div class="vote-count">12345票</div>  <= 投A的票数
-                            <div class="vote-count">12345票</div>  <= 投B的票数
-                        </div>
-                    </div>
-                </div>
-            */
+            this.popup = divClass(".commandDm-popup");
+            this.popup.style.display = "none";
+            widgetContainer.appendChild(this.popup);
+        }
+        show() {
+            this.popup.style.display = "";
+            requestAnimationFrame(() => this.popup.className = "commandDm-popup on");
+        }
+        hide() {
+            this.popup.className = "commandDm-popup";
+            setTimeout(() => this.popup.style.display = "none", 200);
+        }
+        destroy() {
+        }
+        /**
+        * 根据视频区域大小等比缩放投票界面
+        */
+        resize(scaleX, scaleY) {
+            this.popup.style.left = (this.pos_x * scaleX) + "px";
+            this.popup.style.top = (this.pos_y * scaleY) + "px";
+            this.popup.style.transform = "translateX(-50%) translateY(-50%) scale(" + Math.min((scaleX + scaleY) / 2, 1.5) + ")";
+        }
+    }
+
+    /** 
+     * 投票互动UI
+     */
+    class Vote extends PopupWindow {
+        /*
+        投票弹幕的extra属性的例子
+            cnt: 22343      <= 投票总人数
+            duration: 5000
+            icon: "http://i0.hdslb.com/bfs/album/5ec559dbd4d54f8c1e76021d52eb9807de94bfb9.png"
+            my_vote: 0      <= 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
+            options: Array(2) ->
+                0: {idx: 1, desc: "好玩", cnt: 15782}
+                1: {idx: 2, desc: "非常好玩", cnt: 6595}
+            posX: 194
+            posY: 196.49823321554769
+            pub_dynamic: false
+            question: "你觉得这个功能好玩吗？"
+            vote_id: 703019
+        */
+        constructor(cdm, extra, from) {
+            super(cdm, extra, from);
+            this.popup.style.width = "150px";
+            this.total = extra.cnt;
+            this.voteId = extra.vote_id;
+            this.options = extra.options;
+            this.question = extra.question;
+            this.myVote = extra.my_vote; // 0：未投票  非零数字：已投票，my_vote的值即为已投项的idx
             let dialog = divClass("vote-dialog");
             let panel = divClass("vote-panel");
             let title = divClass("vote-title");
             title.innerHTML = this.question;
             let optionDiv = divClass("vote-option");
-            let result = divClass("vote-result");
-            result.style.display = "none";
-            let button = [], count = [];
-            for (let i = 0, btn, cnt, opt; i < this.options.length; i++) {
+            let button = [];
+            for (let i = 0, btn, opt; i < this.options.length; i++) {
                 // 投票按钮
                 opt = this.options[i];
                 btn = divClass("vote-button");
@@ -266,22 +286,13 @@
                 btn.onclick = () => this.goVote(opt.idx, i);
                 button[i] = btn;
                 optionDiv.appendChild(btn);
-                // 结果数据
-                cnt = divClass("vote-count");
-                cnt.innerHTML = opt.cnt;
-                count[i] = cnt;
-                result.appendChild(cnt);
             }
             panel.appendChild(optionDiv);
-            panel.appendChild(result);
             dialog.appendChild(title);
             dialog.appendChild(panel);
-            dialog.style.display = "none";
-            popupDiv.appendChild(dialog);
+            this.popup.appendChild(dialog);
             this.dialog = dialog;
-            this.result = result;
             this.button = button;
-            this.count = count;
             this.progress = [];
             // 已投票则直接显示结果
             if (this.myVote !== 0) {
@@ -290,7 +301,7 @@
             };
         }
         goVote(idx, i) {
-            if (isLogin()) {
+            if (isLoggedin()) {
                 this.total += 1;
                 this.options[i].cnt += 1;
                 // 发送投票操作到服务器
@@ -310,15 +321,10 @@
                 this.showResult();
                 this.to += 5; //点击投票后推迟5秒消失，防止结果消失太快来不及看
             }
-            else {
-                player.pause();
-                BLOD.toast.info("请先登录");
-                window.biliQuickLogin ? window.biliQuickLogin() : $.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin());
-            }
         }
         showResult() {
-            this.result.style.display = "flex";
             // 显示票数、比例条
+            this.count = [];
             for (let i = 0, progress, desc; i < this.button.length; i++) {
                 this.button[i].onclick = null;
                 this.button[i].innerHTML = "";
@@ -329,6 +335,11 @@
                 progress.appendChild(desc);
                 this.button[i].appendChild(progress);
                 this.progress[i] = progress;
+                // 结果数据
+                let cnt = divClass("vote-count");
+                cnt.innerHTML = this.options[i].cnt;
+                this.count[i] = cnt;
+                this.button[i].appendChild(cnt);
             }
             this.resultAnimation();
         }
@@ -357,26 +368,117 @@
             requestAnimationFrame(frame);
         }
         show() {
-            this.dialog.style.display = "flex";
-            this.dialog.className = "vote-dialog vote-dialog-show";
+            super.show();
             if (this.myVote !== 0) {
                 this.resultAnimation();
             }
         }
         hide() {
-            this.dialog.style.display = "none";
-            this.dialog.className = "vote-dialog";
+            super.hide();
             this.to = this.from + this.duration; // 重设消失时间
         }
-        /**
-         * 根据视频区域大小等比缩放投票界面
-         */
-        resize(scaleX, scaleY) {
-            this.dialog.style.left = (this.pos_x * scaleX) + "px";
-            this.dialog.style.top = (this.pos_y * scaleY) + "px";
-            this.dialog.style.transform = "translateX(-50%) translateY(-50%) scale(" + (scaleX + scaleY) / 2 + ")";
+    }
+
+    class Grade extends PopupWindow {
+        /*
+        avg_score: 8.7  <= 平均评分
+        count: 2990
+        duration: 5000
+        grade_id: 14369
+        mid_score: 0    <= 当前用户的评分
+        msg: "评分标题"  <= 最长为8个汉字
+        posX: 344
+        posY: 159
+        skin_selected: "http://i0.hdslb.com/bfs/b/ee3aca3dbc22087341cf312d71a1354af527e444.png"
+        skin_unselected: "http://i0.hdslb.com/bfs/b/1d8fc3daf9201d70189a3778e605d2acf9cae7e9.png"
+        */
+        constructor(cdm, info, from) {
+            super(cdm, info, from);
+            this.popup.style.width = "184px";
+            this.gradeInfo = info;
+            this.popup.innerHTML = `
+            <div style="display:block" class="grade-title">${info.msg}</div>
+            <div class="grade-score-area pointer"></div>
+            <div class="grade-score-info" style="display:none">
+                <div style="color:#6f6f6f;display:inline-block;">平均</div><span style="color:${info.skin_font_color};font-size:27px" class="grade-avg-score">${info.avg_score}</span>
+            </div>
+            <span style="position:absolute;right:1rem;top:0.8rem;font-size:12px;color:#6f6f6f" class="grade-score-count">${info.count}人参与</span>
+            `;
+            this.scoreInfo = this.popup.getElementsByClassName("grade-score-info")[0];
+            let scoreArea = this.popup.getElementsByClassName("grade-score-area")[0];
+            let scoreButton = [];
+            function highlightScores(i) {
+                for (let m = 0; m < 5; m++) {
+                    if (m <= i && !scoreButton[m].highlight) {
+                        scoreButton[m].highlight = true;
+                        scoreButton[m].className = "highlight";
+                    } else if (m > i && scoreButton[m].highlight) {
+                        scoreButton[m].highlight = false;
+                        scoreButton[m].className = "";
+                    }
+                }
+            }
+            for (let i = 0; i < 5; i++) {
+                let score = document.createElement("div");
+                scoreButton[i] = score;
+                score.innerHTML = `
+                <img width=20 hegiht=20 src="${info.skin_selected}" class="bg"></img>
+                <img width=20 hegiht=20 src="${info.skin_selected}" class="score-button"></img>`
+                scoreArea.appendChild(score);
+                if (info.mid_score === 0) {
+                    score.onmouseenter = () => highlightScores(i);
+                    score.onclick = () => {
+                        if (isLoggedin()) {
+                            this.gradeInfo.avg_score = (this.gradeInfo.count * this.gradeInfo.avg_score + (i + 1) * 2) / (this.gradeInfo.count + 1);
+                            this.gradeInfo.avg_score = this.gradeInfo.avg_score.toPrecision(2);
+                            this.gradeInfo.count += 1;
+                            this.popup.getElementsByClassName("grade-avg-score")[0].innerHTML = this.gradeInfo.avg_score;
+                            this.popup.getElementsByClassName("grade-score-count")[0].innerHTML = this.gradeInfo.count + "人参与";
+                            this.showResult();
+                            for (let index = 0; index < 5; index++) {
+                                if (index <= i) {
+                                    scoreButton[index].style.animation = "grade-score-hit 0.7s ease forwards";
+                                    setTimeout(() => scoreButton[index].style.animation = "", 1000);
+                                }
+                                scoreButton[index].onclick = null;
+                                scoreButton[index].onmouseenter = null;
+                            }
+                            scoreArea.onmouseleave = null;
+                            scoreArea.classList.remove("pointer");
+                            this.goGrade((i + 1) * 2);
+                        }
+                    }
+                }
+            };
+            if (info.mid_score === 0)
+                scoreArea.onmouseleave = () => highlightScores(-1);
+            this.scoreButton = scoreButton;
+            if (info.mid_score != 0) {
+                this.showResult();
+                highlightScores(info.mid_score / 2 - 1);
+                scoreArea.classList.remove("pointer");
+            }
         }
-        destroy() {
+        goGrade(score) {
+            post("https://api.bilibili.com/x/v2/dm/command/grade/post", {
+                aid: BLOD.aid,
+                cid: BLOD.cid,
+                progress: parseInt(player.getCurrentTime()) * 1000,
+                grade_id: this.gradeInfo.grade_id,
+                grade_score: score
+            });
+            this.to += 3;
+        }
+        showResult() {
+            this.scoreInfo.style.display = "";
+            this.scoreInfo.style.animation = "grade-score-showup 0.3s ease 0.2s forwards";
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => this.scoreButton[i].style.width = "24px", i * 50);
+            }
+        }
+        hide() {
+            super.hide();
+            this.to = this.from + this.duration;
         }
     }
 
@@ -502,7 +604,7 @@
                 player.pause();
                 window.open("https://www.bilibili.com/video/av" + this.aid);
             };
-            popupDiv.appendChild(button);
+            widgetContainer.appendChild(button);
             this.button = button;
         }
         show() {
@@ -530,7 +632,7 @@
      * @param {String} cid cid
      */
     BLOD.loadCommandDm = (cdm, aid, cid) => {
-        if (aid != BLOD.aid || cid != BLOD.cid || popupDiv !== undefined) {
+        if (aid != BLOD.aid || cid != BLOD.cid || widgetContainer !== undefined) {
             // 正在“载入其他视频弹幕”，不必处理互动弹幕
             return;
         }
