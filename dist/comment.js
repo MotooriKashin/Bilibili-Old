@@ -2242,6 +2242,9 @@
                             let style = document.createElement("style");
                             style.setAttribute("type", "text/css");
                             style.innerHTML = `
+                            html[lab-style*=dark] .comment-dialog-container,.comment-dialog{background-color:var(--dark-3)}
+                            html[lab-style*=dark] .comment-dialog .opera-list{background-color:var(--dark-4);color:var(--dark-font-0)}
+                            html[lab-style*=dark] .comment-dialog .opera-list li:hover{background-color:var(--dark-3)}
                             .comment-dialog .dialog{display:none!important}
                             .comment-dialog > .comment-list{transform:translateY(-13px)}
                             .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}
@@ -2262,18 +2265,18 @@
                         </div></div></div></div></div>`;
                         document.body.appendChild(container);
                         let replyBox = container.getElementsByClassName("reply-box")[0];
-                        setTimeout(() => {
-                            let closeWindow = e => {
+                        function closeWindow() {
+                            container.className = "comment-dialog-container hidden";
+                            setTimeout(() => container.remove(), 100);
+                            clickTarget.innerHTML = "查看对话"
+                        }
+                        setTimeout(() => window.addEventListener('click', function onClick(e) {
                                 // 点击了悬浮窗以外区域则关闭窗口
                                 if (!container.contains(e.target) && e.target != container) {
-                                    container.className = "comment-dialog-container hidden";
-                                    setTimeout(() => container.remove(), 100);
-                                    clickTarget.innerHTML = "查看对话"
-                                    window.removeEventListener('click', closeWindow, false);
+                                    closeWindow();
+                                    window.removeEventListener('click', onClick);
                                 }
-                            };
-                            window.addEventListener('click', closeWindow);
-                        }, 0);
+                            }), 0);
                         /**
                          * 从minFloor层开始，向后获取20条对话的数据
                          * @param  {number} minFloor 起始楼层
@@ -2325,7 +2328,10 @@
                                     } else fixEmojiPosition(replyBox);
                                 }
                                 nextPage(resp.data.cursor.max_floor);
-                            }
+                            } else {
+                                closeWindow();
+                                (new p).show(clickTarget, resp.message || "操作失败");
+                            };
                         });
                     })
                     ,

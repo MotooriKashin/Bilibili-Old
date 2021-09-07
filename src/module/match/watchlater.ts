@@ -6,6 +6,8 @@
     API.path.name = "watchlater";
     // 备份还原旧版播放器设置数据
     API.restorePlayerSetting();
+    API.scriptIntercept(["video-nano"]); // 新版播放器拦截
+    API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
     API.rewriteHTML(API.getModule("watchlater.html"));
     API.addCss(API.getModule("bofqi.css"));
     // 修复评论跳转

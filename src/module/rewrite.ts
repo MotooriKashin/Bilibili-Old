@@ -29,6 +29,9 @@
     if (location.href.includes("www.bilibili.com/account/history")) API.importModule("history.ts");
     if (/dmid/.test(location.href) && /dm_progress/.test(location.href)) API.importModule("loadByDmid.js");
     if (config.read && /\/read\/[Cc][Vv]/.test(location.href)) API.importModule("read.js");
+    API.scriptIntercept(["bilibiliPlayer.min.js"], "bilibiliPlayer.js"); // 播放器脚本拦截
+    API.path.name && API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
+    config.logReport && API.scriptIntercept(["log-reporter"]); // 日志拦截
     /**
      * 若页面不需要重写，直接进入正常引导
      */

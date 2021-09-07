@@ -49,8 +49,11 @@ class API {
             return;
         }
         if (!msg) node.childNodes.forEach(d => d.remove());
+        const root = document.querySelector(".bilibili-player-video-toast-item.bilibili-player-video-toast-pay") || document.createElement("div");
+        root.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
         const ele = document.createElement("div");
         ele.setAttribute("class", "bilibili-player-video-toast-item-text");
+        root.appendChild(ele);
         msg = Array.isArray(msg) ? msg : [msg];
         if (!msg[0]) return;
         replace && node.childNodes.forEach(d => d.remove());
@@ -59,7 +62,7 @@ class API {
                 switch (i) {
                     case 0: s += `<span class="video-float-hint-text">${d}</span>`;
                         break;
-                    case 1: s += `<span class="video-float-hint-btn hint-red;">${d}</span>`;
+                    case 1: s += `<span class="video-float-hint-btn hint-red">${d}</span>`;
                         break;
                     case 2: s += `<span class="video-float-hint-btn">${d}</span>`;
                         break;
@@ -67,9 +70,13 @@ class API {
             }
             return s;
         }, '');
-        node.appendChild(ele);
+        node.appendChild(root);
         callback && (ele.style.cursor = "pointer") && (ele.onclick = () => callback());
-        (time !== 0) && setTimeout(() => ele.remove(), time * 100);
+        // @ts-ignore Tampermonkey提供
+        (time !== 0) && unsafeWindow.setTimeout(() => {
+            ele.remove();
+            !root.children[0] && root.remove();
+        }, time * 1000);
     }
     addElement(tag: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element) {
         let element = document.createElement(tag);
@@ -91,13 +98,16 @@ class API {
         parrent.appendChild(style);
     }
     static runWhile(check: Function, callback: Function, delay: number = 100, stop: number = 180) {
-        let timer = setInterval(() => {
+        // @ts-ignore Tampermonkey提供
+        let timer = unsafeWindow.setInterval(() => {
             if (check()) {
-                clearInterval(timer);
+                // @ts-ignore Tampermonkey提供
+                unsafeWindow.clearInterval(timer);
                 callback();
             }
         }, delay);
-        stop && setTimeout(() => clearInterval(timer), stop * 1000)
+        // @ts-ignore Tampermonkey提供
+        stop && unsafeWindow.setTimeout(() => unsafeWindow.clearInterval(timer), stop * 1000)
     }
     async alert(text: string, title: string = API.Name) {
         return new Promise((r: (value: boolean) => void) => {
@@ -122,11 +132,12 @@ class API {
     }
     rewriteHTML(html: string) {
         // @ts-ignore unsafeWindow由TamperMonkey提供
-        GM.getValue<string[]>("bug", []).forEach(d => { delete unsafeWindow[d] })
+        GM.getValue<string[]>("bug", []).forEach(d => { unsafeWindow[d] && Reflect.set(unsafeWindow, d, undefined) })
         document.open();
         document.write(html);
         document.close();
-        setTimeout(() => this.importModule("vector.js")); // 重写后页面正常引导
+        // @ts-ignore Tampermonkey提供
+        unsafeWindow.setTimeout(() => this.importModule("vector.js")); // 重写后页面正常引导
     }
     static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
         if (!name) return Object.keys(API.modules);
@@ -205,7 +216,8 @@ class API {
         }, []))
         const name = resource.reduce((s: string[], d) => {
             const arr = d.split("/");
-            d = arr[arr[length - 1]];
+            d = arr[arr.length - 1];
+            s.push(d);
             return s;
         }, []);
         arr.forEach((d, i) => {
@@ -218,21 +230,27 @@ class API {
     static init() {
         this.importModule("rewrite.js");
         this.importModule("setting.js");
-        window.self === window.top && this.runWhile(() => document.body, () => {
+    }
+    initUi() {
+        // @ts-expect-error 由tampermonkey提供
+        unsafeWindow.self === unsafeWindow.top && this.runWhile(() => document.body, () => {
             this.importModule("ui.js", { MENU, SETTING });
         });
+        new Promise(r => delete this.initUi);
     }
     constructor() {
         API.API = new Proxy(this, {
             get: (target, p) => {
-                return Reflect.get(window, p) || Reflect.get(this, p) || (
+                // @ts-expect-error 由tampermonkey提供
+                return Reflect.get(unsafeWindow, p) || Reflect.get(this, p) || (
                     Reflect.has(API.apply, p) ? (
                         this.importModule(Reflect.get(API.apply, p), {}, true),
                         Reflect.get(this, p)
-                    ) : new Error(`对象API上不存在方法${String(p)}，请检查源代码！`));
+                    ) : undefined);
             },
             set: (_target, p, value) => {
-                !Reflect.has(window, p) && Reflect.set(this, p, value);
+                // @ts-expect-error 由tampermonkey提供
+                Reflect.has(unsafeWindow, p) ? Reflect.set(unsafeWindow, p, value) : Reflect.set(this, p, value);
                 return true;
             }
         })

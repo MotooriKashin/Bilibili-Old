@@ -11,7 +11,8 @@
         static protoSeg;
         static protoView;
         constructor() {
-            Danmaku.root = window.protobuf.Root.fromJSON(JSON.parse(API.getModule("protobuf")));
+            API.importModule("protobuf.min.js");
+            Danmaku.root = window.protobuf.Root.fromJSON(GM.getValue("protobuf"));
             Danmaku.protoSeg = Danmaku.root.lookupType('bilibili.DmSegMobileReply');
             Danmaku.protoView = Danmaku.root.lookupType('bilibili.DmWebViewReply');
         }

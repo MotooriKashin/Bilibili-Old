@@ -2,6 +2,7 @@
  * 本模块负责恢复翻页评论区
  */
 (function () {
+    API.scriptIntercept(["comment.min.js"], "comment.js");
     class ReplyList {
         init() {
             // 拦截评论脚本

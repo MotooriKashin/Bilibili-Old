@@ -17,5 +17,5 @@
     if (typeof window.webkitMediaStreamTrack !== "undefined") window.webkitMediaStreamTrack = undefined;
     if (typeof window.webkitRTCPeerConnection !== "undefined") window.webkitRTCPeerConnection = undefined;
     if (typeof window.webkitRTCSessionDescription !== "undefined") window.webkitRTCSessionDescription = undefined;
-    API.toast.warning("禁用直播间P2P上传！")
+    toast.warning("禁用直播间P2P上传！")
 })()

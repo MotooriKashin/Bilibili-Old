@@ -256,7 +256,7 @@
                 value.children[1].children[0].setAttribute("checked", "checked"))
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            real.onclick = () => {
+            value.onclick = () => {
                 config[obj.key] = !config[obj.key];
                 config[obj.key] ? (value.children[0].setAttribute("checked", "checked"),
                     value.children[1].setAttribute("checked", "checked"),

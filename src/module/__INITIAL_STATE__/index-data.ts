@@ -41,5 +41,5 @@
         if (d.response[34])
             result.locsData[34] = d.response[34]; // 推广
     });
-    return result;
+    API.__INITIAL_STATE__ = result;
 })();

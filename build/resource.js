@@ -3,7 +3,7 @@ const fs = require("fs");
 /**
  * 无需包含的文件或拓展名拓展名
  */
-const extend = [".d.ts", ".map", "index.js"];
+const extend = [".d.ts", ".map"];
 /**
  * 要求哈希表的子目录
  */

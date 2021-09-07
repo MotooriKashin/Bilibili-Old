@@ -1,11 +1,11 @@
 /**
  * 本模块负责重构av/BV页__INITIAL_STATE__
  * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 原始数据对应来源`//www.biliplus.com/api/view?aid`
+ * 原始数据对应来源`//api.bilibili.com/x/web-interface/view/detail?aid`
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
 (function () {
-    const result: AV__INITIAL_STATE__ = {
+    const result = {
         aid: 0,
         comment: { count: 0, list: [] },
         error: {},
@@ -77,32 +77,19 @@
             videos: 1,
             embedPlayer: 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=0&aid=0&pre_ad=")'
         }
+    };
+    // @ts-ignore：传递的参数
+    let data = API.jsonCheck(__INITIAL_STATE__).data;
+    if (!data.View.cid && data.View.forward) {
+        toast.warning("视频撞车了！正在跳转至原视频~");
+        location.href = `https://www.bilibili.com/video/av${data.View.forward}`;
     }
-    // @ts-ignore：传递参数
-    let data = API.jsonCheck(__INITIAL_STATE__);
-    // 处理重定向
-    data.v2_app_api && data.v2_app_api.redirect_url && (location.href = data.v2_app_api.redirect_url);
-    data.bangumi && data.bangumi.ogv_play_url && (location.href = data.bangumi.ogv_play_url);
-    result.aid = data.aid || API.aid;
-    result.upData.name = data.author;
-    result.upData.mid = data.mid;
-    result.videoData.aid = data.aid || API.aid;
-    result.videoData.cid = data.list[0].cid;
-    result.videoData.ctime = data.created;
-    result.videoData.pubdate = data.created;
-    result.videoData.desc = data.description;
-    result.videoData.pages[0].cid = data.list[0].cid;
-    result.videoData.stat.aid = data.aid;
-    result.videoData.stat.coin = data.coins;
-    result.videoData.stat.danmaku = data.video_review;
-    result.videoData.stat.favorite = data.favorites;
-    result.videoData.stat.reply = data.review;
-    result.videoData.stat.view = data.play;
-    result.videoData.tid = data.tid;
-    result.videoData.title = data.title;
-    result.videoData.tname = data.typename;
-    data.v2_app_api && (result.tags = data.v2_app_api.tag, result.videoData = data.v2_app_api);
-    result.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
-    //API.switchVideo(()=>API.debug.msg(300,"视频已失效","加载弹幕","缓存信息仅供参考",true,()=>API.importModule("")))
+    result.aid = data.View.aid;
+    result.related = data.Related || [];
+    result.tags = data.Tags || [];
+    result.upData = data.Card.card || {};
+    result.upData.archiveCount = data.Card.archive_count;
+    result.videoData = data.View || {};
+    result.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")';
     API.__INITIAL_STATE__ = result;
 })();

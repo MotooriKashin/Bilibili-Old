@@ -34,7 +34,7 @@
         svg: '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>',
         type: 'file',
         title: '选择',
-        accept: [".js", ".css", ".json"],
+        accept: [".js", ".css", ".json", ".html"],
         multiple: true,
         float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css和json。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。</br>※ <strong>硬刷新页面后才会生效！</strong>',
         action: (files) => {
@@ -133,12 +133,13 @@
         sub: "投票弹窗等",
         type: "switch",
         value: false,
-        float: `启用后，可以使用新版播放器新增的 弹幕投票弹窗 和 关联视频跳转按钮 两项功能。</br>其他类型的互动弹幕如引导关注、三连按钮等目前还没有在脚本中实现，正在逐步开发中。</br>脚本实现的互动弹幕外观上与新播放器有较大差别，如果有建议或者遇上bug，欢迎反馈。</br>※ <strong>需要同时开启新版proto弹幕。</strong>`
+        float: `可以使用新版的一些弹窗互动组件。目前可用组件：评分弹窗、投屏弹窗、关联视频跳转按钮、带“UP主”标识弹幕。</br>※ <strong>需要同时开启新版proto弹幕。</strong>`
     })
     API.registerSetting({
         key: "logReport",
         sort: "common",
         label: "日志拦截",
+        svg: '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>',
         sub: "拦截B站日志上报",
         float: "网页端日志采集太频繁，稍微动下鼠标都要发送数条日志请求，给network调试带来额外的困扰。",
         type: "switch",
@@ -259,7 +260,7 @@
     API.registerSetting({
         type: "switch",
         key: "errands",
-        label: '恢复对于<a href="//space.bilibili.com/11783021">番剧出差</a>的访问',
+        label: '恢复对于<a href="//space.bilibili.com/11783021" target="_blank">番剧出差</a>的访问',
         sub: '还好没赶尽杀绝',
         value: true,
         sort: "restore",

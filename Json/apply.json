@@ -22,7 +22,7 @@
     "segDmDecode": "danmaku.js",
     "danmakuFormat": "danmaku.js",
     "onlineDanmaku": "danmaku.js",
-    "loadCommandDm": "conmandDm.js",
+    "loadCommandDm": "commandDm.js",
     "urlInputCheck": "urlInputCheck",
     "midcrc": "crc32.js",
     "crc32": "crc32.js",

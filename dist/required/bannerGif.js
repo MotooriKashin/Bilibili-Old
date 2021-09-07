@@ -8,7 +8,7 @@
         let jsonp = this;
         if (call) {
             window[jsonpCallback] = function (v) {
-                v.data = API.randomArray(GM.getValue("icon").fix, 1)[0];
+                v.data = API.randomArray(GM.getValue("index-icon").fix, 1)[0];
                 return call.call(jsonp, v);
             };
         }
