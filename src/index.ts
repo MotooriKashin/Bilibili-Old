@@ -1,12 +1,26 @@
 class API {
+    /**
+     * 本地模块列表
+     */
     static modules: { [name: string]: any } = GM.getValue("modules", {});
+    /**
+     * 已运行的模块
+     */
     static inModules: string[] = [];
+    /**
+     * 模块信息表，用于检查更新
+     */
     static resource: { [name: string]: string } = GM.getValue("resource", {});
-    static toModules: string[] = [];
+    /**
+     * 模块更新标记，避免重复调用
+     */
     static updating: boolean = false;
     static Virsion: string = GM.info.script.version;
     static API: Object;
     static Name: string = GM.info.script.name;
+    /**
+     * 函数模块关系对照表
+     */
     static apply: { [name: string]: string } = GM.getValue("apply", {});
     GM = GM;
     config = config;
@@ -97,7 +111,7 @@ class API {
                 <div class="button">取消</div>
                 </div>
             `);
-            this.addCss('.table {display: flex;flex-direction: column;box-sizing: border-box;top: 50%;background: #FFFFFF;box-shadow: 0 3px 12px 0 rgb(0 0 0 / 20%);border-radius: 10px;width: 300px;height: auto;padding: 18px;position: fixed;left: 50%;transform: translateX(-50%) translateY(-50%);z-index: 1024;}.title {line-height: 22px;margin-left: 2px;margin-bottom: 10px;font-size: 14px;}.text {margin-bottom: 3px;height: 40px;margin-left: 2px;}.act {line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;height: 32px;justify-content: center;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;border: none;color: #fff;justify-content: space-around;}.button, .action{line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;height: 32px;justify-content: center;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;}.action {border: none;background-color: rgb(26,115,232);color: #fff;}.button {background-color: #fff;color: rgb(26,115,232);border: 1px solid rgba(0,0,0,6%);}.action:hover{background-color: rgb(72,115,232);}.button:hover{background-color: rgba(26,115,232,6%);}.action:active{box-shadow: 0 0 1px 1px rgba(72,115,232,80%);}.button:active{box-shadow: 0 0 1px 1px rgba(0,0,0,10%);}.button[disabled],.xaction[disabled]{pointer-events: none;background-color: rgba(19, 1, 1, 0.1);border: 1px solid rgba(0,0,0,.1);color: white;}', '', div);
+            this.addCss('.table {display: flex;flex-direction: column;box-sizing: border-box;top: 50%;background: #FFFFFF;box-shadow: 0 3px 12px 0 rgb(0 0 0 / 20%);border-radius: 10px;width: 300px;height: auto;padding: 18px;position: fixed;left: 50%;transform: translateX(-50%) translateY(-50%);z-index: 1024;}.title {line-height: 22px;margin-left: 2px;margin-bottom: 10px;font-size: 14px;}.text {margin-bottom: 3px;margin-left: 2px;}.act {line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;border: none;color: #fff;justify-content: space-around;}.button, .action{line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;height: 32px;justify-content: center;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;}.action {border: none;background-color: rgb(26,115,232);color: #fff;}.button {background-color: #fff;color: rgb(26,115,232);border: 1px solid rgba(0,0,0,6%);}.action:hover{background-color: rgb(72,115,232);}.button:hover{background-color: rgba(26,115,232,6%);}.action:active{box-shadow: 0 0 1px 1px rgba(72,115,232,80%);}.button:active{box-shadow: 0 0 1px 1px rgba(0,0,0,10%);}.button[disabled],.xaction[disabled]{pointer-events: none;background-color: rgba(19, 1, 1, 0.1);border: 1px solid rgba(0,0,0,.1);color: white;}', '', div);
             table.querySelectorAll(".button").forEach((d: HTMLElement, i) => {
                 i ? (d.onclick = () => { root.remove(), r(false) }) : (d.onclick = () => (root.remove(), r(true)))
             })
@@ -105,6 +119,14 @@ class API {
     }
     getModule(name: string) {
         return <string>Reflect.get(API.modules, name);
+    }
+    rewriteHTML(html: string) {
+        // @ts-ignore unsafeWindow由TamperMonkey提供
+        GM.getValue<string[]>("bug", []).forEach(d => { delete unsafeWindow[d] })
+        document.open();
+        document.write(html);
+        document.close();
+        setTimeout(() => this.importModule("vector.js")); // 重写后页面正常引导
     }
     static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
         if (!name) return Object.keys(API.modules);
@@ -126,21 +148,19 @@ class API {
                 API.downloadModule(name, Reflect.get(modules, name)).then(d => toast.success(`模块${Reflect.get(modules, name)}安装成功！`, "您现在可以重试刚才的操作了~"))
                 toast.warning(`正在添加模块${Reflect.get(modules, name)}！请稍候~`);
             } else {
-                API.toModules.push(name);
                 !API.updating && API.updateModule();
             }
         }
     }
     static async firstInit() {
-        COM.forEach(d => !this.toModules.includes(d) && this.toModules.push(d));
         await this.updateModule(`脚本首次运行初始化中~`, `感谢您使用 ${this.Name}！当前版本：${this.Virsion}`);
         toast.warning(`正在载入默认设置项~`);
         this.importModule("setting.js");
-        LOADING.forEach(d => this.downloadModule(d));
         Reflect.has(API.modules, "rewrite.js") && toast.success(`初始化成功，刷新页面即可生效~`);
     }
     static async updateModule(...msg: string[]) {
         try {
+            if (this.updating) return;
             msg[0] && toast.warning(...msg);
             this.updating = true;
             let resource: { [key: string]: string } = await xhr.GM({
@@ -150,22 +170,15 @@ class API {
             let keys = Object.keys(resource);
             let list = keys.reduce((s: [string, string][], d) => {
                 let str = d.split("/");
-                Reflect.get(resource, d) != Reflect.get(this.resource, d) && (
-                    d.endsWith(".js") ?
-                        Reflect.has(API.modules, str[str.length - 1]) && s.push([str[str.length - 1], d]) :
-                        s.push([str[str.length - 1], d])
-                );
+                Reflect.get(resource, d) != Reflect.get(this.resource, d) && s.push([str[str.length - 1], d]);
                 return s;
             }, []);
             GM.setValue("resource", this.resource = resource);
-            this.toModules.forEach(d => {
-                keys.find(b => b.includes(d)) && list.push([d, keys.find(b => b.includes(d))]);
-            })
-            this.toModules = [];
             await Promise.all(list.reduce((s: Promise<void>[], d) => {
                 s.push(this.downloadModule(d[0], d[1]));
                 return s;
             }, []));
+            await this.updateResource();
             this.updating = false;
             toast.success(`脚本及其模块已更新至最新版~`);
         } catch (e) { this.updating = false; toast.error(`检查更新出错！`, e) }
@@ -182,13 +195,30 @@ class API {
             name.endsWith(".json") ? (
                 GM.setValue(name.replace(".json", ""), JSON.parse(module))
             ) : Reflect.set(API.modules, name, module);
-            GM.setValue("modules", API.modules)
+            GM.setValue("modules", API.modules);
         } catch (e) { toast.error(`更新模块${name}失败，请检查网络！`) }
+    }
+    static async updateResource() {
+        const arr = await Promise.all(resource.reduce((s: Promise<any>[], d) => {
+            s.push(xhr({ url: d }));
+            return s;
+        }, []))
+        const name = resource.reduce((s: string[], d) => {
+            const arr = d.split("/");
+            d = arr[arr[length - 1]];
+            return s;
+        }, []);
+        arr.forEach((d, i) => {
+            resource[i].endsWith(".json") ?
+                GM.setValue(name[i].replace(".json", ""), JSON.parse(d)) :
+                Reflect.set(API.modules, name[i], d);
+        })
+        GM.setValue("modules", API.modules);
     }
     static init() {
         this.importModule("rewrite.js");
+        this.importModule("setting.js");
         window.self === window.top && this.runWhile(() => document.body, () => {
-            this.importModule("setting.js");
             this.importModule("ui.js", { MENU, SETTING });
         });
     }

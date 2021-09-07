@@ -204,8 +204,6 @@ interface GMxhrDetails {
  */
 declare namespace GM {
     function xmlHttpRequest(details: GMxhrDetails): { abort: () => void };
-    function getResourceText(name: string): string;
-    function getResourceURL(name: string): string;
     function getValue<T>(name: string, defaultValue?: T): T;
     function setValue<T>(name: string, value: T): void;
     function deleteValue(name: string): void;
@@ -327,6 +325,26 @@ declare namespace API {
      */
     let Virsion: string;
     /**
+     * 视频aid
+     */
+    let aid: number;
+    /**
+     * 视频 cid
+     */
+    let cid: string | number;
+    /**
+     * 视频 bvid
+     */
+    let bvid: string;
+    /**
+     * 用户 uid
+     */
+    let uid: string | number;
+    /**
+     * 视频分区编号
+     */
+    let tid: string | number;
+    /**
      * 格式化时间
      * @param time 时间戳
      * @param type 是否包含年月日
@@ -435,4 +453,9 @@ declare namespace API {
      * @param name 模块名字（含拓展名）
      */
     function getModule(name: string): string;
+    /**
+     * 重写网页框架
+     * @param html 网页模板
+     */
+    function rewriteHTML(html: string): void;
 }

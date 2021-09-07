@@ -35,10 +35,405 @@
         title: '选择',
         accept: [".js", ".css", ".json"],
         multiple: true,
-        depends: ["manage.js"],
         float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css和json。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。</br>※ <strong>硬刷新页面后才会生效！</strong>',
         action: (files) => {
             API.localModule(files);
         }
+    });
+    API.registerSetting({
+        key: "av",
+        sort: "rewrite",
+        label: "av/BV",
+        type: "switch",
+        value: true,
+        float: '重写以恢复旧版av视频播放页。'
+    });
+    API.registerSetting({
+        key: "upList",
+        sort: "style",
+        label: "UP主列表",
+        sub: "展示视频合作者",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        key: "electric",
+        sort: "player",
+        label: "跳过充电鸣谢",
+        sub: "在视频末尾",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        key: "enlike",
+        sort: "player",
+        label: "添加点赞功能",
+        sub: "自制、简陋",
+        type: "switch",
+        value: false,
+        float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。"
+    });
+    API.registerSetting({
+        key: "medialist",
+        sort: "rewrite",
+        label: "medialist",
+        type: "switch",
+        value: false,
+        float: "用旧版av页重构medialist页面。"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "index",
+        label: "主页",
+        value: true,
+        sort: "rewrite",
+        float: '重写以恢复旧版主页'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "indexLoc",
+        label: "过滤主页广告",
+        sub: "banner+recommand",
+        value: false,
+        sort: "style",
+        float: '当然指的是旧版主页。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "privateRecommend",
+        label: "禁用主页个性化推荐",
+        sub: "还是习惯全站统一推荐",
+        value: false,
+        sort: "style",
+        float: '禁用旧版主页banner右边的个性化推荐，恢复全站统一推荐。'
+    });
+    API.registerSetting({
+        key: "protoDm",
+        sort: "danmaku",
+        label: "启用新版弹幕",
+        sub: "proto弹幕",
+        type: "switch",
+        value: true,
+        float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能默认启用。</br>”`
+    });
+    API.registerSetting({
+        key: "liveDm",
+        sort: "danmaku",
+        label: "修复实时弹幕",
+        sub: "及时接收别人新发的弹幕",
+        type: "switch",
+        value: true,
+        float: `修复旧版播放器实时弹幕。`
+    });
+    API.registerSetting({
+        key: "commandDm",
+        sort: "danmaku",
+        label: "添加互动弹幕",
+        sub: "投票弹窗等",
+        type: "switch",
+        value: false,
+        float: `启用后，可以使用新版播放器新增的 弹幕投票弹窗 和 关联视频跳转按钮 两项功能。</br>其他类型的互动弹幕如引导关注、三连按钮等目前还没有在脚本中实现，正在逐步开发中。</br>脚本实现的互动弹幕外观上与新播放器有较大差别，如果有建议或者遇上bug，欢迎反馈。</br>※ <strong>需要同时开启新版proto弹幕。</strong>`
+    });
+    API.registerSetting({
+        key: "logReport",
+        sort: "common",
+        label: "日志拦截",
+        sub: "拦截B站日志上报",
+        float: "网页端日志采集太频繁，稍微动下鼠标都要发送数条日志请求，给network调试带来额外的困扰。",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        key: "heartbeat",
+        sort: "restore",
+        label: "修复视频心跳",
+        sub: "出现不记录播放历史症状时的选择",
+        float: "尝试修复可能被广告拦截扩展误伤的视频心跳。",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        key: "noVideo",
+        sort: "player",
+        label: "拦截视频载入",
+        sub: "用于临时不加载视频进入视频页面",
+        float: "拦截播放器载入视频，强行使视频失效。",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        key: "bannerGif",
+        sort: "style",
+        label: "丰富顶栏动图",
+        sub: '搜索框下gif',
+        float: "替换顶栏动图接口，避免单调。",
+        type: "switch",
+        value: true
+    });
+    API.registerSetting({
+        key: "danmakuFirst",
+        sort: "style",
+        label: "自动切换到弹幕列表",
+        sub: "默认是展示推荐视频",
+        float: "自动从推荐视频切换到播放弹幕列表。",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        type: "sort",
+        key: "autoDo",
+        label: "自动化操作",
+        sort: "player",
+        sub: "进入播放页面及切P时",
+        list: [{
+                key: "showBofqi",
+                sort: "style",
+                label: "自动滚动到播放器",
+                type: "switch",
+                value: false
+            }, {
+                key: "screenWide",
+                sort: "style",
+                label: "自动宽屏",
+                type: "switch",
+                value: false
+            }, {
+                key: "noDanmaku",
+                sort: "style",
+                label: "自动关弹幕",
+                type: "switch",
+                value: false
+            }, {
+                key: "autoPlay",
+                sort: "style",
+                label: "自动播放",
+                type: "switch",
+                value: false
+            }]
+    });
+    API.registerSetting({
+        key: "segProgress",
+        sort: "player",
+        label: "分段进度条",
+        sub: "仅限看点视频",
+        type: "switch",
+        value: false
+    });
+    API.registerSetting({
+        key: "replyList",
+        sort: "style",
+        label: "恢复评论翻页",
+        sub: "可以选择跳转而不必一直下拉",
+        type: "switch",
+        value: true,
+        float: '恢复旧版翻页评论区。'
+    });
+    API.registerSetting({
+        key: "section",
+        sort: "style",
+        label: "统一换回旧版顶栏",
+        sub: "针对未重写的页面",
+        type: "switch",
+        value: true,
+        float: '非重写页面顶栏底栏也替换为旧版。'
+    });
+    API.registerSetting({
+        key: "concatDanmaku",
+        sort: "danmaku",
+        label: "合并载入弹幕",
+        sub: "本地弹幕/在线弹幕",
+        type: "switch",
+        value: false,
+        float: '载入本地弹幕文件或者在线弹幕时是否与播放器当前弹幕合并。'
+    });
+    API.registerSetting({
+        key: "danmakuHashId",
+        sort: "danmaku",
+        label: "反查弹幕发送者",
+        sub: "结果仅供参考！",
+        type: "switch",
+        value: false,
+        float: '旧版播放器上右键弹幕将显示弹幕发送者。</br>※ 使用哈希逆向算法，存在碰撞可能性，所示信息仅供参考，或者干脆查不出来。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "errands",
+        label: '恢复对于<a href="//space.bilibili.com/11783021">番剧出差</a>的访问',
+        sub: '还好没赶尽杀绝',
+        value: true,
+        sort: "restore",
+        float: '使用备份数据修复对于番剧出差官方空间的访问。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "album",
+        label: "还原个人空间相簿链接",
+        sub: "相簿比动态页面好看",
+        value: false,
+        sort: "restore",
+        float: '将个人空间的相簿链接从动态重定向回原来的相簿。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "jointime",
+        label: "显示账号注册时间",
+        sub: "历史不该被隐藏",
+        value: false,
+        sort: "restore",
+        float: '在空间显示对应账号的注册时间。'
+    });
+    API.registerSetting({
+        key: "lostVideo",
+        sort: "restore",
+        label: "修复失效视频信息",
+        sub: `有些甚至评论还在！`,
+        type: "switch",
+        value: false,
+        float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
+    });
+    API.registerSetting({
+        key: "bangumi",
+        sort: "rewrite",
+        label: "bangumi",
+        sub: "ss/ep",
+        type: "switch",
+        value: true,
+        float: '重写以恢复旧版bangumi播放页。'
+    });
+    API.registerSetting({
+        key: "limit",
+        sort: "player",
+        label: "解除区域/平台限制",
+        sub: "港澳台？泰版？仅限APP？",
+        float: "同类功能脚本可能会冲突，使用专用脚本切莫开启本功能！",
+        type: "sort",
+        list: [
+            {
+                key: "videoLimit",
+                sort: "player",
+                label: "解除限制",
+                type: "switch",
+                value: false,
+                sub: "区域+APP"
+            }, {
+                key: "limitServer",
+                sort: "player",
+                label: "泰区代理",
+                type: "input",
+                value: "https://api.global.bilibili.com",
+                float: "泰区番剧限制需要自备相应的代理服务器（无需末尾的斜杠！）。</br>本功能由于缺乏调试条件维护不善请多担待！",
+                input: { type: "url", placeholder: "URL" },
+                pattern: /(\w+):\/\/([^/:]+)(:\d*)?([^# ]*)/
+            }
+        ]
+    });
+    API.registerSetting({
+        key: "bangumiEplist",
+        sort: "player",
+        label: "保留番剧回目列表",
+        sub: "牺牲特殊背景图",
+        type: "switch",
+        value: false,
+        float: '部分带特殊背景图片的番剧会隐藏播放器下方的番剧回目列表，二者不可得兼，只能选一。'
+    });
+    API.registerSetting({
+        key: "episodeData",
+        sort: "style",
+        label: "显示番剧分集数据",
+        sub: "原本是合集数据",
+        type: "switch",
+        value: false,
+        float: '有分集数据时将bangumi播放、弹幕数替换为当集数据。原合集数据将显示在鼠标焦点信息上。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "watchlater",
+        label: "稍后再看",
+        value: true,
+        sort: "rewrite",
+        float: '重写以恢复旧版稍后再看。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "history",
+        label: "只显示视频历史",
+        sub: "去除专栏、直播记录",
+        value: false,
+        sort: "style"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "searchHistory",
+        label: "去除历史记录页面搜索框",
+        sub: "其实留着也没什么",
+        value: false,
+        sort: "style"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "liveStream",
+        label: "拦截直播流/轮播流",
+        sub: "那我为什么点开直播？",
+        value: false,
+        sort: "live",
+        float: "将直播间设为未开播状态，不加载直播流或者轮播视频，适用于想打开直播间但不想浪费带宽或流量的情况。</br>※ 脚本注入不够快时可能拦截失败，硬刷新`Ctrl+Shift+R`/`Shift + F5`可解。"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "liveP2p",
+        label: "禁止P2P上传",
+        sub: "小水管禁不起别人白嫖！",
+        value: true,
+        sort: "live",
+        float: "禁止直播间使用WebRTC进行P2P共享上传，以免暴露ip地址，并为小水管节约带宽。"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "sleepCheck",
+        label: "禁止挂机检测",
+        sub: "就喜欢挂后台听个响不行吗！",
+        value: true,
+        sort: "live",
+        float: "禁止直播间5分钟不操作判定挂机并切断直播，可以放心挂后台听个响。"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "anchor",
+        label: "禁用天选时刻",
+        sub: "反正中不了的，哼！",
+        value: false,
+        sort: "live"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "pkvm",
+        label: "禁用大乱斗",
+        sub: "挡着我欣赏主播了",
+        value: false,
+        sort: "live"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "player",
+        label: "嵌入",
+        value: true,
+        sort: "rewrite",
+        float: '重写以恢复旧版嵌入播放器。'
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "ranking",
+        label: "排行榜",
+        value: true,
+        sort: "rewrite",
+        float: "重写以恢复旧版全站排行榜。"
+    });
+    API.registerSetting({
+        type: "switch",
+        key: "read",
+        label: "专栏",
+        value: true,
+        sort: "rewrite",
+        float: "重写以启用旧版专栏。"
     });
 })();

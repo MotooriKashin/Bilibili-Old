@@ -1,7 +1,15 @@
 /**
- * 脚本第一次初始化时默认下载的模块列表。
+ * 脚本所依赖的外部资源，这些资源像内部模块一样使用，只不过不像内部模块一样放入仓库。  
+ * 储存和访问方式也跟内部模块一样：`API.getModule(文件名(含拓展名))`获取json外的资源，json则由`GM.getValue`且不用拓展名。  
+ * 由于缺少更新校验机制，外部资源将在每次更新时强制刷新。  
+ * **模块唯一性原则，内部模块也不可以跟外部模块重名！**  
+ * 外部模块并非专为本项目制作，所以脚本不会主动运行，请用到时主动导入运行相关依赖。
  */
-const COM = ["rewrite.js", "ui.js", "setting.js"];
+const resource = [
+    "https://www.bilibili.com/index/index-icon.json", // 顶栏动图表
+    "https://cdn.jsdelivr.net/npm/js-base64@3.6.0/base64.min.js", // base64库依赖
+    "https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js" // protobufjs依赖
+];
 /**
  * 脚本设置数据，关联设置项的key:value
  */
@@ -16,14 +24,9 @@ const config: { [name: string]: any } = new Proxy(CONFIG, {
 })
 Object.entries(GM.getValue<{ [name: string]: any }>("config", {})).forEach(k => Reflect.set(config, k[0], k[1]));
 const SETTING: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[] = [];
-/**
- * 默认启用的功能所对应的模块
- */
-const LOADING: string[] = [];
 function modifyConfig(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon) {
     Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value"));
     Reflect.has(obj, "list") && (<typeof SETTING>Reflect.get(obj, "list")).forEach(d => modifyConfig(d));
-    Reflect.has(obj, "depends") && LOADING.push(...Reflect.get(obj, "depends"));
 }
 function registerSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon) {
     SETTING.push(obj);
@@ -58,11 +61,6 @@ interface ToolIcon {
      * 鼠标单击时的回调
      */
     action: (node: HTMLDivElement) => void;
-    /**
-     * 所依赖的模块名称（带拓展名）  
-     * 脚本会基于此提前从服务器获取模块到本地  
-     */
-    depends?: string[];
 }
 /**
  * 菜单项
@@ -97,11 +95,6 @@ interface ItemPic {
      * 图片 URL
      */
     src: string;
-    /**
-     * 所依赖的模块名称（带拓展名）  
-     * 脚本会基于此提前从服务器获取模块到本地  
-     */
-    depends?: string[];
 }
 interface ItemCommon {
     /**
@@ -133,11 +126,6 @@ interface ItemCommon {
      * ※ 理论上支持所有能以<div>为父节点的标签
      */
     float?: string;
-    /**
-     * 所依赖的模块名称（带拓展名）  
-     * 脚本会基于此提前从服务器获取模块到本地  
-     */
-    depends?: string[];
 }
 /**
  * 开关类菜单项，用以给用户判断是否开启某些功能等  
@@ -271,11 +259,6 @@ interface ItemIpt {
      * 0 表示一直禁用直到刷新面板
      */
     disabled?: number;
-    /**
-     * 所依赖的模块名称（带拓展名）  
-     * 脚本会基于此提前从服务器获取模块到本地  
-     */
-    depends?: string[];
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等

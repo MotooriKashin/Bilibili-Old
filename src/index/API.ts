@@ -1,6 +1,4 @@
 GM.xmlHttpRequest = GM_xmlhttpRequest;
-GM.getResourceText = GM_getResourceText;
-GM.getResourceURL = GM_getResourceURL;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
@@ -9,8 +7,6 @@ GM.deleteValue = GM_deleteValue;
  */
 declare namespace GM {
     let xmlHttpRequest: typeof GM_xmlhttpRequest;
-    let getResourceText: typeof GM_getResourceText;
-    let getResourceURL: typeof GM_getResourceURL;
     let getValue: typeof GM_getValue;
     let setValue: typeof GM_setValue;
     let deleteValue: typeof GM_deleteValue;
