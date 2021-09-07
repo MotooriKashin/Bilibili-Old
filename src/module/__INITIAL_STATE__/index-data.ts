@@ -41,5 +41,14 @@
         if (d.response[34])
             result.locsData[34] = d.response[34]; // 推广
     });
+    if (config.indexLoc) {
+        for (let key in result.locsData) {
+            if (Array.isArray(result.locsData[key])) {
+                result.locsData[key] = result.locsData[key].filter(d => {
+                    return d.is_ad ? (debug.debug("移除广告", key, d), false) : true;
+                })
+            }
+        }
+    }
     API.__INITIAL_STATE__ = result;
 })();
