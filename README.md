@@ -15,7 +15,7 @@
    - 排行榜：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
    - ~~播单：[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")、[detail](https://www.bilibili.com/playlist/detail/pl769 "bilibili moe 2018 日本动画场应援")~~
    - 专栏：如[cv1](https://www.bilibili.com/video/cv1)
-- 其他：听多的，请参考脚本设置界面。
+- 其他：挺多的，请参考脚本设置界面。
 
 ---
 ### 设置相关
