@@ -12,10 +12,11 @@
                 <img src="${d.face}@48w_48h.webp" /><!---->
                 <span class="info-tag">${d.title}</span><!----></a>
                 <div class="avatar">
-                <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="${d.vip}">${d.name}</a>
+                <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="${(d.vip && d.vip.status) ? 'name-text is-vip' : 'name-text'}">${d.name}</a>
                 </div></div>`;
             return s;
-        }, fl) + `div`;
+        }, fl) + `</div>`;
         document.querySelector("#v_upinfo").innerHTML = fl;
+        API.addCss(API.getModule("upList.css"));
     });
 })();

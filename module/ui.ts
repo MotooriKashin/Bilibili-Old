@@ -380,7 +380,7 @@
             Reflect.set(this.list, obj.key, real);
             API.addCss(API.getModule("ui-input.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
-            API.addElement("div", { style: "padding-inline-end: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;" }, real, obj.label);
+            API.addElement("div", { style: "padding-inline-start: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;" }, real, obj.label);
             const value = API.addElement("div", { class: "textbox" }, real);
             obj.key ? (API.addElement("input", { list: `list-${obj.key}` }, value),
                 API.addElement("datalist", { id: `list-${obj.key}` }, value),
