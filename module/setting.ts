@@ -42,6 +42,26 @@
         }
     })
     API.registerSetting({
+        key: "thirdModule",
+        sort: "common",
+        label: "第三方模块",
+        sub: "js",
+        type: "file",
+        title: "选择",
+        accept: [".js"],
+        multiple: true,
+        float: '所谓第三方模块就是未能正式成为本脚本模块的模块，可能是还在测试的新功能。总之与内置的模块js文件没有任何区别。这种模块只能通过本选项安装，安装后默认全局运行。',
+        action: (files) => {
+            API.localModule(files);
+            const third = GM.getValue<string[]>("thirdModule", []);
+            Array.from(files).reduce((s, d) => {
+                s = [...s, d.name];
+                return s;
+            }, third);
+            GM.setValue("thirdModule", third);
+        }
+    });
+    API.registerSetting({
         key: "av",
         sort: "rewrite",
         label: "av/BV",

@@ -18,7 +18,7 @@
 		},
 		{
 			"type": "typescript",
-			"tsconfig": "src/module/tsconfig.json",
+			"tsconfig": "module/tsconfig.json",
 			"problemMatcher": [
 				"$tsc"
 			],
@@ -30,7 +30,7 @@
 				"isDefault": true
 			},
 			"detail": "编译模块文件",
-			"label": "tsc-module"
+			"label": "module"
 		},
 		{
 			"type": "typescript",
@@ -39,21 +39,7 @@
 				"$tsc"
 			],
 			"detail": "编译index",
-			"label": "tsc-index"
-		},
-		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\build\\resource.js",
-				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"tsc-index"
-			],
-			"detail": "发布前置：记录模块最新提交数据",
-			"label": "resource",
-			"problemMatcher": []
+			"label": "tsc"
 		},
 		{
 			"type": "shell",
@@ -63,9 +49,9 @@
 				"${workspaceFolder}"
 			],
 			"dependsOn": [
-				"resource"
+				"tsc"
 			],
-			"detail": "发布：生成最终脚本文件",
+			"detail": "生成最终脚本文件",
 			"label": "merge",
 			"problemMatcher": []
 		},
@@ -78,7 +64,21 @@
 			"dependsOn": [
 				"merge"
 			],
-			"detail": "发布同时清理临时文件",
+			"detail": "清理临时文件",
+			"label": "index",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\build\\resource.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"index"
+			],
+			"detail": "发布任务",
 			"label": "build",
 			"problemMatcher": []
 		}

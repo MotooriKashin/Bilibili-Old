@@ -5,9 +5,10 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "noImplicitUseStrict": true,
-        "outDir": "../../dist/"
+        "outDir": "../dist/",
+        "declaration": true
     },
     "include": [
         "**/*"
-    ]
+    ],
 }

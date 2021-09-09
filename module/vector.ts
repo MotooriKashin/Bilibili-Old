@@ -21,4 +21,5 @@
     config.replyList && API.importModule("replyList.js"); // 翻页评论
     config.section && API.importModule("section.js"); // 顶栏底栏
     config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 弹幕反查
+    GM.getValue<string[]>("thirdModule", []).forEach(d => API.importModule(d)); // 第三方模块
 })();
