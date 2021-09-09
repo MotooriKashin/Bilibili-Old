@@ -39,11 +39,10 @@
 	"Json/videoSort.json": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"dist/bilibiliPlayer.js": "75233e39421a11cf83c2c8f4d859fc9cfa387db9",
 	"dist/comment.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
-	"dist/index.js": "6a6908436c31e7cbd80c658f6ec42de0dbd0dee2",
 	"dist/rewrite.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
-	"dist/setting.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
+	"dist/setting.js": "9330a31183c7e825d356a41da0ec93becd7b46fe",
 	"dist/ui.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
-	"dist/vector.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
+	"dist/vector.js": "9330a31183c7e825d356a41da0ec93becd7b46fe",
 	"dist/video.js": "75233e39421a11cf83c2c8f4d859fc9cfa387db9",
 	"dist/hook/jsonp.js": "75233e39421a11cf83c2c8f4d859fc9cfa387db9",
 	"dist/hook/Node.js": "75233e39421a11cf83c2c8f4d859fc9cfa387db9",
@@ -115,6 +114,6 @@
 	"dist/__INITIAL_STATE__/av-detail.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
 	"dist/__INITIAL_STATE__/bangumi-global.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
 	"dist/__INITIAL_STATE__/bangumi-season.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
-	"dist/__INITIAL_STATE__/index-data.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
+	"dist/__INITIAL_STATE__/index-data.js": "56edd33e9954568d86d5703f26bdaf22c21cfbe7",
 	"dist/__INITIAL_STATE__/index-html.js": "c1ffff01793007533b98b570a2fe10234c04ab52"
 }
