@@ -174,6 +174,19 @@
                         }
                     }
                 }
+                if (jsonp.url.includes("api.bilibili.com/x/web-show/res/locs") && jsonp.url.includes("ids=142")) {
+                    let jsonpCallback = jsonp.jsonpCallback;
+                    let call = window[jsonpCallback];
+                    if (call) {
+                        window[jsonpCallback] = function (v) {
+                            v.data[142][0].pic = BLOD.randomArray([
+                                "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
+                                "//i0.hdslb.com/bfs/archive/b60151347754f0089489d7d68271233960a8d52f.png"
+                            ], 1)[0];
+                            return call.call(jsonp, v);
+                        }
+                    }
+                }
             })
         }
         /**
@@ -280,13 +293,13 @@
                                 // 旧播放器只能处理(连接成功，心跳响应，实时弹幕)三种响应信息
                                 // 新播放器新增的指令和功能就不管了
                                 case Pl.WS_OP_CHANGEROOM_REPLY:
-                                    //0 === Number(t.body.code) && this.options.onChangeRoomReply({ data : t && t.body });
+                                    //0 === Number(t.body.code) && this.options.onChangeRoomReply({data : t && t.body });
                                     break;
                                 case Pl.WS_OP_REGISTER_REPLY:
-                                    //0 === Number(t.body.code) && this.options.onRegisterReply({ data : t && t.body });
+                                    //0 === Number(t.body.code) && this.options.onRegisterReply({data : t && t.body });
                                     break;
                                 case Pl.WS_OP_UNREGISTER_REPLY:
-                                    //0 === Number(t.body.code) && this.options.onUnRegisterReply({ data : t && t.body });
+                                    //0 === Number(t.body.code) && this.options.onUnRegisterReply({data : t && t.body });
                                     break;
                                 case Pl.WS_OP_DATA:
                                 case Pl.WS_OP_BATCH_DATA:
@@ -459,8 +472,8 @@
             })
         }
         /**
-         * hook sendBeacon
-         */
+                            * hook sendBeacon
+                            */
         sendBeacon() {
             let sendBeacon = Navigator.prototype.sendBeacon;
             Navigator.prototype.sendBeacon = function (url, data) {
@@ -471,7 +484,7 @@
         /**
          * 添加xhrhook
          * @returns {number} xhrhook序号
-         */
+                            */
         xhrhook(callback) {
             if (typeof callback === "function") openArray.push(callback);
             return openArray.length - 1;
@@ -479,7 +492,7 @@
         /**
          * 添加jsonphook
          * @returns {number} xhrhook序号
-         */
+                            */
         jsonphook(callback) {
             if (typeof callback === "function") jsonpArray.push(callback);
             return jsonpArray.length - 1;
@@ -487,14 +500,14 @@
         /**
          * 移除xhrhook
          * @param {number} id xhrhook序号
-         */
+                            */
         quitXhrhook(id) {
             openArray.splice(id, 1);
         }
         /**
          * 移除jsonphook
          * @param {number} id jsonphook序号
-         */
+                            */
         quitJsonphook(id) {
             jsonpArray.splice(id, 1);
         }
@@ -548,8 +561,8 @@
         /**
          * 生成xml形式的弹幕
          * @param  {[]} danmaku protoSeg.decode(new Uint8Array(this.response)).elems
-         * @returns {Promise<String>} 委托对象，表示生成的xml形式的弹幕字符串
-         */
+                            * @returns {Promise < String >} 委托对象，表示生成的xml形式的弹幕字符串
+                            */
         toXml(danmaku) {
             return new Promise((resolve) => {
                 this.sortDmById(danmaku, "idStr");
