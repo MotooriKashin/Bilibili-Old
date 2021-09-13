@@ -23,7 +23,7 @@
     "danmakuFormat": "danmaku.js",
     "onlineDanmaku": "danmaku.js",
     "loadCommandDm": "commandDm.js",
-    "urlInputCheck": "urlInputCheck",
+    "urlInputCheck": "urlInputCheck.js",
     "midcrc": "crc32.js",
     "crc32": "crc32.js",
     "md5": "md5.js",
