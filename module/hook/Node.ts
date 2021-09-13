@@ -8,6 +8,9 @@
         static appendChild = Node.prototype.appendChild;
         static insertBefore = Node.prototype.insertBefore;
         static rules: [string[], string | undefined][] = [];
+        static jsonp: [string[], Function][] = [];
+        jsonphook = (url: string[], callback: (this: any, xhr: any) => void) => NodeHook.jsonp.push([url, callback]);
+        removeJsonphook = (id: number) => NodeHook.jsonp.splice(id - 1, 1);
         constructor() {
             this.appendChild();
             this.insertBefore();
@@ -17,23 +20,43 @@
         }
         appendChild() {
             Node.prototype.appendChild = function <T extends Node>(newChild: T): T {
-                newChild.nodeName == 'SCRIPT' && (<any>newChild).src && NodeHook.rules.forEach(d => {
+                newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.rules.forEach(d => {
                     d[0].every(d => (<any>newChild).src.includes(d)) && (
                         (d[1] && (newChild.textContent = API.getModule(d[1])) && setTimeout(() => (<any>newChild).onload(), 500)),
                         (<any>newChild).removeAttribute("src")
                     );
-                })
+                }), NodeHook.jsonp.forEach(d => {
+                    d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
+                        set: (t, p, v) => {
+                            p == "url" && ((<any>newChild).src = v);
+                            return true;
+                        },
+                        get: (t, p) => {
+                            return p == "url" ? (<any>newChild).src : undefined;
+                        }
+                    }));
+                }))
                 return <T>NodeHook.appendChild.call(this, newChild);
             };
         }
         insertBefore() {
             Node.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
-                newChild.nodeName == 'SCRIPT' && (<any>newChild).src && NodeHook.rules.forEach(d => {
+                newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.rules.forEach(d => {
                     d[0].every(d => (<any>newChild).src.includes(d)) && (
                         (d[1] && (newChild.textContent = API.getModule(d[1])) && setTimeout(() => (<any>newChild).onload(), 500)),
                         (<any>newChild).removeAttribute("src")
                     );
-                })
+                }), NodeHook.jsonp.forEach(d => {
+                    d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
+                        set: (t, p, v) => {
+                            p == "url" && ((<any>newChild).src = v);
+                            return true;
+                        },
+                        get: (t, p) => {
+                            return p == "url" ? (<any>newChild).src : undefined;
+                        }
+                    }));
+                }))
                 return <T>NodeHook.insertBefore.call(this, newChild, refChild);
             }
         }
@@ -49,4 +72,16 @@ declare namespace API {
      * @param moduleName 替换用的模块文件名，未提供则只拦截原脚本不导入模块
      */
     function scriptIntercept(rule: string[], moduleName?: string): void;
+    /**
+     * 注册jsonphook  
+     * @param url 需要hook的URL符合的条件，URL包含的字符串构成的数组，必须都满足才会回调
+     * @param callback hook到指定URL后执行的回调函数，url信息为参数属性
+     * @returns 注册编号，用于使用`removeJsonphook`方法注销当前hook
+     */
+    function jsonphook(url: string[], callback: (xhr: { url: string }) => void): number;
+    /**
+     * 注销jsonphook
+     * @param id 注册`jsonphook`时的返回值
+     */
+    function removeJsonphook(id: number): [string[], Function][];
 }

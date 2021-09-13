@@ -137,7 +137,7 @@ class API {
         document.write(html);
         document.close();
         // @ts-ignore Tampermonkey提供
-        unsafeWindow.setTimeout(() => this.importModule("vector.js")); // 重写后页面正常引导
+        this.importModule("vector.js"); // 重写后页面正常引导
     }
     static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
         if (!name) return Object.keys(API.modules);

@@ -3,13 +3,13 @@
  */
 (function () {
     API.jsonphook(['api.bilibili.com/x/web-interface/online'], function (xhr) {
-        let jsonpCallback = this.jsonpCallback;
+        const obj = API.urlObj(xhr.url);
+        let jsonpCallback = obj.jsonpCallback;
         let call: any = window[jsonpCallback];
-        let jsonp = this
         if (call) {
             (<any>window)[jsonpCallback] = function (v: any) {
                 v.data && (v.data.region_count[165] = v.data.region_count[202]);
-                return call.call(jsonp, v);
+                return call.call(v);
             }
         }
     })

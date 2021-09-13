@@ -8,7 +8,7 @@
     "biliQuickLogin": "extend.js",
     "getTotalTop": "extend.js",
     "abv": "abv.js",
-    "jsonphook": "jsonp.js",
+    "jsonphook": "Node.js",
     "removeJsonphook": "jsonp.js",
     "scriptIntercept": "Node.js",
     "xhrhook": "open.js",

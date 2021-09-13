@@ -3,6 +3,6 @@
  */
 (function () {
     API.jsonphook(["api.bilibili.com/x/web-feed/feed/unread"], function (xhr) {
-        this.url = this.url.replace("feed/unread", "article/unread");
+        xhr.url = xhr.url.replace("feed/unread", "article/unread");
     })
 })();
