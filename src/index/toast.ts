@@ -110,7 +110,7 @@ registerSetting({
     }, {
         type: "input",
         key: "toasttimeout",
-        label: "通知开关：/s",
+        label: "通知时长：/s",
         sort: "common",
         value: "4",
         input: { type: "number", min: 1, max: 30 },
