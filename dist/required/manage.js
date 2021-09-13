@@ -24,17 +24,14 @@
              * 当前模块存储
              */
             this.modules = {};
-            this.async = GM.getValue("updateAsync", new Date().getTime());
-            this.checkAsync && this.checkUpdate();
+            this.async = GM.getValue("updateAsync", this.now);
+            this.checkAsync() && this.checkUpdate();
         }
-        /**
-         * 上一次检查更新时间戳
-         * 使用set访问器绑定了setting.custom，如果后者存在的话
-         */
         set async(v) {
-            this.async = v;
+            Module.async = v;
             this.setting && (this.setting.custom = v);
         }
+        get async() { return Module.async; }
         static async localModule(files) {
             if (files.length === 0)
                 return;
@@ -94,6 +91,7 @@
                 Reflect.set(this.moduleUrl, d, arr[arr.length - 1]);
                 Reflect.get(resource, d) != Reflect.get(this.resource, d) && this.updateList.push(d);
             });
+            GM.getValue("@resource", []).forEach(d => this.updateList.push(d));
         }
         checkAsync() {
             let result = 0;
@@ -111,6 +109,7 @@
                     result = 2592e6;
                     break;
             }
+            GM.setValue("updateAsync", this.now);
             return result ? this.now - this.async >= result : false;
         }
         printfServer(file, hash = "ts") {
@@ -160,7 +159,7 @@
         sort: "module",
         label: "上次更新时间",
         type: "custom",
-        custom: GM.getValue("updateAsync", `N/A`),
+        custom: API.timeFormat(module.async, true),
         flesh: (obj) => module.flesh(obj)
     });
     API.registerSetting({
@@ -190,7 +189,8 @@
         sub: "立即检查更新",
         type: "action",
         title: "立即",
-        action: () => { }
+        disabled: 0,
+        action: () => { module.checkUpdate(); }
     });
     API.registerSetting({
         key: "localModule",

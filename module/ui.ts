@@ -532,6 +532,7 @@
             return div;
         }
     }
+    API.importModule("manage.js");
     const ui = new Ui();
     Reflect.set(API, "displaySetting", (key?: string) => ui.display(key));
 })();

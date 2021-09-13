@@ -209,6 +209,7 @@ class API {
         } catch (e) { toast.error(`更新模块${name}失败，请检查网络！`) }
     }
     static async updateResource() {
+        const resource = GM.getValue<string[]>("@resource", []);
         const arr = await Promise.all(resource.reduce((s: Promise<any>[], d) => {
             s.push(xhr({ url: d }));
             return s;

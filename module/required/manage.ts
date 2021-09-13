@@ -13,10 +13,12 @@
          * 上一次检查更新时间戳  
          * 使用set访问器绑定了setting.custom，如果后者存在的话
          */
+        static async: number;
         set async(v: number) {
-            this.async = v;
+            Module.async = v;
             this.setting && (this.setting.custom = <any>v);
         }
+        get async() { return Module.async }
         /**
          * 当前时间戳
          */
@@ -42,8 +44,8 @@
          */
         modules: { [name: string]: any } = {};
         constructor() {
-            this.async = GM.getValue<number>("updateAsync", new Date().getTime());
-            this.checkAsync && this.checkUpdate();
+            this.async = GM.getValue<number>("updateAsync", this.now);
+            this.checkAsync() && this.checkUpdate();
         }
         static async localModule(files: FileList) {
             if (files.length === 0) return;
@@ -96,6 +98,7 @@
                 Reflect.set(this.moduleUrl, d, arr[arr.length - 1]);
                 Reflect.get(resource, d) != Reflect.get(this.resource, d) && this.updateList.push(d);
             })
+            GM.getValue<string[]>("@resource", []).forEach(d => this.updateList.push(d));
         }
         checkAsync() {
             let result: number = 0;
@@ -109,6 +112,7 @@
                 case "一月": result = 2592e6;
                     break;
             }
+            GM.setValue("updateAsync", this.now);
             return result ? this.now - this.async >= result : false;
         }
         printfServer(file: string, hash: string = "ts") {
@@ -153,7 +157,7 @@
         sort: "module",
         label: "上次更新时间",
         type: "custom",
-        custom: GM.getValue("updateAsync", `N/A`),
+        custom: API.timeFormat(module.async, true),
         flesh: (obj) => module.flesh(obj)
     })
     API.registerSetting({
@@ -183,7 +187,8 @@
         sub: "立即检查更新",
         type: "action",
         title: "立即",
-        action: () => { }
+        disabled: 0,
+        action: () => { module.checkUpdate() }
     })
     API.registerSetting({
         key: "localModule",

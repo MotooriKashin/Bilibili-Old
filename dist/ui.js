@@ -529,6 +529,7 @@
      * 设置项表
      */
     Ui.list = {};
+    API.importModule("manage.js");
     const ui = new Ui();
     Reflect.set(API, "displaySetting", (key) => ui.display(key));
 })();
