@@ -390,10 +390,10 @@
             obj.title && API.addElement("div", { class: "button" }, value, obj.title);
             (history = this.history[obj.key] || [],
                 history.reduce((s, d) => {
-                    API.addElement("option", { value: d })
+                    API.addElement("option", { value: d }, s);
                     return s;
                 }, value.children[1]),
-                (<HTMLDivElement>value.children[2]).style.display = "none");
+                (<HTMLDivElement>value.children[2]).setAttribute("style", "display: none;cursor: pointer;pointer-events: auto;position: absolute;right: 65px;background-color: white;"));
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
             let input = <HTMLInputElement>value.children[0];
