@@ -4,12 +4,12 @@
 (function () {
     API.jsonphook(["api.bilibili.com/x/web-interface/index/icon"], function (xhr) {
         const obj = API.urlObj(xhr.url);
-        let jsonpCallback: any = obj.jsonpCallback;
-        let call: any = window[jsonpCallback];
+        let callback: any = obj.callback;
+        let call: any = window[callback];
         if (call) {
-            (<any>window)[jsonpCallback] = function (v: any) {
+            (<any>window)[callback] = function (v: any) {
                 v.data = API.randomArray(GM.getValue<{ [name: string]: any }>("index-icon").fix, 1)[0];
-                return call.call(v);
+                return call(v);
             }
         }
     })

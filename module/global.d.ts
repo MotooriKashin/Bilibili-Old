@@ -207,6 +207,7 @@ declare namespace GM {
     function getValue<T>(name: string, defaultValue?: T): T;
     function setValue<T>(name: string, value: T): void;
     function deleteValue(name: string): void;
+    function listValues(): string[];
     const info: {
         downloadMode: string;
         isFirstPartyIsolation: boolean;

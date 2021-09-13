@@ -24,7 +24,8 @@
              * 当前模块存储
              */
             this.modules = {};
-            this.async = GM.getValue("updateAsync", this.now);
+            this.async = GM.getValue("updateAsync");
+            !this.async && GM.setValue("updateAsync", this.async = this.now);
             this.checkAsync() && this.checkUpdate();
         }
         set async(v) {
@@ -109,7 +110,6 @@
                     result = 2592e6;
                     break;
             }
-            GM.setValue("updateAsync", this.now);
             return result ? this.now - this.async >= result : false;
         }
         printfServer(file, hash = "ts") {
@@ -129,6 +129,7 @@
             try {
                 if (this.updating)
                     return;
+                GM.setValue("updateAsync", this.now);
                 this.updating = true;
                 msg[0] && toast(...msg);
                 this.resource = await xhr({
@@ -223,6 +224,26 @@
                 !third.includes(d.name) && third.push(d.name);
             });
             GM.setValue("thirdModule", third);
+        }
+    });
+    API.registerSetting({
+        key: "recoveryModule",
+        sort: "module",
+        label: "恢复出厂值设置",
+        sub: "移除所有设置数据！",
+        type: "action",
+        title: "恢复",
+        disabled: 0,
+        action: () => {
+            API.alert("将移除所有模块，设置，插件等数据，恢复到全新安装脚本的状态！您确定？", "恢复出厂值设置").then(d => {
+                if (d) {
+                    GM.listValues().forEach(d => GM.deleteValue(d));
+                    toast.warning("已恢复出厂数据，刷新页面后请重新初始化！");
+                }
+                else {
+                    toast("取消操作");
+                }
+            });
         }
     });
 })();

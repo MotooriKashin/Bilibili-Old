@@ -2,6 +2,7 @@ GM.xmlHttpRequest = GM_xmlhttpRequest;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
 GM.deleteValue = GM_deleteValue;
+GM.listValues = GM_listValues;
 /**
  * Tampermonkey 提供的高级API的封装
  */
@@ -10,6 +11,7 @@ declare namespace GM {
     let getValue: typeof GM_getValue;
     let setValue: typeof GM_setValue;
     let deleteValue: typeof GM_deleteValue;
+    let listValues: typeof GM_listValues;
     const info: {
         downloadMode: string;
         isFirstPartyIsolation: boolean;
@@ -82,27 +84,10 @@ declare namespace GM {
         }
     }
 }
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
 declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
 declare function GM_getResourceText(name: string): string;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
 declare function GM_getResourceURL(name: string): string;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
 declare function GM_getValue<T>(name: string, defaultValue?: T): T;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
 declare function GM_setValue<T>(name: string, value: T): void;
-/**
- * **`GM_*`形式仅可在`index.js`中使用，模块中请使用`GM.*`形式的封装版本**
- */
 declare function GM_deleteValue(name: string): void;
+declare function GM_listValues(): string[];

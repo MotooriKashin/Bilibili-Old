@@ -63,6 +63,8 @@
     }
     const nodeHook = new NodeHook();
     API.scriptIntercept = (rule: string[], moduleName?: string) => nodeHook.intercept(rule, moduleName);
+    API.jsonphook = (url: string[], callback: (xhr: { url: string }) => void) => nodeHook.jsonphook(url, callback);
+    API.removeJsonphook = (id: number) => nodeHook.removeJsonphook(id);
 })();
 declare namespace API {
     /**

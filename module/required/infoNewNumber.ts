@@ -4,12 +4,12 @@
 (function () {
     API.jsonphook(['api.bilibili.com/x/web-interface/online'], function (xhr) {
         const obj = API.urlObj(xhr.url);
-        let jsonpCallback = obj.jsonpCallback;
-        let call: any = window[jsonpCallback];
+        let callback = obj.callback;
+        let call: any = window[callback];
         if (call) {
-            (<any>window)[jsonpCallback] = function (v: any) {
+            (<any>window)[callback] = function (v: any) {
                 v.data && (v.data.region_count[165] = v.data.region_count[202]);
-                return call.call(v);
+                return call(v);
             }
         }
     })

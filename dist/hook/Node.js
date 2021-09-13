@@ -59,4 +59,6 @@
     NodeHook.jsonp = [];
     const nodeHook = new NodeHook();
     API.scriptIntercept = (rule, moduleName) => nodeHook.intercept(rule, moduleName);
+    API.jsonphook = (url, callback) => nodeHook.jsonphook(url, callback);
+    API.removeJsonphook = (id) => nodeHook.removeJsonphook(id);
 })();

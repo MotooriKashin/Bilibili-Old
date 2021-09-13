@@ -15,7 +15,8 @@
         "GM_getResourceURL",
         "GM_getValue",
         "GM_setValue",
-        "GM_deleteValue"
+        "GM_deleteValue",
+        "GM_listValues"
     ],
     "run-at": "document-start",
     "license": "MIT"
