@@ -20,6 +20,17 @@
                 })
             }
         })
+        // $ 可能被覆盖，轮询一定时间
+        const id = setInterval(() => {
+            $ != (<any>window).$ && $.ajaxSetup({
+                beforeSend: function (this: any, xhr: any) {
+                    this.url && jsonp.forEach(d => {
+                        d[0].every(d => this.url.includes(d)) && d[1].call(this, xhr);
+                    })
+                }
+            })
+        }, 1000);
+        setTimeout(() => clearInterval(id), 1000 * 60 * 3);
     })
 })();
 declare namespace API {
