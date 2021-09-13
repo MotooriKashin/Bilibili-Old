@@ -10,6 +10,7 @@
     API.registerMenu({ key: "danmaku", name: "弹幕", svg: `<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>` });
     API.registerMenu({ key: "player", name: "播放", svg: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>` });
     API.registerMenu({ key: "live", name: "直播", svg: `<svg viewBox="0 0 1024 1024"><path d="M392.448 275.911111a92.416 92.416 0 1 1-184.832 0 92.416 92.416 0 0 1 184.832 0"></path><path d="M826.624 464.583111l-63.744 36.864v-48.64a72.206222 72.206222 0 0 0-71.68-71.936H190.72a72.192 72.192 0 0 0-71.936 71.936V748.231111a71.936 71.936 0 0 0 71.936 71.936H691.2a71.936 71.936 0 0 0 71.936-71.936v-23.808l63.488 37.888a51.2 51.2 0 0 0 76.8-44.544V508.871111a51.2 51.2 0 0 0-76.8-44.288M572.928 369.351111c79.459556 0.142222 143.985778-64.156444 144.128-143.616 0.142222-79.459556-64.156444-143.985778-143.616-144.128-79.260444-0.142222-143.701333 63.857778-144.128 143.104-0.426667 79.459556 63.644444 144.213333 143.104 144.64h0.512"></path><path d="M425.216 512.967111l124.16 71.936a25.6 25.6 0 0 1 0 42.496l-124.16 71.68a25.6 25.6 0 0 1-37.12-21.248V534.471111a25.6 25.6 0 0 1 37.12-21.504"></path></svg>` });
+    API.registerMenu({ key: "module", name: "更新", svg: `<svg viewBox="0 0 24 24"><g><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"></path></g></svg>` });
 
     // 注册设置项
     API.registerSetting({
@@ -26,41 +27,6 @@
         }
     })
     config.developer && ((<any>window).API = API);
-    API.registerSetting({
-        key: "localModule",
-        sort: "common",
-        label: "安装本地模块",
-        sub: 'js、css或json',
-        svg: '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>',
-        type: 'file',
-        title: '选择',
-        accept: [".js", ".css", ".json", ".html"],
-        multiple: true,
-        float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css和json。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。</br>※ <strong>硬刷新页面后才会生效！</strong>',
-        action: (files) => {
-            API.localModule(files);
-        }
-    })
-    API.registerSetting({
-        key: "thirdModule",
-        sort: "common",
-        label: "第三方模块",
-        sub: "js",
-        svg: '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg>',
-        type: "file",
-        title: "选择",
-        accept: [".js"],
-        multiple: true,
-        float: '所谓第三方模块就是未能正式成为本脚本模块的模块，可能是还在测试的新功能。总之与内置的模块js文件没有任何区别。这种模块只能通过本选项安装，安装后默认全局运行。',
-        action: (files) => {
-            API.localModule(files);
-            const third = GM.getValue<string[]>("thirdModule", []);
-            Array.from(files).forEach(d => {
-                !third.includes(d.name) && third.push(d.name)
-            });
-            GM.setValue("thirdModule", third);
-        }
-    });
     API.registerSetting({
         key: "av",
         sort: "rewrite",
@@ -463,7 +429,7 @@
  * 已注册的菜单，通过`registerMenu`新建项请补充这里的可能值
  * **本变量仅作为类型声明接口类似的东西存在，不可参与到任何实际运行代码中！**
  */
-declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live"
+declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live" | "module" | "custom"
 /**
  * 已注册设置项
  */
@@ -720,8 +686,8 @@ interface ItemCommon {
     key: string;
     /**
      * 菜单归属分类菜单  
-     * 可以使用已有的，参见`API.settingMenu`  
-     * 若要新建，请到`register.ts`中添加，并补充`settingSort`声明的可能值
+     * 可以使用已有的，参见接口`settingSort`  
+     * 若要新建，请使用`API.registerMenu`添加，并补充`settingSort`声明的可能值
      */
     sort: typeof settingSort;
     /**
@@ -738,8 +704,8 @@ interface ItemCommon {
     sub?: string;
     /**
      * 鼠标移动到设置项时浮动信息，可以详细介绍设置的信息  
-     * 该内容可以包含<i>、<strong>等HTML便签用于格式化信息  
-     * ※ 理论上支持所有能以<div>为父节点的标签
+     * 该内容可以包含\<i\>、\<strong\>等HTML便签用于格式化信息  
+     * ※ 理论上支持所有能以\<div\>为父节点的标签
      */
     float?: string;
 }
@@ -881,7 +847,7 @@ interface ItemIpt {
  */
 interface ItemFie extends ItemCommon {
     /**
-     * 类型标志，用于识别这是输入框设置项
+     * 类型标志，用于识别这是文件选择设置项
      */
     type: "file";
     /**
@@ -1065,8 +1031,32 @@ interface ItemSor extends ItemCommon {
     /**
      * 设置组，包含该类下属设置项
      */
-    list: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[]
+    list: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon | ItemCus)[]
     ;
+}
+/**
+ * 自定义设置项，本设置项支持使用HTML语法自定义设置项值的部分  
+ * 如果预定义的设置类型满足不了需求，那么此种类型可能满足需求
+ */
+interface ItemCus extends ItemCommon {
+    /**
+     * 类型标志，用于识别这是自定义设置
+     */
+    type: "custom";
+    /**
+     * 设置主键（唯一），用于唯一确定设置项
+     */
+    key: string;
+    /**
+     * 要自定义显示的设置内容，可以使用所有支持在\<div\>标签下的HTML标签  
+     * 内容完全封装在独立的shadowDOM中，这意味这可以使用独立的<style>标签而不用担心样式指示器影响到页面其他部分
+     */
+    custom: string;
+    /**
+     * 一个回调函数，设置项绘制后将执行该回调并将本设置数据以参数形式传递  
+     * 您可以设置这个回调函数以接受参数信息，并在需要时对其进行更新，更新结果会及时同步在设置界面中。
+     */
+    flesh?: (obj: ItemCus) => void;
 }
 declare namespace API {
     /**
@@ -1074,7 +1064,7 @@ declare namespace API {
      * 脚本内置多种设置模型，用于往脚本设置界面添加设置
      * @param obj 设置对象
      */
-    function registerSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon): void;
+    function registerSetting(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon | ItemCus): void;
     /**
      * 注册设置项所属菜单信息
      * @param obj 用于将设置分类，设置项中sort值即可这里注册的key值

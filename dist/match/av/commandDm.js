@@ -197,12 +197,6 @@
      * 弹窗组件
      */
     class PopupWindow {
-        popup;
-        duration;
-        from;
-        to;
-        pos_x;
-        pos_y;
         constructor(cdm, extra, from) {
             this.duration = extra.duration / 1e3 || 5;
             this.from = from || 0;
@@ -236,16 +230,6 @@
      * 投票互动UI
      */
     class Vote extends PopupWindow {
-        total;
-        voteId;
-        options;
-        question;
-        myVote;
-        dialog;
-        result;
-        button;
-        count;
-        progress;
         constructor(cdm, extra, from) {
             super(cdm, extra, from);
             this.popup.style.width = "150px";
@@ -361,21 +345,6 @@
         }
     }
     class Grade extends PopupWindow {
-        /*
-        avg_score: 8.7  <= 平均评分
-        count: 2990
-        duration: 5000
-        grade_id: 14369
-        mid_score: 0    <= 当前用户的评分
-        msg: "评分标题"  <= 最长为8个汉字
-        posX: 344
-        posY: 159
-        skin_selected: "http://i0.hdslb.com/bfs/b/ee3aca3dbc22087341cf312d71a1354af527e444.png"
-        skin_unselected: "http://i0.hdslb.com/bfs/b/1d8fc3daf9201d70189a3778e605d2acf9cae7e9.png"
-        */
-        gradeInfo;
-        scoreInfo;
-        scoreButton;
         constructor(cdm, info, from) {
             super(cdm, info, from);
             this.popup.style.width = "184px";
@@ -471,8 +440,6 @@
      * 用于获取收藏列表有关信息
      */
     class favList {
-        static list = [];
-        static defaultFolderId = 0;
         static get() {
             if (this.list.length > 0)
                 return Promise.resolve(this.list);
@@ -496,6 +463,8 @@
             return this.get().then(() => { return this.defaultFolderId; });
         }
     }
+    favList.list = [];
+    favList.defaultFolderId = 0;
     /**
      * @see https://github.com/SocialSisterYi/bilibili-API-collect
      */
@@ -559,23 +528,6 @@
      * 关联视频跳转按钮
      */
     class Link {
-        /*
-            extra = {
-                aid: 2
-                bvid: "BV1xx411c7mD"
-                icon: "http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png"
-                posX: 333.5
-                posY: 93.7
-                title: "字幕君交流场所"
-            }
-        */
-        content;
-        aid;
-        from;
-        to;
-        pos_x;
-        pos_y;
-        button;
         constructor(cdm, extra, from) {
             this.content = cdm.content;
             this.aid = extra.aid;

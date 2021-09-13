@@ -23,7 +23,6 @@
         "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5" // 7d08...1b1c
     ];
     class Sign {
-        static keySecret;
         /**
          * 签名URL
          * @param url 原URL

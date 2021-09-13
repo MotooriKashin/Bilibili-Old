@@ -38,11 +38,12 @@
     }
     API.jsonCheck = (data) => jsonCheck(data);
     function restorePlayerSetting() {
+        var _a;
         let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
         let settings_copy = GM.getValue("bilibili_player_settings", {});
         if (bilibili_player_settings) {
             let settings = JSON.parse(bilibili_player_settings);
-            if (settings?.video_status?.autopart !== "")
+            if (((_a = settings === null || settings === void 0 ? void 0 : settings.video_status) === null || _a === void 0 ? void 0 : _a.autopart) !== "")
                 GM.setValue("bilibili_player_settings", settings);
             else if (settings_copy)
                 localStorage.setItem("bilibili_player_settings", JSON.stringify(settings_copy));

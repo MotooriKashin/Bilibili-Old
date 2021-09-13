@@ -5,30 +5,6 @@
     // @ts-expect-error 专属变量
     const menu = MENU, setting = SETTING;
     class Ui {
-        /**
-         * UI顶层
-         */
-        static box;
-        /**
-         * 工具栏按钮栏
-         */
-        static tool;
-        /**
-         * 分类菜单栏
-         */
-        static menu;
-        /**
-         * 设置实际界面
-         */
-        static item;
-        /**
-         * 输入框历史缓存
-         */
-        static history;
-        /**
-         * 设置项表
-         */
-        static list = {};
         constructor() {
             const history = GM.getValue("history", {});
             Ui.history = new Proxy(history, {
@@ -63,7 +39,8 @@
          * @param key 设置项的key，直接滚动到对应设置
          */
         display(key) {
-            document.querySelector("#ui-border-box")?.remove();
+            var _a;
+            (_a = document.querySelector("#ui-border-box")) === null || _a === void 0 ? void 0 : _a.remove();
             Ui.borderBox();
             setting.reduce((s, d) => {
                 d.sort && !s.includes(d.sort) && (Ui.menuitem(d.sort), s.push(d.sort));
@@ -225,6 +202,7 @@
                 case "icon":
                     result = this.toolIcon(obj);
                     break;
+                case "custom": result = this.custom(obj);
             }
             return result;
         }
@@ -502,7 +480,55 @@
             });
             return div;
         }
+        /**
+         * 添加自定义设置
+         * @param obj 设置内容
+         * @param node 父节点
+         * @returns 设置节点
+         */
+        static custom(obj, node) {
+            node = node || this.itemContain(obj.sort);
+            let div = document.createElement("div");
+            const root = div.attachShadow({ mode: "open" });
+            const real = API.addElement("div", { class: "contain" }, root);
+            const table = {};
+            Reflect.set(this.list, obj.key, real);
+            API.addCss(API.getModule("ui-multi.css"), "", root);
+            obj.svg && real.appendChild(table.svg = this.icon(obj.svg));
+            table.label = API.addElement("div", { class: "label" }, real, obj.label);
+            table.value = API.addElement("div", {}, real, obj.custom);
+            obj.sub && (table.label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+            obj.float && this.float(real, obj.float);
+            node && node.appendChild(div);
+            obj.flesh && obj.flesh.call(real, new Proxy(obj, {
+                set: (t, p, v) => {
+                    Reflect.set(obj, p, v);
+                    switch (p) {
+                        case "svg":
+                            table.temp = this.icon(v);
+                            table.svg.replaceWith(table.temp);
+                            table.svg = table.temp;
+                            break;
+                        case "label":
+                            table.label = API.addElement("div", { class: "label" }, real, v, false, table.label);
+                            break;
+                        case "custom":
+                            table.value = API.addElement("div", {}, real, v, false, table.value);
+                            break;
+                        case "sub":
+                            table.label.innerHTML = `${obj.label}<div class="sub">${v}</div>`;
+                            break;
+                    }
+                    return true;
+                }
+            }));
+            return div;
+        }
     }
+    /**
+     * 设置项表
+     */
+    Ui.list = {};
     const ui = new Ui();
     Reflect.set(API, "displaySetting", (key) => ui.display(key));
 })();

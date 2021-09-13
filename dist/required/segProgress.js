@@ -3,7 +3,6 @@
  */
 (function () {
     class SegProgress {
-        static cssInited = false;
         constructor(resp) {
             if (!resp.data.view_points || resp.data.view_points.length == 0)
                 return;
@@ -118,7 +117,6 @@
             window.player.addEventListener("video_media_seeked", refreshState);
             chptPanel.onmouseenter = refreshState;
             class timer {
-                static handle;
                 static start() { if (!timer.handle)
                     timer.handle = setInterval(refreshState, 3000); }
                 static stop() { if (timer.handle) {
@@ -132,5 +130,6 @@
                 timer.start();
         }
     }
+    SegProgress.cssInited = false;
     API.segProgress = (data) => { new SegProgress(data); };
 })();

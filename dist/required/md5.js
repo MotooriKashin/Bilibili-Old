@@ -34,22 +34,19 @@
         return method;
     };
     class Md5 {
-        blocks;
-        buffer8 = new Uint8Array();
-        h0 = 0;
-        h1 = 0;
-        h2 = 0;
-        h3 = 0;
-        start = 0;
-        bytes = 0;
-        hBytes = 0;
-        finalized = false;
-        hashed = false;
-        first = true;
-        array;
-        buffer;
-        lastByteIndex = 0;
         constructor(sharedMemory) {
+            this.buffer8 = new Uint8Array();
+            this.h0 = 0;
+            this.h1 = 0;
+            this.h2 = 0;
+            this.h3 = 0;
+            this.start = 0;
+            this.bytes = 0;
+            this.hBytes = 0;
+            this.finalized = false;
+            this.hashed = false;
+            this.first = true;
+            this.lastByteIndex = 0;
             if (sharedMemory) {
                 blocks[0] = blocks[16] = blocks[1] = blocks[2] = blocks[3] =
                     blocks[4] = blocks[5] = blocks[6] = blocks[7] =

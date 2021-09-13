@@ -8,10 +8,10 @@
  */
 (function () {
     class Midcrc {
-        CRCPOLYNOMIAL = 0xEDB88320;
-        crctable = new Array(256);
-        index = new Array(4);
         constructor() {
+            this.CRCPOLYNOMIAL = 0xEDB88320;
+            this.crctable = new Array(256);
+            this.index = new Array(4);
             this.create_table();
             API.midcrc = input => this.run(input);
             API.crc32 = input => (((this.crc32(input) + 1) * -1) >>> 0).toString(16);

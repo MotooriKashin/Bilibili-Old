@@ -7,6 +7,7 @@ API.restorePlayerSetting();
 API.scriptIntercept(["video-nano"]); // 新版播放器拦截
 API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
 (async function () {
+    var _a, _b, _c;
     try {
         let epid = API.path[5].startsWith('ep') ? location.href.match(/[0-9]+/)[0] : null;
         if (API.uid) {
@@ -42,16 +43,16 @@ API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
         });
         const isBANGUMI__INITIAL_STATE__ = (pet) => true;
         if (isBANGUMI__INITIAL_STATE__(API.__INITIAL_STATE__)) {
-            if (API.__INITIAL_STATE__?.epInfo?.badge === "互动")
+            if (((_b = (_a = API.__INITIAL_STATE__) === null || _a === void 0 ? void 0 : _a.epInfo) === null || _b === void 0 ? void 0 : _b.badge) === "互动")
                 return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
-            config.bangumiEplist && API.__INITIAL_STATE__?.epList[1] && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
+            config.bangumiEplist && ((_c = API.__INITIAL_STATE__) === null || _c === void 0 ? void 0 : _c.epList[1]) && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
             window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
             API.__INITIAL_STATE__.special ? API.rewriteHTML(API.getModule("bangumi-special.html")) : API.rewriteHTML(API.getModule("bangumi.html"));
             document.title = API.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
             // 分集数据
             config.episodeData && API.importModule("episodeData.js");
             // 移除过期节点
-            API.runWhile(() => document.querySelector(".new-entry"), () => document.querySelector(".new-entry")?.remove());
+            API.runWhile(() => document.querySelector(".new-entry"), () => { var _a; return (_a = document.querySelector(".new-entry")) === null || _a === void 0 ? void 0 : _a.remove(); });
             // 修复数据
             API.importModule("restoreData.js");
             // 媒体控制

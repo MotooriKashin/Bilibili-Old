@@ -4,14 +4,8 @@
 (function () {
     API.addCss(API.getModule("danmakuHashId.css"));
     class DanmakuHashId {
-        static count = 0; // 正在查询弹幕数
-        static catch = {}; // 已查询弹幕缓存
-        count = 0; // 当前查询弹幕序号
-        hash; // 当前弹幕哈希值
-        mid; // 当前弹幕mid
-        node;
-        dm;
         constructor(crc) {
+            this.count = 0; // 当前查询弹幕序号
             // 设置正在查询的弹幕数量
             DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
             // 当前查询弹幕排序
@@ -58,6 +52,8 @@
             }
         }
     }
+    DanmakuHashId.count = 0; // 正在查询弹幕数
+    DanmakuHashId.catch = {}; // 已查询弹幕缓存
     window.danmakuHashId = (crc) => {
         const check = new DanmakuHashId(crc);
         return `hash: ${check.hash} mid: ${check.mid}`;

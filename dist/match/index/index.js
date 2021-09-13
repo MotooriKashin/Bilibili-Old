@@ -33,8 +33,8 @@ API.path.name = "index";
             window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
             API.rewriteHTML(API.getModule("index.html"));
             // 移除无效节点
-            API.runWhile(() => document.querySelector(".ver"), () => document.querySelector(".ver")?.remove());
-            API.runWhile(() => document.querySelector("#fixed_app_download"), () => document.querySelector("#fixed_app_download")?.remove());
+            API.runWhile(() => document.querySelector(".ver"), () => { var _a; return (_a = document.querySelector(".ver")) === null || _a === void 0 ? void 0 : _a.remove(); });
+            API.runWhile(() => document.querySelector("#fixed_app_download"), () => { var _a; return (_a = document.querySelector("#fixed_app_download")) === null || _a === void 0 ? void 0 : _a.remove(); });
             // 修复失效分区
             API.importModule("indexSort.js");
         }

@@ -4,134 +4,136 @@
 (function () {
     const OBJ = {};
     class RebuildPlayerurl {
-        playurl = {
-            accept_description: ["高清 1080P+", "高清 1080P", "高清 720P", "清晰 480P", "流畅 360P"],
-            accept_format: "hdflv2,flv,flv720,flv480,mp4",
-            accept_quality: [112, 80, 64, 32, 16],
-            bp: 0,
-            code: 0,
-            dash: {
-                audio: [],
-                dolby: { audio: [], type: "NONE" },
-                duration: 0,
-                min_buffer_time: 1.5,
-                minBufferTime: 1.5,
-                video: []
-            },
-            fnval: 0,
-            fnver: 0,
-            format: "flv480",
-            from: "local",
-            has_paid: false,
-            is_preview: 0,
-            message: "",
-            no_rexcode: 1,
-            quality: 32,
-            result: "suee",
-            seek_param: "start",
-            seek_type: "offset",
-            status: 2,
-            support_formats: [
-                {
-                    description: "高清 1080P+",
-                    display_desc: "1080P",
-                    format: "hdflv2",
-                    need_login: true,
-                    need_vip: true,
-                    new_description: "1080P 高码率",
-                    quality: 112,
-                    superscript: "高码率"
+        constructor() {
+            this.playurl = {
+                accept_description: ["高清 1080P+", "高清 1080P", "高清 720P", "清晰 480P", "流畅 360P"],
+                accept_format: "hdflv2,flv,flv720,flv480,mp4",
+                accept_quality: [112, 80, 64, 32, 16],
+                bp: 0,
+                code: 0,
+                dash: {
+                    audio: [],
+                    dolby: { audio: [], type: "NONE" },
+                    duration: 0,
+                    min_buffer_time: 1.5,
+                    minBufferTime: 1.5,
+                    video: []
                 },
-                {
-                    description: "高清 1080P",
-                    display_desc: "1080P",
-                    format: "flv",
-                    need_login: true,
-                    new_description: "1080P 高清",
-                    quality: 80,
-                    superscript: ""
+                fnval: 0,
+                fnver: 0,
+                format: "flv480",
+                from: "local",
+                has_paid: false,
+                is_preview: 0,
+                message: "",
+                no_rexcode: 1,
+                quality: 32,
+                result: "suee",
+                seek_param: "start",
+                seek_type: "offset",
+                status: 2,
+                support_formats: [
+                    {
+                        description: "高清 1080P+",
+                        display_desc: "1080P",
+                        format: "hdflv2",
+                        need_login: true,
+                        need_vip: true,
+                        new_description: "1080P 高码率",
+                        quality: 112,
+                        superscript: "高码率"
+                    },
+                    {
+                        description: "高清 1080P",
+                        display_desc: "1080P",
+                        format: "flv",
+                        need_login: true,
+                        new_description: "1080P 高清",
+                        quality: 80,
+                        superscript: ""
+                    },
+                    {
+                        description: "高清 720P",
+                        display_desc: "720P",
+                        format: "flv720",
+                        need_login: true,
+                        new_description: "720P 高清",
+                        quality: 64,
+                        superscript: ""
+                    },
+                    {
+                        description: "清晰 480P",
+                        display_desc: "480P",
+                        format: "flv480",
+                        new_description: "480P 清晰",
+                        quality: 32,
+                        superscript: ""
+                    },
+                    {
+                        description: "流畅 360P",
+                        display_desc: "360P",
+                        format: "mp4",
+                        new_description: "360P 流畅",
+                        quality: 16,
+                        superscript: ""
+                    }
+                ],
+                timelength: 0,
+                type: "DASH",
+                video_codecid: 7,
+                video_project: true
+            };
+            this.codecs = {
+                default: {
+                    30112: 'avc1.640028',
+                    30102: 'hev1.1.6.L120.90',
+                    30080: 'avc1.640028',
+                    30077: 'hev1.1.6.L120.90',
+                    30064: 'avc1.64001F',
+                    30066: 'hev1.1.6.L120.90',
+                    30032: 'avc1.64001E',
+                    30033: 'hev1.1.6.L120.90',
+                    30011: 'hev1.1.6.L120.90',
+                    30016: 'avc1.64001E',
+                    30280: 'mp4a.40.2',
+                    30232: 'mp4a.40.2',
+                    30216: 'mp4a.40.2', // 低码音频
                 },
-                {
-                    description: "高清 720P",
-                    display_desc: "720P",
-                    format: "flv720",
-                    need_login: true,
-                    new_description: "720P 高清",
-                    quality: 64,
-                    superscript: ""
-                },
-                {
-                    description: "清晰 480P",
-                    display_desc: "480P",
-                    format: "flv480",
-                    new_description: "480P 清晰",
-                    quality: 32,
-                    superscript: ""
-                },
-                {
-                    description: "流畅 360P",
-                    display_desc: "360P",
-                    format: "mp4",
-                    new_description: "360P 流畅",
-                    quality: 16,
-                    superscript: ""
+                app: {
+                    30016: 'avc1.64001E',
+                    30032: 'avc1.64001F',
+                    30064: 'avc1.640028',
+                    30080: 'avc1.640032',
+                    30216: 'mp4a.40.2',
+                    30232: 'mp4a.40.2',
+                    30280: 'mp4a.40.2' // APP源 高码音频 
                 }
-            ],
-            timelength: 0,
-            type: "DASH",
-            video_codecid: 7,
-            video_project: true
-        };
-        codecs = {
-            default: {
-                30112: 'avc1.640028',
-                30102: 'hev1.1.6.L120.90',
-                30080: 'avc1.640028',
-                30077: 'hev1.1.6.L120.90',
-                30064: 'avc1.64001F',
-                30066: 'hev1.1.6.L120.90',
-                30032: 'avc1.64001E',
-                30033: 'hev1.1.6.L120.90',
-                30011: 'hev1.1.6.L120.90',
-                30016: 'avc1.64001E',
-                30280: 'mp4a.40.2',
-                30232: 'mp4a.40.2',
-                30216: 'mp4a.40.2', // 低码音频
-            },
-            app: {
-                30016: 'avc1.64001E',
-                30032: 'avc1.64001F',
-                30064: 'avc1.640028',
-                30080: 'avc1.640032',
-                30216: 'mp4a.40.2',
-                30232: 'mp4a.40.2',
-                30280: 'mp4a.40.2' // APP源 高码音频 
-            }
-        };
-        frameRate = {
-            30112: '16000/672',
-            30102: '16000/672',
-            30080: '16000/672',
-            30077: '16000/656',
-            30064: '16000/672',
-            30066: '16000/656',
-            30032: '16000/672',
-            30033: '16000/656',
-            30011: '16000/656',
-            30016: '16000/672'
-        };
-        resolution = {
-            30112: [1920, 1080],
-            30102: [1920, 1080],
-            30080: [1920, 1080],
-            30077: [1920, 1080],
-            30064: [1280, 720],
-            30066: [1280, 720],
-            30032: [852, 480],
-            30033: [852, 480],
-            30011: [640, 360],
-            30016: [640, 360], // 360P
-        };
+            };
+            this.frameRate = {
+                30112: '16000/672',
+                30102: '16000/672',
+                30080: '16000/672',
+                30077: '16000/656',
+                30064: '16000/672',
+                30066: '16000/656',
+                30032: '16000/672',
+                30033: '16000/656',
+                30011: '16000/656',
+                30016: '16000/672'
+            };
+            this.resolution = {
+                30112: [1920, 1080],
+                30102: [1920, 1080],
+                30080: [1920, 1080],
+                30077: [1920, 1080],
+                30064: [1280, 720],
+                30066: [1280, 720],
+                30032: [852, 480],
+                30033: [852, 480],
+                30011: [640, 360],
+                30016: [640, 360], // 360P
+            };
+        }
         /**
          * 获取链接ids
          * @param url 下载链接

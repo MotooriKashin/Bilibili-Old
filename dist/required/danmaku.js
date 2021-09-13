@@ -7,9 +7,6 @@
  */
 (function () {
     class Danmaku {
-        static root;
-        static protoSeg;
-        static protoView;
         constructor() {
             API.importModule("protobuf.min.js");
             Danmaku.root = window.protobuf.Root.fromJSON(GM.getValue("protobuf"));
@@ -208,6 +205,7 @@
          * @param append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
          */
         loadLocalDm(xml, append) {
+            var _a, _b;
             let doc = new DOMParser().parseFromString(xml, "application/xml");
             let dm = doc.querySelectorAll("d");
             if (dm.length == 0) {
@@ -240,9 +238,9 @@
              * @param  {Boolean} append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
              */
             // setDanmaku = (dm) => {......}
-            if (!window.player?.setDanmaku)
+            if (!((_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku))
                 return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-            window.player?.setDanmaku(danmaku, append);
+            (_b = window.player) === null || _b === void 0 ? void 0 : _b.setDanmaku(danmaku, append);
         }
         /**
          * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
@@ -308,8 +306,9 @@
                 let obj = await API.urlInputCheck(url);
                 if (obj.aid && obj.cid) {
                     API.getSegDanmaku(obj.aid, obj.cid).then(d => {
+                        var _a;
                         d = API.danmakuFormat(d, obj.aid);
-                        window.player?.setDanmaku(d, config.concatDanmaku);
+                        (_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku(d, config.concatDanmaku);
                         API.danmaku = d;
                     });
                 }

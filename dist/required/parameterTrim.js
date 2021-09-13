@@ -3,25 +3,27 @@
  */
 (function () {
     class ParameterTrim {
-        /**
-         * 过滤参数
-         */
-        param = {
-            "spm_id_from": null,
-            "from_source": null,
-            "msource": null,
-            "bsource": null,
-            "seid": null,
-            "source": null,
-            "session_id": null,
-            "visit_id": null,
-            "sourceFrom": null,
-            "from_spmid": null
-        };
-        /**
-         * 地址变动参考
-         */
-        url = [];
+        constructor() {
+            /**
+             * 过滤参数
+             */
+            this.param = {
+                "spm_id_from": null,
+                "from_source": null,
+                "msource": null,
+                "bsource": null,
+                "seid": null,
+                "source": null,
+                "session_id": null,
+                "visit_id": null,
+                "sourceFrom": null,
+                "from_spmid": null
+            };
+            /**
+             * 地址变动参考
+             */
+            this.url = [];
+        }
         /**
          * 地址栏
          */

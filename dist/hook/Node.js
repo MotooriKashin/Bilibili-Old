@@ -5,9 +5,6 @@
  */
 (function () {
     class NodeHook {
-        static appendChild = Node.prototype.appendChild;
-        static insertBefore = Node.prototype.insertBefore;
-        static rules = [];
         constructor() {
             this.appendChild();
             this.insertBefore();
@@ -34,6 +31,9 @@
             };
         }
     }
+    NodeHook.appendChild = Node.prototype.appendChild;
+    NodeHook.insertBefore = Node.prototype.insertBefore;
+    NodeHook.rules = [];
     const nodeHook = new NodeHook();
     API.scriptIntercept = (rule, moduleName) => nodeHook.intercept(rule, moduleName);
 })();

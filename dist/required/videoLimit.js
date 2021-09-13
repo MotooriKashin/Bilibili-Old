@@ -3,7 +3,6 @@
  */
 (function () {
     class HookTimeOut {
-        hook;
         constructor() {
             this.hook = setTimeout;
             window.setTimeout = (...args) => {
@@ -46,8 +45,9 @@
         });
     });
     API.xhrhook(["/playurl?"], function (args) {
+        var _a, _b;
         // APP限制
-        !API.limit && API.pgc && API.__INITIAL_STATE__?.rightsInfo?.watch_platform && (this.send = async () => appLimit.call(this, args));
+        !API.limit && API.pgc && ((_b = (_a = API.__INITIAL_STATE__) === null || _a === void 0 ? void 0 : _a.rightsInfo) === null || _b === void 0 ? void 0 : _b.watch_platform) && (this.send = async () => appLimit.call(this, args));
         // 区域限制
         API.limit && (this.send = async () => areaLimit.call(this, args));
     });

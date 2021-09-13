@@ -18,10 +18,11 @@
             });
         }).then((data) => {
             API.runWhile(() => ready, () => {
+                var _a, _b, _c;
                 // CC字幕
-                data?.data?.subtitle?.subtitles && API.closedCaption(data);
+                ((_b = (_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.subtitle) === null || _b === void 0 ? void 0 : _b.subtitles) && API.closedCaption(data);
                 // 分段进度条
-                data?.data?.view_points[1] && API.segProgress(data);
+                ((_c = data === null || data === void 0 ? void 0 : data.data) === null || _c === void 0 ? void 0 : _c.view_points[1]) && API.segProgress(data);
             });
         });
     });

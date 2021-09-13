@@ -5,13 +5,13 @@
  * */
 (function () {
     class Abv {
-        base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
-        digitMap = [11, 10, 3, 8, 4, 6];
-        xor = 177451812;
-        add = 8728348608;
-        bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
-        table = {};
         constructor() {
+            this.base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
+            this.digitMap = [11, 10, 3, 8, 4, 6];
+            this.xor = 177451812;
+            this.add = 8728348608;
+            this.bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
+            this.table = {};
             for (let i = 0; i < 58; i++)
                 this.table[this.base58Table[i]] = i;
         }

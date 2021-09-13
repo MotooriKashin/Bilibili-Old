@@ -195,7 +195,7 @@
          * @param node 父节点
          * @returns 设置节点
          */
-        static index(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon, node?: Element) {
+        static index(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon | ItemCus, node?: Element) {
             let result: HTMLDivElement;
             switch (obj.type) {
                 case "action": result = this.action(obj, node);
@@ -216,6 +216,7 @@
                     break;
                 case "icon": result = this.toolIcon(obj);
                     break;
+                case "custom": result = this.custom(obj);
             }
             return result;
         }
@@ -488,6 +489,46 @@
                     obj.action && obj.action.call(real, config[obj.key])
                 }
             })
+            return div;
+        }
+        /**
+         * 添加自定义设置
+         * @param obj 设置内容
+         * @param node 父节点
+         * @returns 设置节点
+         */
+        static custom(obj: ItemCus, node?: Element) {
+            node = node || this.itemContain(obj.sort);
+            let div = document.createElement("div");
+            const root = div.attachShadow({ mode: "open" });
+            const real = API.addElement("div", { class: "contain" }, root);
+            const table: { [name: string]: HTMLElement } = {};
+            Reflect.set(this.list, obj.key, real);
+            API.addCss(API.getModule("ui-multi.css"), "", root);
+            obj.svg && real.appendChild(table.svg = this.icon(obj.svg));
+            table.label = API.addElement("div", { class: "label" }, real, obj.label);
+            table.value = API.addElement("div", {}, real, obj.custom);
+            obj.sub && (table.label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+            obj.float && this.float(real, obj.float);
+            node && node.appendChild(div);
+            obj.flesh && obj.flesh.call(real, new Proxy(obj, {
+                set: (t, p, v) => {
+                    Reflect.set(obj, p, v);
+                    switch (p) {
+                        case "svg": table.temp = this.icon(v);
+                            table.svg.replaceWith(table.temp);
+                            table.svg = table.temp;
+                            break;
+                        case "label": table.label = API.addElement("div", { class: "label" }, real, v, false, table.label);
+                            break;
+                        case "custom": table.value = API.addElement("div", {}, real, v, false, table.value);
+                            break;
+                        case "sub": table.label.innerHTML = `${obj.label}<div class="sub">${v}</div>`;
+                            break;
+                    }
+                    return true;
+                }
+            }))
             return div;
         }
     }

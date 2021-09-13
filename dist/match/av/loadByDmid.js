@@ -6,9 +6,10 @@
     let progress = Number(API.urlObj(location.href).dm_progress);
     let first = 0;
     API.switchVideo(async () => {
-        if (!window.player?.seek) {
+        var _a;
+        if (!((_a = window.player) === null || _a === void 0 ? void 0 : _a.seek)) {
             await new Promise(r => {
-                API.runWhile(() => window.player?.seek, r);
+                API.runWhile(() => { var _a; return (_a = window.player) === null || _a === void 0 ? void 0 : _a.seek; }, r);
             });
         }
         if (first)

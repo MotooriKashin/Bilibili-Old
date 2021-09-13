@@ -199,9 +199,8 @@ class API {
             if (!url) {
                 url = Object.keys(this.resource).find(d => d.includes(name));
             }
-            let temp = url.endsWith(".js") ? url.replace(".js", ".min.js") : url;
             let module = await xhr.GM({
-                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${temp}`
+                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${url}`
             })
             name.endsWith(".json") ? (
                 GM.setValue(name.replace(".json", ""), JSON.parse(module))
