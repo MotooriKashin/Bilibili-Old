@@ -340,7 +340,7 @@ registerSetting({
         }, {
             type: "input",
             key: "toasttimeout",
-            label: "通知开关：/s",
+            label: "通知时长：/s",
             sort: "common",
             value: "4",
             input: { type: "number", min: 1, max: 30 },
@@ -492,7 +492,7 @@ class API {
         document.write(html);
         document.close();
         // @ts-ignore Tampermonkey提供
-        this.importModule("vector.js"); // 重写后页面正常引导
+        config.rewriteMethod == "异步" && this.importModule("vector.js"); // 重写后页面正常引导
     }
     static importModule(name, args = {}, force = false) {
         if (!name)
