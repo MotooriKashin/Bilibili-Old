@@ -28,6 +28,16 @@
     })
     config.developer && ((<any>window).API = API);
     API.registerSetting({
+        key: "rewriteMethod",
+        sort: "rewrite",
+        label: "重写模式",
+        sub: "兼容性选项",
+        type: "row",
+        value: "同步",
+        list: ["同步", "异步"],
+        float: '同步模式能够更有效阻断原生脚本执行，减少原生脚本对于页面的破坏，<strong>缺点是与其他脚本或拓展兼容性不佳</strong>。</br>异步模式尝试提高兼容性，相对应的阻断效果下降，新版页面一闪而过现象加剧且受网络延时影响更大。'
+    })
+    API.registerSetting({
         key: "av",
         sort: "rewrite",
         label: "av/BV",
@@ -681,6 +691,10 @@ declare namespace config {
      * 重写：专栏
      */
     let read: boolean;
+    /**
+     * 重写：重写模式
+     */
+    let rewriteMethod: string;
 }
 /**
  * 工具栏按钮
