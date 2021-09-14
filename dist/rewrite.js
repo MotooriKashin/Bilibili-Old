@@ -51,5 +51,5 @@
     /**
      * 若页面不需要重写，直接进入正常引导
      */
-    !API.path.name && API.importModule("vector.js");
+    (!API.path.name || config.rewriteMethod == "同步") && API.importModule("vector.js");
 })();
