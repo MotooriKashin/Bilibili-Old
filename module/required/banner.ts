@@ -2,37 +2,9 @@
  * 本模块负责替换顶栏动图接口
  */
 try {
-    config.bannerGif && API.jsonphook(["api.bilibili.com/x/web-interface/index/icon"], function (xhr) {
-        const obj = API.urlObj(xhr.url);
-        let callback: any = obj.callback;
-        let call: any = window[callback];
-        if (call) {
-            (<any>window)[callback] = function (v: any) {
-                v.data = API.randomArray(GM.getValue<{ [name: string]: any }>("index-icon").fix, 1)[0];
-                return call(v);
-            }
-        }
-    })
-    API.jsonphook(["api.bilibili.com/x/web-show/res/locs", "ids=142"], function (jsonp) {
-        const obj = API.urlObj(jsonp.url);
-        let callback: any = obj.callback;
-        let call: any = window[callback];
-        if (call) {
-            (<any>window)[callback] = function (v: any) {
-                const data = GM.getValue<any>("banner");
-                v.data[142][0].pic = (data && data.pic) || "";
-                return call(v);
-            }
-        }
-        xhr({
-            url: "https://api.bilibili.com/x/web-show/page/header?resource_id=142",
-            responseType: "json"
-        }).then((d: any) => {
-            GM.setValue("banner", d.data);
-            new Animate(d.data);
-        })
-    })
     class Animate {
+        static rid = this.resourceId();
+        static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
         /**
          * 有在启用了动画banner的配置，且浏览器支持css filter时才加载动画banner的图片资源  
          * safari浏览器在mac屏幕上模糊效果有性能问题，不开启
@@ -41,7 +13,7 @@ try {
             typeof CSS !== 'undefined' && CSS.supports && CSS.supports('filter: blur(1px)')
             && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         layerConfig: {
-            layer: {
+            layers: {
                 blur: any,
                 id: number,
                 name: string,
@@ -65,16 +37,38 @@ try {
         constructor(v: any) {
             if (this.animatedBannerSupport) this.mounted(v);
             API.addCss(API.getModule("animated-banner.css"), "animated-banner");
+            let timer = setInterval(() => {
+                const blur = document.querySelector(".blur-bg");
+                blur && blur.remove();
+            }, 100);
+            setTimeout(() => clearTimeout(timer), 60 * 1000);
+        }
+        static resourceId() {
+            if (location.href.includes("v/douga")) return 1576;
+            if (location.href.includes("/anime")) return 1612;
+            if (location.href.includes("v/music")) return 1580;
+            if (location.href.includes("/guochuang")) return 1920;
+            if (location.href.includes("v/dance")) return 1584;
+            if (location.href.includes("v/game")) return 1588;
+            if (location.href.includes("v/knowledge")) return 1592;
+            if (location.href.includes("v/tech")) return 3129;
+            if (location.href.includes("v/life")) return 1600;
+            if (location.href.includes("v/kichiku")) return 1608;
+            if (location.href.includes("v/fashion")) return 1604;
+            if (location.href.includes("v/ent")) return 1596;
+            if (location.href.includes("v/cinephile")) return 2210;
+            if (location.href.includes("/cinema")) return 1634;
+            return 142;
         }
         async mounted(v: any) {
             this.layerConfig = JSON.parse(v.split_layer);
-            if (!this.layerConfig.layer) return;
+            if (!this.layerConfig.layers) return;
             try {
-                await Promise.all(this.layerConfig.layer.map(async v => {
-                    return Promise.all(v.resources.map(async (i, index) => {
+                await Promise.all(this.layerConfig.layers.map(async (v, index) => {
+                    return Promise.all(v.resources.map(async (i) => {
                         if (/\.(webm|mp4)$/.test(i.src)) {
                             const res = await xhr({ url: i.src, responseType: "blob" });
-                            const url = URL.createObjectURL(res.data);
+                            const url = URL.createObjectURL(res);
                             const video = document.createElement('video');
                             video.muted = true;
                             // video.autoplay = true
@@ -108,13 +102,13 @@ try {
                 return
             }
             const container = document.querySelector("#banner_link");
-            container.setAttribute("class", "animated-banner");
+            container.setAttribute("class", "head-banner animated-banner");
             let containerHeight = container.clientHeight;
             let containerWidth = container.clientWidth;
             let containerScale = containerHeight / 155;
 
             // 初始化资源尺寸
-            this.layerConfig.layer.forEach(v => {
+            this.layerConfig.layers.forEach(v => {
                 v._initState = {
                     scale: 1,
                     rotate: v.rotate?.initial || 0,
@@ -141,7 +135,7 @@ try {
             })
 
             // 初始化图层
-            const layers = this.layerConfig.layer.map(v => {
+            const layers = this.layerConfig.layers.map(v => {
                 const layer = document.createElement('div');
                 layer.classList.add('layer');
                 container.appendChild(layer);
@@ -166,7 +160,7 @@ try {
                     }
                     lastDisplace = displace;
                     layers.map((layer, i) => {
-                        const v = this.layerConfig.layer[i];
+                        const v = this.layerConfig.layers[i];
                         const a = layer.firstChild;
                         if (!a) {
                             return
@@ -237,8 +231,8 @@ try {
             }
 
             // 初始化图层内图片和帧动画
-            this.layerConfig.layer.map((v, i) => {
-                const a = this.resources[0];
+            this.layerConfig.layers.map((v, i) => {
+                const a = this.resources[i];
                 layers[i].appendChild(a);
                 if (a.tagName === 'VIDEO') {
                     (<HTMLVideoElement>a).play();
@@ -291,7 +285,7 @@ try {
                 containerHeight = container.clientHeight;
                 containerWidth = container.clientWidth;
                 containerScale = containerHeight / 155;
-                this.layerConfig.layer.forEach(lc => {
+                this.layerConfig.layers.forEach(lc => {
                     lc.resources.forEach((d, i) => {
                         const el: any = this.resources[i];
                         el.height = el.dataset.height * containerScale * (lc.scale?.initial || 1);
@@ -309,4 +303,39 @@ try {
             window.addEventListener('resize', this.handleResize);
         }
     }
+    config.bannerGif && API.jsonphook(["api.bilibili.com/x/web-interface/index/icon"], function (xhr) {
+        const obj = API.urlObj(xhr.url);
+        let callback: any = obj.callback;
+        let call: any = window[callback];
+        if (call) {
+            (<any>window)[callback] = function (v: any) {
+                v.data = API.randomArray(GM.getValue<{ [name: string]: any }>("index-icon").fix, 1)[0];
+                return call(v);
+            }
+        }
+    })
+    let tag = false; // 防止二度请求
+    API.jsonphook(["api.bilibili.com/x/web-show/res/locs"], function (jsonp) {
+        const obj = API.urlObj(jsonp.url);
+        let callback: any = obj.callback;
+        let call: any = window[callback];
+        if (call) {
+            (<any>window)[callback] = function (v: any) {
+                const data = GM.getValue<any>("banner");
+                Animate.locs.forEach(d => {
+                    v.data[d] && (v.data[d][0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png");
+                })
+                return call(v);
+            }
+        }
+        if (tag) return;
+        tag = true;
+        xhr({
+            url: `https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`,
+            responseType: "json"
+        }).then((d: any) => {
+            GM.setValue("banner", d.data);
+            new Animate(d.data);
+        })
+    })
 } catch (e) { API.trace(e, "banner.js") }
