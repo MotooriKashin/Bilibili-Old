@@ -35,5 +35,6 @@
     "closedCaption": "closedCaption.js",
     "segProgress": "segProgress.js",
     "localMedia": "localMedia.js",
-    "allDanmaku": "allDanmaku.js"
+    "allDanmaku": "allDanmaku.js",
+    "bezier": "cubicBezier"
 }
