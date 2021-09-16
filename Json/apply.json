@@ -36,5 +36,6 @@
     "segProgress": "segProgress.js",
     "localMedia": "localMedia.js",
     "allDanmaku": "allDanmaku.js",
-    "bezier": "cubicBezier"
+    "bezier": "cubicBezier",
+    "element": "element.js"
 }
