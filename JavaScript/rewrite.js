@@ -120,6 +120,7 @@
             }
             .im-root .im-list-box {
                 width:100%;
+                overflow: visible;
             }
             .im-root .im-list-box .im-list {
                 line-height:42px;
