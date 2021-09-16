@@ -433,6 +433,14 @@
         sort: "rewrite",
         float: "重写以启用旧版专栏。"
     });
+    API.registerSetting({
+        type: "switch",
+        key: "unloginPopover",
+        label: "移除未登录弹窗",
+        sub: "有些时候就是喜欢不登录",
+        value: false,
+        sort: "style"
+    });
     // 旧版播放器专属设置
     API.path.name && API.runWhile(() => API.path.name && window.player, () => {
         API.registerSetting({
