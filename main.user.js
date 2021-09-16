@@ -517,7 +517,7 @@ class API {
                 toast.warning(`正在添加模块${Reflect.get(modules, name)}！请稍候~`);
             }
             else {
-                !API.updating && API.updateModule();
+                toast.error(`您正在尝试载入未知模块 ${name}！`, "但本地模块资料库并没有该模块记录，您可以到脚本设置里立即检查更新看看~");
             }
         }
     }
