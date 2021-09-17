@@ -26,7 +26,7 @@
     if (API.path[2] == "message.bilibili.com") API.addCss(API.getModule("message.css"));
     if (window.self == window.top && API.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
     if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync")) API.addCss(API.getModule("imroot.css"));
-    if (location.href.includes("www.bilibili.com/account/history")) API.importModule("history.ts");
+    if (location.href.includes("www.bilibili.com/account/history")) API.importModule("history.js");
     if (/dmid/.test(location.href) && /dm_progress/.test(location.href)) API.importModule("loadByDmid.js");
     if (config.read && /\/read\/[Cc][Vv]/.test(location.href)) API.importModule("read.js");
     API.scriptIntercept(["bilibiliPlayer.min.js"], "bilibiliPlayer.js"); // 播放器脚本拦截

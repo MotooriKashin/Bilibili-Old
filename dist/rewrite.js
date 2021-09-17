@@ -40,7 +40,7 @@
     if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync"))
         API.addCss(API.getModule("imroot.css"));
     if (location.href.includes("www.bilibili.com/account/history"))
-        API.importModule("history.ts");
+        API.importModule("history.js");
     if (/dmid/.test(location.href) && /dm_progress/.test(location.href))
         API.importModule("loadByDmid.js");
     if (config.read && /\/read\/[Cc][Vv]/.test(location.href))

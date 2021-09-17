@@ -37,5 +37,6 @@
     "localMedia": "localMedia.js",
     "allDanmaku": "allDanmaku.js",
     "bezier": "cubicBezier",
-    "element": "element.js"
+    "element": "element.js",
+    "getCss": "element.js"
 }

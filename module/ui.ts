@@ -246,27 +246,17 @@
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
             const real = API.addElement("div", { class: "contain" }, root);
-            API.addCss(API.getModule("ui-switch.css"), "", root);
+            API.addCss(API.getCss("ui-item.css"), "", root);
             Reflect.set(this.list, obj.key, real);
             obj.svg && real.appendChild(this.icon(obj.svg));
             const label = API.addElement("div", { class: "label" }, real, obj.label);
-            const value = API.addElement("div", { class: "switch" }, real, `<span class="bar"></span><span class="knob"><i class="circle"></i></span>`)
+            real.appendChild(API.element.switch(function (v) {
+                config[obj.key] = v;
+                obj.action && obj.action.call(this, config[obj.key]);
+            }, config[obj.key]))
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
-            config[obj.key] && (value.children[0].setAttribute("checked", "checked"),
-                value.children[1].setAttribute("checked", "checked"),
-                value.children[1].children[0].setAttribute("checked", "checked"))
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            value.onclick = () => {
-                config[obj.key] = !config[obj.key];
-                config[obj.key] ? (value.children[0].setAttribute("checked", "checked"),
-                    value.children[1].setAttribute("checked", "checked"),
-                    value.children[1].children[0].setAttribute("checked", "checked")) :
-                    (value.children[0].removeAttribute("checked"),
-                        value.children[1].removeAttribute("checked"),
-                        value.children[1].children[0].removeAttribute("checked"));
-                obj.action && obj.action.call(real, config[obj.key]);
-            }
             return div;
         }
         /**
@@ -281,22 +271,17 @@
             const root = div.attachShadow({ mode: "closed" });
             const real = API.addElement("div", { class: "contain" }, root);
             Reflect.set(this.list, obj.key, real);
-            API.addCss(API.getModule("ui-row.css"), "", root);
+            API.addCss(API.getCss("ui-item.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
             const label = API.addElement("div", { class: "label" }, real, obj.label);
-            const value = API.addElement("div", { class: "row" }, real);
+            real.appendChild(API.element.select(obj.list, function (v) {
+                config[obj.key] = v;
+                (<any>config)[obj.key] = v;
+                obj.action && obj.action.call(this, v);
+            }, config[obj.key]))
             obj.sub && API.addElement("div", { class: "sub" }, label, obj.sub);
-            let select = obj.list.reduce((s, d) => {
-                API.addElement("option", {}, s, d);
-                return s;
-            }, <HTMLSelectElement>API.addElement("select", {}, value))
-            select.value = config[obj.key];
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            select.onchange = () => {
-                config[obj.key] = select.value, (<any>config)[obj.key] = select.value;
-                obj.action && obj.action.call(real, select.value);
-            }
             return div;
         }
         /**
@@ -351,18 +336,15 @@
             const root = div.attachShadow({ mode: "closed" });
             const real = API.addElement("div", { class: "contain" }, root);
             Reflect.set(this.list, obj.key, real);
-            API.addCss(API.getModule("ui-action.css"), "", root);
+            API.addCss(API.getModule("ui-item.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
             const label = API.addElement("div", { class: "label" }, real, obj.label);
-            const value = API.addElement("div", { class: "action" }, real, obj.title);
+            real.appendChild(API.element.button(function () {
+                obj.action.call(this);
+            }, obj.title, disabled));
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            (real.querySelector(".action") as HTMLDivElement).onclick = () => {
-                value.setAttribute("disabled", "disabled");
-                disabled && setTimeout(() => value.removeAttribute("disabled"), disabled * 1000);
-                obj.action.call(real);
-            }
             return div;
         }
         /**
