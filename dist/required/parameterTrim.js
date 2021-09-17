@@ -88,6 +88,16 @@
             });
             return arr.join("/");
         }
+        click(e) {
+            var f = e.target;
+            for (; f && "A" !== f.tagName;) {
+                f = f.parentNode;
+            }
+            if ("A" !== (null == f ? void 0 : f.tagName)) {
+                return;
+            }
+            f.href && (f.href = this.triming(f.href));
+        }
     }
     const parameterTrim = new ParameterTrim();
     parameterTrim.location();
@@ -96,4 +106,5 @@
         node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
         node.tagName == "A" && parameterTrim.anchor([node]);
     });
+    document.addEventListener("click", e => parameterTrim.click(e), !1);
 })();
