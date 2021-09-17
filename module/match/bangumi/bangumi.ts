@@ -17,7 +17,7 @@ try {
             config.rewriteMethod == "异步" ? this.prepareA() : this.prepareB();
         }
         async prepareA() {
-            if (API.uid) {
+            if (API.uid && !this.epid) {
                 const data = await xhr({ url: location.href });
                 const arr = data.match(/last_ep_id\"\:[0-9]+/) || [];
                 this.epid = (arr[0] && arr[0].split(":")[1]) || null;
@@ -48,7 +48,7 @@ try {
             this.write();
         }
         prepareB() {
-            if (API.uid) {
+            if (API.uid && !this.epid) {
                 const data = xhr({ url: location.href, async: false });
                 const arr = data.match(/last_ep_id\"\:[0-9]+/) || [];
                 this.epid = (arr[0] && arr[0].split(":")[1]) || null;
