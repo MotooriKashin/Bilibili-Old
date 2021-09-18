@@ -436,30 +436,16 @@
             const root = div.attachShadow({ mode: "closed" });
             const real = API.addElement("div", { class: "contain" }, root);
             Reflect.set(this.list, obj.key, real);
-            API.addCss(API.getModule("ui-multi.css"), "", root);
+            API.addCss(API.getModule("ui-item.css"), "", root);
             obj.svg && real.appendChild(this.icon(obj.svg));
             const label = API.addElement("div", { class: "label" }, real, obj.label);
-            const value = API.addElement("div", { class: "checkbox" }, real);
+            real.appendChild(API.element.checkbox(obj.list, function (v) {
+                config[obj.key] = v;
+                obj.action && obj.action.call(this, v);
+            }, config[obj.key]));
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
-            obj.list.forEach(d => {
-                config[obj.key].includes(d) ? API.addElement("div", { class: "checkbox" }, real, `<div class="checklabel">
-                        <div class="disc-border" checked></div>
-                        <div class="disc" checked></div>
-                    </div>
-                    <div class="checkvalue">${d}</div>`) : API.addElement("div", { class: "checkbox" }, real, `<div class="checklabel">
-                        <div class="disc-border"></div>
-                        <div class="disc"></div>
-                    </div>
-                    <div class="checkvalue">${d}</div>`);
-            });
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
-            real.querySelectorAll(".checkbox").forEach(d => {
-                d.onclick = () => {
-                    config[obj.key].includes(d.innerText) ? config[obj.key].splice(config[obj.key].indexOf(d.innerText), 1) : config[obj.key].push(d.innerText);
-                    obj.action && obj.action.call(real, config[obj.key]);
-                };
-            });
             return div;
         }
         /**

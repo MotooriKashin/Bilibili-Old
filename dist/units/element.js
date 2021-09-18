@@ -174,10 +174,17 @@ try {
             input.onchange = () => input.files && callback.call(input, input.value);
             return root;
         }
-        static checkbox(list, callback, value) {
+        /**
+         * 封装好的复选框（多选）
+         * @param list 复选框的值组
+         * @param callback 响应选择操作的回调函数，必须，否则无法响应文件选择
+         * @param value list中的默认选中数据组，非必须
+         * @returns 封装好的节点
+         */
+        static checkbox(list, callback, value = []) {
             const root = document.createElement("div");
             const real = root.attachShadow({ mode: "closed" });
-            const div = API.addElement("div", {}, real);
+            const div = API.addElement("div", { class: "box" }, real);
             API.addCss(this.getCss("checkbox.css"), undefined, real);
             const checkboxs = list.reduce((s, d) => {
                 s.push(API.addElement("div", { class: "checkbox" }, div, `<div class="checklabel">
@@ -187,6 +194,22 @@ try {
                     <div class="checkvalue">${d}</div>`));
                 return s;
             }, []);
+            const checks = list.reduce((s, d) => {
+                s.push(value.includes(d));
+                return s;
+            }, []);
+            checkboxs.forEach((d, i) => {
+                checks[i] && (d.children[0].children[0].setAttribute("checked", "checked"),
+                    d.children[0].children[1].setAttribute("checked", "checked"));
+                d.onclick = () => {
+                    checks[i] = !checks[i];
+                    checks[i] ? (d.children[0].children[0].setAttribute("checked", "checked"),
+                        d.children[0].children[1].setAttribute("checked", "checked")) : (d.children[0].children[0].removeAttribute("checked"),
+                        d.children[0].children[1].removeAttribute("checked"));
+                    callback.call(div, checks.reduce((s, d, i) => { d && s.push(list[i]); return s; }, []));
+                };
+            });
+            return root;
         }
     }
     API.element = {
@@ -197,8 +220,10 @@ try {
         select: (list, callback, value) => Element.select(list, callback, value),
         button: (callback, text, disabled) => Element.button(callback, text, disabled),
         input: (callback, text, attribute, pattern) => Element.input(callback, text, attribute, pattern),
-        file: (callback, multiple, text, accept) => Element.file(callback, multiple, text, accept)
+        file: (callback, multiple, text, accept) => Element.file(callback, multiple, text, accept),
+        checkbox: (list, callback, value) => Element.checkbox(list, callback, value)
     };
+    API.getCss = (...svg) => Element.getCss(...svg);
 }
 catch (e) {
     API.trace(e, "element.js");

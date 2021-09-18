@@ -1,4 +1,7 @@
 /* 复选框 */
+.box {
+  display: inline-flex;
+}
 .checkbox {
   align-items: center;
   display: flex;
