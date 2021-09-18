@@ -66,4 +66,31 @@
         return sum;
     }
     API.getTotalTop = (node) => getTotalTop(node);
+    async function saveAs(content, fileName, contentType = "text/plain") {
+        const a = document.createElement("a");
+        const file = new Blob([content], { type: contentType });
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+    }
+    API.saveAs = (content, fileName, contentType) => saveAs(content, fileName, contentType);
+    function readAs(file, type = "string", encoding) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            switch (type) {
+                case "ArrayBuffer":
+                    reader.readAsArrayBuffer(file);
+                    break;
+                case "DataURL":
+                    reader.readAsDataURL(file);
+                    break;
+                case "string":
+                    reader.readAsText(file, encoding || 'utf-8');
+                    break;
+            }
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = e => reject(e);
+        });
+    }
+    API.readAs = (file, type, encoding) => readAs(file, type, encoding);
 })();

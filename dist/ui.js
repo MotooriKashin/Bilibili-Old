@@ -461,7 +461,7 @@
             const real = API.addElement("div", { class: "contain" }, root);
             const table = {};
             Reflect.set(this.list, obj.key, real);
-            API.addCss(API.getModule("ui-multi.css"), "", root);
+            API.addCss(API.getModule("ui-item.css"), "", root);
             obj.svg && real.appendChild(table.svg = this.icon(obj.svg));
             table.label = API.addElement("div", { class: "label" }, real, obj.label);
             table.value = API.addElement("div", {}, real, obj.custom);

@@ -38,5 +38,7 @@
     "allDanmaku": "allDanmaku.js",
     "bezier": "cubicBezier",
     "element": "element.js",
-    "getCss": "element.js"
+    "getCss": "element.js",
+    "saveAs": "extend.js",
+    "readAs": "extend.js"
 }

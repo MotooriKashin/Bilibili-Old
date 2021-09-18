@@ -61,6 +61,30 @@
         return sum;
     }
     API.getTotalTop = (node: HTMLElement) => getTotalTop(node);
+    async function saveAs(content: BufferSource | Blob | string, fileName: string, contentType: string = "text/plain") {
+        const a = document.createElement("a");
+        const file = new Blob([content], { type: contentType });
+        a.href = URL.createObjectURL(file);
+        a.download = fileName;
+        a.click();
+    }
+    API.saveAs = (content: BufferSource | Blob | string, fileName: string, contentType?: string) => saveAs(content, fileName, contentType);
+    function readAs(file: File, type: "ArrayBuffer" | "DataURL" | "string" = "string", encoding?: string) {
+        return new Promise((resolve: (value: ArrayBuffer | string) => void, reject) => {
+            const reader = new FileReader();
+            switch (type) {
+                case "ArrayBuffer": reader.readAsArrayBuffer(file);
+                    break;
+                case "DataURL": reader.readAsDataURL(file);
+                    break;
+                case "string": reader.readAsText(file, encoding || 'utf-8');
+                    break;
+            }
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = e => reject(e);
+        })
+    }
+    (<any>API.readAs) = (file: File, type?: "ArrayBuffer" | "DataURL" | "string", encoding?: string) => readAs(file, type, encoding);
 })();
 declare namespace API {
     /**
@@ -91,4 +115,22 @@ declare namespace API {
      * @param node 文档垂直偏移：/px
      */
     function getTotalTop(node: HTMLElement): number;
+    /**
+     * 保存为本地文件
+     * @param content 文档内容，JSON请先转化为字符串类型
+     * @param fileName 保存为文件名，需包含拓展名
+     * @param contentType 文档内容的MIME类型，默认为text/plain
+     */
+    function saveAs(content: BufferSource | Blob | string, fileName: string, contentType?: string): Promise<void>;
+    /**
+     * 读取本地文件
+     * @param file 本地文件File，来自type="file"的input标签，`input.files`中的元素
+     * @param type 将file以特定的格式编码，默认为string，即字符串形式
+     * @param encoding 字符串的编码格式，默认为utf-8，仅在type="string"时有意义
+     * @returns Promise托管的文件内容
+     */
+    function readAs(file: File): Promise<string>;
+    function readAs(file: File, type: "DataURL"): Promise<string>;
+    function readAs(file: File, type: "string", encoding?: string): Promise<string>;
+    function readAs(file: File, type: "ArrayBuffer"): Promise<ArrayBuffer>;
 }

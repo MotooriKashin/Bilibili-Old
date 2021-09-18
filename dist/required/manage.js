@@ -228,6 +228,35 @@
             });
         }
     }
+    class Config {
+        constructor() {
+            this.box = API.element.popupbox();
+            this.box.style.maxWidth = "360px";
+            this.box.style.maxHeight = "300px";
+            API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, this.box, `<span>设置数据<span>`);
+            API.addElement("div", { style: 'margin-bottom: 10px;' }, this.box, `<div>设置数据包含您个人对于设置的自定义调整，不包括内置的模块、安装的第三方模块以及各种功能缓存的数据。您可以选择恢复默认数据、导出为本地文件或者从本地文件中恢复。</div>`);
+            this.box.appendChild(API.element.hr());
+            const body = API.addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, this.box);
+            body.appendChild(API.element.button(() => { this.restore(); }, "默认", 0));
+            body.appendChild(API.element.button(() => { this.output(); }, "导出", 0));
+            body.appendChild(API.element.file((v) => { this.input(v); }, false, "导入", [".json"]));
+        }
+        restore() {
+            GM.deleteValue("config");
+            toast.warning("已恢复默认数据，请及时刷新页面避免数据紊乱！");
+            API.alert(`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置").then(d => { d && location.reload(); });
+        }
+        output() {
+            API.saveAs(JSON.stringify(config, undefined, "\t"), `config ${API.timeFormat(undefined, true)}.json`, "application/json");
+        }
+        input(v) {
+            v && v[0] && API.readAs(v[0]).then(d => {
+                const data = JSON.parse(d);
+                Object.keys(data).forEach(d => Reflect.has(config, d) && Reflect.set(config, d, data[d]));
+                toast.success("已导入本地设置数据，请刷新页面生效！");
+            });
+        }
+    }
     API.registerSetting({
         key: "updateTime",
         sort: "module",
@@ -275,7 +304,7 @@
         title: '选择',
         accept: [".js", ".css", ".json", ".html"],
         multiple: true,
-        float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css和json。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。</br>※ <strong>硬刷新页面后才会生效！</strong>',
+        float: '从本地磁盘安装脚本的模块文件（编码格式utf-8），包括js、css、json和html。</br>js/css文件将直接以文本形式保存，可通过使用`API.getMoudle`方法以文件+拓展名形式获取，json则以对象形式保存，可通过`GM.getValue`方法以无拓展名形式获取。</br>※ 本项目以文件名+拓展名索引模块，<strong>切勿添加同名模块！</strong>，以本地方式更新模块除外。</br>※ <strong>硬刷新页面后才会生效！</strong>',
         action: (files) => {
             Module.localModule(files);
         }
@@ -297,7 +326,7 @@
         sub: "优化模块缓存",
         type: "action",
         title: "清理",
-        float: '由于版本更新、本地安装等诸多原因，脚本可能缓存了一些过时、失效甚至错误的模块数据，可以使用本功能进行整理。</br>已安装的第三方组件不会被清除，大可放心！',
+        float: '由于版本更新、本地安装等诸多原因，脚本可能缓存了一些过时、失效甚至错误的模块数据，可以使用本功能进行整理。</br>暂不支持清理json数据，强迫症可尝试恢复出厂值选项！</br>已安装的第三方组件不会被清除，大可放心！',
         action: () => module.clear()
     });
     API.registerSetting({
@@ -319,5 +348,15 @@
                 }
             });
         }
+    });
+    API.registerSetting({
+        key: "configManage",
+        sort: "common",
+        svg: '<svg viewBox="0 0 24 24"><g><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></g></svg>',
+        label: "设置数据",
+        sub: "备份/恢复",
+        type: "action",
+        title: "管理",
+        action: () => new Config()
     });
 })();

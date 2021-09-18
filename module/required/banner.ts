@@ -102,6 +102,7 @@ try {
                 return
             }
             const container = document.querySelector("#banner_link");
+            if (!container) return;
             container.setAttribute("class", "head-banner animated-banner");
             let containerHeight = container.clientHeight;
             let containerWidth = container.clientWidth;
