@@ -8,12 +8,14 @@ try {
          * @param ele 目标节点
          */
         constructor(ele) {
-            function remove() {
-                ele.remove();
-                document.removeEventListener("click", remove);
-            }
-            document.addEventListener("click", remove);
-            ele.addEventListener("click", e => e.stopPropagation());
+            setTimeout(() => {
+                function remove() {
+                    ele.remove();
+                    document.removeEventListener("click", remove);
+                }
+                document.addEventListener("click", remove);
+                ele.addEventListener("click", e => e.stopPropagation());
+            }, 100);
         }
     }
     class Element {
@@ -167,11 +169,11 @@ try {
         static file(callback, multiple, text = "选择", accept) {
             const root = document.createElement("div");
             const real = root.attachShadow({ mode: "closed" });
-            const input = API.addElement("input", { type: "file", style: "width: 0;" }, real);
+            const input = API.addElement("input", { type: "file", style: "width: 0;position: absolute;" }, real);
             accept && (input.accept = accept.join(","));
             multiple && (input.multiple = true);
             real.appendChild(this.button(() => input.click(), text, 0));
-            input.onchange = () => input.files && callback.call(input, input.value);
+            input.onchange = () => input.files && callback.call(input, input.files);
             return root;
         }
         /**

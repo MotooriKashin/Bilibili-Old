@@ -153,8 +153,81 @@
             file.endsWith(".json") ? GM.setValue(Reflect.get(this.moduleUrl, file).replace(".json", ""), JSON.parse(result)) : Reflect.set(this.modules, Reflect.get(this.moduleUrl, file), result);
             GM.setValue("modules", this.modules);
         }
+        clear() {
+            this.modules = GM.getValue("modules", {});
+            const resource = GM.getValue("resource", {});
+            const arr = Object.keys(resource);
+            GM.getValue("@resource", []).forEach(d => arr.push(d));
+            GM.getValue("thirdModule", []).forEach(d => arr.push(d));
+            let i = 0;
+            const name = arr.reduce((s, d) => {
+                const arr = d.split("/");
+                s.push(arr[arr.length - 1]);
+                return s;
+            }, []);
+            Object.keys(this.modules).forEach(d => {
+                !name.includes(d) && (i++, delete this.modules[d], toast(`清理失效模块 ${d}`));
+            });
+            GM.setValue("modules", this.modules);
+            i ? toast.success(`清理完成，共清理 ${i} 个失效模块！`) : toast("本地缓存很干净，未找到任何失效模块！");
+        }
     }
     const module = new Module();
+    class Third {
+        constructor() {
+            this.third = GM.getValue("thirdModule", []);
+            this.modules = GM.getValue("modules", {});
+            const box = API.element.popupbox();
+            box.style.maxWidth = "360px";
+            box.style.maxHeight = "300px";
+            API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, box, `<span>第三方组件管理<span>`);
+            API.addElement("div", { style: 'margin-bottom: 10px;' }, box, `<div>第三方组件就是非正式的模块，相当于全局默认运行的模块。来源可能是还没正式发布的模块，也可能是第三方编写的模块，只能自行通过本界面添加和管理。</br><strong>来历不明的第三方组件可能存在安全风险，请确定掂量后操作！</strong></div>`);
+            box.appendChild(API.element.hr());
+            const title = API.addElement("div", { style: 'display: flex;grid-gap: 0;gap: 0;flex-shrink: 0;margin-bottom: 10px;flex-direction: row;align-items: center;justify-content: space-between;' }, box, `<div style="font-weight: bold;">已安装组件</div>`);
+            const action = API.addElement("div", { style: "display: flex;align-items: center;" }, title);
+            action.appendChild(API.element.input((v) => { this.url(v); }, undefined, { type: "url", placeholder: "第三方组件在线URL" }, /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?\.js$/));
+            action.appendChild(API.element.file((v) => { this.file(v); }, true, "本地", [".js"]));
+            this.body = API.addElement("div", { style: 'margin-inline: 10px;overflow: auto;' }, box);
+            this.list();
+        }
+        async url(url) {
+            if (this.pause)
+                return;
+            this.pause = true;
+            const arr = url.split("/");
+            const name = arr[arr.length - 1];
+            const data = await xhr({ url: url });
+            Reflect.set(this.modules, name, data);
+            !this.third.includes(name) && this.third.push(name);
+            GM.setValue("thirdModule", this.third);
+            GM.getValue("modules", this.modules);
+            toast.success(`成功第三方组件 ${name}`);
+            this.body.innerHTML = "";
+            this.list();
+        }
+        file(files) {
+            Module.localModule(files);
+            Array.from(files).forEach(d => {
+                !this.third.includes(d.name) && this.third.push(d.name);
+            });
+            GM.setValue("thirdModule", this.third);
+            this.body.innerHTML = "";
+            this.list();
+        }
+        list() {
+            this.third.forEach((d, i) => {
+                const item = API.addElement("div", { style: 'display: flex;grid-gap: 0;gap: 0;flex-shrink: 0;margin-bottom: 10px;flex-direction: row;align-items: center;justify-content: space-between;' }, this.body, `<div>${d}</div>`);
+                const icon = API.element.svg(`<svg viewBox="0 0 48 48"><rect x="22.96" y="16" width="2" height="22"/><rect x="29.96" y="16" width="2" height="22"/><rect x="15.96" y="16" width="2" height="22"/><path d="M44,7H33V5a5,5,0,0,0-5-5H20a5,5,0,0,0-5,5V7H4V9H6.68V39a9,9,0,0,0,9,9H32.23a9,9,0,0,0,9-9V9H44ZM17,5a3,3,0,0,1,3-3h8a3,3,0,0,1,3,3V7H17ZM39.23,39a7,7,0,0,1-7,7H15.68a7,7,0,0,1-7-7V9H39.23Z"/></svg>`);
+                icon.onclick = () => {
+                    this.third.splice(i, 1);
+                    GM.setValue("thirdModule", this.third);
+                    item.remove();
+                    toast(`移除第三方组件 ${d}`);
+                };
+                item.appendChild(icon);
+            });
+        }
+    }
     API.registerSetting({
         key: "updateTime",
         sort: "module",
@@ -210,21 +283,22 @@
     API.registerSetting({
         key: "thirdModule",
         sort: "module",
-        label: "安装第三方模块",
-        sub: "js",
-        type: "file",
-        title: "选择",
-        accept: [".js"],
-        multiple: true,
+        label: "第三方组件",
+        sub: "非正式模块",
+        type: "action",
+        title: "管理",
         float: '所谓第三方模块就是未能正式成为本脚本模块的模块，可能是还在测试的新功能。总之与内置的模块js文件没有任何区别。这种模块只能通过本选项安装，安装后默认全局运行。',
-        action: (files) => {
-            Module.localModule(files);
-            const third = GM.getValue("thirdModule", []);
-            Array.from(files).forEach(d => {
-                !third.includes(d.name) && third.push(d.name);
-            });
-            GM.setValue("thirdModule", third);
-        }
+        action: () => new Third()
+    });
+    API.registerSetting({
+        key: "removeDisabled",
+        sort: "module",
+        label: "清理失效模块",
+        sub: "优化模块缓存",
+        type: "action",
+        title: "清理",
+        float: '由于版本更新、本地安装等诸多原因，脚本可能缓存了一些过时、失效甚至错误的模块数据，可以使用本功能进行整理。</br>已安装的第三方组件不会被清除，大可放心！',
+        action: () => module.clear()
     });
     API.registerSetting({
         key: "recoveryModule",

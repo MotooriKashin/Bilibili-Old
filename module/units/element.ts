@@ -8,18 +8,20 @@ try {
          * @param ele 目标节点
          */
         constructor(ele: HTMLElement) {
-            function remove() {
-                ele.remove();
-                document.removeEventListener("click", remove);
-            }
-            document.addEventListener("click", remove);
-            ele.addEventListener("click", e => e.stopPropagation());
+            setTimeout(() => {
+                function remove() {
+                    ele.remove();
+                    document.removeEventListener("click", remove);
+                }
+                document.addEventListener("click", remove);
+                ele.addEventListener("click", e => e.stopPropagation());
+            }, 100)
         }
     }
     class Element {
         /**
          * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭  
-         * 浮动窗口上的内容请通过返回的节点进行后续添加
+         * 浮动窗口上的内容请通过返回的节点进行后续添加  
          * @returns 浮动窗口实际可操作节点，可以往上面添加需要显示在浮动窗口上的内容
          */
         static popupbox() {
@@ -167,11 +169,11 @@ try {
         static file(callback: (this: HTMLInputElement, value: FileList) => void, multiple?: boolean, text = "选择", accept?: string[]) {
             const root = document.createElement("div");
             const real = root.attachShadow({ mode: "closed" });
-            const input = <HTMLInputElement>API.addElement("input", { type: "file", style: "width: 0;" }, real);
+            const input = <HTMLInputElement>API.addElement("input", { type: "file", style: "width: 0;position: absolute;" }, real);
             accept && (input.accept = accept.join(","));
             multiple && (input.multiple = true);
             real.appendChild(this.button(() => input.click(), text, 0));
-            input.onchange = () => input.files && callback.call(input, input.value);
+            input.onchange = () => input.files && callback.call(input, input.files);
             return root;
         }
         /**
@@ -181,10 +183,10 @@ try {
          * @param value list中的默认选中数据组，非必须
          * @returns 封装好的节点
          */
-        static checkbox(list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value: string[]=[]) {
+        static checkbox(list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value: string[] = []) {
             const root = document.createElement("div");
             const real = root.attachShadow({ mode: "closed" });
-            const div = API.addElement("div", {class:"box"}, real);
+            const div = API.addElement("div", { class: "box" }, real);
             API.addCss(this.getCss("checkbox.css"), undefined, real);
             const checkboxs = list.reduce((s: HTMLDivElement[], d) => {
                 s.push(<HTMLDivElement>API.addElement("div", { class: "checkbox" }, div, `<div class="checklabel">
@@ -194,20 +196,20 @@ try {
                     <div class="checkvalue">${d}</div>`))
                 return s;
             }, [])
-            const checks = list.reduce((s:boolean[],d)=>{
+            const checks = list.reduce((s: boolean[], d) => {
                 s.push(value.includes(d))
                 return s;
-            },[]);
-            checkboxs.forEach((d,i)=>{
-                checks[i] && (d.children[0].children[0].setAttribute("checked","checked"),
-                d.children[0].children[1].setAttribute("checked","checked"));
-                d.onclick = ()=>{
+            }, []);
+            checkboxs.forEach((d, i) => {
+                checks[i] && (d.children[0].children[0].setAttribute("checked", "checked"),
+                    d.children[0].children[1].setAttribute("checked", "checked"));
+                d.onclick = () => {
                     checks[i] = !checks[i];
-                    checks[i] ? (d.children[0].children[0].setAttribute("checked","checked"),
-                d.children[0].children[1].setAttribute("checked","checked")) :(
-                    d.children[0].children[0].removeAttribute("checked"),
-                d.children[0].children[1].removeAttribute("checked"));
-                callback.call(div,checks.reduce((s:string[],d,i)=>{d && s.push(list[i]);return s;},[]));
+                    checks[i] ? (d.children[0].children[0].setAttribute("checked", "checked"),
+                        d.children[0].children[1].setAttribute("checked", "checked")) : (
+                        d.children[0].children[0].removeAttribute("checked"),
+                        d.children[0].children[1].removeAttribute("checked"));
+                    callback.call(div, checks.reduce((s: string[], d, i) => { d && s.push(list[i]); return s; }, []));
                 }
             })
             return root;
@@ -222,9 +224,9 @@ try {
         button: (callback: (this: HTMLDivElement) => void, text?: string, disabled?: number) => Element.button(callback, text, disabled),
         input: (callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp) => Element.input(callback, text, attribute, pattern),
         file: (callback: (this: HTMLInputElement, value: FileList) => void, multiple?: boolean, text?: string, accept?: string[]) => Element.file(callback, multiple, text, accept),
-        checkbox:(list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[])=>Element.checkbox(list,callback,value)
+        checkbox: (list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]) => Element.checkbox(list, callback, value)
     }
-    API.getCss = (...svg: string[])=> Element.getCss(...svg);
+    API.getCss = (...svg: string[]) => Element.getCss(...svg);
 } catch (e) { API.trace(e, "element.js") }
 declare namespace API {
     let element: {
