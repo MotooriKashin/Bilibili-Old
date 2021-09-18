@@ -147,7 +147,7 @@
                 responseType: 'arraybuffer',
                 headers: { 'Range': `bytes=0-${range}` },
                 credentials: false
-            })(url, 'arraybuffer', { 'Range': `bytes=0-${range}` }, false);
+            });
         }
         /**
          * 过滤问题音频

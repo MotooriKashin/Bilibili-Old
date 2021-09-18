@@ -64,7 +64,7 @@
             arg.replaceWith(text);
             arg = text;
             if (!API.uid) return;
-            data = API.jsonCheck(xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": <any>API.aid }) })).data;
+            data = API.jsonCheck(await xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": <any>API.aid }) })).data;
             if (data == 1) {
                 // 点赞过点亮图标
                 i.setAttribute("style", "width : 22px;height : 22px;display : none;");

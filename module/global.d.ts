@@ -56,11 +56,6 @@ interface xhrDetails {
      */
     data?: string;
     /**
-     * async request ? the third argument of XMLHttpRequest.open.  
-     * many properties will be ignored if this is `false`
-     */
-    async?: boolean;
-    /**
      * a timeout in ms
      */
     timeout?: number;
@@ -301,7 +296,15 @@ declare const xhr: {
      * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
      * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
      */
-    (details: xhrDetails): any;
+    (details: xhrDetails): Promise<any>;
+    (details: {
+        /**
+         * use async request  
+         * the third argument of XMLHttpRequest.open  
+         * **many properties are forbid, such as 'responseType'**
+         */
+        async: false
+    } & xhrDetails): any;
     /**
      * `GM_xmlhttpRequest`的`Promise`封装，用于跨域`XMLHttpRequest`请求
      * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
