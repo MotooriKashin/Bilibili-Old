@@ -1,7 +1,7 @@
 /**
  * 本模块负责绘制设置UI
  */
-(function () {
+try {
     // @ts-expect-error 专属变量
     const menu = MENU, setting = SETTING;
     class Ui {
@@ -500,4 +500,7 @@
     API.importModule("manage.js");
     const ui = new Ui();
     Reflect.set(API, "displaySetting", (key) => ui.display(key));
-})();
+}
+catch (e) {
+    API.trace(e, "ui.js", true);
+}

@@ -2,7 +2,7 @@
  * 本模块负责实现互动弹幕  
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
-(function () {
+try {
     API.addCss(API.getModule("commandDm.css"));
     var player: any, widgetContainer: any;
     var playing = false;
@@ -646,7 +646,7 @@
         init(); // 由于切P后整个播放器会被销毁重建，每次载入互动弹幕都需要重新绑定事件
         load(cdm);
     }
-})();
+} catch (e) { API.trace(e, "commandDm.js", true) }
 declare namespace API {
     /**
      * 载入互动弹幕

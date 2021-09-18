@@ -1,7 +1,7 @@
 /**
  * 本模块负责获取收藏、频道中的失效视频信息
  */
-(function () {
+try {
     async function getLostVideo(aid: number) {
         let result = []; // 失效视频信息缓存
         try { // 尝试访问Biliplus
@@ -77,4 +77,4 @@
             })
         }
     })
-})();
+} catch (e) { API.trace(e, "lostVideo.js", true) }

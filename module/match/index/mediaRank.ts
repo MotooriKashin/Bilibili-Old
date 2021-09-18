@@ -1,7 +1,7 @@
 /**
  * 本模块负责将主页电影、电视剧、纪录片排行转化为番剧样式
  */
-(function () {
+try {
     async function fixRank(node: HTMLDivElement) {
         const sorts = {
             bili_movie: ["ranking_movie", 2, "https://www.bilibili.com/ranking/cinema/23/0/3"],
@@ -38,4 +38,4 @@
     API.runWhile(() => document.querySelector("#bili_movie"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_movie")))
     API.runWhile(() => document.querySelector("#bili_teleplay"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_teleplay")))
     API.runWhile(() => document.querySelector("#bili_documentary"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_documentary")))
-})();
+} catch (e) { API.trace(e, "mediaRank.js", true) }

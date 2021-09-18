@@ -1,7 +1,7 @@
 /**
  * 本模块负责禁用直播间挂机检测
  */
-(function () {
+try {
     const fun = setInterval;
     let flag = 0;
     window.setInterval = (...args) => {
@@ -14,4 +14,7 @@
         }
         return fun.call(window, ...args);
     };
-})();
+}
+catch (e) {
+    API.trace(e, "sleepCheck.js", true);
+}

@@ -1,7 +1,7 @@
 /**
  * 本模块负责转化av页简介中BV号为超链接
  */
-(function () {
+try {
     API.switchVideo(() => {
         let desc = document.getElementsByClassName("info");
         if (desc[1] && desc[1].parentNode && (<HTMLElement>desc[1].parentNode).id == "v_desc") {
@@ -15,4 +15,4 @@
             }
         }
     })
-})();
+} catch (e) { API.trace(e, "descBV.js") }

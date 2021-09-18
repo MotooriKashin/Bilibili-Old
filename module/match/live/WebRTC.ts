@@ -4,7 +4,7 @@
  * @see WebRTC-Control {@link https://mybrowseraddon.com/webrtc-control.html}
  */
 // @ts-nocheck
-(function () {
+try {
     if (typeof navigator.getUserMedia !== "undefined") navigator.getUserMedia = undefined;
     if (typeof window.MediaStreamTrack !== "undefined") window.MediaStreamTrack = undefined;
     if (typeof window.RTCPeerConnection !== "undefined") window.RTCPeerConnection = undefined;
@@ -18,4 +18,4 @@
     if (typeof window.webkitRTCPeerConnection !== "undefined") window.webkitRTCPeerConnection = undefined;
     if (typeof window.webkitRTCSessionDescription !== "undefined") window.webkitRTCSessionDescription = undefined;
     toast.warning("禁用直播间P2P上传！")
-})()
+} catch (e) { API.trace(e, "WebRTC.js", true) }

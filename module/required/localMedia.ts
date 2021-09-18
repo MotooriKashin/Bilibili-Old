@@ -1,7 +1,7 @@
 /**
  * 本模块负责实现旧版播放器载入本地视频及弹幕功能
  */
-(function () {
+try {
     class LocalMedia {
         data: {
             xml: File[],
@@ -122,7 +122,7 @@
     }
     const localMedia = new LocalMedia()
     API.localMedia = (files: FileList) => localMedia.change(files);
-})();
+} catch (e) { API.trace(e, "localMedia.js", true) }
 declare namespace API {
     /**
      * 载入本地文件

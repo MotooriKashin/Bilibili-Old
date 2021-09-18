@@ -6,7 +6,7 @@
  * @see esterTion {@link https://github.com/esterTion/BiliBili_crc2mid}
  * @license GFUL
  */
-(function () {
+try {
     class Midcrc {
         constructor() {
             this.CRCPOLYNOMIAL = 0xEDB88320;
@@ -101,4 +101,7 @@
         }
     }
     new Midcrc();
-})();
+}
+catch (e) {
+    API.trace(e, "crc32.js", true);
+}

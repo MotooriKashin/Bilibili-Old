@@ -1,7 +1,7 @@
 /**
  * 本模块负责添加分段进度条  
  */
-(function () {
+try {
     class SegProgress {
         static cssInited = false;
         constructor(resp: any) {
@@ -129,8 +129,7 @@
         }
     }
     API.segProgress = (data: any) => { new SegProgress(data) };
-
-})();
+} catch (e) { API.trace(e, "segProgress.js", true) }
 declare namespace API {
     /**
      * 分段进度条

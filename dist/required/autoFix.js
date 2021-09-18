@@ -1,7 +1,7 @@
 /**
  * 本模块负责一些自动化处理
  */
-(function () {
+try {
     function bofqiToView() {
         let str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
         let node = str.reduce((s, d) => {
@@ -23,4 +23,7 @@
         });
         config.autoPlay && setTimeout(() => { window.player && window.player.play && window.player.play(); }, 1000);
     });
-})();
+}
+catch (e) {
+    API.trace(e, "autoFix.js");
+}

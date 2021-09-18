@@ -1,7 +1,7 @@
 /**
  * 本模块负责将主页失效的广告区转化为资讯区
  */
-(function () {
+try {
     API.runWhile(() => document.querySelector("#bili_ad"), function () {
         const node = document.querySelector("#bili_ad");
         const sight = node.querySelectorAll("a");
@@ -30,4 +30,7 @@
                 item.innerHTML = "科技";
         }
     });
-})();
+}
+catch (e) {
+    API.trace(e, "ad2info.js", true);
+}

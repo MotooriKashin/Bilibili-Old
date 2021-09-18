@@ -1,7 +1,7 @@
 /**
  * 本模块负责修复主页直播分区数据
  */
-(function () {
+try {
     API.xhrhook(["api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec"], function (args) {
         args[1] = args[1].includes("List") ? args[1].replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web') : args[1].replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
         this.addEventListener('readystatechange', () => {
@@ -24,4 +24,4 @@
             }
         })
     })
-})();
+} catch (e) { API.trace(e, "biliIndexRec.js", true) }

@@ -1,7 +1,7 @@
 /**
  * 本模块负责模块的维护工作
  */
-(function () {
+try {
     class Module {
         /**
          * 设置项updateTime的副本，绘制设置界面时传递而来，可以用来及时更新设置内容  
@@ -293,13 +293,13 @@
         type: "action",
         title: "立即",
         disabled: 0,
-        action: () => { module.checkUpdate() }
+        action: () => { module.checkUpdate('正在检查更新~') }
     })
     API.registerSetting({
         key: "localModule",
         sort: "module",
         label: "安装本地模块",
-        sub: 'js、css或json',
+        sub: 'js、css、json或html',
         type: 'file',
         title: '选择',
         accept: [".js", ".css", ".json", ".html"],
@@ -358,7 +358,7 @@
         title: "管理",
         action: () => new Config()
     })
-})();
+} catch (e) { API.trace(e, "manage.js") }
 declare namespace config {
     /**
      * 模块：检查更新

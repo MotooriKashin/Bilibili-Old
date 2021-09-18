@@ -5,7 +5,7 @@
  * @see protobufjs {@link https://github.com/protobufjs/protobuf.js}
  * @license BSD 3-Clause
  */
-(function () {
+try {
     class Danmaku {
         static root: any;
         static protoSeg: any;
@@ -311,7 +311,7 @@
     API.segDmDecode = (response: any) => DM.segDmDecode(response);
     API.danmakuFormat = (dm: any[], aid?: number | string) => DM.danmakuFormat(dm, aid);
     API.onlineDanmaku = (url: string) => DM.onlineDanmaku(url);
-})();
+} catch (e) { API.trace(e, "danmaku.js", true) }
 declare namespace API {
     /**
      * 获取 proto 弹幕

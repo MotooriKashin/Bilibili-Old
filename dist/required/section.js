@@ -1,7 +1,7 @@
 /**
  * 本模块负责替换全局顶栏和底栏
  */
-(function () {
+try {
     API.runWhile(() => document.querySelector("#internationalHeader"), () => {
         var _a;
         if (API.path.name)
@@ -24,4 +24,7 @@
         API.addElement("div", { class: "footer bili-footer report-wrap-module", id: "home_footer" });
         API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/common/js/footer.js" });
     });
-})();
+}
+catch (e) {
+    API.trace(e, "section.js");
+}

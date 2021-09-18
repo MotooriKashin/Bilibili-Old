@@ -1,7 +1,7 @@
 /**
  * 本模块负责绘制设置UI
  */
-(function () {
+try {
     // @ts-expect-error 专属变量
     const menu: { [name: string]: Menuitem } = MENU, setting: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon)[] = SETTING;
     class Ui {
@@ -503,7 +503,7 @@
     API.importModule("manage.js");
     const ui = new Ui();
     Reflect.set(API, "displaySetting", (key?: string) => ui.display(key));
-})();
+} catch (e) { API.trace(e, "ui.js", true) }
 declare namespace API {
     /**
      * 弹出设置菜单  

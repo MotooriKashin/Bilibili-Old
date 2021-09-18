@@ -1,7 +1,7 @@
 /**
  * 本页面负责引导全局模块运行，一般全局生效运行的模块请将导入命令写在这里
  */
-(function () {
+try {
     // @ts-ignore 添加设置入口，该函数运行即毁，所以没有添加进注释。
     API.initUi();
     API.importModule("parameterTrim.js"); // 网址清理
@@ -23,4 +23,7 @@
     config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 弹幕反查
     config.unloginPopover && !API.uid && API.importModule("unloginPopover.js"); // 未登录弹窗
     GM.getValue("thirdModule", []).forEach(d => API.importModule(d)); // 第三方模块
-})();
+}
+catch (e) {
+    API.trace(e, "vector.js", true);
+}

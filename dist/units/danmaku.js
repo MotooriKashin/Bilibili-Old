@@ -5,7 +5,7 @@
  * @see protobufjs {@link https://github.com/protobufjs/protobuf.js}
  * @license BSD 3-Clause
  */
-(function () {
+try {
     class Danmaku {
         constructor() {
             API.importModule("protobuf.min.js");
@@ -328,4 +328,7 @@
     API.segDmDecode = (response) => DM.segDmDecode(response);
     API.danmakuFormat = (dm, aid) => DM.danmakuFormat(dm, aid);
     API.onlineDanmaku = (url) => DM.onlineDanmaku(url);
-})();
+}
+catch (e) {
+    API.trace(e, "danmaku.js", true);
+}

@@ -1,7 +1,7 @@
 /**
  * 本模块负责强制拦截视频载入
  */
-(function () {
+try {
     API.xhrhook(["/playurl?"], function (args) {
         let obj: any = API.urlObj(args[1]);
         obj.aid = 1, obj.cid = 1, obj.ep_id = 1;
@@ -13,4 +13,4 @@
             (<any>window).BilibiliPlayer({ aid: API.aid, cid: API.cid });
         }, true)
     })
-})();
+} catch (e) { API.trace(e, "noVideo.js") }

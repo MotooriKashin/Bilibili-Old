@@ -1,7 +1,7 @@
 /**
  * 本模块负责取消主页个性化推荐
  */
-(function () {
+try {
     let indexRecommend: any[], indexFlag: number;
     API.runWhile(() => document.querySelector(".bili-wrapper"), async function () {
         try {
@@ -31,4 +31,4 @@
             if (API.uid && config.privateRecommend) prev.click(); // 移除个性化推荐
         } catch (e) { API.trace(e, "indexRecommend.js") }
     })
-})();
+} catch (e) { API.trace(e, "indexRecommend.js", true) }

@@ -1,7 +1,7 @@
 /**
  * 本模块负责修正旧版顶栏分区
  */
-(function () {
+try {
     API.runWhile(() => document.querySelector("#bili-header-m"), () => {
         let node = document.querySelector("#bili-header-m").getElementsByClassName('nav-name');
         if (node[0]) {
@@ -44,4 +44,7 @@
             }
         }
     });
-})();
+}
+catch (e) {
+    API.trace(e, "sectionTypo.js");
+}

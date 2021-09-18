@@ -1,7 +1,7 @@
 /**
  * 本模块负责修复Bangumi页面数据错误
  */
-(function () {
+try {
     // 修复追番数
     API.xhrhook(["bangumi.bilibili.com/ext/web_api/season_count?"], function (args) {
         this.addEventListener('readystatechange', () => {
@@ -90,4 +90,7 @@
         // @ts-ignorei：前面判定了存在节点
         item.querySelector(".mCSB_container").innerHTML = data;
     }
-})();
+}
+catch (e) {
+    API.trace(e, "restoreData.js", true);
+}

@@ -1,7 +1,7 @@
 /**
  * 本模块负责修复资讯区新动态数目
  */
-(function () {
+try {
     API.jsonphook(['api.bilibili.com/x/web-interface/online'], function (xhr) {
         const obj = API.urlObj(xhr.url);
         let callback = obj.callback;
@@ -13,4 +13,4 @@
             }
         }
     })
-})();
+} catch (e) { API.trace(e, "replyList.js") }

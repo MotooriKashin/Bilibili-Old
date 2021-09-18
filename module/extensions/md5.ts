@@ -5,7 +5,7 @@
  * @see js-md5 {@link https://github.com/emn178/js-md5}
  * @license MIT
  */
-(function () {
+try {
     const ERROR = 'input is invalid type';
     const ARRAY_BUFFER = true;
     const HEX_CHARS = '0123456789abcdef'.split('');
@@ -431,7 +431,7 @@
         }
     }
     API.md5 = createMethod();
-})()
+} catch (e) { API.trace(e, "md5.js", true) }
 declare namespace API {
     /**
      * 获取md5哈希值  

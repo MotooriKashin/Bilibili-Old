@@ -1,7 +1,7 @@
 /**
  * 本模块负责实现反查弹幕发送者功能
  */
-(function () {
+try {
     API.addCss(API.getModule("danmakuHashId.css"));
     class DanmakuHashId {
         static count: number = 0; // 正在查询弹幕数
@@ -54,7 +54,7 @@
         const check = new DanmakuHashId(crc);
         return `hash: ${check.hash} mid: ${check.mid}`
     }
-})();
+} catch (e) { API.trace(e, "danmakuHashId.js", true) }
 interface Window {
     /**
      * 反查弹幕发送者  

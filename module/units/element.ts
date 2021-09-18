@@ -227,7 +227,7 @@ try {
         checkbox: (list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]) => Element.checkbox(list, callback, value)
     }
     API.getCss = (...svg: string[]) => Element.getCss(...svg);
-} catch (e) { API.trace(e, "element.js") }
+} catch (e) { API.trace(e, "element.js", true) }
 declare namespace API {
     let element: {
         /**

@@ -1,7 +1,7 @@
 /**
  * 本模块负责处理并记录playinfo信息
  */
-(function () {
+try {
     API.xhrhook(["/playurl?"], function (args) {
         let obj: any = API.urlObj(args[1]);
         !obj.sign && (obj.fourk = 1, obj.fnval = obj.fnval ? 80 : null); // 4k支持
@@ -18,7 +18,8 @@
             }
         } catch (e) { API.trace(e, "playinfoRecord.js") }
     }
-})();
+
+} catch (e) { API.trace(e, "playinfoRecord.js") }
 declare namespace API {
     /**
      * __playinfo__

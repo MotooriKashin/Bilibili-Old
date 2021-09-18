@@ -1,7 +1,7 @@
 /**
  * 本模块负责接触区域、APP等播放限制  
  */
-(function () {
+try {
     class HookTimeOut {
         hook: (handler: TimerHandler, timeout?: number | undefined, ...args: any[]) => number
         constructor() {
@@ -161,4 +161,4 @@
         this.dispatchEvent(new ProgressEvent("loadend"));
         hookTimeout.relese();
     }
-})();
+} catch (e) { API.trace(e, "videoLimit.js", true) }

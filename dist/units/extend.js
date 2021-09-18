@@ -1,7 +1,7 @@
 /**
  * 本模块负责拓展一些小工具，这些工具不便写在主模块中
  */
-(function () {
+try {
     function getCookies() {
         return document.cookie.split('; ').reduce((s, d) => {
             let key = d.split('=')[0];
@@ -93,4 +93,7 @@
         });
     }
     API.readAs = (file, type, encoding) => readAs(file, type, encoding);
-})();
+}
+catch (e) {
+    API.trace(e, "extend.js", true);
+}

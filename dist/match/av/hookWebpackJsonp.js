@@ -1,7 +1,7 @@
 /**
  * 本模块负责修复av页原生脚本中的错误代码
  */
-(function () {
+try {
     let webpackJsonpFunction;
     Object.defineProperty(window, "webpackJsonp", {
         get() {
@@ -36,4 +36,7 @@
             webpackJsonpFunction = func;
         }
     });
-})();
+}
+catch (e) {
+    API.trace(e, "webpackJsonpFunction.js", true);
+}

@@ -1,7 +1,7 @@
 /**
  * 本模块负责提供全弹幕装填工具
  */
-(function () {
+try {
     class AllDanmaku {
         constructor(callback) {
             this.danmaku = [];
@@ -180,4 +180,7 @@
         }
     }
     API.allDanmaku = (callback) => { new AllDanmaku(callback); };
-})();
+}
+catch (e) {
+    API.trace(e, "allDanmaku.js", true);
+}

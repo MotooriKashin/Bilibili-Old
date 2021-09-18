@@ -1,7 +1,7 @@
 /**
  * 本模块负责处理dmid跳转
  */
-(function () {
+try {
     const dmid = API.urlObj(location.href).dmid;
     let progress: any = Number(API.urlObj(location.href).dm_progress);
     let first = 0;
@@ -20,4 +20,4 @@
             progress && (<any>window).player.seek(progress / 1000 - .2);
         }
     })
-})();
+} catch (e) { API.trace(e, "loadByDmid.js") }

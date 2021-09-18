@@ -1,7 +1,7 @@
 /**
  * 本模块负责处理URL，包括地址栏和a标签
  */
-(function () {
+try {
     class ParameterTrim {
         constructor() {
             /**
@@ -107,4 +107,7 @@
         node.tagName == "A" && parameterTrim.anchor([node]);
     });
     document.addEventListener("click", e => parameterTrim.click(e), !1);
-})();
+}
+catch (e) {
+    API.trace(e, "parameterTrim.js");
+}

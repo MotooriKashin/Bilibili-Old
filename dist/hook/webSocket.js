@@ -2,7 +2,7 @@
  * 本模块hook了WebSocket以修复旧版播放器的实时弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
-(function () {
+try {
     let decoder = new TextDecoder();
     let encoder = new TextEncoder();
     let liveChatOld; // 对旧播放器建立的ws对象的引用
@@ -193,4 +193,7 @@
             return n;
         };
     }
-})();
+}
+catch (e) {
+    API.trace(e, "webSocket.js", true);
+}

@@ -1,7 +1,7 @@
 /**
  * 本模块负责执行切P调用监听
  */
-(function () {
+try {
     const switchlist = [];
     /**
      * 注册切P回调
@@ -20,4 +20,7 @@
             switchlist.forEach(d => d());
         }
     });
-})();
+}
+catch (e) {
+    API.trace(e, "switchVideo.js", true);
+}

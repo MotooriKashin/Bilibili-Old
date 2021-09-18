@@ -1,7 +1,7 @@
 /**
  * 本模块负责拦截B站日志上报
  */
-(function () {
+try {
     let sendBeacon = Navigator.prototype.sendBeacon;
     Navigator.prototype.sendBeacon = function (url, data) {
         if (url.includes("data.bilibili.com"))
@@ -12,4 +12,7 @@
     // xhrhook的部分
     API.xhrhook(["data.bilibili.com"], function (args) { this.send = () => true; });
     API.xhrhook(["data.bilivideo.com"], function (args) { this.send = () => true; });
-})();
+}
+catch (e) {
+    API.trace(e, "sendBeacon.js", true);
+}

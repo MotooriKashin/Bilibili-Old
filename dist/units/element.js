@@ -228,5 +228,5 @@ try {
     API.getCss = (...svg) => Element.getCss(...svg);
 }
 catch (e) {
-    API.trace(e, "element.js");
+    API.trace(e, "element.js", true);
 }

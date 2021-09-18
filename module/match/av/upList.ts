@@ -2,7 +2,7 @@
  * 本模块负责生成和作视频的UP列表  
  * 请以`staff`的名义传入UP主列表
  */
-(function () {
+try {
     API.runWhile(() => document.querySelector("#v_upinfo"), () => {
         let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
         // @ts-ignore：该变量由主模块传入
@@ -19,4 +19,4 @@
         (<HTMLElement>document.querySelector("#v_upinfo")).innerHTML = fl;
         API.addCss(API.getModule("upList.css"));
     })
-})();
+} catch (e) { API.trace(e, "upList.js", true) }

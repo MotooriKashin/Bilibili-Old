@@ -1,7 +1,7 @@
 /**
  * 本模块负责修复主页失效分区
  */
-(function () {
+try {
     API.importModule("biliIndexRec.js");
     API.importModule("ad2info.js");
     API.importModule("mediaRank.js");
@@ -22,4 +22,4 @@
     API.jsonphook(["api.bilibili.com/x/web-interface/ranking/index"], function (xhr) {
         xhr.url = xhr.url.replace("ranking/index", "index/top");
     })
-})();
+} catch (e) { API.trace(e, "indexSort.js", true) }

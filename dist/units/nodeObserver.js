@@ -2,7 +2,7 @@
  * 本模块负责DOM节点变动监听
  * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
  */
-(function () {
+try {
     const nodelist = [];
     /**
      * 注册节点添加监听
@@ -27,4 +27,7 @@
     (new MutationObserver(d => d.forEach(d => {
         d.addedNodes[0] && nodelist.forEach(async (f) => f(d.addedNodes[0]));
     }))).observe(document, { childList: true, subtree: true });
-})();
+}
+catch (e) {
+    API.trace(e, "nodeObserver.js", true);
+}

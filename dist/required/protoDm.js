@@ -1,7 +1,7 @@
 /**
  * 本模块负责使旧版播放器支持新版弹幕
  */
-(function () {
+try {
     // 修复一般弹幕
     API.importModule("worker.js");
     // 修复历史弹幕
@@ -34,4 +34,7 @@
             });
         }
     });
-})();
+}
+catch (e) {
+    API.trace(e, "protoDm.js", true);
+}

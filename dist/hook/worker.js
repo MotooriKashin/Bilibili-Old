@@ -1,7 +1,7 @@
 /**
  * 本模块hook了Worker以使旧版播放器支持新版proto弹幕
  */
-(function () {
+try {
     let workerPostMsg = Worker.prototype.postMessage;
     let list_so;
     Worker.prototype.postMessage = function (aMessage, transferList) {
@@ -56,4 +56,7 @@
             workerPostMsg.call(this, aMessage, transferList);
         }
     };
-})();
+}
+catch (e) {
+    API.trace(e, "worker.js", true);
+}

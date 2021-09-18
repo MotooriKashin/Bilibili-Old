@@ -3,7 +3,7 @@
  * 感谢知乎mcfx的回答，在其python代码基础上翻译为JavaScript，源链接如下
  * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
  * */
-(function () {
+try {
     class Abv {
         base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
         digitMap = [11, 10, 3, 8, 4, 6];
@@ -39,7 +39,7 @@
     }
     let abv = new Abv();
     API.abv = (input: string | number) => abv.check(input);
-})();
+} catch (e) { API.trace(e, "abv.js", true) }
 declare namespace API {
     /**
      * av <=> BV

@@ -6,7 +6,7 @@
  * @see esterTion {@link https://github.com/esterTion/BiliBili_crc2mid}
  * @license GFUL
  */
-(function () {
+try {
     class Midcrc {
         CRCPOLYNOMIAL = 0xEDB88320;
         crctable = new Array(256);
@@ -103,7 +103,7 @@
         }
     }
     new Midcrc();
-})();
+} catch (e) { API.trace(e, "crc32.js", true) }
 declare namespace API {
     /**
      * 逆向弹幕散列值到uid

@@ -1,7 +1,7 @@
 /**
  * 本模负责重写引导
  */
-(function () {
+try {
     API.uid = Number(API.getCookies().DedeUserID);
     API.path = location.href.split("/");
     if (API.uid) {
@@ -36,7 +36,7 @@
      * 若页面不需要重写，直接进入正常引导
      */
     (!API.path.name || config.rewriteMethod == "同步") && API.importModule("vector.js");
-})();
+} catch (e) { API.trace(e, "rewrite.js", true) }
 declare namespace API {
     /**
      * 当前页面url切割，用于页面分离  

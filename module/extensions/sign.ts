@@ -1,7 +1,7 @@
 /**
  * 本模块提供B站URL签名工具
  */
-(function () {
+try {
     /**
      * appkey and salt  
      * 注释后是带掩码版 appkey  
@@ -87,7 +87,7 @@
     urlsign.encode = (key: string, secret: string) => Sign.encode(key, secret);
     urlsign.list = () => Sign.list();
     API.urlsign = urlsign;
-})();
+} catch (e) { API.trace(e, "sign.js", true) }
 declare namespace API {
     /**
      * 签名URL

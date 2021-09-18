@@ -1,7 +1,7 @@
 /**
  * 本模块负责添加bangumi分集数据
  */
-(function () {
+try {
     let first = 0; // 首p指示
     API.switchVideo(async () => {
         try {
@@ -25,4 +25,4 @@
             debug.debug("播放", view + " 弹幕", danmaku);
         } catch (e) { API.trace(e, "episodeData.js") }
     })
-})();
+} catch (e) { API.trace(e, "episodeData.js") }

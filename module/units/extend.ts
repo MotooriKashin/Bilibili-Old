@@ -1,7 +1,7 @@
 /**
  * 本模块负责拓展一些小工具，这些工具不便写在主模块中
  */
-(function () {
+try {
     function getCookies() {
         return document.cookie.split('; ').reduce((s: { [name: string]: string }, d) => {
             let key = d.split('=')[0];
@@ -85,7 +85,7 @@
         })
     }
     (<any>API.readAs) = (file: File, type?: "ArrayBuffer" | "DataURL" | "string", encoding?: string) => readAs(file, type, encoding);
-})();
+} catch (e) { API.trace(e, "extend.js", true) }
 declare namespace API {
     /**
      * 获取当前用户cookies

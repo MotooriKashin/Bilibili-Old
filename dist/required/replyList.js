@@ -1,7 +1,7 @@
 /**
  * 本模块负责恢复翻页评论区
  */
-(function () {
+try {
     API.scriptIntercept(["comment.min.js"], "comment.js");
     class ReplyList {
         init() {
@@ -23,4 +23,7 @@
         }
     }
     new ReplyList().init();
-})();
+}
+catch (e) {
+    API.trace(e, "replyList.js", true);
+}

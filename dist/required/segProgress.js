@@ -1,7 +1,7 @@
 /**
  * 本模块负责添加分段进度条
  */
-(function () {
+try {
     class SegProgress {
         constructor(resp) {
             if (!resp.data.view_points || resp.data.view_points.length == 0)
@@ -132,4 +132,7 @@
     }
     SegProgress.cssInited = false;
     API.segProgress = (data) => { new SegProgress(data); };
-})();
+}
+catch (e) {
+    API.trace(e, "segProgress.js", true);
+}

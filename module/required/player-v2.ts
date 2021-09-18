@@ -3,7 +3,7 @@
  * 视频信息接口`https://api.bilibili.com/x/player/v2`  
  * 备用移动端接口`https://api.bilibili.com/x/v2/dm/view`
  */
-(function () {
+try {
     API.switchVideo(() => {
         let ready = false; // 载入时机标记
         API.xhrhook(["api.bilibili.com/x/player/carousel.so"], function (args) { ready = true });
@@ -25,4 +25,4 @@
             })
         })
     })
-})();
+} catch (e) { API.trace(e, "player-v2.js", true) }

@@ -90,4 +90,4 @@ try {
         }
     }
     new Read();
-} catch (e) { API.trace(e, "read.js") }
+} catch (e) { API.trace(e, "read.js", true) }

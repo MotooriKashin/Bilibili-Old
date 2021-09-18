@@ -1,7 +1,7 @@
 /**
  * 本模块负责重建playurl为网页端类型
  */
-(function () {
+try {
     const OBJ = {};
     class RebuildPlayerurl {
         constructor() {
@@ -382,4 +382,7 @@
         }
     }
     API.RebuildPlayerurl = RebuildPlayerurl;
-})();
+}
+catch (e) {
+    API.trace(e, "rebuildPlayerurl.js", true);
+}

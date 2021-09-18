@@ -1,7 +1,7 @@
 /**
  * 本模块负责提供全弹幕装填工具
  */
-(function () {
+try {
     class AllDanmaku {
         pubdate: any; // 视频发布时间
         today: any; // 当天
@@ -163,7 +163,7 @@
         }
     }
     API.allDanmaku = (callback?: Function) => { new AllDanmaku(callback) };
-})();
+} catch (e) { API.trace(e, "allDanmaku.js", true) }
 declare namespace API {
     /**
      * 全弹幕装填

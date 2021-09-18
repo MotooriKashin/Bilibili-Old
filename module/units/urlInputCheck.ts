@@ -2,7 +2,7 @@
  * 本模块负责检查url输入并返回对应aid/cid等值  
  * 按需加载模块请先载入再使用相关方法
  */
-(function () {
+try {
     API.urlInputCheck = async function (input: string): Promise<{ aid: number; cid: number; ssid: number; epid: number; p: number; }> {
         let aid: any, cid: any, ssid: any, epid: any, p: any;
         toast("正在解析链接：" + input);
@@ -76,7 +76,7 @@
         } catch (e) { }
         return { aid, cid, ssid, epid, p }
     }
-})();
+} catch (e) { API.trace(e, "urlInputCheck.js", true) }
 declare namespace API {
     /**
      * 检查URL输入并返回关键参数，无效输入各输入返回`undefiend`  

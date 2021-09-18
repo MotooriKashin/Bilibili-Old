@@ -3,7 +3,7 @@
  * 源码来自B站原生header.js工程，具体来源不明  
  * 稍作修改以符合本项目需求
  */
-(function () {
+try {
     const NEWTON_ITERATIONS = 4
     const NEWTON_MIN_SLOPE = 0.001
     const SUBDIVISION_PRECISION = 0.0000001
@@ -101,7 +101,7 @@
             return calcBezier(getTForX(x), mY1, mY2)
         }
     }
-})();
+} catch (e) { API.trace(e, "cubicBezier.js", true) }
 declare namespace API {
     function bezier(mX1: any, mY1: any, mX2: any, mY2: any): (x: any) => any
 }

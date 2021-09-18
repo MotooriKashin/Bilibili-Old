@@ -1,6 +1,7 @@
 var _a;
 /**
  * 本模块负责替换顶栏动图接口
+ * 本模块动态banner相关代码移植自B站header.js
  */
 try {
     class Animate {
@@ -341,5 +342,5 @@ try {
     });
 }
 catch (e) {
-    API.trace(e, "banner.js");
+    API.trace(e, "banner.js", true);
 }

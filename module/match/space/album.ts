@@ -1,7 +1,7 @@
 /**
  * 本模块负责将空间中相簿的链接从动态重定向回去
  */
-(function () {
+try {
     API.xhrhook(["api.bilibili.com/x/dynamic/feed/draw/doc_list"], function (args) {
         this.addEventListener('readystatechange', () => {
             if (this.readyState === 4) {
@@ -19,4 +19,4 @@
             }
         });
     })
-})();
+} catch (e) { API.trace(e, "album.js") }

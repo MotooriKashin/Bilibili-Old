@@ -3,7 +3,7 @@
  * 这里指的原生脚本是那些非直接写入原生HTML，而是后续由JavaScript添加进DOM的脚本
  * 本模块导入优先级极高
  */
-(function () {
+try {
     class NodeHook {
         constructor() {
             this.jsonphook = (url, callback) => NodeHook.jsonp.push([url, callback]);
@@ -61,4 +61,7 @@
     API.scriptIntercept = (rule, moduleName) => nodeHook.intercept(rule, moduleName);
     API.jsonphook = (url, callback) => nodeHook.jsonphook(url, callback);
     API.removeJsonphook = (id) => nodeHook.removeJsonphook(id);
-})();
+}
+catch (e) {
+    API.trace(e, "Node.js", true);
+}

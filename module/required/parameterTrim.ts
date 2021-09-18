@@ -1,7 +1,7 @@
 /**
  * 本模块负责处理URL，包括地址栏和a标签
  */
-(function () {
+try {
     class ParameterTrim {
         /**
          * 过滤参数
@@ -84,9 +84,9 @@
             })
             return arr.join("/");
         }
-        click(e:MouseEvent){
+        click(e: MouseEvent) {
             var f = <HTMLAnchorElement>e.target;
-            for (; f && "A" !== f.tagName; ) {
+            for (; f && "A" !== f.tagName;) {
                 f = <HTMLAnchorElement>f.parentNode
             }
             if ("A" !== (null == f ? void 0 : f.tagName)) {
@@ -102,5 +102,5 @@
         node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
         node.tagName == "A" && parameterTrim.anchor([node]);
     })
-    document.addEventListener("click", e=>parameterTrim.click(e), !1)
-})();
+    document.addEventListener("click", e => parameterTrim.click(e), !1);
+} catch (e) { API.trace(e, "parameterTrim.js") }

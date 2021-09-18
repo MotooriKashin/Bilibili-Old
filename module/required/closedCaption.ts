@@ -3,7 +3,7 @@
  * 代码移植自 Bilibili CC 字幕工具，源项目信息如下
  * @see indefined {@link https://github.com/indefined/UserScripts/tree/master/bilibiliCCHelper}
  */
-(function () {
+try {
     class ClosedCaption {
         element: { [name: string]: any } = {}; // 节点集合
         data: { [name: string]: any } = {}; // 字幕缓存
@@ -308,7 +308,7 @@
         }
     }
     API.closedCaption = (data: any) => { new ClosedCaption().getCaption(data) };
-})();
+} catch (e) { API.trace(e, "closedCaption.js", true) }
 declare namespace API {
     /**
      * CC字幕组

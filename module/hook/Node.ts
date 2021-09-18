@@ -3,7 +3,7 @@
  * 这里指的原生脚本是那些非直接写入原生HTML，而是后续由JavaScript添加进DOM的脚本  
  * 本模块导入优先级极高
  */
-(function () {
+try {
     class NodeHook {
         static appendChild = Node.prototype.appendChild;
         static insertBefore = Node.prototype.insertBefore;
@@ -65,7 +65,7 @@
     API.scriptIntercept = (rule: string[], moduleName?: string) => nodeHook.intercept(rule, moduleName);
     API.jsonphook = (url: string[], callback: (xhr: { url: string }) => void) => nodeHook.jsonphook(url, callback);
     API.removeJsonphook = (id: number) => nodeHook.removeJsonphook(id);
-})();
+} catch (e) { API.trace(e, "Node.js", true) }
 declare namespace API {
     /**
      * 替换插入页面的外部脚本文件  
