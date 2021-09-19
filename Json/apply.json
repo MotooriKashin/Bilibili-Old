@@ -40,5 +40,6 @@
     "element": "element.js",
     "getCss": "element.js",
     "saveAs": "extend.js",
-    "readAs": "extend.js"
+    "readAs": "extend.js",
+    "Base64": "Base64.js"
 }
