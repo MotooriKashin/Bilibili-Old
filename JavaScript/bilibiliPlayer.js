@@ -16252,8 +16252,8 @@ function Fa() {
                                 c = d
                             }
                             if (c.length && c[Math.floor(f / 100)]) {
-                                if (e)
-                                    for (g = 0; g < c.length; g++) c[g] = c[g].replace(".jpg", ".jpg@.webp");
+                                // if (e)
+                                //     for (g = 0; g < c.length; g++) c[g] = c[g].replace(".jpg", ".jpg@.webp");
                                 e = {
                                     pv_img: c,
                                     pv_x_len: parseInt($(b).data("pv_x_len"), 10) || 10,
@@ -16264,6 +16264,8 @@ function Fa() {
                                 b.css({
                                     width: e.pv_x_size,
                                     height: e.pv_y_size,
+                                    "transform": "scale(" + 160 / e.pv_x_size + ")",
+                                    "transform-origin": "0 0",
                                     "background-image": "url(" + c[Math.floor(f / 100)] + ")",
                                     "background-position": -(f % 100 % e.pv_x_len) * e.pv_x_size + "px " + -Math.floor(f % 100 / e.pv_y_len) * e.pv_y_size + "px"
                                 })
