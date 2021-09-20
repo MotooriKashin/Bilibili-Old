@@ -51,6 +51,11 @@ const MENU = {};
 function registerMenu(obj) {
     Reflect.set(MENU, Reflect.get(obj, "key"), obj);
 }
+function unRegisterSetting(keys) {
+    SETTING.forEach((d, i) => {
+        keys ? (Reflect.has(d, "key") && keys.includes(Reflect.get(d, "key")) && SETTING.splice(i, 1)) : SETTING.splice(0, SETTING.length);
+    });
+}
 class Xhr {
     /**
      * `XMLHttpRequest`的`Promise`封装
@@ -364,6 +369,7 @@ class API {
         this.Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
         this.registerSetting = registerSetting;
         this.registerMenu = registerMenu;
+        this.unRegisterSetting = unRegisterSetting;
         this.runWhile = API.runWhile;
         this.importModule = API.importModule;
         this.timeFormat = (time, type) => Format.timeFormat(time, type);
