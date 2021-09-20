@@ -5,5 +5,8 @@
     try {
         class Download {
         }
-    } catch (e) { API.trace(e, "download.js", true) }
+    }
+    catch (e) {
+        API.trace(e, "download.js", true);
+    }
 })();

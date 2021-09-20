@@ -3,49 +3,51 @@
  * 感谢知乎mcfx的回答，在其python代码基础上翻译为JavaScript，源链接如下
  * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
  * */
-try {
-    class Abv {
-        constructor() {
-            this.base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
-            this.digitMap = [11, 10, 3, 8, 4, 6];
-            this.xor = 177451812;
-            this.add = 8728348608;
-            this.bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
-            this.table = {};
-            for (let i = 0; i < 58; i++)
-                this.table[this.base58Table[i]] = i;
+(function () {
+    try {
+        class Abv {
+            constructor() {
+                this.base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
+                this.digitMap = [11, 10, 3, 8, 4, 6];
+                this.xor = 177451812;
+                this.add = 8728348608;
+                this.bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
+                this.table = {};
+                for (let i = 0; i < 58; i++)
+                    this.table[this.base58Table[i]] = i;
+            }
+            /**
+             * av/BV互转
+             * @param input av或BV，可带av/BV前缀
+             * @returns 转化结果
+             */
+            check(input) {
+                if (/^[aA][vV][0-9]+$/.test(String(input)) || /^\d+$/.test(String(input)))
+                    return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
+                if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
+                    return this.bvToAv("BV" + input);
+                if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
+                    return this.bvToAv(String(input));
+                throw input;
+            }
+            bvToAv(BV) {
+                let r = 0;
+                for (let i = 0; i < 6; i++)
+                    r += this.table[BV[this.digitMap[i]]] * 58 ** i;
+                return (r - this.add) ^ this.xor;
+            }
+            avToBv(av) {
+                let bv = Array.from(this.bvidTemplate);
+                av = (av ^ this.xor) + this.add;
+                for (let i = 0; i < 6; i++)
+                    bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
+                return bv.join("");
+            }
         }
-        /**
-         * av/BV互转
-         * @param input av或BV，可带av/BV前缀
-         * @returns 转化结果
-         */
-        check(input) {
-            if (/^[aA][vV][0-9]+$/.test(String(input)) || /^\d+$/.test(String(input)))
-                return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-            if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
-                return this.bvToAv("BV" + input);
-            if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
-                return this.bvToAv(String(input));
-            throw input;
-        }
-        bvToAv(BV) {
-            let r = 0;
-            for (let i = 0; i < 6; i++)
-                r += this.table[BV[this.digitMap[i]]] * 58 ** i;
-            return (r - this.add) ^ this.xor;
-        }
-        avToBv(av) {
-            let bv = Array.from(this.bvidTemplate);
-            av = (av ^ this.xor) + this.add;
-            for (let i = 0; i < 6; i++)
-                bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
-            return bv.join("");
-        }
+        let abv = new Abv();
+        API.abv = (input) => abv.check(input);
     }
-    let abv = new Abv();
-    API.abv = (input) => abv.check(input);
-}
-catch (e) {
-    API.trace(e, "abv.js", true);
-}
+    catch (e) {
+        API.trace(e, "abv.js", true);
+    }
+})();
