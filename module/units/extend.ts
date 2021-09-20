@@ -85,6 +85,18 @@ try {
         })
     }
     (<any>API.readAs) = (file: File, type?: "ArrayBuffer" | "DataURL" | "string", encoding?: string) => readAs(file, type, encoding);
+    const aids: { [name: string]: any } = {};
+    async function getAidInfo(aid: number) {
+        if (!aids[aid]) {
+            const data = await xhr({
+                url: `https://api.bilibili.com/x/web-interface/view/detail?aid=${aid}`,
+                responseType: "json"
+            })
+            aids[aid] = data.data;
+        }
+        return aids[aid];
+    }
+    API.getAidInfo = (aid: number) => getAidInfo(aid);
 } catch (e) { API.trace(e, "extend.js", true) }
 declare namespace API {
     /**
@@ -133,4 +145,9 @@ declare namespace API {
     function readAs(file: File, type: "DataURL"): Promise<string>;
     function readAs(file: File, type: "string", encoding?: string): Promise<string>;
     function readAs(file: File, type: "ArrayBuffer"): Promise<ArrayBuffer>;
+    /**
+     * 获取aid的信息，无效aid除外
+     * @param aid aid
+     */
+    function getAidInfo(aid: number): Promise<any>;
 }

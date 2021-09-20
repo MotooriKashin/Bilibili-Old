@@ -230,9 +230,10 @@ try {
             node = node || this.itemContain(obj.sort);
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
-            API.addElement("div", { class: "contain" }, root, `<picture><img src="${obj.src}"></picture>`);
+            const real = API.addElement("div", { class: "contain" }, root, `<picture><img src="${obj.src}"></picture>`);
             API.addCss(API.getModule("ui-picture.css"), "", root);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             return div;
         }
         /**
@@ -257,6 +258,7 @@ try {
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             return div;
         }
         /**
@@ -282,6 +284,7 @@ try {
             obj.sub && API.addElement("div", { class: "sub" }, label, obj.sub);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             return div;
         }
         /**
@@ -310,6 +313,7 @@ try {
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div) && node.appendChild(sec);
+            obj.callback && new Promise(r => obj.callback.call(real));
             item = obj.list.reduce((s: HTMLDivElement[], d) => {
                 let temp = this.index(d, secreal);
                 temp.style.display = "none";
@@ -345,6 +349,7 @@ try {
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             return div;
         }
         /**
@@ -378,6 +383,7 @@ try {
                 (<HTMLDivElement>value.children[2]).setAttribute("style", "display: none;cursor: pointer;pointer-events: auto;position: absolute;right: 65px;background-color: white;"));
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             let input = <HTMLInputElement>value.children[0];
             let clear = <HTMLDivElement>value.children[2];
             obj.hasOwnProperty("value") && (input.value = <string>config[obj.key]);
@@ -430,6 +436,7 @@ try {
             obj.multiple && (input.multiple = true);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             value.onclick = () => input.click();
             input.onclick = () => input.value = "";
             input.onchange = () => input.files && obj.action.call(real, input.files);
@@ -457,6 +464,7 @@ try {
             obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             return div;
         }
         /**
@@ -479,6 +487,7 @@ try {
             obj.sub && (table.label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
             obj.float && this.float(real, obj.float);
             node && node.appendChild(div);
+            obj.callback && new Promise(r => obj.callback.call(real));
             obj.flesh && obj.flesh.call(real, new Proxy(obj, {
                 set: (t, p, v) => {
                     Reflect.set(obj, p, v);

@@ -22,16 +22,30 @@ try {
         /**
          * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭
          * 浮动窗口上的内容请通过返回的节点进行后续添加
+         * @param style 添加style样式，直接写进element，具有最高优先级
+         * @param hold 禁用自动关闭，转而提供一个关闭按钮
          * @returns 浮动窗口实际可操作节点，可以往上面添加需要显示在浮动窗口上的内容
          */
-        static popupbox() {
+        static popupbox(style = {}, hold) {
             const box = API.addElement("div", { class: "ui-popup-box" });
             const real = box.attachShadow({ mode: "closed" });
             const div = API.addElement("div", { class: "box" }, real);
             const popup = API.addElement("div", { class: "contain" }, div);
             API.addCss(API.getModule("ui-popup-box.css"), undefined, real);
-            new ClickRemove(box);
+            Object.keys(style).forEach(d => popup.style[d] = style[d]);
+            hold ? this.close(div, box) : new ClickRemove(box);
             return popup;
+        }
+        /**
+         * 添加关闭按钮
+         * @param ele 按钮所在节点
+         * @param box 点击按钮关闭的节点，不存在则取ele
+         */
+        static close(ele, box) {
+            const svg = this.svg('<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>');
+            svg.setAttribute("style", "position: absolute;transform: scale(0.8);right: 10px;top: 10px;");
+            svg.onclick = () => box ? box.remove() : ele.remove();
+            ele.appendChild(svg);
         }
         /**
          * 封装hr标签，一条水平直线，一般用于隔断节点
@@ -215,7 +229,7 @@ try {
         }
     }
     API.element = {
-        popupbox: () => Element.popupbox(),
+        popupbox: (style, hold) => Element.popupbox(style, hold),
         hr: () => Element.hr(),
         svg: (svg) => Element.svg(svg),
         switch: (callback, value) => Element.switch(callback, value),

@@ -28,7 +28,7 @@ function registerMenu(obj: Menuitem) {
  * 已注册的菜单，通过`registerMenu`新建项请补充这里的可能值
  * **本变量仅作为类型声明接口类似的东西存在，不可参与到任何实际运行代码中！**
  */
-declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live"
+declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live" | "module" | "download"
 /**
  * 工具栏按钮
  */
@@ -78,11 +78,16 @@ interface ItemPic {
     /**
      * 菜单归属分类菜单，也可以新建
      */
-    sort: string;
+    sort: typeof settingSort;
     /**
      * 图片 URL
      */
     src: string;
+    /**
+     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
+     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     */
+    callback?: (this: HTMLDivElement) => void;
 }
 interface ItemCommon {
     /**
@@ -114,6 +119,11 @@ interface ItemCommon {
      * ※ 理论上支持所有能以<div>为父节点的标签
      */
     float?: string;
+    /**
+     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
+     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     */
+    callback?: (this: HTMLDivElement) => void;
 }
 /**
  * 开关类菜单项，用以给用户判断是否开启某些功能等  
@@ -247,6 +257,11 @@ interface ItemIpt {
      * 0 表示一直禁用直到刷新面板
      */
     disabled?: number;
+    /**
+     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
+     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     */
+    callback?: (this: HTMLDivElement) => void;
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等

@@ -41,5 +41,6 @@
     "getCss": "element.js",
     "saveAs": "extend.js",
     "readAs": "extend.js",
-    "Base64": "Base64.js"
+    "Base64": "Base64.js",
+    "getAidInfo": "extend.js"
 }

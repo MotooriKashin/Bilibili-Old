@@ -1,5 +1,7 @@
 /**
  * 本模块负责提供Base64<=>字符串的互转函数
+ * 本模块核心代码直接来源如下
+ * @see MDN Web Docs {@link https://developer.mozilla.org/en-US/docs/Glossary/Base64}
  */
 try {
     class Base64 {

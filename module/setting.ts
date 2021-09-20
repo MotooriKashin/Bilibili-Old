@@ -11,6 +11,7 @@ try {
     API.registerMenu({ key: "player", name: "播放", svg: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>` });
     API.registerMenu({ key: "live", name: "直播", svg: `<svg viewBox="0 0 1024 1024"><path d="M392.448 275.911111a92.416 92.416 0 1 1-184.832 0 92.416 92.416 0 0 1 184.832 0"></path><path d="M826.624 464.583111l-63.744 36.864v-48.64a72.206222 72.206222 0 0 0-71.68-71.936H190.72a72.192 72.192 0 0 0-71.936 71.936V748.231111a71.936 71.936 0 0 0 71.936 71.936H691.2a71.936 71.936 0 0 0 71.936-71.936v-23.808l63.488 37.888a51.2 51.2 0 0 0 76.8-44.544V508.871111a51.2 51.2 0 0 0-76.8-44.288M572.928 369.351111c79.459556 0.142222 143.985778-64.156444 144.128-143.616 0.142222-79.459556-64.156444-143.985778-143.616-144.128-79.260444-0.142222-143.701333 63.857778-144.128 143.104-0.426667 79.459556 63.644444 144.213333 143.104 144.64h0.512"></path><path d="M425.216 512.967111l124.16 71.936a25.6 25.6 0 0 1 0 42.496l-124.16 71.68a25.6 25.6 0 0 1-37.12-21.248V534.471111a25.6 25.6 0 0 1 37.12-21.504"></path></svg>` });
     API.registerMenu({ key: "module", name: "更新", svg: `<svg viewBox="0 0 24 24"><g><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"></path></g></svg>` });
+    API.registerMenu({ key: "download", name: "下载", svg: `<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>` });
 
     // 注册设置项
     API.registerSetting({
@@ -442,6 +443,16 @@ try {
         value: false,
         sort: "style"
     })
+    API.registerSetting({
+        type: "picture",
+        sort: "download",
+        src: '//s2.hdslb.com/bfs/static/blive/blfe-album-detail/static/img/empty-hint.7b606b9.jpg',
+        callback: function () {
+            API.getAidInfo(API.aid).then(d => {
+                this.innerHTML = `<picture><img src="${d.View.pic.replace("http:", "")}"></picture>`
+            })
+        }
+    })
 
     // 旧版播放器专属设置
     API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
@@ -506,7 +517,7 @@ try {
  * 已注册的菜单，通过`registerMenu`新建项请补充这里的可能值
  * **本变量仅作为类型声明接口类似的东西存在，不可参与到任何实际运行代码中！**
  */
-declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live" | "module" | "custom"
+declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live" | "module" | "download"
 /**
  * 已注册设置项
  */
@@ -757,11 +768,16 @@ interface ItemPic {
     /**
      * 菜单归属分类菜单，也可以新建
      */
-    sort: string;
+    sort: typeof settingSort;
     /**
      * 图片 URL
      */
     src: string;
+    /**
+     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
+     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     */
+    callback?: (this: HTMLDivElement) => void;
 }
 interface ItemCommon {
     /**
@@ -793,6 +809,11 @@ interface ItemCommon {
      * ※ 理论上支持所有能以\<div\>为父节点的标签
      */
     float?: string;
+    /**
+     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
+     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     */
+    callback?: (this: HTMLDivElement) => void;
 }
 /**
  * 开关类菜单项，用以给用户判断是否开启某些功能等  
@@ -926,6 +947,11 @@ interface ItemIpt {
      * 0 表示一直禁用直到刷新面板
      */
     disabled?: number;
+    /**
+     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
+     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     */
+    callback?: (this: HTMLDivElement) => void;
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等
