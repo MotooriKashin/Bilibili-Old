@@ -238,7 +238,8 @@
             button: (callback, text, disabled) => Element.button(callback, text, disabled),
             input: (callback, text, attribute, pattern) => Element.input(callback, text, attribute, pattern),
             file: (callback, multiple, text, accept) => Element.file(callback, multiple, text, accept),
-            checkbox: (list, callback, value) => Element.checkbox(list, callback, value)
+            checkbox: (list, callback, value) => Element.checkbox(list, callback, value),
+            clickRemove: (ele) => new ClickRemove(ele)
         };
         API.getCss = (...svg) => Element.getCss(...svg);
     }

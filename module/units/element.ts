@@ -119,12 +119,12 @@
              * @param value 初始选定值
              * @returns 封装好的节点
              */
-            static select(list: string[], callback: (this: HTMLDivElement, v: string) => void, value?: string) {
+            static select(list: (string | number)[], callback: (this: HTMLDivElement, v: string) => void, value?: string) {
                 const root = document.createElement("div");
                 const real = root.attachShadow({ mode: "closed" });
                 const div = API.addElement("div", { class: "select" }, real);
                 const select = list.reduce((s, d) => {
-                    API.addElement("option", {}, s, d);
+                    API.addElement("option", {}, s, <string>d);
                     return s;
                 }, <HTMLSelectElement>API.addElement("select", {}, div));
                 API.addCss(this.getCss("select.css"), undefined, real);
@@ -235,11 +235,12 @@
             hr: () => Element.hr(),
             svg: (svg: string) => Element.svg(svg),
             switch: (callback: (v: boolean) => void, value?: boolean) => Element.switch(callback, value),
-            select: (list: string[], callback: (this: HTMLDivElement, v: string) => void, value?: string) => Element.select(list, callback, value),
+            select: (list: (string | number)[], callback: (this: HTMLDivElement, v: string) => void, value?: string) => Element.select(list, callback, value),
             button: (callback: (this: HTMLDivElement) => void, text?: string, disabled?: number) => Element.button(callback, text, disabled),
             input: (callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp) => Element.input(callback, text, attribute, pattern),
             file: (callback: (this: HTMLInputElement, value: FileList) => void, multiple?: boolean, text?: string, accept?: string[]) => Element.file(callback, multiple, text, accept),
-            checkbox: (list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]) => Element.checkbox(list, callback, value)
+            checkbox: (list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]) => Element.checkbox(list, callback, value),
+            clickRemove: (ele: HTMLElement) => new ClickRemove(ele)
         }
         API.getCss = (...svg: string[]) => Element.getCss(...svg);
     } catch (e) { API.trace(e, "element.js", true) }
@@ -247,7 +248,7 @@
 declare namespace API {
     let element: {
         /**
-         * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭
+         * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭  
          * 浮动窗口上的内容请通过返回的节点进行后续添加
          * @returns 浮动窗口实际可操作节点，可以往上面添加需要显示在浮动窗口上的内容
          */
@@ -277,7 +278,7 @@ declare namespace API {
          * @param value 初始选定值
          * @returns 封装好的节点
          */
-        select(list: string[], callback: (this: HTMLDivElement, v: string) => void, value?: string): HTMLDivElement;
+        select(list: (string | number)[], callback: (this: HTMLDivElement, v: string) => void, value?: string): HTMLDivElement;
         /**
          * 封装好的按钮标签
          * @param callback 响应按钮点击的回调函数，必须，否则无法响应按钮点击事件
@@ -312,11 +313,16 @@ declare namespace API {
          * @returns 封装好的节点
          */
         checkbox(list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]): HTMLDivElement;
+        /**
+         * 为节点添加监听，点击节点外的部分移除该节点
+         * @param ele 目标节点
+         */
+        clickRemove(ele: HTMLElement): void;
     }
     /**
      * 获取并整合合内置Css模块
      * @param svg Css模块名序列
      * @returns 整合好的Css模块
      */
-    function getCss(...svg: string[]): string
+    function getCss(...svg: string[]): string;
 }

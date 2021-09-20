@@ -23,6 +23,7 @@
         config.section && API.importModule("section.js"); // 顶栏底栏
         config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 弹幕反查
         config.unloginPopover && !API.uid && API.importModule("unloginPopover.js"); // 未登录弹窗
+        config.downloadContentmenu && API.importModule("dlContentMenu.js"); // 下载右键菜单
         GM.getValue("thirdModule", []).forEach(d => API.importModule(d)); // 第三方模块
     }
     catch (e) {

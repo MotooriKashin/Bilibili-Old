@@ -303,11 +303,11 @@
             }
         }
         const DM = new Danmaku();
-        API.getSegDanmaku = (aid = API.aid, cid = API.cid, bas = false) => DM.getSegDanmaku(<number>aid, cid, bas);
+        API.getSegDanmaku = (aid = API.aid, cid = API.cid, bas = false) => DM.getSegDanmaku(<number>aid, <number>cid, bas);
         API.specialEffects = (dm: any[]) => DM.specialEffects(dm);
         API.sortDmById = (danmaku: any[], key: string) => DM.sortDmById(danmaku, key);
         API.toXml = (danmaku: any[]) => DM.toXml(danmaku);
-        API.getHistoryDanmaku = (date: string, cid?: string | number) => DM.getHistoryDanmaku(date, cid);
+        API.getHistoryDanmaku = (date: string, cid?: string | number) => DM.getHistoryDanmaku(date, <number>cid);
         API.loadLocalDm = (xml: string, append: boolean) => DM.loadLocalDm(xml, append);
         API.segDmDecode = (response: any) => DM.segDmDecode(response);
         API.danmakuFormat = (dm: any[], aid?: number | string) => DM.danmakuFormat(dm, aid);

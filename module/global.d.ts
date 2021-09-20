@@ -335,7 +335,7 @@ declare namespace API {
     /**
      * 视频 cid
      */
-    let cid: string | number;
+    let cid: number;
     /**
      * 视频 bvid
      */
@@ -386,7 +386,7 @@ declare namespace API {
      * @param obj search参数对象
      * @returns 拼合的URL
      */
-    function objUrl(url: string, obj: { [name: string]: string }): string;
+    function objUrl(url: string, obj: { [name: string]: string | number }): string;
     /**
      * 提取URL search参数对象
      * @param url 原URL
@@ -462,4 +462,13 @@ declare namespace API {
      * @param html 网页模板
      */
     function rewriteHTML(html: string): void;
+    /**
+     * 取消一些设置项注册  
+     * 一般用于不满足某种条件时取消设置项在设置面板中的显示  
+     * 这类设置项在注册前也应进行类似地判断是否要注册  
+     * 本函数是用来在不刷新页面的情况下修改设置显示的  
+     * **不传递任何参数将清空所有设置数据，请在后面使用API.importModule("setting.js", {}, true)以立即刷新设置数据以免造成设置界面异常！**
+     * @param keys 注册设置项时使用的key组，参考config的属性名
+     */
+    function unRegisterSetting(keys?: string[]): void;
 }

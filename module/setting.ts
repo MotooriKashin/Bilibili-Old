@@ -449,11 +449,120 @@
             sort: "download",
             src: '//s2.hdslb.com/bfs/static/blive/blfe-album-detail/static/img/empty-hint.7b606b9.jpg',
             callback: function () {
-                API.getAidInfo(API.aid).then(d => {
+                API.aid && API.getAidInfo(API.aid).then(d => {
                     this.innerHTML = `<picture><img src="${d.View.pic.replace("http:", "")}"></picture>`
                 })
             }
         })
+        API.registerSetting({
+            type: "switch",
+            sort: "download",
+            key: "downloadContentmenu",
+            label: "右键下载菜单",
+            sub: "播放画面上右键添加下载菜单",
+            value: false
+        })
+        API.registerSetting({
+            type: "mutlti",
+            sort: "download",
+            key: "downloadList",
+            label: "视频类型",
+            sub: "右键呼出下载时请求的类型",
+            value: ["mp4", "dash"],
+            list: ["mp4", "dash", "flv"]
+        })
+        API.registerSetting({
+            type: "row",
+            sort: "download",
+            key: "downloadQn",
+            label: "默认画质",
+            sub: "针对flv格式",
+            value: 125,
+            list: [0, 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125],
+            float: '画质qn参数，数值越大画质越高，0表示自动。64（720P）以上需要登录，112（1080P+）以上需要大会员。一般只需设置为最大即可，会自动获取到能获取的最高画质。'
+        })
+        API.registerSetting({
+            type: "row",
+            sort: "download",
+            key: "downloadMethod",
+            label: "下载方式",
+            value: "右键保存",
+            list: ["右键保存", "IDM+EF2", "aria2", "aira2 RPC"],
+            action: (v) => {
+                switch (v) {
+                    case "IDM+EF2": API.alert(`<a href="https://github.com/MotooriKashin/ef2/releases target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
+                        !d && (config.downloadMethod = "右键保存");
+                    })
+                        break;
+                    case "aria2": API.alert(`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>`).then(d => {
+                        !d && (config.downloadMethod = "右键保存");
+                    })
+                        break;
+                    case "aira2 RPC": API.alert(`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。`).then(d => {
+                        !d && (config.downloadMethod = "右键保存");
+                    })
+                        break;
+                }
+                API.unRegisterSetting();
+                API.importModule("setting.js", {}, true);
+                API.displaySetting("downloadMethod");
+            }
+        })
+        if (config.downloadMethod != "右键保存") {
+            API.registerSetting({
+                type: "input",
+                sort: "download",
+                key: "useragent",
+                label: "User-Agent",
+                value: navigator.userAgent,
+                input: { type: "text" },
+                float: `一般不需要修改，除非下载访问的不是一般网页端接口。`
+            })
+            API.registerSetting({
+                type: "input",
+                sort: "download",
+                key: "filepath",
+                label: "保存目录",
+                input: { type: "text", placeholder: "如：D\\下载" },
+                float: 'windows端请注意反斜杠！'
+            })
+        }
+        if (config.downloadMethod == "IDM+EF2") {
+            API.registerSetting({
+                key: "IDMLater",
+                sort: "download",
+                label: "稍后下载",
+                sub: "添加到IDM列表而不立即下载",
+                type: "switch",
+                value: false
+            })
+            API.registerSetting({
+                key: "IDMToast",
+                sort: "download",
+                label: "静默下载",
+                sub: "不用IDM确认框",
+                type: "switch",
+                value: false
+            })
+        }
+        if (config.downloadMethod == "aira2 RPC") {
+            API.registerSetting({
+                key: "rpcServer",
+                sort: "download",
+                label: "RPC主机",
+                type: "input",
+                input: { type: "url", placeholder: "如：http(s)://localhost" },
+                value: "http://localhost"
+            })
+            API.registerSetting({
+                key: "rpcPort",
+                sort: "download",
+                label: "RPC端口",
+                type: "input",
+                input: { type: "number", placeholder: "如：6800" },
+                value: 6800
+            })
+        }
 
         // 旧版播放器专属设置
         API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
@@ -720,6 +829,46 @@ declare namespace config {
      * 样式：登录弹窗
      */
     let unloginPopover: boolean;
+    /**
+     * 下载：右键菜单
+     */
+    let downloadContentmenu: boolean;
+    /**
+     * 下载：视频类型
+     */
+    let downloadList: ("mp4" | "dash" | "flv")[];
+    /**
+     * 下载：画质参数
+     */
+    let downloadQn: number;
+    /**
+     * 下载：下载方式
+     */
+    let downloadMethod: string;
+    /**
+     * 下载：UserAgent
+     */
+    let useragent: string;
+    /**
+     * 下载：保存目录
+     */
+    let filepath: string;
+    /**
+     * 下载：稍后下载
+     */
+    let IDMLater: boolean;
+    /**
+     * 下载：静默下载
+     */
+    let IDMToast: boolean;
+    /**
+     * 下载：RPC主机
+     */
+    let rpcServer: string;
+    /**
+     * 下载：RPC端口
+     */
+    let rpcPort: number;
 }
 /**
  * 工具栏按钮
@@ -853,11 +1002,11 @@ interface ItemRow extends ItemCommon {
      * 默认取值
      * 实际时将以用户本地配置`config[key]`为准
      */
-    value: string;
+    value: string | number;
     /**
      * 下拉框可选值列表
      */
-    list: string[];
+    list: (string | number)[];
     /**
      * 改变选值后的回调函数  
      * 将调整后的`value`作为参数传递  
@@ -901,7 +1050,7 @@ interface ItemIpt {
     /**
      * 菜单归属分类菜单，也可以新建
      */
-    sort: string;
+    sort: typeof settingSort;
     /**
      * 设置 svg 图片
      */
@@ -939,7 +1088,7 @@ interface ItemIpt {
      * 默认值，输入框内的默认值
      * 这意味着本设置将保存到本地 config
      */
-    value?: string;
+    value?: string | number;
     /**
      * 用于判断输入的正则表达式
      */
