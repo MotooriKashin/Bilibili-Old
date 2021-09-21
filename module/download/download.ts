@@ -278,11 +278,11 @@
                 switch (config.downloadMethod) {
                     case "IDM+EF2": ""
                         break;
-                    case "aria2": ""
+                    case "aria2": this.aria2(data);
                         break;
                     case "aira2 RPC": ""
                         break;
-                    default: this.rightKey(data)
+                    default: this.rightKey(data);
                 }
             }
             /**
@@ -340,6 +340,18 @@
                 API.addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, name);
                 API.addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${name}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
                 API.addElement("div", { style: "font-size: 10px; padding-block-end: 10px;" }, root, '本方式下载不太稳定，不嫌麻烦的话可在设置中更换下载方式。');
+            }
+            /**
+             * aria2命令行
+             * @param data 下载数据
+             */
+            aria2(data: { type: string; url: string; quality: string; size: string; filename?: string; contentType?: string; }) {
+                const name = this.setFinalName(data.url, data.type, data.filename);
+                let cl = `aria2c "${data.url}" --out="${name}"`;
+                config.useragent && (cl += ` --user-agent="${config.useragent}"`);
+                config.referer && (cl += ` --referer="${config.referer}"`);
+                config.filepath && (cl += ` --dir="${config.filepath}"`);
+                navigator.clipboard.writeText(cl).then(r => toast("已复制下载表达式到剪切版，输入cmd等终端中便可以启动aria2下载！"), r => toast.error("复制下载链接到剪切版失败！", r));
             }
         }
         const download = new Download();

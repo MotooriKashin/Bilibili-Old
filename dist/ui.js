@@ -365,10 +365,10 @@
                 obj.title && API.addElement("div", { class: "button" }, value, obj.title);
                 (history = this.history[obj.key] || [],
                     history.reduce((s, d) => {
-                        API.addElement("option", { value: d }, s);
+                        API.addElement("option", { value: d || "" }, s);
                         return s;
                     }, value.children[1]),
-                    value.children[2].setAttribute("style", "display: none;cursor: pointer;pointer-events: auto;position: absolute;right: 65px;background-color: white;"));
+                    value.children[2].setAttribute("style", "display: none;cursor: pointer;pointer-events: auto;position: absolute;right: 100%;background-color: white;"));
                 obj.float && this.float(real, obj.float);
                 node && node.appendChild(div);
                 obj.callback && new Promise(r => obj.callback.call(real));
