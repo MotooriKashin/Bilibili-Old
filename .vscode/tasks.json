@@ -81,6 +81,15 @@
 			"detail": "发布任务",
 			"label": "build",
 			"problemMatcher": []
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "third/tsconfig.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"detail": "编译第三方插件",
+			"label": "third"
 		}
 	]
 }
