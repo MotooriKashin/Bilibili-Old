@@ -326,7 +326,9 @@
                 (<any>window)[callback] = function (v: any) {
                     const data = GM.getValue<any>("banner");
                     Animate.locs.forEach(d => {
-                        v.data[d] && (v.data[d][0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png");
+                        v.data[d] && (v.data[d][0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
+                            v.data[d][0].url = (data && data.url) || "",
+                            v.data[d][0].title = (data && data.name) || "");
                     })
                     return call(v);
                 }
