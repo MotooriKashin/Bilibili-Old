@@ -123,7 +123,7 @@
                         server = `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${hash}/${file}`;
                         break;
                 }
-                file && /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/.test(file) && (server = file);
+                file && /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-,.\/?%&=]*)?/.test(file) && (server = file);
                 return server;
             }
             async checkUpdate(...msg) {
@@ -184,7 +184,7 @@
                 box.appendChild(API.element.hr());
                 const title = API.addElement("div", { style: 'display: flex;grid-gap: 0;gap: 0;flex-shrink: 0;margin-bottom: 10px;flex-direction: row;align-items: center;justify-content: space-between;' }, box, `<div style="font-weight: bold;">已安装组件</div>`);
                 const action = API.addElement("div", { style: "display: flex;align-items: center;" }, title);
-                action.appendChild(API.element.input((v) => { this.url(v); }, undefined, { type: "url", placeholder: "第三方组件在线URL" }, /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?\.js$/));
+                action.appendChild(API.element.input((v) => { this.url(v); }, undefined, { type: "url", placeholder: "第三方组件在线URL" }, /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-,.\/?%&=]*)?\.js/));
                 action.appendChild(API.element.file((v) => { this.file(v); }, true, "本地", [".js"]));
                 this.body = API.addElement("div", { style: 'margin-inline: 10px;overflow: auto;' }, box);
                 this.list();

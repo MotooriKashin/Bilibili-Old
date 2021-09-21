@@ -37,7 +37,7 @@
                 });
             }
             sign(obj) {
-                return API.urlsign("", obj, obj.appkey);
+                return API.urlObj(`?${API.urlsign("", obj, obj.appkey)}`);
             }
         }
         const exports = new Url();

@@ -3,7 +3,6 @@
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
-    min-width: 372px;
     padding: 12px;
     background-color: #fff;
     color: black;

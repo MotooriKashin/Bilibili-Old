@@ -20,8 +20,13 @@
     color: #000 !important;
     border: #ccc 1px solid;
     border-radius: 3px;
-    display: inline-block;
+    display: flex;
     margin: 3px;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
 }
 .type {
     color: #000 !important;
@@ -29,7 +34,7 @@
     min-width: 1.5em;
     text-align: center;
     vertical-align: middle;
-    padding: 1px 3px;
+    padding: 10px 3px;
 }
 .item {
     display: table-cell;
