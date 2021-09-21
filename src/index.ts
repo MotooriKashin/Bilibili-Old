@@ -29,7 +29,7 @@ class API {
     Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
     registerSetting = registerSetting;
     registerMenu = registerMenu;
-    unRegisterSetting = unRegisterSetting;
+    changeSettingMode = changeSettingMode;
     runWhile = API.runWhile;
     importModule = API.importModule;
     timeFormat = (time?: number, type?: boolean) => Format.timeFormat(time, type);

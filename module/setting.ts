@@ -445,15 +445,18 @@
             sort: "style"
         })
         API.registerSetting({
+            key: "downloadPicture",
             type: "picture",
             sort: "download",
             src: '//s2.hdslb.com/bfs/static/blive/blfe-album-detail/static/img/empty-hint.7b606b9.jpg',
+            hidden: !API.aid,
             callback: function () {
                 API.aid && API.getAidInfo(API.aid).then(d => {
                     this.innerHTML = `<picture><img src="${d.View.pic.replace("http:", "")}"></picture>`
                 })
             }
         })
+        API.runWhile(() => API.aid, () => { API.changeSettingMode({ downloadPicture: false }) })
         API.registerSetting({
             type: "switch",
             sort: "download",
@@ -478,7 +481,7 @@
             label: "默认画质",
             sub: "针对flv格式",
             value: 125,
-            list: [0, 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125],
+            list: ["0", 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125],
             float: '画质qn参数，数值越大画质越高，0表示自动。64（720P）以上需要登录，112（1080P+）以上需要大会员。一般只需设置为最大即可，会自动获取到能获取的最高画质。'
         })
         API.registerSetting({
@@ -491,136 +494,144 @@
             action: (v) => {
                 switch (v) {
                     case "IDM+EF2": API.alert(`<a href="https://github.com/MotooriKashin/ef2/releases target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
-                        !d && (config.downloadMethod = "右键保存");
+                        d ? API.changeSettingMode({ "useragent": false, "filepath": false, "IDMLater": false, "IDMToast": false, "rpcServer": true, "rpcPort": true }) :
+                            (config.downloadMethod = "右键保存", API.changeSettingMode({ "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }));
+                        API.displaySetting("downloadMethod");
                     })
                         break;
                     case "aria2": API.alert(`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>`).then(d => {
-                        !d && (config.downloadMethod = "右键保存");
+                        d ? API.changeSettingMode({ "useragent": false, "filepath": false, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }) :
+                            (config.downloadMethod = "右键保存", API.changeSettingMode({ "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }));
+                        API.displaySetting("downloadMethod");
                     })
                         break;
                     case "aira2 RPC": API.alert(`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。`).then(d => {
-                        !d && (config.downloadMethod = "右键保存");
+                        d ? API.changeSettingMode({ "useragent": false, "filepath": false, "IDMLater": true, "IDMToast": true, "rpcServer": false, "rpcPort": false }) :
+                            (config.downloadMethod = "右键保存", API.changeSettingMode({ "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }));
+                        API.displaySetting("downloadMethod");
                     })
                         break;
+                    default: API.changeSettingMode({ "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true });
+                        API.displaySetting("downloadMethod");
                 }
-                API.unRegisterSetting();
-                API.importModule("setting.js", {}, true);
-                API.displaySetting("downloadMethod");
             }
         })
-        if (config.downloadMethod != "右键保存") {
-            API.registerSetting({
-                type: "input",
-                sort: "download",
-                key: "useragent",
-                label: "User-Agent",
-                value: navigator.userAgent,
-                input: { type: "text" },
-                float: `一般不需要修改，除非下载访问的不是一般网页端接口。`
-            })
-            API.registerSetting({
-                type: "input",
-                sort: "download",
-                key: "filepath",
-                label: "保存目录",
-                input: { type: "text", placeholder: "如：D\\下载" },
-                float: 'windows端请注意反斜杠！'
-            })
-        }
-        if (config.downloadMethod == "IDM+EF2") {
-            API.registerSetting({
-                key: "IDMLater",
-                sort: "download",
-                label: "稍后下载",
-                sub: "添加到IDM列表而不立即下载",
-                type: "switch",
-                value: false
-            })
-            API.registerSetting({
-                key: "IDMToast",
-                sort: "download",
-                label: "静默下载",
-                sub: "不用IDM确认框",
-                type: "switch",
-                value: false
-            })
-        }
-        if (config.downloadMethod == "aira2 RPC") {
-            API.registerSetting({
-                key: "rpcServer",
-                sort: "download",
-                label: "RPC主机",
-                type: "input",
-                input: { type: "url", placeholder: "如：http(s)://localhost" },
-                value: "http://localhost"
-            })
-            API.registerSetting({
-                key: "rpcPort",
-                sort: "download",
-                label: "RPC端口",
-                type: "input",
-                input: { type: "number", placeholder: "如：6800" },
-                value: 6800
-            })
-        }
-
+        API.registerSetting({
+            type: "input",
+            sort: "download",
+            key: "useragent",
+            label: "User-Agent",
+            value: navigator.userAgent,
+            input: { type: "text" },
+            float: `一般不需要修改，除非下载访问的不是一般网页端接口。`,
+            hidden: config.downloadMethod == "右键保存"
+        })
+        API.registerSetting({
+            type: "input",
+            sort: "download",
+            key: "filepath",
+            label: "保存目录",
+            input: { type: "text", placeholder: "如：D\\下载" },
+            float: 'windows端请注意反斜杠！',
+            hidden: config.downloadMethod == "右键保存"
+        })
+        API.registerSetting({
+            key: "IDMLater",
+            sort: "download",
+            label: "稍后下载",
+            sub: "添加到IDM列表而不立即下载",
+            type: "switch",
+            value: false,
+            hidden: config.downloadMethod != "IDM+EF2"
+        })
+        API.registerSetting({
+            key: "IDMToast",
+            sort: "download",
+            label: "静默下载",
+            sub: "不用IDM确认框",
+            type: "switch",
+            value: false,
+            hidden: config.downloadMethod != "IDM+EF2"
+        })
+        API.registerSetting({
+            key: "rpcServer",
+            sort: "download",
+            label: "RPC主机",
+            type: "input",
+            input: { type: "url", placeholder: "如：http(s)://localhost" },
+            value: "http://localhost",
+            hidden: config.downloadMethod != "aira2 RPC"
+        })
+        API.registerSetting({
+            key: "rpcPort",
+            sort: "download",
+            label: "RPC端口",
+            type: "input",
+            input: { type: "number", placeholder: "如：6800" },
+            value: 6800,
+            hidden: config.downloadMethod != "aira2 RPC"
+        })
         // 旧版播放器专属设置
-        API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
-            API.registerSetting({
-                key: "onlineDanmaku",
+        API.registerSetting({
+            key: "onlineDanmaku",
+            sort: "danmaku",
+            label: "在线弹幕",
+            type: "input",
+            float: '为当前旧版播放器载入其他站内视频弹幕，可以输入URL或者aid等参数。</br>※ 可配合选择是否合并已有弹幕。',
+            input: { type: "url", placeholder: "URL" },
+            title: "载入",
+            hidden: true,
+            action: (url) => {
+                if (!window.player?.setDanmaku) return toast.warning("内部组件丢失，已停止！");
+                API.onlineDanmaku(url);
+            }
+        })
+        API.registerSetting({
+            key: "allDanmaku",
+            sort: "danmaku",
+            label: "全弹幕装填",
+            type: "sort",
+            float: '获取所有能获取的历史弹幕。</br><strong>※ 该操作耗时较长且可能造成B站临时封接口，请慎用！</strong>',
+            hidden: true,
+            list: [{
+                key: "allDanmakuDelay",
                 sort: "danmaku",
-                label: "在线弹幕",
+                label: "冷却时间：/s",
                 type: "input",
-                float: '为当前旧版播放器载入其他站内视频弹幕，可以输入URL或者aid等参数。</br>※ 可配合选择是否合并已有弹幕。',
-                input: { type: "url", placeholder: "URL" },
-                title: "载入",
-                action: (url) => {
-                    if (!window.player?.setDanmaku) return toast.warning("内部组件丢失，已停止！");
-                    API.onlineDanmaku(url);
-                }
-            })
-            API.registerSetting({
-                key: "allDanmaku",
+                value: <any>3,
+                input: { type: "number", min: 1, max: 60, step: 0.5 },
+                float: '接口冷却时间，时间长可以降低被临时封端口的几率'
+            },
+            {
+                key: "allDanmakuAction",
                 sort: "danmaku",
-                label: "全弹幕装填",
-                type: "sort",
-                float: '获取所有能获取的历史弹幕。</br><strong>※ 该操作耗时较长且可能造成B站临时封接口，请慎用！</strong>',
-                list: [{
-                    key: "allDanmakuDelay",
-                    sort: "danmaku",
-                    label: "冷却时间：/s",
-                    type: "input",
-                    value: <any>3,
-                    input: { type: "number", min: 1, max: 60, step: 0.5 },
-                    float: '接口冷却时间，时间长可以降低被临时封端口的几率'
+                label: "开始获取",
+                type: "action",
+                title: "开始",
+                action: function () {
+                    if (!window.player?.setDanmaku) return toast.warning("内部组件丢失，已停止！");
+                    API.allDanmaku();
                 },
-                {
-                    key: "allDanmakuAction",
-                    sort: "danmaku",
-                    label: "开始获取",
-                    type: "action",
-                    title: "开始",
-                    action: function () {
-                        if (!window.player?.setDanmaku) return toast.warning("内部组件丢失，已停止！");
-                        API.allDanmaku();
-                    },
-                    disabled: 0
-                }]
-            })
-            API.registerSetting({
-                key: "localMedia",
-                sort: "player",
-                label: "载入本地文件",
-                sub: "视频/弹幕",
-                type: "file",
-                accept: [".mp4", ".xml", ".json"],
-                float: '使用旧版播放器播放本地视频或者弹幕文件。</br>※ 视频只能为mp4格式，且编码格式被浏览器所兼容。</br>※ 若载入弹幕文件，参见弹幕设置是否合并弹幕。',
-                title: "文件",
-                action: (files) => {
-                    (!window.player?.setDanmaku) && toast.warning("内部组件丢失，无法载入弹幕文件！");
-                    API.localMedia(files);
-                }
-            })
+                disabled: 0
+            }]
+        })
+        API.registerSetting({
+            key: "localMedia",
+            sort: "player",
+            label: "载入本地文件",
+            sub: "视频/弹幕",
+            type: "file",
+            accept: [".mp4", ".xml", ".json"],
+            float: '使用旧版播放器播放本地视频或者弹幕文件。</br>※ 视频只能为mp4格式，且编码格式被浏览器所兼容。</br>※ 若载入弹幕文件，参见弹幕设置是否合并弹幕。',
+            title: "文件",
+            hidden: true,
+            action: (files) => {
+                (!window.player?.setDanmaku) && toast.warning("内部组件丢失，无法载入弹幕文件！");
+                API.localMedia(files);
+            }
+        })
+        API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
+            API.changeSettingMode({ onlineDanmaku: false, allDanmaku: false, localMedia: false })
         })
     } catch (e) { API.trace(e, "setting.js", true) }
 })();
@@ -875,6 +886,11 @@ declare namespace config {
  */
 interface ToolIcon {
     /**
+     * 设置唯一主键，非必需  
+     * **注意不能与已有设置项重复**
+     */
+    key?: string;
+    /**
      * 类型标志，用于识别这是工具栏按钮设置项
      */
     type: "icon";
@@ -890,6 +906,11 @@ interface ToolIcon {
      * 鼠标单击时的回调
      */
     action: (node: HTMLDivElement) => void;
+    /**
+     * 隐藏该设置项，比如不满足某些前置条件  
+     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
+     */
+    hidden?: boolean;
 }
 /**
  * 菜单项
@@ -913,6 +934,11 @@ interface Menuitem {
  */
 interface ItemPic {
     /**
+     * 设置唯一主键，非必需  
+     * **注意不能与已有设置项重复**
+     */
+    key?: string;
+    /**
      * 类型标志，用于识别这是图片类设置项
      */
     type: "picture";
@@ -929,6 +955,11 @@ interface ItemPic {
      * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
      */
     callback?: (this: HTMLDivElement) => void;
+    /**
+     * 隐藏该设置项，比如不满足某些前置条件  
+     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
+     */
+    hidden?: boolean;
 }
 interface ItemCommon {
     /**
@@ -965,6 +996,11 @@ interface ItemCommon {
      * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
      */
     callback?: (this: HTMLDivElement) => void;
+    /**
+     * 隐藏该设置项，比如不满足某些前置条件  
+     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
+     */
+    hidden?: boolean;
 }
 /**
  * 开关类菜单项，用以给用户判断是否开启某些功能等  
@@ -1103,6 +1139,11 @@ interface ItemIpt {
      * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
      */
     callback?: (this: HTMLDivElement) => void;
+    /**
+     * 隐藏该设置项，比如不满足某些前置条件  
+     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
+     */
+    hidden?: boolean;
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等

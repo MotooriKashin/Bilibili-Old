@@ -175,36 +175,37 @@
              */
             static index(obj, node) {
                 let result;
-                switch (obj.type) {
-                    case "action":
-                        result = this.action(obj, node);
-                        break;
-                    case "file":
-                        result = this.file(obj, node);
-                        break;
-                    case "input":
-                        result = this.input(obj, node);
-                        break;
-                    case "mutlti":
-                        result = this.multi(obj, node);
-                        break;
-                    case "picture":
-                        result = this.picture(obj, node);
-                        break;
-                    case "row":
-                        result = this.row(obj, node);
-                        break;
-                    case "sort":
-                        result = this.sort(obj, node);
-                        break;
-                    case "switch":
-                        result = this.switch(obj, node);
-                        break;
-                    case "icon":
-                        result = this.toolIcon(obj);
-                        break;
-                    case "custom": result = this.custom(obj);
-                }
+                if (!obj.hidden)
+                    switch (obj.type) {
+                        case "action":
+                            result = this.action(obj, node);
+                            break;
+                        case "file":
+                            result = this.file(obj, node);
+                            break;
+                        case "input":
+                            result = this.input(obj, node);
+                            break;
+                        case "mutlti":
+                            result = this.multi(obj, node);
+                            break;
+                        case "picture":
+                            result = this.picture(obj, node);
+                            break;
+                        case "row":
+                            result = this.row(obj, node);
+                            break;
+                        case "sort":
+                            result = this.sort(obj, node);
+                            break;
+                        case "switch":
+                            result = this.switch(obj, node);
+                            break;
+                        case "icon":
+                            result = this.toolIcon(obj);
+                            break;
+                        case "custom": result = this.custom(obj);
+                    }
                 return result;
             }
             /**
@@ -387,7 +388,6 @@
                         return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
                     !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                    !obj.action && toast.warning(`数值已变更：${input.value}`);
                     obj.action && obj.action.call(real, input.value);
                 };
                 obj.title && (real.querySelector(".button").onclick = () => {
@@ -399,7 +399,6 @@
                     disabled && setTimeout(() => real.querySelector(".button").removeAttribute("disabled"), disabled * 1000);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
                     !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                    !obj.action && toast.warning(`数值已变更：${input.value}`);
                     obj.action && obj.action.call(real, input.value);
                 });
                 return div;

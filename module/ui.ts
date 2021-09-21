@@ -198,7 +198,7 @@
              */
             static index(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon | ItemCus, node?: Element) {
                 let result: HTMLDivElement;
-                switch (obj.type) {
+                if (!obj.hidden) switch (obj.type) {
                     case "action": result = this.action(obj, node);
                         break;
                     case "file": result = this.file(obj, node);
@@ -400,7 +400,6 @@
                     if (obj.pattern && !obj.pattern.test(input.value)) return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, (<any>config)[obj.key] = input.value);
                     !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                    !obj.action && toast.warning(`数值已变更：${input.value}`);
                     obj.action && obj.action.call(real, input.value);
                 }
                 obj.title && ((real.querySelector(".button") as HTMLDivElement).onclick = () => {
@@ -410,7 +409,6 @@
                     disabled && setTimeout(() => (<HTMLDivElement>real.querySelector(".button")).removeAttribute("disabled"), disabled * 1000);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, (<any>config)[obj.key] = input.value);
                     !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                    !obj.action && toast.warning(`数值已变更：${input.value}`);
                     obj.action && obj.action.call(real, input.value);
                 })
                 return div;

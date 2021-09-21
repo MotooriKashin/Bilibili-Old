@@ -24,8 +24,9 @@ const MENU: { [name: string]: any } = {};
 function registerMenu(obj: any) {
     Reflect.set(MENU, Reflect.get(obj, "key"), obj);
 }
-function unRegisterSetting(keys?: string[]) {
-    SETTING.forEach((d, i) => {
-        keys ? (Reflect.has(d, "key") && keys.includes(Reflect.get(d, "key")) && SETTING.splice(i, 1)) : SETTING.splice(0, SETTING.length);
+function changeSettingMode(mode: { [key: string]: boolean }) {
+    const keys = Object.keys(mode);
+    SETTING.forEach(d => {
+        Reflect.has(d, "key") && keys.includes(Reflect.get(d, "key")) && Reflect.set(d, "hidden", Reflect.get(mode, Reflect.get(d, "key")));
     })
 }

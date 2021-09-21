@@ -463,12 +463,9 @@ declare namespace API {
      */
     function rewriteHTML(html: string): void;
     /**
-     * 取消一些设置项注册  
-     * 一般用于不满足某种条件时取消设置项在设置面板中的显示  
-     * 这类设置项在注册前也应进行类似地判断是否要注册  
-     * 本函数是用来在不刷新页面的情况下修改设置显示的  
-     * **不传递任何参数将清空所有设置数据，请在后面使用API.importModule("setting.js", {}, true)以立即刷新设置数据以免造成设置界面异常！**
-     * @param keys 注册设置项时使用的key组，参考config的属性名
+     * 修改设置项的显示状态，只能改变有key的设置项  
+     * 可配合displaySetting([key])立即刷新当前设置面板显示
+     * @param mode key：是否隐藏 构成的对象，注意真值表示隐藏
      */
-    function unRegisterSetting(keys?: string[]): void;
+    function changeSettingMode(mode: { [key: string]: boolean }): void;
 }
