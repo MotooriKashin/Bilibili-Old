@@ -2,25 +2,106 @@
  * 本模块负责与aria2通信并构造下载数据
  */
 (function () {
-    class Aria2 {
-        setting: Partial<Aria2Date> = {};
-        jsonrpc: {
-            method: Partial<Aria2Method>;
-        };
-        constructor() {
-            config.useragent && (this.setting.userAgent = config.useragent);
-            config.referer && (this.setting.referer = config.referer);
-            config.filepath && (this.setting.directory = config.filepath);
-            config.rpcToken && (this.setting.token = config.rpcToken);
+    try {
+        class Aria2 {
+            setting: Partial<Aria2Data> = {};
+            jsonrpc: {
+                method: Partial<Aria2Method>;
+            };
+            constructor() {
+                config.useragent && (this.setting.userAgent = config.useragent);
+                config.referer && (this.setting.referer = config.referer);
+                config.filepath && (this.setting.directory = config.filepath);
+                config.rpcToken && (this.setting.token = config.rpcToken);
+            }
+            shell(obj: Aria2Data) {
+                return new Promise((r: (v: void) => void, j) => {
+                    let result = "aria2c";
+                    obj = { ...this.setting, ...obj };
+                    obj.urls.forEach(d => result += ` "${d}"`);
+                    obj.out && (result += ` --out="${obj.out}"`);
+                    obj.userAgent && (result += ` --user-agent="${obj.userAgent}"`);
+                    obj.referer && (result += ` --referer="${obj.referer}"`);
+                    obj.directory && (result += ` --dir="${obj.directory}"`);
+                    obj.split && (result += ` --split="${obj.split}"`);
+                    obj.header && Object.entries(obj.header).forEach(d => result += ` --header="${d[0]}: ${d[1]}"`);
+                    navigator.clipboard.writeText(result).then(r, e => j(e));
+                })
+            }
+            rpc(obj: Aria2Data) {
+                obj = { ...this.setting, ...obj };
+                const options: Aria2Option = {};
+                obj.out && (options.out = obj.out);
+                obj.userAgent && (options["user-agent"] = obj.userAgent);
+                obj.referer && (options["referer"] = obj.referer);
+                obj.directory && (options["dir"] = obj.directory);
+                obj.split && (options["split"] = obj.split);
+                obj.header && (options["header"] = obj.header);
+                return this.postMessage("aria2.addUri", obj.id || <any>new Date().getTime(), [obj.urls, options]);
+            }
+            postMessage<T extends keyof Aria2Method>(method: T, id: string, params: any[] = []): Promise<ReturnType<Aria2Method[T]>> {
+                const url = `${config.rpcServer}:${config.rpcPort}/jsonrpc`;
+                config.rpcToken && params.unshift(`token:${config.rpcToken}`);
+                return new Promise((r, j) => {
+                    xhr({
+                        url: url,
+                        method: "POST",
+                        responseType: "json",
+                        data: JSON.stringify({ method, id, params })
+                    }).then(d => {
+                        d.error && j(d.error);
+                        d.result && r(d.result);
+                    }).catch(e => {
+                        xhr({
+                            url: API.objUrl(url, { method, id, params: API.Base64.encode(JSON.stringify(params)) }),
+                            method: "GET",
+                            responseType: "json"
+                        }).then(d => {
+                            d.error && j(d.error);
+                            d.result && r(d.result);
+                        }).catch(() => j(e))
+                    })
+                })
+            }
+            getVersion() {
+                return this.postMessage("aria2.getVersion", <any>new Date().getTime())
+            }
         }
-        commandLine(obj: Aria2Date) {
+        API.aria2 = {
+            shell: (obj: Aria2Data) => new Aria2().shell(obj),
+            rpcTest: () => new Aria2().getVersion(),
+            rpc: (obj: Aria2Data) => new Aria2().rpc(obj)
         }
-    }
+    } catch (e) { API.trace(e, "aria2.js", true) }
 })();
+declare namespace API {
+    /**
+     * aria2下载方法
+     */
+    let aria2: {
+        /**
+         * 复制到aria2下载命令行
+         * @param obj 配置数据
+         */
+        shell(obj: Aria2Data): Promise<void>;
+        /**
+         * 测试aria2 RPC可用性
+         * @returns Promise托管的版本号及启用功能数组
+         */
+        rpcTest(): Promise<{ version: string; enabledFeatures: string[] }>;
+        /**
+         * 发送aria2 RPC添加下载任务
+         * @param obj 配置数据
+         * @returns Promise托管的任务唯一GID
+         */
+        rpc(obj: Aria2Data): Promise<string>;
+    }
+}
 /**
- * 本项目可用的aria配置
+ * 本项目可用的aria配置  
+ * aria2支持配置数据太繁杂，这里只提炼出需要的
  */
-interface Aria2Date {
+interface Aria2Data {
     /**
      * URL组，所有链接必须指向同一文件，或者只提供一条链接
      */
@@ -48,14 +129,19 @@ interface Aria2Date {
     /**
      * 附加的HTTP请求头组
      */
-    header?: string[];
+    header?: { [name: string]: string };
     /**
      * 令牌
      */
     token?: string;
+    /**
+     * 任务唯一GID，用于唯一标志任务  
+     * **请不要使用url中禁止的字符，可使用encodeURIComponent等标准方法或者本项目提供的md5、Base64、crc32等方法预处理一下！**
+     */
+    id?: string;
 }
 /**
- * aria任务配置信息
+ * aria任务配置信息，类型信息有待进一步核实
  */
 interface Aria2Option {
     "all-proxy"?: string;
@@ -113,7 +199,7 @@ interface Aria2Option {
     "ftp-user"?: string;
     "gid"?: string;
     "hash-check-only"?: string;
-    "header"?: string;
+    "header"?: { [name: string]: string };
     "http-accept-gzip"?: string;
     "http-auth-challenge"?: string;
     "http-no-cache"?: string;
@@ -161,7 +247,7 @@ interface Aria2Option {
     "seed-ratio"?: string;
     "seed-time"?: string;
     "select-file"?: string;
-    "split"?: string;
+    "split"?: number;
     "ssh-host-key-md"?: string;
     "stream-piece-selector"?: string;
     "timeout"?: string;
@@ -328,163 +414,154 @@ interface Aria2Status {
     verifyIntegrityPending?: boolean;
 }
 /**
- * aria2 RPC 方法  
- * secret、options、position为可选参数  
- * 返回值位于{id: string, jsonrpc: string, result: any}的result中
- * 这是仅供参考的接口，项目中并没有相关实现！
+ * aria2 RPC 方法参数  
+ * 按数组顺序传递，带问号的位可选参数  
+ * 返回值在Aria2MethodResponse并一一对应
  */
 interface Aria2Method {
     /**
      * 添加下载链接
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param urls url数组
-     * @param options 额外参数，可选
-     * @param position 下载次序，忽略默认添加到最末尾，可选
-     * @returns 任务gid
+     * @param options 额外参数
+     * @param position 下载次序，忽略默认添加到最末尾
+     * @returns 任务GID
      */
-    addUri(secret: string, urls: string[], options: Aria2Option, position: number): string;
+    "aria2.addUri"(secret: string, urls: string, options?: Aria2Option, position?: number): string;
     /**
      * 添加torrent，磁力链接请使用addUri方法
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param torrent .torrent文档的Base64值
-     * @param urls 补充url源，可选
-     * @param options 额外参数，可选
-     * @param position 下载次序，忽略默认添加到最末尾，可选
-     * @returns 任务gid
+     * @param urls 补充url源
+     * @param options 额外参数
+     * @param position 下载次序，忽略默认添加到最末尾
+     * @returns 任务GID
      */
-    addTorrent(secret: string, torrent: string, urls: string[], options: Aria2Option, position: number): string;
+    "aria2.addTorrent"(secret: string, torrent: string, options?: Aria2Option, position?: number): string;
     /**
      * 添加metalink
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param metalink .metalink文档的Base64值
-     * @param options 额外参数，可选
-     * @param position 下载次序，忽略默认添加到最末尾，可选
-     * @returns 任务gid
+     * @param options 额外参数
+     * @param position 下载次序，忽略默认添加到最末尾
+     * @returns 任务GID
      */
-    addMetalink(secret: string, metalink: string, options: Aria2Option, position: number): string;
+    "aria2.addMetalink"(secret: string, metalink: string, options?: Aria2Option, position?: number): string;
     /**
      * 移除一个任务
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
-     * @returns 任务gid
+     * @returns 任务GID
      */
-    remove(secret: string, gid: string): string;
+    "aria2.remove"(secret: string, gid: string): string;
     /**
      * 强制移除一个任务，remove的无等待版
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
-     * @returns 任务gid
+     * @returns 任务GID
      */
-    forceRemove(secret: string, gid: string): string;
+    "aria2.forceRemove"(secret: string, gid: string): string;
     /**
      * 暂停任务
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
      * @returns 任务GID
      */
-    pause(secret: string, gid: string): string;
+    "aria2.pause"(secret: string, gid: string): string;
     /**
      * 暂停全部任务
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      */
-    pauseAll(secret: string): "OK";
+    "aria2.pauseAll"(secret?: string): "OK";
     /**
      * 强制暂停任务
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
      * @returns 任务GID
      */
-    forcePause(secret: string, gid: string): string;
+    "aria2.forcePause"(secret: string, gid: string): string;
     /**
      * 强制暂停全部任务
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      */
-    forcePauseAll(secret: string): "OK";
+    "aria2.forcePauseAll"(secret?: string): "OK";
     /**
      * 继续任务
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
      * @returns 任务GID
      */
-    unpause(secret: string, gid: string): string;
+    "aria2.unpause"(secret: string, gid: string): string;
     /**
      * 全部继续
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      */
-    unpauseAll(secret: string): "OK";
+    "aria2.unpauseAll"(secret?: string): "OK";
     /**
      * 查询下载进度
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
      * @param keys 查询键值，置空则返回所有
-     * @returns 进度信息
      */
-    tellStatus(secret: string, gid: string, keys?: keyof Aria2Status): Aria2Status;
+    "aria2.tellStatus"(secret: string, gid: string, keys?: keyof Aria2Status): Aria2Status;
     /**
      * 查询url使用情况
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
-     * @returns url状态
      */
-    getUris(secret: string, gid: string): { uri: string, status: "used" | "waiting" }[];
+    "aria2.getUris"(secret: string, gid: string): { uri: string, status: "used" | "waiting" }[];
     /**
      * 查询文件列表
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
-     * @returns 文件列表
      */
-    getFiles(secret: string, gid: string): Aria2Files[];
+    "aria2.getFiles"(secret: string, gid: string): Aria2Files[];
     /**
      * 查询p2p主机
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
-     * @returns p2p主机信息
      */
-    getPeers(secret: string, gid: string): { peerId: string, ip: string, port: string, bitfield: string, amChoking: boolean, peerChoking: boolean, downloadSpeed: number, uploadSpeed: number, seeder: boolean }[];
+    "aria2.getPeers"(secret: string, gid: string): { peerId: string, ip: string, port: string, bitfield: string, amChoking: boolean, peerChoking: boolean, downloadSpeed: number, uploadSpeed: number, seeder: boolean }[];
     /**
      * 查询链接服务器信息
-     * @param secret RPC令牌token，可选
+     * @param secret RPC令牌token
      * @param gid 任务GID
-     * @returns 服务器信息
      */
-    getServers(secret: string, gid: string): { index: number, servers: { uri: string, currentUri: string, downloadSpeed: number } }[];
+    "aria2.getServers"(secret: string, gid: string): { index: number, servers: { uri: string, currentUri: string, downloadSpeed: number } }[];
     /**
      * 查询全部正在下载
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param keys 查询键值，置空则返回所有
-     * @returns 正在下载信息表
      */
-    tellActive(secret: string, keys?: keyof Aria2Status): Aria2Status[];
+    "aria2.tellActive"(secret?: string, keys?: keyof Aria2Status): Aria2Status[];
     /**
      * 查询等待下载表
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param offset 查询起始索引
      * @param num 查询范围介绍索引
      * @param keys 查询键值，置空则返回所有
-     * @returns 等待下载表
      */
-    tellWaiting(secret: string, offset: number, num: number, keys?: keyof Aria2Status): Aria2Status[];
+    "aria2.tellWaiting"(secret: string, offset: number, num: number, keys?: keyof Aria2Status): Aria2Status[];
     /**
      * 查询停止下载表
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param offset 查询起始索引
      * @param num 查询范围介绍索引
      * @param keys 查询键值，置空则返回所有
-     * @returns 停止下载表
      */
-    tellStopped(secret: string, offset: number, num: number, keys?: keyof Aria2Status): Aria2Status[];
+    "aria2.tellStopped"(secret: string, offset: number, num: number, keys?: keyof Aria2Status): Aria2Status[];
     /**
      * 修改下载顺序
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param gid 任务GID
      * @param pos 索引改变量，相对how
      * @param how 变动参考系
      * @returns 变动后的位置索引
      */
-    changePosition(secret: string, gid: string, pos: number, how: "POS_SET" | "POS_CUR" | "POS_END"): number;
+    "aria2.changePosition"(secret: string, gid: string, pos: number, how: 'POS_SET' | 'POS_CUR' | 'POS_END'): number;
     /**
      * 添加或移除url源
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param gid 任务GID
      * @param fileIndex url索引，从1开始
      * @param delUris 要移除的url表
@@ -492,94 +569,89 @@ interface Aria2Method {
      * @param position 下载顺序索引
      * @returns [删除的url数，添加的url数]
      */
-    changeUri(secret: string, gid: string, fileIndex: number, delUris: string[], addUris: string[], position: number): [number, number];
+    "aria2.changeUri"(secret: string, gid: string, fileIndex: number, delUris: string[], addUris: string[], position?: number): [number, number];
     /**
      * 获取任务配置信息
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param gid 任务GID
-     * @returns 任务配置信息
      */
-    getOption(secret: string, gid: string): Aria2Option;
+    "aria2.getOption"(secret: string, gid: string): Aria2Option;
     /**
      * 修改任务配置信息
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param gid 任务GID
      * @param options 任务配置信息，其中部分无法修改
      */
-    changeOption(secret: string, gid: string, options: Aria2Option): "OK";
+    "aria2.changeOption"(secret: string, gid: string, options: Aria2Option): "OK";
     /**
      * 获取全局配置信息
-     * @param secret PC令牌token，可选
-     * @returns 全局配置信息
+     * @param secret PC令牌token
      */
-    getGlobalOption(secret: string): Aria2Option;
+    "aria2.getGlobalOption"(secret?: string): Aria2Option;
     /**
      * 修改全局配置信息
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param options 任务配置信息，只有部分可用
      */
-    changeGlobalOption(secret: string, options: Aria2Option): "OK";
+    "aria2.changeGlobalOption"(secret: string, options: Aria2Option): "OK";
     /**
      * 获取全局下载状态
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @returns 全局下载状态
      */
-    getGlobalStat(secret: string): { downloadSpeed: number, uploadSpeed: number, numActive: number, numWaiting: number, numStopped: number, numStoppedTotal: number };
+    "aria2.getGlobalStat"(secret?: string): { downloadSpeed: number, uploadSpeed: number, numActive: number, numWaiting: number, numStopped: number, numStoppedTotal: number };
     /**
      * 清除已完成/错误/已删除的下载以释放内存
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      */
-    purgeDownloadResult(secret: string): "OK";
+    "aria2.purgeDownloadResult"(secret?: string): "OK";
     /**
      * 删除由gid表示的已完成/错误/已删除下载
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @param gid 任务GID
      */
-    removeDownloadResult(secret: string, gid: string): "OK";
+    "aria2.removeDownloadResult"(secret: string, gid: string): "OK";
     /**
      * 获取aria2版本信息及启用功能列表
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @returns 版本信息及启用功能列表
      */
-    getVersion(secret: string): { version: string, enabledFeatures: string[] };
+    "aria2.getVersion"(secret?: string): { version: string, enabledFeatures: string[] };
     /**
      * 获取aria2当前会话信息
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      * @returns 当前会话信息
      */
-    getSessionInfo(secret: string): { sessionId: string };
+    "aria2.getSessionInfo"(secret?: string): { sessionId: string };
     /**
      * 关闭aria2
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      */
-    shutdown(secret: string): "OK";
+    "aria2.shutdown"(secret?: string): "OK";
     /**
      * 强制关闭aria2
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      */
-    forceShutdown(secret: string): "OK";
+    "aria2.forceShutdown"(secret?: string): "OK";
     /**
      * 保存当前会话保存到--save-session选项指定的文件
-     * @param secret PC令牌token，可选
+     * @param secret PC令牌token
      */
-    saveSession(secret: string): "OK";
+    "aria2.saveSession"(secret?: string): "OK";
     /**
      * 一次发送多个其他方法  
-     * **注意此方法前缀为system！**
      * @param methods 其他方法调用组成的数组
-     * @returns 所有方法返回值组成的数组
+     * @returns  所有方法返回值组成的数组
      */
-    multicall(methods: Aria2Method[]): any[];
+    "system.multicall"(): any[];
     /**
-     * 查询所有可用方法（上行）  
-     * **注意此方法前缀为system！**
+     * 查询所有可用方法（上行）
      * @returns 所有可用方法名组成的数组
      */
-    listMethods(): string[];
+    "system.listMethods"(): string[];
     /**
      * 查询所有可用通知（下行）  
-     * **注意此方法前缀为system！**
      * @returns 所有可用通知名组成的数组
      */
-    listNotifications(): string[];
+    "system.listNotifications"(): string[];
 }

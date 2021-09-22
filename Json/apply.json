@@ -44,5 +44,6 @@
     "Base64": "Base64.js",
     "getAidInfo": "extend.js",
     "downloadThis": "download.js",
-    "getJson": "url.js"
+    "getJson": "url.js",
+    "aria2": "aria2.js"
 }

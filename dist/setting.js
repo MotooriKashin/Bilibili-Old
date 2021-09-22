@@ -494,27 +494,27 @@
                 switch (v) {
                     case "IDM+EF2":
                         API.alert(`<a href="https://github.com/MotooriKashin/ef2/releases target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
-                            d ? API.changeSettingMode({ "referer": false, "useragent": false, "filepath": false, "IDMLater": false, "IDMToast": false, "rpcServer": true, "rpcPort": true }) :
-                                (config.downloadMethod = "右键保存", API.changeSettingMode({ "referer": true, "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }));
+                            d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: false, IDMToast: false, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
+                                (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     case "aria2":
                         API.alert(`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>`).then(d => {
-                            d ? API.changeSettingMode({ "referer": false, "useragent": false, "filepath": false, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }) :
-                                (config.downloadMethod = "右键保存", API.changeSettingMode({ "referer": true, "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }));
+                            d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
+                                (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLate: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     case "aira2 RPC":
                         API.alert(`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。`).then(d => {
-                            d ? API.changeSettingMode({ "referer": false, "useragent": false, "filepath": false, "IDMLater": true, "IDMToast": true, "rpcServer": false, "rpcPort": false }) :
-                                (config.downloadMethod = "右键保存", API.changeSettingMode({ "referer": true, "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true }));
+                            d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: true, IDMToast: true, rpcServer: false, rpcPort: false, rpcToken: false, rpcTest: false }) :
+                                (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     default:
-                        API.changeSettingMode({ "referer": true, "useragent": true, "filepath": true, "IDMLater": true, "IDMToast": true, "rpcServer": true, "rpcPort": true });
+                        API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true });
                         API.displaySetting("downloadMethod");
                 }
             }
@@ -600,7 +600,12 @@
             label: "RPC调试",
             type: "action",
             title: "测试",
-            action: () => { }
+            hidden: config.downloadMethod != "aira2 RPC",
+            action: () => {
+                API.aria2.rpcTest()
+                    .then(d => toast.success(`RPC设置正常！aria2版本：${d.version}`))
+                    .catch(e => toast.error("RPC链接异常！请检查各项设置以及RPC主机的状况！", e));
+            }
         });
         // 旧版播放器专属设置
         API.registerSetting({

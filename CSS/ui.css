@@ -14,6 +14,7 @@
   border-radius: 8px;
   box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
   transition: transform 0.3s ease-in;
+  line-height: 14px;
   font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,
     Heiti SC, WenQuanYi Micro Hei, sans-serif;
 }
