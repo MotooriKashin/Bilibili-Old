@@ -35,7 +35,11 @@
              * 备用链接，B站一般会同时返回两条备用源  
              * 此数据未必可用，使用前请先进行真值检查！
              */
-            backupUrl?: string[]
+            backupUrl?: string[],
+            /**
+             * flv专用，flv一般只返回一种画质却可能分成很多段，这里用于标记分段索引
+             */
+            flvSplit?: number
         }
         class Download {
             /**
@@ -191,23 +195,24 @@
              * @param durl durl信息
              */
             durl(durl: any[]) {
+                let index = 0; // flv分段标记
                 durl.forEach(d => {
-                    let type = "";
-                    switch (d.url.includes("mp4?")) {
-                        case true: type = "mp4";
-                            !this.type.includes("mp4") && this.type.push("mp4");
-                            break;
-                        case false: type = "flv";
-                            !this.type.includes("flv") && this.type.push("flv");
-                            break;
-                    }
-                    this.links.push({
-                        type: type,
+                    const link: DownloadRocord = {
+                        type: "",
                         url: d.url,
                         quality: this.getQuality(d.url),
                         size: API.sizeFormat(d.size),
                         backupUrl: d.backupUrl || d.backup_url
-                    })
+                    }
+                    switch (d.url.includes("mp4?")) {
+                        case true: link.type = "mp4";
+                            !this.type.includes("mp4") && this.type.push("mp4");
+                            break;
+                        case false: link.type = "flv"; index++; link.flvSplit = index;
+                            !this.type.includes("flv") && this.type.push("flv");
+                            break;
+                    }
+                    this.links.push(link);
                 })
             }
             /**
@@ -276,7 +281,7 @@
                         this.color[d.type] && div.setAttribute("style", this.color[d.type]);
                     }
                     const item = API.addElement("a", { class: "item", target: "_blank" }, cell);
-                    const up = API.addElement("div", { class: "up" }, item, d.quality);
+                    const up = API.addElement("div", { class: "up" }, item, d.quality + (d.flvSplit ? "x" + d.flvSplit : ""));
                     this.color[d.quality] && up.setAttribute("style", this.color[d.quality]);
                     API.addElement("div", { class: "down" }, item, d.size);
                     item.onclick = () => {
@@ -290,11 +295,11 @@
                 switch (config.downloadMethod) {
                     case "IDM+EF2": ""
                         break;
-                    case "aria2": API.aria2.shell({ urls: [data.url], out: this.setFinalName(data.url, data.type, data.filename) })
+                    case "aria2": API.aria2.shell({ urls: [data.url], out: this.setFinalName(data) })
                         .then(() => toast.success(`已复制aria2命令行到剪切板，在cmd等shell中使用即可下载~`))
                         .catch(e => toast.error(`复制aria2命令行失败！`, e))
                         break;
-                    case "aira2 RPC": API.aria2.rpc({ urls: [data.url], out: this.setFinalName(data.url, data.type, data.filename) })
+                    case "aira2 RPC": API.aria2.rpc({ urls: [data.url], out: this.setFinalName(data) })
                         .then(GID => toast.success(`已添加下载任务到aria2 RPC主机，任务GID：${GID}`))
                         .catch(e => toast.error(`添加下载任务到aria2 RPC主机出错！`, e))
                         break;
@@ -327,11 +332,11 @@
              * @param filename 预设定文件名，优先级最高
              * @returns 文件名
              */
-            setFinalName(url: string, type: string, filename: string = "") {
+            setFinalName(obj: DownloadRocord) {
                 let adv = "";
-                let arr = this.getUrlFileName(url);
-                let ars = filename.split(".");
-                switch (type) {
+                let arr = this.getUrlFileName(obj.url);
+                let ars = obj.filename.split(".");
+                switch (obj.type) {
                     case "mp4": adv = ".mp4";
                         break;
                     case "flv": adv = ".flv";
@@ -343,8 +348,8 @@
                     case "hev": adv = ".hevc.m4v";
                         break;
                 }
-                adv = ars[1] || (adv ? adv : arr[1] ? `.${arr[1]}` : "");
-                return (filename || arr[0]) + adv;
+                adv = ars[1] ? `.${ars.pop()}` : adv ? adv : arr[1] ? `.${arr.pop()}` : "";
+                return (obj.filename || arr[0]) + `${obj.flvSplit ? "x" + obj.flvSplit : ""}.${obj.quality}${adv}`;
             }
             /**
              * 右键下载
@@ -352,7 +357,7 @@
              */
             rightKey(data: DownloadRocord) {
                 const root = API.element.popupbox({ width: "300px" });
-                const name = this.setFinalName(data.url, data.type, data.filename);
+                const name = this.setFinalName(data);
                 API.addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, name);
                 API.addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${name}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
                 API.addElement("div", { style: "font-size: 10px; padding-block-end: 10px;" }, root, '本方式下载不太稳定，不嫌麻烦的话可在设置中更换下载方式。');
