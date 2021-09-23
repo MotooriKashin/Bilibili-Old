@@ -384,12 +384,11 @@ class API {
         API.API = new Proxy(this, {
             get: (target, p) => {
                 // @ts-expect-error 由tampermonkey提供
-                return Reflect.get(unsafeWindow, p) || Reflect.get(this, p) || (Reflect.has(API.apply, p) ? (this.importModule(Reflect.get(API.apply, p), {}, true),
+                return Reflect.get(this, p) || Reflect.get(unsafeWindow, p) || (Reflect.has(API.apply, p) ? (this.importModule(Reflect.get(API.apply, p), {}, true),
                     Reflect.get(this, p)) : undefined);
             },
             set: (_target, p, value) => {
-                // @ts-expect-error 由tampermonkey提供
-                Reflect.has(unsafeWindow, p) ? Reflect.set(unsafeWindow, p, value) : Reflect.set(this, p, value);
+                Reflect.set(this, p, value);
                 return true;
             }
         });

@@ -250,8 +250,7 @@ class API {
                     ) : undefined);
             },
             set: (_target, p, value) => {
-                // @ts-expect-error 由tampermonkey提供
-                Reflect.has(unsafeWindow, p) ? Reflect.set(unsafeWindow, p, value) : Reflect.set(this, p, value);
+                Reflect.set(this, p, value);
                 return true;
             }
         })
