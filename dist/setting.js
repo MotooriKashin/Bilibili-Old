@@ -471,7 +471,8 @@
             label: "视频类型",
             sub: "右键呼出下载时请求的类型",
             value: ["mp4", "dash"],
-            list: ["mp4", "dash", "flv"]
+            list: ["mp4", "dash", "flv"],
+            float: '下载功能会自动读取播放器已载入的视频源并呈现在下载面板上，即使未勾选对应的视频类型。</br>勾选了也不一定能获取到该类型的视频源。'
         });
         API.registerSetting({
             type: "row",
@@ -493,7 +494,7 @@
             action: (v) => {
                 switch (v) {
                     case "IDM+EF2":
-                        API.alertMessage(`<a href="https://github.com/MotooriKashin/ef2/releases target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
+                        API.alertMessage(`<a href="https://github.com/MotooriKashin/ef2/releases" target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: false, IDMToast: false, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
@@ -556,7 +557,7 @@
             sub: "添加到IDM列表而不立即下载",
             type: "switch",
             value: false,
-            float: "把下载链接添加到下载列表但是不立即开始下载，需要下载时再手动到IDM里开始。<strong>B站下载链接一般都有失效，太久不链接可能失效！</strong>",
+            float: "把下载链接添加到下载列表但是不立即开始下载，需要下载时再手动到IDM里开始。<strong>B站下载链接一般都有时效，太久不链接可能失效！</strong>",
             hidden: config.downloadMethod != "IDM+EF2"
         });
         API.registerSetting({
