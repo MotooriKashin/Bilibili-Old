@@ -74,6 +74,14 @@
             a.download = fileName;
             a.click();
         }
+        function getUrlValue(name) {
+            const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            const r = window.location.search.substr(1).match(reg);
+            if (r != null)
+                return decodeURIComponent(r[2]);
+            return null;
+        }
+        API.getUrlValue = (name) => getUrlValue(name);
         API.saveAs = (content, fileName, contentType) => saveAs(content, fileName, contentType);
         function readAs(file, type = "string", encoding) {
             return new Promise((resolve, reject) => {

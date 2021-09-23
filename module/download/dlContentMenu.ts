@@ -11,7 +11,7 @@
             li.onmouseover = () => li.setAttribute("class", "context-line context-menu-function bili-old-download hover");
             li.onmouseout = () => li.setAttribute("class", "context-line context-menu-function bili-old-download");
             li.onclick = () => API.downloadThis();
-            document.querySelector("#bilibiliPlayer").addEventListener("DOMNodeInserted", e => {
+            document.querySelector("#bilibiliPlayer")?.addEventListener("DOMNodeInserted", e => {
                 if (!flag && (<HTMLElement>e.target).className && (<HTMLElement>e.target).className.includes("context-line context-menu-function")) {
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
                     flag = setTimeout(() => {
@@ -21,7 +21,7 @@
                     }, 100);
                 }
             })
-            document.querySelector("#bilibiliPlayer").addEventListener("DOMNodeRemoved", e => {
+            document.querySelector("#bilibiliPlayer")?.addEventListener("DOMNodeRemoved", e => {
                 if (flag && (<HTMLElement>e.target).className && (<HTMLElement>e.target).className.includes("context-line context-menu-function")) {
                     flag = 0;
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");

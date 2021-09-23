@@ -4,6 +4,7 @@
 (function () {
     try {
         API.runWhile(() => window.player, () => {
+            var _a, _b;
             const li = document.createElement("li");
             let flag = 0;
             li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
@@ -11,7 +12,7 @@
             li.onmouseover = () => li.setAttribute("class", "context-line context-menu-function bili-old-download hover");
             li.onmouseout = () => li.setAttribute("class", "context-line context-menu-function bili-old-download");
             li.onclick = () => API.downloadThis();
-            document.querySelector("#bilibiliPlayer").addEventListener("DOMNodeInserted", e => {
+            (_a = document.querySelector("#bilibiliPlayer")) === null || _a === void 0 ? void 0 : _a.addEventListener("DOMNodeInserted", e => {
                 if (!flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
                     flag = setTimeout(() => {
@@ -23,7 +24,7 @@
                     }, 100);
                 }
             });
-            document.querySelector("#bilibiliPlayer").addEventListener("DOMNodeRemoved", e => {
+            (_b = document.querySelector("#bilibiliPlayer")) === null || _b === void 0 ? void 0 : _b.addEventListener("DOMNodeRemoved", e => {
                 if (flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
                     flag = 0;
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");

@@ -69,6 +69,12 @@
             a.download = fileName;
             a.click();
         }
+        function getUrlValue(name: string) {
+            const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            const r = window.location.search.substr(1).match(reg);
+            if (r != null) return decodeURIComponent(r[2]); return null;
+        }
+        API.getUrlValue = (name: string) => getUrlValue(name);
         API.saveAs = (content: BufferSource | Blob | string, fileName: string, contentType?: string) => saveAs(content, fileName, contentType);
         function readAs(file: File, type: "ArrayBuffer" | "DataURL" | "string" = "string", encoding?: string) {
             return new Promise((resolve: (value: ArrayBuffer | string) => void, reject) => {
@@ -152,4 +158,10 @@ declare namespace API {
      * @param aid aid
      */
     function getAidInfo(aid: number): Promise<any>;
+    /**
+     * 从url中提取指定参数
+     * @param name 参数名
+     * @returns 参数值，不存在返回null
+     */
+    function getUrlValue(name: string): string
 }

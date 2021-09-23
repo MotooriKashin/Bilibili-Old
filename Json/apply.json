@@ -46,5 +46,6 @@
     "downloadThis": "download.js",
     "getJson": "url.js",
     "aria2": "aria2.js",
-    "ef2": "ef2.js"
+    "ef2": "ef2.js",
+    "getUrlValue": "extend.js"
 }

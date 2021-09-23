@@ -201,7 +201,9 @@
                 'sendbar': __GetUrlValue('sendbar'),
                 'as_wide': 1, // 默认以宽屏模式载入
                 'cid': __GetUrlValue('cid'),
-                'bnj': __GetUrlValue('bnj')
+                'bnj': __GetUrlValue('bnj'),
+                "player_type": __GetUrlValue('player_type'),
+                "season_type": __GetUrlValue('season_type')
             };
             this.flashAddEvents = [];
             this.flashRemoveEvents = [];
@@ -296,7 +298,9 @@
                             p: self.config.page,
                             autoplay: (self.config.autoplay == true),
                             as_wide: self.config.as_wide,
-                            bnj: self.config.bnj
+                            bnj: self.config.bnj,
+                            player_type: self.config.player_type,
+                            season_type: self.config.season_type
                         });
                         //compatible
                         self.gray_html5_compatible();
