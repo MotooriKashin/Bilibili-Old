@@ -292,7 +292,7 @@
                 })
             }
             postData(data: DownloadRocord) {
-                data.filename = this.setFinalName(data);
+                !Reflect.has(data, "_name") && (data.filename = this.setFinalName(data));
                 switch (config.downloadMethod) {
                     case "IDM+EF2": API.ef2({ url: data.url, out: data.filename });
                         break;
@@ -350,6 +350,7 @@
                         break;
                 }
                 adv = ars[1] ? `.${ars.pop()}` : adv ? adv : arr[1] ? `.${arr.pop()}` : "";
+                Reflect.set(obj, "_name", true);
                 return (obj.filename || arr[0]) + `${obj.flvSplit ? "x" + obj.flvSplit : ""}.${obj.quality}${adv}`;
             }
             /**
