@@ -262,17 +262,18 @@
                 });
             }
             postData(data) {
+                data.filename = this.setFinalName(data);
                 switch (config.downloadMethod) {
                     case "IDM+EF2":
-                        "";
+                        API.ef2({ url: data.url, out: data.filename });
                         break;
                     case "aria2":
-                        API.aria2.shell({ urls: [data.url], out: this.setFinalName(data) })
+                        API.aria2.shell({ urls: [data.url], out: data.filename })
                             .then(() => toast.success(`已复制aria2命令行到剪切板，在cmd等shell中使用即可下载~`))
                             .catch(e => toast.error(`复制aria2命令行失败！`, e));
                         break;
                     case "aira2 RPC":
-                        API.aria2.rpc({ urls: [data.url], out: this.setFinalName(data) })
+                        API.aria2.rpc({ urls: [data.url], out: data.filename })
                             .then(GID => toast.success(`已添加下载任务到aria2 RPC主机，任务GID：${GID}`))
                             .catch(e => toast.error(`添加下载任务到aria2 RPC主机出错！`, e));
                         break;
@@ -335,9 +336,8 @@
              */
             rightKey(data) {
                 const root = API.element.popupbox({ width: "300px" });
-                const name = this.setFinalName(data);
-                API.addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, name);
-                API.addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${name}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
+                API.addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, data.filename);
+                API.addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${data.filename}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
                 API.addElement("div", { style: "font-size: 10px; padding-block-end: 10px;" }, root, '本方式下载不太稳定，不嫌麻烦的话可在设置中更换下载方式。');
             }
         }

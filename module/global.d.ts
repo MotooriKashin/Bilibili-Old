@@ -450,7 +450,7 @@ declare namespace API {
      * @param text 提示内容
      * @returns Promise代理的布尔值，取决于用户的点击的按钮
      */
-    function alert(text: string, title?: string): Promise<boolean>;
+    function alertMessage(text: string, title?: string): Promise<boolean>;
     /**
      * 获取模块文本，类似于GM.getResourceText  
      * 一般用于获取css文件

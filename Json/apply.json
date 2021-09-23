@@ -45,5 +45,6 @@
     "getAidInfo": "extend.js",
     "downloadThis": "download.js",
     "getJson": "url.js",
-    "aria2": "aria2.js"
+    "aria2": "aria2.js",
+    "ef2": "ef2.js"
 }

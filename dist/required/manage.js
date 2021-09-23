@@ -241,7 +241,7 @@
             restore() {
                 GM.deleteValue("config");
                 toast.warning("已恢复默认数据，请及时刷新页面避免数据紊乱！");
-                API.alert(`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置").then(d => { d && location.reload(); });
+                API.alertMessage(`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置").then(d => { d && location.reload(); });
             }
             output() {
                 API.saveAs(JSON.stringify(config, undefined, "\t"), `config ${API.timeFormat(undefined, true)}.json`, "application/json");
@@ -335,7 +335,7 @@
             title: "恢复",
             disabled: 0,
             action: () => {
-                API.alert("将移除所有模块，设置，插件等数据，恢复到全新安装脚本的状态！您确定？", "恢复出厂值设置").then(d => {
+                API.alertMessage("将移除所有模块，设置，插件等数据，恢复到全新安装脚本的状态！您确定？", "恢复出厂值设置").then(d => {
                     if (d) {
                         GM.listValues().forEach(d => GM.deleteValue(d));
                         toast.warning("已恢复出厂数据，刷新页面后请重新初始化！");

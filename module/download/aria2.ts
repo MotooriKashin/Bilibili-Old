@@ -5,9 +5,6 @@
     try {
         class Aria2 {
             setting: Partial<Aria2Data> = {};
-            jsonrpc: {
-                method: Partial<Aria2Method>;
-            };
             constructor() {
                 config.useragent && (this.setting.userAgent = config.useragent);
                 config.referer && (this.setting.referer = config.referer);

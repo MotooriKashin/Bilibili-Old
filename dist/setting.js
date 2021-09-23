@@ -493,21 +493,21 @@
             action: (v) => {
                 switch (v) {
                     case "IDM+EF2":
-                        API.alert(`<a href="https://github.com/MotooriKashin/ef2/releases target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
+                        API.alertMessage(`<a href="https://github.com/MotooriKashin/ef2/releases target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: false, IDMToast: false, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     case "aria2":
-                        API.alert(`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>`).then(d => {
+                        API.alertMessage(`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLate: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     case "aira2 RPC":
-                        API.alert(`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。`).then(d => {
+                        API.alertMessage(`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: true, IDMToast: true, rpcServer: false, rpcPort: false, rpcToken: false, rpcTest: false }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
@@ -556,6 +556,7 @@
             sub: "添加到IDM列表而不立即下载",
             type: "switch",
             value: false,
+            float: "把下载链接添加到下载列表但是不立即开始下载，需要下载时再手动到IDM里开始。<strong>B站下载链接一般都有失效，太久不链接可能失效！</strong>",
             hidden: config.downloadMethod != "IDM+EF2"
         });
         API.registerSetting({
@@ -565,6 +566,7 @@
             sub: "不用IDM确认框",
             type: "switch",
             value: false,
+            float: "禁用IDM下载前的询问弹窗，其中可以选择修改文件名及保存目录等信息。",
             hidden: config.downloadMethod != "IDM+EF2"
         });
         API.registerSetting({

@@ -21,8 +21,8 @@
             (<HTMLDivElement>document.querySelector(".icon.icon_t.icon-ad")).setAttribute("style", "background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/news.png);background-position: unset;");
         })
         API.runWhile(() => document.querySelector(".report-wrap-module.elevator-module"), function () {
-            const node = <HTMLDivElement>document.querySelector(".report-wrap-module.elevator-module");
-            for (let item of node.children[1].children) {
+            const node = document.querySelector(".report-wrap-module.elevator-module");
+            for (let item of <any>node.children[1].children) {
                 if (item.innerHTML == "广告") item.innerHTML = "资讯";
                 if (item.innerHTML == "科技") item.innerHTML = "知识";
                 if (item.innerHTML == "数码") item.innerHTML = "科技";
