@@ -384,7 +384,7 @@ class API {
         API.API = new Proxy(this, {
             get: (target, p) => {
                 // @ts-expect-error 由tampermonkey提供
-                return Reflect.get(this, p) || Reflect.get(unsafeWindow, p) || (Reflect.has(API.apply, p) ? (this.importModule(Reflect.get(API.apply, p), {}, true),
+                return Reflect.get(unsafeWindow, p) || Reflect.get(this, p) || (Reflect.has(API.apply, p) ? (this.importModule(Reflect.get(API.apply, p), {}, true),
                     Reflect.get(this, p)) : undefined);
             },
             set: (_target, p, value) => {
@@ -393,7 +393,7 @@ class API {
                 return true;
             }
         });
-        Reflect.has(API.modules, "rewrite.js") ? API.init() : this.runWhile(() => document.body, () => this.alert(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“总是允许全部域名”</strong>`).then(d => { d && API.firstInit(); }));
+        Reflect.has(API.modules, "rewrite.js") ? API.init() : this.runWhile(() => document.body, () => this.alertMessage(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“总是允许全部域名”</strong>`).then(d => { d && API.firstInit(); }));
     }
     bofqiMessage(msg, time = 3, callback, replace = true) {
         let node = document.querySelector(".bilibili-player-video-toast-bottom");
@@ -471,7 +471,7 @@ class API {
         // @ts-ignore Tampermonkey提供
         stop && unsafeWindow.setTimeout(() => unsafeWindow.clearInterval(timer), stop * 1000);
     }
-    async alert(text, title = API.Name) {
+    async alertMessage(text, title = API.Name) {
         return new Promise((r) => {
             const root = this.addElement("div");
             const div = root.attachShadow({ mode: "closed" });
