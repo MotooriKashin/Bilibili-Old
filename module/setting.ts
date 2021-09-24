@@ -316,6 +316,14 @@
                     value: false,
                     sub: "区域+APP"
                 }, {
+                    key: "limitAccesskey",
+                    sort: "player",
+                    label: "账户授权",
+                    sub: "泰区除外",
+                    type: "action",
+                    title: "管理",
+                    action: () => { API.showAccesskey() }
+                }, {
                     key: "limitServer",
                     sort: "player",
                     label: "泰区代理",
