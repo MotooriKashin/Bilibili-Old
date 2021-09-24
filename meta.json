@@ -16,7 +16,8 @@
         "GM_getValue",
         "GM_setValue",
         "GM_deleteValue",
-        "GM_listValues"
+        "GM_listValues",
+        "GM.cookie"
     ],
     "run-at": "document-start",
     "license": "MIT"

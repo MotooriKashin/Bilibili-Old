@@ -16,6 +16,7 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_listValues
+// @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
 // ==/UserScript==

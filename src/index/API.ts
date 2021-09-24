@@ -7,6 +7,48 @@ GM.listValues = GM_listValues;
  * Tampermonkey 提供的高级API的封装
  */
 declare namespace GM {
+    interface cookieDetails {
+        /**
+         * 域
+         */
+        domain: string,
+        /**
+         * 截止日期时间戳（10位）
+         */
+        expirationDate: number;
+        /**
+         * 客户端专用，不会发送给服务端
+         */
+        hostOnly: boolean;
+        /**
+         * 服务端专用，客户端js无法获取/修改
+         */
+        httpOnly: boolean;
+        /**
+         * 名称
+         */
+        name: string;
+        /**
+         * 子页面路径
+         */
+        path: string;
+        /**
+         * 同源策略
+         */
+        sameSite: string;
+        /**
+         * 是否允许通过非安全链接发送给服务器
+         */
+        secure: boolean;
+        /**
+         * 会话型cookie，临时有效，随页面一起销毁
+         */
+        session: boolean;
+        /**
+         * 值
+         */
+        value: string
+    }
     let xmlHttpRequest: typeof GM_xmlhttpRequest;
     let getValue: typeof GM_getValue;
     let setValue: typeof GM_setValue;
@@ -82,6 +124,31 @@ declare namespace GM {
             version: string;
             webRequest: string;
         }
+    }
+    const cookie: {
+        /**
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         */
+        <T extends keyof typeof cookie>(method: T, ...args: Parameters<(typeof cookie)[T]>): ReturnType<(typeof cookie)[T]>;
+        /**
+         * 以数组形式返回所有cookie  
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * @param details 筛选条件，无条件请使用空对象{}会返回所有cookie
+         * @returns 符合条件的cookie对象数组
+         */
+        list(details: Partial<Record<"domain" | "name" | "path", string>>): Promise<cookieDetails[]>;
+        /**
+         * 修改/添加cookie  
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * @param args cookie详细信息
+         */
+        set(details: Partial<cookieDetails>): Promise<void>;
+        /**
+         * 删除cookie  
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * @param args 删除条件
+         */
+        delete(details: Record<"name", string>): Promise<void>;
     }
 }
 declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
