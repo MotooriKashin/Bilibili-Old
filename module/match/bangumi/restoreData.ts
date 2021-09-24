@@ -37,6 +37,13 @@
             args[1] = "https://comment.bilibili.com/playtag,2-2?html5=1";
             restoreBangumiRecommand();
         })
+        API.addCss(`#bangumi_recommend_vertial .recom-list{
+            height: 960px;
+            overflow: auto;
+        } .recom-list::-webkit-scrollbar {
+            width: 0 !important;
+            height: 0 !important;
+        }`, "recom-list")
         async function restoreBangumiRecommand() {
             let data = API.jsonCheck(await xhr({ url: API.objUrl("https://api.bilibili.com/pgc/web/recommend/related/recommend", { season_id: String((<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__).ssId) }) })).result;
             let result = API.jsonCheck(await xhr({ url: API.objUrl("https://api.bilibili.com/x/tag/info", { tag_name: (<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__).mediaInfo.title }) }));
