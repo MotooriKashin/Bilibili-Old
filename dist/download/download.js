@@ -192,12 +192,37 @@
                             return s;
                         }, []));
                         result.forEach(d => d && this.decodePlayinfo(d));
+                        this.getOther();
                     }
                     const title = this.getTitle();
                     this.links.forEach(d => {
                         !d.filename && (d.filename = title);
                     });
                     this.showTable();
+                }
+            }
+            getOther() {
+                if (!config.ifDlDmCC)
+                    return;
+                if (API.danmaku) {
+                    const url = config.dlDmType == "json" ? JSON.stringify(API.danmaku, undefined, "\t") : API.toXml(API.danmaku);
+                    this.links.push({
+                        url: url,
+                        type: "其他",
+                        quality: "弹幕",
+                        size: API.sizeFormat(API.strSize(url)),
+                        filename: `${this.getTitle()}-${API.cid}.${config.dlDmType}`
+                    });
+                }
+                if (API.subtitle) {
+                    API.subtitle.forEach(d => {
+                        this.links.push({
+                            url: !d.subtitle_url.includes(":") ? d.subtitle_url.replace("//", "https://") : d.subtitle_url,
+                            type: "其他",
+                            quality: d.lan_doc,
+                            size: "N/A"
+                        });
+                    });
                 }
             }
             /**
@@ -264,7 +289,7 @@
             postData(data) {
                 !Reflect.has(data, "_name") && (data.filename = this.setFinalName(data));
                 switch (config.downloadMethod) {
-                    case "IDM+EF2":
+                    case "ef2":
                         API.ef2({ url: data.url, out: data.filename });
                         break;
                     case "aria2":

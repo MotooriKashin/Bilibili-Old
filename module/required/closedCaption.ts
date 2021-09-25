@@ -315,7 +315,7 @@ declare namespace API {
     /**
      * CC字幕组
      */
-    let subtitle: any;
+    let subtitle: any[];
     /**
      * CC字幕
      * @param data 视频信息，来自https://api.bilibili.com/x/player/v2

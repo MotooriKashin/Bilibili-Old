@@ -48,5 +48,6 @@
     "aria2": "aria2.js",
     "ef2": "ef2.js",
     "getUrlValue": "extend.js",
-    "showAccesskey": "accesskey.js"
+    "showAccesskey": "accesskey.js",
+    "strSize": "extend.js"
 }

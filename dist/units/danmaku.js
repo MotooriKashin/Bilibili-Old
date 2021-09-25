@@ -16,34 +16,25 @@
             }
             /**
              * 生成xml形式的弹幕
-             * @param  danmaku protoSeg.decode(new Uint8Array(this.response)).elems
+             * @param danmaku protoSeg.decode(new Uint8Array(this.response)).elems
              * @returns 委托对象，表示生成的xml形式的弹幕字符串
              */
             toXml(danmaku) {
-                return new Promise((resolve) => {
-                    this.sortDmById(danmaku, "idStr");
-                    let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n';
-                    for (let i = 0; i < danmaku.length; i++) {
-                        attr[0] = danmaku[i].progress / 1000;
-                        attr[1] = danmaku[i].mode;
-                        attr[2] = danmaku[i].fontsize;
-                        attr[3] = danmaku[i].color;
-                        attr[4] = danmaku[i].ctime;
-                        attr[5] = danmaku[i].pool;
-                        attr[6] = danmaku[i].midHash;
-                        attr[7] = danmaku[i].idStr;
-                        xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a]; }) + '</d>\r\n';
-                    }
-                    xml += "</i>";
-                    /**
-                     * remove-invalid-xml-characters.js
-                     * @link https://gist.github.com/john-doherty/b9195065884cdbfd2017a4756e6409cc
-                     * @license MIT
-                     * @see https://en.wikipedia.org/wiki/Valid_characters_in_XML
-                     */
-                    var regex = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;
-                    resolve(xml.replace(regex, ''));
-                });
+                let DM = Reflect.has(danmaku[0], "idStr") ? this.danmakuFormat(danmaku) : danmaku;
+                this.sortDmById(DM, "dmid");
+                let xml = DM.reduce((s, d) => {
+                    s += `<d p="${d.stime},${d.mode},${d.size},${d.color},${d.date},${d.class},${d.uid},${d.dmid}">${d.text.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a]; })}</d>\r\n`;
+                    return s;
+                }, '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n');
+                xml += "</i>";
+                /**
+                 * remove-invalid-xml-characters.js
+                 * @link https://gist.github.com/john-doherty/b9195065884cdbfd2017a4756e6409cc
+                 * @license MIT
+                 * @see https://en.wikipedia.org/wiki/Valid_characters_in_XML
+                 */
+                var regex = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;
+                return xml.replace(regex, '');
             }
             /**
              * 将弹幕数组按弹幕id升序排序

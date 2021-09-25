@@ -19,41 +19,32 @@
             }
             /**
              * 生成xml形式的弹幕
-             * @param  danmaku protoSeg.decode(new Uint8Array(this.response)).elems
+             * @param danmaku protoSeg.decode(new Uint8Array(this.response)).elems
              * @returns 委托对象，表示生成的xml形式的弹幕字符串
              */
-            toXml(danmaku: any[]): Promise<string> {
-                return new Promise((resolve) => {
-                    this.sortDmById(danmaku, "idStr");
-                    let attr = [], xml = '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n'
-                    for (let i = 0; i < danmaku.length; i++) {
-                        attr[0] = danmaku[i].progress / 1000;
-                        attr[1] = danmaku[i].mode;
-                        attr[2] = danmaku[i].fontsize;
-                        attr[3] = danmaku[i].color;
-                        attr[4] = danmaku[i].ctime;
-                        attr[5] = danmaku[i].pool;
-                        attr[6] = danmaku[i].midHash;
-                        attr[7] = danmaku[i].idStr;
-                        xml += '<d p="' + attr.join(",") + '">' + danmaku[i].content.replace(/[<">'&]/g, (a: string) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }) + '</d>\r\n';
-                    }
-                    xml += "</i>";
-                    /**
-                     * remove-invalid-xml-characters.js
-                     * @link https://gist.github.com/john-doherty/b9195065884cdbfd2017a4756e6409cc
-                     * @license MIT
-                     * @see https://en.wikipedia.org/wiki/Valid_characters_in_XML
-                     */
-                    var regex = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;
-                    resolve(xml.replace(regex, ''));
-                });
+            toXml(danmaku: (danmaku | danmakuNew)[]) {
+                let DM: danmaku[] = Reflect.has(danmaku[0], "idStr") ? this.danmakuFormat(<danmakuNew[]>danmaku) : <danmaku[]>danmaku;
+                this.sortDmById(DM, "dmid");
+                let xml = DM.reduce((s, d) => {
+                    s += `<d p="${d.stime},${d.mode},${d.size},${d.color},${d.date},${d.class},${d.uid},${d.dmid}">${d.text.replace(/[<">'&]/g, (a: string) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] })}</d>\r\n`;
+                    return s;
+                }, '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n');
+                xml += "</i>";
+                /**
+                 * remove-invalid-xml-characters.js
+                 * @link https://gist.github.com/john-doherty/b9195065884cdbfd2017a4756e6409cc
+                 * @license MIT
+                 * @see https://en.wikipedia.org/wiki/Valid_characters_in_XML
+                 */
+                var regex = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;
+                return xml.replace(regex, '');
             }
             /**
              * 将弹幕数组按弹幕id升序排序
              * @param danmaku 要排序的弹幕数组
              * @param key 弹幕id的属性名，应为dmid或idStr
              */
-            sortDmById(danmaku: any[], key: string) {
+            sortDmById(danmaku: (danmaku | danmakuNew)[], key: "dmid" | "idStr") {
                 let egx = /^\d+$/;
                 for (let i = 0, d; i < danmaku.length; i++) {
                     d = danmaku[i];
@@ -116,7 +107,7 @@
                     // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
                     let pageSize = config.dmSge.pageSize ? config.dmSge.pageSize / 1000 : 360;
                     let total = ((<any>window).player && (<any>window).player.getDuration && ((<any>window).player.getDuration() / pageSize + 1)) || config.dmSge.total;
-                    let allrequset: any[] = [], allDanmaku: any[] = [];
+                    let allrequset: any[] = [], allDanmaku: danmakuNew[] = [];
                     // 其他视频的分片总数已经不能从当前window下获取
                     if (API.aid && (aid != API.aid)) total = config.dmSge.total;
                     if (!bas) {
@@ -202,7 +193,7 @@
                     toast.warning("从弹幕文件中没有获取到任何弹幕！");
                     return;
                 }
-                let danmaku = [];
+                let danmaku: danmaku[] = [];
                 let attr: string[], v: Element, mode: number;
                 for (let i = 0; i < dm.length; i++) {
                     v = dm[i];
@@ -236,8 +227,8 @@
              * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
              * @param dm 弹幕数组
              */
-            specialEffects(dm: any[]) {
-                let textData;
+            specialEffects(dm: danmaku[]) {
+                let textData: danmaku;
                 for (let i = 0; i < dm.length; i++) {
                     textData = dm[i];
                     if (textData.text.includes('\n')) {
@@ -248,7 +239,7 @@
                     }
                 }
             }
-            segDmDecode(response: any) {
+            segDmDecode(response: any): danmakuNew[] {
                 return Danmaku.protoSeg.decode(new Uint8Array(response)).elems;
             }
             /**
@@ -257,7 +248,7 @@
              * @param aid 视频aid，默认取当前视频aid
              * @returns 旧版弹幕数组
              */
-            danmakuFormat(dm: any[], aid?: number | string) {
+            danmakuFormat(dm: danmakuNew[], aid?: number | string) {
                 aid = aid || API.aid
                 let danmaku = dm.map(function (v) {
                     let result: danmaku = {
@@ -305,7 +296,7 @@
         const DM = new Danmaku();
         API.getSegDanmaku = (aid = API.aid, cid = API.cid, bas = false) => DM.getSegDanmaku(<number>aid, <number>cid, bas);
         API.specialEffects = (dm: any[]) => DM.specialEffects(dm);
-        API.sortDmById = (danmaku: any[], key: string) => DM.sortDmById(danmaku, key);
+        API.sortDmById = (danmaku: any[], key: "idStr" | "dmid") => DM.sortDmById(danmaku, key);
         API.toXml = (danmaku: any[]) => DM.toXml(danmaku);
         API.getHistoryDanmaku = (date: string, cid?: string | number) => DM.getHistoryDanmaku(date, <number>cid);
         API.loadLocalDm = (xml: string, append: boolean) => DM.loadLocalDm(xml, append);
@@ -336,10 +327,10 @@ declare namespace API {
     function sortDmById(danmaku: any[], key: string): void;
     /**
      * 生成xml形式的弹幕
-     * @param  danmaku protoSeg.decode(new Uint8Array(this.response)).elems
+     * @param danmaku protoSeg.decode(new Uint8Array(this.response)).elems
      * @returns 委托对象，表示生成的xml形式的弹幕字符串
      */
-    function toXml(danmaku: any[]): Promise<string>;
+    function toXml(danmaku: any[]): string;
     /**
      * 获取历史弹幕
      * @param date 历史弹幕日期，yyyy-mm-dd格式：如 2009-06-24
@@ -385,7 +376,24 @@ interface danmaku {
     text: string;
     uid: string;
     picture?: string;
-    AH?: string
+    AH?: string;
+    zIndex?: number;
+}
+/**
+ * proto弹幕对象
+ */
+interface danmakuNew {
+    pool: number;
+    color: number;
+    ctime: number;
+    idStr: string;
+    mode: number;
+    fontsize: number;
+    progress: number;
+    content: string;
+    midHash: string;
+    action?: string;
+    styleClass?: string
 }
 interface Window {
     player: {

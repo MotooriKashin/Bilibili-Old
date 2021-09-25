@@ -499,10 +499,10 @@
             key: "downloadMethod",
             label: "下载方式",
             value: "右键保存",
-            list: ["右键保存", "IDM+EF2", "aria2", "aira2 RPC"],
+            list: ["右键保存", "ef2", "aria2", "aira2 RPC"],
             action: (v) => {
                 switch (v) {
-                    case "IDM+EF2": API.alertMessage(`<a href="https://github.com/MotooriKashin/ef2/releases" target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
+                    case "ef2": API.alertMessage(`<a href="https://github.com/MotooriKashin/ef2/releases" target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
                         d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: false, IDMToast: false, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
                             (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                         API.displaySetting("downloadMethod");
@@ -563,7 +563,7 @@
             type: "switch",
             value: false,
             float: "把下载链接添加到下载列表但是不立即开始下载，需要下载时再手动到IDM里开始。<strong>B站下载链接一般都有时效，太久不链接可能失效！</strong>",
-            hidden: config.downloadMethod != "IDM+EF2"
+            hidden: config.downloadMethod != "ef2"
         })
         API.registerSetting({
             key: "IDMToast",
@@ -573,7 +573,7 @@
             type: "switch",
             value: false,
             float: "禁用IDM下载前的询问弹窗，其中可以选择修改文件名及保存目录等信息。",
-            hidden: config.downloadMethod != "IDM+EF2"
+            hidden: config.downloadMethod != "ef2"
         })
         API.registerSetting({
             key: "rpcServer",
@@ -614,6 +614,31 @@
                     .then(d => toast.success(`RPC设置正常！aria2版本：${d.version}`))
                     .catch(e => toast.error("RPC链接异常！请检查各项设置以及RPC主机的状况！", e))
             }
+        })
+        API.registerSetting({
+            key: "dlDmCC",
+            sort: "download",
+            label: "其他下载",
+            sub: "弹幕、CC字幕等",
+            type: "sort",
+            list: [
+                {
+                    key: "ifDlDmCC",
+                    sort: "download",
+                    label: "弹幕、CC字幕",
+                    type: "switch",
+                    value: false
+                },
+                {
+                    key: "dlDmType",
+                    sort: "download",
+                    label: "弹幕格式",
+                    type: "row",
+                    value: "xml",
+                    list: ["xml", "json"],
+                    float: `xml是经典的B站弹幕格式，json是旧版播放器直接支持的格式，本脚本载入本地弹幕功能同时支持这两种。</br>如果只是给本脚本专用那就选json，xml对“非法字符”支持不友好，部分高级/代码/BAS弹幕可能出错。`
+                }
+            ]
         })
         // 旧版播放器专属设置
         API.registerSetting({
@@ -932,6 +957,14 @@ declare namespace config {
      * 下载：RPC令牌
      */
     let rpcToken: string;
+    /**
+     * 下载：其他下载
+     */
+    let ifDlDmCC: boolean;
+    /**
+     * 下载：弹幕类型
+     */
+    let dlDmType: string;
 }
 /**
  * 工具栏按钮

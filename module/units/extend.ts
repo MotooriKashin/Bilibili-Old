@@ -104,6 +104,18 @@
             return aids[aid];
         }
         API.getAidInfo = (aid: number) => getAidInfo(aid);
+        function strSize(str: string) {
+            let size = 0;
+            for (let i = 0; i < str.length; i++) {
+                const code = str.charCodeAt(i);
+                if (code <= 0x007f) size++;
+                else if (code <= 0x07ff) size += 2;
+                else if (code <= 0xffff) size += 3;
+                else size += 4;
+            }
+            return size;
+        }
+        API.strSize = (str: string) => strSize(str);
     } catch (e) { API.trace(e, "extend.js", true) }
 })();
 declare namespace API {
@@ -163,5 +175,11 @@ declare namespace API {
      * @param name 参数名
      * @returns 参数值，不存在返回null
      */
-    function getUrlValue(name: string): string
+    function getUrlValue(name: string): string;
+    /**
+     * 求utf-8字符串字节数
+     * @param str utf-8字符串（js默认字符串格式）
+     * @returns 字节数
+     */
+    function strSize(str: string): number;
 }

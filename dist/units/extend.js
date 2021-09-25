@@ -114,6 +114,22 @@
             return aids[aid];
         }
         API.getAidInfo = (aid) => getAidInfo(aid);
+        function strSize(str) {
+            let size = 0;
+            for (let i = 0; i < str.length; i++) {
+                const code = str.charCodeAt(i);
+                if (code <= 0x007f)
+                    size++;
+                else if (code <= 0x07ff)
+                    size += 2;
+                else if (code <= 0xffff)
+                    size += 3;
+                else
+                    size += 4;
+            }
+            return size;
+        }
+        API.strSize = (str) => strSize(str);
     }
     catch (e) {
         API.trace(e, "extend.js", true);
