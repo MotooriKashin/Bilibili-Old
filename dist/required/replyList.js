@@ -24,6 +24,9 @@
             }
         }
         new ReplyList().init();
+        API.jsonphook(["api.bilibili.com/x/v2/reply?"], (xhr) => {
+            !xhr.url.includes("mobi_app") && (xhr.url += `&mobi_app=android`);
+        });
     }
     catch (e) {
         API.trace(e, "replyList.js", true);
