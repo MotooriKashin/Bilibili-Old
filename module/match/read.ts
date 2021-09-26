@@ -88,6 +88,7 @@
                 }
                 this.data = `<div class="page-container">${this.temp}</div>`;
                 API.rewriteHTML(API.getModule("read.html").replace(`<div class="page-container"></div>`, this.data));
+                API.runWhile(() => document.body, () => API.importModule("user-select.js"));
             }
         }
         new Read();
