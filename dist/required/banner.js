@@ -102,10 +102,20 @@
                     debug.error('load animated banner images error', e);
                     return;
                 }
-                const container = document.querySelector("#banner_link");
-                if (!container)
-                    return;
-                container.setAttribute("class", "head-banner animated-banner");
+                let container = document.querySelector("#banner_link");
+                if (!container) {
+                    container = document.querySelector(".h-center");
+                    if (!container)
+                        return;
+                    container.parentElement.removeAttribute("style");
+                    container.style.width = "100%";
+                    container.style.top = "-42px";
+                    container.style.marginBottom = "-42px";
+                    container.innerHTML = "";
+                    document.querySelector(".b-header-mask-wrp").remove();
+                }
+                ;
+                container.classList.add("animated-banner");
                 let containerHeight = container.clientHeight;
                 let containerWidth = container.clientWidth;
                 let containerScale = containerHeight / 155;
@@ -317,7 +327,7 @@
             }
         });
         let tag = false; // 防止二度请求
-        API.jsonphook(["api.bilibili.com/x/web-show/res/locs"], function (jsonp) {
+        API.jsonphook(["api.bilibili.com/x/web-show/res/loc"], function (jsonp) {
             const obj = API.urlObj(jsonp.url);
             let callback = obj.callback;
             let call = window[callback];
@@ -328,6 +338,11 @@
                         v.data[d] && (v.data[d][0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
                             v.data[d][0].url = (data && data.url) || "",
                             v.data[d][0].title = (data && data.name) || "");
+                        if (jsonp.url.includes("loc?") && obj.id == String(d)) {
+                            v.data[0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
+                            v.data[0].url = (data && data.url) || "";
+                            v.data[0].title = (data && data.name) || "";
+                        }
                     });
                     return call(v);
                 };
