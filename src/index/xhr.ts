@@ -5,6 +5,7 @@ class Xhr {
      * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
      */
     static xhr(details: xhrDetails): any {
+        details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
         if (details.hasOwnProperty("async") && Boolean(details.async) === false) {
             let xhr = new XMLHttpRequest();
             xhr.open(details.method || 'GET', details.url, false);

@@ -35,7 +35,7 @@
                 else {
                     // 让pakku.js载入弹幕
                     let url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + API.cid + "&pid=" + API.aid + "&segment_index=1";
-                    xhr({ url: url, responseType: "arraybuffer" }).then((response: any) => {
+                    xhr({ url: url, responseType: "arraybuffer",credentials:true }).then((response: any) => {
                         let Segments = API.segDmDecode(response);
                         // pakku.js处于“休眠中”时，不会修改响应数据，这时的response仅仅是第一个分段的弹幕数据
                         // 这种情况下需要主动去加载全部的分段(loadDanmaku)

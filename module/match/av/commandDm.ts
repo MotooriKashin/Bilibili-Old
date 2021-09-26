@@ -203,7 +203,8 @@
                 url: url,
                 data: API.objUrl("", data),
                 headers: { "Content-type": contentType },
-                method: "POST"
+                method: "POST",
+                credentials: true
             });
         }
 
@@ -494,7 +495,8 @@
                         type: String(2),
                         rid: String(API.aid),
                         up_mid: String(API.uid)
-                    })
+                    }),
+                    credentials: true
                 }).then((resp: any) => {
                     resp = JSON.parse(resp);
                     biliAPI.verify(resp, "获取收藏列表");

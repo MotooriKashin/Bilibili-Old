@@ -22,7 +22,7 @@
                 config.rewriteMethod == "异步" ? this.prepareA() : this.prepareB();
             }
             prepareA() {
-                (<Promise<string>>xhr({ url: location.href })).then(d => { this.build(d) });
+                (<Promise<string>>xhr({ url: location.href, credentials: true })).then(d => { this.build(d) });
             }
             prepareB() {
                 let data = xhr({ url: location.href, async: false });

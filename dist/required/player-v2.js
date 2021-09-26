@@ -10,12 +10,14 @@
             API.xhrhook(["api.bilibili.com/x/player/carousel.so"], function (args) { ready = true; });
             xhr({
                 url: API.objUrl("https://api.bilibili.com/x/player/v2", { cid: API.cid, aid: API.aid }),
-                responseType: "json"
+                responseType: "json",
+                credentials: true
             }).catch((e) => {
                 API.trace(e, "autoFix.js");
                 return xhr({
                     url: API.objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: API.cid, aid: API.aid, type: 1 }),
-                    responseType: "json"
+                    responseType: "json",
+                    credentials: true
                 });
             }).then((data) => {
                 API.runWhile(() => ready, () => {

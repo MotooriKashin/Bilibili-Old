@@ -15,7 +15,10 @@
                     danmakus.setAttribute("title", "总弹幕数 " + danmakus.innerText);
                     debug.debug("总播放数", views.innerText, " 总弹幕数", danmakus.innerText);
                 }
-                let data = await xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": String(API.aid) }) }); // 获取分集数据
+                let data = await xhr({
+                    url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": String(API.aid) }),
+                    credentials: true
+                }); // 获取分集数据
                 data = API.jsonCheck(data).data;
                 let view = data.view;
                 let danmaku = data.danmaku;

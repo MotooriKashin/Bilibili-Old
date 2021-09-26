@@ -14,7 +14,8 @@
             prepareA() {
                 xhr({
                     url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
-                    responseType: "json"
+                    responseType: "json",
+                    credentials: true
                 }).then(d => { this.write(d); });
             }
             prepareB() {

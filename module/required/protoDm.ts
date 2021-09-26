@@ -24,7 +24,8 @@
                 let history = "https://api.bilibili.com/x/v2/dm/web/history/seg.so?type=1&oid=" + API.cid + "&date=" + param.date;
                 xhr({
                     url: history,
-                    responseType: "arraybuffer"
+                    responseType: "arraybuffer",
+                    credentials: true
                 }).then((seg: any) => {
                     let segDm = API.segDmDecode(seg);
                     window.player?.setDanmaku(API.danmaku = API.danmakuFormat(segDm));

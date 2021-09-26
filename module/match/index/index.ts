@@ -13,7 +13,7 @@
             async prepareA() {
                 await new Promise(r => {
                     if (!(<any>window).__INITIAL_STATE__ && !((<any>window).__INITIAL_DATA__ && (<any>window).__INITIAL_DATA__[0])) {
-                        (<Promise<string>>xhr({ url: location.href })).then(d => {
+                        (<Promise<string>>xhr({ url: location.href, credentials: true })).then(d => {
                             let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
                             if (data) API.importModule("index-html.js", { __INITIAL_STATE__: data });
                             else {

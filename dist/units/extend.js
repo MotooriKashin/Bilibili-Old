@@ -20,6 +20,7 @@
                 url: "https://passport.bilibili.com/login/exit/v2",
                 data: `biliCSRF=${API.getCookies().bili_jct}&gourl=${encodeURIComponent(location.href)}`,
                 method: "POST",
+                credentials: true
             }));
             if (data.status) {
                 toast.success("退出登录！");
@@ -107,7 +108,8 @@
             if (!aids[aid]) {
                 const data = await xhr({
                     url: `https://api.bilibili.com/x/web-interface/view/detail?aid=${aid}`,
-                    responseType: "json"
+                    responseType: "json",
+                    credentials: true
                 });
                 aids[aid] = data.data;
             }

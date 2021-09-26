@@ -94,7 +94,8 @@
                             type: <any>1,
                             oid: <any>API.cid,
                             month: this.arrT.slice(0, 2).join("-")
-                        })
+                        }),
+                        credentials: true
                     })
                     data = API.jsonCheck(data).data;
                     if (data && data[0]) {

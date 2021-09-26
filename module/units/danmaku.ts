@@ -100,7 +100,8 @@
                             oid: String(cid),
                             pid: String(aid)
                         }),
-                        responseType: "arraybuffer"
+                        responseType: "arraybuffer",
+                        credentials: true
                     });
                     config = Danmaku.protoView.decode(new Uint8Array(config));
                     // dmSge.total代表的分片总数，有时错误地为100
@@ -120,7 +121,8 @@
                                     pid: String(aid),
                                     segment_index: String(index)
                                 }),
-                                responseType: "arraybuffer"
+                                responseType: "arraybuffer",
+                                credentials: true
                             }));
                         }
                     }
@@ -177,7 +179,8 @@
                         oid: String(cid),
                         date: date
                     }),
-                    responseType: "arraybuffer"
+                    responseType: "arraybuffer",
+                    credentials: true
                 });
                 return this.segDmDecode(dm);
             }

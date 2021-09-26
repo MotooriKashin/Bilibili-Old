@@ -28,7 +28,8 @@
                     if (Reflect.has(this.obj, "season_id") || Reflect.has(this.obj, "ep_id")) {
                         (<Promise<JSON>>xhr({
                             url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", this.obj),
-                            responseType: "json"
+                            responseType: "json",
+                            credentials: true
                         })).then(d => {
                             API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid });
                             r(true);
@@ -36,7 +37,8 @@
                             toast.error("获取bangumi数据出错！", e);
                             config.videoLimit && (<Promise<JSON>>xhr({
                                 url: API.objUrl(`${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season`, this.obj),
-                                responseType: "json"
+                                responseType: "json",
+                                credentials: true
                             })).then(d => {
                                 API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid });
                                 r(true);

@@ -20,7 +20,10 @@
     try {
         toast("重构媒体页信息中...");
         let avs = [], value = [], promises = [], ids = [];
-        xhr({ url: `https://api.bilibili.com/x/v1/medialist/resource/ids4Player?media_id=${mid}` }).then(async (d) => {
+        xhr({
+            url: `https://api.bilibili.com/x/v1/medialist/resource/ids4Player?media_id=${mid}`,
+            credentials: true
+        }).then(async (d) => {
             let data = API.jsonCheck(d).data;
             for (let i = 0; i < data.medias.length; i++) {
                 ids[i] = data.medias[i].id;
@@ -30,7 +33,10 @@
             while (avs.length) {
                 let i = avs.length > 20 ? 20 : avs.length;
                 value = avs.splice(0, i);
-                promises.push(xhr({ url: API.objUrl("https://api.bilibili.com/x/article/cards", { "ids": value.join("%2C") }) }));
+                promises.push(xhr({
+                    url: API.objUrl("https://api.bilibili.com/x/article/cards", { "ids": value.join("%2C") }),
+                    credentials: true
+                }));
             }
             value = [];
             data = await Promise.all(promises);

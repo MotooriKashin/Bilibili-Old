@@ -22,7 +22,8 @@
                     let data = await xhr({
                         url: "https://api.bilibili.com/x/web-interface/archive/like",
                         method: "POST",
-                        data: `aid=${API.aid}&like=2&csrf=${API.getCookies().bili_jct}`
+                        data: `aid=${API.aid}&like=2&csrf=${API.getCookies().bili_jct}`,
+                        credentials: true
                     });
                     data = API.jsonCheck(data).ttl;
                     toast.warning("取消点赞！");
@@ -40,7 +41,8 @@
                     let data = await xhr({
                         url: "https://api.bilibili.com/x/web-interface/archive/like",
                         method: "POST",
-                        data: `aid=${API.aid}&like=1&csrf=${API.getCookies().bili_jct}`
+                        data: `aid=${API.aid}&like=1&csrf=${API.getCookies().bili_jct}`,
+                        credentials: true
                     });
                     data = API.jsonCheck(data).ttl;
                     toast.success("点赞成功！");
@@ -56,7 +58,8 @@
             }
             // 初始化按钮
             let data = await xhr({
-                url: API.objUrl("https://api.bilibili.com/x/web-interface/view", { aid: <any>API.aid })
+                url: API.objUrl("https://api.bilibili.com/x/web-interface/view", { aid: <any>API.aid }),
+                credentials: true
             })
             data = API.jsonCheck(data).data.stat.like;
             (<HTMLElement>document.querySelector(".like")).setAttribute("title", "点赞人数" + data);
@@ -64,7 +67,10 @@
             arg.replaceWith(text);
             arg = text;
             if (!API.uid) return;
-            data = API.jsonCheck(await xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": <any>API.aid }) })).data;
+            data = API.jsonCheck(await xhr({
+                url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": <any>API.aid }),
+                credentials: true
+            })).data;
             if (data == 1) {
                 // 点赞过点亮图标
                 i.setAttribute("style", "width : 22px;height : 22px;display : none;");

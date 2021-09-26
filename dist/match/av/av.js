@@ -29,7 +29,8 @@
                 await new Promise(r => {
                     xhr({
                         url: API.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: API.aid }),
-                        responseType: "json"
+                        responseType: "json",
+                        credentials: true
                     }).then(d => {
                         API.importModule("av-detail.js", { __INITIAL_STATE__: d });
                         r(true);

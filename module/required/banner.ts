@@ -351,7 +351,8 @@
             tag = true;
             xhr({
                 url: `https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`,
-                responseType: "json"
+                responseType: "json",
+                credentials: true
             }).then((d: any) => {
                 GM.setValue("banner", d.data);
                 new Animate(d.data);
