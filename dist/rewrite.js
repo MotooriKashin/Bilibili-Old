@@ -46,6 +46,8 @@
             API.importModule("loadByDmid.js");
         if (config.read && /\/read\/[Cc][Vv]/.test(location.href))
             API.importModule("read.js");
+        if (config.player && /festival\/2021bnj/.test(location.href))
+            API.importModule("bnj2021.js");
         API.scriptIntercept(["bilibiliPlayer.min.js"], "bilibiliPlayer.js"); // 播放器脚本拦截
         API.path.name && API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
         config.logReport && API.scriptIntercept(["log-reporter"]); // 日志拦截
