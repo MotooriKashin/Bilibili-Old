@@ -33,7 +33,8 @@
                     responseType: "json"
                 }) : xhr({
                     url: API.objUrl(`//${url}`, obj),
-                    responseType: "json"
+                    responseType: "json",
+                    credentials: true
                 });
             }
             sign(obj) {
