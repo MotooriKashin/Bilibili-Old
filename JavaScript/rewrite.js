@@ -1050,7 +1050,7 @@
             if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
                 if (desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
                     const text = desc[1].innerText.replace(/BV[A-Za-z0-9]+/gi, (str) => {
-                        const av = API.abv(str);
+                        const av = BLOD.abv(str);
                         return `<a target="_blank" href="//www.bilibili.com/video/av${av}">av${av}</a>`;
                     });
                     desc[1].innerHTML = text;
