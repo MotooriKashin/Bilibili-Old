@@ -22,11 +22,15 @@
                 if (this.animatedBannerSupport)
                     this.mounted(v);
                 API.addCss(API.getModule("animated-banner.css"), "animated-banner");
-                let timer = setInterval(() => {
-                    const blur = document.querySelector(".blur-bg");
-                    blur && blur.remove();
-                }, 100);
-                setTimeout(() => clearTimeout(timer), 60 * 1000);
+                if (v.is_split_layer !== 0) {
+                    let timer = setInterval(() => {
+                        const blur = document.querySelector(".blur-bg");
+                        blur && blur.remove();
+                    }, 100);
+                    setTimeout(() => clearTimeout(timer), 60 * 1000);
+                }
+                else
+                    API.addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
             }
             static resourceId() {
                 if (location.href.includes("v/douga"))
