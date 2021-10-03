@@ -699,7 +699,7 @@
                 API.localMedia(files);
             }
         })
-        API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
+        API.path && API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
             API.changeSettingMode({ onlineDanmaku: false, allDanmaku: false, localMedia: false })
         })
     } catch (e) { API.trace(e, "setting.js", true) }
