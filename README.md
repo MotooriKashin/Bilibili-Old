@@ -1,7 +1,7 @@
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 93](https://img.shields.io/badge/Google_Chrome_91-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面，即2020年改版之前的页面，尤其是还原当时的播放器样式。  
-**6.x之后的版本改用Typescript重构并引入了大量ESNext新特性，可能无法支持部分旧版内核浏览器，请见谅！如由需要可继续使用旧版的备份，但不会继续维护及更新。**
+初次使用需要进行初始化操作，点击“确定”后将进行跨域申请，建议勾选“总是允许全部域名”。
 
 ---
 ### 脚本实现
@@ -15,7 +15,7 @@
    - 排行榜：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
    - ~~播单：[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")、[detail](https://www.bilibili.com/playlist/detail/pl769 "bilibili moe 2018 日本动画场应援")~~
    - 专栏：如[cv1](https://www.bilibili.com/video/cv1)
-- 其他：挺多的，请参考脚本设置界面。
+- 其他：挺多的，请参考脚本设置界面，如有其他附加功能请求也可以提issue。
 
 ---
 ### 设置相关
@@ -28,11 +28,11 @@
 _以下问题这里可能处于并将长期处于无法解决状态，请多担待！如能提供相关帮助，不胜感激！_
 1. 技术上无法实现排除新版页面干扰对于重写页面的干扰，新版页面会一闪而过，取决于脚本注入速度和您的网络延时情况。  
 2. 上述干扰严重到破坏页面的话请尝试刷新，最好是硬刷新(shift + F5 或 Ctrl + shift + r)。
-3. 6.x之后的版本不再兼容老旧内核浏览器，也不会尝试去兼容，具体浏览器支持情况可参考下文作者的运行环境。
-4. 重写页面是过于底层的操作，可能导致其他脚本或浏览器扩展失效，需要第三方主动去兼容。
-5. 反查弹幕发送者信息原理是逆向CRC32，存在哈希碰撞的可能性，所以提供的信息仅供参考。
-6. 暂未跟进B站播放器的互动视频、全景视频、高能进度条等新功能。
-7. 暂未跟进HEVC的软解支持，包括HDR、Dobby相关媒体。
+3. 如果是浏览器内核过时不支持相关特性类的问题原则上不会修复，浏览器内核还是越新越好。
+4. 重写页面是过于底层的操作，可能导致其他脚本或浏览器扩展失效，需要第三方主动去兼容。重写模式改为“异步”或许可以缓解，但会引发一些其他问题。
+5. 反查弹幕发送者信息原理是逆向CRC32，存在哈希碰撞的可能性，查出的uid信息仅供参考。
+6. 互动视频、全景视频、高能进度条等新功能暂时未能移植。
+7. HDR、Dobby等流要求HEVC的软解支持暂时未能移植。
 8. 旧版弹幕已获取不到90分钟以后的内容，非必要不要关闭“新版弹幕”。
 9. av页的充电功能失效，切勿使用，如有需求，请前往对应UP主空间。
 10. 主页是改版最大的地方，已尽力去修复，依旧无法做到完美还原请多担待。
