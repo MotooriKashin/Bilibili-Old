@@ -702,6 +702,14 @@
         API.path && API.path.name && API.runWhile(() => API.path.name && (<any>window).player, () => {
             API.changeSettingMode({ onlineDanmaku: false, allDanmaku: false, localMedia: false })
         })
+        API.registerSetting({
+            key: "commentLinkDetail",
+            sort: "style",
+            label: "还原评论中的超链接",
+            sub: "av、ss或ep",
+            type: "switch",
+            value: false
+        })
     } catch (e) { API.trace(e, "setting.js", true) }
 })();
 /**
@@ -965,6 +973,10 @@ declare namespace config {
      * 下载：弹幕类型
      */
     let dlDmType: string;
+    /**
+     * 样式：评论超链接
+     */
+    let commentLinkDetail: boolean;
 }
 /**
  * 工具栏按钮
