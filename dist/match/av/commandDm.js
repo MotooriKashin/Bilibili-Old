@@ -39,10 +39,10 @@
             let videoWrap = document.getElementsByClassName("bilibili-player-video-wrap")[0];
             if (!videoWrap)
                 return;
-            let popupDiv = document.createElement("div");
-            popupDiv.className = "bilibili-player-video-popup";
-            videoWrap.appendChild(popupDiv);
-            return popupDiv;
+            let widgetContainer = document.createElement("div");
+            widgetContainer.className = "bilibili-player-video-popup";
+            videoWrap.appendChild(widgetContainer);
+            return widgetContainer;
         }
         /**
          * 绑定播放器事件，使用window.player.addEventListener
@@ -100,6 +100,9 @@
                         break;
                     case "#VOTE#": // 投票弹窗
                         popupWindow.push(new Vote(cdm, extra, from));
+                        break;
+                    case "#GRADE#": // 评分弹窗
+                        popupWindow.push(new Grade(cdm, extra, from));
                         break;
                     // 滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
                     case "#RESERVE#":
@@ -205,7 +208,7 @@
                 this.to = from + (extra.duration / 1e3 || 5);
                 this.pos_x = extra.posX || 200;
                 this.pos_y = extra.posY || 200;
-                this.popup = divClass(".commandDm-popup");
+                this.popup = divClass("commandDm-popup");
                 this.popup.style.display = "none";
                 widgetContainer.appendChild(this.popup);
             }
@@ -259,6 +262,7 @@
                 panel.appendChild(optionDiv);
                 dialog.appendChild(title);
                 dialog.appendChild(panel);
+                this.popup.appendChild(dialog);
                 this.dialog = dialog;
                 this.button = button;
                 this.progress = [];
