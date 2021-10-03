@@ -86,6 +86,7 @@
                 this.setting = obj;
             }
             buildTable() {
+                this.updateList = [];
                 const resource = GM.getValue("resource", {});
                 this.modules = GM.getValue("modules", {});
                 Object.keys(this.resource).forEach(d => {
@@ -93,7 +94,11 @@
                     Reflect.set(this.moduleUrl, d, arr[arr.length - 1]);
                     Reflect.get(resource, d) != Reflect.get(this.resource, d) && this.updateList.push(d);
                 });
-                GM.getValue("@resource", []).forEach(d => this.updateList.push(d));
+                GM.getValue("@resource", []).forEach(d => {
+                    const arr = d.split("/");
+                    Reflect.set(this.moduleUrl, d, arr[arr.length - 1]);
+                    this.updateList.push(d);
+                });
             }
             checkAsync() {
                 let result = 0;
@@ -132,6 +137,7 @@
                         return;
                     GM.setValue("updateAsync", this.now);
                     this.updating = true;
+                    this.toast = Boolean(msg[0]);
                     msg[0] && toast(...msg);
                     this.resource = await xhr({
                         url: this.printfServer("resource.json"),
@@ -143,16 +149,32 @@
                         return s;
                     }, []));
                     this.updating = false;
-                    msg && toast.success("更新完成~");
+                    this.toast && toast.success("更新完成~");
+                    xhr({
+                        url: this.printfServer("meta.json"),
+                        responseType: "json"
+                    }).then(d => {
+                        const v = d.version;
+                        debug(`最新版本：${v}`);
+                        if (v != API.Virsion) {
+                            this.toast && toast.warning(`脚本本体也有更新！`, `当前版本：${API.Virsion}`, `最新版本：${v}`);
+                            this.toast && API.alertMessage(`脚本本体有更新，是否立即更新到${v}版本？点击“确定”将立即跳转到脚本更新页面。</br>您也可以使用Tampermonkey自带的更新检查功能获取更新。`, undefined).then(d => {
+                                d ? window.open(this.printfServer("main.user.js")) : toast("取消操作！", "更新功能交还给Tampermonkey");
+                            });
+                        }
+                    });
                 }
                 catch (e) {
-                    API.trace(e, "检查更新");
+                    API.trace(e, "检查更新", this.toast);
+                    this.toast && config.updateServer == "Github" && toast.warning("Github源可能链接不畅，推荐尝试使用jsdelivrCDN源！");
+                    this.updating = false;
                 }
             }
             async download(file, hash = "ts") {
                 let result = await xhr({ url: this.printfServer(file, hash) });
                 file.endsWith(".json") ? GM.setValue(Reflect.get(this.moduleUrl, file).replace(".json", ""), JSON.parse(result)) : Reflect.set(this.modules, Reflect.get(this.moduleUrl, file), result);
                 GM.setValue("modules", this.modules);
+                this.toast && toast.success(`更新模块 ${Reflect.get(this.moduleUrl, file)}`);
             }
             clear() {
                 this.modules = GM.getValue("modules", {});
@@ -280,7 +302,7 @@
             type: "row",
             value: "jsdelivr",
             list: ["Github", "jsdelivr"],
-            float: 'Github原生源同步及时，但一般很难访问。jsdelivrCDN可能有缓存延迟，但链接稳定。'
+            float: 'Github原生源同步及时，但一般很难访问。jsdelivrCDN可能有缓存延迟，但链接稳定。</br>jsdelivr源由于缓存可能会有一天左右时间的延迟，无法保证立即更新到最新版本。Github直连源没有延迟但国内大概难以访问。'
         });
         API.registerSetting({
             key: "updateNow",
