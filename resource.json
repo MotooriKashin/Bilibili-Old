@@ -74,7 +74,7 @@
 	"dist/match/read.js": "d240ba009287431f7fb8d5e0eeceb5420ef8e048",
 	"dist/match/watchlater.js": "7f0d0fbf9abf5743f15f2b79f2fba6541f47ca45",
 	"dist/match/av/av.js": "d240ba009287431f7fb8d5e0eeceb5420ef8e048",
-	"dist/match/av/commandDm.js": "d240ba009287431f7fb8d5e0eeceb5420ef8e048",
+	"dist/match/av/commandDm.js": "a24b5a7de882bbb8412b3b573990737aebcd8566",
 	"dist/match/av/descBV.js": "5d859df6010fead0bc6cfb6d81289ec44a89aa74",
 	"dist/match/av/enLike.js": "d240ba009287431f7fb8d5e0eeceb5420ef8e048",
 	"dist/match/av/hookWebpackJsonp.js": "7f0d0fbf9abf5743f15f2b79f2fba6541f47ca45",
