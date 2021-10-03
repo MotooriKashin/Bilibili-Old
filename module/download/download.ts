@@ -119,7 +119,7 @@
                 "flv": "background-color: #0dd;"
             }
             constructor() {
-                // 切P后清楚下载数据并移除下载面板
+                // 切P后清除下载数据并移除下载面板
                 API.switchVideo(() => { this.type = []; this.links = []; this.table && this.table.remove() });
             }
             /**
@@ -218,7 +218,7 @@
                 })
             }
             /**
-             * 右键下载相应
+             * 右键下载响应
              */
             async contentMenu() {
                 if (API.aid && API.cid) {
@@ -354,9 +354,9 @@
             }
             /**
              * 合成最终文件名
-             * @param url 下载url，从中提取可能的文件名，优先级最低
-             * @param type 下载资源类型，用于决定后缀名，优先级次之
-             * @param filename 预设定文件名，优先级最高
+             * @param obj.url 下载url，从中提取可能的文件名，优先级最低
+             * @param obj.type 下载资源类型，用于决定后缀名，优先级次之
+             * @param obj.filename 预设定文件名，优先级最高
              * @returns 文件名
              */
             setFinalName(obj: DownloadRocord) {

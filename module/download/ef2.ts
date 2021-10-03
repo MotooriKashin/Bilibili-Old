@@ -65,7 +65,7 @@
         /**
          * 解码ef2链接为
          * @param ef2ptl 
-         * @returns 
+         * @returns ef2配置信息
          */
         decode(ef2ptl: string) {
             ef2ptl = ef2ptl.replace("ef2://", "");
