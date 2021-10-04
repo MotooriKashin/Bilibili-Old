@@ -1175,29 +1175,11 @@ interface ItemPus extends ItemCommon {
  * 输入框设置项，用以提供一个输入框与用户交互等
  * 需要自行将HTML的`input`标签配置以对象形式写入`input`属性
  */
-interface ItemIpt {
+interface ItemIpt extends ItemCommon {
     /**
      * 类型标志，用于识别这是输入框设置项
      */
     type: "input";
-    /**
-     * 菜单归属分类菜单，也可以新建
-     */
-    sort: typeof settingSort;
-    /**
-     * 设置 svg 图片
-     */
-    svg?: string;
-    /**
-     * 鼠标移动到设置项时浮动信息，可以详细介绍设置的信息  
-     * 该内容可以包含<i>、<strong>等HTML便签用于格式化信息  
-     * ※ 理论上支持所有能以<div>为父节点的标签
-     */
-    float?: string;
-    /**
-     * 输入框前面的文字，用来提示该输入框是干什么的
-     */
-    label: string;
     /**
      * 用于给`input`标签添加的属性  
      * 请自行通过合适的属性来指定`input`类型及其他要求
@@ -1214,10 +1196,6 @@ interface ItemIpt {
      */
     title?: string;
     /**
-     * 设置项主键（唯一），可选  
-     */
-    key: string;
-    /**
      * 默认值，输入框内的默认值
      * 这意味着本设置将保存到本地 config
      */
@@ -1231,16 +1209,6 @@ interface ItemIpt {
      * 0 表示一直禁用直到刷新面板
      */
     disabled?: number;
-    /**
-     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
-     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
-     */
-    callback?: (this: HTMLDivElement) => void;
-    /**
-     * 隐藏该设置项，比如不满足某些前置条件  
-     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
-     */
-    hidden?: boolean;
 }
 /**
  * 文件选择设置项，用于提取本地文件读取等
@@ -1280,10 +1248,6 @@ interface ItemMut extends ItemCommon {
      * 类型标志，用于识别这是输入框设置项
      */
     type: "mutlti";
-    /**
-     * 设置主键（唯一），将作为用户本地设置`config`的属性名称
-     */
-    key: string;
     /**
      * 默认取值列表
      * 实际时将以用户本地配置`config[key]`为准

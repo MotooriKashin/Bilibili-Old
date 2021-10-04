@@ -157,9 +157,11 @@
              * @param text 输入框内默认数据，非必须
              * @param attribute input标签的标准属性，用于指定输入框类型等
              * @param pattern 检测输入的正则表达式，将过滤非法输入并弹出toast警告
+             * @param button 输入框右侧带上按钮，响应按钮点击事件而非回车事件
+             * @param disabled 点击按钮后的CD，单位：/s，默认为1，取0表示一直禁用
              * @returns 封装好的节点
              */
-            static input(callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp) {
+            static input(callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp, button?: string, disabled?: number) {
                 const root = document.createElement("div");
                 const real = root.attachShadow({ mode: "closed" });
                 const div = API.addElement("div", { class: "input" }, real);
@@ -167,7 +169,10 @@
                 API.addCss(this.getCss("input.css"), undefined, real);
                 attribute && Object.entries(attribute).forEach(d => { input.setAttribute(d[0], d[1]) });
                 text && (input.value = text);
-                input.onchange = () => {
+                button ? div.appendChild(this.button(function () {
+                    if (pattern && !pattern.test(input.value)) return toast.warning(`值 ${input.value} 不符合要求！`, `正则表达式：${pattern.toString()}`);
+                    callback.call(input, input.value);
+                }, button, disabled)) : input.onchange = () => {
                     if (pattern && !pattern.test(input.value)) return toast.warning(`值 ${input.value} 不符合要求！`, `正则表达式：${pattern.toString()}`);
                     callback.call(input, input.value);
                 }
@@ -237,7 +242,7 @@
             switch: (callback: (v: boolean) => void, value?: boolean) => Element.switch(callback, value),
             select: (list: (string | number)[], callback: (this: HTMLDivElement, v: string) => void, value?: string) => Element.select(list, callback, value),
             button: (callback: (this: HTMLDivElement) => void, text?: string, disabled?: number) => Element.button(callback, text, disabled),
-            input: (callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp) => Element.input(callback, text, attribute, pattern),
+            input: (callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp, button?: string, disabled?: number) => Element.input(callback, text, attribute, pattern, button, disabled),
             file: (callback: (this: HTMLInputElement, value: FileList) => void, multiple?: boolean, text?: string, accept?: string[]) => Element.file(callback, multiple, text, accept),
             checkbox: (list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]) => Element.checkbox(list, callback, value),
             clickRemove: (ele: HTMLElement) => new ClickRemove(ele)
@@ -293,9 +298,11 @@ declare namespace API {
          * @param text 输入框内默认数据，非必须
          * @param attribute input标签的标准属性，用于指定输入框类型等
          * @param pattern 检测输入的正则表达式，将过滤非法输入并弹出toast警告
+         * @param button 输入框右侧带上按钮，响应按钮点击事件而非回车事件
+         * @param disabled 点击按钮后的CD，单位：/s，默认为1，取0表示一直禁用
          * @returns 封装好的节点
          */
-        input(callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp): HTMLDivElement;
+        input(callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp, button?: string, disabled?: number): HTMLDivElement;
         /**
          * 封装好的文件选择按钮，特化版的输入框
          * @param callback 响应文件选择结果的回调函数，必须，否则无法响应文件选择

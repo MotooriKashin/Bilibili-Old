@@ -403,20 +403,19 @@
                     real.querySelectorAll("option").forEach(d => d.remove());
                     clear.style.display = "none";
                 });
-                input.onchange = () => {
-                    if (obj.pattern && !obj.pattern.test(input.value))
-                        return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
-                    obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
-                    !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
-                    obj.action && obj.action.call(real, input.value);
-                };
-                obj.title && (real.querySelector(".button").onclick = () => {
+                obj.title ? (real.querySelector(".button").onclick = () => {
                     if (!input.value || (config[obj.key] == input.value))
                         return;
                     if (obj.pattern && !obj.pattern.test(input.value))
                         return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                     real.querySelector(".button").setAttribute("disabled", "disabled");
                     disabled && setTimeout(() => real.querySelector(".button").removeAttribute("disabled"), disabled * 1000);
+                    obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
+                    !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
+                    obj.action && obj.action.call(real, input.value);
+                }) : (input.onchange = () => {
+                    if (obj.pattern && !obj.pattern.test(input.value))
+                        return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
                     !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                     obj.action && obj.action.call(real, input.value);
