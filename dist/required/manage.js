@@ -149,6 +149,7 @@
                         return s;
                     }, []));
                     this.updating = false;
+                    GM.setValue("modules", this.modules);
                     this.toast && toast.success("更新完成~");
                     xhr({
                         url: this.printfServer("meta.json"),
@@ -173,7 +174,6 @@
             async download(file, hash = "ts") {
                 let result = await xhr({ url: this.printfServer(file, hash) });
                 file.endsWith(".json") ? GM.setValue(Reflect.get(this.moduleUrl, file).replace(".json", ""), JSON.parse(result)) : Reflect.set(this.modules, Reflect.get(this.moduleUrl, file), result);
-                GM.setValue("modules", this.modules);
                 this.toast && toast.success(`更新模块 ${Reflect.get(this.moduleUrl, file)}`);
             }
             clear() {
