@@ -90,6 +90,54 @@
 			],
 			"detail": "编译第三方插件",
 			"label": "third"
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "module/tsnext.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"detail": "编译ESNext版本模块文件",
+			"label": "ESNextMergeTscModule"
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "src/tsnext.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"dependsOn": [
+				"ESNextMergeTscModule"
+			],
+			"detail": "编译ESNext版本index",
+			"label": "ESNextMergeTscIndex"
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\build\\build.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"ESNextMergeTscIndex"
+			],
+			"detail": "生成ESNext版本脚本本体",
+			"label": "ESNextMerge",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "Remove-Item",
+			"args": [
+				"${workspaceFolder}\\dist\\index.js"
+			],
+			"dependsOn": [
+				"ESNextMerge"
+			],
+			"detail": "编译ESNext版本，用于本地安装，用后即毁，不要作为正式提交！",
+			"label": "ESNext",
+			"problemMatcher": []
 		}
 	]
 }
