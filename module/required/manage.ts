@@ -125,7 +125,7 @@
                 }
                 return result ? this.now - this.async >= result : false;
             }
-            printfServer(file: string, hash: string = "ts") {
+            printfServer(file: string, hash: string = "master") {
                 let server = "";
                 switch (config.updateServer) {
                     case "Github": server = `https://raw.githubusercontent.com/MotooriKashin/Bilibili-Old/${hash}/${file}`;
@@ -174,7 +174,7 @@
                     this.updating = false;
                 }
             }
-            async download(file: string, hash: string = "ts") {
+            async download(file: string, hash: string = "master") {
                 let result = await xhr({ url: this.printfServer(file, hash) });
                 file.endsWith(".json") ? GM.setValue(Reflect.get(this.moduleUrl, file).replace(".json", ""), JSON.parse(result)) : Reflect.set(this.modules, Reflect.get(this.moduleUrl, file), result);
                 this.toast && toast.success(`更新模块 ${Reflect.get(this.moduleUrl, file)}`);
