@@ -18,8 +18,15 @@
             cover() {
                 delete (<any>window).bbComment; // 取消拦截
                 API.importModule("comment.js"); // 载入新评论脚本
-                API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" });
-                API.addCss(`.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {float: right;line-height: 36px;}`);
+                API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
+                API.addCss(`
+                .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
+                    float: right;line-height: 36px;
+                }.bb-comment .comment-list .list-item .user .text-con, .comment-bilibili-fold .comment-list .list-item .user .text-con {
+                    margin-left: initial;
+                }.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
+                    margin-left: initial;
+                }`);
             }
         }
         new ReplyList().init();
