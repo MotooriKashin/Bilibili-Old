@@ -3,15 +3,15 @@
  */
 (function () {
     /**
-         * 将数据缓存起来，以免重复查询
-         */
+     * 将数据缓存起来，以免重复查询
+     */
     const catchs: {
         aid: { [name: string]: any },
         ssid: { [name: string]: any },
         epid: { [name: string]: any }
     } = { aid: {}, ssid: {}, epid: {} };
-    API.urlInputCheck = async function (input: string): Promise<{ aid: number; cid: number; ssid: number; epid: number; p: number; }> {
-        let aid: any, cid: any, ssid: any, epid: any, p: any;
+    API.urlInputCheck = async function (input: string) {
+        let aid: any, cid: any, ssid: any, epid: any, p: any, pgc: boolean = false;
         toast("正在解析链接：" + input);
         if (input && !input.includes("?")) input = "?" + input; // 重整化输入便于提取参数
         let obj: any = API.urlObj(input); // 获取参数对象
@@ -22,9 +22,9 @@
         p = obj.p || 1;
         try {
             if (aid) {
-                if (aid = API.aid) cid = API.cid;
+                if (aid == API.aid) cid = API.cid;
                 // 有缓存数据的情况
-                cid = catchs.aid[aid][p - 1];
+                cid = catchs.aid[aid] && catchs.aid[aid][p - 1].cid;
                 // 直接获取到cid的情况
                 cid = cid || obj.cid || undefined;
                 if (!cid) {
@@ -39,7 +39,7 @@
                         try {
                             // 尝试访问BiliPlus获取信息
                             let data = API.jsonCheck(await xhr({ url: API.objUrl("https://www.biliplus.com/api/view", { "id": aid }) }));
-                            catchs.aid[aid] = (data.list && data.list) || (data.v2_app_api && data.v2_app_api.pages);
+                            catchs.aid[aid] = data.list || (data.v2_app_api && data.v2_app_api.pages);
                             cid = catchs.aid[aid][p - 1].cid;
                             toast("正在请求av视频数据", "分P名称：" + catchs.aid[aid][p - 1].part);
                         } catch (e) {
@@ -65,6 +65,7 @@
                         epid && (catchs.epid[epid] = data);
                         aid = data.epInfo.aid;
                         cid = data.epInfo.cid;
+                        pgc = true;
                         toast("正在请求Bangumi数据", "系列名称：" + data.mediaInfo.title, "分p名称：" + data.epInfo.index_title);
                     }
                 } catch (e) {
@@ -81,12 +82,13 @@
                         data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
                         aid = data.epInfo.aid;
                         cid = data.epInfo.cid;
+                        pgc = true;
                         toast("正在请求Bangumi数据", "系列名称：" + data.mediaInfo.title, "分p名称：" + data.epInfo.index_title);
                     } catch (e) { }
                 }
             }
         } catch (e) { API.trace(e, "urlInputCheck.js", true) }
-        return { aid, cid, ssid, epid, p }
+        return { aid, cid, ssid, epid, p, pgc }
     }
 })();
 declare namespace API {
@@ -95,5 +97,5 @@ declare namespace API {
      * 按需加载模块请先导入模块
      * @param input URL链接
      */
-    function urlInputCheck(input: string): Promise<{ aid: number; cid: number; ssid: number; epid: number; p: number; }>
+    function urlInputCheck(input: string): Promise<{ aid: number; cid: number; ssid: number; epid: number; p: number; pgc: boolean; }>
 }
