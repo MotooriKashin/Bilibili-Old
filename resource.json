@@ -43,6 +43,7 @@
 	"Json/@resource.json": "e6912a64c8b2db70db63a46c9963709a1b48a2fe",
 	"Json/apply.json": "89b3a92049754fa13566a3f46429d2b7702db16c",
 	"Json/bug.json": "c1ffff01793007533b98b570a2fe10234c04ab52",
+	"Json/protobuf.json": "9e6f8b3e0151e871c21d8460d761f380f2ceaa70",
 	"Json/videoSort.json": "fe766e479b51386d6881be99b3bff57029dd491b",
 	"dist/bilibiliPlayer.js": "95ea85c3d16e7a46c4da7e8b81db6c544e119fdc",
 	"dist/comment.js": "c1ffff01793007533b98b570a2fe10234c04ab52",
