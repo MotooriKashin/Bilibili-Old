@@ -172,7 +172,7 @@ class API {
             msg[0] && toast.warning(...msg);
             this.updating = true;
             let resource: { [key: string]: string } = await xhr.GM({
-                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ts/resource.json',
+                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@master/resource.json',
                 responseType: 'json'
             })
             let keys = Object.keys(resource);

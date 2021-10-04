@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      5.0.0
+// @version      6.0.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
-// @author       MotooriKashin
+// @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
 // @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @icon         https://static.hdslb.com/images/favicon.ico
@@ -537,7 +537,7 @@ class API {
             msg[0] && toast.warning(...msg);
             this.updating = true;
             let resource = await xhr.GM({
-                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ts/resource.json',
+                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@master/resource.json',
                 responseType: 'json'
             });
             let keys = Object.keys(resource);
