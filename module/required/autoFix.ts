@@ -21,7 +21,7 @@
                         (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")).click(); // 自动关闭弹幕
                     }
                 }
-            })
+            }, 500)
             config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000);
         })
     } catch (e) { API.trace(e, "autoFix.js") }

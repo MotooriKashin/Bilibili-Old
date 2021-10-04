@@ -21,7 +21,7 @@
                         document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click(); // 自动关闭弹幕
                     }
                 }
-            });
+            }, 500);
             config.autoPlay && setTimeout(() => { window.player && window.player.play && window.player.play(); }, 1000);
         });
     }
