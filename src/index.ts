@@ -1,3 +1,5 @@
+// @ts-ignore 忽略unsafeWindow错误
+const root: Window = unsafeWindow;
 class API {
     /**
      * 本地模块列表
@@ -50,11 +52,11 @@ class API {
             return;
         }
         if (!msg) node.childNodes.forEach(d => d.remove());
-        const root = document.querySelector(".bilibili-player-video-toast-item.bilibili-player-video-toast-pay") || document.createElement("div");
-        root.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
+        const table = document.querySelector(".bilibili-player-video-toast-item.bilibili-player-video-toast-pay") || document.createElement("div");
+        table.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
         const ele = document.createElement("div");
         ele.setAttribute("class", "bilibili-player-video-toast-item-text");
-        root.appendChild(ele);
+        table.appendChild(ele);
         msg = Array.isArray(msg) ? msg : [msg];
         if (!msg[0]) return;
         replace && node.childNodes.forEach(d => d.remove());
@@ -71,12 +73,11 @@ class API {
             }
             return s;
         }, '');
-        node.appendChild(root);
+        node.appendChild(table);
         callback && (ele.style.cursor = "pointer") && (ele.onclick = () => callback());
-        // @ts-ignore Tampermonkey提供
-        (time !== 0) && unsafeWindow.setTimeout(() => {
+        (time !== 0) && root.setTimeout(() => {
             ele.remove();
-            !root.children[0] && root.remove();
+            !table.children[0] && table.remove();
         }, time * 1000);
     }
     addElement(tag: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element) {
@@ -99,16 +100,13 @@ class API {
         parrent.appendChild(style);
     }
     static runWhile(check: Function, callback: Function, delay: number = 100, stop: number = 180) {
-        // @ts-ignore Tampermonkey提供
-        let timer = unsafeWindow.setInterval(() => {
+        let timer = root.setInterval(() => {
             if (check()) {
-                // @ts-ignore Tampermonkey提供
-                unsafeWindow.clearInterval(timer);
+                root.clearInterval(timer);
                 callback();
             }
         }, delay);
-        // @ts-ignore Tampermonkey提供
-        stop && unsafeWindow.setTimeout(() => unsafeWindow.clearInterval(timer), stop * 1000)
+        stop && root.setTimeout(() => root.clearInterval(timer), stop * 1000)
     }
     async alertMessage(text: string, title: string = API.Name) {
         return new Promise((r: (value: boolean) => void) => {
@@ -132,12 +130,10 @@ class API {
         return <string>Reflect.get(API.modules, name);
     }
     rewriteHTML(html: string) {
-        // @ts-ignore unsafeWindow由TamperMonkey提供
-        GM.getValue<string[]>("bug", []).forEach(d => { unsafeWindow[d] && Reflect.set(unsafeWindow, d, undefined) })
+        GM.getValue<string[]>("bug", []).forEach(d => { root[d] && Reflect.set(root, d, undefined) })
         document.open();
         document.write(html);
         document.close();
-        // @ts-ignore Tampermonkey提供
         config.rewriteMethod == "异步" && this.importModule("vector.js"); // 重写后页面正常引导
     }
     static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
@@ -185,12 +181,14 @@ class API {
                 Reflect.get(resource, d) != Reflect.get(this.resource, d) && s.push([str[str.length - 1], d]);
                 return s;
             }, []);
+            toast(`获取初始化数据中，共 ${list.length}项~`, "这需要亿点时间，请耐心等待~");
             GM.setValue("resource", this.resource = resource);
             await Promise.all(list.reduce((s: Promise<void>[], d) => {
                 s.push(this.downloadModule(d[0], d[1]));
                 return s;
             }, []));
             await this.updateResource();
+            GM.setValue("modules", API.modules);
             this.updating = false;
             toast.success(`脚本及其模块已更新至最新版~`);
         } catch (e) { this.updating = false; toast.error(`检查更新出错！`, e) }
@@ -206,7 +204,6 @@ class API {
             name.endsWith(".json") ? (
                 GM.setValue(name.replace(".json", ""), JSON.parse(module))
             ) : Reflect.set(API.modules, name, module);
-            GM.setValue("modules", API.modules);
         } catch (e) { toast.error(`更新模块${name}失败，请检查网络！`) }
     }
     static async updateResource() {
@@ -226,15 +223,13 @@ class API {
                 GM.setValue(name[i].replace(".json", ""), JSON.parse(d)) :
                 Reflect.set(API.modules, name[i], d);
         })
-        GM.setValue("modules", API.modules);
     }
     static init() {
         this.importModule("rewrite.js");
         this.importModule("setting.js");
     }
     initUi() {
-        // @ts-expect-error 由tampermonkey提供
-        unsafeWindow.self === unsafeWindow.top && this.runWhile(() => document.body, () => {
+        root.self === root.top && this.runWhile(() => document.body, () => {
             this.importModule("ui.js", { MENU, SETTING });
         });
         new Promise(r => delete this.initUi);
@@ -242,8 +237,7 @@ class API {
     constructor() {
         API.API = new Proxy(this, {
             get: (target, p) => {
-                // @ts-expect-error 由tampermonkey提供
-                return Reflect.get(this, p) || Reflect.get(unsafeWindow, p) || (
+                return Reflect.get(this, p) || Reflect.get(root, p) || (
                     Reflect.has(API.apply, p) ? (
                         this.importModule(Reflect.get(API.apply, p), {}, true),
                         Reflect.get(this, p)
