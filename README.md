@@ -1,3 +1,6 @@
+
+**合并准备中，此分支下脚本主体暂时不可使用，因为无法完成数据初始化！**
+
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 94](https://img.shields.io/badge/Google_Chrome_94-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面，即2020年改版之前的页面，尤其是还原当时的播放器样式。  
