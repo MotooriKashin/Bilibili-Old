@@ -1,0 +1,72 @@
+.stage {
+  position: fixed;
+  right: 40px;
+  bottom: 60px;
+  height: 20px;
+  width: 20px;
+  border: 1px solid #e9eaec;
+  border-radius: 50%;
+  box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);
+  padding: 10px;
+  cursor: pointer;
+  animation: roll 1s ease-out;
+  transition: opacity 0.3s ease-out;
+  background: none;
+  z-index: 11110;
+}
+.classical{
+  box-sizing: content-box;
+  color: #fff;
+  background-color: #fff;
+  border-radius: 5px;
+  position: fixed;
+  bottom: 65px;
+  width: 56px;
+  height: 40px;
+  transition: right 0.7s;
+  -moz-transition: right 0.7s;
+  -webkit-transition: right 0.7s;
+  -o-transition: right 0.7s;
+  z-index: 1008;
+  padding: 4px;
+  right : -54px;
+}
+.classical:hover{
+  right : 0px;
+  box-shadow : rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;
+  border : 1px solid rgb(233, 234, 236);
+}
+.classical i{
+  background-position: -471px -982px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  transition: 0.2s;
+  background-image: url(//static.hdslb.com/images/base/icons.png);
+  margin: auto;
+}
+.classical span{
+  font-size: 14px;
+  display: block;
+  width: 50%;
+  transition: 0.2s;
+  color: #000;
+  margin: auto;
+}
+@keyframes roll {
+  30%,
+  60%,
+  90% {
+    transform: scale(1) rotate(0deg);
+  }
+  10%,
+  40%,
+  70% {
+    transform: scale(1.11) rotate(-180deg);
+  }
+  20%,
+  50%,
+  80% {
+    transform: scale(0.9) rotate(-360deg);
+  }
+}

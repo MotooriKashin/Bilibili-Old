@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "ES2018",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitUseStrict": true,
+        "outDir": "../dist/",
+        "declaration": true
+    },
+    "include": [
+        "**/*"
+    ],
+}

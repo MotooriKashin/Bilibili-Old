@@ -1,0 +1,24 @@
+{
+    "name": "Bilibili 旧播放页",
+    "namespace": "MotooriKashin",
+    "version": "6.0.0",
+    "description": "恢复Bilibili旧版页面，为了那些念旧的人。",
+    "author": "MotooriKashin，wly5556",
+    "homepage": "https://github.com/MotooriKashin/Bilibili-Old",
+    "supportURL": "https://github.com/MotooriKashin/Bilibili-Old/issues",
+    "icon": "https://static.hdslb.com/images/favicon.ico",
+    "match": "*://*.bilibili.com/*",
+    "connect": "*",
+    "grant": [
+        "GM_xmlhttpRequest",
+        "GM_getResourceText",
+        "GM_getResourceURL",
+        "GM_getValue",
+        "GM_setValue",
+        "GM_deleteValue",
+        "GM_listValues",
+        "GM.cookie"
+    ],
+    "run-at": "document-start",
+    "license": "MIT"
+}

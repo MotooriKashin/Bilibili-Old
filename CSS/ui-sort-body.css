@@ -1,0 +1,8 @@
+contain {
+  display: block;
+  padding-block-end: 0;
+  padding-block-start: 0;
+  padding-inline-end: 20px;
+  padding-inline-start: 20px;
+  border-top: 1px solid rgba(0, 0, 0, 6%);
+}

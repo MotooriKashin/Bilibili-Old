@@ -1,0 +1,119 @@
+.contain {
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 6%);
+  display: flex;
+  min-height: 24px;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  background-color: transparent !important;
+}
+.label {
+  flex: 1;
+  flex-basis: 0.000000001px;
+  padding-block-end: 12px;
+  padding-block-start: 12px;
+  padding-inline-start: 12px;
+}
+.sub {
+  color: rgb(95, 99, 104);
+  font-weight: 400;
+}
+.textbox {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  background-color: transparent;
+  box-sizing: border-box;
+  padding: 0;
+  flex: 1;
+  flex-basis: 0.000000001px;
+  padding-block-end: 12px;
+  padding-block-start: 12px;
+}
+.textbox input {
+  background-color: transparent;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  min-height: auto;
+  outline: none;
+  padding-bottom: 6px;
+  padding-inline-end: 8px;
+  padding-inline-start: 8px;
+  padding-top: 6px;
+  text-align: inherit;
+  text-overflow: ellipsis;
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid rgba(136, 136, 136, 0.13333);
+  box-shadow: 0 4px 12px 0 rgb(0, 0, 0, 5%);
+  transition: box-shadow 120ms ease 180ms;
+}
+.textbox input:focus {
+  box-shadow: inset 0 0 1px 1px rgba(26, 115, 232, 80%);
+}
+.textbox .icon {
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+  pointer-events: auto;
+  position: absolute;
+  right: 12px;
+  background-color: white;
+}
+.textbox .icon:hover {
+  background-color: rgba(0, 0, 0, 10%);
+  box-shadow: 0 1 12px 12px rgb(0, 0, 0, 10%);
+}
+.button,
+.action {
+  line-height: 154%;
+  align-items: center;
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-weight: 500;
+  height: 32px;
+  justify-content: center;
+  min-width: 5.14em;
+  outline-width: 0;
+  overflow: hidden;
+  padding: 8px 16px;
+  position: relative;
+  user-select: none;
+}
+.action {
+  border: none;
+  background-color: rgb(26, 115, 232);
+  color: #fff;
+}
+.button {
+  background-color: #fff;
+  color: rgb(26, 115, 232);
+  border: 1px solid rgba(0, 0, 0, 6%);
+}
+.action:hover {
+  background-color: rgb(72, 115, 232);
+}
+.button:hover {
+  background-color: rgba(26, 115, 232, 6%);
+}
+.action:active {
+  box-shadow: 0 0 1px 1px rgba(72, 115, 232, 80%);
+}
+.button:active {
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 10%);
+}
+.button[disabled],
+.action[disabled] {
+  pointer-events: none;
+  background-color: rgba(19, 1, 1, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
+}

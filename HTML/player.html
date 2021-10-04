@@ -5,7 +5,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport"
         content="target-densitydpi=device-dpi,width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,minimal-ui">
-    <meta name="spm_prefix" content="">
     <title>player - bilibili.com</title>
     <script type="text/javascript">
         if (!!navigator.userAgent.match(/AppleWebKit.*Mobile.*/)) {
@@ -202,7 +201,9 @@
                 'sendbar': __GetUrlValue('sendbar'),
                 'as_wide': 1, // 默认以宽屏模式载入
                 'cid': __GetUrlValue('cid'),
-                'bnj': __GetUrlValue('bnj')
+                'bnj': __GetUrlValue('bnj'),
+                "player_type": __GetUrlValue('player_type'),
+                "season_type": __GetUrlValue('season_type')
             };
             this.flashAddEvents = [];
             this.flashRemoveEvents = [];
@@ -297,7 +298,9 @@
                             p: self.config.page,
                             autoplay: (self.config.autoplay == true),
                             as_wide: self.config.as_wide,
-                            bnj: self.config.bnj
+                            bnj: self.config.bnj,
+                            player_type: self.config.player_type,
+                            season_type: self.config.season_type
                         });
                         //compatible
                         self.gray_html5_compatible();

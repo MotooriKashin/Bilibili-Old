@@ -1,0 +1,14 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitUseStrict": true
+    },
+    "include": [
+        "**/*",
+        "../dist",
+        "../module/global.d.ts"
+    ]
+}

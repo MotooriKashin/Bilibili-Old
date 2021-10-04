@@ -1,10 +1,10 @@
-![Windows 8](https://img.shields.io/badge/Microsoft_Windows_8-pass-green.svg?longCache=true) ![Chrome 91](https://img.shields.io/badge/Google_Chrome_91-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.13-pass-green.svg?longCache=true)
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 94](https://img.shields.io/badge/Google_Chrome_94-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
-[Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面，即2020年改版之前的页面，尤其是还原当时的播放器样式。
+[Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面，即2020年改版之前的页面，尤其是还原当时的播放器样式。  
+初次使用需要进行初始化操作，点击“确定”后将进行跨域申请，建议勾选“总是允许全部域名”。
 
 ---
 ### 脚本实现
-
 - 重写：使用旧版网页框架还原当时的页面，是脚本的核心功能。
    - 主页：[www.bilibili.com](https://www.bilibili.com)
    - av/BV：[av50619577](https://www.bilibili.com/video/av50619577 "Brambly Boundaries")、[BV1w4411b7ph](https://www.bilibili.com/video/BV1w4411b7ph "Brambly Boundaries")
@@ -15,128 +15,30 @@
    - 排行榜：[ranking](https://www.bilibili.com/ranking)、[popular](https://www.bilibili.com/v/popular)
    - ~~播单：[pl769](https://www.bilibili.com/playlist/video/pl769 "bilibili moe 2018 日本动画场应援")、[detail](https://www.bilibili.com/playlist/detail/pl769 "bilibili moe 2018 日本动画场应援")~~
    - 专栏：如[cv1](https://www.bilibili.com/video/cv1)
-- 修改：重写页面之外的其他修改、修复及功能添加。
-   - 全局
-      - 替换所有顶栏、底栏为旧版样式，丰富顶栏动图彩蛋
-      - 恢复所有评论区的页码翻页功能（问题1）
-      - 转化页面中出现的所有BV号为av号，同时链接中去除无效的查询参数
-   - 播放
-      - 自动滚动到播放器，自动网页宽屏，自动关闭弹幕，自动播放视频
-      - 自动跳过充电鸣谢
-      - 播放结束画面停留在最后一帧
-      - 支持CC字幕
-      - 支持载入本地视频、弹幕文件（问题2）
-      - 支持新版弹幕，修复高级、BAS弹幕，修复实时弹幕
-      - 支持互动弹幕
-      - 支持反查弹幕发送者信息（问题3）
-      - 支持载入站内其他视频、弹幕
-   - 其他
-      - 支持查询账号注册时间
-      - 修复失效视频信息，可以的话直接重建失效页面
-      - 还原评论跳转链接的标题为av号等链接
-      - 连载Bangumi显示分集数据
-      - 支持下载视频（问题4） 
-      - 解除港澳台、APP等视频限制，对于泰版视频须自备反代服务器
-      - 直播间禁用挂机检测，禁用天选时刻、大乱斗弹窗，禁用p2p带宽共享
-
-※ 以上功能除重写部分外大部分都需要在脚本设置界面自行启用
+- 其他：挺多的，请参考脚本设置界面，如有其他附加功能请求也可以提issue。
 
 ---
-
 ### 设置相关
-
-**脚本设置在哪里？请戳[这个动图](https://s1.ax1x.com/2020/04/07/GgUKUS.gif)！**  
-设置界面虽然有所改动，但入口还是参考动图鼠标操作。  
-脚本提供的所有功能都可以自行单独调整启用与否。  
-大部分功能可能需要**刷新**页面才可以启用。
+脚本正常载入会在页面右下角添加一个滚动的齿轮<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>，滚动数秒后消失。鼠标移动到对应位置会再次显现，点击即可呼出脚本的设置界面。  
+基本上所有功能都可以在设置中自行决定启用与否，本脚本只默认开启重写页面相关的部分。  
+大部分设置都不能及时生效，需要刷新当前页面才行。
 
 ---
-
 ### 已知问题
-
-_以下问题这里可能处于并将长期处于无法解决状态，请多担待！如能提供相关帮助，不胜感激！_  
-- **刷新能解决一半问题，硬刷新(shift + F5 或 Ctrl + shift + r)更佳！**  
-- 反馈问题最好附带控制台console报错截图以方便定位，且为了沟通效率建议前往[Github](https://github.com/MotooriKashin/Bilibili-Old/issues)。
-- 本脚本机制上可能与部分其他脚本或浏览器扩展互斥，并且无法解决也请多担待！
-
-1. 默认载入“按热度排序”评论时页码总数存在虚标现象，具体虚标页数取决于评论被和谐的数量，切换一次“按时间排序”即可获取到实际页数。
-2. 本地视频文件拓展名必须为`.mp4`，且视频、音频编码及封装格式必须为浏览器本身所支持。弹幕格式可以是`.xml`和`.json`，前者是B站曾经默认的弹幕文件格式本脚本下载弹幕也是这种，后者是旧版播放器实际解析的弹幕数组并暂无获取方式。载入本地视频可能导致控制台大量报错请无视！
-3. 反查弹幕发送者信息原理是逆向CRC32，存在哈希碰撞的可能性，所以提供的信息仅供参考。
-4. 获取到的下载链接请右键保存或右键IDM，直接复制大概率会下载失败。配合IDM百分百成功下载的办法可以搭配作者的另一个项目[`ef2`](https://github.com/MotooriKashin/ef2)，并在脚本设置里启用ef2下载功能。
-   - 原则上1080P可以下载mp4格式是最好的，更高画质有flv和DASH可选，flv可能分段，DASH则把音视频分开了：avc/hev视频轨二选一，aac是音频轨
-   - 脚本设置里可自行添加其他下载：弹幕、封面、CC字幕
-5. 重写页面时新版页面一闪而过纯属正常，无需大惊小怪。
-6. 部分Firefox浏览器版本兼容不太好，请认准本脚本指定运行环境 chrome + Tampermonkey。
-7. 互动视频、全景视频、高能进度条等功能不被旧版播放器所支持。
-8. HDR画质的视频在chrome里肯定是无法支持的。
-9. 旧版弹幕已获取不到90分钟以后的内容，如非必要不要在脚本设置里关闭“新版弹幕”。
-10. av页的充电功能失效，切勿使用，如有需求，请前往对应UP主空间。
-11. 旧版主页改版极大，已尽力在尽可能的范围内加以修复。
-
+_以下问题这里可能处于并将长期处于无法解决状态，请多担待！如能提供相关帮助，不胜感激！_
+1. 技术上无法实现排除新版页面干扰对于重写页面的干扰，新版页面会一闪而过，取决于脚本注入速度和您的网络延时情况。  
+2. 上述干扰严重到破坏页面的话请尝试刷新，最好是硬刷新(shift + F5 或 Ctrl + shift + r)。
+3. 如果是浏览器内核过时不支持相关特性类的问题原则上不会修复，浏览器内核还是越新越好。
+4. 重写页面是过于底层的操作，可能导致其他脚本或浏览器扩展失效，需要第三方主动去兼容。重写模式改为“异步”或许可以缓解，但会引发一些其他问题。
+5. 反查弹幕发送者信息原理是逆向CRC32，存在哈希碰撞的可能性，查出的uid信息仅供参考。
+6. 互动视频、全景视频、高能进度条等新功能暂时未能移植。
+7. HDR、Dobby等流要求HEVC的软解支持暂时未能移植。
+8. 旧版弹幕已获取不到90分钟以后的内容，非必要不要关闭“新版弹幕”。
+9. av页的充电功能失效，切勿使用，如有需求，请前往对应UP主空间。
+10. 主页是改版最大的地方，已尽力去修复，依旧无法做到完美还原请多担待。
 
 ---
-
-### 运行环境
-
-```
-Microsoft Windows 8 (Build 6.2.9200.16384) （64 位）
-Google Chrome 91.0.4472.77 (正式版本) （64 位） (cohort: 91_Win_77)
-Tampermonkey BETA 4.10.6137
-```
-
----
-
-### 隐私相关
-**本脚本运行时可能会侵犯您的部分隐私信息告知如下，使用本脚本默认您同意本脚本使用相关信息。**  
-- cookies
-  - DedeUserID：用于本地判断您是否登录以方便功能实现
-  - bili_jct：用于修复部分接口中恢复与B站后端的通信  
-
-**脚本不会保留您的任何隐私信息或者发送给任何第三方！**  
-脚本申请了部分用于跨域的高级功能，说明如下：
-- `GM_xmlhttpRequest`（`@connect`）：Tampermonkey提供的跨域Ajax。
-  - [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：用于获取缓存的失效视频标题和封面
-  - [mcbbs](https://www.mcbbs.net)：用于获取 APP 端的鉴权`access_key`，只在解除限制功能同时开启“会员授权”时
-  - [bilibili](https://www.bilibili.com)：用于获取无[CORS](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS "Cross-origin resource sharing")权限 B 站数据
-- `GM_getResourceURL`/`GM_getResourceText`（`@resource`）：脚本运行的模块依赖，全部保存在Tampermonkey本地。
-    - html：旧版网页框架，修改自[Wayback Machine](https://archive.org/web/)缓存
-    - json：各种配置数据，包括脚本默认设置
-    - js：各个功能模块，可以按需加载
-  
-脚本引用了部分公开js库
-- [protobuf](https://github.com/protobufjs/protobuf.js)：解码新版 proto 弹幕
-- [toastr](https://github.com/CodeSeven/toastr/)：实现通知模块
-  
-脚本使用了部分原生脚本历史版本并可能进行了修改  
-- [comment.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/JavaScript/comment.js) 2019 年 12 月的备份，进行了部分修改用以找回新版移除评论区小页码区域及恢复旧版评论排序
-- [video.js](https://github.com/MotooriKashin/Bilibili-Old/blob/master/JavaScript/video.js) 2019 年 12 月的备份，进行了部分修改以支持 4K、HDR 清晰度
-
----
-
-### 参考致谢
-
-- [protobuf](https://github.com/protobufjs/protobuf.js)（BSD 3-Clause 许可）：protobuf.js 库
-- [toastr](https://github.com/CodeSeven/toastr/)（BSD 3-Clause 许可）：toastr 库，使用原生 JavaScript 重新实现
-- [Wayback Machine](https://archive.org/web/)：B 站旧版网页源代码
-- [indefined](https://github.com/indefined/)：脚本原型及指导，CC字幕移植来源
-- [BiliPlus](https://www.biliplus.com/)/[Bilibilijj](https://www.jijidown.com/)：第三方数据接口
-- [哔哩哔哩注册时间查询助手](https://greasyfork.org/zh-CN/scripts/382542)：注册时间样式参考
-- [mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)：av/BV 转化算法的 python 源码
-- [Bilibili 番剧显示单集信息](https://greasyfork.org/scripts/37970)：番剧分集信息接口
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：兼容问题启发及部分实现参考
-- [Bilibili_video_download](https://github.com/Henryhaohao/Bilibili_video_download)：playurl 接口算法
-- [解除 B 站区域限制](https://greasyfork.org/scripts/25718)：BPplayurl 接口参考、授权登录接口
-- [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
-- [js-md5](https://github.com/emn178/js-md5)（MIT 许可）：md5 哈希算法
-- [MoePus](https://moepus.oicp.net/2016/11/27/crccrack/ "用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！")：弹幕哈希反查算法
-- [esterTion](https://github.com/esterTion/BiliBili_crc2mid)（GFUL 许可）：弹幕哈希反查算法的 JavaScript 实现
-- [miyouzi](https://github.com/miyouzi/bilibili-helper/raw/0316840c56b3295377fc0f6b7095daa54bc6ac9d/packages/unblock-area-limit/src/api/biliplus.ts)（MIT 许可）：APP 端 DASH sidx 解析
-- [js-base64](https://github.com/dankogai/js-base64)（BSD-3-Clause 许可）：Base64 算法
-
----
-
-### B 站记忆
-
+### B站纪事
 - 2019 年 12 月 09 日：改版 av、Bangumi 页面，旧版播放页面入口从此消失。
 - 2019 年 12 月 24 日：改版稍后再看，使用稍后再看找回旧版播放器的方法失效。
 - 2020 年 03 月 23 日：启用 BV 号，av 号也不再自增。
@@ -155,9 +57,32 @@ Tampermonkey BETA 4.10.6137
 - 2021 年 02 月 08 日：关闭旧版历史弹幕池，部分高级弹幕、历史弹幕从此消失。
 - 2021 年 04 月 14 日：改版旧版嵌入式播放器。
 - 2021 年 04 月 21 日：改版评论区，不再支持翻页。
-- 2021 年 07 月 01 日：和谐网页端评论接口，上古按“评论数”排序评论彻底失效
+- 2021 年 07 月 01 日：和谐网页端评论接口，上古按“评论数”排序评论彻底失效。
 
 ---
+### 编程环境
+操作系统    Microsoft Windows 11 professional Insider Preview 10.0.22449.1000  
+浏览器      Google Chrome 93.0.4577.63 (stable) (x64) (cohort: 93_Win_63)  
+脚本管理器  Tampermonkey Beta 4.14.6143
 
-### 开放源码
-本项目以 MIT 许可开放所有源代码，包括对于B站原生脚本修改的部分。
+---
+### 参考来源
+- [protobufjs](https://github.com/protobufjs/protobuf.js)
+- [toastr](https://github.com/CodeSeven/toastr/)
+- [Wayback Machine](https://archive.org/web/)
+- [bilibiliOldPlayer](https://github.com/indefined/UserScripts)
+- [BiliPlus](https://www.biliplus.com/)
+- [Bilibilijj](https://www.jijidown.com/)
+- [mcfx](https://www.zhihu.com/question/381784377/answer/1099438784)
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
+- [Bilibili_video_download](https://github.com/Henryhaohao/Bilibili_video_download)
+- [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)
+- [js-md5](https://github.com/emn178/js-md5)
+- [js-base64](https://github.com/dankogai/js-base64)
+- [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid)
+- [解除 B 站区域限制](https://greasyfork.org/scripts/25718)
+- [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/)
+
+--- 
+### 许可协议
+[MIT License](https://opensource.org/licenses/MIT)
