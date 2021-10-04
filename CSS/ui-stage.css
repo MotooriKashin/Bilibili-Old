@@ -12,7 +12,7 @@
   animation: roll 1s ease-out;
   transition: opacity 0.3s ease-out;
   background: none;
-  z-index: 999;
+  z-index: 11110;
 }
 @keyframes roll {
   30%,
