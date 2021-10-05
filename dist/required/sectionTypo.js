@@ -28,6 +28,11 @@
                         <li><a href="//www.bilibili.com/v/tech/industry/"><span>工业·工程·机械</span></a></li>
                         <li><a href="//www.bilibili.com/v/tech/diy/"><span>极客DIY</span></a></li>`;
                     }
+                    if (node[i].textContent == "时尚") {
+                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/fashion/makeup/"><span>美妆护肤</span></a></li>
+                        <li><a href="//www.bilibili.com/v/fashion/clothing/"><span>穿搭</span></a></li>
+                        <li><a href="//www.bilibili.com/v/fashion/trend/"><span>时尚潮流</span></a></li>`;
+                    }
                     if (node[i].textContent == "广告") {
                         node[i].textContent = "资讯";
                         node[i].parentNode.href = "//www.bilibili.com/v/information/";
@@ -38,7 +43,9 @@
                     }
                     if (node[i].textContent == "生活") {
                         node[i].parentNode.parentNode.children[1].children[2].remove(); // 移除美食圈
-                        node[i].parentNode.parentNode.children[1].children[2].remove(); // 移除动物圈
+                        node[i].parentNode.parentNode.children[1].children[2].remove(); // 移除美食圈
+                        node[i].parentNode.parentNode.children[1].children[5].remove(); // 移除其他
+                        node[i].parentNode.parentNode.children[1].children[4].children[0].href = "//www.bilibili.com/v/sports"; // 修复运动区链接
                     }
                     if (node[i].textContent == "娱乐")
                         node[i].parentNode.parentNode.children[1].lastChild.remove();
