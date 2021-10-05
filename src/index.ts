@@ -80,7 +80,7 @@ class API {
             !table.children[0] && table.remove();
         }, time * 1000);
     }
-    addElement(tag: keyof HTMLElementTagNameMap, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element) {
+    addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T] {
         let element = document.createElement(tag);
         attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
         parrent = parrent || document.body;

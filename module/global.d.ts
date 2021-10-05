@@ -484,9 +484,9 @@ declare namespace API {
      * @param top 是否在父节点中置顶
      * @param replaced 替换节点而不是添加，被替换的节点，将忽略父节点相关参数
      */
-    function addElement(tag: keyof HTMLElementTagNameMap, attribute?: {
+    function addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: {
         [name: string]: string
-    }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElement;
+    }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T];
     /**
      * 添加css样式
      * @param txt css文本
