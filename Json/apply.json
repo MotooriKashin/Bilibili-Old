@@ -49,5 +49,6 @@
     "ef2": "ef2.js",
     "getUrlValue": "extend.js",
     "showAccesskey": "accesskey.js",
-    "strSize": "extend.js"
+    "strSize": "extend.js",
+    "intervalFormat": "extend.js"
 }

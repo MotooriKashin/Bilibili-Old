@@ -118,6 +118,20 @@
             return size;
         }
         API.strSize = (str: string) => strSize(str);
+        function intervalFormat(time: number) {
+            time >= 1e11 && (time = Math.floor(time / 1e3));
+            const now = Math.floor((new Date).getTime() / 1e3);
+            let t: any = new Date;
+            if (t.setHours(0), t.setMinutes(0), t.setSeconds(0), (t = Math.floor(t.getTime() / 1e3)) < time && 0 <= now - time) {
+                if (now - time <= 50) {
+                    var r = 10 * Math.floor((now - time) % 60 / 10);
+                    return (10 < time ? r : 10) + "秒前"
+                }
+                return now - time < 3600 ? Math.floor((now - time) / 60) + "分钟前" : Math.floor((now - time) / 3600) + "小时前"
+            }
+            return API.timeFormat(time * 1e3, true);
+        }
+        API.intervalFormat = (time: number) => intervalFormat(time);
     } catch (e) { API.trace(e, "extend.js", true) }
 })();
 declare namespace API {
@@ -184,4 +198,11 @@ declare namespace API {
      * @returns 字节数
      */
     function strSize(str: string): number;
+    /**
+     * 格式化时间间隔，返回过去了多长时间  
+     * timeFormat的再封装
+     * @param time 10/13位的时间戳
+     * @returns 过去了多长时间，当时间间隔超过一天时，直接返回timeFormat带年月日的结果
+     */
+    function intervalFormat(time: number): string;
 }
