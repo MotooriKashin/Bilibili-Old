@@ -154,7 +154,7 @@
                                 config.commandDms.splice(i, 1);
                             }
                         }
-                        if (API.loadCommandDm)
+                        if (API.loadCommandDm && (<any>API).config.commandDm)
                             API.loadCommandDm(config.commandDms, aid, cid);
                     }
                     // 解码弹幕

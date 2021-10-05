@@ -25,7 +25,7 @@
                     // CC字幕
                     ((_b = (_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.subtitle) === null || _b === void 0 ? void 0 : _b.subtitles) && API.closedCaption(data);
                     // 分段进度条
-                    ((_c = data === null || data === void 0 ? void 0 : data.data) === null || _c === void 0 ? void 0 : _c.view_points[1]) && API.segProgress(data);
+                    config.segProgress && ((_c = data === null || data === void 0 ? void 0 : data.data) === null || _c === void 0 ? void 0 : _c.view_points[1]) && API.segProgress(data);
                 });
             });
         });

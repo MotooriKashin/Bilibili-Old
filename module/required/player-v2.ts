@@ -24,7 +24,7 @@
                     // CC字幕
                     data?.data?.subtitle?.subtitles && API.closedCaption(data);
                     // 分段进度条
-                    data?.data?.view_points[1] && API.segProgress(data);
+                    config.segProgress && data?.data?.view_points[1] && API.segProgress(data);
                 })
             })
         })
