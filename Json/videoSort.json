@@ -49,10 +49,35 @@
         "时尚",
         "//www.bilibili.com/v/fashion"
     ],
+    "157": [
+        155,
+        "美妆护肤",
+        "//www.bilibili.com/v/fashion/makeup/"
+    ],
+    "158": [
+        155,
+        "穿搭",
+        "//www.bilibili.com/v/fashion/clothing/"
+    ],
+    "159": [
+        155,
+        "时尚潮流",
+        "//www.bilibili.com/v/fashion/trend/"
+    ],
     "160": [
         160,
         "生活",
         "//www.bilibili.com/v/life"
+    ],
+    "163": [
+        160,
+        "家居房产",
+        "//www.bilibili.com/v/life/home"
+    ],
+    "164": [
+        234,
+        "健身",
+        "//www.bilibili.com/v/sports/aerobics"
     ],
     "168": [
         168,
@@ -60,7 +85,7 @@
         "//www.bilibili.com/guochuang"
     ],
     "176": [
-        160,
+        223,
         "汽车生活",
         "//www.bilibili.com/v/car/life/"
     ],
@@ -283,5 +308,35 @@
         188,
         "极客DIY",
         "//www.bilibili.com/v/tech/diy/"
+    ],
+    "234": [
+        234,
+        "运动",
+        "//www.bilibili.com/v/sports"
+    ],
+    "235": [
+        234,
+        "篮球·足球",
+        "//www.bilibili.com/v/sports/basketballfootball"
+    ],
+    "236": [
+        234,
+        "竞技体育",
+        "//www.bilibili.com/v/sports/athletic"
+    ],
+    "237": [
+        234,
+        "运动文化",
+        "//www.bilibili.com/v/sports/culture"
+    ],
+    "238": [
+        234,
+        "运动综合",
+        "//www.bilibili.com/v/sports/comprehensive"
+    ],
+    "240": [
+        223,
+        "摩托车",
+        "//www.bilibili.com/v/car/motorcycle"
     ]
 }

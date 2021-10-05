@@ -99,6 +99,8 @@
                     API.importModule("hookWebpackJsonp.js");
                     // 互动弹幕
                     config.commandDm && API.importModule("commandDm.js");
+                    // 修正分区信息
+                    API.importModule("videoSort.js");
                     // 添加媒体控制
                     API.importModule("mediaControl.js", {
                         title: API.__INITIAL_STATE__.videoData.title,

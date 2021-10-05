@@ -17,6 +17,8 @@
             // 添加点赞功能
             config.enlike && API.importModule("enLike.js");
             API.addCss(API.getModule("mini-bofqi.css"));
+            // 修正分区信息
+            API.importModule("videoSort.js");
         }
     } catch (e) { API.trace(e, "watchlater.js", true) }
 })();
