@@ -113,7 +113,7 @@
             sub: "proto弹幕",
             type: "switch",
             value: true,
-            float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能默认启用。</br>”`
+            float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。</br>”`
         })
         API.registerSetting({
             key: "liveDm",
@@ -226,7 +226,7 @@
             sub: "可以选择跳转而不必一直下拉",
             type: "switch",
             value: true,
-            float: '恢复旧版翻页评论区。'
+            float: '恢复旧版翻页评论区。</br>重写过的页面除外，那些默认就是翻页评论区。'
         })
         API.registerSetting({
             key: "section",
@@ -448,7 +448,7 @@
             type: "switch",
             key: "unloginPopover",
             label: "移除未登录弹窗",
-            sub: "有些时候就是喜欢不登录",
+            sub: "有些时候就是不喜欢登录",
             value: false,
             sort: "style"
         })
@@ -469,7 +469,7 @@
             type: "switch",
             sort: "download",
             key: "downloadContentmenu",
-            label: "右键下载菜单",
+            label: "右键菜单",
             sub: "播放画面上右键添加下载菜单",
             value: false
         })
@@ -532,7 +532,7 @@
             label: "User-Agent",
             value: navigator.userAgent,
             input: { type: "text" },
-            float: `一般不需要修改，除非下载访问的不是一般网页端接口。禁用时请置空并回车。`,
+            float: `用户代理，此值一般填非空的任意值皆可。`,
             hidden: config.downloadMethod == "右键保存"
         })
         API.registerSetting({
@@ -542,7 +542,7 @@
             label: "referer",
             value: location.origin,
             input: { type: "text" },
-            float: `一般不需要修改，除非下载访问的不是一般网页端接口。禁用时请置空并回车。</br>`,
+            float: `一般为B站主域名(origin)，此值不可为空，除非是APP/TV等视频源。`,
             hidden: config.downloadMethod == "右键保存"
         })
         API.registerSetting({
@@ -562,7 +562,7 @@
             sub: "添加到IDM列表而不立即下载",
             type: "switch",
             value: false,
-            float: "把下载链接添加到下载列表但是不立即开始下载，需要下载时再手动到IDM里开始。<strong>B站下载链接一般都有时效，太久不链接可能失效！</strong>",
+            float: "把下载链接添加到下载列表但是不立即开始下载，需要下载时再手动到IDM里开始。<strong>B站下载链接一般都有时效，太久不下载的话链接可能失效！</strong>",
             hidden: config.downloadMethod != "ef2"
         })
         API.registerSetting({
@@ -669,7 +669,7 @@
                 type: "input",
                 value: <any>3,
                 input: { type: "number", min: 1, max: 60, step: 0.5 },
-                float: '接口冷却时间，时间长可以降低被临时封端口的几率'
+                float: '接口冷却时间，时间长可以降低被临时封端口的几率。'
             },
             {
                 key: "allDanmakuAction",
