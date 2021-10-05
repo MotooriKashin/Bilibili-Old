@@ -17,7 +17,7 @@
             span.appendChild(text);
             (<HTMLElement>document.querySelector(".number")).insertBefore(span, document.querySelector(".coin"));
             span.onclick = async () => {
-                if (like) {
+                if (islike) {
                     // 取消点赞
                     let data = await xhr({
                         url: "https://api.bilibili.com/x/web-interface/archive/like",
