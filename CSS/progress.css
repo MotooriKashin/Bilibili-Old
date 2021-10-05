@@ -1,0 +1,33 @@
+.progress{
+    --paper-progress-active-color: rgb(26,115,232);
+    --paper-progress-container-color: rgb(223, 222, 223);
+    width: auto;
+}
+.progressContainer{
+    background: rgb(223, 222, 223);
+    height: 4px;
+    position: relative;
+}
+.secondaryProgress,.primaryProgress{
+    
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform-origin: left center;
+    transform: scaleX(0);
+    will-change: transform;
+}
+.secondaryProgress{
+    background: rgb(183, 225, 205);
+}
+.primaryProgress{
+    background: rgb(26,115,232);
+}
+.progressTag{
+    width: 100%;
+    padding-top: 6px;
+    display: inline-flex;
+    justify-content: space-between;
+}

@@ -234,6 +234,56 @@
                 });
                 return root;
             }
+            /**
+             * 封装好的进度条，自适应父节点width
+             * @param detail 进度条配置，双向绑定：**修改其中的值会及时体现在该进度条上**
+             * @returns 封装好的节点
+             */
+            static progress(detail) {
+                let { min, max, value, color, nocolor, display } = detail;
+                const root = document.createElement("div");
+                const real = root.attachShadow({ mode: "closed" });
+                API.addCss(API.getCss("progress.css"), undefined, real);
+                const progress = API.addElement("div", { class: "progress" }, real);
+                const progressContainer = API.addElement("div", { class: "progressContainer", title: "0%" }, progress);
+                const secondaryProgress = API.addElement("div", { class: "secondaryProgress", style: "transform: scaleX(0);" }, progressContainer);
+                const primaryProgress = API.addElement("div", { class: "primaryProgress", style: "transform: scaleX(0);" }, progressContainer);
+                const progressTag = API.addElement("div", { class: "progressTag", style: "display: none;" }, progress, `<div>${min}</div><div>${max}</div>`);
+                Object.defineProperties(detail, {
+                    "color": { get: () => primaryProgress.style.backgroundColor, set: (v) => primaryProgress.style.backgroundColor = v },
+                    "display": { get: () => progressTag.style.display, set: (v) => progressTag.style.display = v ? "" : "none" },
+                    "max": {
+                        get: () => max, set: (v) => {
+                            if (v < value || v <= min)
+                                return;
+                            progressTag.children[1].innerText = max = v;
+                            detail.value = value;
+                        }
+                    },
+                    "min": {
+                        get: () => min, set: (v) => {
+                            if (v > value || v >= max)
+                                return;
+                            progressTag.children[0].innerText = min = v;
+                            detail.value = value;
+                        }
+                    },
+                    "nocolor": { get: () => secondaryProgress.style.backgroundColor, set: (v) => secondaryProgress.style.backgroundColor = v },
+                    "value": {
+                        get: () => value, set: (v) => {
+                            if (v > max || v < min)
+                                return;
+                            const per = Number(((v - min) / (max - min)).toFixed(3).slice(0, -1));
+                            primaryProgress.style.transform = `scaleX(${per})`;
+                            progressContainer.title = (per * 100) + "%";
+                        }
+                    }
+                });
+                min >= max && (min = 0);
+                (value > max || value < min) && (value = 0);
+                detail.min = min, detail.max = max, detail.value = value, detail.color = color, detail.nocolor = nocolor, detail.display = display;
+                return root;
+            }
         }
         API.element = {
             popupbox: (style, hold) => Element.popupbox(style, hold),
@@ -245,7 +295,8 @@
             input: (callback, text, attribute, pattern, button, disabled) => Element.input(callback, text, attribute, pattern, button, disabled),
             file: (callback, multiple, text, accept) => Element.file(callback, multiple, text, accept),
             checkbox: (list, callback, value) => Element.checkbox(list, callback, value),
-            clickRemove: (ele) => new ClickRemove(ele)
+            clickRemove: (ele) => new ClickRemove(ele),
+            progress: (detail) => Element.progress(detail)
         };
         API.getCss = (...svg) => Element.getCss(...svg);
     }

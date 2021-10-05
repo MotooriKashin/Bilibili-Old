@@ -234,6 +234,53 @@
                 })
                 return root;
             }
+            /**
+             * 封装好的进度条，自适应父节点width
+             * @param detail 进度条配置，双向绑定：**修改其中的值会及时体现在该进度条上**
+             * @returns 封装好的节点
+             */
+            static progress(detail: ProgressDetial) {
+                let { min, max, value, color, nocolor, display } = detail;
+                const root = document.createElement("div");
+                const real = root.attachShadow({ mode: "closed" });
+                API.addCss(API.getCss("progress.css"), undefined, real);
+                const progress = API.addElement("div", { class: "progress" }, real);
+                const progressContainer = API.addElement("div", { class: "progressContainer", title: "0%" }, progress);
+                const secondaryProgress = API.addElement("div", { class: "secondaryProgress", style: "transform: scaleX(0);" }, progressContainer);
+                const primaryProgress = API.addElement("div", { class: "primaryProgress", style: "transform: scaleX(0);" }, progressContainer);
+                const progressTag = API.addElement("div", { class: "progressTag", style: "display: none;" }, progress, `<div>${min}</div><div>${max}</div>`);
+                Object.defineProperties(detail, {
+                    "color": { get: () => primaryProgress.style.backgroundColor, set: (v) => primaryProgress.style.backgroundColor = v },
+                    "display": { get: () => progressTag.style.display, set: (v) => progressTag.style.display = v ? "" : "none" },
+                    "max": {
+                        get: () => max, set: (v) => {
+                            if (v < value || v <= min) return;
+                            (<HTMLDivElement>progressTag.children[1]).innerText = max = v;
+                            detail.value = value;
+                        }
+                    },
+                    "min": {
+                        get: () => min, set: (v) => {
+                            if (v > value || v >= max) return;
+                            (<HTMLDivElement>progressTag.children[0]).innerText = min = v;
+                            detail.value = value;
+                        }
+                    },
+                    "nocolor": { get: () => secondaryProgress.style.backgroundColor, set: (v) => secondaryProgress.style.backgroundColor = v },
+                    "value": {
+                        get: () => value, set: (v) => {
+                            if (v > max || v < min) return;
+                            const per = Number(((v - min) / (max - min)).toFixed(3).slice(0, -1));
+                            primaryProgress.style.transform = `scaleX(${per})`;
+                            progressContainer.title = (per * 100) + "%";
+                        }
+                    }
+                })
+                min >= max && (min = 0);
+                (value > max || value < min) && (value = 0);
+                detail.min = min, detail.max = max, detail.value = value, detail.color = color, detail.nocolor = nocolor, detail.display = display;
+                return root;
+            }
         }
         API.element = {
             popupbox: (style?: Partial<CSSStyleDeclaration>, hold?: boolean) => Element.popupbox(style, hold),
@@ -245,7 +292,8 @@
             input: (callback: (this: HTMLInputElement, value: string) => void, text?: string, attribute?: input, pattern?: RegExp, button?: string, disabled?: number) => Element.input(callback, text, attribute, pattern, button, disabled),
             file: (callback: (this: HTMLInputElement, value: FileList) => void, multiple?: boolean, text?: string, accept?: string[]) => Element.file(callback, multiple, text, accept),
             checkbox: (list: string[], callback: (this: HTMLDivElement, value: string[]) => void, value?: string[]) => Element.checkbox(list, callback, value),
-            clickRemove: (ele: HTMLElement) => new ClickRemove(ele)
+            clickRemove: (ele: HTMLElement) => new ClickRemove(ele),
+            progress: (detail: ProgressDetial) => Element.progress(detail)
         }
         API.getCss = (...svg: string[]) => Element.getCss(...svg);
     } catch (e) { API.trace(e, "element.js", true) }
@@ -325,6 +373,12 @@ declare namespace API {
          * @param ele 目标节点
          */
         clickRemove(ele: HTMLElement): void;
+        /**
+         * 封装好的进度条，自适应父节点width
+         * @param detail 进度条配置，双向绑定：**修改其中的值会及时体现在该进度条上**
+         * @returns 封装好的节点
+         */
+        progress(detail: ProgressDetial): HTMLDivElement;
     }
     /**
      * 获取并整合合内置Css模块
@@ -332,4 +386,35 @@ declare namespace API {
      * @returns 整合好的Css模块
      */
     function getCss(...svg: string[]): string;
+}
+/**
+ * 进度条配置信息，双向绑定
+ */
+interface ProgressDetial {
+    /**
+     * 进度起点，必须小于max
+     */
+    min: number;
+    /**
+     * 进度终点，必须大于min
+     */
+    max: number;
+    /**
+     * 当前进度，取值范围[min,max]
+     */
+    value: number;
+    /**
+     * 有进度部分颜色，CSS颜色允许的字符串  
+     * 默认为rgb(26,115,232)
+     */
+    color?: string;
+    /**
+     * 剩余部分颜色，CSS颜色允许的字符串  
+     * 默认为rgb(183, 225, 205)
+     */
+    nocolor?: string;
+    /**
+     * 是否在进度条下标志起讫信息，默认不显示，只有一行进度条
+     */
+    display?: boolean;
 }
