@@ -19,5 +19,5 @@ fs.readFile("./dist/index.js", "utf-8", (err, data) => {
     //     s = `${s}// @resource     ${arr[arr.length - 1]} ${path}@${resource[d]}/${d}\r\n`
     //     return s;
     // }, content) + "// ==/UserScript==\r\n" + data.replace("\"use strict\";", "");
-    fs.writeFile("./main.user.js", content, (err) => { if (err) throw err })
+    fs.writeFile("./beta.user.js", content, (err) => { if (err) throw err })
 })

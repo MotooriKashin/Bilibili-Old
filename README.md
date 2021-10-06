@@ -1,7 +1,7 @@
 ![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 94](https://img.shields.io/badge/Google_Chrome_94-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，通过重写网页框架的方式还原 B 站旧版页面，即2020年改版之前的页面，尤其是还原当时的播放器样式。  
-初次使用需要进行初始化操作，点击“确定”后将进行跨域申请，建议勾选“总是允许全部域名”。
+**[main.user.js(GreasyFork)]版暂时不再维护**，[beta.user.js](https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/beta.user.js)版本才是目前维护的版本。
 
 ---
 ### 脚本实现
