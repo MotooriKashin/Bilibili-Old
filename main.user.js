@@ -4,8 +4,8 @@
 // @version      5.2.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin
-// @homepage     https://github.com/MotooriKashin/Bilibili-Old@3217da07974183ad8d4175aca59da7b1c406d132/
-// @supportURL   https://github.com/MotooriKashin/Bilibili-Old@3217da07974183ad8d4175aca59da7b1c406d132/issues
+// @homepage     https://github.com/MotooriKashin/Bilibili-Old/
+// @supportURL   https://github.com/MotooriKashin/Bilibili-Old/issues
 // @icon         https://static.hdslb.com/images/favicon.ico
 // @match        *://*.bilibili.com/*
 // @connect      *
