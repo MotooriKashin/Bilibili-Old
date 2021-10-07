@@ -34,6 +34,7 @@
         Name: string = GM.info.script.name;
         Virsion: string = GM.info.script.version;
         Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
+        config = config;
         /**
          * 获取模块内容
          * @param name 模块名字
