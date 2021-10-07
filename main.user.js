@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.0.1
+// @version      6.0.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -90,7 +90,6 @@
   bottom: 0;
   left: 0;
   right: 0;
-  overflow: hidden;
 }
 .animated-banner > .layer {
   position: absolute;
@@ -13579,6 +13578,7 @@ catch (e) {
             this.Name = GM.info.script.name;
             this.Virsion = GM.info.script.version;
             this.Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
+            this.config = config;
             /**
              * 获取模块内容
              * @param name 模块名字
