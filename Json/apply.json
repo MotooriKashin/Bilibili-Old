@@ -1,4 +1,13 @@
 {
+    "timeFormat": "format.js",
+    "sizeFormat": "format.js",
+    "unitFormat": "format.js",
+    "bubbleSort": "format.js",
+    "randomArray": "format.js",
+    "objUrl": "format.js",
+    "urlObj": "format.js",
+    "addCss": "extend.js",
+    "addElement": "extend.js",
     "localModule": "manage.js",
     "readFile": "manage.js",
     "getCookies": "extend.js",
@@ -50,5 +59,8 @@
     "getUrlValue": "extend.js",
     "showAccesskey": "accesskey.js",
     "strSize": "extend.js",
-    "intervalFormat": "extend.js"
+    "intervalFormat": "extend.js",
+    "runWhile": "extend.js",
+    "bofqiMessage": "extend.js",
+    "alertMessage": "extend.js"
 }

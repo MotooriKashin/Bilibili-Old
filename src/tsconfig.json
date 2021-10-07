@@ -5,15 +5,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitUseStrict": true,
-    "outFile": "../dist/index.js"
+    "outDir": "../dist/"
   },
-  "files": [
-    "index/API.ts",
-    "index/config.ts",
-    "index/xhr.ts",
-    "index/format.ts",
-    "index/debug.ts",
-    "index/toast.ts",
-    "index.ts"
+  "include": [
+    "**/*"
   ]
 }

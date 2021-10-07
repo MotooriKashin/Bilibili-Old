@@ -2,6 +2,29 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
+			"type": "typescript",
+			"tsconfig": "src/tsconfig.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"label": "tsc",
+			"detail": "编译TypeScript源码"
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\tasks\\build.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"tsc"
+			],
+			"label": "build",
+			"detail": "编译最终的用户脚本本体",
+			"problemMatcher": []
+		},
+		{
 			"type": "shell",
 			"command": "Remove-Item",
 			"args": [
@@ -12,131 +35,15 @@
 				",comment.js",
 				",video.js"
 			],
-			"detail": "清理生成目录",
-			"label": "clear",
-			"problemMatcher": []
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "module/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
 			"dependsOn": [
-				"clear"
+				"build"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "编译模块文件",
-			"label": "module"
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "src/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"detail": "编译index",
-			"label": "tsc"
-		},
-		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\build\\build.js",
-				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"tsc"
-			],
-			"detail": "生成最终脚本文件",
-			"label": "merge",
-			"problemMatcher": []
-		},
-		{
-			"type": "shell",
-			"command": "Remove-Item",
-			"args": [
-				"${workspaceFolder}\\dist\\index.js"
-			],
-			"dependsOn": [
-				"merge"
-			],
-			"detail": "清理临时文件",
-			"label": "index",
-			"problemMatcher": []
-		},
-		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\build\\resource.js",
-				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"index"
-			],
-			"detail": "发布任务",
-			"label": "build",
-			"problemMatcher": []
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "third/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"detail": "编译第三方插件",
-			"label": "third"
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "module/tsnext.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"detail": "编译ESNext版本模块文件",
-			"label": "ESNextMergeTscModule"
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "src/tsnext.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"dependsOn": [
-				"ESNextMergeTscModule"
-			],
-			"detail": "编译ESNext版本index",
-			"label": "ESNextMergeTscIndex"
-		},
-		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\build\\build.js",
-				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"ESNextMergeTscIndex"
-			],
-			"detail": "生成ESNext版本脚本本体",
-			"label": "ESNextMerge",
-			"problemMatcher": []
-		},
-		{
-			"type": "shell",
-			"command": "Remove-Item",
-			"args": [
-				"${workspaceFolder}\\dist\\index.js"
-			],
-			"dependsOn": [
-				"ESNextMerge"
-			],
-			"detail": "编译ESNext版本，用于本地安装，用后即毁，不要作为正式提交！",
-			"label": "ESNext",
+			"detail": "清理生成目录",
+			"label": "clear",
 			"problemMatcher": []
 		}
 	]

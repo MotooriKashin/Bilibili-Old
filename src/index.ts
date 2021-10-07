@@ -1,254 +1,297 @@
-// @ts-ignore 忽略unsafeWindow错误
-const root: Window = unsafeWindow;
-class API {
+/**
+ * 脚本主体，负责提供脚本与模块间沟通的桥梁
+ */
+(function () {
+    GM.xmlHttpRequest = GM_xmlhttpRequest;
+    GM.getValue = GM_getValue;
+    GM.setValue = GM_setValue;
+    GM.deleteValue = GM_deleteValue;
+    GM.listValues = GM_listValues;
+    GM.getResourceText = GM_getResourceText;
+    GM.getResourceURL = GM_getResourceText;
+    // @ts-ignore 忽略unsafeWindow错误
+    const root: Window = unsafeWindow;
+    const modules: Record<string, any> = {};
+    /* 模块占位 */
     /**
-     * 本地模块列表
+     * 出事话脚本设置数据
      */
-    static modules: { [name: string]: any } = GM.getValue("modules", {});
-    /**
-     * 已运行的模块
-     */
-    static inModules: string[] = [];
-    /**
-     * 模块信息表，用于检查更新
-     */
-    static resource: { [name: string]: string } = GM.getValue("resource", {});
-    /**
-     * 模块更新标记，避免重复调用
-     */
-    static updating: boolean = false;
-    static Virsion: string = GM.info.script.version;
-    static API: Object;
-    static Name: string = GM.info.script.name;
-    /**
-     * 函数模块关系对照表
-     */
-    static apply: { [name: string]: string } = GM.getValue("apply", {});
-    GM = GM;
-    config = config;
-    Name = API.Name;
-    Virsion: string = API.Virsion;
-    Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
-    registerSetting = registerSetting;
-    registerMenu = registerMenu;
-    changeSettingMode = changeSettingMode;
-    runWhile = API.runWhile;
-    importModule = API.importModule;
-    timeFormat = (time?: number, type?: boolean) => Format.timeFormat(time, type);
-    sizeFormat = (size?: number) => Format.sizeFormat(size);
-    unitFormat = (num?: number) => Format.unitFormat(num);
-    bubbleSort = (arr: number[]) => Format.bubbleSort(arr);
-    randomArray = (arr: any[], num: number) => Format.randomArray(arr, num);
-    objUrl = (url: string, obj: { [name: string]: string }) => Format.objUrl(url, obj);
-    urlObj = (url?: string) => Format.urlObj(url);
-    trace = (e: Error, label: string = "", toastr: boolean = false) => { toastr ? toast.error(label, ...(Array.isArray(e) ? e : [e])) : Debug.error(label, ...(Array.isArray(e) ? e : [e])) }
-    bofqiMessage(msg?: string | [string?, string?, string?], time = 3, callback?: () => void, replace = true) {
-        let node = document.querySelector(".bilibili-player-video-toast-bottom");
-        if (!node) {
-            if (msg) {
-                if (Array.isArray(msg)) return Debug.log(...msg);
-                return Debug.log(msg)
-            }
-            return;
-        }
-        if (!msg) node.childNodes.forEach(d => d.remove());
-        const table = document.querySelector(".bilibili-player-video-toast-item.bilibili-player-video-toast-pay") || document.createElement("div");
-        table.setAttribute("class", "bilibili-player-video-toast-item bilibili-player-video-toast-pay");
-        const ele = document.createElement("div");
-        ele.setAttribute("class", "bilibili-player-video-toast-item-text");
-        table.appendChild(ele);
-        msg = Array.isArray(msg) ? msg : [msg];
-        if (!msg[0]) return;
-        replace && node.childNodes.forEach(d => d.remove());
-        ele.innerHTML = <string>msg.reduce((s, d, i) => {
-            if (d) {
-                switch (i) {
-                    case 0: s += `<span class="video-float-hint-text">${d}</span>`;
-                        break;
-                    case 1: s += `<span class="video-float-hint-btn hint-red">${d}</span>`;
-                        break;
-                    case 2: s += `<span class="video-float-hint-btn">${d}</span>`;
-                        break;
-                }
-            }
-            return s;
-        }, '');
-        node.appendChild(table);
-        callback && (ele.style.cursor = "pointer") && (ele.onclick = () => callback());
-        (time !== 0) && root.setTimeout(() => {
-            ele.remove();
-            !table.children[0] && table.remove();
-        }, time * 1000);
-    }
-    addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T] {
-        let element = document.createElement(tag);
-        attribute && (Object.entries(attribute).forEach(d => element.setAttribute(d[0], d[1])));
-        parrent = parrent || document.body;
-        innerHTML && (element.innerHTML = innerHTML);
-        replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
-        return element;
-    }
-    async addCss(txt: string, id?: string, parrent?: Node) {
-        if (!parrent && !document.head) {
-            await new Promise(r => this.runWhile(() => document.body, r));
-        }
-        parrent = parrent || document.head;
-        const style = document.createElement("style");
-        style.setAttribute("type", "text/css");
-        id && !(<HTMLElement>parrent).querySelector(`#${id}`) && style.setAttribute("id", id);
-        style.appendChild(document.createTextNode(txt));
-        parrent.appendChild(style);
-    }
-    static runWhile(check: Function, callback: Function, delay: number = 100, stop: number = 180) {
-        let timer = root.setInterval(() => {
-            if (check()) {
-                root.clearInterval(timer);
-                callback();
-            }
-        }, delay);
-        stop && root.setTimeout(() => root.clearInterval(timer), stop * 1000)
-    }
-    async alertMessage(text: string, title: string = API.Name) {
-        return new Promise((r: (value: boolean) => void) => {
-            const root = this.addElement("div")
-            const div = root.attachShadow({ mode: "closed" });
-            const table = this.addElement("div", { class: "table" }, div, `
-            <div class="title">${title}</div>
-            <div class="text">${text}</div>
-            <div class="act">
-                <div class="button">确认</div>
-                <div class="button">取消</div>
-                </div>
-            `);
-            this.addCss('.table {line-height: 14px;display: flex;flex-direction: column;box-sizing: border-box;top: 50%;background: #FFFFFF;box-shadow: 0 3px 12px 0 rgb(0 0 0 / 20%);border-radius: 10px;width: 300px;height: auto;padding: 18px;position: fixed;left: 50%;transform: translateX(-50%) translateY(-50%);z-index: 11124;}.title {line-height: 22px;margin-left: 2px;margin-bottom: 10px;font-size: 14px;}.text {margin-bottom: 3px;margin-left: 2px;}.act {line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;border: none;color: #fff;justify-content: space-around;}.button, .action{line-height: 154%;align-items: center;border-radius: 4px;box-sizing: border-box;cursor: pointer;display: inline-flex;flex-shrink: 0;font-weight: 500;height: 32px;justify-content: center;min-width: 5.14em;outline-width: 0;overflow: hidden;padding: 8px 16px;position: relative;user-select: none;}.action {border: none;background-color: rgb(26,115,232);color: #fff;}.button {background-color: #fff;color: rgb(26,115,232);border: 1px solid rgba(0,0,0,6%);}.action:hover{background-color: rgb(72,115,232);}.button:hover{background-color: rgba(26,115,232,6%);}.action:active{box-shadow: 0 0 1px 1px rgba(72,115,232,80%);}.button:active{box-shadow: 0 0 1px 1px rgba(0,0,0,10%);}.button[disabled],.xaction[disabled]{pointer-events: none;background-color: rgba(19, 1, 1, 0.1);border: 1px solid rgba(0,0,0,.1);color: white;}', '', div);
-            table.querySelectorAll(".button").forEach((d: HTMLElement, i) => {
-                i ? (d.onclick = () => { root.remove(), r(false) }) : (d.onclick = () => (root.remove(), r(true)))
-            })
-        })
-    }
-    getModule(name: string) {
-        return <string>Reflect.get(API.modules, name);
-    }
-    rewriteHTML(html: string) {
-        GM.getValue<string[]>("bug", []).forEach(d => { root[d] && Reflect.set(root, d, undefined) })
-        document.open();
-        document.write(html);
-        document.close();
-        config.rewriteMethod == "异步" && this.importModule("vector.js"); // 重写后页面正常引导
-    }
-    static importModule(name?: string, args: { [key: string]: any } = {}, force: boolean = false) {
-        if (!name) return Object.keys(API.modules);
-        if (API.inModules.includes(name) && !force) return;
-        if (Reflect.has(API.modules, name)) {
-            API.inModules.push(name);
-            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(API.modules, name))
-                (API.API, GM, debug, toast, xhr, config, API.importModule, ...Object.keys(args).reduce((s: object[], d) => {
-                    s.push(args[d]);
-                    return s;
-                }, []))
-        } else {
-            let modules = Reflect.ownKeys(API.resource).reduce((s: { [key: string]: string }, d: string) => {
-                let str = d.split("/");
-                Reflect.set(s, str[str.length - 1], d);
-                return s;
-            }, {});
+    const CONFIG: { [name: string]: any } = {};
+    const config: { [name: string]: any } = new Proxy(CONFIG, {
+        set: (_target, p: string, value) => {
+            CONFIG[p] = value;
+            GM.setValue<{ [name: string]: any }>("config", CONFIG);
+            return true;
+        },
+        get: (_target, p: string) => CONFIG[p]
+    })
+    Object.entries(GM.getValue<{ [name: string]: any }>("config", {})).forEach(k => Reflect.set(config, k[0], k[1]));
+    class API {
+        static API: Object;
+        static SETTING: any[] = [];
+        static MENU: Record<string, any> = {};
+        GM = GM;
+        Name: string = GM.info.script.name;
+        Virsion: string = GM.info.script.version;
+        Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
+        /**
+         * 获取模块内容
+         * @param name 模块名字
+         * @returns json直接返回格式化对象，其他返回字符串
+         */
+        getModule = (name: string) => Reflect.get(modules, name);
+        /**
+         * 载入模块
+         * @param name 模块名字
+         * @param args 传递给对方的全局变量：格式{变量名：变量值}
+         */
+        importModule = (name?: string | symbol, args: { [key: string]: any } = {}) => {
+            if (!name) return Object.keys(modules);
             if (Reflect.has(modules, name)) {
-                API.downloadModule(name, Reflect.get(modules, name)).then(d => toast.success(`模块${Reflect.get(modules, name)}安装成功！`, "您现在可以重试刚才的操作了~"))
-                toast.warning(`正在添加模块${Reflect.get(modules, name)}！请稍候~`);
-            } else {
-                toast.error(`您正在尝试载入未知模块 ${name}！`, "但本地模块资料库并没有该模块记录，您可以到脚本设置里立即检查更新看看~")
+                new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(modules, name))
+                    (API.API, GM, Reflect.get(this, "debug"), Reflect.get(this, "toast"), Reflect.get(this, "xhr"), config, this.importModule, ...Object.keys(args).reduce((s: object[], d) => {
+                        s.push(args[d]);
+                        return s;
+                    }, []))
             }
         }
-    }
-    static async firstInit() {
-        await this.updateModule(`脚本首次运行初始化中~`, `感谢您使用 ${this.Name}！当前版本：${this.Virsion}`);
-        toast.warning(`正在载入默认设置项~`);
-        this.importModule("setting.js");
-        Reflect.has(API.modules, "rewrite.js") && toast.success(`初始化成功，刷新页面即可生效~`);
-    }
-    static async updateModule(...msg: string[]) {
-        try {
-            if (this.updating) return;
-            msg[0] && toast.warning(...msg);
-            this.updating = true;
-            let resource: { [key: string]: string } = await xhr.GM({
-                url: 'https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@master/resource.json',
-                responseType: 'json'
+        static modifyConfig(obj: any) {
+            Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value"));
+            Reflect.get(obj, "type") == "sort" && Reflect.has(obj, "list") && Reflect.get(obj, "list").forEach((d: any) => this.modifyConfig(d));
+        }
+        registerSetting(obj: any) {
+            API.SETTING.push(obj);
+            API.modifyConfig(obj);
+        }
+        registerMenu(obj: any) {
+            Reflect.set(API.MENU, Reflect.get(obj, "key"), obj);
+        }
+        changeSettingMode(mode: Record<string, boolean>) {
+            const keys = Object.keys(mode);
+            API.SETTING.forEach(d => {
+                Reflect.has(d, "key") && keys.includes(Reflect.get(d, "key")) && Reflect.set(d, "hidden", Reflect.get(mode, Reflect.get(d, "key")));
             })
-            let keys = Object.keys(resource);
-            let list = keys.reduce((s: [string, string][], d) => {
-                let str = d.split("/");
-                Reflect.get(resource, d) != Reflect.get(this.resource, d) && s.push([str[str.length - 1], d]);
-                return s;
-            }, []);
-            toast(`获取初始化数据中，共 ${list.length}项~`, "这需要亿点时间，请耐心等待~");
-            GM.setValue("resource", this.resource = resource);
-            await Promise.all(list.reduce((s: Promise<void>[], d) => {
-                s.push(this.downloadModule(d[0], d[1]));
-                return s;
-            }, []));
-            await this.updateResource();
-            GM.setValue("modules", API.modules);
-            this.updating = false;
-            toast.success(`脚本及其模块已更新至最新版~`);
-        } catch (e) { this.updating = false; toast.error(`检查更新出错！`, e) }
-    }
-    static async downloadModule(name: string, url?: string) {
-        try {
-            if (!url) {
-                url = Object.keys(this.resource).find(d => d.includes(name));
-            }
-            let module = await xhr.GM({
-                url: `https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${Reflect.get(this.resource, url)}/${url}`
+        }
+        rewriteHTML(html: string) {
+            this.getModule("bug.json").forEach((d: string) => { root[d] && Reflect.set(root, d, undefined) })
+            document.open();
+            document.write(html);
+            document.close();
+            config.rewriteMethod == "异步" && this.importModule("vector.js"); // 重写后页面正常引导
+        }
+        initUi() {
+            root.self === root.top && (<any>this).runWhile(() => document.body, () => {
+                this.importModule("ui.js", { MENU: API.MENU, SETTING: API.SETTING });
+            });
+            new Promise(r => delete this.initUi);
+        }
+        constructor() {
+            API.API = new Proxy(this, {
+                get: (t, p) => {
+                    return Reflect.get(t, p) || Reflect.get(root, p) || (
+                        Reflect.has(modules["apply.json"], p) ? (
+                            t.importModule(modules["apply.json"][p], {}),
+                            Reflect.get(t, p)
+                        ) : undefined);
+                },
+                set: (t, p, value) => {
+                    Reflect.set(t, p, value);
+                    return true;
+                }
             })
-            name.endsWith(".json") ? (
-                GM.setValue(name.replace(".json", ""), JSON.parse(module))
-            ) : Reflect.set(API.modules, name, module);
-        } catch (e) { toast.error(`更新模块${name}失败，请检查网络！`) }
+            new Function("API", Reflect.get(modules, "debug.js"))(API.API);
+            new Function("API", "debug", "config", Reflect.get(modules, "toast.js"))(API.API, Reflect.get(this, "debug"), config);
+            new Function("API", "GM", Reflect.get(modules, "xhr.js"))(API.API, GM);
+            this.importModule("rewrite.js");
+        }
     }
-    static async updateResource() {
-        const resource = GM.getValue<string[]>("@resource", []);
-        const arr = await Promise.all(resource.reduce((s: Promise<any>[], d) => {
-            s.push(xhr({ url: d }));
-            return s;
-        }, []))
-        const name = resource.reduce((s: string[], d) => {
-            const arr = d.split("/");
-            d = arr[arr.length - 1];
-            s.push(d);
-            return s;
-        }, []);
-        arr.forEach((d, i) => {
-            resource[i].endsWith(".json") ?
-                GM.setValue(name[i].replace(".json", ""), JSON.parse(d)) :
-                Reflect.set(API.modules, name[i], d);
-        })
+    new API();
+})();
+declare namespace GM {
+    interface cookieDetails {
+        /**
+         * 域
+         */
+        domain: string,
+        /**
+         * 截止日期时间戳（10位）
+         */
+        expirationDate: number;
+        /**
+         * 客户端专用，不会发送给服务端
+         */
+        hostOnly: boolean;
+        /**
+         * 服务端专用，客户端js无法获取/修改
+         */
+        httpOnly: boolean;
+        /**
+         * 名称
+         */
+        name: string;
+        /**
+         * 子页面路径
+         */
+        path: string;
+        /**
+         * 同源策略
+         */
+        sameSite: string;
+        /**
+         * 是否允许通过非安全链接发送给服务器
+         */
+        secure: boolean;
+        /**
+         * 会话型cookie，临时有效，随页面一起销毁
+         */
+        session: boolean;
+        /**
+         * 值
+         */
+        value: string
     }
-    static init() {
-        this.importModule("rewrite.js");
-        this.importModule("setting.js");
-    }
-    initUi() {
-        root.self === root.top && this.runWhile(() => document.body, () => {
-            this.importModule("ui.js", { MENU, SETTING });
-        });
-        new Promise(r => delete this.initUi);
-    }
-    constructor() {
-        API.API = new Proxy(this, {
-            get: (target, p) => {
-                return Reflect.get(this, p) || Reflect.get(root, p) || (
-                    Reflect.has(API.apply, p) ? (
-                        this.importModule(Reflect.get(API.apply, p), {}, true),
-                        Reflect.get(this, p)
-                    ) : undefined);
-            },
-            set: (_target, p, value) => {
-                Reflect.set(this, p, value);
-                return true;
+    let xmlHttpRequest: typeof GM_xmlhttpRequest;
+    let getValue: typeof GM_getValue;
+    let setValue: typeof GM_setValue;
+    let deleteValue: typeof GM_deleteValue;
+    let listValues: typeof GM_listValues;
+    let getResourceText: typeof GM_getResourceText;
+    let getResourceURL: typeof GM_getResourceURL;
+    const info: {
+        downloadMode: string;
+        isFirstPartyIsolation: boolean;
+        isIncognito: boolean;
+        scriptHandler: string;
+        scriptMetaStr: string;
+        scriptSource: string;
+        scriptUpdateURL: string;
+        scriptWillUpdate: string;
+        version: string;
+        script: {
+            antifeatures: {};
+            author: string;
+            blockers: [];
+            copyright: string;
+            description: string;
+            description_i18n: {};
+            evilness: number;
+            excludes: [];
+            grant: [];
+            header: string;
+            homepage: string;
+            icon: string;
+            icon64: string;
+            includes: [];
+            lastModified: number;
+            matches: [];
+            name: string;
+            name_i18n: [];
+            namespace: string;
+            options: {
+                check_for_updates: boolean;
+                comment: string;
+                compat_foreach: boolean;
+                compat_metadata: boolean;
+                compat_prototypes: boolean;
+                compat_wrappedjsobject: boolean;
+                compatopts_for_requires: boolean;
+                noframes: boolean;
+                override: {
+                    merge_connects: boolean;
+                    merge_excludes: boolean;
+                    merge_includes: boolean;
+                    merge_matches: boolean;
+                    orig_connects: [];
+                    orig_excludes: [];
+                    orig_includes: [];
+                    orig_matches: [];
+                    orig_noframes: boolean;
+                    orig_run_at: string;
+                    use_blockers: [];
+                    use_connects: [];
+                    use_excludes: [];
+                    use_includes: [];
+                    use_matches: [];
+                }
+                run_at: string;
             }
-        })
-        Reflect.has(API.modules, "rewrite.js") ? API.init() : this.runWhile(() => document.body, () => this.alertMessage(`即将下载脚本运行所需基本数据，请允许脚本访问网络权限！<strong>推荐选择“总是允许全部域名”</strong>`).then(d => { d && API.firstInit() }));
+            position: number;
+            requires: [];
+            resources: [{ [name: string]: string }];
+            "run-at": string;
+            supportURL: string;
+            sync: { imported: string };
+            unwrap: boolean;
+            updateURL: string;
+            uuid: string;
+            version: string;
+            webRequest: string;
+        }
+    }
+    const cookie: {
+        /**
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         */
+        <T extends keyof typeof cookie>(method: T, ...args: Parameters<(typeof cookie)[T]>): ReturnType<(typeof cookie)[T]>;
+        /**
+         * 以数组形式返回所有cookie  
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * @param details 筛选条件，无条件请使用空对象{}会返回所有cookie
+         * @returns 符合条件的cookie对象数组
+         */
+        list(details: Partial<Record<"domain" | "name" | "path", string>>): Promise<cookieDetails[]>;
+        /**
+         * 修改/添加cookie  
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * @param args cookie详细信息
+         */
+        set(details: Partial<cookieDetails>): Promise<void>;
+        /**
+         * 删除cookie  
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * @param args 删除条件
+         */
+        delete(details: Record<"name", string>): Promise<void>;
     }
 }
-new API();
+declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
+declare function GM_getResourceText(name: string): string;
+declare function GM_getResourceURL(name: string): string;
+declare function GM_getValue<T>(name: string, defaultValue?: T): T;
+declare function GM_setValue<T>(name: string, value: T): void;
+declare function GM_deleteValue(name: string): void;
+declare function GM_listValues(): string[];
+/**
+ * 模块间的顶层变量，类似于`window`
+ */
+declare namespace API {
+    /**
+     * 脚本名字
+     */
+    let Name: string;
+    /**
+     * 脚本版本
+     */
+    let Virsion: string;
+    /**
+     * 脚本管理器名字
+     */
+    let Handler: string;
+    /**
+     * 载入模块
+     * @param name 模块名字
+     * @param args 传递给对方的全局变量：格式{变量名：变量值}
+     */
+    function importModule(name?: string | symbol, args?: { [key: string]: any; }): string[];
+    /**
+     * 获取模块内容
+     * @param name 模块名字
+     * @returns json直接返回格式化对象，其他返回字符串
+     */
+    function getModule(name: string): any;
+    /**
+     * 重写网页框架
+     * @param html 网页模板
+     */
+    function rewriteHTML(html: string): void;
+}
