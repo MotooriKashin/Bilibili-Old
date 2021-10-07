@@ -39,7 +39,7 @@
     const root = unsafeWindow;
     const modules = {};
     
-    modules["alert.css"] = (<><![CDATA[.table {
+    modules["alert.css"] = `.table {
     line-height: 14px;
     display: flex;
     flex-direction: column;
@@ -83,8 +83,8 @@
     border: none;
     color: #fff;
     justify-content: space-around;
-}]]></>).toString();
-    modules["animated-banner.css"] = (<><![CDATA[.animated-banner {
+}`;
+    modules["animated-banner.css"] = `.animated-banner {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -101,8 +101,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}]]></>).toString();
-    modules["avatarAnimation.css"] = (<><![CDATA[/* 鼠标放在顶栏上的动效 */
+}`;
+    modules["avatarAnimation.css"] = `/* 鼠标放在顶栏上的动效 */
 .bili-header-m .profile-info .i-face .face{
     border:0
 }
@@ -142,8 +142,8 @@
 }
 .bili-header-m .profile-info.on .i-face.scale-in .legalize{
     transform:scale(0.5) translate(38px,48px)
-}]]></>).toString();
-    modules["bofqi.css"] = (<><![CDATA[#bofqi .player {
+}`;
+    modules["bofqi.css"] = `#bofqi .player {
     width: 980px;
     height: 620px;
     display: block;
@@ -153,8 +153,8 @@
         width: 1160px;
         height: 720px
     }
-}]]></>).toString();
-    modules["button.css"] = (<><![CDATA[.button{
+}`;
+    modules["button.css"] = `.button{
     line-height: 154%;
     align-items: center;
     border-radius: 4px;
@@ -188,8 +188,8 @@
     background-color: rgba(239, 239, 239, 0.3);
     border: 1px solid rgba(118, 118, 118, 0.3);
     color: rgba(16, 16, 16, 0.3);
-}]]></>).toString();
-    modules["checkbox.css"] = (<><![CDATA[/* 复选框 */
+}`;
+    modules["checkbox.css"] = `/* 复选框 */
 .box {
   display: inline-flex;
 }
@@ -236,8 +236,8 @@
   flex: 1;
   margin-inline-start: 5px;
   margin-inline-end: 5px;
-}]]></>).toString();
-    modules["closedCaption.css"] = (<><![CDATA[/* CC字幕相关样式 */
+}`;
+    modules["closedCaption.css"] = `/* CC字幕相关样式 */
 /*对齐，悬停按钮显示菜单*/
 #subtitle-setting-panel>div>* {margin-right: 5px;}
 #bilibili-player-subtitle-btn:hover>#subtitle-setting-panel {display: block!important;}
@@ -259,7 +259,7 @@
 /*复选框和其对应标签样式*/
 #subtitle-setting-panel input[type="checkbox"]{display:none;}
 #subtitle-setting-panel input ~ label {cursor:pointer;}
-#subtitle-setting-panel input:checked ~ label:before {content: '\2714';}
+#subtitle-setting-panel input:checked ~ label:before {content: '\\2714';}
 #subtitle-setting-panel input ~ label:before{
     width: 12px;
     height:12px;
@@ -276,8 +276,8 @@
 /*滚动条样式*/
 #subtitle-setting-panel ::-webkit-scrollbar{width: 7px;}
 #subtitle-setting-panel ::-webkit-scrollbar-track{border-radius: 4px;background-color: #EEE;}
-#subtitle-setting-panel ::-webkit-scrollbar-thumb{border-radius: 4px;background-color: #999;}]]></>).toString();
-    modules["commandDm.css"] = (<><![CDATA[.commandDm-popup {
+#subtitle-setting-panel ::-webkit-scrollbar-thumb{border-radius: 4px;background-color: #999;}`;
+    modules["commandDm.css"] = `.commandDm-popup {
   border-radius: 1rem;
   background-color: #f5f5f5;
   position: absolute;
@@ -503,8 +503,8 @@
     filter: brightness(1);
   }
 }
-]]></>).toString();
-    modules["danmakuHashId.css"] = (<><![CDATA[/* 反查弹幕发送者相关样式 */
+`;
+    modules["danmakuHashId.css"] = `/* 反查弹幕发送者相关样式 */
 .bb-comment, .comment-bilibili-fold {
     font-family: Microsoft YaHei,Arial,Helvetica,sans-serif;
     font-size: 0;
@@ -567,8 +567,8 @@
     vertical-align: middle;
     margin: 0 8px;
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAPoCAMAAAB6fSTWAAAA51BMVEUAAACYoKhwd3yboqni5emDjJL7+/yZoqoAodbnix8AodYAodaZoqoAodYAodaln5jnix8Aodbnix8AodaZoqoAodbnix8Aodbnix/yXY6ZoqoAodYAodYAodaZoqoAodaZoqryXY7yXY4AodbyXY6ZoqryXY6ZoqoAodaZoqoAodaZoqryXY7nix8AodYAodbnix+ZoqqZoqrnix8AodYAodbnix+Zoqr////19vfM0NcAoda/v7/l6e9MyP//u1PlL+z/s3yS0eWV3bL/bAAVFRX/AACEHPnnix+M2fn/1pbyXY4iIiIkv4BgAAAAOHRSTlMA9fUreZKu4eI+EfDtgtwP7AkexYcv2WfIsP3refnX0mcmGUPyxsScjXkXF++zoZpMMyn+Ppl8Q6/LsKoAAA3QSURBVHja7NvdbtowGIfxP7UsaEqbfkGj0bWVpqofiK0f2nZALyD3f0V7E4KsbULCjpRA9fykQDjw4SOb2BEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG2cF4X64vzAeJc+/sDYeGDH3Q0e1MrV1x9q4eW0LNUTP2j4xPEHDS9gp70O50O1MRk9j5Tu13tZhX4+LdS5ejJvpnUlqCfzZloXsMPym99qFfrZ7Telh54vyop1Xk7VNevbqeas+KT5fD2eOR3b+FhR1/L84dJaz42SZNnPR2UnWZadKV7+Mi1rss7P1THXdB7u47iq83DP/3RsijtQpevQ78bjL/fS29CMHxTvana0vDjT5MTMviuSVb6movvO5Qe+Wr2vLvsRP6H7avW+ujxTOjaErrrw+mq+1K1hrqHWxoo3yjTS2kyRTssQeh9sEg+hO/uIZJN4CN3xLx07G7pC6G/3KaErhD65UKQyUGEfhbplaYfQlRK6Quja29CPj4W/febQn55ahn59vY+hO9VcWuhh/P6GfrxcUvq/PnHo965l6BcTRZruwNLdexnv05buYfzeLt2tc0qPkBi6qb77D31+o3ahP58o1mERQl8U/TyMc3bZjUt9GOfsshvHwzhsDt00jdf3fYZ+d9ky9KtHxcsPe99ec746NJO+veZ8dWiG7TVs9PGfzkOfr0PPb16TQn9eh57dTtoemCm0NQ7MAHH76OOVJylxH/2oNrtufQR2oa1xBBbYN/ZSy7ui8VILsF94TRUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAH3buoMVNIAzA8BxESA5ldyHkUui1p/Y6YrJ71v//g/rFmFoKaaMBdZPngTWzh+/4MqKTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwIMqyirnqizungfWqihzryzum5c6rFVkWrUfoa0i1Unzx+Y9NMfTPKzZvv6ZnlJ02n702ih1wnzz3muUzrrt6rpOS3kbFrMrzp0PpRdj57vOh9LdvbNer/WCob+9bFJn8zJ/6eWl87Y9l16OnW/6xpvuakvnvw5naW7bbX2y3W5f0xI2UXr/MbciV33nffBVLsbNH/vO++CPtnSuxT3o/k/z2td/+JGWEIkv0vmwobf596KcsqE3ORa2dK46nNLuLsNiXpF3/F2kRUTkC3QeqnzpPBadXI2bv3Qei07Mg9CvlR6dLyDnc+ehqqou9Dxu/tJ5zB+70HOCtYf+Nd3sgUKvcqedGno/3widTxL6Lt3skW7do+/ofPKtezh17tadf4YeTp8rCP1Lup2HcR7GMSL00BfeNb5o6N/TzR7r9Vobnd/zeq2Jzr1e47rD35YM/dsujfMwB2bauE4/MNMdl7Ghs2r7+o5HcY7AOgILn4AvtcAz8DVVeAZ+eAKegp+SAgAAAAAAAAAAAAAAAAAAAH6xczctbQRxAIf/RmHDGgyiQWisCkV8gxaF0nZDTjkF+v0/T4dNrIFe6g5JnOR5srksDHP6wTCzDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlKhZdXRY3HjgPzS/Vkybd5fW/FyRxmfOr3RorS/0ZHqUEXqSxufODyRrDD1pckJPmuz5gQihQxc3g8GnwcJDdHAxPp4ct8aXUR6hsx+qp6iiNbx6jvfrP0Y/WvX1KIojdDZtthCbVbVP6+a8S+jt07q4j+IsQjvIDH2eGfpU6Dtutioi2WLoT1d5oT+eRHEWof0+yAt9Ms8LvZkKfbfNoi28/be2GXrcHmaFHmflrd2XoafSs0KfzPNCb6ZC32kfK/SHh7zQL8vbjluGnkrPC30yzwu9mQp9l62Evv2le7zc5oU+OovS/A29J3Q66BT6Vjbjhm+hx6BD6PVb6DGO0ryG3rN0Z41e406/jNBzz9FvI16qZHDX7Rz97DRGJ8n4a5RmGXrPZhzr1Gb92vjyzaYNh3fnMbwaJtFFXX+/j/qkruvTKM4itJ7jNdZq9q/YuFT5j6iiu9PrL9GPIvlghj3yXD1VkWHUfxS60Pnwbg7uIsfF529RJKHDHhA67AEXT8AecJUU7IHG5ZAAAAAAAAAAAAAAAMAfdu6etUEgDuDwNcnkUMgQshS6dmrXeOKSLdDv/3kqlxeELCVXk9T/84Aogtz0w+OUAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAmVqu8ti/ex74RWe5b8dueH43Vj0+8PdWfVsV2mrofOyG8YUOU8ttXWh5Vxd6boUOV4QOt9h2F28pHqETwxD4cBTvmxSO0Lm3/VGqUBd695HCuYT2Uhn6oTL0Xuhzth8rdx4Z+msKJ587/64L/dDVhd5noc/ZPpXCy1E8LPQi3tw9nzuvC/3Q1YXeZ6HP2pOFHm85Lp86rwv90NWF3mehz9so9CeYug+X0Rz7WgidKzN+o0cN3dSdaZ36LufHhL7tRj5TNLk9WliMY0Il69J3xap7paYpkTdNs07h5PZk4fMa09lfS/e3Djlr98MM0WyELnQC2HZfKSShQwBChwBsPAEB2EoKIljaHBIAAAAAAAAAAPhhzw5WGwSiMIzekCGbkF1Wgb5HhzIL3/+lClaCEixCCMl4zwER3H/8OgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADtX2gYlgJ617w1aAD0TOiQgdEhA6JCA0CEBoUMCQocEhA4JCB0SEDokIHRIQOiQgNBJ6nq4xlMu50t0Q+gkdbsd4ilfP+fohtB5o+FPbGTRhU4vhrkYr+CB0OnbEPfChb5O6PTtU0L36i505l4Z+vRkI4dxQqcXi9AHi75C6PRt6nu6+0ZfIXT6NmY99i30/widrg0z/qOvEjo4jBM6WHShQ0ZChwSEDgkIHRIQOiQgdEhA6JDAQ+i1tSp02Je2rLy2cjyWVqvQYUfaYsxPJUbl1KrQYTfaYszjbpx1of+yZ8c4DINAFAW3QJwpFO64/5kiMAUU6eP1jGS5oH76loEcajvGfDlnvdUAnqxc7dOuY8yPWZ/HJYBHK3WN+e9jnQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPyNfgsgmb6LQeiQTo9Z+P2ERYeUhA4vsIXu0x2y2kOfhA75rL7HW+iQ1cx69O2vO+TVN+7RAQAAAAAAAAAAvuzZwQnAIBBE0a1u+i8pqBch15wm74FawWdFAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvpFjgDK5zSJ0qJPZhZ81JjpUEjr8wBW6qzu0ek10oUOfTJZ1Ch1aZW/JeHWHXrn4RwcAAAAAAHjYs2MbgIEQCIKURv9VWY8dfAGOjhkJUcFGBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8I9+FRCmb3UIHeJ0TeFzQ+iQR+iwgNBhAaHDAl/f5wsdUk3W07fQIVZf7OgAAAAPe3ZQA0AIQ1Gw7r5/Rxu6lwrgVGYSqIIXCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANyRXwHLZKpD6LBOqgvv1UPosI/Q4QEjdFd32MqJDg9I5ThT6LBVekvKqzvslcE/+sduHZ0AAIIAFHQ5918pMggH6MvuQJzgoQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAG/kEcAw2cUmdBgnowqvqSV0mEfo8IEWutcdprqh17joiz07tgEQhgEgmBoEUuQaZZDU3n8lCBUbIFl3hT3BNzaUlC2XtYUOVeU7MpurO9SVH/7oAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL+L+YgGVBZzaUBp2xA6FNaP8zqPmEPoUFaPueyxCf1mz45NIIaBIAAqdCKBcOTAgZBDh86uhO+/n9fzTZhjJtgOloNbSKtGm322qGX3jIOsWjwrn2gFSOuMvrLHWYC0WkwXHbKrsc0+t6gFSKvv8bP3AuT139H1HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4OXGcV3HKEBi4/4st6Z/2bODG4BhEAaArJFnoyjLeP99WnUMuHuwgQXC0NnK2vsbBfR1sqt2TgF9CToM4HSHATzjYIJnJeo16O3mdwvoS9BhhqSA7q51DgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAve3AgAAAAAADk/9oIqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqrCHhwIAAAAAAD5vzaCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqwBwcCAAAAAED+r42gqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqirtwQEJAAAAgKD/r9sRqAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8BfEgGFMI1IvvAAAAABJRU5ErkJggg==) no-repeat;
-}]]></>).toString();
-    modules["download.css"] = (<><![CDATA[.table {
+}`;
+    modules["download.css"] = `.table {
     position: fixed;
     z-index: 11113;
     bottom: 0;
@@ -627,8 +627,8 @@
     margin-top: 2px;
     text-align: center;
     padding: 1px 3px;
-}]]></>).toString();
-    modules["hr.css"] = (<><![CDATA[.hr {
+}`;
+    modules["hr.css"] = `.hr {
     display: flex;
     align-items: center;
     grid-gap: 0;
@@ -639,8 +639,8 @@
     background-color: rgba(136,136,136,0.1);
     width: 100%;
     margin-bottom: 12px;
-}]]></>).toString();
-    modules["icon.css"] = (<><![CDATA[.icon {
+}`;
+    modules["icon.css"] = `.icon {
   align-items: center;
   border-radius: 50%;
   display: flex;
@@ -652,8 +652,8 @@
   background: none;
   cursor: pointer;
 }
-]]></>).toString();
-    modules["imroot.css"] = (<><![CDATA[/* 修复顶栏样式 */
+`;
+    modules["imroot.css"] = `/* 修复顶栏样式 */
 .im-root,.im-root .im-list-box * {
     font-size:12px;
     line-height:42px;
@@ -690,8 +690,8 @@
 .im-root .im-list-box .im-notify.im-dot.im-center {
     top: 16px;
     right: 20px;
-}]]></>).toString();
-    modules["input.css"] = (<><![CDATA[/* 输入框 */
+}`;
+    modules["input.css"] = `/* 输入框 */
 .input {
   align-items: center;
   display: flex;
@@ -741,20 +741,20 @@
 .input .icon:hover {
   background-color: rgba(0, 0, 0, 10%);
   box-shadow: 0 1 12px 12px rgb(0, 0, 0, 10%);
-}]]></>).toString();
-    modules["message.css"] = (<><![CDATA[/* 修复消息页样式 */
+}`;
+    modules["message.css"] = `/* 修复消息页样式 */
 .container[data-v-6969394c] { 
     height: calc(100vh - 42px) !important;
 } 
 .container[data-v-1c9150a9] { 
     height: calc(100vh - 42px) !important;
-}]]></>).toString();
-    modules["mini-bofqi.css"] = (<><![CDATA[/* 修正稍后再看迷你播放器样式 */
+}`;
+    modules["mini-bofqi.css"] = `/* 修正稍后再看迷你播放器样式 */
 .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {
     top: 30px;
     height: 240px;
-}]]></>).toString();
-    modules["progress.css"] = (<><![CDATA[.progress{
+}`;
+    modules["progress.css"] = `.progress{
     --paper-progress-active-color: rgb(26,115,232);
     --paper-progress-container-color: rgb(223, 222, 223);
     width: auto;
@@ -786,8 +786,8 @@
     padding-top: 6px;
     display: inline-flex;
     justify-content: space-between;
-}]]></>).toString();
-    modules["select.css"] = (<><![CDATA[/* 下拉列表 */
+}`;
+    modules["select.css"] = `/* 下拉列表 */
 .select {
   align-items: center;
   display: inline-flex;
@@ -812,8 +812,8 @@ select {
 }
 option {
   background-color: #fff;
-}]]></>).toString();
-    modules["switch.css"] = (<><![CDATA[/* 滑块开关 */
+}`;
+    modules["switch.css"] = `/* 滑块开关 */
 .switch {
   cursor: pointer;
   display: block;
@@ -879,8 +879,8 @@ option {
 }
 .knob i:active {
   box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);
-}]]></>).toString();
-    modules["ui-action.css"] = (<><![CDATA[.contain {
+}`;
+    modules["ui-action.css"] = `.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -949,8 +949,8 @@ option {
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: white;
 }
-]]></>).toString();
-    modules["ui-contain.css"] = (<><![CDATA[.contain {
+`;
+    modules["ui-contain.css"] = `.contain {
   margin-bottom: 3px;
   padding-inline-start: 20px;
   padding-inline-end: 20px;
@@ -978,8 +978,8 @@ option {
   line-height: 154%;
   user-select: text;
 }
-]]></>).toString();
-    modules["ui-file.css"] = (<><![CDATA[.contain {
+`;
+    modules["ui-file.css"] = `.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1048,8 +1048,8 @@ option {
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: white;
 }
-]]></>).toString();
-    modules["ui-float.css"] = (<><![CDATA[.float {
+`;
+    modules["ui-float.css"] = `.float {
   top: 0;
   right: 0;
   position: fixed;
@@ -1088,8 +1088,8 @@ option {
   font-size: 12px;
   line-height: 1.15;
 }
-]]></>).toString();
-    modules["ui-input.css"] = (<><![CDATA[.contain {
+`;
+    modules["ui-input.css"] = `.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1208,8 +1208,8 @@ option {
   border: 1px solid rgba(0, 0, 0, 0.1);
   color: white;
 }
-]]></>).toString();
-    modules["ui-item.css"] = (<><![CDATA[/* 菜单项容器 */
+`;
+    modules["ui-item.css"] = `/* 菜单项容器 */
 .contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
@@ -1231,8 +1231,8 @@ option {
   color: rgb(95, 99, 104);
   font-weight: 400;
 }
-]]></>).toString();
-    modules["ui-menu.css"] = (<><![CDATA[.menuitem {
+`;
+    modules["ui-menu.css"] = `.menuitem {
   align-items: center;
   display: flex;
   font-weight: 500;
@@ -1250,8 +1250,8 @@ option {
 .menuitem > div {
   padding-inline-end: 12px;
 }
-]]></>).toString();
-    modules["ui-picture.css"] = (<><![CDATA[.contain {
+`;
+    modules["ui-picture.css"] = `.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1268,8 +1268,8 @@ option {
   width: 100%;
   max-height: 62px;
 }
-]]></>).toString();
-    modules["ui-popup-box.css"] = (<><![CDATA[.box{
+`;
+    modules["ui-popup-box.css"] = `.box{
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
@@ -1294,8 +1294,8 @@ option {
 *::-webkit-scrollbar {
   width: 0 !important;
   height: 0 !important;
-}]]></>).toString();
-    modules["ui-sort-body.css"] = (<><![CDATA[contain {
+}`;
+    modules["ui-sort-body.css"] = `contain {
   display: block;
   padding-block-end: 0;
   padding-block-start: 0;
@@ -1303,8 +1303,8 @@ option {
   padding-inline-start: 20px;
   border-top: 1px solid rgba(0, 0, 0, 6%);
 }
-]]></>).toString();
-    modules["ui-sort-head.css"] = (<><![CDATA[.contain {
+`;
+    modules["ui-sort-head.css"] = `.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1335,8 +1335,8 @@ option {
 .anchor:hover {
   box-shadow: 0 0 4px 4px rgba(241, 243, 244, 80%);
 }
-]]></>).toString();
-    modules["ui-stage.css"] = (<><![CDATA[.stage {
+`;
+    modules["ui-stage.css"] = `.stage {
   position: fixed;
   right: 40px;
   bottom: 60px;
@@ -1408,8 +1408,8 @@ option {
     transform: scale(0.9) rotate(-360deg);
   }
 }
-]]></>).toString();
-    modules["ui.css"] = (<><![CDATA[.box {
+`;
+    modules["ui.css"] = `.box {
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -1499,8 +1499,8 @@ option {
 .selected > .icon {
   fill: rgb(51, 103, 214) !important;
 }
-]]></>).toString();
-    modules["upList.css"] = (<><![CDATA[.up-info-m .up-card-box {
+`;
+    modules["upList.css"] = `.up-info-m .up-card-box {
   white-space: nowrap;
   overflow: auto;
 }
@@ -1572,8 +1572,8 @@ option {
   height: 24px;
   font-weight: 400;
   padding: 8px 0;
-}]]></>).toString();
-    modules["av.html"] = (<><![CDATA[<!DOCTYPE html>
+}`;
+    modules["av.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -1600,7 +1600,7 @@ option {
   <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script>
   <script type="text/javascript" src="//static.hdslb.com/js/video.min.js"></script>
   <script type="text/javascript">
-    function getQueryString(e) { var r = new RegExp("(^|&)" + e + "=([^&]*)(&|$)"), i = window.location.search.substr(1).match(r); return null != i ? unescape(i[2]) : null } window.getInternetExplorerVersion = function () { var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) { var r = navigator.userAgent; null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.$1)) } return e }; var vd = window.__INITIAL_STATE__ && window.__INITIAL_STATE__.videoData; if (vd && vd.aid && 9 !== getInternetExplorerVersion()) { if ($("#__bofqi").innerHTML = '<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>', vd.embedPlayer) { var p = getQueryString("p") ? getQueryString("p") - 1 : 0, player = { aid: vd.aid, cid: vd.pages[p] && vd.pages[p].cid || vd.pages[0].cid }; EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=" + player.cid + "&aid=" + player.aid + "&pre_ad=") } vd.embed && $("#bofqi").html(vd.embed) } else $("#bofqi").remove()
+    function getQueryString(e) { var r = new RegExp("(^|&)" + e + "=([^&]*)(&|\$)"), i = window.location.search.substr(1).match(r); return null != i ? unescape(i[2]) : null } window.getInternetExplorerVersion = function () { var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) { var r = navigator.userAgent; null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.\$1)) } return e }; var vd = window.__INITIAL_STATE__ && window.__INITIAL_STATE__.videoData; if (vd && vd.aid && 9 !== getInternetExplorerVersion()) { if (\$("#__bofqi").innerHTML = '<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>', vd.embedPlayer) { var p = getQueryString("p") ? getQueryString("p") - 1 : 0, player = { aid: vd.aid, cid: vd.pages[p] && vd.pages[p].cid || vd.pages[0].cid }; EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=" + player.cid + "&aid=" + player.aid + "&pre_ad=") } vd.embed && \$("#bofqi").html(vd.embed) } else \$("#bofqi").remove()
   </script>
   <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js"
     crossorigin="" defer="defer"></script>
@@ -1614,8 +1614,8 @@ option {
   <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["bangumi-special.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["bangumi-special.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -1651,8 +1651,8 @@ option {
     <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["bangumi.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["bangumi.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -1688,8 +1688,8 @@ option {
   <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["index.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["index.html"] = `<!DOCTYPE html>
 <html lang="zh-Hans" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hans">
 
 <head>
@@ -1721,8 +1721,8 @@ option {
   <link rel="prefetch" as="script" href="//static.hdslb.com/js/video.min.js" />
 </body>
 
-</html>]]></>).toString();
-    modules["player.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["player.html"] = `<!DOCTYPE html>
 <html>
 
 <head>
@@ -1821,20 +1821,20 @@ option {
         /* == malihu jquery custom scrollbar plugin == Version: 3.1.5, License: MIT License (MIT) */
         !function (e) { "function" == typeof define && define.amd ? define(["jquery"], e) : "undefined" != typeof module && module.exports ? module.exports = e : e(jQuery, window, document) }(function (e) {
             !function (t) { var o = "function" == typeof define && define.amd, a = "undefined" != typeof module && module.exports, n = "https:" == document.location.protocol ? "https:" : "http:", i = "cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js"; o || (a ? require("jquery-mousewheel")(e) : e.event.special.mousewheel || e("head").append(decodeURI("%3Cscript src=" + n + "//" + i + "%3E%3C/script%3E"))), t() }(function () {
-                var t, o = "mCustomScrollbar", a = "mCS", n = ".mCustomScrollbar", i = { setTop: 0, setLeft: 0, axis: "y", scrollbarPosition: "inside", scrollInertia: 950, autoDraggerLength: !0, alwaysShowScrollbar: 0, snapOffset: 0, mouseWheel: { enable: !0, scrollAmount: "auto", axis: "y", deltaFactor: "auto", disableOver: ["select", "option", "keygen", "datalist", "textarea"] }, scrollButtons: { scrollType: "stepless", scrollAmount: "auto" }, keyboard: { enable: !0, scrollType: "stepless", scrollAmount: "auto" }, contentTouchScroll: 25, documentTouchScroll: !0, advanced: { autoScrollOnFocus: "input,textarea,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true']", updateOnContentResize: !0, updateOnImageLoad: "auto", autoUpdateTimeout: 60 }, theme: "light", callbacks: { onTotalScrollOffset: 0, onTotalScrollBackOffset: 0, alwaysTriggerOffsets: !0 } }, r = 0, l = {}, s = window.attachEvent && !window.addEventListener ? 1 : 0, c = !1, d = ["mCSB_dragger_onDrag", "mCSB_scrollTools_onDrag", "mCS_img_loaded", "mCS_disabled", "mCS_destroyed", "mCS_no_scrollbar", "mCS-autoHide", "mCS-dir-rtl", "mCS_no_scrollbar_y", "mCS_no_scrollbar_x", "mCS_y_hidden", "mCS_x_hidden", "mCSB_draggerContainer", "mCSB_buttonUp", "mCSB_buttonDown", "mCSB_buttonLeft", "mCSB_buttonRight"], u = { init: function (t) { var t = e.extend(!0, {}, i, t), o = f.call(this); if (t.live) { var s = t.liveSelector || this.selector || n, c = e(s); if ("off" === t.live) return void m(s); l[s] = setTimeout(function () { c.mCustomScrollbar(t), "once" === t.live && c.length && m(s) }, 500) } else m(s); return t.setWidth = t.set_width ? t.set_width : t.setWidth, t.setHeight = t.set_height ? t.set_height : t.setHeight, t.axis = t.horizontalScroll ? "x" : p(t.axis), t.scrollInertia = t.scrollInertia > 0 && t.scrollInertia < 17 ? 17 : t.scrollInertia, "object" != typeof t.mouseWheel && 1 == t.mouseWheel && (t.mouseWheel = { enable: !0, scrollAmount: "auto", axis: "y", preventDefault: !1, deltaFactor: "auto", normalizeDelta: !1, invert: !1 }), t.mouseWheel.scrollAmount = t.mouseWheelPixels ? t.mouseWheelPixels : t.mouseWheel.scrollAmount, t.mouseWheel.normalizeDelta = t.advanced.normalizeMouseWheelDelta ? t.advanced.normalizeMouseWheelDelta : t.mouseWheel.normalizeDelta, t.scrollButtons.scrollType = g(t.scrollButtons.scrollType), h(t), e(o).each(function () { var o = e(this); if (!o.data(a)) { o.data(a, { idx: ++r, opt: t, scrollRatio: { y: null, x: null }, overflowed: null, contentReset: { y: null, x: null }, bindEvents: !1, tweenRunning: !1, sequential: {}, langDir: o.css("direction"), cbOffsets: null, trigger: null, poll: { size: { o: 0, n: 0 }, img: { o: 0, n: 0 }, change: { o: 0, n: 0 } } }); var n = o.data(a), i = n.opt, l = o.data("mcs-axis"), s = o.data("mcs-scrollbar-position"), c = o.data("mcs-theme"); l && (i.axis = l), s && (i.scrollbarPosition = s), c && (i.theme = c, h(i)), v.call(this), n && i.callbacks.onCreate && "function" == typeof i.callbacks.onCreate && i.callbacks.onCreate.call(this), e("#mCSB_" + n.idx + "_container img:not(." + d[2] + ")").addClass(d[2]), u.update.call(null, o) } }) }, update: function (t, o) { var n = t || f.call(this); return e(n).each(function () { var t = e(this); if (t.data(a)) { var n = t.data(a), i = n.opt, r = e("#mCSB_" + n.idx + "_container"), l = e("#mCSB_" + n.idx), s = [e("#mCSB_" + n.idx + "_dragger_vertical"), e("#mCSB_" + n.idx + "_dragger_horizontal")]; if (!r.length) return; n.tweenRunning && Q(t), o && n && i.callbacks.onBeforeUpdate && "function" == typeof i.callbacks.onBeforeUpdate && i.callbacks.onBeforeUpdate.call(this), t.hasClass(d[3]) && t.removeClass(d[3]), t.hasClass(d[4]) && t.removeClass(d[4]), l.css("max-height", "none"), l.height() !== t.height() && l.css("max-height", t.height()), _.call(this), "y" === i.axis || i.advanced.autoExpandHorizontalScroll || r.css("width", x(r)), n.overflowed = y.call(this), M.call(this), i.autoDraggerLength && S.call(this), b.call(this), T.call(this); var c = [Math.abs(r[0].offsetTop), Math.abs(r[0].offsetLeft)]; "x" !== i.axis && (n.overflowed[0] ? s[0].height() > s[0].parent().height() ? B.call(this) : (G(t, c[0].toString(), { dir: "y", dur: 0, overwrite: "none" }), n.contentReset.y = null) : (B.call(this), "y" === i.axis ? k.call(this) : "yx" === i.axis && n.overflowed[1] && G(t, c[1].toString(), { dir: "x", dur: 0, overwrite: "none" }))), "y" !== i.axis && (n.overflowed[1] ? s[1].width() > s[1].parent().width() ? B.call(this) : (G(t, c[1].toString(), { dir: "x", dur: 0, overwrite: "none" }), n.contentReset.x = null) : (B.call(this), "x" === i.axis ? k.call(this) : "yx" === i.axis && n.overflowed[0] && G(t, c[0].toString(), { dir: "y", dur: 0, overwrite: "none" }))), o && n && (2 === o && i.callbacks.onImageLoad && "function" == typeof i.callbacks.onImageLoad ? i.callbacks.onImageLoad.call(this) : 3 === o && i.callbacks.onSelectorChange && "function" == typeof i.callbacks.onSelectorChange ? i.callbacks.onSelectorChange.call(this) : i.callbacks.onUpdate && "function" == typeof i.callbacks.onUpdate && i.callbacks.onUpdate.call(this)), N.call(this) } }) }, scrollTo: function (t, o) { if ("undefined" != typeof t && null != t) { var n = f.call(this); return e(n).each(function () { var n = e(this); if (n.data(a)) { var i = n.data(a), r = i.opt, l = { trigger: "external", scrollInertia: r.scrollInertia, scrollEasing: "mcsEaseInOut", moveDragger: !1, timeout: 60, callbacks: !0, onStart: !0, onUpdate: !0, onComplete: !0 }, s = e.extend(!0, {}, l, o), c = Y.call(this, t), d = s.scrollInertia > 0 && s.scrollInertia < 17 ? 17 : s.scrollInertia; c[0] = X.call(this, c[0], "y"), c[1] = X.call(this, c[1], "x"), s.moveDragger && (c[0] *= i.scrollRatio.y, c[1] *= i.scrollRatio.x), s.dur = ne() ? 0 : d, setTimeout(function () { null !== c[0] && "undefined" != typeof c[0] && "x" !== r.axis && i.overflowed[0] && (s.dir = "y", s.overwrite = "all", G(n, c[0].toString(), s)), null !== c[1] && "undefined" != typeof c[1] && "y" !== r.axis && i.overflowed[1] && (s.dir = "x", s.overwrite = "none", G(n, c[1].toString(), s)) }, s.timeout) } }) } }, stop: function () { var t = f.call(this); return e(t).each(function () { var t = e(this); t.data(a) && Q(t) }) }, disable: function (t) { var o = f.call(this); return e(o).each(function () { var o = e(this); if (o.data(a)) { o.data(a); N.call(this, "remove"), k.call(this), t && B.call(this), M.call(this, !0), o.addClass(d[3]) } }) }, destroy: function () { var t = f.call(this); return e(t).each(function () { var n = e(this); if (n.data(a)) { var i = n.data(a), r = i.opt, l = e("#mCSB_" + i.idx), s = e("#mCSB_" + i.idx + "_container"), c = e(".mCSB_" + i.idx + "_scrollbar"); r.live && m(r.liveSelector || e(t).selector), N.call(this, "remove"), k.call(this), B.call(this), n.removeData(a), $(this, "mcs"), c.remove(), s.find("img." + d[2]).removeClass(d[2]), l.replaceWith(s.contents()), n.removeClass(o + " _" + a + "_" + i.idx + " " + d[6] + " " + d[7] + " " + d[5] + " " + d[3]).addClass(d[4]) } }) } }, f = function () { return "object" != typeof e(this) || e(this).length < 1 ? n : this }, h = function (t) { var o = ["rounded", "rounded-dark", "rounded-dots", "rounded-dots-dark"], a = ["rounded-dots", "rounded-dots-dark", "3d", "3d-dark", "3d-thick", "3d-thick-dark", "inset", "inset-dark", "inset-2", "inset-2-dark", "inset-3", "inset-3-dark"], n = ["minimal", "minimal-dark"], i = ["minimal", "minimal-dark"], r = ["minimal", "minimal-dark"]; t.autoDraggerLength = e.inArray(t.theme, o) > -1 ? !1 : t.autoDraggerLength, t.autoExpandScrollbar = e.inArray(t.theme, a) > -1 ? !1 : t.autoExpandScrollbar, t.scrollButtons.enable = e.inArray(t.theme, n) > -1 ? !1 : t.scrollButtons.enable, t.autoHideScrollbar = e.inArray(t.theme, i) > -1 ? !0 : t.autoHideScrollbar, t.scrollbarPosition = e.inArray(t.theme, r) > -1 ? "outside" : t.scrollbarPosition }, m = function (e) { l[e] && (clearTimeout(l[e]), $(l, e)) }, p = function (e) { return "yx" === e || "xy" === e || "auto" === e ? "yx" : "x" === e || "horizontal" === e ? "x" : "y" }, g = function (e) { return "stepped" === e || "pixels" === e || "step" === e || "click" === e ? "stepped" : "stepless" }, v = function () { var t = e(this), n = t.data(a), i = n.opt, r = i.autoExpandScrollbar ? " " + d[1] + "_expand" : "", l = ["<div id='mCSB_" + n.idx + "_scrollbar_vertical' class='mCSB_scrollTools mCSB_" + n.idx + "_scrollbar mCS-" + i.theme + " mCSB_scrollTools_vertical" + r + "'><div class='" + d[12] + "'><div id='mCSB_" + n.idx + "_dragger_vertical' class='mCSB_dragger' style='position:absolute;'><div class='mCSB_dragger_bar' /></div><div class='mCSB_draggerRail' /></div></div>", "<div id='mCSB_" + n.idx + "_scrollbar_horizontal' class='mCSB_scrollTools mCSB_" + n.idx + "_scrollbar mCS-" + i.theme + " mCSB_scrollTools_horizontal" + r + "'><div class='" + d[12] + "'><div id='mCSB_" + n.idx + "_dragger_horizontal' class='mCSB_dragger' style='position:absolute;'><div class='mCSB_dragger_bar' /></div><div class='mCSB_draggerRail' /></div></div>"], s = "yx" === i.axis ? "mCSB_vertical_horizontal" : "x" === i.axis ? "mCSB_horizontal" : "mCSB_vertical", c = "yx" === i.axis ? l[0] + l[1] : "x" === i.axis ? l[1] : l[0], u = "yx" === i.axis ? "<div id='mCSB_" + n.idx + "_container_wrapper' class='mCSB_container_wrapper' />" : "", f = i.autoHideScrollbar ? " " + d[6] : "", h = "x" !== i.axis && "rtl" === n.langDir ? " " + d[7] : ""; i.setWidth && t.css("width", i.setWidth), i.setHeight && t.css("height", i.setHeight), i.setLeft = "y" !== i.axis && "rtl" === n.langDir ? "989999px" : i.setLeft, t.addClass(o + " _" + a + "_" + n.idx + f + h).wrapInner("<div id='mCSB_" + n.idx + "' class='mCustomScrollBox mCS-" + i.theme + " " + s + "'><div id='mCSB_" + n.idx + "_container' class='mCSB_container' style='position:relative; top:" + i.setTop + "; left:" + i.setLeft + ";' dir='" + n.langDir + "' /></div>"); var m = e("#mCSB_" + n.idx), p = e("#mCSB_" + n.idx + "_container"); "y" === i.axis || i.advanced.autoExpandHorizontalScroll || p.css("width", x(p)), "outside" === i.scrollbarPosition ? ("static" === t.css("position") && t.css("position", "relative"), t.css("overflow", "visible"), m.addClass("mCSB_outside").after(c)) : (m.addClass("mCSB_inside").append(c), p.wrap(u)), w.call(this); var g = [e("#mCSB_" + n.idx + "_dragger_vertical"), e("#mCSB_" + n.idx + "_dragger_horizontal")]; g[0].css("min-height", g[0].height()), g[1].css("min-width", g[1].width()) }, x = function (t) { var o = [t[0].scrollWidth, Math.max.apply(Math, t.children().map(function () { return e(this).outerWidth(!0) }).get())], a = t.parent().width(); return o[0] > a ? o[0] : o[1] > a ? o[1] : "100%" }, _ = function () { var t = e(this), o = t.data(a), n = o.opt, i = e("#mCSB_" + o.idx + "_container"); if (n.advanced.autoExpandHorizontalScroll && "y" !== n.axis) { i.css({ width: "auto", "min-width": 0, "overflow-x": "scroll" }); var r = Math.ceil(i[0].scrollWidth); 3 === n.advanced.autoExpandHorizontalScroll || 2 !== n.advanced.autoExpandHorizontalScroll && r > i.parent().width() ? i.css({ width: r, "min-width": "100%", "overflow-x": "inherit" }) : i.css({ "overflow-x": "inherit", position: "absolute" }).wrap("<div class='mCSB_h_wrapper' style='position:relative; left:0; width:999999px;' />").css({ width: Math.ceil(i[0].getBoundingClientRect().right + .4) - Math.floor(i[0].getBoundingClientRect().left), "min-width": "100%", position: "relative" }).unwrap() } }, w = function () { var t = e(this), o = t.data(a), n = o.opt, i = e(".mCSB_" + o.idx + "_scrollbar:first"), r = oe(n.scrollButtons.tabindex) ? "tabindex='" + n.scrollButtons.tabindex + "'" : "", l = ["<a href='#' class='" + d[13] + "' " + r + " />", "<a href='#' class='" + d[14] + "' " + r + " />", "<a href='#' class='" + d[15] + "' " + r + " />", "<a href='#' class='" + d[16] + "' " + r + " />"], s = ["x" === n.axis ? l[2] : l[0], "x" === n.axis ? l[3] : l[1], l[2], l[3]]; n.scrollButtons.enable && i.prepend(s[0]).append(s[1]).next(".mCSB_scrollTools").prepend(s[2]).append(s[3]) }, S = function () { var t = e(this), o = t.data(a), n = e("#mCSB_" + o.idx), i = e("#mCSB_" + o.idx + "_container"), r = [e("#mCSB_" + o.idx + "_dragger_vertical"), e("#mCSB_" + o.idx + "_dragger_horizontal")], l = [n.height() / i.outerHeight(!1), n.width() / i.outerWidth(!1)], c = [parseInt(r[0].css("min-height")), Math.round(l[0] * r[0].parent().height()), parseInt(r[1].css("min-width")), Math.round(l[1] * r[1].parent().width())], d = s && c[1] < c[0] ? c[0] : c[1], u = s && c[3] < c[2] ? c[2] : c[3]; r[0].css({ height: d, "max-height": r[0].parent().height() - 10 }).find(".mCSB_dragger_bar").css({ "line-height": c[0] + "px" }), r[1].css({ width: u, "max-width": r[1].parent().width() - 10 }) }, b = function () { var t = e(this), o = t.data(a), n = e("#mCSB_" + o.idx), i = e("#mCSB_" + o.idx + "_container"), r = [e("#mCSB_" + o.idx + "_dragger_vertical"), e("#mCSB_" + o.idx + "_dragger_horizontal")], l = [i.outerHeight(!1) - n.height(), i.outerWidth(!1) - n.width()], s = [l[0] / (r[0].parent().height() - r[0].height()), l[1] / (r[1].parent().width() - r[1].width())]; o.scrollRatio = { y: s[0], x: s[1] } }, C = function (e, t, o) { var a = o ? d[0] + "_expanded" : "", n = e.closest(".mCSB_scrollTools"); "active" === t ? (e.toggleClass(d[0] + " " + a), n.toggleClass(d[1]), e[0]._draggable = e[0]._draggable ? 0 : 1) : e[0]._draggable || ("hide" === t ? (e.removeClass(d[0]), n.removeClass(d[1])) : (e.addClass(d[0]), n.addClass(d[1]))) }, y = function () { var t = e(this), o = t.data(a), n = e("#mCSB_" + o.idx), i = e("#mCSB_" + o.idx + "_container"), r = null == o.overflowed ? i.height() : i.outerHeight(!1), l = null == o.overflowed ? i.width() : i.outerWidth(!1), s = i[0].scrollHeight, c = i[0].scrollWidth; return s > r && (r = s), c > l && (l = c), [r > n.height(), l > n.width()] }, B = function () { var t = e(this), o = t.data(a), n = o.opt, i = e("#mCSB_" + o.idx), r = e("#mCSB_" + o.idx + "_container"), l = [e("#mCSB_" + o.idx + "_dragger_vertical"), e("#mCSB_" + o.idx + "_dragger_horizontal")]; if (Q(t), ("x" !== n.axis && !o.overflowed[0] || "y" === n.axis && o.overflowed[0]) && (l[0].add(r).css("top", 0), G(t, "_resetY")), "y" !== n.axis && !o.overflowed[1] || "x" === n.axis && o.overflowed[1]) { var s = dx = 0; "rtl" === o.langDir && (s = i.width() - r.outerWidth(!1), dx = Math.abs(s / o.scrollRatio.x)), r.css("left", s), l[1].css("left", dx), G(t, "_resetX") } }, T = function () { function t() { r = setTimeout(function () { e.event.special.mousewheel ? (clearTimeout(r), W.call(o[0])) : t() }, 100) } var o = e(this), n = o.data(a), i = n.opt; if (!n.bindEvents) { if (I.call(this), i.contentTouchScroll && D.call(this), E.call(this), i.mouseWheel.enable) { var r; t() } P.call(this), U.call(this), i.advanced.autoScrollOnFocus && H.call(this), i.scrollButtons.enable && F.call(this), i.keyboard.enable && q.call(this), n.bindEvents = !0 } }, k = function () { var t = e(this), o = t.data(a), n = o.opt, i = a + "_" + o.idx, r = ".mCSB_" + o.idx + "_scrollbar", l = e("#mCSB_" + o.idx + ",#mCSB_" + o.idx + "_container,#mCSB_" + o.idx + "_container_wrapper," + r + " ." + d[12] + ",#mCSB_" + o.idx + "_dragger_vertical,#mCSB_" + o.idx + "_dragger_horizontal," + r + ">a"), s = e("#mCSB_" + o.idx + "_container"); n.advanced.releaseDraggableSelectors && l.add(e(n.advanced.releaseDraggableSelectors)), n.advanced.extraDraggableSelectors && l.add(e(n.advanced.extraDraggableSelectors)), o.bindEvents && (e(document).add(e(!A() || top.document)).unbind("." + i), l.each(function () { e(this).unbind("." + i) }), clearTimeout(t[0]._focusTimeout), $(t[0], "_focusTimeout"), clearTimeout(o.sequential.step), $(o.sequential, "step"), clearTimeout(s[0].onCompleteTimeout), $(s[0], "onCompleteTimeout"), o.bindEvents = !1) }, M = function (t) { var o = e(this), n = o.data(a), i = n.opt, r = e("#mCSB_" + n.idx + "_container_wrapper"), l = r.length ? r : e("#mCSB_" + n.idx + "_container"), s = [e("#mCSB_" + n.idx + "_scrollbar_vertical"), e("#mCSB_" + n.idx + "_scrollbar_horizontal")], c = [s[0].find(".mCSB_dragger"), s[1].find(".mCSB_dragger")]; "x" !== i.axis && (n.overflowed[0] && !t ? (s[0].add(c[0]).add(s[0].children("a")).css("display", "block"), l.removeClass(d[8] + " " + d[10])) : (i.alwaysShowScrollbar ? (2 !== i.alwaysShowScrollbar && c[0].css("display", "none"), l.removeClass(d[10])) : (s[0].css("display", "none"), l.addClass(d[10])), l.addClass(d[8]))), "y" !== i.axis && (n.overflowed[1] && !t ? (s[1].add(c[1]).add(s[1].children("a")).css("display", "block"), l.removeClass(d[9] + " " + d[11])) : (i.alwaysShowScrollbar ? (2 !== i.alwaysShowScrollbar && c[1].css("display", "none"), l.removeClass(d[11])) : (s[1].css("display", "none"), l.addClass(d[11])), l.addClass(d[9]))), n.overflowed[0] || n.overflowed[1] ? o.removeClass(d[5]) : o.addClass(d[5]) }, O = function (t) { var o = t.type, a = t.target.ownerDocument !== document && null !== frameElement ? [e(frameElement).offset().top, e(frameElement).offset().left] : null, n = A() && t.target.ownerDocument !== top.document && null !== frameElement ? [e(t.view.frameElement).offset().top, e(t.view.frameElement).offset().left] : [0, 0]; switch (o) { case "pointerdown": case "MSPointerDown": case "pointermove": case "MSPointerMove": case "pointerup": case "MSPointerUp": return a ? [t.originalEvent.pageY - a[0] + n[0], t.originalEvent.pageX - a[1] + n[1], !1] : [t.originalEvent.pageY, t.originalEvent.pageX, !1]; case "touchstart": case "touchmove": case "touchend": var i = t.originalEvent.touches[0] || t.originalEvent.changedTouches[0], r = t.originalEvent.touches.length || t.originalEvent.changedTouches.length; return t.target.ownerDocument !== document ? [i.screenY, i.screenX, r > 1] : [i.pageY, i.pageX, r > 1]; default: return a ? [t.pageY - a[0] + n[0], t.pageX - a[1] + n[1], !1] : [t.pageY, t.pageX, !1] } }, I = function () { function t(e, t, a, n) { if (h[0].idleTimer = d.scrollInertia < 233 ? 250 : 0, o.attr("id") === f[1]) var i = "x", s = (o[0].offsetLeft - t + n) * l.scrollRatio.x; else var i = "y", s = (o[0].offsetTop - e + a) * l.scrollRatio.y; G(r, s.toString(), { dir: i, drag: !0 }) } var o, n, i, r = e(this), l = r.data(a), d = l.opt, u = a + "_" + l.idx, f = ["mCSB_" + l.idx + "_dragger_vertical", "mCSB_" + l.idx + "_dragger_horizontal"], h = e("#mCSB_" + l.idx + "_container"), m = e("#" + f[0] + ",#" + f[1]), p = d.advanced.releaseDraggableSelectors ? m.add(e(d.advanced.releaseDraggableSelectors)) : m, g = d.advanced.extraDraggableSelectors ? e(!A() || top.document).add(e(d.advanced.extraDraggableSelectors)) : e(!A() || top.document); m.bind("contextmenu." + u, function (e) { e.preventDefault() }).bind("mousedown." + u + " touchstart." + u + " pointerdown." + u + " MSPointerDown." + u, function (t) { if (t.stopImmediatePropagation(), t.preventDefault(), ee(t)) { c = !0, s && (document.onselectstart = function () { return !1 }), L.call(h, !1), Q(r), o = e(this); var a = o.offset(), l = O(t)[0] - a.top, u = O(t)[1] - a.left, f = o.height() + a.top, m = o.width() + a.left; f > l && l > 0 && m > u && u > 0 && (n = l, i = u), C(o, "active", d.autoExpandScrollbar) } }).bind("touchmove." + u, function (e) { e.stopImmediatePropagation(), e.preventDefault(); var a = o.offset(), r = O(e)[0] - a.top, l = O(e)[1] - a.left; t(n, i, r, l) }), e(document).add(g).bind("mousemove." + u + " pointermove." + u + " MSPointerMove." + u, function (e) { if (o) { var a = o.offset(), r = O(e)[0] - a.top, l = O(e)[1] - a.left; if (n === r && i === l) return; t(n, i, r, l) } }).add(p).bind("mouseup." + u + " touchend." + u + " pointerup." + u + " MSPointerUp." + u, function () { o && (C(o, "active", d.autoExpandScrollbar), o = null), c = !1, s && (document.onselectstart = null), L.call(h, !0) }) }, D = function () { function o(e) { if (!te(e) || c || O(e)[2]) return void (t = 0); t = 1, b = 0, C = 0, d = 1, y.removeClass("mCS_touch_action"); var o = I.offset(); u = O(e)[0] - o.top, f = O(e)[1] - o.left, z = [O(e)[0], O(e)[1]] } function n(e) { if (te(e) && !c && !O(e)[2] && (T.documentTouchScroll || e.preventDefault(), e.stopImmediatePropagation(), (!C || b) && d)) { g = K(); var t = M.offset(), o = O(e)[0] - t.top, a = O(e)[1] - t.left, n = "mcsLinearOut"; if (E.push(o), W.push(a), z[2] = Math.abs(O(e)[0] - z[0]), z[3] = Math.abs(O(e)[1] - z[1]), B.overflowed[0]) var i = D[0].parent().height() - D[0].height(), r = u - o > 0 && o - u > -(i * B.scrollRatio.y) && (2 * z[3] < z[2] || "yx" === T.axis); if (B.overflowed[1]) var l = D[1].parent().width() - D[1].width(), h = f - a > 0 && a - f > -(l * B.scrollRatio.x) && (2 * z[2] < z[3] || "yx" === T.axis); r || h ? (U || e.preventDefault(), b = 1) : (C = 1, y.addClass("mCS_touch_action")), U && e.preventDefault(), w = "yx" === T.axis ? [u - o, f - a] : "x" === T.axis ? [null, f - a] : [u - o, null], I[0].idleTimer = 250, B.overflowed[0] && s(w[0], R, n, "y", "all", !0), B.overflowed[1] && s(w[1], R, n, "x", L, !0) } } function i(e) { if (!te(e) || c || O(e)[2]) return void (t = 0); t = 1, e.stopImmediatePropagation(), Q(y), p = K(); var o = M.offset(); h = O(e)[0] - o.top, m = O(e)[1] - o.left, E = [], W = [] } function r(e) { if (te(e) && !c && !O(e)[2]) { d = 0, e.stopImmediatePropagation(), b = 0, C = 0, v = K(); var t = M.offset(), o = O(e)[0] - t.top, a = O(e)[1] - t.left; if (!(v - g > 30)) { _ = 1e3 / (v - p); var n = "mcsEaseOut", i = 2.5 > _, r = i ? [E[E.length - 2], W[W.length - 2]] : [0, 0]; x = i ? [o - r[0], a - r[1]] : [o - h, a - m]; var u = [Math.abs(x[0]), Math.abs(x[1])]; _ = i ? [Math.abs(x[0] / 4), Math.abs(x[1] / 4)] : [_, _]; var f = [Math.abs(I[0].offsetTop) - x[0] * l(u[0] / _[0], _[0]), Math.abs(I[0].offsetLeft) - x[1] * l(u[1] / _[1], _[1])]; w = "yx" === T.axis ? [f[0], f[1]] : "x" === T.axis ? [null, f[1]] : [f[0], null], S = [4 * u[0] + T.scrollInertia, 4 * u[1] + T.scrollInertia]; var y = parseInt(T.contentTouchScroll) || 0; w[0] = u[0] > y ? w[0] : 0, w[1] = u[1] > y ? w[1] : 0, B.overflowed[0] && s(w[0], S[0], n, "y", L, !1), B.overflowed[1] && s(w[1], S[1], n, "x", L, !1) } } } function l(e, t) { var o = [1.5 * t, 2 * t, t / 1.5, t / 2]; return e > 90 ? t > 4 ? o[0] : o[3] : e > 60 ? t > 3 ? o[3] : o[2] : e > 30 ? t > 8 ? o[1] : t > 6 ? o[0] : t > 4 ? t : o[2] : t > 8 ? t : o[3] } function s(e, t, o, a, n, i) { e && G(y, e.toString(), { dur: t, scrollEasing: o, dir: a, overwrite: n, drag: i }) } var d, u, f, h, m, p, g, v, x, _, w, S, b, C, y = e(this), B = y.data(a), T = B.opt, k = a + "_" + B.idx, M = e("#mCSB_" + B.idx), I = e("#mCSB_" + B.idx + "_container"), D = [e("#mCSB_" + B.idx + "_dragger_vertical"), e("#mCSB_" + B.idx + "_dragger_horizontal")], E = [], W = [], R = 0, L = "yx" === T.axis ? "none" : "all", z = [], P = I.find("iframe"), H = ["touchstart." + k + " pointerdown." + k + " MSPointerDown." + k, "touchmove." + k + " pointermove." + k + " MSPointerMove." + k, "touchend." + k + " pointerup." + k + " MSPointerUp." + k], U = void 0 !== document.body.style.touchAction && "" !== document.body.style.touchAction; I.bind(H[0], function (e) { o(e) }).bind(H[1], function (e) { n(e) }), M.bind(H[0], function (e) { i(e) }).bind(H[2], function (e) { r(e) }), P.length && P.each(function () { e(this).bind("load", function () { A(this) && e(this.contentDocument || this.contentWindow.document).bind(H[0], function (e) { o(e), i(e) }).bind(H[1], function (e) { n(e) }).bind(H[2], function (e) { r(e) }) }) }) }, E = function () { function o() { return window.getSelection ? window.getSelection().toString() : document.selection && "Control" != document.selection.type ? document.selection.createRange().text : 0 } function n(e, t, o) { d.type = o && i ? "stepped" : "stepless", d.scrollAmount = 10, j(r, e, t, "mcsLinearOut", o ? 60 : null) } var i, r = e(this), l = r.data(a), s = l.opt, d = l.sequential, u = a + "_" + l.idx, f = e("#mCSB_" + l.idx + "_container"), h = f.parent(); f.bind("mousedown." + u, function () { t || i || (i = 1, c = !0) }).add(document).bind("mousemove." + u, function (e) { if (!t && i && o()) { var a = f.offset(), r = O(e)[0] - a.top + f[0].offsetTop, c = O(e)[1] - a.left + f[0].offsetLeft; r > 0 && r < h.height() && c > 0 && c < h.width() ? d.step && n("off", null, "stepped") : ("x" !== s.axis && l.overflowed[0] && (0 > r ? n("on", 38) : r > h.height() && n("on", 40)), "y" !== s.axis && l.overflowed[1] && (0 > c ? n("on", 37) : c > h.width() && n("on", 39))) } }).bind("mouseup." + u + " dragend." + u, function () { t || (i && (i = 0, n("off", null)), c = !1) }) }, W = function () { function t(t, a) { if (Q(o), !z(o, t.target)) { var r = "auto" !== i.mouseWheel.deltaFactor ? parseInt(i.mouseWheel.deltaFactor) : s && t.deltaFactor < 100 ? 100 : t.deltaFactor || 100, d = i.scrollInertia; if ("x" === i.axis || "x" === i.mouseWheel.axis) var u = "x", f = [Math.round(r * n.scrollRatio.x), parseInt(i.mouseWheel.scrollAmount)], h = "auto" !== i.mouseWheel.scrollAmount ? f[1] : f[0] >= l.width() ? .9 * l.width() : f[0], m = Math.abs(e("#mCSB_" + n.idx + "_container")[0].offsetLeft), p = c[1][0].offsetLeft, g = c[1].parent().width() - c[1].width(), v = "y" === i.mouseWheel.axis ? t.deltaY || a : t.deltaX; else var u = "y", f = [Math.round(r * n.scrollRatio.y), parseInt(i.mouseWheel.scrollAmount)], h = "auto" !== i.mouseWheel.scrollAmount ? f[1] : f[0] >= l.height() ? .9 * l.height() : f[0], m = Math.abs(e("#mCSB_" + n.idx + "_container")[0].offsetTop), p = c[0][0].offsetTop, g = c[0].parent().height() - c[0].height(), v = t.deltaY || a; "y" === u && !n.overflowed[0] || "x" === u && !n.overflowed[1] || ((i.mouseWheel.invert || t.webkitDirectionInvertedFromDevice) && (v = -v), i.mouseWheel.normalizeDelta && (v = 0 > v ? -1 : 1), (v > 0 && 0 !== p || 0 > v && p !== g || i.mouseWheel.preventDefault) && (t.stopImmediatePropagation(), t.preventDefault()), t.deltaFactor < 5 && !i.mouseWheel.normalizeDelta && (h = t.deltaFactor, d = 17), G(o, (m - v * h).toString(), { dir: u, dur: d })) } } if (e(this).data(a)) { var o = e(this), n = o.data(a), i = n.opt, r = a + "_" + n.idx, l = e("#mCSB_" + n.idx), c = [e("#mCSB_" + n.idx + "_dragger_vertical"), e("#mCSB_" + n.idx + "_dragger_horizontal")], d = e("#mCSB_" + n.idx + "_container").find("iframe"); d.length && d.each(function () { e(this).bind("load", function () { A(this) && e(this.contentDocument || this.contentWindow.document).bind("mousewheel." + r, function (e, o) { t(e, o) }) }) }), l.bind("mousewheel." + r, function (e, o) { t(e, o) }) } }, R = new Object, A = function (t) { var o = !1, a = !1, n = null; if (void 0 === t ? a = "#empty" : void 0 !== e(t).attr("id") && (a = e(t).attr("id")), a !== !1 && void 0 !== R[a]) return R[a]; if (t) { try { var i = t.contentDocument || t.contentWindow.document; n = i.body.innerHTML } catch (r) { } o = null !== n } else { try { var i = top.document; n = i.body.innerHTML } catch (r) { } o = null !== n } return a !== !1 && (R[a] = o), o }, L = function (e) { var t = this.find("iframe"); if (t.length) { var o = e ? "auto" : "none"; t.css("pointer-events", o) } }, z = function (t, o) { var n = o.nodeName.toLowerCase(), i = t.data(a).opt.mouseWheel.disableOver, r = ["select", "textarea"]; return e.inArray(n, i) > -1 && !(e.inArray(n, r) > -1 && !e(o).is(":focus")) }, P = function () { var t, o = e(this), n = o.data(a), i = a + "_" + n.idx, r = e("#mCSB_" + n.idx + "_container"), l = r.parent(), s = e(".mCSB_" + n.idx + "_scrollbar ." + d[12]); s.bind("mousedown." + i + " touchstart." + i + " pointerdown." + i + " MSPointerDown." + i, function (o) { c = !0, e(o.target).hasClass("mCSB_dragger") || (t = 1) }).bind("touchend." + i + " pointerup." + i + " MSPointerUp." + i, function () { c = !1 }).bind("click." + i, function (a) { if (t && (t = 0, e(a.target).hasClass(d[12]) || e(a.target).hasClass("mCSB_draggerRail"))) { Q(o); var i = e(this), s = i.find(".mCSB_dragger"); if (i.parent(".mCSB_scrollTools_horizontal").length > 0) { if (!n.overflowed[1]) return; var c = "x", u = a.pageX > s.offset().left ? -1 : 1, f = Math.abs(r[0].offsetLeft) - u * (.9 * l.width()) } else { if (!n.overflowed[0]) return; var c = "y", u = a.pageY > s.offset().top ? -1 : 1, f = Math.abs(r[0].offsetTop) - u * (.9 * l.height()) } G(o, f.toString(), { dir: c, scrollEasing: "mcsEaseInOut" }) } }) }, H = function () { var t = e(this), o = t.data(a), n = o.opt, i = a + "_" + o.idx, r = e("#mCSB_" + o.idx + "_container"), l = r.parent(); r.bind("focusin." + i, function () { var o = e(document.activeElement), a = r.find(".mCustomScrollBox").length, i = 0; o.is(n.advanced.autoScrollOnFocus) && (Q(t), clearTimeout(t[0]._focusTimeout), t[0]._focusTimer = a ? (i + 17) * a : 0, t[0]._focusTimeout = setTimeout(function () { var e = [ae(o)[0], ae(o)[1]], a = [r[0].offsetTop, r[0].offsetLeft], s = [a[0] + e[0] >= 0 && a[0] + e[0] < l.height() - o.outerHeight(!1), a[1] + e[1] >= 0 && a[0] + e[1] < l.width() - o.outerWidth(!1)], c = "yx" !== n.axis || s[0] || s[1] ? "all" : "none"; "x" === n.axis || s[0] || G(t, e[0].toString(), { dir: "y", scrollEasing: "mcsEaseInOut", overwrite: c, dur: i }), "y" === n.axis || s[1] || G(t, e[1].toString(), { dir: "x", scrollEasing: "mcsEaseInOut", overwrite: c, dur: i }) }, t[0]._focusTimer)) }) }, U = function () { var t = e(this), o = t.data(a), n = a + "_" + o.idx, i = e("#mCSB_" + o.idx + "_container").parent(); i.bind("scroll." + n, function () { 0 === i.scrollTop() && 0 === i.scrollLeft() || e(".mCSB_" + o.idx + "_scrollbar").css("visibility", "hidden") }) }, F = function () { var t = e(this), o = t.data(a), n = o.opt, i = o.sequential, r = a + "_" + o.idx, l = ".mCSB_" + o.idx + "_scrollbar", s = e(l + ">a"); s.bind("contextmenu." + r, function (e) { e.preventDefault() }).bind("mousedown." + r + " touchstart." + r + " pointerdown." + r + " MSPointerDown." + r + " mouseup." + r + " touchend." + r + " pointerup." + r + " MSPointerUp." + r + " mouseout." + r + " pointerout." + r + " MSPointerOut." + r + " click." + r, function (a) { function r(e, o) { i.scrollAmount = n.scrollButtons.scrollAmount, j(t, e, o) } if (a.preventDefault(), ee(a)) { var l = e(this).attr("class"); switch (i.type = n.scrollButtons.scrollType, a.type) { case "mousedown": case "touchstart": case "pointerdown": case "MSPointerDown": if ("stepped" === i.type) return; c = !0, o.tweenRunning = !1, r("on", l); break; case "mouseup": case "touchend": case "pointerup": case "MSPointerUp": case "mouseout": case "pointerout": case "MSPointerOut": if ("stepped" === i.type) return; c = !1, i.dir && r("off", l); break; case "click": if ("stepped" !== i.type || o.tweenRunning) return; r("on", l) } } }) }, q = function () { function t(t) { function a(e, t) { r.type = i.keyboard.scrollType, r.scrollAmount = i.keyboard.scrollAmount, "stepped" === r.type && n.tweenRunning || j(o, e, t) } switch (t.type) { case "blur": n.tweenRunning && r.dir && a("off", null); break; case "keydown": case "keyup": var l = t.keyCode ? t.keyCode : t.which, s = "on"; if ("x" !== i.axis && (38 === l || 40 === l) || "y" !== i.axis && (37 === l || 39 === l)) { if ((38 === l || 40 === l) && !n.overflowed[0] || (37 === l || 39 === l) && !n.overflowed[1]) return; "keyup" === t.type && (s = "off"), e(document.activeElement).is(u) || (t.preventDefault(), t.stopImmediatePropagation(), a(s, l)) } else if (33 === l || 34 === l) { if ((n.overflowed[0] || n.overflowed[1]) && (t.preventDefault(), t.stopImmediatePropagation()), "keyup" === t.type) { Q(o); var f = 34 === l ? -1 : 1; if ("x" === i.axis || "yx" === i.axis && n.overflowed[1] && !n.overflowed[0]) var h = "x", m = Math.abs(c[0].offsetLeft) - f * (.9 * d.width()); else var h = "y", m = Math.abs(c[0].offsetTop) - f * (.9 * d.height()); G(o, m.toString(), { dir: h, scrollEasing: "mcsEaseInOut" }) } } else if ((35 === l || 36 === l) && !e(document.activeElement).is(u) && ((n.overflowed[0] || n.overflowed[1]) && (t.preventDefault(), t.stopImmediatePropagation()), "keyup" === t.type)) { if ("x" === i.axis || "yx" === i.axis && n.overflowed[1] && !n.overflowed[0]) var h = "x", m = 35 === l ? Math.abs(d.width() - c.outerWidth(!1)) : 0; else var h = "y", m = 35 === l ? Math.abs(d.height() - c.outerHeight(!1)) : 0; G(o, m.toString(), { dir: h, scrollEasing: "mcsEaseInOut" }) } } } var o = e(this), n = o.data(a), i = n.opt, r = n.sequential, l = a + "_" + n.idx, s = e("#mCSB_" + n.idx), c = e("#mCSB_" + n.idx + "_container"), d = c.parent(), u = "input,textarea,select,datalist,keygen,[contenteditable='true']", f = c.find("iframe"), h = ["blur." + l + " keydown." + l + " keyup." + l]; f.length && f.each(function () { e(this).bind("load", function () { A(this) && e(this.contentDocument || this.contentWindow.document).bind(h[0], function (e) { t(e) }) }) }), s.attr("tabindex", "0").bind(h[0], function (e) { t(e) }) }, j = function (t, o, n, i, r) { function l(e) { u.snapAmount && (f.scrollAmount = u.snapAmount instanceof Array ? "x" === f.dir[0] ? u.snapAmount[1] : u.snapAmount[0] : u.snapAmount); var o = "stepped" !== f.type, a = r ? r : e ? o ? p / 1.5 : g : 1e3 / 60, n = e ? o ? 7.5 : 40 : 2.5, s = [Math.abs(h[0].offsetTop), Math.abs(h[0].offsetLeft)], d = [c.scrollRatio.y > 10 ? 10 : c.scrollRatio.y, c.scrollRatio.x > 10 ? 10 : c.scrollRatio.x], m = "x" === f.dir[0] ? s[1] + f.dir[1] * (d[1] * n) : s[0] + f.dir[1] * (d[0] * n), v = "x" === f.dir[0] ? s[1] + f.dir[1] * parseInt(f.scrollAmount) : s[0] + f.dir[1] * parseInt(f.scrollAmount), x = "auto" !== f.scrollAmount ? v : m, _ = i ? i : e ? o ? "mcsLinearOut" : "mcsEaseInOut" : "mcsLinear", w = !!e; return e && 17 > a && (x = "x" === f.dir[0] ? s[1] : s[0]), G(t, x.toString(), { dir: f.dir[0], scrollEasing: _, dur: a, onComplete: w }), e ? void (f.dir = !1) : (clearTimeout(f.step), void (f.step = setTimeout(function () { l() }, a))) } function s() { clearTimeout(f.step), $(f, "step"), Q(t) } var c = t.data(a), u = c.opt, f = c.sequential, h = e("#mCSB_" + c.idx + "_container"), m = "stepped" === f.type, p = u.scrollInertia < 26 ? 26 : u.scrollInertia, g = u.scrollInertia < 1 ? 17 : u.scrollInertia; switch (o) { case "on": if (f.dir = [n === d[16] || n === d[15] || 39 === n || 37 === n ? "x" : "y", n === d[13] || n === d[15] || 38 === n || 37 === n ? -1 : 1], Q(t), oe(n) && "stepped" === f.type) return; l(m); break; case "off": s(), (m || c.tweenRunning && f.dir) && l(!0) } }, Y = function (t) { var o = e(this).data(a).opt, n = []; return "function" == typeof t && (t = t()), t instanceof Array ? n = t.length > 1 ? [t[0], t[1]] : "x" === o.axis ? [null, t[0]] : [t[0], null] : (n[0] = t.y ? t.y : t.x || "x" === o.axis ? null : t, n[1] = t.x ? t.x : t.y || "y" === o.axis ? null : t), "function" == typeof n[0] && (n[0] = n[0]()), "function" == typeof n[1] && (n[1] = n[1]()), n }, X = function (t, o) { if (null != t && "undefined" != typeof t) { var n = e(this), i = n.data(a), r = i.opt, l = e("#mCSB_" + i.idx + "_container"), s = l.parent(), c = typeof t; o || (o = "x" === r.axis ? "x" : "y"); var d = "x" === o ? l.outerWidth(!1) - s.width() : l.outerHeight(!1) - s.height(), f = "x" === o ? l[0].offsetLeft : l[0].offsetTop, h = "x" === o ? "left" : "top"; switch (c) { case "function": return t(); case "object": var m = t.jquery ? t : e(t); if (!m.length) return; return "x" === o ? ae(m)[1] : ae(m)[0]; case "string": case "number": if (oe(t)) return Math.abs(t); if (-1 !== t.indexOf("%")) return Math.abs(d * parseInt(t) / 100); if (-1 !== t.indexOf("-=")) return Math.abs(f - parseInt(t.split("-=")[1])); if (-1 !== t.indexOf("+=")) { var p = f + parseInt(t.split("+=")[1]); return p >= 0 ? 0 : Math.abs(p) } if (-1 !== t.indexOf("px") && oe(t.split("px")[0])) return Math.abs(t.split("px")[0]); if ("top" === t || "left" === t) return 0; if ("bottom" === t) return Math.abs(s.height() - l.outerHeight(!1)); if ("right" === t) return Math.abs(s.width() - l.outerWidth(!1)); if ("first" === t || "last" === t) { var m = l.find(":" + t); return "x" === o ? ae(m)[1] : ae(m)[0] } return e(t).length ? "x" === o ? ae(e(t))[1] : ae(e(t))[0] : (l.css(h, t), void u.update.call(null, n[0])) } } }, N = function (t) {
+                var t, o = "mCustomScrollbar", a = "mCS", n = ".mCustomScrollbar", i = { setTop: 0, setLeft: 0, axis: "y", scrollbarPosition: "inside", scrollInertia: 950, autoDraggerLength: !0, alwaysShowScrollbar: 0, snapOffset: 0, mouseWheel: { enable: !0, scrollAmount: "auto", axis: "y", deltaFactor: "auto", disableOver: ["select", "option", "keygen", "datalist", "textarea"] }, scrollButtons: { scrollType: "stepless", scrollAmount: "auto" }, keyboard: { enable: !0, scrollType: "stepless", scrollAmount: "auto" }, contentTouchScroll: 25, documentTouchScroll: !0, advanced: { autoScrollOnFocus: "input,textarea,select,button,datalist,keygen,a[tabindex],area,object,[contenteditable='true']", updateOnContentResize: !0, updateOnImageLoad: "auto", autoUpdateTimeout: 60 }, theme: "light", callbacks: { onTotalScrollOffset: 0, onTotalScrollBackOffset: 0, alwaysTriggerOffsets: !0 } }, r = 0, l = {}, s = window.attachEvent && !window.addEventListener ? 1 : 0, c = !1, d = ["mCSB_dragger_onDrag", "mCSB_scrollTools_onDrag", "mCS_img_loaded", "mCS_disabled", "mCS_destroyed", "mCS_no_scrollbar", "mCS-autoHide", "mCS-dir-rtl", "mCS_no_scrollbar_y", "mCS_no_scrollbar_x", "mCS_y_hidden", "mCS_x_hidden", "mCSB_draggerContainer", "mCSB_buttonUp", "mCSB_buttonDown", "mCSB_buttonLeft", "mCSB_buttonRight"], u = { init: function (t) { var t = e.extend(!0, {}, i, t), o = f.call(this); if (t.live) { var s = t.liveSelector || this.selector || n, c = e(s); if ("off" === t.live) return void m(s); l[s] = setTimeout(function () { c.mCustomScrollbar(t), "once" === t.live && c.length && m(s) }, 500) } else m(s); return t.setWidth = t.set_width ? t.set_width : t.setWidth, t.setHeight = t.set_height ? t.set_height : t.setHeight, t.axis = t.horizontalScroll ? "x" : p(t.axis), t.scrollInertia = t.scrollInertia > 0 && t.scrollInertia < 17 ? 17 : t.scrollInertia, "object" != typeof t.mouseWheel && 1 == t.mouseWheel && (t.mouseWheel = { enable: !0, scrollAmount: "auto", axis: "y", preventDefault: !1, deltaFactor: "auto", normalizeDelta: !1, invert: !1 }), t.mouseWheel.scrollAmount = t.mouseWheelPixels ? t.mouseWheelPixels : t.mouseWheel.scrollAmount, t.mouseWheel.normalizeDelta = t.advanced.normalizeMouseWheelDelta ? t.advanced.normalizeMouseWheelDelta : t.mouseWheel.normalizeDelta, t.scrollButtons.scrollType = g(t.scrollButtons.scrollType), h(t), e(o).each(function () { var o = e(this); if (!o.data(a)) { o.data(a, { idx: ++r, opt: t, scrollRatio: { y: null, x: null }, overflowed: null, contentReset: { y: null, x: null }, bindEvents: !1, tweenRunning: !1, sequential: {}, langDir: o.css("direction"), cbOffsets: null, trigger: null, poll: { size: { o: 0, n: 0 }, img: { o: 0, n: 0 }, change: { o: 0, n: 0 } } }); var n = o.data(a), i = n.opt, l = o.data("mcs-axis"), s = o.data("mcs-scrollbar-position"), c = o.data("mcs-theme"); l && (i.axis = l), s && (i.scrollbarPosition = s), c && (i.theme = c, h(i)), v.call(this), n && i.callbacks.onCreate && "function" == typeof i.callbacks.onCreate && i.callbacks.onCreate.call(this), e("#mCSB_" + n.idx + "_container img:not(." + d[2] + ")").addClass(d[2]), u.update.call(null, o) } }) }, update: function (t, o) { var n = t || f.call(this); return e(n).each(function () { var t = e(this); if (t.data(a)) { var n = t.data(a), i = n.opt, r = e("#mCSB_" + n.idx + "_container"), l = e("#mCSB_" + n.idx), s = [e("#mCSB_" + n.idx + "_dragger_vertical"), e("#mCSB_" + n.idx + "_dragger_horizontal")]; if (!r.length) return; n.tweenRunning && Q(t), o && n && i.callbacks.onBeforeUpdate && "function" == typeof i.callbacks.onBeforeUpdate && i.callbacks.onBeforeUpdate.call(this), t.hasClass(d[3]) && t.removeClass(d[3]), t.hasClass(d[4]) && t.removeClass(d[4]), l.css("max-height", "none"), l.height() !== t.height() && l.css("max-height", t.height()), _.call(this), "y" === i.axis || i.advanced.autoExpandHorizontalScroll || r.css("width", x(r)), n.overflowed = y.call(this), M.call(this), i.autoDraggerLength && S.call(this), b.call(this), T.call(this); var c = [Math.abs(r[0].offsetTop), Math.abs(r[0].offsetLeft)]; "x" !== i.axis && (n.overflowed[0] ? s[0].height() > s[0].parent().height() ? B.call(this) : (G(t, c[0].toString(), { dir: "y", dur: 0, overwrite: "none" }), n.contentReset.y = null) : (B.call(this), "y" === i.axis ? k.call(this) : "yx" === i.axis && n.overflowed[1] && G(t, c[1].toString(), { dir: "x", dur: 0, overwrite: "none" }))), "y" !== i.axis && (n.overflowed[1] ? s[1].width() > s[1].parent().width() ? B.call(this) : (G(t, c[1].toString(), { dir: "x", dur: 0, overwrite: "none" }), n.contentReset.x = null) : (B.call(this), "x" === i.axis ? k.call(this) : "yx" === i.axis && n.overflowed[0] && G(t, c[0].toString(), { dir: "y", dur: 0, overwrite: "none" }))), o && n && (2 === o && i.callbacks.onImageLoad && "function" == typeof i.callbacks.onImageLoad ? i.callbacks.onImageLoad.call(this) : 3 === o && i.callbacks.onSelectorChange && "function" == typeof i.callbacks.onSelectorChange ? i.callbacks.onSelectorChange.call(this) : i.callbacks.onUpdate && "function" == typeof i.callbacks.onUpdate && i.callbacks.onUpdate.call(this)), N.call(this) } }) }, scrollTo: function (t, o) { if ("undefined" != typeof t && null != t) { var n = f.call(this); return e(n).each(function () { var n = e(this); if (n.data(a)) { var i = n.data(a), r = i.opt, l = { trigger: "external", scrollInertia: r.scrollInertia, scrollEasing: "mcsEaseInOut", moveDragger: !1, timeout: 60, callbacks: !0, onStart: !0, onUpdate: !0, onComplete: !0 }, s = e.extend(!0, {}, l, o), c = Y.call(this, t), d = s.scrollInertia > 0 && s.scrollInertia < 17 ? 17 : s.scrollInertia; c[0] = X.call(this, c[0], "y"), c[1] = X.call(this, c[1], "x"), s.moveDragger && (c[0] *= i.scrollRatio.y, c[1] *= i.scrollRatio.x), s.dur = ne() ? 0 : d, setTimeout(function () { null !== c[0] && "undefined" != typeof c[0] && "x" !== r.axis && i.overflowed[0] && (s.dir = "y", s.overwrite = "all", G(n, c[0].toString(), s)), null !== c[1] && "undefined" != typeof c[1] && "y" !== r.axis && i.overflowed[1] && (s.dir = "x", s.overwrite = "none", G(n, c[1].toString(), s)) }, s.timeout) } }) } }, stop: function () { var t = f.call(this); return e(t).each(function () { var t = e(this); t.data(a) && Q(t) }) }, disable: function (t) { var o = f.call(this); return e(o).each(function () { var o = e(this); if (o.data(a)) { o.data(a); N.call(this, "remove"), k.call(this), t && B.call(this), M.call(this, !0), o.addClass(d[3]) } }) }, destroy: function () { var t = f.call(this); return e(t).each(function () { var n = e(this); if (n.data(a)) { var i = n.data(a), r = i.opt, l = e("#mCSB_" + i.idx), s = e("#mCSB_" + i.idx + "_container"), c = e(".mCSB_" + i.idx + "_scrollbar"); r.live && m(r.liveSelector || e(t).selector), N.call(this, "remove"), k.call(this), B.call(this), n.removeData(a), \$(this, "mcs"), c.remove(), s.find("img." + d[2]).removeClass(d[2]), l.replaceWith(s.contents()), n.removeClass(o + " _" + a + "_" + i.idx + " " + d[6] + " " + d[7] + " " + d[5] + " " + d[3]).addClass(d[4]) } }) } }, f = function () { return "object" != typeof e(this) || e(this).length < 1 ? n : this }, h = function (t) { var o = ["rounded", "rounded-dark", "rounded-dots", "rounded-dots-dark"], a = ["rounded-dots", "rounded-dots-dark", "3d", "3d-dark", "3d-thick", "3d-thick-dark", "inset", "inset-dark", "inset-2", "inset-2-dark", "inset-3", "inset-3-dark"], n = ["minimal", "minimal-dark"], i = ["minimal", "minimal-dark"], r = ["minimal", "minimal-dark"]; t.autoDraggerLength = e.inArray(t.theme, o) > -1 ? !1 : t.autoDraggerLength, t.autoExpandScrollbar = e.inArray(t.theme, a) > -1 ? !1 : t.autoExpandScrollbar, t.scrollButtons.enable = e.inArray(t.theme, n) > -1 ? !1 : t.scrollButtons.enable, t.autoHideScrollbar = e.inArray(t.theme, i) > -1 ? !0 : t.autoHideScrollbar, t.scrollbarPosition = e.inArray(t.theme, r) > -1 ? "outside" : t.scrollbarPosition }, m = function (e) { l[e] && (clearTimeout(l[e]), \$(l, e)) }, p = function (e) { return "yx" === e || "xy" === e || "auto" === e ? "yx" : "x" === e || "horizontal" === e ? "x" : "y" }, g = function (e) { return "stepped" === e || "pixels" === e || "step" === e || "click" === e ? "stepped" : "stepless" }, v = function () { var t = e(this), n = t.data(a), i = n.opt, r = i.autoExpandScrollbar ? " " + d[1] + "_expand" : "", l = ["<div id='mCSB_" + n.idx + "_scrollbar_vertical' class='mCSB_scrollTools mCSB_" + n.idx + "_scrollbar mCS-" + i.theme + " mCSB_scrollTools_vertical" + r + "'><div class='" + d[12] + "'><div id='mCSB_" + n.idx + "_dragger_vertical' class='mCSB_dragger' style='position:absolute;'><div class='mCSB_dragger_bar' /></div><div class='mCSB_draggerRail' /></div></div>", "<div id='mCSB_" + n.idx + "_scrollbar_horizontal' class='mCSB_scrollTools mCSB_" + n.idx + "_scrollbar mCS-" + i.theme + " mCSB_scrollTools_horizontal" + r + "'><div class='" + d[12] + "'><div id='mCSB_" + n.idx + "_dragger_horizontal' class='mCSB_dragger' style='position:absolute;'><div class='mCSB_dragger_bar' /></div><div class='mCSB_draggerRail' /></div></div>"], s = "yx" === i.axis ? "mCSB_vertical_horizontal" : "x" === i.axis ? "mCSB_horizontal" : "mCSB_vertical", c = "yx" === i.axis ? l[0] + l[1] : "x" === i.axis ? l[1] : l[0], u = "yx" === i.axis ? "<div id='mCSB_" + n.idx + "_container_wrapper' class='mCSB_container_wrapper' />" : "", f = i.autoHideScrollbar ? " " + d[6] : "", h = "x" !== i.axis && "rtl" === n.langDir ? " " + d[7] : ""; i.setWidth && t.css("width", i.setWidth), i.setHeight && t.css("height", i.setHeight), i.setLeft = "y" !== i.axis && "rtl" === n.langDir ? "989999px" : i.setLeft, t.addClass(o + " _" + a + "_" + n.idx + f + h).wrapInner("<div id='mCSB_" + n.idx + "' class='mCustomScrollBox mCS-" + i.theme + " " + s + "'><div id='mCSB_" + n.idx + "_container' class='mCSB_container' style='position:relative; top:" + i.setTop + "; left:" + i.setLeft + ";' dir='" + n.langDir + "' /></div>"); var m = e("#mCSB_" + n.idx), p = e("#mCSB_" + n.idx + "_container"); "y" === i.axis || i.advanced.autoExpandHorizontalScroll || p.css("width", x(p)), "outside" === i.scrollbarPosition ? ("static" === t.css("position") && t.css("position", "relative"), t.css("overflow", "visible"), m.addClass("mCSB_outside").after(c)) : (m.addClass("mCSB_inside").append(c), p.wrap(u)), w.call(this); var g = [e("#mCSB_" + n.idx + "_dragger_vertical"), e("#mCSB_" + n.idx + "_dragger_horizontal")]; g[0].css("min-height", g[0].height()), g[1].css("min-width", g[1].width()) }, x = function (t) { var o = [t[0].scrollWidth, Math.max.apply(Math, t.children().map(function () { return e(this).outerWidth(!0) }).get())], a = t.parent().width(); return o[0] > a ? o[0] : o[1] > a ? o[1] : "100%" }, _ = function () { var t = e(this), o = t.data(a), n = o.opt, i = e("#mCSB_" + o.idx + "_container"); if (n.advanced.autoExpandHorizontalScroll && "y" !== n.axis) { i.css({ width: "auto", "min-width": 0, "overflow-x": "scroll" }); var r = Math.ceil(i[0].scrollWidth); 3 === n.advanced.autoExpandHorizontalScroll || 2 !== n.advanced.autoExpandHorizontalScroll && r > i.parent().width() ? i.css({ width: r, "min-width": "100%", "overflow-x": "inherit" }) : i.css({ "overflow-x": "inherit", position: "absolute" }).wrap("<div class='mCSB_h_wrapper' style='position:relative; left:0; width:999999px;' />").css({ width: Math.ceil(i[0].getBoundingClientRect().right + .4) - Math.floor(i[0].getBoundingClientRect().left), "min-width": "100%", position: "relative" }).unwrap() } }, w = function () { var t = e(this), o = t.data(a), n = o.opt, i = e(".mCSB_" + o.idx + "_scrollbar:first"), r = oe(n.scrollButtons.tabindex) ? "tabindex='" + n.scrollButtons.tabindex + "'" : "", l = ["<a href='#' class='" + d[13] + "' " + r + " />", "<a href='#' class='" + d[14] + "' " + r + " />", "<a href='#' class='" + d[15] + "' " + r + " />", "<a href='#' class='" + d[16] + "' " + r + " />"], s = ["x" === n.axis ? l[2] : l[0], "x" === n.axis ? l[3] : l[1], l[2], l[3]]; n.scrollButtons.enable && i.prepend(s[0]).append(s[1]).next(".mCSB_scrollTools").prepend(s[2]).append(s[3]) }, S = function () { var t = e(this), o = t.data(a), n = e("#mCSB_" + o.idx), i = e("#mCSB_" + o.idx + "_container"), r = [e("#mCSB_" + o.idx + "_dragger_vertical"), e("#mCSB_" + o.idx + "_dragger_horizontal")], l = [n.height() / i.outerHeight(!1), n.width() / i.outerWidth(!1)], c = [parseInt(r[0].css("min-height")), Math.round(l[0] * r[0].parent().height()), parseInt(r[1].css("min-width")), Math.round(l[1] * r[1].parent().width())], d = s && c[1] < c[0] ? c[0] : c[1], u = s && c[3] < c[2] ? c[2] : c[3]; r[0].css({ height: d, "max-height": r[0].parent().height() - 10 }).find(".mCSB_dragger_bar").css({ "line-height": c[0] + "px" }), r[1].css({ width: u, "max-width": r[1].parent().width() - 10 }) }, b = function () { var t = e(this), o = t.data(a), n = e("#mCSB_" + o.idx), i = e("#mCSB_" + o.idx + "_container"), r = [e("#mCSB_" + o.idx + "_dragger_vertical"), e("#mCSB_" + o.idx + "_dragger_horizontal")], l = [i.outerHeight(!1) - n.height(), i.outerWidth(!1) - n.width()], s = [l[0] / (r[0].parent().height() - r[0].height()), l[1] / (r[1].parent().width() - r[1].width())]; o.scrollRatio = { y: s[0], x: s[1] } }, C = function (e, t, o) { var a = o ? d[0] + "_expanded" : "", n = e.closest(".mCSB_scrollTools"); "active" === t ? (e.toggleClass(d[0] + " " + a), n.toggleClass(d[1]), e[0]._draggable = e[0]._draggable ? 0 : 1) : e[0]._draggable || ("hide" === t ? (e.removeClass(d[0]), n.removeClass(d[1])) : (e.addClass(d[0]), n.addClass(d[1]))) }, y = function () { var t = e(this), o = t.data(a), n = e("#mCSB_" + o.idx), i = e("#mCSB_" + o.idx + "_container"), r = null == o.overflowed ? i.height() : i.outerHeight(!1), l = null == o.overflowed ? i.width() : i.outerWidth(!1), s = i[0].scrollHeight, c = i[0].scrollWidth; return s > r && (r = s), c > l && (l = c), [r > n.height(), l > n.width()] }, B = function () { var t = e(this), o = t.data(a), n = o.opt, i = e("#mCSB_" + o.idx), r = e("#mCSB_" + o.idx + "_container"), l = [e("#mCSB_" + o.idx + "_dragger_vertical"), e("#mCSB_" + o.idx + "_dragger_horizontal")]; if (Q(t), ("x" !== n.axis && !o.overflowed[0] || "y" === n.axis && o.overflowed[0]) && (l[0].add(r).css("top", 0), G(t, "_resetY")), "y" !== n.axis && !o.overflowed[1] || "x" === n.axis && o.overflowed[1]) { var s = dx = 0; "rtl" === o.langDir && (s = i.width() - r.outerWidth(!1), dx = Math.abs(s / o.scrollRatio.x)), r.css("left", s), l[1].css("left", dx), G(t, "_resetX") } }, T = function () { function t() { r = setTimeout(function () { e.event.special.mousewheel ? (clearTimeout(r), W.call(o[0])) : t() }, 100) } var o = e(this), n = o.data(a), i = n.opt; if (!n.bindEvents) { if (I.call(this), i.contentTouchScroll && D.call(this), E.call(this), i.mouseWheel.enable) { var r; t() } P.call(this), U.call(this), i.advanced.autoScrollOnFocus && H.call(this), i.scrollButtons.enable && F.call(this), i.keyboard.enable && q.call(this), n.bindEvents = !0 } }, k = function () { var t = e(this), o = t.data(a), n = o.opt, i = a + "_" + o.idx, r = ".mCSB_" + o.idx + "_scrollbar", l = e("#mCSB_" + o.idx + ",#mCSB_" + o.idx + "_container,#mCSB_" + o.idx + "_container_wrapper," + r + " ." + d[12] + ",#mCSB_" + o.idx + "_dragger_vertical,#mCSB_" + o.idx + "_dragger_horizontal," + r + ">a"), s = e("#mCSB_" + o.idx + "_container"); n.advanced.releaseDraggableSelectors && l.add(e(n.advanced.releaseDraggableSelectors)), n.advanced.extraDraggableSelectors && l.add(e(n.advanced.extraDraggableSelectors)), o.bindEvents && (e(document).add(e(!A() || top.document)).unbind("." + i), l.each(function () { e(this).unbind("." + i) }), clearTimeout(t[0]._focusTimeout), \$(t[0], "_focusTimeout"), clearTimeout(o.sequential.step), \$(o.sequential, "step"), clearTimeout(s[0].onCompleteTimeout), \$(s[0], "onCompleteTimeout"), o.bindEvents = !1) }, M = function (t) { var o = e(this), n = o.data(a), i = n.opt, r = e("#mCSB_" + n.idx + "_container_wrapper"), l = r.length ? r : e("#mCSB_" + n.idx + "_container"), s = [e("#mCSB_" + n.idx + "_scrollbar_vertical"), e("#mCSB_" + n.idx + "_scrollbar_horizontal")], c = [s[0].find(".mCSB_dragger"), s[1].find(".mCSB_dragger")]; "x" !== i.axis && (n.overflowed[0] && !t ? (s[0].add(c[0]).add(s[0].children("a")).css("display", "block"), l.removeClass(d[8] + " " + d[10])) : (i.alwaysShowScrollbar ? (2 !== i.alwaysShowScrollbar && c[0].css("display", "none"), l.removeClass(d[10])) : (s[0].css("display", "none"), l.addClass(d[10])), l.addClass(d[8]))), "y" !== i.axis && (n.overflowed[1] && !t ? (s[1].add(c[1]).add(s[1].children("a")).css("display", "block"), l.removeClass(d[9] + " " + d[11])) : (i.alwaysShowScrollbar ? (2 !== i.alwaysShowScrollbar && c[1].css("display", "none"), l.removeClass(d[11])) : (s[1].css("display", "none"), l.addClass(d[11])), l.addClass(d[9]))), n.overflowed[0] || n.overflowed[1] ? o.removeClass(d[5]) : o.addClass(d[5]) }, O = function (t) { var o = t.type, a = t.target.ownerDocument !== document && null !== frameElement ? [e(frameElement).offset().top, e(frameElement).offset().left] : null, n = A() && t.target.ownerDocument !== top.document && null !== frameElement ? [e(t.view.frameElement).offset().top, e(t.view.frameElement).offset().left] : [0, 0]; switch (o) { case "pointerdown": case "MSPointerDown": case "pointermove": case "MSPointerMove": case "pointerup": case "MSPointerUp": return a ? [t.originalEvent.pageY - a[0] + n[0], t.originalEvent.pageX - a[1] + n[1], !1] : [t.originalEvent.pageY, t.originalEvent.pageX, !1]; case "touchstart": case "touchmove": case "touchend": var i = t.originalEvent.touches[0] || t.originalEvent.changedTouches[0], r = t.originalEvent.touches.length || t.originalEvent.changedTouches.length; return t.target.ownerDocument !== document ? [i.screenY, i.screenX, r > 1] : [i.pageY, i.pageX, r > 1]; default: return a ? [t.pageY - a[0] + n[0], t.pageX - a[1] + n[1], !1] : [t.pageY, t.pageX, !1] } }, I = function () { function t(e, t, a, n) { if (h[0].idleTimer = d.scrollInertia < 233 ? 250 : 0, o.attr("id") === f[1]) var i = "x", s = (o[0].offsetLeft - t + n) * l.scrollRatio.x; else var i = "y", s = (o[0].offsetTop - e + a) * l.scrollRatio.y; G(r, s.toString(), { dir: i, drag: !0 }) } var o, n, i, r = e(this), l = r.data(a), d = l.opt, u = a + "_" + l.idx, f = ["mCSB_" + l.idx + "_dragger_vertical", "mCSB_" + l.idx + "_dragger_horizontal"], h = e("#mCSB_" + l.idx + "_container"), m = e("#" + f[0] + ",#" + f[1]), p = d.advanced.releaseDraggableSelectors ? m.add(e(d.advanced.releaseDraggableSelectors)) : m, g = d.advanced.extraDraggableSelectors ? e(!A() || top.document).add(e(d.advanced.extraDraggableSelectors)) : e(!A() || top.document); m.bind("contextmenu." + u, function (e) { e.preventDefault() }).bind("mousedown." + u + " touchstart." + u + " pointerdown." + u + " MSPointerDown." + u, function (t) { if (t.stopImmediatePropagation(), t.preventDefault(), ee(t)) { c = !0, s && (document.onselectstart = function () { return !1 }), L.call(h, !1), Q(r), o = e(this); var a = o.offset(), l = O(t)[0] - a.top, u = O(t)[1] - a.left, f = o.height() + a.top, m = o.width() + a.left; f > l && l > 0 && m > u && u > 0 && (n = l, i = u), C(o, "active", d.autoExpandScrollbar) } }).bind("touchmove." + u, function (e) { e.stopImmediatePropagation(), e.preventDefault(); var a = o.offset(), r = O(e)[0] - a.top, l = O(e)[1] - a.left; t(n, i, r, l) }), e(document).add(g).bind("mousemove." + u + " pointermove." + u + " MSPointerMove." + u, function (e) { if (o) { var a = o.offset(), r = O(e)[0] - a.top, l = O(e)[1] - a.left; if (n === r && i === l) return; t(n, i, r, l) } }).add(p).bind("mouseup." + u + " touchend." + u + " pointerup." + u + " MSPointerUp." + u, function () { o && (C(o, "active", d.autoExpandScrollbar), o = null), c = !1, s && (document.onselectstart = null), L.call(h, !0) }) }, D = function () { function o(e) { if (!te(e) || c || O(e)[2]) return void (t = 0); t = 1, b = 0, C = 0, d = 1, y.removeClass("mCS_touch_action"); var o = I.offset(); u = O(e)[0] - o.top, f = O(e)[1] - o.left, z = [O(e)[0], O(e)[1]] } function n(e) { if (te(e) && !c && !O(e)[2] && (T.documentTouchScroll || e.preventDefault(), e.stopImmediatePropagation(), (!C || b) && d)) { g = K(); var t = M.offset(), o = O(e)[0] - t.top, a = O(e)[1] - t.left, n = "mcsLinearOut"; if (E.push(o), W.push(a), z[2] = Math.abs(O(e)[0] - z[0]), z[3] = Math.abs(O(e)[1] - z[1]), B.overflowed[0]) var i = D[0].parent().height() - D[0].height(), r = u - o > 0 && o - u > -(i * B.scrollRatio.y) && (2 * z[3] < z[2] || "yx" === T.axis); if (B.overflowed[1]) var l = D[1].parent().width() - D[1].width(), h = f - a > 0 && a - f > -(l * B.scrollRatio.x) && (2 * z[2] < z[3] || "yx" === T.axis); r || h ? (U || e.preventDefault(), b = 1) : (C = 1, y.addClass("mCS_touch_action")), U && e.preventDefault(), w = "yx" === T.axis ? [u - o, f - a] : "x" === T.axis ? [null, f - a] : [u - o, null], I[0].idleTimer = 250, B.overflowed[0] && s(w[0], R, n, "y", "all", !0), B.overflowed[1] && s(w[1], R, n, "x", L, !0) } } function i(e) { if (!te(e) || c || O(e)[2]) return void (t = 0); t = 1, e.stopImmediatePropagation(), Q(y), p = K(); var o = M.offset(); h = O(e)[0] - o.top, m = O(e)[1] - o.left, E = [], W = [] } function r(e) { if (te(e) && !c && !O(e)[2]) { d = 0, e.stopImmediatePropagation(), b = 0, C = 0, v = K(); var t = M.offset(), o = O(e)[0] - t.top, a = O(e)[1] - t.left; if (!(v - g > 30)) { _ = 1e3 / (v - p); var n = "mcsEaseOut", i = 2.5 > _, r = i ? [E[E.length - 2], W[W.length - 2]] : [0, 0]; x = i ? [o - r[0], a - r[1]] : [o - h, a - m]; var u = [Math.abs(x[0]), Math.abs(x[1])]; _ = i ? [Math.abs(x[0] / 4), Math.abs(x[1] / 4)] : [_, _]; var f = [Math.abs(I[0].offsetTop) - x[0] * l(u[0] / _[0], _[0]), Math.abs(I[0].offsetLeft) - x[1] * l(u[1] / _[1], _[1])]; w = "yx" === T.axis ? [f[0], f[1]] : "x" === T.axis ? [null, f[1]] : [f[0], null], S = [4 * u[0] + T.scrollInertia, 4 * u[1] + T.scrollInertia]; var y = parseInt(T.contentTouchScroll) || 0; w[0] = u[0] > y ? w[0] : 0, w[1] = u[1] > y ? w[1] : 0, B.overflowed[0] && s(w[0], S[0], n, "y", L, !1), B.overflowed[1] && s(w[1], S[1], n, "x", L, !1) } } } function l(e, t) { var o = [1.5 * t, 2 * t, t / 1.5, t / 2]; return e > 90 ? t > 4 ? o[0] : o[3] : e > 60 ? t > 3 ? o[3] : o[2] : e > 30 ? t > 8 ? o[1] : t > 6 ? o[0] : t > 4 ? t : o[2] : t > 8 ? t : o[3] } function s(e, t, o, a, n, i) { e && G(y, e.toString(), { dur: t, scrollEasing: o, dir: a, overwrite: n, drag: i }) } var d, u, f, h, m, p, g, v, x, _, w, S, b, C, y = e(this), B = y.data(a), T = B.opt, k = a + "_" + B.idx, M = e("#mCSB_" + B.idx), I = e("#mCSB_" + B.idx + "_container"), D = [e("#mCSB_" + B.idx + "_dragger_vertical"), e("#mCSB_" + B.idx + "_dragger_horizontal")], E = [], W = [], R = 0, L = "yx" === T.axis ? "none" : "all", z = [], P = I.find("iframe"), H = ["touchstart." + k + " pointerdown." + k + " MSPointerDown." + k, "touchmove." + k + " pointermove." + k + " MSPointerMove." + k, "touchend." + k + " pointerup." + k + " MSPointerUp." + k], U = void 0 !== document.body.style.touchAction && "" !== document.body.style.touchAction; I.bind(H[0], function (e) { o(e) }).bind(H[1], function (e) { n(e) }), M.bind(H[0], function (e) { i(e) }).bind(H[2], function (e) { r(e) }), P.length && P.each(function () { e(this).bind("load", function () { A(this) && e(this.contentDocument || this.contentWindow.document).bind(H[0], function (e) { o(e), i(e) }).bind(H[1], function (e) { n(e) }).bind(H[2], function (e) { r(e) }) }) }) }, E = function () { function o() { return window.getSelection ? window.getSelection().toString() : document.selection && "Control" != document.selection.type ? document.selection.createRange().text : 0 } function n(e, t, o) { d.type = o && i ? "stepped" : "stepless", d.scrollAmount = 10, j(r, e, t, "mcsLinearOut", o ? 60 : null) } var i, r = e(this), l = r.data(a), s = l.opt, d = l.sequential, u = a + "_" + l.idx, f = e("#mCSB_" + l.idx + "_container"), h = f.parent(); f.bind("mousedown." + u, function () { t || i || (i = 1, c = !0) }).add(document).bind("mousemove." + u, function (e) { if (!t && i && o()) { var a = f.offset(), r = O(e)[0] - a.top + f[0].offsetTop, c = O(e)[1] - a.left + f[0].offsetLeft; r > 0 && r < h.height() && c > 0 && c < h.width() ? d.step && n("off", null, "stepped") : ("x" !== s.axis && l.overflowed[0] && (0 > r ? n("on", 38) : r > h.height() && n("on", 40)), "y" !== s.axis && l.overflowed[1] && (0 > c ? n("on", 37) : c > h.width() && n("on", 39))) } }).bind("mouseup." + u + " dragend." + u, function () { t || (i && (i = 0, n("off", null)), c = !1) }) }, W = function () { function t(t, a) { if (Q(o), !z(o, t.target)) { var r = "auto" !== i.mouseWheel.deltaFactor ? parseInt(i.mouseWheel.deltaFactor) : s && t.deltaFactor < 100 ? 100 : t.deltaFactor || 100, d = i.scrollInertia; if ("x" === i.axis || "x" === i.mouseWheel.axis) var u = "x", f = [Math.round(r * n.scrollRatio.x), parseInt(i.mouseWheel.scrollAmount)], h = "auto" !== i.mouseWheel.scrollAmount ? f[1] : f[0] >= l.width() ? .9 * l.width() : f[0], m = Math.abs(e("#mCSB_" + n.idx + "_container")[0].offsetLeft), p = c[1][0].offsetLeft, g = c[1].parent().width() - c[1].width(), v = "y" === i.mouseWheel.axis ? t.deltaY || a : t.deltaX; else var u = "y", f = [Math.round(r * n.scrollRatio.y), parseInt(i.mouseWheel.scrollAmount)], h = "auto" !== i.mouseWheel.scrollAmount ? f[1] : f[0] >= l.height() ? .9 * l.height() : f[0], m = Math.abs(e("#mCSB_" + n.idx + "_container")[0].offsetTop), p = c[0][0].offsetTop, g = c[0].parent().height() - c[0].height(), v = t.deltaY || a; "y" === u && !n.overflowed[0] || "x" === u && !n.overflowed[1] || ((i.mouseWheel.invert || t.webkitDirectionInvertedFromDevice) && (v = -v), i.mouseWheel.normalizeDelta && (v = 0 > v ? -1 : 1), (v > 0 && 0 !== p || 0 > v && p !== g || i.mouseWheel.preventDefault) && (t.stopImmediatePropagation(), t.preventDefault()), t.deltaFactor < 5 && !i.mouseWheel.normalizeDelta && (h = t.deltaFactor, d = 17), G(o, (m - v * h).toString(), { dir: u, dur: d })) } } if (e(this).data(a)) { var o = e(this), n = o.data(a), i = n.opt, r = a + "_" + n.idx, l = e("#mCSB_" + n.idx), c = [e("#mCSB_" + n.idx + "_dragger_vertical"), e("#mCSB_" + n.idx + "_dragger_horizontal")], d = e("#mCSB_" + n.idx + "_container").find("iframe"); d.length && d.each(function () { e(this).bind("load", function () { A(this) && e(this.contentDocument || this.contentWindow.document).bind("mousewheel." + r, function (e, o) { t(e, o) }) }) }), l.bind("mousewheel." + r, function (e, o) { t(e, o) }) } }, R = new Object, A = function (t) { var o = !1, a = !1, n = null; if (void 0 === t ? a = "#empty" : void 0 !== e(t).attr("id") && (a = e(t).attr("id")), a !== !1 && void 0 !== R[a]) return R[a]; if (t) { try { var i = t.contentDocument || t.contentWindow.document; n = i.body.innerHTML } catch (r) { } o = null !== n } else { try { var i = top.document; n = i.body.innerHTML } catch (r) { } o = null !== n } return a !== !1 && (R[a] = o), o }, L = function (e) { var t = this.find("iframe"); if (t.length) { var o = e ? "auto" : "none"; t.css("pointer-events", o) } }, z = function (t, o) { var n = o.nodeName.toLowerCase(), i = t.data(a).opt.mouseWheel.disableOver, r = ["select", "textarea"]; return e.inArray(n, i) > -1 && !(e.inArray(n, r) > -1 && !e(o).is(":focus")) }, P = function () { var t, o = e(this), n = o.data(a), i = a + "_" + n.idx, r = e("#mCSB_" + n.idx + "_container"), l = r.parent(), s = e(".mCSB_" + n.idx + "_scrollbar ." + d[12]); s.bind("mousedown." + i + " touchstart." + i + " pointerdown." + i + " MSPointerDown." + i, function (o) { c = !0, e(o.target).hasClass("mCSB_dragger") || (t = 1) }).bind("touchend." + i + " pointerup." + i + " MSPointerUp." + i, function () { c = !1 }).bind("click." + i, function (a) { if (t && (t = 0, e(a.target).hasClass(d[12]) || e(a.target).hasClass("mCSB_draggerRail"))) { Q(o); var i = e(this), s = i.find(".mCSB_dragger"); if (i.parent(".mCSB_scrollTools_horizontal").length > 0) { if (!n.overflowed[1]) return; var c = "x", u = a.pageX > s.offset().left ? -1 : 1, f = Math.abs(r[0].offsetLeft) - u * (.9 * l.width()) } else { if (!n.overflowed[0]) return; var c = "y", u = a.pageY > s.offset().top ? -1 : 1, f = Math.abs(r[0].offsetTop) - u * (.9 * l.height()) } G(o, f.toString(), { dir: c, scrollEasing: "mcsEaseInOut" }) } }) }, H = function () { var t = e(this), o = t.data(a), n = o.opt, i = a + "_" + o.idx, r = e("#mCSB_" + o.idx + "_container"), l = r.parent(); r.bind("focusin." + i, function () { var o = e(document.activeElement), a = r.find(".mCustomScrollBox").length, i = 0; o.is(n.advanced.autoScrollOnFocus) && (Q(t), clearTimeout(t[0]._focusTimeout), t[0]._focusTimer = a ? (i + 17) * a : 0, t[0]._focusTimeout = setTimeout(function () { var e = [ae(o)[0], ae(o)[1]], a = [r[0].offsetTop, r[0].offsetLeft], s = [a[0] + e[0] >= 0 && a[0] + e[0] < l.height() - o.outerHeight(!1), a[1] + e[1] >= 0 && a[0] + e[1] < l.width() - o.outerWidth(!1)], c = "yx" !== n.axis || s[0] || s[1] ? "all" : "none"; "x" === n.axis || s[0] || G(t, e[0].toString(), { dir: "y", scrollEasing: "mcsEaseInOut", overwrite: c, dur: i }), "y" === n.axis || s[1] || G(t, e[1].toString(), { dir: "x", scrollEasing: "mcsEaseInOut", overwrite: c, dur: i }) }, t[0]._focusTimer)) }) }, U = function () { var t = e(this), o = t.data(a), n = a + "_" + o.idx, i = e("#mCSB_" + o.idx + "_container").parent(); i.bind("scroll." + n, function () { 0 === i.scrollTop() && 0 === i.scrollLeft() || e(".mCSB_" + o.idx + "_scrollbar").css("visibility", "hidden") }) }, F = function () { var t = e(this), o = t.data(a), n = o.opt, i = o.sequential, r = a + "_" + o.idx, l = ".mCSB_" + o.idx + "_scrollbar", s = e(l + ">a"); s.bind("contextmenu." + r, function (e) { e.preventDefault() }).bind("mousedown." + r + " touchstart." + r + " pointerdown." + r + " MSPointerDown." + r + " mouseup." + r + " touchend." + r + " pointerup." + r + " MSPointerUp." + r + " mouseout." + r + " pointerout." + r + " MSPointerOut." + r + " click." + r, function (a) { function r(e, o) { i.scrollAmount = n.scrollButtons.scrollAmount, j(t, e, o) } if (a.preventDefault(), ee(a)) { var l = e(this).attr("class"); switch (i.type = n.scrollButtons.scrollType, a.type) { case "mousedown": case "touchstart": case "pointerdown": case "MSPointerDown": if ("stepped" === i.type) return; c = !0, o.tweenRunning = !1, r("on", l); break; case "mouseup": case "touchend": case "pointerup": case "MSPointerUp": case "mouseout": case "pointerout": case "MSPointerOut": if ("stepped" === i.type) return; c = !1, i.dir && r("off", l); break; case "click": if ("stepped" !== i.type || o.tweenRunning) return; r("on", l) } } }) }, q = function () { function t(t) { function a(e, t) { r.type = i.keyboard.scrollType, r.scrollAmount = i.keyboard.scrollAmount, "stepped" === r.type && n.tweenRunning || j(o, e, t) } switch (t.type) { case "blur": n.tweenRunning && r.dir && a("off", null); break; case "keydown": case "keyup": var l = t.keyCode ? t.keyCode : t.which, s = "on"; if ("x" !== i.axis && (38 === l || 40 === l) || "y" !== i.axis && (37 === l || 39 === l)) { if ((38 === l || 40 === l) && !n.overflowed[0] || (37 === l || 39 === l) && !n.overflowed[1]) return; "keyup" === t.type && (s = "off"), e(document.activeElement).is(u) || (t.preventDefault(), t.stopImmediatePropagation(), a(s, l)) } else if (33 === l || 34 === l) { if ((n.overflowed[0] || n.overflowed[1]) && (t.preventDefault(), t.stopImmediatePropagation()), "keyup" === t.type) { Q(o); var f = 34 === l ? -1 : 1; if ("x" === i.axis || "yx" === i.axis && n.overflowed[1] && !n.overflowed[0]) var h = "x", m = Math.abs(c[0].offsetLeft) - f * (.9 * d.width()); else var h = "y", m = Math.abs(c[0].offsetTop) - f * (.9 * d.height()); G(o, m.toString(), { dir: h, scrollEasing: "mcsEaseInOut" }) } } else if ((35 === l || 36 === l) && !e(document.activeElement).is(u) && ((n.overflowed[0] || n.overflowed[1]) && (t.preventDefault(), t.stopImmediatePropagation()), "keyup" === t.type)) { if ("x" === i.axis || "yx" === i.axis && n.overflowed[1] && !n.overflowed[0]) var h = "x", m = 35 === l ? Math.abs(d.width() - c.outerWidth(!1)) : 0; else var h = "y", m = 35 === l ? Math.abs(d.height() - c.outerHeight(!1)) : 0; G(o, m.toString(), { dir: h, scrollEasing: "mcsEaseInOut" }) } } } var o = e(this), n = o.data(a), i = n.opt, r = n.sequential, l = a + "_" + n.idx, s = e("#mCSB_" + n.idx), c = e("#mCSB_" + n.idx + "_container"), d = c.parent(), u = "input,textarea,select,datalist,keygen,[contenteditable='true']", f = c.find("iframe"), h = ["blur." + l + " keydown." + l + " keyup." + l]; f.length && f.each(function () { e(this).bind("load", function () { A(this) && e(this.contentDocument || this.contentWindow.document).bind(h[0], function (e) { t(e) }) }) }), s.attr("tabindex", "0").bind(h[0], function (e) { t(e) }) }, j = function (t, o, n, i, r) { function l(e) { u.snapAmount && (f.scrollAmount = u.snapAmount instanceof Array ? "x" === f.dir[0] ? u.snapAmount[1] : u.snapAmount[0] : u.snapAmount); var o = "stepped" !== f.type, a = r ? r : e ? o ? p / 1.5 : g : 1e3 / 60, n = e ? o ? 7.5 : 40 : 2.5, s = [Math.abs(h[0].offsetTop), Math.abs(h[0].offsetLeft)], d = [c.scrollRatio.y > 10 ? 10 : c.scrollRatio.y, c.scrollRatio.x > 10 ? 10 : c.scrollRatio.x], m = "x" === f.dir[0] ? s[1] + f.dir[1] * (d[1] * n) : s[0] + f.dir[1] * (d[0] * n), v = "x" === f.dir[0] ? s[1] + f.dir[1] * parseInt(f.scrollAmount) : s[0] + f.dir[1] * parseInt(f.scrollAmount), x = "auto" !== f.scrollAmount ? v : m, _ = i ? i : e ? o ? "mcsLinearOut" : "mcsEaseInOut" : "mcsLinear", w = !!e; return e && 17 > a && (x = "x" === f.dir[0] ? s[1] : s[0]), G(t, x.toString(), { dir: f.dir[0], scrollEasing: _, dur: a, onComplete: w }), e ? void (f.dir = !1) : (clearTimeout(f.step), void (f.step = setTimeout(function () { l() }, a))) } function s() { clearTimeout(f.step), \$(f, "step"), Q(t) } var c = t.data(a), u = c.opt, f = c.sequential, h = e("#mCSB_" + c.idx + "_container"), m = "stepped" === f.type, p = u.scrollInertia < 26 ? 26 : u.scrollInertia, g = u.scrollInertia < 1 ? 17 : u.scrollInertia; switch (o) { case "on": if (f.dir = [n === d[16] || n === d[15] || 39 === n || 37 === n ? "x" : "y", n === d[13] || n === d[15] || 38 === n || 37 === n ? -1 : 1], Q(t), oe(n) && "stepped" === f.type) return; l(m); break; case "off": s(), (m || c.tweenRunning && f.dir) && l(!0) } }, Y = function (t) { var o = e(this).data(a).opt, n = []; return "function" == typeof t && (t = t()), t instanceof Array ? n = t.length > 1 ? [t[0], t[1]] : "x" === o.axis ? [null, t[0]] : [t[0], null] : (n[0] = t.y ? t.y : t.x || "x" === o.axis ? null : t, n[1] = t.x ? t.x : t.y || "y" === o.axis ? null : t), "function" == typeof n[0] && (n[0] = n[0]()), "function" == typeof n[1] && (n[1] = n[1]()), n }, X = function (t, o) { if (null != t && "undefined" != typeof t) { var n = e(this), i = n.data(a), r = i.opt, l = e("#mCSB_" + i.idx + "_container"), s = l.parent(), c = typeof t; o || (o = "x" === r.axis ? "x" : "y"); var d = "x" === o ? l.outerWidth(!1) - s.width() : l.outerHeight(!1) - s.height(), f = "x" === o ? l[0].offsetLeft : l[0].offsetTop, h = "x" === o ? "left" : "top"; switch (c) { case "function": return t(); case "object": var m = t.jquery ? t : e(t); if (!m.length) return; return "x" === o ? ae(m)[1] : ae(m)[0]; case "string": case "number": if (oe(t)) return Math.abs(t); if (-1 !== t.indexOf("%")) return Math.abs(d * parseInt(t) / 100); if (-1 !== t.indexOf("-=")) return Math.abs(f - parseInt(t.split("-=")[1])); if (-1 !== t.indexOf("+=")) { var p = f + parseInt(t.split("+=")[1]); return p >= 0 ? 0 : Math.abs(p) } if (-1 !== t.indexOf("px") && oe(t.split("px")[0])) return Math.abs(t.split("px")[0]); if ("top" === t || "left" === t) return 0; if ("bottom" === t) return Math.abs(s.height() - l.outerHeight(!1)); if ("right" === t) return Math.abs(s.width() - l.outerWidth(!1)); if ("first" === t || "last" === t) { var m = l.find(":" + t); return "x" === o ? ae(m)[1] : ae(m)[0] } return e(t).length ? "x" === o ? ae(e(t))[1] : ae(e(t))[0] : (l.css(h, t), void u.update.call(null, n[0])) } } }, N = function (t) {
                     function o() { return clearTimeout(f[0].autoUpdate), 0 === l.parents("html").length ? void (l = null) : void (f[0].autoUpdate = setTimeout(function () { return c.advanced.updateOnSelectorChange && (s.poll.change.n = i(), s.poll.change.n !== s.poll.change.o) ? (s.poll.change.o = s.poll.change.n, void r(3)) : c.advanced.updateOnContentResize && (s.poll.size.n = l[0].scrollHeight + l[0].scrollWidth + f[0].offsetHeight + l[0].offsetHeight + l[0].offsetWidth, s.poll.size.n !== s.poll.size.o) ? (s.poll.size.o = s.poll.size.n, void r(1)) : !c.advanced.updateOnImageLoad || "auto" === c.advanced.updateOnImageLoad && "y" === c.axis || (s.poll.img.n = f.find("img").length, s.poll.img.n === s.poll.img.o) ? void ((c.advanced.updateOnSelectorChange || c.advanced.updateOnContentResize || c.advanced.updateOnImageLoad) && o()) : (s.poll.img.o = s.poll.img.n, void f.find("img").each(function () { n(this) })) }, c.advanced.autoUpdateTimeout)) } function n(t) {
                         function o(e, t) {
                             return function () {
                                 return t.apply(e, arguments)
                             }
                         } function a() { this.onload = null, e(t).addClass(d[2]), r(2) } if (e(t).hasClass(d[2])) return void r(); var n = new Image; n.onload = o(n, a), n.src = t.src
-                    } function i() { c.advanced.updateOnSelectorChange === !0 && (c.advanced.updateOnSelectorChange = "*"); var e = 0, t = f.find(c.advanced.updateOnSelectorChange); return c.advanced.updateOnSelectorChange && t.length > 0 && t.each(function () { e += this.offsetHeight + this.offsetWidth }), e } function r(e) { clearTimeout(f[0].autoUpdate), u.update.call(null, l[0], e) } var l = e(this), s = l.data(a), c = s.opt, f = e("#mCSB_" + s.idx + "_container"); return t ? (clearTimeout(f[0].autoUpdate), void $(f[0], "autoUpdate")) : void o()
-                }, V = function (e, t, o) { return Math.round(e / t) * t - o }, Q = function (t) { var o = t.data(a), n = e("#mCSB_" + o.idx + "_container,#mCSB_" + o.idx + "_container_wrapper,#mCSB_" + o.idx + "_dragger_vertical,#mCSB_" + o.idx + "_dragger_horizontal"); n.each(function () { Z.call(this) }) }, G = function (t, o, n) { function i(e) { return s && c.callbacks[e] && "function" == typeof c.callbacks[e] } function r() { return [c.callbacks.alwaysTriggerOffsets || w >= S[0] + y, c.callbacks.alwaysTriggerOffsets || -B >= w] } function l() { var e = [h[0].offsetTop, h[0].offsetLeft], o = [x[0].offsetTop, x[0].offsetLeft], a = [h.outerHeight(!1), h.outerWidth(!1)], i = [f.height(), f.width()]; t[0].mcs = { content: h, top: e[0], left: e[1], draggerTop: o[0], draggerLeft: o[1], topPct: Math.round(100 * Math.abs(e[0]) / (Math.abs(a[0]) - i[0])), leftPct: Math.round(100 * Math.abs(e[1]) / (Math.abs(a[1]) - i[1])), direction: n.dir } } var s = t.data(a), c = s.opt, d = { trigger: "internal", dir: "y", scrollEasing: "mcsEaseOut", drag: !1, dur: c.scrollInertia, overwrite: "all", callbacks: !0, onStart: !0, onUpdate: !0, onComplete: !0 }, n = e.extend(d, n), u = [n.dur, n.drag ? 0 : n.dur], f = e("#mCSB_" + s.idx), h = e("#mCSB_" + s.idx + "_container"), m = h.parent(), p = c.callbacks.onTotalScrollOffset ? Y.call(t, c.callbacks.onTotalScrollOffset) : [0, 0], g = c.callbacks.onTotalScrollBackOffset ? Y.call(t, c.callbacks.onTotalScrollBackOffset) : [0, 0]; if (s.trigger = n.trigger, 0 === m.scrollTop() && 0 === m.scrollLeft() || (e(".mCSB_" + s.idx + "_scrollbar").css("visibility", "visible"), m.scrollTop(0).scrollLeft(0)), "_resetY" !== o || s.contentReset.y || (i("onOverflowYNone") && c.callbacks.onOverflowYNone.call(t[0]), s.contentReset.y = 1), "_resetX" !== o || s.contentReset.x || (i("onOverflowXNone") && c.callbacks.onOverflowXNone.call(t[0]), s.contentReset.x = 1), "_resetY" !== o && "_resetX" !== o) { if (!s.contentReset.y && t[0].mcs || !s.overflowed[0] || (i("onOverflowY") && c.callbacks.onOverflowY.call(t[0]), s.contentReset.x = null), !s.contentReset.x && t[0].mcs || !s.overflowed[1] || (i("onOverflowX") && c.callbacks.onOverflowX.call(t[0]), s.contentReset.x = null), c.snapAmount) { var v = c.snapAmount instanceof Array ? "x" === n.dir ? c.snapAmount[1] : c.snapAmount[0] : c.snapAmount; o = V(o, v, c.snapOffset) } switch (n.dir) { case "x": var x = e("#mCSB_" + s.idx + "_dragger_horizontal"), _ = "left", w = h[0].offsetLeft, S = [f.width() - h.outerWidth(!1), x.parent().width() - x.width()], b = [o, 0 === o ? 0 : o / s.scrollRatio.x], y = p[1], B = g[1], T = y > 0 ? y / s.scrollRatio.x : 0, k = B > 0 ? B / s.scrollRatio.x : 0; break; case "y": var x = e("#mCSB_" + s.idx + "_dragger_vertical"), _ = "top", w = h[0].offsetTop, S = [f.height() - h.outerHeight(!1), x.parent().height() - x.height()], b = [o, 0 === o ? 0 : o / s.scrollRatio.y], y = p[0], B = g[0], T = y > 0 ? y / s.scrollRatio.y : 0, k = B > 0 ? B / s.scrollRatio.y : 0 }b[1] < 0 || 0 === b[0] && 0 === b[1] ? b = [0, 0] : b[1] >= S[1] ? b = [S[0], S[1]] : b[0] = -b[0], t[0].mcs || (l(), i("onInit") && c.callbacks.onInit.call(t[0])), clearTimeout(h[0].onCompleteTimeout), J(x[0], _, Math.round(b[1]), u[1], n.scrollEasing), !s.tweenRunning && (0 === w && b[0] >= 0 || w === S[0] && b[0] <= S[0]) || J(h[0], _, Math.round(b[0]), u[0], n.scrollEasing, n.overwrite, { onStart: function () { n.callbacks && n.onStart && !s.tweenRunning && (i("onScrollStart") && (l(), c.callbacks.onScrollStart.call(t[0])), s.tweenRunning = !0, C(x), s.cbOffsets = r()) }, onUpdate: function () { n.callbacks && n.onUpdate && i("whileScrolling") && (l(), c.callbacks.whileScrolling.call(t[0])) }, onComplete: function () { if (n.callbacks && n.onComplete) { "yx" === c.axis && clearTimeout(h[0].onCompleteTimeout); var e = h[0].idleTimer || 0; h[0].onCompleteTimeout = setTimeout(function () { i("onScroll") && (l(), c.callbacks.onScroll.call(t[0])), i("onTotalScroll") && b[1] >= S[1] - T && s.cbOffsets[0] && (l(), c.callbacks.onTotalScroll.call(t[0])), i("onTotalScrollBack") && b[1] <= k && s.cbOffsets[1] && (l(), c.callbacks.onTotalScrollBack.call(t[0])), s.tweenRunning = !1, h[0].idleTimer = 0, C(x, "hide") }, e) } } }) } }, J = function (e, t, o, a, n, i, r) { function l() { S.stop || (x || m.call(), x = K() - v, s(), x >= S.time && (S.time = x > S.time ? x + f - (x - S.time) : x + f - 1, S.time < x + 1 && (S.time = x + 1)), S.time < a ? S.id = h(l) : g.call()) } function s() { a > 0 ? (S.currVal = u(S.time, _, b, a, n), w[t] = Math.round(S.currVal) + "px") : w[t] = o + "px", p.call() } function c() { f = 1e3 / 60, S.time = x + f, h = window.requestAnimationFrame ? window.requestAnimationFrame : function (e) { return s(), setTimeout(e, .01) }, S.id = h(l) } function d() { null != S.id && (window.requestAnimationFrame ? window.cancelAnimationFrame(S.id) : clearTimeout(S.id), S.id = null) } function u(e, t, o, a, n) { switch (n) { case "linear": case "mcsLinear": return o * e / a + t; case "mcsLinearOut": return e /= a, e--, o * Math.sqrt(1 - e * e) + t; case "easeInOutSmooth": return e /= a / 2, 1 > e ? o / 2 * e * e + t : (e--, -o / 2 * (e * (e - 2) - 1) + t); case "easeInOutStrong": return e /= a / 2, 1 > e ? o / 2 * Math.pow(2, 10 * (e - 1)) + t : (e--, o / 2 * (-Math.pow(2, -10 * e) + 2) + t); case "easeInOut": case "mcsEaseInOut": return e /= a / 2, 1 > e ? o / 2 * e * e * e + t : (e -= 2, o / 2 * (e * e * e + 2) + t); case "easeOutSmooth": return e /= a, e--, -o * (e * e * e * e - 1) + t; case "easeOutStrong": return o * (-Math.pow(2, -10 * e / a) + 1) + t; case "easeOut": case "mcsEaseOut": default: var i = (e /= a) * e, r = i * e; return t + o * (.499999999999997 * r * i + -2.5 * i * i + 5.5 * r + -6.5 * i + 4 * e) } } e._mTween || (e._mTween = { top: {}, left: {} }); var f, h, r = r || {}, m = r.onStart || function () { }, p = r.onUpdate || function () { }, g = r.onComplete || function () { }, v = K(), x = 0, _ = e.offsetTop, w = e.style, S = e._mTween[t]; "left" === t && (_ = e.offsetLeft); var b = o - _; S.stop = 0, "none" !== i && d(), c() }, K = function () { return window.performance && window.performance.now ? window.performance.now() : window.performance && window.performance.webkitNow ? window.performance.webkitNow() : Date.now ? Date.now() : (new Date).getTime() }, Z = function () { var e = this; e._mTween || (e._mTween = { top: {}, left: {} }); for (var t = ["top", "left"], o = 0; o < t.length; o++) { var a = t[o]; e._mTween[a].id && (window.requestAnimationFrame ? window.cancelAnimationFrame(e._mTween[a].id) : clearTimeout(e._mTween[a].id), e._mTween[a].id = null, e._mTween[a].stop = 1) } }, $ = function (e, t) { try { delete e[t] } catch (o) { e[t] = null } }, ee = function (e) { return !(e.which && 1 !== e.which) }, te = function (e) { var t = e.originalEvent.pointerType; return !(t && "touch" !== t && 2 !== t) }, oe = function (e) { return !isNaN(parseFloat(e)) && isFinite(e) }, ae = function (e) { var t = e.parents(".mCSB_container"); return [e.offset().top - t.offset().top, e.offset().left - t.offset().left] }, ne = function () { function e() { var e = ["webkit", "moz", "ms", "o"]; if ("hidden" in document) return "hidden"; for (var t = 0; t < e.length; t++)if (e[t] + "Hidden" in document) return e[t] + "Hidden"; return null } var t = e(); return t ? document[t] : !1 }; e.fn[o] = function (t) { return u[t] ? u[t].apply(this, Array.prototype.slice.call(arguments, 1)) : "object" != typeof t && t ? void e.error("Method " + t + " does not exist") : u.init.apply(this, arguments) }, e[o] = function (t) { return u[t] ? u[t].apply(this, Array.prototype.slice.call(arguments, 1)) : "object" != typeof t && t ? void e.error("Method " + t + " does not exist") : u.init.apply(this, arguments) }, e[o].defaults = i, window[o] = !0, e(window).bind("load", function () { e(n)[o](), e.extend(e.expr[":"], { mcsInView: e.expr[":"].mcsInView || function (t) { var o, a, n = e(t), i = n.parents(".mCSB_container"); if (i.length) return o = i.parent(), a = [i[0].offsetTop, i[0].offsetLeft], a[0] + ae(n)[0] >= 0 && a[0] + ae(n)[0] < o.height() - n.outerHeight(!1) && a[1] + ae(n)[1] >= 0 && a[1] + ae(n)[1] < o.width() - n.outerWidth(!1) }, mcsInSight: e.expr[":"].mcsInSight || function (t, o, a) { var n, i, r, l, s = e(t), c = s.parents(".mCSB_container"), d = "exact" === a[3] ? [[1, 0], [1, 0]] : [[.9, .1], [.6, .4]]; if (c.length) return n = [s.outerHeight(!1), s.outerWidth(!1)], r = [c[0].offsetTop + ae(s)[0], c[0].offsetLeft + ae(s)[1]], i = [c.parent()[0].offsetHeight, c.parent()[0].offsetWidth], l = [n[0] < i[0] ? d[0] : d[1], n[1] < i[1] ? d[0] : d[1]], r[0] - i[0] * l[0][0] < 0 && r[0] + n[0] - i[0] * l[0][1] >= 0 && r[1] - i[1] * l[1][0] < 0 && r[1] + n[1] - i[1] * l[1][1] >= 0 }, mcsOverflow: e.expr[":"].mcsOverflow || function (t) { var o = e(t).data(a); if (o) return o.overflowed[0] || o.overflowed[1] } }) })
+                    } function i() { c.advanced.updateOnSelectorChange === !0 && (c.advanced.updateOnSelectorChange = "*"); var e = 0, t = f.find(c.advanced.updateOnSelectorChange); return c.advanced.updateOnSelectorChange && t.length > 0 && t.each(function () { e += this.offsetHeight + this.offsetWidth }), e } function r(e) { clearTimeout(f[0].autoUpdate), u.update.call(null, l[0], e) } var l = e(this), s = l.data(a), c = s.opt, f = e("#mCSB_" + s.idx + "_container"); return t ? (clearTimeout(f[0].autoUpdate), void \$(f[0], "autoUpdate")) : void o()
+                }, V = function (e, t, o) { return Math.round(e / t) * t - o }, Q = function (t) { var o = t.data(a), n = e("#mCSB_" + o.idx + "_container,#mCSB_" + o.idx + "_container_wrapper,#mCSB_" + o.idx + "_dragger_vertical,#mCSB_" + o.idx + "_dragger_horizontal"); n.each(function () { Z.call(this) }) }, G = function (t, o, n) { function i(e) { return s && c.callbacks[e] && "function" == typeof c.callbacks[e] } function r() { return [c.callbacks.alwaysTriggerOffsets || w >= S[0] + y, c.callbacks.alwaysTriggerOffsets || -B >= w] } function l() { var e = [h[0].offsetTop, h[0].offsetLeft], o = [x[0].offsetTop, x[0].offsetLeft], a = [h.outerHeight(!1), h.outerWidth(!1)], i = [f.height(), f.width()]; t[0].mcs = { content: h, top: e[0], left: e[1], draggerTop: o[0], draggerLeft: o[1], topPct: Math.round(100 * Math.abs(e[0]) / (Math.abs(a[0]) - i[0])), leftPct: Math.round(100 * Math.abs(e[1]) / (Math.abs(a[1]) - i[1])), direction: n.dir } } var s = t.data(a), c = s.opt, d = { trigger: "internal", dir: "y", scrollEasing: "mcsEaseOut", drag: !1, dur: c.scrollInertia, overwrite: "all", callbacks: !0, onStart: !0, onUpdate: !0, onComplete: !0 }, n = e.extend(d, n), u = [n.dur, n.drag ? 0 : n.dur], f = e("#mCSB_" + s.idx), h = e("#mCSB_" + s.idx + "_container"), m = h.parent(), p = c.callbacks.onTotalScrollOffset ? Y.call(t, c.callbacks.onTotalScrollOffset) : [0, 0], g = c.callbacks.onTotalScrollBackOffset ? Y.call(t, c.callbacks.onTotalScrollBackOffset) : [0, 0]; if (s.trigger = n.trigger, 0 === m.scrollTop() && 0 === m.scrollLeft() || (e(".mCSB_" + s.idx + "_scrollbar").css("visibility", "visible"), m.scrollTop(0).scrollLeft(0)), "_resetY" !== o || s.contentReset.y || (i("onOverflowYNone") && c.callbacks.onOverflowYNone.call(t[0]), s.contentReset.y = 1), "_resetX" !== o || s.contentReset.x || (i("onOverflowXNone") && c.callbacks.onOverflowXNone.call(t[0]), s.contentReset.x = 1), "_resetY" !== o && "_resetX" !== o) { if (!s.contentReset.y && t[0].mcs || !s.overflowed[0] || (i("onOverflowY") && c.callbacks.onOverflowY.call(t[0]), s.contentReset.x = null), !s.contentReset.x && t[0].mcs || !s.overflowed[1] || (i("onOverflowX") && c.callbacks.onOverflowX.call(t[0]), s.contentReset.x = null), c.snapAmount) { var v = c.snapAmount instanceof Array ? "x" === n.dir ? c.snapAmount[1] : c.snapAmount[0] : c.snapAmount; o = V(o, v, c.snapOffset) } switch (n.dir) { case "x": var x = e("#mCSB_" + s.idx + "_dragger_horizontal"), _ = "left", w = h[0].offsetLeft, S = [f.width() - h.outerWidth(!1), x.parent().width() - x.width()], b = [o, 0 === o ? 0 : o / s.scrollRatio.x], y = p[1], B = g[1], T = y > 0 ? y / s.scrollRatio.x : 0, k = B > 0 ? B / s.scrollRatio.x : 0; break; case "y": var x = e("#mCSB_" + s.idx + "_dragger_vertical"), _ = "top", w = h[0].offsetTop, S = [f.height() - h.outerHeight(!1), x.parent().height() - x.height()], b = [o, 0 === o ? 0 : o / s.scrollRatio.y], y = p[0], B = g[0], T = y > 0 ? y / s.scrollRatio.y : 0, k = B > 0 ? B / s.scrollRatio.y : 0 }b[1] < 0 || 0 === b[0] && 0 === b[1] ? b = [0, 0] : b[1] >= S[1] ? b = [S[0], S[1]] : b[0] = -b[0], t[0].mcs || (l(), i("onInit") && c.callbacks.onInit.call(t[0])), clearTimeout(h[0].onCompleteTimeout), J(x[0], _, Math.round(b[1]), u[1], n.scrollEasing), !s.tweenRunning && (0 === w && b[0] >= 0 || w === S[0] && b[0] <= S[0]) || J(h[0], _, Math.round(b[0]), u[0], n.scrollEasing, n.overwrite, { onStart: function () { n.callbacks && n.onStart && !s.tweenRunning && (i("onScrollStart") && (l(), c.callbacks.onScrollStart.call(t[0])), s.tweenRunning = !0, C(x), s.cbOffsets = r()) }, onUpdate: function () { n.callbacks && n.onUpdate && i("whileScrolling") && (l(), c.callbacks.whileScrolling.call(t[0])) }, onComplete: function () { if (n.callbacks && n.onComplete) { "yx" === c.axis && clearTimeout(h[0].onCompleteTimeout); var e = h[0].idleTimer || 0; h[0].onCompleteTimeout = setTimeout(function () { i("onScroll") && (l(), c.callbacks.onScroll.call(t[0])), i("onTotalScroll") && b[1] >= S[1] - T && s.cbOffsets[0] && (l(), c.callbacks.onTotalScroll.call(t[0])), i("onTotalScrollBack") && b[1] <= k && s.cbOffsets[1] && (l(), c.callbacks.onTotalScrollBack.call(t[0])), s.tweenRunning = !1, h[0].idleTimer = 0, C(x, "hide") }, e) } } }) } }, J = function (e, t, o, a, n, i, r) { function l() { S.stop || (x || m.call(), x = K() - v, s(), x >= S.time && (S.time = x > S.time ? x + f - (x - S.time) : x + f - 1, S.time < x + 1 && (S.time = x + 1)), S.time < a ? S.id = h(l) : g.call()) } function s() { a > 0 ? (S.currVal = u(S.time, _, b, a, n), w[t] = Math.round(S.currVal) + "px") : w[t] = o + "px", p.call() } function c() { f = 1e3 / 60, S.time = x + f, h = window.requestAnimationFrame ? window.requestAnimationFrame : function (e) { return s(), setTimeout(e, .01) }, S.id = h(l) } function d() { null != S.id && (window.requestAnimationFrame ? window.cancelAnimationFrame(S.id) : clearTimeout(S.id), S.id = null) } function u(e, t, o, a, n) { switch (n) { case "linear": case "mcsLinear": return o * e / a + t; case "mcsLinearOut": return e /= a, e--, o * Math.sqrt(1 - e * e) + t; case "easeInOutSmooth": return e /= a / 2, 1 > e ? o / 2 * e * e + t : (e--, -o / 2 * (e * (e - 2) - 1) + t); case "easeInOutStrong": return e /= a / 2, 1 > e ? o / 2 * Math.pow(2, 10 * (e - 1)) + t : (e--, o / 2 * (-Math.pow(2, -10 * e) + 2) + t); case "easeInOut": case "mcsEaseInOut": return e /= a / 2, 1 > e ? o / 2 * e * e * e + t : (e -= 2, o / 2 * (e * e * e + 2) + t); case "easeOutSmooth": return e /= a, e--, -o * (e * e * e * e - 1) + t; case "easeOutStrong": return o * (-Math.pow(2, -10 * e / a) + 1) + t; case "easeOut": case "mcsEaseOut": default: var i = (e /= a) * e, r = i * e; return t + o * (.499999999999997 * r * i + -2.5 * i * i + 5.5 * r + -6.5 * i + 4 * e) } } e._mTween || (e._mTween = { top: {}, left: {} }); var f, h, r = r || {}, m = r.onStart || function () { }, p = r.onUpdate || function () { }, g = r.onComplete || function () { }, v = K(), x = 0, _ = e.offsetTop, w = e.style, S = e._mTween[t]; "left" === t && (_ = e.offsetLeft); var b = o - _; S.stop = 0, "none" !== i && d(), c() }, K = function () { return window.performance && window.performance.now ? window.performance.now() : window.performance && window.performance.webkitNow ? window.performance.webkitNow() : Date.now ? Date.now() : (new Date).getTime() }, Z = function () { var e = this; e._mTween || (e._mTween = { top: {}, left: {} }); for (var t = ["top", "left"], o = 0; o < t.length; o++) { var a = t[o]; e._mTween[a].id && (window.requestAnimationFrame ? window.cancelAnimationFrame(e._mTween[a].id) : clearTimeout(e._mTween[a].id), e._mTween[a].id = null, e._mTween[a].stop = 1) } }, \$ = function (e, t) { try { delete e[t] } catch (o) { e[t] = null } }, ee = function (e) { return !(e.which && 1 !== e.which) }, te = function (e) { var t = e.originalEvent.pointerType; return !(t && "touch" !== t && 2 !== t) }, oe = function (e) { return !isNaN(parseFloat(e)) && isFinite(e) }, ae = function (e) { var t = e.parents(".mCSB_container"); return [e.offset().top - t.offset().top, e.offset().left - t.offset().left] }, ne = function () { function e() { var e = ["webkit", "moz", "ms", "o"]; if ("hidden" in document) return "hidden"; for (var t = 0; t < e.length; t++)if (e[t] + "Hidden" in document) return e[t] + "Hidden"; return null } var t = e(); return t ? document[t] : !1 }; e.fn[o] = function (t) { return u[t] ? u[t].apply(this, Array.prototype.slice.call(arguments, 1)) : "object" != typeof t && t ? void e.error("Method " + t + " does not exist") : u.init.apply(this, arguments) }, e[o] = function (t) { return u[t] ? u[t].apply(this, Array.prototype.slice.call(arguments, 1)) : "object" != typeof t && t ? void e.error("Method " + t + " does not exist") : u.init.apply(this, arguments) }, e[o].defaults = i, window[o] = !0, e(window).bind("load", function () { e(n)[o](), e.extend(e.expr[":"], { mcsInView: e.expr[":"].mcsInView || function (t) { var o, a, n = e(t), i = n.parents(".mCSB_container"); if (i.length) return o = i.parent(), a = [i[0].offsetTop, i[0].offsetLeft], a[0] + ae(n)[0] >= 0 && a[0] + ae(n)[0] < o.height() - n.outerHeight(!1) && a[1] + ae(n)[1] >= 0 && a[1] + ae(n)[1] < o.width() - n.outerWidth(!1) }, mcsInSight: e.expr[":"].mcsInSight || function (t, o, a) { var n, i, r, l, s = e(t), c = s.parents(".mCSB_container"), d = "exact" === a[3] ? [[1, 0], [1, 0]] : [[.9, .1], [.6, .4]]; if (c.length) return n = [s.outerHeight(!1), s.outerWidth(!1)], r = [c[0].offsetTop + ae(s)[0], c[0].offsetLeft + ae(s)[1]], i = [c.parent()[0].offsetHeight, c.parent()[0].offsetWidth], l = [n[0] < i[0] ? d[0] : d[1], n[1] < i[1] ? d[0] : d[1]], r[0] - i[0] * l[0][0] < 0 && r[0] + n[0] - i[0] * l[0][1] >= 0 && r[1] - i[1] * l[1][0] < 0 && r[1] + n[1] - i[1] * l[1][1] >= 0 }, mcsOverflow: e.expr[":"].mcsOverflow || function (t) { var o = e(t).data(a); if (o) return o.overflowed[0] || o.overflowed[1] } }) })
             })
         });
 
         function __GetUrlValue(name) {
-            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
             var r = window.location.search.substr(1).match(reg);
             if (r != null) return decodeURIComponent(r[2]); return null;
         };
@@ -1880,8 +1880,8 @@ option {
         var allow = true;
         if (window.top != window.self && window.REFERRER_LIST) {
             try {
-                var h = window.document.referrer.match(/^http(s)?:\/\/(.*?)\//);
-                if (h && h[2] && !(new RegExp(window.REFERRER_LIST.join('|').replace(/\./g, '\\.').replace(/\*/g, '\.\*'))).test(h[2])) {
+                var h = window.document.referrer.match(/^http(s)?:\\/\\/(.*?)\\//);
+                if (h && h[2] && !(new RegExp(window.REFERRER_LIST.join('|').replace(/\\./g, '\\\\.').replace(/\\*/g, '\\.\\*'))).test(h[2])) {
                     allow = false;
                 } else if (!window.document.referrer && window.navigator.userAgent.indexOf('MicroMessenger') === -1 && window.navigator.userAgent.indexOf('IqiyiApp') === -1) {
                     allow = false;
@@ -1913,11 +1913,11 @@ option {
             document.domain = 'bilibili.com';
         }
 
-        window.browser = { version: function () { var b = navigator.userAgent; return { trident: /Trident/i.test(b), presto: /Presto/i.test(b), webKit: /AppleWebKit/i.test(b), gecko: /Gecko/i.test(b) && !/KHTML/i.test(b), mobile: /AppleWebKit.*Mobile.*/i.test(b), ios: /\(i[^;]+;( U;)? CPU.+Mac OS X/i.test(b), android: /Android/i.test(b) || /Linux/i.test(b), windowsphone: /Windows Phone/i.test(b), iPhone: /iPhone/i.test(b), iPad: /iPad/i.test(b), MicroMessenger: /MicroMessenger/i.test(b), webApp: !/Safari/i.test(b) } }(), language: (navigator.browserLanguage || navigator.language).toLowerCase() };
+        window.browser = { version: function () { var b = navigator.userAgent; return { trident: /Trident/i.test(b), presto: /Presto/i.test(b), webKit: /AppleWebKit/i.test(b), gecko: /Gecko/i.test(b) && !/KHTML/i.test(b), mobile: /AppleWebKit.*Mobile.*/i.test(b), ios: /\\(i[^;]+;( U;)? CPU.+Mac OS X/i.test(b), android: /Android/i.test(b) || /Linux/i.test(b), windowsphone: /Windows Phone/i.test(b), iPhone: /iPhone/i.test(b), iPad: /iPad/i.test(b), MicroMessenger: /MicroMessenger/i.test(b), webApp: !/Safari/i.test(b) } }(), language: (navigator.browserLanguage || navigator.language).toLowerCase() };
 
         function videoLoader() {
             this.config = {
-                'player': $("#bofqi"),
+                'player': \$("#bofqi"),
                 'aid': __GetUrlValue('aid'),
                 'page': __GetUrlValue('page') || 1,
                 'roomid': __GetUrlValue('roomid'),
@@ -1935,11 +1935,11 @@ option {
             this.gray_html5 = true;
 
             //不支持IE10及以下浏览器 不支持Win7 IE11
-            if (/msie [\w.]+/.exec(navigator.userAgent.toLowerCase()) || /edge/i.exec(navigator.userAgent) || ((/Trident/i).test(navigator.userAgent) && (/Windows NT 6/.test(navigator.userAgent)))) {
+            if (/msie [\\w.]+/.exec(navigator.userAgent.toLowerCase()) || /edge/i.exec(navigator.userAgent) || ((/Trident/i).test(navigator.userAgent) && (/Windows NT 6/.test(navigator.userAgent)))) {
                 this.gray_html5 = false;
             }
 
-            if (((/linux/i).test(navigator.userAgent.toLowerCase()) || (/Mac OS X[\s\_\-\/](\d+[\.\-\_]\d+[\.\-\_]?\d*)/i).test(navigator.userAgent)) || !flashChecker().hasFlash) {
+            if (((/linux/i).test(navigator.userAgent.toLowerCase()) || (/Mac OS X[\\s\\_\\-\\/](\\d+[\\.\\-\\_]\\d+[\\.\\-\\_]?\\d*)/i).test(navigator.userAgent)) || !flashChecker().hasFlash) {
                 if (ChatGetSettings('defaulth5') == null) {
                     ChatSaveSettings("defaulth5", 1);
                 }
@@ -1953,7 +1953,7 @@ option {
         }
         videoLoader.prototype.getCid = function () {
             var self = this;
-            $.ajax({
+            \$.ajax({
                 url: '//api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + this.config['aid'] + '&page=' + this.config['page'],
                 type: 'get',
                 data: {
@@ -1983,14 +1983,14 @@ option {
                 var self = this;
 
                 if (this.config.roomid) {
-                    $('<link rel="stylesheet" type="text/css" href="//static.hdslb.com/css/simple.v2.min.css" />').appendTo('body');
-                    $.getScript("//static.hdslb.com/js/simple.v2.min.js", function () {
+                    \$('<link rel="stylesheet" type="text/css" href="//static.hdslb.com/css/simple.v2.min.css" />').appendTo('body');
+                    \$.getScript("//static.hdslb.com/js/simple.v2.min.js", function () {
                         self.config.player.addClass('html5');
                         if (self.config.sendbar) {
                             self.config.player.after('<div id="dm_send_bar"><input type="text" id="dm_send_input" maxlength="200" disabled placeholder="输入弹幕╮(￣▽￣)╭" value="" /><button id="dm_send_btn" class="disabled">发送</button></div>');
-                            self.config.player.hide().height($(window).height() - $("#dm_send_bar").height()).show();
-                            $(window).resize(function () {
-                                self.config.player.hide().height($(window).height() - $("#dm_send_bar").height()).show();
+                            self.config.player.hide().height(\$(window).height() - \$("#dm_send_bar").height()).show();
+                            \$(window).resize(function () {
+                                self.config.player.hide().height(\$(window).height() - \$("#dm_send_bar").height()).show();
                             });
                         }
                         self.h5player = new BiliH5Player();
@@ -2007,15 +2007,15 @@ option {
             this.videoType = 'html5';
             ChatSaveSettings("defaulth5", 1);
             if (!window.bilibiliPlayer) {
-                $('<link rel="stylesheet" type="text/css" href="//static.hdslb.com/plugins/mCustomScrollbar/jquery.mCustomScrollbar.min.css" />').appendTo('body');
+                \$('<link rel="stylesheet" type="text/css" href="//static.hdslb.com/plugins/mCustomScrollbar/jquery.mCustomScrollbar.min.css" />').appendTo('body');
 
-                $.ajax({
+                \$.ajax({
                     url: '//static.hdslb.com/player/js/bilibiliPlayer.min.js',
                     cache: true,
                     type: 'get',
                     dataType: 'script',
                     success: function () {
-                        $('#bofqi').html('<div class="player"><div id="bilibiliPlayer"></div></div><iframe style="display: none"></iframe><div id="player_placeholder"></div>');
+                        \$('#bofqi').html('<div class="player"><div id="bilibiliPlayer"></div></div><iframe style="display: none"></iframe><div id="player_placeholder"></div>');
                         window.player = new bilibiliPlayer({
                             aid: self.config.aid,
                             cid: self.config.cid,
@@ -2031,7 +2031,7 @@ option {
                     }
                 });
             } else {
-                $('#bofqi').html('<div class="player"><div id="bilibiliPlayer"></div></div><iframe style="display: none"></iframe><div id="player_placeholder"></div>');
+                \$('#bofqi').html('<div class="player"><div id="bilibiliPlayer"></div></div><iframe style="display: none"></iframe><div id="player_placeholder"></div>');
                 window.player = new bilibiliPlayer({
                     aid: self.config.aid,
                     cid: self.config.cid,
@@ -2084,14 +2084,14 @@ option {
             };
             var c_head, c_element;
             try {
-                c_head = $(window.parent.document.body);
-                c_element = $(window.parent.document.body).find('#player_placeholder');
+                c_head = \$(window.parent.document.body);
+                c_element = \$(window.parent.document.body).find('#player_placeholder');
             } catch (e) {
-                c_head = $('#bofqi');
-                c_element = $('#bofqi').find('#player_placeholder');
+                c_head = \$('#bofqi');
+                c_element = \$('#bofqi').find('#player_placeholder');
             }
             if (c_element.length === 0) {
-                c_element = $('<div id="player_placeholder" style="display: none;"></div>').appendTo(c_head);
+                c_element = \$('<div id="player_placeholder" style="display: none;"></div>').appendTo(c_head);
             }
             c_element = c_element[0];
 
@@ -2170,13 +2170,13 @@ option {
             };
             var c_head, c_element;
             try {
-                c_head = $(window.parent.document.body);
-                c_element = $(window.parent.document.body).find('#player_placeholder');
+                c_head = \$(window.parent.document.body);
+                c_element = \$(window.parent.document.body).find('#player_placeholder');
             } catch (e) {
                 return false;
             }
             if (c_element.length === 0) {
-                c_element = $('<div id="player_placeholder" style="display: none;"></div>').appendTo(c_head);
+                c_element = \$('<div id="player_placeholder" style="display: none;"></div>').appendTo(c_head);
             }
             c_element = c_element[0];
 
@@ -2184,7 +2184,7 @@ option {
                 (function (flashName, html5Name) {
                     c_element[flashName] = function () {
                         try {
-                            $('#player_placeholder')[0][flashName].apply(this, arguments);
+                            \$('#player_placeholder')[0][flashName].apply(this, arguments);
                         } catch (e) {
                             console.log(e);
                         }
@@ -2194,14 +2194,14 @@ option {
 
             c_element.jwAddEventListener = function () {
                 try {
-                    $('#player_placeholder')[0]['jwAddEventListener'].apply(this, arguments);
+                    \$('#player_placeholder')[0]['jwAddEventListener'].apply(this, arguments);
                 } catch (e) {
                     console.log(e);
                 }
             }
             c_element.jwRemoveEventListener = function () {
                 try {
-                    $('#player_placeholder')[0]['jwRemoveEventListener'].apply(this, arguments);
+                    \$('#player_placeholder')[0]['jwRemoveEventListener'].apply(this, arguments);
                 } catch (e) {
                     console.log(e);
                 }
@@ -2374,7 +2374,7 @@ option {
             var source = {
                 'image': "//i2.hdslb.com/u_user/activities/201507chinajoy/images/cover_reverse.png"
             };
-            $.ajax({
+            \$.ajax({
                 url: "//live.bilibili.com/api/h5playurl?roomid=" + self.config.roomid,
                 dataType: "jsonp",
                 success: function (result) {
@@ -2402,19 +2402,19 @@ option {
             var self = this;
             if (now_status == 1 && origin_status == 0 && self.config.sendbar) {
                 self.config.sendbar = false;
-                $('#bofqi').after('<div id="dm_send_bar"><input type="text" id="dm_send_input" maxlength="200" placeholder="点击此处开始吐槽！" value="" /><button id="dm_send_btn">发送</button></div>');
-                $("#bofqi").height($(window).height() - $("#dm_send_bar").height());
-                $(window).resize(function () {
-                    $("#bofqi").height($(window).height() - $("#dm_send_bar").height());
+                \$('#bofqi').after('<div id="dm_send_bar"><input type="text" id="dm_send_input" maxlength="200" placeholder="点击此处开始吐槽！" value="" /><button id="dm_send_btn">发送</button></div>');
+                \$("#bofqi").height(\$(window).height() - \$("#dm_send_bar").height());
+                \$(window).resize(function () {
+                    \$("#bofqi").height(\$(window).height() - \$("#dm_send_bar").height());
                 });
-                $("#dm_send_bar").addClass('float').appendTo('.display');
-                var send_btn = $("#dm_send_btn");
-                var send_input = $("#dm_send_input");
+                \$("#dm_send_bar").addClass('float').appendTo('.display');
+                var send_btn = \$("#dm_send_btn");
+                var send_input = \$("#dm_send_input");
                 send_btn.removeClass("disabled");
                 send_input.removeAttr("disabled");
 
                 send_btn.bind('click', function () {
-                    if (send_btn.hasClass("disabled") || $.trim(send_input.val()) == "") {
+                    if (send_btn.hasClass("disabled") || \$.trim(send_input.val()) == "") {
                         return false;
                     } else {
                         send_input.attr("disabled");
@@ -2426,7 +2426,7 @@ option {
                         }, 3000);
                     }
                     splayer.sendComment({
-                        "msg": $.trim(send_input.val()),
+                        "msg": \$.trim(send_input.val()),
                         "color": 0xffffff
                     }, function (data) {
                         clearTimeout(sendTimeout);
@@ -2487,7 +2487,7 @@ option {
             // if(this.videoType == 'html5') {
             //     this.config['page'] = player.getPlaylistIndex() + 1;
             // }
-            // $.ajax({
+            // \$.ajax({
             //     url: '//www.bilibili.com/widget/getPageList?aid=' + this.config['aid'],
             //     cache: true,
             //     type: 'get',
@@ -2602,17 +2602,17 @@ option {
                 }
             };
             window.parent.GrayManager = window.GrayManager;
-            $(window.parent.document).find('iframe#bofqi_embed').addClass('bilibiliHtml5Player');
-            var h = $(window.parent.document).find('head');
+            \$(window.parent.document).find('iframe#bofqi_embed').addClass('bilibiliHtml5Player');
+            var h = \$(window.parent.document).find('head');
             if (!h.find('style.bilibiliHtml5PlayerClass').length) {
-                $('<style class="bilibiliHtml5PlayerClass">.player-fullscreen-fix {position: fixed;top: 0;left: 0;margin: 0;padding: 0;width: 100%;height: 100%;}'
+                \$('<style class="bilibiliHtml5PlayerClass">.player-fullscreen-fix {position: fixed;top: 0;left: 0;margin: 0;padding: 0;width: 100%;height: 100%;}'
                     + '.player-fullscreen-fix iframe#bofqi_embed {position: fixed!important;border-radius: 0;z-index: 100000!important;left: 0;top: 0;width: 100%!important;height: 100%!important;}</style>').appendTo(h);
             }
         } catch (e) {
 
         }
 
-        $(window).on('unload', function () {
+        \$(window).on('unload', function () {
             try {
                 player && player.destroy();
             } catch (e) {
@@ -2622,8 +2622,8 @@ option {
     </script>
 </body>
 
-</html>]]></>).toString();
-    modules["playlist-detail.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["playlist-detail.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -2666,8 +2666,8 @@ option {
     <script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["playlist.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["playlist.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -2705,8 +2705,8 @@ option {
     src="//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["ranking.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["ranking.html"] = `<!DOCTYPE html>
 <html lang="zh-Hans" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hans">
 
 <head>
@@ -2735,8 +2735,8 @@ option {
   <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js" defer="defer"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["read.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["read.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -2782,8 +2782,8 @@ option {
         src="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"></script>
 </body>
 
-</html>]]></>).toString();
-    modules["watchlater.html"] = (<><![CDATA[<!DOCTYPE html>
+</html>`;
+    modules["watchlater.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -2824,7 +2824,7 @@ option {
     src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"></script>
 </body>
 
-</html>]]></>).toString();
+</html>`;
     modules["apply.json"] = {
     "timeFormat": "format.js",
     "sizeFormat": "format.js",
@@ -2890,7 +2890,7 @@ option {
     "runWhile": "extend.js",
     "bofqiMessage": "extend.js",
     "alertMessage": "extend.js"
-}
+};
     modules["bug.json"] = [
     "__PGC_USERSTATE__",
     "__BILI_CONFIG__",
@@ -2956,7 +2956,7 @@ option {
     "webpackJsonp",
     "webpackJsonpwebpackLogReporter",
     "webpackLogReporter"
-]
+];
     modules["protobuf.json"] = {
     "nested": {
         "bilibili": {
@@ -3231,7 +3231,7 @@ option {
             }
         }
     }
-}
+};
     modules["videoSort.json"] = {
     "1": [
         1,
@@ -3573,8 +3573,8 @@ option {
         "摩托车",
         "//www.bilibili.com/v/car/motorcycle"
     ]
-}
-    modules["aria2.js"] = (<><![CDATA[/**
+};
+    modules["aria2.js"] = `/**
  * 本模块负责与aria2通信并构造下载数据
  */
 (function () {
@@ -3591,13 +3591,13 @@ option {
                 return new Promise((r, j) => {
                     let result = "aria2c";
                     obj = { ...this.setting, ...obj };
-                    obj.urls.forEach(d => result += ` "${d}"`);
-                    obj.out && (result += ` --out="${obj.out}"`);
-                    obj.userAgent && (result += ` --user-agent="${obj.userAgent}"`);
-                    obj.referer && (result += ` --referer="${obj.referer}"`);
-                    obj.directory && (result += ` --dir="${obj.directory}"`);
-                    obj.split && (result += ` --split="${obj.split}"`);
-                    obj.header && Object.entries(obj.header).forEach(d => result += ` --header="${d[0]}: ${d[1]}"`);
+                    obj.urls.forEach(d => result += \` "\${d}"\`);
+                    obj.out && (result += \` --out="\${obj.out}"\`);
+                    obj.userAgent && (result += \` --user-agent="\${obj.userAgent}"\`);
+                    obj.referer && (result += \` --referer="\${obj.referer}"\`);
+                    obj.directory && (result += \` --dir="\${obj.directory}"\`);
+                    obj.split && (result += \` --split="\${obj.split}"\`);
+                    obj.header && Object.entries(obj.header).forEach(d => result += \` --header="\${d[0]}: \${d[1]}"\`);
                     navigator.clipboard.writeText(result).then(r, e => j(e));
                 });
             }
@@ -3613,8 +3613,8 @@ option {
                 return this.postMessage("aria2.addUri", obj.id || new Date().getTime(), [obj.urls, options]);
             }
             postMessage(method, id, params = []) {
-                const url = `${config.rpcServer}:${config.rpcPort}/jsonrpc`;
-                config.rpcToken && params.unshift(`token:${config.rpcToken}`);
+                const url = \`\${config.rpcServer}:\${config.rpcPort}/jsonrpc\`;
+                config.rpcToken && params.unshift(\`token:\${config.rpcToken}\`);
                 return new Promise((r, j) => {
                     xhr({
                         url: url,
@@ -3650,8 +3650,8 @@ option {
         toast.error("aria2.js", e);
     }
 })();
-]]></>).toString();
-    modules["dlContentMenu.js"] = (<><![CDATA[/**
+`;
+    modules["dlContentMenu.js"] = `/**
  * 添加下载右键菜单
  */
 (function () {
@@ -3690,8 +3690,8 @@ option {
         }
     });
 })();
-]]></>).toString();
-    modules["download.js"] = (<><![CDATA[/**
+`;
+    modules["download.js"] = `/**
  * 本模块负责下载功能，主要是视频下载功能
  */
 (function () {
@@ -3788,7 +3788,7 @@ option {
              * @returns 画质/音质信息
              */
             getQuality(url) {
-                return this.quality[url.match(/[0-9]+\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || "N/A";
+                return this.quality[url.match(/[0-9]+\\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || "N/A";
             }
             /**
              * 整理dash部分
@@ -3898,13 +3898,13 @@ option {
                 if (!config.ifDlDmCC)
                     return;
                 if (API.danmaku) {
-                    const url = config.dlDmType == "json" ? JSON.stringify(API.danmaku, undefined, "\t") : API.toXml(API.danmaku);
+                    const url = config.dlDmType == "json" ? JSON.stringify(API.danmaku, undefined, "\\t") : API.toXml(API.danmaku);
                     this.links.push({
                         url: url,
                         type: "其他",
                         quality: "弹幕",
                         size: API.sizeFormat(API.strSize(url)),
-                        filename: `${this.getTitle()}-${API.cid}.${config.dlDmType}`
+                        filename: \`\${this.getTitle()}-\${API.cid}.\${config.dlDmType}\`
                     });
                 }
                 if (API.subtitle) {
@@ -3973,9 +3973,9 @@ option {
                     this.color[d.quality] && up.setAttribute("style", this.color[d.quality]);
                     API.addElement("div", { class: "down" }, item, d.size);
                     item.onclick = () => {
-                        /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-,.\/?%&=]*)?/.test(d.url) ?
+                        /^https?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w-,.\\/?%&=]*)?/.test(d.url) ?
                             this.postData(d) :
-                            API.saveAs(d.url, d.filename || `download ${API.timeFormat(undefined, true)}.txt`, d.contentType || "text/plain");
+                            API.saveAs(d.url, d.filename || \`download \${API.timeFormat(undefined, true)}.txt\`, d.contentType || "text/plain");
                     };
                 });
             }
@@ -3987,13 +3987,13 @@ option {
                         break;
                     case "aria2":
                         API.aria2.shell({ urls: [data.url], out: data.filename })
-                            .then(() => toast.success(`已复制aria2命令行到剪切板，在cmd等shell中使用即可下载~`))
-                            .catch(e => toast.error(`复制aria2命令行失败！`, e));
+                            .then(() => toast.success(\`已复制aria2命令行到剪切板，在cmd等shell中使用即可下载~\`))
+                            .catch(e => toast.error(\`复制aria2命令行失败！\`, e));
                         break;
                     case "aira2 RPC":
                         API.aria2.rpc({ urls: [data.url], out: data.filename })
-                            .then(GID => toast.success(`已添加下载任务到aria2 RPC主机，任务GID：${GID}`))
-                            .catch(e => toast.error(`添加下载任务到aria2 RPC主机出错！`, e));
+                            .then(GID => toast.success(\`已添加下载任务到aria2 RPC主机，任务GID：\${GID}\`))
+                            .catch(e => toast.error(\`添加下载任务到aria2 RPC主机出错！\`, e));
                         break;
                     default: this.rightKey(data);
                 }
@@ -4004,7 +4004,7 @@ option {
              */
             getTitle() {
                 const title = document.title.split("_哔哩")[0];
-                const p = location.href.includes("p=") ? location.href.match(/p=\d+/)[0].split("=")[1] : "";
+                const p = location.href.includes("p=") ? location.href.match(/p=\\d+/)[0].split("=")[1] : "";
                 return p ? title + p : title;
             }
             /**
@@ -4045,9 +4045,9 @@ option {
                         adv = ".hevc.m4v";
                         break;
                 }
-                adv = ars[1] ? `.${ars.pop()}` : adv ? adv : arr[1] ? `.${arr.pop()}` : "";
+                adv = ars[1] ? \`.\${ars.pop()}\` : adv ? adv : arr[1] ? \`.\${arr.pop()}\` : "";
                 Reflect.set(obj, "_name", true);
-                return (obj.filename || arr[0]) + `${obj.flvSplit ? "x" + obj.flvSplit : ""}.${obj.quality}${adv}`;
+                return (obj.filename || arr[0]) + \`\${obj.flvSplit ? "x" + obj.flvSplit : ""}.\${obj.quality}\${adv}\`;
             }
             /**
              * 右键下载
@@ -4056,7 +4056,7 @@ option {
             rightKey(data) {
                 const root = API.element.popupbox({ width: "300px" });
                 API.addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, data.filename);
-                API.addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${data.filename}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
+                API.addElement("div", { style: "padding-block-end: 10px;" }, root, \`<a href=\${data.url} target="_blank" download="\${data.filename}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>\`);
                 API.addElement("div", { style: "font-size: 10px; padding-block-end: 10px;" }, root, '本方式下载不太稳定，不嫌麻烦的话可在设置中更换下载方式。');
             }
         }
@@ -4067,8 +4067,8 @@ option {
         toast.error(e, "download.js");
     }
 })();
-]]></>).toString();
-    modules["ef2.js"] = (<><![CDATA[/**
+`;
+    modules["ef2.js"] = `/**
  * 本模块负责使用ef2自定义协议调用IDM进行下载
  * 使用本下载方式需要先安装IDM{@see Internet Download Manager (IDM) {@link http://www.internetdownloadmanager.com/}}
  * 然后安装ef2工具{@see ef2 {@link https://github.com/MotooriKashin/ef2/releases/latest}}
@@ -4103,40 +4103,40 @@ option {
             Object.keys(data).forEach((d) => {
                 switch (d) {
                     case "cookies":
-                        result += ` -c "${data.cookies}"`;
+                        result += \` -c "\${data.cookies}"\`;
                         break;
                     case "directory":
-                        data.directory = data.directory.replace(/\//, "\\"); // 目录反斜杠可能误输入为了正斜杠
-                        data.directory && data.directory[data.directory.length - 1] == "\\" && (data.directory = data.directory.substr(0, data.directory.length - 1)); // 目录最后的反斜杠可能导致引号被转义 
-                        result += ` -o "${data.directory}"`;
+                        data.directory = data.directory.replace(/\\//, "\\\\"); // 目录反斜杠可能误输入为了正斜杠
+                        data.directory && data.directory[data.directory.length - 1] == "\\\\" && (data.directory = data.directory.substr(0, data.directory.length - 1)); // 目录最后的反斜杠可能导致引号被转义 
+                        result += \` -o "\${data.directory}"\`;
                         break;
                     case "out":
-                        result += ` -s "${data.out}"`;
+                        result += \` -s "\${data.out}"\`;
                         break;
                     case "password":
-                        result += ` -P "${data.password}"`;
+                        result += \` -P "\${data.password}"\`;
                         break;
                     case "postDate":
-                        result += ` -d "${data.postDate}"`;
+                        result += \` -d "\${data.postDate}"\`;
                         break;
                     case "referer":
-                        result += ` -r "${data.referer}"`;
+                        result += \` -r "\${data.referer}"\`;
                         break;
                     case "sendToList":
-                        result += ` -q`;
+                        result += \` -q\`;
                         break;
                     case "toastDisabled":
-                        result += ` -f`;
+                        result += \` -f\`;
                         break;
                     case "url":
                         data.url.startsWith("//") && (data.url = "https:" + data.url); // 省略协议头时默认添加http/tls头
-                        result += ` -u "${data.url}"`;
+                        result += \` -u "\${data.url}"\`;
                         break;
                     case "userAgent":
-                        result += ` -a "${data.userAgent}"`;
+                        result += \` -a "\${data.userAgent}"\`;
                         break;
                     case "userName":
-                        result += ` -U "${data.userName}"`;
+                        result += \` -U "\${data.userName}"\`;
                         break;
                 }
             });
@@ -4151,12 +4151,12 @@ option {
         decode(ef2ptl) {
             ef2ptl = ef2ptl.replace("ef2://", "");
             ef2ptl = API.Base64.decode(ef2ptl) + " ";
-            const key = ef2ptl.match(/-\w /g);
-            const value = ef2ptl.split(/-\w /);
+            const key = ef2ptl.match(/-\\w /g);
+            const value = ef2ptl.split(/-\\w /);
             value.shift();
             return Array.from(key).reduce((s, d, i) => {
                 value[i] && value[i].endsWith(" ") && (value[i] = value[i].substr(0, value[i].length - 1));
-                value[i] && value[i].endsWith("\"") && (value[i] = value[i].substr(1, value[i].length - 2));
+                value[i] && value[i].endsWith("\\"") && (value[i] = value[i].substr(1, value[i].length - 2));
                 switch (d) {
                     case "-c ":
                         s.cookies = value[i];
@@ -4201,8 +4201,8 @@ option {
     API.ef2.encode = (data) => new Ef2().encode(data);
     API.ef2.decode = (ef2ptl) => new Ef2().decode(ef2ptl);
 })();
-]]></>).toString();
-    modules["abv.js"] = (<><![CDATA[/**
+`;
+    modules["abv.js"] = `/**
  * 本模块负责负责提供av/BV互转函数
  * 感谢知乎mcfx的回答，在其python代码基础上翻译为JavaScript，源链接如下
  * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
@@ -4226,11 +4226,11 @@ option {
              * @returns 转化结果
              */
             check(input) {
-                if (/^[aA][vV][0-9]+$/.test(String(input)) || /^\d+$/.test(String(input)))
+                if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
                     return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-                if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
+                if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
                     return this.bvToAv("BV" + input);
-                if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
+                if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
                     return this.bvToAv(String(input));
                 throw input;
             }
@@ -4255,8 +4255,8 @@ option {
         toast.error("abv.js", e);
     }
 })();
-]]></>).toString();
-    modules["Base64.js"] = (<><![CDATA[/**
+`;
+    modules["Base64.js"] = `/**
  * 本模块负责提供Base64<=>字符串的互转函数
  * 本模块核心代码直接来源如下
  * @see MDN Web Docs {@link https://developer.mozilla.org/en-US/docs/Glossary/Base64}
@@ -4284,12 +4284,12 @@ option {
         toast.error("base64.js", e);
     }
 })();
-]]></>).toString();
-    modules["crc32.js"] = (<><![CDATA[/**
- * 本模块提供CRC32散列算法及逆向工具，是将`BiliBili_crc2mid`修改为符合本项目模块规范的版本
- * 感谢`MoePus`提出的CRC32逆向算法，论坛原帖见
+`;
+    modules["crc32.js"] = `/**
+ * 本模块提供CRC32散列算法及逆向工具，是将\`BiliBili_crc2mid\`修改为符合本项目模块规范的版本
+ * 感谢\`MoePus\`提出的CRC32逆向算法，论坛原帖见
  * @see MoePus {@link https://moepus.oicp.net/2016/11/27/crccrack}
- * 感谢`esterTion`开源的该逆向算法的JavaScript版本，源项目信息如下
+ * 感谢\`esterTion\`开源的该逆向算法的JavaScript版本，源项目信息如下
  * @see esterTion {@link https://github.com/esterTion/BiliBili_crc2mid}
  * @license GFUL
  */
@@ -4394,8 +4394,8 @@ option {
         toast.error("crc32.js", e);
     }
 })();
-]]></>).toString();
-    modules["cubicBezier.js"] = (<><![CDATA[/**
+`;
+    modules["cubicBezier.js"] = `/**
  * 本模块提供贝塞尔曲线工具
  * 源码来自B站原生header.js工程，具体来源不明
  * 稍作修改以符合本项目需求
@@ -4491,11 +4491,11 @@ option {
         toast.error("cubicBezier.js", e);
     }
 })();
-]]></>).toString();
-    modules["md5.js"] = (<><![CDATA[/**
- * 本模块提供md5加密工具，是将`js-md5`修改为符合本项目模块规范的版本
- * 本模块同时可作为普通js文件执行，该模式下将暴露方法对象到顶层变量`window`
- * 感谢开源项目`js-md5`，源项目信息如下
+`;
+    modules["md5.js"] = `/**
+ * 本模块提供md5加密工具，是将\`js-md5\`修改为符合本项目模块规范的版本
+ * 本模块同时可作为普通js文件执行，该模式下将暴露方法对象到顶层变量\`window\`
+ * 感谢开源项目\`js-md5\`，源项目信息如下
  * @see js-md5 {@link https://github.com/emn178/js-md5}
  * @license MIT
  */
@@ -4932,8 +4932,8 @@ option {
         toast.error("md5.js", e);
     }
 })();
-]]></>).toString();
-    modules["sign.js"] = (<><![CDATA[/**
+`;
+    modules["sign.js"] = `/**
  * 本模块提供B站URL签名工具
  */
 (function () {
@@ -4945,25 +4945,25 @@ option {
          */
         const keySecret = [
             "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
-            "/a_206b`_.61.bca6117.175bcdadc41850c010c..././1``",
-            "157bdd`6/bc73632.bcd660baa03a.43841211032b5c4`6b/",
-            "351a7a6b/.b`d77da1cdccc25_13bc0a81a6d63.7ad13`c50",
-            "4_/54d`3_4_73..2c42`d4.a3__31b358d706d`._7a.3_b5.",
-            "12a.7c4b76c.a`12bb4`2b2b275c667c85b6d`c_c`0d5.051",
-            "bb16d652`04.7/121d3474b_2.c12`7386`0/bdd6ca0c7.22",
-            "244_530/7/.ab`7.//22a15572502b_08c21./_.`3164`c36",
-            "16_d52_d/d22_2c0a.6573355/b`./bd8a`bc6114a30_4.`d",
-            "c02ba/d6.33d05cb/5d34.7d_23_`_2785`c60.a`.4343726",
-            "2aa2`.1_`_1.73`.70.67d.bc671c16382a3d`71a4.bcb3c7",
-            "40/171b046c/bcc0a603ac620`372ba_8d706d`._7a.3_b5.",
-            "c4_a.7562_15`_a416a/63/c2cbcb`308a/`//41b30376.b5" // 7d08...1b1c
+            "/a_206b\`_.61.bca6117.175bcdadc41850c010c..././1\`\`",
+            "157bdd\`6/bc73632.bcd660baa03a.43841211032b5c4\`6b/",
+            "351a7a6b/.b\`d77da1cdccc25_13bc0a81a6d63.7ad13\`c50",
+            "4_/54d\`3_4_73..2c42\`d4.a3__31b358d706d\`._7a.3_b5.",
+            "12a.7c4b76c.a\`12bb4\`2b2b275c667c85b6d\`c_c\`0d5.051",
+            "bb16d652\`04.7/121d3474b_2.c12\`7386\`0/bdd6ca0c7.22",
+            "244_530/7/.ab\`7.//22a15572502b_08c21./_.\`3164\`c36",
+            "16_d52_d/d22_2c0a.6573355/b\`./bd8a\`bc6114a30_4.\`d",
+            "c02ba/d6.33d05cb/5d34.7d_23_\`_2785\`c60.a\`.4343726",
+            "2aa2\`.1_\`_1.73\`.70.67d.bc671c16382a3d\`71a4.bcb3c7",
+            "40/171b046c/bcc0a603ac620\`372ba_8d706d\`._7a.3_b5.",
+            "c4_a.7562_15\`_a416a/63/c2cbcb\`308a/\`//41b30376.b5" // 7d08...1b1c
         ];
         class Sign {
             /**
              * 签名URL
              * @param url 原URL
              * @param obj 添加到URL上的查询参数对象，可选
-             * @param id appkey在`keySecret`中的索引
+             * @param id appkey在\`keySecret\`中的索引
              * @returns 签名后的URL
              */
             static sign(url, obj = {}, id = 0) {
@@ -4979,7 +4979,7 @@ option {
             }
             /**
              * 提取appkey和盐
-             * @param id appkey在`keySecret`中的索引
+             * @param id appkey在\`keySecret\`中的索引
              * @returns [appkey, sort]
              */
             static decode(id) {
@@ -4995,7 +4995,7 @@ option {
                 }
             }
             /**
-             * 生成`keySecret`池
+             * 生成\`keySecret\`池
              * @param key appkey
              * @param secret appkey对应的盐
              * @returns 混淆后的字符串
@@ -5007,8 +5007,8 @@ option {
                 }, "");
             }
             /**
-             * 输出`keySecret`池对象
-             * @returns `keySecret`池对象
+             * 输出\`keySecret\`池对象
+             * @returns \`keySecret\`池对象
              */
             static list() {
                 return keySecret.reduce((s, d, i) => {
@@ -5028,8 +5028,8 @@ option {
         toast.error("sign.js", e);
     }
 })();
-]]></>).toString();
-    modules["Node.js"] = (<><![CDATA[/**
+`;
+    modules["Node.js"] = `/**
  * 本模块负责实现原生脚本拦截模块
  * 这里指的原生脚本是那些非直接写入原生HTML，而是后续由JavaScript添加进DOM的脚本
  * 本模块导入优先级极高
@@ -5100,10 +5100,10 @@ option {
         toast.error("Node.js", e);
     }
 })();
-]]></>).toString();
-    modules["open.js"] = (<><![CDATA[/**
- * 本模块负责提供`XMLHttpRequest`的hook工具
- * 拦截`open`参数组并传入`XMLHttpRequest`对象本身给回调函数
+`;
+    modules["open.js"] = `/**
+ * 本模块负责提供\`XMLHttpRequest\`的hook工具
+ * 拦截\`open\`参数组并传入\`XMLHttpRequest\`对象本身给回调函数
  */
 (function () {
     try {
@@ -5123,8 +5123,8 @@ option {
         toast.error("open.js", e);
     }
 })();
-]]></>).toString();
-    modules["sendBeacon.js"] = (<><![CDATA[/**
+`;
+    modules["sendBeacon.js"] = `/**
  * 本模块负责拦截B站日志上报
  */
 (function () {
@@ -5144,8 +5144,8 @@ option {
         toast.error("sendBeacon.js", e);
     }
 })();
-]]></>).toString();
-    modules["webSocket.js"] = (<><![CDATA[/**
+`;
+    modules["webSocket.js"] = `/**
  * 本模块hook了WebSocket以修复旧版播放器的实时弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
@@ -5346,8 +5346,8 @@ option {
         toast.error("webSocket.js", e);
     }
 })();
-]]></>).toString();
-    modules["worker.js"] = (<><![CDATA[/**
+`;
+    modules["worker.js"] = `/**
  * 本模块hook了Worker以使旧版播放器支持新版proto弹幕
  */
 (function () {
@@ -5411,8 +5411,8 @@ option {
         toast.error("worker.js", e);
     }
 })();
-]]></>).toString();
-    modules["bnj2021.js"] = (<><![CDATA[/**
+`;
+    modules["bnj2021.js"] = `/**
  * 本模块负责替换拜年祭2021专题页面使用旧版嵌入播放器
  */
 (function () {
@@ -5425,7 +5425,7 @@ option {
             // 替换播放器节点
             const node = document.querySelector("#bilibili-player");
             const iframe = document.createElement('iframe');
-            iframe.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${window.__INITIAL_STATE__.videoInfo.aid}&cid=${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;
+            iframe.src = \`https://www.bilibili.com/blackboard/html5player.html?aid=\${window.__INITIAL_STATE__.videoInfo.aid}&cid=\${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1\`;
             iframe.setAttribute("style", "width: 906px; height: 556px;border:none;");
             iframe.setAttribute("id", "bofqi");
             node.replaceWith(iframe);
@@ -5434,7 +5434,7 @@ option {
             episodes.forEach((d, i, e) => {
                 const episode = titles.find(t => t.title == d.innerText);
                 e[i].parentNode.parentNode.onclick = () => {
-                    toast(episode.title, `av${Reflect.get(episode, "aid")}`, `UP主：${Reflect.get(episode, "author").name}`);
+                    toast(episode.title, \`av\${Reflect.get(episode, "aid")}\`, \`UP主：\${Reflect.get(episode, "author").name}\`);
                     iframe.contentWindow.postMessage({ aid: Reflect.get(episode, "aid"), cid: Reflect.get(episode, "cid") });
                 };
             });
@@ -5444,8 +5444,8 @@ option {
         }
     });
 })();
-]]></>).toString();
-    modules["history.js"] = (<><![CDATA[/**
+`;
+    modules["history.js"] = `/**
  * 本模块负责处理历史记录页面
  */
 (function () {
@@ -5460,8 +5460,8 @@ option {
         debug.error("history.js", e);
     }
 })();
-]]></>).toString();
-    modules["player.js"] = (<><![CDATA[/**
+`;
+    modules["player.js"] = `/**
  * 本模块负责重写旧版嵌入播放器
  */
 (function () {
@@ -5491,8 +5491,8 @@ option {
         toast.error("player.js", e);
     }
 })();
-]]></>).toString();
-    modules["ranking.js"] = (<><![CDATA[/**
+`;
+    modules["ranking.js"] = `/**
  * 本模块负责重写全站排行榜页面
  */
 (function () {
@@ -5536,8 +5536,8 @@ option {
         toast.error("ranking.js", e);
     }
 })();
-]]></>).toString();
-    modules["read.js"] = (<><![CDATA[/**
+`;
+    modules["read.js"] = `/**
  * 本模块负责重新旧版专栏页面
  */
 (function () {
@@ -5568,7 +5568,7 @@ option {
                 this.build(data);
             }
             build(d) {
-                this.data = d.includes("__INITIAL_STATE__=") ? JSON.parse(d.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : "";
+                this.data = d.includes("__INITIAL_STATE__=") ? JSON.parse(d.match(/INITIAL_STATE__=.+?\\;\\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\\(function/, "")) : "";
                 if (!this.data)
                     throw "获取专栏数据失败！";
                 this.bars();
@@ -5580,34 +5580,34 @@ option {
             }
             bars() {
                 this.temp += this.bar.reduce((o, d) => {
-                    o = o + `<a href="//www.bilibili.com/read/${d[2]}?from=articleDetail" target="_self" class="tab-item${this.data.readInfo.category.parent_id == d[0] ? " on" : ""}" data-tab-id="${d[0]}"><span>${d[1]}</span></a>`;
+                    o = o + \`<a href="//www.bilibili.com/read/\${d[2]}?from=articleDetail" target="_self" class="tab-item\${this.data.readInfo.category.parent_id == d[0] ? " on" : ""}" data-tab-id="\${d[0]}"><span>\${d[1]}</span></a>\`;
                     return o;
-                }, `<div class="nav-tab-bar"><a href="https://www.bilibili.com/read/home?from=articleDetail" target="_self" class="logo"></a>`) + "</div>";
+                }, \`<div class="nav-tab-bar"><a href="https://www.bilibili.com/read/home?from=articleDetail" target="_self" class="logo"></a>\`) + "</div>";
             }
             upinfo() {
-                this.temp += `<div class="up-info-holder"><div class="fixed-box"><div class="up-info-block">
-            <a class="up-face-holder" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank"><img class="up-face-image" data-face-src="${this.data.readInfo.author.face.replace("http:", "")}" src="//static.hdslb.com/images/member/noface.gif" /></a><div class="up-info-right-block"><div class="row">
-            <a class="up-name" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank">${this.data.readInfo.author.name}</a> <span class="level"></span><div class="nameplate-holder"><i class="nameplate"></i></div></div><div class="row-2">粉丝: <span class="fans-num"></span> <span class="view">阅读:</span> <span class="view-num"></span></div></div></div><div class="follow-btn-holder"><span class="follow-btn">关注</span></div><div class="up-article-list-block hidden"><div class="block-title">推荐文章</div><ul class="article-list"></ul></div><div class="more"><div class="top-bar"><label>更多</label></div><a class="ac-link" href="//www.bilibili.com/read/apply/" target="_blank"><div class="link"><span class="icon"></span><p class="title">成为创作者</p><p class="info">申请成为专栏UP主</p></div></a> <a href="//www.bilibili.com/blackboard/help.html#%C3%A4%C2%B8%C2%93%C3%A6%C2%A0%C2%8F%C3%A7%C2%9B%C2%B8%C3%A5%C2%85%C2%B3" target="_blank"><div class="help"><span class="icon"></span><p class="title">专栏帮助</p><p class="info">查看专栏使用说明</p></div></a></div></div>
-            </div><div class="right-side-bar"><div class="to-comment"><div class="comment-num-holder"><span class="comment-num"></span></div></div><div class="to-top"></div></div>`;
+                this.temp += \`<div class="up-info-holder"><div class="fixed-box"><div class="up-info-block">
+            <a class="up-face-holder" href="//space.bilibili.com/\${this.data.readInfo.author.mid}" target="_blank"><img class="up-face-image" data-face-src="\${this.data.readInfo.author.face.replace("http:", "")}" src="//static.hdslb.com/images/member/noface.gif" /></a><div class="up-info-right-block"><div class="row">
+            <a class="up-name" href="//space.bilibili.com/\${this.data.readInfo.author.mid}" target="_blank">\${this.data.readInfo.author.name}</a> <span class="level"></span><div class="nameplate-holder"><i class="nameplate"></i></div></div><div class="row-2">粉丝: <span class="fans-num"></span> <span class="view">阅读:</span> <span class="view-num"></span></div></div></div><div class="follow-btn-holder"><span class="follow-btn">关注</span></div><div class="up-article-list-block hidden"><div class="block-title">推荐文章</div><ul class="article-list"></ul></div><div class="more"><div class="top-bar"><label>更多</label></div><a class="ac-link" href="//www.bilibili.com/read/apply/" target="_blank"><div class="link"><span class="icon"></span><p class="title">成为创作者</p><p class="info">申请成为专栏UP主</p></div></a> <a href="//www.bilibili.com/blackboard/help.html#%C3%A4%C2%B8%C2%93%C3%A6%C2%A0%C2%8F%C3%A7%C2%9B%C2%B8%C3%A5%C2%85%C2%B3" target="_blank"><div class="help"><span class="icon"></span><p class="title">专栏帮助</p><p class="info">查看专栏使用说明</p></div></a></div></div>
+            </div><div class="right-side-bar"><div class="to-comment"><div class="comment-num-holder"><span class="comment-num"></span></div></div><div class="to-top"></div></div>\`;
             }
             head() {
-                this.temp += `<div class="head-container"><div class="banner-img-holder"></div><div class="bangumi-rating-container"></div><div class="argue-flag hidden"></div><div class="title-container">
-            <h1 class="title">${this.data.readInfo.title}</h1><div class="info">
-            <a class="category-link" href="//www.bilibili.com/read/${this.bar.find(d => {
+                this.temp += \`<div class="head-container"><div class="banner-img-holder"></div><div class="bangumi-rating-container"></div><div class="argue-flag hidden"></div><div class="title-container">
+            <h1 class="title">\${this.data.readInfo.title}</h1><div class="info">
+            <a class="category-link" href="//www.bilibili.com/read/\${this.bar.find(d => {
                     if (d[0] == this.data.readInfo.category.parent_id)
                         return d;
-                })[2]}#rid=${this.data.readInfo.category.id}" target="_blank"><span>${this.data.readInfo.category.name}</span></a> <span class="create-time" data-ts="${this.data.readInfo.ctime}"></span><div class="article-data"></div>
+                })[2]}#rid=\${this.data.readInfo.category.id}" target="_blank"><span>\${this.data.readInfo.category.name}</span></a> <span class="create-time" data-ts="\${this.data.readInfo.ctime}"></span><div class="article-data"></div>
             </div></div><div style="display:none" class="author-container">
-            <a class="author-face" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank"><img data-face-src="${this.data.readInfo.author.face.replace("http:", "")}" src="${this.data.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank">${this.data.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>`;
+            <a class="author-face" href="//space.bilibili.com/\${this.data.readInfo.author.mid}" target="_blank"><img data-face-src="\${this.data.readInfo.author.face.replace("http:", "")}" src="\${this.data.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/\${this.data.readInfo.author.mid}" target="_blank">\${this.data.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>\`;
             }
             body() {
-                this.temp += `<div class="article-holder">${this.data.readInfo.content}</div><p class="original">本文为我原创</p>`;
+                this.temp += \`<div class="article-holder">\${this.data.readInfo.content}</div><p class="original">本文为我原创</p>\`;
             }
             tag() {
                 this.temp += (this.data.readInfo.tags || []).reduce((o, d) => {
-                    o = o + `<li data-tag-id="${d.tid}" class="tag-item"><span class="tag-border"><span class="tag-border-inner"></span></span> <span class="tag-content">${d.name}</span></li>`;
+                    o = o + \`<li data-tag-id="\${d.tid}" class="tag-item"><span class="tag-border"><span class="tag-border-inner"></span></span> <span class="tag-content">\${d.name}</span></li>\`;
                     return o;
-                }, `<ul class="tag-container">`) + `</ul><div class="article-action"><div class="ops"><span class="like-btn"><i class="icon-video-details_like"></i> <span>--</span></span> <span class="coin-btn"><i class="icon-video-details_throw-coin"></i> <span>--</span></span> <span class="fav-btn"><i class="icon-video-details_collection"></i> <span>--</span></span> <span class="share-container share-btn">分享到：<span></span></span></div><div class="more"><!-- <i class="icon-general_more-actions"></i> --><div class="more-ops-list"><ul><li value="0">投诉或建议</li></ul></div></div></div><div class="article-list-holder-block"></div><div class="draft-holder-block"></div><div class="b-head comment-title-block"><span class="b-head-t comment-results" style="display: inline;"></span> <span class="b-head-t">评论</span></div><div class="comment-holder"></div>`;
+                }, \`<ul class="tag-container">\`) + \`</ul><div class="article-action"><div class="ops"><span class="like-btn"><i class="icon-video-details_like"></i> <span>--</span></span> <span class="coin-btn"><i class="icon-video-details_throw-coin"></i> <span>--</span></span> <span class="fav-btn"><i class="icon-video-details_collection"></i> <span>--</span></span> <span class="share-container share-btn">分享到：<span></span></span></div><div class="more"><!-- <i class="icon-general_more-actions"></i> --><div class="more-ops-list"><ul><li value="0">投诉或建议</li></ul></div></div></div><div class="article-list-holder-block"></div><div class="draft-holder-block"></div><div class="b-head comment-title-block"><span class="b-head-t comment-results" style="display: inline;"></span> <span class="b-head-t">评论</span></div><div class="comment-holder"></div>\`;
             }
             write() {
                 window.original = {
@@ -5627,8 +5627,8 @@ option {
                     },
                     spoiler: "0"
                 };
-                this.data = `<div class="page-container">${this.temp}</div>`;
-                API.rewriteHTML(API.getModule("read.html").replace(`<div class="page-container"></div>`, this.data));
+                this.data = \`<div class="page-container">\${this.temp}</div>\`;
+                API.rewriteHTML(API.getModule("read.html").replace(\`<div class="page-container"></div>\`, this.data));
                 API.runWhile(() => document.body, () => API.importModule("user-select.js"));
             }
         }
@@ -5638,8 +5638,8 @@ option {
         toast.error("read.js", e);
     }
 })();
-]]></>).toString();
-    modules["watchlater.js"] = (<><![CDATA[/**
+`;
+    modules["watchlater.js"] = `/**
  * 本模块负责重写稍后再看页面
  */
 (function () {
@@ -5668,9 +5668,9 @@ option {
         toast.error("watchlater.js", e);
     }
 })();
-]]></>).toString();
-    modules["av.js"] = (<><![CDATA[/**
- * 本模块负责重写av/BV页，由`rewrite.js`按需引导
+`;
+    modules["av.js"] = `/**
+ * 本模块负责重写av/BV页，由\`rewrite.js\`按需引导
  * 其他只在重写过的旧版页面生效的功能可添加在本模块中，但更推荐编写在单独的模块中然后将引导代码写在本模块中。
  */
 (function () {
@@ -5680,7 +5680,7 @@ option {
                 // __INITIAL_STATE__类型保护
                 this.isAV__INITIAL_STATE__ = (pet) => true;
                 // 重定向SEO页面
-                if (/\/s\//.test(location.href))
+                if (/\\/s\\//.test(location.href))
                     location.replace(location.href.replace("s/video", "video"));
                 API.path.name = "av";
                 // 备份还原旧版播放器设置数据
@@ -5798,8 +5798,8 @@ option {
         API.importModule("vector.js");
     }
 })();
-]]></>).toString();
-    modules["commandDm.js"] = (<><![CDATA[/**
+`;
+    modules["commandDm.js"] = `/**
  * 本模块负责实现互动弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
@@ -6155,14 +6155,14 @@ option {
             super(cdm, info, from);
             this.popup.style.width = "184px";
             this.gradeInfo = info;
-            this.popup.innerHTML = `
-            <div style="display:block" class="grade-title">${info.msg}</div>
+            this.popup.innerHTML = \`
+            <div style="display:block" class="grade-title">\${info.msg}</div>
             <div class="grade-score-area pointer"></div>
             <div class="grade-score-info" style="display:none">
-                <div style="color:#6f6f6f;display:inline-block;">平均</div><span style="color:${info.skin_font_color};font-size:27px" class="grade-avg-score">${info.avg_score}</span>
+                <div style="color:#6f6f6f;display:inline-block;">平均</div><span style="color:\${info.skin_font_color};font-size:27px" class="grade-avg-score">\${info.avg_score}</span>
             </div>
-            <span style="position:absolute;right:1rem;top:0.8rem;font-size:12px;color:#6f6f6f" class="grade-score-count">${info.count}人参与</span>
-            `;
+            <span style="position:absolute;right:1rem;top:0.8rem;font-size:12px;color:#6f6f6f" class="grade-score-count">\${info.count}人参与</span>
+            \`;
             this.scoreInfo = this.popup.getElementsByClassName("grade-score-info")[0];
             let scoreArea = this.popup.getElementsByClassName("grade-score-area")[0];
             let scoreButton = [];
@@ -6181,9 +6181,9 @@ option {
             for (let i = 0; i < 5; i++) {
                 let score = document.createElement("div");
                 scoreButton[i] = score;
-                score.innerHTML = `
-                <img width=20 hegiht=20 src="${info.skin_selected}" class="bg"></img>
-                <img width=20 hegiht=20 src="${info.skin_selected}" class="score-button"></img>`;
+                score.innerHTML = \`
+                <img width=20 hegiht=20 src="\${info.skin_selected}" class="bg"></img>
+                <img width=20 hegiht=20 src="\${info.skin_selected}" class="score-button"></img>\`;
                 scoreArea.appendChild(score);
                 if (info.mid_score === 0) {
                     score.onmouseenter = () => highlightScores(i);
@@ -6400,8 +6400,8 @@ option {
         }
     };
 })();
-]]></>).toString();
-    modules["descBV.js"] = (<><![CDATA[/**
+`;
+    modules["descBV.js"] = `/**
  * 本模块负责转化av页简介中BV号为超链接
  */
 (function () {
@@ -6412,7 +6412,7 @@ option {
                 if (desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
                     const text = desc[1].innerText.replace(/BV[A-Za-z0-9]+/gi, (str) => {
                         const av = API.abv(str);
-                        return `<a target="_blank" href="//www.bilibili.com/video/av${av}">av${av}</a>`;
+                        return \`<a target="_blank" href="//www.bilibili.com/video/av\${av}">av\${av}</a>\`;
                     });
                     desc[1].innerHTML = text;
                 }
@@ -6423,16 +6423,16 @@ option {
         debug.error("descBV.js", e);
     }
 })();
-]]></>).toString();
-    modules["enLike.js"] = (<><![CDATA[/**
+`;
+    modules["enLike.js"] = `/**
  * 本模块负责为旧版av/BV、稍后再看添加点赞功能
  */
 (function () {
     API.runWhile(() => document.querySelector(".v.play"), async () => {
         try {
             let span = document.createElement("span");
-            let like = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);`;
-            let dislike = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/dislike.png);`;
+            let like = \`background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);\`;
+            let dislike = \`background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/dislike.png);\`;
             let text = document.createTextNode("点赞 --");
             let arg = text;
             let islike = false;
@@ -6448,7 +6448,7 @@ option {
                     let data = await xhr({
                         url: "https://api.bilibili.com/x/web-interface/archive/like",
                         method: "POST",
-                        data: `aid=${API.aid}&like=2&csrf=${API.getCookies().bili_jct}`,
+                        data: \`aid=\${API.aid}&like=2&csrf=\${API.getCookies().bili_jct}\`,
                         credentials: true
                     });
                     data = API.jsonCheck(data).ttl;
@@ -6470,7 +6470,7 @@ option {
                     let data = await xhr({
                         url: "https://api.bilibili.com/x/web-interface/archive/like",
                         method: "POST",
-                        data: `aid=${API.aid}&like=1&csrf=${API.getCookies().bili_jct}`,
+                        data: \`aid=\${API.aid}&like=1&csrf=\${API.getCookies().bili_jct}\`,
                         credentials: true
                     });
                     data = API.jsonCheck(data).ttl;
@@ -6514,8 +6514,8 @@ option {
         }
     });
 })();
-]]></>).toString();
-    modules["hookWebpackJsonp.js"] = (<><![CDATA[/**
+`;
+    modules["hookWebpackJsonp.js"] = `/**
  * 本模块负责修复av页原生脚本中的错误代码
  */
 (function () {
@@ -6559,8 +6559,8 @@ option {
         toast.error("webpackJsonpFunction.js", e);
     }
 })();
-]]></>).toString();
-    modules["loadByDmid.js"] = (<><![CDATA[/**
+`;
+    modules["loadByDmid.js"] = `/**
  * 本模块负责处理dmid跳转
  */
 (function () {
@@ -6582,7 +6582,7 @@ option {
                 return window.player.seek(progress);
             if (dmid) {
                 progress = await xhr({
-                    url: `https://api.bilibili.com/x/v2/dm/thumbup/detail?oid=${API.cid}&dmid=${dmid}`,
+                    url: \`https://api.bilibili.com/x/v2/dm/thumbup/detail?oid=\${API.cid}&dmid=\${dmid}\`,
                     credentials: true
                 });
                 progress = API.jsonCheck(progress).data.progress; // 检查xhr返回值并转化为json
@@ -6594,10 +6594,10 @@ option {
         debug.error("loadByDmid.js", e);
     }
 })();
-]]></>).toString();
-    modules["mediaControl.js"] = (<><![CDATA[/**
+`;
+    modules["mediaControl.js"] = `/**
  * 本模块负责为旧版播放器添加媒体控制键
- * 请以`title`、`artist`、`chapterName`、`coverUrl`、`getPlaylistIndex`的名义传入数据
+ * 请以\`title\`、\`artist\`、\`chapterName\`、\`coverUrl\`、\`getPlaylistIndex\`的名义传入数据
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
 (async function () {
@@ -6658,8 +6658,8 @@ option {
         toast.error("mediaControl.js", e);
     }
 })();
-]]></>).toString();
-    modules["mediaList.js"] = (<><![CDATA[/**
+`;
+    modules["mediaList.js"] = `/**
  * 本模块负责基于av页重构为媒体页
  */
 (function () {
@@ -6669,12 +6669,12 @@ option {
         if (!config.medialist)
             return;
         GM.setValue("medialist", ml);
-        return API.runWhile(() => window.aid, () => location.replace(`https://www.bilibili.com/video/${window.aid}`));
+        return API.runWhile(() => window.aid, () => location.replace(\`https://www.bilibili.com/video/\${window.aid}\`));
     }
     // 新版稍后再看跳转到旧版稍后再看
     if (API.path[5].startsWith("watchlater") && config.watchlater)
         location.replace("https://www.bilibili.com/watchlater/#/");
-    if (!/\/video\/[AaBb][Vv]/.test(location.href))
+    if (!/\\/video\\/[AaBb][Vv]/.test(location.href))
         return;
     let mid = GM.getValue("medialist", 0);
     GM.deleteValue("medialist");
@@ -6682,7 +6682,7 @@ option {
         toast("重构媒体页信息中...");
         let avs = [], value = [], promises = [], ids = [];
         xhr({
-            url: `https://api.bilibili.com/x/v1/medialist/resource/ids4Player?media_id=${mid}`,
+            url: \`https://api.bilibili.com/x/v1/medialist/resource/ids4Player?media_id=\${mid}\`,
             credentials: true
         }).then(async (d) => {
             let data = API.jsonCheck(d).data;
@@ -6777,10 +6777,10 @@ option {
         toast.error("mediaList.js", e);
     }
 })();
-]]></>).toString();
-    modules["upList.js"] = (<><![CDATA[/**
+`;
+    modules["upList.js"] = `/**
  * 本模块负责生成和作视频的UP列表
- * 请以`staff`的名义传入UP主列表
+ * 请以\`staff\`的名义传入UP主列表
  */
 (function () {
     API.runWhile(() => document.querySelector("#v_upinfo"), () => {
@@ -6788,15 +6788,15 @@ option {
             let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
             // @ts-ignore：该变量由主模块传入
             fl = staff.reduce((s, d) => {
-                s = s + `<div class="up-card">
-                <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="avatar">
-                <img src="${d.face}@48w_48h.webp" /><!---->
-                <span class="info-tag">${d.title}</span><!----></a>
+                s = s + \`<div class="up-card">
+                <a href="//space.bilibili.com/\${d.mid}" data-usercard-mid="\${d.mid}" target="_blank" class="avatar">
+                <img src="\${d.face}@48w_48h.webp" /><!---->
+                <span class="info-tag">\${d.title}</span><!----></a>
                 <div class="avatar">
-                <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="${(d.vip && d.vip.status) ? 'name-text is-vip' : 'name-text'}">${d.name}</a>
-                </div></div>`;
+                <a href="//space.bilibili.com/\${d.mid}" data-usercard-mid="\${d.mid}" target="_blank" class="\${(d.vip && d.vip.status) ? 'name-text is-vip' : 'name-text'}">\${d.name}</a>
+                </div></div>\`;
                 return s;
-            }, fl) + `</div>`;
+            }, fl) + \`</div>\`;
             document.querySelector("#v_upinfo").innerHTML = fl;
             API.addCss(API.getModule("upList.css"));
         }
@@ -6805,8 +6805,8 @@ option {
         }
     });
 })();
-]]></>).toString();
-    modules["videoSort.js"] = (<><![CDATA[/**
+`;
+    modules["videoSort.js"] = `/**
  * 本模块负责视频标题下失效的分区信息
  * 分区信息表videoSort.json可能需要长期维护
  */
@@ -6828,7 +6828,7 @@ option {
                 const nodes = document.querySelector(".tm-info").childNodes;
                 if (nodes[2].nodeType === 8) {
                     xhr({
-                        url: `https://api.bilibili.com/x/web-interface/view?aid=${API.aid}`,
+                        url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
                         responseType: "json"
                     }).then(d => {
                         API.tid = API.jsonCheck(d).data.tid;
@@ -6850,8 +6850,8 @@ option {
         }
     });
 })();
-]]></>).toString();
-    modules["bangumi.js"] = (<><![CDATA[/**
+`;
+    modules["bangumi.js"] = `/**
  * 本模块负责重写旧版bangumi页面
  */
 (function () {
@@ -6873,7 +6873,7 @@ option {
             async prepareA() {
                 if (API.uid && !this.epid) {
                     const data = await xhr({ url: location.href });
-                    const arr = data.match(/last_ep_id\"\:[0-9]+/) || [];
+                    const arr = data.match(/last_ep_id\\"\\:[0-9]+/) || [];
                     this.epid = (arr[0] && arr[0].split(":")[1]) || null;
                 }
                 await new Promise(r => {
@@ -6889,7 +6889,7 @@ option {
                         }).catch(e => {
                             toast.error("获取bangumi数据出错！", e);
                             config.videoLimit && xhr({
-                                url: API.objUrl(`${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season`, this.obj),
+                                url: API.objUrl(\`\${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season\`, this.obj),
                                 responseType: "json",
                                 credentials: true
                             }).then(d => {
@@ -6906,7 +6906,7 @@ option {
             prepareB() {
                 if (API.uid && !this.epid) {
                     const data = xhr({ url: location.href, async: false });
-                    const arr = data.match(/last_ep_id\"\:[0-9]+/) || [];
+                    const arr = data.match(/last_ep_id\\"\\:[0-9]+/) || [];
                     this.epid = (arr[0] && arr[0].split(":")[1]) || null;
                 }
                 let d = xhr({
@@ -6921,7 +6921,7 @@ option {
                     if (!config.videoLimit)
                         return;
                     d = xhr({
-                        url: API.objUrl(`${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season`, this.obj),
+                        url: API.objUrl(\`\${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season\`, this.obj),
                         async: false
                     });
                     API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid });
@@ -6963,8 +6963,8 @@ option {
         API.importModule("vector.js");
     }
 })();
-]]></>).toString();
-    modules["episodeData.js"] = (<><![CDATA[/**
+`;
+    modules["episodeData.js"] = `/**
  * 本模块负责添加bangumi分集数据
  */
 (function () {
@@ -7003,8 +7003,8 @@ option {
         debug.error("episodeData.js", e);
     }
 })();
-]]></>).toString();
-    modules["restoreData.js"] = (<><![CDATA[/**
+`;
+    modules["restoreData.js"] = `/**
  * 本模块负责修复Bangumi页面数据错误
  */
 (function () {
@@ -7050,13 +7050,13 @@ option {
             args[1] = "https://comment.bilibili.com/playtag,2-2?html5=1";
             restoreBangumiRecommand();
         });
-        API.addCss(`#bangumi_recommend_vertial .recom-list{
+        API.addCss(\`#bangumi_recommend_vertial .recom-list{
             height: 960px;
             overflow: auto;
         } .recom-list::-webkit-scrollbar {
             width: 0 !important;
             height: 0 !important;
-        }`, "recom-list");
+        }\`, "recom-list");
         async function restoreBangumiRecommand() {
             let data = API.jsonCheck(await xhr({ url: API.objUrl("https://api.bilibili.com/pgc/web/recommend/related/recommend", { season_id: String(API.__INITIAL_STATE__.ssId) }) })).result;
             let result = API.jsonCheck(await xhr({ url: API.objUrl("https://api.bilibili.com/x/tag/info", { tag_name: API.__INITIAL_STATE__.mediaInfo.title }) }));
@@ -7067,32 +7067,32 @@ option {
                 });
             }
             result = result.reduce((s, d) => {
-                s = s + `<li class="recom-item">
-                <a href="https://www.bilibili.com/video/av${d.aid}" target="_blank" title="${d.title}">
+                s = s + \`<li class="recom-item">
+                <a href="https://www.bilibili.com/video/av\${d.aid}" target="_blank" title="\${d.title}">
                 <div class="recom-img"><div class="common-lazy-img">
-                <img alt="${d.title}" src="${d.pic.replace("http:", "")}@224w_140h.webp" lazy="loaded">
+                <img alt="\${d.title}" src="\${d.pic.replace("http:", "")}@224w_140h.webp" lazy="loaded">
                 </div></div>
                 <div class="recom-info">
-                <div class="info-title">${d.title}</div>
+                <div class="info-title">\${d.title}</div>
                 <div class="info-count">
-                <div class="play-count"><i></i><span>${API.unitFormat(d.stat.view)}</span></div>
-                <div class="danmu-count"><i></i><span>${API.unitFormat(d.stat.danmaku)}</span></div>
-                </div></div></a></li>`;
+                <div class="play-count"><i></i><span>\${API.unitFormat(d.stat.view)}</span></div>
+                <div class="danmu-count"><i></i><span>\${API.unitFormat(d.stat.danmaku)}</span></div>
+                </div></div></a></li>\`;
                 return s;
             }, "");
             // @ts-ignore：节点肯定存在
             document.querySelector(".recom-list.clearfix").innerHTML = result;
             data = data.reduce((s, d) => {
-                s = s + `<a class="bilibili-player-recommend-video" href="${d.url}" target="_blank">
+                s = s + \`<a class="bilibili-player-recommend-video" href="\${d.url}" target="_blank">
                 <div class="bilibili-player-recommend-left">
-                <img src="${d.new_ep.cover || d.cover}@160w_100h.webp" alt="${d.title}" class="mCS_img_loaded" />
+                <img src="\${d.new_ep.cover || d.cover}@160w_100h.webp" alt="\${d.title}" class="mCS_img_loaded" />
                 <span class="player-tooltips-trigger"><i class="bilibili-player-iconfont icon-22wait-normal"></i></span>
                 </div>
                 <div class="bilibili-player-recommend-right">
-                <div class="bilibili-player-recommend-title" title="${d.title}">${d.title}</div>
-                <div class="bilibili-player-recommend-click"><i class="bilibili-player-iconfont icon-12iconplayed"></i>${API.unitFormat(d.stat.view)}</div>
-                <div class="bilibili-player-recommend-danmaku"><i class="bilibili-player-iconfont icon-12icondanmu"></i>${API.unitFormat(d.stat.danmaku)}</div>
-                </div></a>`;
+                <div class="bilibili-player-recommend-title" title="\${d.title}">\${d.title}</div>
+                <div class="bilibili-player-recommend-click"><i class="bilibili-player-iconfont icon-12iconplayed"></i>\${API.unitFormat(d.stat.view)}</div>
+                <div class="bilibili-player-recommend-danmaku"><i class="bilibili-player-iconfont icon-12icondanmu"></i>\${API.unitFormat(d.stat.danmaku)}</div>
+                </div></a>\`;
                 return s;
             }, '');
             let item = document.querySelector(".bilibili-player-recommend");
@@ -7109,8 +7109,8 @@ option {
         toast.error("restoreData.js", e);
     }
 })();
-]]></>).toString();
-    modules["ad2info.js"] = (<><![CDATA[/**
+`;
+    modules["ad2info.js"] = `/**
  * 本模块负责将主页失效的广告区转化为资讯区
  */
 (function () {
@@ -7148,8 +7148,8 @@ option {
         toast.error("ad2info.js", e);
     }
 })();
-]]></>).toString();
-    modules["biliIndexRec.js"] = (<><![CDATA[/**
+`;
+    modules["biliIndexRec.js"] = `/**
  * 本模块负责修复主页直播分区数据
  */
 (function () {
@@ -7186,8 +7186,8 @@ option {
         toast.error("biliIndexRec.js", e);
     }
 })();
-]]></>).toString();
-    modules["index.js"] = (<><![CDATA[/**
+`;
+    modules["index.js"] = `/**
  * 本模块负责重写B站旧版主页
  */
 (function () {
@@ -7203,11 +7203,11 @@ option {
                 await new Promise(r => {
                     if (!window.__INITIAL_STATE__ && !(window.__INITIAL_DATA__ && window.__INITIAL_DATA__[0])) {
                         xhr({ url: location.href, credentials: true }).then(d => {
-                            let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
+                            let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\\;\\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\\(function/, "") : "";
                             if (data)
                                 API.importModule("index-html.js", { __INITIAL_STATE__: data });
                             else {
-                                data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\/script>/, "") : "";
+                                data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\\/script>/, "") : "";
                                 data && API.importModule("index-data.js", { __INITIAL_DATA__: data });
                             }
                             r(true);
@@ -7227,11 +7227,11 @@ option {
             prepareB() {
                 if (!window.__INITIAL_STATE__ && !(window.__INITIAL_DATA__ && window.__INITIAL_DATA__[0])) {
                     let d = xhr({ url: location.href, async: false });
-                    let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
+                    let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\\;\\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\\(function/, "") : "";
                     if (data)
                         API.importModule("index-html.js", { __INITIAL_STATE__: data });
                     else {
-                        data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\/script>/, "") : "";
+                        data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\\/script>/, "") : "";
                         data && API.importModule("index-data.js", { __INITIAL_DATA__: data });
                     }
                 }
@@ -7262,8 +7262,8 @@ option {
         API.importModule("vector.js");
     }
 })();
-]]></>).toString();
-    modules["indexRecommend.js"] = (<><![CDATA[/**
+`;
+    modules["indexRecommend.js"] = `/**
  * 本模块负责取消主页个性化推荐
  */
 (function () {
@@ -7287,9 +7287,9 @@ option {
                 wait.remove(); // 移除loading节点
                 for (let i = indexFlag - 1; i >= indexFlag - 10; i--) {
                     // 依次创建推荐数据，长度固定为10
-                    API.addElement("div", { class: "groom-module home-card" }, node, undefined, true).innerHTML = `<a href="//www.bilibili.com/video/av${indexRecommend[i].aid || indexRecommend[i].id}" target="_blank" title="${indexRecommend[i].title}">
-                        <img src="${indexRecommend[i].pic.replace("http:", "")}@160w_100h.webp" alt="${indexRecommend[i].title}" width="160" height="100" class="pic">
-                        "><!----><div class="card-mark"><p class="title">${indexRecommend[i].title}</p><p class="author">up主：${indexRecommend[i].owner.name}</p><p class="play">播放：${API.unitFormat(indexRecommend[i].stat.view)}</p></div></a><div class="watch-later-trigger w-later"></div></div>`;
+                    API.addElement("div", { class: "groom-module home-card" }, node, undefined, true).innerHTML = \`<a href="//www.bilibili.com/video/av\${indexRecommend[i].aid || indexRecommend[i].id}" target="_blank" title="\${indexRecommend[i].title}">
+                        <img src="\${indexRecommend[i].pic.replace("http:", "")}@160w_100h.webp" alt="\${indexRecommend[i].title}" width="160" height="100" class="pic">
+                        "><!----><div class="card-mark"><p class="title">\${indexRecommend[i].title}</p><p class="author">up主：\${indexRecommend[i].owner.name}</p><p class="play">播放：\${API.unitFormat(indexRecommend[i].stat.view)}</p></div></a><div class="watch-later-trigger w-later"></div></div>\`;
                 }
                 indexFlag = indexRecommend.length < 20 ? 10 : indexFlag < 30 ? indexFlag + 10 : 10; // 对于全站推荐，刷新遍历起始点
             };
@@ -7301,8 +7301,8 @@ option {
         }
     });
 })();
-]]></>).toString();
-    modules["indexSort.js"] = (<><![CDATA[/**
+`;
+    modules["indexSort.js"] = `/**
  * 本模块负责修复主页失效分区
  */
 (function () {
@@ -7332,8 +7332,8 @@ option {
         toast.error("indexSort.js", e);
     }
 })();
-]]></>).toString();
-    modules["mediaRank.js"] = (<><![CDATA[/**
+`;
+    modules["mediaRank.js"] = `/**
  * 本模块负责将主页电影、电视剧、纪录片排行转化为番剧样式
  */
 (function () {
@@ -7380,8 +7380,8 @@ option {
         toast.error("mediaRank.js", e);
     }
 })();
-]]></>).toString();
-    modules["live.js"] = (<><![CDATA[/**
+`;
+    modules["live.js"] = `/**
  * 本模块负责引导直播相关模块
  */
 (function () {
@@ -7397,8 +7397,8 @@ option {
         toast.error("live.js", e);
     }
 })();
-]]></>).toString();
-    modules["liveStream.js"] = (<><![CDATA[/**
+`;
+    modules["liveStream.js"] = `/**
  * 本模块负责拦截直播间流媒体
  */
 (function () {
@@ -7430,8 +7430,8 @@ option {
         toast.error("liveStream.js", e);
     }
 })();
-]]></>).toString();
-    modules["sleepCheck.js"] = (<><![CDATA[/**
+`;
+    modules["sleepCheck.js"] = `/**
  * 本模块负责禁用直播间挂机检测
  */
 (function () {
@@ -7453,8 +7453,8 @@ option {
         toast.error("sleepCheck.js", e);
     }
 })();
-]]></>).toString();
-    modules["WebRTC.js"] = (<><![CDATA[/**
+`;
+    modules["WebRTC.js"] = `/**
  * 本模块负责禁用WebRTC以禁止直播间p2p共享
  * 代码参看了WebRTC Control的源码，非常感谢！
  * @see WebRTC-Control {@link https://mybrowseraddon.com/webrtc-control.html}
@@ -7490,8 +7490,8 @@ try {
 catch (e) {
     API.trace(e, "WebRTC.js", true);
 }
-]]></>).toString();
-    modules["11783021.js"] = (<><![CDATA[/**
+`;
+    modules["11783021.js"] = `/**
  * 本模块负责修复对于番剧出差(uid=11783021)空间的访问
  */
 (function () {
@@ -7573,8 +7573,8 @@ catch (e) {
         toast.error("11783021.js", e);
     }
 })();
-]]></>).toString();
-    modules["album.js"] = (<><![CDATA[/**
+`;
+    modules["album.js"] = `/**
  * 本模块负责将空间中相簿的链接从动态重定向回去
  */
 (function () {
@@ -7589,8 +7589,8 @@ catch (e) {
                     }, []);
                     setTimeout(() => {
                         document.querySelectorAll(".album-card").forEach((d, i) => {
-                            d.firstChild.href = `//h.bilibili.com/${data[i]}`;
-                            d.children[1].href = `//h.bilibili.com/${data[i]}`;
+                            d.firstChild.href = \`//h.bilibili.com/\${data[i]}\`;
+                            d.children[1].href = \`//h.bilibili.com/\${data[i]}\`;
                         });
                     }, 1000);
                 }
@@ -7601,8 +7601,8 @@ catch (e) {
         debug.error("album.js", e);
     }
 })();
-]]></>).toString();
-    modules["jointime.js"] = (<><![CDATA[/**
+`;
+    modules["jointime.js"] = `/**
  * 本模块负责添加空间账号注册时间信息
  */
 (async function () {
@@ -7621,8 +7621,8 @@ catch (e) {
         toast.error("jsontime.js", e);
     }
 })();
-]]></>).toString();
-    modules["lostVideo.js"] = (<><![CDATA[/**
+`;
+    modules["lostVideo.js"] = `/**
  * 本模块负责获取收藏、频道中的失效视频信息
  */
 (function () {
@@ -7630,10 +7630,10 @@ catch (e) {
         async function getLostVideo(aid) {
             let result = []; // 失效视频信息缓存
             try { // 尝试访问Biliplus
-                let data = await xhr.GM({ url: `https://www.biliplus.com/video/av${aid}` });
-                if (data.match(/\<title\>.+?\ \-\ AV/)) {
-                    result[0] = data.match(/\<title\>.+?\ \-\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
-                    result[1] = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
+                let data = await xhr.GM({ url: \`https://www.biliplus.com/video/av\${aid}\` });
+                if (data.match(/\\<title\\>.+?\\ \\-\\ AV/)) {
+                    result[0] = data.match(/\\<title\\>.+?\\ \\-\\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
+                    result[1] = data.match(/\\<img style=\\"display:none\\"\\ src=\\".+?\\"\\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
                 }
             }
             catch (e) {
@@ -7641,10 +7641,10 @@ catch (e) {
             }
             if (!result[0] || !result[1]) {
                 try { // 标题或封面无效，尝试访问Biliplus CID缓存库
-                    let data = await xhr.GM({ url: `https://www.biliplus.com/all/video/av${aid}/` });
+                    let data = await xhr.GM({ url: \`https://www.biliplus.com/all/video/av\${aid}/\` });
                     if (data.match('/api/view_all?')) {
-                        data = data.match(/\/api\/view_all\?.+?\',cloudmoe/)[0].replace(/\',cloudmoe/, "");
-                        data = await xhr.GM({ url: `//www.biliplus.com${data}` });
+                        data = data.match(/\\/api\\/view_all\\?.+?\\',cloudmoe/)[0].replace(/\\',cloudmoe/, "");
+                        data = await xhr.GM({ url: \`//www.biliplus.com\${data}\` });
                         data = API.jsonCheck(data).data;
                         result[0] = result[0] || data.info.title;
                         result[1] = result[1] || data.info.pic;
@@ -7656,17 +7656,17 @@ catch (e) {
             }
             if (!result[0] || !result[1]) {
                 try { // 标题或封面依旧无效，尝试访问jijidown
-                    let data = await xhr.GM({ url: `https://www.jijidown.com/video/${aid}` });
+                    let data = await xhr.GM({ url: \`https://www.jijidown.com/video/\${aid}\` });
                     if (data.match('window._INIT')) {
-                        result[0] = result[0] || data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
-                        result[1] = result[1] || data.match(/\"img\":\ \".+?\",/)[0].match(/http.+?\",/)[0].replace(/",/, "");
+                        result[0] = result[0] || data.match(/\\<title\\>.+?\\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
+                        result[1] = result[1] || data.match(/\\"img\\":\\ \\".+?\\",/)[0].match(/http.+?\\",/)[0].replace(/",/, "");
                     }
                 }
                 catch (e) {
                     debug.error("lostVideo.js", e);
                 }
             }
-            result[0] = result[0] || `av${aid}`; // 无法获取有效数据，将标题改为av号
+            result[0] = result[0] || \`av\${aid}\`; // 无法获取有效数据，将标题改为av号
             result[1] = result[1] ? result[1].replace("http:", "") : "//i0.hdslb.com/bfs/archive/be27fd62c99036dce67efface486fb0a88ffed06.jpg"; //无法获取有效数据，将封面改为哭脸
             return result;
         }
@@ -7678,8 +7678,8 @@ catch (e) {
                     aid = Number(aid) || API.abv(aid); // 转化为数字
                     d.setAttribute("class", "small-item fakeDanmu-item");
                     d.setAttribute("data-aid", aid);
-                    d.children[0].href = `//www.bilibili.com/video/av${aid}`;
-                    d.children[1].href = `//www.bilibili.com/video/av${aid}`;
+                    d.children[0].href = \`//www.bilibili.com/video/av\${aid}\`;
+                    d.children[1].href = \`//www.bilibili.com/video/av\${aid}\`;
                     d.children[0].setAttribute("target", "_blank");
                     d.children[1].setAttribute("target", "_blank");
                     d.children[0].setAttribute("class", "cover cover-normal");
@@ -7697,8 +7697,8 @@ catch (e) {
                 aid = Number(aid) || API.abv(aid); // 转化为数字
                 node.setAttribute("class", "small-item fakeDanmu-item");
                 node.setAttribute("data-aid", aid);
-                node.children[0].href = `//www.bilibili.com/video/av${aid}`;
-                node.children[1].href = `//www.bilibili.com/video/av${aid}`;
+                node.children[0].href = \`//www.bilibili.com/video/av\${aid}\`;
+                node.children[1].href = \`//www.bilibili.com/video/av\${aid}\`;
                 node.children[0].setAttribute("target", "_blank");
                 node.children[1].setAttribute("target", "_blank");
                 node.children[0].setAttribute("class", "cover cover-normal");
@@ -7716,8 +7716,8 @@ catch (e) {
         toast.error("lostVideo.js", e);
     }
 })();
-]]></>).toString();
-    modules["space.js"] = (<><![CDATA[/**
+`;
+    modules["space.js"] = `/**
  * 本模块负责引导个人空间相关的模块
  */
 (function () {
@@ -7732,8 +7732,8 @@ catch (e) {
         toast.error("space.js", e);
     }
 })();
-]]></>).toString();
-    modules["accesskey.js"] = (<><![CDATA[/**
+`;
+    modules["accesskey.js"] = `/**
  * 本模块负责获取账户授权的高级操作
  * 用于提供给代理服务器以获取区域/APP限制视频源，实际上不进行授权也行，以游客身份一般一样能获取最高1080P的视频源，而限制视频一般也不要求大会员
  * **账户授权意味着第三方拥有您B站账号的访问权限，如非必要请不要进行操作！**
@@ -7745,11 +7745,11 @@ catch (e) {
             this.access_date = GM.getValue("access_date", 0);
             this.num = 0;
             this.box = API.element.popupbox({ maxWidth: "360px", maxHeight: "300px" });
-            API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, this.box, `<span>账户授权<span>`);
-            API.addElement("div", { style: 'margin-bottom: 10px;' }, this.box, `<div>授权代理服务器使用您的账户权限，以在限制视频等操作中继承您的大会员权益。
+            API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, this.box, \`<span>账户授权<span>\`);
+            API.addElement("div", { style: 'margin-bottom: 10px;' }, this.box, \`<div>授权代理服务器使用您的账户权限，以在限制视频等操作中继承您的大会员权益。
             <strong>这意味着第三方拥有您的账户访问权限，请充分考虑其中干系后谨慎操作！</strong>
             如果只是为了解除视频限制，以“游客”身份也一样可以获取到最高1080P的视频源，而且一般不会有大会员专享限制。
-            </br>※ 鉴权有效期一般在一个月左右，若是失效需要手动重新授权，脚本不会代为检查。</div>`);
+            </br>※ 鉴权有效期一般在一个月左右，若是失效需要手动重新授权，脚本不会代为检查。</div>\`);
             this.box.appendChild(API.element.hr());
             const body = API.addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;margin-bottom: 10px;" }, this.box);
             this.enable = body.appendChild(API.element.button(() => { this.access(); }, "开始授权", 3));
@@ -7764,14 +7764,14 @@ catch (e) {
                 this.enable.replaceWith(temp);
                 this.disable.style.display = "block";
                 this.enable = temp;
-                this.foot.innerHTML = `<div>授权状态：已授权</div><div>授权日期：${API.timeFormat(this.access_date, true)}</div>`;
+                this.foot.innerHTML = \`<div>授权状态：已授权</div><div>授权日期：\${API.timeFormat(this.access_date, true)}</div>\`;
             }
             else {
                 const temp = API.element.button(() => { this.access(); }, "开始授权", 3);
                 this.enable.replaceWith(temp);
                 this.enable = temp;
                 this.disable.style.display = "none";
-                this.foot.innerHTML = `<div>授权状态：未授权</div><div> </div>`;
+                this.foot.innerHTML = \`<div>授权状态：未授权</div><div> </div>\`;
             }
         }
         async access() {
@@ -7853,8 +7853,8 @@ catch (e) {
         }
     };
 })();
-]]></>).toString();
-    modules["allDanmaku.js"] = (<><![CDATA[/**
+`;
+    modules["allDanmaku.js"] = `/**
  * 本模块负责提供全弹幕装填工具
  */
 (function () {
@@ -7973,7 +7973,7 @@ catch (e) {
                         // 延时转入日期请求
                         this.time = this.timeT;
                         this.timeT = undefined;
-                        toast(`技能冷却中。。。请稍待 ${config.allDanmakuDelay} 秒钟`);
+                        toast(\`技能冷却中。。。请稍待 \${config.allDanmakuDelay} 秒钟\`);
                         return setTimeout(() => this.init(), config.allDanmakuDelay * 1000);
                     }
                     else {
@@ -7984,7 +7984,7 @@ catch (e) {
                         }
                         else
                             this.arrT = [this.arrT[0] - 1, 12, 31];
-                        toast(`获取前一个月数据 ${this.arrT.slice(0, 2).join("-")} 请稍待 ${config.allDanmakuDelay} 秒钟`);
+                        toast(\`获取前一个月数据 \${this.arrT.slice(0, 2).join("-")} 请稍待 \${config.allDanmakuDelay} 秒钟\`);
                         return setTimeout(() => this.check(), config.allDanmakuDelay * 1000);
                     }
                 }
@@ -7997,7 +7997,7 @@ catch (e) {
                     }
                     else
                         this.arrT = [this.arrT[0] - 1, 12, 31];
-                    toast(`获取前一个月数据 ${this.arrT.slice(0, 2).join("-")} 请稍待 ${config.allDanmakuDelay} 秒钟`);
+                    toast(\`获取前一个月数据 \${this.arrT.slice(0, 2).join("-")} 请稍待 \${config.allDanmakuDelay} 秒钟\`);
                     return setTimeout(() => this.check(), config.allDanmakuDelay * 1000);
                 }
             }
@@ -8045,8 +8045,8 @@ catch (e) {
         }
     };
 })();
-]]></>).toString();
-    modules["autoFix.js"] = (<><![CDATA[/**
+`;
+    modules["autoFix.js"] = `/**
  * 本模块负责一些自动化处理
  */
 (function () {
@@ -8077,8 +8077,8 @@ catch (e) {
         debug.error("autoFix.js", e);
     }
 })();
-]]></>).toString();
-    modules["banner.js"] = (<><![CDATA[/**
+`;
+    modules["banner.js"] = `/**
  * 本模块负责替换顶栏动图接口
  * 本模块动态banner相关代码移植自B站header.js
  */
@@ -8150,7 +8150,7 @@ catch (e) {
                 try {
                     await Promise.all(this.layerConfig.layers.map(async (v, index) => {
                         return Promise.all(v.resources.map(async (i) => {
-                            if (/\.(webm|mp4)$/.test(i.src)) {
+                            if (/\\.(webm|mp4)\$/.test(i.src)) {
                                 const res = await xhr({ url: i.src, responseType: "blob" });
                                 const url = URL.createObjectURL(res);
                                 const video = document.createElement('video');
@@ -8284,9 +8284,9 @@ catch (e) {
                                 const translate = v._initState.translate.map((x, i) => { var _b; return (x + offset[i]) * containerScale * (((_b = v.scale) === null || _b === void 0 ? void 0 : _b.initial) || 1); });
                                 transform.translate = translate;
                             }
-                            a.style.transform = `scale(${transform.scale})` +
-                                `translate(${transform.translate[0]}px, ${transform.translate[1]}px)` +
-                                `rotate(${transform.rotate}deg)`;
+                            a.style.transform = \`scale(\${transform.scale})\` +
+                                \`translate(\${transform.translate[0]}px, \${transform.translate[1]}px)\` +
+                                \`rotate(\${transform.rotate}deg)\`;
                             if (v.blur) {
                                 const x = v.blur.offset || 0;
                                 const itp = v.blur.offsetCurve ? curveParameterToFunc(v.blur.offsetCurve) : (x => x);
@@ -8298,7 +8298,7 @@ catch (e) {
                                 else if (v.blur.wrap === 'alternate') {
                                     res = Math.abs(v._initState.blur + blurOffset);
                                 }
-                                a.style.filter = res < 1e-4 ? '' : `blur(${res}px)`;
+                                a.style.filter = res < 1e-4 ? '' : \`blur(\${res}px)\`;
                             }
                             if (v.opacity) {
                                 const x = v.opacity.offset || 0;
@@ -8435,7 +8435,7 @@ catch (e) {
                 return;
             tag = true;
             xhr({
-                url: `https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`,
+                url: \`https://api.bilibili.com/x/web-show/page/header?resource_id=\${Animate.rid}\`,
                 responseType: "json",
                 credentials: true
             }).then((d) => {
@@ -8448,8 +8448,8 @@ catch (e) {
         toast.error("banner.js", e);
     }
 })();
-]]></>).toString();
-    modules["closedCaption.js"] = (<><![CDATA[/**
+`;
+    modules["closedCaption.js"] = `/**
  * 本模块负责处理CC字幕
  * 代码移植自 Bilibili CC 字幕工具，源项目信息如下
  * @see indefined {@link https://github.com/indefined/UserScripts/tree/master/bilibiliCCHelper}
@@ -8460,8 +8460,8 @@ catch (e) {
             this.element = {}; // 节点集合
             this.data = {}; // 字幕缓存
             this.resizeRate = 100; // 字幕大小倍率
-            this.ON = `<svg width="22" height="28" viewbox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m4.07787,6.88102l14,0a2,2 0 0 1 2,2l0,10a2,2 0 0 1 -2,2l-14,0a2,2 0 0 1 -2,-2l0,-10a2,2 0 0 1 2,-2zm5,5.5a1,1 0 1 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0zm8,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0z"/></svg>`;
-            this.OFF = `<svg width="22" height="28" viewBox="0 0 22 32" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m15.172,21.87103l-11.172,0a2,2 0 0 1 -2,-2l0,-10c0,-0.34 0.084,-0.658 0.233,-0.938l-0.425,-0.426a1,1 0 1 1 1.414,-1.414l15.556,15.556a1,1 0 0 1 -1.414,1.414l-2.192,-2.192zm-10.21,-10.21c-0.577,0.351 -0.962,0.986 -0.962,1.71l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 0.713,-0.958l-1.751,-1.752zm1.866,-3.79l11.172,0a2,2 0 0 1 2,2l0,10c0,0.34 -0.084,0.658 -0.233,0.938l-2.48,-2.48a1,1 0 0 0 -0.287,-1.958l-1.672,0l-1.328,-1.328l0,-0.672a1,1 0 0 1 1,-1l2,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -1.977,1.695l-5.195,-5.195z"/></svg>`;
+            this.ON = \`<svg width="22" height="28" viewbox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m4.07787,6.88102l14,0a2,2 0 0 1 2,2l0,10a2,2 0 0 1 -2,2l-14,0a2,2 0 0 1 -2,-2l0,-10a2,2 0 0 1 2,-2zm5,5.5a1,1 0 1 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0zm8,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0z"/></svg>\`;
+            this.OFF = \`<svg width="22" height="28" viewBox="0 0 22 32" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m15.172,21.87103l-11.172,0a2,2 0 0 1 -2,-2l0,-10c0,-0.34 0.084,-0.658 0.233,-0.938l-0.425,-0.426a1,1 0 1 1 1.414,-1.414l15.556,15.556a1,1 0 0 1 -1.414,1.414l-2.192,-2.192zm-10.21,-10.21c-0.577,0.351 -0.962,0.986 -0.962,1.71l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 0.713,-0.958l-1.751,-1.752zm1.866,-3.79l11.172,0a2,2 0 0 1 2,2l0,10c0,0.34 -0.084,0.658 -0.233,0.938l-2.48,-2.48a1,1 0 0 0 -0.287,-1.958l-1.672,0l-1.328,-1.328l0,-0.672a1,1 0 0 1 1,-1l2,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -1.977,1.695l-5.195,-5.195z"/></svg>\`;
             this.color = [
                 { value: '16777215', content: '<span style="color:#FFF;text-shadow: #000 0px 0px 1px">白色</span>' },
                 { value: '16007990', content: '<b style="color:#F44336;text-shadow: #000 0px 0px 1px">红色</b>' },
@@ -8481,9 +8481,9 @@ catch (e) {
             ];
             this.shadow = [
                 { value: '0', content: '无描边', style: '' },
-                { value: '1', content: '重墨', style: `text-shadow: #000 1px 0px 1px, #000 0px 1px 1px, #000 0px -1px 1px,#000 -1px 0px 1px;` },
-                { value: '2', content: '描边', style: `text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;` },
-                { value: '3', content: '45°投影', style: `text-shadow: #000 1px 1px 2px, #000 0px 0px 1px;` }
+                { value: '1', content: '重墨', style: \`text-shadow: #000 1px 0px 1px, #000 0px 1px 1px, #000 0px -1px 1px,#000 -1px 0px 1px;\` },
+                { value: '2', content: '描边', style: \`text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;\` },
+                { value: '3', content: '45°投影', style: \`text-shadow: #000 1px 1px 2px, #000 0px 0px 1px;\` }
             ];
             this.isON = false; // 是否启用
             this.setting = GM.getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
@@ -8523,10 +8523,10 @@ catch (e) {
         changeStyle() {
             var _a;
             (_a = document.querySelector("#caption-style")) === null || _a === void 0 ? void 0 : _a.remove();
-            API.addCss(`span.subtitle-item-background{opacity: ${this.setting.backgroundopacity};}
-            span.subtitle-item-text {color:#${("000000" + this.setting.color.toString(16)).slice(-6)};}
-            span.subtitle-item {font-size: ${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
-            span.subtitle-item {${this.shadow[this.setting.shadow].style}}`, "caption-style");
+            API.addCss(\`span.subtitle-item-background{opacity: \${this.setting.backgroundopacity};}
+            span.subtitle-item-text {color:#\${("000000" + this.setting.color.toString(16)).slice(-6)};}
+            span.subtitle-item {font-size: \${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
+            span.subtitle-item {\${this.shadow[this.setting.shadow].style}}\`, "caption-style");
             GM.setValue("subtitle", this.setting);
         }
         /**
@@ -8571,7 +8571,7 @@ catch (e) {
          */
         language() {
             this.element.language = API.addElement("div", {}, this.element.table);
-            this.element.language.innerHTML = `<div>字幕</div>
+            this.element.language.innerHTML = \`<div>字幕</div>
             <div class="bilibili-player-block-string-type bpui-component bpui-selectmenu selectmenu-mode-absolute" style="width: 100px;">
             <div class="bpui-selectmenu-txt">关闭</div>
             <div class="bpui-selectmenu-arrow bpui-icon bpui-icon-arrow-down"></div>
@@ -8579,7 +8579,7 @@ catch (e) {
             <li class="bpui-selectmenu-list-row" data-value="close">关闭</li>
             </ul></div>
             <button class="bpui-button" style="padding: 0px 8px;">下载</button>
-            <a class="bpui-button" href="https://member.bilibili.com/v2#/zimu/my-zimu/zimu-editor?cid=${API.cid}&aid=${API.aid}" target="_blank" title="" style="margin-right: 0px; height: 24px; padding: 0px 6px;">添加字幕</a>`;
+            <a class="bpui-button" href="https://member.bilibili.com/v2#/zimu/my-zimu/zimu-editor?cid=\${API.cid}&aid=\${API.aid}" target="_blank" title="" style="margin-right: 0px; height: 24px; padding: 0px 6px;">添加字幕</a>\`;
             let list = this.element.language.children[1].children[2];
             this.text = this.element.language.children[1].children[0];
             // this.element.language.children[2].onclick = () => {
@@ -8607,10 +8607,10 @@ catch (e) {
          */
         fontsize() {
             this.element.fontsize = API.addElement("div", {}, this.element.table);
-            this.element.fontsize.innerHTML = `<div>字体大小</div>
+            this.element.fontsize.innerHTML = \`<div>字体大小</div>
             <input type="range" step="25" style="width: 70%;">
             <input id="subtitle-auto-resize" type="checkbox">
-            <label for="subtitle-auto-resize" style="cursor: pointer;">自动缩放</label>`;
+            <label for="subtitle-auto-resize" style="cursor: pointer;">自动缩放</label>\`;
             this.element.fontsize.children[1].value = this.setting.fontsize == 0.6 ? 0
                 : this.setting.fontsize == 0.8 ? 25
                     : this.setting.fontsize == 1.3 ? 75
@@ -8628,12 +8628,12 @@ catch (e) {
          */
         fontcolor() {
             this.element.fontcolor = API.addElement("div", {}, this.element.table);
-            this.element.fontcolor.innerHTML = `<span>字幕颜色</span>
+            this.element.fontcolor.innerHTML = \`<span>字幕颜色</span>
             <div class="bilibili-player-block-string-type bpui-component bpui-selectmenu selectmenu-mode-absolute" style="width: 74%;">
             <div class="bpui-selectmenu-txt"><span style="color:#FFF;text-shadow: #000 0px 0px 1px">白色</span></div>
             <div class="bpui-selectmenu-arrow bpui-icon bpui-icon-arrow-down"></div>
             <ul class="bpui-selectmenu-list bpui-selectmenu-list-left" style="max-height: 120px; overflow: hidden auto; white-space: nowrap;"></ul>
-            </div>`;
+            </div>\`;
             this.color.forEach(d => {
                 if (d.value == this.setting.color)
                     this.element.fontcolor.children[1].children[0].innerHTML = d.content;
@@ -8650,12 +8650,12 @@ catch (e) {
          */
         fontshadow() {
             this.element.fontshadow = API.addElement("div", {}, this.element.table);
-            this.element.fontshadow.innerHTML = `<span>字幕描边</span>
+            this.element.fontshadow.innerHTML = \`<span>字幕描边</span>
             <div class="bilibili-player-block-string-type bpui-component bpui-selectmenu selectmenu-mode-absolute" style="width: 74%;">
             <div class="bpui-selectmenu-txt">无描边</div>
             <div class="bpui-selectmenu-arrow bpui-icon bpui-icon-arrow-down"></div>
             <ul class="bpui-selectmenu-list bpui-selectmenu-list-left" style="max-height: 120px; overflow: hidden auto; white-space: nowrap;"></ul>
-            </div>`;
+            </div>\`;
             this.shadow.forEach(d => {
                 if (d.value == this.setting.shadow)
                     this.element.fontshadow.children[1].children[0].innerHTML = d.content;
@@ -8672,12 +8672,12 @@ catch (e) {
          */
         fontposition() {
             this.element.fontposition = API.addElement("div", {}, this.element.table);
-            this.element.fontposition.innerHTML = `<span>字幕位置</span>
+            this.element.fontposition.innerHTML = \`<span>字幕位置</span>
             <div class="bilibili-player-block-string-type bpui-component bpui-selectmenu selectmenu-mode-absolute" style="width: 74%;">
             <div class="bpui-selectmenu-txt">底部居中</div>
             <div class="bpui-selectmenu-arrow bpui-icon bpui-icon-arrow-down"></div>
             <ul class="bpui-selectmenu-list bpui-selectmenu-list-left" style="max-height: 100px; overflow: hidden auto; white-space: nowrap;"></ul>
-            </div>`;
+            </div>\`;
             this.position.forEach(d => {
                 if (d.value == this.setting.position)
                     this.element.fontposition.children[1].children[0].innerHTML = d.content;
@@ -8694,7 +8694,7 @@ catch (e) {
          */
         fontopacrity() {
             this.element.fontopacrity = API.addElement("div", {}, this.element.table);
-            this.element.fontopacrity.innerHTML = `<div>背景不透明度</div><input type="range" style="width: 100%;">`;
+            this.element.fontopacrity.innerHTML = \`<div>背景不透明度</div><input type="range" style="width: 100%;">\`;
             this.element.fontopacrity.children[1].value = this.setting.backgroundopacity * 100;
             this.element.fontopacrity.children[1].oninput = (e) => {
                 this.changeStyle(this.setting.backgroundopacity = e.target.value / 100);
@@ -8767,8 +8767,8 @@ catch (e) {
         }
     };
 })();
-]]></>).toString();
-    modules["commentLinkDetail.js"] = (<><![CDATA[/**
+`;
+    modules["commentLinkDetail.js"] = `/**
  * 本模块负责将评论区超链接还原为av号
  */
 (function () {
@@ -8791,8 +8791,8 @@ catch (e) {
         }
     });
 })();
-]]></>).toString();
-    modules["danmakuHashId.js"] = (<><![CDATA[/**
+`;
+    modules["danmakuHashId.js"] = `/**
  * 本模块负责实现反查弹幕发送者功能
  */
 (function () {
@@ -8851,15 +8851,15 @@ catch (e) {
     window.danmakuHashId = (crc) => {
         try {
             const check = new DanmakuHashId(crc);
-            return `hash: ${check.hash} mid: ${check.mid}`;
+            return \`hash: \${check.hash} mid: \${check.mid}\`;
         }
         catch (e) {
             toast.error("danmakuHashId.js", e);
         }
     };
 })();
-]]></>).toString();
-    modules["heartbeat.js"] = (<><![CDATA[/**
+`;
+    modules["heartbeat.js"] = `/**
  * 本模块负责处理可能被广告屏蔽拓展误伤的视频心跳
  */
 (function () {
@@ -8872,8 +8872,8 @@ catch (e) {
         toast.error("replyList.js", e);
     }
 })();
-]]></>).toString();
-    modules["infoNewNumber.js"] = (<><![CDATA[/**
+`;
+    modules["infoNewNumber.js"] = `/**
  * 本模块负责修复资讯区新动态数目
  */
 (function () {
@@ -8894,8 +8894,8 @@ catch (e) {
         debug.error("replyList.js", e);
     }
 })();
-]]></>).toString();
-    modules["localMedia.js"] = (<><![CDATA[/**
+`;
+    modules["localMedia.js"] = `/**
  * 本模块负责实现旧版播放器载入本地视频及弹幕功能
  */
 (function () {
@@ -8915,9 +8915,9 @@ catch (e) {
             }
             this.data = { xml: [], json: [], mp4: [] };
             this.data = Array.from(file).reduce((d, i) => {
-                /\.xml$/.test(i.name) && d.xml.push(i); // xml弹幕
-                /\.json$/.test(i.name) && d.json.push(i); // json弹幕
-                /\.mp4$/.test(i.name) && d.mp4.push(i); // mp4视频
+                /\\.xml\$/.test(i.name) && d.xml.push(i); // xml弹幕
+                /\\.json\$/.test(i.name) && d.json.push(i); // json弹幕
+                /\\.mp4\$/.test(i.name) && d.mp4.push(i); // mp4视频
                 return d;
             }, this.data);
             if (!this.data.xml[0] && !this.data.json[0] && !this.data.mp4[0]) {
@@ -8980,12 +8980,12 @@ catch (e) {
                             case ",":
                                 window.player.offsetDanmaku(-1);
                                 this.offset--;
-                                API.bofqiMessage(["弹幕偏移：", `${this.offset} 秒`]);
+                                API.bofqiMessage(["弹幕偏移：", \`\${this.offset} 秒\`]);
                                 break;
                             case ".":
                                 window.player.offsetDanmaku(1);
                                 this.offset++;
-                                API.bofqiMessage(["弹幕偏移：", `${this.offset} 秒`]);
+                                API.bofqiMessage(["弹幕偏移：", \`\${this.offset} 秒\`]);
                                 break;
                             default:
                                 break;
@@ -9017,7 +9017,7 @@ catch (e) {
             let m = (time - s) / 60;
             s = (Array(2).join('0') + s).slice(-2);
             m = m < 10 ? (Array(2).join('0') + m).slice(-2) : m;
-            return `${m}:${s}`;
+            return \`\${m}:\${s}\`;
         }
     }
     const localMedia = new LocalMedia();
@@ -9030,8 +9030,8 @@ catch (e) {
         }
     };
 })();
-]]></>).toString();
-    modules["noVideo.js"] = (<><![CDATA[/**
+`;
+    modules["noVideo.js"] = `/**
  * 本模块负责强制拦截视频载入
  */
 (function () {
@@ -9052,8 +9052,8 @@ catch (e) {
         debug.error("noVideo.js", e);
     }
 })();
-]]></>).toString();
-    modules["parameterTrim.js"] = (<><![CDATA[/**
+`;
+    modules["parameterTrim.js"] = `/**
  * 本模块负责处理URL，包括地址栏和a标签
  */
 (function () {
@@ -9168,11 +9168,11 @@ catch (e) {
         debug.error("parameterTrim.js", e);
     }
 })();
-]]></>).toString();
-    modules["player-v2.js"] = (<><![CDATA[/**
+`;
+    modules["player-v2.js"] = `/**
  * 本模块负责获取视频信息以提供给CC字幕等模块
- * 视频信息接口`https://api.bilibili.com/x/player/v2`
- * 备用移动端接口`https://api.bilibili.com/x/v2/dm/view`
+ * 视频信息接口\`https://api.bilibili.com/x/player/v2\`
+ * 备用移动端接口\`https://api.bilibili.com/x/v2/dm/view\`
  */
 (function () {
     try {
@@ -9205,8 +9205,8 @@ catch (e) {
         toast.error("player-v2.js", e);
     }
 })();
-]]></>).toString();
-    modules["playinfoRecord.js"] = (<><![CDATA[/**
+`;
+    modules["playinfoRecord.js"] = `/**
  * 本模块负责处理并记录playinfo信息
  */
 (function () {
@@ -9234,8 +9234,8 @@ catch (e) {
         }
     }
 })();
-]]></>).toString();
-    modules["protoDm.js"] = (<><![CDATA[/**
+`;
+    modules["protoDm.js"] = `/**
  * 本模块负责使旧版播放器支持新版弹幕
  */
 (function () {
@@ -9278,8 +9278,8 @@ catch (e) {
         toast.error("protoDm.js", e);
     }
 })();
-]]></>).toString();
-    modules["rebuildPlayerurl.js"] = (<><![CDATA[/**
+`;
+    modules["rebuildPlayerurl.js"] = `/**
  * 本模块负责重建playurl为网页端类型
  */
 (function () {
@@ -9427,7 +9427,7 @@ catch (e) {
                 return xhr({
                     url: url,
                     responseType: 'arraybuffer',
-                    headers: { 'Range': `bytes=0-${range}` },
+                    headers: { 'Range': \`bytes=0-\${range}\` },
                     credentials: false
                 });
             }
@@ -9465,7 +9465,7 @@ catch (e) {
                 this.playurl.dash.video.forEach((d, i, e) => {
                     arr.push((async (d) => {
                         OBJ["sidx" + String(API.cid)] = OBJ["sidx" + String(API.cid)] || {};
-                        let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                        let id = d.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
                         if (d.SegmentBase)
                             OBJ["sidx" + String(API.cid)][id] = [d.SegmentBase.Initialization, d.SegmentBase.indexRange];
                         if (!OBJ["sidx" + String(API.cid)][id]) {
@@ -9502,7 +9502,7 @@ catch (e) {
                 this.playurl.dash.audio.forEach((d, i, e) => {
                     arr.push((async (d) => {
                         OBJ["sidx" + String(API.cid)] = OBJ["sidx" + String(API.cid)] || {};
-                        let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                        let id = d.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
                         if (d.SegmentBase)
                             OBJ["sidx" + String(API.cid)][id] = [d.SegmentBase.Initialization, d.SegmentBase.indexRange];
                         if (!OBJ["sidx" + String(API.cid)][id]) {
@@ -9573,7 +9573,7 @@ catch (e) {
                     if (d.dash_video && d.dash_video.base_url) {
                         arr.push((async (d) => {
                             OBJ["sidx" + String(API.cid)] = OBJ["sidx" + String(API.cid)] || {};
-                            let id = d.dash_video.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                            let id = d.dash_video.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
                             if (!OBJ["sidx" + String(API.cid)][id]) {
                                 let data = new Uint8Array(await this.getIdxs(d.dash_video.base_url, this.playurl.dash.duration));
                                 let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
@@ -9616,7 +9616,7 @@ catch (e) {
                 })(ogv.data.video_info.dash_audio).forEach((d) => {
                     arr.push((async (d) => {
                         OBJ["sidx" + String(API.cid)] = OBJ["sidx" + String(API.cid)] || {};
-                        let id = d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
+                        let id = d.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
                         if (!OBJ["sidx" + String(API.cid)][id]) {
                             let data = new Uint8Array(await this.getIdxs(d.base_url, this.playurl.dash.duration));
                             let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
@@ -9669,8 +9669,8 @@ catch (e) {
         toast.error("rebuildPlayerurl.js", e);
     }
 })();
-]]></>).toString();
-    modules["replyList.js"] = (<><![CDATA[/**
+`;
+    modules["replyList.js"] = `/**
  * 本模块负责恢复翻页评论区
  */
 (function () {
@@ -9692,19 +9692,19 @@ catch (e) {
                 delete window.bbComment; // 取消拦截
                 new Function(GM.getResourceText("comment.js"))(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
-                API.addCss(`
+                API.addCss(\`
                 .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
                     float: right;line-height: 36px;
                 }.bb-comment .comment-list .list-item .user .text-con, .comment-bilibili-fold .comment-list .list-item .user .text-con {
                     margin-left: initial;
                 }.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
                     margin-left: initial;
-                }`);
+                }\`);
             }
         }
         new ReplyList().init();
         API.jsonphook(["api.bilibili.com/x/v2/reply?"], (xhr) => {
-            !xhr.url.includes("mobi_app") && (xhr.url += `&mobi_app=android`);
+            !xhr.url.includes("mobi_app") && (xhr.url += \`&mobi_app=android\`);
         });
         config.commentLinkDetail && API.importModule("commentLinkDetail.js");
     }
@@ -9712,8 +9712,8 @@ catch (e) {
         toast.error("replyList.js", e);
     }
 })();
-]]></>).toString();
-    modules["section.js"] = (<><![CDATA[/**
+`;
+    modules["section.js"] = `/**
  * 本模块负责替换全局顶栏和底栏
  */
 (function () {
@@ -9723,7 +9723,7 @@ catch (e) {
             if (API.path.name)
                 return;
             document.querySelector("#internationalHeader").setAttribute("style", "visibility:hidden;");
-            (!((_a = window.$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
+            (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
             (document.querySelector(".mini-type") && !location.href.includes("blackboard/topic_list") && !location.href.includes("blackboard/x/act_list")) ? API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) : API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
             API.addElement("script", { type: "text/javascript", src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js" });
         });
@@ -9732,7 +9732,7 @@ catch (e) {
             if (API.path.name)
                 return;
             document.querySelector(".international-footer").remove();
-            (!((_a = window.$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
+            (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
             API.addElement("div", { class: "footer bili-footer report-wrap-module", id: "home_footer" });
             API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/common/js/footer.js" });
         });
@@ -9746,8 +9746,8 @@ catch (e) {
         debug.error("section.js", e);
     }
 })();
-]]></>).toString();
-    modules["sectionTypo.js"] = (<><![CDATA[/**
+`;
+    modules["sectionTypo.js"] = `/**
  * 本模块负责修正旧版顶栏分区
  */
 (function () {
@@ -9759,36 +9759,36 @@ catch (e) {
                     if (node[i].textContent == "科技") {
                         node[i].textContent = "知识";
                         node[i].parentNode.href = "//www.bilibili.com/v/knowledge/";
-                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/knowledge/science/"><span>科学科普</span></a></li>
+                        node[i].parentNode.parentNode.children[1].innerHTML = \`<li><a href="//www.bilibili.com/v/knowledge/science/"><span>科学科普</span></a></li>
                         <li><a href="//www.bilibili.com/v/knowledge/social_science/"><span>社科·法律·心理</span></a></li>
                         <li><a href="//www.bilibili.com/v/knowledge/humanity_history/"><span>人文历史</span></a></li>
                         <li><a href="//www.bilibili.com/v/knowledge/business/"><span>财经商业</span></a></li>
                         <li><a href="//www.bilibili.com/v/knowledge/campus/"><span>校园学习</span></a></li>
                         <li><a href="//www.bilibili.com/v/knowledge/career/"><span>职业职场</span></a></li>
                         <li><a href="//www.bilibili.com/v/knowledge/design/"><span>设计·创意</span></a></li>
-                        <li><a href="//www.bilibili.com/v/knowledge/skill/"><span>野生技能协会</span></a></li>`;
+                        <li><a href="//www.bilibili.com/v/knowledge/skill/"><span>野生技能协会</span></a></li>\`;
                     }
                     if (node[i].textContent == "数码") {
                         node[i].textContent = "科技";
                         node[i].parentNode.href = "//www.bilibili.com/v/tech/";
-                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/tech/digital/"><span>数码</span></a></li>
+                        node[i].parentNode.parentNode.children[1].innerHTML = \`<li><a href="//www.bilibili.com/v/tech/digital/"><span>数码</span></a></li>
                         <li><a href="//www.bilibili.com/v/tech/application/"><span>软件应用</span></a></li>
                         <li><a href="//www.bilibili.com/v/tech/computer_tech/"><span>计算机技术</span></a></li>
                         <li><a href="//www.bilibili.com/v/tech/industry/"><span>工业·工程·机械</span></a></li>
-                        <li><a href="//www.bilibili.com/v/tech/diy/"><span>极客DIY</span></a></li>`;
+                        <li><a href="//www.bilibili.com/v/tech/diy/"><span>极客DIY</span></a></li>\`;
                     }
                     if (node[i].textContent == "时尚") {
-                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/fashion/makeup/"><span>美妆护肤</span></a></li>
+                        node[i].parentNode.parentNode.children[1].innerHTML = \`<li><a href="//www.bilibili.com/v/fashion/makeup/"><span>美妆护肤</span></a></li>
                         <li><a href="//www.bilibili.com/v/fashion/clothing/"><span>穿搭</span></a></li>
-                        <li><a href="//www.bilibili.com/v/fashion/trend/"><span>时尚潮流</span></a></li>`;
+                        <li><a href="//www.bilibili.com/v/fashion/trend/"><span>时尚潮流</span></a></li>\`;
                     }
                     if (node[i].textContent == "广告") {
                         node[i].textContent = "资讯";
                         node[i].parentNode.href = "//www.bilibili.com/v/information/";
-                        node[i].parentNode.parentNode.children[1].innerHTML = `<li><a href="//www.bilibili.com/v/information/hotspot/"><span>热点</span></a></li>
+                        node[i].parentNode.parentNode.children[1].innerHTML = \`<li><a href="//www.bilibili.com/v/information/hotspot/"><span>热点</span></a></li>
                         <li><a href="//www.bilibili.com/v/information/global/"><span>环球</span></a></li>
                         <li><a href="//www.bilibili.com/v/information/social/"><span>社会</span></a></li>
-                        <li><a href="//www.bilibili.com/v/information/multiple/"><span>综合</span></a></li>`;
+                        <li><a href="//www.bilibili.com/v/information/multiple/"><span>综合</span></a></li>\`;
                     }
                     if (node[i].textContent == "生活") {
                         node[i].parentNode.parentNode.children[1].children[2].remove(); // 移除美食圈
@@ -9806,8 +9806,8 @@ catch (e) {
         }
     });
 })();
-]]></>).toString();
-    modules["segProgress.js"] = (<><![CDATA[/**
+`;
+    modules["segProgress.js"] = `/**
  * 本模块负责添加分段进度条
  */
 (function () {
@@ -9820,7 +9820,7 @@ catch (e) {
         async init(view_points) {
             if (!SegProgress.cssInited) {
                 SegProgress.cssInited = true;
-                API.addCss(`.bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
+                API.addCss(\`.bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
                             .bilibili-progress-segmentation:hover > div > div{border-color:#fb7299;border-style:solid;border-width:0 2px;width:100%;height:3px;top:6px;left:-2px;position:relative;background:#fb7299}
                             .bilibili-progress-segmentation > div{box-sizing:border-box;border-style:solid;border-color:#fb7299;border-left-width:2px;position:absolute;width:100%;height:6px;top:12px}
                             .bilibili-progress-detail-chapter{top:-96px;position:absolute;width:100%;font-size:17px;font-weight:bold;color:#fff;text-shadow:0 0 5px #000}
@@ -9837,7 +9837,7 @@ catch (e) {
                             .bilibili-player-chapter-info > p{padding-top:5px;margin:0 5px 5px 138px;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;height:43px}
                             .bilibili-player-chapter-info:hover > p{color:#00a1d6}
                             .bilibili-player-chapter-info > span{color:#99a2aa}
-                            .bilibili-player-chapter-info.active{background-color:#f3f3f3}`);
+                            .bilibili-player-chapter-info.active{background-color:#f3f3f3}\`);
             }
             let duration = view_points[view_points.length - 1].to;
             let ratio = window.player.getDuration() / duration / duration;
@@ -9904,10 +9904,10 @@ catch (e) {
                         v = view_points[i];
                         let div = document.createElement("div");
                         div.className = "bilibili-player-chapter-info";
-                        div.innerHTML = `<img width="112" height="63" src="${v.imgUrl}"/>
-                                        <p class="chapter-name">${v.content}</p>
-                                        <span style="margin-left: 138px">${timeFormat(Math.floor(v.from / 60))}:${timeFormat(v.from % 60)}</span>
-                                        <span style="margin-right: 5px; float: right;">${(v.to - v.from) >= 60 ? `${Math.floor((v.to - v.from) / 60)}分` : ""}${(v.to - v.from) % 60}秒</span>`;
+                        div.innerHTML = \`<img width="112" height="63" src="\${v.imgUrl}"/>
+                                        <p class="chapter-name">\${v.content}</p>
+                                        <span style="margin-left: 138px">\${timeFormat(Math.floor(v.from / 60))}:\${timeFormat(v.from % 60)}</span>
+                                        <span style="margin-right: 5px; float: right;">\${(v.to - v.from) >= 60 ? \`\${Math.floor((v.to - v.from) / 60)}分\` : ""}\${(v.to - v.from) % 60}秒</span>\`;
                         div.onclick = (jumpto => () => {
                             window.player.seek(jumpto);
                             let active = document.querySelector(".bilibili-player-chapter-info.active");
@@ -9949,8 +9949,8 @@ catch (e) {
         }
     };
 })();
-]]></>).toString();
-    modules["unloginPopover.js"] = (<><![CDATA[/**
+`;
+    modules["unloginPopover.js"] = `/**
  * 移除未登录弹窗
  */
 (function () {
@@ -9962,8 +9962,8 @@ catch (e) {
         debug.error("unloginPopover.js", e);
     }
 })();
-]]></>).toString();
-    modules["unread.js"] = (<><![CDATA[/**
+`;
+    modules["unread.js"] = `/**
  * 本模块负责处理远古顶栏的动态残留问题
  */
 (function () {
@@ -9976,19 +9976,19 @@ catch (e) {
         debug.error("unread.js", e);
     }
 })();
-]]></>).toString();
-    modules["user-select.js"] = (<><![CDATA[/**
+`;
+    modules["user-select.js"] = `/**
  * 本模块负责截除页面复制限制及右键锁
  * 本模块代码参考自{@see Absolute Enable Right Click & Copy {@link https://chrome.google.com/webstore/detail/jdocbkpgdakpekjlhemmfcncgdjeiika}}
  */
 (function () {
     try {
-        API.addCss(`* {
+        API.addCss(\`* {
             -webkit-user-select: text !important;
             -moz-user-select: text !important;
             -ms-user-select: text !important;
             user-select: text !important;
-        }`);
+        }\`);
         [].forEach.call(['contextmenu', 'copy', 'cut', 'paste', 'mouseup', 'mousedown', 'keyup', 'keydown', 'drag', 'dragstart', 'select', 'selectstart'], function (event) {
             document.addEventListener(event, function (e) {
                 e.stopPropagation();
@@ -9999,8 +9999,8 @@ catch (e) {
         debug.error("user-select.js", e);
     }
 })();
-]]></>).toString();
-    modules["videoLimit.js"] = (<><![CDATA[/**
+`;
+    modules["videoLimit.js"] = `/**
  * 本模块负责解除区域、APP等播放限制
  */
 (function () {
@@ -10077,7 +10077,7 @@ catch (e) {
                 }));
                 response = { "code": 0, "message": "success", "result": response };
                 API.__playinfo__ = response;
-                toast.success(`解除APP限制！aid=${API.aid}, cid=${API.cid}`);
+                toast.success(\`解除APP限制！aid=\${API.aid}, cid=\${API.cid}\`);
             }
             catch (e) {
                 toast.error("videoLimit.js", e);
@@ -10119,7 +10119,7 @@ catch (e) {
                 response = await new API.RebuildPlayerurl().appPlayurl(response);
                 response = { "code": 0, "message": "success", "result": response };
                 API.__playinfo__ = response;
-                toast.success(`解除区域限制！aid=${API.aid}, cid=${API.cid}`);
+                toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
             }
             catch (e) {
                 toast.error("videoLimit.js", e);
@@ -10152,12 +10152,12 @@ catch (e) {
             try {
                 toast.info("尝试解除泰区限制... 访问代理服务器");
                 response = API.jsonCheck(await xhr.GM({
-                    url: API.objUrl(`${server}/intl/gateway/v2/ogv/playurl`, { aid: obj.avid || API.aid, ep_id: obj.ep_id, download: "1" })
+                    url: API.objUrl(\`\${server}/intl/gateway/v2/ogv/playurl\`, { aid: obj.avid || API.aid, ep_id: obj.ep_id, download: "1" })
                 }));
                 response = await new API.RebuildPlayerurl().ogvPlayurl(response);
                 response = { "code": 0, "message": "success", "result": response };
                 API.__playinfo__ = response;
-                toast.success(`解除泰区限制！aid=${API.aid}, cid=${API.cid}`);
+                toast.success(\`解除泰区限制！aid=\${API.aid}, cid=\${API.cid}\`);
             }
             catch (e) {
                 toast.error("videoLimit.js", e);
@@ -10177,11 +10177,11 @@ catch (e) {
         toast.error("videoLimit.js", e);
     }
 })();
-]]></>).toString();
-    modules["danmaku.js"] = (<><![CDATA[/**
+`;
+    modules["danmaku.js"] = `/**
  * 本模块提供各种弹幕相关工具，负责获取、转化等弹幕处理功能
- * `本模块按需加载，使用相关函数前请务必先载入本模块`
- * 新版弹幕相关功能调用了开源项目`protobufjs`，非常感谢，相关信息如下
+ * \`本模块按需加载，使用相关函数前请务必先载入本模块\`
+ * 新版弹幕相关功能调用了开源项目\`protobufjs\`，非常感谢，相关信息如下
  * @see protobufjs {@link https://github.com/protobufjs/protobuf.js}
  * @license BSD 3-Clause
  */
@@ -10203,9 +10203,9 @@ catch (e) {
                 let DM = Reflect.has(danmaku[0], "idStr") ? this.danmakuFormat(danmaku) : danmaku;
                 this.sortDmById(DM, "dmid");
                 let xml = DM.reduce((s, d) => {
-                    s += `<d p="${d.stime},${d.mode},${d.size},${d.color},${d.date},${d.class},${d.uid},${d.dmid}">${d.text.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a]; })}</d>\r\n`;
+                    s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<">'&]/g, (a) => { return { '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a]; })}</d>\\r\\n\`;
                     return s;
-                }, '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n');
+                }, '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\\r\\n');
                 xml += "</i>";
                 /**
                  * remove-invalid-xml-characters.js
@@ -10213,7 +10213,7 @@ catch (e) {
                  * @license MIT
                  * @see https://en.wikipedia.org/wiki/Valid_characters_in_XML
                  */
-                var regex = /((?:[\0-\x08\x0B\f\x0E-\x1F\uFFFD\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]))/g;
+                var regex = /((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g;
                 return xml.replace(regex, '');
             }
             /**
@@ -10222,7 +10222,7 @@ catch (e) {
              * @param key 弹幕id的属性名，应为dmid或idStr
              */
             sortDmById(danmaku, key) {
-                let egx = /^\d+$/;
+                let egx = /^\\d+\$/;
                 for (let i = 0, d; i < danmaku.length; i++) {
                     d = danmaku[i];
                     // 判断输入是否纯数字
@@ -10401,7 +10401,7 @@ catch (e) {
                         mode: mode,
                         size: parseInt(attr[2]),
                         stime: parseFloat(attr[0]),
-                        text: ((mode != 8 && mode != 9) ? v.textContent.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.textContent),
+                        text: ((mode != 8 && mode != 9) ? v.textContent.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, '\\n') : v.textContent),
                         uid: attr[6]
                     };
                 }
@@ -10425,7 +10425,7 @@ catch (e) {
                 let textData;
                 for (let i = 0; i < dm.length; i++) {
                     textData = dm[i];
-                    if (textData.text.includes('\n')) {
+                    if (textData.text.includes('\\n')) {
                         textData.class = 1;
                         textData.zIndex = textData.stime * 1000;
                         if (!(textData.text.includes("█") || textData.text.includes("▂")))
@@ -10453,7 +10453,7 @@ catch (e) {
                         mode: v.mode,
                         size: v.fontsize,
                         stime: v.progress / 1000,
-                        text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
+                        text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, '\\n') : v.content,
                         uid: v.midHash
                     };
                     // 添加图片弹幕信息
@@ -10508,21 +10508,21 @@ catch (e) {
         toast.error("danmaku.js", e);
     }
 })();
-]]></>).toString();
-    modules["debug.js"] = (<><![CDATA[(function () {
+`;
+    modules["debug.js"] = `(function () {
     class Debug {
-        static log(...data) { console.log(`%c[${API.timeFormat()}]`, "color: blue;", ...data); }
-        static info(...data) { console.info(`%c[${API.timeFormat()}]`, "color: green;", ...data); }
-        static debug(...data) { console.debug(`[${API.timeFormat()}]`, ...data); }
-        static warn(...data) { console.warn(`[${API.timeFormat()}]`, ...data); }
-        static error(...data) { console.error(`[${API.timeFormat()}]`, ...data); }
+        static log(...data) { console.log(\`%c[\${API.timeFormat()}]\`, "color: blue;", ...data); }
+        static info(...data) { console.info(\`%c[\${API.timeFormat()}]\`, "color: green;", ...data); }
+        static debug(...data) { console.debug(\`[\${API.timeFormat()}]\`, ...data); }
+        static warn(...data) { console.warn(\`[\${API.timeFormat()}]\`, ...data); }
+        static error(...data) { console.error(\`[\${API.timeFormat()}]\`, ...data); }
     }
     // @ts-ignore
     API.debug = (...data) => Debug.log(...data);
     Reflect.ownKeys(Debug).forEach(d => typeof Debug[d] == "function" && Reflect.set(Reflect.get(API, "debug"), d, Debug[d]));
 })();
-]]></>).toString();
-    modules["element.js"] = (<><![CDATA[/**
+`;
+    modules["element.js"] = `/**
  * 本模块负责提供一些内置的可复用的HTMLEliment组件
  */
 (function () {
@@ -10606,8 +10606,8 @@ catch (e) {
                 const real = root.attachShadow({ mode: "closed" });
                 const div = API.addElement("div", {
                     class: "switch"
-                }, real, `<span class="bar"></span>
-            <span class="knob"><i class="circle"></i></span>`);
+                }, real, \`<span class="bar"></span>
+            <span class="knob"><i class="circle"></i></span>\`);
                 API.addCss(API.getModule("switch.css"), undefined, real);
                 value = value ? true : false;
                 value && (div.children[0].setAttribute("checked", "checked"),
@@ -10631,7 +10631,7 @@ catch (e) {
              */
             static getCss(...svg) {
                 return svg.reduce((s, d) => {
-                    s += `\r\n${API.getModule(d)}`;
+                    s += \`\\r\\n\${API.getModule(d)}\`;
                     return s;
                 }, "");
             }
@@ -10694,11 +10694,11 @@ catch (e) {
                 text && (input.value = text);
                 button ? div.appendChild(this.button(function () {
                     if (pattern && !pattern.test(input.value))
-                        return toast.warning(`值 ${input.value} 不符合要求！`, `正则表达式：${pattern.toString()}`);
+                        return toast.warning(\`值 \${input.value} 不符合要求！\`, \`正则表达式：\${pattern.toString()}\`);
                     callback.call(input, input.value);
                 }, button, disabled)) : input.onchange = () => {
                     if (pattern && !pattern.test(input.value))
-                        return toast.warning(`值 ${input.value} 不符合要求！`, `正则表达式：${pattern.toString()}`);
+                        return toast.warning(\`值 \${input.value} 不符合要求！\`, \`正则表达式：\${pattern.toString()}\`);
                     callback.call(input, input.value);
                 };
                 return root;
@@ -10734,11 +10734,11 @@ catch (e) {
                 const div = API.addElement("div", { class: "box" }, real);
                 API.addCss(this.getCss("checkbox.css"), undefined, real);
                 const checkboxs = list.reduce((s, d) => {
-                    s.push(API.addElement("div", { class: "checkbox" }, div, `<div class="checklabel">
+                    s.push(API.addElement("div", { class: "checkbox" }, div, \`<div class="checklabel">
                         <div class="disc-border"></div>
                         <div class="disc"></div>
                     </div>
-                    <div class="checkvalue">${d}</div>`));
+                    <div class="checkvalue">\${d}</div>\`));
                     return s;
                 }, []);
                 const checks = list.reduce((s, d) => {
@@ -10772,7 +10772,7 @@ catch (e) {
                 const progressContainer = API.addElement("div", { class: "progressContainer", title: "0%" }, progress);
                 const secondaryProgress = API.addElement("div", { class: "secondaryProgress", style: "transform: scaleX(0);" }, progressContainer);
                 const primaryProgress = API.addElement("div", { class: "primaryProgress", style: "transform: scaleX(0);" }, progressContainer);
-                const progressTag = API.addElement("div", { class: "progressTag", style: "display: none;" }, progress, `<div>${min}</div><div>${max}</div>`);
+                const progressTag = API.addElement("div", { class: "progressTag", style: "display: none;" }, progress, \`<div>\${min}</div><div>\${max}</div>\`);
                 Object.defineProperties(detail, {
                     "color": { get: () => primaryProgress.style.backgroundColor, set: (v) => primaryProgress.style.backgroundColor = v },
                     "display": { get: () => progressTag.style.display, set: (v) => progressTag.style.display = v ? "" : "none" },
@@ -10798,7 +10798,7 @@ catch (e) {
                             if (v > max || v < min)
                                 return;
                             const per = Number(((v - min) / (max - min)).toFixed(3).slice(0, -1));
-                            primaryProgress.style.transform = `scaleX(${per})`;
+                            primaryProgress.style.transform = \`scaleX(\${per})\`;
                             progressContainer.title = (per * 100) + "%";
                         }
                     }
@@ -10828,8 +10828,8 @@ catch (e) {
         toast.error("element.js", e);
     }
 })();
-]]></>).toString();
-    modules["extend.js"] = (<><![CDATA[/**
+`;
+    modules["extend.js"] = `/**
  * 本模块负责拓展一些小工具，这些工具不便写在主模块中
  */
 (function () {
@@ -10849,7 +10849,7 @@ catch (e) {
             toast.warning("正在退出登录...");
             let data = API.jsonCheck(await xhr({
                 url: "https://passport.bilibili.com/login/exit/v2",
-                data: `biliCSRF=${API.getCookies().bili_jct}&gourl=${encodeURIComponent(location.href)}`,
+                data: \`biliCSRF=\${API.getCookies().bili_jct}&gourl=\${encodeURIComponent(location.href)}\`,
                 method: "POST",
                 credentials: true
             }));
@@ -10887,7 +10887,7 @@ catch (e) {
         }
         API.restorePlayerSetting = () => restorePlayerSetting();
         function biliQuickLogin() {
-            window.biliQuickLogin ? window.biliQuickLogin() : window.$ ? window.$.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin()) : false;
+            window.biliQuickLogin ? window.biliQuickLogin() : window.\$ ? window.\$.getScript("//static.hdslb.com/account/bili_quick_login.js", () => window.biliQuickLogin()) : false;
         }
         API.biliQuickLogin = () => biliQuickLogin();
         function getTotalTop(node) {
@@ -10907,7 +10907,7 @@ catch (e) {
             a.click();
         }
         function getUrlValue(name) {
-            const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+            const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
             const r = window.location.search.substr(1).match(reg);
             if (r != null)
                 return decodeURIComponent(r[2]);
@@ -10938,7 +10938,7 @@ catch (e) {
         async function getAidInfo(aid) {
             if (!aids[aid]) {
                 const data = await xhr({
-                    url: `https://api.bilibili.com/x/web-interface/view/detail?aid=${aid}`,
+                    url: \`https://api.bilibili.com/x/web-interface/view/detail?aid=\${aid}\`,
                     responseType: "json",
                     credentials: true
                 });
@@ -10984,7 +10984,7 @@ catch (e) {
             parrent = parrent || document.head;
             const style = document.createElement("style");
             style.setAttribute("type", "text/css");
-            id && !parrent.querySelector(`#${id}`) && style.setAttribute("id", id);
+            id && !parrent.querySelector(\`#\${id}\`) && style.setAttribute("id", id);
             style.appendChild(document.createTextNode(txt));
             parrent.appendChild(style);
         }
@@ -11033,13 +11033,13 @@ catch (e) {
                 if (d) {
                     switch (i) {
                         case 0:
-                            s += `<span class="video-float-hint-text">${d}</span>`;
+                            s += \`<span class="video-float-hint-text">\${d}</span>\`;
                             break;
                         case 1:
-                            s += `<span class="video-float-hint-btn hint-red">${d}</span>`;
+                            s += \`<span class="video-float-hint-btn hint-red">\${d}</span>\`;
                             break;
                         case 2:
-                            s += `<span class="video-float-hint-btn">${d}</span>`;
+                            s += \`<span class="video-float-hint-btn">\${d}</span>\`;
                             break;
                     }
                 }
@@ -11057,14 +11057,14 @@ catch (e) {
             return new Promise((r) => {
                 const root = API.addElement("div");
                 const div = root.attachShadow({ mode: "closed" });
-                const table = API.addElement("div", { class: "table" }, div, `
-            <div class="title">${title}</div>
-            <div class="text">${text}</div>
+                const table = API.addElement("div", { class: "table" }, div, \`
+            <div class="title">\${title}</div>
+            <div class="text">\${text}</div>
             <div class="act">
                 <div class="button">确认</div>
                 <div class="button">取消</div>
                 </div>
-            `);
+            \`);
                 API.addCss(API.getCss("alert.css", "button.css"), '', div);
                 table.querySelectorAll(".button").forEach((d, i) => {
                     i ? (d.onclick = () => { root.remove(), r(false); }) : (d.onclick = () => (root.remove(), r(true)));
@@ -11077,8 +11077,8 @@ catch (e) {
         toast.error("extend.js", e);
     }
 })();
-]]></>).toString();
-    modules["format.js"] = (<><![CDATA[(function () {
+`;
+    modules["format.js"] = `(function () {
     class Format {
         /**
          * 格式化时间
@@ -11207,16 +11207,16 @@ catch (e) {
     }
     Reflect.ownKeys(Format).forEach(d => typeof Format[d] == "function" && Reflect.set(API, d, Format[d]));
 })();
-]]></>).toString();
-    modules["manage.js"] = (<><![CDATA[/**
+`;
+    modules["manage.js"] = `/**
  * 本模块负责维护脚本数据存储
  */
 (function () {
     class Config {
         constructor() {
             this.box = API.element.popupbox({ maxWidth: "360px", maxHeight: "300px" });
-            API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, this.box, `<span>设置数据<span>`);
-            API.addElement("div", { style: 'margin-bottom: 10px;' }, this.box, `<div>设置数据包含您个人对于设置的自定义调整，不包括内置的模块、安装的第三方模块以及各种功能缓存的数据。您可以选择恢复默认数据、导出为本地文件或者从本地文件中恢复。</div>`);
+            API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, this.box, \`<span>设置数据<span>\`);
+            API.addElement("div", { style: 'margin-bottom: 10px;' }, this.box, \`<div>设置数据包含您个人对于设置的自定义调整，不包括内置的模块、安装的第三方模块以及各种功能缓存的数据。您可以选择恢复默认数据、导出为本地文件或者从本地文件中恢复。</div>\`);
             this.box.appendChild(API.element.hr());
             const body = API.addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, this.box);
             body.appendChild(API.element.button(() => { this.restore(); }, "默认", 0));
@@ -11226,10 +11226,10 @@ catch (e) {
         restore() {
             GM.deleteValue("config");
             toast.warning("已恢复默认数据，请及时刷新页面避免数据紊乱！");
-            API.alertMessage(`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置").then(d => { d && location.reload(); });
+            API.alertMessage(\`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！\`, "恢复默认设置").then(d => { d && location.reload(); });
         }
         output() {
-            API.saveAs(JSON.stringify(config, undefined, "\t"), `config ${API.timeFormat(undefined, true)}.json`, "application/json");
+            API.saveAs(JSON.stringify(config, undefined, "\\t"), \`config \${API.timeFormat(undefined, true)}.json\`, "application/json");
         }
         input(v) {
             v && v[0] && API.readAs(v[0]).then(d => {
@@ -11241,8 +11241,8 @@ catch (e) {
     }
     new Config();
 })();
-]]></>).toString();
-    modules["nodeObserver.js"] = (<><![CDATA[/**
+`;
+    modules["nodeObserver.js"] = `/**
  * 本模块负责DOM节点变动监听
  * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
  */
@@ -11252,7 +11252,7 @@ catch (e) {
      * 注册节点添加监听
      * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
      * @param callback 添加节点后执行的回调函数
-     * @returns 注册编号，用于使用`removeObserver`销毁监听
+     * @returns 注册编号，用于使用\`removeObserver\`销毁监听
      */
     function observerAddedNodes(callback) {
         try {
@@ -11266,8 +11266,8 @@ catch (e) {
     }
     API.observerAddedNodes = (callback) => observerAddedNodes(callback);
     /**
-     * 销毁`observerAddedNodes`监听
-     * @param id 注册`observerAddedNodes`监听是返回的编号
+     * 销毁\`observerAddedNodes\`监听
+     * @param id 注册\`observerAddedNodes\`监听是返回的编号
      */
     function removeObserver(id) {
         nodelist.splice(id, 1);
@@ -11277,8 +11277,8 @@ catch (e) {
         d.addedNodes[0] && nodelist.forEach(async (f) => f(d.addedNodes[0]));
     }))).observe(document, { childList: true, subtree: true });
 })();
-]]></>).toString();
-    modules["rewrite.js"] = (<><![CDATA[/**
+`;
+    modules["rewrite.js"] = `/**
  * 重写引导，重写操作是非常底层的操作，必须在正常引导之前。
  */
 (function () {
@@ -11296,23 +11296,23 @@ catch (e) {
         /**
          * 分离页面进入重写判定
          */
-        if (config.av && /\/video\/[AaBb][Vv]/.test(location.href))
+        if (config.av && /\\/video\\/[AaBb][Vv]/.test(location.href))
             API.importModule("av.js");
-        if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href))
+        if (config.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href))
             API.importModule("bangumi.js");
-        if (config.watchlater && /\/watchlater\//.test(location.href))
+        if (config.watchlater && /\\/watchlater\\//.test(location.href))
             API.importModule("watchlater.js");
-        if (config.player && /player\./.test(location.href))
+        if (config.player && /player\\./.test(location.href))
             API.importModule("player.js");
-        if (/space\.bilibili\.com/.test(location.href))
+        if (/space\\.bilibili\\.com/.test(location.href))
             API.importModule("space.js");
-        if (config.index && API.path[2] == 'www.bilibili.com' && (!API.path[3] || (API.path[3].startsWith('\?') || API.path[3].startsWith('\#') || API.path[3].startsWith('index.'))))
+        if (config.index && API.path[2] == 'www.bilibili.com' && (!API.path[3] || (API.path[3].startsWith('\\?') || API.path[3].startsWith('\\#') || API.path[3].startsWith('index.'))))
             API.importModule("index.js");
-        if (config.ranking && /\/v\/popular\//.test(location.href))
+        if (config.ranking && /\\/v\\/popular\\//.test(location.href))
             API.importModule("ranking.js");
-        if (/live\.bilibili\.com/.test(location.href))
+        if (/live\\.bilibili\\.com/.test(location.href))
             API.importModule("live.js");
-        if (/\/medialist\/play\//.test(location.href))
+        if (/\\/medialist\\/play\\//.test(location.href))
             API.importModule("mediaList.js");
         if (API.path[2] == "message.bilibili.com")
             API.addCss(API.getModule("message.css"));
@@ -11324,9 +11324,9 @@ catch (e) {
             API.importModule("history.js");
         if (/dmid/.test(location.href) && /dm_progress/.test(location.href))
             API.importModule("loadByDmid.js");
-        if (config.read && /\/read\/[Cc][Vv]/.test(location.href))
+        if (config.read && /\\/read\\/[Cc][Vv]/.test(location.href))
             API.importModule("read.js");
-        if (config.player && /festival\/2021bnj/.test(location.href))
+        if (config.player && /festival\\/2021bnj/.test(location.href))
             API.importModule("bnj2021.js");
         API.scriptIntercept(["bilibiliPlayer.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/bilibiliPlayer.min.js"); // 播放器脚本拦截
         API.path.name && API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
@@ -11340,21 +11340,21 @@ catch (e) {
         toast.error("rewrite.js", e);
     }
 })();
-]]></>).toString();
-    modules["setting.js"] = (<><![CDATA[/**
+`;
+    modules["setting.js"] = `/**
  * 本模块负责集中注册相关设置项
  */
 (function () {
     try {
         // 注册设置菜单
         API.registerMenu({ key: "common", name: "通用", svg: '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>' });
-        API.registerMenu({ key: "rewrite", name: "重写", svg: `<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>` });
-        API.registerMenu({ key: "restore", name: "修复", svg: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>` });
-        API.registerMenu({ key: "style", name: "样式", svg: `<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>` });
-        API.registerMenu({ key: "danmaku", name: "弹幕", svg: `<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>` });
-        API.registerMenu({ key: "player", name: "播放", svg: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>` });
-        API.registerMenu({ key: "live", name: "直播", svg: `<svg viewBox="0 0 1024 1024"><path d="M392.448 275.911111a92.416 92.416 0 1 1-184.832 0 92.416 92.416 0 0 1 184.832 0"></path><path d="M826.624 464.583111l-63.744 36.864v-48.64a72.206222 72.206222 0 0 0-71.68-71.936H190.72a72.192 72.192 0 0 0-71.936 71.936V748.231111a71.936 71.936 0 0 0 71.936 71.936H691.2a71.936 71.936 0 0 0 71.936-71.936v-23.808l63.488 37.888a51.2 51.2 0 0 0 76.8-44.544V508.871111a51.2 51.2 0 0 0-76.8-44.288M572.928 369.351111c79.459556 0.142222 143.985778-64.156444 144.128-143.616 0.142222-79.459556-64.156444-143.985778-143.616-144.128-79.260444-0.142222-143.701333 63.857778-144.128 143.104-0.426667 79.459556 63.644444 144.213333 143.104 144.64h0.512"></path><path d="M425.216 512.967111l124.16 71.936a25.6 25.6 0 0 1 0 42.496l-124.16 71.68a25.6 25.6 0 0 1-37.12-21.248V534.471111a25.6 25.6 0 0 1 37.12-21.504"></path></svg>` });
-        API.registerMenu({ key: "download", name: "下载", svg: `<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>` });
+        API.registerMenu({ key: "rewrite", name: "重写", svg: \`<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>\` });
+        API.registerMenu({ key: "restore", name: "修复", svg: \`<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>\` });
+        API.registerMenu({ key: "style", name: "样式", svg: \`<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>\` });
+        API.registerMenu({ key: "danmaku", name: "弹幕", svg: \`<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>\` });
+        API.registerMenu({ key: "player", name: "播放", svg: \`<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>\` });
+        API.registerMenu({ key: "live", name: "直播", svg: \`<svg viewBox="0 0 1024 1024"><path d="M392.448 275.911111a92.416 92.416 0 1 1-184.832 0 92.416 92.416 0 0 1 184.832 0"></path><path d="M826.624 464.583111l-63.744 36.864v-48.64a72.206222 72.206222 0 0 0-71.68-71.936H190.72a72.192 72.192 0 0 0-71.936 71.936V748.231111a71.936 71.936 0 0 0 71.936 71.936H691.2a71.936 71.936 0 0 0 71.936-71.936v-23.808l63.488 37.888a51.2 51.2 0 0 0 76.8-44.544V508.871111a51.2 51.2 0 0 0-76.8-44.288M572.928 369.351111c79.459556 0.142222 143.985778-64.156444 144.128-143.616 0.142222-79.459556-64.156444-143.985778-143.616-144.128-79.260444-0.142222-143.701333 63.857778-144.128 143.104-0.426667 79.459556 63.644444 144.213333 143.104 144.64h0.512"></path><path d="M425.216 512.967111l124.16 71.936a25.6 25.6 0 0 1 0 42.496l-124.16 71.68a25.6 25.6 0 0 1-37.12-21.248V534.471111a25.6 25.6 0 0 1 37.12-21.504"></path></svg>\` });
+        API.registerMenu({ key: "download", name: "下载", svg: \`<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>\` });
         // 注册设置项
         API.registerSetting({
             key: "developer",
@@ -11454,7 +11454,7 @@ catch (e) {
             sub: "proto弹幕",
             type: "switch",
             value: true,
-            float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。</br>”`
+            float: \`添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。</br>”\`
         });
         API.registerSetting({
             key: "liveDm",
@@ -11463,7 +11463,7 @@ catch (e) {
             sub: "及时接收别人新发的弹幕",
             type: "switch",
             value: true,
-            float: `修复旧版播放器实时弹幕。`
+            float: \`修复旧版播放器实时弹幕。\`
         });
         API.registerSetting({
             key: "commandDm",
@@ -11472,7 +11472,7 @@ catch (e) {
             sub: "投票弹窗等",
             type: "switch",
             value: false,
-            float: `可以使用新版的一些弹窗互动组件。目前可用组件：评分弹窗、投屏弹窗、关联视频跳转按钮、带“UP主”标识弹幕。</br>※ <strong>需要同时开启新版proto弹幕。</strong>`
+            float: \`可以使用新版的一些弹窗互动组件。目前可用组件：评分弹窗、投屏弹窗、关联视频跳转按钮、带“UP主”标识弹幕。</br>※ <strong>需要同时开启新版proto弹幕。</strong>\`
         });
         API.registerSetting({
             key: "logReport",
@@ -11627,7 +11627,7 @@ catch (e) {
             key: "lostVideo",
             sort: "restore",
             label: "修复失效视频信息",
-            sub: `有些甚至评论还在！`,
+            sub: \`有些甚至评论还在！\`,
             type: "switch",
             value: false,
             float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
@@ -11672,7 +11672,7 @@ catch (e) {
                     value: "https://api.global.bilibili.com",
                     float: "泰区番剧限制需要自备相应的代理服务器（无需末尾的斜杠！）。</br>本功能由于缺乏调试条件维护不善请多担待！",
                     input: { type: "url", placeholder: "URL" },
-                    pattern: /(\w+):\/\/([^/:]+)(:\d*)?([^# ]*)/
+                    pattern: /(\\w+):\\/\\/([^/:]+)(:\\d*)?([^# ]*)/
                 }
             ]
         });
@@ -11725,7 +11725,7 @@ catch (e) {
             sub: "那我为什么点开直播？",
             value: false,
             sort: "live",
-            float: "将直播间设为未开播状态，不加载直播流或者轮播视频，适用于想打开直播间但不想浪费带宽或流量的情况。</br>※ 脚本注入不够快时可能拦截失败，硬刷新`Ctrl+Shift+R`/`Shift + F5`可解。"
+            float: "将直播间设为未开播状态，不加载直播流或者轮播视频，适用于想打开直播间但不想浪费带宽或流量的情况。</br>※ 脚本注入不够快时可能拦截失败，硬刷新\`Ctrl+Shift+R\`/\`Shift + F5\`可解。"
         });
         API.registerSetting({
             type: "switch",
@@ -11801,7 +11801,7 @@ catch (e) {
             hidden: !API.aid,
             callback: function () {
                 API.aid && API.getAidInfo(API.aid).then(d => {
-                    this.innerHTML = `<picture><img src="${d.View.pic.replace("http:", "")}"></picture>`;
+                    this.innerHTML = \`<picture><img src="\${d.View.pic.replace("http:", "")}"></picture>\`;
                 });
             }
         });
@@ -11844,21 +11844,21 @@ catch (e) {
             action: (v) => {
                 switch (v) {
                     case "ef2":
-                        API.alertMessage(`<a href="https://github.com/MotooriKashin/ef2/releases" target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>`).then(d => {
+                        API.alertMessage(\`<a href="https://github.com/MotooriKashin/ef2/releases" target="_blank">EF2</a>是作者开发的一款从浏览器中拉起IDM进行下载的中间软件，可以非常方便地传递下载数据给IDM，并支持自定义文件名、保存目录等。<strong>您必须安装了ef2和IDM才能使用本方式！</strong>\`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: false, IDMToast: false, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     case "aria2":
-                        API.alertMessage(`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>`).then(d => {
+                        API.alertMessage(\`aria2是一款著名的命令行下载工具，使用本方式将在您点击下载面板中的链接时将命令行复制到您的剪切板中，您可以粘贴到cmd等终端中回车进行下载。<strong>您必须先下载aria2工具并添加系统环境变量或者在终端在打开aria2二进制文件所在目录！</strong>\`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLate: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
                         });
                         break;
                     case "aira2 RPC":
-                        API.alertMessage(`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。`).then(d => {
+                        API.alertMessage(\`aria2支持RPC方式接收下载数据，您需要在aria2配置开启RPC功能并保持后台运行，并在本脚本设置中配置好aria2主机及端口。</br>点击确定将刷新设置面板并呈现相关设置。\`).then(d => {
                             d ? API.changeSettingMode({ referer: false, useragent: false, filepath: false, IDMLater: true, IDMToast: true, rpcServer: false, rpcPort: false, rpcToken: false, rpcTest: false }) :
                                 (config.downloadMethod = "右键保存", API.changeSettingMode({ referer: true, useragent: true, filepath: true, IDMLater: true, IDMToast: true, rpcServer: true, rpcPort: true, rpcToken: true, rpcTest: true }));
                             API.displaySetting("downloadMethod");
@@ -11877,7 +11877,7 @@ catch (e) {
             label: "User-Agent",
             value: navigator.userAgent,
             input: { type: "text" },
-            float: `用户代理，此值一般填非空的任意值皆可。`,
+            float: \`用户代理，此值一般填非空的任意值皆可。\`,
             hidden: config.downloadMethod == "右键保存"
         });
         API.registerSetting({
@@ -11887,7 +11887,7 @@ catch (e) {
             label: "referer",
             value: location.origin,
             input: { type: "text" },
-            float: `一般为B站主域名(origin)，此值不可为空，除非是APP/TV等视频源。`,
+            float: \`一般为B站主域名(origin)，此值不可为空，除非是APP/TV等视频源。\`,
             hidden: config.downloadMethod == "右键保存"
         });
         API.registerSetting({
@@ -11896,7 +11896,7 @@ catch (e) {
             key: "filepath",
             label: "保存目录",
             value: "",
-            input: { type: "text", placeholder: "如：D\\下载" },
+            input: { type: "text", placeholder: "如：D\\\\下载" },
             float: 'windows端请注意反斜杠！',
             hidden: config.downloadMethod == "右键保存"
         });
@@ -11956,7 +11956,7 @@ catch (e) {
             hidden: config.downloadMethod != "aira2 RPC",
             action: () => {
                 API.aria2.rpcTest()
-                    .then(d => toast.success(`RPC设置正常！aria2版本：${d.version}`))
+                    .then(d => toast.success(\`RPC设置正常！aria2版本：\${d.version}\`))
                     .catch(e => toast.error("RPC链接异常！请检查各项设置以及RPC主机的状况！", e));
             }
         });
@@ -11981,7 +11981,7 @@ catch (e) {
                     type: "row",
                     value: "xml",
                     list: ["xml", "json"],
-                    float: `xml是经典的B站弹幕格式，json是旧版播放器直接支持的格式，本脚本载入本地弹幕功能同时支持这两种。</br>如果只是给本脚本专用那就选json，xml对“非法字符”支持不友好，部分高级/代码/BAS弹幕可能出错。`
+                    float: \`xml是经典的B站弹幕格式，json是旧版播放器直接支持的格式，本脚本载入本地弹幕功能同时支持这两种。</br>如果只是给本脚本专用那就选json，xml对“非法字符”支持不友好，部分高级/代码/BAS弹幕可能出错。\`
                 }
             ]
         });
@@ -12075,8 +12075,8 @@ catch (e) {
         toast.error("setting.js", e);
     }
 })();
-]]></>).toString();
-    modules["switchVideo.js"] = (<><![CDATA[/**
+`;
+    modules["switchVideo.js"] = `/**
  * 本模块负责执行切P调用监听
  */
 (function () {
@@ -12104,8 +12104,8 @@ catch (e) {
         }
     });
 })();
-]]></>).toString();
-    modules["toast.js"] = (<><![CDATA[(function () {
+`;
+    modules["toast.js"] = `(function () {
     API.registerSetting({
         type: "sort",
         key: "toast",
@@ -12126,7 +12126,7 @@ catch (e) {
                 sort: "common",
                 value: "4",
                 input: { type: "number", min: 1, max: 30 },
-                pattern: /^\d+$/
+                pattern: /^\\d+\$/
             }, {
                 type: "input",
                 key: "toaststep",
@@ -12134,7 +12134,7 @@ catch (e) {
                 sort: "common",
                 value: "250",
                 input: { type: "number", min: 100, max: 1000 },
-                pattern: /^\d+$/
+                pattern: /^\\d+\$/
             }]
     });
     class Toast {
@@ -12223,8 +12223,8 @@ catch (e) {
     Reflect.set(Reflect.get(API, "toast"), "warning", (...msg) => { debug.warn(...msg); Toast.show("warning", ...msg); });
     Reflect.set(Reflect.get(API, "toast"), "error", (...msg) => { debug.error(...msg); Toast.show("error", ...msg); });
 })();
-]]></>).toString();
-    modules["ui.js"] = (<><![CDATA[/**
+`;
+    modules["ui.js"] = `/**
  * 本模块负责绘制设置UI
  */
 (function () {
@@ -12263,7 +12263,7 @@ catch (e) {
                 if (config.settingEntryType)
                     return this.classical();
                 const div = API.addElement("div").attachShadow({ mode: "closed" });
-                const stage = API.addElement("div", { class: "stage" }, div, `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>`);
+                const stage = API.addElement("div", { class: "stage" }, div, \`<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>\`);
                 API.addCss(API.getModule("ui-stage.css"), "", div);
                 stage.onclick = () => this.display();
                 stage.onmouseover = () => stage.style.opacity = "0.8";
@@ -12277,7 +12277,7 @@ catch (e) {
              */
             async classical() {
                 const div = API.addElement("div").attachShadow({ mode: "closed" });
-                const classical = API.addElement("div", { class: "classical", style: "style" }, div, `<i></i><span>设置</span>`);
+                const classical = API.addElement("div", { class: "classical", style: "style" }, div, \`<i></i><span>设置</span>\`);
                 API.addCss(API.getModule("ui-stage.css"), "", div);
                 classical.onclick = () => this.display();
             }
@@ -12314,13 +12314,13 @@ catch (e) {
                 this.box = document.createElement("div");
                 this.box.setAttribute("id", "ui-border-box");
                 const root = this.box.attachShadow({ mode: "closed" });
-                const div = API.addElement("div", { class: "box" }, root, `<div class="tool"></div>
+                const div = API.addElement("div", { class: "box" }, root, \`<div class="tool"></div>
             <div class="content">
                 <div class="contain">
                     <div class="menu"></div>
                     <div class="item"></div>
                 </div>
-            </div>`);
+            </div>\`);
                 API.addCss(API.getModule("ui.css"), "", root);
                 this.tool = div.children[0];
                 this.menu = div.children[1].children[0].children[0];
@@ -12369,7 +12369,7 @@ catch (e) {
                 real.appendChild(document.createTextNode(obj.name));
                 div.onclick = () => {
                     let selected = this.menu.querySelector(".selected");
-                    let itembox = this.item.querySelector(`.${obj.key}`);
+                    let itembox = this.item.querySelector(\`.\${obj.key}\`);
                     selected && selected.removeAttribute("class");
                     itembox && itembox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     div.setAttribute("class", "selected");
@@ -12382,14 +12382,14 @@ catch (e) {
              */
             static itemContain(key) {
                 let obj = menu[key];
-                let div = this.item.querySelector(`.${obj.key}`);
+                let div = this.item.querySelector(\`.\${obj.key}\`);
                 if (!div) {
                     div = API.addElement("div", { class: obj.key }, this.item);
                     const root = div.attachShadow({ mode: "open" });
-                    API.addElement("div", { class: "contain" }, root, `<div class="header">
-                    <h2 class="title">${obj.name}</h2>
+                    API.addElement("div", { class: "contain" }, root, \`<div class="header">
+                    <h2 class="title">\${obj.name}</h2>
                 </div>
-                <div class="card"></div>`);
+                <div class="card"></div>\`);
                     API.addCss(API.getModule("ui-contain.css"), "", root);
                 }
                 return div.shadowRoot.querySelector(".card");
@@ -12402,14 +12402,14 @@ catch (e) {
             static float(node, data) {
                 const div = document.createElement("div");
                 const root = div.attachShadow({ mode: "closed" });
-                const real = API.addElement("div", { class: "float" }, root, `<div class="arrow"></div><div class="message">${data}</div>`);
+                const real = API.addElement("div", { class: "float" }, root, \`<div class="arrow"></div><div class="message">\${data}</div>\`);
                 API.addCss(API.getModule("ui-float.css"), "", root);
                 node.onmouseover = (ev) => {
                     document.body.appendChild(div);
                     let rect = real.getBoundingClientRect();
-                    real.style.left = `${node.getBoundingClientRect().x + ev.offsetX}px`;
-                    real.style.top = `${node.getBoundingClientRect().y + ev.offsetY - rect.height}px`;
-                    real.style.width = `${Math.sqrt(rect.width * rect.height) * 4 / 3}px`;
+                    real.style.left = \`\${node.getBoundingClientRect().x + ev.offsetX}px\`;
+                    real.style.top = \`\${node.getBoundingClientRect().y + ev.offsetY - rect.height}px\`;
+                    real.style.width = \`\${Math.sqrt(rect.width * rect.height) * 4 / 3}px\`;
                 };
                 node.onmouseout = () => div.remove();
             }
@@ -12464,7 +12464,7 @@ catch (e) {
                 node = node || this.itemContain(obj.sort);
                 const div = document.createElement("div");
                 const root = div.attachShadow({ mode: "closed" });
-                const real = API.addElement("div", { class: "contain" }, root, `<picture><img src="${obj.src}"></picture>`);
+                const real = API.addElement("div", { class: "contain" }, root, \`<picture><img src="\${obj.src}"></picture>\`);
                 API.addCss(API.getModule("ui-picture.css"), "", root);
                 node && node.appendChild(div);
                 obj.callback && new Promise(r => obj.callback.call(real));
@@ -12489,7 +12489,7 @@ catch (e) {
                     config[obj.key] = v;
                     obj.action && obj.action.call(this, config[obj.key]);
                 }, config[obj.key]));
-                obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+                obj.sub && (label.innerHTML = \`\${obj.label}<div class="sub">\${obj.sub}</div>\`);
                 obj.float && this.float(real, obj.float);
                 node && node.appendChild(div);
                 obj.callback && new Promise(r => obj.callback.call(real));
@@ -12543,8 +12543,8 @@ catch (e) {
                 obj.svg && real.appendChild(this.icon(obj.svg));
                 const label = API.addElement("div", { class: "label" }, real, obj.label);
                 const value = API.addElement("div", { class: "anchor" }, real);
-                value.appendChild(this.icon(`<svg viewBox="0 0 24 24"><g><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></g></svg>`));
-                obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+                value.appendChild(this.icon(\`<svg viewBox="0 0 24 24"><g><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></g></svg>\`));
+                obj.sub && (label.innerHTML = \`\${obj.label}<div class="sub">\${obj.sub}</div>\`);
                 obj.float && this.float(real, obj.float);
                 node && node.appendChild(div) && node.appendChild(sec);
                 obj.callback && new Promise(r => obj.callback.call(real));
@@ -12580,7 +12580,7 @@ catch (e) {
                 real.appendChild(API.element.button(function () {
                     obj.action.call(this);
                 }, obj.title, disabled));
-                obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+                obj.sub && (label.innerHTML = \`\${obj.label}<div class="sub">\${obj.sub}</div>\`);
                 obj.float && this.float(real, obj.float);
                 node && node.appendChild(div);
                 obj.callback && new Promise(r => obj.callback.call(real));
@@ -12604,9 +12604,9 @@ catch (e) {
                 obj.svg && real.appendChild(this.icon(obj.svg));
                 API.addElement("div", { style: "padding-inline-start: 12px;flex: 1;flex-basis: 0.000000001px;padding-block-end: 12px;padding-block-start: 12px;" }, real, obj.label);
                 const value = API.addElement("div", { class: "textbox" }, real);
-                obj.key ? (API.addElement("input", { list: `list-${obj.key}` }, value),
-                    API.addElement("datalist", { id: `list-${obj.key}` }, value),
-                    value.appendChild(this.icon(`<svg viewBox="0 0 24 24"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg>`)))
+                obj.key ? (API.addElement("input", { list: \`list-\${obj.key}\` }, value),
+                    API.addElement("datalist", { id: \`list-\${obj.key}\` }, value),
+                    value.appendChild(this.icon(\`<svg viewBox="0 0 24 24"><g><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"></path></g></svg>\`)))
                     : API.addElement("input", {}, value);
                 obj.title && API.addElement("div", { class: "button" }, value, obj.title);
                 (history = this.history[obj.key] || [],
@@ -12633,7 +12633,7 @@ catch (e) {
                     if (!input.value || (config[obj.key] == input.value))
                         return;
                     if (obj.pattern && !obj.pattern.test(input.value))
-                        return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
+                        return toast.warning("非法输入！", \`正则限制：\${obj.pattern.toString()}\`);
                     real.querySelector(".button").setAttribute("disabled", "disabled");
                     disabled && setTimeout(() => real.querySelector(".button").removeAttribute("disabled"), disabled * 1000);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
@@ -12641,7 +12641,7 @@ catch (e) {
                     obj.action && obj.action.call(real, input.value);
                 }) : (input.onchange = () => {
                     if (obj.pattern && !obj.pattern.test(input.value))
-                        return toast.warning("非法输入！", `正则限制：${obj.pattern.toString()}`);
+                        return toast.warning("非法输入！", \`正则限制：\${obj.pattern.toString()}\`);
                     obj.hasOwnProperty("value") && (config[obj.key] = input.value, config[obj.key] = input.value);
                     !history.includes(input.value) && history.push(input.value) && (this.history[obj.key] = history);
                     obj.action && obj.action.call(real, input.value);
@@ -12665,7 +12665,7 @@ catch (e) {
                 const label = API.addElement("div", { class: "label" }, real, obj.label);
                 const value = API.addElement("div", { class: "button" }, real, obj.title);
                 const input = API.addElement("input", { type: "file", style: "width: 0;" }, real);
-                obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+                obj.sub && (label.innerHTML = \`\${obj.label}<div class="sub">\${obj.sub}</div>\`);
                 obj.accept && (input.accept = obj.accept.join(","));
                 obj.multiple && (input.multiple = true);
                 obj.float && this.float(real, obj.float);
@@ -12695,7 +12695,7 @@ catch (e) {
                     config[obj.key] = v;
                     obj.action && obj.action.call(this, v);
                 }, config[obj.key]));
-                obj.sub && (label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+                obj.sub && (label.innerHTML = \`\${obj.label}<div class="sub">\${obj.sub}</div>\`);
                 obj.float && this.float(real, obj.float);
                 node && node.appendChild(div);
                 obj.callback && new Promise(r => obj.callback.call(real));
@@ -12718,7 +12718,7 @@ catch (e) {
                 obj.svg && real.appendChild(table.svg = this.icon(obj.svg));
                 table.label = API.addElement("div", { class: "label" }, real, obj.label);
                 table.value = API.addElement("div", {}, real, obj.custom);
-                obj.sub && (table.label.innerHTML = `${obj.label}<div class="sub">${obj.sub}</div>`);
+                obj.sub && (table.label.innerHTML = \`\${obj.label}<div class="sub">\${obj.sub}</div>\`);
                 obj.float && this.float(real, obj.float);
                 node && node.appendChild(div);
                 obj.callback && new Promise(r => obj.callback.call(real));
@@ -12738,7 +12738,7 @@ catch (e) {
                                 table.value = API.addElement("div", {}, real, v, false, table.value);
                                 break;
                             case "sub":
-                                table.label.innerHTML = `${obj.label}<div class="sub">${v}</div>`;
+                                table.label.innerHTML = \`\${obj.label}<div class="sub">\${v}</div>\`;
                                 break;
                         }
                         return true;
@@ -12754,7 +12754,7 @@ catch (e) {
         API.importModule("setting.js");
         const ui = new Ui();
         Reflect.set(API, "displaySetting", (key) => ui.display(key));
-        GM.getValue("modules") && API.alertMessage(`脚本更新残留后残留了大量废弃数据在您本地存储中，造成了额外的性能消耗！</br>是否立即执行清洁安装？</br><strong>将删除本脚本所有存储痕迹，您可以先备份设置再执行本操作！</strong>`).then(d => {
+        GM.getValue("modules") && API.alertMessage(\`脚本更新残留后残留了大量废弃数据在您本地存储中，造成了额外的性能消耗！</br>是否立即执行清洁安装？</br><strong>将删除本脚本所有存储痕迹，您可以先备份设置再执行本操作！</strong>\`).then(d => {
             if (d) {
                 const arr = GM.listValues();
                 arr.forEach(d => GM.deleteValue(d));
@@ -12768,8 +12768,8 @@ catch (e) {
         toast.error("ui.js", e);
     }
 })();
-]]></>).toString();
-    modules["url.js"] = (<><![CDATA[/**
+`;
+    modules["url.js"] = `/**
  * 本模块封装了urlAPI请求以便于访问
  */
 (function () {
@@ -12799,16 +12799,16 @@ catch (e) {
             let obj = { ...(this.jsonUrlDefault[url] || {}), ...detail };
             Reflect.has(obj, "appkey") && (obj = this.sign(obj));
             return GM ? xhr.GM({
-                url: API.objUrl(`//${url}`, obj),
+                url: API.objUrl(\`//\${url}\`, obj),
                 responseType: "json"
             }) : xhr({
-                url: API.objUrl(`//${url}`, obj),
+                url: API.objUrl(\`//\${url}\`, obj),
                 responseType: "json",
                 credentials: true
             });
         }
         sign(obj) {
-            return API.urlObj(`?${API.urlsign("", obj, obj.appkey)}`);
+            return API.urlObj(\`?\${API.urlsign("", obj, obj.appkey)}\`);
         }
     }
     const exports = new Url();
@@ -12821,8 +12821,8 @@ catch (e) {
         }
     };
 })();
-]]></>).toString();
-    modules["urlInputCheck.js"] = (<><![CDATA[/**
+`;
+    modules["urlInputCheck.js"] = `/**
  * 本模块负责检查url输入并返回对应aid/cid等值
  */
 (function () {
@@ -12836,7 +12836,7 @@ catch (e) {
         if (input && !input.includes("?"))
             input = "?" + input; // 重整化输入便于提取参数
         let obj = API.urlObj(input); // 获取参数对象
-        aid = input.match(/[aA][vV][0-9]+/) ? input.match(/[aA][vV][0-9]+/)[0].match(/\d+/)[0] : undefined;
+        aid = input.match(/[aA][vV][0-9]+/) ? input.match(/[aA][vV][0-9]+/)[0].match(/\\d+/)[0] : undefined;
         aid = aid || obj.aid || undefined;
         aid = aid || (/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/.test(input) ? API.abv(input.match(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/)[0]) : undefined);
         aid = aid || (obj.bvid ? API.abv(obj.bvid) : undefined);
@@ -12875,9 +12875,9 @@ catch (e) {
             }
             else {
                 // 输入的是番剧ss/ep链接的情况，尝试获取aid、cid
-                ssid = input.match(/[sS][sS][0-9]+/) ? input.match(/[sS][sS][0-9]+/)[0].match(/\d+/)[0] : undefined;
+                ssid = input.match(/[sS][sS][0-9]+/) ? input.match(/[sS][sS][0-9]+/)[0].match(/\\d+/)[0] : undefined;
                 ssid = ssid || obj.season_id || undefined;
-                epid = input.match(/[eE][pP][0-9]+/) ? input.match(/[eE][pP][0-9]+/)[0].match(/\d+/)[0] : undefined;
+                epid = input.match(/[eE][pP][0-9]+/) ? input.match(/[eE][pP][0-9]+/)[0].match(/\\d+/)[0] : undefined;
                 epid = epid || obj.ep_id || undefined;
                 try {
                     // 尝试访问bangumi接口
@@ -12905,10 +12905,10 @@ catch (e) {
                         debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
                     try {
                         if (epid) {
-                            data = await xhr({ url: API.objUrl(`${config.limitServer}/intl/gateway/v2/ogv/view/app/season`, { ep_id: epid }) });
+                            data = await xhr({ url: API.objUrl(\`\${config.limitServer}/intl/gateway/v2/ogv/view/app/season\`, { ep_id: epid }) });
                         }
                         else if (ssid) {
-                            data = await xhr({ url: API.objUrl(`${config.limitServer}/intl/gateway/v2/ogv/view/app/season`, { season_id: ssid }) });
+                            data = await xhr({ url: API.objUrl(\`\${config.limitServer}/intl/gateway/v2/ogv/view/app/season\`, { season_id: ssid }) });
                         }
                         data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid });
                         aid = data.epInfo.aid;
@@ -12926,8 +12926,8 @@ catch (e) {
         return { aid, cid, ssid, epid, p, pgc };
     };
 })();
-]]></>).toString();
-    modules["vector.js"] = (<><![CDATA[/**
+`;
+    modules["vector.js"] = `/**
  * 本页面负责引导全局模块运行，一般全局生效运行的模块请将导入命令写在这里
  */
 (function () {
@@ -12959,13 +12959,13 @@ catch (e) {
         toast.error("vector.js", e);
     }
 })();
-]]></>).toString();
-    modules["xhr.js"] = (<><![CDATA[(function () {
+`;
+    modules["xhr.js"] = `(function () {
     class Xhr {
         /**
-         * `XMLHttpRequest`的`Promise`封装
-         * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
-         * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
+         * \`XMLHttpRequest\`的\`Promise\`封装
+         * @param details 以对象形式传递的参数，注意\`onload\`回调会覆盖Promise结果
+         * @returns \`Promise\`托管的请求结果或者报错信息，\`async = false\` 时除外，直接返回结果
          */
         static xhr(details) {
             details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
@@ -12997,9 +12997,9 @@ catch (e) {
             });
         }
         /**
-         * `GM_xmlhttpRequest`的`Promise`封装，用于跨域`XMLHttpRequest`请求
-         * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
-         * @returns `Promise`托管的请求结果或者报错信息
+         * \`GM_xmlhttpRequest\`的\`Promise\`封装，用于跨域\`XMLHttpRequest\`请求
+         * @param details 以对象形式传递的参数，注意\`onload\`回调会覆盖Promise结果
+         * @returns \`Promise\`托管的请求结果或者报错信息
          */
         static GM(details) {
             return new Promise((resolve, reject) => {
@@ -13013,11 +13013,11 @@ catch (e) {
     // @ts-ignore
     API.xhr = (details) => Xhr.xhr(details), API.xhr.GM = (details) => Xhr.GM(details);
 })();
-]]></>).toString();
-    modules["av-biliplus.js"] = (<><![CDATA[/**
+`;
+    modules["av-biliplus.js"] = `/**
  * 本模块负责重构av/BV页__INITIAL_STATE__
- * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 原始数据对应来源`//www.biliplus.com/api/view?aid`
+ * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
+ * 原始数据对应来源\`//www.biliplus.com/api/view?aid\`
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
 (function () {
@@ -13122,11 +13122,11 @@ catch (e) {
     //API.switchVideo(()=>API.debug.msg(300,"视频已失效","加载弹幕","缓存信息仅供参考",true,()=>API.importModule("")))
     API.__INITIAL_STATE__ = result;
 })();
-]]></>).toString();
-    modules["av-detail.js"] = (<><![CDATA[/**
+`;
+    modules["av-detail.js"] = `/**
  * 本模块负责重构av/BV页__INITIAL_STATE__
- * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 原始数据对应来源`//api.bilibili.com/x/web-interface/view/detail?aid`
+ * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
+ * 原始数据对应来源\`//api.bilibili.com/x/web-interface/view/detail?aid\`
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
 (function () {
@@ -13207,7 +13207,7 @@ catch (e) {
     let data = API.jsonCheck(__INITIAL_STATE__).data;
     if (!data.View.cid && data.View.forward) {
         toast.warning("视频撞车了！正在跳转至原视频~");
-        location.href = `https://www.bilibili.com/video/av${data.View.forward}`;
+        location.href = \`https://www.bilibili.com/video/av\${data.View.forward}\`;
     }
     result.aid = data.View.aid;
     result.related = data.Related || [];
@@ -13218,12 +13218,12 @@ catch (e) {
     result.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")';
     API.__INITIAL_STATE__ = result;
 })();
-]]></>).toString();
-    modules["bangumi-global.js"] = (<><![CDATA[/**
+`;
+    modules["bangumi-global.js"] = `/**
  * 本模块负责重构bangumi页__INITIAL_STATE__
- * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 同时传入的还有以`epid`的名义指定回目，默认值为0即第一回
- * 原始数据对应来源`//api.global.bilibili.com/view/web_api/season?season_id/ep_id`
+ * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
+ * 同时传入的还有以\`epid\`的名义指定回目，默认值为0即第一回
+ * 原始数据对应来源\`//api.global.bilibili.com/view/web_api/season?season_id/ep_id\`
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
 (function () {
@@ -13338,12 +13338,12 @@ catch (e) {
     result.ssId = data.season_id;
     API.__INITIAL_STATE__ = result;
 })();
-]]></>).toString();
-    modules["bangumi-season.js"] = (<><![CDATA[/**
+`;
+    modules["bangumi-season.js"] = `/**
  * 本模块负责重构bangumi页__INITIAL_STATE__
- * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 同时传入的还有以`epid`的名义指定回目，默认值为0即第一回
- * 原始数据对应来源`//bangumi.bilibili.com/view/web_api/season?season_id/ep_id`
+ * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
+ * 同时传入的还有以\`epid\`的名义指定回目，默认值为0即第一回
+ * 原始数据对应来源\`//bangumi.bilibili.com/view/web_api/season?season_id/ep_id\`
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
 (function () {
@@ -13455,10 +13455,10 @@ catch (e) {
     result.upInfo = data.up_info;
     API.__INITIAL_STATE__ = result;
 })();
-]]></>).toString();
-    modules["index-data.js"] = (<><![CDATA[/**
+`;
+    modules["index-data.js"] = `/**
  * 本模块负责重构主页__INITIAL_STATE__
- * 请以`__INITIAL_DATA__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
+ * 请以\`__INITIAL_DATA__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 原始数据对应自主页网页文件本身提取
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
@@ -13510,10 +13510,10 @@ catch (e) {
     }
     API.__INITIAL_STATE__ = result;
 })();
-]]></>).toString();
-    modules["index-html.js"] = (<><![CDATA[/**
+`;
+    modules["index-html.js"] = `/**
  * 本模块负责重构主页__INITIAL_STATE__
- * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
+ * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 原始数据对应自主页网页文件本身提取
  * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
  */
@@ -13559,7 +13559,7 @@ catch (e) {
     }
     API.__INITIAL_STATE__ = result;
 })();
-]]></>).toString();
+`;
     /**
      * 出事话脚本设置数据
      */

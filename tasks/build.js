@@ -20,13 +20,11 @@ class Build {
             s.push(fs.promises.readFile(d));
             return s;
         }, []));
-        // const resource = await this.resource();
-        // resource.forEach(d => { arr.push(d[0]); files.push(d[1]); })
         const modules = files.reduce((s, d, i) => {
             let t = arr[i].split("/");
             s += arr[i].endsWith(".json") ? `
-    modules["${t[t.length - 1]}"] = ${String(d)}` : `
-    modules["${t[t.length - 1]}"] = (<><![CDATA[${String(d)}]]></>).toString();`
+    modules["${t[t.length - 1]}"] = ${String(d)};` : `
+    modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;`
             return s;
         }, "");
         fs.readFile("./dist/index.js", "utf-8", (err, data) => {
@@ -46,25 +44,6 @@ class Build {
             content = content + "// ==/UserScript==\r\n\r\n" + data.replace("/* 模块占位 */", modules);
             fs.writeFile("./main.user.js", content, (err) => { if (err) throw err });
         })
-    }
-    /**
-     * 下载外部资源
-     * @returns 
-     */
-    async resource() {
-        const result = [];
-        await Promise.all(resource.reduce((s, d) => {
-            s.push(new Promise(r => {
-                https.get(d, res => {
-                    let data = "";
-                    res.on("data", d => data += d);
-                    res.on("end", () => { r(result.push([d, data])) })
-                    res.on("error", e => console.error("获取外部资源失败！", `url：${d}`, e))
-                })
-            }));
-            return s;
-        }, []));
-        return result;
     }
     /**
      * 汇总所有模块文件
