@@ -24,5 +24,18 @@
             }, 500)
             config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000);
         })
+        API.path.name && API.observerAddedNodes(e => {
+            if (e.className && /bilibili-player-danmaku-setting-lite-panel/.test(e.className)) {
+                API.runWhile(() => document.querySelector(".bilibili-player-setting-dmask-wrap"), () => {
+                    const node = document.querySelector(".bilibili-player-setting-dmask-wrap").parentElement;
+                    const lebel = API.addElement("label", { class: "bpui-checkbox-text", style: "cursor: pointer;display: inline-table;" }, node, "本地文件");
+                    const input = API.addElement("input", { type: "file", accept: ".mp4,.xml,.json", multiple: "multiple", style: "width: 0;" }, lebel);
+                    input.onchange = () => {
+                        (!window.player?.setDanmaku) && toast.warning("内部组件丢失，无法载入弹幕文件！");
+                        API.localMedia(input.files);
+                    }
+                })
+            }
+        })
     } catch (e) { debug.error("autoFix.js", e) }
 })();

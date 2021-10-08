@@ -3680,7 +3680,7 @@ option {
                 if (flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
                     flag = 0;
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
-                    node.contains(li) && li.remove();
+                    node && node.contains(li) && li.remove();
                 }
             });
         }
@@ -8070,6 +8070,20 @@ catch (e) {
                 }
             }, 500);
             config.autoPlay && setTimeout(() => { window.player && window.player.play && window.player.play(); }, 1000);
+        });
+        API.path.name && API.observerAddedNodes(e => {
+            if (e.className && /bilibili-player-danmaku-setting-lite-panel/.test(e.className)) {
+                API.runWhile(() => document.querySelector(".bilibili-player-setting-dmask-wrap"), () => {
+                    const node = document.querySelector(".bilibili-player-setting-dmask-wrap").parentElement;
+                    const lebel = API.addElement("label", { class: "bpui-checkbox-text", style: "cursor: pointer;display: inline-table;" }, node, "本地文件");
+                    const input = API.addElement("input", { type: "file", accept: ".mp4,.xml,.json", multiple: "multiple", style: "width: 0;" }, lebel);
+                    input.onchange = () => {
+                        var _a;
+                        (!((_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku)) && toast.warning("内部组件丢失，无法载入弹幕文件！");
+                        API.localMedia(input.files);
+                    };
+                });
+            }
         });
     }
     catch (e) {

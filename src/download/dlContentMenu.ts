@@ -25,7 +25,7 @@
                 if (flag && (<HTMLElement>e.target).className && (<HTMLElement>e.target).className.includes("context-line context-menu-function")) {
                     flag = 0;
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
-                    node.contains(li) && li.remove();
+                    node && node.contains(li) && li.remove();
                 }
             })
         } catch (e) { toast.error("dlContentMenu.js", e) }
