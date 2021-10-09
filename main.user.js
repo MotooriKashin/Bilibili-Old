@@ -3951,7 +3951,8 @@ option {
                     url: data.View.pic,
                     type: "其他",
                     quality: "封面",
-                    size: "N/A"
+                    size: "N/A",
+                    amylose: true
                 });
             }
             /**
@@ -4008,11 +4009,11 @@ option {
                     const up = API.addElement("div", { class: "up" }, item, d.quality + (d.flvSplit ? "x" + d.flvSplit : ""));
                     this.color[d.quality] && up.setAttribute("style", this.color[d.quality]);
                     API.addElement("div", { class: "down" }, item, d.size);
-                    item.onclick = () => {
+                    d.amylose ? item.href = d.url : (item.onclick = () => {
                         /^https?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w-,.\\/?%&=]*)?/.test(d.url) ?
                             this.postData(d) :
                             API.saveAs(d.url, d.filename || \`download \${API.timeFormat(undefined, true)}.txt\`, d.contentType || "text/plain");
-                    };
+                    });
                 });
             }
             postData(data) {
