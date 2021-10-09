@@ -3717,6 +3717,7 @@ option {
                     30280: "高音质",
                     30232: "中音质",
                     30216: "低音质",
+                    30126: "Dolby",
                     30125: "HDR",
                     30121: "4K",
                     30120: "4K",
@@ -3739,6 +3740,7 @@ option {
                     208: "1080P",
                     192: "720P",
                     160: "480P",
+                    126: "Dolby",
                     125: "HDR",
                     120: "4K",
                     116: "1080P60",
@@ -9239,7 +9241,7 @@ catch (e) {
 (function () {
     API.xhrhook(["/playurl?"], function (args) {
         let obj = API.urlObj(args[1]);
-        !obj.sign && (obj.fourk = 1, obj.fnval = obj.fnval ? 80 : null); // 4k支持
+        !obj.sign && (obj.fourk = 1, obj.fnval = obj.fnval < 80 ? obj.fnval : 976); // 杜比视界支持
         obj.avid && Number(obj.avid) && Reflect.set(API, "aid", obj.avid);
         !API.aid && obj.bvid && Reflect.set(API, "aid", API.abv(obj.bvid));
         obj.cid && Number(obj.cid) && Reflect.set(API, "cid", obj.cid);
