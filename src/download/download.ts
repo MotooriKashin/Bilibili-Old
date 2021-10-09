@@ -229,7 +229,7 @@
                             return s;
                         }, []));
                         result.forEach(d => d && this.decodePlayinfo(d));
-                        this.getOther();
+                        await this.getOther();
                     }
                     const title = this.getTitle();
                     this.links.forEach(d => {
@@ -238,7 +238,7 @@
                     this.showTable();
                 }
             }
-            getOther() {
+            async getOther() {
                 if (!config.ifDlDmCC) return;
                 if (API.danmaku) {
                     const url = config.dlDmType == "json" ? JSON.stringify(API.danmaku, undefined, "\t") : API.toXml(API.danmaku);
@@ -260,6 +260,13 @@
                         })
                     })
                 }
+                const data = await API.getAidInfo(API.aid);
+                data && data?.View?.pic && this.links.push({
+                    url: data.View.pic,
+                    type: "其他",
+                    quality: "封面",
+                    size: "N/A"
+                })
             }
             /**
              * 封装请求链接  

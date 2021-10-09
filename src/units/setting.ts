@@ -624,7 +624,7 @@
                 {
                     key: "ifDlDmCC",
                     sort: "download",
-                    label: "弹幕、CC字幕",
+                    label: "弹幕、CC字幕、封面",
                     type: "switch",
                     value: false
                 },

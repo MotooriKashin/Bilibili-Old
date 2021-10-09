@@ -3888,7 +3888,7 @@ option {
                             return s;
                         }, []));
                         result.forEach(d => d && this.decodePlayinfo(d));
-                        this.getOther();
+                        await this.getOther();
                     }
                     const title = this.getTitle();
                     this.links.forEach(d => {
@@ -3897,7 +3897,8 @@ option {
                     this.showTable();
                 }
             }
-            getOther() {
+            async getOther() {
+                var _a;
                 if (!config.ifDlDmCC)
                     return;
                 if (API.danmaku) {
@@ -3920,6 +3921,13 @@ option {
                         });
                     });
                 }
+                const data = await API.getAidInfo(API.aid);
+                data && ((_a = data === null || data === void 0 ? void 0 : data.View) === null || _a === void 0 ? void 0 : _a.pic) && this.links.push({
+                    url: data.View.pic,
+                    type: "其他",
+                    quality: "封面",
+                    size: "N/A"
+                });
             }
             /**
              * 封装请求链接
@@ -11990,7 +11998,7 @@ catch (e) {
                 {
                     key: "ifDlDmCC",
                     sort: "download",
-                    label: "弹幕、CC字幕",
+                    label: "弹幕、CC字幕、封面",
                     type: "switch",
                     value: false
                 },
