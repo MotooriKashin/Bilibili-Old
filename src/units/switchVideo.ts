@@ -13,11 +13,8 @@
         } catch (e) { toast.error("switchVideo.js", e) }
     }
     API.switchVideo = (callback: Function) => switchVideo(callback);
-    // if (/bilibili-player-video-btn-start/.test(node.className)) {
-    //     switchlist.forEach(d => d());
-    // }
     API.observerAddedNodes((node) => {
-        if (/bilibili-player-video-btn-start/.test(node.className)) {
+        if (/bilibili-player-area video-state-pause/.test(node.className)) {
             switchlist.forEach(d => d());
         }
     })

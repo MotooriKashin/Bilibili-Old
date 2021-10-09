@@ -12,7 +12,7 @@
     transition: transform 0.3s ease-in;
     flex-wrap: wrap;
     align-content: center;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 .cell {

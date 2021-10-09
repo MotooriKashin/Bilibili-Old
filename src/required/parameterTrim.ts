@@ -97,7 +97,8 @@
             }
         }
         const parameterTrim = new ParameterTrim();
-        parameterTrim.location();
+        // @ts-ignore 重写标记
+        if (Before) return parameterTrim.location();
         API.switchVideo(() => { parameterTrim.location() });
         API.observerAddedNodes(async (node) => {
             node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));

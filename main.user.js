@@ -582,7 +582,7 @@
     transition: transform 0.3s ease-in;
     flex-wrap: wrap;
     align-content: center;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
 }
 .cell {
@@ -3655,16 +3655,16 @@ option {
  * 添加下载右键菜单
  */
 (function () {
-    API.runWhile(() => window.player, () => {
+    API.switchVideo(() => {
         var _a, _b;
         try {
             const li = document.createElement("li");
-            let flag = 0;
             li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
             li.setAttribute("class", "context-line context-menu-function bili-old-download");
             li.onmouseover = () => li.setAttribute("class", "context-line context-menu-function bili-old-download hover");
             li.onmouseout = () => li.setAttribute("class", "context-line context-menu-function bili-old-download");
             li.onclick = () => API.downloadThis();
+            let flag = 0;
             (_a = document.querySelector("#bilibiliPlayer")) === null || _a === void 0 ? void 0 : _a.addEventListener("DOMNodeInserted", e => {
                 if (!flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
@@ -3680,8 +3680,11 @@ option {
             (_b = document.querySelector("#bilibiliPlayer")) === null || _b === void 0 ? void 0 : _b.addEventListener("DOMNodeRemoved", e => {
                 if (flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
                     flag = 0;
-                    const node = document.querySelector(".bilibili-player-context-menu-container.black");
-                    node && node.contains(li) && li.remove();
+                    try {
+                        li.remove();
+                    }
+                    catch (_a) { }
+                    ;
                 }
             });
         }
@@ -9170,7 +9173,9 @@ catch (e) {
             }
         }
         const parameterTrim = new ParameterTrim();
-        parameterTrim.location();
+        // @ts-ignore 重写标记
+        if (Before)
+            return parameterTrim.location();
         API.switchVideo(() => { parameterTrim.location(); });
         API.observerAddedNodes(async (node) => {
             node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
@@ -11307,6 +11312,7 @@ catch (e) {
             let offset = API.getCookies()["bp_video_offset_" + API.uid];
             offset && (document.cookie = "bp_t_offset_" + API.uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
         }
+        API.importModule("parameterTrim.js", { Before: true }); // 网址清理，重写前处理
         /**
          * 分离页面进入重写判定
          */
@@ -12109,11 +12115,8 @@ catch (e) {
         }
     }
     API.switchVideo = (callback) => switchVideo(callback);
-    // if (/bilibili-player-video-btn-start/.test(node.className)) {
-    //     switchlist.forEach(d => d());
-    // }
     API.observerAddedNodes((node) => {
-        if (/bilibili-player-video-btn-start/.test(node.className)) {
+        if (/bilibili-player-area video-state-pause/.test(node.className)) {
             switchlist.forEach(d => d());
         }
     });
@@ -12947,7 +12950,7 @@ catch (e) {
 (function () {
     try {
         API.initUi(); // 设置ui
-        API.importModule("parameterTrim.js"); // 网址清理
+        API.importModule("parameterTrim.js", { Before: false }); // 网址清理，重写后处理
         API.importModule("infoNewNumber.js"); // 旧版顶栏资讯数
         config.protoDm && API.importModule("protoDm.js"); // 新版弹幕
         config.liveDm && API.importModule("webSocket.js"); // 实时弹幕
