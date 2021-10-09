@@ -3651,7 +3651,7 @@ option {
     }
 })();
 `;
-    modules["dlContentMenu.js"] = `/**
+    modules["contentMenu.js"] = `/**
  * 添加下载右键菜单
  */
 (function () {
@@ -8471,10 +8471,12 @@ catch (e) {
                     const data = GM.getValue("banner");
                     Animate.locs.forEach(d => {
                         v.data[d] && (v.data[d][0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
+                            v.data[d][0].litpic = (data && data.litpic),
                             v.data[d][0].url = (data && data.url) || "",
                             v.data[d][0].title = (data && data.name) || "");
                         if (jsonp.url.includes("loc?") && obj.id == String(d)) {
                             v.data[0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
+                            v.data[0].litpic = (data && data.litpic) || "";
                             v.data[0].url = (data && data.url) || "";
                             v.data[0].title = (data && data.name) || "";
                         }
@@ -13002,7 +13004,7 @@ catch (e) {
         config.section && API.importModule("section.js"); // 顶栏底栏
         config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 弹幕反查
         config.unloginPopover && !API.uid && API.importModule("unloginPopover.js"); // 未登录弹窗
-        config.downloadContentmenu && API.importModule("dlContentMenu.js"); // 下载右键菜单
+        config.downloadContentmenu && API.importModule("contentMenu.js"); // 下载右键菜单
         // 自运行模块，通常是插件
         API.importModule().forEach(d => { d.includes("[run]") && API.importModule(d); });
     }
