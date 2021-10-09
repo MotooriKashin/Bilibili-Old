@@ -3666,7 +3666,7 @@ option {
             li.onclick = () => API.downloadThis();
             let flag = 0;
             (_a = document.querySelector("#bilibiliPlayer")) === null || _a === void 0 ? void 0 : _a.addEventListener("DOMNodeInserted", e => {
-                if (!flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
+                if (!flag && e.target.className && /context-line context-menu-function/.test(e.target.className)) {
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
                     flag = setTimeout(() => {
                         if (node.querySelector(".context-menu-danmaku"))
@@ -3678,7 +3678,7 @@ option {
                 }
             });
             (_b = document.querySelector("#bilibiliPlayer")) === null || _b === void 0 ? void 0 : _b.addEventListener("DOMNodeRemoved", e => {
-                if (flag && e.target.className && e.target.className.includes("context-line context-menu-function")) {
+                if (flag && e.target.className && /context-line context-menu-function/.test(e.target.className)) {
                     flag = 0;
                     try {
                         li.remove();
@@ -3714,9 +3714,10 @@ option {
                  * 暂缺杜比视界/杜比全景声部分
                  */
                 this.quality = {
-                    30280: "高音质",
-                    30232: "中音质",
-                    30216: "低音质",
+                    30280: "320Kbps",
+                    30250: "ATMOS",
+                    30232: "128Kbps",
+                    30216: "64Kbps",
                     30126: "Dolby",
                     30125: "HDR",
                     30121: "4K",
@@ -3758,6 +3759,7 @@ option {
                  */
                 this.color = {
                     "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
+                    "ATMOS": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "HDR": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "4K": "background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);",
                     "1080P60": "background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);",
@@ -3771,7 +3773,10 @@ option {
                     "avc": "background-color: #07e;",
                     "hev": "background-color: #7ba;",
                     "aac": "background-color: #07e;",
-                    "flv": "background-color: #0dd;"
+                    "flv": "background-color: #0dd;",
+                    "320Kbps": "background-color: #f00;background-image: linear-gradient(to right, #f00, #c00);",
+                    "128Kbps": "background-color: #f90;background-image: linear-gradient(to right, #f90, #d70);",
+                    "64Kbps": "background-color: #0d0;"
                 };
                 // 切P后清除下载数据并移除下载面板
                 API.switchVideo(() => { this.type = []; this.links = []; this.table && this.table.remove(); });
@@ -3802,6 +3807,7 @@ option {
             dash(dash) {
                 dash.video && this.dashVideo(dash.video, dash.duration);
                 dash.audio && this.dashAudio(dash.audio, dash.duration);
+                dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashATMOS(dash.dolby.audio, dash.duration);
             }
             /**
              * 整理dash视频部分
@@ -3838,6 +3844,23 @@ option {
              * @param duration duration信息，配合bandwidth能计算出文件大小
              */
             dashAudio(audio, duration) {
+                audio.forEach(d => {
+                    const url = d.baseUrl || d.base_url;
+                    url && this.links.push({
+                        type: "aac",
+                        url: url,
+                        quality: this.getQuality(url),
+                        size: API.sizeFormat(d.bandwidth * duration / 8),
+                        backupUrl: d.backupUrl || d.backup_url
+                    });
+                });
+            }
+            /**
+             * 整理dash杜比全景声部分
+             * @param audio 杜比全景声信息
+             * @param duration duration信息，配合bandwidth能计算出文件大小
+             */
+            dashATMOS(audio, duration) {
                 audio.forEach(d => {
                     const url = d.baseUrl || d.base_url;
                     url && this.links.push({
@@ -3943,8 +3966,8 @@ option {
                     switch (d) {
                         case "dash":
                             result = API.pgc ?
-                                await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 80 }, true) :
-                                await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 80 }, true);
+                                await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 976 }, true) :
+                                await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 976 }, true);
                             break;
                         case "flv":
                             result = API.pgc ?
@@ -9241,7 +9264,7 @@ catch (e) {
 (function () {
     API.xhrhook(["/playurl?"], function (args) {
         let obj = API.urlObj(args[1]);
-        !obj.sign && (obj.fourk = 1, obj.fnval = obj.fnval < 80 ? obj.fnval : 976); // 杜比视界支持
+        !obj.sign && (obj.fourk = 1, obj.fnval && (obj.fnval = 976)); // 杜比视界支持
         obj.avid && Number(obj.avid) && Reflect.set(API, "aid", obj.avid);
         !API.aid && obj.bvid && Reflect.set(API, "aid", API.abv(obj.bvid));
         obj.cid && Number(obj.cid) && Reflect.set(API, "cid", obj.cid);

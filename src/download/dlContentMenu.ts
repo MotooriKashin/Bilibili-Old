@@ -12,7 +12,7 @@
             li.onclick = () => API.downloadThis();
             let flag = 0;
             document.querySelector("#bilibiliPlayer")?.addEventListener("DOMNodeInserted", e => {
-                if (!flag && (<HTMLElement>e.target).className && (<HTMLElement>e.target).className.includes("context-line context-menu-function")) {
+                if (!flag && (<HTMLElement>e.target).className && /context-line context-menu-function/.test((<HTMLElement>e.target).className)) {
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
                     flag = setTimeout(() => {
                         if (node.querySelector(".context-menu-danmaku")) return;
@@ -22,7 +22,7 @@
                 }
             })
             document.querySelector("#bilibiliPlayer")?.addEventListener("DOMNodeRemoved", e => {
-                if (flag && (<HTMLElement>e.target).className && (<HTMLElement>e.target).className.includes("context-line context-menu-function")) {
+                if (flag && (<HTMLElement>e.target).className && /context-line context-menu-function/.test((<HTMLElement>e.target).className)) {
                     flag = 0;
                     try { li.remove() } catch { };
                 }

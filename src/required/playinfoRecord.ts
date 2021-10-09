@@ -4,7 +4,7 @@
 (function () {
     API.xhrhook(["/playurl?"], function (args) {
         let obj: any = API.urlObj(args[1]);
-        !obj.sign && (obj.fourk = 1, obj.fnval = obj.fnval < 80 ? obj.fnval : 976); // 杜比视界支持
+        !obj.sign && (obj.fourk = 1, obj.fnval && (obj.fnval = 976)); // 杜比视界支持
         obj.avid && Number(obj.avid) && Reflect.set(API, "aid", obj.avid);
         !API.aid && obj.bvid && Reflect.set(API, "aid", API.abv(obj.bvid));
         obj.cid && Number(obj.cid) && Reflect.set(API, "cid", obj.cid);
