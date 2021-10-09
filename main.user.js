@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.0.2
+// @version      6.0.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -100,6 +100,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }`;
     modules["avatarAnimation.css"] = `/* 鼠标放在顶栏上的动效 */
 .bili-header-m .profile-info .i-face .face{
