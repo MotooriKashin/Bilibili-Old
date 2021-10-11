@@ -14,7 +14,7 @@
     const modules: Record<string, any> = {};
     /* 模块占位 */
     /**
-     * 出事话脚本设置数据
+     * 初始化脚本设置数据
      */
     const CONFIG: { [name: string]: any } = {};
     const config: { [name: string]: any } = new Proxy(CONFIG, {

@@ -62,7 +62,6 @@
             links: DownloadRocord[] = [];
             /**
              * url序号对应的质量信息  
-             * 暂缺杜比视界/杜比全景声部分
              */
             quality = {
                 30280: "320Kbps",

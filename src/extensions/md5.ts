@@ -1,6 +1,5 @@
 /**
  * 本模块提供md5加密工具，是将`js-md5`修改为符合本项目模块规范的版本  
- * 本模块同时可作为普通js文件执行，该模式下将暴露方法对象到顶层变量`window`  
  * 感谢开源项目`js-md5`，源项目信息如下
  * @see js-md5 {@link https://github.com/emn178/js-md5}
  * @license MIT
