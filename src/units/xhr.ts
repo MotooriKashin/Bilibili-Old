@@ -1,5 +1,7 @@
 (function () {
     class Xhr {
+        static catches: [string, any][] = [];
+        static log = () => this.catches;
         /**
          * `XMLHttpRequest`的`Promise`封装
          * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
@@ -42,14 +44,14 @@
         static GM(details: GMxhrDetails): Promise<any> {
             return new Promise((resolve, reject) => {
                 details.method = details.method || 'GET';
-                details.onload = details.onload || ((xhr) => resolve(xhr.response));
-                details.onerror = details.onerror || ((xhr) => reject(xhr.response));
+                details.onload = details.onload || ((xhr) => { this.catches.push([details.url, xhr.response]); resolve(xhr.response) });
+                details.onerror = details.onerror || ((xhr) => { this.catches.push([details.url, xhr.response]); reject(xhr.response) });
                 GM.xmlHttpRequest(details);
             })
         }
     }
     // @ts-ignore
-    API.xhr = (details: xhrDetails) => Xhr.xhr(details), API.xhr.GM = (details: GMxhrDetails) => Xhr.GM(details);
+    API.xhr = (details: xhrDetails) => Xhr.xhr(details), API.xhr.GM = (details: GMxhrDetails) => Xhr.GM(details), API.xhr.log = () => Xhr.log();
 })();
 declare const xhr: {
     /**
@@ -72,6 +74,10 @@ declare const xhr: {
      * @returns `Promise`托管的请求结果或者报错信息
      */
     GM(details: GMxhrDetails): Promise<any>;
+    /**
+     * 跨域xhr记录
+     */
+    log(): [string, any][];
 }
 /**
 * `GM_xmlhttpRequest`的返回值

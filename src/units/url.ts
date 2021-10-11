@@ -9,11 +9,11 @@
         jsonUrlDefault = {
             "api.bilibili.com/pgc/player/web/playurl": { qn: 125, otype: 'json', fourk: 1 },
             "api.bilibili.com/x/player/playurl": { qn: 125, otype: 'json', fourk: 1 },
-            "interface.bilibili.com/v2/playurl": { otype: 'json', qn: 125, quality: 125, type: '' },
+            "interface.bilibili.com/v2/playurl": { appkey: 0, otype: 'json', qn: 125, quality: 125, type: '' },
             "api.bilibili.com/pgc/player/api/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
             "app.bilibili.com/v2/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-            "api.bilibili.com/pgc/player/api/playurltv": { appkey: 1, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-            "api.bilibili.com/x/tv/ugc/playurl": { appkey: 1, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 }
+            "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+            "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 }
         }
         /**
          * 请求封装好的json请求
