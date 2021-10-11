@@ -9,7 +9,8 @@
         jsonUrlDefault = {
             "api.bilibili.com/pgc/player/web/playurl": { qn: 125, otype: 'json', fourk: 1 },
             "api.bilibili.com/x/player/playurl": { qn: 125, otype: 'json', fourk: 1 },
-            "interface.bilibili.com/v2/playurl": { appkey: 0, otype: 'json', qn: 125, quality: 125, type: '' },
+            "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 125, type: '' },
+            "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 125, type: '' },
             "api.bilibili.com/pgc/player/api/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
             "app.bilibili.com/v2/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
             "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
@@ -62,9 +63,14 @@ interface jsonUrlDetail {
      * Interface playurl  
      * 这版url没有防盗链检测
      */
-    "interface.bilibili.com/v2/playurl": { cid: number, qn?: number, quality?: number }
+    "interface.bilibili.com/v2/playurl": { cid: number, quality?: number }
     /**
-     * 投屏bangumi playurl
+     * Interface bangumi playuel  
+     * 这版url没有防盗链检测
+     */
+    "bangumi.bilibili.com/player/web_api/v2/playurl": { cid: number, quality?: number }
+    /**
+     * 投屏 bangumi playurl
      */
     "api.bilibili.com/pgc/player/api/playurlproj": { cid: number }
     /**
