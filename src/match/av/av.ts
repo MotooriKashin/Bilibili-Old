@@ -6,7 +6,7 @@
     try {
         class Av {
             // __INITIAL_STATE__类型保护
-            isAV__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__ | INDEX__INITIAL_STATE__): pet is AV__INITIAL_STATE__ => true;
+            isAV__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__): pet is AV__INITIAL_STATE__ => true;
             constructor() {
                 // 重定向SEO页面
                 if (/\/s\//.test(location.href)) location.replace(location.href.replace("s/video", "video"));

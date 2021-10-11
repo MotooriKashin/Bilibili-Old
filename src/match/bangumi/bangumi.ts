@@ -6,7 +6,7 @@
         class Bangumi {
             epid = API.path[5].startsWith('ep') ? (<string[]>location.href.match(/[0-9]+/))[0] : null;
             obj = {};
-            isBANGUMI__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__ | INDEX__INITIAL_STATE__): pet is BANGUMI__INITIAL_STATE__ => true;
+            isBANGUMI__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__): pet is BANGUMI__INITIAL_STATE__ => true;
             constructor() {
                 API.path.name = "bangumi";
                 // 备份还原旧版播放器设置数据

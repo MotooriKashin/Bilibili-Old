@@ -97,7 +97,7 @@ declare namespace API {
     /**
      * 重构的__INITIAL_STATE__数据
      */
-    let __INITIAL_STATE__: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__ | INDEX__INITIAL_STATE__;
+    let __INITIAL_STATE__: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__;
 }
 interface AV__INITIAL_STATE__ {
     aid: number;

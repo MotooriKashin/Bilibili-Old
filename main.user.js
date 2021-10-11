@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.0.3
+// @version      6.0.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -7231,65 +7231,46 @@ option {
     try {
         class Index {
             constructor() {
-                // __INITIAL_STATE__类型保护
-                this.isINDEX__INITIAL_STATE__ = (pet) => true;
                 API.path.name = "index";
                 config.rewriteMethod == "异步" ? this.prepareA() : this.prepareB();
             }
             async prepareA() {
-                await new Promise(r => {
-                    if (!window.__INITIAL_STATE__ && !(window.__INITIAL_DATA__ && window.__INITIAL_DATA__[0])) {
-                        xhr({ url: location.href, credentials: true }).then(d => {
-                            let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\\;\\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\\(function/, "") : "";
-                            if (data)
-                                API.importModule("index-html.js", { __INITIAL_STATE__: data });
-                            else {
-                                data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\\/script>/, "") : "";
-                                data && API.importModule("index-data.js", { __INITIAL_DATA__: data });
-                            }
-                            r(true);
-                        }).catch(e => { toast.error("获取主页数据出错！", e); API.importModule("vector.js"); });
-                    }
-                    else if (window.__INITIAL_STATE__) {
-                        API.importModule("index-html.js", { __INITIAL_STATE__: JSON.stringify(window.__INITIAL_STATE__) });
-                        r(true);
-                    }
-                    else if (window.__INITIAL_DATA__) {
-                        API.importModule("index-data.js", { __INITIAL_DATA__: JSON.stringify(window.__INITIAL_DATA__) });
-                        r(true);
-                    }
-                });
+                const data = (await xhr({
+                    url: "https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,34,31",
+                    responseType: "json"
+                })).data;
+                let result = { locsData: { 23: data[4694], 34: data[34], 31: data[31] } };
+                config.indexLoc && this.reAD(result);
+                window.__INITIAL_STATE__ = result;
                 this.write();
             }
             prepareB() {
-                if (!window.__INITIAL_STATE__ && !(window.__INITIAL_DATA__ && window.__INITIAL_DATA__[0])) {
-                    let d = xhr({ url: location.href, async: false });
-                    let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\\;\\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\\(function/, "") : "";
-                    if (data)
-                        API.importModule("index-html.js", { __INITIAL_STATE__: data });
-                    else {
-                        data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\\/script>/, "") : "";
-                        data && API.importModule("index-data.js", { __INITIAL_DATA__: data });
-                    }
-                }
-                else if (window.__INITIAL_STATE__) {
-                    API.importModule("index-html.js", { __INITIAL_STATE__: JSON.stringify(window.__INITIAL_STATE__) });
-                }
-                else if (window.__INITIAL_DATA__) {
-                    API.importModule("index-data.js", { __INITIAL_DATA__: JSON.stringify(window.__INITIAL_DATA__) });
-                }
+                const data = API.jsonCheck(xhr({
+                    url: "https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,34,31",
+                    async: false
+                })).data;
+                let result = { locsData: { 23: data[4694], 34: data[34], 31: data[31] } };
+                config.indexLoc && this.reAD(result);
+                window.__INITIAL_STATE__ = result;
                 this.write();
             }
-            write() {
-                if (this.isINDEX__INITIAL_STATE__(API.__INITIAL_STATE__)) {
-                    window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
-                    API.rewriteHTML(API.getModule("index.html"));
-                    // 移除无效节点
-                    API.runWhile(() => document.querySelector(".ver"), () => { var _a; return (_a = document.querySelector(".ver")) === null || _a === void 0 ? void 0 : _a.remove(); });
-                    API.runWhile(() => document.querySelector("#fixed_app_download"), () => { var _a; return (_a = document.querySelector("#fixed_app_download")) === null || _a === void 0 ? void 0 : _a.remove(); });
-                    // 修复失效分区
-                    API.importModule("indexSort.js");
+            reAD(data) {
+                for (let key in data.locsData) {
+                    if (Array.isArray(data.locsData[key])) {
+                        data.locsData[key] = data.locsData[key].filter((d) => {
+                            return d.is_ad ? (debug.debug("移除广告", key, d), false) : true;
+                        });
+                    }
                 }
+            }
+            write() {
+                window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
+                API.rewriteHTML(API.getModule("index.html"));
+                // 移除无效节点
+                API.runWhile(() => document.querySelector(".ver"), () => { var _a; return (_a = document.querySelector(".ver")) === null || _a === void 0 ? void 0 : _a.remove(); });
+                API.runWhile(() => document.querySelector("#fixed_app_download"), () => { var _a; return (_a = document.querySelector("#fixed_app_download")) === null || _a === void 0 ? void 0 : _a.remove(); });
+                // 修复失效分区
+                API.importModule("indexSort.js");
             }
         }
         new Index();
@@ -7330,8 +7311,7 @@ option {
                 }
                 indexFlag = indexRecommend.length < 20 ? 10 : indexFlag < 30 ? indexFlag + 10 : 10; // 对于全站推荐，刷新遍历起始点
             };
-            if (API.uid && config.privateRecommend)
-                prev.click(); // 移除个性化推荐
+            prev.click(); // 移除个性化推荐
         }
         catch (e) {
             debug.error("indexRecommend.js", e);
@@ -13506,110 +13486,6 @@ catch (e) {
     result.special = data.bkg_cover ? true : false;
     result.ssId = data.season_id;
     result.upInfo = data.up_info;
-    API.__INITIAL_STATE__ = result;
-})();
-`;
-    modules["index-data.js"] = `/**
- * 本模块负责重构主页__INITIAL_STATE__
- * 请以\`__INITIAL_DATA__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 原始数据对应自主页网页文件本身提取
- * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
- */
-(function () {
-    // @ts-ignore：传递参数
-    let arr = JSON.parse(__INITIAL_DATA__);
-    const result = {
-        recommendData: [],
-        locsData: {
-            31: [{ id: 36585, contract_id: "", pos_num: 1, name: "小黑屋弹幕举报", pic: "https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg", litpic: "", url: "https://www.bilibili.com/blackboard/activity-dmjbfj.html", style: 0, agency: "", label: "", intro: "", creative_type: 0, request_id: "1546354354629q172a23a61a62q626", src_id: 32, area: 0, is_ad_loc: true, ad_cb: "", title: "", server_type: 0, cm_mark: 0, stime: 1520478000, mid: "14629218" }]
-        }
-    };
-    arr.forEach(d => {
-        if (d.response.item) {
-            d.response.item.forEach(d => {
-                result.recommendData.push({
-                    aid: API.abv(d.bvid),
-                    typename: "",
-                    title: d.title,
-                    subtitle: "",
-                    play: d.stat.view,
-                    review: "",
-                    video_review: "",
-                    favorites: "",
-                    mid: d.owner.mid,
-                    author: d.owner.name,
-                    creat: "",
-                    pic: d.pic,
-                    coins: "",
-                    duration: d.duration,
-                    badgepay: false,
-                    rights: ""
-                });
-            });
-        }
-        if (d.response[4694])
-            result.locsData[23] = d.response[4694]; //滚动推荐
-        if (d.response[34])
-            result.locsData[34] = d.response[34]; // 推广
-    });
-    if (config.indexLoc) {
-        for (let key in result.locsData) {
-            if (Array.isArray(result.locsData[key])) {
-                result.locsData[key] = result.locsData[key].filter(d => {
-                    return d.is_ad ? (debug.debug("移除广告", key, d), false) : true;
-                });
-            }
-        }
-    }
-    API.__INITIAL_STATE__ = result;
-})();
-`;
-    modules["index-html.js"] = `/**
- * 本模块负责重构主页__INITIAL_STATE__
- * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 原始数据对应自主页网页文件本身提取
- * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
- */
-(function () {
-    // @ts-ignore：传递参数
-    let data = JSON.parse(__INITIAL_STATE__);
-    const result = {
-        recommendData: [],
-        locsData: {
-            31: [{ id: 36585, contract_id: "", pos_num: 1, name: "小黑屋弹幕举报", pic: "https://i0.hdslb.com/bfs/archive/0aa2f32c56cb65b6d453192a3015b65e62537b9a.jpg", litpic: "", url: "https://www.bilibili.com/blackboard/activity-dmjbfj.html", style: 0, agency: "", label: "", intro: "", creative_type: 0, request_id: "1546354354629q172a23a61a62q626", src_id: 32, area: 0, is_ad_loc: true, ad_cb: "", title: "", server_type: 0, cm_mark: 0, stime: 1520478000, mid: "14629218" }]
-        }
-    };
-    data.recommendData && data.recommendData.item.forEach((i) => {
-        result.recommendData.push({
-            aid: API.abv(i.bvid),
-            typename: "",
-            title: i.title,
-            subtitle: "",
-            play: i.stat.view,
-            review: "",
-            video_review: "",
-            favorites: "",
-            mid: i.owner.mid,
-            author: i.owner.name,
-            creat: "",
-            pic: i.pic,
-            coins: "",
-            duration: i.duration,
-            badgepay: false,
-            rights: ""
-        });
-    });
-    result.locsData = data.locsData;
-    result.locsData[23] = data.locsData[3197].filter((d) => d.url);
-    if (config.indexLoc) {
-        for (let key in result.locsData) {
-            if (Array.isArray(result.locsData[key])) {
-                result.locsData[key] = result.locsData[key].filter(d => {
-                    return d.is_ad ? (debug.debug("移除广告", key, d), false) : true;
-                });
-            }
-        }
-    }
     API.__INITIAL_STATE__ = result;
 })();
 `;

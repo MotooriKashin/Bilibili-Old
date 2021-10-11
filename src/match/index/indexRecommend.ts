@@ -28,7 +28,7 @@
                 }
                 indexFlag = indexRecommend.length < 20 ? 10 : indexFlag < 30 ? indexFlag + 10 : 10; // 对于全站推荐，刷新遍历起始点
             }
-            if (API.uid && config.privateRecommend) prev.click(); // 移除个性化推荐
+            prev.click(); // 移除个性化推荐
         } catch (e) { debug.error("indexRecommend.js", e) }
     })
 })();

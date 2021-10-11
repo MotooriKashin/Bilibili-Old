@@ -4,60 +4,47 @@
 (function () {
     try {
         class Index {
-            // __INITIAL_STATE__类型保护
-            isINDEX__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__ | INDEX__INITIAL_STATE__): pet is INDEX__INITIAL_STATE__ => true;
             constructor() {
                 API.path.name = "index";
                 config.rewriteMethod == "异步" ? this.prepareA() : this.prepareB();
             }
             async prepareA() {
-                await new Promise(r => {
-                    if (!(<any>window).__INITIAL_STATE__ && !((<any>window).__INITIAL_DATA__ && (<any>window).__INITIAL_DATA__[0])) {
-                        (<Promise<string>>xhr({ url: location.href, credentials: true })).then(d => {
-                            let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
-                            if (data) API.importModule("index-html.js", { __INITIAL_STATE__: data });
-                            else {
-                                data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\/script>/, "") : "";
-                                data && API.importModule("index-data.js", { __INITIAL_DATA__: data });
-                            }
-                            r(true);
-                        }).catch(e => { toast.error("获取主页数据出错！", e); API.importModule("vector.js"); })
-                    } else if ((<any>window).__INITIAL_STATE__) {
-                        API.importModule("index-html.js", { __INITIAL_STATE__: JSON.stringify((<any>window).__INITIAL_STATE__) });
-                        r(true);
-                    } else if ((<any>window).__INITIAL_DATA__) {
-                        API.importModule("index-data.js", { __INITIAL_DATA__: JSON.stringify((<any>window).__INITIAL_DATA__) });
-                        r(true);
-                    }
-                })
+                const data = (await xhr({
+                    url: "https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,34,31",
+                    responseType: "json"
+                })).data;
+                let result = { locsData: { 23: data[4694], 34: data[34], 31: data[31] } };
+                config.indexLoc && this.reAD(result);
+                (<any>window).__INITIAL_STATE__ = result;
                 this.write();
             }
             prepareB() {
-                if (!(<any>window).__INITIAL_STATE__ && !((<any>window).__INITIAL_DATA__ && (<any>window).__INITIAL_DATA__[0])) {
-                    let d = xhr({ url: location.href, async: false });
-                    let data = d.includes("__INITIAL_STATE__=") ? d.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "") : "";
-                    if (data) API.importModule("index-html.js", { __INITIAL_STATE__: data });
-                    else {
-                        data = d.includes("__INITIAL_DATA__=") ? d.match(/INITIAL_DATA__=.+?<\/script>/)[0].replace(/INITIAL_DATA__=/, "").replace(/<\/script>/, "") : "";
-                        data && API.importModule("index-data.js", { __INITIAL_DATA__: data });
-                    }
-                } else if ((<any>window).__INITIAL_STATE__) {
-                    API.importModule("index-html.js", { __INITIAL_STATE__: JSON.stringify((<any>window).__INITIAL_STATE__) });
-                } else if ((<any>window).__INITIAL_DATA__) {
-                    API.importModule("index-data.js", { __INITIAL_DATA__: JSON.stringify((<any>window).__INITIAL_DATA__) });
-                }
+                const data = API.jsonCheck(xhr({
+                    url: "https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,34,31",
+                    async: false
+                })).data;
+                let result = { locsData: { 23: data[4694], 34: data[34], 31: data[31] } };
+                config.indexLoc && this.reAD(result);
+                (<any>window).__INITIAL_STATE__ = result;
                 this.write();
             }
-            write() {
-                if (this.isINDEX__INITIAL_STATE__(API.__INITIAL_STATE__)) {
-                    (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
-                    API.rewriteHTML(API.getModule("index.html"));
-                    // 移除无效节点
-                    API.runWhile(() => document.querySelector(".ver"), () => document.querySelector(".ver")?.remove());
-                    API.runWhile(() => document.querySelector("#fixed_app_download"), () => document.querySelector("#fixed_app_download")?.remove());
-                    // 修复失效分区
-                    API.importModule("indexSort.js");
+            reAD(data: any) {
+                for (let key in data.locsData) {
+                    if (Array.isArray(data.locsData[key])) {
+                        data.locsData[key] = data.locsData[key].filter((d: any) => {
+                            return d.is_ad ? (debug.debug("移除广告", key, d), false) : true;
+                        })
+                    }
                 }
+            }
+            write() {
+                (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
+                API.rewriteHTML(API.getModule("index.html"));
+                // 移除无效节点
+                API.runWhile(() => document.querySelector(".ver"), () => document.querySelector(".ver")?.remove());
+                API.runWhile(() => document.querySelector("#fixed_app_download"), () => document.querySelector("#fixed_app_download")?.remove());
+                // 修复失效分区
+                API.importModule("indexSort.js");
             }
         }
         new Index();
