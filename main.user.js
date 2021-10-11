@@ -3754,6 +3754,13 @@ option {
                     15: "360P"
                 };
                 /**
+                 * 视频编码信息对应的id，可能不完整
+                 */
+                this.codec = {
+                    hev: [30126, 30125, 30121, 30102, 30077, 30066, 30033, 30011],
+                    avc: [30120, 30112, 30080, 30064, 30032, 30016]
+                };
+                /**
                  * 颜色表
                  */
                 this.color = {
@@ -3798,7 +3805,14 @@ option {
              * @returns 画质/音质信息
              */
             getQuality(url, id) {
-                return this.quality[url.match(/[0-9]+\\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || (id && this.quality[id]) || "N/A";
+                return this.quality[this.getID(url)] || (id && this.quality[id]) || "N/A";
+            }
+            /**
+             * 从url中提取可能的id
+             * @param url 多媒体url
+             */
+            getID(url) {
+                return Number(/[0-9]+\\.((flv)|(mp4)|(m4s))/.exec(url)[0].split(".")[0]);
             }
             /**
              * 整理dash部分
@@ -3820,13 +3834,18 @@ option {
                     let type = "";
                     if (!url)
                         return;
-                    switch (d.codecs.includes("avc")) {
-                        case true:
-                            type = "avc";
-                            break;
-                        case false:
-                            type = "hev";
-                            break;
+                    if (d.codecs)
+                        switch (d.codecs.includes("avc")) {
+                            case true:
+                                type = "avc";
+                                break;
+                            case false:
+                                type = "hev";
+                                break;
+                        }
+                    else {
+                        const id = this.getID(url);
+                        type = this.codec.hev.find(d => d === id) ? "hev" : "avc";
                     }
                     !this.type.includes("dash") && this.type.push("dash");
                     this.links.push({
@@ -12807,6 +12826,7 @@ catch (e) {
 (function () {
     class Url {
         constructor() {
+            this.access_key = GM.getValue("access_key", undefined);
             /**
              * url的默认参数，即UrlDetail未列出或可选的部分
              */
@@ -12815,10 +12835,12 @@ catch (e) {
                 "api.bilibili.com/x/player/playurl": { qn: 125, otype: 'json', fourk: 1 },
                 "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 125, type: '' },
                 "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 125, type: '' },
-                "api.bilibili.com/pgc/player/api/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-                "app.bilibili.com/v2/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
+                "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
+                "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
                 "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 }
+                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 976, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 976, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() }
             };
         }
         /**

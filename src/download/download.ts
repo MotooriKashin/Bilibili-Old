@@ -105,6 +105,13 @@
                 15: "360P"
             };
             /**
+             * 视频编码信息对应的id，可能不完整
+             */
+            codec = {
+                hev: [30126, 30125, 30121, 30102, 30077, 30066, 30033, 30011],
+                avc: [30120, 30112, 30080, 30064, 30032, 30016]
+            }
+            /**
              * 颜色表
              */
             color = {
@@ -150,7 +157,14 @@
              * @returns 画质/音质信息
              */
             getQuality(url: string, id?: number) {
-                return this.quality[url.match(/[0-9]+\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || (id && this.quality[id]) || "N/A";
+                return this.quality[this.getID(url)] || (id && this.quality[id]) || "N/A";
+            }
+            /**
+             * 从url中提取可能的id
+             * @param url 多媒体url
+             */
+            getID(url: string) {
+                return Number(/[0-9]+\.((flv)|(mp4)|(m4s))/.exec(url)[0].split(".")[0]);
             }
             /**
              * 整理dash部分
@@ -171,11 +185,14 @@
                     const url = d.baseUrl || d.base_url;
                     let type = "";
                     if (!url) return;
-                    switch (d.codecs.includes("avc")) {
+                    if (d.codecs) switch (d.codecs.includes("avc")) {
                         case true: type = "avc";
                             break;
                         case false: type = "hev";
                             break;
+                    } else {
+                        const id = this.getID(url);
+                        type = this.codec.hev.find(d => d === id) ? "hev" : "avc";
                     }
                     !this.type.includes("dash") && this.type.push("dash");
                     this.links.push({
