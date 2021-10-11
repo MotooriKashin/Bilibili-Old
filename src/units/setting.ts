@@ -529,9 +529,9 @@
             sort: "download",
             key: "useragent",
             label: "User-Agent",
-            value: navigator.userAgent,
+            value: "Bilibili Freedoooooom/MarkII",
             input: { type: "text" },
-            float: `用户代理，此值一般填非空的任意值皆可。`,
+            float: `用户代理，此值不可为空，默认使用B站客户端专属UA。`,
             hidden: config.downloadMethod == "右键保存"
         })
         API.registerSetting({
@@ -541,7 +541,7 @@
             label: "referer",
             value: location.origin,
             input: { type: "text" },
-            float: `一般为B站主域名(origin)，此值不可为空，除非是APP/TV等视频源。`,
+            float: `一般为B站主域名(http://www.bilibili.com)。</br><strong>APP/TV等下载源此视频源必须为空！</strong>`,
             hidden: config.downloadMethod == "右键保存"
         })
         API.registerSetting({

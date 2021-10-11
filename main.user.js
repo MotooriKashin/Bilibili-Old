@@ -3711,7 +3711,6 @@ option {
                 this.links = [];
                 /**
                  * url序号对应的质量信息
-                 * 暂缺杜比视界/杜比全景声部分
                  */
                 this.quality = {
                     30280: "320Kbps",
@@ -3795,10 +3794,11 @@ option {
              * 根据url确定画质/音质信息
              * 需要维护quality表
              * @param url 多媒体url
+             * @param id 媒体流id
              * @returns 画质/音质信息
              */
-            getQuality(url) {
-                return this.quality[url.match(/[0-9]+\\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || "N/A";
+            getQuality(url, id) {
+                return this.quality[url.match(/[0-9]+\\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || (id && this.quality[id]) || "N/A";
             }
             /**
              * 整理dash部分
@@ -3832,7 +3832,7 @@ option {
                     this.links.push({
                         type: type,
                         url: url,
-                        quality: this.getQuality(url),
+                        quality: this.getQuality(url, d.id),
                         size: API.sizeFormat(d.bandwidth * duration / 8),
                         backupUrl: d.backupUrl || d.backup_url
                     });
@@ -3849,7 +3849,7 @@ option {
                     url && this.links.push({
                         type: "aac",
                         url: url,
-                        quality: this.getQuality(url),
+                        quality: this.getQuality(url, d.id),
                         size: API.sizeFormat(d.bandwidth * duration / 8),
                         backupUrl: d.backupUrl || d.backup_url
                     });
@@ -3866,7 +3866,7 @@ option {
                     url && this.links.push({
                         type: "aac",
                         url: url,
-                        quality: this.getQuality(url),
+                        quality: this.getQuality(url, d.id),
                         size: API.sizeFormat(d.bandwidth * duration / 8),
                         backupUrl: d.backupUrl || d.backup_url
                     });
@@ -3882,7 +3882,7 @@ option {
                     const link = {
                         type: "",
                         url: d.url,
-                        quality: this.getQuality(d.url),
+                        quality: this.getQuality(d.url, d.id),
                         size: API.sizeFormat(d.size),
                         backupUrl: d.backupUrl || d.backup_url
                     };
@@ -4531,7 +4531,6 @@ option {
 `;
     modules["md5.js"] = `/**
  * 本模块提供md5加密工具，是将\`js-md5\`修改为符合本项目模块规范的版本
- * 本模块同时可作为普通js文件执行，该模式下将暴露方法对象到顶层变量\`window\`
  * 感谢开源项目\`js-md5\`，源项目信息如下
  * @see js-md5 {@link https://github.com/emn178/js-md5}
  * @license MIT
@@ -11911,9 +11910,9 @@ catch (e) {
             sort: "download",
             key: "useragent",
             label: "User-Agent",
-            value: navigator.userAgent,
+            value: "Bilibili Freedoooooom/MarkII",
             input: { type: "text" },
-            float: \`用户代理，此值一般填非空的任意值皆可。\`,
+            float: \`用户代理，此值不可为空，默认使用B站客户端专属UA。\`,
             hidden: config.downloadMethod == "右键保存"
         });
         API.registerSetting({
@@ -11923,7 +11922,7 @@ catch (e) {
             label: "referer",
             value: location.origin,
             input: { type: "text" },
-            float: \`一般为B站主域名(origin)，此值不可为空，除非是APP/TV等视频源。\`,
+            float: \`一般为B站主域名(http://www.bilibili.com)。</br><strong>APP/TV等下载源此视频源必须为空！</strong>\`,
             hidden: config.downloadMethod == "右键保存"
         });
         API.registerSetting({
@@ -12814,11 +12813,12 @@ catch (e) {
             this.jsonUrlDefault = {
                 "api.bilibili.com/pgc/player/web/playurl": { qn: 125, otype: 'json', fourk: 1 },
                 "api.bilibili.com/x/player/playurl": { qn: 125, otype: 'json', fourk: 1 },
-                "interface.bilibili.com/v2/playurl": { otype: 'json', qn: 125, quality: 125, type: '' },
+                "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 125, type: '' },
+                "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 125, type: '' },
                 "api.bilibili.com/pgc/player/api/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
                 "app.bilibili.com/v2/playurlproj": { appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 1, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 80, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 1, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 80, platform: "android", mobi_app: "android_tv_yst", build: 102801 }
+                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 }
             };
         }
         /**
@@ -12994,6 +12994,7 @@ catch (e) {
 })();
 `;
     modules["xhr.js"] = `(function () {
+    var _a;
     class Xhr {
         /**
          * \`XMLHttpRequest\`的\`Promise\`封装
@@ -13037,14 +13038,17 @@ catch (e) {
         static GM(details) {
             return new Promise((resolve, reject) => {
                 details.method = details.method || 'GET';
-                details.onload = details.onload || ((xhr) => resolve(xhr.response));
-                details.onerror = details.onerror || ((xhr) => reject(xhr.response));
+                details.onload = details.onload || ((xhr) => { this.catches.push([details.url, xhr.response]); resolve(xhr.response); });
+                details.onerror = details.onerror || ((xhr) => { this.catches.push([details.url, xhr.response]); reject(xhr.response); });
                 GM.xmlHttpRequest(details);
             });
         }
     }
+    _a = Xhr;
+    Xhr.catches = [];
+    Xhr.log = () => _a.catches;
     // @ts-ignore
-    API.xhr = (details) => Xhr.xhr(details), API.xhr.GM = (details) => Xhr.GM(details);
+    API.xhr = (details) => Xhr.xhr(details), API.xhr.GM = (details) => Xhr.GM(details), API.xhr.log = () => Xhr.log();
 })();
 `;
     modules["av-biliplus.js"] = `/**
@@ -13490,7 +13494,7 @@ catch (e) {
 })();
 `;
     /**
-     * 出事话脚本设置数据
+     * 初始化脚本设置数据
      */
     const CONFIG = {};
     const config = new Proxy(CONFIG, {
