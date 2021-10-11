@@ -146,10 +146,11 @@
              * 根据url确定画质/音质信息  
              * 需要维护quality表
              * @param url 多媒体url
+             * @param id 媒体流id
              * @returns 画质/音质信息
              */
-            getQuality(url: string) {
-                return this.quality[url.match(/[0-9]+\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || "N/A";
+            getQuality(url: string, id?: number) {
+                return this.quality[url.match(/[0-9]+\.((flv)|(mp4)|(m4s))/)[0].split(".")[0]] || (id && this.quality[id]) || "N/A";
             }
             /**
              * 整理dash部分
@@ -180,7 +181,7 @@
                     this.links.push({
                         type: type,
                         url: url,
-                        quality: this.getQuality(url),
+                        quality: this.getQuality(url, d.id),
                         size: API.sizeFormat(d.bandwidth * duration / 8),
                         backupUrl: d.backupUrl || d.backup_url
                     })
@@ -197,7 +198,7 @@
                     url && this.links.push({
                         type: "aac",
                         url: url,
-                        quality: this.getQuality(url),
+                        quality: this.getQuality(url, d.id),
                         size: API.sizeFormat(d.bandwidth * duration / 8),
                         backupUrl: d.backupUrl || d.backup_url
                     })
@@ -214,7 +215,7 @@
                     url && this.links.push({
                         type: "aac",
                         url: url,
-                        quality: this.getQuality(url),
+                        quality: this.getQuality(url, d.id),
                         size: API.sizeFormat(d.bandwidth * duration / 8),
                         backupUrl: d.backupUrl || d.backup_url
                     })
@@ -230,7 +231,7 @@
                     const link: DownloadRocord = {
                         type: "",
                         url: d.url,
-                        quality: this.getQuality(d.url),
+                        quality: this.getQuality(d.url, d.id),
                         size: API.sizeFormat(d.size),
                         backupUrl: d.backupUrl || d.backup_url
                     }
