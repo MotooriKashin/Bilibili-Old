@@ -26,7 +26,7 @@ npm install -g typescript
 这些文件的存在是因为有些功能无法用常规手段修复，只能直接修复并托管相关代码。  
 本部分全部是js代码，而且经过高度混淆压缩，不会被打包进脚本中，需要使用其他手段使用，所幸一般不需要修改。
 
-项目中还用到了一些非代码文件，分类存放于CSS，HTML，image，json等目录下，其中css，html以及部分json文件与“模块”使用类似的方式打包进了脚本，只是因为并非代码文件，切莫使用API.importModule([模块文件名])方法载入运行！取而代之的是使用API.getModule([模块文件名])方法以字符串形式——json文件会直接代为格式化为对象，无需再次格式化！  
+项目中还用到了一些非代码文件，分类存放于CSS，HTML，image，json等目录下，其中css，html以及部分json文件与“模块”使用类似的方式打包进了脚本，只是因为并非代码文件，切莫使用API.importModule([模块文件名])方法载入运行！取而代之的是使用API.getModule([模块文件名])方法以字符串形式获取——json文件会直接代为格式化为对象，无需再次格式化！  
 脚本元数据位于json/meta.json，不会打包进脚本，修改脚本版本号等操作位于这里。  
 脚本外部依赖位于json/resource.json，不会打包进脚本，可以使用高级API`GM_getResourceText`/`GM_getResourceURL`获取。
 
@@ -36,7 +36,7 @@ npm install -g typescript
 ### 全局对象
 “模块”中可以像使用`window`一样直接使用一些预定义好的对象：
 1. API：作为类似于`window`的存在，是模块间交流数据的基础。
-2. GM：高级API对象，只申请了目前用到的，需要添加的话请在json/meta.json中声明，然后再index.ts中封装好。
+2. GM：高级API对象，只申请了目前用到的，需要添加的话请在json/meta.json中声明，然后在index.ts中封装好。
 3. debug：console的部分再封装，添加了时间戳。
 4. toast：浮动通知组件。
 5. xhr：XMLHttpRequest的Promise封装，同时还封装了高级API`GM_xmlhttpRequest`为Promise。
@@ -47,7 +47,7 @@ npm install -g typescript
 ---
 ### 代码规范
 1. 模块主体代码需要放在一个自运行函数或命名空间中以免污染顶层对象。
-2. 请使用原生的ts/js语法，不要引入jQuery等外部库，或者自行使用原生ts/js封装“库”，就像xhr.ts封装XMLHttpRequest那样。
+2. 请使用原生的ts/js语法，不要引入jQuery等直接改变语法的外部库，或者自行使用原生ts/js封装“库”，就像xhr.ts封装XMLHttpRequest那样。
 3. ESNext的新特性只要不报错就可以使用，但不要为了强行使用引入任何Polyfill。
 4. 不要求代码风格统一，但请一定要完善类型声明，以便其他贡献者使用相关数据。
 
