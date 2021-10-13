@@ -11,10 +11,6 @@
                 // 重定向SEO页面
                 if (/\/s\//.test(location.href)) location.replace(location.href.replace("s/video", "video"));
                 API.path.name = "av";
-                // 备份还原旧版播放器设置数据
-                API.restorePlayerSetting();
-                API.scriptIntercept(["video-nano"]); // 新版播放器拦截
-                API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                 // 获取aid
                 if (API.path[4].toLowerCase().startsWith('bv')) API.aid = <number>API.abv(API.path[4].split("#")[0].split("?")[0]);
                 API.aid = API.aid || Number((<RegExpExecArray>/[0-9]+/.exec(String(API.path[4])))[0]);
@@ -75,7 +71,11 @@
                 if (this.isAV__INITIAL_STATE__(API.__INITIAL_STATE__)) {
                     if (!API.__INITIAL_STATE__) throw "无法重写av页 ಥ_ಥ";
                     if (API.__INITIAL_STATE__.videoData.redirect_url) return toast.warning("番剧重定向...", API.__INITIAL_STATE__.videoData.redirect_url);
-                    if (API.__INITIAL_STATE__.videoData.stein_guide_cid) return toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ");
+                    if (API.__INITIAL_STATE__.videoData.stein_guide_cid) return (delete API.path.name, toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ"), API.importModule("vector.js"));
+                    // 备份还原旧版播放器设置数据
+                    API.restorePlayerSetting();
+                    API.scriptIntercept(["video-nano"]); // 新版播放器拦截
+                    API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                     API.aid = API.__INITIAL_STATE__.aid;
                     API.tid = API.__INITIAL_STATE__.videoData.tid;
                     (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;

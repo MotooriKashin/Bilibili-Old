@@ -9,10 +9,6 @@
             isBANGUMI__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__): pet is BANGUMI__INITIAL_STATE__ => true;
             constructor() {
                 API.path.name = "bangumi";
-                // 备份还原旧版播放器设置数据
-                API.restorePlayerSetting();
-                API.scriptIntercept(["video-nano"]); // 新版播放器拦截
-                API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                 API.path[5].startsWith('ss') && Reflect.set(this.obj, "season_id", location.href.match(/[0-9]+/)[0]);
                 API.path[5].startsWith('ep') && Reflect.set(this.obj, "ep_id", location.href.match(/[0-9]+/)[0]);
                 config.rewriteMethod == "异步" ? this.prepareA() : this.prepareB();
@@ -77,7 +73,11 @@
             }
             write() {
                 if (this.isBANGUMI__INITIAL_STATE__(API.__INITIAL_STATE__)) {
-                    if (API.__INITIAL_STATE__?.epInfo?.badge === "互动") return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
+                    if (API.__INITIAL_STATE__?.epInfo?.badge === "互动") return (delete API.path.name, toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ"), API.importModule("vector.js"));
+                    // 备份还原旧版播放器设置数据
+                    API.restorePlayerSetting();
+                    API.scriptIntercept(["video-nano"]); // 新版播放器拦截
+                    API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                     config.bangumiEplist && API.__INITIAL_STATE__?.epList[1] && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
                     (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
                     API.__INITIAL_STATE__.special ? API.rewriteHTML(API.getModule("bangumi-special.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js")) : API.rewriteHTML(API.getModule("bangumi.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js"));

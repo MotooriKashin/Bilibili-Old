@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.0.4
+// @version      6.0.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5738,10 +5738,6 @@ option {
                 if (/\\/s\\//.test(location.href))
                     location.replace(location.href.replace("s/video", "video"));
                 API.path.name = "av";
-                // 备份还原旧版播放器设置数据
-                API.restorePlayerSetting();
-                API.scriptIntercept(["video-nano"]); // 新版播放器拦截
-                API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                 // 获取aid
                 if (API.path[4].toLowerCase().startsWith('bv'))
                     API.aid = API.abv(API.path[4].split("#")[0].split("?")[0]);
@@ -5807,7 +5803,11 @@ option {
                     if (API.__INITIAL_STATE__.videoData.redirect_url)
                         return toast.warning("番剧重定向...", API.__INITIAL_STATE__.videoData.redirect_url);
                     if (API.__INITIAL_STATE__.videoData.stein_guide_cid)
-                        return toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ");
+                        return (delete API.path.name, toast.warning("这似乎是个互动视频！", "抱歉！旧版播放器无法支持 ಥ_ಥ"), API.importModule("vector.js"));
+                    // 备份还原旧版播放器设置数据
+                    API.restorePlayerSetting();
+                    API.scriptIntercept(["video-nano"]); // 新版播放器拦截
+                    API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                     API.aid = API.__INITIAL_STATE__.aid;
                     API.tid = API.__INITIAL_STATE__.videoData.tid;
                     window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
@@ -6917,10 +6917,6 @@ option {
                 this.obj = {};
                 this.isBANGUMI__INITIAL_STATE__ = (pet) => true;
                 API.path.name = "bangumi";
-                // 备份还原旧版播放器设置数据
-                API.restorePlayerSetting();
-                API.scriptIntercept(["video-nano"]); // 新版播放器拦截
-                API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                 API.path[5].startsWith('ss') && Reflect.set(this.obj, "season_id", location.href.match(/[0-9]+/)[0]);
                 API.path[5].startsWith('ep') && Reflect.set(this.obj, "ep_id", location.href.match(/[0-9]+/)[0]);
                 config.rewriteMethod == "异步" ? this.prepareA() : this.prepareB();
@@ -6989,7 +6985,11 @@ option {
                 var _a, _b, _c;
                 if (this.isBANGUMI__INITIAL_STATE__(API.__INITIAL_STATE__)) {
                     if (((_b = (_a = API.__INITIAL_STATE__) === null || _a === void 0 ? void 0 : _a.epInfo) === null || _b === void 0 ? void 0 : _b.badge) === "互动")
-                        return toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ");
+                        return (delete API.path.name, toast.warning("这似乎是个互动番剧！", "什么！番剧也能互动？", "可惜旧版播放器不支持 ಥ_ಥ"), API.importModule("vector.js"));
+                    // 备份还原旧版播放器设置数据
+                    API.restorePlayerSetting();
+                    API.scriptIntercept(["video-nano"]); // 新版播放器拦截
+                    API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                     config.bangumiEplist && ((_c = API.__INITIAL_STATE__) === null || _c === void 0 ? void 0 : _c.epList[1]) && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
                     window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
                     API.__INITIAL_STATE__.special ? API.rewriteHTML(API.getModule("bangumi-special.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js")) : API.rewriteHTML(API.getModule("bangumi.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js"));
@@ -11383,7 +11383,6 @@ catch (e) {
         if (config.player && /festival\\/2021bnj/.test(location.href))
             API.importModule("bnj2021.js");
         API.scriptIntercept(["bilibiliPlayer.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/bilibiliPlayer.min.js"); // 播放器脚本拦截
-        API.path.name && API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
         config.logReport && API.scriptIntercept(["log-reporter"]); // 日志拦截
         /**
          * 若页面不需要重写，直接进入正常引导
