@@ -60,7 +60,7 @@
                     if (ssid) data = JSON.stringify(catchs.ssid[ssid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: ssid }) });
                     else if (epid) data = JSON.stringify(catchs.epid[epid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: epid }) });
                     if (data) {
-                        data = API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid });
+                        data = API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid }, true);
                         ssid && (catchs.ssid[ssid] = data);
                         epid && (catchs.epid[epid] = data);
                         aid = data.epInfo.aid;
@@ -79,7 +79,7 @@
                         } else if (ssid) {
                             data = await xhr({ url: API.objUrl(`${config.limitServer}/intl/gateway/v2/ogv/view/app/season`, { season_id: ssid }) });
                         }
-                        data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid });
+                        data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
                         aid = data.epInfo.aid;
                         cid = data.epInfo.cid;
                         pgc = true;

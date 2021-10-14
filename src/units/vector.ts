@@ -4,7 +4,7 @@
 (function () {
     try {
         (<any>API).initUi(); // 设置ui
-        API.importModule("parameterTrim.js", { Before: false }); // 网址清理，重写后处理
+        API.importModule("parameterTrim.js", { Before: false }, true); // 网址清理，重写后处理
         API.importModule("infoNewNumber.js"); // 旧版顶栏资讯数
         config.protoDm && API.importModule("protoDm.js"); // 新版弹幕
         config.liveDm && API.importModule("webSocket.js"); // 实时弹幕

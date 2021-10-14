@@ -27,7 +27,7 @@
                             responseType: "json",
                             credentials: true
                         })).then(d => {
-                            API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid });
+                            API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                             r(true);
                         }).catch(e => {
                             toast.error("获取bangumi数据出错！", e);
@@ -36,7 +36,7 @@
                                 responseType: "json",
                                 credentials: true
                             })).then(d => {
-                                API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid });
+                                API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                                 r(true);
                                 API.limit = true;
                                 API.globalLimit = true;
@@ -57,7 +57,7 @@
                     async: false
                 })
                 try {
-                    API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid });
+                    API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                 } catch (e) {
                     toast.error("获取bangumi数据出错！", e);
                     if (!config.videoLimit) return;
@@ -65,7 +65,7 @@
                         url: API.objUrl(`${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season`, this.obj),
                         async: false
                     })
-                    API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid });
+                    API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                     API.limit = true;
                     API.globalLimit = true;
                 }

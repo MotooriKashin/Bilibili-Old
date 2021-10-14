@@ -31,6 +31,7 @@
         static SETTING: any[] = [];
         static MENU: Record<string, any> = {};
         GM = GM;
+        module: (string | symbol)[] = [];
         Name: string = GM.info.script.name;
         Virsion: string = GM.info.script.version;
         Handler: string = [GM.info.scriptHandler, GM.info.version].join(" ");
@@ -45,10 +46,13 @@
          * 载入模块
          * @param name 模块名字
          * @param args 传递给对方的全局变量：格式{变量名：变量值}
+         * @param force 是否强制载入，一般模块只会载入一次，需要二次载入请将本值设为真
          */
-        importModule = (name?: string | symbol, args: { [key: string]: any } = {}) => {
+        importModule = (name?: string | symbol, args: { [key: string]: any } = {}, force?: boolean) => {
             if (!name) return Object.keys(modules);
+            if (this.module.includes(name) && !force) return this.module;
             if (Reflect.has(modules, name)) {
+                !this.module.includes(name) && this.module.push(name);
                 new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(modules, name))
                     (API.API, GM, Reflect.get(this, "debug"), Reflect.get(this, "toast"), Reflect.get(this, "xhr"), config, this.importModule, ...Object.keys(args).reduce((s: object[], d) => {
                         s.push(args[d]);
@@ -282,8 +286,9 @@ declare namespace API {
      * 载入模块
      * @param name 模块名字
      * @param args 传递给对方的全局变量：格式{变量名：变量值}
+     * @param force 是否强制载入，一般模块只会载入一次，需要二次载入请将本值设为真
      */
-    function importModule(name?: string | symbol, args?: { [key: string]: any; }): string[];
+    function importModule(name?: string | symbol, args?: { [key: string]: any; }, force?: boolean): string[];
     /**
      * 获取模块内容
      * @param name 模块名字

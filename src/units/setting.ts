@@ -717,7 +717,7 @@
             sub: "备份/恢复",
             type: "action",
             title: "管理",
-            action: () => API.importModule("manage.js")
+            action: () => API.importModule("manage.js", undefined, true)
         })
     } catch (e) { toast.error("setting.js", e) }
 })();

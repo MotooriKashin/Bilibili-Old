@@ -12,7 +12,7 @@
             let offset = API.getCookies()["bp_video_offset_" + API.uid];
             offset && (document.cookie = "bp_t_offset_" + API.uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
         }
-        API.importModule("parameterTrim.js", { Before: true }); // 网址清理，重写前处理
+        API.importModule("parameterTrim.js", { Before: true }, true); // 网址清理，重写前处理
         /**
          * 分离页面进入重写判定
          */

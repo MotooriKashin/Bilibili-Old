@@ -5754,7 +5754,7 @@ option {
                         responseType: "json",
                         credentials: true
                     }).then(d => {
-                        API.importModule("av-detail.js", { __INITIAL_STATE__: d });
+                        API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                         r(true);
                     }).catch(e => {
                         toast.error("获取av号信息出错，尝试访问第三方接口~", e);
@@ -5762,7 +5762,7 @@ option {
                             url: API.objUrl("https://www.biliplus.com/api/view", { id: API.aid }),
                             responseType: "json"
                         }).then(d => {
-                            API.importModule("av-biliplus.js", { __INITIAL_STATE__: d });
+                            API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
                             r(true);
                         }).catch(e => {
                             toast.error("第三方接口也出错，", e);
@@ -5781,7 +5781,7 @@ option {
                     async: false
                 });
                 try {
-                    API.importModule("av-detail.js", { __INITIAL_STATE__: d });
+                    API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                 }
                 catch (e) {
                     toast.error("获取av号信息出错，尝试访问第三方接口~", e);
@@ -5789,7 +5789,7 @@ option {
                         url: API.objUrl("https://www.biliplus.com/api/view", { id: API.aid }),
                         async: false
                     });
-                    API.importModule("av-biliplus.js", { __INITIAL_STATE__: d });
+                    API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
                 }
                 this.write();
             }
@@ -6935,7 +6935,7 @@ option {
                             responseType: "json",
                             credentials: true
                         }).then(d => {
-                            API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid });
+                            API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                             r(true);
                         }).catch(e => {
                             toast.error("获取bangumi数据出错！", e);
@@ -6944,7 +6944,7 @@ option {
                                 responseType: "json",
                                 credentials: true
                             }).then(d => {
-                                API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid });
+                                API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                                 r(true);
                                 API.limit = true;
                                 API.globalLimit = true;
@@ -6965,7 +6965,7 @@ option {
                     async: false
                 });
                 try {
-                    API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid });
+                    API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                 }
                 catch (e) {
                     toast.error("获取bangumi数据出错！", e);
@@ -6975,7 +6975,7 @@ option {
                         url: API.objUrl(\`\${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season\`, this.obj),
                         async: false
                     });
-                    API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid });
+                    API.importModule("bangumi-global.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
                     API.limit = true;
                     API.globalLimit = true;
                 }
@@ -11346,7 +11346,7 @@ catch (e) {
             let offset = API.getCookies()["bp_video_offset_" + API.uid];
             offset && (document.cookie = "bp_t_offset_" + API.uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
         }
-        API.importModule("parameterTrim.js", { Before: true }); // 网址清理，重写前处理
+        API.importModule("parameterTrim.js", { Before: true }, true); // 网址清理，重写前处理
         /**
          * 分离页面进入重写判定
          */
@@ -12121,7 +12121,7 @@ catch (e) {
             sub: "备份/恢复",
             type: "action",
             title: "管理",
-            action: () => API.importModule("manage.js")
+            action: () => API.importModule("manage.js", undefined, true)
         });
     }
     catch (e) {
@@ -12941,7 +12941,7 @@ catch (e) {
                     else if (epid)
                         data = JSON.stringify(catchs.epid[epid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: epid }) });
                     if (data) {
-                        data = API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid });
+                        data = API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid }, true);
                         ssid && (catchs.ssid[ssid] = data);
                         epid && (catchs.epid[epid] = data);
                         aid = data.epInfo.aid;
@@ -12964,7 +12964,7 @@ catch (e) {
                         else if (ssid) {
                             data = await xhr({ url: API.objUrl(\`\${config.limitServer}/intl/gateway/v2/ogv/view/app/season\`, { season_id: ssid }) });
                         }
-                        data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid });
+                        data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
                         aid = data.epInfo.aid;
                         cid = data.epInfo.cid;
                         pgc = true;
@@ -12987,7 +12987,7 @@ catch (e) {
 (function () {
     try {
         API.initUi(); // 设置ui
-        API.importModule("parameterTrim.js", { Before: false }); // 网址清理，重写后处理
+        API.importModule("parameterTrim.js", { Before: false }, true); // 网址清理，重写后处理
         API.importModule("infoNewNumber.js"); // 旧版顶栏资讯数
         config.protoDm && API.importModule("protoDm.js"); // 新版弹幕
         config.liveDm && API.importModule("webSocket.js"); // 实时弹幕
@@ -13530,6 +13530,7 @@ catch (e) {
     class API {
         constructor() {
             this.GM = GM;
+            this.module = [];
             this.Name = GM.info.script.name;
             this.Virsion = GM.info.script.version;
             this.Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
@@ -13544,11 +13545,15 @@ catch (e) {
              * 载入模块
              * @param name 模块名字
              * @param args 传递给对方的全局变量：格式{变量名：变量值}
+             * @param force 是否强制载入，一般模块只会载入一次，需要二次载入请将本值设为真
              */
-            this.importModule = (name, args = {}) => {
+            this.importModule = (name, args = {}, force) => {
                 if (!name)
                     return Object.keys(modules);
+                if (this.module.includes(name) && !force)
+                    return this.module;
                 if (Reflect.has(modules, name)) {
+                    !this.module.includes(name) && this.module.push(name);
                     new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(modules, name))(API.API, GM, Reflect.get(this, "debug"), Reflect.get(this, "toast"), Reflect.get(this, "xhr"), config, this.importModule, ...Object.keys(args).reduce((s, d) => {
                         s.push(args[d]);
                         return s;

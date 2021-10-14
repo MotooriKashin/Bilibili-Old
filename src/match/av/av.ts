@@ -26,7 +26,7 @@
                         responseType: "json",
                         credentials: true
                     })).then(d => {
-                        API.importModule("av-detail.js", { __INITIAL_STATE__: d });
+                        API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                         r(true);
                     }).catch(e => {
                         toast.error("获取av号信息出错，尝试访问第三方接口~", e);
@@ -34,7 +34,7 @@
                             url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
                             responseType: "json"
                         })).then(d => {
-                            API.importModule("av-biliplus.js", { __INITIAL_STATE__: d });
+                            API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
                             r(true);
                         }).catch(e => {
                             toast.error("第三方接口也出错，", e);
@@ -53,14 +53,14 @@
                     async: false
                 })
                 try {
-                    API.importModule("av-detail.js", { __INITIAL_STATE__: d });
+                    API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                 } catch (e) {
                     toast.error("获取av号信息出错，尝试访问第三方接口~", e);
                     d = xhr({
                         url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
                         async: false
                     })
-                    API.importModule("av-biliplus.js", { __INITIAL_STATE__: d });
+                    API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
                 }
                 this.write();
             }
