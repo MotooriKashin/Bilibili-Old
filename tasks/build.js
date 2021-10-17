@@ -1,5 +1,4 @@
 // 构建脚本主体
-// 需要链接到在线资源，所以构建过程中必须有网络
 const fs = require("fs");
 const https = require('https');
 const meta = require("../json/meta.json");
@@ -9,7 +8,7 @@ const path = "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old";
 resource.push(`${path}/dist/comment.js`);
 
 class Build {
-    extend = [".d.ts", ".map", "dist/index.js", "dist/bilibiliPlayer.js", "dist/comment.js", "dist/video.js", "meta.json", "resource.json"]; // 排除文件或拓展名
+    extend = [".d.ts", ".map", "dist/index.js", "dist/bilibiliPlayer.js", "dist/comment.js", "dist/video.js", "meta.json", "resource.json", ".md"]; // 排除文件或拓展名
     path = ["CSS", "HTML", "Json", "dist"]; // 模块所在目录
     /**
      * 构建入口

@@ -33,7 +33,8 @@
 				"-Exclude",
 				"bilibiliPlayer.js",
 				",comment.js",
-				",video.js"
+				",video.js",
+				",README.md"
 			],
 			"dependsOn": [
 				"build"
