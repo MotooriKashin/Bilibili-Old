@@ -9138,8 +9138,6 @@ catch (e) {
                 this.url[1] = location.href; // 暂存URL，以便比较URL变化
                 if (this.url[0] != this.url[1]) {
                     let href = this.triming(location.href); // 处理链接
-                    if (!href.includes("#") && location.href.includes("#"))
-                        href = href + location.hash; // 还原锚
                     window.history.replaceState(null, "", href); // 推送到地址栏
                     this.url[0] = location.href; // 刷新暂存
                 }
@@ -9152,11 +9150,10 @@ catch (e) {
                 list.forEach((d) => {
                     if (!d.href)
                         return;
-                    let hash = (d.href.includes("?") && d.href.split("#")[1]) || "";
                     d.href.includes("bilibili.tv") && (d.href = d.href.replace("bilibili.tv", "bilibili.com"));
                     d.href.includes("www.bilibili.com/tag") && (d.href = d.href.replace("tag", "topic"));
                     d.href.includes("account.bilibili.com/login?act=exit") && (d.href = "javascript:void(0);", d.onclick = () => API.loginExit());
-                    d.href = this.triming(d.href) + (hash ? "#" + hash : "");
+                    d.href = this.triming(d.href);
                 });
             }
             /**
@@ -9188,12 +9185,12 @@ catch (e) {
              * @returns URL
              */
             hash(url) {
-                let arr = url.split("?")[0].split("/"); // 分割URL
+                const hash = url.includes("#") ? \`#\${url.split("#")[1]}\` : "";
+                let arr = url.split("#")[0].split("?")[0].split("/"); // 分割URL
                 arr.forEach((d, i, e) => {
-                    d.includes("#") && (d = d.split("#")[0]);
                     (d.toLowerCase().startsWith('bv')) && (e[i] = "av" + API.abv(d));
                 });
-                return arr.join("/");
+                return arr.join("/") + hash;
             }
             click(e) {
                 var f = e.target;
