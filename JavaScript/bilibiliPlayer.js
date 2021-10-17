@@ -24370,15 +24370,19 @@ function Fa() {
                 var f = new k.a;
                 f.postMessage(b);
                 f.onmessage = function (d) {
+                    function copy() {
+                        for(let i = 0, len = d.data.length; i < len; i++)
+                            c.xd[i] = d.data[i];
+                    }
                     if (0 < c.xd.length) {
                         if (d.data.length > c.xd.length) {
                             let dm = c.xd.splice(0, c.xd.length);
-                            c.xd.push.apply(c.xd,d.data);
+                            copy();
                             for (let d = 0, e = dm.length; d < e; d++) c.xd.Gk(dm[d]);
                         } else {
                             for (let d = 0, e = b.length; d < e; d++) c.xd.Gk(b[d]);
                         }
-                    } else c.xd.push.apply(c.xd, d.data);
+                    } else copy();
                     f.terminate()
                 }
             };
