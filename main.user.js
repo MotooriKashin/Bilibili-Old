@@ -9185,7 +9185,8 @@ catch (e) {
              * @returns URL
              */
             hash(url) {
-                const hash = url.includes("#") ? \`#\${url.split("#")[1]}\` : "";
+                let hash = url.includes("#") ? \`#\${url.split("#")[1]}\` : "";
+                hash.includes("?") && (hash = hash.split("?")[0]);
                 let arr = url.split("#")[0].split("?")[0].split("/"); // 分割URL
                 arr.forEach((d, i, e) => {
                     (d.toLowerCase().startsWith('bv')) && (e[i] = "av" + API.abv(d));
