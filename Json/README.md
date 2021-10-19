@@ -12,3 +12,4 @@ API.getModule("protobuf.json")
 4. protobuf.json：protobufjs反射配置，主要用于解码proto弹幕。
 5. resource.json：项目的外部依赖URL，将以`@resource`元数据的形式写进脚本，可以使用高级API`GM_getResourceText`/`GM_getResourceURL`获取。
 6. videoSort.json：视频tid分区信息表，B站多次改版分区，这些修改无法为旧版页面识别，由脚本辅助进行识别。
+7. mid.json：B站用户mid信息标本，用于恢复IP限制的用户空间的访问，如[哔哩哔哩番剧出差](//space.bilibili.com/11783021),[b站_DM組](//space.bilibili.com/1988098633)。
