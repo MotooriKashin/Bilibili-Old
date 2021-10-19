@@ -257,7 +257,7 @@
         API.registerSetting({
             type: "switch",
             key: "errands",
-            label: '恢复对于<a href="//space.bilibili.com/11783021" target="_blank">番剧出差</a>的访问',
+            label: '恢复对于<a href="//space.bilibili.com/11783021" target="_blank">番剧出差</a>和<a href="//space.bilibili.com/1988098633" target="_blank">DM組</a>的访问',
             sub: '还好没赶尽杀绝',
             value: true,
             sort: "restore",
