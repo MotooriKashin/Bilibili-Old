@@ -328,7 +328,7 @@
                     label: "泰区代理",
                     type: "input",
                     value: "https://api.global.bilibili.com",
-                    float: "泰区番剧限制需要自备相应的代理服务器（无需末尾的斜杠！）。</br>本功能由于缺乏调试条件维护不善请多担待！",
+                    float: "泰区番剧限制需要自备相应的代理服务器（需要https协议头但无需末尾的斜杠！）</br>中文域名请先使用punycode转化一下。</br>本功能由于缺乏调试条件维护不善请多担待！",
                     input: { type: "url", placeholder: "URL" },
                     pattern: /(\w+):\/\/([^/:]+)(:\d*)?([^# ]*)/
                 }
