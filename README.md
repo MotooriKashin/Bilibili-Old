@@ -67,7 +67,7 @@
 ---
 ### 开发环境
 > 
-> 操作系统        Microsoft Windows 11 professional Insider Preview 10.0.22449.1000  
+> 操作系统        Microsoft Windows 11 professional 10.0.22000.258  
 > 浏览器          Google Chrome 94.0.4606.71 (正式版本) （64 位） (cohort: Stable)  
 > 脚本管理器      Tampermonkey Beta 4.14.6143  
 > 代码编辑器      Visual Studio Code 1.61.0  
