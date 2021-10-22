@@ -134,7 +134,7 @@
         API.intervalFormat = (time: number) => intervalFormat(time);
         async function addCss(txt: string, id?: string, parrent?: Node) {
             if (!parrent && !document.head) {
-                await new Promise(r => this.runWhile(() => document.body, r));
+                await new Promise(r => API.runWhile(() => document.body, r));
             }
             parrent = parrent || document.head;
             const style = document.createElement("style");
