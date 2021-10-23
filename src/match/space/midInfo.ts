@@ -15,6 +15,9 @@
             case 1988098633: response.data.name = "b站_DM組";
                 response.data.official.desc = "b站_DM組 官方帐号";
                 break;
+            case 2042149112: response.data.name = "b站_EN組";
+                response.data.official.desc = "b站_EN組 官方帐号";
+                break;
         }
         API.xhrhook(["api.bilibili.com/x/space/acc/info"], function (args) {
             this.addEventListener('readystatechange', () => {

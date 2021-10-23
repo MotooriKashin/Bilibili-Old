@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.0.7
+// @version      6.0.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -7746,6 +7746,10 @@ catch (e) {
                 response.data.name = "b站_DM組";
                 response.data.official.desc = "b站_DM組 官方帐号";
                 break;
+            case 2042149112:
+                response.data.name = "b站_EN組";
+                response.data.official.desc = "b站_EN組 官方帐号";
+                break;
         }
         API.xhrhook(["api.bilibili.com/x/space/acc/info"], function (args) {
             this.addEventListener('readystatechange', () => {
@@ -7771,7 +7775,7 @@ catch (e) {
 (function () {
     try {
         API.mid = (API.path[3] && API.path[3].split("?")[0]) || API.mid;
-        config.errands && (API.mid == 11783021 || API.mid == 1988098633) && API.importModule("midInfo.js");
+        config.errands && (API.mid == 11783021 || API.mid == 1988098633 || API.mid == 2042149112) && API.importModule("midInfo.js");
         config.album && API.importModule("album.js");
         config.jointime && API.importModule("jointime.js");
         config.lostVideo && API.importModule("lostVideo.js");
