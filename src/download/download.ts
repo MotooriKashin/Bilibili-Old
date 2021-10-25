@@ -334,8 +334,8 @@
                             await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid }, true);
                             break;
                         case "mp4": result = API.pgc ?
-                            await API.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }) :
-                            await API.getJson("app.bilibili.com/v2/playurlproj", { cid: API.cid });
+                            await API.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }, true) :
+                            await API.getJson("app.bilibili.com/v2/playurlproj", { cid: API.cid }, true);
                             break;
                     }
                 } catch (e) { }
