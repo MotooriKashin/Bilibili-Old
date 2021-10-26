@@ -3729,6 +3729,8 @@ option {
                     flag = setTimeout(() => {
                         if (node.querySelector(".context-menu-danmaku"))
                             return;
+                        if (node.querySelector("#BLOD-dl-content"))
+                            return;
                         if (node.contains(li))
                             return;
                         node.firstChild.appendChild(li);
@@ -4054,8 +4056,8 @@ option {
                             break;
                         case "mp4":
                             result = API.pgc ?
-                                await API.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }) :
-                                await API.getJson("app.bilibili.com/v2/playurlproj", { cid: API.cid });
+                                await API.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }, true) :
+                                await API.getJson("app.bilibili.com/v2/playurlproj", { cid: API.cid }, true);
                             break;
                     }
                 }

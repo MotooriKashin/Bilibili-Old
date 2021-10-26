@@ -16,6 +16,7 @@
                     const node = document.querySelector(".bilibili-player-context-menu-container.black");
                     flag = setTimeout(() => {
                         if (node.querySelector(".context-menu-danmaku")) return;
+                        if (node.querySelector("#BLOD-dl-content")) return;
                         if (node.contains(li)) return;
                         node.firstChild.appendChild(li);
                     }, 100);
