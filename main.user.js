@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.0.8
+// @version      6.0.9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -6778,16 +6778,26 @@ option {
  * 本模块负责基于av页重构为媒体页
  */
 (function () {
-    if (API.path[5].startsWith("ml")) {
-        const ml = Number(API.path[5].match(/[0-9]+/)[0]);
-        // 保存收藏号并调用av跳转
-        if (!config.medialist)
-            return;
-        GM.setValue("medialist", ml);
-        return API.runWhile(() => window.aid, () => location.replace(\`https://www.bilibili.com/video/\${window.aid}\`));
+    if (config.medialist && /\\/medialist\\/play\\//.test(location.href)) {
+        if (/ml\\d+/.test(location.href)) {
+            API.xhrhook(["medialist/resource/list?", "biz_id"], function (args) {
+                const obj = API.urlObj(args[1]);
+                GM.setValue("medialist", obj.biz_id);
+                this.addEventListener("readystatechange", () => {
+                    if (this.readyState === 4) {
+                        if (!this.response)
+                            throw this;
+                        const response = API.jsonCheck(this.response);
+                        response.data && response.data.media_list && location.replace(\`https://www.bilibili.com/video/av\${response.data.media_list[0].id}\`);
+                    }
+                });
+            });
+        }
+        else
+            toast.warning("抱歉！", \`这不是一个固定的媒体播放列表，已禁用旧版模拟！\`);
     }
     // 新版稍后再看跳转到旧版稍后再看
-    if (API.path[5].startsWith("watchlater") && config.watchlater)
+    if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater)
         location.replace("https://www.bilibili.com/watchlater/#/");
     if (!/\\/video\\/[AaBb][Vv]/.test(location.href))
         return;
