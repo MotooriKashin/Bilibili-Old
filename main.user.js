@@ -5882,7 +5882,7 @@ option {
                     // 添加点赞功能
                     config.enlike && API.importModule("enLike.js");
                     // 构造媒体页
-                    GM.getValue("medialist", 0) && API.importModule("mediaList.js");
+                    sessionStorage.getItem("medialist") && API.importModule("mediaList.js");
                     // 和作UP主
                     config.upList && API.__INITIAL_STATE__.videoData.staff && API.importModule("upList.js", { staff: API.__INITIAL_STATE__.videoData.staff });
                     // 视频简介中的bv转超链接
@@ -6782,7 +6782,7 @@ option {
         if (/ml\\d+/.test(location.href)) {
             API.xhrhook(["medialist/resource/list?", "biz_id"], function (args) {
                 const obj = API.urlObj(args[1]);
-                GM.setValue("medialist", obj.biz_id);
+                sessionStorage.setItem("medialist", obj.biz_id);
                 this.addEventListener("readystatechange", () => {
                     if (this.readyState === 4) {
                         if (!this.response)
@@ -6801,8 +6801,8 @@ option {
         location.replace("https://www.bilibili.com/watchlater/#/");
     if (!/\\/video\\/[AaBb][Vv]/.test(location.href))
         return;
-    let mid = GM.getValue("medialist", 0);
-    GM.deleteValue("medialist");
+    let mid = sessionStorage.getItem("medialist");
+    sessionStorage.removeItem("medialist");
     try {
         toast("重构媒体页信息中...");
         let avs = [], value = [], promises = [], ids = [];

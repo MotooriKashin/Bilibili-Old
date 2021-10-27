@@ -90,7 +90,7 @@
                     // 添加点赞功能
                     config.enlike && API.importModule("enLike.js");
                     // 构造媒体页
-                    GM.getValue<number>("medialist", 0) && API.importModule("mediaList.js");
+                    sessionStorage.getItem("medialist") && API.importModule("mediaList.js");
                     // 和作UP主
                     config.upList && API.__INITIAL_STATE__.videoData.staff && API.importModule("upList.js", { staff: API.__INITIAL_STATE__.videoData.staff });
                     // 视频简介中的bv转超链接

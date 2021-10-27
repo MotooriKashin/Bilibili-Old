@@ -6,7 +6,7 @@
         if (/ml\d+/.test(location.href)) {
             API.xhrhook(["medialist/resource/list?", "biz_id"], function (args) {
                 const obj = API.urlObj(args[1]);
-                GM.setValue("medialist", obj.biz_id);
+                sessionStorage.setItem("medialist", obj.biz_id);
                 this.addEventListener("readystatechange", () => {
                     if (this.readyState === 4) {
                         if (!this.response) throw this;
@@ -20,8 +20,8 @@
     // 新版稍后再看跳转到旧版稍后再看
     if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
     if (!/\/video\/[AaBb][Vv]/.test(location.href)) return;
-    let mid = GM.getValue<number>("medialist", 0);
-    GM.deleteValue("medialist");
+    let mid = sessionStorage.getItem("medialist");
+    sessionStorage.removeItem("medialist");
     try {
         toast("重构媒体页信息中...");
         let avs: any[] = [], value: any[] = [], promises: any[] = [], ids: any[] = [];
