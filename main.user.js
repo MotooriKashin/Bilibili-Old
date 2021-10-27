@@ -5902,7 +5902,7 @@ option {
                         getPlaylistIndex: () => window.player.getPlaylistIndex()
                     });
                     // 跳过充电鸣谢
-                    API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.url = API.objUrl(xhr.url.split("?")[0], Object.assign(API.urlObj(xhr.url), { aid: 1, mid: 1 })); });
+                    config.electric && API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.url = API.objUrl(xhr.url.split("?")[0], Object.assign(API.urlObj(xhr.url), { aid: 1, mid: 1 })); });
                 }
             }
         }
