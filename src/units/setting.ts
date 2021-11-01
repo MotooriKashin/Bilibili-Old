@@ -478,7 +478,7 @@
             key: "downloadList",
             label: "视频类型",
             sub: "右键呼出下载时请求的类型",
-            value: ["mp4", "dash"],
+            value: ["mp4", "dash", "flv"],
             list: ["mp4", "dash", "flv"],
             float: '下载功能会自动读取播放器已载入的视频源并呈现在下载面板上，即使未勾选对应的视频类型。</br>勾选了也不一定能获取到该类型的视频源。'
         })
