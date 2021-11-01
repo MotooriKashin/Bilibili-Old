@@ -49,9 +49,46 @@
                 GM.xmlHttpRequest(details);
             })
         }
+        /**
+         * `XMLHttpRequest`的GET方法的快捷模式  
+         * 将url独立为第一个参数，剩余参数放在第二个参数，方便快速发送ajax  
+         * **注意本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
+         * @param url url链接
+         * @param details url外的参数对象
+         * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
+         */
+        static get(url: string, details: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] } = {}) {
+            !Reflect.has(details, "credentials") && (details.credentials = true);
+            // @ts-ignore
+            return this.xhr({ url: url, ...details });
+        }
+        /**
+         * `XMLHttpRequest`的POST方法的快捷模式  
+         * 将url、data，Content-Type分别独立为参数，剩余参数放在末尾，方便快速发送ajax  
+         * **注意本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
+         * @param url url链接
+         * @param data post数据
+         * @param contentType 发送数据使用的编码，默认"application/x-www-form-urlencoded"
+         * @param details url、data外的参数对象
+         * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
+         */
+        static post(url: string, data: string, contentType: string = "application/x-www-form-urlencoded", details: { [P in Exclude<keyof xhrDetails, "url" | "data">]?: xhrDetails[P] } = {}) {
+            !Reflect.has(details, "credentials") && (details.credentials = true);
+            details.headers = { "Content-Type": contentType, ...details.headers };
+            // @ts-ignore
+            return this.xhr({ url: url, method: "POST", data: data, ...details })
+        }
     }
     // @ts-ignore
-    API.xhr = (details: xhrDetails) => Xhr.xhr(details), API.xhr.GM = (details: GMxhrDetails) => Xhr.GM(details), API.xhr.log = () => Xhr.log();
+    API.xhr = (details: xhrDetails) => Xhr.xhr(details);
+    // @ts-ignore
+    API.xhr.GM = (details: GMxhrDetails) => Xhr.GM(details);
+    // @ts-ignore
+    API.xhr.log = () => Xhr.log();
+    // @ts-ignore
+    API.xhr.get = (url: string, details?: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] }) => Xhr.get(url, details);
+    // @ts-ignore
+    API.xhr.post = (url: string, data: string, contentType?: string, details?: { [P in Exclude<keyof xhrDetails, "url" | "data">]?: xhrDetails[P] }) => Xhr.post(url, data, contentType, details);
 })();
 declare const xhr: {
     /**
@@ -78,6 +115,34 @@ declare const xhr: {
      * 跨域xhr记录
      */
     log(): [string, any][];
+    /**
+     * `XMLHttpRequest`的GET方法的快捷模式  
+     * 将url独立为第一个参数，剩余参数放在第二个参数，方便快速发送ajax  
+     * **注意本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
+     * @param url url链接
+     * @param details url外的参数对象
+     * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
+     */
+    get(url: string, details?: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] }): Promise<any>;
+    get(url: string, details: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] } & {
+        /**
+         * use async request  
+         * the third argument of XMLHttpRequest.open  
+         * **many properties are forbid, such as 'responseType'**
+         */
+        async: false
+    }): any;
+    /**
+     * `XMLHttpRequest`的POST方法的快捷模式  
+     * 将url、data，Content-Type分别独立为参数，剩余参数放在末尾，方便快速发送ajax  
+     * **注意本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
+     * @param url url链接
+     * @param data post数据
+     * @param contentType 发送数据使用的编码，默认"application/x-www-form-urlencoded"
+     * @param details url、data外的参数对象
+     * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
+     */
+    post(url: string, data: string, contentType?: string, details?: { [P in Exclude<keyof xhrDetails, "url" | "data">]?: xhrDetails[P] }): Promise<any>;
 }
 /**
 * `GM_xmlhttpRequest`的返回值
