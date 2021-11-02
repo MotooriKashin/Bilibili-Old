@@ -541,7 +541,7 @@
             label: "referer",
             value: location.origin,
             input: { type: "text" },
-            float: `一般为B站主域名(http://www.bilibili.com)。</br><strong>APP/TV等下载源此视频源必须为空！</strong>`,
+            float: `一般为B站主域名(http://www.bilibili.com)。</br><strong>APP/TV等视频源必须为空！</strong>`,
             hidden: config.downloadMethod == "右键保存"
         })
         API.registerSetting({
