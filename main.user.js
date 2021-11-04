@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.0
+// @version      6.1.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,6 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.min.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.js
+// @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
 // ==/UserScript==
 
 /**
@@ -9770,7 +9771,7 @@ catch (e) {
             }
             cover() {
                 delete window.bbComment; // 取消拦截
-                new Function(GM.getResourceText("comment.js"))(); // 载入旧版脚本
+                new Function(GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js"))(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
                 API.addCss(\`
                 .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
@@ -9780,6 +9781,25 @@ catch (e) {
                 }.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
                     margin-left: initial;
                 }\`);
+                config.oldReplySort && API.addCss(\`.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                }
+                .bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {
+                    width: 86px;
+                    height: 86px;
+                    position: absolute;
+                    top: -19px;
+                    left: -19px;
+                    display: block;
+                }
+                .bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {
+                    border: 0;
+                    border-radius: 0;
+                    width: 86px;
+                    height: 86px;
+                };\`);
             }
         }
         new ReplyList().init();
@@ -11900,7 +11920,7 @@ catch (e) {
             key: "downloadList",
             label: "视频类型",
             sub: "右键呼出下载时请求的类型",
-            value: ["mp4", "dash"],
+            value: ["mp4", "dash", "flv"],
             list: ["mp4", "dash", "flv"],
             float: '下载功能会自动读取播放器已载入的视频源并呈现在下载面板上，即使未勾选对应的视频类型。</br>勾选了也不一定能获取到该类型的视频源。'
         });
@@ -11967,7 +11987,7 @@ catch (e) {
             label: "referer",
             value: location.origin,
             input: { type: "text" },
-            float: \`一般为B站主域名(http://www.bilibili.com)。</br><strong>APP/TV等下载源此视频源必须为空！</strong>\`,
+            float: \`一般为B站主域名(http://www.bilibili.com)。</br><strong>APP/TV等视频源必须为空！</strong>\`,
             hidden: config.downloadMethod == "右键保存"
         });
         API.registerSetting({
@@ -12149,6 +12169,15 @@ catch (e) {
             type: "action",
             title: "管理",
             action: () => API.importModule("manage.js", undefined, true)
+        });
+        API.registerSetting({
+            key: "oldReplySort",
+            sort: "style",
+            label: "评论区优先展示按时间排序",
+            sub: "疏于维护的特别需求",
+            type: "switch",
+            value: false,
+            float: "B站曾经默认优先以时间顺序展示评论，并在最前列展示几条热评。本脚本尝试恢复过本功能，但如今已疏于维护。"
         });
     }
     catch (e) {
@@ -13091,12 +13120,49 @@ catch (e) {
                 GM.xmlHttpRequest(details);
             });
         }
+        /**
+         * \`XMLHttpRequest\`的GET方法的快捷模式
+         * 将url独立为第一个参数，剩余参数放在第二个参数，方便快速发送ajax
+         * **注意本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
+         * @param url url链接
+         * @param details url外的参数对象
+         * @returns \`Promise\`托管的请求结果或者报错信息，\`async = false\` 时除外，直接返回结果
+         */
+        static get(url, details = {}) {
+            !Reflect.has(details, "credentials") && (details.credentials = true);
+            // @ts-ignore
+            return this.xhr({ url: url, ...details });
+        }
+        /**
+         * \`XMLHttpRequest\`的POST方法的快捷模式
+         * 将url、data，Content-Type分别独立为参数，剩余参数放在末尾，方便快速发送ajax
+         * **注意本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
+         * @param url url链接
+         * @param data post数据
+         * @param contentType 发送数据使用的编码，默认"application/x-www-form-urlencoded"
+         * @param details url、data外的参数对象
+         * @returns \`Promise\`托管的请求结果或者报错信息，\`async = false\` 时除外，直接返回结果
+         */
+        static post(url, data, contentType = "application/x-www-form-urlencoded", details = {}) {
+            !Reflect.has(details, "credentials") && (details.credentials = true);
+            details.headers = { "Content-Type": contentType, ...details.headers };
+            // @ts-ignore
+            return this.xhr({ url: url, method: "POST", data: data, ...details });
+        }
     }
     _a = Xhr;
     Xhr.catches = [];
     Xhr.log = () => _a.catches;
     // @ts-ignore
-    API.xhr = (details) => Xhr.xhr(details), API.xhr.GM = (details) => Xhr.GM(details), API.xhr.log = () => Xhr.log();
+    API.xhr = (details) => Xhr.xhr(details);
+    // @ts-ignore
+    API.xhr.GM = (details) => Xhr.GM(details);
+    // @ts-ignore
+    API.xhr.log = () => Xhr.log();
+    // @ts-ignore
+    API.xhr.get = (url, details) => Xhr.get(url, details);
+    // @ts-ignore
+    API.xhr.post = (url, data, contentType, details) => Xhr.post(url, data, contentType, details);
 })();
 `;
     modules["av-biliplus.js"] = `/**

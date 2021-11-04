@@ -17,7 +17,7 @@
             }
             cover() {
                 delete (<any>window).bbComment; // 取消拦截
-                new Function(GM.getResourceText("comment.js"))(); // 载入旧版脚本
+                new Function(GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js"))(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
                 API.addCss(`
                 .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
@@ -27,6 +27,25 @@
                 }.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
                     margin-left: initial;
                 }`);
+                config.oldReplySort && API.addCss(`.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                }
+                .bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {
+                    width: 86px;
+                    height: 86px;
+                    position: absolute;
+                    top: -19px;
+                    left: -19px;
+                    display: block;
+                }
+                .bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {
+                    border: 0;
+                    border-radius: 0;
+                    width: 86px;
+                    height: 86px;
+                };`)
             }
         }
         new ReplyList().init();

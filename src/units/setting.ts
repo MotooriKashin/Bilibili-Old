@@ -719,6 +719,15 @@
             title: "管理",
             action: () => API.importModule("manage.js", undefined, true)
         })
+        API.registerSetting({
+            key: "oldReplySort",
+            sort: "style",
+            label: "评论区优先展示按时间排序",
+            sub: "疏于维护的特别需求",
+            type: "switch",
+            value: false,
+            float: "B站曾经默认优先以时间顺序展示评论，并在最前列展示几条热评。本脚本尝试恢复过本功能，但如今已疏于维护。"
+        })
     } catch (e) { toast.error("setting.js", e) }
 })();
 /**
@@ -986,6 +995,10 @@ declare namespace config {
      * 样式：评论超链接
      */
     let commentLinkDetail: boolean;
+    /**
+     * 样式：旧版评论排序
+     */
+    let oldReplySort: boolean;
 }
 /**
  * 工具栏按钮
