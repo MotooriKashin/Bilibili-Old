@@ -30870,8 +30870,23 @@ function Fa() {
                         } catch (k) {
                             void 0
                         }
-                    }, b.prototype.onHeartBeatReply = function (b) {
-                        c.a.Hh(this.yf.Jz, b)
+                    }, b.prototype.onHeartBeatReply = function (pcOnline) {
+                        $.ajax({
+                            url: `https://api.bilibili.com/x/player/online/total?cid=${cid}&aid=${aid}&ts=${Math.ceil(Date.now() / 30 / 1e3)}`,
+                            type: "get",
+                            dataType: "json",
+                            cache: !1,
+                            xhrFields: {
+                                withCredentials: !0
+                            },
+                            success: d => {
+                                if (d && d.data !== undefined && d.data.total !== undefined
+                                    && Number.isInteger(parseInt(d.data.total)))
+                                    c.a.Hh(this.yf.Jz, { count: d.data.total })
+                                else c.a.Hh(this.yf.Jz, pcOnline);
+                            },
+                            error: () => c.a.Hh(this.yf.Jz, pcOnline)
+                        });
                     }, b.prototype.Zb = function () {
                         var b = this;
                         return c.a.Hh(this.yf.Fz), clearTimeout(this.Rl), this.options.Ud &&
