@@ -50,6 +50,7 @@ npm install -g typescript
 2. 请使用原生的ts/js语法，不要引入jQuery等直接改变语法的外部库，或者自行使用原生ts/js封装“库”，就像xhr.ts封装XMLHttpRequest那样。
 3. ESNext的新特性只要不报错就可以使用，但不要为了强行使用引入任何Polyfill。
 4. 不要求代码风格统一，但请一定要完善类型声明，以便其他贡献者使用相关数据。
+5. API对象代理了顶层window对象上的全部属性，所以向API暴露新属性禁止与window上现有属性重名。
 
 ---
 ### 合并请求
