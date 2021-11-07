@@ -11,7 +11,14 @@
         async init(view_points: any) {
             if (!SegProgress.cssInited) {
                 SegProgress.cssInited = true;
-                API.addCss(`.bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
+                API.addCss(`
+                            .bilibili-progress-segmentation-logo{display:inline-block;position:absolute;top:-12px;height:30px;width:2%}
+                            .bilibili-progress-segmentation-logo>img{position: absolute;top:-14px;transform:translate(-50%,-50%) scale(0.7);left:50%}
+                            .bilibili-player.mode-widescreen .bilibili-progress-segmentation-logo>img,
+                            .bilibili-player.mode-webfullscreen .bilibili-progress-segmentation-logo>img,
+                            .bilibili-player.mode-fullscreen .bilibili-progress-segmentation-logo>img{top:-18px;left:50%;transform:translate(-50%,-50%) scale(1)}
+                            .bilibili-progress-segmentation-logo.active>img#segmentation-logo{top:-110px}
+                            .bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
                             .bilibili-progress-segmentation:hover > div > div{border-color:#fb7299;border-style:solid;border-width:0 2px;width:100%;height:3px;top:6px;left:-2px;position:relative;background:#fb7299}
                             .bilibili-progress-segmentation > div{box-sizing:border-box;border-style:solid;border-color:#fb7299;border-left-width:2px;position:absolute;width:100%;height:6px;top:12px}
                             .bilibili-progress-detail-chapter{top:-96px;position:absolute;width:100%;font-size:17px;font-weight:bold;color:#fff;text-shadow:0 0 5px #000}
@@ -30,24 +37,71 @@
                             .bilibili-player-chapter-info > span{color:#99a2aa}
                             .bilibili-player-chapter-info.active{background-color:#f3f3f3}`);
             }
+            let sliderBar = document.getElementsByClassName("bilibili-player-video-progress-bar")[0];
+            let handleWidth = document.getElementsByClassName("bpui-slider-handle")[0].clientWidth;
+            let trackerWrp = <HTMLDivElement>document.querySelector(".bpui-slider-tracker-wrp");
             let duration = view_points[view_points.length - 1].to;
-            let ratio = (<any>window).player.getDuration() / duration / duration;
+            let videoDuration = (<any>window).player.getDuration();
+            let ratio = videoDuration / duration / duration;
             let sliderTracker = <HTMLDivElement>document.querySelector(".bilibili-player-video-progress .bpui-slider-tracker");  // 播放器进度条的div  // 播放器进度条的div
             let chptName = document.createElement("div"); // 显示在视频预览缩略图上方的看点标题
             chptName.className = "bilibili-progress-detail-chapter";
             (<HTMLDivElement>document.querySelector(".bilibili-player-video-progress-detail")).appendChild(chptName);
 
             // 添加分段进度条
+            let type = view_points[0].type;
+            let segDivs: Array<HTMLElement> = [];
+            function update() {
+                for (let i = 0; i < segDivs.length; i++) {
+                    segDivs[i].style.left = view_points[i].to / videoDuration * (trackerWrp.clientWidth - handleWidth) - handleWidth / 2 + "px";
+                }
+            }
             for (let v of view_points) {
                 let seg = document.createElement("div");
-                seg.className = "bilibili-progress-segmentation";
-                seg.style.width = (v.to - v.from) * ratio * 100 + "%";
-                seg.style.left = v.from * ratio * 100 + "%";
-                seg.innerHTML = '<div><div></div></div>';
-                seg.onmouseenter = (content => () => chptName.innerHTML = content)(v.content)
+                if (type == "1") {
+                    seg.className = "bilibili-progress-segmentation-logo";
+                    seg.innerHTML = `<img id="segmentation-logo" width=32 height=36 src="${v.logoUrl}"></img>`;
+                } else if (type == "2") {
+                    seg.className = "bilibili-progress-segmentation";
+                    seg.style.width = (v.to - v.from) * ratio * 100 + "%";
+                    seg.style.left = v.from * ratio * 100 + "%";
+                    seg.innerHTML = "<div><div></div></div>";
+                    seg.onmouseenter = () => chptName.innerHTML = v.content;
+                }
+                segDivs.push(seg);
                 sliderTracker.appendChild(seg);
             }
-
+            if (type == "1") {
+                setTimeout(() => update(), 500);
+                chptName.style.top = "-140px";
+                trackerWrp.addEventListener("mousemove", e => {
+                    let closestPoint = 1e6;;
+                    let box = sliderBar.getBoundingClientRect();
+                    let pos = (e.pageX - box.left + document.body.scrollLeft - document.body.clientLeft - handleWidth / 2) / (trackerWrp.clientWidth - handleWidth) * videoDuration;
+                    0 > pos && (pos = 0);
+                    pos > videoDuration && (pos = videoDuration);
+                    let timeArea = 80 / (trackerWrp.clientWidth - handleWidth) * videoDuration;
+                    for (let i = 0; i < view_points.length; i++) {
+                        if (view_points[i].to >= pos - timeArea && view_points[i].to <= pos + timeArea) {
+                            segDivs[i].className = "bilibili-progress-segmentation-logo active";
+                            if (view_points[i].to >= pos - timeArea / 10 && view_points[i].to <= pos + timeArea / 10 && Math.abs(view_points[i].to - pos) < closestPoint) {
+                                chptName.innerHTML = view_points[i].content;
+                                closestPoint = Math.abs(view_points[i].to - pos);
+                            }
+                        }
+                        else {
+                            segDivs[i].className = "bilibili-progress-segmentation-logo";
+                        }
+                    }
+                    if (closestPoint == 1e6) chptName.innerHTML = "";
+                });
+                (<any>window).player.addEventListener("video_player_resize", () => update());
+                trackerWrp.addEventListener("mouseleave", () => {
+                    for (let i = 0; i < view_points.length; i++) {
+                        segDivs[i].className = "bilibili-progress-segmentation-logo";
+                    }
+                });
+            }
             // 添加“视频看点”面板
             let wrapList = <HTMLDivElement>document.querySelector("div.bilibili-player-wraplist"); // 获取播放器右侧面板的容器div
             let panels = wrapList.children;

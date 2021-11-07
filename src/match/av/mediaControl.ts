@@ -43,7 +43,7 @@
                         trial(() => {
                             // @ts-ignore：该变量由主模块传入
                             let pid = getPlaylistIndex();
-                            if (pid != LastPid) {
+                            if (pid != LastPid && (<any>window).player.getPlaylist() != undefined) {
                                 LastPid = pid;
                                 // @ts-ignore：该变量由主模块传入
                                 info = mediaInfo(LastPid, (<any>window).player.getPlaylist());
