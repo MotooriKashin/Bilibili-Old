@@ -1,6 +1,6 @@
 /**
  * 本模块负责为旧版播放器添加媒体控制键  
- * 请以`title`、`artist`、`chapterName`、`coverUrl`、`getPlaylistIndex`的名义传入数据  
+ * 请以`mediaInfo`、`getPlaylistIndex`的名义传入数据
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
 (async function mediaControl() {
