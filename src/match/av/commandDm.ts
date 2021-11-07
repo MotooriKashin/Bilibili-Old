@@ -199,12 +199,12 @@
         API.biliQuickLogin();
     }
 
-    function post(url: string, data: any, contentType = "application/x-www-form-urlencoded") {
+    function post(url: string, data: any, contentType = "application/x-www-form-urlencoded;charset=UTF-8") {
         data.csrf = API.getCookies().bili_jct;
         return xhr({
             url: url,
             data: API.objUrl("", data),
-            headers: { "Content-type": contentType },
+            headers: { "Content-Type": contentType },
             method: "POST",
             credentials: true
         });

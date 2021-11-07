@@ -16,3 +16,15 @@
   justify-content: center;
   overflow: hidden;
 }
+
+@keyframes banner-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animated-banner .layer {
+  animation: banner-fade-in 0.7s;
+}

@@ -89,12 +89,19 @@
                     // 修复数据
                     API.importModule("restoreData.js");
                     // 媒体控制
+                    let getPlaylistIndex = () => (<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__).epList.findIndex(v => v.cid == ((<any>window).cid || API.cid));
+                    Object.defineProperty(window, "pageno", { get: () => getPlaylistIndex() + 1 });
                     API.importModule("mediaControl.js", {
-                        title: API.__INITIAL_STATE__.mediaInfo.title,
-                        artist: API.__INITIAL_STATE__.mediaInfo.jp_title,
-                        chapterName: (pid: any) => (<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__).epList[pid].index_title,
-                        coverUrl: (pid: any) => [{ src: (<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__).epList[pid].cover, sizes: "960x600" }],
-                        getPlaylistIndex: () => (<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__).epList.reduce((s, d, i) => { s[d.cid] = i; return s }, {})[API.cid]
+                        getPlaylistIndex: () => getPlaylistIndex(),
+                        mediaInfo: (pid: number) => {
+                            if (this.isBANGUMI__INITIAL_STATE__(API.__INITIAL_STATE__))
+                                return {
+                                    title: API.__INITIAL_STATE__.mediaInfo.title,
+                                    artist: API.__INITIAL_STATE__.mediaInfo.jp_title,
+                                    chapterName: API.__INITIAL_STATE__.epList[pid].index_title,
+                                    coverUrl: [{ src: API.__INITIAL_STATE__.epList[pid].cover, sizes: "960x600" }]
+                                }
+                        }
                     })
                 }
             }

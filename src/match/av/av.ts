@@ -103,11 +103,16 @@
                     API.importModule("videoSort.js");
                     // 添加媒体控制
                     API.importModule("mediaControl.js", {
-                        title: API.__INITIAL_STATE__.videoData.title,
-                        artist: API.__INITIAL_STATE__.videoData.owner.name,
-                        chapterName: (pid: any, playList: any[]) => playList[pid].part,
-                        coverUrl: () => [{ src: (<AV__INITIAL_STATE__>API.__INITIAL_STATE__).videoData.pic, sizes: "320x180" }],
-                        getPlaylistIndex: () => (<any>window).player.getPlaylistIndex()
+                        getPlaylistIndex: () => (<any>window).player.getPlaylistIndex(),
+                        mediaInfo: (pid: number, playList: any) => {
+                            if (this.isAV__INITIAL_STATE__(API.__INITIAL_STATE__))
+                                return {
+                                    title: API.__INITIAL_STATE__.videoData.title,
+                                    artist: API.__INITIAL_STATE__.videoData.owner.name,
+                                    chapterName: playList[pid].part,
+                                    coverUrl: [{ src: API.__INITIAL_STATE__.videoData.pic, sizes: "320x180" }]
+                                }
+                        }
                     })
                     // 跳过充电鸣谢
                     config.electric && API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.url = API.objUrl(xhr.url.split("?")[0], Object.assign(API.urlObj(xhr.url), { aid: 1, mid: 1 })) })

@@ -15,6 +15,9 @@
                 typeof CSS !== 'undefined' && CSS.supports && CSS.supports('filter: blur(1px)')
                 && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             layerConfig: {
+                extensions?: {
+                    time: any
+                },
                 layers: {
                     blur: any,
                     id: number,
@@ -40,11 +43,7 @@
                 if (this.animatedBannerSupport) this.mounted(v);
                 API.addCss(API.getModule("animated-banner.css"), "animated-banner");
                 if (v.is_split_layer !== 0) {
-                    let timer = setInterval(() => {
-                        const blur = document.querySelector(".blur-bg");
-                        blur && blur.remove();
-                    }, 100);
-                    setTimeout(() => clearTimeout(timer), 60 * 1000);
+                    API.addCss(".blur-bg {display:none}");
                 } else
                     API.addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
             }
@@ -69,6 +68,16 @@
                 this.layerConfig = JSON.parse(v.split_layer);
                 if (!this.layerConfig.layers) return;
                 try {
+                    if("extensions" in this.layerConfig && "time" in this.layerConfig.extensions) {
+                        let time: number, now = (Date.now() - (new Date).setHours(0, 0, 0, 0)) / 1e3;
+                        let timeCode = Object.keys(this.layerConfig.extensions.time).sort((a,b) => parseInt(a) - parseInt(b));
+                        for(let t of timeCode) {
+                            if(parseInt(t) < now) time = parseInt(t);
+                            else break;
+                        }
+                        let timelayers = this.layerConfig.extensions.time[time];
+                        this.layerConfig.layers = timelayers[Math.floor(Math.random() * timelayers.length)].layers;
+                    }
                     await Promise.all(this.layerConfig.layers.map(async (v, index) => {
                         return Promise.all(v.resources.map(async (i) => {
                             if (/\.(webm|mp4)$/.test(i.src)) {
