@@ -1,15 +1,19 @@
 // 构建脚本主体
 const fs = require("fs");
+const { exec } = require("child_process");
 const meta = require("../json/meta.json");
 const resource = require("../json/resource.json");
 
 class Build {
     extend = [".d.ts", ".map", "dist/index.js", "dist/bilibiliPlayer.js", "dist/comment.js", "dist/video.js", "meta.json", "resource.json", ".md"]; // 排除文件或拓展名
     path = ["CSS", "HTML", "Json", "dist"]; // 模块所在目录
+    resource = ["dist/comment.js"]; // 以@resource形式加载的模块
+    cdn = "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old"; // 在线仓库
     /**
      * 构建入口
      */
     async output() {
+        await this.getResource()
         const arr = await this.listPath();
         const files = await Promise.all(arr.reduce((s, d) => {
             s.push(fs.promises.readFile(d));
@@ -97,6 +101,31 @@ class Build {
     static async getStat(path) {
         const result = await fs.promises.stat(path);
         return result.isDirectory() ? false : true;
+    }
+    /**
+    * 获取文件的`commit`哈希值
+    * @param {string} path 文件路径：相对/绝对
+    * @returns {Promise<string>} `commit`哈希值
+    */
+    getHash(path) {
+        return new Promise((s, r) => {
+            exec(`git log -1 ${path}`, (e, d) => {
+                e && r(e);
+                d && s(d.match(/[a-f0-9]{40}/)[0]);
+            })
+        })
+    }
+    /**
+     * 添加`@resources`资源
+     */
+    async getResource() {
+        const hashs = await Promise.all(this.resource.reduce((s, d) => {
+            s.push(this.getHash(d));
+            return s;
+        }, []));
+        hashs.forEach((d, i) => {
+            resource.push(`${this.cdn}@${d}/${this.resource[i]}`);
+        })
     }
 }
 new Build().output();

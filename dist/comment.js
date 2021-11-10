@@ -886,10 +886,10 @@
                     dm: 0
                 },
                 this.next = null; // 时间排序索引
-                let operationListStyle = document.createElement("style");
-                operationListStyle.setAttribute("type", "text/css");
-                operationListStyle.innerHTML = ".operation.btn-hide-re .opera-list {visibility: visible}";
-                document.head.appendChild(operationListStyle);
+            let operationListStyle = document.createElement("style");
+            operationListStyle.setAttribute("type", "text/css");
+            operationListStyle.innerHTML = ".operation.btn-hide-re .opera-list {visibility: visible}";
+            document.head.appendChild(operationListStyle);
             var d = this;
             return window.jQuery ? (h(), _(), this.start(e, r)) : ((o = document.createElement("script")).setAttribute("src", "//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery3.3.1.min.js"), document.body.appendChild(o), o.onload = function () {
                 _(),
@@ -1490,7 +1490,7 @@
                 var t = ['<div class="reply-item reply-wrap" data-id="' + e.rpid + '" data-index="' + n + '">', '<a href="//space.bilibili.com/' + e.mid + '" data-usercard-mid="' + e.mid + '" target="_blank" class="reply-face">', '<img src="' + f.trimHttp(f.webp(e.member.avatar, {
                     w: 52,
                     h: 52
-                })) + '" alt="">', "</a>", '<div class="reply-con">', '<div class="user">', '<a href="//space.bilibili.com/' + e.mid + '" target="_blank" data-usercard-mid="' + e.mid + '" class="name ' + this._createVipClass(e.member.vip.vipType, e.member.vip.vipStatus, e.member.vip.themeType) + '">' + f.unhtml(e.member.uname) + "</a>", '<a class="level-link" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + e.member.level_info.current_level + '"></i></a>', this._createSubMsgContent(e), "</div>", "</div>", '<div class="info">', e.floor ? '<span class="floor">#' + e.floor + "</span>" : "", this._createPlatformDom(e.content.plat), '<span class="time">' + this._formateTime(e.ctime) + "</span>", '<span class="like ' + (1 == e.action ? "liked" : "") + '"><i></i><span>' + (e.like || "") + "</span></span>", '<span class="hate ' + (2 == e.action ? "hated" : "") + '"><i></i></span>', '<span class="reply btn-hover">回复</span>', e.dialog != e.rpid ? '<span class="dialog btn-hover" dialog="' + e.dialog + '">查看对话</span>' : '','<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(e.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(e.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(e.mid) ? '<li class="del" data-mid="' + e.mid + '">删除</li>' : "") + "</ul></div></div>", "</div>", "</div>"].join("");
+                })) + '" alt="">', "</a>", '<div class="reply-con">', '<div class="user">', '<a href="//space.bilibili.com/' + e.mid + '" target="_blank" data-usercard-mid="' + e.mid + '" class="name ' + this._createVipClass(e.member.vip.vipType, e.member.vip.vipStatus, e.member.vip.themeType) + '">' + f.unhtml(e.member.uname) + "</a>", '<a class="level-link" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + e.member.level_info.current_level + '"></i></a>', this._createSubMsgContent(e), "</div>", "</div>", '<div class="info">', e.floor ? '<span class="floor">#' + e.floor + "</span>" : "", this._createPlatformDom(e.content.plat), '<span class="time">' + this._formateTime(e.ctime) + "</span>", '<span class="like ' + (1 == e.action ? "liked" : "") + '"><i></i><span>' + (e.like || "") + "</span></span>", '<span class="hate ' + (2 == e.action ? "hated" : "") + '"><i></i></span>', '<span class="reply btn-hover">回复</span>', e.dialog != e.rpid ? '<span class="dialog btn-hover" dialog="' + e.dialog + '">查看对话</span>' : '', '<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(e.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(e.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(e.mid) ? '<li class="del" data-mid="' + e.mid + '">删除</li>' : "") + "</ul></div></div>", "</div>", "</div>"].join("");
                 return f.browser.version.mobile && (t = ['<div class="reply-item reply-wrap" data-id="' + e.rpid + '" data-index="' + n + '">', '<div class="reply-con">', '<div class="user">', '<a href="//space.bilibili.com/' + e.mid + '" target="_blank" data-usercard-mid="' + e.mid + '" class="name ' + this._createVipClass(e.member.vip.vipType, e.member.vip.vipStatus, e.member.vip.themeType) + '">' + f.unhtml(e.member.uname) + "</a>", '<a class="level-link" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + e.member.level_info.current_level + '"></i>', '<div class="right"><span class="time">' + this._formateMobileTime(e.ctime) + "</span></div>", "</a>", this._createSubMsgContent(e), "</div>", '<div class="info">', '<span class="like ' + (1 == e.action ? "liked" : "") + '"><i></i><span>' + (e.like || "") + "</span></span>", '<span class="reply btn-hover">回复</span>', '<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(e.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(e.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(e.mid) ? '<li class="del" data-mid="' + e.mid + '">删除</li>' : "") + "</ul></div></div>", "</div>", "</div>", "</div>"].join("")),
                     t
             },
@@ -2271,12 +2271,12 @@
                             clickTarget.innerHTML = "查看对话"
                         }
                         setTimeout(() => window.addEventListener('click', function onClick(e) {
-                                // 点击了悬浮窗以外区域则关闭窗口
-                                if (!container.contains(e.target) && e.target != container) {
-                                    closeWindow();
-                                    window.removeEventListener('click', onClick);
-                                }
-                            }), 0);
+                            // 点击了悬浮窗以外区域则关闭窗口
+                            if (!container.contains(e.target) && e.target != container) {
+                                closeWindow();
+                                window.removeEventListener('click', onClick);
+                            }
+                        }), 0);
                         /**
                          * 从minFloor层开始，向后获取20条对话的数据
                          * @param  {number} minFloor 起始楼层
@@ -2428,7 +2428,7 @@
                     }),
                     n.on("click.operation", ".spot", function (e) {
                         let operalist = this.parentNode.getElementsByClassName("opera-list")[0];
-                        if(l.lastClickOperation != this || (operalist && operalist.style.display == "none")) {
+                        if (l.lastClickOperation != this || (operalist && operalist.style.display == "none")) {
                             $(".opera-list").hide(),
                                 $(this).siblings(".opera-list").show(),
                                 e.stopPropagation(),
@@ -2821,7 +2821,12 @@
                     o = 1 === e.card.vip.theme_type && 2 === e.card.vip.vipType ? "vip-green-name" : 2 === e.card.vip.vipType && 1 === e.card.vip.vipStatus ? "vip-red-name" : "",
                     s = this._isLikeMe(e),
                     l = e.following ? "已关注" : "+关注",
-                    d = e.following ? "liked" : "";
+                    d = e.following ? "liked" : "",
+                    isVip = (e.card.vip && e.card.vip.label && e.card.vip.label.text && '<span class="vip-icon"><span class="tinyfont">' + e.card.vip.label.text + '</span></span>') || "";
+                var _ref2 = e.card.official_verify || {},
+                    verifyType = _ref2.type,
+                    verifyDesc = _ref2.desc;
+                var verify = ("type" in _ref2 && verifyType >= 0) ? ('<p class="verify"><span><img title="' + (verifyType === 0 ? "个人认证" : "企业/团体认证") + '" class="auth" src="//s1.hdslb.com/bfs/seed/jinkela/commentpc/static/img/ic_tag_' + (verifyType === 0 ? "offic_tagial.fe21613" : "enterprise.9e3c59e") + '.png@.webp">bilibili机构认证：' + verifyDesc + '</span></p>') : "";
                 return d += s ? " liked-me" : "",
                     '<div class="user-card"><div class="bg" style="background-image:url(' + c.trimHttp(c.webp(n, {
                         w: 750,
@@ -2829,7 +2834,7 @@
                     })) + ')"></div><a target="_blank" href="//space.bilibili.com/' + e.card.mid + '" class="face"><img src="' + c.trimHttp(c.webp(e.card.face, {
                         w: 50,
                         h: 50
-                    })) + '" />' + t + r + '</a><div class="info"><p class="user"><a target="_blank" href="//space.bilibili.com/' + e.card.mid + '" class="name ' + o + '">' + c.unhtml(e.card.name) + "</a>" + i + '<a href="//www.bilibili.com/html/help.html#k_' + e.card.level_info.current_level + '" target="_blank"><i class="level l' + e.card.level_info.current_level + '"></i></a></p><p class="social"><a href="//space.bilibili.com/' + e.card.mid + '/fans/follow" target="_blank">关注: <span class="like">' + e.card.friend + '</span></a><a href="//space.bilibili.com/' + e.card.mid + '/fans/fans" target="_blank">粉丝: <span class="fans">' + c.formatNum(e.card.fans) + "</span></a></p>" + a + '</div><div class="btn-box"><a class="like ' + d + '" mid="' + e.card.mid + '" uname="' + c.unhtml(e.card.name) + '"' + (e.quiet ? ' quiet="true"' : "") + '><span class="default-text">' + l + '</span><span class="hover-text">取消关注</span></a><a href="//message.bilibili.com/#whisper/mid' + e.card.mid + '" target="_blank" class="message">发消息</a></div></div>'
+                    })) + '" />' + t + r + '</a><div class="info"><p class="user"><a target="_blank" href="//space.bilibili.com/' + e.card.mid + '" class="name ' + o + '">' + c.unhtml(e.card.name) + "</a>" + i + '<a href="//www.bilibili.com/html/help.html#k_' + e.card.level_info.current_level + '" target="_blank"><i class="level l' + e.card.level_info.current_level + '"></i></a>' + isVip + '</p><p class="social"><a href="//space.bilibili.com/' + e.card.mid + '/fans/follow" target="_blank">关注: <span class="like">' + e.card.friend + '</span></a><a href="//space.bilibili.com/' + e.card.mid + '/fans/fans" target="_blank">粉丝: <span class="like">' + c.formatNum(e.card.fans) + '</span></a><a>点赞: <span class="like">' + c.formatNum(e.like_num) + '</span></a></p>' + verify + a + '</div><div class="btn-box"><a class="like ' + d + '" mid="' + e.card.mid + '" uname="' + c.unhtml(e.card.name) + '"' + (e.quiet ? ' quiet="true"' : "") + '><span class="default-text">' + l + '</span><span class="hover-text">取消关注</span></a><a href="//message.bilibili.com/#whisper/mid' + e.card.mid + '" target="_blank" class="message">发消息</a></div></div>'
             },
             a.prototype._createErrorCard = function () {
                 return '<div class="user-card"><p class="error-card">加载失败</p></div>'

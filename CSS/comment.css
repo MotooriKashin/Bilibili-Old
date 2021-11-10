@@ -1,0 +1,33 @@
+.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
+    float: right;
+    line-height: 36px;
+}
+.bb-comment .comment-list .list-item .user .text-con, .comment-bilibili-fold .comment-list .list-item .user .text-con {
+    margin-left: initial;
+}
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
+    margin-left: initial;
+}
+.user-card .info .user .vip-icon {
+    max-width: 58px;
+    height: 16px;
+    border-radius: 2px;
+    margin-left: 8px;
+    background-color: #FF6699;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    white-space: nowrap;
+}
+.user-card .info .verify {
+    color: #9499A0;
+    line-height: 17px;
+}
+.user-card .info .verify .auth {
+    display: inline-block;
+    vertical-align: bottom;
+    position: relative;
+    left: -3px;
+    width: 16px;
+    height: 16px;
+}

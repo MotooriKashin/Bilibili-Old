@@ -1,6 +1,5 @@
 [
     "https://www.bilibili.com/index/index-icon.json",
     "https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js",
-    "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.js",
     "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js"
 ]
