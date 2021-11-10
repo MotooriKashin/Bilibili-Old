@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.1
+// @version      6.1.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -21,8 +21,8 @@
 // @license      MIT
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.min.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@d5ce66cc46f84da4f8f2b35e54e9c2ea94e84bb7/dist/comment.js
 // ==/UserScript==
 
 /**
@@ -102,7 +102,20 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}`;
+}
+
+@keyframes banner-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animated-banner .layer {
+  animation: banner-fade-in 0.7s;
+}
+`;
     modules["avatarAnimation.css"] = `/* 鼠标放在顶栏上的动效 */
 .bili-header-m .profile-info .i-face .face{
     border:0
@@ -505,6 +518,39 @@
   }
 }
 `;
+    modules["comment.css"] = `.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
+    float: right;
+    line-height: 36px;
+}
+.bb-comment .comment-list .list-item .user .text-con, .comment-bilibili-fold .comment-list .list-item .user .text-con {
+    margin-left: initial;
+}
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
+    margin-left: initial;
+}
+.user-card .info .user .vip-icon {
+    max-width: 58px;
+    height: 16px;
+    border-radius: 2px;
+    margin-left: 8px;
+    background-color: #FF6699;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    white-space: nowrap;
+}
+.user-card .info .verify {
+    color: #9499A0;
+    line-height: 17px;
+}
+.user-card .info .verify .auth {
+    display: inline-block;
+    vertical-align: bottom;
+    position: relative;
+    left: -3px;
+    width: 16px;
+    height: 16px;
+}`;
     modules["danmakuHashId.css"] = `/* 反查弹幕发送者相关样式 */
 .bb-comment, .comment-bilibili-fold {
     font-family: Microsoft YaHei,Arial,Helvetica,sans-serif;
@@ -3709,7 +3755,8 @@ option {
         toast.error("aria2.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/download/aria2.js`;
     modules["contentMenu.js"] = `/**
  * 添加下载右键菜单
  */
@@ -3754,7 +3801,8 @@ option {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/download/contentMenu.js`;
     modules["download.js"] = `/**
  * 本模块负责下载功能，主要是视频下载功能
  */
@@ -4184,7 +4232,8 @@ option {
         toast.error(e, "download.js");
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/download/download.js`;
     modules["ef2.js"] = `/**
  * 本模块负责使用ef2自定义协议调用IDM进行下载
  * 使用本下载方式需要先安装IDM{@see Internet Download Manager (IDM) {@link http://www.internetdownloadmanager.com/}}
@@ -4318,7 +4367,8 @@ option {
     API.ef2.encode = (data) => new Ef2().encode(data);
     API.ef2.decode = (ef2ptl) => new Ef2().decode(ef2ptl);
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/download/ef2.js`;
     modules["abv.js"] = `/**
  * 本模块负责负责提供av/BV互转函数
  * 感谢知乎mcfx的回答，在其python代码基础上翻译为JavaScript，源链接如下
@@ -4372,7 +4422,8 @@ option {
         toast.error("abv.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/extensions/abv.js`;
     modules["Base64.js"] = `/**
  * 本模块负责提供Base64<=>字符串的互转函数
  * 本模块核心代码直接来源如下
@@ -4401,7 +4452,8 @@ option {
         toast.error("base64.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/extensions/Base64.js`;
     modules["crc32.js"] = `/**
  * 本模块提供CRC32散列算法及逆向工具，是将\`BiliBili_crc2mid\`修改为符合本项目模块规范的版本
  * 感谢\`MoePus\`提出的CRC32逆向算法，论坛原帖见
@@ -4511,7 +4563,8 @@ option {
         toast.error("crc32.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/extensions/crc32.js`;
     modules["cubicBezier.js"] = `/**
  * 本模块提供贝塞尔曲线工具
  * 源码来自B站原生header.js工程，具体来源不明
@@ -4608,7 +4661,8 @@ option {
         toast.error("cubicBezier.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/extensions/cubicBezier.js`;
     modules["md5.js"] = `/**
  * 本模块提供md5加密工具，是将\`js-md5\`修改为符合本项目模块规范的版本
  * 感谢开源项目\`js-md5\`，源项目信息如下
@@ -5048,7 +5102,8 @@ option {
         toast.error("md5.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/extensions/md5.js`;
     modules["sign.js"] = `/**
  * 本模块提供B站URL签名工具
  */
@@ -5144,7 +5199,8 @@ option {
         toast.error("sign.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/extensions/sign.js`;
     modules["Node.js"] = `/**
  * 本模块负责实现原生脚本拦截模块
  * 这里指的原生脚本是那些非直接写入原生HTML，而是后续由JavaScript添加进DOM的脚本
@@ -5216,7 +5272,8 @@ option {
         toast.error("Node.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/hook/Node.js`;
     modules["open.js"] = `/**
  * 本模块负责提供\`XMLHttpRequest\`的hook工具
  * 拦截\`open\`参数组并传入\`XMLHttpRequest\`对象本身给回调函数
@@ -5239,7 +5296,8 @@ option {
         toast.error("open.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/hook/open.js`;
     modules["sendBeacon.js"] = `/**
  * 本模块负责拦截B站日志上报
  */
@@ -5260,7 +5318,8 @@ option {
         toast.error("sendBeacon.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/hook/sendBeacon.js`;
     modules["webSocket.js"] = `/**
  * 本模块hook了WebSocket以修复旧版播放器的实时弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
@@ -5462,7 +5521,8 @@ option {
         toast.error("webSocket.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/hook/webSocket.js`;
     modules["worker.js"] = `/**
  * 本模块hook了Worker以使旧版播放器支持新版proto弹幕
  */
@@ -5527,7 +5587,8 @@ option {
         toast.error("worker.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/hook/worker.js`;
     modules["bnj2021.js"] = `/**
  * 本模块负责替换拜年祭2021专题页面使用旧版嵌入播放器
  */
@@ -5560,7 +5621,8 @@ option {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/bnj2021.js`;
     modules["history.js"] = `/**
  * 本模块负责处理历史记录页面
  */
@@ -5576,7 +5638,8 @@ option {
         debug.error("history.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/history.js`;
     modules["player.js"] = `/**
  * 本模块负责重写旧版嵌入播放器
  */
@@ -5607,7 +5670,8 @@ option {
         toast.error("player.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/player.js`;
     modules["ranking.js"] = `/**
  * 本模块负责重写全站排行榜页面
  */
@@ -5652,7 +5716,8 @@ option {
         toast.error("ranking.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/ranking.js`;
     modules["read.js"] = `/**
  * 本模块负责重新旧版专栏页面
  */
@@ -5754,7 +5819,8 @@ option {
         toast.error("read.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/read.js`;
     modules["watchlater.js"] = `/**
  * 本模块负责重写稍后再看页面
  */
@@ -5784,7 +5850,8 @@ option {
         toast.error("watchlater.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/watchlater.js`;
     modules["av.js"] = `/**
  * 本模块负责重写av/BV页，由\`rewrite.js\`按需引导
  * 其他只在重写过的旧版页面生效的功能可添加在本模块中，但更推荐编写在单独的模块中然后将引导代码写在本模块中。
@@ -5896,11 +5963,16 @@ option {
                     API.importModule("videoSort.js");
                     // 添加媒体控制
                     API.importModule("mediaControl.js", {
-                        title: API.__INITIAL_STATE__.videoData.title,
-                        artist: API.__INITIAL_STATE__.videoData.owner.name,
-                        chapterName: (pid, playList) => playList[pid].part,
-                        coverUrl: () => [{ src: API.__INITIAL_STATE__.videoData.pic, sizes: "320x180" }],
-                        getPlaylistIndex: () => window.player.getPlaylistIndex()
+                        getPlaylistIndex: () => window.player.getPlaylistIndex(),
+                        mediaInfo: (pid, playList) => {
+                            if (this.isAV__INITIAL_STATE__(API.__INITIAL_STATE__))
+                                return {
+                                    title: API.__INITIAL_STATE__.videoData.title,
+                                    artist: API.__INITIAL_STATE__.videoData.owner.name,
+                                    chapterName: playList[pid].part,
+                                    coverUrl: [{ src: API.__INITIAL_STATE__.videoData.pic, sizes: "320x180" }]
+                                };
+                        }
                     });
                     // 跳过充电鸣谢
                     config.electric && API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.url = API.objUrl(xhr.url.split("?")[0], Object.assign(API.urlObj(xhr.url), { aid: 1, mid: 1 })); });
@@ -5914,7 +5986,8 @@ option {
         API.importModule("vector.js");
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/av.js`;
     modules["commandDm.js"] = `/**
  * 本模块负责实现互动弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
@@ -6104,12 +6177,12 @@ option {
         toast.warning("请先登录");
         API.biliQuickLogin();
     }
-    function post(url, data, contentType = "application/x-www-form-urlencoded") {
+    function post(url, data, contentType = "application/x-www-form-urlencoded;charset=UTF-8") {
         data.csrf = API.getCookies().bili_jct;
         return xhr({
             url: url,
             data: API.objUrl("", data),
-            headers: { "Content-type": contentType },
+            headers: { "Content-Type": contentType },
             method: "POST",
             credentials: true
         });
@@ -6516,7 +6589,8 @@ option {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/commandDm.js`;
     modules["descBV.js"] = `/**
  * 本模块负责转化av页简介中BV号为超链接
  */
@@ -6539,7 +6613,8 @@ option {
         debug.error("descBV.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/descBV.js`;
     modules["enLike.js"] = `/**
  * 本模块负责为旧版av/BV、稍后再看添加点赞功能
  */
@@ -6630,7 +6705,8 @@ option {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/enLike.js`;
     modules["hookWebpackJsonp.js"] = `/**
  * 本模块负责修复av页原生脚本中的错误代码
  */
@@ -6675,7 +6751,8 @@ option {
         toast.error("webpackJsonpFunction.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/hookWebpackJsonp.js`;
     modules["loadByDmid.js"] = `/**
  * 本模块负责处理dmid跳转
  */
@@ -6710,18 +6787,24 @@ option {
         debug.error("loadByDmid.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/loadByDmid.js`;
     modules["mediaControl.js"] = `/**
  * 本模块负责为旧版播放器添加媒体控制键
- * 请以\`title\`、\`artist\`、\`chapterName\`、\`coverUrl\`、\`getPlaylistIndex\`的名义传入数据
+ * 请以\`mediaInfo\`、\`getPlaylistIndex\`的名义传入数据
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
-(async function () {
+(async function mediaControl() {
     try {
+        // 等待播放器正式加载
         if (document.visibilityState !== "visible") {
-            await new Promise(r => window.addEventListener('load', r));
+            let listener = () => {
+                document.removeEventListener("visibilitychange", listener);
+                mediaControl();
+            };
+            document.addEventListener("visibilitychange", listener);
         }
-        if ("mediaSession" in navigator) {
+        else if ("mediaSession" in window.navigator) {
             function trial(fn) {
                 let limit = 7;
                 function task() { if (!fn() && --limit > 0)
@@ -6729,20 +6812,17 @@ option {
                 task();
             }
             trial(() => {
+                // 确保播放器和播放列表已经加载
                 if (window.player != undefined && window.player.getPlaylist && window.player.getPlaylist() != null) {
-                    let playList = window.player.getPlaylist();
                     // @ts-ignore：该变量由主模块传入
-                    let partIndex = getPlaylistIndex();
-                    // @ts-ignore：这是一项试验性特性
+                    let LastPid = getPlaylistIndex();
+                    // @ts-ignore：该变量由主模块传入
+                    let info = mediaInfo(LastPid, window.player.getPlaylist());
                     navigator.mediaSession.metadata = new MediaMetadata({
-                        // @ts-ignore：该变量由主模块传入
-                        title: title,
-                        // @ts-ignore：该变量由主模块传入
-                        artist: artist,
-                        // @ts-ignore：该变量由主模块传入
-                        album: chapterName(partIndex, playList),
-                        // @ts-ignore：该变量由主模块传入
-                        artwork: coverUrl(partIndex, playList)
+                        title: info.title,
+                        artist: info.artist,
+                        album: info.chapterName,
+                        artwork: info.coverUrl
                     });
                     navigator.mediaSession.setActionHandler('play', () => window.player.play());
                     navigator.mediaSession.setActionHandler('pause', () => window.player.pause());
@@ -6750,17 +6830,20 @@ option {
                     navigator.mediaSession.setActionHandler('seekforward', () => window.player.seek(window.player.getCurrentTime() + 10));
                     navigator.mediaSession.setActionHandler('previoustrack', () => window.player.prev());
                     navigator.mediaSession.setActionHandler('nexttrack', () => window.player.next());
+                    let playList = window.player.getPlaylist();
                     API.switchVideo(() => {
                         // 要等到新的分p载入完成，getPlaylistIndex()的值才会更新
                         trial(() => {
                             // @ts-ignore：该变量由主模块传入
                             let pid = getPlaylistIndex();
-                            if (pid != partIndex) {
-                                partIndex = pid;
+                            if (pid != LastPid && window.player.getPlaylist() != undefined) {
+                                LastPid = pid;
                                 // @ts-ignore：该变量由主模块传入
-                                navigator.mediaSession.metadata.album = chapterName(partIndex, playList);
-                                // @ts-ignore：该变量由主模块传入
-                                navigator.mediaSession.metadata.artwork = coverUrl(partIndex, playList);
+                                info = mediaInfo(LastPid, window.player.getPlaylist());
+                                navigator.mediaSession.metadata.title = info.title;
+                                navigator.mediaSession.metadata.artist = info.artist;
+                                navigator.mediaSession.metadata.album = info.chapterName;
+                                navigator.mediaSession.metadata.artwork = info.coverUrl;
                                 return true;
                             }
                         });
@@ -6774,7 +6857,8 @@ option {
         toast.error("mediaControl.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/mediaControl.js`;
     modules["mediaList.js"] = `/**
  * 本模块负责基于av页重构为媒体页
  */
@@ -6903,7 +6987,8 @@ option {
         toast.error("mediaList.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/mediaList.js`;
     modules["upList.js"] = `/**
  * 本模块负责生成和作视频的UP列表
  * 请以\`staff\`的名义传入UP主列表
@@ -6931,7 +7016,8 @@ option {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/upList.js`;
     modules["videoSort.js"] = `/**
  * 本模块负责视频标题下失效的分区信息
  * 分区信息表videoSort.json可能需要长期维护
@@ -6976,7 +7062,8 @@ option {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/av/videoSort.js`;
     modules["bangumi.js"] = `/**
  * 本模块负责重写旧版bangumi页面
  */
@@ -7072,12 +7159,19 @@ option {
                     // 修复数据
                     API.importModule("restoreData.js");
                     // 媒体控制
+                    let getPlaylistIndex = () => API.__INITIAL_STATE__.epList.findIndex(v => v.cid == (window.cid || API.cid));
+                    Object.defineProperty(window, "pageno", { get: () => getPlaylistIndex() + 1 });
                     API.importModule("mediaControl.js", {
-                        title: API.__INITIAL_STATE__.mediaInfo.title,
-                        artist: API.__INITIAL_STATE__.mediaInfo.jp_title,
-                        chapterName: (pid) => API.__INITIAL_STATE__.epList[pid].index_title,
-                        coverUrl: (pid) => [{ src: API.__INITIAL_STATE__.epList[pid].cover, sizes: "960x600" }],
-                        getPlaylistIndex: () => API.__INITIAL_STATE__.epList.reduce((s, d, i) => { s[d.cid] = i; return s; }, {})[API.cid]
+                        getPlaylistIndex: () => getPlaylistIndex(),
+                        mediaInfo: (pid) => {
+                            if (this.isBANGUMI__INITIAL_STATE__(API.__INITIAL_STATE__))
+                                return {
+                                    title: API.__INITIAL_STATE__.mediaInfo.title,
+                                    artist: API.__INITIAL_STATE__.mediaInfo.jp_title,
+                                    chapterName: API.__INITIAL_STATE__.epList[pid].index_title,
+                                    coverUrl: [{ src: API.__INITIAL_STATE__.epList[pid].cover, sizes: "960x600" }]
+                                };
+                        }
                     });
                 }
             }
@@ -7089,7 +7183,8 @@ option {
         API.importModule("vector.js");
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/bangumi/bangumi.js`;
     modules["episodeData.js"] = `/**
  * 本模块负责添加bangumi分集数据
  */
@@ -7129,7 +7224,8 @@ option {
         debug.error("episodeData.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/bangumi/episodeData.js`;
     modules["restoreData.js"] = `/**
  * 本模块负责修复Bangumi页面数据错误
  */
@@ -7235,7 +7331,8 @@ option {
         toast.error("restoreData.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/bangumi/restoreData.js`;
     modules["ad2info.js"] = `/**
  * 本模块负责将主页失效的广告区转化为资讯区
  */
@@ -7274,7 +7371,8 @@ option {
         toast.error("ad2info.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/index/ad2info.js`;
     modules["biliIndexRec.js"] = `/**
  * 本模块负责修复主页直播分区数据
  */
@@ -7312,7 +7410,8 @@ option {
         toast.error("biliIndexRec.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/index/biliIndexRec.js`;
     modules["index.js"] = `/**
  * 本模块负责重写B站旧版主页
  */
@@ -7369,7 +7468,8 @@ option {
         API.importModule("vector.js");
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/index/index.js`;
     modules["indexRecommend.js"] = `/**
  * 本模块负责取消主页个性化推荐
  */
@@ -7407,7 +7507,8 @@ option {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/index/indexRecommend.js`;
     modules["indexSort.js"] = `/**
  * 本模块负责修复主页失效分区
  */
@@ -7438,7 +7539,8 @@ option {
         toast.error("indexSort.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/index/indexSort.js`;
     modules["mediaRank.js"] = `/**
  * 本模块负责将主页电影、电视剧、纪录片排行转化为番剧样式
  */
@@ -7486,7 +7588,8 @@ option {
         toast.error("mediaRank.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/index/mediaRank.js`;
     modules["live.js"] = `/**
  * 本模块负责引导直播相关模块
  */
@@ -7503,7 +7606,8 @@ option {
         toast.error("live.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/live/live.js`;
     modules["liveStream.js"] = `/**
  * 本模块负责拦截直播间流媒体
  */
@@ -7536,7 +7640,8 @@ option {
         toast.error("liveStream.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/live/liveStream.js`;
     modules["sleepCheck.js"] = `/**
  * 本模块负责禁用直播间挂机检测
  */
@@ -7559,7 +7664,8 @@ option {
         toast.error("sleepCheck.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/live/sleepCheck.js`;
     modules["WebRTC.js"] = `/**
  * 本模块负责禁用WebRTC以禁止直播间p2p共享
  * 代码参看了WebRTC Control的源码，非常感谢！
@@ -7596,7 +7702,8 @@ try {
 catch (e) {
     API.trace(e, "WebRTC.js", true);
 }
-`;
+
+//# sourceURL=API://@bilibili/dist/match/live/WebRTC.js`;
     modules["album.js"] = `/**
  * 本模块负责将空间中相簿的链接从动态重定向回去
  */
@@ -7624,7 +7731,8 @@ catch (e) {
         debug.error("album.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/space/album.js`;
     modules["jointime.js"] = `/**
  * 本模块负责添加空间账号注册时间信息
  */
@@ -7644,7 +7752,8 @@ catch (e) {
         toast.error("jsontime.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/space/jointime.js`;
     modules["lostVideo.js"] = `/**
  * 本模块负责获取收藏、频道中的失效视频信息
  */
@@ -7739,7 +7848,8 @@ catch (e) {
         toast.error("lostVideo.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/space/lostVideo.js`;
     modules["midInfo.js"] = `/**
  * 本模块负责修复对于番剧出差(uid=11783021)空间的访问
  */
@@ -7781,7 +7891,8 @@ catch (e) {
         toast.error("11783021.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/space/midInfo.js`;
     modules["space.js"] = `/**
  * 本模块负责引导个人空间相关的模块
  */
@@ -7797,7 +7908,8 @@ catch (e) {
         toast.error("space.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/match/space/space.js`;
     modules["accesskey.js"] = `/**
  * 本模块负责获取账户授权的高级操作
  * 用于提供给代理服务器以获取区域/APP限制视频源，实际上不进行授权也行，以游客身份一般一样能获取最高1080P的视频源，而限制视频一般也不要求大会员
@@ -7918,7 +8030,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/accesskey.js`;
     modules["allDanmaku.js"] = `/**
  * 本模块负责提供全弹幕装填工具
  */
@@ -8110,7 +8223,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/allDanmaku.js`;
     modules["autoFix.js"] = `/**
  * 本模块负责一些自动化处理
  */
@@ -8156,7 +8270,8 @@ catch (e) {
         debug.error("autoFix.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/autoFix.js`;
     modules["banner.js"] = `/**
  * 本模块负责替换顶栏动图接口
  * 本模块动态banner相关代码移植自B站header.js
@@ -8182,11 +8297,7 @@ catch (e) {
                     this.mounted(v);
                 API.addCss(API.getModule("animated-banner.css"), "animated-banner");
                 if (v.is_split_layer !== 0) {
-                    let timer = setInterval(() => {
-                        const blur = document.querySelector(".blur-bg");
-                        blur && blur.remove();
-                    }, 100);
-                    setTimeout(() => clearTimeout(timer), 60 * 1000);
+                    API.addCss(".blur-bg {display:none}");
                 }
                 else
                     API.addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
@@ -8227,6 +8338,18 @@ catch (e) {
                 if (!this.layerConfig.layers)
                     return;
                 try {
+                    if ("extensions" in this.layerConfig && "time" in this.layerConfig.extensions) {
+                        let time, now = (Date.now() - (new Date).setHours(0, 0, 0, 0)) / 1e3;
+                        let timeCode = Object.keys(this.layerConfig.extensions.time).sort((a, b) => parseInt(a) - parseInt(b));
+                        for (let t of timeCode) {
+                            if (parseInt(t) < now)
+                                time = parseInt(t);
+                            else
+                                break;
+                        }
+                        let timelayers = this.layerConfig.extensions.time[time];
+                        this.layerConfig.layers = timelayers[Math.floor(Math.random() * timelayers.length)].layers;
+                    }
                     await Promise.all(this.layerConfig.layers.map(async (v, index) => {
                         return Promise.all(v.resources.map(async (i) => {
                             if (/\\.(webm|mp4)\$/.test(i.src)) {
@@ -8529,7 +8652,8 @@ catch (e) {
         toast.error("banner.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/banner.js`;
     modules["closedCaption.js"] = `/**
  * 本模块负责处理CC字幕
  * 代码移植自 Bilibili CC 字幕工具，源项目信息如下
@@ -8848,7 +8972,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/closedCaption.js`;
     modules["commentLinkDetail.js"] = `/**
  * 本模块负责将评论区超链接还原为av号
  */
@@ -8872,7 +8997,8 @@ catch (e) {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/commentLinkDetail.js`;
     modules["danmakuHashId.js"] = `/**
  * 本模块负责实现反查弹幕发送者功能
  */
@@ -8939,7 +9065,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/danmakuHashId.js`;
     modules["heartbeat.js"] = `/**
  * 本模块负责处理可能被广告屏蔽拓展误伤的视频心跳
  */
@@ -8953,7 +9080,8 @@ catch (e) {
         toast.error("replyList.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/heartbeat.js`;
     modules["infoNewNumber.js"] = `/**
  * 本模块负责修复资讯区新动态数目
  */
@@ -8975,7 +9103,8 @@ catch (e) {
         debug.error("replyList.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/infoNewNumber.js`;
     modules["localMedia.js"] = `/**
  * 本模块负责实现旧版播放器载入本地视频及弹幕功能
  */
@@ -9111,7 +9240,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/localMedia.js`;
     modules["noVideo.js"] = `/**
  * 本模块负责强制拦截视频载入
  */
@@ -9133,7 +9263,8 @@ catch (e) {
         debug.error("noVideo.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/noVideo.js`;
     modules["parameterTrim.js"] = `/**
  * 本模块负责处理URL，包括地址栏和a标签
  */
@@ -9249,7 +9380,8 @@ catch (e) {
         debug.error("parameterTrim.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/parameterTrim.js`;
     modules["player-v2.js"] = `/**
  * 本模块负责获取视频信息以提供给CC字幕等模块
  * 视频信息接口\`https://api.bilibili.com/x/player/v2\`
@@ -9286,7 +9418,8 @@ catch (e) {
         toast.error("player-v2.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/player-v2.js`;
     modules["playinfoRecord.js"] = `/**
  * 本模块负责处理并记录playinfo信息
  */
@@ -9315,7 +9448,8 @@ catch (e) {
         }
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/playinfoRecord.js`;
     modules["protoDm.js"] = `/**
  * 本模块负责使旧版播放器支持新版弹幕
  */
@@ -9359,7 +9493,8 @@ catch (e) {
         toast.error("protoDm.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/protoDm.js`;
     modules["rebuildPlayerurl.js"] = `/**
  * 本模块负责重建playurl为网页端类型
  */
@@ -9750,7 +9885,8 @@ catch (e) {
         toast.error("rebuildPlayerurl.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/rebuildPlayerurl.js`;
     modules["replyList.js"] = `/**
  * 本模块负责恢复翻页评论区
  */
@@ -9773,33 +9909,8 @@ catch (e) {
                 delete window.bbComment; // 取消拦截
                 new Function(GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js"))(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
-                API.addCss(\`
-                .bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
-                    float: right;line-height: 36px;
-                }.bb-comment .comment-list .list-item .user .text-con, .comment-bilibili-fold .comment-list .list-item .user .text-con {
-                    margin-left: initial;
-                }.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
-                    margin-left: initial;
-                }\`);
-                config.oldReplySort && API.addCss(\`.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
-                }
-                .bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {
-                    width: 86px;
-                    height: 86px;
-                    position: absolute;
-                    top: -19px;
-                    left: -19px;
-                    display: block;
-                }
-                .bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {
-                    border: 0;
-                    border-radius: 0;
-                    width: 86px;
-                    height: 86px;
-                };\`);
+                API.addCss(API.getCss("comment.css"));
+                config.oldReplySort && API.addCss(API.getCss("oldReplySort.css"));
             }
         }
         new ReplyList().init();
@@ -9812,7 +9923,8 @@ catch (e) {
         toast.error("replyList.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/replyList.js`;
     modules["section.js"] = `/**
  * 本模块负责替换全局顶栏和底栏
  */
@@ -9846,7 +9958,8 @@ catch (e) {
         debug.error("section.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/section.js`;
     modules["sectionTypo.js"] = `/**
  * 本模块负责修正旧版顶栏分区
  */
@@ -9906,7 +10019,8 @@ catch (e) {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/sectionTypo.js`;
     modules["segProgress.js"] = `/**
  * 本模块负责添加分段进度条
  */
@@ -9920,7 +10034,14 @@ catch (e) {
         async init(view_points) {
             if (!SegProgress.cssInited) {
                 SegProgress.cssInited = true;
-                API.addCss(\`.bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
+                API.addCss(\`
+                            .bilibili-progress-segmentation-logo{display:inline-block;position:absolute;top:-12px;height:30px;width:2%}
+                            .bilibili-progress-segmentation-logo>img{position: absolute;top:-14px;transform:translate(-50%,-50%) scale(0.7);left:50%}
+                            .bilibili-player.mode-widescreen .bilibili-progress-segmentation-logo>img,
+                            .bilibili-player.mode-webfullscreen .bilibili-progress-segmentation-logo>img,
+                            .bilibili-player.mode-fullscreen .bilibili-progress-segmentation-logo>img{top:-18px;left:50%;transform:translate(-50%,-50%) scale(1)}
+                            .bilibili-progress-segmentation-logo.active>img#segmentation-logo{top:-110px}
+                            .bilibili-progress-segmentation{height:29px;position:absolute;top:-12px}
                             .bilibili-progress-segmentation:hover > div > div{border-color:#fb7299;border-style:solid;border-width:0 2px;width:100%;height:3px;top:6px;left:-2px;position:relative;background:#fb7299}
                             .bilibili-progress-segmentation > div{box-sizing:border-box;border-style:solid;border-color:#fb7299;border-left-width:2px;position:absolute;width:100%;height:6px;top:12px}
                             .bilibili-progress-detail-chapter{top:-96px;position:absolute;width:100%;font-size:17px;font-weight:bold;color:#fff;text-shadow:0 0 5px #000}
@@ -9939,21 +10060,72 @@ catch (e) {
                             .bilibili-player-chapter-info > span{color:#99a2aa}
                             .bilibili-player-chapter-info.active{background-color:#f3f3f3}\`);
             }
+            let sliderBar = document.getElementsByClassName("bilibili-player-video-progress-bar")[0];
+            let handleWidth = document.getElementsByClassName("bpui-slider-handle")[0].clientWidth;
+            let trackerWrp = document.querySelector(".bpui-slider-tracker-wrp");
             let duration = view_points[view_points.length - 1].to;
-            let ratio = window.player.getDuration() / duration / duration;
+            let videoDuration = window.player.getDuration();
+            let ratio = videoDuration / duration / duration;
             let sliderTracker = document.querySelector(".bilibili-player-video-progress .bpui-slider-tracker"); // 播放器进度条的div  // 播放器进度条的div
             let chptName = document.createElement("div"); // 显示在视频预览缩略图上方的看点标题
             chptName.className = "bilibili-progress-detail-chapter";
             document.querySelector(".bilibili-player-video-progress-detail").appendChild(chptName);
             // 添加分段进度条
+            let type = view_points[0].type;
+            let segDivs = [];
+            function update() {
+                for (let i = 0; i < segDivs.length; i++) {
+                    segDivs[i].style.left = view_points[i].to / videoDuration * (trackerWrp.clientWidth - handleWidth) - handleWidth / 2 + "px";
+                }
+            }
             for (let v of view_points) {
                 let seg = document.createElement("div");
-                seg.className = "bilibili-progress-segmentation";
-                seg.style.width = (v.to - v.from) * ratio * 100 + "%";
-                seg.style.left = v.from * ratio * 100 + "%";
-                seg.innerHTML = '<div><div></div></div>';
-                seg.onmouseenter = (content => () => chptName.innerHTML = content)(v.content);
+                if (type == "1") {
+                    seg.className = "bilibili-progress-segmentation-logo";
+                    seg.innerHTML = \`<img id="segmentation-logo" width=32 height=36 src="\${v.logoUrl}"></img>\`;
+                }
+                else if (type == "2") {
+                    seg.className = "bilibili-progress-segmentation";
+                    seg.style.width = (v.to - v.from) * ratio * 100 + "%";
+                    seg.style.left = v.from * ratio * 100 + "%";
+                    seg.innerHTML = "<div><div></div></div>";
+                    seg.onmouseenter = () => chptName.innerHTML = v.content;
+                }
+                segDivs.push(seg);
                 sliderTracker.appendChild(seg);
+            }
+            if (type == "1") {
+                setTimeout(() => update(), 500);
+                chptName.style.top = "-140px";
+                trackerWrp.addEventListener("mousemove", e => {
+                    let closestPoint = 1e6;
+                    ;
+                    let box = sliderBar.getBoundingClientRect();
+                    let pos = (e.pageX - box.left + document.body.scrollLeft - document.body.clientLeft - handleWidth / 2) / (trackerWrp.clientWidth - handleWidth) * videoDuration;
+                    0 > pos && (pos = 0);
+                    pos > videoDuration && (pos = videoDuration);
+                    let timeArea = 80 / (trackerWrp.clientWidth - handleWidth) * videoDuration;
+                    for (let i = 0; i < view_points.length; i++) {
+                        if (view_points[i].to >= pos - timeArea && view_points[i].to <= pos + timeArea) {
+                            segDivs[i].className = "bilibili-progress-segmentation-logo active";
+                            if (view_points[i].to >= pos - timeArea / 10 && view_points[i].to <= pos + timeArea / 10 && Math.abs(view_points[i].to - pos) < closestPoint) {
+                                chptName.innerHTML = view_points[i].content;
+                                closestPoint = Math.abs(view_points[i].to - pos);
+                            }
+                        }
+                        else {
+                            segDivs[i].className = "bilibili-progress-segmentation-logo";
+                        }
+                    }
+                    if (closestPoint == 1e6)
+                        chptName.innerHTML = "";
+                });
+                window.player.addEventListener("video_player_resize", () => update());
+                trackerWrp.addEventListener("mouseleave", () => {
+                    for (let i = 0; i < view_points.length; i++) {
+                        segDivs[i].className = "bilibili-progress-segmentation-logo";
+                    }
+                });
             }
             // 添加“视频看点”面板
             let wrapList = document.querySelector("div.bilibili-player-wraplist"); // 获取播放器右侧面板的容器div
@@ -10049,7 +10221,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/segProgress.js`;
     modules["unloginPopover.js"] = `/**
  * 移除未登录弹窗
  */
@@ -10062,7 +10235,8 @@ catch (e) {
         debug.error("unloginPopover.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/unloginPopover.js`;
     modules["unread.js"] = `/**
  * 本模块负责处理远古顶栏的动态残留问题
  */
@@ -10076,7 +10250,8 @@ catch (e) {
         debug.error("unread.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/unread.js`;
     modules["user-select.js"] = `/**
  * 本模块负责截除页面复制限制及右键锁
  * 本模块代码参考自{@see Absolute Enable Right Click & Copy {@link https://chrome.google.com/webstore/detail/jdocbkpgdakpekjlhemmfcncgdjeiika}}
@@ -10099,7 +10274,8 @@ catch (e) {
         debug.error("user-select.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/user-select.js`;
     modules["videoLimit.js"] = `/**
  * 本模块负责解除区域、APP等播放限制
  */
@@ -10277,7 +10453,8 @@ catch (e) {
         toast.error("videoLimit.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/required/videoLimit.js`;
     modules["danmaku.js"] = `/**
  * 本模块提供各种弹幕相关工具，负责获取、转化等弹幕处理功能
  * \`本模块按需加载，使用相关函数前请务必先载入本模块\`
@@ -10608,7 +10785,8 @@ catch (e) {
         toast.error("danmaku.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/danmaku.js`;
     modules["debug.js"] = `(function () {
     class Debug {
         static log(...data) { console.log(\`%c[\${API.timeFormat()}]\`, "color: blue;", ...data); }
@@ -10621,7 +10799,8 @@ catch (e) {
     API.debug = (...data) => Debug.log(...data);
     Reflect.ownKeys(Debug).forEach(d => typeof Debug[d] == "function" && Reflect.set(Reflect.get(API, "debug"), d, Debug[d]));
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/debug.js`;
     modules["element.js"] = `/**
  * 本模块负责提供一些内置的可复用的HTMLEliment组件
  */
@@ -10928,7 +11107,8 @@ catch (e) {
         toast.error("element.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/element.js`;
     modules["extend.js"] = `/**
  * 本模块负责拓展一些小工具，这些工具不便写在主模块中
  */
@@ -11177,7 +11357,8 @@ catch (e) {
         toast.error("extend.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/extend.js`;
     modules["format.js"] = `(function () {
     class Format {
         /**
@@ -11307,7 +11488,8 @@ catch (e) {
     }
     Reflect.ownKeys(Format).forEach(d => typeof Format[d] == "function" && Reflect.set(API, d, Format[d]));
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/format.js`;
     modules["manage.js"] = `/**
  * 本模块负责维护脚本数据存储
  */
@@ -11341,7 +11523,8 @@ catch (e) {
     }
     new Config();
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/manage.js`;
     modules["nodeObserver.js"] = `/**
  * 本模块负责DOM节点变动监听
  * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
@@ -11377,7 +11560,8 @@ catch (e) {
         d.addedNodes[0] && nodelist.forEach(async (f) => f(d.addedNodes[0]));
     }))).observe(document, { childList: true, subtree: true });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/nodeObserver.js`;
     modules["rewrite.js"] = `/**
  * 重写引导，重写操作是非常底层的操作，必须在正常引导之前。
  */
@@ -11440,7 +11624,8 @@ catch (e) {
         toast.error("rewrite.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/rewrite.js`;
     modules["setting.js"] = `/**
  * 本模块负责集中注册相关设置项
  */
@@ -12184,7 +12369,8 @@ catch (e) {
         toast.error("setting.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/setting.js`;
     modules["switchVideo.js"] = `/**
  * 本模块负责执行切P调用监听
  */
@@ -12210,7 +12396,8 @@ catch (e) {
         }
     });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/switchVideo.js`;
     modules["toast.js"] = `(function () {
     API.registerSetting({
         type: "sort",
@@ -12329,7 +12516,8 @@ catch (e) {
     Reflect.set(Reflect.get(API, "toast"), "warning", (...msg) => { debug.warn(...msg); Toast.show("warning", ...msg); });
     Reflect.set(Reflect.get(API, "toast"), "error", (...msg) => { debug.error(...msg); Toast.show("error", ...msg); });
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/toast.js`;
     modules["ui.js"] = `/**
  * 本模块负责绘制设置UI
  */
@@ -12383,7 +12571,7 @@ catch (e) {
              */
             async classical() {
                 const div = API.addElement("div").attachShadow({ mode: "closed" });
-                const classical = API.addElement("div", { class: "classical", style: "style" }, div, \`<i></i><span>设置</span>\`);
+                const classical = API.addElement("div", { class: "classical" }, div, \`<i></i><span>设置</span>\`);
                 API.addCss(API.getModule("ui-stage.css"), "", div);
                 classical.onclick = () => this.display();
             }
@@ -12874,7 +13062,8 @@ catch (e) {
         toast.error("ui.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/ui.js`;
     modules["url.js"] = `/**
  * 本模块封装了urlAPI请求以便于访问
  */
@@ -12931,7 +13120,8 @@ catch (e) {
         }
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/url.js`;
     modules["urlInputCheck.js"] = `/**
  * 本模块负责检查url输入并返回对应aid/cid等值
  */
@@ -13036,7 +13226,8 @@ catch (e) {
         return { aid, cid, ssid, epid, p, pgc };
     };
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/urlInputCheck.js`;
     modules["vector.js"] = `/**
  * 本页面负责引导全局模块运行，一般全局生效运行的模块请将导入命令写在这里
  */
@@ -13069,7 +13260,8 @@ catch (e) {
         toast.error("vector.js", e);
     }
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/vector.js`;
     modules["xhr.js"] = `(function () {
     var _a;
     class Xhr {
@@ -13164,7 +13356,8 @@ catch (e) {
     // @ts-ignore
     API.xhr.post = (url, data, contentType, details) => Xhr.post(url, data, contentType, details);
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/units/xhr.js`;
     modules["av-biliplus.js"] = `/**
  * 本模块负责重构av/BV页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
@@ -13273,7 +13466,8 @@ catch (e) {
     //API.switchVideo(()=>API.debug.msg(300,"视频已失效","加载弹幕","缓存信息仅供参考",true,()=>API.importModule("")))
     API.__INITIAL_STATE__ = result;
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/av-biliplus.js`;
     modules["av-detail.js"] = `/**
  * 本模块负责重构av/BV页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
@@ -13369,7 +13563,8 @@ catch (e) {
     result.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")';
     API.__INITIAL_STATE__ = result;
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/av-detail.js`;
     modules["bangumi-global.js"] = `/**
  * 本模块负责重构bangumi页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
@@ -13489,7 +13684,8 @@ catch (e) {
     result.ssId = data.season_id;
     API.__INITIAL_STATE__ = result;
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/bangumi-global.js`;
     modules["bangumi-season.js"] = `/**
  * 本模块负责重构bangumi页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
@@ -13606,7 +13802,8 @@ catch (e) {
     result.upInfo = data.up_info;
     API.__INITIAL_STATE__ = result;
 })();
-`;
+
+//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/bangumi-season.js`;
     /**
      * 初始化脚本设置数据
      */
@@ -13655,11 +13852,11 @@ catch (e) {
             };
             API.API = new Proxy(this, {
                 get: (t, p) => {
-                    return Reflect.get(t, p) || Reflect.get(root, p) || (Reflect.has(modules["apply.json"], p) ? (t.importModule(modules["apply.json"][p], {}),
+                    return Reflect.get(root, p) || Reflect.get(t, p) || (Reflect.has(modules["apply.json"], p) ? (t.importModule(modules["apply.json"][p], {}),
                         Reflect.get(t, p)) : undefined);
                 },
                 set: (t, p, value) => {
-                    Reflect.set(t, p, value);
+                    Reflect.has(root, p) ? Reflect.set(root, p, value) : Reflect.set(t, p, value);
                     return true;
                 }
             });
