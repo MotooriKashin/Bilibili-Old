@@ -2,10 +2,6 @@
 const fs = require("fs");
 const meta = require("../json/meta.json");
 const resource = require("../json/resource.json");
-const path = "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old";
-
-resource.push(`${path}/dist/comment.js`);
-resource.push(`${path}@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js`)
 
 class Build {
     extend = [".d.ts", ".map", "dist/index.js", "dist/bilibiliPlayer.js", "dist/comment.js", "dist/video.js", "meta.json", "resource.json", ".md"]; // 排除文件或拓展名
@@ -22,7 +18,8 @@ class Build {
         const modules = files.reduce((s, d, i) => {
             let t = arr[i].split("/");
             s += arr[i].endsWith(".json") ? `
-    modules["${t[t.length - 1]}"] = ${String(d)};` : `
+    modules["${t[t.length - 1]}"] = ${String(d)};` : arr[i].endsWith(".js") ? `
+    modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\n//# sourceURL=API://@bilibili${arr[i].slice(1)}\`;` : `
     modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;`
             return s;
         }, "");
