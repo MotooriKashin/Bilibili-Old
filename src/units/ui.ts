@@ -74,7 +74,7 @@
              */
             async classical() {
                 const div = API.addElement("div").attachShadow({ mode: "closed" });
-                const classical = API.addElement("div", { class: "classical", style: "style" }, div, `<i></i><span>设置</span>`);
+                const classical = API.addElement("div", { class: "classical" }, div, `<i></i><span>设置</span>`);
                 API.addCss(API.getModule("ui-stage.css"), "", div);
                 classical.onclick = () => this.display();
             }
