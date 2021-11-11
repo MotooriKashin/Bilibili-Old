@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.2
+// @version      6.1.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.min.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@d5ce66cc46f84da4f8f2b35e54e9c2ea94e84bb7/dist/comment.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@28397cc4558b999c26a7c3fc275af2ec3fc91dd1/dist/comment.js
 // ==/UserScript==
 
 /**
@@ -538,10 +538,13 @@
     font-weight: 400;
     color: #fff;
     white-space: nowrap;
+    padding: 1px;
+    padding-inline: 4px;
 }
 .user-card .info .verify {
     color: #9499A0;
     line-height: 17px;
+    margin-top: 11px;
 }
 .user-card .info .verify .auth {
     display: inline-block;
@@ -550,6 +553,9 @@
     left: -3px;
     width: 16px;
     height: 16px;
+}
+.reply-item .reply-con .user .stick {
+    zoom: 0.9;
 }`;
     modules["danmakuHashId.css"] = `/* 反查弹幕发送者相关样式 */
 .bb-comment, .comment-bilibili-fold {
