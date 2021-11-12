@@ -1,3 +1,3 @@
-/dist linguist-generated=false
-/JavaScript linguist-generated=false
-main.user.js linguist-generated=false
+/dist/**/* linguist-generated=true
+/JavaScript/**/* linguist-generated=true
+main.user.js linguist-generated=true
