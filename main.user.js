@@ -10041,8 +10041,8 @@ catch (e) {
             if (!SegProgress.cssInited) {
                 SegProgress.cssInited = true;
                 API.addCss(\`
-                            .bilibili-progress-segmentation-logo{display:inline-block;position:absolute;top:-12px;height:30px;width:2%}
-                            .bilibili-progress-segmentation-logo>img{position: absolute;top:-14px;transform:translate(-50%,-50%) scale(0.7);left:50%}
+                            .bilibili-progress-segmentation-logo{display:inline-block;position:absolute;top:-12px;height:30px;width:1px}
+                            .bilibili-progress-segmentation-logo>img{position: absolute;top:-14px;transform:translate(-50%,-50%) scale(0.7);left:50%;transition:top 0.1s}
                             .bilibili-player.mode-widescreen .bilibili-progress-segmentation-logo>img,
                             .bilibili-player.mode-webfullscreen .bilibili-progress-segmentation-logo>img,
                             .bilibili-player.mode-fullscreen .bilibili-progress-segmentation-logo>img{top:-18px;left:50%;transform:translate(-50%,-50%) scale(1)}
@@ -10066,32 +10066,48 @@ catch (e) {
                             .bilibili-player-chapter-info > span{color:#99a2aa}
                             .bilibili-player-chapter-info.active{background-color:#f3f3f3}\`);
             }
+            let sliderTracker = document.querySelector(".bilibili-player-video-progress .bpui-slider-tracker"); // 播放进度区域，6px
             let sliderBar = document.getElementsByClassName("bilibili-player-video-progress-bar")[0];
-            let handleWidth = document.getElementsByClassName("bpui-slider-handle")[0].clientWidth;
-            let trackerWrp = document.querySelector(".bpui-slider-tracker-wrp");
-            let duration = view_points[view_points.length - 1].to;
-            let videoDuration = window.player.getDuration();
-            let ratio = videoDuration / duration / duration;
-            let sliderTracker = document.querySelector(".bilibili-player-video-progress .bpui-slider-tracker"); // 播放器进度条的div  // 播放器进度条的div
-            let chptName = document.createElement("div"); // 显示在视频预览缩略图上方的看点标题
+            let handleWidth = document.getElementsByClassName("bpui-slider-handle")[0].clientWidth; // 进度条圆形把手的宽度
+            let trackerWrp = document.getElementsByClassName("bpui-slider-tracker-wrp")[0]; // 进度条可控区域，28px
+            let videoDuration = window.player.getDuration(); // 视频总时长
+            // 创建显示在视频预览缩略图上方的看点标题
+            let chptName = document.createElement("div");
             chptName.className = "bilibili-progress-detail-chapter";
             document.querySelector(".bilibili-player-video-progress-detail").appendChild(chptName);
             // 添加分段进度条
-            let type = view_points[0].type;
-            let segDivs = [];
-            function update() {
-                for (let i = 0; i < segDivs.length; i++) {
-                    segDivs[i].style.left = view_points[i].to / videoDuration * (trackerWrp.clientWidth - handleWidth) - handleWidth / 2 + "px";
-                }
-            }
+            let type = view_points[0].type; // type = 1：赛事看点，type = 2：视频分段
+            let segDivs = []; // 存放所有分段Div
             for (let v of view_points) {
                 let seg = document.createElement("div");
                 if (type == "1") {
                     seg.className = "bilibili-progress-segmentation-logo";
-                    seg.innerHTML = \`<img id="segmentation-logo" width=32 height=36 src="\${v.logoUrl}"></img>\`;
+                    let title = document.createElement("div"); // 看点标题
+                    title.innerHTML = "-> " + v.content;
+                    title.className = "bilibili-progress-detail-chapter";
+                    title.style.cssText = "width: auto; transform: translateX(-50%); display: none";
+                    let img = document.createElement("img"); // 看点图标
+                    img.id = "segmentation-logo";
+                    img.width = 32;
+                    img.height = 36;
+                    img.src = v.logoUrl;
+                    img.addEventListener("mousemove", e => e.stopPropagation());
+                    img.addEventListener("mouseenter", () => {
+                        title.style.display = "";
+                        img.style.zIndex = "1000";
+                    });
+                    img.addEventListener("mouseleave", () => {
+                        title.style.display = "none";
+                        img.style.zIndex = "";
+                    });
+                    img.addEventListener("click", () => window.player.seek(v.from));
+                    seg.appendChild(title);
+                    seg.appendChild(img);
                 }
                 else if (type == "2") {
                     seg.className = "bilibili-progress-segmentation";
+                    let duration = view_points[view_points.length - 1].to;
+                    let ratio = videoDuration / duration / duration;
                     seg.style.width = (v.to - v.from) * ratio * 100 + "%";
                     seg.style.left = v.from * ratio * 100 + "%";
                     seg.innerHTML = "<div><div></div></div>";
@@ -10101,22 +10117,33 @@ catch (e) {
                 sliderTracker.appendChild(seg);
             }
             if (type == "1") {
-                setTimeout(() => update(), 500);
+                function update() {
+                    for (let i = 0; i < segDivs.length; i++) {
+                        // 进度条上的鼠标坐标与视频时间点的互算公式，从bilibiliPlayer.js复制过来
+                        // 使视频看点标记与点击进度条后实际跳转的时间点准确对应
+                        segDivs[i].style.left = view_points[i].to / videoDuration * (trackerWrp.clientWidth - handleWidth) + handleWidth / 2 + "px";
+                    }
+                }
+                setTimeout(() => update(), 500); // 等待进度条完全加载
                 chptName.style.top = "-140px";
+                // 鼠标与看点图标的交互、将图标上移避免阻挡视频缩略图
                 trackerWrp.addEventListener("mousemove", e => {
                     let closestPoint = 1e6;
-                    ;
+                    // 鼠标位置->视频时间点
                     let box = sliderBar.getBoundingClientRect();
-                    let pos = (e.pageX - box.left + document.body.scrollLeft - document.body.clientLeft - handleWidth / 2) / (trackerWrp.clientWidth - handleWidth) * videoDuration;
+                    let pos = (e.pageX - (box.left + window.scrollX - document.body.clientLeft) - handleWidth / 2) / (trackerWrp.clientWidth - handleWidth) * videoDuration;
                     0 > pos && (pos = 0);
                     pos > videoDuration && (pos = videoDuration);
-                    let timeArea = 80 / (trackerWrp.clientWidth - handleWidth) * videoDuration;
+                    let thumbnailArea = 80 / (trackerWrp.clientWidth - handleWidth) * videoDuration; // 图标上移的鼠标坐标范围(80px)
+                    let hitArea = trackerWrp.clientWidth > 400 ? thumbnailArea / 10 : thumbnailArea / 20; // 显示标题的鼠标坐标范围
                     for (let i = 0; i < view_points.length; i++) {
-                        if (view_points[i].to >= pos - timeArea && view_points[i].to <= pos + timeArea) {
+                        segDivs[i].style.zIndex = "";
+                        if (view_points[i].to >= pos - thumbnailArea && view_points[i].to <= pos + thumbnailArea) {
                             segDivs[i].className = "bilibili-progress-segmentation-logo active";
-                            if (view_points[i].to >= pos - timeArea / 10 && view_points[i].to <= pos + timeArea / 10 && Math.abs(view_points[i].to - pos) < closestPoint) {
+                            if (view_points[i].to >= pos - hitArea && view_points[i].to <= pos + hitArea && Math.abs(view_points[i].to - pos) < closestPoint) {
                                 chptName.innerHTML = view_points[i].content;
                                 closestPoint = Math.abs(view_points[i].to - pos);
+                                segDivs[i].style.zIndex = "1000";
                             }
                         }
                         else {
@@ -10180,12 +10207,13 @@ catch (e) {
                     chptInfo = [];
                     for (let i = 0, v; i < view_points.length; i++) {
                         v = view_points[i];
+                        let dura = v.to - v.from;
                         let div = document.createElement("div");
                         div.className = "bilibili-player-chapter-info";
                         div.innerHTML = \`<img width="112" height="63" src="\${v.imgUrl}"/>
                                         <p class="chapter-name">\${v.content}</p>
                                         <span style="margin-left: 138px">\${timeFormat(Math.floor(v.from / 60))}:\${timeFormat(v.from % 60)}</span>
-                                        <span style="margin-right: 5px; float: right;">\${(v.to - v.from) >= 60 ? \`\${Math.floor((v.to - v.from) / 60)}分\` : ""}\${(v.to - v.from) % 60}秒</span>\`;
+                                        <span style="margin-right: 5px; float: right;">\${dura >= 60 ? \`\${Math.floor(dura / 60)}分\` : ""}\${dura > 0 ? \`\${dura % 60}秒\` : ""}</span>\`;
                         div.onclick = (jumpto => () => {
                             window.player.seek(jumpto);
                             let active = document.querySelector(".bilibili-player-chapter-info.active");
