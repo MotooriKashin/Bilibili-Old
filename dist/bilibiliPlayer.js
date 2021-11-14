@@ -30881,7 +30881,7 @@ function Fa() {
                             },
                             success: d => {
                                 if (d && d.data !== undefined && d.data.total !== undefined
-                                    && Number.isInteger(parseInt(d.data.total)))
+                                    && !isNaN(d.data.total))
                                     c.a.Hh(this.yf.Jz, { count: d.data.total })
                                 else c.a.Hh(this.yf.Jz, pcOnline);
                             },
