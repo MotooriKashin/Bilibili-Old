@@ -176,11 +176,11 @@
             unhtml: function (e, n) {
                 return e ? e.replace(n || /[&<">'](?:(amp|lt|quot|gt|#39|nbsp|#\d+);)?/g, function (e, n) {
                     return n ? e : {
-                        "<": "",
-                        "&": "",
-                        '"': "",
-                        ">": "",
-                        "'": ""
+                        "<": "&lt;",
+                        "&": "&amp;",
+                        '"': "&quot;",
+                        ">": "&gt;",
+                        "'": "&#39;"
                     }
                     [e]
                 }) : ""
@@ -1395,7 +1395,7 @@
             g.prototype._createMsgContent = function (e) {
                 var n,
                     t;
-                return -1 === [3, 4].indexOf(e.state) || e.content.lottery ? (n = e.content.message.replace(/&amp;/g, "&"), t = this._resolveJump(n, e.content.jump_url || {}), n = this._resolveUrl(t), t = this._formateMemberMap(e.content.members || []), t = this._resolveAt(n, t), t = this._resolveEmoji(t, e.content.emote || {}), t = this._resolveSeek(t), t = this._resolveVote(t, e.content), t = this._resolveLottery(t, e.content), '<p class="text">' + (e.isTop || e.isUpTop ? '<span class="stick">置顶</span>' : "") + t + "</p>") : '<p><a href="javascript:;">***</a></p>'
+                return -1 === [3, 4].indexOf(e.state) || e.content.lottery ? (n = f.unhtml(e.content.message.replace(/&amp;/g, "&")), t = this._resolveJump(n, e.content.jump_url || {}), n = this._resolveUrl(t), t = this._formateMemberMap(e.content.members || []), t = this._resolveAt(n, t), t = this._resolveEmoji(t, e.content.emote || {}), t = this._resolveSeek(t), t = this._resolveVote(t, e.content), t = this._resolveLottery(t, e.content), '<p class="text">' + (e.isTop || e.isUpTop ? '<span class="stick">置顶</span>' : "") + t + "</p>") : '<p><a href="javascript:;">***</a></p>'
             },
             g.prototype._createVoteContent = function (e) {
                 return e.vote && e.vote.id && !e.lottery ? (e.vote.title = f.unhtml(e.vote.title), ['<div class="vote-container" data-id="' + e.vote.id + '" data-name="' + e.vote.title + '">', '<div class="image-area">', '<div class="share-img"></div>', "</div>", '<div class="text-area">', '<div class="text-content">' + e.vote.title + "</div>", '<div class="text-desc">' + e.vote.cnt + "人参与</div>", '<div class="vote-btn-box">', '<div class="vote-btn">投票</div>', "</div>", "</div>", "</div>"].join("")) : ""
@@ -1499,7 +1499,7 @@
             g.prototype._createSubMsgContent = function (e) {
                 var n,
                     t;
-                return -1 !== [3, 4].indexOf(e.state) ? '<a href="javascript:;">***</a>' : (n = e.content.message.replace(/&amp;/g, "&"), t = this._resolveJump(n, e.content.jump_url || {}), n = this._resolveUrl(t), t = this._formateMemberMap(e.content.members || []), t = this._resolveAt(n, t), e = this._resolveEmoji(t, e.content.emote || {}), '<span class="text-con">' + this._resolveSeek(e) + "</span>")
+                return -1 !== [3, 4].indexOf(e.state) ? '<a href="javascript:;">***</a>' : (n = f.unhtml(e.content.message.replace(/&amp;/g, "&")), t = this._resolveJump(n, e.content.jump_url || {}), n = this._resolveUrl(t), t = this._formateMemberMap(e.content.members || []), t = this._resolveAt(n, t), e = this._resolveEmoji(t, e.content.emote || {}), '<span class="text-con">' + this._resolveSeek(e) + "</span>")
             },
             g.prototype._formateTime = function (e) {
                 if (!+e)
