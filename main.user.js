@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.3
+// @version      6.1.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.min.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@28397cc4558b999c26a7c3fc275af2ec3fc91dd1/dist/comment.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e8d0df1b4522ec730478d2f84dcbd25cb90d48e8/dist/comment.js
 // ==/UserScript==
 
 /**
@@ -806,6 +806,25 @@
 .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {
     top: 30px;
     height: 240px;
+}`;
+    modules["oldReplySort.css"] = `.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {
+    width: 86px;
+    height: 86px;
+    position: absolute;
+    top: -19px;
+    left: -19px;
+    display: block;
+}
+.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {
+    border: 0;
+    border-radius: 0;
+    width: 86px;
+    height: 86px;
 }`;
     modules["progress.css"] = `.progress{
     --paper-progress-active-color: rgb(26,115,232);
@@ -5701,7 +5720,8 @@ option {
             prepareB() {
                 let data = xhr({
                     url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
-                    async: false
+                    async: false,
+                    credentials: true
                 });
                 this.write(data);
             }
@@ -5751,7 +5771,7 @@ option {
                 xhr({ url: location.href, credentials: true }).then(d => { this.build(d); });
             }
             prepareB() {
-                let data = xhr({ url: location.href, async: false });
+                let data = xhr({ url: location.href, async: false, credentials: true });
                 this.build(data);
             }
             build(d) {
@@ -5912,7 +5932,8 @@ option {
             prepareB() {
                 let d = xhr({
                     url: API.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: API.aid }),
-                    async: false
+                    async: false,
+                    credentials: true
                 });
                 try {
                     API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
@@ -7126,7 +7147,8 @@ option {
                 }
                 let d = xhr({
                     url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", this.obj),
-                    async: false
+                    async: false,
+                    credentials: true
                 });
                 try {
                     API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
