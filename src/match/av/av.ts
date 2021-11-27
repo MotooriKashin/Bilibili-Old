@@ -50,7 +50,8 @@
             prepareB() {
                 let d = xhr({
                     url: API.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: <any>API.aid }),
-                    async: false
+                    async: false,
+                    credentials: true
                 })
                 try {
                     API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);

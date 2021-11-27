@@ -25,7 +25,7 @@
                 (<Promise<string>>xhr({ url: location.href, credentials: true })).then(d => { this.build(d) });
             }
             prepareB() {
-                let data = xhr({ url: location.href, async: false });
+                let data = xhr({ url: location.href, async: false ,credentials: true});
                 this.build(data);
             }
             build(d: string) {

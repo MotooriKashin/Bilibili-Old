@@ -21,7 +21,8 @@
             prepareB() {
                 let data = xhr({
                     url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
-                    async: false
+                    async: false,
+                    credentials: true
                 })
                 this.write(data)
             }

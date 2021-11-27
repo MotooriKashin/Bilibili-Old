@@ -54,7 +54,8 @@
                 }
                 let d = xhr({
                     url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", this.obj),
-                    async: false
+                    async: false,
+                    credentials: true
                 })
                 try {
                     API.importModule("bangumi-season.js", { __INITIAL_STATE__: d, epid: this.epid }, true);
