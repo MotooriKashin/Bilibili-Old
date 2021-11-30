@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.4
+// @version      6.1.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3871,6 +3871,7 @@ option {
                     30016: '360P',
                     30015: '360P',
                     30011: '360P',
+                    464: '预览',
                     208: "1080P",
                     192: "720P",
                     160: "480P",
@@ -6626,13 +6627,15 @@ option {
         API.switchVideo(() => {
             let desc = document.getElementsByClassName("info");
             if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
-                if (desc[1].outerHTML.match(/BV[A-Za-z0-9]+/i)) {
-                    const text = desc[1].innerText.replace(/BV[A-Za-z0-9]+/gi, (str) => {
-                        const av = API.abv(str);
-                        return \`<a target="_blank" href="//www.bilibili.com/video/av\${av}">av\${av}</a>\`;
-                    });
-                    desc[1].innerHTML = text;
-                }
+                let text = desc[1].innerText;
+                text = text.replace(/BV[A-Za-z0-9]+/gi, (str) => {
+                    const av = API.abv(str);
+                    return \`<a target="_blank" href="//www.bilibili.com/video/av\${av}">av\${av}</a>\`;
+                }).replace(/AV[0-9]+/g, (str) => {
+                    str = str.toLowerCase();
+                    return \`<a target="_blank" href="//www.bilibili.com/video/\${str}">\${str}</a>\`;
+                });
+                desc[1].innerHTML = text;
             }
         });
     }
@@ -9342,7 +9345,7 @@ catch (e) {
                     d.href.includes("bilibili.tv") && (d.href = d.href.replace("bilibili.tv", "bilibili.com"));
                     d.href.includes("www.bilibili.com/tag") && (d.href = d.href.replace("tag", "topic"));
                     d.href.includes("account.bilibili.com/login?act=exit") && (d.href = "javascript:void(0);", d.onclick = () => API.loginExit());
-                    d.href = this.triming(d.href);
+                    (!/^.+:/.test(d.href) || /^(https?:)?\\/\\//.test(d.href)) && (d.href = this.triming(d.href));
                 });
             }
             /**
@@ -9962,6 +9965,7 @@ catch (e) {
             var _a;
             if (API.path.name)
                 return;
+            API.addCss(".nav-item.live {width: auto;}");
             document.querySelector("#internationalHeader").setAttribute("style", "visibility:hidden;");
             (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
             (document.querySelector(".mini-type") && !location.href.includes("blackboard/topic_list") && !location.href.includes("blackboard/x/act_list")) ? API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) : API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
