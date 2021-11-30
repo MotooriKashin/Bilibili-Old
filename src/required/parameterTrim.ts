@@ -17,7 +17,13 @@
                 "session_id": null,
                 "visit_id": null,
                 "sourceFrom": null,
-                "from_spmid": null
+                "from_spmid": null,
+                "share_source": null,
+                "share_medium": null,
+                "share_plat": null,
+                "share_session_id": null,
+                "share_tag": null,
+                "unique_k": null,
             };
             /**
              * 地址变动参考
