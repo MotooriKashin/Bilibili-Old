@@ -44,7 +44,7 @@
                     d.href.includes("bilibili.tv") && (d.href = d.href.replace("bilibili.tv", "bilibili.com"));
                     d.href.includes("www.bilibili.com/tag") && (d.href = d.href.replace("tag", "topic"));
                     d.href.includes("account.bilibili.com/login?act=exit") && (d.href = "javascript:void(0);", d.onclick = () => API.loginExit());
-                    d.href = this.triming(d.href);
+                    (!/^.+:/.test(d.href) || /^(https?:)?\/\//.test(d.href)) && (d.href = this.triming(d.href));
                 })
             }
             /**
