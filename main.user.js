@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.5
+// @version      6.1.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -1645,6 +1645,53 @@ option {
   font-weight: 400;
   padding: 8px 0;
 }`;
+    modules["anime.html"] = `<!DOCTYPE html>
+<html lang="zh-Hans" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hans">
+
+<head>
+    <meta charset="utf-8" />
+    <title>番剧 - 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>
+    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />
+    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="baidu-site-verification" content="gbRdPloQBZ" />
+    <link rel="dns-prefetch" href="//s1.hdslb.com" />
+    <link rel="dns-prefetch" href="//s2.hdslb.com" />
+    <link rel="dns-prefetch" href="//s3.hdslb.com" />
+    <link rel="dns-prefetch" href="//i0.hdslb.com" />
+    <link rel="dns-prefetch" href="//i1.hdslb.com" />
+    <link rel="dns-prefetch" href="//i2.hdslb.com" />
+    <link rel="dns-prefetch" href="//static.hdslb.com" />
+    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />
+    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"
+        title="哔哩哔哩" />
+    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script>
+    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script>
+    <script type="text/javascript" src="//s2.hdslb.com/bfs/cm/st/bundle.js"></script>
+    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"></script>
+    <script type="text/javascript"
+        src="//www.bilibili.com/gentleman/polyfill.js?features=Promise%2CObject.assign%2CString.prototype.includes%2CNumber.isNaN"></script>
+    <script type="text/javascript" src="//s1.hdslb.com/bfs/static/ogv/fe/iris.min.js"></script>
+    <link rel="stylesheet"
+        href="//s1.hdslb.com/bfs/static/bangumi-home/css/bangumi-home.1.73141fb5868615cb4fe6bc969ccd02cb7c1c7d4c.css" />
+    <link rel="stylesheet"
+        href="//s1.hdslb.com/bfs/static/bangumi-home/css/bangumi-home.0.73141fb5868615cb4fe6bc969ccd02cb7c1c7d4c.css" />
+</head>
+
+<body>
+    <div class="z-top-container has-menu"></div>
+    <div id="client-app"></div>
+    <div id="app" data-server-rendered="true" class="cinema-home-wrapper"></div>
+    <script src="//s1.hdslb.com/bfs/static/bangumi-home/1.bangumi-home.73141fb5868615cb4fe6bc969ccd02cb7c1c7d4c.js"
+        crossorigin="" defer="defer"></script>
+    <script src="//s1.hdslb.com/bfs/static/bangumi-home/bangumi-home.73141fb5868615cb4fe6bc969ccd02cb7c1c7d4c.js"
+        crossorigin="" defer="defer"></script>
+    <div class="footer bili-footer report-wrap-module"></div>
+    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"></script>
+</body>
+
+</html>`;
     modules["av.html"] = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -5615,6 +5662,30 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/hook/worker.js`;
+    modules["anime.js"] = `/**
+ * 本模块负责重写番剧分区主页
+ * 本模块未正式启用及完善，待cookies完全失效后再说
+ */
+(function () {
+    try {
+        class Anime {
+            constructor() {
+                API.path.name = "anime";
+                this.write();
+            }
+            write() {
+                API.rewriteHTML(API.getModule("anime.html"));
+            }
+        }
+        new Anime();
+    }
+    catch (e) {
+        debug.error("anime.js", e);
+        API.importModule("vector.js");
+    }
+})();
+
+//# sourceURL=API://@bilibili/dist/match/anime.js`;
     modules["bnj2021.js"] = `/**
  * 本模块负责替换拜年祭2021专题页面使用旧版嵌入播放器
  */
@@ -9316,7 +9387,13 @@ catch (e) {
                     "session_id": null,
                     "visit_id": null,
                     "sourceFrom": null,
-                    "from_spmid": null
+                    "from_spmid": null,
+                    "share_source": null,
+                    "share_medium": null,
+                    "share_plat": null,
+                    "share_session_id": null,
+                    "share_tag": null,
+                    "unique_k": null,
                 };
                 /**
                  * 地址变动参考
@@ -11628,6 +11705,8 @@ catch (e) {
 (function () {
     try {
         API.uid = Number(API.getCookies().DedeUserID);
+        API.getCookies().video_page_version != "v_old_home" && (document.cookie = "video_page_version=v_old_home; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
+        !API.getCookies()["i-wanna-go-back"] && (document.cookie = "i-wanna-go-back=1; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
         API.path = location.href.split("/");
         if (API.uid) {
             // 代理旧版退出登录页面
@@ -11659,6 +11738,7 @@ catch (e) {
             API.importModule("live.js");
         if (/\\/medialist\\/play\\//.test(location.href))
             API.importModule("mediaList.js");
+        // if (config.anime && /\\/anime\\/?(\\?.+)?\$/.test(location.href)) API.importModule("anime.js");
         if (API.path[2] == "message.bilibili.com")
             API.addCss(API.getModule("message.css"));
         if (window.self == window.top && API.path[2] == 'www.bilibili.com')
@@ -12423,6 +12503,14 @@ catch (e) {
             type: "switch",
             value: false,
             float: "B站曾经默认优先以时间顺序展示评论，并在最前列展示几条热评。本脚本尝试恢复过本功能，但如今已疏于维护。"
+        });
+        API.registerSetting({
+            key: "anime",
+            sort: "rewrite",
+            label: "番剧分区",
+            type: "switch",
+            value: true,
+            float: '重写以恢复旧版番剧分区（本功能目前通过cookies强制开启）。'
         });
     }
     catch (e) {
