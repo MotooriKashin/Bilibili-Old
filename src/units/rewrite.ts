@@ -4,8 +4,6 @@
 (function () {
     try {
         API.uid = Number(API.getCookies().DedeUserID);
-        API.getCookies().video_page_version != "v_old_home" && (document.cookie = "video_page_version=v_old_home; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
-        !API.getCookies()["i-wanna-go-back"] && (document.cookie = "i-wanna-go-back=1; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
         API.path = location.href.split("/");
         if (API.uid) {
             // 代理旧版退出登录页面
@@ -27,7 +25,7 @@
         if (config.ranking && /\/v\/popular\//.test(location.href)) API.importModule("ranking.js");
         if (/live\.bilibili\.com/.test(location.href)) API.importModule("live.js");
         if (/\/medialist\/play\//.test(location.href)) API.importModule("mediaList.js");
-        // if (config.anime && /\/anime\/?(\?.+)?$/.test(location.href)) API.importModule("anime.js");
+        if (config.anime && /\/anime\/?(\?.+)?$/.test(location.href)) API.importModule("anime.js");
         if (API.path[2] == "message.bilibili.com") API.addCss(API.getModule("message.css"));
         if (window.self == window.top && API.path[2] == 'www.bilibili.com') document.domain = "bilibili.com";
         if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync")) API.addCss(API.getModule("imroot.css"));

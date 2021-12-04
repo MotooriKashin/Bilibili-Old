@@ -733,8 +733,8 @@
             sort: "rewrite",
             label: "番剧分区",
             type: "switch",
-            value: true,
-            float: '重写以恢复旧版番剧分区（本功能目前通过cookies强制开启）。'
+            value: false,
+            float: '重写以恢复旧版番剧分区。'
         })
     } catch (e) { toast.error("setting.js", e) }
 })();
