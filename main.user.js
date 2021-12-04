@@ -11705,8 +11705,6 @@ catch (e) {
 (function () {
     try {
         API.uid = Number(API.getCookies().DedeUserID);
-        API.getCookies().video_page_version != "v_old_home" && (document.cookie = "video_page_version=v_old_home; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
-        !API.getCookies()["i-wanna-go-back"] && (document.cookie = "i-wanna-go-back=1; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
         API.path = location.href.split("/");
         if (API.uid) {
             // 代理旧版退出登录页面
@@ -11738,7 +11736,8 @@ catch (e) {
             API.importModule("live.js");
         if (/\\/medialist\\/play\\//.test(location.href))
             API.importModule("mediaList.js");
-        // if (config.anime && /\\/anime\\/?(\\?.+)?\$/.test(location.href)) API.importModule("anime.js");
+        if (config.anime && /\\/anime\\/?(\\?.+)?\$/.test(location.href))
+            API.importModule("anime.js");
         if (API.path[2] == "message.bilibili.com")
             API.addCss(API.getModule("message.css"));
         if (window.self == window.top && API.path[2] == 'www.bilibili.com')
@@ -12509,8 +12508,8 @@ catch (e) {
             sort: "rewrite",
             label: "番剧分区",
             type: "switch",
-            value: true,
-            float: '重写以恢复旧版番剧分区（本功能目前通过cookies强制开启）。'
+            value: false,
+            float: '重写以恢复旧版番剧分区。'
         });
     }
     catch (e) {
