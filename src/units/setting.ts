@@ -728,6 +728,14 @@
             value: false,
             float: "B站曾经默认优先以时间顺序展示评论，并在最前列展示几条热评。本脚本尝试恢复过本功能，但如今已疏于维护。"
         })
+        API.registerSetting({
+            key: "anime",
+            sort: "rewrite",
+            label: "番剧分区",
+            type: "switch",
+            value: true,
+            float: '重写以恢复旧版番剧分区（本功能目前通过cookies强制开启）。'
+        })
     } catch (e) { toast.error("setting.js", e) }
 })();
 /**
@@ -999,6 +1007,10 @@ declare namespace config {
      * 样式：旧版评论排序
      */
     let oldReplySort: boolean;
+    /**
+     * 重写：番剧分区
+     */
+    let anime: boolean;
 }
 /**
  * 工具栏按钮
