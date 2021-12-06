@@ -20,7 +20,14 @@
                 new Function(GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js"))(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
                 API.addCss(API.getCss("comment.css"));
-                config.oldReplySort && API.addCss(API.getCss("oldReplySort.css"))
+                config.oldReplySort && API.addCss(API.getCss("oldReplySort.css"));
+                this.style();
+            }
+            async style() {
+                const arr = document.querySelectorAll("style");
+                arr.forEach((d, i) => {
+                    d.outerHTML.includes("/*热门评论分割线*/") && arr[i].remove()
+                })
             }
         }
         new ReplyList().init();
