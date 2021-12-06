@@ -3898,6 +3898,7 @@ option {
                     30250: "ATMOS",
                     30232: "128Kbps",
                     30216: "64Kbps",
+                    30127: "8K",
                     30126: "Dolby",
                     30125: "HDR",
                     30121: "4K",
@@ -3922,6 +3923,7 @@ option {
                     208: "1080P",
                     192: "720P",
                     160: "480P",
+                    127: "8K",
                     126: "Dolby",
                     125: "HDR",
                     120: "4K",
@@ -3946,6 +3948,7 @@ option {
                  * 颜色表
                  */
                 this.color = {
+                    "8K": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "ATMOS": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "HDR": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
@@ -4168,8 +4171,8 @@ option {
                     switch (d) {
                         case "dash":
                             result = API.pgc ?
-                                await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 976 }, true) :
-                                await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 976 }, true);
+                                await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true) :
+                                await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true);
                             break;
                         case "flv":
                             result = API.pgc ?
@@ -9534,7 +9537,7 @@ catch (e) {
 (function () {
     API.xhrhook(["/playurl?"], function (args) {
         let obj = API.urlObj(args[1]);
-        !obj.sign && (obj.fourk = 1, obj.fnval && (obj.fnval = 976)); // 杜比视界支持
+        !obj.sign && (obj.fourk = 1, obj.fnval && (obj.fnval = 2000)); // 8K支持
         obj.avid && Number(obj.avid) && Reflect.set(API, "aid", obj.avid);
         !API.aid && obj.bvid && Reflect.set(API, "aid", API.abv(obj.bvid));
         obj.cid && Number(obj.cid) && Reflect.set(API, "cid", obj.cid);
@@ -13235,10 +13238,10 @@ catch (e) {
                 "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 125, type: '' },
                 "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
                 "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 976, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 976, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 976, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() }
+                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 2000, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 2000, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 2000, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 2000, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() }
             };
         }
         /**

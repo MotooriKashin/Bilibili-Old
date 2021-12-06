@@ -68,6 +68,7 @@
                 30250: "ATMOS",
                 30232: "128Kbps",
                 30216: "64Kbps",
+                30127: "8K",
                 30126: "Dolby",
                 30125: "HDR",
                 30121: "4K",
@@ -92,6 +93,7 @@
                 208: "1080P",
                 192: "720P",
                 160: "480P",
+                127: "8K",
                 126: "Dolby",
                 125: "HDR",
                 120: "4K",
@@ -116,6 +118,7 @@
              * 颜色表
              */
             color = {
+                "8K":"background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "ATMOS": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "HDR": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
@@ -327,8 +330,8 @@
                 try {
                     switch (d) {
                         case "dash": result = API.pgc ?
-                            await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 976 }, true) :
-                            await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 976 }, true);
+                            await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true) :
+                            await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true);
                             break;
                         case "flv": result = API.pgc ?
                             await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid }, true) :
