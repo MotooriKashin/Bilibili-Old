@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.6
+// @version      6.1.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -10019,6 +10019,13 @@ catch (e) {
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
                 API.addCss(API.getCss("comment.css"));
                 config.oldReplySort && API.addCss(API.getCss("oldReplySort.css"));
+                this.style();
+            }
+            async style() {
+                const arr = document.querySelectorAll("style");
+                arr.forEach((d, i) => {
+                    d.outerHTML.includes("/*热门评论分割线*/") && arr[i].remove();
+                });
             }
         }
         new ReplyList().init();
