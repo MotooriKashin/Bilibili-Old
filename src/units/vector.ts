@@ -8,7 +8,7 @@
         API.importModule("infoNewNumber.js"); // 旧版顶栏资讯数
         config.protoDm && API.importModule("protoDm.js"); // 新版弹幕
         config.liveDm && API.importModule("webSocket.js"); // 实时弹幕
-        config.logReport && API.importModule("sendBeacon.js"); // 日志拦截
+        config.logReport && API.importModule("logReport.js"); // 日志拦截
         API.importModule("playinfoRecord.js"); // playinfo记录
         API.importModule("unread.js"); // 远古动态
         API.importModule("autoFix.js"); // 自动化处理
