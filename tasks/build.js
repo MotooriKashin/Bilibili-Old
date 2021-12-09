@@ -22,11 +22,11 @@ class Build {
         const modules = files.reduce((s, d, i) => {
             let t = arr[i].split("/");
             s += arr[i].endsWith(".json") ? `
-    modules["${t[t.length - 1]}"] = ${String(d).replace(/\r/g, '').replace(/\n/g, '')};` : arr[i].endsWith(".js") ? `
-    modules["${t[t.length - 1]}"] = "${String(d).replace(/\\/g, '\\\\').replace(/\r/g, '').replace(/\n/g, '\\n').replace(/"/g, '\\"')}\\n//# sourceURL=API://@bilibili${arr[i].slice(1)}";` : `
-    modules["${t[t.length - 1]}"] = "${String(d).replace(/\\/g, '\\\\').replace(/\r/g, '').replace(/\n/g, '\\n').replace(/"/g, '\\"')}";`
+    modules["${t[t.length - 1]}"] = ${String(d)};` : arr[i].endsWith(".js") ? `
+    modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\n//# sourceURL=API://@bilibili${arr[i].slice(1)}\`;` : `
+    modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;`
             return s;
-        }, ``);
+        }, "");
         fs.readFile("./dist/index.js", "utf-8", (err, data) => {
             if (err) throw err;
             let content = Object.keys(meta).reduce((s, d) => {
