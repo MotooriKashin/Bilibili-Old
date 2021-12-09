@@ -21,10 +21,9 @@ class Build {
         }, []));
         const modules = files.reduce((s, d, i) => {
             let t = arr[i].split("/");
-            s += arr[i].endsWith(".json") ? `
-    modules["${t[t.length - 1]}"] = ${String(d)};` : arr[i].endsWith(".js") ? `
-    modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\n//# sourceURL=API://@bilibili${arr[i].slice(1)}\`;` : `
-    modules["${t[t.length - 1]}"] = \`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;`
+            s += arr[i].endsWith(".json") ? `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n${String(d)}\r\n/*!***********************!*/` :
+                arr[i].endsWith(".js") ? `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n\`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\r\n//# sourceURL=API://@bilibili${arr[i].slice(1)}\`;\r\n/*!***********************!*/` :
+                    `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n\`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;\r\n/*!***********************!*/`
             return s;
         }, "");
         fs.readFile("./dist/index.js", "utf-8", (err, data) => {
