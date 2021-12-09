@@ -28,7 +28,7 @@
 - 还原评论中的超链接
 
 ### 其他
-- 恢复对于[番剧出差](https://space.bilibili.com/11783021)和[DM組](https://space.bilibili.com/1988098633)等的访问
+- 恢复对于[番剧出差](https://space.bilibili.com/11783021)和[DM组](https://space.bilibili.com/1988098633)等的访问
 - 还原个人空间相簿链接
 - 显示账号注册时间
 - 修复失效视频信息
