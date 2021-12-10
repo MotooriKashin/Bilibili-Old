@@ -80,15 +80,7 @@
         }
     }
     // @ts-ignore
-    API.xhr = (details: xhrDetails) => Xhr.xhr(details);
-    // @ts-ignore
-    API.xhr.GM = (details: GMxhrDetails) => Xhr.GM(details);
-    // @ts-ignore
-    API.xhr.log = () => Xhr.log();
-    // @ts-ignore
-    API.xhr.get = (url: string, details?: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] }) => Xhr.get(url, details);
-    // @ts-ignore
-    API.xhr.post = (url: string, data: string, contentType?: string, details?: { [P in Exclude<keyof xhrDetails, "url" | "data">]?: xhrDetails[P] }) => Xhr.post(url, data, contentType, details);
+    API.xhr = new Proxy(Xhr.xhr, { get: (t, p) => Xhr[p] });
 })();
 declare const xhr: {
     /**

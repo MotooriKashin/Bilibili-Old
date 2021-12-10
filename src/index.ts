@@ -93,14 +93,14 @@
         constructor() {
             API.API = new Proxy(this, {
                 get: (t, p) => {
-                    return Reflect.get(root, p) || Reflect.get(t, p) || (
+                    return (Reflect.has(root, p) && typeof root[p] !== "function") ? Reflect.get(root, p) : (Reflect.get(t, p) || (
                         Reflect.has(modules["apply.json"], p) ? (
                             t.importModule(modules["apply.json"][p], {}),
                             Reflect.get(t, p)
-                        ) : undefined);
+                        ) : undefined));
                 },
                 set: (t, p, value) => {
-                    Reflect.has(root, p) ? Reflect.set(root, p, value) : Reflect.set(t, p, value);
+                    (Reflect.has(root, p) && typeof root[p] !== "function") ? Reflect.set(root, p, value) : Reflect.set(t, p, value);
                     return true;
                 }
             })

@@ -5,11 +5,25 @@
         static debug(...data: any[]) { console.debug(`[${API.timeFormat()}]`, ...data) }
         static warn(...data: any[]) { console.warn(`[${API.timeFormat()}]`, ...data) }
         static error(...data: any[]) { console.error(`[${API.timeFormat()}]`, ...data); }
+        static group(...info: any[]) {
+            console.groupCollapsed(`[${API.timeFormat()}]`, ...info);
+            const result = new Proxy(Debug, {
+                get: (t, p) => {
+                    return new Proxy(Debug[p], {
+                        apply: (target, thisArg, argArray) => {
+                            target.call(thisArg, ...argArray);
+                            return result
+                        }
+                    })
+                }
+            })
+            return result;
+        }
+        static end() { console.groupEnd() }
     }
     // @ts-ignore
-    API.debug = (...data: any[]) => Debug.log(...data);
-    Reflect.ownKeys(Debug).forEach(d => typeof Debug[d] == "function" && Reflect.set(Reflect.get(API, "debug"), d, Debug[d]));
-})();
+    API.debug = new Proxy(Debug.log, { get: (t, p) => Debug[p] })
+})()
 declare const debug: {
     (...data: any[]): void;
     log(...data: any[]): void;
@@ -17,4 +31,13 @@ declare const debug: {
     debug(...data: any[]): void;
     warn(...data: any[]): void;
     error(...data: any[]): void;
+    /**
+     * 组合控制台信息，可以链式调用其他属性  
+     * **调用链最后必须接end以结束分组！**
+     * @param groupName 组合名称
+     * @param rest 其他补充数据
+     * @example
+     * debug.group(123).log(1).warn(2).group(456).debug(654).end();
+     */
+    group(...info: any[]): any;
 }
