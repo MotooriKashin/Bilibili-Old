@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.8
+// @version      6.1.9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -40,7 +40,8 @@
     const root = unsafeWindow;
     const modules = {};
     
-    modules["alert.css"] = `.table {
+/**/modules["alert.css"] = /*** ./CSS/alert.css ***/
+`.table {
     line-height: 14px;
     display: flex;
     flex-direction: column;
@@ -85,7 +86,9 @@
     color: #fff;
     justify-content: space-around;
 }`;
-    modules["animated-banner.css"] = `.animated-banner {
+/*!***********************!*/
+/**/modules["animated-banner.css"] = /*** ./CSS/animated-banner.css ***/
+`.animated-banner {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -116,7 +119,9 @@
   animation: banner-fade-in 0.7s;
 }
 `;
-    modules["avatarAnimation.css"] = `/* 鼠标放在顶栏上的动效 */
+/*!***********************!*/
+/**/modules["avatarAnimation.css"] = /*** ./CSS/avatarAnimation.css ***/
+`/* 鼠标放在顶栏上的动效 */
 .bili-header-m .profile-info .i-face .face{
     border:0
 }
@@ -157,7 +162,9 @@
 .bili-header-m .profile-info.on .i-face.scale-in .legalize{
     transform:scale(0.5) translate(38px,48px)
 }`;
-    modules["bofqi.css"] = `#bofqi .player {
+/*!***********************!*/
+/**/modules["bofqi.css"] = /*** ./CSS/bofqi.css ***/
+`#bofqi .player {
     width: 980px;
     height: 620px;
     display: block;
@@ -168,7 +175,9 @@
         height: 720px
     }
 }`;
-    modules["button.css"] = `.button{
+/*!***********************!*/
+/**/modules["button.css"] = /*** ./CSS/button.css ***/
+`.button{
     line-height: 154%;
     align-items: center;
     border-radius: 4px;
@@ -203,7 +212,9 @@
     border: 1px solid rgba(118, 118, 118, 0.3);
     color: rgba(16, 16, 16, 0.3);
 }`;
-    modules["checkbox.css"] = `/* 复选框 */
+/*!***********************!*/
+/**/modules["checkbox.css"] = /*** ./CSS/checkbox.css ***/
+`/* 复选框 */
 .box {
   display: inline-flex;
 }
@@ -251,7 +262,9 @@
   margin-inline-start: 5px;
   margin-inline-end: 5px;
 }`;
-    modules["closedCaption.css"] = `/* CC字幕相关样式 */
+/*!***********************!*/
+/**/modules["closedCaption.css"] = /*** ./CSS/closedCaption.css ***/
+`/* CC字幕相关样式 */
 /*对齐，悬停按钮显示菜单*/
 #subtitle-setting-panel>div>* {margin-right: 5px;}
 #bilibili-player-subtitle-btn:hover>#subtitle-setting-panel {display: block!important;}
@@ -291,7 +304,9 @@
 #subtitle-setting-panel ::-webkit-scrollbar{width: 7px;}
 #subtitle-setting-panel ::-webkit-scrollbar-track{border-radius: 4px;background-color: #EEE;}
 #subtitle-setting-panel ::-webkit-scrollbar-thumb{border-radius: 4px;background-color: #999;}`;
-    modules["commandDm.css"] = `.commandDm-popup {
+/*!***********************!*/
+/**/modules["commandDm.css"] = /*** ./CSS/commandDm.css ***/
+`.commandDm-popup {
   border-radius: 1rem;
   background-color: #f5f5f5;
   position: absolute;
@@ -518,7 +533,9 @@
   }
 }
 `;
-    modules["comment.css"] = `.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
+/*!***********************!*/
+/**/modules["comment.css"] = /*** ./CSS/comment.css ***/
+`.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
     float: right;
     line-height: 36px;
 }
@@ -557,7 +574,9 @@
 .reply-item .reply-con .user .stick {
     zoom: 0.9;
 }`;
-    modules["danmakuHashId.css"] = `/* 反查弹幕发送者相关样式 */
+/*!***********************!*/
+/**/modules["danmakuHashId.css"] = /*** ./CSS/danmakuHashId.css ***/
+`/* 反查弹幕发送者相关样式 */
 .bb-comment, .comment-bilibili-fold {
     font-family: Microsoft YaHei,Arial,Helvetica,sans-serif;
     font-size: 0;
@@ -621,7 +640,9 @@
     margin: 0 8px;
     background: url(data:image/png;base64,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) no-repeat;
 }`;
-    modules["download.css"] = `.table {
+/*!***********************!*/
+/**/modules["download.css"] = /*** ./CSS/download.css ***/
+`.table {
     position: fixed;
     z-index: 11113;
     bottom: 0;
@@ -681,7 +702,9 @@
     text-align: center;
     padding: 1px 3px;
 }`;
-    modules["hr.css"] = `.hr {
+/*!***********************!*/
+/**/modules["hr.css"] = /*** ./CSS/hr.css ***/
+`.hr {
     display: flex;
     align-items: center;
     grid-gap: 0;
@@ -693,7 +716,9 @@
     width: 100%;
     margin-bottom: 12px;
 }`;
-    modules["icon.css"] = `.icon {
+/*!***********************!*/
+/**/modules["icon.css"] = /*** ./CSS/icon.css ***/
+`.icon {
   align-items: center;
   border-radius: 50%;
   display: flex;
@@ -706,7 +731,9 @@
   cursor: pointer;
 }
 `;
-    modules["imroot.css"] = `/* 修复顶栏样式 */
+/*!***********************!*/
+/**/modules["imroot.css"] = /*** ./CSS/imroot.css ***/
+`/* 修复顶栏样式 */
 .im-root,.im-root .im-list-box * {
     font-size:12px;
     line-height:42px;
@@ -744,7 +771,9 @@
     top: 16px;
     right: 20px;
 }`;
-    modules["input.css"] = `/* 输入框 */
+/*!***********************!*/
+/**/modules["input.css"] = /*** ./CSS/input.css ***/
+`/* 输入框 */
 .input {
   align-items: center;
   display: flex;
@@ -795,19 +824,25 @@
   background-color: rgba(0, 0, 0, 10%);
   box-shadow: 0 1 12px 12px rgb(0, 0, 0, 10%);
 }`;
-    modules["message.css"] = `/* 修复消息页样式 */
+/*!***********************!*/
+/**/modules["message.css"] = /*** ./CSS/message.css ***/
+`/* 修复消息页样式 */
 .container[data-v-6969394c] { 
     height: calc(100vh - 42px) !important;
 } 
 .container[data-v-1c9150a9] { 
     height: calc(100vh - 42px) !important;
 }`;
-    modules["mini-bofqi.css"] = `/* 修正稍后再看迷你播放器样式 */
+/*!***********************!*/
+/**/modules["mini-bofqi.css"] = /*** ./CSS/mini-bofqi.css ***/
+`/* 修正稍后再看迷你播放器样式 */
 .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {
     top: 30px;
     height: 240px;
 }`;
-    modules["oldReplySort.css"] = `.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
+/*!***********************!*/
+/**/modules["oldReplySort.css"] = /*** ./CSS/oldReplySort.css ***/
+`.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
     width: 48px;
     height: 48px;
     border-radius: 50%;
@@ -826,7 +861,9 @@
     width: 86px;
     height: 86px;
 }`;
-    modules["progress.css"] = `.progress{
+/*!***********************!*/
+/**/modules["progress.css"] = /*** ./CSS/progress.css ***/
+`.progress{
     --paper-progress-active-color: rgb(26,115,232);
     --paper-progress-container-color: rgb(223, 222, 223);
     width: auto;
@@ -859,7 +896,9 @@
     display: inline-flex;
     justify-content: space-between;
 }`;
-    modules["select.css"] = `/* 下拉列表 */
+/*!***********************!*/
+/**/modules["select.css"] = /*** ./CSS/select.css ***/
+`/* 下拉列表 */
 .select {
   align-items: center;
   display: inline-flex;
@@ -885,7 +924,9 @@ select {
 option {
   background-color: #fff;
 }`;
-    modules["switch.css"] = `/* 滑块开关 */
+/*!***********************!*/
+/**/modules["switch.css"] = /*** ./CSS/switch.css ***/
+`/* 滑块开关 */
 .switch {
   cursor: pointer;
   display: block;
@@ -952,7 +993,9 @@ option {
 .knob i:active {
   box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);
 }`;
-    modules["ui-action.css"] = `.contain {
+/*!***********************!*/
+/**/modules["ui-action.css"] = /*** ./CSS/ui-action.css ***/
+`.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1022,7 +1065,9 @@ option {
   color: white;
 }
 `;
-    modules["ui-contain.css"] = `.contain {
+/*!***********************!*/
+/**/modules["ui-contain.css"] = /*** ./CSS/ui-contain.css ***/
+`.contain {
   margin-bottom: 3px;
   padding-inline-start: 20px;
   padding-inline-end: 20px;
@@ -1051,7 +1096,9 @@ option {
   user-select: text;
 }
 `;
-    modules["ui-file.css"] = `.contain {
+/*!***********************!*/
+/**/modules["ui-file.css"] = /*** ./CSS/ui-file.css ***/
+`.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1121,7 +1168,9 @@ option {
   color: white;
 }
 `;
-    modules["ui-float.css"] = `.float {
+/*!***********************!*/
+/**/modules["ui-float.css"] = /*** ./CSS/ui-float.css ***/
+`.float {
   top: 0;
   right: 0;
   position: fixed;
@@ -1161,7 +1210,9 @@ option {
   line-height: 1.15;
 }
 `;
-    modules["ui-input.css"] = `.contain {
+/*!***********************!*/
+/**/modules["ui-input.css"] = /*** ./CSS/ui-input.css ***/
+`.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1281,7 +1332,9 @@ option {
   color: white;
 }
 `;
-    modules["ui-item.css"] = `/* 菜单项容器 */
+/*!***********************!*/
+/**/modules["ui-item.css"] = /*** ./CSS/ui-item.css ***/
+`/* 菜单项容器 */
 .contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
@@ -1304,7 +1357,9 @@ option {
   font-weight: 400;
 }
 `;
-    modules["ui-menu.css"] = `.menuitem {
+/*!***********************!*/
+/**/modules["ui-menu.css"] = /*** ./CSS/ui-menu.css ***/
+`.menuitem {
   align-items: center;
   display: flex;
   font-weight: 500;
@@ -1323,7 +1378,9 @@ option {
   padding-inline-end: 12px;
 }
 `;
-    modules["ui-picture.css"] = `.contain {
+/*!***********************!*/
+/**/modules["ui-picture.css"] = /*** ./CSS/ui-picture.css ***/
+`.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1341,7 +1398,9 @@ option {
   max-height: 62px;
 }
 `;
-    modules["ui-popup-box.css"] = `.box{
+/*!***********************!*/
+/**/modules["ui-popup-box.css"] = /*** ./CSS/ui-popup-box.css ***/
+`.box{
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
@@ -1367,7 +1426,9 @@ option {
   width: 0 !important;
   height: 0 !important;
 }`;
-    modules["ui-sort-body.css"] = `contain {
+/*!***********************!*/
+/**/modules["ui-sort-body.css"] = /*** ./CSS/ui-sort-body.css ***/
+`contain {
   display: block;
   padding-block-end: 0;
   padding-block-start: 0;
@@ -1376,7 +1437,9 @@ option {
   border-top: 1px solid rgba(0, 0, 0, 6%);
 }
 `;
-    modules["ui-sort-head.css"] = `.contain {
+/*!***********************!*/
+/**/modules["ui-sort-head.css"] = /*** ./CSS/ui-sort-head.css ***/
+`.contain {
   align-items: center;
   border-top: 1px solid rgba(0, 0, 0, 6%);
   display: flex;
@@ -1408,7 +1471,9 @@ option {
   box-shadow: 0 0 4px 4px rgba(241, 243, 244, 80%);
 }
 `;
-    modules["ui-stage.css"] = `.stage {
+/*!***********************!*/
+/**/modules["ui-stage.css"] = /*** ./CSS/ui-stage.css ***/
+`.stage {
   position: fixed;
   right: 40px;
   bottom: 60px;
@@ -1481,7 +1546,9 @@ option {
   }
 }
 `;
-    modules["ui.css"] = `.box {
+/*!***********************!*/
+/**/modules["ui.css"] = /*** ./CSS/ui.css ***/
+`.box {
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
@@ -1572,7 +1639,9 @@ option {
   fill: rgb(51, 103, 214) !important;
 }
 `;
-    modules["upList.css"] = `.up-info-m .up-card-box {
+/*!***********************!*/
+/**/modules["upList.css"] = /*** ./CSS/upList.css ***/
+`.up-info-m .up-card-box {
   white-space: nowrap;
   overflow: auto;
 }
@@ -1645,7 +1714,9 @@ option {
   font-weight: 400;
   padding: 8px 0;
 }`;
-    modules["anime.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["anime.html"] = /*** ./HTML/anime.html ***/
+`<!DOCTYPE html>
 <html lang="zh-Hans" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hans">
 
 <head>
@@ -1692,7 +1763,9 @@ option {
 </body>
 
 </html>`;
-    modules["av.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["av.html"] = /*** ./HTML/av.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -1734,7 +1807,9 @@ option {
 </body>
 
 </html>`;
-    modules["bangumi-special.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["bangumi-special.html"] = /*** ./HTML/bangumi-special.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -1771,7 +1846,9 @@ option {
 </body>
 
 </html>`;
-    modules["bangumi.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["bangumi.html"] = /*** ./HTML/bangumi.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -1808,7 +1885,9 @@ option {
 </body>
 
 </html>`;
-    modules["index.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["index.html"] = /*** ./HTML/index.html ***/
+`<!DOCTYPE html>
 <html lang="zh-Hans" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hans">
 
 <head>
@@ -1841,7 +1920,9 @@ option {
 </body>
 
 </html>`;
-    modules["player.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["player.html"] = /*** ./HTML/player.html ***/
+`<!DOCTYPE html>
 <html>
 
 <head>
@@ -2742,7 +2823,9 @@ option {
 </body>
 
 </html>`;
-    modules["playlist-detail.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["playlist-detail.html"] = /*** ./HTML/playlist-detail.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -2786,7 +2869,9 @@ option {
 </body>
 
 </html>`;
-    modules["playlist.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["playlist.html"] = /*** ./HTML/playlist.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -2825,7 +2910,9 @@ option {
 </body>
 
 </html>`;
-    modules["ranking.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["ranking.html"] = /*** ./HTML/ranking.html ***/
+`<!DOCTYPE html>
 <html lang="zh-Hans" xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh-Hans">
 
 <head>
@@ -2855,7 +2942,9 @@ option {
 </body>
 
 </html>`;
-    modules["read.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["read.html"] = /*** ./HTML/read.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -2902,7 +2991,9 @@ option {
 </body>
 
 </html>`;
-    modules["watchlater.html"] = `<!DOCTYPE html>
+/*!***********************!*/
+/**/modules["watchlater.html"] = /*** ./HTML/watchlater.html ***/
+`<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -2944,7 +3035,9 @@ option {
 </body>
 
 </html>`;
-    modules["apply.json"] = {
+/*!***********************!*/
+/**/modules["apply.json"] = /*** ./Json/apply.json ***/
+{
     "timeFormat": "format.js",
     "sizeFormat": "format.js",
     "unitFormat": "format.js",
@@ -3009,8 +3102,10 @@ option {
     "runWhile": "extend.js",
     "bofqiMessage": "extend.js",
     "alertMessage": "extend.js"
-};
-    modules["bug.json"] = [
+}
+/*!***********************!*/
+/**/modules["bug.json"] = /*** ./Json/bug.json ***/
+[
     "__PGC_USERSTATE__",
     "__BILI_CONFIG__",
     "__mobxGlobals",
@@ -3075,8 +3170,10 @@ option {
     "webpackJsonp",
     "webpackJsonpwebpackLogReporter",
     "webpackLogReporter"
-];
-    modules["mid.json"] = {
+]
+/*!***********************!*/
+/**/modules["mid.json"] = /*** ./Json/mid.json ***/
+{
     "code": 0,
     "data": {
         "birthday": "1980-01-01",
@@ -3133,8 +3230,10 @@ option {
     },
     "message": "0",
     "ttl": 1
-};
-    modules["protobuf.json"] = {
+}
+/*!***********************!*/
+/**/modules["protobuf.json"] = /*** ./Json/protobuf.json ***/
+{
     "nested": {
         "bilibili": {
             "nested": {
@@ -3408,8 +3507,10 @@ option {
             }
         }
     }
-};
-    modules["videoSort.json"] = {
+}
+/*!***********************!*/
+/**/modules["videoSort.json"] = /*** ./Json/videoSort.json ***/
+{
     "1": [
         1,
         "动画",
@@ -3750,8 +3851,10 @@ option {
         "摩托车",
         "//www.bilibili.com/v/car/motorcycle"
     ]
-};
-    modules["aria2.js"] = `/**
+}
+/*!***********************!*/
+/**/modules["aria2.js"] = /*** ./dist/download/aria2.js ***/
+`/**
  * 本模块负责与aria2通信并构造下载数据
  */
 (function () {
@@ -3829,7 +3932,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/download/aria2.js`;
-    modules["contentMenu.js"] = `/**
+/*!***********************!*/
+/**/modules["contentMenu.js"] = /*** ./dist/download/contentMenu.js ***/
+`/**
  * 添加下载右键菜单
  */
 (function () {
@@ -3875,7 +3980,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/download/contentMenu.js`;
-    modules["download.js"] = `/**
+/*!***********************!*/
+/**/modules["download.js"] = /*** ./dist/download/download.js ***/
+`/**
  * 本模块负责下载功能，主要是视频下载功能
  */
 (function () {
@@ -4310,7 +4417,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/download/download.js`;
-    modules["ef2.js"] = `/**
+/*!***********************!*/
+/**/modules["ef2.js"] = /*** ./dist/download/ef2.js ***/
+`/**
  * 本模块负责使用ef2自定义协议调用IDM进行下载
  * 使用本下载方式需要先安装IDM{@see Internet Download Manager (IDM) {@link http://www.internetdownloadmanager.com/}}
  * 然后安装ef2工具{@see ef2 {@link https://github.com/MotooriKashin/ef2/releases/latest}}
@@ -4445,7 +4554,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/download/ef2.js`;
-    modules["abv.js"] = `/**
+/*!***********************!*/
+/**/modules["abv.js"] = /*** ./dist/extensions/abv.js ***/
+`/**
  * 本模块负责负责提供av/BV互转函数
  * 感谢知乎mcfx的回答，在其python代码基础上翻译为JavaScript，源链接如下
  * @see mcfx {@link https://www.zhihu.com/question/381784377/answer/1099438784}
@@ -4500,7 +4611,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/extensions/abv.js`;
-    modules["Base64.js"] = `/**
+/*!***********************!*/
+/**/modules["Base64.js"] = /*** ./dist/extensions/Base64.js ***/
+`/**
  * 本模块负责提供Base64<=>字符串的互转函数
  * 本模块核心代码直接来源如下
  * @see MDN Web Docs {@link https://developer.mozilla.org/en-US/docs/Glossary/Base64}
@@ -4530,7 +4643,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/extensions/Base64.js`;
-    modules["crc32.js"] = `/**
+/*!***********************!*/
+/**/modules["crc32.js"] = /*** ./dist/extensions/crc32.js ***/
+`/**
  * 本模块提供CRC32散列算法及逆向工具，是将\`BiliBili_crc2mid\`修改为符合本项目模块规范的版本
  * 感谢\`MoePus\`提出的CRC32逆向算法，论坛原帖见
  * @see MoePus {@link https://moepus.oicp.net/2016/11/27/crccrack}
@@ -4641,7 +4756,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/extensions/crc32.js`;
-    modules["cubicBezier.js"] = `/**
+/*!***********************!*/
+/**/modules["cubicBezier.js"] = /*** ./dist/extensions/cubicBezier.js ***/
+`/**
  * 本模块提供贝塞尔曲线工具
  * 源码来自B站原生header.js工程，具体来源不明
  * 稍作修改以符合本项目需求
@@ -4739,7 +4856,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/extensions/cubicBezier.js`;
-    modules["md5.js"] = `/**
+/*!***********************!*/
+/**/modules["md5.js"] = /*** ./dist/extensions/md5.js ***/
+`/**
  * 本模块提供md5加密工具，是将\`js-md5\`修改为符合本项目模块规范的版本
  * 感谢开源项目\`js-md5\`，源项目信息如下
  * @see js-md5 {@link https://github.com/emn178/js-md5}
@@ -5180,7 +5299,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/extensions/md5.js`;
-    modules["sign.js"] = `/**
+/*!***********************!*/
+/**/modules["sign.js"] = /*** ./dist/extensions/sign.js ***/
+`/**
  * 本模块提供B站URL签名工具
  */
 (function () {
@@ -5277,7 +5398,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/extensions/sign.js`;
-    modules["Node.js"] = `/**
+/*!***********************!*/
+/**/modules["Node.js"] = /*** ./dist/hook/Node.js ***/
+`/**
  * 本模块负责实现原生脚本拦截模块
  * 这里指的原生脚本是那些非直接写入原生HTML，而是后续由JavaScript添加进DOM的脚本
  * 本模块导入优先级极高
@@ -5350,7 +5473,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/hook/Node.js`;
-    modules["open.js"] = `/**
+/*!***********************!*/
+/**/modules["open.js"] = /*** ./dist/hook/open.js ***/
+`/**
  * 本模块负责提供\`XMLHttpRequest\`的hook工具
  * 拦截\`open\`参数组并传入\`XMLHttpRequest\`对象本身给回调函数
  */
@@ -5374,7 +5499,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/hook/open.js`;
-    modules["webSocket.js"] = `/**
+/*!***********************!*/
+/**/modules["webSocket.js"] = /*** ./dist/hook/webSocket.js ***/
+`/**
  * 本模块hook了WebSocket以修复旧版播放器的实时弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
@@ -5577,7 +5704,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/hook/webSocket.js`;
-    modules["worker.js"] = `/**
+/*!***********************!*/
+/**/modules["worker.js"] = /*** ./dist/hook/worker.js ***/
+`/**
  * 本模块hook了Worker以使旧版播放器支持新版proto弹幕
  */
 (function () {
@@ -5643,7 +5772,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/hook/worker.js`;
-    modules["anime.js"] = `/**
+/*!***********************!*/
+/**/modules["anime.js"] = /*** ./dist/match/anime.js ***/
+`/**
  * 本模块负责重写番剧分区主页
  * 本模块未正式启用及完善，待cookies完全失效后再说
  */
@@ -5667,7 +5798,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/anime.js`;
-    modules["bnj2021.js"] = `/**
+/*!***********************!*/
+/**/modules["bnj2021.js"] = /*** ./dist/match/bnj2021.js ***/
+`/**
  * 本模块负责替换拜年祭2021专题页面使用旧版嵌入播放器
  */
 (function () {
@@ -5701,7 +5834,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/bnj2021.js`;
-    modules["history.js"] = `/**
+/*!***********************!*/
+/**/modules["history.js"] = /*** ./dist/match/history.js ***/
+`/**
  * 本模块负责处理历史记录页面
  */
 (function () {
@@ -5718,7 +5853,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/history.js`;
-    modules["player.js"] = `/**
+/*!***********************!*/
+/**/modules["player.js"] = /*** ./dist/match/player.js ***/
+`/**
  * 本模块负责重写旧版嵌入播放器
  */
 (function () {
@@ -5750,7 +5887,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/player.js`;
-    modules["ranking.js"] = `/**
+/*!***********************!*/
+/**/modules["ranking.js"] = /*** ./dist/match/ranking.js ***/
+`/**
  * 本模块负责重写全站排行榜页面
  */
 (function () {
@@ -5797,7 +5936,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/ranking.js`;
-    modules["read.js"] = `/**
+/*!***********************!*/
+/**/modules["read.js"] = /*** ./dist/match/read.js ***/
+`/**
  * 本模块负责重新旧版专栏页面
  */
 (function () {
@@ -5900,7 +6041,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/read.js`;
-    modules["watchlater.js"] = `/**
+/*!***********************!*/
+/**/modules["watchlater.js"] = /*** ./dist/match/watchlater.js ***/
+`/**
  * 本模块负责重写稍后再看页面
  */
 (function () {
@@ -5931,7 +6074,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/watchlater.js`;
-    modules["av.js"] = `/**
+/*!***********************!*/
+/**/modules["av.js"] = /*** ./dist/match/av/av.js ***/
+`/**
  * 本模块负责重写av/BV页，由\`rewrite.js\`按需引导
  * 其他只在重写过的旧版页面生效的功能可添加在本模块中，但更推荐编写在单独的模块中然后将引导代码写在本模块中。
  */
@@ -6068,7 +6213,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/av.js`;
-    modules["commandDm.js"] = `/**
+/*!***********************!*/
+/**/modules["commandDm.js"] = /*** ./dist/match/av/commandDm.js ***/
+`/**
  * 本模块负责实现互动弹幕
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
  */
@@ -6671,7 +6818,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/commandDm.js`;
-    modules["descBV.js"] = `/**
+/*!***********************!*/
+/**/modules["descBV.js"] = /*** ./dist/match/av/descBV.js ***/
+`/**
  * 本模块负责转化av页简介中BV号为超链接
  */
 (function () {
@@ -6680,7 +6829,7 @@ option {
             let desc = document.getElementsByClassName("info");
             if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
                 let text = desc[1].innerText;
-                text = text.replace(/BV[A-Za-z0-9]+/gi, (str) => {
+                text = text.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (str) => {
                     const av = API.abv(str);
                     return \`<a target="_blank" href="//www.bilibili.com/video/av\${av}">av\${av}</a>\`;
                 }).replace(/AV[0-9]+/g, (str) => {
@@ -6697,7 +6846,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/descBV.js`;
-    modules["enLike.js"] = `/**
+/*!***********************!*/
+/**/modules["enLike.js"] = /*** ./dist/match/av/enLike.js ***/
+`/**
  * 本模块负责为旧版av/BV、稍后再看添加点赞功能
  */
 (function () {
@@ -6789,7 +6940,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/enLike.js`;
-    modules["hookWebpackJsonp.js"] = `/**
+/*!***********************!*/
+/**/modules["hookWebpackJsonp.js"] = /*** ./dist/match/av/hookWebpackJsonp.js ***/
+`/**
  * 本模块负责修复av页原生脚本中的错误代码
  */
 (function () {
@@ -6835,7 +6988,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/hookWebpackJsonp.js`;
-    modules["loadByDmid.js"] = `/**
+/*!***********************!*/
+/**/modules["loadByDmid.js"] = /*** ./dist/match/av/loadByDmid.js ***/
+`/**
  * 本模块负责处理dmid跳转
  */
 (function () {
@@ -6871,7 +7026,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/loadByDmid.js`;
-    modules["mediaControl.js"] = `/**
+/*!***********************!*/
+/**/modules["mediaControl.js"] = /*** ./dist/match/av/mediaControl.js ***/
+`/**
  * 本模块负责为旧版播放器添加媒体控制键
  * 请以\`mediaInfo\`、\`getPlaylistIndex\`的名义传入数据
  * 告知：本模块由js强行any为ts版本，可能需要进一步优化
@@ -6941,7 +7098,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/mediaControl.js`;
-    modules["mediaList.js"] = `/**
+/*!***********************!*/
+/**/modules["mediaList.js"] = /*** ./dist/match/av/mediaList.js ***/
+`/**
  * 本模块负责基于av页重构为媒体页
  */
 (function () {
@@ -7071,7 +7230,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/mediaList.js`;
-    modules["upList.js"] = `/**
+/*!***********************!*/
+/**/modules["upList.js"] = /*** ./dist/match/av/upList.js ***/
+`/**
  * 本模块负责生成和作视频的UP列表
  * 请以\`staff\`的名义传入UP主列表
  */
@@ -7100,7 +7261,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/upList.js`;
-    modules["videoSort.js"] = `/**
+/*!***********************!*/
+/**/modules["videoSort.js"] = /*** ./dist/match/av/videoSort.js ***/
+`/**
  * 本模块负责视频标题下失效的分区信息
  * 分区信息表videoSort.json可能需要长期维护
  */
@@ -7146,7 +7309,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/av/videoSort.js`;
-    modules["bangumi.js"] = `/**
+/*!***********************!*/
+/**/modules["bangumi.js"] = /*** ./dist/match/bangumi/bangumi.js ***/
+`/**
  * 本模块负责重写旧版bangumi页面
  */
 (function () {
@@ -7268,7 +7433,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/bangumi/bangumi.js`;
-    modules["episodeData.js"] = `/**
+/*!***********************!*/
+/**/modules["episodeData.js"] = /*** ./dist/match/bangumi/episodeData.js ***/
+`/**
  * 本模块负责添加bangumi分集数据
  */
 (function () {
@@ -7309,7 +7476,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/bangumi/episodeData.js`;
-    modules["restoreData.js"] = `/**
+/*!***********************!*/
+/**/modules["restoreData.js"] = /*** ./dist/match/bangumi/restoreData.js ***/
+`/**
  * 本模块负责修复Bangumi页面数据错误
  */
 (function () {
@@ -7416,7 +7585,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/bangumi/restoreData.js`;
-    modules["ad2info.js"] = `/**
+/*!***********************!*/
+/**/modules["ad2info.js"] = /*** ./dist/match/index/ad2info.js ***/
+`/**
  * 本模块负责将主页失效的广告区转化为资讯区
  */
 (function () {
@@ -7456,7 +7627,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/index/ad2info.js`;
-    modules["biliIndexRec.js"] = `/**
+/*!***********************!*/
+/**/modules["biliIndexRec.js"] = /*** ./dist/match/index/biliIndexRec.js ***/
+`/**
  * 本模块负责修复主页直播分区数据
  */
 (function () {
@@ -7495,7 +7668,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/index/biliIndexRec.js`;
-    modules["index.js"] = `/**
+/*!***********************!*/
+/**/modules["index.js"] = /*** ./dist/match/index/index.js ***/
+`/**
  * 本模块负责重写B站旧版主页
  */
 (function () {
@@ -7553,7 +7728,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/index/index.js`;
-    modules["indexRecommend.js"] = `/**
+/*!***********************!*/
+/**/modules["indexRecommend.js"] = /*** ./dist/match/index/indexRecommend.js ***/
+`/**
  * 本模块负责取消主页个性化推荐
  */
 (function () {
@@ -7592,7 +7769,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/index/indexRecommend.js`;
-    modules["indexSort.js"] = `/**
+/*!***********************!*/
+/**/modules["indexSort.js"] = /*** ./dist/match/index/indexSort.js ***/
+`/**
  * 本模块负责修复主页失效分区
  */
 (function () {
@@ -7624,7 +7803,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/index/indexSort.js`;
-    modules["mediaRank.js"] = `/**
+/*!***********************!*/
+/**/modules["mediaRank.js"] = /*** ./dist/match/index/mediaRank.js ***/
+`/**
  * 本模块负责将主页电影、电视剧、纪录片排行转化为番剧样式
  */
 (function () {
@@ -7673,7 +7854,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/index/mediaRank.js`;
-    modules["live.js"] = `/**
+/*!***********************!*/
+/**/modules["live.js"] = /*** ./dist/match/live/live.js ***/
+`/**
  * 本模块负责引导直播相关模块
  */
 (function () {
@@ -7691,7 +7874,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/live/live.js`;
-    modules["liveStream.js"] = `/**
+/*!***********************!*/
+/**/modules["liveStream.js"] = /*** ./dist/match/live/liveStream.js ***/
+`/**
  * 本模块负责拦截直播间流媒体
  */
 (function () {
@@ -7725,7 +7910,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/live/liveStream.js`;
-    modules["sleepCheck.js"] = `/**
+/*!***********************!*/
+/**/modules["sleepCheck.js"] = /*** ./dist/match/live/sleepCheck.js ***/
+`/**
  * 本模块负责禁用直播间挂机检测
  */
 (function () {
@@ -7749,7 +7936,9 @@ option {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/live/sleepCheck.js`;
-    modules["WebRTC.js"] = `/**
+/*!***********************!*/
+/**/modules["WebRTC.js"] = /*** ./dist/match/live/WebRTC.js ***/
+`/**
  * 本模块负责禁用WebRTC以禁止直播间p2p共享
  * 代码参看了WebRTC Control的源码，非常感谢！
  * @see WebRTC-Control {@link https://mybrowseraddon.com/webrtc-control.html}
@@ -7787,7 +7976,9 @@ catch (e) {
 }
 
 //# sourceURL=API://@bilibili/dist/match/live/WebRTC.js`;
-    modules["album.js"] = `/**
+/*!***********************!*/
+/**/modules["album.js"] = /*** ./dist/match/space/album.js ***/
+`/**
  * 本模块负责将空间中相簿的链接从动态重定向回去
  */
 (function () {
@@ -7816,7 +8007,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/space/album.js`;
-    modules["jointime.js"] = `/**
+/*!***********************!*/
+/**/modules["jointime.js"] = /*** ./dist/match/space/jointime.js ***/
+`/**
  * 本模块负责添加空间账号注册时间信息
  */
 (async function () {
@@ -7837,7 +8030,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/space/jointime.js`;
-    modules["lostVideo.js"] = `/**
+/*!***********************!*/
+/**/modules["lostVideo.js"] = /*** ./dist/match/space/lostVideo.js ***/
+`/**
  * 本模块负责获取收藏、频道中的失效视频信息
  */
 (function () {
@@ -7933,7 +8128,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/space/lostVideo.js`;
-    modules["midInfo.js"] = `/**
+/*!***********************!*/
+/**/modules["midInfo.js"] = /*** ./dist/match/space/midInfo.js ***/
+`/**
  * 本模块负责修复对于番剧出差(uid=11783021)空间的访问
  */
 (function () {
@@ -7976,7 +8173,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/space/midInfo.js`;
-    modules["space.js"] = `/**
+/*!***********************!*/
+/**/modules["space.js"] = /*** ./dist/match/space/space.js ***/
+`/**
  * 本模块负责引导个人空间相关的模块
  */
 (function () {
@@ -7993,7 +8192,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/match/space/space.js`;
-    modules["accesskey.js"] = `/**
+/*!***********************!*/
+/**/modules["accesskey.js"] = /*** ./dist/required/accesskey.js ***/
+`/**
  * 本模块负责获取账户授权的高级操作
  * 用于提供给代理服务器以获取区域/APP限制视频源，实际上不进行授权也行，以游客身份一般一样能获取最高1080P的视频源，而限制视频一般也不要求大会员
  * **账户授权意味着第三方拥有您B站账号的访问权限，如非必要请不要进行操作！**
@@ -8115,7 +8316,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/accesskey.js`;
-    modules["allDanmaku.js"] = `/**
+/*!***********************!*/
+/**/modules["allDanmaku.js"] = /*** ./dist/required/allDanmaku.js ***/
+`/**
  * 本模块负责提供全弹幕装填工具
  */
 (function () {
@@ -8308,7 +8511,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/allDanmaku.js`;
-    modules["autoFix.js"] = `/**
+/*!***********************!*/
+/**/modules["autoFix.js"] = /*** ./dist/required/autoFix.js ***/
+`/**
  * 本模块负责一些自动化处理
  */
 (function () {
@@ -8355,7 +8560,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/autoFix.js`;
-    modules["banner.js"] = `/**
+/*!***********************!*/
+/**/modules["banner.js"] = /*** ./dist/required/banner.js ***/
+`/**
  * 本模块负责替换顶栏动图接口
  * 本模块动态banner相关代码移植自B站header.js
  */
@@ -8737,7 +8944,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/banner.js`;
-    modules["closedCaption.js"] = `/**
+/*!***********************!*/
+/**/modules["closedCaption.js"] = /*** ./dist/required/closedCaption.js ***/
+`/**
  * 本模块负责处理CC字幕
  * 代码移植自 Bilibili CC 字幕工具，源项目信息如下
  * @see indefined {@link https://github.com/indefined/UserScripts/tree/master/bilibiliCCHelper}
@@ -9057,7 +9266,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/closedCaption.js`;
-    modules["commentLinkDetail.js"] = `/**
+/*!***********************!*/
+/**/modules["commentLinkDetail.js"] = /*** ./dist/required/commentLinkDetail.js ***/
+`/**
  * 本模块负责将评论区超链接还原为av号
  */
 (function () {
@@ -9082,7 +9293,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/commentLinkDetail.js`;
-    modules["danmakuHashId.js"] = `/**
+/*!***********************!*/
+/**/modules["danmakuHashId.js"] = /*** ./dist/required/danmakuHashId.js ***/
+`/**
  * 本模块负责实现反查弹幕发送者功能
  */
 (function () {
@@ -9150,7 +9363,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/danmakuHashId.js`;
-    modules["heartbeat.js"] = `/**
+/*!***********************!*/
+/**/modules["heartbeat.js"] = /*** ./dist/required/heartbeat.js ***/
+`/**
  * 本模块负责处理可能被广告屏蔽拓展误伤的视频心跳
  */
 (function () {
@@ -9165,7 +9380,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/heartbeat.js`;
-    modules["infoNewNumber.js"] = `/**
+/*!***********************!*/
+/**/modules["infoNewNumber.js"] = /*** ./dist/required/infoNewNumber.js ***/
+`/**
  * 本模块负责修复资讯区新动态数目
  */
 (function () {
@@ -9188,7 +9405,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/infoNewNumber.js`;
-    modules["localMedia.js"] = `/**
+/*!***********************!*/
+/**/modules["localMedia.js"] = /*** ./dist/required/localMedia.js ***/
+`/**
  * 本模块负责实现旧版播放器载入本地视频及弹幕功能
  */
 (function () {
@@ -9325,7 +9544,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/localMedia.js`;
-    modules["logReport.js"] = `/**
+/*!***********************!*/
+/**/modules["logReport.js"] = /*** ./dist/required/logReport.js ***/
+`/**
  * 本模块负责拦截B站各种日志上报
  */
 (function () {
@@ -9342,7 +9563,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/logReport.js`;
-    modules["noVideo.js"] = `/**
+/*!***********************!*/
+/**/modules["noVideo.js"] = /*** ./dist/required/noVideo.js ***/
+`/**
  * 本模块负责强制拦截视频载入
  */
 (function () {
@@ -9365,7 +9588,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/noVideo.js`;
-    modules["parameterTrim.js"] = `/**
+/*!***********************!*/
+/**/modules["parameterTrim.js"] = /*** ./dist/required/parameterTrim.js ***/
+`/**
  * 本模块负责处理URL，包括地址栏和a标签
  */
 (function () {
@@ -9488,7 +9713,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/parameterTrim.js`;
-    modules["player-v2.js"] = `/**
+/*!***********************!*/
+/**/modules["player-v2.js"] = /*** ./dist/required/player-v2.js ***/
+`/**
  * 本模块负责获取视频信息以提供给CC字幕等模块
  * 视频信息接口\`https://api.bilibili.com/x/player/v2\`
  * 备用移动端接口\`https://api.bilibili.com/x/v2/dm/view\`
@@ -9526,7 +9753,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/player-v2.js`;
-    modules["playinfoRecord.js"] = `/**
+/*!***********************!*/
+/**/modules["playinfoRecord.js"] = /*** ./dist/required/playinfoRecord.js ***/
+`/**
  * 本模块负责处理并记录playinfo信息
  */
 (function () {
@@ -9556,7 +9785,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/playinfoRecord.js`;
-    modules["protoDm.js"] = `/**
+/*!***********************!*/
+/**/modules["protoDm.js"] = /*** ./dist/required/protoDm.js ***/
+`/**
  * 本模块负责使旧版播放器支持新版弹幕
  */
 (function () {
@@ -9601,7 +9832,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/protoDm.js`;
-    modules["rebuildPlayerurl.js"] = `/**
+/*!***********************!*/
+/**/modules["rebuildPlayerurl.js"] = /*** ./dist/required/rebuildPlayerurl.js ***/
+`/**
  * 本模块负责重建playurl为网页端类型
  */
 (function () {
@@ -9993,7 +10226,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/rebuildPlayerurl.js`;
-    modules["replyList.js"] = `/**
+/*!***********************!*/
+/**/modules["replyList.js"] = /*** ./dist/required/replyList.js ***/
+`/**
  * 本模块负责恢复翻页评论区
  */
 (function () {
@@ -10038,7 +10273,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/replyList.js`;
-    modules["section.js"] = `/**
+/*!***********************!*/
+/**/modules["section.js"] = /*** ./dist/required/section.js ***/
+`/**
  * 本模块负责替换全局顶栏和底栏
  */
 (function () {
@@ -10074,7 +10311,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/section.js`;
-    modules["sectionTypo.js"] = `/**
+/*!***********************!*/
+/**/modules["sectionTypo.js"] = /*** ./dist/required/sectionTypo.js ***/
+`/**
  * 本模块负责修正旧版顶栏分区
  */
 (function () {
@@ -10135,7 +10374,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/sectionTypo.js`;
-    modules["segProgress.js"] = `/**
+/*!***********************!*/
+/**/modules["segProgress.js"] = /*** ./dist/required/segProgress.js ***/
+`/**
  * 本模块负责添加分段进度条
  */
 (function () {
@@ -10365,7 +10606,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/segProgress.js`;
-    modules["unloginPopover.js"] = `/**
+/*!***********************!*/
+/**/modules["unloginPopover.js"] = /*** ./dist/required/unloginPopover.js ***/
+`/**
  * 移除未登录弹窗
  */
 (function () {
@@ -10379,7 +10622,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/unloginPopover.js`;
-    modules["unread.js"] = `/**
+/*!***********************!*/
+/**/modules["unread.js"] = /*** ./dist/required/unread.js ***/
+`/**
  * 本模块负责处理远古顶栏的动态残留问题
  */
 (function () {
@@ -10394,7 +10639,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/unread.js`;
-    modules["user-select.js"] = `/**
+/*!***********************!*/
+/**/modules["user-select.js"] = /*** ./dist/required/user-select.js ***/
+`/**
  * 本模块负责截除页面复制限制及右键锁
  * 本模块代码参考自{@see Absolute Enable Right Click & Copy {@link https://chrome.google.com/webstore/detail/jdocbkpgdakpekjlhemmfcncgdjeiika}}
  */
@@ -10418,7 +10665,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/user-select.js`;
-    modules["videoLimit.js"] = `/**
+/*!***********************!*/
+/**/modules["videoLimit.js"] = /*** ./dist/required/videoLimit.js ***/
+`/**
  * 本模块负责解除区域、APP等播放限制
  */
 (function () {
@@ -10597,7 +10846,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/required/videoLimit.js`;
-    modules["danmaku.js"] = `/**
+/*!***********************!*/
+/**/modules["danmaku.js"] = /*** ./dist/units/danmaku.js ***/
+`/**
  * 本模块提供各种弹幕相关工具，负责获取、转化等弹幕处理功能
  * \`本模块按需加载，使用相关函数前请务必先载入本模块\`
  * 新版弹幕相关功能调用了开源项目\`protobufjs\`，非常感谢，相关信息如下
@@ -10929,21 +11180,39 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/danmaku.js`;
-    modules["debug.js"] = `(function () {
+/*!***********************!*/
+/**/modules["debug.js"] = /*** ./dist/units/debug.js ***/
+`(function () {
     class Debug {
         static log(...data) { console.log(\`%c[\${API.timeFormat()}]\`, "color: blue;", ...data); }
         static info(...data) { console.info(\`%c[\${API.timeFormat()}]\`, "color: green;", ...data); }
         static debug(...data) { console.debug(\`[\${API.timeFormat()}]\`, ...data); }
         static warn(...data) { console.warn(\`[\${API.timeFormat()}]\`, ...data); }
         static error(...data) { console.error(\`[\${API.timeFormat()}]\`, ...data); }
+        static group(...info) {
+            console.groupCollapsed(\`[\${API.timeFormat()}]\`, ...info);
+            const result = new Proxy(Debug, {
+                get: (t, p) => {
+                    return new Proxy(Debug[p], {
+                        apply: (target, thisArg, argArray) => {
+                            target.call(thisArg, ...argArray);
+                            return result;
+                        }
+                    });
+                }
+            });
+            return result;
+        }
+        static end() { console.groupEnd(); }
     }
     // @ts-ignore
-    API.debug = (...data) => Debug.log(...data);
-    Reflect.ownKeys(Debug).forEach(d => typeof Debug[d] == "function" && Reflect.set(Reflect.get(API, "debug"), d, Debug[d]));
+    API.debug = new Proxy(Debug.log, { get: (t, p) => Debug[p] });
 })();
 
 //# sourceURL=API://@bilibili/dist/units/debug.js`;
-    modules["element.js"] = `/**
+/*!***********************!*/
+/**/modules["element.js"] = /*** ./dist/units/element.js ***/
+`/**
  * 本模块负责提供一些内置的可复用的HTMLEliment组件
  */
 (function () {
@@ -11251,7 +11520,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/element.js`;
-    modules["extend.js"] = `/**
+/*!***********************!*/
+/**/modules["extend.js"] = /*** ./dist/units/extend.js ***/
+`/**
  * 本模块负责拓展一些小工具，这些工具不便写在主模块中
  */
 (function () {
@@ -11501,7 +11772,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/extend.js`;
-    modules["format.js"] = `(function () {
+/*!***********************!*/
+/**/modules["format.js"] = /*** ./dist/units/format.js ***/
+`(function () {
     class Format {
         /**
          * 格式化时间
@@ -11632,7 +11905,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/format.js`;
-    modules["manage.js"] = `/**
+/*!***********************!*/
+/**/modules["manage.js"] = /*** ./dist/units/manage.js ***/
+`/**
  * 本模块负责维护脚本数据存储
  */
 (function () {
@@ -11667,7 +11942,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/manage.js`;
-    modules["nodeObserver.js"] = `/**
+/*!***********************!*/
+/**/modules["nodeObserver.js"] = /*** ./dist/units/nodeObserver.js ***/
+`/**
  * 本模块负责DOM节点变动监听
  * **监听节点变动开销极大，如非必要请改用其他方法并且用后立即销毁！**
  */
@@ -11699,12 +11976,21 @@ catch (e) {
     }
     API.removeObserver = (id) => removeObserver(id);
     (new MutationObserver(d => d.forEach(d => {
-        d.addedNodes[0] && nodelist.forEach(async (f) => f(d.addedNodes[0]));
+        d.addedNodes[0] && nodelist.forEach(async (f) => {
+            try {
+                f(d.addedNodes[0]);
+            }
+            catch (e) {
+                debug.group("nodeObserver.js").error(e).error(f).end();
+            }
+        });
     }))).observe(document, { childList: true, subtree: true });
 })();
 
 //# sourceURL=API://@bilibili/dist/units/nodeObserver.js`;
-    modules["rewrite.js"] = `/**
+/*!***********************!*/
+/**/modules["rewrite.js"] = /*** ./dist/units/rewrite.js ***/
+`/**
  * 重写引导，重写操作是非常底层的操作，必须在正常引导之前。
  */
 (function () {
@@ -11769,7 +12055,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/rewrite.js`;
-    modules["setting.js"] = `/**
+/*!***********************!*/
+/**/modules["setting.js"] = /*** ./dist/units/setting.js ***/
+`/**
  * 本模块负责集中注册相关设置项
  */
 (function () {
@@ -12522,7 +12810,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/setting.js`;
-    modules["switchVideo.js"] = `/**
+/*!***********************!*/
+/**/modules["switchVideo.js"] = /*** ./dist/units/switchVideo.js ***/
+`/**
  * 本模块负责执行切P调用监听
  */
 (function () {
@@ -12543,13 +12833,22 @@ catch (e) {
     API.switchVideo = (callback) => switchVideo(callback);
     API.observerAddedNodes((node) => {
         if (/bilibili-player-area video-state-pause/.test(node.className)) {
-            switchlist.forEach(d => d());
+            switchlist.forEach(async (d) => {
+                try {
+                    d();
+                }
+                catch (e) {
+                    debug.group("switchVideo.js").error(e).error(d).end();
+                }
+            });
         }
     });
 })();
 
 //# sourceURL=API://@bilibili/dist/units/switchVideo.js`;
-    modules["toast.js"] = `(function () {
+/*!***********************!*/
+/**/modules["toast.js"] = /*** ./dist/units/toast.js ***/
+`(function () {
     API.registerSetting({
         type: "sort",
         key: "toast",
@@ -12669,7 +12968,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/toast.js`;
-    modules["ui.js"] = `/**
+/*!***********************!*/
+/**/modules["ui.js"] = /*** ./dist/units/ui.js ***/
+`/**
  * 本模块负责绘制设置UI
  */
 (function () {
@@ -13215,7 +13516,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/ui.js`;
-    modules["url.js"] = `/**
+/*!***********************!*/
+/**/modules["url.js"] = /*** ./dist/units/url.js ***/
+`/**
  * 本模块封装了urlAPI请求以便于访问
  */
 (function () {
@@ -13273,7 +13576,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/url.js`;
-    modules["urlInputCheck.js"] = `/**
+/*!***********************!*/
+/**/modules["urlInputCheck.js"] = /*** ./dist/units/urlInputCheck.js ***/
+`/**
  * 本模块负责检查url输入并返回对应aid/cid等值
  */
 (function () {
@@ -13379,7 +13684,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/urlInputCheck.js`;
-    modules["vector.js"] = `/**
+/*!***********************!*/
+/**/modules["vector.js"] = /*** ./dist/units/vector.js ***/
+`/**
  * 本页面负责引导全局模块运行，一般全局生效运行的模块请将导入命令写在这里
  */
 (function () {
@@ -13413,7 +13720,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/units/vector.js`;
-    modules["xhr.js"] = `(function () {
+/*!***********************!*/
+/**/modules["xhr.js"] = /*** ./dist/units/xhr.js ***/
+`(function () {
     var _a;
     class Xhr {
         /**
@@ -13497,19 +13806,13 @@ catch (e) {
     Xhr.catches = [];
     Xhr.log = () => _a.catches;
     // @ts-ignore
-    API.xhr = (details) => Xhr.xhr(details);
-    // @ts-ignore
-    API.xhr.GM = (details) => Xhr.GM(details);
-    // @ts-ignore
-    API.xhr.log = () => Xhr.log();
-    // @ts-ignore
-    API.xhr.get = (url, details) => Xhr.get(url, details);
-    // @ts-ignore
-    API.xhr.post = (url, data, contentType, details) => Xhr.post(url, data, contentType, details);
+    API.xhr = new Proxy(Xhr.xhr, { get: (t, p) => Xhr[p] });
 })();
 
 //# sourceURL=API://@bilibili/dist/units/xhr.js`;
-    modules["av-biliplus.js"] = `/**
+/*!***********************!*/
+/**/modules["av-biliplus.js"] = /*** ./dist/__INITIAL_STATE__/av-biliplus.js ***/
+`/**
  * 本模块负责重构av/BV页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 原始数据对应来源\`//www.biliplus.com/api/view?aid\`
@@ -13619,7 +13922,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/av-biliplus.js`;
-    modules["av-detail.js"] = `/**
+/*!***********************!*/
+/**/modules["av-detail.js"] = /*** ./dist/__INITIAL_STATE__/av-detail.js ***/
+`/**
  * 本模块负责重构av/BV页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 原始数据对应来源\`//api.bilibili.com/x/web-interface/view/detail?aid\`
@@ -13716,7 +14021,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/av-detail.js`;
-    modules["bangumi-global.js"] = `/**
+/*!***********************!*/
+/**/modules["bangumi-global.js"] = /*** ./dist/__INITIAL_STATE__/bangumi-global.js ***/
+`/**
  * 本模块负责重构bangumi页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 同时传入的还有以\`epid\`的名义指定回目，默认值为0即第一回
@@ -13837,7 +14144,9 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/bangumi-global.js`;
-    modules["bangumi-season.js"] = `/**
+/*!***********************!*/
+/**/modules["bangumi-season.js"] = /*** ./dist/__INITIAL_STATE__/bangumi-season.js ***/
+`/**
  * 本模块负责重构bangumi页__INITIAL_STATE__
  * 请以\`__INITIAL_STATE__\`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 同时传入的还有以\`epid\`的名义指定回目，默认值为0即第一回
@@ -13955,6 +14264,7 @@ catch (e) {
 })();
 
 //# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/bangumi-season.js`;
+/*!***********************!*/
     /**
      * 初始化脚本设置数据
      */
@@ -14003,11 +14313,11 @@ catch (e) {
             };
             API.API = new Proxy(this, {
                 get: (t, p) => {
-                    return Reflect.get(root, p) || Reflect.get(t, p) || (Reflect.has(modules["apply.json"], p) ? (t.importModule(modules["apply.json"][p], {}),
-                        Reflect.get(t, p)) : undefined);
+                    return (Reflect.has(root, p) && typeof root[p] !== "function") ? Reflect.get(root, p) : (Reflect.get(t, p) || (Reflect.has(modules["apply.json"], p) ? (t.importModule(modules["apply.json"][p], {}),
+                        Reflect.get(t, p)) : undefined));
                 },
                 set: (t, p, value) => {
-                    Reflect.has(root, p) ? Reflect.set(root, p, value) : Reflect.set(t, p, value);
+                    (Reflect.has(root, p) && typeof root[p] !== "function") ? Reflect.set(root, p, value) : Reflect.set(t, p, value);
                     return true;
                 }
             });

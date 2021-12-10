@@ -15,7 +15,13 @@
     API.switchVideo = (callback: Function) => switchVideo(callback);
     API.observerAddedNodes((node) => {
         if (/bilibili-player-area video-state-pause/.test(node.className)) {
-            switchlist.forEach(d => d());
+            switchlist.forEach(async d => {
+                try {
+                    d()
+                } catch (e) {
+                    debug.group("switchVideo.js").error(e).error(d).end();
+                }
+            });
         }
     })
 })();

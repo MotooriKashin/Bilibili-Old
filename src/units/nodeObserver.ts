@@ -26,7 +26,13 @@
     }
     API.removeObserver = (id: number) => removeObserver(id);
     (new MutationObserver(d => d.forEach(d => {
-        d.addedNodes[0] && nodelist.forEach(async f => f(d.addedNodes[0]))
+        d.addedNodes[0] && nodelist.forEach(async f => {
+            try {
+                f(d.addedNodes[0])
+            } catch (e) {
+                debug.group("nodeObserver.js").error(e).error(f).end();
+            }
+        })
     }))).observe(document, { childList: true, subtree: true });
 })();
 declare namespace API {
