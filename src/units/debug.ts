@@ -33,11 +33,11 @@ declare const debug: {
     error(...data: any[]): void;
     /**
      * 组合控制台信息，可以链式调用其他属性  
-     * **调用链最后必须接end以结束分组！**
+     * **必须配合end成对使用！**
      * @param groupName 组合名称
      * @param rest 其他补充数据
      * @example
-     * debug.group(123).log(1).warn(2).group(456).debug(654).end();
+     * debug.group(123).log(1).warn(2).group(456).debug(654).end().end();
      */
     group(...info: any[]): any;
 }
