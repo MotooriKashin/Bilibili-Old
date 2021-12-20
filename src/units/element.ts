@@ -303,6 +303,8 @@ declare namespace API {
         /**
          * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭  
          * 浮动窗口上的内容请通过返回的节点进行后续添加
+         * @param style 添加style样式，直接写进element，具有最高优先级
+         * @param hold 禁用自动关闭，转而提供一个关闭按钮
          * @returns 浮动窗口实际可操作节点，可以往上面添加需要显示在浮动窗口上的内容
          */
         popupbox(style?: Partial<CSSStyleDeclaration>, hold?: boolean): HTMLDivElement;

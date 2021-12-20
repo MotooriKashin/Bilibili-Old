@@ -536,6 +536,7 @@
                 toast.success("清洁完成！");
             } else toast.warning("取消操作，将在下次刷新时重新提示！")
         })
+        API.importModule("notice.js"); // 脚本公告
     } catch (e) { toast.error("ui.js", e) }
 })();
 declare namespace API {
