@@ -10,7 +10,7 @@
             API.restorePlayerSetting();
             API.scriptIntercept(["video-nano"]); // 新版播放器拦截
             API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
-            API.rewriteHTML(API.getModule("watchlater.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js"));
+            API.rewriteHTML(config.trusteeship ? API.getModule("watchlater.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("watchlater.html"));
             API.addCss(API.getModule("bofqi.css"));
             // 修复评论跳转
             (<any>window).commentAgent = { seek: (t: any) => (<any>window).player && (<any>window).player.seek(t) };

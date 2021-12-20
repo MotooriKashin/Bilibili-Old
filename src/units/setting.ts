@@ -27,6 +27,16 @@
                 value ? (!(<any>window).API && ((<any>window).API = API)) : ((<any>window).API && delete (<any>window).API)
             }
         })
+        API.registerSetting({
+            key: "trusteeship",
+            sort: "common",
+            label: "托管原生脚本",
+            svg: '<svg viewBox="0 0 24 24"><g><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></g></svg>',
+            type: "switch",
+            value: true,
+            float: "托管并修改B站原生的脚本以修复及维护部分功能，<strong>关闭将导致脚本部分功能失效，如非必要请勿关闭！</strong>",
+            sub: "代为修复和维护"
+        })
         config.developer && ((<any>window).API = API);
         API.registerSetting({
             key: "rewriteMethod",
@@ -1011,6 +1021,10 @@ declare namespace config {
      * 重写：番剧分区
      */
     let anime: boolean;
+    /**
+     * 通用：托管原生脚本
+     */
+    let trusteeship: boolean;
 }
 /**
  * 工具栏按钮

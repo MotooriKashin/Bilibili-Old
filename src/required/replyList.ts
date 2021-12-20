@@ -3,9 +3,11 @@
  */
 (function () {
     try {
-        API.scriptIntercept(["comment.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.min.js");
+        config.trusteeship && API.scriptIntercept(["comment.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.min.js");
         class ReplyList {
+            script = GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js");
             init() {
+                if (!this.script) return debug.error("replyList.js", "getResourceText failed！");
                 // 拦截评论脚本
                 if ((<any>window).bbComment) return this.cover(); // 评论已载入直接覆盖
                 // 监听评论脚本载入并覆盖
@@ -17,7 +19,7 @@
             }
             cover() {
                 delete (<any>window).bbComment; // 取消拦截
-                new Function(GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js"))(); // 载入旧版脚本
+                new Function(this.script)(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
                 API.addCss(API.getCss("comment.css"));
                 config.oldReplySort && API.addCss(API.getCss("oldReplySort.css"));
