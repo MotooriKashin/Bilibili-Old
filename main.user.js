@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.1.9
+// @version      6.2.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -6056,7 +6056,7 @@ option {
             API.restorePlayerSetting();
             API.scriptIntercept(["video-nano"]); // 新版播放器拦截
             API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
-            API.rewriteHTML(API.getModule("watchlater.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js"));
+            API.rewriteHTML(config.trusteeship ? API.getModule("watchlater.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("watchlater.html"));
             API.addCss(API.getModule("bofqi.css"));
             // 修复评论跳转
             window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
@@ -6165,7 +6165,7 @@ option {
                     API.tid = API.__INITIAL_STATE__.videoData.tid;
                     window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
                     config.noVideo && delete window.__playinfo__;
-                    API.rewriteHTML(API.getModule("av.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js"));
+                    API.rewriteHTML(config.trusteeship ? API.getModule("av.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("av.html"));
                     document.title = API.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                     API.addCss(API.getModule("bofqi.css"));
                     // 移除失效顶栏
@@ -7398,7 +7398,9 @@ option {
                     API.scriptIntercept(["stardust-video"]); // 新版播放器拦截
                     config.bangumiEplist && ((_c = API.__INITIAL_STATE__) === null || _c === void 0 ? void 0 : _c.epList[1]) && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
                     window.__INITIAL_STATE__ = API.__INITIAL_STATE__;
-                    API.__INITIAL_STATE__.special ? API.rewriteHTML(API.getModule("bangumi-special.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js")) : API.rewriteHTML(API.getModule("bangumi.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js"));
+                    API.__INITIAL_STATE__.special ?
+                        API.rewriteHTML(config.trusteeship ? API.getModule("bangumi-special.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("bangumi-special.html")) :
+                        API.rewriteHTML(config.trusteeship ? API.getModule("bangumi.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("bangumi.html"));
                     document.title = API.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                     // 分集数据
                     config.episodeData && API.importModule("episodeData.js");
@@ -10233,9 +10235,14 @@ catch (e) {
  */
 (function () {
     try {
-        API.scriptIntercept(["comment.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.min.js");
+        config.trusteeship && API.scriptIntercept(["comment.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.min.js");
         class ReplyList {
+            constructor() {
+                this.script = GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js");
+            }
             init() {
+                if (!this.script)
+                    return debug.error("replyList.js", "getResourceText failed！");
                 // 拦截评论脚本
                 if (window.bbComment)
                     return this.cover(); // 评论已载入直接覆盖
@@ -10248,7 +10255,7 @@ catch (e) {
             }
             cover() {
                 delete window.bbComment; // 取消拦截
-                new Function(GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js"))(); // 载入旧版脚本
+                new Function(this.script)(); // 载入旧版脚本
                 API.addElement("link", { href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", rel: "stylesheet" }, document.head);
                 API.addCss(API.getCss("comment.css"));
                 config.oldReplySort && API.addCss(API.getCss("oldReplySort.css"));
@@ -11989,6 +11996,33 @@ catch (e) {
 
 //# sourceURL=API://@bilibili/dist/units/nodeObserver.js`;
 /*!***********************!*/
+/**/modules["notice.js"] = /*** ./dist/units/notice.js ***/
+`/**
+ * 本模块负责向用户发布脚本的公告
+ */
+(async function () {
+    const content = {
+        /**
+         * 公告内容
+         */
+        text: "由于今天(2021/12/20)日，jsdelivr CDN国内节点崩溃，导致本脚本部分功能不可用。脚本已在添加在设置->通用中添加了一个选项“托管原生脚本”用于临时禁用这部分功能，等待CDN恢复时<strong>莫忘记</strong>打开以便正常使用这部分功能。给您带来的不便，敬请见谅！",
+        /**
+         * 公共编号，原则上每次修改公告后+1即可
+         * 用于唯一标记该公告，以免重复弹窗
+         */
+        num: 1
+    };
+    const virsion = GM.getValue("notice");
+    if (virsion == content.num)
+        return;
+    const box = API.element.popupbox({ maxWidth: "360px" }, true);
+    API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, box, \`<span>\${API.Name}<span>\`);
+    API.addElement("div", { style: 'margin-bottom: 10px;line-height: 20px;' }, box, \`<div>\${content.text}</div>\`);
+    GM.setValue("notice", content.num);
+})();
+
+//# sourceURL=API://@bilibili/dist/units/notice.js`;
+/*!***********************!*/
 /**/modules["rewrite.js"] = /*** ./dist/units/rewrite.js ***/
 `/**
  * 重写引导，重写操作是非常底层的操作，必须在正常引导之前。
@@ -12043,7 +12077,7 @@ catch (e) {
             API.importModule("read.js");
         if (config.player && /festival\\/2021bnj/.test(location.href))
             API.importModule("bnj2021.js");
-        API.scriptIntercept(["bilibiliPlayer.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/bilibiliPlayer.min.js"); // 播放器脚本拦截
+        config.trusteeship && API.scriptIntercept(["bilibiliPlayer.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/bilibiliPlayer.min.js"); // 播放器脚本拦截
         /**
          * 若页面不需要重写，直接进入正常引导
          */
@@ -12084,6 +12118,16 @@ catch (e) {
             action: (value) => {
                 value ? (!window.API && (window.API = API)) : (window.API && delete window.API);
             }
+        });
+        API.registerSetting({
+            key: "trusteeship",
+            sort: "common",
+            label: "托管原生脚本",
+            svg: '<svg viewBox="0 0 24 24"><g><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></g></svg>',
+            type: "switch",
+            value: true,
+            float: "托管并修改B站原生的脚本以修复及维护部分功能，<strong>关闭将导致脚本部分功能失效，如非必要请勿关闭！</strong>",
+            sub: "代为修复和维护"
         });
         config.developer && (window.API = API);
         API.registerSetting({
@@ -13509,6 +13553,7 @@ catch (e) {
             else
                 toast.warning("取消操作，将在下次刷新时重新提示！");
         });
+        API.importModule("notice.js"); // 脚本公告
     }
     catch (e) {
         toast.error("ui.js", e);
