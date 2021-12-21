@@ -7,7 +7,7 @@
 ### 功能实现
 1. 使用[Wayback Machine](https://archive.org/web/)存档的B站当时的前端资源完全重写页面样式，包括：
    - [Bilibili主页](https://www.bilibili.com)。
-   - 俗称av页现已改名BV页的一般视频播放页面，例如[av2](https://www.bilibili.com/video/av845035861)。
+   - 普通视频页面，俗称av页或BV页，例如[av2](https://www.bilibili.com/video/av2)。
    - 番剧、影视等专属页面，如[冰菓](https://www.bilibili.com/bangumi/play/ss3398/)。
    - 稍后再看页面，如果你使用“稍后再看”功能的话。
    - 视频合集页面，这种页面当时本不存在，脚本使用稍后再看功能模拟了一下，例如[bilibili moe 2018 日本动画场应援](https://www.bilibili.com/medialist/play/ml182603655)。顺带一提该链接原本是当时一种名为“播单”（播单号[pl769](https://www.bilibili.com/playlist/video/pl769)）的特殊页面，脚本曾经也试图恢复，不过因为所有相关API都已被禁用，已经真正成为被遗忘的历史了，同样被遗忘的还有mylist，比如[mylist8](https://www.bilibili.com/mylist8 "缘之空")。
