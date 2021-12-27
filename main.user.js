@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.2.0
+// @version      6.2.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3931,7 +3931,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/download/aria2.js`;
+//# sourceURL=API://@Bilibili-Old/download/aria2.js`;
 /*!***********************!*/
 /**/modules["contentMenu.js"] = /*** ./dist/download/contentMenu.js ***/
 `/**
@@ -3979,7 +3979,7 @@ option {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/download/contentMenu.js`;
+//# sourceURL=API://@Bilibili-Old/download/contentMenu.js`;
 /*!***********************!*/
 /**/modules["download.js"] = /*** ./dist/download/download.js ***/
 `/**
@@ -4416,7 +4416,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/download/download.js`;
+//# sourceURL=API://@Bilibili-Old/download/download.js`;
 /*!***********************!*/
 /**/modules["ef2.js"] = /*** ./dist/download/ef2.js ***/
 `/**
@@ -4553,7 +4553,7 @@ option {
     API.ef2.decode = (ef2ptl) => new Ef2().decode(ef2ptl);
 })();
 
-//# sourceURL=API://@bilibili/dist/download/ef2.js`;
+//# sourceURL=API://@Bilibili-Old/download/ef2.js`;
 /*!***********************!*/
 /**/modules["abv.js"] = /*** ./dist/extensions/abv.js ***/
 `/**
@@ -4610,7 +4610,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/extensions/abv.js`;
+//# sourceURL=API://@Bilibili-Old/extensions/abv.js`;
 /*!***********************!*/
 /**/modules["Base64.js"] = /*** ./dist/extensions/Base64.js ***/
 `/**
@@ -4642,7 +4642,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/extensions/Base64.js`;
+//# sourceURL=API://@Bilibili-Old/extensions/Base64.js`;
 /*!***********************!*/
 /**/modules["crc32.js"] = /*** ./dist/extensions/crc32.js ***/
 `/**
@@ -4755,7 +4755,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/extensions/crc32.js`;
+//# sourceURL=API://@Bilibili-Old/extensions/crc32.js`;
 /*!***********************!*/
 /**/modules["cubicBezier.js"] = /*** ./dist/extensions/cubicBezier.js ***/
 `/**
@@ -4855,7 +4855,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/extensions/cubicBezier.js`;
+//# sourceURL=API://@Bilibili-Old/extensions/cubicBezier.js`;
 /*!***********************!*/
 /**/modules["md5.js"] = /*** ./dist/extensions/md5.js ***/
 `/**
@@ -5298,7 +5298,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/extensions/md5.js`;
+//# sourceURL=API://@Bilibili-Old/extensions/md5.js`;
 /*!***********************!*/
 /**/modules["sign.js"] = /*** ./dist/extensions/sign.js ***/
 `/**
@@ -5397,7 +5397,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/extensions/sign.js`;
+//# sourceURL=API://@Bilibili-Old/extensions/sign.js`;
 /*!***********************!*/
 /**/modules["Node.js"] = /*** ./dist/hook/Node.js ***/
 `/**
@@ -5472,7 +5472,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/hook/Node.js`;
+//# sourceURL=API://@Bilibili-Old/hook/Node.js`;
 /*!***********************!*/
 /**/modules["open.js"] = /*** ./dist/hook/open.js ***/
 `/**
@@ -5498,7 +5498,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/hook/open.js`;
+//# sourceURL=API://@Bilibili-Old/hook/open.js`;
 /*!***********************!*/
 /**/modules["webSocket.js"] = /*** ./dist/hook/webSocket.js ***/
 `/**
@@ -5703,7 +5703,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/hook/webSocket.js`;
+//# sourceURL=API://@Bilibili-Old/hook/webSocket.js`;
 /*!***********************!*/
 /**/modules["worker.js"] = /*** ./dist/hook/worker.js ***/
 `/**
@@ -5771,7 +5771,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/hook/worker.js`;
+//# sourceURL=API://@Bilibili-Old/hook/worker.js`;
 /*!***********************!*/
 /**/modules["anime.js"] = /*** ./dist/match/anime.js ***/
 `/**
@@ -5797,7 +5797,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/anime.js`;
+//# sourceURL=API://@Bilibili-Old/match/anime.js`;
 /*!***********************!*/
 /**/modules["bnj2021.js"] = /*** ./dist/match/bnj2021.js ***/
 `/**
@@ -5833,7 +5833,7 @@ option {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/match/bnj2021.js`;
+//# sourceURL=API://@Bilibili-Old/match/bnj2021.js`;
 /*!***********************!*/
 /**/modules["history.js"] = /*** ./dist/match/history.js ***/
 `/**
@@ -5852,7 +5852,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/history.js`;
+//# sourceURL=API://@Bilibili-Old/match/history.js`;
 /*!***********************!*/
 /**/modules["player.js"] = /*** ./dist/match/player.js ***/
 `/**
@@ -5886,7 +5886,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/player.js`;
+//# sourceURL=API://@Bilibili-Old/match/player.js`;
 /*!***********************!*/
 /**/modules["ranking.js"] = /*** ./dist/match/ranking.js ***/
 `/**
@@ -5935,7 +5935,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/ranking.js`;
+//# sourceURL=API://@Bilibili-Old/match/ranking.js`;
 /*!***********************!*/
 /**/modules["read.js"] = /*** ./dist/match/read.js ***/
 `/**
@@ -6040,7 +6040,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/read.js`;
+//# sourceURL=API://@Bilibili-Old/match/read.js`;
 /*!***********************!*/
 /**/modules["watchlater.js"] = /*** ./dist/match/watchlater.js ***/
 `/**
@@ -6073,7 +6073,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/watchlater.js`;
+//# sourceURL=API://@Bilibili-Old/match/watchlater.js`;
 /*!***********************!*/
 /**/modules["av.js"] = /*** ./dist/match/av/av.js ***/
 `/**
@@ -6212,7 +6212,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/av.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/av.js`;
 /*!***********************!*/
 /**/modules["commandDm.js"] = /*** ./dist/match/av/commandDm.js ***/
 `/**
@@ -6817,7 +6817,7 @@ option {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/commandDm.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/commandDm.js`;
 /*!***********************!*/
 /**/modules["descBV.js"] = /*** ./dist/match/av/descBV.js ***/
 `/**
@@ -6845,14 +6845,14 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/descBV.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/descBV.js`;
 /*!***********************!*/
 /**/modules["enLike.js"] = /*** ./dist/match/av/enLike.js ***/
 `/**
  * 本模块负责为旧版av/BV、稍后再看添加点赞功能
  */
 (function () {
-    API.runWhile(() => document.querySelector(".v.play"), async () => {
+    API.runWhile(() => document.querySelector(".v.play") && API.aid, async () => {
         try {
             let span = document.createElement("span");
             let like = \`background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);\`;
@@ -6939,7 +6939,7 @@ option {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/enLike.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/enLike.js`;
 /*!***********************!*/
 /**/modules["hookWebpackJsonp.js"] = /*** ./dist/match/av/hookWebpackJsonp.js ***/
 `/**
@@ -6987,7 +6987,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/hookWebpackJsonp.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/hookWebpackJsonp.js`;
 /*!***********************!*/
 /**/modules["loadByDmid.js"] = /*** ./dist/match/av/loadByDmid.js ***/
 `/**
@@ -7025,7 +7025,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/loadByDmid.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/loadByDmid.js`;
 /*!***********************!*/
 /**/modules["mediaControl.js"] = /*** ./dist/match/av/mediaControl.js ***/
 `/**
@@ -7097,7 +7097,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/mediaControl.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/mediaControl.js`;
 /*!***********************!*/
 /**/modules["mediaList.js"] = /*** ./dist/match/av/mediaList.js ***/
 `/**
@@ -7229,7 +7229,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/mediaList.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/mediaList.js`;
 /*!***********************!*/
 /**/modules["upList.js"] = /*** ./dist/match/av/upList.js ***/
 `/**
@@ -7260,7 +7260,7 @@ option {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/upList.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/upList.js`;
 /*!***********************!*/
 /**/modules["videoSort.js"] = /*** ./dist/match/av/videoSort.js ***/
 `/**
@@ -7268,7 +7268,7 @@ option {
  * 分区信息表videoSort.json可能需要长期维护
  */
 (function () {
-    API.runWhile(() => document.querySelector(".tm-info"), () => {
+    API.runWhile(() => document.querySelector(".tm-info") && API.aid, () => {
         try {
             const sort = API.getModule("videoSort.json");
             if (API.path.name == "av" && API.tid && API.tid in sort) {
@@ -7308,7 +7308,7 @@ option {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/match/av/videoSort.js`;
+//# sourceURL=API://@Bilibili-Old/match/av/videoSort.js`;
 /*!***********************!*/
 /**/modules["bangumi.js"] = /*** ./dist/match/bangumi/bangumi.js ***/
 `/**
@@ -7434,7 +7434,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/bangumi/bangumi.js`;
+//# sourceURL=API://@Bilibili-Old/match/bangumi/bangumi.js`;
 /*!***********************!*/
 /**/modules["episodeData.js"] = /*** ./dist/match/bangumi/episodeData.js ***/
 `/**
@@ -7477,7 +7477,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/bangumi/episodeData.js`;
+//# sourceURL=API://@Bilibili-Old/match/bangumi/episodeData.js`;
 /*!***********************!*/
 /**/modules["restoreData.js"] = /*** ./dist/match/bangumi/restoreData.js ***/
 `/**
@@ -7586,7 +7586,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/bangumi/restoreData.js`;
+//# sourceURL=API://@Bilibili-Old/match/bangumi/restoreData.js`;
 /*!***********************!*/
 /**/modules["ad2info.js"] = /*** ./dist/match/index/ad2info.js ***/
 `/**
@@ -7628,7 +7628,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/index/ad2info.js`;
+//# sourceURL=API://@Bilibili-Old/match/index/ad2info.js`;
 /*!***********************!*/
 /**/modules["biliIndexRec.js"] = /*** ./dist/match/index/biliIndexRec.js ***/
 `/**
@@ -7669,7 +7669,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/index/biliIndexRec.js`;
+//# sourceURL=API://@Bilibili-Old/match/index/biliIndexRec.js`;
 /*!***********************!*/
 /**/modules["index.js"] = /*** ./dist/match/index/index.js ***/
 `/**
@@ -7729,7 +7729,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/index/index.js`;
+//# sourceURL=API://@Bilibili-Old/match/index/index.js`;
 /*!***********************!*/
 /**/modules["indexRecommend.js"] = /*** ./dist/match/index/indexRecommend.js ***/
 `/**
@@ -7770,7 +7770,7 @@ option {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/match/index/indexRecommend.js`;
+//# sourceURL=API://@Bilibili-Old/match/index/indexRecommend.js`;
 /*!***********************!*/
 /**/modules["indexSort.js"] = /*** ./dist/match/index/indexSort.js ***/
 `/**
@@ -7804,7 +7804,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/index/indexSort.js`;
+//# sourceURL=API://@Bilibili-Old/match/index/indexSort.js`;
 /*!***********************!*/
 /**/modules["mediaRank.js"] = /*** ./dist/match/index/mediaRank.js ***/
 `/**
@@ -7855,7 +7855,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/index/mediaRank.js`;
+//# sourceURL=API://@Bilibili-Old/match/index/mediaRank.js`;
 /*!***********************!*/
 /**/modules["live.js"] = /*** ./dist/match/live/live.js ***/
 `/**
@@ -7875,7 +7875,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/live/live.js`;
+//# sourceURL=API://@Bilibili-Old/match/live/live.js`;
 /*!***********************!*/
 /**/modules["liveStream.js"] = /*** ./dist/match/live/liveStream.js ***/
 `/**
@@ -7911,7 +7911,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/live/liveStream.js`;
+//# sourceURL=API://@Bilibili-Old/match/live/liveStream.js`;
 /*!***********************!*/
 /**/modules["sleepCheck.js"] = /*** ./dist/match/live/sleepCheck.js ***/
 `/**
@@ -7937,7 +7937,7 @@ option {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/live/sleepCheck.js`;
+//# sourceURL=API://@Bilibili-Old/match/live/sleepCheck.js`;
 /*!***********************!*/
 /**/modules["WebRTC.js"] = /*** ./dist/match/live/WebRTC.js ***/
 `/**
@@ -7977,7 +7977,7 @@ catch (e) {
     API.trace(e, "WebRTC.js", true);
 }
 
-//# sourceURL=API://@bilibili/dist/match/live/WebRTC.js`;
+//# sourceURL=API://@Bilibili-Old/match/live/WebRTC.js`;
 /*!***********************!*/
 /**/modules["album.js"] = /*** ./dist/match/space/album.js ***/
 `/**
@@ -8008,7 +8008,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/space/album.js`;
+//# sourceURL=API://@Bilibili-Old/match/space/album.js`;
 /*!***********************!*/
 /**/modules["jointime.js"] = /*** ./dist/match/space/jointime.js ***/
 `/**
@@ -8031,7 +8031,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/space/jointime.js`;
+//# sourceURL=API://@Bilibili-Old/match/space/jointime.js`;
 /*!***********************!*/
 /**/modules["lostVideo.js"] = /*** ./dist/match/space/lostVideo.js ***/
 `/**
@@ -8129,7 +8129,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/space/lostVideo.js`;
+//# sourceURL=API://@Bilibili-Old/match/space/lostVideo.js`;
 /*!***********************!*/
 /**/modules["midInfo.js"] = /*** ./dist/match/space/midInfo.js ***/
 `/**
@@ -8174,7 +8174,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/space/midInfo.js`;
+//# sourceURL=API://@Bilibili-Old/match/space/midInfo.js`;
 /*!***********************!*/
 /**/modules["space.js"] = /*** ./dist/match/space/space.js ***/
 `/**
@@ -8193,7 +8193,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/match/space/space.js`;
+//# sourceURL=API://@Bilibili-Old/match/space/space.js`;
 /*!***********************!*/
 /**/modules["accesskey.js"] = /*** ./dist/required/accesskey.js ***/
 `/**
@@ -8317,7 +8317,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/required/accesskey.js`;
+//# sourceURL=API://@Bilibili-Old/required/accesskey.js`;
 /*!***********************!*/
 /**/modules["allDanmaku.js"] = /*** ./dist/required/allDanmaku.js ***/
 `/**
@@ -8512,7 +8512,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/required/allDanmaku.js`;
+//# sourceURL=API://@Bilibili-Old/required/allDanmaku.js`;
 /*!***********************!*/
 /**/modules["autoFix.js"] = /*** ./dist/required/autoFix.js ***/
 `/**
@@ -8533,6 +8533,7 @@ catch (e) {
             setTimeout(() => {
                 config.showBofqi && bofqiToView();
                 config.screenWide && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff") && document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen").click();
+                config.webFullScreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger") && document.querySelector(".bilibili-player-video-web-fullscreen").click();
                 if (config.noDanmaku && !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off")) {
                     if (document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")) {
                         document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click(); // 自动关闭弹幕
@@ -8561,7 +8562,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/autoFix.js`;
+//# sourceURL=API://@Bilibili-Old/required/autoFix.js`;
 /*!***********************!*/
 /**/modules["banner.js"] = /*** ./dist/required/banner.js ***/
 `/**
@@ -8945,7 +8946,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/banner.js`;
+//# sourceURL=API://@Bilibili-Old/required/banner.js`;
 /*!***********************!*/
 /**/modules["closedCaption.js"] = /*** ./dist/required/closedCaption.js ***/
 `/**
@@ -9267,7 +9268,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/required/closedCaption.js`;
+//# sourceURL=API://@Bilibili-Old/required/closedCaption.js`;
 /*!***********************!*/
 /**/modules["commentLinkDetail.js"] = /*** ./dist/required/commentLinkDetail.js ***/
 `/**
@@ -9294,7 +9295,7 @@ catch (e) {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/required/commentLinkDetail.js`;
+//# sourceURL=API://@Bilibili-Old/required/commentLinkDetail.js`;
 /*!***********************!*/
 /**/modules["danmakuHashId.js"] = /*** ./dist/required/danmakuHashId.js ***/
 `/**
@@ -9364,7 +9365,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/required/danmakuHashId.js`;
+//# sourceURL=API://@Bilibili-Old/required/danmakuHashId.js`;
 /*!***********************!*/
 /**/modules["heartbeat.js"] = /*** ./dist/required/heartbeat.js ***/
 `/**
@@ -9381,7 +9382,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/heartbeat.js`;
+//# sourceURL=API://@Bilibili-Old/required/heartbeat.js`;
 /*!***********************!*/
 /**/modules["infoNewNumber.js"] = /*** ./dist/required/infoNewNumber.js ***/
 `/**
@@ -9406,7 +9407,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/infoNewNumber.js`;
+//# sourceURL=API://@Bilibili-Old/required/infoNewNumber.js`;
 /*!***********************!*/
 /**/modules["localMedia.js"] = /*** ./dist/required/localMedia.js ***/
 `/**
@@ -9545,7 +9546,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/required/localMedia.js`;
+//# sourceURL=API://@Bilibili-Old/required/localMedia.js`;
 /*!***********************!*/
 /**/modules["logReport.js"] = /*** ./dist/required/logReport.js ***/
 `/**
@@ -9564,7 +9565,7 @@ catch (e) {
     API.xhrhook(["data.bilivideo.com"], function (args) { this.send = () => true; });
 })();
 
-//# sourceURL=API://@bilibili/dist/required/logReport.js`;
+//# sourceURL=API://@Bilibili-Old/required/logReport.js`;
 /*!***********************!*/
 /**/modules["noVideo.js"] = /*** ./dist/required/noVideo.js ***/
 `/**
@@ -9589,7 +9590,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/noVideo.js`;
+//# sourceURL=API://@Bilibili-Old/required/noVideo.js`;
 /*!***********************!*/
 /**/modules["parameterTrim.js"] = /*** ./dist/required/parameterTrim.js ***/
 `/**
@@ -9656,36 +9657,14 @@ catch (e) {
              * @returns URL
              */
             triming(url) {
-                let obj = this.search(url);
-                url = this.hash(url);
-                return API.objUrl(url, obj);
-            }
-            /**
-             * 处理查询参数部分
-             * @param url 源URL
-             * @returns 参数对象
-             */
-            search(url) {
-                let obj = API.urlObj(url);
-                obj.bvid && (obj.aid = API.abv(obj.bvid)); // 存在bvid，添加aid
-                obj.aid && !Number(obj.aid) && (obj.aid = API.abv(obj.aid)); // aid误为bvid，转化
-                (obj.from && obj.from == "search") && (obj.from = null);
-                obj = { ...obj, ...this.param };
-                return obj;
-            }
-            /**
-             * 处理非查询部分
-             * @param url 源URL
-             * @returns URL
-             */
-            hash(url) {
-                let hash = url.includes("#") ? \`#\${url.split("#")[1]}\` : "";
-                hash.includes("?") && (hash = hash.split("?")[0]);
-                let arr = url.split("#")[0].split("?")[0].split("/"); // 分割URL
-                arr.forEach((d, i, e) => {
-                    (d.toLowerCase().startsWith('bv')) && (e[i] = "av" + API.abv(d));
-                });
-                return arr.join("/") + hash;
+                const search = API.urlObj(url);
+                search.bvid && (search.aid = API.abv(search.bvid));
+                search.aid && !Number(search.aid) && (search.aid = API.abv(search.aid));
+                (search.from && search.from == "search") && (search.from = null);
+                let rsearch = { ...search, ...this.param };
+                const hash = url.split("#");
+                let shash = (hash[1] && url.includes("?") && !hash[1].includes("?")) ? hash[1] : "";
+                return API.objUrl(url.split("?")[0], rsearch).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + API.abv(s)) + shash;
             }
             click(e) {
                 var f = e.target;
@@ -9714,7 +9693,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/parameterTrim.js`;
+//# sourceURL=API://@Bilibili-Old/required/parameterTrim.js`;
 /*!***********************!*/
 /**/modules["player-v2.js"] = /*** ./dist/required/player-v2.js ***/
 `/**
@@ -9754,7 +9733,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/player-v2.js`;
+//# sourceURL=API://@Bilibili-Old/required/player-v2.js`;
 /*!***********************!*/
 /**/modules["playinfoRecord.js"] = /*** ./dist/required/playinfoRecord.js ***/
 `/**
@@ -9786,7 +9765,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/playinfoRecord.js`;
+//# sourceURL=API://@Bilibili-Old/required/playinfoRecord.js`;
 /*!***********************!*/
 /**/modules["protoDm.js"] = /*** ./dist/required/protoDm.js ***/
 `/**
@@ -9833,7 +9812,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/protoDm.js`;
+//# sourceURL=API://@Bilibili-Old/required/protoDm.js`;
 /*!***********************!*/
 /**/modules["rebuildPlayerurl.js"] = /*** ./dist/required/rebuildPlayerurl.js ***/
 `/**
@@ -10227,7 +10206,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/rebuildPlayerurl.js`;
+//# sourceURL=API://@Bilibili-Old/required/rebuildPlayerurl.js`;
 /*!***********************!*/
 /**/modules["replyList.js"] = /*** ./dist/required/replyList.js ***/
 `/**
@@ -10279,7 +10258,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/replyList.js`;
+//# sourceURL=API://@Bilibili-Old/required/replyList.js`;
 /*!***********************!*/
 /**/modules["section.js"] = /*** ./dist/required/section.js ***/
 `/**
@@ -10317,7 +10296,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/section.js`;
+//# sourceURL=API://@Bilibili-Old/required/section.js`;
 /*!***********************!*/
 /**/modules["sectionTypo.js"] = /*** ./dist/required/sectionTypo.js ***/
 `/**
@@ -10380,7 +10359,7 @@ catch (e) {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/required/sectionTypo.js`;
+//# sourceURL=API://@Bilibili-Old/required/sectionTypo.js`;
 /*!***********************!*/
 /**/modules["segProgress.js"] = /*** ./dist/required/segProgress.js ***/
 `/**
@@ -10612,7 +10591,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/required/segProgress.js`;
+//# sourceURL=API://@Bilibili-Old/required/segProgress.js`;
 /*!***********************!*/
 /**/modules["unloginPopover.js"] = /*** ./dist/required/unloginPopover.js ***/
 `/**
@@ -10628,7 +10607,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/unloginPopover.js`;
+//# sourceURL=API://@Bilibili-Old/required/unloginPopover.js`;
 /*!***********************!*/
 /**/modules["unread.js"] = /*** ./dist/required/unread.js ***/
 `/**
@@ -10645,7 +10624,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/unread.js`;
+//# sourceURL=API://@Bilibili-Old/required/unread.js`;
 /*!***********************!*/
 /**/modules["user-select.js"] = /*** ./dist/required/user-select.js ***/
 `/**
@@ -10671,7 +10650,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/user-select.js`;
+//# sourceURL=API://@Bilibili-Old/required/user-select.js`;
 /*!***********************!*/
 /**/modules["videoLimit.js"] = /*** ./dist/required/videoLimit.js ***/
 `/**
@@ -10852,7 +10831,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/required/videoLimit.js`;
+//# sourceURL=API://@Bilibili-Old/required/videoLimit.js`;
 /*!***********************!*/
 /**/modules["danmaku.js"] = /*** ./dist/units/danmaku.js ***/
 `/**
@@ -11186,7 +11165,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/danmaku.js`;
+//# sourceURL=API://@Bilibili-Old/units/danmaku.js`;
 /*!***********************!*/
 /**/modules["debug.js"] = /*** ./dist/units/debug.js ***/
 `(function () {
@@ -11216,7 +11195,7 @@ catch (e) {
     API.debug = new Proxy(Debug.log, { get: (t, p) => Debug[p] });
 })();
 
-//# sourceURL=API://@bilibili/dist/units/debug.js`;
+//# sourceURL=API://@Bilibili-Old/units/debug.js`;
 /*!***********************!*/
 /**/modules["element.js"] = /*** ./dist/units/element.js ***/
 `/**
@@ -11526,7 +11505,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/element.js`;
+//# sourceURL=API://@Bilibili-Old/units/element.js`;
 /*!***********************!*/
 /**/modules["extend.js"] = /*** ./dist/units/extend.js ***/
 `/**
@@ -11778,7 +11757,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/extend.js`;
+//# sourceURL=API://@Bilibili-Old/units/extend.js`;
 /*!***********************!*/
 /**/modules["format.js"] = /*** ./dist/units/format.js ***/
 `(function () {
@@ -11911,7 +11890,7 @@ catch (e) {
     Reflect.ownKeys(Format).forEach(d => typeof Format[d] == "function" && Reflect.set(API, d, Format[d]));
 })();
 
-//# sourceURL=API://@bilibili/dist/units/format.js`;
+//# sourceURL=API://@Bilibili-Old/units/format.js`;
 /*!***********************!*/
 /**/modules["manage.js"] = /*** ./dist/units/manage.js ***/
 `/**
@@ -11948,7 +11927,7 @@ catch (e) {
     new Config();
 })();
 
-//# sourceURL=API://@bilibili/dist/units/manage.js`;
+//# sourceURL=API://@Bilibili-Old/units/manage.js`;
 /*!***********************!*/
 /**/modules["nodeObserver.js"] = /*** ./dist/units/nodeObserver.js ***/
 `/**
@@ -11994,7 +11973,7 @@ catch (e) {
     }))).observe(document, { childList: true, subtree: true });
 })();
 
-//# sourceURL=API://@bilibili/dist/units/nodeObserver.js`;
+//# sourceURL=API://@Bilibili-Old/units/nodeObserver.js`;
 /*!***********************!*/
 /**/modules["notice.js"] = /*** ./dist/units/notice.js ***/
 `/**
@@ -12021,7 +12000,7 @@ catch (e) {
     GM.setValue("notice", content.num);
 })();
 
-//# sourceURL=API://@bilibili/dist/units/notice.js`;
+//# sourceURL=API://@Bilibili-Old/units/notice.js`;
 /*!***********************!*/
 /**/modules["rewrite.js"] = /*** ./dist/units/rewrite.js ***/
 `/**
@@ -12088,7 +12067,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/rewrite.js`;
+//# sourceURL=API://@Bilibili-Old/units/rewrite.js`;
 /*!***********************!*/
 /**/modules["setting.js"] = /*** ./dist/units/setting.js ***/
 `/**
@@ -12297,7 +12276,8 @@ catch (e) {
                     sort: "style",
                     label: "自动宽屏",
                     type: "switch",
-                    value: false
+                    value: false,
+                    action: v => v && (config.webFullScreen = false)
                 }, {
                     key: "noDanmaku",
                     sort: "style",
@@ -12310,6 +12290,13 @@ catch (e) {
                     label: "自动播放",
                     type: "switch",
                     value: false
+                }, {
+                    key: "webFullScreen",
+                    sort: "style",
+                    label: "自动网页全屏",
+                    type: "switch",
+                    value: false,
+                    action: v => v && (config.screenWide = false)
                 }]
         });
         API.registerSetting({
@@ -12853,7 +12840,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/setting.js`;
+//# sourceURL=API://@Bilibili-Old/units/setting.js`;
 /*!***********************!*/
 /**/modules["switchVideo.js"] = /*** ./dist/units/switchVideo.js ***/
 `/**
@@ -12889,7 +12876,7 @@ catch (e) {
     });
 })();
 
-//# sourceURL=API://@bilibili/dist/units/switchVideo.js`;
+//# sourceURL=API://@Bilibili-Old/units/switchVideo.js`;
 /*!***********************!*/
 /**/modules["toast.js"] = /*** ./dist/units/toast.js ***/
 `(function () {
@@ -13011,7 +12998,7 @@ catch (e) {
     Reflect.set(Reflect.get(API, "toast"), "error", (...msg) => { debug.error(...msg); Toast.show("error", ...msg); });
 })();
 
-//# sourceURL=API://@bilibili/dist/units/toast.js`;
+//# sourceURL=API://@Bilibili-Old/units/toast.js`;
 /*!***********************!*/
 /**/modules["ui.js"] = /*** ./dist/units/ui.js ***/
 `/**
@@ -13560,7 +13547,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/ui.js`;
+//# sourceURL=API://@Bilibili-Old/units/ui.js`;
 /*!***********************!*/
 /**/modules["url.js"] = /*** ./dist/units/url.js ***/
 `/**
@@ -13620,7 +13607,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/units/url.js`;
+//# sourceURL=API://@Bilibili-Old/units/url.js`;
 /*!***********************!*/
 /**/modules["urlInputCheck.js"] = /*** ./dist/units/urlInputCheck.js ***/
 `/**
@@ -13728,7 +13715,7 @@ catch (e) {
     };
 })();
 
-//# sourceURL=API://@bilibili/dist/units/urlInputCheck.js`;
+//# sourceURL=API://@Bilibili-Old/units/urlInputCheck.js`;
 /*!***********************!*/
 /**/modules["vector.js"] = /*** ./dist/units/vector.js ***/
 `/**
@@ -13764,7 +13751,7 @@ catch (e) {
     }
 })();
 
-//# sourceURL=API://@bilibili/dist/units/vector.js`;
+//# sourceURL=API://@Bilibili-Old/units/vector.js`;
 /*!***********************!*/
 /**/modules["xhr.js"] = /*** ./dist/units/xhr.js ***/
 `(function () {
@@ -13854,7 +13841,7 @@ catch (e) {
     API.xhr = new Proxy(Xhr.xhr, { get: (t, p) => Xhr[p] });
 })();
 
-//# sourceURL=API://@bilibili/dist/units/xhr.js`;
+//# sourceURL=API://@Bilibili-Old/units/xhr.js`;
 /*!***********************!*/
 /**/modules["av-biliplus.js"] = /*** ./dist/__INITIAL_STATE__/av-biliplus.js ***/
 `/**
@@ -13966,7 +13953,7 @@ catch (e) {
     API.__INITIAL_STATE__ = result;
 })();
 
-//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/av-biliplus.js`;
+//# sourceURL=API://@Bilibili-Old/__INITIAL_STATE__/av-biliplus.js`;
 /*!***********************!*/
 /**/modules["av-detail.js"] = /*** ./dist/__INITIAL_STATE__/av-detail.js ***/
 `/**
@@ -14065,7 +14052,7 @@ catch (e) {
     API.__INITIAL_STATE__ = result;
 })();
 
-//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/av-detail.js`;
+//# sourceURL=API://@Bilibili-Old/__INITIAL_STATE__/av-detail.js`;
 /*!***********************!*/
 /**/modules["bangumi-global.js"] = /*** ./dist/__INITIAL_STATE__/bangumi-global.js ***/
 `/**
@@ -14188,7 +14175,7 @@ catch (e) {
     API.__INITIAL_STATE__ = result;
 })();
 
-//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/bangumi-global.js`;
+//# sourceURL=API://@Bilibili-Old/__INITIAL_STATE__/bangumi-global.js`;
 /*!***********************!*/
 /**/modules["bangumi-season.js"] = /*** ./dist/__INITIAL_STATE__/bangumi-season.js ***/
 `/**
@@ -14308,7 +14295,7 @@ catch (e) {
     API.__INITIAL_STATE__ = result;
 })();
 
-//# sourceURL=API://@bilibili/dist/__INITIAL_STATE__/bangumi-season.js`;
+//# sourceURL=API://@Bilibili-Old/__INITIAL_STATE__/bangumi-season.js`;
 /*!***********************!*/
     /**
      * 初始化脚本设置数据
