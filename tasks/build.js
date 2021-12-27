@@ -22,7 +22,7 @@ class Build {
         const modules = files.reduce((s, d, i) => {
             let t = arr[i].split("/");
             s += arr[i].endsWith(".json") ? `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n${String(d)}\r\n/*!***********************!*/` :
-                arr[i].endsWith(".js") ? `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n\`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\r\n//# sourceURL=API://@bilibili${arr[i].slice(1)}\`;\r\n/*!***********************!*/` :
+                arr[i].endsWith(".js") ? `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n\`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\r\n//# sourceURL=API://@${arr[i].slice(2).replace("dist", "Bilibili-Old")}\`;\r\n/*!***********************!*/` :
                     `\r\n/**/modules["${t[t.length - 1]}"] = /*** .${arr[i].slice(1)} ***/\r\n\`${String(d).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;\r\n/*!***********************!*/`
             return s;
         }, "");
