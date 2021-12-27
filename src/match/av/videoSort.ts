@@ -3,7 +3,7 @@
  * 分区信息表videoSort.json可能需要长期维护
  */
 (function () {
-    API.runWhile(() => document.querySelector(".tm-info"), () => {
+    API.runWhile(() => document.querySelector(".tm-info") && API.aid, () => {
         try {
             const sort = <Record<number, [number, string, string]>>API.getModule("videoSort.json");
             if (API.path.name == "av" && API.tid && API.tid in sort) {

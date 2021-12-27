@@ -2,7 +2,7 @@
  * 本模块负责为旧版av/BV、稍后再看添加点赞功能
  */
 (function () {
-    API.runWhile(() => document.querySelector(".v.play"), async () => {
+    API.runWhile(() => document.querySelector(".v.play") && API.aid, async () => {
         try {
             let span = document.createElement("span");
             let like = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);`;

@@ -59,36 +59,14 @@
              * @returns URL
              */
             triming(url: string) {
-                let obj = this.search(url);
-                url = this.hash(url);
-                return API.objUrl(url, obj);
-            }
-            /**
-             * 处理查询参数部分
-             * @param url 源URL
-             * @returns 参数对象
-             */
-            search(url: string) {
-                let obj: any = API.urlObj(url);
-                obj.bvid && (obj.aid = <string>API.abv(obj.bvid)); // 存在bvid，添加aid
-                obj.aid && !Number(obj.aid) && (obj.aid = <string>API.abv(obj.aid)); // aid误为bvid，转化
-                (obj.from && obj.from == "search") && (obj.from = null);
-                obj = { ...obj, ...this.param };
-                return obj;
-            }
-            /**
-             * 处理非查询部分
-             * @param url 源URL
-             * @returns URL
-             */
-            hash(url: string) {
-                let hash = url.includes("#") ? `#${url.split("#")[1]}` : "";
-                hash.includes("?") && (hash = hash.split("?")[0]);
-                let arr = url.split("#")[0].split("?")[0].split("/"); // 分割URL
-                arr.forEach((d, i, e) => {
-                    (d.toLowerCase().startsWith('bv')) && (e[i] = "av" + API.abv(d));
-                })
-                return arr.join("/") + hash;
+                const search = API.urlObj(url);
+                search.bvid && (search.aid = <string>API.abv(search.bvid));
+                search.aid && !Number(search.aid) && (search.aid = <string>API.abv(search.aid));
+                (search.from && search.from == "search") && (search.from = null);
+                let rsearch = { ...search, ...this.param };
+                const hash = url.split("#");
+                let shash = (hash[1] && url.includes("?") && !hash[1].includes("?")) ? hash[1] : "";
+                return API.objUrl(url.split("?")[0], rsearch).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + API.abv(s)) + shash;
             }
             click(e: MouseEvent) {
                 var f = <HTMLAnchorElement>e.target;
