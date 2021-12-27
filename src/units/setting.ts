@@ -205,7 +205,8 @@
                 sort: "style",
                 label: "自动宽屏",
                 type: "switch",
-                value: false
+                value: false,
+                action: v => v && (config.webFullScreen = false)
             }, {
                 key: "noDanmaku",
                 sort: "style",
@@ -218,6 +219,13 @@
                 label: "自动播放",
                 type: "switch",
                 value: false
+            }, {
+                key: "webFullScreen",
+                sort: "style",
+                label: "自动网页全屏",
+                type: "switch",
+                value: false,
+                action: v => v && (config.screenWide = false)
             }]
         })
         API.registerSetting({
@@ -1025,6 +1033,10 @@ declare namespace config {
      * 通用：托管原生脚本
      */
     let trusteeship: boolean;
+    /**
+     * 样式：自动网页全屏
+     */
+    let webFullScreen: boolean;
 }
 /**
  * 工具栏按钮
