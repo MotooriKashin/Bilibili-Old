@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.2.1
+// @version      6.2.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5860,26 +5860,43 @@ option {
  */
 (function () {
     try {
-        API.path.name = "player";
-        const obj = API.urlObj(location.href);
-        obj.avid && (Number(obj.avid) ? Reflect.set(window, "aid", obj.avid) : Reflect.set(window, "aid", API.abv(obj.avid)));
-        !Reflect.has(window, "aid") && obj.bvid && Reflect.set(window, "aid", API.abv(obj.bvid));
-        obj.cid && Number(obj.cid) && Reflect.set(window, "cid", obj.cid);
-        API.restorePlayerSetting(); // 备份还原旧版播放器设置数据
-        API.rewriteHTML(API.getModule("player.html"));
-        API.runWhile(() => document.body, () => {
-            window.addEventListener('message', e => {
-                if (e.data.cid) {
-                    window.__playinfo__ = undefined;
-                    e.data.as_wide = 1;
-                    e.data.dashSymbol = true;
-                    e.data.p = 1;
-                    e.data.pre_ad = "";
-                    history.replaceState(undefined, undefined, API.objUrl("https://www.bilibili.com/blackboard/html5player.html", { aid: e.data.aid, cid: e.data.cid }));
-                    window.player = new window.BilibiliPlayer(e.data);
-                }
-            });
-        });
+        class Player {
+            constructor() {
+                API.path.name = "player";
+                const obj = API.urlObj(location.href);
+                obj.avid && (Number(obj.avid) ? Reflect.set(window, "aid", obj.avid) : Reflect.set(window, "aid", API.abv(obj.avid)));
+                !Reflect.has(window, "aid") && obj.bvid && Reflect.set(window, "aid", API.abv(obj.bvid));
+                obj.cid && Number(obj.cid) && Reflect.set(window, "cid", obj.cid);
+                window.aid ? this.write() : this.check();
+            }
+            async check() {
+                const obj = await API.urlInputCheck(location.href);
+                if (!obj.aid)
+                    return toast.error("未能获取到外链视频的aid，已禁用重写操作~");
+                window.aid = obj.aid;
+                window.cid = obj.cid;
+                history.replaceState(null, "", API.objUrl(location.href, { avid: obj.aid, cid: obj.cid }));
+                this.write();
+            }
+            write() {
+                API.restorePlayerSetting(); // 备份还原旧版播放器设置数据
+                API.rewriteHTML(API.getModule("player.html"));
+                API.runWhile(() => document.body, () => {
+                    window.addEventListener('message', e => {
+                        if (e.data.cid) {
+                            window.__playinfo__ = undefined;
+                            e.data.as_wide = 1;
+                            e.data.dashSymbol = true;
+                            e.data.p = 1;
+                            e.data.pre_ad = "";
+                            history.replaceState(undefined, undefined, API.objUrl("https://www.bilibili.com/blackboard/html5player.html", { aid: e.data.aid, cid: e.data.cid }));
+                            window.player = new window.BilibiliPlayer(e.data);
+                        }
+                    });
+                });
+            }
+        }
+        new Player();
     }
     catch (e) {
         toast.error("player.js", e);
@@ -13670,12 +13687,13 @@ catch (e) {
                 try {
                     // 尝试访问bangumi接口
                     let data;
-                    if (ssid)
-                        data = JSON.stringify(catchs.ssid[ssid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: ssid }) });
-                    else if (epid)
+                    if (epid)
                         data = JSON.stringify(catchs.epid[epid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: epid }) });
+                    else if (ssid)
+                        data = JSON.stringify(catchs.ssid[ssid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: ssid }) });
                     if (data) {
-                        data = API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        data = API.__INITIAL_STATE__;
                         ssid && (catchs.ssid[ssid] = data);
                         epid && (catchs.epid[epid] = data);
                         aid = data.epInfo.aid;
@@ -13687,10 +13705,10 @@ catch (e) {
                 catch (e) {
                     e = Array.isArray(e) ? e : [e];
                     let data;
-                    if (epid)
-                        debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
-                    else if (ssid)
+                    if (ssid)
                         debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                    else if (epid)
+                        debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
                     try {
                         if (epid) {
                             data = await xhr({ url: API.objUrl(\`\${config.limitServer}/intl/gateway/v2/ogv/view/app/season\`, { ep_id: epid }) });
@@ -13698,7 +13716,8 @@ catch (e) {
                         else if (ssid) {
                             data = await xhr({ url: API.objUrl(\`\${config.limitServer}/intl/gateway/v2/ogv/view/app/season\`, { season_id: ssid }) });
                         }
-                        data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        data = API.__INITIAL_STATE__;
                         aid = data.epInfo.aid;
                         cid = data.epInfo.cid;
                         pgc = true;
