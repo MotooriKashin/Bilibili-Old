@@ -57,10 +57,11 @@
                 try {
                     // 尝试访问bangumi接口
                     let data;
-                    if (ssid) data = JSON.stringify(catchs.ssid[ssid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: ssid }) });
-                    else if (epid) data = JSON.stringify(catchs.epid[epid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: epid }) });
+                    if (epid) data = JSON.stringify(catchs.epid[epid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { ep_id: epid }) });
+                    else if (ssid) data = JSON.stringify(catchs.ssid[ssid]) || await xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", { season_id: ssid }) });
                     if (data) {
-                        data = API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        API.importModule("bangumi-season.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        data = API.__INITIAL_STATE__;
                         ssid && (catchs.ssid[ssid] = data);
                         epid && (catchs.epid[epid] = data);
                         aid = data.epInfo.aid;
@@ -71,15 +72,16 @@
                 } catch (e) {
                     e = Array.isArray(e) ? e : [e];
                     let data;
-                    if (epid) debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
-                    else if (ssid) debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                    if (ssid) debug.error("获取视频信息出错：ssid：" + ssid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
+                    else if (epid) debug.error("获取视频信息出错：epid：" + epid, "HOST：https://bangumi.bilibili.com/view/web_api/season", ...e);
                     try {
                         if (epid) {
                             data = await xhr({ url: API.objUrl(`${config.limitServer}/intl/gateway/v2/ogv/view/app/season`, { ep_id: epid }) });
                         } else if (ssid) {
                             data = await xhr({ url: API.objUrl(`${config.limitServer}/intl/gateway/v2/ogv/view/app/season`, { season_id: ssid }) });
                         }
-                        data = API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        API.importModule("bangumi-global.js", { __INITIAL_STATE__: data, epid: epid }, true);
+                        data = API.__INITIAL_STATE__;
                         aid = data.epInfo.aid;
                         cid = data.epInfo.cid;
                         pgc = true;
