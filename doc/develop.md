@@ -9,32 +9,133 @@ npm install -g typescript
 ```
 
 ---
-### 代码编辑
-项目源代码全部位于src目录下，使用Typescript进行开发。需要注意的是脚本源码其实分为3部分：src主目录下index.ts文件，src及其子目录下所有`.ts`文件，dist目录下托管的B站原生js文件。  
-1. index.ts：这是脚本的入口，标准的用户脚本文件。  
-上下文环境为Tampermonkey提供的沙盒，可以访问DOM，但访问页面顶层对象需要使用`unsafeWindow`，可以直接使用高级API。  
-本部分作为第二部分的入口和引导，代码量极少且不实现任何具体功能，所以很少需要修改。
-2. src及其子目录下所有`.ts`文件：本项目称之为“模块”。  
-模块可位于src及其子目录的任何位置，本脚本索引模块只使用文件名(包括拓展名)，与所在目录无关，所以模块间不允许重名！  
-上下文环境为就是页面上下文，可以直接访问顶层对象`window`，只能间接使用高级API——封装于全局对象`GM`中。  
-另有全局对象`API`作为`window`替代，模块的互通数据都请通过`API`对象，原则上不需去污染`window`。  
-尽量一个功能一个模块以便维护，模块可以直接实现功能，也可以作为其他功能的“库”：
-直接实现功能的模块需要自己在相应的入口里主动使用API.importModule([模块文件名])方法载入运行，入口可以在rewrite.ts(重写相关功能入口)、src/match目录下ts文件(页面区分入口)、vector.ts(重写外的全局入口)，或者其他任何必定运行的ts文件中。  
-作为“库”使用，可以将需要暴露的数据放在`API`对象，并在json/apply.json文件中关联好数据：模块名。“库”不必主动载入运行，脚本会在用到对应数据时自动载入运行。  
-另外文件名以`[run]`开头的模块是“自运行模块”，全局默认运行，可作为免于添加入口代码的一种方案。
-3. dist目录下托管的B站原生js文件。  
-这些文件的存在是因为有些功能无法用常规手段修复，只能直接修复并托管相关代码。  
-本部分全部是js代码，而且经过高度混淆压缩，不会被打包进脚本中，需要使用其他手段使用，所幸一般不需要修改。
-
-项目中还用到了一些非代码文件，分类存放于CSS，HTML，image，json等目录下，其中css，html以及部分json文件与“模块”使用类似的方式打包进了脚本，只是因为并非代码文件，切莫使用API.importModule([模块文件名])方法载入运行！取而代之的是使用API.getModule([模块文件名])方法以字符串形式获取——json文件会直接代为格式化为对象，无需再次格式化！  
-脚本元数据位于json/meta.json，不会打包进脚本，修改脚本版本号等操作位于这里。  
-脚本外部依赖位于json/resource.json，不会打包进脚本，可以使用高级API`GM_getResourceText`/`GM_getResourceURL`获取。
-
-修改完成后可以使用运行`clear`（已设置为默认任务，使用快捷键`Ctrl` + `Shift` + `B`直接运行。）任务完成编译、合成、清理临时文件的操作，最后提交修改即可。
+### 目录结构
+```
+├─CSS 层叠式样式     
+├─dist B站原生脚本存档
+├─doc 说明文档
+├─HTML 超文本文档
+├─image 图片
+├─json JSON
+│  ├─ apply.json 方法对照表
+│  ├─ meta.json 脚本元数据
+│  ├─ resource.json 外部资源
+├─src 源代码
+│  ├─__INITIAL_STATE__ 重构__INITIAL_STATE__数据
+│  ├─download 下载相关 
+│  ├─extensions 工具组件    
+│  ├─hook hook组件  
+│  ├─match 分类引导
+│  │  ├─av 普通视频
+│  │  ├─bangumi 番剧
+│  │  ├─index 主页
+│  │  ├─live 直播
+│  │  └─space 个人空间
+│  ├─required 一般组件
+│  ├─units 基础组件
+│  │      modules.ts 主引导
+│  │      notice.ts 脚本公告
+│  │      rewrite.ts 重写引导
+│  │      setting.ts 设置注册
+│  │      vector.ts 一般引导
+│  └─ index.ts 脚本主体
+├─tasks 任务脚本
+│  └─ build.js 合成脚本
+└─ main.user.js 编译出的脚本
+        
+```
 
 ---
-### 全局对象
-“模块”中可以像使用`window`一样直接使用一些预定义好的对象：
+### 模块释名
+本脚本使用了**自创**的模块化方案将代码进行模块化，本脚本所谓的“模块”区别于市面上任何已知的模块形式，具体特点如下：
+1. 开发语言为TypeScript。
+2. 本质上是普通的ts脚本，而不是其他语境中的模块。
+3. 在页面环境中运行而不是脚本管理器提供的沙盒，可以正常访问顶层对象window。
+4. 预定义了大量全局变量，由脚本基础组件提供。
+5. 在脚本中以字符串形式存在，按需运行。
+6. 使用特殊方法载入运行。
+
+参考上面的结构的本脚本的编译生成流程如下：
+
+<div style="text-align: center;">
+    <div>TypeScript模块</div>
+    <div>↓ tsc任务</div>
+    <div>JavaScript模块</div>
+    <div>↓ build任务</div>
+    <div>main.user.js</div>
+</div>
+
+最后运行clear任务清理临时文件。*已设计为任务链，运行clear任务会预先执行前两个命令：tsc -> build -> clear*
+
+---
+### 代码编辑
+#### 模块
+- 模块源代码都在src目录下，维护已有功功能参考目录结构直接在对应模块编辑代码即可。  
+- 开发新功能可以新建一个模块，也可以新建子目录然后创建一堆模块，本脚本以文件名索引模块而不关系所在路径，所以**禁止新建同名模块！**
+- 模块中可以使用API等已预定好的全局变量，完全模块间的数据交换。
+- 模块中暴露数据请添加为API对象的新属性或者新方法，并在“方法对照表”中补充对应关系，以实现按需自动载入相关模块。
+```
+// 示例1：
+
+// aaa.ts
+// 暴露一个函数：doSomething
+API.doSomething = function(){...}
+
+// apply.json
+// 添加对应关系
+{
+    ...
+    "doSomething": "aaa.js"
+}
+
+// xxx.js
+// 当调用到doSomething方法时，脚本会预先运行aaa.js以确保doSomething方法存在
+const example = API.doSomething();
+```
+- 模块如果需要主动运行，请在对应引导模块中添加引导代码，使用importModule方法主动调用。
+```
+// 示例2：
+
+// rewrite.js
+// rewrite.js负责重写相关引导，判断是av页面且设置了重写av页，便使用importModule方法主动调用av.js
+if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) API.importModule("av.js");
+
+// vector.js
+// vector.js负责一般全局引导，重写结束后判断设置了分页评论区，便使用importModule方法主动调用replyList.js
+config.replyList && API.importModule("replyList.js");
+
+// av.js
+// av.js负责av页相关处理及引导，判断设置了互动弹幕，便使用importModule方法主动调用commandDm.js
+config.commandDm && API.importModule("commandDm.js");
+```
+#### 主体
+脚本主体一般不需要修改，除非需要添加使用脚本管理器提供的其他高级API。
+```
+// 示例3：
+
+// meta.json
+// 在脚本元数据中声明GM_xmlhttpRequest
+{
+    ...
+    "grant": [
+        ...
+        "GM_xmlhttpRequest"
+    ]
+}
+
+// index.ts
+// 在脚本主体中封装GM_xmlhttpRequest于GM对象中
+GM.xmlHttpRequest = GM_xmlhttpRequest;
+```
+#### 其他
+1. 涉及对于B站原生脚本的修改在dist目录下，直接修改js文件即可。
+2. 添加非源代码资源请添加进对应的顶层目录中，如CSS、HTML、image、JSON。
+3. 字符串及json格式的资源可以使用getModule方法传入文件名获取，其中json会被格式为对象。
+4. 外部资源依赖请将链接写入“外部资源”，可以使用GM.getResourceText等方法获取。
+
+---
+### 全局变量
+模块中可以像使用`window`一样直接使用一些预定义好的变量：
 1. API：作为类似于`window`的存在，是模块间交流数据的基础。
 2. GM：高级API对象，只申请了目前用到的，需要添加的话请在json/meta.json中声明，然后在index.ts中封装好。
 3. debug：console的部分再封装，添加了时间戳。
@@ -53,5 +154,9 @@ npm install -g typescript
 5. API对象代理了顶层window对象上的全部属性，所以向API暴露新属性禁止与window上现有属性重名。
 
 ---
-### 合并请求
-提交完推送到你的远程仓库，然后往`master`分支发起合并请求即可。
+### 贡献代码
+1. 编辑代码及其他资源
+2. 在脚本元数据以添加版本号
+3. 运行任务clear(Ctrl + Shift + B)任务进行编译
+4. Git保存提交推送
+5. 向`master`分支发起合并请求
