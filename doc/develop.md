@@ -57,13 +57,13 @@ npm install -g typescript
 
 参考上面的结构的本脚本的编译生成流程如下：
 
-<center>
+<div align="center">
     <div>TypeScript模块</div>
     <div>↓ tsc任务</div>
     <div>JavaScript模块</div>
     <div>↓ build任务</div>
     <div>main.user.js</div>
-</center>
+</div>
 
 最后运行clear任务清理临时文件。*已设计为任务链，运行clear任务会预先执行前两个命令：tsc -> build -> clear*
 
