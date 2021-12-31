@@ -221,9 +221,39 @@
             })
         }
         API.alertMessage = (text: string, title: string) => alertMessage(text, title);
+        /**
+         * 重写网页框架
+         * @param html 网页模板
+         */
+        function rewriteHTML(html: string) {
+            API.getModule("bug.json").forEach((d: string) => {
+                window[d] && Reflect.set(window, d, undefined);
+            });
+            // document.write方法的使用会使高级API异常，解决办法是仍旧使用沙盒环境中的document对象上的方法
+            (<any>API).document.open();
+            (<any>API).document.write(html);
+            (<any>API).document.close();
+            config.rewriteMethod == "异步" && API.importModule("vector.js"); // 重写后页面正常引导
+        }
+        API.rewriteHTML = (html: string) => rewriteHTML(html);
     } catch (e) { toast.error("extend.js", e) }
 })();
+/**
+ * 模块间的顶层变量，类似于`window`
+ */
 declare namespace API {
+    /**
+     * 脚本名字
+     */
+    let Name: string;
+    /**
+     * 脚本版本
+     */
+    let Virsion: string;
+    /**
+     * 脚本管理器名字
+     */
+    let Handler: string;
     /**
      * 获取当前用户cookies
      */
@@ -335,4 +365,22 @@ declare namespace API {
      * @returns Promise代理的布尔值，取决于用户的点击的按钮
      */
     function alertMessage(text: string, title?: string): Promise<boolean>;
+    /**
+     * 载入模块
+     * @param name 模块名字
+     * @param args 传递给对方的全局变量：格式{变量名：变量值}
+     * @param force 是否强制载入，一般模块只会载入一次，需要二次载入请将本值设为真
+     */
+    function importModule(name?: string | symbol, args?: { [key: string]: any; }, force?: boolean): string[];
+    /**
+     * 获取模块内容
+     * @param name 模块名字
+     * @returns json直接返回格式化对象，其他返回字符串
+     */
+    function getModule(name: string): any;
+    /**
+     * 重写网页框架
+     * @param html 网页模板
+     */
+    function rewriteHTML(html: string): void;
 }
