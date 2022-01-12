@@ -100,7 +100,7 @@
         video() {
             if (this.data.mp4[0]) {
                 toast.warning("载入本地视频中...", "请无视控制台大量报错！")
-                let video = <HTMLVideoElement>document.querySelector("video");
+                let video = <HTMLVideoElement>document.querySelector("#bilibiliPlayer > div.bilibili-player-area.video-state-pause > div.bilibili-player-video-wrap > div.bilibili-player-video > video");
                 video.src = URL.createObjectURL(this.data.mp4[0]);
                 toast.success("本地视频：" + this.data.mp4[0].name);
                 (<HTMLDivElement>document.querySelector(".bilibili-player-video-time-total")).textContent = this.time(video.duration); // 修复总时长

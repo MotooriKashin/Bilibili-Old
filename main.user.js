@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.2.2
+// @version      6.2.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -36,8 +36,6 @@
     GM.listValues = GM_listValues;
     GM.getResourceText = GM_getResourceText;
     GM.getResourceURL = GM_getResourceText;
-    // @ts-ignore 忽略unsafeWindow错误
-    const root = unsafeWindow;
     const modules = {};
     
 /**/modules["alert.css"] = /*** ./CSS/alert.css ***/
@@ -9532,7 +9530,7 @@ catch (e) {
         video() {
             if (this.data.mp4[0]) {
                 toast.warning("载入本地视频中...", "请无视控制台大量报错！");
-                let video = document.querySelector("video");
+                let video = document.querySelector("#bilibiliPlayer > div.bilibili-player-area.video-state-pause > div.bilibili-player-video-wrap > div.bilibili-player-video > video");
                 video.src = URL.createObjectURL(this.data.mp4[0]);
                 toast.success("本地视频：" + this.data.mp4[0].name);
                 document.querySelector(".bilibili-player-video-time-total").textContent = this.time(video.duration); // 修复总时长
@@ -11768,6 +11766,21 @@ catch (e) {
             });
         }
         API.alertMessage = (text, title) => alertMessage(text, title);
+        /**
+         * 重写网页框架
+         * @param html 网页模板
+         */
+        function rewriteHTML(html) {
+            API.getModule("bug.json").forEach((d) => {
+                window[d] && Reflect.set(window, d, undefined);
+            });
+            // document.write方法的使用会使高级API异常，解决办法是仍旧使用沙盒环境中的document对象上的方法
+            API.document.open();
+            API.document.write(html);
+            API.document.close();
+            config.rewriteMethod == "异步" && API.importModule("vector.js"); // 重写后页面正常引导
+        }
+        API.rewriteHTML = (html) => rewriteHTML(html);
     }
     catch (e) {
         toast.error("extend.js", e);
@@ -11945,6 +11958,90 @@ catch (e) {
 })();
 
 //# sourceURL=API://@Bilibili-Old/units/manage.js`;
+/*!***********************!*/
+/**/modules["modules.js"] = /*** ./dist/units/modules.js ***/
+`/**
+ * 本模块是脚本模块主入口
+ */
+(function () {
+    // @ts-expect-error 接收模块字符串
+    const modules = MODULES;
+    /**
+     * 已载入模块
+     */
+    const modulesLoaded = [];
+    /**
+     * 初始化脚本设置数据
+     */
+    const CONFIG = {};
+    const config = new Proxy(CONFIG, {
+        set: (_target, p, value) => {
+            CONFIG[p] = value;
+            GM.setValue("config", CONFIG);
+            return true;
+        },
+        get: (_target, p) => CONFIG[p]
+    });
+    const SETTING = [];
+    const MENU = {};
+    const shadow = new Proxy(API, {
+        get: (t, p) => {
+            return (Reflect.has(window, p) && typeof window[p] !== "function") ? Reflect.get(window, p) : (Reflect.get(t, p) || (Reflect.has(modules["apply.json"], p) ? (importModule(modules["apply.json"][p], {}),
+                Reflect.get(t, p)) : undefined));
+        },
+        set: (t, p, value) => {
+            (Reflect.has(window, p) && typeof window[p] !== "function") ? Reflect.set(window, p, value) : Reflect.set(t, p, value);
+            return true;
+        }
+    });
+    /**
+     * 载入模块
+     * @param name 模块名字
+     * @param args 传递给对方的全局变量：格式{变量名：变量值}
+     * @param force 是否强制载入，一般模块只会载入一次，需要二次载入请将本值设为真
+     */
+    function importModule(name, args = {}, force) {
+        if (!name)
+            return Object.keys(modules);
+        if (modulesLoaded.includes(name) && !force)
+            return modulesLoaded;
+        if (Reflect.has(modules, name)) {
+            !modulesLoaded.includes(name) && modulesLoaded.push(name);
+            new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(modules, name))(shadow, GM, Reflect.get(shadow, "debug"), Reflect.get(shadow, "toast"), Reflect.get(shadow, "xhr"), config, importModule, ...Object.keys(args).reduce((s, d) => {
+                s.push(args[d]);
+                return s;
+            }, []));
+        }
+    }
+    function modifyConfig(obj) {
+        Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value"));
+        Reflect.get(obj, "type") == "sort" && Reflect.has(obj, "list") && Reflect.get(obj, "list").forEach((d) => modifyConfig(d));
+    }
+    Object.entries(GM.getValue("config", {})).forEach(k => Reflect.set(config, k[0], k[1]));
+    Reflect.set(shadow, "config", config);
+    Reflect.set(shadow, "importModule", importModule);
+    Reflect.set(shadow, "getModule", (name) => Reflect.get(modules, name));
+    Reflect.set(shadow, "registerSetting", (obj) => { SETTING.push(obj); modifyConfig(obj); });
+    Reflect.set(shadow, "registerMenu", (obj) => Reflect.set(MENU, Reflect.get(obj, "key"), obj));
+    Reflect.set(shadow, "changeSettingMode", (mode) => {
+        const keys = Object.keys(mode);
+        SETTING.forEach(d => {
+            Reflect.has(d, "key") && keys.includes(Reflect.get(d, "key")) && Reflect.set(d, "hidden", Reflect.get(mode, Reflect.get(d, "key")));
+        });
+    });
+    Reflect.set(shadow, "drawUiInterface", () => {
+        window.self === window.top && shadow.runWhile(() => document.body, () => {
+            importModule("ui.js", { MENU, SETTING });
+        });
+        new Promise(r => Reflect.deleteProperty(shadow, "drawUiInterface"));
+    });
+    new Function("API", Reflect.get(modules, "debug.js"))(shadow);
+    new Function("API", "debug", "config", Reflect.get(modules, "toast.js"))(shadow, Reflect.get(shadow, "debug"), config);
+    new Function("API", "GM", Reflect.get(modules, "xhr.js"))(shadow, GM);
+    importModule("rewrite.js");
+})();
+
+//# sourceURL=API://@Bilibili-Old/units/modules.js`;
 /*!***********************!*/
 /**/modules["nodeObserver.js"] = /*** ./dist/units/nodeObserver.js ***/
 `/**
@@ -13742,7 +13839,7 @@ catch (e) {
  */
 (function () {
     try {
-        API.initUi(); // 设置ui
+        API.drawUiInterface(); // 设置ui
         API.importModule("parameterTrim.js", { Before: false }, true); // 网址清理，重写后处理
         API.importModule("infoNewNumber.js"); // 旧版顶栏资讯数
         config.protoDm && API.importModule("protoDm.js"); // 新版弹幕
@@ -14316,99 +14413,14 @@ catch (e) {
 
 //# sourceURL=API://@Bilibili-Old/__INITIAL_STATE__/bangumi-season.js`;
 /*!***********************!*/
-    /**
-     * 初始化脚本设置数据
-     */
-    const CONFIG = {};
-    const config = new Proxy(CONFIG, {
-        set: (_target, p, value) => {
-            CONFIG[p] = value;
-            GM.setValue("config", CONFIG);
-            return true;
-        },
-        get: (_target, p) => CONFIG[p]
-    });
-    Object.entries(GM.getValue("config", {})).forEach(k => Reflect.set(config, k[0], k[1]));
     class API {
         constructor() {
             this.GM = GM;
-            this.module = [];
             this.Name = GM.info.script.name;
             this.Virsion = GM.info.script.version;
             this.Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
-            this.config = config;
-            /**
-             * 获取模块内容
-             * @param name 模块名字
-             * @returns json直接返回格式化对象，其他返回字符串
-             */
-            this.getModule = (name) => Reflect.get(modules, name);
-            /**
-             * 载入模块
-             * @param name 模块名字
-             * @param args 传递给对方的全局变量：格式{变量名：变量值}
-             * @param force 是否强制载入，一般模块只会载入一次，需要二次载入请将本值设为真
-             */
-            this.importModule = (name, args = {}, force) => {
-                if (!name)
-                    return Object.keys(modules);
-                if (this.module.includes(name) && !force)
-                    return this.module;
-                if (Reflect.has(modules, name)) {
-                    !this.module.includes(name) && this.module.push(name);
-                    new Function("API", "GM", "debug", "toast", "xhr", "config", "importModule", ...Object.keys(args), Reflect.get(modules, name))(API.API, GM, Reflect.get(this, "debug"), Reflect.get(this, "toast"), Reflect.get(this, "xhr"), config, this.importModule, ...Object.keys(args).reduce((s, d) => {
-                        s.push(args[d]);
-                        return s;
-                    }, []));
-                }
-            };
-            API.API = new Proxy(this, {
-                get: (t, p) => {
-                    return (Reflect.has(root, p) && typeof root[p] !== "function") ? Reflect.get(root, p) : (Reflect.get(t, p) || (Reflect.has(modules["apply.json"], p) ? (t.importModule(modules["apply.json"][p], {}),
-                        Reflect.get(t, p)) : undefined));
-                },
-                set: (t, p, value) => {
-                    (Reflect.has(root, p) && typeof root[p] !== "function") ? Reflect.set(root, p, value) : Reflect.set(t, p, value);
-                    return true;
-                }
-            });
-            new Function("API", Reflect.get(modules, "debug.js"))(API.API);
-            new Function("API", "debug", "config", Reflect.get(modules, "toast.js"))(API.API, Reflect.get(this, "debug"), config);
-            new Function("API", "GM", Reflect.get(modules, "xhr.js"))(API.API, GM);
-            this.importModule("rewrite.js");
-        }
-        static modifyConfig(obj) {
-            Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value"));
-            Reflect.get(obj, "type") == "sort" && Reflect.has(obj, "list") && Reflect.get(obj, "list").forEach((d) => this.modifyConfig(d));
-        }
-        registerSetting(obj) {
-            API.SETTING.push(obj);
-            API.modifyConfig(obj);
-        }
-        registerMenu(obj) {
-            Reflect.set(API.MENU, Reflect.get(obj, "key"), obj);
-        }
-        changeSettingMode(mode) {
-            const keys = Object.keys(mode);
-            API.SETTING.forEach(d => {
-                Reflect.has(d, "key") && keys.includes(Reflect.get(d, "key")) && Reflect.set(d, "hidden", Reflect.get(mode, Reflect.get(d, "key")));
-            });
-        }
-        rewriteHTML(html) {
-            this.getModule("bug.json").forEach((d) => { root[d] && Reflect.set(root, d, undefined); });
-            document.open();
-            document.write(html);
-            document.close();
-            config.rewriteMethod == "异步" && this.importModule("vector.js"); // 重写后页面正常引导
-        }
-        initUi() {
-            root.self === root.top && this.runWhile(() => document.body, () => {
-                this.importModule("ui.js", { MENU: API.MENU, SETTING: API.SETTING });
-            });
-            new Promise(r => delete this.initUi);
+            this.document = document;
         }
     }
-    API.SETTING = [];
-    API.MENU = {};
-    new API();
+    new Function("API", "GM", "MODULES", Reflect.get(modules, "modules.js"))(new API(), GM, modules);
 })();
