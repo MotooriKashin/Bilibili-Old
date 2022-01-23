@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.2.3
+// @version      6.2.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5941,6 +5941,7 @@ option {
                 window.__INITIAL_STATE__ = result;
                 API.rewriteHTML(API.getModule("ranking.html"));
                 API.addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
+                API.addCss('.bili-dropdown.rank-dropdown, li[type="origin"], li[type="rookie"] { pointer-events: none; }');
             }
         }
         new Ranking();
@@ -7734,6 +7735,7 @@ option {
                 API.runWhile(() => document.querySelector("#fixed_app_download"), () => { var _a; return (_a = document.querySelector("#fixed_app_download")) === null || _a === void 0 ? void 0 : _a.remove(); });
                 // 修复失效分区
                 API.importModule("indexSort.js");
+                API.addCss(".bili-tab.rank-tab, .bili-dropdown.rank-dropdown { pointer-events: none; }");
             }
         }
         new Index();

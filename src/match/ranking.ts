@@ -35,6 +35,7 @@
                 (<any>window).__INITIAL_STATE__ = result;
                 API.rewriteHTML(API.getModule("ranking.html"));
                 API.addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
+                API.addCss('.bili-dropdown.rank-dropdown, li[type="origin"], li[type="rookie"] { pointer-events: none; }');
             }
         }
         new Ranking();

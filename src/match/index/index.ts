@@ -45,6 +45,7 @@
                 API.runWhile(() => document.querySelector("#fixed_app_download"), () => document.querySelector("#fixed_app_download")?.remove());
                 // 修复失效分区
                 API.importModule("indexSort.js");
+                API.addCss(".bili-tab.rank-tab, .bili-dropdown.rank-dropdown { pointer-events: none; }");
             }
         }
         new Index();
