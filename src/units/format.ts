@@ -124,6 +124,18 @@
                 return o;
             }, {});
         }
+        /**
+         * 秒数 -> hh:mm:ss
+         * @param second 秒数
+         * @returns hh:mm:ss
+         */
+        static s2hms(second: number) {
+            const s = second % 60;
+            let m = parseInt(String(second / 60));
+            const h = parseInt(String(m / 60));
+            m = m % 60;
+            return (h > 0 ? h + ":" : "") + (h > 0 || m > 0 ? (Array(2).join('0') + m).slice(-2) + ":" : "") + (Array(2).join('0') + s).slice(-2);
+        }
     }
     Reflect.ownKeys(Format).forEach(d => typeof Format[d] == "function" && Reflect.set(API, d, Format[d]));
 })();
@@ -173,4 +185,10 @@ declare namespace API {
      * @returns search参数对象
      */
     function urlObj(url?: string): { [name: string]: string };
+    /**
+     * 秒数 -> hh:mm:ss
+     * @param second 秒数
+     * @returns hh:mm:ss
+     */
+    function s2hms(second: number): string;
 }

@@ -62,5 +62,6 @@
     "intervalFormat": "extend.js",
     "runWhile": "extend.js",
     "bofqiMessage": "extend.js",
-    "alertMessage": "extend.js"
+    "alertMessage": "extend.js",
+    "s2hms": "format.js"
 }
