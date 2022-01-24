@@ -73,7 +73,7 @@ npm install -g typescript
 - 模块源代码都在src目录下，维护已有功功能参考目录结构直接在对应模块编辑代码即可。  
 - 开发新功能可以新建一个模块，也可以新建子目录然后创建一堆模块，本脚本以文件名索引模块而不关系所在路径，所以**禁止新建同名模块！**
 - 模块中可以使用API等已预定好的全局变量，完全模块间的数据交换。
-- 模块中暴露数据请添加为API对象的新属性或者新方法，并在“方法对照表”中补充对应关系，以实现按需自动载入相关模块。
+- 按需加载的模块中暴露数据请添加为API对象的新属性或者新方法，请在声明中添加`export`关键词，以实现按需自动载入相关模块。
 ```
 // 示例1：
 
@@ -81,11 +81,10 @@ npm install -g typescript
 // 暴露一个函数：doSomething
 API.doSomething = function(){...}
 
-// apply.json
-// 添加对应关系
-{
+// 添加暴露声明
+declare namespace API {
     ...
-    "doSomething": "aaa.js"
+    export function doSomething(): void;
 }
 
 // xxx.js

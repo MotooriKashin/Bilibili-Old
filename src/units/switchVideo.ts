@@ -30,5 +30,5 @@ declare namespace API {
      * 注册切P回调
      * @param callback 切P时的回调函数
      */
-    function switchVideo(callback: Function): void;
+    export function switchVideo(callback: Function): void;
 }

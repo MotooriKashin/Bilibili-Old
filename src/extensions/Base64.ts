@@ -27,7 +27,7 @@ declare namespace API {
     /**
      * Base64编解码工具
      */
-    let Base64: {
+    export let Base64: {
         /**
          * 编码：字符串 => Base64
          * @param str 字符串

@@ -14,11 +14,25 @@
 			"type": "shell",
 			"command": "node",
 			"args": [
-				"${workspaceFolder}\\tasks\\build.js",
+				"${workspaceFolder}\\tasks\\apply.js",
 				"${workspaceFolder}"
 			],
 			"dependsOn": [
 				"tsc"
+			],
+			"label": "apply",
+			"detail": "提取方法对照表",
+			"problemMatcher": []
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\tasks\\build.js",
+				"${workspaceFolder}"
+			],
+			"dependsOn": [
+				"apply"
 			],
 			"label": "build",
 			"detail": "编译最终的用户脚本本体",

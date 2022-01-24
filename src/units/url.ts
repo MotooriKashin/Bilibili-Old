@@ -105,5 +105,5 @@ declare namespace API {
      * @param GM 是否使用跨域请求
      * @returns Promise封装的返回值
      */
-    function getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T], GM?: boolean): Promise<any>;
+    export function getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T], GM?: boolean): Promise<any>;
 }

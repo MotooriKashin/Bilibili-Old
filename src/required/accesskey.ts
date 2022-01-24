@@ -121,5 +121,5 @@ declare namespace API {
     /**
      * 弹出账户授权面板
      */
-    function showAccesskey(): void;
+    export function showAccesskey(): void;
 }

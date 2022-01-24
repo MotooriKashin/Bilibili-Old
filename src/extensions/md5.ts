@@ -440,5 +440,5 @@ declare namespace API {
      * @param str 字符串输入
      * @returns md5输出
      */
-    function md5(str: string): string;
+    export function md5(str: string): string;
 }

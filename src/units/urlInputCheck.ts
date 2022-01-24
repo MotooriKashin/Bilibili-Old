@@ -99,5 +99,5 @@ declare namespace API {
      * 按需加载模块请先导入模块
      * @param input URL链接
      */
-    function urlInputCheck(input: string): Promise<{ aid: number; cid: number; ssid: number; epid: number; p: number; pgc: boolean; }>
+    export function urlInputCheck(input: string): Promise<{ aid: number; cid: number; ssid: number; epid: number; p: number; pgc: boolean; }>
 }

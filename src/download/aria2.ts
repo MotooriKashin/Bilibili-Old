@@ -75,7 +75,7 @@ declare namespace API {
     /**
      * aria2下载方法
      */
-    let aria2: {
+    export let aria2: {
         /**
          * 复制到aria2下载命令行
          * @param obj 配置数据

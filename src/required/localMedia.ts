@@ -132,5 +132,5 @@ declare namespace API {
      * 载入本地文件
      * @param files `input.files`
      */
-    function localMedia(files: FileList): void;
+    export function localMedia(files: FileList): void;
 }

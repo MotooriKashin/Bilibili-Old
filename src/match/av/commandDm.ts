@@ -662,5 +662,5 @@ declare namespace API {
      * @param aid aid
      * @param cid cid
      */
-    function loadCommandDm(cdm: any[], aid: string | number, cid: string | number): Promise<void>
+    export function loadCommandDm(cdm: any[], aid: string | number, cid: string | number): Promise<void>
 }

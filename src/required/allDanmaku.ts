@@ -174,5 +174,5 @@ declare namespace API {
      * 全弹幕装填
      * @param div 回调函数，用于获取时临时禁用按钮
      */
-    function allDanmaku(callback?: Function): void
+    export function allDanmaku(callback?: Function): void
 }

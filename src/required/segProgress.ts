@@ -222,5 +222,5 @@ declare namespace API {
      * 分段进度条
      * @param data 视频信息，来自`https://api.bilibili.com/x/player/v2`
      */
-    function segProgress(data: any): void
+    export function segProgress(data: any): void
 }

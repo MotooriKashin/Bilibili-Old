@@ -98,7 +98,7 @@ declare namespace API {
      * @param id appkey在`keySecret`中的索引
      * @returns 签名后的URL
      */
-    let urlsign: {
+    export let urlsign: {
         (url: string, obj?: { [name: string]: string }, id?: number | string): string;
         /**
          * /**

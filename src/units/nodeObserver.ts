@@ -42,10 +42,10 @@ declare namespace API {
      * @param callback 添加节点后执行的回调函数
      * @returns 注册编号，用于使用`removeObserver`销毁监听
      */
-    function observerAddedNodes(callback: (node: HTMLElement) => void): number;
+    export function observerAddedNodes(callback: (node: HTMLElement) => void): number;
     /**
      * 销毁`observerAddedNodes`监听
      * @param id 注册`observerAddedNodes`监听是返回的编号
      */
-    function removeObserver(id: number): void;
+    export function removeObserver(id: number): void;
 }

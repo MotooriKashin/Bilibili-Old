@@ -75,17 +75,17 @@ declare namespace API {
      * @param rule 外部脚本链接关键词组，必须全部满足
      * @param replaceURL 替换用的脚本URL，未提供则只进行**拦截**
      */
-    function scriptIntercept(rule: string[], replaceURL?: string): void;
+    export function scriptIntercept(rule: string[], replaceURL?: string): void;
     /**
      * 注册jsonphook  
      * @param url 需要hook的URL符合的条件，URL包含的字符串构成的数组，必须都满足才会回调
      * @param callback hook到指定URL后执行的回调函数，url信息为参数属性
      * @returns 注册编号，用于使用`removeJsonphook`方法注销当前hook
      */
-    function jsonphook(url: string[], callback: (xhr: { url: string }) => void): number;
+    export function jsonphook(url: string[], callback: (xhr: { url: string }) => void): number;
     /**
      * 注销jsonphook
      * @param id 注册`jsonphook`时的返回值
      */
-    function removeJsonphook(id: number): [string[], Function][];
+    export function removeJsonphook(id: number): [string[], Function][];
 }

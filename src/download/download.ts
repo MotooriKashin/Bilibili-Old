@@ -118,7 +118,7 @@
              * 颜色表
              */
             color = {
-                "8K":"background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
+                "8K": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "ATMOS": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "HDR": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
@@ -456,5 +456,5 @@ declare namespace API {
     /**
      * 请求当前视频的下载数据
      */
-    function downloadThis(): void;
+    export function downloadThis(): void;
 }

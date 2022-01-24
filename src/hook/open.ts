@@ -25,10 +25,10 @@ declare namespace API {
      * @param callback hook到指定URL后执行的回调函数，`this`为hook到的XMLHttpRequest对象本身，参数为open参数组成的数组
      * @returns 注册编号，用于使用`removeXhrhook`方法注销当前hook
      */
-    function xhrhook(url: string[], callback: (this: XMLHttpRequest, args: [method: string, url: string, async: boolean, username?: string | null, password?: string | null]) => void): number;
+    export function xhrhook(url: string[], callback: (this: XMLHttpRequest, args: [method: string, url: string, async: boolean, username?: string | null, password?: string | null]) => void): number;
     /**
      * 注销xhrhook
      * @param id `xhrhook`注册时的返回值
      */
-    function removeXhrhook(id: number): [string[], Function][]
+    export function removeXhrhook(id: number): [string[], Function][]
 }

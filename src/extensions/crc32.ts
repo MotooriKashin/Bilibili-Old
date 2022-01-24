@@ -112,11 +112,11 @@ declare namespace API {
      * @param input 输入crc32散列值
      * @returns 逆向出的mid值
      */
-    function midcrc(input: string): number;
+    export function midcrc(input: string): number;
     /**
      * 求字符串的crc32散列
      * @param input 输入字符串
      * @returns crc32散列
      */
-    function crc32(input: string): string;
+    export function crc32(input: string): string;
 }

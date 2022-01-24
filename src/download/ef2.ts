@@ -114,7 +114,7 @@ declare namespace API {
      * 使用ef2协议拉起IDM下载
      * @param data 配置数据
      */
-    let ef2: {
+    export let ef2: {
         (data: EF2Data): void,
         /**
          * 编码下载数据为ef2协议链接，使用方式同一般http链接

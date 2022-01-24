@@ -257,38 +257,38 @@ declare namespace API {
     /**
      * 获取当前用户cookies
      */
-    function getCookies(): { [name: string]: string };
+    export function getCookies(): { [name: string]: string };
     /**
      * 代理退出登录功能
      * @param referer 退出后跳转的页面URL
      */
-    function loginExit(referer?: string): Promise<void>;
+    export function loginExit(referer?: string): Promise<void>;
     /**
      * 检查B站json接口返回值并格式化为json  
      * 对于code异常将直接抛出错误！
      * @param data 返回值字符串或者json
      */
-    function jsonCheck(data: String | JSON): { [name: string]: any };
+    export function jsonCheck(data: String | JSON): { [name: string]: any };
     /**
      * 修复被新版播放器数据破坏的旧版播放器设置数据
      */
-    function restorePlayerSetting(): void;
+    export function restorePlayerSetting(): void;
     /**
      * B站快捷登录
      */
-    function biliQuickLogin(): void;
+    export function biliQuickLogin(): void;
     /**
      * 计算节点绝对高度，相对于文档
      * @param node 文档垂直偏移：/px
      */
-    function getTotalTop(node: HTMLElement): number;
+    export function getTotalTop(node: HTMLElement): number;
     /**
      * 保存为本地文件
      * @param content 文档内容，JSON请先转化为字符串类型
      * @param fileName 保存为文件名，需包含拓展名
      * @param contentType 文档内容的MIME类型，默认为text/plain
      */
-    function saveAs(content: BufferSource | Blob | string, fileName: string, contentType?: string): Promise<void>;
+    export function saveAs(content: BufferSource | Blob | string, fileName: string, contentType?: string): Promise<void>;
     /**
      * 读取本地文件
      * @param file 本地文件File，来自type="file"的input标签，`input.files`中的元素
@@ -296,41 +296,41 @@ declare namespace API {
      * @param encoding 字符串的编码格式，默认为utf-8，仅在type="string"时有意义
      * @returns Promise托管的文件内容
      */
-    function readAs(file: File): Promise<string>;
-    function readAs(file: File, type: "DataURL"): Promise<string>;
-    function readAs(file: File, type: "string", encoding?: string): Promise<string>;
-    function readAs(file: File, type: "ArrayBuffer"): Promise<ArrayBuffer>;
+    export function readAs(file: File): Promise<string>;
+    export function readAs(file: File, type: "DataURL"): Promise<string>;
+    export function readAs(file: File, type: "string", encoding?: string): Promise<string>;
+    export function readAs(file: File, type: "ArrayBuffer"): Promise<ArrayBuffer>;
     /**
      * 获取aid的信息，无效aid除外
      * @param aid aid
      */
-    function getAidInfo(aid: number): Promise<any>;
+    export function getAidInfo(aid: number): Promise<any>;
     /**
      * 从url中提取指定参数
      * @param name 参数名
      * @returns 参数值，不存在返回null
      */
-    function getUrlValue(name: string): string;
+    export function getUrlValue(name: string): string;
     /**
      * 求utf-8字符串字节数
      * @param str utf-8字符串（js默认字符串格式）
      * @returns 字节数
      */
-    function strSize(str: string): number;
+    export function strSize(str: string): number;
     /**
      * 格式化时间间隔，返回过去了多长时间  
      * timeFormat的再封装
      * @param time 10/13位的时间戳
      * @returns 过去了多长时间，当时间间隔超过一天时，直接返回timeFormat带年月日的结果
      */
-    function intervalFormat(time: number): string;
+    export function intervalFormat(time: number): string;
     /**
      * 添加css样式
      * @param txt css文本
      * @param id 样式ID，用于唯一标记
      * @param parrent 添加到的父节点，默认为head
      */
-    function addCss(txt: string, id?: string, parrent?: Node): Promise<void>;
+    export function addCss(txt: string, id?: string, parrent?: Node): Promise<void>;
     /**
      * 创建HTML节点
      * @param tag 节点名称
@@ -340,7 +340,7 @@ declare namespace API {
      * @param top 是否在父节点中置顶
      * @param replaced 替换节点而不是添加，被替换的节点，将忽略父节点相关参数
      */
-    function addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T];
+    export function addElement<T extends keyof HTMLElementTagNameMap>(tag: T, attribute?: { [name: string]: string }, parrent?: Node, innerHTML?: string, top?: boolean, replaced?: Element): HTMLElementTagNameMap[T];
     /**
      * 添加条件回调，条件为真时执行回调函数，用于检测函数运行时机  
      * @param check 一个返回布尔值的函数，用于轮询，当函数返回值为真时执行回调函数
@@ -348,7 +348,7 @@ declare namespace API {
      * @param delay 轮询间隔：/ms，默认100ms
      * @param stop 轮询最大延时：/ms，多长时间后终止轮询，不做无谓的等待，默认180ms，即3分钟。为0时永不终止直到为真。
      */
-    function runWhile(check: Function, callback: Function, delay?: number, stop?: number): void;
+    export function runWhile(check: Function, callback: Function, delay?: number, stop?: number): void;
     /**
      * 播放器通知，播放器不存在将转送到控制台
      * @param msg 消息字符串或数组，数组时顺序分别为普通、红色、黄色消息，可按位次置空取所需颜色。本值不存在将作为“屏显”使用。
@@ -356,7 +356,7 @@ declare namespace API {
      * @param callback 点击消息执行的回调函数
      * @param replace 替代已有消息，默认为真，即同时只显示一条消息
      */
-    function bofqiMessage(msg?: string | [string?, string?, string?], time?: number, callback?: () => void, replace?: boolean): void;
+    export function bofqiMessage(msg?: string | [string?, string?, string?], time?: number, callback?: () => void, replace?: boolean): void;
     /**
      * 弹出提示框  
      * 仿造alert制作的提示框，但不具备中断页面的能力，异步返回用户点击的按钮布尔值
@@ -364,7 +364,7 @@ declare namespace API {
      * @param text 提示内容
      * @returns Promise代理的布尔值，取决于用户的点击的按钮
      */
-    function alertMessage(text: string, title?: string): Promise<boolean>;
+    export function alertMessage(text: string, title?: string): Promise<boolean>;
     /**
      * 载入模块
      * @param name 模块名字
@@ -377,10 +377,10 @@ declare namespace API {
      * @param name 模块名字
      * @returns json直接返回格式化对象，其他返回字符串
      */
-    function getModule(name: string): any;
+    export function getModule(name: string): any;
     /**
      * 重写网页框架
      * @param html 网页模板
      */
-    function rewriteHTML(html: string): void;
+    export function rewriteHTML(html: string): void;
 }

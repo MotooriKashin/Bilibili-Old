@@ -48,5 +48,5 @@ declare namespace API {
      * @param input av/BV
      * @returns BV/aid
      */
-    function abv(input: string | number): string | number
+    export function abv(input: string | number): string | number
 }

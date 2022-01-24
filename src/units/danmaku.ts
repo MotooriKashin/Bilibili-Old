@@ -316,54 +316,54 @@ declare namespace API {
      * @param bas 是否只获取BAS/代码弹幕，默认请留空
      * @returns 弹幕数组：Promise
      */
-    function getSegDanmaku(aid?: string | number, cid?: string | number, bas?: boolean): Promise<any[] | undefined>;
+    export function getSegDanmaku(aid?: string | number, cid?: string | number, bas?: boolean): Promise<any[] | undefined>;
     /**
      * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
      * @param dm 弹幕数组
      */
-    function specialEffects(dm: any[]): void;
+    export function specialEffects(dm: any[]): void;
     /**
      * 将弹幕数组按弹幕id升序排序
      * @param danmaku 要排序的弹幕数组
      * @param key 弹幕id的属性名，应为dmid或idStr
      */
-    function sortDmById(danmaku: any[], key: string): void;
+    export function sortDmById(danmaku: any[], key: string): void;
     /**
      * 生成xml形式的弹幕
      * @param danmaku protoSeg.decode(new Uint8Array(this.response)).elems
      * @returns 委托对象，表示生成的xml形式的弹幕字符串
      */
-    function toXml(danmaku: any[]): string;
+    export function toXml(danmaku: any[]): string;
     /**
      * 获取历史弹幕
      * @param date 历史弹幕日期，yyyy-mm-dd格式：如 2009-06-24
      * @param cid 弹幕所在视频的 cid，不填则取当前视频的cid
      * @returns 解析好的弹幕数组
      */
-    function getHistoryDanmaku(date: string, cid?: string | number): Promise<any>;
+    export function getHistoryDanmaku(date: string, cid?: string | number): Promise<any>;
     /**
      * 载入本地弹幕
      * @param xml 读取本地弹幕文件得到的字符串
      * @param append 默认为false，即不保留已加载的弹幕。为true时，则将追加到现有弹幕上
      */
-    function loadLocalDm(xml: string, append: boolean): void;
+    export function loadLocalDm(xml: string, append: boolean): void;
     /**
      * 解码proto弹幕
      * @param response 二进制文件
      */
-    function segDmDecode(response: any): any;
+    export function segDmDecode(response: any): any;
     /**
      * 将新版弹幕数组转化为旧版弹幕数组
      * @param dm 新版弹幕数组
      * @param aid 视频aid，默认取当前视频aid
      * @returns 旧版弹幕数组
      */
-    function danmakuFormat(dm: any[], aid?: number | string): danmaku[];
+    export function danmakuFormat(dm: any[], aid?: number | string): danmaku[];
     /**
      * 载入在线弹幕
      * @param url 其他视频URL
      */
-    function onlineDanmaku(url: string): void;
+    export function onlineDanmaku(url: string): void;
 }
 /**
  * 旧版播放器对应的弹幕对象

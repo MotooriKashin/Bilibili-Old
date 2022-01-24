@@ -299,7 +299,7 @@
     } catch (e) { toast.error("element.js", e) }
 })();
 declare namespace API {
-    let element: {
+    export let element: {
         /**
          * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭  
          * 浮动窗口上的内容请通过返回的节点进行后续添加
@@ -387,7 +387,7 @@ declare namespace API {
      * @param svg Css模块名序列
      * @returns 整合好的Css模块
      */
-    function getCss(...svg: string[]): string;
+    export function getCss(...svg: string[]): string;
 }
 /**
  * 进度条配置信息，双向绑定

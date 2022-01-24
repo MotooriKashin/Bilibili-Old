@@ -322,5 +322,5 @@ declare namespace API {
      * CC字幕
      * @param data 视频信息，来自https://api.bilibili.com/x/player/v2
      */
-    function closedCaption(data: any): void;
+    export function closedCaption(data: any): void;
 }

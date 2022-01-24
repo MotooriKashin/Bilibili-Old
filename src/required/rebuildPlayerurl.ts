@@ -384,5 +384,5 @@ declare namespace API {
      * 方法`appPlayurl`对应APP端  
      * 方法`ogvPlayurl`对应泰区
      */
-    let RebuildPlayerurl: any;
+    export let RebuildPlayerurl: any;
 }

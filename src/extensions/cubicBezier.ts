@@ -105,5 +105,5 @@
     } catch (e) { toast.error("cubicBezier.js", e) }
 })();
 declare namespace API {
-    function bezier(mX1: any, mY1: any, mX2: any, mY2: any): (x: any) => any
+    export function bezier(mX1: any, mY1: any, mX2: any, mY2: any): (x: any) => any
 }
