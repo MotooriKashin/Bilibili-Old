@@ -330,8 +330,8 @@
                 try {
                     switch (d) {
                         case "dash": result = API.pgc ?
-                            await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true) :
-                            await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true);
+                            await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
+                            await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
                             break;
                         case "flv": result = API.pgc ?
                             await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid }, true) :

@@ -51,6 +51,7 @@
 	"alertMessage": "extend.js",
 	"getModule": "extend.js",
 	"rewriteHTML": "extend.js",
+	"fnval": "fnval.js",
 	"timeFormat": "format.js",
 	"sizeFormat": "format.js",
 	"unitFormat": "format.js",
