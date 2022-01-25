@@ -65,6 +65,7 @@
              */
             quality = {
                 30280: "320Kbps",
+                30255: "AUDIO",
                 30250: "ATMOS",
                 30232: "128Kbps",
                 30216: "64Kbps",
@@ -121,6 +122,7 @@
                 "8K": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "ATMOS": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
+                "AUDIO": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "HDR": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                 "4K": "background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);",
                 "1080P60": "background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);",
