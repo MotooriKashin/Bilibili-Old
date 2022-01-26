@@ -6909,13 +6909,13 @@ option {
         API.switchVideo(() => {
             let desc = document.getElementsByClassName("info");
             if (desc[1] && desc[1].parentNode && desc[1].parentNode.id == "v_desc") {
-                let text = desc[1].innerText;
+                let text = desc[1].textContent;
                 text = text.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (str) => {
                     const av = API.abv(str);
-                    return \`<a target="_blank" href="//www.bilibili.com/video/av\${av}">av\${av}</a>\`;
-                }).replace(/AV[0-9]+/g, (str) => {
+                    return \`<a target="_blank" href="//acg.tv/av\${av}">av\${av}</a>\`;
+                }).replace(/(av|sm)[0-9]+/gi, (str) => {
                     str = str.toLowerCase();
-                    return \`<a target="_blank" href="//www.bilibili.com/video/\${str}">\${str}</a>\`;
+                    return \`<a target="_blank" href="//acg.tv/\${str}">\${str}</a>\`;
                 });
                 desc[1].innerHTML = text;
             }
