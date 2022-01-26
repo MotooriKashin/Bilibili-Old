@@ -6912,10 +6912,10 @@ option {
                 let text = desc[1].textContent;
                 text = text.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (str) => {
                     const av = API.abv(str);
-                    return \`<a target="_blank" href="//acg.tv/av\${av}">av\${av}</a>\`;
+                    return \`<a target="_blank" href="http://acg.tv/av\${av}">av\${av}</a>\`;
                 }).replace(/(av|sm)[0-9]+/gi, (str) => {
                     str = str.toLowerCase();
-                    return \`<a target="_blank" href="//acg.tv/\${str}">\${str}</a>\`;
+                    return \`<a target="_blank" href="http://acg.tv/\${str}">\${str}</a>\`;
                 });
                 desc[1].innerHTML = text;
             }
