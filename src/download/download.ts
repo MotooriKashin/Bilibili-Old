@@ -80,14 +80,18 @@
                 30102: '1080P+',
                 30080: '1080P',
                 30077: '1080P',
+                10026: '1080P',
                 30076: '720P',
                 30074: '720P',
                 30066: '720P',
                 30064: '720P',
+                10024: '720P',
                 30048: "720P",
                 30033: '480P',
                 30032: '480P',
+                10023: '480P',
                 30016: '360P',
+                10022: '360P',
                 30015: '360P',
                 30011: '360P',
                 464: '预览',
@@ -113,7 +117,8 @@
              */
             codec = {
                 hev: [30126, 30125, 30121, 30102, 30077, 30066, 30033, 30011],
-                avc: [30120, 30112, 30080, 30064, 30032, 30016]
+                avc: [30120, 30112, 30080, 30064, 30032, 30016],
+                av1: [10022, 10023, 10024, 10026]
             }
             /**
              * 颜色表
@@ -133,6 +138,7 @@
                 "480P": "background-color: #00d;background-image: linear-gradient(to right, #00d, #00a);",
                 "360P": "background-color: #0d0;",
                 "mp4": "background-color: #e0e;",
+                "av1": "background-color: #feb;",
                 "avc": "background-color: #07e;",
                 "hev": "background-color: #7ba;",
                 "aac": "background-color: #07e;",
@@ -191,11 +197,8 @@
                     const url = d.baseUrl || d.base_url;
                     let type = "";
                     if (!url) return;
-                    if (d.codecs) switch (d.codecs.includes("avc")) {
-                        case true: type = "avc";
-                            break;
-                        case false: type = "hev";
-                            break;
+                    if (d.codecs) {
+                        type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
                     } else {
                         const id = this.getID(url);
                         type = this.codec.hev.find(d => d === id) ? "hev" : "avc";
