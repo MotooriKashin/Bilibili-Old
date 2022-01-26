@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.2.4
+// @version      6.2.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3036,70 +3036,72 @@ option {
 /*!***********************!*/
 /**/modules["apply.json"] = /*** ./Json/apply.json ***/
 {
-    "timeFormat": "format.js",
-    "sizeFormat": "format.js",
-    "unitFormat": "format.js",
-    "bubbleSort": "format.js",
-    "randomArray": "format.js",
-    "objUrl": "format.js",
-    "urlObj": "format.js",
-    "addCss": "extend.js",
-    "addElement": "extend.js",
-    "localModule": "manage.js",
-    "readFile": "manage.js",
-    "getCookies": "extend.js",
-    "loginExit": "extend.js",
-    "jsonCheck": "extend.js",
-    "restorePlayerSetting": "extend.js",
-    "biliQuickLogin": "extend.js",
-    "getTotalTop": "extend.js",
-    "abv": "abv.js",
-    "jsonphook": "Node.js",
-    "removeJsonphook": "jsonp.js",
-    "scriptIntercept": "Node.js",
-    "xhrhook": "open.js",
-    "removeXhrhook": "open.js",
-    "getSegDanmaku": "danmaku.js",
-    "specialEffects": "danmaku.js",
-    "sortDmById": "danmaku.js",
-    "toXml": "danmaku.js",
-    "getHistoryDanmaku": "danmaku.js",
-    "loadLocalDm": "danmaku.js",
-    "segDmDecode": "danmaku.js",
-    "danmakuFormat": "danmaku.js",
-    "onlineDanmaku": "danmaku.js",
-    "loadCommandDm": "commandDm.js",
-    "urlInputCheck": "urlInputCheck.js",
-    "midcrc": "crc32.js",
-    "crc32": "crc32.js",
-    "md5": "md5.js",
-    "RebuildPlayerurl": "rebuildPlayerurl.js",
-    "urlsign": "sign.js",
-    "observerAddedNodes": "nodeObserver.js",
-    "removeObserver": "nodeObserver.js",
-    "switchVideo": "switchVideo.js",
-    "closedCaption": "closedCaption.js",
-    "segProgress": "segProgress.js",
-    "localMedia": "localMedia.js",
-    "allDanmaku": "allDanmaku.js",
-    "bezier": "cubicBezier",
-    "element": "element.js",
-    "getCss": "element.js",
-    "saveAs": "extend.js",
-    "readAs": "extend.js",
-    "Base64": "Base64.js",
-    "getAidInfo": "extend.js",
-    "downloadThis": "download.js",
-    "getJson": "url.js",
-    "aria2": "aria2.js",
-    "ef2": "ef2.js",
-    "getUrlValue": "extend.js",
-    "showAccesskey": "accesskey.js",
-    "strSize": "extend.js",
-    "intervalFormat": "extend.js",
-    "runWhile": "extend.js",
-    "bofqiMessage": "extend.js",
-    "alertMessage": "extend.js"
+	"aria2": "aria2.js",
+	"downloadThis": "download.js",
+	"ef2": "ef2.js",
+	"abv": "abv.js",
+	"Base64": "Base64.js",
+	"midcrc": "crc32.js",
+	"crc32": "crc32.js",
+	"bezier": "cubicBezier.js",
+	"md5": "md5.js",
+	"urlsign": "sign.js",
+	"scriptIntercept": "Node.js",
+	"jsonphook": "Node.js",
+	"removeJsonphook": "Node.js",
+	"xhrhook": "open.js",
+	"removeXhrhook": "open.js",
+	"loadCommandDm": "commandDm.js",
+	"showAccesskey": "accesskey.js",
+	"allDanmaku": "allDanmaku.js",
+	"closedCaption": "closedCaption.js",
+	"localMedia": "localMedia.js",
+	"RebuildPlayerurl": "rebuildPlayerurl.js",
+	"segProgress": "segProgress.js",
+	"getSegDanmaku": "danmaku.js",
+	"specialEffects": "danmaku.js",
+	"sortDmById": "danmaku.js",
+	"toXml": "danmaku.js",
+	"getHistoryDanmaku": "danmaku.js",
+	"loadLocalDm": "danmaku.js",
+	"segDmDecode": "danmaku.js",
+	"danmakuFormat": "danmaku.js",
+	"onlineDanmaku": "danmaku.js",
+	"element": "element.js",
+	"getCss": "element.js",
+	"getCookies": "extend.js",
+	"loginExit": "extend.js",
+	"jsonCheck": "extend.js",
+	"restorePlayerSetting": "extend.js",
+	"biliQuickLogin": "extend.js",
+	"getTotalTop": "extend.js",
+	"saveAs": "extend.js",
+	"readAs": "extend.js",
+	"getAidInfo": "extend.js",
+	"getUrlValue": "extend.js",
+	"strSize": "extend.js",
+	"intervalFormat": "extend.js",
+	"addCss": "extend.js",
+	"addElement": "extend.js",
+	"runWhile": "extend.js",
+	"bofqiMessage": "extend.js",
+	"alertMessage": "extend.js",
+	"getModule": "extend.js",
+	"rewriteHTML": "extend.js",
+	"fnval": "fnval.js",
+	"timeFormat": "format.js",
+	"sizeFormat": "format.js",
+	"unitFormat": "format.js",
+	"bubbleSort": "format.js",
+	"randomArray": "format.js",
+	"objUrl": "format.js",
+	"urlObj": "format.js",
+	"s2hms": "format.js",
+	"observerAddedNodes": "nodeObserver.js",
+	"removeObserver": "nodeObserver.js",
+	"switchVideo": "switchVideo.js",
+	"getJson": "url.js",
+	"urlInputCheck": "urlInputCheck.js"
 }
 /*!***********************!*/
 /**/modules["bug.json"] = /*** ./Json/bug.json ***/
@@ -4000,6 +4002,7 @@ option {
                  */
                 this.quality = {
                     30280: "320Kbps",
+                    30255: "AUDIO",
                     30250: "ATMOS",
                     30232: "128Kbps",
                     30216: "64Kbps",
@@ -4056,6 +4059,7 @@ option {
                     "8K": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "ATMOS": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
+                    "AUDIO": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "HDR": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
                     "4K": "background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);",
                     "1080P60": "background-color: #c0f;background-image: linear-gradient(to right, #c0f, #90f);",
@@ -4276,8 +4280,8 @@ option {
                     switch (d) {
                         case "dash":
                             result = API.pgc ?
-                                await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true) :
-                                await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: 2000 }, true);
+                                await API.getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
+                                await API.getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
                             break;
                         case "flv":
                             result = API.pgc ?
@@ -5909,9 +5913,63 @@ option {
  */
 (function () {
     try {
+        // v2版本接口转换，暂时不需要
+        // class Rank {
+        //     aid: string;
+        //     author: string;
+        //     bvid: string;
+        //     cid: number;
+        //     coins: number;
+        //     duration: string;
+        //     mid: number;
+        //     pic: string;
+        //     play: number;
+        //     pts: number;
+        //     rights = {
+        //         autoplay: 1,
+        //         bp: 0,
+        //         download: 0,
+        //         elec: 0,
+        //         hd5: 0,
+        //         is_cooperation: 0,
+        //         movie: 0,
+        //         no_background: 0,
+        //         no_reprint: 1,
+        //         pay: 0,
+        //         ugc_pay: 0,
+        //         ugc_pay_preview: 0
+        //     };
+        //     title: string;
+        //     trend: null;
+        //     video_review: number;
+        //     others: Rank[] | undefined;
+        //     constructor(obj: any) {
+        //         Object.keys(obj).forEach(d => {
+        //             switch (d) {
+        //                 case "score": this.pts = obj[d];
+        //                     break;
+        //                 case "stat": this.play = obj[d].view;
+        //                     this.video_review = obj[d].danmaku;
+        //                     break;
+        //                 case "owner": this.mid = obj[d].mid;
+        //                     this.author = obj[d].name;
+        //                     break;
+        //                 case "duration": this.duration = API.s2hms(obj[d]);
+        //                     break;
+        //                 case "others": this.others = this.others || [];
+        //                     obj[d].forEach(e => {
+        //                         this.others.push(new Rank(e));
+        //                     });
+        //                     break;
+        //                 default: this[d] = obj[d];
+        //             }
+        //         })
+        //     }
+        // }
         class Ranking {
             constructor() {
                 this.refer = document.referrer.split("/");
+                // obj = { rid: "0", type: "all" };
                 this.obj = { rid: "0", day: "3", type: "1", arc_type: "0" };
                 API.path.name = "ranking";
                 (this.refer && this.refer[4] && this.refer[4] == "all") && Reflect.set(this.obj, "rid", this.refer[5]);
@@ -5919,13 +5977,15 @@ option {
             }
             prepareA() {
                 xhr({
-                    url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
+                    url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", this.obj),
+                    // url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
                     responseType: "json",
                     credentials: true
                 }).then(d => { this.write(d); });
             }
             prepareB() {
                 let data = xhr({
+                    // url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking/v2", this.obj),
                     url: API.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
                     async: false,
                     credentials: true
@@ -5934,6 +5994,10 @@ option {
             }
             write(d) {
                 const data = API.jsonCheck(d);
+                // data.data.list = data.data.list.reduce((s, d) => {
+                //     s.push(new Rank(d));
+                //     return s;
+                // }, []);
                 const result = { loading: false, rankRouteParams: { arc_type: 0, day: 3, rankTab: "all", rid: Number(this.refer[5]) || 0, season_type: 1 }, showTypes: true, times: [{ name: "日排行", value: 1 }, { name: "三日排行", value: 3 }, { name: "周排行", value: 7 }, { name: "月排行", value: 30 }], typeList: [{ name: "全部投稿", value: 0 }, { name: "近期投稿", value: 1 }] };
                 result.channels = [{ name: "全站", tid: 0 }, { name: "动画", tid: 1 }, { name: "国创相关", tid: 168 }, { name: "音乐", tid: 3 }, { name: "舞蹈", tid: 129 }, { name: "游戏", tid: 4 }, { name: "知识", tid: 36 }, { name: "数码", tid: 188 }, { name: "生活", tid: 160 }, { name: "美食", tid: 211 }, { name: "鬼畜", tid: 119 }, { name: "时尚", tid: 155 }, { name: "娱乐", tid: 5 }, { name: "影视", tid: 181 }];
                 result.rankList = data.data.list;
@@ -5941,7 +6005,8 @@ option {
                 window.__INITIAL_STATE__ = result;
                 API.rewriteHTML(API.getModule("ranking.html"));
                 API.addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
-                API.addCss('.bili-dropdown.rank-dropdown, li[type="origin"], li[type="rookie"] { pointer-events: none; }');
+                // API.addCss('.bili-dropdown.rank-dropdown, li[type="origin"], li[type="rookie"] { pointer-events: none; }');
+                // this.apiFix();
             }
         }
         new Ranking();
@@ -9759,7 +9824,7 @@ catch (e) {
 (function () {
     API.xhrhook(["/playurl?"], function (args) {
         let obj = API.urlObj(args[1]);
-        !obj.sign && (obj.fourk = 1, obj.fnval && (obj.fnval = 2000)); // 8K支持
+        !obj.sign && (obj.fourk = 1, obj.fnval && (obj.fnval = API.fnval)); // 8K支持
         obj.avid && Number(obj.avid) && Reflect.set(API, "aid", obj.avid);
         !API.aid && obj.bvid && Reflect.set(API, "aid", API.abv(obj.bvid));
         obj.cid && Number(obj.cid) && Reflect.set(API, "cid", obj.cid);
@@ -11791,6 +11856,32 @@ catch (e) {
 
 //# sourceURL=API://@Bilibili-Old/units/extend.js`;
 /*!***********************!*/
+/**/modules["fnval.js"] = /*** ./dist/units/fnval.js ***/
+`/**
+ * 本模块记录了B站fnval标志信息
+ */
+(function () {
+    class Fnval {
+        constructor() {
+            this.MP4 = 1;
+            this.DASH_H265 = 16;
+            this.HDR = 64;
+            this.DASH_4K = 128;
+            this.DOLBYAUDIO = 256;
+            this.DOLBYVIDEO = 512;
+            this.DASH_8K = 1024;
+            this.DASH_AV1 = 2048;
+        }
+    }
+    const fnval = new Fnval();
+    API.fnval = Reflect.ownKeys(fnval).reduce((s, d) => {
+        s += fnval[d];
+        return s;
+    }, -1);
+})();
+
+//# sourceURL=API://@Bilibili-Old/units/fnval.js`;
+/*!***********************!*/
 /**/modules["format.js"] = /*** ./dist/units/format.js ***/
 `(function () {
     class Format {
@@ -11917,6 +12008,18 @@ catch (e) {
                     o[d.split('=')[0]] = d.split('=')[1] || "";
                 return o;
             }, {});
+        }
+        /**
+         * 秒数 -> hh:mm:ss
+         * @param second 秒数
+         * @returns hh:mm:ss
+         */
+        static s2hms(second) {
+            const s = second % 60;
+            let m = parseInt(String(second / 60));
+            const h = parseInt(String(m / 60));
+            m = m % 60;
+            return (h > 0 ? h + ":" : "") + (h > 0 || m > 0 ? (Array(2).join('0') + m).slice(-2) + ":" : "") + (Array(2).join('0') + s).slice(-2);
         }
     }
     Reflect.ownKeys(Format).forEach(d => typeof Format[d] == "function" && Reflect.set(API, d, Format[d]));
@@ -13683,10 +13786,10 @@ catch (e) {
                 "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 125, type: '' },
                 "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
                 "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 2000, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: 2000, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 2000, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: 2000, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() }
+                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: API.fnval, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: API.fnval, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() }
             };
         }
         /**
