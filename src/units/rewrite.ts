@@ -32,7 +32,7 @@
         if (location.href.includes("www.bilibili.com/account/history")) API.importModule("history.js");
         if (/dmid/.test(location.href) && /dm_progress/.test(location.href)) API.importModule("loadByDmid.js");
         if (config.read && /\/read\/[Cc][Vv]/.test(location.href)) API.importModule("read.js");
-        if (config.player && /festival\/2021bnj/.test(location.href)) API.importModule("bnj2021.js");
+        if (config.player && /festival\/202[1-2]bnj/.test(location.href)) API.importModule("bnjFestival.js");
         config.trusteeship && API.scriptIntercept(["bilibiliPlayer.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/bilibiliPlayer.min.js"); // 播放器脚本拦截
         /**
          * 若页面不需要重写，直接进入正常引导

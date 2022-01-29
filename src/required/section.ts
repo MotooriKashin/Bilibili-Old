@@ -8,7 +8,12 @@
             API.addCss(".nav-item.live {width: auto;}");
             (<HTMLDivElement>document.querySelector("#internationalHeader")).setAttribute("style", "visibility:hidden;");
             (!(<any>window).$?.ajax) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
-            (document.querySelector(".mini-type") && !location.href.includes("blackboard/topic_list") && !location.href.includes("blackboard/x/act_list")) ? API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) : API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
+            ((document.querySelector(".mini-type") &&
+                !location.href.includes("blackboard/topic_list") &&
+                !location.href.includes("blackboard/x/act_list")) ||
+                /festival/.test(location.href)) ?
+                API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) :
+                API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
             API.addElement("script", { type: "text/javascript", src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js" });
         })
         API.runWhile(() => document.querySelector(".international-footer"), () => {

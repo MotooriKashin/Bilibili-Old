@@ -413,5 +413,13 @@ interface Window {
          * @param time 弹幕偏移，正相关
          */
         offsetDanmaku: (time: number) => void;
+        destroy: () => void;
+        stop: () => void;
+        play: () => void;
+        pause: () => void;
+        seek: (s: number) => void;
+        getCurrentTime: () => number;
+        prev: () => void;
+        next: () => void;
     }
 }

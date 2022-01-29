@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      6.2.5
+// @version      6.2.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -4001,6 +4001,10 @@ option {
                  * url序号对应的质量信息
                  */
                 this.quality = {
+                    100026: '1080P',
+                    100024: '720P',
+                    100023: '480P',
+                    100022: '360P',
                     30280: "320Kbps",
                     30255: "AUDIO",
                     30250: "ATMOS",
@@ -4017,18 +4021,14 @@ option {
                     30102: '1080P+',
                     30080: '1080P',
                     30077: '1080P',
-                    10026: '1080P',
                     30076: '720P',
                     30074: '720P',
                     30066: '720P',
                     30064: '720P',
-                    10024: '720P',
                     30048: "720P",
                     30033: '480P',
                     30032: '480P',
-                    10023: '480P',
                     30016: '360P',
-                    10022: '360P',
                     30015: '360P',
                     30011: '360P',
                     464: '预览',
@@ -5801,7 +5801,7 @@ option {
 
 //# sourceURL=API://@Bilibili-Old/match/anime.js`;
 /*!***********************!*/
-/**/modules["bnj2021.js"] = /*** ./dist/match/bnj2021.js ***/
+/**/modules["bnjFestival.js"] = /*** ./dist/match/bnjFestival.js ***/
 `/**
  * 本模块负责替换拜年祭2021专题页面使用旧版嵌入播放器
  */
@@ -5814,28 +5814,44 @@ option {
             }, []);
             // 替换播放器节点
             const node = document.querySelector("#bilibili-player");
+            const root = node.attachShadow({ mode: "closed" }); // 使用shadow覆盖视频节点而不影响页面其他功能
             const iframe = document.createElement('iframe');
             iframe.src = \`https://www.bilibili.com/blackboard/html5player.html?aid=\${window.__INITIAL_STATE__.videoInfo.aid}&cid=\${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1\`;
             iframe.setAttribute("style", "width: 906px; height: 556px;border:none;");
-            iframe.setAttribute("id", "bofqi");
-            node.replaceWith(iframe);
+            root.appendChild(iframe);
             // 添加时间戳监听
             const episodes = document.querySelectorAll('.video-episode-card__info-title');
             episodes.forEach((d, i, e) => {
                 const episode = titles.find(t => t.title == d.innerText);
                 e[i].parentNode.parentNode.onclick = () => {
-                    toast(episode.title, \`av\${Reflect.get(episode, "aid")}\`, \`UP主：\${Reflect.get(episode, "author").name}\`);
-                    iframe.contentWindow.postMessage({ aid: Reflect.get(episode, "aid"), cid: Reflect.get(episode, "cid") });
+                    setTimeout(() => {
+                        // 销毁切p播放器已阻止自动播放
+                        window.player && window.player.destroy();
+                    }, 100);
+                    // toast(episode.title, \`av\${Reflect.get(episode, "aid")}\`, \`UP主：\${Reflect.get(episode, "author").name}\`)
+                    iframe.contentWindow.postMessage({ ...episode });
                 };
+            });
+            // 销毁原播放器
+            API.runWhile(() => window.player && window.player.destroy, () => {
+                const episode = titles.find(t => t.title == window.__INITIAL_STATE__.videoInfo.title);
+                iframe.contentWindow.postMessage({
+                    title: episode.title,
+                    author: episode.author,
+                    cover: episode.cover
+                });
+                setTimeout(() => {
+                    window.player && window.player.destroy();
+                }, 100);
             });
         }
         catch (e) {
-            toast.error("bnj2021.js", e);
+            toast.error("bnjFestival.js", e);
         }
     });
 })();
 
-//# sourceURL=API://@Bilibili-Old/match/bnj2021.js`;
+//# sourceURL=API://@Bilibili-Old/match/bnjFestival.js`;
 /*!***********************!*/
 /**/modules["history.js"] = /*** ./dist/match/history.js ***/
 `/**
@@ -5864,12 +5880,21 @@ option {
     try {
         class Player {
             constructor() {
+                this.obj = API.urlObj(location.href);
+                this.aid = this.obj.aid || this.obj.avid;
+                this.bvid = this.obj.bvid;
+                this.cid = this.obj.cid;
                 API.path.name = "player";
-                const obj = API.urlObj(location.href);
-                obj.avid && (Number(obj.avid) ? Reflect.set(window, "aid", obj.avid) : Reflect.set(window, "aid", API.abv(obj.avid)));
-                !Reflect.has(window, "aid") && obj.bvid && Reflect.set(window, "aid", API.abv(obj.bvid));
-                obj.cid && Number(obj.cid) && Reflect.set(window, "cid", obj.cid);
-                window.aid ? this.write() : this.check();
+                if (!Number(this.aid)) {
+                    if (this.obj.aid)
+                        this.aid = API.abv(this.aid);
+                    else if (this.bvid)
+                        this.aid = this.bvid;
+                    else
+                        this.check();
+                }
+                else
+                    this.write();
             }
             async check() {
                 const obj = await API.urlInputCheck(location.href);
@@ -5881,21 +5906,50 @@ option {
                 this.write();
             }
             write() {
+                Reflect.set(window, "aid", this.aid);
+                this.cid && Reflect.set(window, "cid", this.cid);
                 API.restorePlayerSetting(); // 备份还原旧版播放器设置数据
                 API.rewriteHTML(API.getModule("player.html"));
-                API.runWhile(() => document.body, () => {
-                    window.addEventListener('message', e => {
-                        if (e.data.cid) {
-                            window.__playinfo__ = undefined;
-                            e.data.as_wide = 1;
-                            e.data.dashSymbol = true;
-                            e.data.p = 1;
-                            e.data.pre_ad = "";
-                            history.replaceState(undefined, undefined, API.objUrl("https://www.bilibili.com/blackboard/html5player.html", { aid: e.data.aid, cid: e.data.cid }));
-                            window.player = new window.BilibiliPlayer(e.data);
-                        }
-                    });
+                window.parent = window; // 重定向父索引回本身以禁止向父索引暴露播放器接口，该接口可能被新版页面乱用
+                window.addEventListener('message', e => {
+                    var _a;
+                    if (e.data.aid) {
+                        window.__playinfo__ = undefined;
+                        e.data.as_wide = 1;
+                        e.data.dashSymbol = true;
+                        e.data.p = 1;
+                        e.data.pre_ad = "";
+                        history.replaceState(undefined, undefined, API.objUrl("https://www.bilibili.com/blackboard/html5player.html", { aid: e.data.aid, cid: e.data.cid }));
+                        window.player = new window.BilibiliPlayer(e.data);
+                        navigator.mediaSession.setActionHandler("play", window.player.play);
+                        navigator.mediaSession.setActionHandler("pause", window.player.pause);
+                        navigator.mediaSession.setActionHandler("stop", window.player.stop);
+                    }
+                    if (e.data.title) {
+                        this.mediaSession({
+                            title: e.data.title,
+                            artist: (_a = e.data.author) === null || _a === void 0 ? void 0 : _a.name,
+                            album: document.title,
+                            artwork: [{
+                                    src: e.data.cover
+                                }]
+                        });
+                    }
                 });
+            }
+            /**
+             * 设置媒体控制器
+             * @param data 媒体控制面板
+             */
+            mediaSession(data) {
+                if (!navigator.mediaSession.metadata)
+                    navigator.mediaSession.metadata = new MediaMetadata({ ...data });
+                else {
+                    navigator.mediaSession.metadata.title = data.title;
+                    navigator.mediaSession.metadata.artist = data.artist;
+                    navigator.mediaSession.metadata.album = data.album;
+                    navigator.mediaSession.metadata.artwork = data.artwork;
+                }
             }
         }
         new Player();
@@ -10355,7 +10409,12 @@ catch (e) {
             API.addCss(".nav-item.live {width: auto;}");
             document.querySelector("#internationalHeader").setAttribute("style", "visibility:hidden;");
             (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
-            (document.querySelector(".mini-type") && !location.href.includes("blackboard/topic_list") && !location.href.includes("blackboard/x/act_list")) ? API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) : API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
+            ((document.querySelector(".mini-type") &&
+                !location.href.includes("blackboard/topic_list") &&
+                !location.href.includes("blackboard/x/act_list")) ||
+                /festival/.test(location.href)) ?
+                API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) :
+                API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
             API.addElement("script", { type: "text/javascript", src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js" });
         });
         API.runWhile(() => document.querySelector(".international-footer"), () => {
@@ -12273,8 +12332,8 @@ catch (e) {
             API.importModule("loadByDmid.js");
         if (config.read && /\\/read\\/[Cc][Vv]/.test(location.href))
             API.importModule("read.js");
-        if (config.player && /festival\\/2021bnj/.test(location.href))
-            API.importModule("bnj2021.js");
+        if (config.player && /festival\\/202[1-2]bnj/.test(location.href))
+            API.importModule("bnjFestival.js");
         config.trusteeship && API.scriptIntercept(["bilibiliPlayer.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/bilibiliPlayer.min.js"); // 播放器脚本拦截
         /**
          * 若页面不需要重写，直接进入正常引导
