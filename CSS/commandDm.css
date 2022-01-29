@@ -75,7 +75,7 @@
   animation: opacity-animation 0.5s;
   overflow: hidden;
   display: inline-block;
-  border-radius: 4px;
+  border-radius: 4px 0 0 4px;
   background-color: #d3d3d3;
   text-align: left;
   overflow: visible;

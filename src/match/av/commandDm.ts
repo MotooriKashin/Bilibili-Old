@@ -15,13 +15,14 @@
     /**
      * 初始化互动弹幕功能
      */
-    function init() {
-        if ((<any>window).__INITIAL_STATE__ && (<any>window).__INITIAL_STATE__.videoData && (<any>window).player) {
+    function init(cdm) {
+        if ((<any>window).player) {
             if (widgetContainer === undefined)
                 widgetContainer = initCountainer();
             player = (<any>window).player;
             bindEvents();
-        }
+            load(cdm);
+        } else throw "获取window.player失败";
     }
 
     /**
@@ -39,7 +40,7 @@
      */
     function initCountainer() {
         let videoWrap = document.getElementsByClassName("bilibili-player-video-wrap")[0];
-        if (!videoWrap) return;
+        if (!videoWrap) throw "未能获取播放器div";
         let widgetContainer = document.createElement("div");
         widgetContainer.className = "bilibili-player-video-popup";
         videoWrap.appendChild(widgetContainer);
@@ -98,9 +99,10 @@
             switch (cdm.command) {
                 // 4种将会弹出界面的互动弹幕(见原生代码appendPopup())
                 case "#ATTENTION#":
-                    break;
                 case "#ACTORFOLLOW#":
                 case "#MANAGERFOLLOW#":
+                    debug.warn("未被支持的互动弹幕类型：" + cdm.command);
+                    debug.warn(cdm);
                     break;
                 case "#VOTE#": // 投票弹窗
                     popupWindow.push(new Vote(cdm, extra, from));
@@ -109,14 +111,14 @@
                     popupWindow.push(new Grade(cdm, extra, from));
                     break;
                 // 滚动弹幕(见原生代码appendDmImg())，它们的渲染也许需要去修改原生弹幕渲染器
-                case "#RESERVE#":
-                    break;
                 case "#LINK#":
                     popupWindow.push(new Link(cdm, extra, from));
                     break;
+                case "#RESERVE#":
                 case "#ACTOR#":
-                    break;
                 case "#ACTIVITYCOMBO#":
+                    debug.warn("未被支持的互动弹幕类型：" + cdm.command);
+                    debug.warn(cdm);
                     break;
             }
         }
@@ -143,10 +145,10 @@
         let scaleX = widgetContainer.clientWidth / 680;
         let scaleY = widgetContainer.clientHeight / 504;
         for (let i = 0; i < commandDm.visible.length; i++) {
-            (<any>commandDm.visible[i]).resize(scaleX, scaleY);
+            (<any>commandDm.visible[i]).resize(scaleX, scaleY, widgetContainer.clientWidth, widgetContainer.clientHeight);
         }
         for (let i = 0; i < commandDm.hidden.length; i++) {
-            (<any>commandDm.hidden[i]).resize(scaleX, scaleY);
+            (<any>commandDm.hidden[i]).resize(scaleX, scaleY, widgetContainer.clientWidth, widgetContainer.clientHeight);
         }
     }
 
@@ -162,6 +164,7 @@
                 (<any[]>commandDm.visible).push(cdm);
                 commandDm.hidden.splice(i, 1);
                 cdm.show();
+                resize();
             }
         }
         for (let i = 0, cdm; i < commandDm.visible.length; i++) {
@@ -195,7 +198,7 @@
     function isLoggedin() {
         if (API.uid) return true;
         player.pause();
-        toast.warning("请先登录");
+        API.bofqiMessage("请先登录");
         API.biliQuickLogin();
     }
 
@@ -214,12 +217,12 @@
      * 弹窗组件
      */
     class PopupWindow {
-        popup: any;
-        duration: any;
-        from: any;
-        to: any;
-        pos_x: any;
-        pos_y: any;
+        popup: HTMLElement;
+        duration: number;
+        from: number;
+        to: number;
+        pos_x: number;
+        pos_y: number;
         constructor(cdm, extra, from) {
             this.duration = extra.duration / 1e3 || 5;
             this.from = from || 0;
@@ -243,10 +246,16 @@
         /**
         * 根据视频区域大小等比缩放投票界面
         */
-        resize(scaleX, scaleY) {
-            this.popup.style.left = (this.pos_x * scaleX) + "px";
-            this.popup.style.top = (this.pos_y * scaleY) + "px";
+        resize(scaleX, scaleY, containerWidth, containerHeight) {
             this.popup.style.transform = "translateX(-50%) translateY(-50%) scale(" + Math.min((scaleX + scaleY) / 2, 1.5) + ")";
+            let left = this.pos_x * scaleX;
+            let top = this.pos_y * scaleY;
+            left = Math.max(left, this.popup.clientWidth / 2);
+            top = Math.max(top, this.popup.clientHeight / 2);
+            left = Math.min(left, containerWidth - this.popup.clientWidth / 2);
+            top = Math.min(top, containerHeight - this.popup.clientHeight / 2);
+            this.popup.style.left = left + "px";
+            this.popup.style.top = top + "px";
         }
     }
 
@@ -409,7 +418,7 @@
             <span style="position:absolute;right:1rem;top:0.8rem;font-size:12px;color:#6f6f6f" class="grade-score-count">${info.count}人参与</span>
             `;
             this.scoreInfo = this.popup.getElementsByClassName("grade-score-info")[0];
-            let scoreArea = this.popup.getElementsByClassName("grade-score-area")[0];
+            let scoreArea = <HTMLElement>this.popup.getElementsByClassName("grade-score-area")[0];
             let scoreButton = [];
             function highlightScores(i) {
                 for (let m = 0; m < 5; m++) {
@@ -650,8 +659,7 @@
                 // 正在“载入其他视频弹幕”，不必处理互动弹幕
                 return;
             }
-            init(); // 由于切P后整个播放器会被销毁重建，每次载入互动弹幕都需要重新绑定事件
-            load(cdm);
+            init(cdm); // 由于切P后整个播放器会被销毁重建，每次载入互动弹幕都需要重新绑定事件
         } catch (e) { toast.error("commandDm.js", e) }
     }
 })();
