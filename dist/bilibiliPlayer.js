@@ -49360,7 +49360,7 @@ else {
                             f = !0,
                             g = [],
                             h = {};
-                        c.total && (c.segments.forEach(function (a, b) {
+                        c.total && c.total === d.length && (c.segments.forEach(function (a, b) {
                             a.duration !== d[b].duration && b < c.total - 1 && g.push(b)
                         }), g.length && (f = !1, h = {
                             old: c.qualityIndex,
