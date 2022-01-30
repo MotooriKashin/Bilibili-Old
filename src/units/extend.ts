@@ -7,11 +7,17 @@
             return document.cookie.split('; ').reduce((s: { [name: string]: string }, d) => {
                 let key = d.split('=')[0];
                 let val = d.split('=')[1];
-                s[key] = val;
+                s[key] = unescape(val);
                 return s;
             }, {});
         }
         API.getCookies = () => getCookies();
+        function setCookie(name: string, value: string, days = 365) {
+            const exp = new Date();
+            exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);
+            document.cookie = name + '=' + escape(value) + ';expires=' + exp.toUTCString() + '; path=/; domain=.bilibili.com';
+        }
+        API.setCookie = (name: string, value: string, days?: number) => setCookie(name, value, days);
         async function loginExit(referer?: string) {
             if (!API.uid) return toast.warning("本就未登录，无法退出登录！");
             toast.warning("正在退出登录...");
@@ -258,6 +264,13 @@ declare namespace API {
      * 获取当前用户cookies
      */
     export function getCookies(): { [name: string]: string };
+    /**
+     * 添加/修改cookies
+     * @param name cookie名称
+     * @param value cookie值
+     * @param days 保存时间，默认365天
+     */
+    export function setCookie(name: string, value: string, days?: number): void;
     /**
      * 代理退出登录功能
      * @param referer 退出后跳转的页面URL

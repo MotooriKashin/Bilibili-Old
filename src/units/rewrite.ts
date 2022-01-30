@@ -10,7 +10,7 @@
             if (location.href.includes("bilibili.com/login?act=exit")) API.loginExit(document.referrer);
             // 修复动态时间线
             let offset = API.getCookies()["bp_video_offset_" + API.uid];
-            offset && (document.cookie = "bp_t_offset_" + API.uid + "=" + offset + "; domain=bilibili.com; expires=Aug, 18 Dec 2038 18:00:00 GMT; BLOD.path=/");
+            offset && API.setCookie("bp_t_offset_" + API.uid, offset);
         }
         API.importModule("parameterTrim.js", { Before: true }, true); // 网址清理，重写前处理
         /**

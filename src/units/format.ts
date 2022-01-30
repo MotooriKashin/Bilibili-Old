@@ -117,12 +117,12 @@
          * @returns search参数对象
          */
         static urlObj(url: string = "") {
-            let arr = url.split('?')[1] ? url.split('?')[1].split('&') : [];
-            return arr.reduce((o: { [name: string]: string }, d) => {
-                if (d.includes("#")) d = d.split("#")[0];
-                if (d) o[d.split('=')[0]] = d.split('=')[1] || "";
-                return o;
-            }, {});
+            return url.split('?').reduce((s, d) => {
+                d.split('&').forEach(d => {
+                    d.includes("=") && (d = d.split("#")[0]) && (s[d.split('=')[0]] = d.split('=')[1] || "");
+                });
+                return s
+            }, <Record<string, string>>{});
         }
         /**
          * 秒数 -> hh:mm:ss
