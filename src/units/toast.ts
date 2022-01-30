@@ -62,7 +62,7 @@
             this.container.setAttribute("class", "toast-top-right");
             this.style.setAttribute("rel", "stylesheet");
             this.style.setAttribute("id", "toastr-style");
-            this.style.setAttribute("href", "https://cdn.bootcdn.net/ajax/libs/toastr.js/latest/toastr.min.css")
+            this.style.setAttribute("href", "//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css")
         }
         static show(type: "info" | "success" | "warning" | "error", ...msg: string[]) {
             if (!config.toastcheck) return;
