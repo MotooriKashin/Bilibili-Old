@@ -29,7 +29,7 @@
                 this.cid && Reflect.set(window, "cid", this.cid);
                 API.restorePlayerSetting(); // 备份还原旧版播放器设置数据
                 API.rewriteHTML(API.getModule("player.html"));
-                window.parent = window; // 重定向父索引回本身以禁止向父索引暴露播放器接口，该接口可能被新版页面乱用
+                Reflect.set(window, "parent", window); // 重定向父索引回本身以禁止向父索引暴露播放器接口，该接口可能被新版页面乱用
                 window.addEventListener('message', e => {
                     if (e.data.aid) {
                         (<any>window).__playinfo__ = undefined;
