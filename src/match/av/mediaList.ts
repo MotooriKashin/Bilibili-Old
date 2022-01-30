@@ -80,6 +80,7 @@
                 let oid = ids[0].aid; // 保存当前aid以判断切p
                 debug("收藏列表", toview);
                 toast.success("重构成功！刷新播放器...");
+                window.player.destroy();
                 (<any>window).BilibiliPlayer({ "aid": ids[0].aid, "cid": ids[0].cid, "watchlater": encodeURIComponent(JSON.stringify(toview)) });
                 API.runWhile(() => document.getElementsByClassName("bpui-button-text")[1], () => (<any>document.getElementsByClassName("bpui-button-text")[1].firstChild).innerText = "收藏列表");
                 API.switchVideo(() => {

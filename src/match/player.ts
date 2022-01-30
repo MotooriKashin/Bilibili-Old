@@ -38,6 +38,7 @@
                         e.data.p = 1;
                         e.data.pre_ad = "";
                         history.replaceState(undefined, undefined, API.objUrl("https://www.bilibili.com/blackboard/html5player.html", { aid: e.data.aid, cid: e.data.cid }));
+                        window.player.destroy();
                         window.player = new (<any>window).BilibiliPlayer(e.data);
                         navigator.mediaSession.setActionHandler("play", window.player.play);
                         navigator.mediaSession.setActionHandler("pause", window.player.pause);

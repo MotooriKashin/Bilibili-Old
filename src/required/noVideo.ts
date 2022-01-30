@@ -11,6 +11,7 @@
         API.switchVideo(() => {
             API.bofqiMessage(["拦截视频页媒体载入用于呼出下载面板", "取消拦截"], 3, () => {
                 config.noVideo = false;
+                window.player.destroy();
                 (<any>window).BilibiliPlayer({ aid: API.aid, cid: API.cid });
             }, true)
         })
