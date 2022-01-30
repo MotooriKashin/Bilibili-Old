@@ -30,19 +30,20 @@
                         API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                         r(true);
                     }).catch(e => {
-                        (<Promise<JSON>>API.getJson("api.bilibili.com/view", { id: API.aid, page: this.url.searchParams.get("p") })).then(d => {
-                            API.importModule("av-view.js", { __INITIAL_STATE__: d }, true);
+                        toast.error("获取av号信息出错，尝试访问第三方接口~", e);
+                        (<Promise<JSON>>xhr({
+                            url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
+                            responseType: "json"
+                        })).then(d => {
+                            API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
                             r(true);
                         }).catch(e => {
-                            toast.error("获取av号信息出错，尝试访问第三方接口~", e);
-                            (<Promise<JSON>>xhr({
-                                url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
-                                responseType: "json"
-                            })).then(d => {
-                                API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
+                            toast.error("第三方接口也出错，", e);
+                            (<Promise<JSON>>API.getJson("api.bilibili.com/view", { id: API.aid, page: this.url.searchParams.get("p") })).then(d => {
+                                API.importModule("av-view.js", { __INITIAL_STATE__: d }, true);
+                                API.switchVideo(() => { toast.warning(`抱歉！`, "这是一个限制视频但我们未能获取到Bangumi链接~") });
                                 r(true);
                             }).catch(e => {
-                                toast.error("第三方接口也出错，", e);
                                 API.importModule("vector.js");
                             })
                         })
@@ -62,20 +63,21 @@
                 try {
                     API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                 } catch (e) {
-                    d = xhr({
-                        url: API.objUrl("https://api.bilibili.com/view", { type: "json", appkey: "8e9fc618fbd41e28", id: <any>API.aid, page: this.url.searchParams.get("p") }),
-                        async: false,
-                        credentials: true
-                    })
+                    toast.error("获取av号信息出错，尝试访问第三方接口~", e);
                     try {
-                        API.importModule("av-view.js", { __INITIAL_STATE__: d }, true);
-                    } catch (e) {
-                        toast.error("获取av号信息出错，尝试访问第三方接口~", e);
                         d = xhr({
                             url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
                             async: false
                         })
                         API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
+                    } catch (e) {
+                        d = xhr({
+                            url: API.objUrl("https://api.bilibili.com/view", { type: "json", appkey: "8e9fc618fbd41e28", id: <any>API.aid, page: this.url.searchParams.get("p") }),
+                            async: false,
+                            credentials: true
+                        })
+                        API.importModule("av-view.js", { __INITIAL_STATE__: d }, true);
+                        API.switchVideo(() => { toast.warning(`抱歉！`, "这是一个限制视频但我们未能获取到Bangumi链接~") });
                     }
                 }
                 this.write();
@@ -131,7 +133,7 @@
                         }
                     })
                     // 跳过充电鸣谢
-                    config.electric && API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.url = API.objUrl(xhr.url.split("?")[0], Object.assign(API.urlObj(xhr.url), { aid: 1, mid: 1 })) })
+                    config.electric && API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.url = API.objUrl(xhr.url.split("?")[0], Object.assign(API.urlObj(xhr.url), { aid: 1, mid: 1 })) });
                 }
             }
         }
