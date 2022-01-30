@@ -7,7 +7,7 @@
             const search = url.match(/(?<=\?)[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]]+/g);
             this.search = search ? "?" + search.join("&") : "";
             const hash = url.match(/(?<=\#)[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]\/]+/g);
-            this.hash = hash && "#" + hash;
+            this.hash = hash ? "#" + hash : "";
             this.url = url.replace(/\?[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]]+/g, "")
                 .replace(/\#[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]\/]+/g, "");
         }
@@ -19,7 +19,7 @@
             if (this.search) {
                 return <Record<string, string>>this.search.substring(1).split("&").reduce((s, d) => {
                     const arr = d.split("=");
-                    d[1] && (s[d[0]] = d[1]);
+                    arr[1] && (s[arr[0]] = arr[1]);
                     return s;
                 }, {});
             }
@@ -33,10 +33,10 @@
             let tar = this.getSearch();
             tar = Object.assign(tar, obj);
             const result = Object.entries(tar).reduce((s, d) => {
-                d[1] !== null && d[1] !== undefined && (s += `${d[0]}=${d[1]}`)
+                d[1] !== null && d[1] !== undefined && s.push(`${d[0]}=${d[1]}`)
                 return s;
-            }, '');
-            this.search = result && "?" + result;
+            }, []).join("&");
+            this.search = result ? "?" + result : "";
         }
         /**
          * 转化为url字符串
