@@ -15282,7 +15282,7 @@
                                                     i = !0,
                                                     a = [],
                                                     o = {};
-                                                n.total && (n.segments.forEach(function (e, t) {
+                                                n.total && n.total === r.length && (n.segments.forEach(function (e, t) {
                                                     // e.duration !== r[t].duration && t < n.total - 1 && a.push(t)
                                                     e.duration && e.duration !== r[t].duration && t < n.total - 1 && Math.ceil(1e3 * Math.abs(e.duration / e.timescale - r[t].duration / r[t].timescale)) > 100 && a.push(t)
                                                 }), a.length && (i = !1, o = {
