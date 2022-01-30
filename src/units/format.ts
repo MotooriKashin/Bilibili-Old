@@ -1,4 +1,51 @@
 (function () {
+    class Url {
+        url = "";
+        search = "";
+        hash = "";
+        constructor(url: string) {
+            const search = url.match(/(?<=\?)[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]]+/g);
+            this.search = search ? "?" + search.join("&") : "";
+            const hash = url.match(/(?<=\#)[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]\/]+/g);
+            this.hash = hash && "#" + hash;
+            this.url = url.replace(/\?[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]]+/g, "")
+                .replace(/\#[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]\/]+/g, "");
+        }
+        /**
+         * 提取url的查询参数为对象
+         * @returns 参数对象
+         */
+        getSearch() {
+            if (this.search) {
+                return <Record<string, string>>this.search.substring(1).split("&").reduce((s, d) => {
+                    const arr = d.split("=");
+                    d[1] && (s[d[0]] = d[1]);
+                    return s;
+                }, {});
+            }
+            else return {}
+        }
+        /**
+         * 修改/添加url参数
+         * @param obj 参数对象
+         */
+        setSearch(obj: Record<string, string | number>) {
+            let tar = this.getSearch();
+            tar = Object.assign(tar, obj);
+            const result = Object.entries(tar).reduce((s, d) => {
+                d[1] !== null && d[1] !== undefined && (s += `${d[0]}=${d[1]}`)
+                return s;
+            }, '');
+            this.search = result && "?" + result;
+        }
+        /**
+         * 转化为url字符串
+         * @returns url字符串
+         */
+        toJOSN() {
+            return this.url + this.search + this.hash;
+        }
+    }
     class Format {
         /**
          * 格式化时间
@@ -96,12 +143,9 @@
          * @returns 拼合的URL
          */
         static objUrl(url: string = "", obj: { [name: string]: string } = {}) {
-            const result = new URL(url);
-            Object.entries(obj).forEach(d => {
-                if (d[1] !== null && d[1] !== undefined) result.searchParams.set(d[0], d[1]);
-                else result.searchParams.delete(d[0]);
-            })
-            return result.toJSON();
+            const result = new Url(url);
+            result.setSearch(obj);
+            return result.toJOSN();
         }
         /**
          * 提取URL search参数对象
@@ -109,11 +153,7 @@
          * @returns search参数对象
          */
         static urlObj(url: string = "") {
-            const result = new URL(url);
-            return <Record<string, string>>Array.from(result.searchParams.entries()).reduce((s, d) => {
-                s[d[0]] = d[1];
-                return s;
-            }, {});
+            return new Url(url).getSearch();
         }
         /**
          * 秒数 -> hh:mm:ss

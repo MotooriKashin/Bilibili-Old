@@ -92,8 +92,8 @@
             const accesskey = GM.getValue("access_key", "") || undefined;
             let response: any;
             let obj: any = API.urlObj(args[1]);
-            obj = { ...obj, ...{ access_key: accesskey, module: "bangumi" } }
-            obj.fnval && (obj.fnval = 16);
+            obj = { ...obj, ...{ access_key: accesskey, module: ((<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__)?.upInfo?.mid == 1988098633 || (<BANGUMI__INITIAL_STATE__>API.__INITIAL_STATE__)?.upInfo?.mid == 2042149112) ? "movie" : "bangumi" } }
+            obj.fnval && (obj.fnval = API.fnval);
             this.dispatchEvent(new ProgressEvent("loadstart"));
             Object.defineProperty(this, "response", { writable: true });
             Object.defineProperty(this, "responseText", { writable: true });

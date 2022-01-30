@@ -3,7 +3,7 @@
  * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
  * 同时传入的还有以`epid`的名义指定回目，默认值为0即第一回
  * 原始数据对应来源`//api.global.bilibili.com/view/web_api/season?season_id/ep_id`
- * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致
+ * 重构__INITIAL_STATE__是非常精细的工作，请务必耐心细致
  */
 (function () {
     const result: BANGUMI__INITIAL_STATE__ = {

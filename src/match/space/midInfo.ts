@@ -12,11 +12,11 @@
             case 11783021: response.data.name = "哔哩哔哩番剧出差";
                 response.data.official.desc = "哔哩哔哩番剧出差 官方帐号";
                 break;
-            case 1988098633: response.data.name = "b站_DM組";
-                response.data.official.desc = "b站_DM組 官方帐号";
+            case 1988098633: response.data.name = "b站_戲劇咖";
+                response.data.official.desc = "b站_戲劇咖 官方帐号";
                 break;
-            case 2042149112: response.data.name = "b站_EN組";
-                response.data.official.desc = "b站_EN組 官方帐号";
+            case 2042149112: response.data.name = "b站_綜藝咖";
+                response.data.official.desc = "b站_綜藝咖 官方帐号";
                 break;
         }
         API.xhrhook(["api.bilibili.com/x/space/acc/info"], function (args) {
@@ -31,5 +31,5 @@
                 }
             });
         })
-    } catch (e) { toast.error("11783021.js", e) }
+    } catch (e) { toast.error("midinfo.js", e) }
 })();

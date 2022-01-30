@@ -1,21 +1,21 @@
 /**
- * 本模块负责重构av/BV页__INITIAL_STATE__
- * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回
- * 原始数据对应来源`//www.biliplus.com/api/view?aid`
- * 重构__INITIAL_STATE__是非常精细的工作，请务必耐心细致
+ * 本模块负责重构av/BV页__INITIAL_STATE__  
+ * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回  
+ * 原始数据对应来源`//api.bilibili.com/view`  
+ * 重构__INITIAL_STATE__是非常精细的工作，请务必耐心细致  
  */
 (function () {
-    const result: AV__INITIAL_STATE__ = {
-        aid: 0,
-        comment: { count: 0, list: [] },
-        error: {},
-        isClient: false,
-        p: "",
-        player: "",
-        playurl: "",
-        related: [],
-        tags: [],
-        upData: {
+    class INITIAL_STATE {
+        aid = 0;
+        comment = { count: 0, list: [] };
+        error = {};
+        isClient = false;
+        p = "";
+        player = "";
+        playurl = "";
+        related = [];
+        tags = [];
+        upData = {
             face: "https://static.hdslb.com/images/akari.jpg",
             name: "",
             mid: 0,
@@ -41,8 +41,8 @@
             sign: "",
             spacesta: 0,
             vip: { accessStatus: 0, dueRemark: "", theme_type: 0, vipStatus: 0, vipStatusWarn: "", vipType: 1 }
-        },
-        videoData: {
+        };
+        videoData = {
             aid: 0,
             cid: 0,
             config: { relates_title: "相关推荐", share_style: 1 },
@@ -76,23 +76,23 @@
             tname: 0,
             videos: 1,
             embedPlayer: 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=0&aid=0&pre_ad=")'
-        }
+        };
     }
-    // @ts-ignore：传递参数
+    // @ts-ignore：传递的参数
     let data = API.jsonCheck(__INITIAL_STATE__);
-    // 处理重定向
-    data.v2_app_api && data.v2_app_api.redirect_url && (location.href = data.v2_app_api.redirect_url);
-    data.bangumi && data.bangumi.ogv_play_url && (location.href = data.bangumi.ogv_play_url);
-    result.aid = data.aid || API.aid;
+    const result = new INITIAL_STATE();
+    result.aid = API.aid;
+    result.tags = data.tag || [];
     result.upData.name = data.author;
+    result.upData.face = data.face;
     result.upData.mid = data.mid;
-    result.videoData.aid = data.aid || API.aid;
-    result.videoData.cid = data.list[0].cid;
+    result.videoData.aid = API.aid;
+    result.videoData.cid = data.cid;
     result.videoData.ctime = data.created;
     result.videoData.pubdate = data.created;
     result.videoData.desc = data.description;
-    result.videoData.pages[0].cid = data.list[0].cid;
-    result.videoData.stat.aid = data.aid;
+    result.videoData.pages[0].cid = data.cid;
+    result.videoData.stat.aid = API.aid;
     result.videoData.stat.coin = data.coins;
     result.videoData.stat.danmaku = data.video_review;
     result.videoData.stat.favorite = data.favorites;
@@ -101,8 +101,6 @@
     result.videoData.tid = data.tid;
     result.videoData.title = data.title;
     result.videoData.tname = data.typename;
-    data.v2_app_api && (result.tags = data.v2_app_api.tag, result.videoData = data.v2_app_api);
-    result.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
-    API.switchVideo(() => API.bofqiMessage(["视频已失效", "加载弹幕", "缓存信息仅供参考"], 3, () => API.importModule("")));
-    API.__INITIAL_STATE__ = result;
+    result.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.cid + '&aid=' + API.aid + '&pre_ad=")';
+    API.__INITIAL_STATE__ = <any>result;
 })();

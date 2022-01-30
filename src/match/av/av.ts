@@ -5,6 +5,7 @@
 (function () {
     try {
         class Av {
+            url = new URL(location.href);
             // __INITIAL_STATE__类型保护
             isAV__INITIAL_STATE__ = (pet: AV__INITIAL_STATE__ | BANGUMI__INITIAL_STATE__): pet is AV__INITIAL_STATE__ => true;
             constructor() {
@@ -29,16 +30,21 @@
                         API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                         r(true);
                     }).catch(e => {
-                        toast.error("获取av号信息出错，尝试访问第三方接口~", e);
-                        (<Promise<JSON>>xhr({
-                            url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
-                            responseType: "json"
-                        })).then(d => {
-                            API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
+                        (<Promise<JSON>>API.getJson("api.bilibili.com/view", { id: API.aid, page: this.url.searchParams.get("p") })).then(d => {
+                            API.importModule("av-view.js", { __INITIAL_STATE__: d }, true);
                             r(true);
                         }).catch(e => {
-                            toast.error("第三方接口也出错，", e);
-                            API.importModule("vector.js");
+                            toast.error("获取av号信息出错，尝试访问第三方接口~", e);
+                            (<Promise<JSON>>xhr({
+                                url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
+                                responseType: "json"
+                            })).then(d => {
+                                API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
+                                r(true);
+                            }).catch(e => {
+                                toast.error("第三方接口也出错，", e);
+                                API.importModule("vector.js");
+                            })
                         })
                     })
                 })
@@ -56,12 +62,21 @@
                 try {
                     API.importModule("av-detail.js", { __INITIAL_STATE__: d }, true);
                 } catch (e) {
-                    toast.error("获取av号信息出错，尝试访问第三方接口~", e);
                     d = xhr({
-                        url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
-                        async: false
+                        url: API.objUrl("https://api.bilibili.com/view", { type: "json", appkey: "8e9fc618fbd41e28", id: <any>API.aid, page: this.url.searchParams.get("p") }),
+                        async: false,
+                        credentials: true
                     })
-                    API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
+                    try {
+                        API.importModule("av-view.js", { __INITIAL_STATE__: d }, true);
+                    } catch (e) {
+                        toast.error("获取av号信息出错，尝试访问第三方接口~", e);
+                        d = xhr({
+                            url: API.objUrl("https://www.biliplus.com/api/view", { id: <any>API.aid }),
+                            async: false
+                        })
+                        API.importModule("av-biliplus.js", { __INITIAL_STATE__: d }, true);
+                    }
                 }
                 this.write();
             }

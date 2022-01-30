@@ -58,13 +58,12 @@
              * @returns URL
              */
             triming(url: string) {
-                const obj = new URL(url);
-                if (!obj.protocol.includes("http")) return url;
-                obj.searchParams.has("bvid") && obj.searchParams.append("aid", <string>API.abv(obj.searchParams.get("bvid"))), obj.searchParams.delete("bvid");
-                obj.searchParams.has("aid") && !Number(obj.searchParams.get("aid")) && obj.searchParams.set("aid", <string>API.abv(obj.searchParams.get("aid")));
-                obj.searchParams.has("from") && obj.searchParams.get("from") == "search" && obj.searchParams.delete("from");
-                this.param.forEach(d => obj.searchParams.delete(d));
-                return obj.toJSON().replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + API.abv(s));
+                const obj = API.urlObj(url);
+                obj.bvid && (obj.aid = <string>API.abv(obj.bvid), obj.bvid = undefined);
+                obj.aid && !Number(obj.aid) && (obj.aid = <string>API.abv(obj.aid));
+                obj.from == "search" && (obj.from = undefined);
+                this.param.forEach(d => obj[d] = undefined);
+                return API.objUrl(url, obj).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + API.abv(s));
             }
             click(e: MouseEvent) {
                 var f = <HTMLAnchorElement>e.target;

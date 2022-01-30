@@ -2,7 +2,7 @@
  * 本模块负责重构av/BV页__INITIAL_STATE__  
  * 请以`__INITIAL_STATE__`名义传入原始数据，重构结果以API对象的同名属性的形式返回  
  * 原始数据对应来源`//api.bilibili.com/x/web-interface/view/detail?aid`  
- * 重构__INITIAL_STATE__是非常精细的工具，请务必耐心细致  
+ * 重构__INITIAL_STATE__是非常精细的工作，请务必耐心细致  
  */
 (function () {
     const result: AV__INITIAL_STATE__ = {

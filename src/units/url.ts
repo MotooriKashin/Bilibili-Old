@@ -1,5 +1,5 @@
 /**
- * 本模块封装了urlAPI请求以便于访问
+ * 本模块封装了常用的url请求，提供参数提示以方便访问
  */
 (function () {
     class Url {
@@ -17,7 +17,8 @@
             "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: API.fnval, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
             "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 125, fourk: 1, otype: 'json', fnver: 0, fnval: API.fnval, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
             "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-            "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() }
+            "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 125, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+            "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" }
         }
         /**
          * 请求封装好的json请求
@@ -96,6 +97,12 @@ interface jsonUrlDetail {
      * Android Play bangumi视频
      */
     "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { ep_id: number, cid: number, qn?: number, fnver?: number, fnval?: number, build?: number }
+    /**
+     * 获取aid信息，包括区域限制
+     * @param id 视频aid
+     * @param page 分p号
+     */
+    "api.bilibili.com/view": { id: number, page?: string | number }
 }
 declare namespace API {
     /**

@@ -3,21 +3,12 @@
  */
 (function () {
     API.xhrhook(["/playurl?"], function (args) {
-        const obj = new URL(args[1]);
-        if (!obj.searchParams.has("sign")) {
-            obj.searchParams.set("fourk", "1");
-            obj.searchParams.has("fnval") && obj.searchParams.set("fnval", String(API.fnval));
-        }
-        if (obj.searchParams.has("avid")) {
-            Number(obj.searchParams.get("avid")) && (API.aid = Number(obj.searchParams.get("avid")));
-        }
-        if (obj.searchParams.has("bvid")) {
-            !API.aid && (API.aid = <number>API.abv(obj.searchParams.get("bvid")));
-        }
-        if (obj.searchParams.has("cid")) {
-            Number(obj.searchParams.get("cid")) && (API.cid = Number(obj.searchParams.get("cid")));
-        }
-        args[1] = obj.toJSON();
+        const obj = API.urlObj(args[1]);
+        !obj.sign && obj.fnval && (obj.fnval = <any>API.fnval);
+        obj.avid && Number(obj.bvid) && (API.aid = <any>obj.avid);
+        obj.bvid && !API.aid && (API.aid = <number>API.abv(obj.bvid));
+        obj.cid && Number(obj.cid) && (API.cid = <any>obj.cid);
+        args[1] = API.objUrl(args[1], obj);
         args[1].includes("84956560bc028eb7") && (args[1] = API.urlsign(args[1], {}, 8));
         args[1].includes("pgc") && (API.pgc = true);
         this.addEventListener("readystatechange", async () => record.call(this));
