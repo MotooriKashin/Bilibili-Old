@@ -655,7 +655,7 @@
      */
     API.loadCommandDm = async (cdm: any[], aid: string | number, cid: string | number) => {
         try {
-            if (aid != API.aid || cid != API.cid || widgetContainer !== undefined) {
+            if (aid != API.aid || cid != API.cid || (widgetContainer !== undefined && document.getElementById("bilibiliPlayer").contains(widgetContainer))) {
                 // 正在“载入其他视频弹幕”，不必处理互动弹幕
                 return;
             }
