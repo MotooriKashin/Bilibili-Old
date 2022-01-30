@@ -33,6 +33,7 @@
 	"element": "element.js",
 	"getCss": "element.js",
 	"getCookies": "extend.js",
+	"setCookie": "extend.js",
 	"loginExit": "extend.js",
 	"jsonCheck": "extend.js",
 	"restorePlayerSetting": "extend.js",

@@ -91,25 +91,17 @@
         }
         /**
          * search参数对象拼合回URL
-         * @param url URL主体，可含search参数
+         * @param url URL主体，可含search参数和锚
          * @param obj search参数对象
          * @returns 拼合的URL
          */
-        static objUrl(url: string, obj: { [name: string]: string }) {
-            let data = this.urlObj(url);
-            obj = typeof obj === "object" ? obj : {};
-            data = Object.assign(data, obj);
-            let arr = [], i = 0;
-            for (let key in data) {
-                if (data[key] !== undefined && data[key] !== null) {
-                    arr[i] = key + "=" + data[key];
-                    i++;
-                }
-            }
-            if (url) url = url + "?" + arr.join("&");
-            else url = arr.join("&");
-            if (url.charAt(url.length - 1) == "?") url = url.split("?")[0];
-            return url;
+        static objUrl(url: string = "", obj: { [name: string]: string } = {}) {
+            const result = new URL(url);
+            Object.entries(obj).forEach(d => {
+                if (d[1] !== null && d[1] !== undefined) result.searchParams.set(d[0], d[1]);
+                else result.searchParams.delete(d[0]);
+            })
+            return result.toJSON();
         }
         /**
          * 提取URL search参数对象
@@ -117,12 +109,11 @@
          * @returns search参数对象
          */
         static urlObj(url: string = "") {
-            return url.split('?').reduce((s, d) => {
-                d.split('&').forEach(d => {
-                    d.includes("=") && (d = d.split("#")[0]) && (s[d.split('=')[0]] = d.split('=')[1] || "");
-                });
-                return s
-            }, <Record<string, string>>{});
+            const result = new URL(url);
+            return <Record<string, string>>Array.from(result.searchParams.entries()).reduce((s, d) => {
+                s[d[0]] = d[1];
+                return s;
+            }, {});
         }
         /**
          * 秒数 -> hh:mm:ss
