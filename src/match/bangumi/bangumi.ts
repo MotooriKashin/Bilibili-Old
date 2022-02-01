@@ -82,8 +82,8 @@
                     config.bangumiEplist && API.__INITIAL_STATE__?.epList[1] && (API.__INITIAL_STATE__.special = false, API.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
                     (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
                     API.__INITIAL_STATE__.special ?
-                        API.rewriteHTML(config.trusteeship ? API.getModule("bangumi-special.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("bangumi-special.html")) :
-                        API.rewriteHTML(config.trusteeship ? API.getModule("bangumi.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("bangumi.html"));
+                        API.rewriteHTML(API.getModule("bangumi-special.html")) :
+                        API.rewriteHTML(API.getModule("bangumi.html"));
                     document.title = API.__INITIAL_STATE__.mediaInfo.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                     // 分集数据
                     config.episodeData && API.importModule("episodeData.js");

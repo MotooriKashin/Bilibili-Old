@@ -13,6 +13,7 @@
             offset && API.setCookie("bp_t_offset_" + API.uid, offset);
         }
         API.importModule("parameterTrim.js", { Before: true }, true); // 网址清理，重写前处理
+        API.importModule("EmbedPlayer.js");
         /**
          * 分离页面进入重写判定
          */

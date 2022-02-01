@@ -9,7 +9,7 @@
                 return s;
             }, []);
             // 替换播放器节点
-            const node = document.querySelector("#bilibili-player");
+            const node = document.querySelector("#bilibili-player").parentElement;
             const root = node.attachShadow({ mode: "closed" }); // 使用shadow覆盖视频节点而不影响页面其他功能
             const iframe = document.createElement('iframe');
             iframe.src = `https://www.bilibili.com/blackboard/html5player.html?aid=${(<any>window).__INITIAL_STATE__.videoInfo.aid}&cid=${(<any>window).__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1`;

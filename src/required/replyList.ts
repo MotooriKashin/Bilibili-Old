@@ -3,7 +3,7 @@
  */
 (function () {
     try {
-        config.trusteeship && API.scriptIntercept(["comment.min.js"], "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/comment.min.js");
+        config.trusteeship && API.scriptIntercept(["comment.min.js"], URL.createObjectURL(new Blob([GM.getResourceText("comment.js")])));
         class ReplyList {
             script = GM.getResourceText(config.oldReplySort ? "comment.min.js" : "comment.js");
             init() {

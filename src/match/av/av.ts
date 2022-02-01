@@ -98,7 +98,7 @@
                     API.tid = API.__INITIAL_STATE__.videoData.tid;
                     (<any>window).__INITIAL_STATE__ = API.__INITIAL_STATE__;
                     config.noVideo && delete (<any>window).__playinfo__;
-                    API.rewriteHTML(config.trusteeship ? API.getModule("av.html").replace("static.hdslb.com/js/video.min.js", "cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/dist/video.min.js") : API.getModule("av.html"));
+                    API.rewriteHTML(API.getModule("av.html"));
                     document.title = API.__INITIAL_STATE__.videoData.title + "_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili";
                     API.addCss(API.getModule("bofqi.css"));
                     // 移除失效顶栏
