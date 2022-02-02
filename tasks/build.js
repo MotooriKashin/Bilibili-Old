@@ -7,7 +7,7 @@ const resource = require("../json/resource.json");
 class Build {
     extend = [".d.ts", ".map", "dist/index.js", "dist/bilibiliPlayer.js", "dist/comment.js", "dist/video.js", "meta.json", "resource.json", ".md"]; // 排除文件或拓展名
     path = ["CSS", "HTML", "Json", "dist"]; // 模块所在目录
-    resource = ["dist/bilibiliPlayer.js", "dist/video.js", "dist/comment.js"]; // 以@resource形式加载的模块
+    resource = ["dist/bilibiliPlayer.js", /*"dist/video.js",*/ "dist/comment.js"]; // 以@resource形式加载的模块
     cdn = "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old"; // 在线仓库
     /**
      * 构建入口

@@ -398,28 +398,3 @@ interface danmakuNew {
     action?: string;
     styleClass?: string
 }
-interface Window {
-    player: {
-        /**
-         * 实时修改播放器弹幕
-         * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
-         * @param danmaku 弹幕列表
-         * @param append 添加弹幕还是替换，默认替换
-         */
-        setDanmaku: (danmaku: danmaku[], append?: boolean) => void;
-        /**
-         * 实时修改播放器弹幕
-         * **本函数直接写入托管的`bilibiliPlayer.js`，使用前请检查是否可用**
-         * @param time 弹幕偏移，正相关
-         */
-        offsetDanmaku: (time: number) => void;
-        destroy: () => void;
-        stop: () => void;
-        play: () => void;
-        pause: () => void;
-        seek: (s: number) => void;
-        getCurrentTime: () => number;
-        prev: () => void;
-        next: () => void;
-    }
-}

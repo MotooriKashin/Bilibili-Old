@@ -43,7 +43,7 @@
          * @returns url字符串
          */
         toJOSN() {
-            return this.url + this.search + this.hash;
+            return (this.url || "") + this.search + this.hash;
         }
     }
     class Format {
