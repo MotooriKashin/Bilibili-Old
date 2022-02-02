@@ -312,6 +312,7 @@
     Object.defineProperty(window, "EmbedPlayer", {
         set: (v) => {
             delete window.EmbedPlayer;
+            if (!API.path.name) return window.EmbedPlayer = v;
             // const script = GM.getResourceText("video.js");
             // if (!script) return window.EmbedPlayer = v;
             // new Function(script)();
