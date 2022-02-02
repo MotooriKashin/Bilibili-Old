@@ -120,7 +120,7 @@
             });
             "function" == typeof this.callbackFn && (<any>this.cElement).jwAddEventListener("jwplayerMediaLoaded", () => this.callbackFn());
             "function" == typeof window.PlayerMediaLoaded && window.PlayerMediaLoaded();
-            window.GrayManager = window.GrayManager ? Object.assign(window.GrayManager, new GrayManager(this)) : new GrayManager(this);
+            window.GrayManager = new GrayManager(this);
         }
         flashChecker() {
             let e = !1, t = 0;
@@ -264,7 +264,7 @@
             Object.entries(eventMaps).forEach(d => {
                 this.cElement["jwAddEventListener"](d[1], () => { this.callFunction(d[0]) })
             });
-            window.GrayManager = window.GrayManager ? Object.assign(window.GrayManager, new GrayManager(this)) : new GrayManager(this);
+            window.GrayManager = new GrayManager(this);
         }
         callFunction(type: string) {
             const eventMaps = {
