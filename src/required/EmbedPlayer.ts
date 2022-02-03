@@ -15,7 +15,7 @@
         }
     }
     class EmbedPlayer {
-        playerParam: Record<string, string>;
+        playerParam: Record<string, any>;
         playerType: string;
         upgrade: boolean;
         callbackFn: () => void;
@@ -25,6 +25,7 @@
         bofqi = document.querySelector("#bofqi");
         constructor(player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) {
             this.playerParam = API.urlObj(`?${playerParams}`);
+            this.playerParam.dashSymbol = true;
             this.playerType = playerType;
             this.upgrade = upgrade;
             this.callbackFn = callbackFn;
