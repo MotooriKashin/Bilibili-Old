@@ -6538,8 +6538,8 @@ function Fa() {
                 };
                 e.ta = e.ta ? e.ta + ("&qn=" + e.quality) : "qn=" + e.quality;
                 d.f.Z && !g.a.jd("season_type", "?" + e.ta) && (e.ta += "&season_type=" + d.f.Z);
-                d.f.Tm && this.uf && (e.pk = 0, e.mn = 16, e.Vf = d.Vf, e.ta = e.ta ? e.ta +
-                    "&fnver=0&fnval=80" : "fnver=0&fnval=80");
+                d.f.Tm && this.uf && (e.pk = 0, e.mn = 4048, e.Vf = d.Vf, e.ta = e.ta ? e.ta +
+                    "&fnver=0&fnval=4048" : "fnver=0&fnval=4048");
                 this.window.Ui && (e.ta += "&tid=" + this.window.Ui);
                 d.trigger(l.a.h.kj);
                 K.a.r(e, function (f) {
@@ -7159,7 +7159,7 @@ function Fa() {
                 };
                 d.ta = d.ta ? d.ta + ("&qn=" + d.quality) : "qn=" + d.quality;
                 n.f.Z && !g.a.jd("season_type", "?" + d.ta) && (d.ta += "&season_type=" + n.f.Z);
-                n.f.Tm && this.uf && (d.pk = 0, d.mn = 16, d.Vf = n.Vf, d.ta = d.ta ? d.ta + "&fnver=0&fnval=80" : "fnver=0&fnval=80");
+                n.f.Tm && this.uf && (d.pk = 0, d.mn = 4048, d.Vf = n.Vf, d.ta = d.ta ? d.ta + "&fnver=0&fnval=4048" : "fnver=0&fnval=4048");
                 this.window.Ui && (d.ta += "&tid=" + this.window.Ui);
                 n.trigger(l.a.h.kj);
                 this.window && this.window.GrayManager &&
@@ -24372,7 +24372,7 @@ function Fa() {
                 f.postMessage(b);
                 f.onmessage = function (d) {
                     function copy() {
-                        for(let i = 0, len = d.data.length; i < len; i++)
+                        for (let i = 0, len = d.data.length; i < len; i++)
                             c.xd[i] = d.data[i];
                     }
                     if (0 < c.xd.length) {
