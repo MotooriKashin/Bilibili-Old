@@ -2,18 +2,6 @@
  * 旧版播放器脚本hook
  */
 (function () {
-    class GrayManager {
-        static player: EmbedPlayer;
-        constructor(player: EmbedPlayer) {
-            GrayManager.player = player;
-        }
-        loadExtraMenuConfig(type: string) {
-            return GrayManager.player.loadExtraMenuConfig(type);
-        }
-        clickMenu(id: string) {
-            return GrayManager.player.clickMenu(id);
-        }
-    }
     class EmbedPlayer {
         playerParam: Record<string, any>;
         playerType: string;
@@ -22,10 +10,13 @@
         gray_html5 = true;
         flashAddEvents = [];
         flashRemoveEvents = [];
+        pageno: string;
         bofqi = document.querySelector("#bofqi");
         constructor(player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) {
             this.playerParam = API.urlObj(`?${playerParams}`);
             this.playerParam.dashSymbol = true;
+            this.playerParam.aid && Reflect.set(window, "aid", this.playerParam.aid);
+            this.playerParam.cid && Reflect.set(window, "cid", this.playerParam.cid);
             this.playerType = playerType;
             this.upgrade = upgrade;
             this.callbackFn = callbackFn;
@@ -42,8 +33,6 @@
             document.body.appendChild(script);
         }
         loadHtml5Player() {
-            this.playerParam.aid && Reflect.set(window, "aid", this.playerParam.aid);
-            this.playerParam.cid && Reflect.set(window, "cid", this.playerParam.cid);
             if (!window.bilibiliPlayer) {
                 this.loadScript("//static.hdslb.com/player/js/bilibiliPlayer.min.js", () => {
                     this.bofqi.innerHTML = '<div class="player"><div id="bilibiliPlayer"></div></div><div id="player_placeholder"></div>';
@@ -121,7 +110,6 @@
             });
             "function" == typeof this.callbackFn && (<any>this.cElement).jwAddEventListener("jwplayerMediaLoaded", () => this.callbackFn());
             "function" == typeof window.PlayerMediaLoaded && window.PlayerMediaLoaded();
-            window.GrayManager = new GrayManager(this);
         }
         flashChecker() {
             let e = !1, t = 0;
@@ -265,7 +253,6 @@
             Object.entries(eventMaps).forEach(d => {
                 this.cElement["jwAddEventListener"](d[1], () => { this.callFunction(d[0]) })
             });
-            window.GrayManager = new GrayManager(this);
         }
         callFunction(type: string) {
             const eventMaps = {
@@ -301,13 +288,104 @@
         clickMenu(id: string) {
             setTimeout(() => {
                 if (id === 'change_h5') {
+                    this.gray_html5 = true;
                     this.loadHtml5Player()
                 }
                 else if (id === 'change_flash') {
+                    this.gray_html5 = false;
                     window.player && window.player.destroy && window.player.destroy();
                     this.gray_loader_flash();
                 }
             });
+        }
+    }
+    class GrayManager extends EmbedPlayer {
+        constructor(player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) {
+            super(player, swf, playerParams, playerType, upgrade, callbackFn);
+        }
+        reload(playerParams: string) {
+            if (this.playerParam) {
+                try {
+                    (<any>window).swfobject && (<any>window).swfobject.removeSWF("player_placeholder"),
+                        window.player && window.player.pause(),
+                        window.player && window.player.destroy && window.player.destroy(),
+                        (this.HashManage.get("page") || this.GetUrlValue("p")) && (window.pageno = this.HashManage.get("page") || this.GetUrlValue("p") || 1,
+                            this.pageno = window.pageno)
+                } catch (e) {
+                    console.log(e)
+                }
+                this.playerParam = API.urlObj(`?${playerParams}`) || this.playerParam;
+                this.playerParam.dashSymbol = true;
+                this.playerParam && (Reflect.set(window, "aid", this.playerParam.aid),
+                    Reflect.set(window, "cid", this.playerParam.cid));
+                this.gray_loader();
+            } else
+                window.location.reload();
+        }
+        HashManage = {
+            p: function (e) {
+                return (this.p = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
+                    return typeof e
+                }
+                    : function (e) {
+                        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e
+                    })(e)
+            },
+            prependHash: "!",
+            _change: function (e, t) {
+                var n, r = location.hash, i = [], a = "", o = 0, s = {};
+                r && (r = r.substring(1),
+                    this.prependHash && (r = r.replace(new RegExp("^".concat(this.prependHash.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"))), ""))),
+                    i = r.split("&");
+                for (var u = 0; u < i.length; u++) {
+                    var l = i[u].split("=")[0]
+                        , d = i[u].split("=")[1];
+                    l && (s[l] = decodeURIComponent(d))
+                }
+                if ("object" === this.p(e)) {
+                    n = Object.keys(e).length;
+                    for (var f = 0; f < n; f++) {
+                        var c = e[n[f]];
+                        c ? s[n[f]] = encodeURIComponent(c) : !1 === c && delete s[n[f]]
+                    }
+                } else if (t)
+                    s[e] = encodeURIComponent(t);
+                else {
+                    if (!1 !== t)
+                        return void 0 === e ? s : s[e] || null;
+                    delete s[e]
+                }
+                n = Object.keys(s);
+                for (var h = 0; h < n.length; h++)
+                    a += 0 !== o ? "&" : this.prependHash,
+                        a += "".concat(n[h], "=").concat(s[n[h]]),
+                        o += 1;
+                return location.hash = a,
+                    s
+            },
+            get: function (e) {
+                return this._change(e, null)
+            },
+            set: function (e, t) {
+                return this._change(e, t)
+            },
+            clear: function () {
+                location.hash = ""
+            }
+        }
+        GetUrlValue(e: string) {
+            var t = new RegExp("(^|&)".concat(e, "=([^&]*)(&|$)"), "i"),
+                n = window.location.search.substr(1).match(t);
+            if (null != n)
+                try {
+                    return decodeURIComponent(n[2])
+                } catch (e) {
+                    return null
+                }
+            return null
+        }
+        gray_loader() {
+            ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
         }
     }
     Object.defineProperty(window, "EmbedPlayer", {
@@ -318,7 +396,7 @@
             // if (!script) return window.EmbedPlayer = v;
             // new Function(script)();
             window.EmbedPlayer = (player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) => {
-                new EmbedPlayer(player, swf, playerParams, playerType, upgrade, callbackFn)
+                window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
             }
         },
         get: () => undefined,
@@ -356,4 +434,5 @@ interface Window {
     bilibiliPlayer: new (playerParam: Record<string, string>) => Window["player"];
     PlayerMediaLoaded: () => void;
     GrayManager: {};
+    pageno: string;
 }

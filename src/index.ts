@@ -143,7 +143,8 @@ declare namespace GM {
     }
     const cookie: {
         /**
-         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**
+         * **警告：此实验性特性仅在Tampermonkey Beta中可用，否则将抛出语法错误！**  
+         * 新版Tampermonkey Beta v4.14.615中已不可用，请直接调用用对应方法。
          */
         <T extends keyof typeof cookie>(method: T, ...args: Parameters<(typeof cookie)[T]>): ReturnType<(typeof cookie)[T]>;
         /**
