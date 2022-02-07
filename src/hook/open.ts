@@ -1,22 +1,22 @@
-/**
- * 本模块负责提供`XMLHttpRequest`的hook工具  
- * 拦截`open`参数组并传入`XMLHttpRequest`对象本身给回调函数
- */
-(function () {
-    try {
-        const rules: [string[], Function][] = [];
-        const open = XMLHttpRequest.prototype.open;
-        API.xhrhook = (url: string[], callback: (this: XMLHttpRequest, args: [method: string, url: string, async: boolean, username?: string | null, password?: string | null]) => void) => rules.push([url, callback]);
-        API.removeXhrhook = (id: number) => rules.splice(id - 1, 1);
-        (<any>XMLHttpRequest.prototype.open) = function (this: XMLHttpRequest, ...rest: [method: string, url: string, async: boolean, username?: string | null, password?: string | null]) {
-            let args: [method: string, url: string, async: boolean, username?: string | null, password?: string | null] = [...rest];
-            args[1] && rules.forEach(d => {
-                d[0].every(d => args[1].includes(d)) && d[1].call(this, args);
-            })
-            return open.call(this, ...args);
-        }
-    } catch (e) { toast.error("open.js", e) }
-})();
+interface modules {
+    /**
+     * `XMLHttpRequest`hook工具
+     */
+    readonly "open.js": string;
+}
+{
+    const rules: [string[], Function][] = [];
+    const open = XMLHttpRequest.prototype.open;
+    API.xhrhook = (url: string[], callback: (this: XMLHttpRequest, args: [method: string, url: string, async: boolean, username?: string | null, password?: string | null]) => void) => rules.push([url, callback]);
+    API.removeXhrhook = (id: number) => rules.splice(id - 1, 1);
+    (<any>XMLHttpRequest.prototype.open) = function (this: XMLHttpRequest, ...rest: [method: string, url: string, async: boolean, username?: string | null, password?: string | null]) {
+        let args: [method: string, url: string, async: boolean, username?: string | null, password?: string | null] = [...rest];
+        args[1] && rules.forEach(d => {
+            d[0].every(d => args[1].includes(d)) && d[1].call(this, args);
+        })
+        return open.call(this, ...args);
+    }
+}
 declare namespace API {
     /**
      * 注册xhrhook以拦截URL及返回值  

@@ -1,103 +1,74 @@
-/**
- * 本模块负责与aria2通信并构造下载数据
- */
-(function () {
-    try {
-        class Aria2 {
-            setting: Partial<Aria2Data> = {};
-            constructor() {
-                config.useragent && (this.setting.userAgent = config.useragent);
-                config.referer && (this.setting.referer = config.referer);
-                config.filepath && (this.setting.directory = config.filepath);
-                config.rpcToken && (this.setting.token = config.rpcToken);
-            }
-            shell(obj: Aria2Data) {
-                return new Promise((r: (v: void) => void, j) => {
-                    let result = "aria2c";
-                    obj = { ...this.setting, ...obj };
-                    obj.urls.forEach(d => result += ` "${d}"`);
-                    obj.out && (result += ` --out="${obj.out}"`);
-                    obj.userAgent && (result += ` --user-agent="${obj.userAgent}"`);
-                    obj.referer && (result += ` --referer="${obj.referer}"`);
-                    obj.directory && (result += ` --dir="${obj.directory}"`);
-                    obj.split && (result += ` --split="${obj.split}"`);
-                    obj.header && Object.entries(obj.header).forEach(d => result += ` --header="${d[0]}: ${d[1]}"`);
-                    navigator.clipboard.writeText(result).then(r, e => j(e));
-                })
-            }
-            rpc(obj: Aria2Data) {
-                obj = { ...this.setting, ...obj };
-                const options: Aria2Option = {};
-                obj.out && (options.out = obj.out);
-                obj.userAgent && (options["user-agent"] = obj.userAgent);
-                obj.referer && (options["referer"] = obj.referer);
-                obj.directory && (options["dir"] = obj.directory);
-                obj.split && (options["split"] = obj.split);
-                obj.header && (options["header"] = obj.header);
-                return this.postMessage("aria2.addUri", obj.id || <any>new Date().getTime(), [obj.urls, options]);
-            }
-            postMessage<T extends keyof Aria2Method>(method: T, id: string, params: any[] = []): Promise<ReturnType<Aria2Method[T]>> {
-                const url = `${config.rpcServer}:${config.rpcPort}/jsonrpc`;
-                config.rpcToken && params.unshift(`token:${config.rpcToken}`);
-                return new Promise((r, j) => {
-                    xhr({
-                        url: url,
-                        method: "POST",
-                        responseType: "json",
-                        data: JSON.stringify({ method, id, params })
-                    }).then(d => {
-                        d.error && j(d.error);
-                        d.result && r(d.result);
-                    }).catch(e => {
-                        xhr({
-                            url: API.objUrl(url, { method, id, params: API.Base64.encode(JSON.stringify(params)) }),
-                            method: "GET",
-                            responseType: "json"
-                        }).then(d => {
-                            d.error && j(d.error);
-                            d.result && r(d.result);
-                        }).catch(() => j(e))
-                    })
-                })
-            }
-            getVersion() {
-                return this.postMessage("aria2.getVersion", <any>new Date().getTime())
-            }
-        }
-        API.aria2 = {
-            shell: (obj: Aria2Data) => new Aria2().shell(obj),
-            rpcTest: () => new Aria2().getVersion(),
-            rpc: (obj: Aria2Data) => new Aria2().rpc(obj)
-        }
-    } catch (e) { toast.error("aria2.js", e) }
-})();
-declare namespace API {
+interface modules {
     /**
-     * aria2下载方法
+     * 
      */
-    export let aria2: {
-        /**
-         * 复制到aria2下载命令行
-         * @param obj 配置数据
-         */
-        shell(obj: Aria2Data): Promise<void>;
-        /**
-         * 测试aria2 RPC可用性
-         * @returns Promise托管的版本号及启用功能数组
-         */
-        rpcTest(): Promise<{ version: string; enabledFeatures: string[] }>;
-        /**
-         * 发送aria2 RPC添加下载任务
-         * @param obj 配置数据
-         * @returns Promise托管的任务唯一GID
-         */
-        rpc(obj: Aria2Data): Promise<string>;
+    readonly "aria2.js": string;
+}
+class Aria2 {
+    setting: Partial<Aria2Data> = {};
+    constructor() {
+        config.useragent && (this.setting.userAgent = config.useragent);
+        config.referer && (this.setting.referer = config.referer);
+        config.filepath && (this.setting.directory = config.filepath);
+        config.rpcToken && (this.setting.token = config.rpcToken);
+    }
+    shell(obj: Aria2Data) {
+        return new Promise((r: (v: void) => void, j) => {
+            let result = "aria2c";
+            obj = { ...this.setting, ...obj };
+            obj.urls.forEach(d => result += ` "${d}"`);
+            obj.out && (result += ` --out="${obj.out}"`);
+            obj.userAgent && (result += ` --user-agent="${obj.userAgent}"`);
+            obj.referer && (result += ` --referer="${obj.referer}"`);
+            obj.directory && (result += ` --dir="${obj.directory}"`);
+            obj.split && (result += ` --split="${obj.split}"`);
+            obj.header && Object.entries(obj.header).forEach(d => result += ` --header="${d[0]}: ${d[1]}"`);
+            navigator.clipboard.writeText(result).then(r, e => j(e));
+        })
+    }
+    rpc(obj: Aria2Data) {
+        obj = { ...this.setting, ...obj };
+        const options: Aria2Option = {};
+        obj.out && (options.out = obj.out);
+        obj.userAgent && (options["user-agent"] = obj.userAgent);
+        obj.referer && (options["referer"] = obj.referer);
+        obj.directory && (options["dir"] = obj.directory);
+        obj.split && (options["split"] = obj.split);
+        obj.header && (options["header"] = obj.header);
+        return this.postMessage("aria2.addUri", obj.id || <any>new Date().getTime(), [obj.urls, options]);
+    }
+    postMessage<T extends keyof Aria2Method>(method: T, id: string, params: any[] = []): Promise<ReturnType<Aria2Method[T]>> {
+        const url = `${config.rpcServer}:${config.rpcPort}/jsonrpc`;
+        config.rpcToken && params.unshift(`token:${config.rpcToken}`);
+        return new Promise((r, j) => {
+            xhr({
+                url: url,
+                method: "POST",
+                responseType: "json",
+                data: JSON.stringify({ method, id, params })
+            }).then(d => {
+                d.error && j(d.error);
+                d.result && r(d.result);
+            }).catch(e => {
+                xhr({
+                    url: Format.objUrl(url, { method, id, params: API.base64.encode(JSON.stringify(params)) }),
+                    method: "GET",
+                    responseType: "json"
+                }).then(d => {
+                    d.error && j(d.error);
+                    d.result && r(d.result);
+                }).catch(() => j(e))
+            })
+        })
+    }
+    getVersion() {
+        return this.postMessage("aria2.getVersion", <any>new Date().getTime())
     }
 }
-/**
- * 本项目可用的aria配置  
- * aria2支持配置数据太繁杂，这里只提炼出需要的
- */
+API.aria2 = new Aria2();
+declare namespace API {
+    export let aria2: Aria2;
+}
 interface Aria2Data {
     /**
      * URL组，所有链接必须指向同一文件，或者只提供一条链接

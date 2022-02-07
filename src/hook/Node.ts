@@ -1,73 +1,73 @@
-/**
- * 本模块负责实现原生脚本拦截模块  
- * 这里指的原生脚本是那些非直接写入原生HTML，而是后续由JavaScript添加进DOM的脚本  
- * 本模块导入优先级极高
- */
-(function () {
-    try {
-        class NodeHook {
-            static appendChild = Node.prototype.appendChild;
-            static insertBefore = Node.prototype.insertBefore;
-            static rules: [string[], string | undefined][] = [];
-            static jsonp: [string[], Function][] = [];
-            jsonphook = (url: string[], callback: (this: any, xhr: any) => void) => NodeHook.jsonp.push([url, callback]);
-            removeJsonphook = (id: number) => NodeHook.jsonp.splice(id - 1, 1);
-            constructor() {
-                this.appendChild();
-                this.insertBefore();
-            }
-            intercept(rule: string[], replaceURL?: string) {
-                NodeHook.rules.push([rule, replaceURL]);
-            }
-            appendChild() {
-                Node.prototype.appendChild = function <T extends Node>(newChild: T): T {
-                    newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.rules.forEach(d => {
-                        d[0].every(d => (<any>newChild).src.includes(d)) && (d[1] ?
-                            ((<any>newChild).src = d[1]) :
-                            (<any>newChild).removeAttribute("src")
-                        );
-                    }), NodeHook.jsonp.forEach(d => {
-                        d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
-                            set: (t, p, v) => {
-                                p == "url" && ((<any>newChild).src = v);
-                                return true;
-                            },
-                            get: (t, p) => {
-                                return p == "url" ? (<any>newChild).src : undefined;
-                            }
-                        }));
-                    }))
-                    return <T>NodeHook.appendChild.call(this, newChild);
-                };
-            }
-            insertBefore() {
-                Node.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
-                    newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.rules.forEach(d => {
-                        d[0].every(d => (<any>newChild).src.includes(d)) && (d[1] ?
-                            ((<any>newChild).src = d[1]) :
-                            (<any>newChild).removeAttribute("src")
-                        );
-                    }), NodeHook.jsonp.forEach(d => {
-                        d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
-                            set: (t, p, v) => {
-                                p == "url" && ((<any>newChild).src = v);
-                                return true;
-                            },
-                            get: (t, p) => {
-                                return p == "url" ? (<any>newChild).src : undefined;
-                            }
-                        }));
-                    }))
-                    return <T>NodeHook.insertBefore.call(this, newChild, refChild);
-                }
-            }
+interface modules {
+    /**
+     * 插入脚本拦截工具  
+     * jsonp的实现基础就是插入脚本，所以jsonphook工具也在这里实现。
+     */
+    readonly "Node.js": string;
+}
+class NodeHook {
+    static appendChild = Node.prototype.appendChild;
+    static insertBefore = Node.prototype.insertBefore;
+    static rules: [string[], string | undefined][] = [];
+    static jsonp: [string[], Function][] = [];
+    jsonphook = (url: string[], callback: (this: any, xhr: any) => void) => NodeHook.jsonp.push([url, callback]);
+    removeJsonphook = (id: number) => NodeHook.jsonp.splice(id - 1, 1);
+    constructor() {
+        this.appendChild();
+        this.insertBefore();
+    }
+    intercept(rule: string[], replaceURL?: string) {
+        NodeHook.rules.push([rule, replaceURL]);
+    }
+    appendChild() {
+        Node.prototype.appendChild = function <T extends Node>(newChild: T): T {
+            newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.rules.forEach(d => {
+                d[0].every(d => (<any>newChild).src.includes(d)) && (d[1] ?
+                    ((<any>newChild).src = d[1], d[1].startsWith("blob") && newChild.addEventListener("load", async () => { URL.revokeObjectURL(d[1]); (<any>newChild)?.remove() })) :
+                    (<any>newChild).removeAttribute("src", setTimeout(() => { newChild.dispatchEvent(new ProgressEvent("load")) }, 100))
+                );
+            }), NodeHook.jsonp.forEach(d => {
+                d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
+                    set: (t, p, v) => {
+                        p == "url" && ((<any>newChild).src = v);
+                        return true;
+                    },
+                    get: (t, p) => {
+                        return p == "url" ? (<any>newChild).src : undefined;
+                    }
+                }));
+            }))
+            return <T>NodeHook.appendChild.call(this, newChild);
+        };
+    }
+    insertBefore() {
+        Node.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
+            newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.rules.forEach(d => {
+                d[0].every(d => (<any>newChild).src.includes(d)) && (d[1] ?
+                    ((<any>newChild).src = d[1], d[1].startsWith("blob") && newChild.addEventListener("load", async () => { URL.revokeObjectURL(d[1]); (<any>newChild)?.remove() })) :
+                    (<any>newChild).removeAttribute("src", setTimeout(() => { newChild.dispatchEvent(new ProgressEvent("load")) }, 100))
+                );
+            }), NodeHook.jsonp.forEach(d => {
+                d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
+                    set: (t, p, v) => {
+                        p == "url" && ((<any>newChild).src = v);
+                        return true;
+                    },
+                    get: (t, p) => {
+                        return p == "url" ? (<any>newChild).src : undefined;
+                    }
+                }));
+            }))
+            return <T>NodeHook.insertBefore.call(this, newChild, refChild);
         }
-        const nodeHook = new NodeHook();
-        API.scriptIntercept = (rule: string[], replaceURL?: string) => nodeHook.intercept(rule, replaceURL);
-        API.jsonphook = (url: string[], callback: (xhr: { url: string }) => void) => nodeHook.jsonphook(url, callback);
-        API.removeJsonphook = (id: number) => nodeHook.removeJsonphook(id);
-    } catch (e) { toast.error("Node.js", e) }
-})();
+    }
+}
+{
+    const nodeHook = new NodeHook();
+    API.scriptIntercept = (rule: string[], replaceURL?: string) => nodeHook.intercept(rule, replaceURL);
+    API.jsonphook = (url: string[], callback: (xhr: { url: string }) => void) => nodeHook.jsonphook(url, callback);
+    API.removeJsonphook = (id: number) => nodeHook.removeJsonphook(id);
+}
 declare namespace API {
     /**
      * 替换插入页面的外部脚本文件  

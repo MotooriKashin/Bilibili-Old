@@ -7,35 +7,82 @@
 			"problemMatcher": [
 				"$tsc"
 			],
-			"label": "tsc",
-			"detail": "编译TypeScript源码"
+			"label": "tsc"
 		},
 		{
 			"type": "shell",
 			"command": "node",
 			"args": [
-				"${workspaceFolder}\\tasks\\apply.js",
+				"${workspaceFolder}\\.vscode\\apply.js",
 				"${workspaceFolder}"
-			],
-			"dependsOn": [
-				"tsc"
 			],
 			"label": "apply",
-			"detail": "提取方法对照表",
-			"problemMatcher": []
+			"detail": "生成接口导出表apply.json",
+			"problemMatcher": [],
+			"dependsOn": [
+				"tsc"
+			]
 		},
 		{
 			"type": "shell",
 			"command": "node",
 			"args": [
-				"${workspaceFolder}\\tasks\\build.js",
+				"${workspaceFolder}\\.vscode\\require.js",
 				"${workspaceFolder}"
 			],
+			"label": "require",
+			"detail": "合成require资源require.js",
+			"problemMatcher": [],
 			"dependsOn": [
 				"apply"
+			]
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\.vscode\\local.js",
+				"${workspaceFolder}"
 			],
-			"label": "build",
-			"detail": "编译最终的用户脚本本体",
+			"label": "local",
+			"detail": "编译开发版脚本local.user.js",
+			"problemMatcher": [],
+			"dependsOn": [
+				"require"
+			]
+		},
+		{
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"${workspaceFolder}\\.vscode\\main.js",
+				"${workspaceFolder}"
+			],
+			"label": "main",
+			"detail": "编译发行版脚本main.user.js",
+			"problemMatcher": [],
+			"dependsOn": [
+				"require"
+			]
+		},
+		{
+			"type": "shell",
+			"command": "Remove-Item",
+			"args": [
+				"${workspaceFolder}\\dist\\*",
+				"-recurse",
+				"-Exclude",
+				"bilibiliPlayer.js",
+				",comment.js",
+				",require.js",
+				",video.js",
+				",README.md"
+			],
+			"dependsOn": [
+				"local"
+			],
+			"detail": "开发环境下编译起点",
+			"label": "develop",
 			"problemMatcher": []
 		},
 		{
@@ -47,18 +94,19 @@
 				"-Exclude",
 				"bilibiliPlayer.js",
 				",comment.js",
+				",require.js",
 				",video.js",
 				",README.md"
 			],
 			"dependsOn": [
-				"build"
+				"main"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "清理生成目录",
-			"label": "clear",
+			"detail": "发行环境下编译起点",
+			"label": "release",
 			"problemMatcher": []
 		}
 	]

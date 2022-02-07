@@ -1,0 +1,83 @@
+interface modules {
+    /**
+     * 旧版页面添加点赞功能
+     */
+    readonly "enLike.js": string;
+}
+API.runWhile(() => document.querySelector(".v.play") && API.aid, async () => {
+    try {
+        let span = document.createElement("span");
+        let like = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);`;
+        let dislike = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/dislike.png);`;
+        let text = document.createTextNode("点赞 --");
+        let arg = text;
+        let islike = false;
+        let i = API.addElement("i", { class: "l-icon-move", style: 'width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;' + dislike }, span);
+        let b = API.addElement("b", { class: "l-icon-moved", style: "width : 22px;height : 22px;display : none;" }, span)
+        span.setAttribute("class", "u like");
+        span.setAttribute("style", "margin-left : 24px;margin-right : 10px;");
+        span.appendChild(text);
+        (<HTMLElement>document.querySelector(".number")).insertBefore(span, document.querySelector(".coin"));
+        span.onclick = async () => {
+            if (islike) {
+                // 取消点赞
+                let data = await xhr({
+                    url: "https://api.bilibili.com/x/web-interface/archive/like",
+                    method: "POST",
+                    data: `aid=${API.aid}&like=2&csrf=${API.getCookies().bili_jct}`,
+                    credentials: true
+                });
+                data = API.jsonCheck(data).ttl;
+                toast.warning("取消点赞！");
+                islike = false;
+                i.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + dislike);
+                b.setAttribute("style", "width : 22px;height : 22px;display : none;");
+                if ((<any>arg.nodeValue).match("万")) return;
+                let number = 1 * (<any>arg.nodeValue).match(/[0-9]+/) - 1;
+                text = document.createTextNode(" 点赞 " + number);
+                arg.replaceWith(text);
+                arg = text;
+            } else {
+                if (!API.uid) return API.biliQuickLogin(); // 登录判断
+                // 点赞
+                let data = await xhr({
+                    url: "https://api.bilibili.com/x/web-interface/archive/like",
+                    method: "POST",
+                    data: `aid=${API.aid}&like=1&csrf=${API.getCookies().bili_jct}`,
+                    credentials: true
+                });
+                data = API.jsonCheck(data).ttl;
+                toast.success("点赞成功！");
+                islike = true;
+                i.setAttribute("style", "width : 22px;height : 22px;display : none;");
+                b.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + like);
+                if ((<any>arg.nodeValue).match("万")) return;
+                let number = 1 * (<any>arg.nodeValue).match(/[0-9]+/) + 1;
+                text = document.createTextNode(" 点赞 " + number);
+                arg.replaceWith(text);
+                arg = text;
+            }
+        }
+        // 初始化按钮
+        let data = await xhr({
+            url: Format.objUrl("https://api.bilibili.com/x/web-interface/view", { aid: <any>API.aid }),
+            credentials: true
+        })
+        data = API.jsonCheck(data).data.stat.like;
+        (<HTMLElement>document.querySelector(".like")).setAttribute("title", "点赞人数" + data);
+        text = document.createTextNode(" 点赞 " + Format.unitFormat(data));
+        arg.replaceWith(text);
+        arg = text;
+        if (!API.uid) return;
+        data = API.jsonCheck(await xhr({
+            url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": <any>API.aid }),
+            credentials: true
+        })).data;
+        if (data == 1) {
+            // 点赞过点亮图标
+            i.setAttribute("style", "width : 22px;height : 22px;display : none;");
+            b.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + like);
+            islike = true;
+        }
+    } catch (e) { toast.error("enLike.js", e) }
+})

@@ -27,7 +27,7 @@
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 部分情况下重写之前的网页会一闪而过，网络不稳定时尤甚。
+1. 部分情况下重写之前的网页会一闪而过，取决于脚本注入的速度。
 2. 偶发各种页面形变，功能报错的情况，刷新页面可以缓解，最好是硬刷新。
 3. 反查出的弹幕发送者信息不一定可靠，因为可能存在哈希碰撞，真正的发送者B站从未提供给前端。
 4. B站后来为播放器添加的各种功能，例如互动视频、全景视频、高能进度条等都未能支持。
@@ -39,7 +39,8 @@
 问题反馈推荐去[Github](https://github.com/MotooriKashin/Bilibili-Old)发issue，GreasyFork的邮件通知系统经常抽风，可能无法及时接收评论和反馈。
 
 ---
-### B站更新摘记
+### B站更新摘记  
+记录从旧版页面被抛弃以来B站的一些修改。
 - 2019 年 12 月 09 日：av、Bangumi改版，万恶之源。
 - 2019 年 12 月 24 日：稍后再看改版，使用稍后再看找回旧版播放器的方法失效。
 - 2020 年 03 月 23 日：BV号全量推送，同时保留av号支持，但是不再自增。
@@ -75,12 +76,7 @@
 >                TypeScript Version 4.5.2  
 >
 
----
-### 文档索引
-- [代码贡献指南](https://github.com/MotooriKashin/Bilibili-Old/tree/master/doc/develop.md)
-- [下载功能说明](https://github.com/MotooriKashin/Bilibili-Old/tree/master/doc/download.md)
-- [兼容性文档](https://github.com/MotooriKashin/Bilibili-Old/tree/master/doc/compatibility.md)
-- [功能实现](https://github.com/MotooriKashin/Bilibili-Old/tree/master/doc/opinion.md)
+开发者文档参见本仓库[Wiki](https://github.com/MotooriKashin/Bilibili-Old/wiki/%E5%BC%80%E5%8F%91%E8%80%85%E6%96%87%E6%A1%A3)。
 
 ---
 ### 参考致谢
