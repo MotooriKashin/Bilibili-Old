@@ -9,11 +9,16 @@ class EmbedPlayer {
     playerType: string;
     upgrade: boolean;
     callbackFn: () => void;
-    gray_html5 = true;
     flashAddEvents = [];
     flashRemoveEvents = [];
     pageno: string;
-    bofqi = document.querySelector("#bofqi");
+    bofqi: HTMLDivElement = document.querySelector("#bofqi");
+    get gray_html5() {
+        return !config.noVideo
+    }
+    set gray_html5(v: boolean) {
+        config.noVideo = !v;
+    }
     constructor(player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) {
         this.playerParam = Format.urlObj(`?${playerParams}`);
         this.playerParam.dashSymbol = true;
@@ -22,7 +27,7 @@ class EmbedPlayer {
         this.playerType = playerType;
         this.upgrade = upgrade;
         this.callbackFn = callbackFn;
-        this.gray_html5 ? this.loadHtml5Player() : this.gray_loader_flash();
+        this.gray_loader();
     }
     loadScript(src: string, onload?: () => void) {
         const script = document.createElement("script");
@@ -169,14 +174,16 @@ class EmbedPlayer {
                     type: "html5",
                     theme: "blue",
                     onClick: (e) => {
-                        this.loadHtml5Player(),
+                        this.gray_html5 = true,
+                            this.loadHtml5Player(),
                             "function" == typeof e && e()
                     }
                 }
             ],
             hasOrText: !1
         };
-        new (<any>window).NoFlashTips(document.querySelector("#bofqi"), config);
+        new (<any>window).NoFlashTips(this.bofqi, config);
+        this.bofqi.style.removeProperty("position");
     }
     loadFlashPlayer() {
         this.bofqi.innerHTML = '<div id="player_placeholder" class="player"></div>';
@@ -291,14 +298,17 @@ class EmbedPlayer {
         setTimeout(() => {
             if (id === 'change_h5') {
                 this.gray_html5 = true;
-                this.loadHtml5Player()
+                this.gray_loader()
             }
             else if (id === 'change_flash') {
                 this.gray_html5 = false;
                 window.player && window.player.destroy && window.player.destroy();
-                this.gray_loader_flash();
+                this.gray_loader();
             }
         });
+    }
+    gray_loader() {
+        ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
     }
 }
 class GrayManager extends EmbedPlayer {
@@ -385,9 +395,6 @@ class GrayManager extends EmbedPlayer {
                 return null
             }
         return null
-    }
-    gray_loader() {
-        ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
     }
 }
 API.EmbedPlayer = () => {

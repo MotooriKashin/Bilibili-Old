@@ -151,7 +151,7 @@ interface config {
          * 添加工具栏按钮
          * @param obj 按钮配置数据
          */
-        static toolIcon(obj: ToolIcon) {
+        static toolIcon(obj: SettingType["icon"]) {
             const div = this.icon(obj.svg);
             div.setAttribute("title", obj.title);
             this.tool.insertBefore(div, this.tool.firstChild);
@@ -234,7 +234,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static index(obj: ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon | ItemCus, node?: Element) {
+        static index(obj: SettingType[keyof SettingType], node?: Element) {
             let result: HTMLDivElement;
             if (!obj.hidden) switch (obj.type) {
                 case "action": result = this.action(obj, node);
@@ -265,7 +265,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static picture(obj: ItemPic, node?: Element) {
+        static picture(obj: SettingType["picture"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -281,7 +281,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static switch(obj: ItemSwh, node?: Element) {
+        static switch(obj: SettingType["switch"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -306,7 +306,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static row(obj: ItemRow, node?: Element) {
+        static row(obj: SettingType["row"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -332,7 +332,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static sort(obj: ItemSor, node?: Element) {
+        static sort(obj: SettingType["sort"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             let sec = document.createElement("div");
@@ -372,7 +372,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static action(obj: ItemPus, node?: Element) {
+        static action(obj: SettingType["action"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             let disabled = obj.hasOwnProperty("disabled") ? obj.disabled : 3;
@@ -397,7 +397,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static input(obj: ItemIpt, node?: Element) {
+        static input(obj: SettingType["input"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             let history: string[] = [];
@@ -456,7 +456,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static file(obj: ItemFie, node?: Element) {
+        static file(obj: SettingType["file"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -484,7 +484,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static multi(obj: ItemMut, node?: Element) {
+        static multi(obj: SettingType["mutlti"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -509,7 +509,7 @@ interface config {
          * @param node 父节点
          * @returns 设置节点
          */
-        static custom(obj: ItemCus, node?: Element) {
+        static custom(obj: SettingType["custom"], node?: Element) {
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             const root = div.attachShadow({ mode: "open" });

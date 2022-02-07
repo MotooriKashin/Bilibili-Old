@@ -58,7 +58,7 @@ interface modules {
             else toast.warning(`模块${name}并不存在！是不是拼写错了？`) // 无效调用
         }
         getModule = (key: keyof modules) => modules[key];
-        registerSetting(obj: any) {
+        registerSetting(obj: SettingType[keyof SettingType]) {
             SETTING.push(obj);
             Window.modifyConfig(obj);
         }
@@ -70,7 +70,7 @@ interface modules {
                 debug.warn(`UI设置项注册错误！`, obj);
             }
         }
-        registerMenu(obj: any) {
+        registerMenu(obj: MenuType) {
             MENU[obj.key] = obj;
         }
         changeSettingMode(mode: Record<string, boolean>) {
@@ -350,12 +350,12 @@ declare namespace API {
      * 注册UI设置项
      * @param obj 设置项配置
      */
-    function registerSetting(obj: any): void;
+    function registerSetting(obj: SettingType[keyof SettingType]): void;
     /**
      * 注册UI菜单
      * @param obj 菜单配置
      */
-    function registerMenu(obj: any): void;
+    function registerMenu(obj: MenuType): void;
     /**
      * 临时调整设置项县隐状态，刷新设置界面后生效，刷新页面后失效。
      * @param mode 设置项名：是否隐藏（隐藏为true）

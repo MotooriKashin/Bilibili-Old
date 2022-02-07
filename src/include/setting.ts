@@ -52,10 +52,6 @@ interface config {
      */
     protoDm: boolean;
     /**
-     * 弹幕：实时弹幕
-     */
-    liveDm: boolean;
-    /**
      * 通用：日志拦截
      */
     logReport: boolean;
@@ -164,10 +160,6 @@ interface config {
      */
     searchHistory: boolean;
     /**
-     * 直播：拦截直播流
-     */
-    liveStream: boolean;
-    /**
      * 直播：P2P上传
      */
     liveP2p: boolean;
@@ -175,14 +167,6 @@ interface config {
      * 直播：禁止挂机检测
      */
     sleepCheck: boolean;
-    /**
-     * 直播：禁用天选时刻
-     */
-    anchor: boolean;
-    /**
-     * 直播：禁用大乱斗
-     */
-    pkvm: boolean;
     /**
      * 重构：嵌入播放器
      */
@@ -268,10 +252,6 @@ interface config {
      */
     anime: boolean;
     /**
-     * 通用：托管原生脚本
-     */
-    trusteeship: boolean;
-    /**
      * 样式：自动网页全屏
      */
     webFullScreen: boolean;
@@ -280,7 +260,7 @@ interface config {
  * 已注册的菜单，通过`registerMenu`新建项请补充这里的可能值
  * **本变量仅作为类型声明接口类似的东西存在，不可参与到任何实际运行代码中！**
  */
-declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live" | "download"
+type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player" | "live" | "download"
 
 {
     // 注册设置菜单
@@ -306,16 +286,6 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
         action: (value) => {
             value ? (!(<any>window).API && ((<any>window).API = API)) : ((<any>window).API && delete (<any>window).API)
         }
-    })
-    API.registerSetting({
-        key: "trusteeship",
-        sort: "common",
-        label: "托管原生脚本",
-        svg: '<svg viewBox="0 0 24 24"><g><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></g></svg>',
-        type: "switch",
-        value: true,
-        float: "托管并修改B站原生的脚本以修复及维护部分功能，<strong>关闭将导致脚本部分功能失效，如非必要请勿关闭！</strong>",
-        sub: "代为修复和维护"
     })
     config.developer && ((<any>window).API = API);
     API.registerSetting({
@@ -357,7 +327,8 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
         label: "medialist",
         type: "switch",
         value: false,
-        float: "用旧版av页重构medialist页面。"
+        float: "用旧版av页重构medialist页面。",
+        hidden: true
     })
     API.registerSetting({
         type: "switch",
@@ -395,15 +366,6 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
         float: `添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。</br>”`
     })
     API.registerSetting({
-        key: "liveDm",
-        sort: "danmaku",
-        label: "修复实时弹幕",
-        sub: "及时接收别人新发的弹幕",
-        type: "switch",
-        value: true,
-        float: `修复旧版播放器实时弹幕。`
-    })
-    API.registerSetting({
         key: "commandDm",
         sort: "danmaku",
         label: "添加互动弹幕",
@@ -434,9 +396,9 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
     API.registerSetting({
         key: "noVideo",
         sort: "player",
-        label: "拦截视频载入",
-        sub: "用于临时不加载视频进入视频页面",
-        float: "拦截播放器载入视频，强行使视频失效。",
+        label: "flash播放器",
+        sub: "可用于临时不加载视频进入视频页面",
+        float: "临时启用flash播放器以拦截播放器载入，如需下载视频可切换到“下载”标签呼出下载面板，恢复播放器请点击HTML5按钮或在设置中关闭本功能。",
         type: "switch",
         value: false
     })
@@ -666,15 +628,6 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
     })
     API.registerSetting({
         type: "switch",
-        key: "liveStream",
-        label: "拦截直播流/轮播流",
-        sub: "那我为什么点开直播？",
-        value: false,
-        sort: "live",
-        float: "将直播间设为未开播状态，不加载直播流或者轮播视频，适用于想打开直播间但不想浪费带宽或流量的情况。</br>※ 脚本注入不够快时可能拦截失败，硬刷新`Ctrl+Shift+R`/`Shift + F5`可解。"
-    })
-    API.registerSetting({
-        type: "switch",
         key: "liveP2p",
         label: "禁止P2P上传",
         sub: "小水管禁不起别人白嫖！",
@@ -690,22 +643,6 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
         value: true,
         sort: "live",
         float: "禁止直播间5分钟不操作判定挂机并切断直播，可以放心挂后台听个响。"
-    })
-    API.registerSetting({
-        type: "switch",
-        key: "anchor",
-        label: "禁用天选时刻",
-        sub: "反正中不了的，哼！",
-        value: false,
-        sort: "live"
-    })
-    API.registerSetting({
-        type: "switch",
-        key: "pkvm",
-        label: "禁用大乱斗",
-        sub: "挡着我欣赏主播了",
-        value: false,
-        sort: "live"
     })
     API.registerSetting({
         type: "switch",
@@ -752,6 +689,20 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
         }
     })
     API.runWhile(() => API.aid, () => { API.changeSettingMode({ downloadPicture: false }) })
+    API.registerSetting({
+        type: "action",
+        key: "downloadThis",
+        label: "下载面版",
+        title: "呼出",
+        sub: "只在视频页面有效",
+        sort: "download",
+        disabled: 0,
+        action: () => {
+            if (API.aid && API.cid) {
+                API.download();
+            } else toast.warning("当前并非视频页，请在视频页面打开！")
+        }
+    })
     API.registerSetting({
         type: "switch",
         sort: "download",
@@ -1026,290 +977,237 @@ declare const settingSort: "common" | "rewrite" | "restore" | "style" | "danmaku
     })
 }
 /**
- * 工具栏按钮
+ * 设置菜单标签
  */
-interface ToolIcon {
+interface MenuType {
     /**
-     * 设置唯一主键，非必需  
-     * **注意不能与已有设置项重复**
-     */
-    key?: string;
-    /**
-     * 类型标志，用于识别这是工具栏按钮设置项
-     */
-    type: "icon";
-    /**
-     * 按钮 svg 图标字符串
-     */
-    svg: string;
-    /**
-     * 鼠标焦点按钮时提示的文字
-     */
-    title: string;
-    /**
-     * 鼠标单击时的回调
-     */
-    action: (node: HTMLDivElement) => void;
-    /**
-     * 隐藏该设置项，比如不满足某些前置条件  
-     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
-     */
-    hidden?: boolean;
-}
-/**
- * 菜单项
- */
-interface Menuitem {
-    /**
-     * 菜单主键（唯一），可以取已有的，也可以自定义
+     * 菜单项主键  
+     * 新增时请一并拓展`MenuKey`名
      */
     key: string;
     /**
-     * 主键名字，简短的菜单分类名字，与 key 一一对应
+     * 菜单项名称
      */
     name: string;
     /**
-     * 菜单图标 svg 字符串
+     * 菜单项svg图标
      */
     svg?: string;
 }
-/**
- * 图片类菜单项，可以作为banner或者下一项设置的图解说明等
- */
-interface ItemPic {
+interface SettingCommon {
     /**
-     * 设置唯一主键，非必需  
-     * **注意不能与已有设置项重复**
-     */
-    key?: string;
-    /**
-     * 类型标志，用于识别这是图片类设置项
-     */
-    type: "picture";
-    /**
-     * 菜单归属分类菜单，也可以新建
-     */
-    sort: typeof settingSort;
-    /**
-     * 图片 URL
-     */
-    src: string;
-    /**
-     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
-     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
-     */
-    callback?: (this: HTMLDivElement) => void;
-    /**
-     * 隐藏该设置项，比如不满足某些前置条件  
-     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
-     */
-    hidden?: boolean;
-}
-interface ItemCommon {
-    /**
-     * 设置唯一主键，将作为全局变量`config`的属性名。  
+     * 设置项主键    
      * **注意不能与已有设置项重复**
      */
     key: string;
     /**
-     * 菜单归属分类菜单  
-     * 可以使用已有的，参见接口`settingSort`  
-     * 若要新建，请使用`API.registerMenu`添加，并补充`settingSort`声明的可能值
+     * 菜单所属菜单名
      */
-    sort: typeof settingSort;
+    sort: MenuKey;
     /**
-     * 设置 svg 图片
+     * svg格式的图标
      */
     svg?: string;
     /**
-     * 设置内容
+     * 设置项名称
      */
     label: string;
     /**
-     * 内容附加简短介绍
+     * 设置项副名称，一般用于简介
      */
     sub?: string;
     /**
-     * 鼠标移动到设置项时浮动信息，可以详细介绍设置的信息  
+     * 设置项的浮动信息，用于详细说明设置项    
      * 该内容可以包含\<i\>、\<strong\>等HTML便签用于格式化信息  
      * ※ 理论上支持所有能以\<div\>为父节点的标签
      */
     float?: string;
     /**
-     * 设置呈现时执行的回调函数，this为设置项节点，可以据此修改设置项呈现  
-     * **其子节点一般都使用shadowDOM封装，外部js无权访问，但可以自己生成节点进行覆盖(如使用innerHTML属性)**
+     * 设置UI呼出时的回调，可用于调整显示。  
      */
     callback?: (this: HTMLDivElement) => void;
     /**
-     * 隐藏该设置项，比如不满足某些前置条件  
-     * 对于有key的设置可以通过changeSettingMode方法改变其显示状态
+     * 隐藏设置，可用changeSettingMode方法改变其显示状态。  
      */
     hidden?: boolean;
 }
-/**
- * 开关类菜单项，用以给用户判断是否开启某些功能等  
- * 可以在`action`属性添加回调函数以立即响应用户的开关操作  
- * 否则可能需要刷新页面才会生效
- */
-interface ItemSwh extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是开关类设置项
-     */
-    type: "switch";
-    /**
-     * 设置的值，添加设置项时将作为默认值  
-     * 实际时将以用户本地配置`config[key]`为准
-     */
-    value: boolean;
-    /**
-     * 点击该设置时的回调函数  
-     * 将调整后的`value`作为参数传递  
-     * 设置节点本身将作为`this`传递
-     */
-    action?: (value: Boolean) => void;
-}
-/**
- * 下拉框类菜单项，用于给用户从多个数值选一个等  
- * 可以在`action`属性添加回调函数以立即响应用户的开关操作  
- * 否则可能需要刷新页面才会生效
- */
-interface ItemRow extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是下拉框类设置项
-     */
-    type: "row";
-    /**
-     * 默认取值
-     * 实际时将以用户本地配置`config[key]`为准
-     */
-    value: string | number;
-    /**
-     * 下拉框可选值列表
-     */
-    list: (string | number)[];
-    /**
-     * 改变选值后的回调函数  
-     * 将调整后的`value`作为参数传递  
-     * 设置节点本身将作为`this`传递
-     */
-    action?: (value: string) => void
-}
-/**
- * 按钮设置，用以用户点击按钮执行操作
- * 必须在`action`属性添加回调函数
- */
-interface ItemPus extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是按钮设置项
-     */
-    type: "action";
-    /**
-     * 按钮上的文字
-     */
-    title: string;
-    /**
-     * 点击按钮执行的回调函数  
-     * 设置节点本身将作为this传入
-     */
-    action: () => void,
-    /**
-     * 点击按钮后临时禁用按钮多长时间，单位：/s，默认为 3  
-     * 0 表示一直禁用直到刷新面板
-     */
-    disabled?: number;
-}
-/**
- * 输入框设置项，用以提供一个输入框与用户交互等
- * 需要自行将HTML的`input`标签配置以对象形式写入`input`属性
- */
-interface ItemIpt extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是输入框设置项
-     */
-    type: "input";
-    /**
-     * 用于给`input`标签添加的属性  
-     * 请自行通过合适的属性来指定`input`类型及其他要求
-     */
-    input: input;
-    /**
-     * 回调函数，用于接受用户输入内容以执行操作  
-     * 将输入值作为参数传递  
-     * 设置节点本身将作为`this`传递
-     */
-    action?: (value: string) => void;
-    /**
-     * 输入框后按钮上的文字
-     */
-    title?: string;
-    /**
-     * 默认值，输入框内的默认值
-     * 这意味着本设置将保存到本地 config
-     */
-    value?: string | number;
-    /**
-     * 用于判断输入的正则表达式
-     */
-    pattern?: RegExp;
-    /**
-     * 点击按钮后临时禁用按钮多长时间，单位：/s，默认为 3  
-     * 0 表示一直禁用直到刷新面板
-     */
-    disabled?: number;
-}
-/**
- * 文件选择设置项，用于提取本地文件读取等
- */
-interface ItemFie extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是文件选择设置项
-     */
-    type: "file";
-    /**
-     * 按钮上的文字
-     */
-    title: string;
-    /**
-     * 文件拓展名列表：如 `.txt`
-     */
-    accept?: string[];
-    /**
-     * 是否允许文件多选
-     */
-    multiple?: boolean;
-    /**
-     * 点击按钮执行的回调函数  
-     * 设置节点本身将作为this传递
-     * 将文件列表`input.files`作为参数传递
-     */
-    action: (files: FileList) => void
-}
-/**
- * 多选类菜单项，用以提供一组数据供用户不定多选等  
- * 可以在`action`属性添加回调函数以立即响应用户的开关操作
- * 如果值只有一个等于另一种形式的开关菜单只是回调还是数组  
- * 注意：任意选项改变都会触发回调
- */
-interface ItemMut extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是输入框设置项
-     */
-    type: "mutlti";
-    /**
-     * 默认取值列表
-     * 实际时将以用户本地配置`config[key]`为准
-     */
-    value: string[];
-    /**
-     * 所有选项列表
-     */
-    list: string[];
-    /**
-     * 改变选值后的回调函数  
-     * 将调整后的`value`作为参数传递  
-     * 设置节点本身将作为`this`传递
-     */
-    action?: (value: string[]) => void
+interface SettingType {
+    switch: SettingCommon & {
+        /**
+         * 滑块开关类设置
+         */
+        type: "switch";
+        /**
+         * 初始值  
+         * **含有本项的设置会保存到本地，请使用type值拓展`config`接口以让别人知道本设置项存在**
+         */
+        value: boolean;
+        /**
+         * 用户调整设置时的回调函数，第一个参数为当前value值
+         */
+        action?: (value: Boolean) => void;
+    }
+    row: SettingCommon & {
+        /**
+         * 下拉框类设置
+         */
+        type: "row";
+        /**
+         * 初始值  
+         * **含有本项的设置会保存到本地，请使用type值拓展`config`接口以让别人知道本设置项存在**
+         */
+        value: string | number;
+        /**
+         * 待选值列表
+         */
+        list: (string | number)[];
+        /**
+         * 用户调整设置时的回调函数，第一个参数为当前value值
+         */
+        action?: (value: string) => void
+    }
+    action: SettingCommon & {
+        /**
+         * 按钮型设置
+         */
+        type: "action";
+        /**
+         * 按钮上的文字
+         */
+        title: string;
+        /**
+         * 按下按钮时的会体哦啊函数
+         */
+        action: () => void;
+        /**
+         * 按钮禁用间隔，单位：/s，默认值3，0表示永远禁用。
+         */
+        disabled?: number;
+    }
+    input: SettingCommon & {
+        /**
+         * 输入框型设置
+         */
+        type: "input";
+        /**
+         * input标签属性
+         */
+        input: input;
+        /**
+         * 用户输入后的回调函数，第一个参数为用户输入的值
+         */
+        action?: (value: string) => void;
+        /**
+         * 在输入框后添加一个按钮，其值为按钮上的文字
+         */
+        title?: string;
+        /**
+         * 输入框中默认值  
+         * **含有本项的设置会保存到本地，请使用type值拓展`config`接口以让别人知道本设置项存在**
+         */
+        value?: string | number;
+        /**
+         * 用于判定合法输入的正则表达式
+         */
+        pattern?: RegExp;
+        /**
+         * 按钮禁用间隔，单位：/s，默认值3，0表示永远禁用。
+         */
+        disabled?: number;
+    }
+    file: SettingCommon & {
+        /**
+         * 文件选择按钮型设置
+         */
+        type: "file";
+        /**
+         * 按钮上的文字
+         */
+        title: string;
+        /**
+         * 允许的文件拓展名列表，如`.txt`
+         */
+        accept?: string[];
+        /**
+         * 是否允许多选
+         */
+        multiple?: boolean;
+        /**
+         * 用户选择文件后的回调，第一个参数为`input.files`
+         */
+        action: (files: FileList) => void
+    }
+    mutlti: SettingCommon & {
+        /**
+         * 复选框类设置，区别下拉框型设置，可以不定多选。
+         */
+        type: "mutlti";
+        /**
+         * 默认选取的值列表，必须为`list`的子集  
+         * **含有本项的设置会保存到本地，请使用type值拓展`config`接口以让别人知道本设置项存在**
+         */
+        value: string[];
+        /**
+         * 可选的值列表，为`value`的超集
+         */
+        list: string[];
+        /**
+         * 用户改变选择后的回调函数，第一个参数为`value`
+         */
+        action?: (value: string[]) => void
+    }
+    sort: SettingCommon & {
+        /**
+         * 设置分组，可将几个设置分为一组
+         */
+        type: "sort";
+        /**
+         * 组名
+         */
+        label: string;
+        /**
+         * 被分组的其他设置
+         */
+        list: SettingType[keyof SettingType][];
+    }
+    custom: SettingCommon & {
+        /**
+         * 自定义的设置
+         */
+        type: "custom";
+        /**
+         * 自定义的html字符串，支持以div标签为父标签的html标签
+         */
+        custom: string;
+        /**
+         * 设置UI呈现时的回调函数，将设置项本身作为第一个参数
+         */
+        flesh?: (obj: SettingType["custom"]) => void;
+    }
+    picture: Omit<SettingCommon, "label"> & {
+        /**
+         * 图片类设置
+         */
+        type: "picture";
+        /**
+         * 图片url
+         */
+        src: string;
+    }
+    icon: Omit<SettingCommon, "label" | "sort" | "key"> & {
+        /**
+         * 图标类设置
+         */
+        type: "icon";
+        /**
+         * 鼠标焦点时提示的文字
+         */
+        title: string;
+        /**
+         * 点击该图标时的回调
+         */
+        action: (node: HTMLDivElement) => void;
+    }
 }
 /**
  * input标签的可选属性
@@ -1424,48 +1322,4 @@ interface input {
      * 元素的宽度：/px，仅限type="image"
      */
     width?: number;
-}
-/**
- * 归档一组设置，这组设置将在点击本条设置后展开  
- * 用于分组一些关联性很强或者同类的设置  
- * 可以看作是在菜单中再分类
- */
-interface ItemSor extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是分组集合设置项
-     */
-    type: "sort";
-    /**
-     * 类别名称
-     */
-    label: string;
-    /**
-     * 设置组，包含该类下属设置项
-     */
-    list: (ItemPic | ItemSwh | ItemSor | ItemRow | ItemPus | ItemIpt | ItemFie | ItemMut | ToolIcon | ItemCus)[]
-    ;
-}
-/**
- * 自定义设置项，本设置项支持使用HTML语法自定义设置项值的部分  
- * 如果预定义的设置类型满足不了需求，那么此种类型可能满足需求
- */
-interface ItemCus extends ItemCommon {
-    /**
-     * 类型标志，用于识别这是自定义设置
-     */
-    type: "custom";
-    /**
-     * 设置主键（唯一），用于唯一确定设置项
-     */
-    key: string;
-    /**
-     * 要自定义显示的设置内容，可以使用所有支持在\<div\>标签下的HTML标签  
-     * 内容完全封装在独立的shadowDOM中，这意味这可以使用独立的<style>标签而不用担心样式指示器影响到页面其他部分
-     */
-    custom: string;
-    /**
-     * 一个回调函数，设置项绘制后将执行该回调并将本设置数据以参数形式传递  
-     * 您可以设置这个回调函数以接受参数信息，并在需要时对其进行更新，更新结果会及时同步在设置界面中。
-     */
-    flesh?: (obj: ItemCus) => void;
 }
