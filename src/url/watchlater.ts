@@ -62,7 +62,7 @@ class Watchlater extends API.rewrite {
     }
     mediaSession() {
         const id = API.jsonphook(["api.bilibili.com/x/v2/history/toview/web"], (xhr) => {
-            const obj = Format.urlObj(xhr.url);
+            const obj = Format.urlObj(xhr.src);
             let callback: any = obj.callback;
             let call: any = window[callback];
             if (call) {

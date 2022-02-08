@@ -4,7 +4,7 @@ const fs = require("fs");
 const files = require("./files").getFiles;
 
 const path = ["css", "html", "json", "dist"]; // 遍历路径
-const exclude = ["dist/index.js", "dist/require.js", "dist/bilibiliPlayer.js", "dist/comment.js"]; // 排除路径关键词
+const exclude = ["json/pl769.json", "dist/index.js", "dist/require.js", "dist/bilibiliPlayer.js", "dist/comment.js"]; // 排除路径关键词
 new files(path, exclude).run().then(d => {
     let modules = ""; // 模块打包处
     let data = d.reduce((s, d) => {

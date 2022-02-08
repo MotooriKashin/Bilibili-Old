@@ -27,15 +27,7 @@ class NodeHook {
                     (<any>newChild).removeAttribute("src", setTimeout(() => { newChild.dispatchEvent(new ProgressEvent("load")) }, 100))
                 );
             }), NodeHook.jsonp.forEach(d => {
-                d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
-                    set: (t, p, v) => {
-                        p == "url" && ((<any>newChild).src = v);
-                        return true;
-                    },
-                    get: (t, p) => {
-                        return p == "url" ? (<any>newChild).src : undefined;
-                    }
-                }));
+                d[0].every(d => (<any>newChild).src.includes(d)) && d[1](newChild);
             }))
             return <T>NodeHook.appendChild.call(this, newChild);
         };
@@ -48,15 +40,7 @@ class NodeHook {
                     (<any>newChild).removeAttribute("src", setTimeout(() => { newChild.dispatchEvent(new ProgressEvent("load")) }, 100))
                 );
             }), NodeHook.jsonp.forEach(d => {
-                d[0].every(d => (<any>newChild).src.includes(d)) && d[1](new Proxy(new Object(), {
-                    set: (t, p, v) => {
-                        p == "url" && ((<any>newChild).src = v);
-                        return true;
-                    },
-                    get: (t, p) => {
-                        return p == "url" ? (<any>newChild).src : undefined;
-                    }
-                }));
+                d[0].every(d => (<any>newChild).src.includes(d)) && d[1](newChild);
             }))
             return <T>NodeHook.insertBefore.call(this, newChild, refChild);
         }
@@ -65,7 +49,7 @@ class NodeHook {
 {
     const nodeHook = new NodeHook();
     API.scriptIntercept = (rule: string[], replaceURL?: string) => nodeHook.intercept(rule, replaceURL);
-    API.jsonphook = (url: string[], callback: (xhr: { url: string }) => void) => nodeHook.jsonphook(url, callback);
+    API.jsonphook = (url: string[], callback: (xhr: HTMLScriptElement & { url: string }) => void) => nodeHook.jsonphook(url, callback);
     API.removeJsonphook = (id: number) => nodeHook.removeJsonphook(id);
 }
 declare namespace API {
@@ -82,7 +66,7 @@ declare namespace API {
      * @param callback hook到指定URL后执行的回调函数，url信息为参数属性
      * @returns 注册编号，用于使用`removeJsonphook`方法注销当前hook
      */
-    export function jsonphook(url: string[], callback: (xhr: { url: string }) => void): number;
+    export function jsonphook(url: string[], callback: (xhr: HTMLScriptElement) => void): number;
     /**
      * 注销jsonphook
      * @param id 注册`jsonphook`时的返回值

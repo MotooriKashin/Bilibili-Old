@@ -35,6 +35,7 @@ try {
         if (location.href.includes("www.bilibili.com/account/history")) API.importModule("history.js");
         if (config.read && /\/read\/[Cc][Vv]/.test(location.href)) API.importModule("read.js");
         if (config.player && /festival\/202[1-2]bnj/.test(location.href)) API.importModule("bnj.js");
+        if (/\/medialist\/play\//.test(location.href) || /\/playlist\/video\/pl/.test(location.href)) API.importModule("medialist.js");
     }
     // 重写之后再引导的全局模块
     API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效咨询数据

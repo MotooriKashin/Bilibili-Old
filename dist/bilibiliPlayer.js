@@ -7034,7 +7034,7 @@ function Fa() {
                 new z.a(this);
                 this.X = (new C.a(this)).X;
                 this.send = new ba.a(this);
-                this.f.La ? this.La = new P.a(this) : this.f.R ? this.R = new N.a(this) : this.wi = new O.a(this);
+                this.f.La ? this.La = new P.a(this)/* 稍后再看 */ : this.f.R ? this.R = new N.a(this) /* 播单 */ : this.wi = new O.a(this)/* 一般推荐 */;
                 this.J && this.yb().update(U.a.qk(this.J.type));
                 this.S && this.yb().update(U.a.qk("DashPlayer"));
                 this.ma.complete(0, !0);
@@ -19436,6 +19436,9 @@ function Fa() {
                 this.placeholder.empty().append(b);
                 this.na.append(this.placeholder)
             };
+            /**
+             * 装填播单列表
+             */
             e.prototype.tr = function () {
                 var b = e.Fa.raw;
                 b && 0 === b.code ? b.list.length ? (this.Qq(), this.Rq(), this.Cq()) : this.ik() : this.Fj($("<div>").append("<span>\u5217\u8868\u88c5\u586b\u5931\u8d25</span>"))
@@ -19647,6 +19650,11 @@ function Fa() {
                 this.w.ra.append(this.w.Bl);
                 this.na.append(this.w.ra)
             };
+            /**
+             * 创建播单项
+             * @param {{}} b 播单项数据
+             * @param {number} 当前项索引
+             */
             e.prototype.Sq = function (b, c) {
                 var d = this,
                     f = b.Te,
@@ -19700,14 +19708,17 @@ function Fa() {
                         })
                     } this.w.Bl.append(v)
             };
+            /**
+             * 标记正在播放项
+             */
             e.prototype.Cq = function () {
                 var b = this.c.f.j,
                     c = $('[data-aid="' + this.c.f.aid + '"].' + this.m + "-item", this.w.ra),
                     b = $('[data-cid="' + b + '"].' + this.m + "-part-item", c);
                 c.attr("data-state-play", "true");
                 b.attr("data-state-play", "true");
-                this.Gi();
-                this.Oj()
+                this.Gi(); // 修正索引/总数
+                this.Oj() // 修正滚动位置
             };
             e.prototype.Oj = function () {
                 var b = this;

@@ -59,7 +59,7 @@ class Xhr {
      * @param details url外的参数对象
      * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
      */
-    static get(url: string, details: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] } = {}) {
+    static get(url: string, details: Omit<xhrDetails, "url"> = {}) {
         !Reflect.has(details, "credentials") && (details.credentials = true);
         // @ts-ignore
         return this.xhr({ url: url, ...details });
@@ -213,8 +213,8 @@ interface xhr {
      * @param details url外的参数对象
      * @returns `Promise`托管的请求结果或者报错信息，`async = false` 时除外，直接返回结果
      */
-    get(url: string, details?: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] }): Promise<any>;
-    get(url: string, details: { [P in Exclude<keyof xhrDetails, "url">]?: xhrDetails[P] } & {
+    get(url: string, details?: Omit<xhrDetails, "url">): Promise<any>;
+    get(url: string, details: Omit<xhrDetails, "url"> & {
         /**
          * use async request  
          * the third argument of XMLHttpRequest.open  

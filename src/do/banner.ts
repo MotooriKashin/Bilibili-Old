@@ -330,7 +330,7 @@ interface modules {
         }
     }
     config.bannerGif && API.jsonphook(["api.bilibili.com/x/web-interface/index/icon"], function (xhr) {
-        const obj = Format.urlObj(xhr.url);
+        const obj = Format.urlObj(xhr.src);
         let callback: any = obj.callback;
         let call: any = window[callback];
         if (call) {
@@ -342,7 +342,7 @@ interface modules {
     })
     let tag = false; // 防止二度请求
     API.jsonphook(["api.bilibili.com/x/web-show/res/loc"], function (jsonp) {
-        const obj = Format.urlObj(jsonp.url);
+        const obj = Format.urlObj(jsonp.src);
         let callback: any = obj.callback;
         let call: any = window[callback];
         if (call) {
@@ -353,7 +353,7 @@ interface modules {
                         v.data[d][0].litpic = (data && data.litpic),
                         v.data[d][0].url = (data && data.url) || "",
                         v.data[d][0].title = (data && data.name) || "");
-                    if (jsonp.url.includes("loc?") && obj.id == String(d)) {
+                    if (jsonp.src.includes("loc?") && obj.id == String(d)) {
                         v.data[0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
                         v.data[0].litpic = (data && data.litpic) || "";
                         v.data[0].url = (data && data.url) || "";
