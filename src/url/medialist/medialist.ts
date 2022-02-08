@@ -58,11 +58,13 @@ class Playlist extends API.rewrite {
             const callback: any = obj.callback;
             josnp.removeAttribute("src");
             if (this.pl === 769 || this.pl === 182603655) {
-                xhr.get("https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json", { responseType: "json" })
-                    .then(d => {
-                        (<any>window)[callback](d);
-                        josnp.dispatchEvent(new ProgressEvent("load"));
-                    })
+                xhr({
+                    url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
+                    responseType: "json"
+                }).then(d => {
+                    (<any>window)[callback](d);
+                    josnp.dispatchEvent(new ProgressEvent("load"));
+                })
             }
         })
         this.flushDocument();
