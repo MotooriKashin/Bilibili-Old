@@ -44,7 +44,7 @@ class Url {
      * 转化为url字符串
      * @returns url字符串
      */
-    toJOSN() {
+    toJSON() {
         return (this.url || "") + this.search + this.hash;
     }
 }
@@ -150,7 +150,7 @@ class Format {
     static objUrl(url: string = "", obj: Record<string, string | number> = {}) {
         const result = new Url(url);
         result.setSearch(obj);
-        return result.toJOSN();
+        return result.toJSON();
     }
     /**
      * 提取URL search参数对象
