@@ -327,8 +327,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         label: "medialist",
         type: "switch",
         value: false,
-        float: "用旧版av页重构medialist页面。",
-        hidden: true
+        float: "用旧版av页重构medialist页面。"
     })
     API.registerSetting({
         type: "switch",

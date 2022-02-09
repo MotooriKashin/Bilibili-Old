@@ -239,7 +239,6 @@ class Rewrite {
      * 重写完信息通知
      */
     loadenEvent() {
-        console.clear();
         Reflect.defineProperty(document, "readyState", { value: "complete", writable: false });
         this.loadendCallback.forEach(async d => d());
         document.dispatchEvent(new ProgressEvent("readystatechange"));
