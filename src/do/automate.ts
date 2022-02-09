@@ -92,7 +92,7 @@ interface modules {
     })
     config.heartbeat && API.xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
         args[1] = args[1].replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
-    })
+    }, undefined, false);
     config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".lt-row"), () => document.querySelector(".lt-row").remove());
     config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector(".unlogin-popover").remove());
 }

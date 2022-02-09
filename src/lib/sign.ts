@@ -30,7 +30,7 @@ class Sign {
      */
     static sign(url: string, obj: Record<string, string | number> = {}, id: number | string = 0) {
         let table: Record<string, string | number> = {};
-        this.keySecret = this.decode(id);
+        this.keySecret = <string[]>this.decode(id);
         obj = { ...Format.urlObj(url), ...obj };
         url = url.split("#")[0].split("?")[0];
         delete obj.sign;
@@ -72,15 +72,15 @@ class Sign {
      * @returns `keySecret`池对象
      */
     static list() {
-        return this.table.reduce((s: { [name: string]: string }, d, i) => {
+        return this.table.reduce((s: Record<string, string | number>, d, i) => {
             let keySecret = this.decode(i);
             s[keySecret[0]] = keySecret[1];
             return s;
         }, {})
     }
 }
-API.urlsign = <any>((url: string, obj: { [name: string]: string } = {}, id: number | string = 0) => Sign.sign(url, obj, id));
-API.urlsign.getKeyById = (id: number | string) => Sign.decode(id);
+API.urlsign = <any>((url: string, obj: Record<string, string | number> = {}, id: number | string = 0) => Sign.sign(url, obj, id));
+API.urlsign.getKeyById = (id: number | string) => <string[]>Sign.decode(id);
 API.urlsign.encode = (key: string, secret: string) => Sign.encode(key, secret);
 API.urlsign.list = () => Sign.list();
 declare namespace API {
@@ -92,7 +92,7 @@ declare namespace API {
      * @returns 签名后的URL
      */
     export let urlsign: {
-        (url: string, obj?: { [name: string]: string }, id?: number | string): string;
+        (url: string, obj?: Record<string, string | number>, id?: number | string): string;
         /**
          * /**
          * 提取appkey和盐
@@ -111,6 +111,6 @@ declare namespace API {
          * 输出`keySecret`池对象
          * @returns `keySecret`池对象
          */
-        list: () => { [name: string]: string }
+        list: () => Record<string, string | number>
     }
 }

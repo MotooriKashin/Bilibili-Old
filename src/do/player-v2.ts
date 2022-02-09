@@ -8,7 +8,7 @@ interface modules {
 }
 API.switchVideo(() => {
     let ready = false; // 载入时机标记
-    API.xhrhook(["api.bilibili.com/x/player/carousel.so"], function (args) { ready = true });
+    API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true);
     xhr({
         url: Format.objUrl("https://api.bilibili.com/x/player/v2", { cid: <any>API.cid, aid: <any>API.aid }),
         responseType: "json",

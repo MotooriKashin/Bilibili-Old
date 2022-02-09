@@ -9,6 +9,7 @@
 	"jsonphook": "Node.js",
 	"removeJsonphook": "Node.js",
 	"xhrhook": "open.js",
+	"xhrhookasync": "open.js",
 	"removeXhrhook": "open.js",
 	"allDanmaku": "allDanmaku.js",
 	"danmaku": "danmaku.js",

@@ -14,6 +14,6 @@ interface modules {
         }
     });
     Object.defineProperty(window, "reportMsgObj", { get: () => [], set: v => true });
-    API.xhrhook(["data.bilibili.com"], function (args) { this.send = () => true });
-    API.xhrhook(["data.bilivideo.com"], function (args) { this.send = () => true });
+    API.xhrhookasync("data.bilibili.com", undefined, undefined, false);
+    API.xhrhookasync("data.bilivideo.com", undefined, undefined, false);
 }

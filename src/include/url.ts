@@ -31,7 +31,7 @@ class _Url {
      */
     getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T], GM = false) {
         let obj: any = { ...(this.jsonUrlDefault[url] || {}), ...detail };
-        Reflect.has(obj, "appkey") && (obj = this.sign(obj));
+        Number(Reflect.get(obj, "appkey")) && (obj = this.sign(obj));
         return GM ? xhr.GM({
             url: Format.objUrl(`//${url}`, obj),
             responseType: "json"

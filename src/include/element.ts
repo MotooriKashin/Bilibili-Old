@@ -29,7 +29,7 @@ class ClickRemove {
         }, 100)
     }
 }
-class ApiElement {
+class ElementModule {
     /**
      * 弹出一个空白浮动窗口，点击该窗口外的节点该窗口会自动关闭  
      * 浮动窗口上的内容请通过返回的节点进行后续添加  
@@ -281,10 +281,10 @@ class ApiElement {
         return root;
     }
 }
-API.element = ApiElement;
+API.element = ElementModule;
 API.clickRemove = ClickRemove;
 declare namespace API {
-    export let element: typeof ApiElement;
+    export let element: typeof ElementModule;
     export let clickRemove: typeof ClickRemove;
 }
 /**

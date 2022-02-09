@@ -6,36 +6,21 @@ interface modules {
 }
 {
     // 修复追番数
-    API.xhrhook(["bangumi.bilibili.com/ext/web_api/season_count?"], function (args) {
-        this.addEventListener('readystatechange', () => {
-            if (this.readyState === 4) {
-                try {
-                    let response = API.jsonCheck(this.responseText);
-                    response.result.favorites = response.result.follow;
-                    Object.defineProperty(this, 'response', { writable: true });
-                    Object.defineProperty(this, 'responseText', { writable: true });
-                    (<any>this).response = (<any>this).responseText = JSON.stringify(response);
-                } catch (e) { debug.error("restoreData.js", e) }
-            }
-        });
+    API.xhrhook("bangumi.bilibili.com/ext/web_api/season_count?", args => {
         args[1] = args[1].replace('bangumi.bilibili.com/ext/web_api/season_count', 'api.bilibili.com/pgc/web/season/stat');
-    })
+    }, args => {
+        const response = API.jsonCheck(args.responseText);
+        response.result.favorites = response.result.follow;
+        args.response = args.responseText = JSON.stringify(response);
+    }, false)
     // 修复片尾番剧推荐
-    API.xhrhook(["api.bilibili.com/pgc/web/recommend/related/recommend"], function (args) {
-        this.addEventListener('readystatechange', () => {
-            if (this.readyState === 4) {
-                try {
-                    let response = API.jsonCheck(this.responseText);
-                    if (response.result && response.result.season) response.result = response.result.season;
-                    Object.defineProperty(this, 'response', { writable: true });
-                    Object.defineProperty(this, 'responseText', { writable: true });
-                    (<any>this).response = (<any>this).responseText = JSON.stringify(response);
-                } catch (e) { debug.error("restoreData.js", e) }
-            }
-        })
-    })
+    API.xhrhook("api.bilibili.com/pgc/web/recommend/related/recommend", undefined, obj => {
+        const response = API.jsonCheck(obj.responseText);
+        if (response.result && response.result.season) response.result = response.result.season;
+        obj.response = obj.responseText = JSON.stringify(response);
+    }, false)
     // 修复番剧推荐
-    API.xhrhook(["comment.bilibili.com/playtag"], function (args) {
+    API.xhrhook("comment.bilibili.com/playtag", args => {
         args[1] = "https://comment.bilibili.com/playtag,2-2?html5=1";
         restoreBangumiRecommand();
     })
