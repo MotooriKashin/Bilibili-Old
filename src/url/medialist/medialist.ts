@@ -110,7 +110,7 @@ class Playlist extends API.rewrite {
                     return { code: 0, data: this.toview, message: "0", ttl: 1 }
                 }
             } catch (e) {
-                toast.error("获取midialist数据失败！请刷新页面或者在脚本设置中关闭重构“medialist”选项");
+                toast.error("获取medialist数据失败！请刷新页面或者在脚本设置中关闭重构“medialist”选项");
                 throw e;
             }
         })
