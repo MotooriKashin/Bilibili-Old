@@ -21,7 +21,7 @@ interface modules {
     function init(cdm) {
         if ((<any>window).player) {
             if (widgetContainer === undefined)
-                widgetContainer = initCountainer();
+                widgetContainer = initContainer();
             player = (<any>window).player;
             bindEvents();
             load(cdm);
@@ -41,7 +41,7 @@ interface modules {
      * 创建互动弹幕的容器div
      * @returns div.bilibili-player-video-popup
      */
-    function initCountainer() {
+    function initContainer() {
         let videoWrap = document.getElementsByClassName("bilibili-player-video-wrap")[0];
         if (!videoWrap) throw "未能获取播放器div";
         let widgetContainer = document.createElement("div");

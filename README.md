@@ -14,7 +14,7 @@
    - 外链播放器或者说嵌入式播放器，本质是一个纯播放器页面，通常作为子页面嵌入在别的网页中，例如[拜年祭2021](https://www.bilibili.com/festival/2021bnj)专题页面。
    - [全站排行榜页面](https://www.bilibili.com/ranking)。
    - 专栏页面，或者说CV页面。
-2. 为重写的页面配套的其他功能，详见脚本自带的设置界面或者[说明文档](https://github.com/MotooriKashin/Bilibili-Old/tree/master/doc/opinion.md)。
+2. 为重写的页面配套的其他功能，详见脚本自带的设置界面。
 
 ---
 ### 关于设置
