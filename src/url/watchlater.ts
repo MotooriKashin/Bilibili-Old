@@ -61,27 +61,19 @@ class Watchlater extends API.rewrite {
         this.onload = () => { this.afterFlush() }
     }
     mediaSession() {
-        const id = API.jsonphook(["api.bilibili.com/x/v2/history/toview/web"], (xhr) => {
-            const obj = Format.urlObj(xhr.src);
-            let callback: any = obj.callback;
-            let call: any = window[callback];
-            if (call) {
-                (<any>window)[callback] = function (v: any) {
-                    API.switchVideo(async () => {
-                        const data = v.data.list.find(d => d.aid == API.aid);
-                        data && API.mediaSession({
-                            title: data.pages.find(d => d.cid == API.cid).part || data.title,
-                            artist: data.owner.name,
-                            album: data.title,
-                            artwork: [{
-                                src: data.pic
-                            }]
-                        })
-                    })
-                    return call(v);
-                }
-            }
-            API.removeJsonphook(id);
+        API.jsonphook("api.bilibili.com/x/v2/history/toview/web", undefined, obj => {
+            API.switchVideo(async () => {
+                const data = obj.data.list.find(d => d.aid == API.aid);
+                data && API.mediaSession({
+                    title: data.pages.find(d => d.cid == API.cid).part || data.title,
+                    artist: data.owner.name,
+                    album: data.title,
+                    artwork: [{
+                        src: data.pic
+                    }]
+                })
+            })
+            return obj;
         })
     }
     afterFlush() {

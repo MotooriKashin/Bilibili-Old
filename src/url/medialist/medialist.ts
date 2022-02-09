@@ -53,19 +53,13 @@ class Playlist extends API.rewrite {
                 src: "//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"
             }
         ];
-        API.jsonphook(["toview"], jsonp => {
-            const obj = Format.urlObj(jsonp.src);
-            const callback: any = obj.callback;
-            jsonp.removeAttribute("src");
-            if (this.pl === 769 || this.pl === 182603655) {
-                xhr({
-                    url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
-                    responseType: "json"
-                }).then(d => {
-                    (<any>window)[callback](d);
-                    jsonp.dispatchEvent(new ProgressEvent("load"));
-                })
-            }
+        API.jsonphookasync("toview", undefined, async url => {
+            // if (this.pl === 769 || this.pl === 182603655) {
+            return await xhr({
+                url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
+                responseType: "json"
+            });
+            // }
         })
         this.flushDocument();
     }

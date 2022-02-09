@@ -128,7 +128,7 @@ class Av extends API.rewrite {
         API.importModule("descBV.js"); // 修复简介中超链接
         config.commandDm && API.importModule("commandDm.js"); // 互动弹幕
         API.importModule("videoSort.js"); // 修正分区信息
-        config.electric && API.jsonphook(["api.bilibili.com/x/web-interface/elec/show"], function (xhr) { xhr.src = Format.objUrl(xhr.src.split("?")[0], Object.assign(Format.urlObj(xhr.src), { aid: 1, mid: 1 })) }); // 跳过充电鸣谢
+        config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
         /dmid/.test(location.href) && /dm_progress/.test(location.href) && API.importModule("loadByDmid.js");
     }
 }

@@ -402,7 +402,9 @@ API.EmbedPlayer = () => {
         window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
     }
 }
-API.scriptIntercept(["bilibiliPlayer.min.js"], URL.createObjectURL(new Blob([GM.getResourceText("bilibiliPlayer.js")])));
+API.scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
+    return GM.getResourceText("bilibiliPlayer.js");
+})
 interface Window {
     player: {
         /**

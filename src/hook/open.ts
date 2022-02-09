@@ -56,15 +56,15 @@ type XMLHttpRequestResponses = {
         let id: number;
         const one = Array.isArray(url) ? url : [url];
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
-            if (!condition || condition(args)) {
-                once && id && rules.splice(id - 1, 1);
-                this.send = () => true; // 禁用XMLHttpRequest.send
-                (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
-                const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
-                Object.defineProperty(this, "status", { configurable: true, value: 200 });
-                Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
-                this.dispatchEvent(new ProgressEvent("readystatechange"));
-                try {
+            try {
+                if (!condition || condition(args)) {
+                    once && id && rules.splice(id - 1, 1);
+                    this.send = () => true; // 禁用XMLHttpRequest.send
+                    (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
+                    const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
+                    Object.defineProperty(this, "status", { configurable: true, value: 200 });
+                    Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
+                    this.dispatchEvent(new ProgressEvent("readystatechange"));
                     modifyResponse && modifyResponse(args).then(d => {
                         clearInterval(et);
                         if (d) {
@@ -78,14 +78,13 @@ type XMLHttpRequestResponses = {
                             this.dispatchEvent(new ProgressEvent("load"));
                             this.dispatchEvent(new ProgressEvent("loadend"));
                         }
-                    })
-                } catch (e) {
+                    }).catch(e => {
+                        this.dispatchEvent(new ProgressEvent("error"));
+                        debug.error("modifyResponse of xhrhookasync", one, e);
+                    }).finally(() => { clearInterval(et) })
                     clearInterval(et);
-                    this.dispatchEvent(new ProgressEvent("error"));
-                    debug.error("modifyResponse of xhrhookasync", one, e)
                 }
-                clearInterval(et);
-            }
+            } catch (e) { debug.error("condition of xhrhook", one, e) }
         }
         return id = rules.push([one, two]);
     }
@@ -102,19 +101,18 @@ declare namespace API {
      */
     export function xhrhook(url: string | string[], modifyOpen?: (args: XMLHttpRequestOpenParams) => void, modifyResponse?: (response: XMLHttpRequestResponses) => void, once?: boolean): number;
     /**
-     * xhrhook的异步版本，本方法会让该xhr一直等待`modifyResponse`回调函数提供的返回值。  
+     * `xhrhook`的异步版本，可以用异步方法获取到的返回值替换xhr请求返回值。  
      * 本方法或阻断原xhr请求，您可以在`condition`根据url等信息进一步判定是否真的需要拦截。  
      * 注意部分xhr请求可能有额外的超时判定，所以`modifyResponse`修改未必会生效。
      * @param url 需要拦截的xhr的url匹配关键词或词组，词组间是并的关系，即必须同时满足才会触发拦截回调。
-     * @param condition 二次判定**同步**回调函数，不提供或者返回真值时开始拦截。
+     * @param condition 二次判定**同步**回调函数，不提供或者返回真值时开始拦截，可以通过url等精确判定是否真要拦截。
      * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，**注意每种返回值的格式！**
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递`false`，然后自行在不再需要拦截后使用`removeXhrhook`注销。
      */
     export function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams) => Promise<XMLHttpRequestResponses>, once?: boolean): number;
     /**
-     * 注销xhrhook以节约开销  
-     * **仅供注册拦截是主动定义了once=false使用！**
-     * @param id `xhrhook`注册时的返回值
+     * 注销xhrhook以节约开销，只在注册时设置了`once=force`时才需要使用本方法！ 
+     * @param id `xhrhook`注册时的返回值，一个id只允许使用一次！
      */
     export function removeXhrhook(id: number): [string[], Function][]
 }

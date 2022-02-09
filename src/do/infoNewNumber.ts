@@ -4,17 +4,10 @@ interface modules {
      */
     readonly "infoNewNumber.js": string;
 }
-API.jsonphook(['api.bilibili.com/x/web-interface/online'], function (xhr) {
-    const obj = Format.urlObj(xhr.src);
-    let callback = obj.callback;
-    let call: any = window[callback];
-    if (call) {
-        (<any>window)[callback] = function (v: any) {
-            v.data && (v.data.region_count[165] = v.data.region_count[202]);
-            return call(v);
-        }
-    }
-})
-API.jsonphook(["api.bilibili.com/x/web-feed/feed/unread"], function (xhr) {
-    xhr.src = xhr.src.replace("feed/unread", "article/unread");
-})
+API.jsonphook("api.bilibili.com/x/web-interface/online", undefined, obj => {
+    obj.data && (obj.data.region_count[165] = obj.data.region_count[202]);
+    return obj;
+}, false)
+API.jsonphook("api.bilibili.com/x/web-feed/feed/unread", url => {
+    return url.replace("feed/unread", "article/unread");
+}, undefined, false)

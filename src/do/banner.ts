@@ -7,6 +7,7 @@ interface modules {
 }
 {
     class Animate {
+        static record: Record<string, any> = {};
         static rid = this.resourceId();
         static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
         /**
@@ -120,7 +121,7 @@ interface modules {
             let container: HTMLDivElement = document.querySelector("#banner_link");
             if (!container) {
                 container = document.querySelector(".h-center");
-                if (!container) return;
+                if (!container) return this.resources.forEach(d => d.remove());
                 container.parentElement.removeAttribute("style");
                 container.style.width = "100%";
                 container.style.top = "-42px";
@@ -329,49 +330,38 @@ interface modules {
             window.addEventListener('resize', this.handleResize);
         }
     }
-    config.bannerGif && API.jsonphook(["api.bilibili.com/x/web-interface/index/icon"], function (xhr) {
-        const obj = Format.urlObj(xhr.src);
-        let callback: any = obj.callback;
-        let call: any = window[callback];
-        if (call) {
-            (<any>window)[callback] = function (v: any) {
-                v.data = Format.randomArray(JSON.parse(GM.getResourceText("index-icon.json")).fix, 1)[0];
-                return call(v);
-            }
+    config.bannerGif && API.jsonphook("api.bilibili.com/x/web-interface/index/icon", undefined, response => {
+        response.data = Format.randomArray(JSON.parse(GM.getResourceText("index-icon.json")).fix, 1)[0];
+        return response;
+    }, false);
+    API.jsonphookasync("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
+        const obj = Format.urlObj(url);
+        obj.callback = undefined;
+        let loc = Animate.record[url];
+        let header = Animate.record[Animate.rid];
+        let rqs: any;
+        if (!loc || !header) {
+            rqs = await Promise.all([
+                xhr.get(Format.objUrl(url, obj), { responseType: "json" }),
+                xhr.get(`https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`, { responseType: "json" })
+            ]);
+            loc = Animate.record[url] = rqs[0];
+            header = Animate.record[Animate.rid] = rqs[1];
         }
-    })
-    let tag = false; // 防止二度请求
-    API.jsonphook(["api.bilibili.com/x/web-show/res/loc"], function (jsonp) {
-        const obj = Format.urlObj(jsonp.src);
-        let callback: any = obj.callback;
-        let call: any = window[callback];
-        if (call) {
-            (<any>window)[callback] = function (v: any) {
-                const data = GM.getValue<any>("banner");
-                v.data && Animate.locs.forEach(d => {
-                    v.data[d] && (v.data[d][0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
-                        v.data[d][0].litpic = (data && data.litpic),
-                        v.data[d][0].url = (data && data.url) || "",
-                        v.data[d][0].title = (data && data.name) || "");
-                    if (jsonp.src.includes("loc?") && obj.id == String(d)) {
-                        v.data[0].pic = (data && data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
-                        v.data[0].litpic = (data && data.litpic) || "";
-                        v.data[0].url = (data && data.url) || "";
-                        v.data[0].title = (data && data.name) || "";
-                    }
-                })
-                return call(v);
+        // document.querySelector<HTMLDivElement>("#banner_link").style.backgroundImage = `url("${header.data.pic}");`;
+        loc.data && Animate.locs.forEach(d => {
+            loc.data[d] && (loc.data[d][0].pic = (header && header.data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
+                loc.data[d][0].litpic = (header && header.data.litpic),
+                loc.data[d][0].url = (header && header.data.url) || "",
+                loc.data[d][0].title = (header && header.data.name) || "");
+            if (url.includes("loc?") && obj.id == String(d)) {
+                loc.data[0].pic = (header && header.data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
+                loc.data[0].litpic = (header && header.data.litpic) || "";
+                loc.data[0].url = (header && header.data.url) || "";
+                loc.data[0].title = (header && header.data.name) || "";
             }
-        }
-        if (tag) return;
-        tag = true;
-        xhr({
-            url: `https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`,
-            responseType: "json",
-            credentials: true
-        }).then((d: any) => {
-            GM.setValue("banner", d.data);
-            new Animate(d.data);
         })
-    })
+        setTimeout(() => new Animate(header.data));
+        return loc;
+    }, false);
 }
