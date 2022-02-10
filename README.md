@@ -10,8 +10,8 @@
    - 普通视频页面，俗称av页或BV页，例如[av2](https://www.bilibili.com/video/av2)。
    - 番剧、影视等专属页面，如[冰菓](https://www.bilibili.com/bangumi/play/ss3398/)。
    - 稍后再看页面，如果你使用“稍后再看”功能的话。
-   - 视频合集页面，这种页面当时本不存在，脚本使用稍后再看功能模拟了一下，例如[bilibili moe 2018 日本动画场应援](https://www.bilibili.com/medialist/play/ml182603655)。顺带一提该链接原本是当时一种名为“播单”（播单号[pl769](https://www.bilibili.com/playlist/video/pl769)）的特殊页面，脚本曾经也试图恢复，不过因为所有相关API都已被禁用，已经真正成为被遗忘的历史了，同样被遗忘的还有mylist，比如[mylist8](https://www.bilibili.com/mylist8 "缘之空")。
-   - 外链播放器或者说嵌入式播放器，本质是一个纯播放器页面，通常作为子页面嵌入在别的网页中，例如[拜年祭2021](https://www.bilibili.com/festival/2021bnj)专题页面。
+   - 视频合集页面，这种页面当时本不存在，脚本使用播单功能模拟了一下，例如[bilibili moe 2018 日本动画场应援](https://www.bilibili.com/medialist/play/ml182603655)对应曾经的播单号[pl769](https://www.bilibili.com/playlist/video/pl769)的，其他无法获取到播单号的页面则取前20个视频模拟成播单列表，需要滚动到列表底部才能动态加载更多。
+   - 外链播放器或者说嵌入式播放器，本质是一个纯播放器页面，通常作为子页面嵌入在别的网页中，例如[拜年祭2021](https://www.bilibili.com/festival/2022bnj)专题页面。
    - [全站排行榜页面](https://www.bilibili.com/ranking)。
    - 专栏页面，或者说CV页面。
 2. 为重写的页面配套的其他功能，详见脚本自带的设置界面。
@@ -64,6 +64,7 @@
 - 2021 年 08 月 02 日：HEVC软解支持，网页端播放HEVC源成为可能。
 - 2021 年 09 月 28 日：杜比视界/杜比音效支持，只提供HEVC源。
 - 2021 年 12 月 03 日：8K支持，只提供HEVC源。
+- 2021 年 01 月 24 日：av1编码上线。
 
 ---
 ### 开发环境

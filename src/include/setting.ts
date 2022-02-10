@@ -341,7 +341,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         label: "medialist",
         type: "switch",
         value: false,
-        float: "用旧版av页重构medialist页面。"
+        float: "用旧版av页重构medialist页面。该页面使用曾经的播单页面进行模拟，初始状态视频数据为20，你可以滚送到播单底部以动态加载更多。另外由于播单已被官方禁用，您无法对播单进行收藏等操作，也不能访问播单详情页面。"
     })
     API.registerSetting({
         type: "switch",
