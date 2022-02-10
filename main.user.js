@@ -2197,7 +2197,7 @@ option {
 </head>
 
 <body>
-  <div class="z-top-container has-menu"></div>
+  <!-- <div class="z-top-container has-menu"></div> -->
   <div id="video-page-app"></div>
   <div id="app" data-server-rendered="true"></div>
   <div class="bili-wrapper" id="bofqi"></div>
@@ -4557,9 +4557,7 @@ API.closedCaption = new ClosedCaption();
     obj.data && (obj.data.region_count[165] = obj.data.region_count[202]);
     return obj;
 }, false);
-API.jsonphook("api.bilibili.com/x/web-feed/feed/unread", url => {
-    return url.replace("feed/unread", "article/unread");
-}, undefined, false);
+API.scriptBlock(["/web-feed/", "unread?"]);
 
 //# sourceURL=API://@Bilibili-Old/do/infoNewNumber.js`;
 /*!***********************!*/
@@ -6082,7 +6080,10 @@ API.ef2 = new Ef2();
                     if (text) {
                         this.text = text(this.src);
                         this.removeAttribute("src");
-                        setTimeout(() => this.dispatchEvent(new ProgressEvent("load")), 100);
+                        setTimeout(() => {
+                            this.dispatchEvent(new ProgressEvent("load"));
+                            this === null || this === void 0 ? void 0 : this.remove();
+                        }, 100);
                     }
                     else if (redirect) {
                         this.src = redirect(this.src);
@@ -6102,6 +6103,7 @@ API.ef2 = new Ef2();
                 newChild.nodeName == 'SCRIPT' && newChild.src && (NodeHook.jsonp.forEach(d => {
                     d[0].every(d => newChild.src.includes(d)) && d[1].call(newChild);
                 }));
+                newChild.src && newChild.src.includes("message.bilibili.com/pages/nav/index") && (newChild.src = "//message.bilibili.com/pages/nav/index_new_sync");
                 return NodeHook.appendChild.call(this, newChild);
             };
         }
@@ -6110,6 +6112,7 @@ API.ef2 = new Ef2();
                 newChild.nodeName == 'SCRIPT' && newChild.src && (NodeHook.jsonp.forEach(d => {
                     d[0].every(d => newChild.src.includes(d)) && d[1].call(newChild);
                 }));
+                newChild.src && newChild.src.includes("message.bilibili.com/pages/nav/index") && (newChild.src = "//message.bilibili.com/pages/nav/index_new_sync");
                 return NodeHook.insertBefore.call(this, newChild, refChild);
             };
         }
@@ -10732,6 +10735,310 @@ new Anime("anime.html");
 
 //# sourceURL=API://@Bilibili-Old/url/history.js`;
 /*!***********************!*/
+/**/modules["medialist.js"] = /*** ./dist/url/medialist.js ***/
+`class Playlist extends API.rewrite {
+    constructor(html) {
+        super(html);
+        this.route = Format.urlObj(location.href);
+        this.type = 3;
+        this.pl = /\\d+/.exec(API.path[5]) && Number(/\\d+/.exec(API.path[5])[0]);
+        this.playlist = Boolean(API.path[5].startsWith("pl"));
+        this.oid = "";
+        this.toview = {
+            "attr": 2,
+            "count": 100,
+            "cover": "https://i0.hdslb.com/bfs/archive/a45ef4fcde397247032cf4ce0c8f71815f9e28d0.jpg",
+            "ctime": 1529021131,
+            "description": "bilibili moe 2018 动画角色人气大赏日本动画场应援视频播单 / 每天不定时更新最新的一批",
+            "faved_count": 0,
+            "favored": 0,
+            "favorite": false,
+            "id": 1826036,
+            "is_favorite": false,
+            "like_count": 0,
+            "list": [],
+            "mid": 26468955,
+            "mlid": 182603655,
+            "mtime": 1533874759,
+            "name": "bilibili moe 2018 日本动画场应援",
+            "owner": {
+                "face": "http://i2.hdslb.com/bfs/face/57389d533621407d36981a99fed93834dd8b20e6.jpg",
+                "mid": 26468955,
+                "name": "萌战基"
+            },
+            "pid": 769,
+            "play_count": 0,
+            "recent_oids": [],
+            "recent_res": [],
+            "reply_count": 0,
+            "share_count": 0,
+            "stat": {
+                "favorite": 1685,
+                "pid": 769,
+                "reply": 10,
+                "share": 0,
+                "view": 298928
+            },
+            "state": 0,
+            "type": 2
+        };
+        this.has_more = false;
+        this.observer = new MutationObserver(d => this.Observer(d));
+        this.initPlayerQueryData();
+        history.replaceState(null, null, \`https://www.bilibili.com/playlist/video/pl\${this.pl}\`);
+        this.script = [
+            {
+                type: "text/javascript",
+                src: "//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//static.hdslb.com/js/jquery.qrcode.min.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//static.hdslb.com/common/js/footer.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//static.hdslb.com/js/swfobject.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//static.hdslb.com/mstation/js/upload/moxie.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//static.hdslb.com/mstation/js/upload/plupload.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//static.hdslb.com/phoenix/dist/js/comment.min.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"
+            },
+            {
+                type: "text/javascript",
+                src: "//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"
+            }
+        ];
+        API.jsonphookasync("toview", undefined, async (url) => {
+            history.replaceState(null, null, API.path.join("/"));
+            try {
+                if (this.playlist || this.pl === 182603655) {
+                    const result = await xhr({
+                        url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
+                        responseType: "json"
+                    });
+                    this.toview = result.data;
+                    return result;
+                }
+                else {
+                    const rqs = await Promise.all([
+                        xhr.get(\`https://api.bilibili.com/x/v1/medialist/info?type=\${this.type}&biz_id=\${this.pl}&tid=0\`, { responseType: "json" }),
+                        xhr.get(\`https://api.bilibili.com/x/v2/medialist/resource/list?type=\${this.type}&oid=\${this.oid}&otype=2&biz_id=\${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true\`, { responseType: "json" })
+                    ]);
+                    this.info(rqs[0]);
+                    this.list(rqs[1]);
+                    return { code: 0, data: this.toview, message: "0", ttl: 1 };
+                }
+            }
+            catch (e) {
+                toast.error("获取medialist数据失败！请刷新页面或者在脚本设置中关闭重构“medialist”选项");
+                throw e;
+            }
+        });
+        API.switchVideo(() => {
+            const data = this.toview.list.find(d => d.aid == API.aid);
+            if (data) {
+                API.tid = data.tid;
+                API.mediaSession({
+                    title: data.pages.find(d => d.cid == API.cid).part || data.title,
+                    artist: data.owner.name,
+                    album: data.title,
+                    artwork: [{
+                            src: data.pic
+                        }]
+                });
+                (Reflect.has(data, "attr") && !!+data.attr.toString(2)[data.attr.toString(2).length - 2] && toast.warning("限制视频，可能无法在播单中直接播放~"));
+            }
+            if (this.has_more) {
+                API.runWhile(() => document.querySelector(".bilibili-player-playlist-item"), () => this.startObserver());
+            }
+        });
+        this.flushDocument();
+        this.onload = () => this.afterFlush();
+    }
+    initPlayerQueryData() {
+        if (this.route.business)
+            switch (this.route.business) {
+                case "space":
+                    this.type = 1;
+                    break;
+                case "space_series":
+                    this.type = 5;
+                    this.pl = this.route.business_id;
+                    break;
+                case "space_channel":
+                    this.type = 6;
+                    this.pl = 10 * this.route.business_id + this.pl % 10;
+                    break;
+                case "space_collection":
+                    this.type = 8;
+                    this.pl = this.route.business_id;
+                    break;
+                default: this.type = 3;
+            }
+    }
+    startObserver() {
+        this.observer.observe(document.querySelector(".bilibili-player-playlist-item").parentElement.parentElement, { attributes: true });
+    }
+    info(obj) {
+        this.toview.attr = obj.data.attr;
+        this.toview.count = obj.data.media_count;
+        this.toview.cover = obj.data.cover;
+        this.toview.ctime = obj.data.ctime;
+        this.toview.description = obj.data.intro;
+        this.toview.favored = obj.data.fav_state;
+        this.toview.favorite = Boolean(obj.data.fav_state);
+        this.toview.id = obj.data.id;
+        this.toview.is_favorite = Boolean(obj.data.fav_state);
+        this.toview.like_count = obj.data.like_state;
+        this.toview.mid = obj.data.mid;
+        this.toview.mlid = obj.data.id;
+        this.toview.mtime = obj.data.ctime;
+        this.toview.name = obj.data.title;
+        this.toview.owner = obj.data.upper;
+        this.toview.pid = obj.data.id;
+        this.toview.stat.favorite = obj.data.cnt_info.collect;
+        this.toview.stat.pid = obj.data.id;
+        this.toview.stat.reply = obj.data.cnt_info.reply;
+        this.toview.stat.share = obj.data.cnt_info.share;
+        this.toview.stat.view = obj.data.cnt_info.play;
+    }
+    list(obj) {
+        obj.data.media_list.reduce((s, d) => {
+            s.push({
+                aid: d.id,
+                attr: d.attr,
+                attribute: 0,
+                cid: d.pages[0].id,
+                copyright: d.copy_right,
+                ctime: d.pubtime,
+                desc: d.intro,
+                dimension: d.pages[0].dimension,
+                duration: d.duration,
+                dynamic: "",
+                owner: d.upper,
+                pages: d.pages.reduce((s, b) => {
+                    s.push({
+                        cid: b.id,
+                        dimension: b.dimension,
+                        duration: b.duration,
+                        from: b.from,
+                        page: b.page,
+                        part: b.title,
+                        vid: "",
+                        weblink: b.link
+                    });
+                    return s;
+                }, []),
+                pic: d.cover,
+                pubdate: d.pubtime,
+                rights: d.rights,
+                stat: {
+                    aid: d.id,
+                    coin: d.cnt_info.coin,
+                    danmaku: d.cnt_info.danmaku,
+                    dislike: d.cnt_info.thumb_down,
+                    favorite: d.cnt_info.collect,
+                    his_rank: 0,
+                    like: d.cnt_info.thumb_up,
+                    now_rank: 0,
+                    reply: d.cnt_info.reply,
+                    share: d.cnt_info.share,
+                    view: d.cnt_info.play
+                },
+                state: 0,
+                tid: d.tid,
+                title: d.title,
+                tname: "",
+                videos: d.page
+            });
+            return s;
+        }, this.toview.list);
+        this.has_more = obj.data.has_more;
+        this.oid = this.toview.list[this.toview.list.length - 1].aid;
+    }
+    afterFlush() {
+        if (this.playlist && !(this.pl == 769)) {
+            history.replaceState(null, null, \`https://www.bilibili.com/playlist/video/pl769\`);
+            toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
+        }
+        API.uid && API.addCss(".bili-header-m .nav-menu .nav-con .i-face { top: 5px; }"); // 顶栏头像居中
+        API.importModule("descBV.js"); // 修复简介中超链接
+        API.importModule("videoSort.js"); // 修正分区信息
+        config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
+    }
+    Observer(record) {
+        record.forEach(d => {
+            this.calcScroll(d.target);
+        });
+    }
+    calcScroll(node) {
+        const maxHeight = node.scrollHeight;
+        const scroll = /\\d+/.exec(node.style.top) ? Number(/\\d+/.exec(node.style.top)) : 0;
+        if (node.className.includes("hidden"))
+            return;
+        if (maxHeight - scroll > 0 && maxHeight - scroll < 600) {
+            this.observer.disconnect(); // 暂停监听
+            toast("loading...");
+            xhr.get(\`https://api.bilibili.com/x/v2/medialist/resource/list?type=\${this.type}&oid=\${this.oid}&otype=2&biz_id=\${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true\`, { responseType: "json" }).then(d => {
+                this.formatMore(d);
+                this.has_more && this.startObserver(); // 重新监听
+            }).catch(e => { toast.error("正在加载...", e); });
+        }
+    }
+    formatMore(obj) {
+        var _a;
+        const result = obj.data.media_list.reduce((s, d) => {
+            s.push({
+                ao: d.rights && d.rights.pay,
+                Sz: d.upper && d.upper.face,
+                Te: d.pages.reduce((s, f) => {
+                    var _a, _b, _c;
+                    s.push({
+                        Da: (_a = d.bangumi) === null || _a === void 0 ? void 0 : _a.ep_id,
+                        Fb: (_c = (_b = d.bangumi) === null || _b === void 0 ? void 0 : _b.season) === null || _c === void 0 ? void 0 : _c.season_id,
+                        aid: d.id,
+                        duration: f.duration,
+                        from: f.from,
+                        j: f.id,
+                        ni: f.title,
+                        page: f.page
+                    });
+                    return s;
+                }, []),
+                Tz: d.upper && d.upper.mid,
+                aid: d.id,
+                duration: d.duration,
+                ko: d.upper && d.upper.name,
+                lb: d.cover,
+                state: 0,
+                title: d.title,
+            });
+            return s;
+        }, []);
+        this.list(obj);
+        this.has_more ? (_a = window.player) === null || _a === void 0 ? void 0 : _a.updatePlaylist(result) : toast.warning("没有更多了！");
+    }
+}
+new Playlist("playlist.html");
+
+//# sourceURL=API://@Bilibili-Old/url/medialist.js`;
+/*!***********************!*/
 /**/modules["player.js"] = /*** ./dist/url/player.js ***/
 `class Player extends API.rewrite {
     constructor(html) {
@@ -11101,10 +11408,6 @@ new Watchlater("watchlater.html");
             },
             {
                 type: "text/javascript",
-                src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js"
-            },
-            {
-                type: "text/javascript",
                 text: \`window.getInternetExplorerVersion=function(){var rv=-1;if(navigator.appName=="Microsoft Internet Explorer"){var ua=navigator.userAgent;var re=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");if(re.exec(ua)!=null){rv=parseFloat(RegExp.\$1)}}return rv};function getQueryString(name){var reg=new RegExp("(^|&)"+name+"=([^&]*)(&|\$)");var r=window.location.search.substr(1).match(reg);if(r!=null){return unescape(r[2])}return null}\`
             },
             {
@@ -11206,7 +11509,6 @@ new Watchlater("watchlater.html");
         });
     }
     afterFlush() {
-        API.runWhile(() => document.getElementsByClassName("bili-header-m report-wrap-module")[1], () => document.getElementsByClassName("bili-header-m report-wrap-module")[1].remove()); // 移除失效顶栏
         window.commentAgent = { seek: (t) => window.player && window.player.seek(t) }; // 修复评论跳转
         API.importModule("hookWebpackJsonp.js"); // 修复原生代码错误
         config.enlike && API.importModule("enLike.js"); // 添加点赞功能
@@ -12917,314 +13219,6 @@ if (typeof window.webkitRTCSessionDescription !== "undefined")
     window.webkitRTCSessionDescription = undefined;
 
 //# sourceURL=API://@Bilibili-Old/url/live/WebRTC.js`;
-/*!***********************!*/
-/**/modules["medialist.js"] = /*** ./dist/url/medialist/medialist.js ***/
-`class Playlist extends API.rewrite {
-    constructor(html) {
-        super(html);
-        this.route = Format.urlObj(location.href);
-        this.type = 3;
-        this.pl = /\\d+/.exec(API.path[5]) && Number(/\\d+/.exec(API.path[5])[0]);
-        this.playlist = Boolean(API.path[5].startsWith("pl"));
-        this.oid = "";
-        this.toview = {
-            "attr": 2,
-            "count": 100,
-            "cover": "https://i0.hdslb.com/bfs/archive/a45ef4fcde397247032cf4ce0c8f71815f9e28d0.jpg",
-            "ctime": 1529021131,
-            "description": "bilibili moe 2018 动画角色人气大赏日本动画场应援视频播单 / 每天不定时更新最新的一批",
-            "faved_count": 0,
-            "favored": 0,
-            "favorite": false,
-            "id": 1826036,
-            "is_favorite": false,
-            "like_count": 0,
-            "list": [],
-            "mid": 26468955,
-            "mlid": 182603655,
-            "mtime": 1533874759,
-            "name": "bilibili moe 2018 日本动画场应援",
-            "owner": {
-                "face": "http://i2.hdslb.com/bfs/face/57389d533621407d36981a99fed93834dd8b20e6.jpg",
-                "mid": 26468955,
-                "name": "萌战基"
-            },
-            "pid": 769,
-            "play_count": 0,
-            "recent_oids": [],
-            "recent_res": [],
-            "reply_count": 0,
-            "share_count": 0,
-            "stat": {
-                "favorite": 1685,
-                "pid": 769,
-                "reply": 10,
-                "share": 0,
-                "view": 298928
-            },
-            "state": 0,
-            "type": 2
-        };
-        this.has_more = false;
-        this.observer = new MutationObserver(d => this.Observer(d));
-        this.initPlayerQueryData();
-        history.replaceState(null, null, \`https://www.bilibili.com/playlist/video/pl\${this.pl}\`);
-        this.script = [
-            {
-                type: "text/javascript",
-                src: "//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//static.hdslb.com/js/jquery.qrcode.min.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//static.hdslb.com/common/js/footer.js"
-            },
-            {
-                type: "text/javascript",
-                charset: "utf-8",
-                src: "//static.hdslb.com/common/js/footer.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//static.hdslb.com/js/swfobject.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//static.hdslb.com/mstation/js/upload/moxie.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//static.hdslb.com/mstation/js/upload/plupload.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//static.hdslb.com/phoenix/dist/js/comment.min.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"
-            },
-            {
-                type: "text/javascript",
-                src: "//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"
-            }
-        ];
-        API.jsonphookasync("toview", undefined, async (url) => {
-            history.replaceState(null, null, API.path.join("/"));
-            try {
-                if (this.playlist || this.pl === 182603655) {
-                    const result = await xhr({
-                        url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
-                        responseType: "json"
-                    });
-                    this.toview = result.data;
-                    return result;
-                }
-                else {
-                    const rqs = await Promise.all([
-                        xhr.get(\`https://api.bilibili.com/x/v1/medialist/info?type=\${this.type}&biz_id=\${this.pl}&tid=0\`, { responseType: "json" }),
-                        xhr.get(\`https://api.bilibili.com/x/v2/medialist/resource/list?type=\${this.type}&oid=\${this.oid}&otype=2&biz_id=\${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true\`, { responseType: "json" })
-                    ]);
-                    this.info(rqs[0]);
-                    this.list(rqs[1]);
-                    return { code: 0, data: this.toview, message: "0", ttl: 1 };
-                }
-            }
-            catch (e) {
-                toast.error("获取medialist数据失败！请刷新页面或者在脚本设置中关闭重构“medialist”选项");
-                throw e;
-            }
-        });
-        API.switchVideo(() => {
-            const data = this.toview.list.find(d => d.aid == API.aid);
-            if (data) {
-                API.tid = data.tid;
-                API.mediaSession({
-                    title: data.pages.find(d => d.cid == API.cid).part || data.title,
-                    artist: data.owner.name,
-                    album: data.title,
-                    artwork: [{
-                            src: data.pic
-                        }]
-                });
-                (Reflect.has(data, "attr") && !!+data.attr.toString(2)[data.attr.toString(2).length - 2] && toast.warning("限制视频，可能无法在播单中直接播放~"));
-            }
-            if (this.has_more) {
-                API.runWhile(() => document.querySelector(".bilibili-player-playlist-item"), () => this.startObserver());
-            }
-        });
-        this.flushDocument();
-        this.onload = () => this.afterFlush();
-    }
-    initPlayerQueryData() {
-        if (this.route.business)
-            switch (this.route.business) {
-                case "space":
-                    this.type = 1;
-                    break;
-                case "space_series":
-                    this.type = 5;
-                    this.pl = this.route.business_id;
-                    break;
-                case "space_channel":
-                    this.type = 6;
-                    this.pl = 10 * this.route.business_id + this.pl % 10;
-                    break;
-                case "space_collection":
-                    this.type = 8;
-                    this.pl = this.route.business_id;
-                    break;
-                default: this.type = 3;
-            }
-    }
-    startObserver() {
-        this.observer.observe(document.querySelector(".bilibili-player-playlist-item").parentElement.parentElement, { attributes: true });
-    }
-    info(obj) {
-        this.toview.attr = obj.data.attr;
-        this.toview.count = obj.data.media_count;
-        this.toview.cover = obj.data.cover;
-        this.toview.ctime = obj.data.ctime;
-        this.toview.description = obj.data.intro;
-        this.toview.favored = obj.data.fav_state;
-        this.toview.favorite = Boolean(obj.data.fav_state);
-        this.toview.id = obj.data.id;
-        this.toview.is_favorite = Boolean(obj.data.fav_state);
-        this.toview.like_count = obj.data.like_state;
-        this.toview.mid = obj.data.mid;
-        this.toview.mlid = obj.data.id;
-        this.toview.mtime = obj.data.ctime;
-        this.toview.name = obj.data.title;
-        this.toview.owner = obj.data.upper;
-        this.toview.pid = obj.data.id;
-        this.toview.stat.favorite = obj.data.cnt_info.collect;
-        this.toview.stat.pid = obj.data.id;
-        this.toview.stat.reply = obj.data.cnt_info.reply;
-        this.toview.stat.share = obj.data.cnt_info.share;
-        this.toview.stat.view = obj.data.cnt_info.play;
-    }
-    list(obj) {
-        obj.data.media_list.reduce((s, d) => {
-            s.push({
-                aid: d.id,
-                attr: d.attr,
-                attribute: 0,
-                cid: d.pages[0].id,
-                copyright: d.copy_right,
-                ctime: d.pubtime,
-                desc: d.intro,
-                dimension: d.pages[0].dimension,
-                duration: d.duration,
-                dynamic: "",
-                owner: d.upper,
-                pages: d.pages.reduce((s, b) => {
-                    s.push({
-                        cid: b.id,
-                        dimension: b.dimension,
-                        duration: b.duration,
-                        from: b.from,
-                        page: b.page,
-                        part: b.title,
-                        vid: "",
-                        weblink: b.link
-                    });
-                    return s;
-                }, []),
-                pic: d.cover,
-                pubdate: d.pubtime,
-                rights: d.rights,
-                stat: {
-                    aid: d.id,
-                    coin: d.cnt_info.coin,
-                    danmaku: d.cnt_info.danmaku,
-                    dislike: d.cnt_info.thumb_down,
-                    favorite: d.cnt_info.collect,
-                    his_rank: 0,
-                    like: d.cnt_info.thumb_up,
-                    now_rank: 0,
-                    reply: d.cnt_info.reply,
-                    share: d.cnt_info.share,
-                    view: d.cnt_info.play
-                },
-                state: 0,
-                tid: d.tid,
-                title: d.title,
-                tname: "",
-                videos: d.page
-            });
-            return s;
-        }, this.toview.list);
-        this.has_more = obj.data.has_more;
-        this.oid = this.toview.list[this.toview.list.length - 1].aid;
-    }
-    afterFlush() {
-        if (this.playlist && !(this.pl == 769)) {
-            history.replaceState(null, null, \`https://www.bilibili.com/playlist/video/pl769\`);
-            toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
-        }
-        API.importModule("descBV.js"); // 修复简介中超链接
-        API.importModule("videoSort.js"); // 修正分区信息
-        config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
-    }
-    Observer(record) {
-        record.forEach(d => {
-            this.calcScroll(d.target);
-        });
-    }
-    calcScroll(node) {
-        const maxHeight = node.scrollHeight;
-        const scroll = /\\d+/.exec(node.style.top) ? Number(/\\d+/.exec(node.style.top)) : 0;
-        if (node.className.includes("hidden"))
-            return;
-        if (maxHeight - scroll > 0 && maxHeight - scroll < 600) {
-            this.observer.disconnect(); // 暂停监听
-            toast("loading...");
-            xhr.get(\`https://api.bilibili.com/x/v2/medialist/resource/list?type=\${this.type}&oid=\${this.oid}&otype=2&biz_id=\${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true\`, { responseType: "json" }).then(d => {
-                this.formatMore(d);
-                this.has_more && this.startObserver(); // 重新监听
-            }).catch(e => { toast.error("正在加载...", e); });
-        }
-    }
-    formatMore(obj) {
-        var _a;
-        const result = obj.data.media_list.reduce((s, d) => {
-            s.push({
-                ao: d.rights && d.rights.pay,
-                Sz: d.upper && d.upper.face,
-                Te: d.pages.reduce((s, f) => {
-                    var _a, _b, _c;
-                    s.push({
-                        Da: (_a = d.bangumi) === null || _a === void 0 ? void 0 : _a.ep_id,
-                        Fb: (_c = (_b = d.bangumi) === null || _b === void 0 ? void 0 : _b.season) === null || _c === void 0 ? void 0 : _c.season_id,
-                        aid: d.id,
-                        duration: f.duration,
-                        from: f.from,
-                        j: f.id,
-                        ni: f.title,
-                        page: f.page
-                    });
-                    return s;
-                }, []),
-                Tz: d.upper && d.upper.mid,
-                aid: d.id,
-                duration: d.duration,
-                ko: d.upper && d.upper.name,
-                lb: d.cover,
-                state: 0,
-                title: d.title,
-            });
-            return s;
-        }, []);
-        this.list(obj);
-        this.has_more ? (_a = window.player) === null || _a === void 0 ? void 0 : _a.updatePlaylist(result) : toast.warning("没有更多了！");
-    }
-}
-new Playlist("playlist.html");
-
-//# sourceURL=API://@Bilibili-Old/url/medialist/medialist.js`;
 /*!***********************!*/
 /**/modules["album.js"] = /*** ./dist/url/space/album.js ***/
 `API.xhrhook("api.bilibili.com/x/dynamic/feed/draw/doc_list", undefined, obj => {

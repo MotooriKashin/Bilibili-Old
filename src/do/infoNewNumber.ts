@@ -8,6 +8,4 @@ API.jsonphook("api.bilibili.com/x/web-interface/online", undefined, obj => {
     obj.data && (obj.data.region_count[165] = obj.data.region_count[202]);
     return obj;
 }, false)
-API.jsonphook("api.bilibili.com/x/web-feed/feed/unread", url => {
-    return url.replace("feed/unread", "article/unread");
-}, undefined, false)
+API.scriptBlock(["/web-feed/", "unread?"]);

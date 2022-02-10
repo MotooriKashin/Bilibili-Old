@@ -18,10 +18,6 @@ class Av extends API.rewrite {
             },
             {
                 type: "text/javascript",
-                src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js"
-            },
-            {
-                type: "text/javascript",
                 text: `window.getInternetExplorerVersion=function(){var rv=-1;if(navigator.appName=="Microsoft Internet Explorer"){var ua=navigator.userAgent;var re=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");if(re.exec(ua)!=null){rv=parseFloat(RegExp.$1)}}return rv};function getQueryString(name){var reg=new RegExp("(^|&)"+name+"=([^&]*)(&|$)");var r=window.location.search.substr(1).match(reg);if(r!=null){return unescape(r[2])}return null}`
             },
             {
@@ -120,7 +116,6 @@ class Av extends API.rewrite {
         })
     }
     afterFlush() {
-        API.runWhile(() => document.getElementsByClassName("bili-header-m report-wrap-module")[1], () => document.getElementsByClassName("bili-header-m report-wrap-module")[1].remove()); // 移除失效顶栏
         window.commentAgent = { seek: (t: number) => window.player && window.player.seek(t) }; // 修复评论跳转
         API.importModule("hookWebpackJsonp.js"); // 修复原生代码错误
         config.enlike && API.importModule("enLike.js"); // 添加点赞功能

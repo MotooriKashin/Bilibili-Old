@@ -70,11 +70,6 @@ class Playlist extends API.rewrite {
             },
             {
                 type: "text/javascript",
-                charset: "utf-8",
-                src: "//static.hdslb.com/common/js/footer.js"
-            },
-            {
-                type: "text/javascript",
                 src: "//static.hdslb.com/js/swfobject.js"
             },
             {
@@ -241,6 +236,7 @@ class Playlist extends API.rewrite {
             history.replaceState(null, null, `https://www.bilibili.com/playlist/video/pl769`);
             toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
         }
+        API.uid && API.addCss(".bili-header-m .nav-menu .nav-con .i-face { top: 5px; }"); // 顶栏头像居中
         API.importModule("descBV.js"); // 修复简介中超链接
         API.importModule("videoSort.js"); // 修正分区信息
         config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
