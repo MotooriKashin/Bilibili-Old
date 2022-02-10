@@ -235,12 +235,12 @@ class Playlist extends API.rewrite {
             this.observer.disconnect(); // 暂停监听
             toast("loading...");
             xhr.get(`https://api.bilibili.com/x/v2/medialist/resource/list?type=${this.type}&oid=${this.oid}&otype=2&biz_id=${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true`, { responseType: "json" }).then(d => {
-                this.fomatMore(d);
+                this.formatMore(d);
                 this.has_more && this.startObserver(); // 重新监听
             }).catch(e => { toast.error("正在加载...", e) })
         }
     }
-    fomatMore(obj: any) {
+    formatMore(obj: any) {
         const result = obj.data.media_list.reduce((s, d) => {
             s.push({
                 ao: d.rights && d.rights.pay,

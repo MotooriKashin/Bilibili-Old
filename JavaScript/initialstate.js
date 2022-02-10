@@ -4,8 +4,8 @@
  * @license MIT
  */
 (function () {
-    const BLOD = window.BLOD; /** @see main  */
-    const toast = BLOD.toast; /** @see debug */
+    const BOLD = window.BOLD; /** @see main  */
+    const toast = BOLD.toast; /** @see debug */
 
     class IniState {
         constructor() {
@@ -154,7 +154,7 @@
                 }
             }
 
-            BLOD.iniState = {
+            BOLD.iniState = {
                 av: (data) => this.av(data),
                 avPlus: (data) => this.avPlus(data),
                 bangumi: (data, epId) => this.bangumi(data, epId),
@@ -169,7 +169,7 @@
          */
         av(data) {
             try {
-                data = BLOD.jsonCheck(data).data;
+                data = BOLD.jsonCheck(data).data;
                 if (!data.View.cid && data.View.forward) {
                     toast.warning("视频撞车了！正在跳转至原视频~");
                     location.href = `https://www.bilibili.com/video/av${data.View.forward}`;
@@ -183,7 +183,7 @@
                 __INITIAL_STATE__.videoData = data.View || {};
                 __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.View.cid + '&aid=' + data.View.aid + '&pre_ad=")'
 
-                if (__INITIAL_STATE__.videoData.staff) BLOD.staff = __INITIAL_STATE__.videoData.staff;
+                if (__INITIAL_STATE__.videoData.staff) BOLD.staff = __INITIAL_STATE__.videoData.staff;
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
         }
@@ -193,16 +193,16 @@
          */
         avPlus(data) {
             try {
-                data = BLOD.jsonCheck(data);
+                data = BOLD.jsonCheck(data);
                 // 处理重定向
                 if (data.v2_app_api && data.v2_app_api.redirect_url) location.href = data.v2_app_api.redirect_url;
                 if (data.bangumi && data.bangumi.ogv_play_url) location.href = data.bangumi.ogv_play_url;
 
                 let __INITIAL_STATE__ = this.__INITIAL_STATE__.av;
-                __INITIAL_STATE__.aid = data.aid || BLOD.aid;
+                __INITIAL_STATE__.aid = data.aid || BOLD.aid;
                 __INITIAL_STATE__.upData.name = data.author;
                 __INITIAL_STATE__.upData.mid = data.mid;
-                __INITIAL_STATE__.videoData.aid = data.aid || BLOD.aid;
+                __INITIAL_STATE__.videoData.aid = data.aid || BOLD.aid;
                 __INITIAL_STATE__.videoData.cid = data.list[0].cid;
                 __INITIAL_STATE__.videoData.ctime = data.created;
                 __INITIAL_STATE__.videoData.pubdate = data.created;
@@ -223,8 +223,8 @@
                 }
                 __INITIAL_STATE__.videoData.embedPlayer = 'EmbedPlayer("player", "//static.hdslb.com/play.swf", "cid=' + data.list[0].cid + '&aid=' + data.aid + '&pre_ad=")';
                 // 禁用部分功能
-                BLOD.config.reset.like = 0;
-                BLOD.avPlus = true;
+                BOLD.config.reset.like = 0;
+                BOLD.avPlus = true;
 
                 return __INITIAL_STATE__;
             } catch (e) { e = Array.isArray(e) ? e : [e]; toast.error("__INITIAL_STATE__", ...e); }
@@ -237,11 +237,11 @@
         bangumi(data, epId) {
             // https://bangumi.bilibili.com/view/web_api/season
             epId = 1 * epId || null;
-            data = BLOD.jsonCheck(data).result;
+            data = BOLD.jsonCheck(data).result;
             let ids = [];
             data.episodes.forEach(d => {
                 ids.push(d.ep_id);
-                if (d.badge == "会员" || d.badge_type) BLOD.ids.push(d.cid)
+                if (d.badge == "会员" || d.badge_type) BOLD.ids.push(d.cid)
             });
 
             let __INITIAL_STATE__ = this.__INITIAL_STATE__.bangumi;
@@ -293,7 +293,7 @@
         thaiBangumi(data, epId) {
             // https://api.global.bilibili.com/view/web_api/season
             epId = 1 * epId || null;
-            data = BLOD.jsonCheck(data).result;
+            data = BOLD.jsonCheck(data).result;
             let ids = [], epList = [];
             data.modules.forEach(d => {
                 d.data.episodes.forEach(d => {
@@ -353,7 +353,7 @@
                 let __INITIAL_STATE__ = this.__INITIAL_STATE__.index;
                 data.recommendData && data.recommendData.item.forEach(i => {
                     __INITIAL_STATE__.recommendData.push({
-                        aid: BLOD.abv(i.bvid),
+                        aid: BOLD.abv(i.bvid),
                         typename: "",
                         title: i.title,
                         subtitle: "",
@@ -388,7 +388,7 @@
                 if (d.response.item) {
                     d.response.item.forEach(d => {
                         result.recommendData.push({
-                            aid: BLOD.abv(d.bvid),
+                            aid: BOLD.abv(d.bvid),
                             typename: "",
                             title: d.title,
                             subtitle: "",
@@ -412,7 +412,7 @@
                 if (d.response[34])
                     result.locsData[34] = d.response[34]; // 推广
             });
-            if (BLOD.config.reset.adloc) {
+            if (BOLD.config.reset.adloc) {
                 for (let key in result.locsData) {
                     if (Array.isArray(result.locsData[key])) {
                         result.locsData[key] = result.locsData[key].filter(d => {

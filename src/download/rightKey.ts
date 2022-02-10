@@ -7,7 +7,7 @@ interface modules {
 API.switchVideo(() => {
     try {
         const li = document.createElement("li");
-        li.innerHTML = '<a id="BLOD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
+        li.innerHTML = '<a id="BOLD-dl-content" class="context-menu-a js-action" href="javascript:void(0);">下载视频</a>';
         li.setAttribute("class", "context-line context-menu-function bili-old-download");
         li.onmouseover = () => li.setAttribute("class", "context-line context-menu-function bili-old-download hover");
         li.onmouseout = () => li.setAttribute("class", "context-line context-menu-function bili-old-download");
@@ -18,7 +18,7 @@ API.switchVideo(() => {
                 const node = document.querySelector(".bilibili-player-context-menu-container.black");
                 node && (flag = setTimeout(() => {
                     if (node.querySelector(".context-menu-danmaku")) return;
-                    if (node.querySelector("#BLOD-dl-content")) return;
+                    if (node.querySelector("#BOLD-dl-content")) return;
                     if (node.contains(li)) return;
                     node.firstChild.appendChild(li);
                 }, 100));
