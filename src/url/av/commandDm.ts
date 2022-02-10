@@ -7,10 +7,10 @@ interface modules {
 }
 {
     API.addCss(API.getModule("commandDm.css"));
-    var player: any, widgetContainer: any;
-    var playing = false;
-    var visible = true;
-    var commandDm = {
+    let player: any, widgetContainer: any;
+    let playing = false;
+    let visible = true;
+    let commandDm = {
         visible: [], // 可见的互动弹幕
         hidden: []   // 未显示的互动弹幕
     };
@@ -573,7 +573,7 @@ interface modules {
                 aid: API.aid
             }, "application/json; charset=utf-8").then((resp: any) => {
                 biliAPI.verify(resp, "三连");
-                var d = resp.data;
+                let d = resp.data;
                 if (d.coin && d.like && d.fav) return;
                 if (!d.coin) toast.error("投币失败");
                 if (!d.like) toast.error("点赞失败");

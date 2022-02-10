@@ -8,9 +8,13 @@ interface modules {
 }
 interface config {
     /**
- * 开发者模式
- */
+     * 开发者模式
+     */
     developer: boolean;
+    /**
+     * 托管原生脚本
+     */
+    trusteeship: boolean;
     /**
      * 重构：av/BV
      */
@@ -286,6 +290,16 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         action: (value) => {
             value ? (!(<any>window).API && ((<any>window).API = API)) : ((<any>window).API && delete (<any>window).API)
         }
+    })
+    API.registerSetting({
+        key: "trusteeship",
+        sort: "common",
+        label: "托管原生脚本",
+        svg: '<svg viewBox="0 0 24 24"><g><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></g></svg>',
+        type: "switch",
+        value: true,
+        float: "脚本修改了部分B站原生脚本以解决常规手段无法解决的问题，但由于托管CDN没有国内节点等原因可能访问不畅，如果出现页面其他情况都正常唯独播放器加载不出来的情况可以尝试开启。<strong>关闭本选项将导致部分功能不可用，如非必要请勿关闭！</strong>",
+        sub: "代为修复和维护"
     })
     config.developer && ((<any>window).API = API);
     API.registerSetting({

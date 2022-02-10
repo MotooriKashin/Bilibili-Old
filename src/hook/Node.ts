@@ -19,14 +19,14 @@ interface modules {
             const one = Array.isArray(url) ? url : [url];
             const two = function (this: HTMLScriptElement) {
                 once && id && NodeHook.jsonp.splice(id - 1, 1);
-                if (redirect) try { this.src = redirect(this.src) } catch (e) { debug.error("redirect of jsonphook", one, e) }
+                if (redirect) try { this.src = redirect(this.src) || this.src } catch (e) { debug.error("redirect of jsonphook", one, e) }
                 if (modifyResponse) {
                     const obj = Format.urlObj(this.src);
                     const callback = obj.callback;
                     const call = window[callback];
                     if (call) {
                         window[callback] = function (v: any) {
-                            try { v = modifyResponse(v); } catch (e) { debug.error("modifyResponse of jsonphook", one, e) }
+                            try { v = modifyResponse(v) || v } catch (e) { debug.error("modifyResponse of jsonphook", one, e) }
                             return call(v);
                         }
                     }

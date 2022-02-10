@@ -8,6 +8,8 @@ interface modules {
 class Playlist extends API.rewrite {
     type = Number(API.path[5].split("?")[0]) ? 1 : 3;
     pl = /\d+/.exec(API.path[5]) && Number(/\d+/.exec(API.path[5])[0]);
+    playlist = Boolean(API.path[5].startsWith("pl"));
+    oid = "";
     toview = {
         "attr": 2,
         "count": 100,
@@ -46,6 +48,8 @@ class Playlist extends API.rewrite {
         "state": 0,
         "type": 2
     };
+    has_more = false;
+    observer = new MutationObserver(d => this.Observer(d));
     constructor(html: keyof modules) {
         super(html);
         history.replaceState(null, null, `https://www.bilibili.com/playlist/video/pl${this.pl}`);
@@ -95,15 +99,17 @@ class Playlist extends API.rewrite {
         API.jsonphookasync("toview", undefined, async url => {
             history.replaceState(null, null, API.path.join("/"));
             try {
-                if (this.pl === 769 || this.pl === 182603655) {
-                    return await xhr({
+                if (this.playlist || this.pl === 182603655) {
+                    const result = await xhr({
                         url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
                         responseType: "json"
                     });
+                    this.toview = result.data;
+                    return result;
                 } else {
                     const rqs = await Promise.all([
                         xhr.get(`https://api.bilibili.com/x/v1/medialist/info?type=${this.type}&biz_id=${this.pl}&tid=0`, { responseType: "json" }),
-                        xhr.get(`https://api.bilibili.com/x/v2/medialist/resource/list?type=${this.type}&oid=&otype=2&biz_id=${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true`, { responseType: "json" })
+                        xhr.get(`https://api.bilibili.com/x/v2/medialist/resource/list?type=${this.type}&oid=${this.oid}&otype=2&biz_id=${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true`, { responseType: "json" })
                     ]);
                     this.info(rqs[0]);
                     this.list(rqs[1]);
@@ -114,7 +120,25 @@ class Playlist extends API.rewrite {
                 throw e;
             }
         })
+        API.switchVideo(() => {
+            const data = this.toview.list.find(d => d.aid == API.aid);
+            data && API.mediaSession({
+                title: data.pages.find(d => d.cid == API.cid).part || data.title,
+                artist: data.owner.name,
+                album: data.title,
+                artwork: [{
+                    src: data.pic
+                }]
+            })
+            if (this.has_more) {
+                API.runWhile(() => document.querySelector(".bilibili-player-playlist-item"), () => this.startObserver());
+            }
+        })
         this.flushDocument();
+        this.onload = () => this.afterFlush();
+    }
+    startObserver() {
+        this.observer.observe(document.querySelector(".bilibili-player-playlist-item").parentElement.parentElement, { attributes: true });
     }
     info(obj: Record<string, any>) {
         this.toview.attr = obj.data.attr;
@@ -189,6 +213,64 @@ class Playlist extends API.rewrite {
             });
             return s;
         }, this.toview.list);
+        this.has_more = obj.data.has_more;
+        this.oid = this.toview.list[this.toview.list.length - 1].aid;
+    }
+    afterFlush() {
+        if (this.playlist && !(this.pl == 769)) {
+            history.replaceState(null, null, `https://www.bilibili.com/playlist/video/pl769`);
+            toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
+        }
+    }
+    Observer(record: MutationRecord[]) {
+        record.forEach(d => {
+            this.calcScroll(<HTMLDivElement>d.target)
+        })
+    }
+    calcScroll(node: HTMLDivElement) {
+        const maxHeight = node.scrollHeight;
+        const scroll = /\d+/.exec(node.style.top) ? Number(/\d+/.exec(node.style.top)) : 0;
+        if (node.className.includes("hidden")) return;
+        if (maxHeight - scroll > 0 && maxHeight - scroll < 600) {
+            this.observer.disconnect(); // 暂停监听
+            toast("loading...");
+            xhr.get(`https://api.bilibili.com/x/v2/medialist/resource/list?type=${this.type}&oid=${this.oid}&otype=2&biz_id=${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true`, { responseType: "json" }).then(d => {
+                this.fomatMore(d);
+                this.has_more && this.startObserver(); // 重新监听
+            }).catch(e => { toast.error("正在加载...", e) })
+        }
+    }
+    fomatMore(obj: any) {
+        const result = obj.data.media_list.reduce((s, d) => {
+            s.push({
+                ao: d.rights && d.rights.pay,
+                Sz: d.upper && d.upper.face,
+                Te: d.pages.reduce((s, f) => {
+                    s.push({
+                        Da: d.bangumi?.ep_id,
+                        Fb: d.bangumi?.season?.season_id,
+                        aid: d.id,
+                        duration: f.duration,
+                        from: f.from,
+                        j: f.id,
+                        ni: f.title,
+                        page: f.page
+                    })
+                    return s;
+                }, []),
+                Tz: d.upper && d.upper.mid,
+                aid: d.id,
+                duration: d.duration,
+                ko: d.upper && d.upper.name,
+                lb: d.cover,
+                state: 0,
+                title: d.title,
+            })
+            return s;
+        }, []);
+        this.has_more = obj.data.has_more;
+        this.oid = result[result.length - 1].aid;
+        this.has_more ? window.player?.updatePlaylist(result) : toast.warning("没有更多了！");
     }
 }
 new Playlist("playlist.html");

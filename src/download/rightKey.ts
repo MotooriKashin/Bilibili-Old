@@ -16,12 +16,12 @@ API.switchVideo(() => {
         document.querySelector("#bilibiliPlayer")?.addEventListener("DOMNodeInserted", e => {
             if (!flag && (<HTMLElement>e.target).className && /context-line context-menu-function/.test((<HTMLElement>e.target).className)) {
                 const node = document.querySelector(".bilibili-player-context-menu-container.black");
-                flag = setTimeout(() => {
+                node && (flag = setTimeout(() => {
                     if (node.querySelector(".context-menu-danmaku")) return;
                     if (node.querySelector("#BLOD-dl-content")) return;
                     if (node.contains(li)) return;
                     node.firstChild.appendChild(li);
-                }, 100);
+                }, 100));
             }
         })
         document.querySelector("#bilibiliPlayer")?.addEventListener("DOMNodeRemoved", e => {

@@ -19236,7 +19236,8 @@ function Fa() {
                 this.prefix = this.c.prefix;
                 this.m = this.prefix + "-playlist";
                 this.na = this.c.template.Zz;
-                this.o()
+                this.o();
+                window.player.updatePlaylist = (...arg) => this.updatePlaylist(...arg)
             }
             e.Lf = function (b) {
                 return this.Ik(b)
@@ -19649,6 +19650,21 @@ function Fa() {
                 for (var b = 0; b < this.R.length; b++) this.Sq(this.R[b], b + 1);
                 this.w.ra.append(this.w.Bl);
                 this.na.append(this.w.ra)
+            };
+            /**
+             * 追加播单数据
+             * @param {{}[]} arr 构造好的播单数据
+             */
+            e.prototype.updatePlaylist = function (arr) {
+                try {
+                    const n = this.R.length;
+                    arr.forEach((d, i) => {
+                        this.R.push(d); // 追加
+                        d.Te.forEach(f => { this.F.push(f) })
+                        this.Sq(d, n + i + 1); // 创建
+                    });
+                    this.Gi();
+                } catch (e) { }
             };
             /**
              * 创建播单项
@@ -35267,6 +35283,7 @@ function Fa() {
         }
     },
     function (m, t) {
+        // 重构播单表
         t.a = function (e) {
             try {
                 var g = JSON.parse(decodeURIComponent(e));

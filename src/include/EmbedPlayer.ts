@@ -402,7 +402,7 @@ API.EmbedPlayer = () => {
         window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
     }
 }
-API.scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
+config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
     return GM.getResourceText("bilibiliPlayer.js");
 })
 interface Window {
@@ -430,6 +430,7 @@ interface Window {
         next: () => void;
         addEventListener: (type: string, listener: any) => void;
         removeEventListener: (type: string) => void;
+        updatePlaylist?: (arr: []) => void;
     }
     EmbedPlayer: (player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) => void;
     bilibiliPlayer: new (playerParam: Record<string, string>) => Window["player"];

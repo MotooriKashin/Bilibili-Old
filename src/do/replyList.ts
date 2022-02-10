@@ -9,7 +9,7 @@ interface modules {
 {
     let tag = true;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
-    API.scriptIntercept("comment.min.js", undefined, url => {
+    config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         return GM.getResourceText(script);
     })
     API.jsonphook("api.bilibili.com/x/v2/reply?", url => {
