@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.0
+// @version      7.0.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3587,6 +3587,7 @@ option {
     API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效咨询数据
     config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     API.importModule("playinfo.js"); // 视频源修复及记录
+    API.importModule("player-v2.js"); // 视频信息接口
     API.importModule("automate.js"); // 自动化处理
     config.videoLimit && API.importModule("videoLimit.js"); // 解锁视频限制
     API.importModule("banner.js"); // 移植动态顶栏banner
