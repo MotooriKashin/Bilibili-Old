@@ -12,18 +12,6 @@ class Rewrite {
      */
     script: { type?: string; src?: string; text?: string; defer?: string; crossorigin?: string; charset?: string; }[] = [];
     /**
-     * 是否已重写完页面
-     */
-    get load() {
-        return document.readyState === "complete";
-    }
-    /**
-     * 页面重写状态标记
-     */
-    get readyState() {
-        return document.readyState;
-    }
-    /**
      * 重写页面前需要清理的全局变量污染
      */
     dush = [
@@ -35,6 +23,12 @@ class Rewrite {
         "_babelPolyfill",
         "BilibiliPlayer",
         "BiliJsBridge",
+        "LazyLoad",
+        "lazyload",
+        "regeneratorRuntime",
+        "ownKeys",
+        "asyncGeneratorStep",
+        "Bjax",
         "BPlayer",
         "BwpElement",
         "BwpMediaSource",
@@ -90,6 +84,28 @@ class Rewrite {
         "videoWidgetsJsonP",
         "webAbTest",
         "webpackJsonp",
+        "__getClientLogo",
+        "_arrayLikeToArray",
+        "_arrayWithHoles",
+        "_arrayWithoutHoles",
+        "_asyncToGenerator2",
+        "_classCallCheck",
+        "_createClass",
+        "_createForOfIteratorHelper",
+        "_defineProperties",
+        "_defineProperty",
+        "_iterableToArray",
+        "_iterableToArrayLimit",
+        "_nonIterableRest",
+        "_nonIterableSpread",
+        "_objectSpread",
+        "_slicedToArray",
+        "_toConsumableArray",
+        "_typeof",
+        "_unsupportedIterableToArray",
+        "el",
+        "BiliCm",
+        "BiliHeader",
         "webpackJsonpwebpackLogReporter",
         "webpackLogReporter",
         "core",
@@ -133,7 +149,6 @@ class Rewrite {
      */
     loadendCallback: (() => void)[] = [];
     title = document.title;
-    html: keyof modules;
     /**
      * 添加重写完页面执行的回调函数
      */
@@ -148,12 +163,15 @@ class Rewrite {
      * 3. 部分页面需要构造`__INITIAL_STATE__`数据，请在重构页面(`flushDocument`)前准备好并写入window变量下。  
      * 5. 需要页面重构完再执行的回调函数请复制给`onload`属性，可以添加多个，不会相互覆盖，且异步并行回调。  
      * 6. 重写页面要异步等待外源脚本加载完，完成后推送`load``DOMContentLoaded`等标准事件。
-     * @param 旧版网页框架名
+     * @param 旧版网页框架名，**请移除其中的script标签**
      */
     constructor(html: keyof modules) {
-        window.stop();
-        this.html = html;
-        this.clearDocument();
+        document.close(); // 关闭文档流
+        document.body?.remove();
+        document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
+        document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
+        (!this.title.includes("出错")) && (document.title = this.title);
+        this.clearWindow();
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -173,27 +191,15 @@ class Rewrite {
         }
     }
     /**
-     * 阻止页面加载并清洗页面
+     * 清洗页面全局变量
      */
-    clearDocument() {
-        document.body && (document.body.innerHTML = "");
+    clearWindow() {
         this.dush.forEach(d => {
             try {
-                Reflect.deleteProperty(window, d)
+                window[d] = undefined;
             } catch (e) { debug.error(`无法删除变量${d}~`) }
         });
-        this.prepareDocument();
         API.EmbedPlayer();
-    }
-    /**
-     * 获取旧版页面并格式化
-     */
-    prepareDocument() {
-        this.Dom = new DOMParser().parseFromString(API.getModule(this.html), 'text/html');
-        document.head.replaceWith(this.Dom.querySelector("head"));
-        document.body = this.Dom.querySelector("body"); // body标签居然可以直接赋值？！
-        delete this.Dom;
-        document.title = this.title;
     }
     /**
      * 刷新页面  
@@ -239,7 +245,6 @@ class Rewrite {
      * 重写完信息通知
      */
     loadenEvent() {
-        Reflect.defineProperty(document, "readyState", { value: "complete", writable: false });
         this.loadendCallback.forEach(async d => d());
         document.dispatchEvent(new ProgressEvent("readystatechange"));
         document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));

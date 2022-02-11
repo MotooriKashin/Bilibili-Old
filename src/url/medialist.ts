@@ -236,7 +236,9 @@ class Playlist extends API.rewrite {
             history.replaceState(null, null, `https://www.bilibili.com/playlist/video/pl769`);
             toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
         }
-        API.uid && API.addCss(".bili-header-m .nav-menu .nav-con .i-face { top: 5px; }"); // 顶栏头像居中
+        if (document.compatMode === "BackCompat") { // 怪异模式下样式修复
+            API.addCss(".bili-header-m .nav-menu .profile-info .i-face { top:5px; }")
+        }
         API.importModule("descBV.js"); // 修复简介中超链接
         API.importModule("videoSort.js"); // 修正分区信息
         config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
