@@ -2192,7 +2192,7 @@ option {
       }
     }
   </style>
-  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
+  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" />
   <link rel="stylesheet"
     href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />
 </head>
@@ -2222,7 +2222,7 @@ option {
   <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />
   <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"
     title="哔哩哔哩" />
-  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
+  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" />
   <link rel="stylesheet"
     href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />
 </head>
@@ -2365,7 +2365,7 @@ option {
     <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />
     <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />
     <meta name="spm_prefix" content="333.44" />
-    <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
+    <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" />
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="renderer" content="webkit" />
@@ -2442,7 +2442,7 @@ option {
     <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"
         href="//static.hdslb.com/mobile/img/512.png" />
     <title>哔哩哔哩专栏</title>
-    <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
+    <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" />
     <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"
         rel="stylesheet" />
 </head>
@@ -2469,9 +2469,9 @@ option {
   <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />
   <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"
     title="哔哩哔哩" />
-  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
-  <link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css" />
-  <link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css" />
+  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" />
+  <link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" />
+  <link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" />
   <link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css"
     rel="stylesheet" />
   <style>
@@ -3750,9 +3750,9 @@ new Accesskey();
             });
         }
     });
-    API.runWhile(() => document.querySelector("#bili-header-m"), () => {
+    API.runWhile(() => document.querySelector(".bili-header-m"), () => {
         try {
-            let node = document.querySelector("#bili-header-m").getElementsByClassName('nav-name');
+            let node = document.querySelector(".bili-header-m").getElementsByClassName('nav-name');
             if (node[0]) {
                 for (let i = 0; i < node.length; i++) {
                     if (node[i].textContent == "科技") {
@@ -4909,6 +4909,9 @@ const localMedia = LocalMedia;
     let tag = true;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
+        setTimeout(() => {
+            !Array.from(document.styleSheets).some(d => d.href.includes("comment.min.css")) && API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+        });
         return GM.getResourceText(script);
     });
     API.jsonphook("api.bilibili.com/x/v2/reply?", url => {
@@ -4916,7 +4919,6 @@ const localMedia = LocalMedia;
         url.includes("mobi_app") && (url += "&mobi_app=android");
         return url;
     }, undefined, false);
-    API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css", type: "text/css" }, document.head);
 }
 
 //# sourceURL=API://@Bilibili-Old/do/replyList.js`;
