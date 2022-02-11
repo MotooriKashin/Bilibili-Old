@@ -2192,6 +2192,7 @@ option {
       }
     }
   </style>
+  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
   <link rel="stylesheet"
     href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />
 </head>
@@ -2202,7 +2203,6 @@ option {
   <div id="app" data-server-rendered="true"></div>
   <div class="bili-wrapper" id="bofqi"></div>
   <div class="footer bili-footer report-wrap-module"></div>
-  <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
 </body>
 
 </html>`;
@@ -2442,6 +2442,7 @@ option {
     <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"
         href="//static.hdslb.com/mobile/img/512.png" />
     <title>哔哩哔哩专栏</title>
+    <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />
     <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"
         rel="stylesheet" />
 </head>
@@ -2450,7 +2451,6 @@ option {
     <div class="z-top-container report-wrap-module"></div>
     <div class="page-container"></div>
     <div class="footer bili-footer report-wrap-module" id="home_footer"></div>
-    <link rel="stylesheet" type="text/css" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" />
 </body>
 
 </html>`;
