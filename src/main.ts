@@ -64,7 +64,7 @@ interface modules {
         }
         static modifyConfig(obj: any) {
             try {
-                obj.value && !config[obj.key] && (config[obj.key] = obj.value);
+                obj.value && !Reflect.has(config, obj.key) && (config[obj.key] = obj.value);
                 obj.type == "sort" && obj.list && obj.list.forEach((d: any) => { this.modifyConfig(d) });
             } catch (e) {
                 debug.warn(`UI设置项注册错误！`, obj);
