@@ -38,9 +38,8 @@ type XMLHttpRequestResponses = {
                     try {
                         if (this.readyState === 4) {
                             const response: XMLHttpRequestResponses = { response: this.response, responseType: this.responseType };
-                            this.responseType
-                            this.responseText && (response.responseText = this.responseText);
-                            this.responseXML && (response.responseXML = this.responseXML);
+                            (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
+                            (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
                             modifyResponse(response);
                             Object.defineProperty(this, "response", { configurable: true, value: response.response });
                             response.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
@@ -52,7 +51,7 @@ type XMLHttpRequestResponses = {
         }
         return id = rules.push([one, two]);
     }
-    function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams) => Promise<XMLHttpRequestResponses>, once = true) {
+    function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once = true) {
         let id: number;
         const one = Array.isArray(url) ? url : [url];
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
@@ -65,7 +64,7 @@ type XMLHttpRequestResponses = {
                     Object.defineProperty(this, "status", { configurable: true, value: 200 });
                     Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
                     this.dispatchEvent(new ProgressEvent("readystatechange"));
-                    modifyResponse && modifyResponse(args).then(d => {
+                    modifyResponse && modifyResponse(args, this.responseType).then(d => {
                         clearInterval(et);
                         if (d) {
                             Object.defineProperty(this, "response", { configurable: true, value: d.response });
@@ -89,7 +88,7 @@ type XMLHttpRequestResponses = {
         return id = rules.push([one, two]);
     }
     API.xhrhook = (url: string | string[], modifyOpen?: (args: XMLHttpRequestOpenParams) => void, modifyResponse?: (response: XMLHttpRequestResponses) => void, once?: boolean) => xhrhook(url, modifyOpen, modifyResponse, once);
-    API.xhrhookasync = (url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams) => Promise<XMLHttpRequestResponses>, once?: boolean) => xhrhookasync(url, condition, modifyResponse, once);
+    API.xhrhookasync = (url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once?: boolean) => xhrhookasync(url, condition, modifyResponse, once);
 }
 declare namespace API {
     /**
@@ -106,10 +105,10 @@ declare namespace API {
      * 注意部分xhr请求可能有额外的超时判定，所以`modifyResponse`修改未必会生效。
      * @param url 需要拦截的xhr的url匹配关键词或词组，词组间是并的关系，即必须同时满足才会触发拦截回调。
      * @param condition 二次判定**同步**回调函数，不提供或者返回真值时开始拦截，可以通过url等精确判定是否真要拦截。
-     * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，**注意每种返回值的格式！**
+     * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，第二个参数为responseType类型，你可以据此确定需要哪些返回值，**注意每种返回值的格式！**
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递`false`，然后自行在不再需要拦截后使用`removeXhrhook`注销。
      */
-    export function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams) => Promise<XMLHttpRequestResponses>, once?: boolean): number;
+    export function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once?: boolean): number;
     /**
      * 注销xhrhook以节约开销，只在注册时设置了`once=force`时才需要使用本方法！ 
      * @param id `xhrhook`注册时的返回值，一个id只允许使用一次！

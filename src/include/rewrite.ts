@@ -166,8 +166,7 @@ class Rewrite {
      * @param 旧版网页框架名，**请移除其中的script标签**
      */
     constructor(html: keyof modules) {
-        document.close(); // 关闭文档流
-        document.body?.remove();
+        window.stop();
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
@@ -196,8 +195,8 @@ class Rewrite {
     clearWindow() {
         this.dush.forEach(d => {
             try {
-                window[d] = undefined;
-            } catch (e) { debug.error(`无法删除变量${d}~`) }
+                Reflect.deleteProperty(window, d);
+            } catch (e) { }
         });
         API.EmbedPlayer();
     }

@@ -15,7 +15,7 @@ API.xhrhook("/playurl?", args => {
     args[1].includes("pgc") && (API.pgc = true);
 }, async obj => {
     try {
-        API.__playinfo__ = typeof obj.response == "object" ? obj.response : API.jsonCheck(obj.response);
+        API.__playinfo__ = obj.responseType === "json" ? obj.response : API.jsonCheck(obj.response);
     } catch (e) { }
 }, false)
 declare namespace API {

@@ -73,7 +73,7 @@ class Av extends API.rewrite {
             }).catch(e => {
                 toast.error(`获取av号信息失败，尝试访问第三方接口~`, e);
                 xhr({
-                    url: Format.objUrl("https://www.biliplus.com/api/view", { id: API.aid, update: 1 }),
+                    url: Format.objUrl("https://www.biliplus.com/api/view", { id: API.aid }),
                     responseType: "json"
                 }).then(d => {
                     this.__INITIAL_STATE__ = new API.initialStateOfAv(d).plus();

@@ -40,7 +40,7 @@ interface modules {
     }, false);
     API.xhrhookasync("/playurl?", args => {
         return API.limit || (API.pgc && (<any>API).__INITIAL_STATE__?.rightsInfo?.watch_platform);
-    }, async args => {
+    }, async (args, type) => {
         let response: any;
         let obj = Format.urlObj(args[1]);
         const hookTimeout = new HookTimeOut();
@@ -98,7 +98,7 @@ interface modules {
             }
         }
         hookTimeout.relese();
-        return {
+        return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)
         }
