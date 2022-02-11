@@ -1,6 +1,6 @@
 interface modules {
     /**
-     * 移除旧版顶栏失效咨询数据
+     * 移除旧版顶栏失效资讯数据
      */
     readonly "infoNewNumber.js": string;
 }

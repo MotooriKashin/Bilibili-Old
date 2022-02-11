@@ -40,9 +40,9 @@ interface modules {
             })
         }
     })
-    API.runWhile(() => document.querySelector("#bili-header-m"), () => {
+    API.runWhile(() => document.querySelector(".bili-header-m"), () => {
         try {
-            let node = <HTMLCollectionOf<HTMLDivElement>>(<HTMLDivElement>document.querySelector("#bili-header-m")).getElementsByClassName('nav-name');
+            let node = <HTMLCollectionOf<HTMLDivElement>>(<HTMLDivElement>document.querySelector(".bili-header-m")).getElementsByClassName('nav-name');
             if (node[0]) {
                 for (let i = 0; i < node.length; i++) {
                     if (node[i].textContent == "科技") {
