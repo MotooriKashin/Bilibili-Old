@@ -3273,7 +3273,7 @@ option {
         }
         static modifyConfig(obj) {
             try {
-                obj.value && !config[obj.key] && (config[obj.key] = obj.value);
+                obj.value && !Reflect.has(config, obj.key) && (config[obj.key] = obj.value);
                 obj.type == "sort" && obj.list && obj.list.forEach((d) => { this.modifyConfig(d); });
             }
             catch (e) {
@@ -4691,17 +4691,11 @@ const localMedia = LocalMedia;
 /*!***********************!*/
 /**/modules["logReport.js"] = /*** ./dist/do/logReport.js ***/
 `{
-    Object.defineProperty(window, "reportObserver", {
-        get: () => {
-            return {
-                forceCommit: () => true,
-                reportCustomData: () => true
-            };
-        }
-    });
-    Object.defineProperty(window, "reportMsgObj", { get: () => [], set: v => true });
+    Object.defineProperty(window, "reportObserver", { get: () => undefined, set: v => true });
+    Object.defineProperty(window, "reportMsgObj", { get: () => undefined, set: v => true });
     API.xhrhookasync("data.bilibili.com", undefined, undefined, false);
     API.xhrhookasync("data.bilivideo.com", undefined, undefined, false);
+    API.scriptBlock("log-reporter.js");
 }
 
 //# sourceURL=API://@Bilibili-Old/do/logReport.js`;
@@ -4871,7 +4865,7 @@ const localMedia = LocalMedia;
     args[1].includes("pgc") && (API.pgc = true);
 }, async (obj) => {
     try {
-        API.__playinfo__ = typeof obj.response == "object" ? obj.response : API.jsonCheck(obj.response);
+        API.__playinfo__ = obj.responseType === "json" ? obj.response : API.jsonCheck(obj.response);
     }
     catch (e) { }
 }, false);
@@ -5254,7 +5248,7 @@ API.segProgress = SegProgress;
     API.xhrhookasync("/playurl?", args => {
         var _a, _b;
         return API.limit || (API.pgc && ((_b = (_a = API.__INITIAL_STATE__) === null || _a === void 0 ? void 0 : _a.rightsInfo) === null || _b === void 0 ? void 0 : _b.watch_platform));
-    }, async (args) => {
+    }, async (args, type) => {
         var _a, _b, _c, _d, _e, _f;
         let response;
         let obj = Format.urlObj(args[1]);
@@ -5316,7 +5310,7 @@ API.segProgress = SegProgress;
             }
         }
         hookTimeout.relese();
-        return {
+        return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)
         };
@@ -6160,9 +6154,8 @@ API.ef2 = new Ef2();
                         try {
                             if (this.readyState === 4) {
                                 const response = { response: this.response, responseType: this.responseType };
-                                this.responseType;
-                                this.responseText && (response.responseText = this.responseText);
-                                this.responseXML && (response.responseXML = this.responseXML);
+                                (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
+                                (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
                                 modifyResponse(response);
                                 Object.defineProperty(this, "response", { configurable: true, value: response.response });
                                 response.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
@@ -6193,7 +6186,7 @@ API.ef2 = new Ef2();
                     Object.defineProperty(this, "status", { configurable: true, value: 200 });
                     Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
                     this.dispatchEvent(new ProgressEvent("readystatechange"));
-                    modifyResponse && modifyResponse(args).then(d => {
+                    modifyResponse && modifyResponse(args, this.responseType).then(d => {
                         clearInterval(et);
                         if (d) {
                             Object.defineProperty(this, "response", { configurable: true, value: d.response });
@@ -8132,7 +8125,7 @@ API.rebuildPlayerurl = RebuildPlayerurl;
      * 3. 部分页面需要构造\`__INITIAL_STATE__\`数据，请在重构页面(\`flushDocument\`)前准备好并写入window变量下。
      * 5. 需要页面重构完再执行的回调函数请复制给\`onload\`属性，可以添加多个，不会相互覆盖，且异步并行回调。
      * 6. 重写页面要异步等待外源脚本加载完，完成后推送\`load\`\`DOMContentLoaded\`等标准事件。
-     * @param 旧版网页框架名
+     * @param 旧版网页框架名，**请移除其中的script标签**
      */
     constructor(html) {
         this.url = new URL(location.href);
@@ -8153,6 +8146,12 @@ API.rebuildPlayerurl = RebuildPlayerurl;
             "_babelPolyfill",
             "BilibiliPlayer",
             "BiliJsBridge",
+            "LazyLoad",
+            "lazyload",
+            "regeneratorRuntime",
+            "ownKeys",
+            "asyncGeneratorStep",
+            "Bjax",
             "BPlayer",
             "BwpElement",
             "BwpMediaSource",
@@ -8208,6 +8207,28 @@ API.rebuildPlayerurl = RebuildPlayerurl;
             "videoWidgetsJsonP",
             "webAbTest",
             "webpackJsonp",
+            "__getClientLogo",
+            "_arrayLikeToArray",
+            "_arrayWithHoles",
+            "_arrayWithoutHoles",
+            "_asyncToGenerator2",
+            "_classCallCheck",
+            "_createClass",
+            "_createForOfIteratorHelper",
+            "_defineProperties",
+            "_defineProperty",
+            "_iterableToArray",
+            "_iterableToArrayLimit",
+            "_nonIterableRest",
+            "_nonIterableSpread",
+            "_objectSpread",
+            "_slicedToArray",
+            "_toConsumableArray",
+            "_typeof",
+            "_unsupportedIterableToArray",
+            "el",
+            "BiliCm",
+            "BiliHeader",
             "webpackJsonpwebpackLogReporter",
             "webpackLogReporter",
             "core",
@@ -8247,22 +8268,12 @@ API.rebuildPlayerurl = RebuildPlayerurl;
         this.loadendCallback = [];
         this.title = document.title;
         window.stop();
-        this.html = html;
-        this.clearDocument();
+        document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
+        document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
+        (!this.title.includes("出错")) && (document.title = this.title);
+        this.clearWindow();
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
-    }
-    /**
-     * 是否已重写完页面
-     */
-    get load() {
-        return document.readyState === "complete";
-    }
-    /**
-     * 页面重写状态标记
-     */
-    get readyState() {
-        return document.readyState;
     }
     /**
      * 添加重写完页面执行的回调函数
@@ -8290,30 +8301,16 @@ API.rebuildPlayerurl = RebuildPlayerurl;
         }
     }
     /**
-     * 阻止页面加载并清洗页面
+     * 清洗页面全局变量
      */
-    clearDocument() {
-        document.body && (document.body.innerHTML = "");
+    clearWindow() {
         this.dush.forEach(d => {
             try {
                 Reflect.deleteProperty(window, d);
             }
-            catch (e) {
-                debug.error(\`无法删除变量\${d}~\`);
-            }
+            catch (e) { }
         });
-        this.prepareDocument();
         API.EmbedPlayer();
-    }
-    /**
-     * 获取旧版页面并格式化
-     */
-    prepareDocument() {
-        this.Dom = new DOMParser().parseFromString(API.getModule(this.html), 'text/html');
-        document.head.replaceWith(this.Dom.querySelector("head"));
-        document.body = this.Dom.querySelector("body"); // body标签居然可以直接赋值？！
-        delete this.Dom;
-        document.title = this.title;
     }
     /**
      * 刷新页面
@@ -8359,7 +8356,6 @@ API.rebuildPlayerurl = RebuildPlayerurl;
      * 重写完信息通知
      */
     loadenEvent() {
-        Reflect.defineProperty(document, "readyState", { value: "complete", writable: false });
         this.loadendCallback.forEach(async (d) => d());
         document.dispatchEvent(new ProgressEvent("readystatechange"));
         document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
@@ -10978,7 +10974,9 @@ new Anime("anime.html");
             history.replaceState(null, null, \`https://www.bilibili.com/playlist/video/pl769\`);
             toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
         }
-        API.uid && API.addCss(".bili-header-m .nav-menu .nav-con .i-face { top: 5px; }"); // 顶栏头像居中
+        if (document.compatMode === "BackCompat") { // 怪异模式下样式修复
+            API.addCss(".bili-header-m .nav-menu .profile-info .i-face { top:5px; }");
+        }
         API.importModule("descBV.js"); // 修复简介中超链接
         API.importModule("videoSort.js"); // 修正分区信息
         config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
@@ -11465,7 +11463,7 @@ new Watchlater("watchlater.html");
             }).catch(e => {
                 toast.error(\`获取av号信息失败，尝试访问第三方接口~\`, e);
                 xhr({
-                    url: Format.objUrl("https://www.biliplus.com/api/view", { id: API.aid, update: 1 }),
+                    url: Format.objUrl("https://www.biliplus.com/api/view", { id: API.aid }),
                     responseType: "json"
                 }).then(d => {
                     this.__INITIAL_STATE__ = new API.initialStateOfAv(d).plus();
@@ -12658,6 +12656,9 @@ API.initialStateOfAv = InitialStateOfAv;
     }
     afterFlush() {
         API.runWhile(() => document.querySelector(".new-entry"), () => { var _a; return (_a = document.querySelector(".new-entry")) === null || _a === void 0 ? void 0 : _a.remove(); }); // 移除过期节点
+        if (document.compatMode === "BackCompat") { // 怪异模式下样式修复
+            API.addCss(".header-info .count-wrapper div { height:18px; }.bili-header-m .nav-menu .profile-info .i-face { top:5px; }");
+        }
     }
 }
 new Bangumi("bangumi.html");
@@ -12982,19 +12983,22 @@ API.initialStateOfBangumi = InitialStateOfBangumi;
 `API.xhrhook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", args => {
     args[1] = args[1].includes("List") ? args[1].replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web') : args[1].replace('api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore', 'api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web');
 }, obj => {
-    let response = obj.responseText.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
-    response = JSON.parse(response);
-    response.data.text_link = { text: "233秒居然能做这些！", link: "//vc.bilibili.com" };
-    if (response.data.recommend) {
-        for (let i = 0; i < response.data.recommend.length; i++) {
-            response.data.recommend[i].pic = response.data.recommend[i].cover;
-            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
+    var _a;
+    let response = (_a = obj.responseText) === null || _a === void 0 ? void 0 : _a.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+    if (response) {
+        response = JSON.parse(response);
+        response.data.text_link = { text: "233秒居然能做这些！", link: "//vc.bilibili.com" };
+        if (response.data.recommend) {
+            for (let i = 0; i < response.data.recommend.length; i++) {
+                response.data.recommend[i].pic = response.data.recommend[i].cover;
+                response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
+            }
         }
+        if (response.data.preview)
+            for (let i = 0; i < response.data.preview.length; i++)
+                response.data.preview[i].url = response.data.preview[i].link;
+        obj.response = obj.responseText = JSON.stringify(response);
     }
-    if (response.data.preview)
-        for (let i = 0; i < response.data.preview.length; i++)
-            response.data.preview[i].url = response.data.preview[i].link;
-    obj.response = obj.responseText = JSON.stringify(response);
 }, false);
 
 //# sourceURL=API://@Bilibili-Old/url/index/biliIndexRec.js`;
