@@ -167,10 +167,12 @@ class Rewrite {
      */
     constructor(html: keyof modules) {
         window.stop();
+        Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
         this.clearWindow();
+        Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -248,6 +250,7 @@ class Rewrite {
         document.dispatchEvent(new ProgressEvent("readystatechange"));
         document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
         window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+        Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
         window.dispatchEvent(new ProgressEvent("load"));
     }
     /**
