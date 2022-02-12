@@ -2728,7 +2728,7 @@ option {
 </head>
 
 <body>
-  <!-- <div class="z-top-container has-menu"></div> -->
+  <div class="z-top-container has-menu"></div>
   <div id="video-page-app"></div>
   <div id="app" data-server-rendered="true"></div>
   <div class="bili-wrapper" id="bofqi"></div>
@@ -2922,6 +2922,7 @@ option {
 </head>
 
 <body>
+    <div class="z-top-container has-menu"></div>
     <div id="playlist-video-app"></div>
     <div class="footer bili-footer report-wrap-module"></div>
 </body>
@@ -3449,6 +3450,11 @@ option {
         188,
         "数码",
         "//www.bilibili.com/v/digital/mobile/"
+    ],
+    "119": [
+        119,
+        "鬼畜",
+        "//www.bilibili.com/v/kichiku/"
     ],
     "129": [
         129,
@@ -6646,7 +6652,6 @@ API.ef2 = new Ef2();
                 newChild.nodeName == 'SCRIPT' && newChild.src && (NodeHook.jsonp.forEach(d => {
                     d[0].every(d => newChild.src.includes(d)) && d[1].call(newChild);
                 }));
-                newChild.src && newChild.src.includes("message.bilibili.com/pages/nav/index") && (newChild.src = "//message.bilibili.com/pages/nav/index_new_sync");
                 return NodeHook.appendChild.call(this, newChild);
             };
         }
@@ -6655,7 +6660,6 @@ API.ef2 = new Ef2();
                 newChild.nodeName == 'SCRIPT' && newChild.src && (NodeHook.jsonp.forEach(d => {
                     d[0].every(d => newChild.src.includes(d)) && d[1].call(newChild);
                 }));
-                newChild.src && newChild.src.includes("message.bilibili.com/pages/nav/index") && (newChild.src = "//message.bilibili.com/pages/nav/index_new_sync");
                 return NodeHook.insertBefore.call(this, newChild, refChild);
             };
         }
@@ -8686,7 +8690,7 @@ API.rebuildPlayerurl = RebuildPlayerurl;
          * 重写页面前需要清理的全局变量污染
          */
         this.dush = [
-            "__INITIAL_STATE__",
+            // "__INITIAL_STATE__",
             "__PGC_USERSTATE__",
             "__BILI_CONFIG__",
             "__mobxGlobals",
@@ -8814,14 +8818,14 @@ API.rebuildPlayerurl = RebuildPlayerurl;
          * 重写完页面执行的回调函数
          */
         this.loadendCallback = [];
+        this.cleard = false;
         this.title = document.title;
-        window.stop();
-        Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
+        // window.stop();
+        // Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
-        this.clearWindow();
-        Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
+        // Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -8861,12 +8865,14 @@ API.rebuildPlayerurl = RebuildPlayerurl;
             catch (e) { }
         });
         API.EmbedPlayer();
+        this.cleard = true;
     }
     /**
      * 刷新页面
      * 将进入脚本插入循环，页面重构完成请通过\`onload\`属性回调
      */
     flushDocument() {
+        !this.cleard && this.clearWindow();
         !(this.script.length === 0) ? this.loadScript(this.script[0]) : this.loadenEvent();
     }
     /**
@@ -8907,11 +8913,11 @@ API.rebuildPlayerurl = RebuildPlayerurl;
      */
     loadenEvent() {
         this.loadendCallback.forEach(async (d) => d());
-        document.dispatchEvent(new ProgressEvent("readystatechange"));
-        document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
-        window.dispatchEvent(new ProgressEvent("load"));
+        // document.dispatchEvent(new ProgressEvent("readystatechange"));
+        // document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+        // window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+        // Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
+        // window.dispatchEvent(new ProgressEvent("load"));
     }
     /**
      * 添加媒体控制
@@ -11345,6 +11351,10 @@ new Anime("anime.html");
             },
             {
                 type: "text/javascript",
+                src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js"
+            },
+            {
+                type: "text/javascript",
                 src: "//static.hdslb.com/common/js/footer.js"
             },
             {
@@ -11521,6 +11531,7 @@ new Anime("anime.html");
         this.oid = this.toview.list[this.toview.list.length - 1].aid;
     }
     afterFlush() {
+        API.runWhile(() => document.getElementsByClassName("bili-header-m")[1], () => document.getElementsByClassName("bili-header-m")[1].remove()); // 移除上古顶栏
         if (this.playlist && !(this.pl == 769)) {
             history.replaceState(null, null, \`https://www.bilibili.com/playlist/video/pl769\`);
             toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
@@ -11961,6 +11972,10 @@ new Watchlater("watchlater.html");
             },
             {
                 type: "text/javascript",
+                src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js"
+            },
+            {
+                type: "text/javascript",
                 text: \`window.getInternetExplorerVersion=function(){var rv=-1;if(navigator.appName=="Microsoft Internet Explorer"){var ua=navigator.userAgent;var re=new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})");if(re.exec(ua)!=null){rv=parseFloat(RegExp.\$1)}}return rv};function getQueryString(name){var reg=new RegExp("(^|&)"+name+"=([^&]*)(&|\$)");var r=window.location.search.substr(1).match(reg);if(r!=null){return unescape(r[2])}return null}\`
             },
             {
@@ -12064,6 +12079,7 @@ new Watchlater("watchlater.html");
         });
     }
     afterFlush() {
+        API.runWhile(() => document.getElementsByClassName("bili-header-m")[1], () => document.getElementsByClassName("bili-header-m")[1].remove()); // 移除上古顶栏
         window.commentAgent = { seek: (t) => window.player && window.player.seek(t) }; // 修复评论跳转
         API.importModule("hookWebpackJsonp.js"); // 修复原生代码错误
         config.enlike && API.importModule("enLike.js"); // 添加点赞功能
@@ -12759,7 +12775,7 @@ new Av("av.html");
             }
         }
         style() {
-            let style = \`.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 28px;vertical-align: middle;margin-right: 6px;}\`;
+            let style = \`.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 25px;vertical-align: middle;margin-right: 6px;}\`;
             switch (API.path.name) {
                 case "bangumi":
                     style += \`.ulike {position: relative;min-width: 110px;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;transform: translateY(-2px);}\`;
@@ -12792,7 +12808,7 @@ new Av("av.html");
                 API.biliQuickLogin();
         }
         changeLiked() {
-            this.span.innerHTML = \`<i class="van-icon-videodetails_like" style="color: \${this.liked ? "#f36392" : "#757575"};" ></i>点赞 \${Format.unitFormat(this.number) || "--"}\`;
+            this.span.innerHTML = \`<i class="van-icon-videodetails_like" style="color: \${this.liked ? "#f36392;" : "#ffffff;text-shadow: 1px 1px #757575, -1px -1px #757575, 1px -1px #757575, -1px 1px #757575;"}" ></i>点赞 \${Format.unitFormat(this.number) || "--"}\`;
         }
         switch() {
             if (this.aid != API.aid) {
