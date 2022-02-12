@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6f411f820b0d40d48bdf8a7ea44252b11dc6ea85/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e73dcdb60009ee9acfb26645107cb5e5ef88b72a/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e8d0df1b4522ec730478d2f84dcbd25cb90d48e8/dist/comment.min.js
 // ==/UserScript==
 
@@ -5434,7 +5434,8 @@ const localMedia = LocalMedia;
 /*!***********************!*/
 /**/modules["replyList.js"] = /*** ./dist/do/replyList.js ***/
 `{
-    let tag = true;
+    let tag = true, timer;
+    ;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
@@ -5447,6 +5448,23 @@ const localMedia = LocalMedia;
         url.includes("mobi_app") && (url += "&mobi_app=android");
         return url;
     }, undefined, false);
+    config.commentLinkDetail && API.observerAddedNodes((node) => {
+        if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                timer = undefined;
+                document.querySelectorAll(".comment-jump-url").forEach((d, i, e) => {
+                    if (d.href && !d.href.includes(d.text)) {
+                        const arr = d.href.split("/");
+                        let text = arr[arr.length - 1] || arr[arr.length - 2];
+                        text.toLowerCase().startsWith("bv") && (text = API.abv(text));
+                        e[i].title = d.text;
+                        e[i].text = text;
+                    }
+                });
+            }, 100);
+        }
+    });
 }
 
 //# sourceURL=API://@Bilibili-Old/do/replyList.js`;
