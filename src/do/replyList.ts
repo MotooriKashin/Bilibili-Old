@@ -7,7 +7,7 @@ interface modules {
     readonly "oldReplySort.css": string;
 }
 {
-    let tag = true;
+    let tag = true, timer: number;;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
@@ -20,4 +20,21 @@ interface modules {
         url.includes("mobi_app") && (url += "&mobi_app=android");
         return url;
     }, undefined, false);
+    config.commentLinkDetail && API.observerAddedNodes((node) => {
+        if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                timer = undefined;
+                document.querySelectorAll(".comment-jump-url").forEach((d: HTMLAnchorElement, i, e: NodeListOf<HTMLAnchorElement>) => {
+                    if (d.href && !d.href.includes(d.text)) {
+                        const arr = d.href.split("/");
+                        let text = arr[arr.length - 1] || arr[arr.length - 2];
+                        text.toLowerCase().startsWith("bv") && (text = <string>API.abv(text));
+                        e[i].title = d.text;
+                        e[i].text = text;
+                    }
+                })
+            }, 100)
+        }
+    })
 }
