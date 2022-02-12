@@ -22,8 +22,7 @@ try {
     if (!disable) {
         if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) API.importModule("av.js");
         if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) API.importModule("bangumi.js");
-        if (config.watchlater && /\/watchlater\//.test(location.href)) API.importModule("watchlater.js");
-        if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
+        if (config.watchlater && /\/watchlater/.test(location.href)) API.importModule("watchlater.js");
         if (config.player && /player\./.test(location.href)) API.importModule("player.js");
         if (/space\.bilibili\.com/.test(location.href)) API.importModule("space.js");
         if (config.index && API.path[2] == 'www.bilibili.com' && (!API.path[3] || (API.path[3].startsWith('\?') || API.path[3].startsWith('\#') || API.path[3].startsWith('index.')))) API.importModule("index.js");
@@ -36,7 +35,7 @@ try {
         if (location.href.includes("www.bilibili.com/account/history")) API.importModule("history.js");
         if (config.read && /\/read\/[Cc][Vv]/.test(location.href)) API.importModule("read.js");
         if (config.player && /festival\/202[1-2]bnj/.test(location.href)) API.importModule("bnj.js");
-        if (config.medialist && /\/medialist\/play\//.test(location.href) || /\/playlist\/video\/pl/.test(location.href)) API.importModule("medialist.js");
+        if ((config.medialist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) API.importModule("medialist.js");
     }
     // 重写之后再引导的全局模块
     API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效咨询数据

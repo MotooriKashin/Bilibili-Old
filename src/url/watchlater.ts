@@ -84,4 +84,5 @@ class Watchlater extends API.rewrite {
         API.path.forEach(d => { d.includes("av") && (API.aid = Number(/[0-9]+/.exec(d)[0])) })
     }
 }
+if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
 new Watchlater("watchlater.html");

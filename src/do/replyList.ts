@@ -11,7 +11,7 @@ interface modules {
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
-            !Array.from(document.styleSheets).some(d => d.href.includes("comment.min.css")) && API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            !Array.from(document.styleSheets).some(d => d.href?.includes("comment.min.css")) && API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
         });
         return GM.getResourceText(script);
     })
