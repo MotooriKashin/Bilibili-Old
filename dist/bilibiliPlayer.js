@@ -18494,6 +18494,110 @@ function Fa() {
                 this.prefix = b.prefix;
                 this.c.aa.log("Recommend Initialized", 0)
             }
+            /**
+             * 推荐视频列表
+             * @param {any[]} k 推荐视频信息
+             */
+            e.prototype.recommendList = function (k) {
+                var f = this.c,
+                    n = this.prefix,
+                    q = this.container = f.template.vo,
+                    m = this,
+                    t = this.wi;
+                if (k &&
+                    k.length) {
+                    for (var l = function (e) {
+                        var l = k[e][1],
+                            q = $('<a class="' + n + '-recommend-video" href="' + (k[e][1].includes("/") ? k[e][1] : ("//www.bilibili.com/video/av" + k[e][1])) + '" target="_blank"><div class="' + n + '-recommend-left">' + (k[e][8] ? k[e][8].is_ad_loc && k[e][8].is_ad ? '<i class="promote-icon"></i>' : "" : "") + '<img src="' + b.a.Ni(k[e][0], 160, 100) + '"/><span><i class="' + n + '-iconfont icon-22wait-normal"></i></span></div><div class="' + n + '-recommend-right"><div class="' + n + '-recommend-title"></div><div class="' + n + '-recommend-click"><i class="' + n + '-iconfont icon-12iconplayed"></i>' +
+                                f.ua.Br(k[e][3]) + '</div><div class="' + n + '-recommend-danmaku"><i class="' + n + '-iconfont icon-12icondanmu"></i>' + f.ua.Br(k[e][4]) + "</div></div></a>").appendTo(t).click(function () {
+                                    f.u("recommend_click");
+                                    k[e][8] && k[e][8].is_ad_loc && (f.u("recommend_ad_click", JSON.stringify(k[e][8])), f.Ia && f.Ia.send({
+                                        Wd: k[e][8].src_id,
+                                        Hk: k[e][8].is_ad,
+                                        sm: k[e][8].ad_cb,
+                                        wm: k[e][8].area,
+                                        Iq: k[e][8].click_url,
+                                        nt: k[e][8].request_id,
+                                        Qd: k[e][8].pos_num || 3,
+                                        oe: 162
+                                    }, "click"))
+                                }),
+                            h = q.find("." + n + "-recommend-left img"),
+                            m = q.find("." + n +
+                                "-recommend-title");
+                        h.attr("alt", k[e][2]);
+                        m.attr("title", k[e][2]).text(k[e][2]);
+                        var v = q.find("." + n + "-recommend-left > span"),
+                            x = new g.a({
+                                target: v,
+                                type: "tip",
+                                name: "add_watchlater_button",
+                                position: "top-center",
+                                text: "\u7a0d\u540e\u518d\u770b"
+                            });
+                        v.click(function (b) {
+                            b.preventDefault();
+                            var e = "\u6dfb\u52a0\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5",
+                                k = "\u79fb\u9664\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5";
+                            if (v.attr("data-selected")) return f.u("recommend_list_add_watchlater", "action:del"), (new c.a(l)).getData({
+                                success: function (b) {
+                                    b &&
+                                        (0 === b.code ? (k = "\u5df2\u4ece\u7a0d\u540e\u518d\u770b\u5217\u8868\u4e2d\u79fb\u9664", x.options.text = "\u7a0d\u540e\u518d\u770b", v.removeAttr("data-selected"), v.find(".icon-22wait-choice").removeClass("icon-22wait-choice").addClass("icon-22wait-normal")) : b.message && (k = b.message))
+                                },
+                                complete: function () {
+                                    new g.a({
+                                        target: v,
+                                        name: "add_watchlater_button",
+                                        position: "top-center",
+                                        text: k
+                                    })
+                                }
+                            }), !1;
+                            f.u("recommend_list_add_watchlater");
+                            if (!f.I.status().da) return "function" === typeof f.Uc && f.Uc().load();
+                            (new d.a(l)).getData({
+                                success: function (b) {
+                                    b &&
+                                        (0 === b.code ? (e = "\u5df2\u52a0\u7a0d\u540e\u518d\u770b", x.options.text = "\u79fb\u9664", v.attr("data-selected", "true"), v.find(".icon-22wait-normal").removeClass("icon-22wait-normal").addClass("icon-22wait-choice")) : b.message && (e = b.message))
+                                },
+                                complete: function () {
+                                    new g.a({
+                                        target: v,
+                                        name: "add_watchlater_button",
+                                        position: "top-center",
+                                        text: e
+                                    })
+                                }
+                            });
+                            return !1
+                        });
+                        k[e][8] && k[e][8].is_ad_loc && (f.u("recommend_ad_show", JSON.stringify(k[e][8])), f.Ia && f.Ia.send({
+                            Wd: k[e][8].src_id,
+                            Hk: k[e][8].is_ad,
+                            sm: k[e][8].ad_cb,
+                            wm: k[e][8].area,
+                            Et: k[e][8].show_url,
+                            Qd: k[e][8].pos_num || 3,
+                            oe: 162
+                        }, "show"));
+                        k[e].element = q
+                    }, q = 0; q < k.length; q++) l(q);
+                    t.mCustomScrollbar({
+                        axis: "y",
+                        scrollInertia: 100,
+                        autoHideScrollbar: !0,
+                        mouseWheel: {
+                            scrollAmount: 100,
+                            preventDefault: !1
+                        },
+                        callbacks: {
+                            whileScrolling: function () {
+                                0 > this.mcs.top && m.c.Ia && m.c.Ia.hide("close_slide")
+                            }
+                        }
+                    });
+                } else m.fw()
+            }
             e.prototype.ce = function (e) {
                 this.ka = !0;
                 var f = this.c,
@@ -18505,106 +18609,36 @@ function Fa() {
                 });
                 var t = this.wi = $('<div class="' + n + '-panel-scrollbar"></div>').appendTo(q);
                 this.rl = [];
-                (new h.a({
+                f.f.Fb ? ($.ajax({
+                    url: `https://api.bilibili.com/pgc/web/recommend/related/recommend?season_id=${f.f.Fb}`,
+                    type: "get",
+                    dataType: "json",
+                    success: (c) => {
+                        try {
+                            this.recommendList(c.result.season.reduce((s, d) => {
+                                s.push([
+                                    d.new_ep.cover || d.cover,
+                                    d.url,
+                                    d.title,
+                                    d.stat.view,
+                                    d.stat.danmaku,
+                                    0,
+                                    0,
+                                    "00:03:10"
+                                ])
+                                return s;
+                            }, []));
+                        } catch (e) { m.fw(); }
+                    },
+                    error: function (c) {
+                        m.fw();
+                        void 0
+                    }
+                })) : (new h.a({
                     aid: f.f.aid,
                     j: f.f.j
                 })).getData({
-                    success: function (k) {
-                        if (k &&
-                            k.length) {
-                            for (var l = function (e) {
-                                var l = k[e][1],
-                                    q = $('<a class="' + n + '-recommend-video" href="//www.bilibili.com/video/av' + k[e][1] + '" target="_blank"><div class="' + n + '-recommend-left">' + (k[e][8] ? k[e][8].is_ad_loc && k[e][8].is_ad ? '<i class="promote-icon"></i>' : "" : "") + '<img src="' + b.a.Ni(k[e][0], 160, 100) + '"/><span><i class="' + n + '-iconfont icon-22wait-normal"></i></span></div><div class="' + n + '-recommend-right"><div class="' + n + '-recommend-title"></div><div class="' + n + '-recommend-click"><i class="' + n + '-iconfont icon-12iconplayed"></i>' +
-                                        f.ua.Br(k[e][3]) + '</div><div class="' + n + '-recommend-danmaku"><i class="' + n + '-iconfont icon-12icondanmu"></i>' + f.ua.Br(k[e][4]) + "</div></div></a>").appendTo(t).click(function () {
-                                            f.u("recommend_click");
-                                            k[e][8] && k[e][8].is_ad_loc && (f.u("recommend_ad_click", JSON.stringify(k[e][8])), f.Ia && f.Ia.send({
-                                                Wd: k[e][8].src_id,
-                                                Hk: k[e][8].is_ad,
-                                                sm: k[e][8].ad_cb,
-                                                wm: k[e][8].area,
-                                                Iq: k[e][8].click_url,
-                                                nt: k[e][8].request_id,
-                                                Qd: k[e][8].pos_num || 3,
-                                                oe: 162
-                                            }, "click"))
-                                        }),
-                                    h = q.find("." + n + "-recommend-left img"),
-                                    m = q.find("." + n +
-                                        "-recommend-title");
-                                h.attr("alt", k[e][2]);
-                                m.attr("title", k[e][2]).text(k[e][2]);
-                                var v = q.find("." + n + "-recommend-left > span"),
-                                    x = new g.a({
-                                        target: v,
-                                        type: "tip",
-                                        name: "add_watchlater_button",
-                                        position: "top-center",
-                                        text: "\u7a0d\u540e\u518d\u770b"
-                                    });
-                                v.click(function (b) {
-                                    b.preventDefault();
-                                    var e = "\u6dfb\u52a0\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5",
-                                        k = "\u79fb\u9664\u5931\u8d25\uff0c\u8bf7\u91cd\u8bd5";
-                                    if (v.attr("data-selected")) return f.u("recommend_list_add_watchlater", "action:del"), (new c.a(l)).getData({
-                                        success: function (b) {
-                                            b &&
-                                                (0 === b.code ? (k = "\u5df2\u4ece\u7a0d\u540e\u518d\u770b\u5217\u8868\u4e2d\u79fb\u9664", x.options.text = "\u7a0d\u540e\u518d\u770b", v.removeAttr("data-selected"), v.find(".icon-22wait-choice").removeClass("icon-22wait-choice").addClass("icon-22wait-normal")) : b.message && (k = b.message))
-                                        },
-                                        complete: function () {
-                                            new g.a({
-                                                target: v,
-                                                name: "add_watchlater_button",
-                                                position: "top-center",
-                                                text: k
-                                            })
-                                        }
-                                    }), !1;
-                                    f.u("recommend_list_add_watchlater");
-                                    if (!f.I.status().da) return "function" === typeof f.Uc && f.Uc().load();
-                                    (new d.a(l)).getData({
-                                        success: function (b) {
-                                            b &&
-                                                (0 === b.code ? (e = "\u5df2\u52a0\u7a0d\u540e\u518d\u770b", x.options.text = "\u79fb\u9664", v.attr("data-selected", "true"), v.find(".icon-22wait-normal").removeClass("icon-22wait-normal").addClass("icon-22wait-choice")) : b.message && (e = b.message))
-                                        },
-                                        complete: function () {
-                                            new g.a({
-                                                target: v,
-                                                name: "add_watchlater_button",
-                                                position: "top-center",
-                                                text: e
-                                            })
-                                        }
-                                    });
-                                    return !1
-                                });
-                                k[e][8] && k[e][8].is_ad_loc && (f.u("recommend_ad_show", JSON.stringify(k[e][8])), f.Ia && f.Ia.send({
-                                    Wd: k[e][8].src_id,
-                                    Hk: k[e][8].is_ad,
-                                    sm: k[e][8].ad_cb,
-                                    wm: k[e][8].area,
-                                    Et: k[e][8].show_url,
-                                    Qd: k[e][8].pos_num || 3,
-                                    oe: 162
-                                }, "show"));
-                                k[e].element = q
-                            }, q = 0; q < k.length; q++) l(q);
-                            t.mCustomScrollbar({
-                                axis: "y",
-                                scrollInertia: 100,
-                                autoHideScrollbar: !0,
-                                mouseWheel: {
-                                    scrollAmount: 100,
-                                    preventDefault: !1
-                                },
-                                callbacks: {
-                                    whileScrolling: function () {
-                                        0 > this.mcs.top && m.c.Ia && m.c.Ia.hide("close_slide")
-                                    }
-                                }
-                            });
-                            "function" === typeof e && e()
-                        } else m.fw()
-                    },
+                    success: k => this.recommendList(k),
                     error: function () {
                         m.fw();
                         void 0
