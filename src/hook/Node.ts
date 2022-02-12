@@ -95,7 +95,6 @@ interface modules {
                 newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.jsonp.forEach(d => {
                     d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
                 }));
-                (<any>newChild).src && (<any>newChild).src.includes("message.bilibili.com/pages/nav/index") && ((<any>newChild).src = "//message.bilibili.com/pages/nav/index_new_sync");
                 return <T>NodeHook.appendChild.call(this, newChild);
             };
         }
@@ -104,7 +103,6 @@ interface modules {
                 newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (NodeHook.jsonp.forEach(d => {
                     d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
                 }));
-                (<any>newChild).src && (<any>newChild).src.includes("message.bilibili.com/pages/nav/index") && ((<any>newChild).src = "//message.bilibili.com/pages/nav/index_new_sync");
                 return <T>NodeHook.insertBefore.call(this, newChild, refChild);
             }
         }

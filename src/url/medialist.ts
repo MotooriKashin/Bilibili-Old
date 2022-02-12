@@ -66,6 +66,10 @@ class Playlist extends API.rewrite {
             },
             {
                 type: "text/javascript",
+                src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js"
+            },
+            {
+                type: "text/javascript",
                 src: "//static.hdslb.com/common/js/footer.js"
             },
             {
@@ -232,6 +236,7 @@ class Playlist extends API.rewrite {
         this.oid = this.toview.list[this.toview.list.length - 1].aid;
     }
     afterFlush() {
+        API.runWhile(() => document.getElementsByClassName("bili-header-m")[1], () => document.getElementsByClassName("bili-header-m")[1].remove()); // 移除上古顶栏
         if (this.playlist && !(this.pl == 769)) {
             history.replaceState(null, null, `https://www.bilibili.com/playlist/video/pl769`);
             toast.warning("原生playlist页面已无法访问，已重定向到脚本备份的pl769~");
