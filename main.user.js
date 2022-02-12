@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.1
+// @version      7.0.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@431988b536837afc4dae6ca09fe7c3f87ef5c392/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6f411f820b0d40d48bdf8a7ea44252b11dc6ea85/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e8d0df1b4522ec730478d2f84dcbd25cb90d48e8/dist/comment.min.js
 // ==/UserScript==
 
@@ -453,175 +453,194 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 
 /**/modules["alert.css"] = /*** ./CSS/alert.css ***/
 `.table {
-    line-height: 14px;
-    display: flex;
+    line-height   : 14px;
+    display       : flex;
     flex-direction: column;
-    box-sizing: border-box;
-    top: 50%;
-    background: #FFFFFF;
-    box-shadow: 0 3px 12px 0 rgb(0 0 0 / 20%);
-    border-radius: 10px;
-    width: 300px;
-    height: auto;
-    padding: 18px;
-    position: fixed;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);z-index: 11124;
+    box-sizing    : border-box;
+    top           : 50%;
+    background    : #FFFFFF;
+    box-shadow    : 0 3px 12px 0 rgb(0 0 0 / 20%);
+    border-radius : 10px;
+    width         : 300px;
+    height        : auto;
+    padding       : 18px;
+    position      : fixed;
+    left          : 50%;
+    transform     : translateX(-50%) translateY(-50%);
+    z-index       : 11124;
 }
+
 .title {
-    line-height: 22px;
-    margin-left: 2px;
+    line-height  : 22px;
+    margin-left  : 2px;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size    : 14px;
 }
+
 .text {
     margin-bottom: 3px;
-    margin-left: 2px;
+    margin-left  : 2px;
 }
+
 .act {
-    line-height: 154%;
-    align-items: center;
-    border-radius: 4px;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-flex;
-    flex-shrink: 0;
-    font-weight: 500;
-    min-width: 5.14em;
-    outline-width: 0;
-    overflow: hidden;
-    padding: 8px 16px;
-    position: relative;
-    user-select: none;
-    border: none;
-    color: #fff;
+    line-height    : 154%;
+    align-items    : center;
+    border-radius  : 4px;
+    box-sizing     : border-box;
+    cursor         : pointer;
+    display        : inline-flex;
+    flex-shrink    : 0;
+    font-weight    : 500;
+    min-width      : 5.14em;
+    outline-width  : 0;
+    overflow       : hidden;
+    padding        : 8px 16px;
+    position       : relative;
+    user-select    : none;
+    border         : none;
+    color          : #fff;
     justify-content: space-around;
 }`;
 /*!***********************!*/
 /**/modules["animated-banner.css"] = /*** ./CSS/animated-banner.css ***/
 `.animated-banner {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  top     : 0;
+  bottom  : 0;
+  left    : 0;
+  right   : 0;
 }
-.animated-banner > .layer {
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
+
+.animated-banner>.layer {
+  position       : absolute;
+  left           : 0;
+  top            : 0;
+  height         : 100%;
+  width          : 100%;
+  display        : flex;
+  align-items    : center;
   justify-content: center;
-  overflow: hidden;
+  overflow       : hidden;
 }
 
 @keyframes banner-fade-in {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
 }
+
 .animated-banner .layer {
   animation: banner-fade-in 0.7s;
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["avatarAnimation.css"] = /*** ./CSS/avatarAnimation.css ***/
 `/* 鼠标放在顶栏上的动效 */
-.bili-header-m .profile-info .i-face .face{
-    border:0
+.bili-header-m .profile-info .i-face .face {
+    border: 0
 }
-.bili-header-m .profile-info .i-face .pendant{
-    transform:scale(0.5);
-    width:112px;
-    height:112px;
-    left:-41px;
-    bottom:-46px;
-    opacity:0;
-    transition:opacity .1s ease-in
+
+.bili-header-m .profile-info .i-face .pendant {
+    transform : scale(0.5);
+    width     : 112px;
+    height    : 112px;
+    left      : -41px;
+    bottom    : -46px;
+    opacity   : 0;
+    transition: opacity .1s ease-in
 }
-.bili-header-m .profile-info.on .i-face{
-    left:8px;
-    top:0;
-    height:32px;
-    width:32px;
-    transform:translateY(10px) translateX(-16px) scale(2);
-    transform-origin:top left
+
+.bili-header-m .profile-info.on .i-face {
+    left            : 8px;
+    top             : 0;
+    height          : 32px;
+    width           : 32px;
+    transform       : translateY(10px) translateX(-16px) scale(2);
+    transform-origin: top left
 }
-.bili-header-m .profile-info.on .i-face .legalize{
-    transform:scale(0.5) translate(10px,15px)
+
+.bili-header-m .profile-info.on .i-face .legalize {
+    transform: scale(0.5) translate(10px, 15px)
 }
-.bili-header-m .profile-info.on .i-face .pendant{
-    opacity:1
+
+.bili-header-m .profile-info.on .i-face .pendant {
+    opacity: 1
 }
-.bili-header-m .profile-info.on .i-face .face{
-    border:0;
-    box-shadow:0 0 0 2px #fff
+
+.bili-header-m .profile-info.on .i-face .face {
+    border    : 0;
+    box-shadow: 0 0 0 2px #fff
 }
-.bili-header-m .profile-info.on .i-face.scale-in{
-    transform:translateY(5px) translateX(-10px) scale(1.75)
+
+.bili-header-m .profile-info.on .i-face.scale-in {
+    transform: translateY(5px) translateX(-10px) scale(1.75)
 }
-.bili-header-m .profile-info.on .scale-in .face{
-    height:32px;
-    width:32px
+
+.bili-header-m .profile-info.on .scale-in .face {
+    height: 32px;
+    width : 32px
 }
-.bili-header-m .profile-info.on .i-face.scale-in .legalize{
-    transform:scale(0.5) translate(38px,48px)
+
+.bili-header-m .profile-info.on .i-face.scale-in .legalize {
+    transform: scale(0.5) translate(38px, 48px)
 }`;
 /*!***********************!*/
 /**/modules["bofqi.css"] = /*** ./CSS/bofqi.css ***/
 `#bofqi .player {
-    width: 980px;
-    height: 620px;
+    width  : 980px;
+    height : 620px;
     display: block;
-}       
+}
+
 @media screen and (min-width:1400px) {
     #bofqi .player {
-        width: 1160px;
+        width : 1160px;
         height: 720px
     }
 }`;
 /*!***********************!*/
 /**/modules["button.css"] = /*** ./CSS/button.css ***/
-`.button{
-    line-height: 154%;
-    align-items: center;
-    border-radius: 4px;
-    box-sizing: border-box;
-    cursor: pointer;
-    display: inline-flex;
-    flex-shrink: 0;
-    font-weight: 500;
-    height: 32px;
+`.button {
+    line-height    : 154%;
+    align-items    : center;
+    border-radius  : 4px;
+    box-sizing     : border-box;
+    cursor         : pointer;
+    display        : inline-flex;
+    flex-shrink    : 0;
+    font-weight    : 500;
+    height         : 32px;
     justify-content: center;
-    min-width: 5.14em;
-    outline-width: 0;
-    overflow: hidden;
-    padding: 8px 16px;
-    position: relative;
-    user-select: none;
+    min-width      : 5.14em;
+    outline-width  : 0;
+    overflow       : hidden;
+    padding        : 8px 16px;
+    position       : relative;
+    user-select    : none;
 }
+
 .button {
     background-color: #fff;
-    color: rgb(26,115,232);
-    border: 1px solid rgba(0,0,0,6%);
+    color           : rgb(26, 115, 232);
+    border          : 1px solid rgba(0, 0, 0, 6%);
 }
-.button:hover{
-    background-color: rgba(26,115,232,6%);
+
+.button:hover {
+    background-color: rgba(26, 115, 232, 6%);
 }
-.button:active{
-    box-shadow: 0 0 1px 1px rgba(0,0,0,10%);
+
+.button:active {
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 10%);
 }
-.button[disabled]{
-    pointer-events: none;
+
+.button[disabled] {
+    pointer-events  : none;
     background-color: rgba(239, 239, 239, 0.3);
-    border: 1px solid rgba(118, 118, 118, 0.3);
-    color: rgba(16, 16, 16, 0.3);
+    border          : 1px solid rgba(118, 118, 118, 0.3);
+    color           : rgba(16, 16, 16, 0.3);
 }`;
 /*!***********************!*/
 /**/modules["checkbox.css"] = /*** ./CSS/checkbox.css ***/
@@ -629,102 +648,140 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 .box {
   display: inline-flex;
 }
+
 .checkbox {
   align-items: center;
-  display: flex;
-  min-height: auto;
-  padding: 0;
-  cursor: pointer;
+  display    : flex;
+  min-height : auto;
+  padding    : 0;
+  cursor     : pointer;
 }
+
 .checkbox .checklabel {
-  height: 16px;
+  height            : 16px;
   margin-block-start: 0px;
-  position: relative;
-  width: 16px;
-  border-radius: 50%;
+  position          : relative;
+  width             : 16px;
+  border-radius     : 50%;
 }
+
 .checklabel .disc-border {
-  border: 2px solid rgb(95, 99, 104);
-  box-sizing: border-box;
-  height: 16px;
-  width: 16px;
+  border       : 2px solid rgb(95, 99, 104);
+  box-sizing   : border-box;
+  height       : 16px;
+  width        : 16px;
   border-radius: 50%;
 }
+
 .checklabel .disc-border[checked] {
   border-color: rgb(26, 115, 232);
 }
+
 .checklabel .disc {
   background-color: transparent;
-  position: absolute;
-  top: 0;
-  transform: scale(0);
-  transition: border-color 200ms, transform 200ms;
-  box-sizing: border-box;
-  height: 16px;
-  width: 16px;
-  border-radius: 50%;
+  position        : absolute;
+  top             : 0;
+  transform       : scale(0);
+  transition      : border-color 200ms, transform 200ms;
+  box-sizing      : border-box;
+  height          : 16px;
+  width           : 16px;
+  border-radius   : 50%;
 }
+
 .checklabel .disc[checked] {
   background-color: rgb(26, 115, 232);
-  transform: scale(0.5);
+  transform       : scale(0.5);
 }
+
 .checkbox .checkvalue {
-  flex: 1;
+  flex               : 1;
   margin-inline-start: 5px;
-  margin-inline-end: 5px;
+  margin-inline-end  : 5px;
 }`;
 /*!***********************!*/
 /**/modules["closedCaption.css"] = /*** ./CSS/closedCaption.css ***/
 `/* CC字幕相关样式 */
 /*对齐，悬停按钮显示菜单*/
-#subtitle-setting-panel>div>* {margin-right: 5px;}
-#bilibili-player-subtitle-btn:hover>#subtitle-setting-panel {display: block!important;}
+#subtitle-setting-panel>div>* {
+    margin-right: 5px;
+}
+
+#bilibili-player-subtitle-btn:hover>#subtitle-setting-panel {
+    display: block !important;
+}
+
 /*滑动选择样式*/
 #subtitle-setting-panel input[type="range"] {
-    background-color: #ebeff4;
+    background-color  : #ebeff4;
     -webkit-appearance: none;
-    height:4px;
-    transform: translateY(-4px);
+    height            : 4px;
+    transform         : translateY(-4px);
 }
+
 #subtitle-setting-panel input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 15px;
-    width: 15px;
-    background: #fff;
-    border-radius: 15px;
-    border: 1px solid;
+    height            : 15px;
+    width             : 15px;
+    background        : #fff;
+    border-radius     : 15px;
+    border            : 1px solid;
 }
+
 /*复选框和其对应标签样式*/
-#subtitle-setting-panel input[type="checkbox"]{display:none;}
-#subtitle-setting-panel input ~ label {cursor:pointer;}
-#subtitle-setting-panel input:checked ~ label:before {content: '\\2714';}
-#subtitle-setting-panel input ~ label:before{
-    width: 12px;
-    height:12px;
-    line-height: 14px;
-    vertical-align: text-bottom;
-    border-radius: 3px;
-    border:1px solid #d3d3d3;
-    display: inline-block;
-    text-align: center;
-    content: ' ';
+#subtitle-setting-panel input[type="checkbox"] {
+    display: none;
 }
+
+#subtitle-setting-panel input~label {
+    cursor: pointer;
+}
+
+#subtitle-setting-panel input:checked~label:before {
+    content: '\\2714';
+}
+
+#subtitle-setting-panel input~label:before {
+    width         : 12px;
+    height        : 12px;
+    line-height   : 14px;
+    vertical-align: text-bottom;
+    border-radius : 3px;
+    border        : 1px solid #d3d3d3;
+    display       : inline-block;
+    text-align    : center;
+    content       : ' ';
+}
+
 /*悬停显示下拉框样式*/
-#subtitle-setting-panel .bpui-selectmenu:hover .bpui-selectmenu-list{display:block;}
+#subtitle-setting-panel .bpui-selectmenu:hover .bpui-selectmenu-list {
+    display: block;
+}
+
 /*滚动条样式*/
-#subtitle-setting-panel ::-webkit-scrollbar{width: 7px;}
-#subtitle-setting-panel ::-webkit-scrollbar-track{border-radius: 4px;background-color: #EEE;}
-#subtitle-setting-panel ::-webkit-scrollbar-thumb{border-radius: 4px;background-color: #999;}`;
+#subtitle-setting-panel ::-webkit-scrollbar {
+    width: 7px;
+}
+
+#subtitle-setting-panel ::-webkit-scrollbar-track {
+    border-radius   : 4px;
+    background-color: #EEE;
+}
+
+#subtitle-setting-panel ::-webkit-scrollbar-thumb {
+    border-radius   : 4px;
+    background-color: #999;
+}`;
 /*!***********************!*/
 /**/modules["commandDm.css"] = /*** ./CSS/commandDm.css ***/
 `.commandDm-popup {
-  border-radius: 1rem;
+  border-radius   : 1rem;
   background-color: #f5f5f5;
-  position: absolute;
-  cursor: default;
-  opacity: 0;
-  transition: opacity 0.2s;
-  padding: 0.8rem 1rem;
+  position        : absolute;
+  cursor          : default;
+  opacity         : 0;
+  transition      : opacity 0.2s;
+  padding         : 0.8rem 1rem;
 }
 
 .commandDm-popup.on {
@@ -732,73 +789,73 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 }
 
 .vote-dialog {
-  overflow: hidden;
-  display: flex;
+  overflow      : hidden;
+  display       : flex;
   flex-direction: column;
 }
 
 .vote-panel {
-  display: flex;
+  display        : flex;
   justify-content: space-between;
-  width: 100%;
+  width          : 100%;
 }
 
 .vote-title,
 .grade-title {
-  font-weight: bolder;
+  font-weight  : bolder;
   margin-bottom: 0.5rem;
 }
 
 .vote-option {
-  display: flex;
+  display       : flex;
   flex-direction: column;
-  width: 100%;
+  width         : 100%;
 }
 
 .vote-button {
-  text-align: center;
-  min-width: 85px;
-  display: inline-block;
-  padding: 0.3rem 2rem;
-  border: 1px solid #00a1d6;
-  border-radius: 5px;
-  margin: 0.2rem 0;
+  text-align      : center;
+  min-width       : 85px;
+  display         : inline-block;
+  padding         : 0.3rem 2rem;
+  border          : 1px solid #00a1d6;
+  border-radius   : 5px;
+  margin          : 0.2rem 0;
   background-color: #fff;
-  cursor: pointer;
+  cursor          : pointer;
 }
 
 .vote-button:hover {
   background-color: #1baada;
-  color: #f5f5f5;
-  transition: all 0.15s ease-out;
+  color           : #f5f5f5;
+  transition      : all 0.15s ease-out;
 }
 
 .vote-button::before {
   position: absolute;
-  padding: 0 1.8rem;
-  left: 0;
-  content: attr(idx);
+  padding : 0 1.8rem;
+  left    : 0;
+  content : attr(idx);
 }
 
 .vote-progress-bg {
-  border-radius: 5px;
-  min-width: 85px;
-  margin: 0.2rem 0;
-  border: 1px solid #1a1a1a6b;
+  border-radius   : 5px;
+  min-width       : 85px;
+  margin          : 0.2rem 0;
+  border          : 1px solid #1a1a1a6b;
   background-color: white;
-  position: relative;
+  position        : relative;
 }
 
 .vote-progress {
-  transition: width 0.3s, background-color 0.2s;
-  animation: opacity-animation 0.5s;
-  overflow: hidden;
-  display: inline-block;
-  border-radius: 4px 0 0 4px;
+  transition      : width 0.3s, background-color 0.2s;
+  animation       : opacity-animation 0.5s;
+  overflow        : hidden;
+  display         : inline-block;
+  border-radius   : 4px 0 0 4px;
   background-color: #d3d3d3;
-  text-align: left;
-  overflow: visible;
-  position: relative;
+  text-align      : left;
+  overflow        : visible;
+  position        : relative;
 }
 
 .vote-progress-blue {
@@ -807,23 +864,24 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 
 .vote-progress-desc {
   display: inline-block;
-  margin: 0.3rem 0.8rem;
+  margin : 0.3rem 0.8rem;
 }
 
 @keyframes opacity-animation {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
 .vote-count {
-  display: inline-block;
+  display : inline-block;
   position: absolute;
-  right: 0.8rem;
-  top: 0.3rem;
+  right   : 0.8rem;
+  top     : 0.3rem;
 }
 
 .vote-count::after {
@@ -831,59 +889,59 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 }
 
 .bilibili-player-video-popup {
-  z-index: 100;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  z-index       : 100;
+  position      : absolute;
+  top           : 0;
+  left          : 0;
+  width         : 100%;
+  height        : 100%;
   pointer-events: none;
 }
 
-.bilibili-player-video-popup > * {
+.bilibili-player-video-popup>* {
   pointer-events: all;
 }
 
 .link-button {
-  animation: opacity-animation 0.2s;
-  position: absolute;
-  left: 40%;
-  top: 20%;
+  animation       : opacity-animation 0.2s;
+  position        : absolute;
+  left            : 40%;
+  top             : 20%;
   background-color: #f5f5f5;
-  padding: 0.4rem 1rem;
-  border-radius: 0.6rem;
-  font-size: large;
-  box-shadow: #888888c7 0px 0px 6px;
+  padding         : 0.4rem 1rem;
+  border-radius   : 0.6rem;
+  font-size       : large;
+  box-shadow      : #888888c7 0px 0px 6px;
 }
 
 .link-button:hover {
-  color: #00a1d6;
+  color : #00a1d6;
   cursor: pointer;
 }
 
-.link-button > * {
+.link-button>* {
   vertical-align: middle;
 }
 
-.link-button > img {
+.link-button>img {
   transform: scale(0.7) translateY(-1px);
 }
 
 .danmaku-up-icon::before {
-  content: "UP主";
+  content         : "UP主";
   background-color: #00a1d6;
-  border-radius: 5px;
-  font-size: 0.8em;
-  padding: 0.1em;
-  transform: translateY(-0.1em);
-  display: inline-block;
-  box-shadow: #888888c7 0px 0px 6px;
+  border-radius   : 5px;
+  font-size       : 0.8em;
+  padding         : 0.1em;
+  transform       : translateY(-0.1em);
+  display         : inline-block;
+  box-shadow      : #888888c7 0px 0px 6px;
 }
 
-.grade-score-area > div {
-  display: inline-block;
-  position: relative;
-  width: 41px;
+.grade-score-area>div {
+  display   : inline-block;
+  position  : relative;
+  width     : 41px;
   transition: width 0.3s;
 }
 
@@ -891,7 +949,7 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
   cursor: pointer;
 }
 
-.grade-score-area > div:last-child {
+.grade-score-area>div:last-child {
   width: 20px;
 }
 
@@ -904,9 +962,9 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 }
 
 .grade-score-area .bg {
-  position: absolute;
-  left: 0;
-  filter: blur(9px);
+  position  : absolute;
+  left      : 0;
+  filter    : blur(9px);
   visibility: hidden;
 }
 
@@ -916,18 +974,19 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 
 .grade-score-info {
   position: absolute;
-  right: 1rem;
-  bottom: 0.6rem;
-  opacity: 0;
+  right   : 1rem;
+  bottom  : 0.6rem;
+  opacity : 0;
 }
 
 @keyframes grade-score-showup {
   0% {
-    opacity: 0;
+    opacity  : 0;
     transform: translateY(5px);
   }
+
   100% {
-    opacity: 1;
+    opacity  : 1;
     transform: translateY(0);
   }
 }
@@ -936,375 +995,471 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
   0% {
     filter: brightness(1);
   }
+
   30% {
     filter: brightness(1.5);
   }
+
   100% {
     filter: brightness(1);
   }
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["comment.css"] = /*** ./CSS/comment.css ***/
-`.bb-comment .comment-header .header-page, .comment-bilibili-fold .comment-header .header-page {
-    float: right;
+`.bb-comment .comment-header .header-page,
+.comment-bilibili-fold .comment-header .header-page {
+    float      : right;
     line-height: 36px;
 }
-.bb-comment .comment-list .list-item .user .text-con, .comment-bilibili-fold .comment-list .list-item .user .text-con {
+
+.bb-comment .comment-list .list-item .user .text-con,
+.comment-bilibili-fold .comment-list .list-item .user .text-con {
     margin-left: initial;
 }
-.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
+
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user>a,
+.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user>a {
     margin-left: initial;
 }
+
 .user-card .info .user .vip-icon {
-    max-width: 58px;
-    height: 16px;
-    border-radius: 2px;
-    margin-left: 8px;
+    max-width       : 58px;
+    height          : 16px;
+    border-radius   : 2px;
+    margin-left     : 8px;
     background-color: #FF6699;
-    font-size: 12px;
-    font-weight: 400;
-    color: #fff;
-    white-space: nowrap;
-    padding: 1px;
-    padding-inline: 4px;
+    font-size       : 12px;
+    font-weight     : 400;
+    color           : #fff;
+    white-space     : nowrap;
+    padding         : 1px;
+    padding-inline  : 4px;
 }
+
 .user-card .info .verify {
-    color: #9499A0;
+    color      : #9499A0;
     line-height: 17px;
-    margin-top: 11px;
+    margin-top : 11px;
 }
+
 .user-card .info .verify .auth {
-    display: inline-block;
+    display       : inline-block;
     vertical-align: bottom;
-    position: relative;
-    left: -3px;
-    width: 16px;
-    height: 16px;
+    position      : relative;
+    left          : -3px;
+    width         : 16px;
+    height        : 16px;
 }
+
 .reply-item .reply-con .user .stick {
     zoom: 0.9;
 }`;
 /*!***********************!*/
 /**/modules["danmakuHashId.css"] = /*** ./CSS/danmakuHashId.css ***/
 `/* 反查弹幕发送者相关样式 */
-.bb-comment, .comment-bilibili-fold {
-    font-family: Microsoft YaHei,Arial,Helvetica,sans-serif;
-    font-size: 0;
-    zoom: 1;
-    min-height: 100px;
-    background: #fff;
-}.bb-comment .comment-list, .comment-bilibili-fold .comment-list {
+.bb-comment,
+.comment-bilibili-fold {
+    font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;
+    font-size  : 0;
+    zoom       : 1;
+    min-height : 100px;
+    background : #fff;
+}
+
+.bb-comment .comment-list,
+.comment-bilibili-fold .comment-list {
     padding-top: 20px;
-}.bb-comment *, .comment-bilibili-fold * {
+}
+
+.bb-comment *,
+.comment-bilibili-fold * {
     box-sizing: content-box;
-}.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face {
-    display: inline-block;
-    position: relative;
-    margin-right: 10px;
+}
+
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face,
+.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face {
+    display       : inline-block;
+    position      : relative;
+    margin-right  : 10px;
     vertical-align: top;
-}.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face img, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face img {
-    width: 24px;
-    height: 24px;
+}
+
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face img,
+.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face img {
+    width        : 24px;
+    height       : 24px;
     border-radius: 50%;
-}.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con {
+}
+
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con,
+.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con {
     display: inline-block;
-    width: calc(100% - 34px);
-}.bb-comment .comment-list .list-item .user, .comment-bilibili-fold .comment-list .list-item .user {
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 18px;
+    width  : calc(100% - 34px);
+}
+
+.bb-comment .comment-list .list-item .user,
+.comment-bilibili-fold .comment-list .list-item .user {
+    font-size     : 12px;
+    font-weight   : 700;
+    line-height   : 18px;
     padding-bottom: 4px;
-    display: block;
-    word-wrap: break-word;
+    display       : block;
+    word-wrap     : break-word;
+    position      : relative;
+}
+
+.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user .name,
+.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user .name {
     position: relative;
-}.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user .name, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user .name {
-    position: relative;
-    top: -1px;
-}.bb-comment .comment-list .list-item .reply-box .reply-item .level, .comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .level {
+    top     : -1px;
+}
+
+.bb-comment .comment-list .list-item .reply-box .reply-item .level,
+.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .level {
     margin: 0 15px 0 8px;
-}.bb-comment .comment-list .list-item .user .level.l0,.comment-bilibili-fold .comment-list .list-item .user .level.l0 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l0,
+.comment-bilibili-fold .comment-list .list-item .user .level.l0 {
     background-position: -23px -28px
-}.bb-comment .comment-list .list-item .user .level.l1,.comment-bilibili-fold .comment-list .list-item .user .level.l1 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l1,
+.comment-bilibili-fold .comment-list .list-item .user .level.l1 {
     background-position: -23px -92px
-}.bb-comment .comment-list .list-item .user .level.l2,.comment-bilibili-fold .comment-list .list-item .user .level.l2 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l2,
+.comment-bilibili-fold .comment-list .list-item .user .level.l2 {
     background-position: -23px -156px
-}.bb-comment .comment-list .list-item .user .level.l3,.comment-bilibili-fold .comment-list .list-item .user .level.l3 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l3,
+.comment-bilibili-fold .comment-list .list-item .user .level.l3 {
     background-position: -23px -220px
-}.bb-comment .comment-list .list-item .user .level.l4,.comment-bilibili-fold .comment-list .list-item .user .level.l4 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l4,
+.comment-bilibili-fold .comment-list .list-item .user .level.l4 {
     background-position: -23px -284px
-}.bb-comment .comment-list .list-item .user .level.l5,.comment-bilibili-fold .comment-list .list-item .user .level.l5 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l5,
+.comment-bilibili-fold .comment-list .list-item .user .level.l5 {
     background-position: -23px -348px
-}.bb-comment .comment-list .list-item .user .level.l6,.comment-bilibili-fold .comment-list .list-item .user .level.l6 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l6,
+.comment-bilibili-fold .comment-list .list-item .user .level.l6 {
     background-position: -23px -412px
-}.bb-comment .comment-list .list-item .user .level.l7,.comment-bilibili-fold .comment-list .list-item .user .level.l7 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l7,
+.comment-bilibili-fold .comment-list .list-item .user .level.l7 {
     background-position: -23px -476px
-}.bb-comment .comment-list .list-item .user .level.l8,.comment-bilibili-fold .comment-list .list-item .user .level.l8 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l8,
+.comment-bilibili-fold .comment-list .list-item .user .level.l8 {
     background-position: -23px -540px
-}.bb-comment .comment-list .list-item .user .level.l9,.comment-bilibili-fold .comment-list .list-item .user .level.l9 {
+}
+
+.bb-comment .comment-list .list-item .user .level.l9,
+.comment-bilibili-fold .comment-list .list-item .user .level.l9 {
     background-position: -23px -604px
-}.bb-comment .comment-list .list-item .user .level, .comment-bilibili-fold .comment-list .list-item .user .level {
-    display: inline-block;
-    width: 19px;
-    height: 9px;
+}
+
+.bb-comment .comment-list .list-item .user .level,
+.comment-bilibili-fold .comment-list .list-item .user .level {
+    display       : inline-block;
+    width         : 19px;
+    height        : 9px;
     vertical-align: middle;
-    margin: 0 8px;
-    background: url(data:image/png;base64,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) no-repeat;
+    margin        : 0 8px;
+    background    : url(data:image/png;base64,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) no-repeat;
 }`;
 /*!***********************!*/
 /**/modules["download.css"] = /*** ./CSS/download.css ***/
 `.table {
-    position: fixed;
-    z-index: 11113;
-    bottom: 0;
-    width: 100%;
-    min-height: 50px;
-    display: flex;
-    box-sizing: border-box;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
-    transition: transform 0.3s ease-in;
-    flex-wrap: wrap;
-    align-content: center;
+    position       : fixed;
+    z-index        : 11113;
+    bottom         : 0;
+    width          : 100%;
+    min-height     : 50px;
+    display        : flex;
+    box-sizing     : border-box;
+    background     : #fff;
+    border-radius  : 8px;
+    box-shadow     : 0 6px 12px 0 rgba(106, 115, 133, 22%);
+    transition     : transform 0.3s ease-in;
+    flex-wrap      : wrap;
+    align-content  : center;
     justify-content: center;
-    align-items: center;
+    align-items    : center;
 }
+
 .cell {
     background-color: #fff;
-    color: #000 !important;
-    border: #ccc 1px solid;
-    border-radius: 3px;
-    display: flex;
-    margin: 3px;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
+    color           : #000 !important;
+    border          : #ccc 1px solid;
+    border-radius   : 3px;
+    display         : flex;
+    margin          : 3px;
+    flex-wrap       : wrap;
+    align-content   : center;
+    justify-content : center;
+    align-items     : center;
+    flex-direction  : row;
 }
+
 .type {
-    color: #000 !important;
-    display: table-cell;
-    min-width: 1.5em;
-    text-align: center;
+    color         : #000 !important;
+    display       : table-cell;
+    min-width     : 1.5em;
+    text-align    : center;
     vertical-align: middle;
-    padding: 10px 3px;
+    padding       : 10px 3px;
 }
+
 .item {
-    display: table-cell;
+    display        : table-cell;
     text-decoration: none;
-    padding: 3px;
-    cursor: pointer;
-    color: #1184B4;
+    padding        : 3px;
+    cursor         : pointer;
+    color          : #1184B4;
 }
+
 .item:hover {
-    color:#FE3676;
+    color: #FE3676;
 }
+
 .up {
-    color: #fff !important;
-    text-align: center;
-    padding: 1px 3px;
+    color           : #fff !important;
+    text-align      : center;
+    padding         : 1px 3px;
     background-color: #777;
 }
+
 .down {
-    font-size: 90%;
+    font-size : 90%;
     margin-top: 2px;
     text-align: center;
-    padding: 1px 3px;
+    padding   : 1px 3px;
 }`;
 /*!***********************!*/
 /**/modules["hr.css"] = /*** ./CSS/hr.css ***/
 `.hr {
-    display: flex;
-    align-items: center;
-    grid-gap: 0;
-    gap: 0;
-    justify-content: space-between;
-    flex-shrink: 0;
-    height: 1px;
-    background-color: rgba(136,136,136,0.1);
-    width: 100%;
-    margin-bottom: 12px;
+    display         : flex;
+    align-items     : center;
+    grid-gap        : 0;
+    gap             : 0;
+    justify-content : space-between;
+    flex-shrink     : 0;
+    height          : 1px;
+    background-color: rgba(136, 136, 136, 0.1);
+    width           : 100%;
+    margin-bottom   : 12px;
 }`;
 /*!***********************!*/
 /**/modules["icon.css"] = /*** ./CSS/icon.css ***/
 `.icon {
-  align-items: center;
-  border-radius: 50%;
-  display: flex;
-  height: 20px;
+  align-items    : center;
+  border-radius  : 50%;
+  display        : flex;
+  height         : 20px;
   justify-content: center;
-  position: relative;
-  width: 20px;
-  box-sizing: content-box;
-  background: none;
-  cursor: pointer;
-}
-`;
+  position       : relative;
+  width          : 20px;
+  box-sizing     : content-box;
+  background     : none;
+  cursor         : pointer;
+}`;
 /*!***********************!*/
 /**/modules["imroot.css"] = /*** ./CSS/imroot.css ***/
 `/* 修复顶栏样式 */
-.im-root,.im-root .im-list-box * {
-    font-size:12px;
-    line-height:42px;
+.im-root,
+.im-root .im-list-box * {
+    font-size  : 12px;
+    line-height: 42px;
 }
+
 .im-root .im-list-box {
-    width:100%;
-    overflow:visible;
+    width   : 100%;
+    overflow: visible;
 }
+
 .im-root .im-list-box .im-list {
-    line-height:42px;
-    height:42px;
+    line-height: 42px;
+    height     : 42px;
 }
+
 .im-root .im-list-box .im-notify.im-number {
-    height: 14px;
-    line-height: 13px;
+    height       : 14px;
+    line-height  : 13px;
     border-radius: 10px;
-    padding: 1px 3px;
-    font-size: 12px;
-    min-width: 20px;
-    text-align: center;
-    color: #fff;
+    padding      : 1px 3px;
+    font-size    : 12px;
+    min-width    : 20px;
+    text-align   : center;
+    color        : #fff;
 }
+
 .im-root .im-list-box .im-notify.im-number.im-center {
-    top: 14px;
+    top : 14px;
     left: 80px;
 }
+
 .im-root .im-list-box .im-notify.im-dot {
-    top: 11px;
-    right: -10px;
-    width: 8px;
-    height: 8px;
+    top          : 11px;
+    right        : -10px;
+    width        : 8px;
+    height       : 8px;
     border-radius: 100%;
 }
+
 .im-root .im-list-box .im-notify.im-dot.im-center {
-    top: 16px;
+    top  : 16px;
     right: 20px;
 }`;
 /*!***********************!*/
 /**/modules["input.css"] = /*** ./CSS/input.css ***/
 `/* 输入框 */
 .input {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  background-color: transparent;
-  box-sizing: border-box;
-  padding: 0;
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
+  align-items        : center;
+  display            : flex;
+  justify-content    : space-between;
+  position           : relative;
+  background-color   : transparent;
+  box-sizing         : border-box;
+  padding            : 0;
+  flex               : 1;
+  flex-basis         : 0.000000001px;
+  padding-block-end  : 12px;
   padding-block-start: 12px;
 }
+
 .input input {
-  background-color: transparent;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  min-height: auto;
-  outline: none;
-  padding-bottom: 6px;
-  padding-inline-end: 8px;
+  background-color    : transparent;
+  box-sizing          : border-box;
+  font-family         : inherit;
+  font-size           : inherit;
+  font-weight         : inherit;
+  line-height         : inherit;
+  min-height          : auto;
+  outline             : none;
+  padding-bottom      : 6px;
+  padding-inline-end  : 8px;
   padding-inline-start: 8px;
-  padding-top: 6px;
-  text-align: inherit;
-  text-overflow: ellipsis;
-  width: 100%;
-  border-radius: 4px;
-  border: 1px solid rgba(136, 136, 136, 0.13333);
-  box-shadow: 0 4px 12px 0 rgb(0, 0, 0, 5%);
-  transition: box-shadow 120ms ease 180ms;
+  padding-top         : 6px;
+  text-align          : inherit;
+  text-overflow       : ellipsis;
+  width               : 100%;
+  border-radius       : 4px;
+  border              : 1px solid rgba(136, 136, 136, 0.13333);
+  box-shadow          : 0 4px 12px 0 rgb(0, 0, 0, 5%);
+  transition          : box-shadow 120ms ease 180ms;
 }
+
 .input input:focus {
   box-shadow: inset 0 0 1px 1px rgba(26, 115, 232, 80%);
 }
+
 .input .icon {
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  pointer-events: auto;
-  position: absolute;
-  right: 12px;
+  cursor          : pointer;
+  outline         : none;
+  padding         : 0;
+  pointer-events  : auto;
+  position        : absolute;
+  right           : 12px;
   background-color: white;
 }
+
 .input .icon:hover {
   background-color: rgba(0, 0, 0, 10%);
-  box-shadow: 0 1 12px 12px rgb(0, 0, 0, 10%);
+  box-shadow      : 0 1 12px 12px rgb(0, 0, 0, 10%);
 }`;
 /*!***********************!*/
 /**/modules["message.css"] = /*** ./CSS/message.css ***/
 `/* 修复消息页样式 */
-.container[data-v-6969394c] { 
+.container[data-v-6969394c] {
     height: calc(100vh - 42px) !important;
-} 
-.container[data-v-1c9150a9] { 
+}
+
+.container[data-v-1c9150a9] {
     height: calc(100vh - 42px) !important;
 }`;
 /*!***********************!*/
 /**/modules["mini-bofqi.css"] = /*** ./CSS/mini-bofqi.css ***/
 `/* 修正稍后再看迷你播放器样式 */
 .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {
-    top: 30px;
+    top   : 30px;
     height: 240px;
 }`;
 /*!***********************!*/
 /**/modules["oldReplySort.css"] = /*** ./CSS/oldReplySort.css ***/
-`.bb-comment .comment-list .list-item .user-face img, .comment-bilibili-fold .comment-list .list-item .user-face img {
-    width: 48px;
-    height: 48px;
+`.bb-comment .comment-list .list-item .user-face img,
+.comment-bilibili-fold .comment-list .list-item .user-face img {
+    width        : 48px;
+    height       : 48px;
     border-radius: 50%;
 }
-.bb-comment .comment-list .list-item .user-face .pendant, .comment-bilibili-fold .comment-list .list-item .user-face .pendant {
-    width: 86px;
-    height: 86px;
+
+.bb-comment .comment-list .list-item .user-face .pendant,
+.comment-bilibili-fold .comment-list .list-item .user-face .pendant {
+    width   : 86px;
+    height  : 86px;
     position: absolute;
-    top: -19px;
-    left: -19px;
-    display: block;
+    top     : -19px;
+    left    : -19px;
+    display : block;
 }
-.bb-comment .comment-list .list-item .user-face .pendant img, .comment-bilibili-fold .comment-list .list-item .user-face .pendant img {
-    border: 0;
+
+.bb-comment .comment-list .list-item .user-face .pendant img,
+.comment-bilibili-fold .comment-list .list-item .user-face .pendant img {
+    border       : 0;
     border-radius: 0;
-    width: 86px;
-    height: 86px;
+    width        : 86px;
+    height       : 86px;
 }`;
 /*!***********************!*/
 /**/modules["progress.css"] = /*** ./CSS/progress.css ***/
-`.progress{
-    --paper-progress-active-color: rgb(26,115,232);
+`.progress {
+    --paper-progress-active-color   : rgb(26, 115, 232);
     --paper-progress-container-color: rgb(223, 222, 223);
-    width: auto;
+    width                           : auto;
 }
-.progressContainer{
+
+.progressContainer {
     background: rgb(223, 222, 223);
-    height: 4px;
-    position: relative;
+    height    : 4px;
+    position  : relative;
 }
-.secondaryProgress,.primaryProgress{
-    
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+
+.secondaryProgress,
+.primaryProgress {
+
+    position        : absolute;
+    top             : 0;
+    right           : 0;
+    bottom          : 0;
+    left            : 0;
     transform-origin: left center;
-    transform: scaleX(0);
-    will-change: transform;
+    transform       : scaleX(0);
+    will-change     : transform;
 }
-.secondaryProgress{
+
+.secondaryProgress {
     background: rgb(183, 225, 205);
 }
-.primaryProgress{
-    background: rgb(26,115,232);
+
+.primaryProgress {
+    background: rgb(26, 115, 232);
 }
-.progressTag{
-    width: 100%;
-    padding-top: 6px;
-    display: inline-flex;
+
+.progressTag {
+    width          : 100%;
+    padding-top    : 6px;
+    display        : inline-flex;
     justify-content: space-between;
 }`;
 /*!***********************!*/
@@ -1312,26 +1467,28 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 `/* 下拉列表 */
 .select {
   align-items: center;
-  display: inline-flex;
+  display    : inline-flex;
 }
+
 select {
-  background-color: rgb(241, 243, 244);
-  background-size: 10px;
-  border: none;
-  border-radius: 4px;
-  color: rgb(32, 33, 36);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  max-width: 100%;
-  outline: none;
-  padding-bottom: 6px;
-  padding-inline-end: 21px;
+  background-color    : rgb(241, 243, 244);
+  background-size     : 10px;
+  border              : none;
+  border-radius       : 4px;
+  color               : rgb(32, 33, 36);
+  cursor              : pointer;
+  font-family         : inherit;
+  font-size           : inherit;
+  line-height         : inherit;
+  max-width           : 100%;
+  outline             : none;
+  padding-bottom      : 6px;
+  padding-inline-end  : 21px;
   padding-inline-start: 8px;
-  padding-top: 6px;
-  width: 200px;
+  padding-top         : 6px;
+  width               : 200px;
 }
+
 option {
   background-color: #fff;
 }`;
@@ -1339,733 +1496,799 @@ option {
 /**/modules["switch.css"] = /*** ./CSS/switch.css ***/
 `/* 滑块开关 */
 .switch {
-  cursor: pointer;
-  display: block;
+  cursor   : pointer;
+  display  : block;
   min-width: 34px;
-  outline: none;
-  position: relative;
-  width: 34px;
+  outline  : none;
+  position : relative;
+  width    : 34px;
 }
+
 .bar {
   background-color: rgb(189, 193, 198);
-  border-radius: 8px;
-  height: 12px;
-  left: 3px;
-  position: absolute;
-  top: 2px;
-  transition: background-color linear 80ms;
-  width: 28px;
-  z-index: 0;
+  border-radius   : 8px;
+  height          : 12px;
+  left            : 3px;
+  position        : absolute;
+  top             : 2px;
+  transition      : background-color linear 80ms;
+  width           : 28px;
+  z-index         : 0;
 }
+
 .bar[checked] {
   background-color: rgb(26, 115, 232);
-  opacity: 0.5;
+  opacity         : 0.5;
 }
+
 .bar:active {
   box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);
 }
+
 .knob {
   background-color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);
-  display: block;
-  height: 16px;
-  position: relative;
-  transition: transform linear 80ms, background-color linear 80ms;
-  width: 16px;
-  z-index: 1;
+  border-radius   : 50%;
+  box-shadow      : 0 1px 3px 0 rgba(0, 0, 0, 40%);
+  display         : block;
+  height          : 16px;
+  position        : relative;
+  transition      : transform linear 80ms, background-color linear 80ms;
+  width           : 16px;
+  z-index         : 1;
 }
+
 .knob[checked] {
   background-color: rgb(26, 115, 232);
-  transform: translate3d(18px, 0, 0);
+  transform       : translate3d(18px, 0, 0);
 }
+
 .knob:active {
   box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);
 }
+
 .knob i {
-  color: rgba(128, 134, 139, 15%);
-  height: 40px;
-  left: -12px;
+  color         : rgba(128, 134, 139, 15%);
+  height        : 40px;
+  left          : -12px;
   pointer-events: none;
-  top: -12px;
-  transition: color linear 80ms;
-  width: 40px;
-  border-radius: 50%;
-  bottom: 0;
-  display: block;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  transform: translate3d(0, 0, 0);
+  top           : -12px;
+  transition    : color linear 80ms;
+  width         : 40px;
+  border-radius : 50%;
+  bottom        : 0;
+  display       : block;
+  overflow      : hidden;
+  position      : absolute;
+  right         : 0;
+  transform     : translate3d(0, 0, 0);
 }
+
 .knob i[checked] {
   color: rgb(26, 115, 232);
 }
+
 .knob i:active {
   box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);
 }`;
 /*!***********************!*/
 /**/modules["ui-action.css"] = /*** ./CSS/ui-action.css ***/
 `.contain {
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-  display: flex;
-  min-height: 24px;
-  padding: 0 20px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items     : center;
+  border-top      : 1px solid rgba(0, 0, 0, 6%);
+  display         : flex;
+  min-height      : 24px;
+  padding         : 0 20px;
+  flex-wrap       : wrap;
+  justify-content : flex-end;
   background-color: transparent !important;
 }
+
 .label {
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
-  padding-block-start: 12px;
+  flex                : 1;
+  flex-basis          : 0.000000001px;
+  padding-block-end   : 12px;
+  padding-block-start : 12px;
   padding-inline-start: 12px;
 }
+
 .sub {
-  color: rgb(95, 99, 104);
+  color      : rgb(95, 99, 104);
   font-weight: 400;
 }
+
 .button,
 .action {
-  line-height: 154%;
-  align-items: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-flex;
-  flex-shrink: 0;
-  font-weight: 500;
-  height: 32px;
+  line-height    : 154%;
+  align-items    : center;
+  border-radius  : 4px;
+  box-sizing     : border-box;
+  cursor         : pointer;
+  display        : inline-flex;
+  flex-shrink    : 0;
+  font-weight    : 500;
+  height         : 32px;
   justify-content: center;
-  min-width: 5.14em;
-  outline-width: 0;
-  overflow: hidden;
-  padding: 8px 16px;
-  position: relative;
-  user-select: none;
+  min-width      : 5.14em;
+  outline-width  : 0;
+  overflow       : hidden;
+  padding        : 8px 16px;
+  position       : relative;
+  user-select    : none;
 }
+
 .action {
-  border: none;
+  border          : none;
   background-color: rgb(26, 115, 232);
-  color: #fff;
+  color           : #fff;
 }
+
 .button {
   background-color: #fff;
-  color: rgb(26, 115, 232);
-  border: 1px solid rgba(0, 0, 0, 6%);
+  color           : rgb(26, 115, 232);
+  border          : 1px solid rgba(0, 0, 0, 6%);
 }
+
 .action:hover {
   background-color: rgb(72, 115, 232);
 }
+
 .button:hover {
   background-color: rgba(26, 115, 232, 6%);
 }
+
 .action:active {
   box-shadow: 0 0 1px 1px rgba(72, 115, 232, 80%);
 }
+
 .button:active {
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 10%);
 }
+
 .button[disabled],
 .action[disabled] {
-  pointer-events: none;
+  pointer-events  : none;
   background-color: rgba(19, 1, 1, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: white;
-}
-`;
+  border          : 1px solid rgba(0, 0, 0, 0.1);
+  color           : white;
+}`;
 /*!***********************!*/
 /**/modules["ui-contain.css"] = /*** ./CSS/ui-contain.css ***/
 `.contain {
-  margin-bottom: 3px;
+  margin-bottom       : 3px;
   padding-inline-start: 20px;
-  padding-inline-end: 20px;
-  display: flex;
-  flex-direction: column;
-  outline: none;
-  position: relative;
+  padding-inline-end  : 20px;
+  display             : flex;
+  flex-direction      : column;
+  outline             : none;
+  position            : relative;
 }
+
 .header .title {
-  color: #000;
-  font-size: 108%;
-  font-weight: 400;
+  color         : #000;
+  font-size     : 108%;
+  font-weight   : 400;
   letter-spacing: 0.25px;
-  margin-bottom: 12px;
-  margin-top: 21px;
-  outline: none;
+  margin-bottom : 12px;
+  margin-top    : 21px;
+  outline       : none;
   padding-bottom: 4px;
-  padding-top: 8px;
+  padding-top   : 8px;
 }
+
 .card {
   border-radius: 4px;
-  box-shadow: 0px 0px 1px 1px rgba(60, 64, 67, 30%);
-  flex: 1;
-  color: #000;
-  line-height: 154%;
-  user-select: text;
-}
-`;
+  box-shadow   : 0px 0px 1px 1px rgba(60, 64, 67, 30%);
+  flex         : 1;
+  color        : #000;
+  line-height  : 154%;
+  user-select  : text;
+}`;
 /*!***********************!*/
 /**/modules["ui-file.css"] = /*** ./CSS/ui-file.css ***/
 `.contain {
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-  display: flex;
-  min-height: 24px;
-  padding: 0 20px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items     : center;
+  border-top      : 1px solid rgba(0, 0, 0, 6%);
+  display         : flex;
+  min-height      : 24px;
+  padding         : 0 20px;
+  flex-wrap       : wrap;
+  justify-content : flex-end;
   background-color: transparent !important;
 }
+
 .label {
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
-  padding-block-start: 12px;
+  flex                : 1;
+  flex-basis          : 0.000000001px;
+  padding-block-end   : 12px;
+  padding-block-start : 12px;
   padding-inline-start: 12px;
 }
+
 .sub {
-  color: rgb(95, 99, 104);
+  color      : rgb(95, 99, 104);
   font-weight: 400;
 }
+
 .button,
 .action {
-  line-height: 154%;
-  align-items: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-flex;
-  flex-shrink: 0;
-  font-weight: 500;
-  height: 32px;
+  line-height    : 154%;
+  align-items    : center;
+  border-radius  : 4px;
+  box-sizing     : border-box;
+  cursor         : pointer;
+  display        : inline-flex;
+  flex-shrink    : 0;
+  font-weight    : 500;
+  height         : 32px;
   justify-content: center;
-  min-width: 5.14em;
-  outline-width: 0;
-  overflow: hidden;
-  padding: 8px 16px;
-  position: relative;
-  user-select: none;
+  min-width      : 5.14em;
+  outline-width  : 0;
+  overflow       : hidden;
+  padding        : 8px 16px;
+  position       : relative;
+  user-select    : none;
 }
+
 .action {
-  border: none;
+  border          : none;
   background-color: rgb(26, 115, 232);
-  color: #fff;
+  color           : #fff;
 }
+
 .button {
   background-color: #fff;
-  color: rgb(26, 115, 232);
-  border: 1px solid rgba(0, 0, 0, 6%);
+  color           : rgb(26, 115, 232);
+  border          : 1px solid rgba(0, 0, 0, 6%);
 }
+
 .action:hover {
   background-color: rgb(72, 115, 232);
 }
+
 .button:hover {
   background-color: rgba(26, 115, 232, 6%);
 }
+
 .action:active {
   box-shadow: 0 0 1px 1px rgba(72, 115, 232, 80%);
 }
+
 .button:active {
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 10%);
 }
+
 .button[disabled],
 .action[disabled] {
-  pointer-events: none;
+  pointer-events  : none;
   background-color: rgba(19, 1, 1, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: white;
-}
-`;
+  border          : 1px solid rgba(0, 0, 0, 0.1);
+  color           : white;
+}`;
 /*!***********************!*/
 /**/modules["ui-float.css"] = /*** ./CSS/ui-float.css ***/
 `.float {
-  top: 0;
-  right: 0;
-  position: fixed;
-  z-index: 11111;
-  min-width: 40px;
-  min-height: 30px;
-  display: block;
-  padding: 8px;
-  box-sizing: border-box;
-  background: #fff;
-  border: 1px solid #e9eaec;
-  border-radius: 8px;
-  box-shadow: 0 6px 12px 0 rgb(106, 115, 133, 22%);
-  user-select: text;
+  top           : 0;
+  right         : 0;
+  position      : fixed;
+  z-index       : 11111;
+  min-width     : 40px;
+  min-height    : 30px;
+  display       : block;
+  padding       : 8px;
+  box-sizing    : border-box;
+  background    : #fff;
+  border        : 1px solid #e9eaec;
+  border-radius : 8px;
+  box-shadow    : 0 6px 12px 0 rgb(106, 115, 133, 22%);
+  user-select   : text;
   pointer-events: none;
 }
+
 .arrow {
-  left: 16%;
-  top: 100%;
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
+  left        : 16%;
+  top         : 100%;
+  width       : 0;
+  height      : 0;
+  border-left : 4px solid transparent;
   border-right: 4px solid transparent;
-  border-top: 8px solid #fff;
-  position: absolute;
-  user-select: text;
+  border-top  : 8px solid #fff;
+  position    : absolute;
+  user-select : text;
 }
+
 .message {
-  margin-top: -4px;
-  box-sizing: border-box;
-  height: 100%;
-  position: relative;
+  margin-top : -4px;
+  box-sizing : border-box;
+  height     : 100%;
+  position   : relative;
   user-select: text;
-  word-wrap: break-word;
-  word-break: break-all;
-  font-size: 12px;
+  word-wrap  : break-word;
+  word-break : break-all;
+  font-size  : 12px;
   line-height: 1.15;
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["ui-input.css"] = /*** ./CSS/ui-input.css ***/
 `.contain {
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-  display: flex;
-  min-height: 24px;
-  padding: 0 20px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items     : center;
+  border-top      : 1px solid rgba(0, 0, 0, 6%);
+  display         : flex;
+  min-height      : 24px;
+  padding         : 0 20px;
+  flex-wrap       : wrap;
+  justify-content : flex-end;
   background-color: transparent !important;
 }
+
 .label {
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
-  padding-block-start: 12px;
+  flex                : 1;
+  flex-basis          : 0.000000001px;
+  padding-block-end   : 12px;
+  padding-block-start : 12px;
   padding-inline-start: 12px;
 }
+
 .sub {
-  color: rgb(95, 99, 104);
+  color      : rgb(95, 99, 104);
   font-weight: 400;
 }
+
 .textbox {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  background-color: transparent;
-  box-sizing: border-box;
-  padding: 0;
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
+  align-items        : center;
+  display            : flex;
+  justify-content    : space-between;
+  position           : relative;
+  background-color   : transparent;
+  box-sizing         : border-box;
+  padding            : 0;
+  flex               : 1;
+  flex-basis         : 0.000000001px;
+  padding-block-end  : 12px;
   padding-block-start: 12px;
 }
+
 .textbox input {
-  background-color: transparent;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: inherit;
-  min-height: auto;
-  outline: none;
-  padding-bottom: 6px;
-  padding-inline-end: 8px;
+  background-color    : transparent;
+  box-sizing          : border-box;
+  font-family         : inherit;
+  font-size           : inherit;
+  font-weight         : inherit;
+  line-height         : inherit;
+  min-height          : auto;
+  outline             : none;
+  padding-bottom      : 6px;
+  padding-inline-end  : 8px;
   padding-inline-start: 8px;
-  padding-top: 6px;
-  text-align: inherit;
-  text-overflow: ellipsis;
-  width: 100%;
-  border-radius: 4px;
-  border: 1px solid rgba(136, 136, 136, 0.13333);
-  box-shadow: 0 4px 12px 0 rgb(0, 0, 0, 5%);
-  transition: box-shadow 120ms ease 180ms;
+  padding-top         : 6px;
+  text-align          : inherit;
+  text-overflow       : ellipsis;
+  width               : 100%;
+  border-radius       : 4px;
+  border              : 1px solid rgba(136, 136, 136, 0.13333);
+  box-shadow          : 0 4px 12px 0 rgb(0, 0, 0, 5%);
+  transition          : box-shadow 120ms ease 180ms;
 }
+
 .textbox input:focus {
   box-shadow: inset 0 0 1px 1px rgba(26, 115, 232, 80%);
 }
+
 .textbox .icon {
-  cursor: pointer;
-  outline: none;
-  padding: 0;
-  pointer-events: auto;
-  position: absolute;
-  right: 12px;
+  cursor          : pointer;
+  outline         : none;
+  padding         : 0;
+  pointer-events  : auto;
+  position        : absolute;
+  right           : 12px;
   background-color: white;
 }
+
 .textbox .icon:hover {
   background-color: rgba(0, 0, 0, 10%);
-  box-shadow: 0 1 12px 12px rgb(0, 0, 0, 10%);
+  box-shadow      : 0 1 12px 12px rgb(0, 0, 0, 10%);
 }
+
 .button,
 .action {
-  line-height: 154%;
-  align-items: center;
-  border-radius: 4px;
-  box-sizing: border-box;
-  cursor: pointer;
-  display: inline-flex;
-  flex-shrink: 0;
-  font-weight: 500;
-  height: 32px;
+  line-height    : 154%;
+  align-items    : center;
+  border-radius  : 4px;
+  box-sizing     : border-box;
+  cursor         : pointer;
+  display        : inline-flex;
+  flex-shrink    : 0;
+  font-weight    : 500;
+  height         : 32px;
   justify-content: center;
-  min-width: 5.14em;
-  outline-width: 0;
-  overflow: hidden;
-  padding: 8px 16px;
-  position: relative;
-  user-select: none;
+  min-width      : 5.14em;
+  outline-width  : 0;
+  overflow       : hidden;
+  padding        : 8px 16px;
+  position       : relative;
+  user-select    : none;
 }
+
 .action {
-  border: none;
+  border          : none;
   background-color: rgb(26, 115, 232);
-  color: #fff;
+  color           : #fff;
 }
+
 .button {
   background-color: #fff;
-  color: rgb(26, 115, 232);
-  border: 1px solid rgba(0, 0, 0, 6%);
+  color           : rgb(26, 115, 232);
+  border          : 1px solid rgba(0, 0, 0, 6%);
 }
+
 .action:hover {
   background-color: rgb(72, 115, 232);
 }
+
 .button:hover {
   background-color: rgba(26, 115, 232, 6%);
 }
+
 .action:active {
   box-shadow: 0 0 1px 1px rgba(72, 115, 232, 80%);
 }
+
 .button:active {
   box-shadow: 0 0 1px 1px rgba(0, 0, 0, 10%);
 }
+
 .button[disabled],
 .action[disabled] {
-  pointer-events: none;
+  pointer-events  : none;
   background-color: rgba(19, 1, 1, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: white;
-}
-`;
+  border          : 1px solid rgba(0, 0, 0, 0.1);
+  color           : white;
+}`;
 /*!***********************!*/
 /**/modules["ui-item.css"] = /*** ./CSS/ui-item.css ***/
 `/* 菜单项容器 */
 .contain {
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-  display: flex;
-  min-height: 24px;
-  padding: 0 20px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items     : center;
+  border-top      : 1px solid rgba(0, 0, 0, 6%);
+  display         : flex;
+  min-height      : 24px;
+  padding         : 0 20px;
+  flex-wrap       : wrap;
+  justify-content : flex-end;
   background-color: transparent !important;
 }
+
 .label {
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
-  padding-block-start: 12px;
+  flex                : 1;
+  flex-basis          : 0.000000001px;
+  padding-block-end   : 12px;
+  padding-block-start : 12px;
   padding-inline-start: 12px;
 }
+
 .sub {
-  color: rgb(95, 99, 104);
+  color      : rgb(95, 99, 104);
   font-weight: 400;
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["ui-menu.css"] = /*** ./CSS/ui-menu.css ***/
 `.menuitem {
-  align-items: center;
-  display: flex;
-  font-weight: 500;
-  margin-inline-end: 2px;
-  margin-inline-start: 1px;
-  min-height: 20px;
-  padding-bottom: 10px;
+  align-items         : center;
+  display             : flex;
+  font-weight         : 500;
+  margin-inline-end   : 2px;
+  margin-inline-start : 1px;
+  min-height          : 20px;
+  padding-bottom      : 10px;
   padding-inline-start: 23px;
-  padding-top: 10px;
-  cursor: pointer;
+  padding-top         : 10px;
+  cursor              : pointer;
 }
+
 .menuitem:hover {
   background-color: rgb(0, 0, 0, 6%);
 }
-.menuitem > div {
+
+.menuitem>div {
   padding-inline-end: 12px;
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["ui-picture.css"] = /*** ./CSS/ui-picture.css ***/
 `.contain {
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-  display: flex;
-  min-height: 24px;
-  padding: 0 20px;
-  flex-wrap: wrap;
-  justify-content: center;
+  align-items     : center;
+  border-top      : 1px solid rgba(0, 0, 0, 6%);
+  display         : flex;
+  min-height      : 24px;
+  padding         : 0 20px;
+  flex-wrap       : wrap;
+  justify-content : center;
   background-color: transparent !important;
-  line-height: 0;
-  max-height: 62px;
+  line-height     : 0;
+  max-height      : 62px;
 }
+
 .contain img {
   border-radius: 4px;
-  width: 100%;
-  max-height: 62px;
-}
-`;
+  width        : 100%;
+  max-height   : 62px;
+}`;
 /*!***********************!*/
 /**/modules["ui-popup-box.css"] = /*** ./CSS/ui-popup-box.css ***/
-`.box{
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
-    padding: 12px;
-    background-color: #fff;
-    color: black;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);
-    border: 1px solid rgba(136,136,136,0.13333);
-    box-sizing: border-box;
-    position: fixed;
-    font-size: 13px;
-    z-index: 11115;
-    line-height: 14px;
+`.box {
+  top             : 50%;
+  left            : 50%;
+  transform       : translateX(-50%) translateY(-50%);
+  transition      : 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  padding         : 12px;
+  background-color: #fff;
+  color           : black;
+  border-radius   : 8px;
+  box-shadow      : 0 4px 12px 0 rgb(0 0 0 / 5%);
+  border          : 1px solid rgba(136, 136, 136, 0.13333);
+  box-sizing      : border-box;
+  position        : fixed;
+  font-size       : 13px;
+  z-index         : 11115;
+  line-height     : 14px;
 }
-.contain{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+
+.contain {
+  display       : flex;
+  flex-direction: column;
+  height        : 100%;
 }
+
 *::-webkit-scrollbar {
-  width: 0 !important;
+  width : 0 !important;
   height: 0 !important;
 }`;
 /*!***********************!*/
 /**/modules["ui-sort-body.css"] = /*** ./CSS/ui-sort-body.css ***/
 `contain {
-  display: block;
-  padding-block-end: 0;
-  padding-block-start: 0;
-  padding-inline-end: 20px;
+  display             : block;
+  padding-block-end   : 0;
+  padding-block-start : 0;
+  padding-inline-end  : 20px;
   padding-inline-start: 20px;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-}
-`;
+  border-top          : 1px solid rgba(0, 0, 0, 6%);
+}`;
 /*!***********************!*/
 /**/modules["ui-sort-head.css"] = /*** ./CSS/ui-sort-head.css ***/
 `.contain {
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 6%);
-  display: flex;
-  min-height: 24px;
-  padding: 0 20px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
+  align-items     : center;
+  border-top      : 1px solid rgba(0, 0, 0, 6%);
+  display         : flex;
+  min-height      : 24px;
+  padding         : 0 20px;
+  flex-wrap       : wrap;
+  justify-content : flex-end;
   background-color: transparent !important;
 }
+
 .label {
-  flex: 1;
-  flex-basis: 0.000000001px;
-  padding-block-end: 12px;
-  padding-block-start: 12px;
+  flex                : 1;
+  flex-basis          : 0.000000001px;
+  padding-block-end   : 12px;
+  padding-block-start : 12px;
   padding-inline-start: 12px;
 }
+
 .sub {
-  color: rgb(95, 99, 104);
+  color      : rgb(95, 99, 104);
   font-weight: 400;
 }
+
 .anchor {
-  cursor: pointer;
+  cursor    : pointer;
   transition: transform 120ms ease 180ms, box-shadow 120ms ease 180ms;
 }
+
 .anchor[checked] {
   transform: rotateX(180deg);
 }
+
 .anchor:hover {
   box-shadow: 0 0 4px 4px rgba(241, 243, 244, 80%);
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["ui-stage.css"] = /*** ./CSS/ui-stage.css ***/
 `.stage {
-  position: fixed;
-  right: 40px;
-  bottom: 60px;
-  height: 20px;
-  width: 20px;
-  border: 1px solid #e9eaec;
+  position     : fixed;
+  right        : 40px;
+  bottom       : 60px;
+  height       : 20px;
+  width        : 20px;
+  border       : 1px solid #e9eaec;
   border-radius: 50%;
-  box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);
-  padding: 10px;
-  cursor: pointer;
-  animation: roll 1s ease-out;
-  transition: opacity 0.3s ease-out;
-  background: none;
-  z-index: 11110;
+  box-shadow   : 0 0 12px 4px rgb(106, 115, 133, 22%);
+  padding      : 10px;
+  cursor       : pointer;
+  animation    : roll 1s ease-out;
+  transition   : opacity 0.3s ease-out;
+  background   : none;
+  z-index      : 11110;
 }
-.classical{
-  box-sizing: content-box;
-  color: #fff;
-  background-color: #fff;
-  border-radius: 5px;
-  position: fixed;
-  bottom: 65px;
-  width: 56px;
-  height: 40px;
-  transition: right 0.7s;
-  -moz-transition: right 0.7s;
+
+.classical {
+  box-sizing        : content-box;
+  color             : #fff;
+  background-color  : #fff;
+  border-radius     : 5px;
+  position          : fixed;
+  bottom            : 65px;
+  width             : 56px;
+  height            : 40px;
+  transition        : right 0.7s;
+  -moz-transition   : right 0.7s;
   -webkit-transition: right 0.7s;
-  -o-transition: right 0.7s;
-  z-index: 11110;
-  padding: 4px;
-  right : -54px;
+  -o-transition     : right 0.7s;
+  z-index           : 11110;
+  padding           : 4px;
+  right             : -54px;
 }
-.classical:hover{
-  right : 0px;
-  box-shadow : rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;
-  border : 1px solid rgb(233, 234, 236);
+
+.classical:hover {
+  right     : 0px;
+  box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;
+  border    : 1px solid rgb(233, 234, 236);
 }
-.classical i{
+
+.classical i {
   background-position: -471px -982px;
-  display: block;
-  width: 20px;
-  height: 20px;
-  transition: 0.2s;
-  background-image: url(//static.hdslb.com/images/base/icons.png);
-  margin: auto;
+  display            : block;
+  width              : 20px;
+  height             : 20px;
+  transition         : 0.2s;
+  background-image   : url(//static.hdslb.com/images/base/icons.png);
+  margin             : auto;
 }
-.classical span{
-  font-size: 14px;
-  display: block;
-  width: 50%;
+
+.classical span {
+  font-size : 14px;
+  display   : block;
+  width     : 50%;
   transition: 0.2s;
-  color: #000;
-  margin: auto;
+  color     : #000;
+  margin    : auto;
 }
+
 @keyframes roll {
+
   30%,
   60%,
   90% {
     transform: scale(1) rotate(0deg);
   }
+
   10%,
   40%,
   70% {
     transform: scale(1.11) rotate(-180deg);
   }
+
   20%,
   50%,
   80% {
     transform: scale(0.9) rotate(-360deg);
   }
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["ui.css"] = /*** ./CSS/ui.css ***/
 `.box {
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  min-width: 600px;
-  min-height: 400px;
-  padding: 0;
-  border: 0;
-  position: fixed;
-  z-index: 11110;
-  display: block;
-  box-sizing: border-box;
-  background: #fff;
+  left         : 50%;
+  top          : 50%;
+  transform    : translateX(-50%) translateY(-50%);
+  min-width    : 600px;
+  min-height   : 400px;
+  padding      : 0;
+  border       : 0;
+  position     : fixed;
+  z-index      : 11110;
+  display      : block;
+  box-sizing   : border-box;
+  background   : #fff;
   border-radius: 8px;
-  box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
-  transition: transform 0.3s ease-in;
-  line-height: 14px;
-  font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,
+  box-shadow   : 0 6px 12px 0 rgba(106, 115, 133, 22%);
+  transition   : transform 0.3s ease-in;
+  line-height  : 14px;
+  font         : 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,
     Heiti SC, WenQuanYi Micro Hei, sans-serif;
 }
+
 .tool {
-  position: absolute;
-  border-bottom-left-radius: 8px;
+  position                  : absolute;
+  border-bottom-left-radius : 8px;
   border-bottom-right-radius: 8px;
-  overflow: hidden;
-  width: 100%;
-  display: inline-flex;
-  z-index: 1;
-  align-items: center;
-  justify-content: flex-end;
-  pointer-events: none;
+  overflow                  : hidden;
+  width                     : 100%;
+  display                   : inline-flex;
+  z-index                   : 1;
+  align-items               : center;
+  justify-content           : flex-end;
+  pointer-events            : none;
 }
+
 .tool div {
-  border-radius: 50%;
-  padding: 10px;
-  transform: scale(0.8);
+  border-radius : 50%;
+  padding       : 10px;
+  transform     : scale(0.8);
   pointer-events: visible;
 }
+
 .tool div:hover {
   background-color: rgba(0, 0, 0, 10%);
 }
+
 .content {
-  position: relative;
-  border-bottom-left-radius: 8px;
+  position                  : relative;
+  border-bottom-left-radius : 8px;
   border-bottom-right-radius: 8px;
-  overflow: hidden;
-  background-color: #fff;
+  overflow                  : hidden;
+  background-color          : #fff;
 }
+
 .contain {
-  padding-bottom: 15px;
+  padding-bottom     : 15px;
   background-position: top center;
-  background-size: contain;
-  background-repeat: no-repeat;
-  display: flex;
-  align-items: flex-start;
-  flex: 1;
-  height: 385px;
+  background-size    : contain;
+  background-repeat  : no-repeat;
+  display            : flex;
+  align-items        : flex-start;
+  flex               : 1;
+  height             : 385px;
 }
+
 .menu::-webkit-scrollbar,
 .item::-webkit-scrollbar {
-  width: 0 !important;
+  width : 0 !important;
   height: 0 !important;
 }
+
 .menu {
-  flex: 1 1 0;
-  flex-basis: calc(480px * 0.2);
-  height: 100%;
-  position: sticky;
-  top: 0;
-  display: flex;
+  flex          : 1 1 0;
+  flex-basis    : calc(480px * 0.2);
+  height        : 100%;
+  position      : sticky;
+  top           : 0;
+  display       : flex;
   flex-direction: column;
-  min-width: fit-content;
-  overflow: auto;
+  min-width     : fit-content;
+  overflow      : auto;
 }
+
 .item {
-  flex: 4 4 0;
+  flex      : 4 4 0;
   flex-basis: calc(480px * 0.8);
-  height: 100%;
+  height    : 100%;
   box-sizing: border-box;
-  display: block;
-  margin: 0 auto;
-  position: relative;
-  overflow: auto;
+  display   : block;
+  margin    : 0 auto;
+  position  : relative;
+  overflow  : auto;
 }
+
 .selected {
   color: rgb(51, 103, 214) !important;
 }
-.selected > .icon {
+
+.selected>.icon {
   fill: rgb(51, 103, 214) !important;
-}
-`;
+}`;
 /*!***********************!*/
 /**/modules["upList.css"] = /*** ./CSS/upList.css ***/
 `.up-info-m .up-card-box {
   white-space: nowrap;
-  overflow: auto;
+  overflow   : auto;
 }
 
 .up-info-m .up-card {
-  display: inline-block;
+  display   : inline-block;
   margin-top: 10px;
 }
 
 .up-info-m .avatar img {
-  cursor: pointer;
-  width: 40px;
-  height: 40px;
+  cursor       : pointer;
+  width        : 40px;
+  height       : 40px;
   border-radius: 50%;
 }
 
@@ -2074,56 +2297,363 @@ option {
 }
 
 .up-info-m .avatar .info-tag {
-  position: absolute;
-  background: #fff;
-  border: 1px solid #fb7299;
+  position     : absolute;
+  background   : #fff;
+  border       : 1px solid #fb7299;
   border-radius: 2px;
-  display: inline-block;
-  font-size: 12px;
-  color: #fb7299;
-  padding: 0 3px;
-  top: -10px;
-  right: -10px;
-  white-space: nowrap;
+  display      : inline-block;
+  font-size    : 12px;
+  color        : #fb7299;
+  padding      : 0 3px;
+  top          : -10px;
+  right        : -10px;
+  white-space  : nowrap;
 }
 
 .up-info-m .avatar {
-  width: 60px;
-  height: 30px;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: center;
+  width          : 60px;
+  height         : 30px;
+  display        : -ms-flexbox;
+  display        : flex;
+  -ms-flex-pack  : center;
   justify-content: center;
-  -ms-flex-align: start;
-  align-items: flex-start;
+  -ms-flex-align : start;
+  align-items    : flex-start;
 }
 
 .up-info-m .avatar .name-text {
-  font-family: PingFangSC-Regular, sans-serif;
-  line-height: 30px;
-  color: #222;
-  word-break: break-all;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
+  font-family       : PingFangSC-Regular, sans-serif;
+  line-height       : 30px;
+  color             : #222;
+  word-break        : break-all;
+  overflow          : hidden;
+  text-overflow     : ellipsis;
+  display           : -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  white-space: nowrap;
+  white-space       : nowrap;
 }
 
-.up-info-m .avatar .name-text.is-vip, .up-info-m .avatar .name-text:hover {
+.up-info-m .avatar .name-text.is-vip,
+.up-info-m .avatar .name-text:hover {
   color: #fb7299;
 }
 
 .up-info-m .title {
-  display: block;
-  font-size: 14px;
+  display     : block;
+  font-size   : 14px;
   margin-right: 80px;
-  color: #525659;
-  overflow: hidden;
-  height: 24px;
-  font-weight: 400;
-  padding: 8px 0;
+  color       : #525659;
+  overflow    : hidden;
+  height      : 24px;
+  font-weight : 400;
+  padding     : 8px 0;
+}`;
+/*!***********************!*/
+/**/modules["vanfont.css"] = /*** ./CSS/vanfont.css ***/
+`@font-face {
+    font-family: vanfont;
+    src        : url(//s1.hdslb.com/bfs/static/audio/medialist/asserts/iconfont.ae48418.eot);
+    src        : url(data:font/woff;base64,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) format("woff"), url(//s1.hdslb.com/bfs/static/audio/medialist/asserts/iconfont.6401a86.ttf) format("truetype"), url(//s1.hdslb.com/bfs/static/audio/medialist/asserts/iconfont.5899803.svg#iconfont) format("svg")
+}
+
+.vanfont {
+    display                : inline-block;
+    font-style             : normal;
+    vertical-align         : baseline;
+    text-align             : center;
+    text-transform         : none;
+    line-height            : 1;
+    text-rendering         : optimizeLegibility;
+    -webkit-font-smoothing : antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+.vanfont:before {
+    display    : block;
+    font-family: vanfont !important
+}
+
+[class^=van-icon-] {
+    display                : inline-block;
+    font-style             : normal;
+    vertical-align         : baseline;
+    text-align             : center;
+    text-transform         : none;
+    line-height            : 1;
+    text-rendering         : optimizeLegibility;
+    -webkit-font-smoothing : antialiased;
+    -moz-osx-font-smoothing: grayscale
+}
+
+[class^=van-icon-]:before {
+    display    : block;
+    font-family: vanfont !important
+}
+
+.van-icon-rotate:before {
+    display  : inline-block;
+    animation: loadingCircle 1s linear infinite
+}
+
+.van-icon-error:before {
+    content: "\\E62B"
+}
+
+.van-icon-serach:before {
+    content: "\\E62F"
+}
+
+.van-icon-info:before {
+    content: "\\E67D"
+}
+
+.van-icon-loading:before {
+    content: "\\EEE3"
+}
+
+.van-icon-warning:before {
+    content: "\\E664"
+}
+
+.van-icon-success:before {
+    content: "\\E6F7"
+}
+
+.van-icon-jianpan:before {
+    content: "\\E616"
+}
+
+.van-icon-lajitong:before {
+    content: "\\E659"
+}
+
+.van-icon-lv0:before {
+    content: "\\E6CB"
+}
+
+.van-icon-lv1:before {
+    content: "\\E6CC"
+}
+
+.van-icon-lv2:before {
+    content: "\\E6CD"
+}
+
+.van-icon-lv3:before {
+    content: "\\E6CE"
+}
+
+.van-icon-lv4:before {
+    content: "\\E6CF"
+}
+
+.van-icon-lv5:before {
+    content: "\\E6D0"
+}
+
+.van-icon-lv6:before {
+    content: "\\E6D1"
+}
+
+.van-icon-close:before {
+    content: "\\E604"
+}
+
+.van-icon-rate-3:before {
+    content: "\\E670"
+}
+
+.van-icon-rate-1:before {
+    content: "\\E672"
+}
+
+.van-icon-rate-2:before {
+    content: "\\E673"
+}
+
+.van-icon-fasong:before {
+    content: "\\E666"
+}
+
+.van-icon-cai:before {
+    content: "\\E638"
+}
+
+.van-icon-pinglun:before {
+    content: "\\E639"
+}
+
+.van-icon-ding:before {
+    content: "\\E63A"
+}
+
+.van-icon-guanbi:before {
+    content: "\\E63C"
+}
+
+.van-icon-gengduo:before {
+    content: "\\E63D"
+}
+
+.van-icon-biaoqing:before {
+    content: "\\E63E"
+}
+
+.van-icon-videodetails_play:before {
+    content: "\\E6E3"
+}
+
+.van-icon-videodetails_messag:before {
+    content: "\\E6E5"
+}
+
+.van-icon-info_playnumber:before {
+    content: "\\E6E6"
+}
+
+.van-icon-info_barragenumber:before {
+    content: "\\E6E7"
+}
+
+.van-icon-info_rank:before {
+    content: "\\E6E8"
+}
+
+.van-icon-info_prohibit:before {
+    content: "\\E6E9"
+}
+
+.van-icon-general_moreactions:before {
+    content: "\\E6EA"
+}
+
+.van-icon-general_pulldown_s:before {
+    content: "\\E6EB"
+}
+
+.van-icon-general_pullup_s:before {
+    content: "\\E6EC"
+}
+
+.van-icon-general_more:before {
+    content: "\\E6ED"
+}
+
+.van-icon-general_close_s:before {
+    content: "\\E6EE"
+}
+
+.van-icon-general_addto_s:before {
+    content: "\\E6EF"
+}
+
+.van-icon-videodetails_collec:before {
+    content: "\\E6E1"
+}
+
+.van-icon-videodetails_usemo:before {
+    content: "\\E6E2"
+}
+
+.van-icon-videodetails_throw:before {
+    content: "\\E6E4"
+}
+
+.van-icon-videodetails_like:before {
+    content: "\\E6E0"
+}
+
+.van-icon-general_enter_s:before {
+    content: "\\E6F0"
+}
+
+.van-icon-general_back_s:before {
+    content: "\\E6F1"
+}
+
+.van-icon-floatwindow_custome:before {
+    content: "\\E6F2"
+}
+
+.van-icon-share_weibo_default:before {
+    content: "\\E71C"
+}
+
+.van-icon-share_tieba_default:before {
+    content: "\\E71D"
+}
+
+.van-icon-share_wechat_default:before {
+    content: "\\E721"
+}
+
+.van-icon-tuodong:before {
+    content: "\\E665"
+}
+
+.van-icon-share_qq_default:before {
+    content: "\\E71E"
+}
+
+.van-icon-share_news_default:before {
+    content: "\\E71F"
+}
+
+.van-icon-share_qzone_default:before {
+    content: "\\E720"
+}
+
+.van-icon-info_up:before {
+    content: "\\E723"
+}
+
+.van-icon-Navbar_mobile:before {
+    content: "\\E724"
+}
+
+.van-icon-Navbar_logo:before {
+    content: "\\E725"
+}
+
+.van-icon-download:before {
+    content: "\\E744"
+}
+
+.van-icon-general_viewlist:before {
+    content: "\\E706"
+}
+
+.van-icon-general_viewmodule:before {
+    content: "\\E707"
+}
+
+.van-icon-videodetails_share:before {
+    content: "\\E70F"
+}
+
+.van-icon-general_upload:before {
+    content: "\\E634"
+}
+
+.van-icon-general_search:before {
+    content: "\\E635"
+}
+
+.van-icon-general_inplay:before {
+    content: "\\E646"
+}
+
+.van-icon-info_warning:before {
+    content: "\\E658"
+}
+
+.van-icon-gift:before {
+    content: "\\E605"
+}
+
+.van-icon-notice:before {
+    content: "\\E606"
 }`;
 /*!***********************!*/
 /**/modules["anime.html"] = /*** ./HTML/anime.html ***/
@@ -3552,10 +4082,8 @@ option {
             API.importModule("av.js");
         if (config.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href))
             API.importModule("bangumi.js");
-        if (config.watchlater && /\\/watchlater\\//.test(location.href))
+        if (config.watchlater && /\\/watchlater/.test(location.href))
             API.importModule("watchlater.js");
-        if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater)
-            location.replace("https://www.bilibili.com/watchlater/#/");
         if (config.player && /player\\./.test(location.href))
             API.importModule("player.js");
         if (/space\\.bilibili\\.com/.test(location.href))
@@ -3580,7 +4108,7 @@ option {
             API.importModule("read.js");
         if (config.player && /festival\\/202[1-2]bnj/.test(location.href))
             API.importModule("bnj.js");
-        if (config.medialist && /\\/medialist\\/play\\//.test(location.href) || /\\/playlist\\/video\\/pl/.test(location.href))
+        if ((config.medialist && /\\/medialist\\/play\\//.test(location.href) && !/watchlater/.test(location.href)) || /\\/playlist\\/video\\/pl/.test(location.href))
             API.importModule("medialist.js");
     }
     // 重写之后再引导的全局模块
@@ -4910,7 +5438,7 @@ const localMedia = LocalMedia;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
-            !Array.from(document.styleSheets).some(d => d.href.includes("comment.min.css")) && API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            !Array.from(document.styleSheets).some(d => { var _a; return (_a = d.href) === null || _a === void 0 ? void 0 : _a.includes("comment.min.css"); }) && API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
         });
         return GM.getResourceText(script);
     });
@@ -5690,8 +6218,8 @@ API.aria2 = new Aria2();
                         break;
                     case "flv":
                         result = API.pgc ?
-                            await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid }, true) :
-                            await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid }, true);
+                            await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
+                            await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
                         break;
                     case "mp4":
                         result = API.pgc ?
@@ -8270,10 +8798,12 @@ API.rebuildPlayerurl = RebuildPlayerurl;
         this.loadendCallback = [];
         this.title = document.title;
         window.stop();
+        Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
         this.clearWindow();
+        Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -8362,6 +8892,7 @@ API.rebuildPlayerurl = RebuildPlayerurl;
         document.dispatchEvent(new ProgressEvent("readystatechange"));
         document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
         window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+        Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
         window.dispatchEvent(new ProgressEvent("load"));
     }
     /**
@@ -8454,7 +8985,7 @@ API.rewrite = Rewrite;
         sub: "自制、简陋",
         type: "switch",
         value: false,
-        float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。"
+        float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。注意对于bangumi，点赞数据计算的是单P的。"
     });
     API.registerSetting({
         key: "medialist",
@@ -8863,8 +9394,8 @@ API.rewrite = Rewrite;
         key: "downloadQn",
         label: "默认画质",
         sub: "针对flv格式",
-        value: 125,
-        list: ["0", 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125],
+        value: 127,
+        list: ["0", 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125, 126, 127],
         float: '画质qn参数，数值越大画质越高，0表示自动。64（720P）以上需要登录，112（1080P+）以上需要大会员。一般只需设置为最大即可，会自动获取到能获取的最高画质。'
     });
     API.registerSetting({
@@ -10981,6 +11512,7 @@ new Anime("anime.html");
         }
         API.importModule("descBV.js"); // 修复简介中超链接
         API.importModule("videoSort.js"); // 修正分区信息
+        config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
     }
     Observer(record) {
@@ -11394,6 +11926,8 @@ new Read("read.html");
         API.path.forEach(d => { d.includes("av") && (API.aid = Number(/[0-9]+/.exec(d)[0])); });
     }
 }
+if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater)
+    location.replace("https://www.bilibili.com/watchlater/#/");
 new Watchlater("watchlater.html");
 
 //# sourceURL=API://@Bilibili-Old/url/watchlater.js`;
@@ -11449,6 +11983,7 @@ new Watchlater("watchlater.html");
         this.onload = () => { this.afterFlush(); };
     }
     async getIniState() {
+        var _a;
         if (API.path[4].toLowerCase().startsWith('bv'))
             API.aid = API.abv(API.path[4].split("#")[0].split("?")[0]);
         API.aid = API.aid || Number(/[0-9]+/.exec(String(API.path[4]))[0]);
@@ -11491,6 +12026,7 @@ new Watchlater("watchlater.html");
             this.stop("这似乎是个互动视频！抱歉！旧版播放器无法支持 ಥ_ಥ");
         API.aid = this.__INITIAL_STATE__.aid;
         API.tid = this.__INITIAL_STATE__.videoData.tid;
+        API.like = (_a = this.__INITIAL_STATE__.stat) === null || _a === void 0 ? void 0 : _a.like;
         API.switchVideo(() => {
             API.mediaSession({
                 title: this.__INITIAL_STATE__.videoData.pages.find(t => t.cid == API.cid).part || this.__INITIAL_STATE__.videoData.title,
@@ -12162,91 +12698,100 @@ new Av("av.html");
 //# sourceURL=API://@Bilibili-Old/url/av/descBV.js`;
 /*!***********************!*/
 /**/modules["enLike.js"] = /*** ./dist/url/av/enLike.js ***/
-`API.runWhile(() => document.querySelector(".v.play") && API.aid, async () => {
-    try {
-        let span = document.createElement("span");
-        let like = \`background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);\`;
-        let dislike = \`background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/dislike.png);\`;
-        let text = document.createTextNode("点赞 --");
-        let arg = text;
-        let islike = false;
-        let i = API.addElement("i", { class: "l-icon-move", style: 'width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;' + dislike }, span);
-        let b = API.addElement("b", { class: "l-icon-moved", style: "width : 22px;height : 22px;display : none;" }, span);
-        span.setAttribute("class", "u like");
-        span.setAttribute("style", "margin-left : 24px;margin-right : 10px;");
-        span.appendChild(text);
-        document.querySelector(".number").insertBefore(span, document.querySelector(".coin"));
-        span.onclick = async () => {
-            if (islike) {
-                // 取消点赞
-                let data = await xhr({
+`{
+    class Like {
+        constructor() {
+            this.liked = false;
+            this.number = API.like || 0;
+            API.runWhile(() => {
+                this.coin = API.path.name == "watchlater" ? document.querySelector(".u.coin") : document.querySelector("[report-id*=coin]");
+                return this.coin && API.aid;
+            }, () => this.init());
+        }
+        init() {
+            API.addCss(API.getModule("vanfont.css"), "vanfont");
+            this.style();
+            this.aid = API.aid;
+            this.span = document.createElement("span");
+            this.span.classList.add("ulike");
+            this.coin.parentElement.insertBefore(this.span, this.coin);
+            this.changeLiked();
+            this.span.addEventListener("click", () => this.setLike());
+            API.switchVideo(() => this.switch());
+            try {
+                !this.number && xhr({
+                    url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    this.number = API.jsonCheck(d).data.stat.like;
+                    this.changeLiked();
+                });
+                API.uid && xhr({
+                    url: \`https://api.bilibili.com/x/web-interface/archive/has/like?aid=\${API.aid}\`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    d = API.jsonCheck(d).data;
+                    d === 1 && (this.liked = true, this.changeLiked());
+                });
+            }
+            catch (e) {
+                toast.error("点赞出错！", e);
+            }
+        }
+        style() {
+            let style = \`.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 28px;vertical-align: middle;margin-right: 6px;}\`;
+            switch (API.path.name) {
+                case "bangumi":
+                    style += \`.ulike {position: relative;min-width: 110px;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;transform: translateY(-2px);}\`;
+                    style += \`.van-icon-videodetails_like{margin-left: 25px;}\`;
+                    break;
+                case "watchlater":
+                    style += \`.video-info-module .number .ulike {margin-right: 5px;}\`;
+                    break;
+                default: style += \`.video-info-m .number .ulike {margin-right: 5px;}\`;
+            }
+            API.addCss(style);
+        }
+        setLike() {
+            if (API.uid) {
+                const like = this.liked ? 2 : 1;
+                xhr({
                     url: "https://api.bilibili.com/x/web-interface/archive/like",
                     method: "POST",
-                    data: \`aid=\${API.aid}&like=2&csrf=\${API.getCookies().bili_jct}\`,
-                    credentials: true
+                    data: \`aid=\${API.aid}&like=\${like}&csrf=\${API.getCookies().bili_jct}\`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    API.jsonCheck(d).ttl;
+                    this.liked = !this.liked;
+                    this.number = this.liked ? this.number + 1 : this.number - 1;
+                    this.changeLiked();
                 });
-                data = API.jsonCheck(data).ttl;
-                toast.warning("取消点赞！");
-                islike = false;
-                i.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + dislike);
-                b.setAttribute("style", "width : 22px;height : 22px;display : none;");
-                if (arg.nodeValue.match("万"))
-                    return;
-                let number = 1 * arg.nodeValue.match(/[0-9]+/) - 1;
-                text = document.createTextNode(" 点赞 " + number);
-                arg.replaceWith(text);
-                arg = text;
             }
-            else {
-                if (!API.uid)
-                    return API.biliQuickLogin(); // 登录判断
-                // 点赞
-                let data = await xhr({
-                    url: "https://api.bilibili.com/x/web-interface/archive/like",
-                    method: "POST",
-                    data: \`aid=\${API.aid}&like=1&csrf=\${API.getCookies().bili_jct}\`,
-                    credentials: true
+            else
+                API.biliQuickLogin();
+        }
+        changeLiked() {
+            this.span.innerHTML = \`<i class="van-icon-videodetails_like" style="color: \${this.liked ? "#f36392" : "#757575"};" ></i>点赞 \${Format.unitFormat(this.number) || "--"}\`;
+        }
+        switch() {
+            if (this.aid != API.aid) {
+                this.aid = API.aid;
+                xhr({
+                    url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    this.number = API.jsonCheck(d).data.stat.like;
+                    this.changeLiked();
                 });
-                data = API.jsonCheck(data).ttl;
-                toast.success("点赞成功！");
-                islike = true;
-                i.setAttribute("style", "width : 22px;height : 22px;display : none;");
-                b.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + like);
-                if (arg.nodeValue.match("万"))
-                    return;
-                let number = 1 * arg.nodeValue.match(/[0-9]+/) + 1;
-                text = document.createTextNode(" 点赞 " + number);
-                arg.replaceWith(text);
-                arg = text;
             }
-        };
-        // 初始化按钮
-        let data = await xhr({
-            url: Format.objUrl("https://api.bilibili.com/x/web-interface/view", { aid: API.aid }),
-            credentials: true
-        });
-        data = API.jsonCheck(data).data.stat.like;
-        document.querySelector(".like").setAttribute("title", "点赞人数" + data);
-        text = document.createTextNode(" 点赞 " + Format.unitFormat(data));
-        arg.replaceWith(text);
-        arg = text;
-        if (!API.uid)
-            return;
-        data = API.jsonCheck(await xhr({
-            url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": API.aid }),
-            credentials: true
-        })).data;
-        if (data == 1) {
-            // 点赞过点亮图标
-            i.setAttribute("style", "width : 22px;height : 22px;display : none;");
-            b.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + like);
-            islike = true;
         }
     }
-    catch (e) {
-        toast.error("enLike.js", e);
-    }
-});
+    new Like();
+}
 
 //# sourceURL=API://@Bilibili-Old/url/av/enLike.js`;
 /*!***********************!*/
@@ -12657,6 +13202,7 @@ API.initialStateOfAv = InitialStateOfAv;
         });
     }
     afterFlush() {
+        config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         API.runWhile(() => document.querySelector(".new-entry"), () => { var _a; return (_a = document.querySelector(".new-entry")) === null || _a === void 0 ? void 0 : _a.remove(); }); // 移除过期节点
         if (document.compatMode === "BackCompat") { // 怪异模式下样式修复
             API.addCss(".header-info .count-wrapper div { height:18px; }.bili-header-m .nav-menu .profile-info .i-face { top:5px; }");
@@ -12877,18 +13423,7 @@ API.initialStateOfBangumi = InitialStateOfBangumi;
         response.result.favorites = response.result.follow;
         args.response = args.responseText = JSON.stringify(response);
     }, false);
-    // 修复片尾番剧推荐
-    API.xhrhook("api.bilibili.com/pgc/web/recommend/related/recommend", undefined, obj => {
-        const response = API.jsonCheck(obj.responseText);
-        if (response.result && response.result.season)
-            response.result = response.result.season;
-        obj.response = obj.responseText = JSON.stringify(response);
-    }, false);
     // 修复番剧推荐
-    API.xhrhook("comment.bilibili.com/playtag", args => {
-        args[1] = "https://comment.bilibili.com/playtag,2-2?html5=1";
-        restoreBangumiRecommand();
-    });
     API.addCss(\`#bangumi_recommend_vertial .recom-list{
             height: 960px;
             overflow: auto;
@@ -12896,15 +13431,9 @@ API.initialStateOfBangumi = InitialStateOfBangumi;
             width: 0 !important;
             height: 0 !important;
         }\`, "recom-list");
-    async function restoreBangumiRecommand() {
-        let data = API.jsonCheck(await xhr({ url: Format.objUrl("https://api.bilibili.com/pgc/web/recommend/related/recommend", { season_id: String(API.__INITIAL_STATE__.ssId) }) })).result;
+    API.runWhile(() => document.querySelector(".recom-list.clearfix"), async () => {
         let result = API.jsonCheck(await xhr({ url: Format.objUrl("https://api.bilibili.com/x/tag/info", { tag_name: (API.__INITIAL_STATE__).mediaInfo.title }) }));
         result = API.jsonCheck(await xhr({ url: Format.objUrl("https://api.bilibili.com/x/web-interface/tag/top", { tid: result.data.tag_id }) })).data;
-        if (!document.querySelector(".bilibili-player-recommend")) {
-            await new Promise(r => {
-                API.runWhile(() => document.querySelector(".bilibili-player-recommend"), r);
-            });
-        }
         result = result.reduce((s, d) => {
             s = s + \`<li class="recom-item">
                 <a href="https://www.bilibili.com/video/av\${d.aid}" target="_blank" title="\${d.title}">
@@ -12919,30 +13448,8 @@ API.initialStateOfBangumi = InitialStateOfBangumi;
                 </div></div></a></li>\`;
             return s;
         }, "");
-        // @ts-ignore：节点肯定存在
         document.querySelector(".recom-list.clearfix").innerHTML = result;
-        data = data.reduce((s, d) => {
-            s = s + \`<a class="bilibili-player-recommend-video" href="\${d.url}" target="_blank">
-                <div class="bilibili-player-recommend-left">
-                <img src="\${d.new_ep.cover || d.cover}@160w_100h.webp" alt="\${d.title}" class="mCS_img_loaded" />
-                <span class="player-tooltips-trigger"><i class="bilibili-player-iconfont icon-22wait-normal"></i></span>
-                </div>
-                <div class="bilibili-player-recommend-right">
-                <div class="bilibili-player-recommend-title" title="\${d.title}">\${d.title}</div>
-                <div class="bilibili-player-recommend-click"><i class="bilibili-player-iconfont icon-12iconplayed"></i>\${Format.unitFormat(d.stat.view)}</div>
-                <div class="bilibili-player-recommend-danmaku"><i class="bilibili-player-iconfont icon-12icondanmu"></i>\${Format.unitFormat(d.stat.danmaku)}</div>
-                </div></a>\`;
-            return s;
-        }, '');
-        let item = document.querySelector(".bilibili-player-recommend");
-        if (!item.querySelector(".mCSB_container")) {
-            await new Promise(r => {
-                API.runWhile(() => item.querySelector(".mCSB_container"), r, 500, 0);
-            });
-        }
-        // @ts-ignorei：前面判定了存在节点
-        item.querySelector(".mCSB_container").innerHTML = data;
-    }
+    });
 }
 
 //# sourceURL=API://@Bilibili-Old/url/bangumi/restoreData.js`;
