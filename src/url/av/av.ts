@@ -97,6 +97,7 @@ class Av extends API.rewrite {
         if (this.__INITIAL_STATE__.videoData.stein_guide_cid) this.stop("这似乎是个互动视频！抱歉！旧版播放器无法支持 ಥ_ಥ");
         API.aid = this.__INITIAL_STATE__.aid;
         API.tid = this.__INITIAL_STATE__.videoData.tid;
+        API.like = this.__INITIAL_STATE__.stat?.like;
         API.switchVideo(() => {
             API.mediaSession({
                 title: this.__INITIAL_STATE__.videoData.pages.find(t => t.cid == API.cid).part || this.__INITIAL_STATE__.videoData.title,

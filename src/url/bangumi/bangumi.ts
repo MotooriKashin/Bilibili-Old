@@ -120,6 +120,7 @@ class Bangumi extends API.rewrite {
         })
     }
     afterFlush() {
+        config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         API.runWhile(() => document.querySelector(".new-entry"), () => document.querySelector(".new-entry")?.remove()); // 移除过期节点
         if (document.compatMode === "BackCompat") { // 怪异模式下样式修复
             API.addCss(".header-info .count-wrapper div { height:18px; }.bili-header-m .nav-menu .profile-info .i-face { top:5px; }")

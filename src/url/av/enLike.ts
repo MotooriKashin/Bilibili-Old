@@ -3,81 +3,102 @@ interface modules {
      * 旧版页面添加点赞功能
      */
     readonly "enLike.js": string;
+    readonly "vanfont.css": string;
 }
-API.runWhile(() => document.querySelector(".v.play") && API.aid, async () => {
-    try {
-        let span = document.createElement("span");
-        let like = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/like.png);`;
-        let dislike = `background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/dislike.png);`;
-        let text = document.createTextNode("点赞 --");
-        let arg = text;
-        let islike = false;
-        let i = API.addElement("i", { class: "l-icon-move", style: 'width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;' + dislike }, span);
-        let b = API.addElement("b", { class: "l-icon-moved", style: "width : 22px;height : 22px;display : none;" }, span)
-        span.setAttribute("class", "u like");
-        span.setAttribute("style", "margin-left : 24px;margin-right : 10px;");
-        span.appendChild(text);
-        (<HTMLElement>document.querySelector(".number")).insertBefore(span, document.querySelector(".coin"));
-        span.onclick = async () => {
-            if (islike) {
-                // 取消点赞
-                let data = await xhr({
+{
+    class Like {
+        aid: number;
+        coin: HTMLElement;
+        span: HTMLSpanElement;
+        liked = false;
+        number = API.like || 0;
+        constructor() {
+            API.runWhile(() => {
+                this.coin = API.path.name == "watchlater" ? document.querySelector(".u.coin") : document.querySelector("[report-id*=coin]");
+                return this.coin && API.aid;
+            }, () => this.init())
+        }
+        init() {
+            API.addCss(API.getModule("vanfont.css"), "vanfont");
+            this.style();
+            this.aid = API.aid;
+            this.span = document.createElement("span");
+            this.span.classList.add("ulike");
+            this.coin.parentElement.insertBefore(this.span, this.coin);
+            this.changeLiked();
+            this.span.addEventListener("click", () => this.setLike());
+            API.switchVideo(() => this.switch());
+            try {
+                !this.number && xhr({
+                    url: `https://api.bilibili.com/x/web-interface/view?aid=${API.aid}`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    this.number = API.jsonCheck(d).data.stat.like;
+                    this.changeLiked();
+                })
+                API.uid && xhr({
+                    url: `https://api.bilibili.com/x/web-interface/archive/has/like?aid=${API.aid}`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    d = API.jsonCheck(d).data;
+                    d === 1 && (this.liked = true, this.changeLiked());
+                })
+            } catch (e) { toast.error("点赞出错！", e) }
+        }
+        style() {
+            let style = `.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 28px;vertical-align: middle;margin-right: 6px;}`;
+            switch (API.path.name) {
+                case "bangumi": style += `.ulike {position: relative;min-width: 110px;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;transform: translateY(-2px);}`;
+                    style += `.van-icon-videodetails_like{margin-left: 25px;}`;
+                    break;
+                case "watchlater": style += `.video-info-module .number .ulike {margin-right: 5px;}`;
+                    break;
+                default: style += `.video-info-m .number .ulike {margin-right: 5px;}`;
+            }
+            API.addCss(style);
+        }
+        setLike() {
+            if (API.uid) {
+                const like = this.liked ? 2 : 1;
+                xhr({
                     url: "https://api.bilibili.com/x/web-interface/archive/like",
                     method: "POST",
-                    data: `aid=${API.aid}&like=2&csrf=${API.getCookies().bili_jct}`,
-                    credentials: true
-                });
-                data = API.jsonCheck(data).ttl;
-                toast.warning("取消点赞！");
-                islike = false;
-                i.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + dislike);
-                b.setAttribute("style", "width : 22px;height : 22px;display : none;");
-                if ((<any>arg.nodeValue).match("万")) return;
-                let number = 1 * (<any>arg.nodeValue).match(/[0-9]+/) - 1;
-                text = document.createTextNode(" 点赞 " + number);
-                arg.replaceWith(text);
-                arg = text;
-            } else {
-                if (!API.uid) return API.biliQuickLogin(); // 登录判断
-                // 点赞
-                let data = await xhr({
-                    url: "https://api.bilibili.com/x/web-interface/archive/like",
-                    method: "POST",
-                    data: `aid=${API.aid}&like=1&csrf=${API.getCookies().bili_jct}`,
-                    credentials: true
-                });
-                data = API.jsonCheck(data).ttl;
-                toast.success("点赞成功！");
-                islike = true;
-                i.setAttribute("style", "width : 22px;height : 22px;display : none;");
-                b.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + like);
-                if ((<any>arg.nodeValue).match("万")) return;
-                let number = 1 * (<any>arg.nodeValue).match(/[0-9]+/) + 1;
-                text = document.createTextNode(" 点赞 " + number);
-                arg.replaceWith(text);
-                arg = text;
+                    data: `aid=${API.aid}&like=${like}&csrf=${API.getCookies().bili_jct}`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    API.jsonCheck(d).ttl;
+                    this.liked = !this.liked;
+                    this.number = this.liked ? this.number + 1 : this.number - 1;
+                    this.changeLiked();
+                })
+            }
+            else API.biliQuickLogin();
+        }
+        changeLiked() {
+            this.span.innerHTML = `<i class="van-icon-videodetails_like" style="color: ${this.liked ? "#f36392" : "#757575"};" ></i>点赞 ${Format.unitFormat(this.number) || "--"}`;
+        }
+        switch() {
+            if (this.aid != API.aid) {
+                this.aid = API.aid;
+                xhr({
+                    url: `https://api.bilibili.com/x/web-interface/view?aid=${API.aid}`,
+                    credentials: true,
+                    responseType: "json"
+                }).then(d => {
+                    this.number = API.jsonCheck(d).data.stat.like;
+                    this.changeLiked();
+                })
             }
         }
-        // 初始化按钮
-        let data = await xhr({
-            url: Format.objUrl("https://api.bilibili.com/x/web-interface/view", { aid: <any>API.aid }),
-            credentials: true
-        })
-        data = API.jsonCheck(data).data.stat.like;
-        (<HTMLElement>document.querySelector(".like")).setAttribute("title", "点赞人数" + data);
-        text = document.createTextNode(" 点赞 " + Format.unitFormat(data));
-        arg.replaceWith(text);
-        arg = text;
-        if (!API.uid) return;
-        data = API.jsonCheck(await xhr({
-            url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/has/like", { "aid": <any>API.aid }),
-            credentials: true
-        })).data;
-        if (data == 1) {
-            // 点赞过点亮图标
-            i.setAttribute("style", "width : 22px;height : 22px;display : none;");
-            b.setAttribute("style", "width : 22px;height : 22px;display: inline-block;vertical-align: middle;margin-top: -3px;margin-right: 3px;" + like);
-            islike = true;
-        }
-    } catch (e) { toast.error("enLike.js", e) }
-})
+    }
+    new Like();
+}
+declare namespace API {
+    /**
+     * 点赞数
+     */
+    let like: number;
+}

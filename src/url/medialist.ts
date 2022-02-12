@@ -241,6 +241,7 @@ class Playlist extends API.rewrite {
         }
         API.importModule("descBV.js"); // 修复简介中超链接
         API.importModule("videoSort.js"); // 修正分区信息
+        config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
     }
     Observer(record: MutationRecord[]) {

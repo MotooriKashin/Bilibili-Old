@@ -333,7 +333,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         sub: "自制、简陋",
         type: "switch",
         value: false,
-        float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。"
+        float: "旧版播放器的时代点赞功能还未存在，本脚本代为设计了个丑丑的点赞功能。注意对于bangumi，点赞数据计算的是单P的。"
     })
     API.registerSetting({
         key: "medialist",
