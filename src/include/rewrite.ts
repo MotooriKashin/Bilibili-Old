@@ -15,7 +15,7 @@ class Rewrite {
      * 重写页面前需要清理的全局变量污染
      */
     dush = [
-        "__INITIAL_STATE__",
+        // "__INITIAL_STATE__",
         "__PGC_USERSTATE__",
         "__BILI_CONFIG__",
         "__mobxGlobals",
@@ -148,6 +148,7 @@ class Rewrite {
      * 重写完页面执行的回调函数
      */
     loadendCallback: (() => void)[] = [];
+    cleard = false;
     title = document.title;
     /**
      * 添加重写完页面执行的回调函数
@@ -166,13 +167,12 @@ class Rewrite {
      * @param 旧版网页框架名，**请移除其中的script标签**
      */
     constructor(html: keyof modules) {
-        window.stop();
-        Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
+        // window.stop();
+        // Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
-        this.clearWindow();
-        Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
+        // Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -201,12 +201,14 @@ class Rewrite {
             } catch (e) { }
         });
         API.EmbedPlayer();
+        this.cleard = true;
     }
     /**
      * 刷新页面  
      * 将进入脚本插入循环，页面重构完成请通过`onload`属性回调
      */
     flushDocument() {
+        !this.cleard && this.clearWindow();
         !(this.script.length === 0) ? this.loadScript(this.script[0]) : this.loadenEvent();
     }
     /**
@@ -247,11 +249,11 @@ class Rewrite {
      */
     loadenEvent() {
         this.loadendCallback.forEach(async d => d());
-        document.dispatchEvent(new ProgressEvent("readystatechange"));
-        document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
-        window.dispatchEvent(new ProgressEvent("load"));
+        // document.dispatchEvent(new ProgressEvent("readystatechange"));
+        // document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+        // window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+        // Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
+        // window.dispatchEvent(new ProgressEvent("load"));
     }
     /**
      * 添加媒体控制
