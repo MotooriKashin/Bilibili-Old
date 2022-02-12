@@ -1,60 +1,66 @@
 .table {
-    position: fixed;
-    z-index: 11113;
-    bottom: 0;
-    width: 100%;
-    min-height: 50px;
-    display: flex;
-    box-sizing: border-box;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
-    transition: transform 0.3s ease-in;
-    flex-wrap: wrap;
-    align-content: center;
+    position       : fixed;
+    z-index        : 11113;
+    bottom         : 0;
+    width          : 100%;
+    min-height     : 50px;
+    display        : flex;
+    box-sizing     : border-box;
+    background     : #fff;
+    border-radius  : 8px;
+    box-shadow     : 0 6px 12px 0 rgba(106, 115, 133, 22%);
+    transition     : transform 0.3s ease-in;
+    flex-wrap      : wrap;
+    align-content  : center;
     justify-content: center;
-    align-items: center;
+    align-items    : center;
 }
+
 .cell {
     background-color: #fff;
-    color: #000 !important;
-    border: #ccc 1px solid;
-    border-radius: 3px;
-    display: flex;
-    margin: 3px;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
+    color           : #000 !important;
+    border          : #ccc 1px solid;
+    border-radius   : 3px;
+    display         : flex;
+    margin          : 3px;
+    flex-wrap       : wrap;
+    align-content   : center;
+    justify-content : center;
+    align-items     : center;
+    flex-direction  : row;
 }
+
 .type {
-    color: #000 !important;
-    display: table-cell;
-    min-width: 1.5em;
-    text-align: center;
+    color         : #000 !important;
+    display       : table-cell;
+    min-width     : 1.5em;
+    text-align    : center;
     vertical-align: middle;
-    padding: 10px 3px;
+    padding       : 10px 3px;
 }
+
 .item {
-    display: table-cell;
+    display        : table-cell;
     text-decoration: none;
-    padding: 3px;
-    cursor: pointer;
-    color: #1184B4;
+    padding        : 3px;
+    cursor         : pointer;
+    color          : #1184B4;
 }
+
 .item:hover {
-    color:#FE3676;
+    color: #FE3676;
 }
+
 .up {
-    color: #fff !important;
-    text-align: center;
-    padding: 1px 3px;
+    color           : #fff !important;
+    text-align      : center;
+    padding         : 1px 3px;
     background-color: #777;
 }
+
 .down {
-    font-size: 90%;
+    font-size : 90%;
     margin-top: 2px;
     text-align: center;
-    padding: 1px 3px;
+    padding   : 1px 3px;
 }

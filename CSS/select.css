@@ -1,26 +1,28 @@
 /* 下拉列表 */
 .select {
   align-items: center;
-  display: inline-flex;
+  display    : inline-flex;
 }
+
 select {
-  background-color: rgb(241, 243, 244);
-  background-size: 10px;
-  border: none;
-  border-radius: 4px;
-  color: rgb(32, 33, 36);
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  max-width: 100%;
-  outline: none;
-  padding-bottom: 6px;
-  padding-inline-end: 21px;
+  background-color    : rgb(241, 243, 244);
+  background-size     : 10px;
+  border              : none;
+  border-radius       : 4px;
+  color               : rgb(32, 33, 36);
+  cursor              : pointer;
+  font-family         : inherit;
+  font-size           : inherit;
+  line-height         : inherit;
+  max-width           : 100%;
+  outline             : none;
+  padding-bottom      : 6px;
+  padding-inline-end  : 21px;
   padding-inline-start: 8px;
-  padding-top: 6px;
-  width: 200px;
+  padding-top         : 6px;
+  width               : 200px;
 }
+
 option {
   background-color: #fff;
 }
