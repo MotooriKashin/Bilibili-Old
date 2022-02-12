@@ -345,8 +345,8 @@ interface modules {
                         await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
                         break;
                     case "flv": result = API.pgc ?
-                        await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid }, true) :
-                        await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid }, true);
+                        await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
+                        await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
                         break;
                     case "mp4": result = API.pgc ?
                         await new API.url().getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }, true) :

@@ -740,8 +740,8 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         key: "downloadQn",
         label: "默认画质",
         sub: "针对flv格式",
-        value: 125,
-        list: ["0", 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125],
+        value: 127,
+        list: ["0", 15, 16, 32, 48, 64, 74, 80, 112, 116, 120, 125, 126, 127],
         float: '画质qn参数，数值越大画质越高，0表示自动。64（720P）以上需要登录，112（1080P+）以上需要大会员。一般只需设置为最大即可，会自动获取到能获取的最高画质。'
     })
     API.registerSetting({
