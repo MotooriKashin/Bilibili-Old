@@ -988,6 +988,26 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         value: false,
         float: '重构以恢复旧版番剧分区。'
     })
+    API.registerSetting({
+        type: "row",
+        sort: "player",
+        key: "codecType",
+        label: "优先载入的视频编码类型",
+        value: "AVC",
+        list: ["AVC", "HEVC", "AV1"],
+        float: '播放器会尽量优先加载所选择的编码，可根据设备解码能力与实际需要调整这个设置项',
+        action: type => {
+            let mime = {
+                "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
+                "AV1": 'video/mp4;codecs="av01.0.01M.08.0.110.01.01.01.0"',
+                "AVC": 'video/mp4;codecs="avc1.640028"'
+            };
+            if(!MediaSource.isTypeSupported(mime[type])) {
+                toast.warning(`播放器不支持${type}编码格式`, "将继续使用AVC编码");
+                config.codecType = "AVC";
+            }
+        }
+    })
 }
 /**
  * 设置菜单标签

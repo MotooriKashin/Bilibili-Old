@@ -322,8 +322,32 @@ class EmbedPlayer {
     }
 }
 class GrayManager extends EmbedPlayer {
+    /**
+    * 播放器播放时优先选择的编码、浏览器支持的编码类型
+    */
+    codec: {
+        preference: number;
+        support: {};
+    }
     constructor(player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) {
         super(player, swf, playerParams, playerType, upgrade, callbackFn);
+        let codecId = {
+            "AVC": 7,
+            "HEVC": 12,
+            "AV1": 13
+        }
+        this.codec = {
+            preference: codecId[config.codecType],
+            support: {}
+        }
+        let mime = {
+            "AVC": 'video/mp4;codecs="avc1.640028"',
+            "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
+            "AV1": 'video/mp4;codecs="av01.0.01M.08.0.110.01.01.01.0"'
+        };
+        for (let i in mime) {
+            this.codec.support[codecId[i]] = MediaSource.isTypeSupported(mime[i]);
+        }
     }
     reload(playerParams: string) {
         if (this.playerParam) {
@@ -448,6 +472,13 @@ interface Window {
     GrayManager: {};
     pageno: string;
     commentAgent: { seek: (t: number) => void };
+}
+interface config {
+    /**
+     * 优先加载的视频流的编码类型
+     * avc = 7, hevc = 12, av1 = 13
+     */
+    codecType: string;
 }
 declare namespace API {
     /**

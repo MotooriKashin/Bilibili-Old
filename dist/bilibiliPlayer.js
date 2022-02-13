@@ -6514,16 +6514,32 @@ function Fa() {
                 var f = this,
                     d = this;
                 this.sd = !0;
-                if (this.S && !this.Kk(this.yd) && !this.Kk(b)) return 0 === Number(b) ? (this.S.setAutoSwitchQualityFor("video", !0), g.a.he("DedeUserID") ? this.S.setAutoSwitchTopQualityFor("video", T.b) : this.S.setAutoSwitchTopQualityFor("video", T.a), this.ya = b, b = this.yd, this.sd = !1, d.jg(b), c(!0)) : this.S.setAutoSwitchQualityFor("video", !1).setQualityFor("video", b).then(function () {
-                    f.sd = !1;
-                    d.jg(b);
-                    f.ya = b;
-                    c(!0)
-                }).catch(function (e) {
-                    f.sd = !1;
-                    e &&
+                // 当要切换的画质的编码器与当前不同时，重新加载dashplayer
+                function sameCodec(currentQuality) {
+                    if(!window.GrayManager.codec || !window.GrayManager.codec.loadedSource) return true;
+                    let newStream = window.GrayManager.codec.loadedSource[b].codecid;
+                    if(window.GrayManager.codec.loadedSource[currentQuality].codecid == newStream) 
+                        return true;
+                    else {
+                        return false;
+                    }
+                }
+                if (this.S && !this.Kk(this.yd) && !this.Kk(b) && sameCodec(this.yd)) 
+                    return 0 === Number(b) ? (this.S.setAutoSwitchQualityFor("video", !0),  
+                        g.a.he("DedeUserID")
+                            ? this.S.setAutoSwitchTopQualityFor("video", T.b) 
+                            : this.S.setAutoSwitchTopQualityFor("video", T.a), this.ya = b, b = this.yd, this.sd = !1, d.jg(b), c(!0)) 
+                    : this.S.setAutoSwitchQualityFor("video", !1).setQualityFor("video", b).then(function () {
+                        f.sd = !1;
+                        d.jg(b);
+                        f.ya = b;
+                        c(!0)
+                    }).catch(function (e) {
+                        f.sd = !1;
+                        e &&
                         e.msg && -1 < e.msg.indexOf("Set quality equal current quality") ? (d.jg(b), f.ya = b, c(!0)) : c(!1)
-                }), !0;
+                    }), !0;
+
                 this.ka || (this.ma.reset(2), this.ma.reset(3), this.ma.ready(2));
                 var e = {
                     domain: 1 <= this.f.Z ? K.a.Je.lg : 1 === this.f.nc ? K.a.Je.yq : K.a.Je.as,
@@ -6562,12 +6578,12 @@ function Fa() {
                         d.ya = parseInt(b, 10);
                         d.W = f.W;
                         if ("flv" === f.W.type)
-                            for (var q = f.W.segments,
-                                u = 0; u < q.length; u++)
+                            for (var q = f.W.segments,u = 0; u < q.length; u++)
                                 if (q[u].url.match(/\/ws\.acgvideo\.com\//)) {
                                     k = "param";
                                     break
-                                } f.Pi && f.W.duration && n && (d.bg = Math.max(0, (f.Pi - f.W.duration) / 1E3), d.yj(f));
+                                } 
+                        f.Pi && f.W.duration && n && (d.bg = Math.max(0, (f.Pi - f.W.duration) / 1E3), d.yj(f));
                         var h = document.createElement("video"),
                             v = d.J ? d.J.currentTime : d.zd || 0,
                             n = d.controller.wc,
@@ -46637,34 +46653,52 @@ else {
                 }, b.loadedTime = new Date, b.mediaPresentationDuration = a.duration, b.minBufferTime = a.minBufferTime, b.profiles = "urn:mpeg:dash:profile:isoff-on-demand:2011", b.xmlns = "urn:mpeg:dash:profile:isoff-on-demand:2011", b.type = "static", b.originalUrl = location.href, b.url = location.href, b.Period = {
                     duration: a.duration,
                     AdaptationSet: []
-                }, a.video && (b.Period.AdaptationSet[0] = {}, b.Period.AdaptationSet[0].Representation = a.video.filter(function (a) {
-                    return 7 === a.codecid
-                }).map(function (a) {
-                    var b = {
-                        __text: a.baseUrl
-                    };
-                    return a.backupUrl && a.backupUrl.forEach(function (a, c) {
-                        b["backupUrl" + (c + 1)] = a
-                    }), {
-                        BaseURL: b,
-                        SegmentBase: {
-                            Initialization: {
-                                range: a.SegmentBase.Initialization
-                            },
-                            indexRange: a.SegmentBase.indexRange,
-                            indexRangeExact: "true"
-                        },
-                        bandwidth: a.bandwidth,
-                        codecs: a.codecs,
-                        frameRate: a.frameRate,
-                        height: a.height,
-                        width: a.width,
-                        id: a.id + "",
-                        mimeType: a.mimeType,
-                        sar: a.sar,
-                        startWithSAP: a.startWithSAP
+                }, a.video && (b.Period.AdaptationSet[0] = {}, b.Period.AdaptationSet[0].Representation = ((function() {
+                    let result = [];
+                    // 根据指定的编码器类型筛选出每一个画质等级对应的dash流
+                    if(window.GrayManager.codec) {
+                        let support = window.GrayManager.codec.support;
+                        let target = window.GrayManager.codec.preference;
+                        let quality = {};
+                        for(let i = a.video.length - 1, codecid; i >= 0; i--) {
+                            codecid = a.video[i].codecid;
+                            if(support[codecid] && codecid >= target && (quality[a.video[i].id] ? quality[a.video[i].id].codecid > codecid : true)) quality[a.video[i].id] = a.video[i];
+                        }
+                        window.GrayManager.codec.loadedSource = quality;
+                        for(let k in quality) result.push(quality[k]);
+                        result.sort(function(a,b) { return b.id - a.id });
+                    } else {
+                        result = a.video.filter(function (a) {
+                            return 7 === a.codecid
+                        });
                     }
-                })), a.audio && (b.Period.AdaptationSet[1] = {}, b.Period.AdaptationSet[1].Representation = a.audio.map(function (a) {
+                    return result.map(function (a) {
+                        var b = {
+                            __text: a.baseUrl
+                        };
+                        return a.backupUrl && a.backupUrl.forEach(function (a, c) {
+                            b["backupUrl" + (c + 1)] = a
+                        }), {
+                            BaseURL: b,
+                            SegmentBase: {
+                                Initialization: {
+                                    range: a.SegmentBase.Initialization
+                                },
+                                indexRange: a.SegmentBase.indexRange,
+                                indexRangeExact: "true"
+                            },
+                            bandwidth: a.bandwidth,
+                            codecs: a.codecs,
+                            frameRate: a.frameRate,
+                            height: a.height,
+                            width: a.width,
+                            id: a.id + "",
+                            mimeType: a.mimeType,
+                            sar: a.sar,
+                            startWithSAP: a.startWithSAP
+                        }
+                    });
+                })())), a.audio && (b.Period.AdaptationSet[1] = {}, b.Period.AdaptationSet[1].Representation = a.audio.map(function (a) {
                     return {
                         BaseURL: {
                             __text: a.baseUrl
@@ -49903,6 +49937,11 @@ else {
             function d() {
                 x = !1;
                 var c = b.codec;
+                // 根据播放器默认加载的画质等级的视频流修正传递给addSourceBuffer的mime类型
+                if(b.type == "video" && window.GrayManager.codec) {
+                    let streamInfo = window.GrayManager.codec.loadedSource[dashPlayer.state.defaultQuality];
+                    b.codec = c = streamInfo.mimeType + ';codecs="' + streamInfo.codecs + '"';
+                }
                 try {
                     if (c.match(/application\/mp4;\s*codecs="(stpp|wvtt).*"/i)) throw new Error("not really supported");
                     w = a.addSourceBuffer(c)
@@ -49980,7 +50019,12 @@ else {
                             }))
                         };
                     try {
+                        // if (w.changeType && w.last) {
+                        //     if(c.representationId != w.last)
+                        //         w.changeType(MimeMapping[c.representationId])
+                        // }
                         0 === c.bytes.length ? e.call(a) : (d = h(), w.appendBuffer ? w.appendBuffer(c.bytes) : w.append(c.bytes, c), s(w, e.bind(a)))
+                        // w.last = c.representationId;
                     } catch (f) {
                         u('SourceBuffer append failed "' + f + '"'), y.length > 0 ? o() : x = !1, z && z({
                             chunk: c,
