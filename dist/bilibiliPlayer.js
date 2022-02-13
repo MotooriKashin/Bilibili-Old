@@ -46660,9 +46660,16 @@ else {
                         let support = window.GrayManager.codec.support;
                         let target = window.GrayManager.codec.preference;
                         let quality = {};
-                        for(let i = a.video.length - 1, codecid; i >= 0; i--) {
+                        for (let i = 0, codecid; i < a.video.length; i++) {
                             codecid = a.video[i].codecid;
-                            if(support[codecid] && codecid >= target && (quality[a.video[i].id] ? quality[a.video[i].id].codecid > codecid : true)) quality[a.video[i].id] = a.video[i];
+                            if (support[codecid] && !quality[a.video[i].id])
+                                quality[a.video[i].id] = a.video[i];
+                            else if (support[codecid] && a.video[i].codecid < quality[a.video[i].id].codecid)
+                                quality[a.video[i].id] = a.video[i]
+                        }
+                        for (let i = 0, codecid; i < a.video.length; i++) {
+                            codecid = a.video[i].codecid;
+                            if(support[codecid] && codecid <= target && quality[a.video[i].id].codecid < codecid) quality[a.video[i].id] = a.video[i];
                         }
                         window.GrayManager.codec.loadedSource = quality;
                         for(let k in quality) result.push(quality[k]);
@@ -58930,3 +58937,4 @@ else {
         c.default = e, b.exports = c.default
     }, {}]
 }, {}, [4]);
+//# sourceURL=API://@Bilibili-Old/bilibiliPlayer.js
