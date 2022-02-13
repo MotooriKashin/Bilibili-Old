@@ -16,6 +16,7 @@ class SegProgress {
             API.addCss(`
                             .bilibili-progress-segmentation-logo{display:inline-block;position:absolute;top:-12px;height:30px;width:1px; transition: opacity .1s}
                             .bilibili-progress-segmentation-logo>img{position: absolute;top:-14px;transform:translate(-50%,-50%) scale(0.7);left:50%;transition:top 0.1s}
+                            .bilibili-progress-segmentation-logo>svg{position: absolute;top: -19px;width: 32px;height: 36px;transform: translate(-50%, -50%)}
                             .bilibili-player.mode-widescreen .bilibili-progress-segmentation-logo>img,
                             .bilibili-player.mode-webfullscreen .bilibili-progress-segmentation-logo>img,
                             .bilibili-player.mode-fullscreen .bilibili-progress-segmentation-logo>img{top:-18px;left:50%;transform:translate(-50%,-50%) scale(1)}
@@ -61,8 +62,23 @@ class SegProgress {
                 title.innerHTML = "-> " + v.content;
                 title.className = "bilibili-progress-detail-chapter";
                 title.style.cssText = "width: auto; transform: translateX(-50%); display: none";
-                let img = <HTMLImageElement>document.createElement("img"); // 看点图标
-                img.id = "segmentation-logo"; img.width = 32; img.height = 36; img.src = v.logoUrl;
+                let img: HTMLImageElement | SVGSVGElement;
+                if (v.logoUrl) {
+                    img = <HTMLImageElement>document.createElement("img"); // 看点图标
+                    img.id = "segmentation-logo"; img.width = 32; img.height = 36; img.src = v.logoUrl;
+                } else {
+                    img = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    img.setAttribute("viewBox", "0 0 32 36");
+                    img.innerHTML = `
+                    <defs>
+                    <radialGradient id="gradient">
+                            <stop offset="10%" stop-color="#ffe78f"></stop>
+                            <stop offset="40%" stop-color="#ffe996"></stop>
+                            <stop offset="95%" stop-color="#fcecae"></stop>
+                        </radialGradient>
+                    </defs>
+                    <circle cx="50%" cy="83%" r="5" fill="url(#gradient)"/>`;
+                }
                 img.addEventListener("mousemove", e => e.stopPropagation());
                 img.addEventListener("mouseenter", () => {
                     title.style.display = "";
@@ -99,29 +115,30 @@ class SegProgress {
             }
             setTimeout(() => update(), 500); // 等待进度条完全加载
             chptName.style.top = "-150px";
-            let playerArea = <HTMLElement>document.getElementsByClassName("bilibili-player-area")[0], timer;
+            let playerArea = <HTMLElement>document.getElementsByClassName("bilibili-player-area")[0], visibility = true;
+            function hide() {
+                if (!visibility) return;
+                visibility = false;
+                for (let i = 0; i < segDivs.length; i++) segDivs[i].style.opacity = "0";
+                setTimeout(() => {
+                    for (let i = 0; i < segDivs.length; i++)
+                        segDivs[i].style.visibility = "hidden";
+                }, 100);
+            }
+            playerArea.addEventListener("mouseleave", e => {
+                hide();
+            });
             playerArea.addEventListener("mousemove", e => {
-                function hide() {
-                    if (timer != null) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
-                    for (let i = 0; i < segDivs.length; i++) segDivs[i].style.opacity = "0";
-                    setTimeout(() => {
-                        for (let i = 0; i < segDivs.length; i++)
-                            segDivs[i].style.visibility = "hidden";
-                    }, 100);
-                }
-                if (timer == null) {
+                let clientRect = playerArea.getBoundingClientRect();
+                if (e.pageY < clientRect.top + window.scrollY + clientRect.height * 0.6) {
+                    hide();
+                } else {
+                    visibility = true;
                     for (let i = 0; i < segDivs.length; i++) {
                         segDivs[i].style.visibility = "";
                         segDivs[i].style.opacity = "1";
                     }
-                } else {
-                    clearTimeout(timer);
-                    timer = null;
                 }
-                timer = setTimeout(() => hide(), 5000);
             });
             // 鼠标与看点图标的交互
             trackerWrp.addEventListener("mousemove", e => {
