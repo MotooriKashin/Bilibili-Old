@@ -18,6 +18,7 @@ class Rewrite {
         // "__INITIAL_STATE__",
         "__PGC_USERSTATE__",
         "__BILI_CONFIG__",
+        "Sentry",
         "__mobxGlobals",
         "__mobxInstanceCount",
         "_babelPolyfill",
@@ -167,12 +168,10 @@ class Rewrite {
      * @param 旧版网页框架名，**请移除其中的script标签**
      */
     constructor(html: keyof modules) {
-        // window.stop();
-        // Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
+        config.compatible === "默认" && window.stop();
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
-        // Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -192,16 +191,16 @@ class Rewrite {
         }
     }
     /**
-     * 清洗页面全局变量
+     * 清洗页面及全局变量
      */
     clearWindow() {
+        this.cleard = true;
         this.dush.forEach(d => {
             try {
-                Reflect.deleteProperty(window, d);
-            } catch (e) { }
+                window[d] = undefined;
+            } catch (e) { debug(d) }
         });
         API.EmbedPlayer();
-        this.cleard = true;
     }
     /**
      * 刷新页面  
@@ -249,11 +248,12 @@ class Rewrite {
      */
     loadenEvent() {
         this.loadendCallback.forEach(async d => d());
-        // document.dispatchEvent(new ProgressEvent("readystatechange"));
-        // document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        // window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        // Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
-        // window.dispatchEvent(new ProgressEvent("load"));
+        if (config.compatible === "默认") {
+            document.dispatchEvent(new ProgressEvent("readystatechange"));
+            document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+            window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+            window.dispatchEvent(new ProgressEvent("load"));
+        }
     }
     /**
      * 添加媒体控制
@@ -277,4 +277,10 @@ class Rewrite {
 API.rewrite = Rewrite;
 declare namespace API {
     export let rewrite: typeof Rewrite;
+}
+interface config {
+    /**
+     * 通用：页面重构模式
+     */
+    compatible: "默认" | "兼容";
 }

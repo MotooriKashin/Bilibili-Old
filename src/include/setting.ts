@@ -303,6 +303,16 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
     })
     config.developer && ((<any>window).API = API);
     API.registerSetting({
+        key: "compatible",
+        sort: "common",
+        label: "页面重构模式",
+        type: "row",
+        sub: "页面不正常时的选择",
+        value: "默认",
+        list: ["默认", "兼容"],
+        float: `“默认”模式下会中止默认DOM树的解析，更有效地保障旧版页面不被新版脚本破坏，但可能引发部分浏览器扩展（如pakku.js）功能异常，“兼容”模式可改善这一问题，但加剧了旧版页面被破坏的可能性。很抱歉还是没能找到两全的办法，请自行按需调整。`
+    })
+    API.registerSetting({
         key: "av",
         sort: "rewrite",
         label: "av/BV",
@@ -1002,7 +1012,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
                 "AV1": 'video/mp4;codecs="av01.0.01M.08.0.110.01.01.01.0"',
                 "AVC": 'video/mp4;codecs="avc1.640028"'
             };
-            if(!MediaSource.isTypeSupported(mime[type])) {
+            if (!MediaSource.isTypeSupported(mime[type])) {
                 toast.warning(`播放器不支持${type}编码格式`, "将继续使用AVC编码");
                 config.codecType = "AVC";
             }

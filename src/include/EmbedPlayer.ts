@@ -40,6 +40,7 @@ class EmbedPlayer {
         document.body.appendChild(script);
     }
     loadHtml5Player() {
+        if (!this.bofqi) return debug.warn("页面中并不存在播放器节点！", this.playerParam);
         if (!window.bilibiliPlayer) {
             this.loadScript("//static.hdslb.com/player/js/bilibiliPlayer.min.js", () => {
                 this.bofqi.innerHTML = '<div class="player"><div id="bilibiliPlayer"></div></div><div id="player_placeholder"></div>';
