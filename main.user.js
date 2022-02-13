@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.2
+// @version      7.0.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e73dcdb60009ee9acfb26645107cb5e5ef88b72a/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ba5ee4029b5b37f0dfd4e856044b3f53114c443c/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e8d0df1b4522ec730478d2f84dcbd25cb90d48e8/dist/comment.min.js
 // ==/UserScript==
 
@@ -5445,7 +5445,7 @@ const localMedia = LocalMedia;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
-            !Array.from(document.styleSheets).some(d => { var _a; return (_a = d.href) === null || _a === void 0 ? void 0 : _a.includes("comment.min.css"); }) && API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
         });
         return GM.getResourceText(script);
     });
@@ -7865,6 +7865,8 @@ API.clickRemove = ClickRemove;
         document.body.appendChild(script);
     }
     loadHtml5Player() {
+        if (!this.bofqi)
+            return debug.warn("页面中并不存在播放器节点！", this.playerParam);
         if (!window.bilibiliPlayer) {
             this.loadScript("//static.hdslb.com/player/js/bilibiliPlayer.min.js", () => {
                 this.bofqi.innerHTML = '<div class="player"><div id="bilibiliPlayer"></div></div><div id="player_placeholder"></div>';
@@ -7944,7 +7946,7 @@ API.clickRemove = ClickRemove;
         window.NoFlashTips ? this.createNoFlashTipsInstance() : this.loadScript("//static.hdslb.com/player/noflashtips/no-flash-tips.min.js", () => this.createNoFlashTipsInstance());
     }
     createNoFlashTipsInstance() {
-        const config = {
+        const msg = {
             backgroundColor: "white",
             msg: "主人，未安装Flash插件，暂时无法观看视频，您可以…",
             msgColor: "#000",
@@ -7971,7 +7973,17 @@ API.clickRemove = ClickRemove;
             ],
             hasOrText: !1
         };
-        new window.NoFlashTips(this.bofqi, config);
+        config.noVideo && msg.btnList.push({
+            title: "下载视频",
+            width: 166,
+            height: 40,
+            type: "download",
+            theme: "red",
+            onClick: (e) => {
+                API.download();
+            }
+        });
+        new window.NoFlashTips(this.bofqi, msg);
         this.bofqi.style.removeProperty("position");
     }
     loadFlashPlayer() {
@@ -8155,6 +8167,23 @@ class GrayManager extends EmbedPlayer {
                 location.hash = "";
             }
         };
+        let codecId = {
+            "AVC": 7,
+            "HEVC": 12,
+            "AV1": 13
+        };
+        this.codec = {
+            preference: codecId[config.codecType],
+            support: {}
+        };
+        let mime = {
+            "AVC": 'video/mp4;codecs="avc1.640028"',
+            "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
+            "AV1": 'video/mp4;codecs="av01.0.01M.08.0.110.01.01.01.0"'
+        };
+        for (let i in mime) {
+            this.codec.support[codecId[i]] = MediaSource.isTypeSupported(mime[i]);
+        }
     }
     reload(playerParams) {
         if (this.playerParam) {
@@ -8693,6 +8722,7 @@ API.rebuildPlayerurl = RebuildPlayerurl;
             // "__INITIAL_STATE__",
             "__PGC_USERSTATE__",
             "__BILI_CONFIG__",
+            "Sentry",
             "__mobxGlobals",
             "__mobxInstanceCount",
             "_babelPolyfill",
@@ -8820,12 +8850,10 @@ API.rebuildPlayerurl = RebuildPlayerurl;
         this.loadendCallback = [];
         this.cleard = false;
         this.title = document.title;
-        // window.stop();
-        // Object.defineProperty(document, "readyState", { configurable: true, value: "loading" });
+        config.compatible === "默认" && window.stop();
         document.replaceChild(document.implementation.createDocumentType('html', '', ''), document.doctype);
         document.documentElement.replaceWith((new DOMParser().parseFromString(API.getModule(html), 'text/html')).documentElement);
         (!this.title.includes("出错")) && (document.title = this.title);
-        // Object.defineProperty(document, "readyState", { configurable: true, value: "interactive" });
         this.restorePlayerSetting();
         API.switchVideo(() => this.setActionHandler());
     }
@@ -8855,17 +8883,19 @@ API.rebuildPlayerurl = RebuildPlayerurl;
         }
     }
     /**
-     * 清洗页面全局变量
+     * 清洗页面及全局变量
      */
     clearWindow() {
+        this.cleard = true;
         this.dush.forEach(d => {
             try {
-                Reflect.deleteProperty(window, d);
+                window[d] = undefined;
             }
-            catch (e) { }
+            catch (e) {
+                debug(d);
+            }
         });
         API.EmbedPlayer();
-        this.cleard = true;
     }
     /**
      * 刷新页面
@@ -8913,11 +8943,12 @@ API.rebuildPlayerurl = RebuildPlayerurl;
      */
     loadenEvent() {
         this.loadendCallback.forEach(async (d) => d());
-        // document.dispatchEvent(new ProgressEvent("readystatechange"));
-        // document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        // window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
-        // Object.defineProperty(document, "readyState", { configurable: true, value: "complete" });
-        // window.dispatchEvent(new ProgressEvent("load"));
+        if (config.compatible === "默认") {
+            document.dispatchEvent(new ProgressEvent("readystatechange"));
+            document.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+            window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
+            window.dispatchEvent(new ProgressEvent("load"));
+        }
     }
     /**
      * 添加媒体控制
@@ -8978,6 +9009,17 @@ API.rewrite = Rewrite;
         sub: "代为修复和维护"
     });
     config.developer && (window.API = API);
+    API.registerSetting({
+        key: "compatible",
+        sort: "common",
+        label: "页面重构模式",
+        svg: \`<svg viewBox="0 0 24 24"><g><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></g></svg>\`,
+        type: "row",
+        sub: "页面不正常时的选择",
+        value: "默认",
+        list: ["默认", "兼容"],
+        float: \`“默认”模式下会中止默认DOM树的解析，更有效地保障旧版页面不被新版脚本破坏，但可能引发部分浏览器扩展（如pakku.js）功能异常，“兼容”模式可改善这一问题，但加剧了旧版页面被破坏的可能性。很抱歉还是没能找到两全的办法，请自行按需调整。\`
+    });
     API.registerSetting({
         key: "av",
         sort: "rewrite",
@@ -9675,6 +9717,28 @@ API.rewrite = Rewrite;
         value: false,
         float: '重构以恢复旧版番剧分区。'
     });
+    API.registerSetting({
+        type: "row",
+        sort: "player",
+        key: "codecType",
+        label: "优先载入的视频编码类型",
+        sub: "AVC、HEVC或AV1",
+        value: "AVC",
+        list: ["AVC", "HEVC", "AV1"],
+        float: '播放器会尽量优先加载所选择的编码，可根据设备解码能力与实际需要调整这个设置项。AVC兼容性最佳，AV1次之，HEVC则只有Safari支持，edge可通过一些操作进行支持。有关视频编码格式可查阅其他专业文档。',
+        action: type => {
+            let mime = {
+                "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
+                "AV1": 'video/mp4;codecs="av01.0.01M.08.0.110.01.01.01.0"',
+                "AVC": 'video/mp4;codecs="avc1.640028"'
+            };
+            if (!MediaSource.isTypeSupported(mime[type])) {
+                toast.warning(\`播放器不支持\${type}编码格式\`, "将继续使用AVC编码");
+                config.codecType = "AVC";
+                API.displaySetting("codecType");
+            }
+        }
+    });
 }
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
@@ -9898,6 +9962,7 @@ API.rewrite = Rewrite;
                 real.style.width = \`\${Math.sqrt(rect.width * rect.height) * 4 / 3}px\`;
             };
             node.onmouseout = () => div.remove();
+            this.box.addEventListener("DOMNodeRemovedFromDocument", async () => div === null || div === void 0 ? void 0 : div.remove());
         }
         /**
          * 设置分类
@@ -12808,7 +12873,7 @@ new Av("av.html");
                 API.biliQuickLogin();
         }
         changeLiked() {
-            this.span.innerHTML = \`<i class="van-icon-videodetails_like" style="color: \${this.liked ? "#f36392;" : "#ffffff;text-shadow: 1px 1px #757575, -1px -1px #757575, 1px -1px #757575, -1px 1px #757575;"}" ></i>点赞 \${Format.unitFormat(this.number) || "--"}\`;
+            this.span.innerHTML = \`<i class="van-icon-videodetails_like" style="color: \${this.liked ? "#f36392;" : "#ffffff;text-shadow: 1px 1px #757575, -1px -1px #757575, 1px -1px #757575, -1px 1px #757575;font-size: 23px;"}" ></i>点赞 \${Format.unitFormat(this.number) || "--"}\`;
         }
         switch() {
             if (this.aid != API.aid) {
