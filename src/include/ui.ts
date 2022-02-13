@@ -214,7 +214,7 @@ interface config {
          * @param node 浮动信息所属节点
          * @param data 浮动信息内容
          */
-        static float(node: HTMLElement, data: string) {
+        static float(node: HTMLDivElement, data: string) {
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
             const real = API.addElement("div", { class: "float" }, root, `<div class="arrow"></div><div class="message">${data}</div>`);
@@ -227,6 +227,7 @@ interface config {
                 real.style.width = `${Math.sqrt(rect.width * rect.height) * 4 / 3}px`;
             }
             node.onmouseout = () => div.remove();
+            this.box.addEventListener("DOMNodeRemovedFromDocument", async () => div?.remove());
         }
         /**
          * 设置分类

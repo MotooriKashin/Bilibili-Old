@@ -306,6 +306,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         key: "compatible",
         sort: "common",
         label: "页面重构模式",
+        svg: `<svg viewBox="0 0 24 24"><g><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></g></svg>`,
         type: "row",
         sub: "页面不正常时的选择",
         value: "默认",
@@ -1003,9 +1004,10 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         sort: "player",
         key: "codecType",
         label: "优先载入的视频编码类型",
+        sub: "AVC、HEVC或AV1",
         value: "AVC",
         list: ["AVC", "HEVC", "AV1"],
-        float: '播放器会尽量优先加载所选择的编码，可根据设备解码能力与实际需要调整这个设置项',
+        float: '播放器会尽量优先加载所选择的编码，可根据设备解码能力与实际需要调整这个设置项。AVC兼容性最佳，AV1次之，HEVC则只有Safari支持，edge可通过一些操作进行支持。有关视频编码格式可查阅其他专业文档。',
         action: type => {
             let mime = {
                 "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
@@ -1015,6 +1017,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
             if (!MediaSource.isTypeSupported(mime[type])) {
                 toast.warning(`播放器不支持${type}编码格式`, "将继续使用AVC编码");
                 config.codecType = "AVC";
+                API.displaySetting("codecType");
             }
         }
     })
