@@ -155,7 +155,7 @@ class EmbedPlayer {
         (<any>window).NoFlashTips ? this.createNoFlashTipsInstance() : this.loadScript("//static.hdslb.com/player/noflashtips/no-flash-tips.min.js", () => this.createNoFlashTipsInstance());
     }
     createNoFlashTipsInstance() {
-        const config = {
+        const msg = {
             backgroundColor: "white",
             msg: "主人，未安装Flash插件，暂时无法观看视频，您可以…",
             msgColor: "#000",
@@ -182,7 +182,17 @@ class EmbedPlayer {
             ],
             hasOrText: !1
         };
-        new (<any>window).NoFlashTips(this.bofqi, config);
+        config.noVideo && msg.btnList.push({
+            title: "下载视频",
+            width: 166,
+            height: 40,
+            type: "download",
+            theme: "red",
+            onClick: (e) => {
+                API.download();
+            }
+        })
+        new (<any>window).NoFlashTips(this.bofqi, msg);
         this.bofqi.style.removeProperty("position");
     }
     loadFlashPlayer() {
