@@ -51695,7 +51695,7 @@ else {
                     return void (a.error.code !== J && ma() || (Ca("Clearing playback buffer to overcome quota exceed situation for type: " + za), qa.trigger(u.default.QUOTA_EXCEEDED, {
                         sender: Ba,
                         criticalBufferLevel: Ga
-                    }), x()))
+                    }), x(), Pa = !1))
                 } (Na = a.chunk) && !isNaN(Na.index) && (Ia = Math.max(Na.index, Ia), P());
                 var d = Ka.getAllBufferRanges();
                 if (Na.segmentType === D.HTTPRequest.MEDIA_SEGMENT_TYPE) B();
