@@ -57412,11 +57412,15 @@ else {
                     var k = e.getCurrentBufferLevel(f.getReadOnlyMetricsFor(g.default.VIDEO));
                     d = isNaN(j.fragmentDuration) ? k : Math.max(k, j.fragmentDuration)
                 } else {
-                    var l = j.mediaInfo.streamInfo;
-                    if (i.isPlayingAtTopQuality(l)) {
-                        var m = l.manifestInfo.duration >= h.getLongFormContentDurationThreshold();
-                        d = m ? h.getBufferTimeAtTopQualityLongForm() : h.getBufferTimeAtTopQuality()
-                    } else d = h.getStableBufferTime()
+                    // var l = j.mediaInfo.streamInfo;
+                    // if (i.isPlayingAtTopQuality(l)) {
+                    //     var m = l.manifestInfo.duration >= h.getLongFormContentDurationThreshold();
+                    //     d = m ? h.getBufferTimeAtTopQualityLongForm() : h.getBufferTimeAtTopQuality()
+                    // } else d = h.getStableBufferTime()
+                    let bufferTimeLimit = {};
+                    bufferTimeLimit[120] = bufferTimeLimit[125] = bufferTimeLimit[126] = bufferTimeLimit[127] = 30;
+                    d = bufferTimeLimit[j.id];
+                    d = d ? d : 80;
                 }
                 return d
             }
