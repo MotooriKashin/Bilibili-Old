@@ -6516,7 +6516,7 @@ function Fa() {
                 this.sd = !0;
                 // 当要切换的画质的编码器与当前不同时，重新加载dashplayer
                 function sameCodec(currentQuality) {
-                    if(!window.GrayManager.codec || !window.GrayManager.codec.loadedSource) return true;
+                    if(!window.GrayManager.codec || !window.GrayManager.codec.loadedSource || !window.GrayManager.codec.loadedSource[b]) return true;
                     let newStream = window.GrayManager.codec.loadedSource[b].codecid;
                     if(window.GrayManager.codec.loadedSource[currentQuality].codecid == newStream) 
                         return true;
