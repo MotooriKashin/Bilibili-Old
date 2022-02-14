@@ -485,5 +485,5 @@ declare namespace API {
     /**
      * video.min.js，重写页面前调用。
      */
-    let EmbedPlayer: () => void;
+    export function EmbedPlayer(): void;
 }

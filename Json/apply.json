@@ -17,6 +17,7 @@
 	"danmaku": "danmaku.js",
 	"element": "element.js",
 	"clickRemove": "element.js",
+	"EmbedPlayer": "EmbedPlayer.js",
 	"fnval": "fnval.js",
 	"mediaSession": "MediaMeta.js",
 	"observerAddedNodes": "nodeObserver.js",

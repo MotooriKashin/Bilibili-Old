@@ -21,7 +21,7 @@ class Url {
         if (this.search) {
             return <Record<string, string | number>>this.search.substring(1).split("&").reduce((s, d) => {
                 const arr = d.split("=");
-                arr[1] && (s[arr[0]] = arr[1]);
+                s[arr[0]] = arr[1];
                 return s;
             }, {});
         }

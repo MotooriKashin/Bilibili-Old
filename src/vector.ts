@@ -15,7 +15,6 @@ try {
     // 模块引导起点
     config.developer && (window.API = <any>API); // 开发者模式
     API.importModule("parameterTrim.js"); // 网址及超链接清理
-    API.importModule("EmbedPlayer.js"); // hook旧版播放器
     API.importModule("replyList.js"); // 回复翻页评论区及楼层号
     config.logReport && API.importModule("logReport.js"); // 拦截B站日志上报
     // 重写分别引导入口，专属对应页面的模块请转向对应引导模块
@@ -38,7 +37,7 @@ try {
         if ((config.medialist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) API.importModule("medialist.js");
     }
     // 重写之后再引导的全局模块
-    API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效咨询数据
+    API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
     config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     API.importModule("playinfo.js"); // 视频源修复及记录
     API.importModule("player-v2.js"); // 视频信息接口
