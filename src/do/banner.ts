@@ -50,6 +50,10 @@ interface modules {
             } else
                 API.addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
         }
+        /**
+         * 根据页面返回resourceId
+         * @returns resourceId
+         */
         static resourceId() {
             if (location.href.includes("v/douga")) return 1576;
             if (location.href.includes("/anime")) return 1612;

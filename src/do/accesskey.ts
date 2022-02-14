@@ -12,6 +12,9 @@ class Accesskey {
     disable: HTMLDivElement;
     foot: HTMLElement;
     num = 0;
+    /**
+     * 创建移动端鉴权获取面板
+     */
     constructor() {
         this.box = API.element.popupbox({ maxWidth: "360px", maxHeight: "300px" });
         API.addElement("div", { style: 'text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;' }, this.box, `<span>账户授权<span>`);
@@ -27,6 +30,9 @@ class Accesskey {
         this.foot = API.addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, this.box);
         this.flesh();
     }
+    /**
+     * 重新获取鉴权按钮
+     */
     flesh() {
         if (this.access_key) {
             const temp = API.element.button(() => { this.access() }, "重新授权", 3);
@@ -42,6 +48,9 @@ class Accesskey {
             this.foot.innerHTML = `<div>授权状态：未授权</div><div> </div>`;
         }
     }
+    /**
+     * 请求移动端鉴权
+     */
     async access() {
         if (!API.uid) return (toast.warning("请先登录！"), API.biliQuickLogin());
         toast("您正在进行账户授权操作，请稍候~")
@@ -66,6 +75,9 @@ class Accesskey {
         toast.success("账户授权成功！")
         this.flesh();
     }
+    /**
+     * 取消移动端鉴权并清除一切数据
+     */
     async abort() {
         toast("正在取消账户授权，请稍候~");
         this.access_key = "";
@@ -89,6 +101,9 @@ class Accesskey {
         toast.success("已取消账户授权并销毁痕迹！")
         this.flesh();
     }
+    /**
+     * 登录到biliplus，用于解除视频限制
+     */
     pluslogin(data: any, resolve: (value: void) => void, reject: (reason?: any) => void) {
         this.num++;
         const iframe = document.createElement("iframe");

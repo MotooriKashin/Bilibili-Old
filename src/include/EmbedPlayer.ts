@@ -19,6 +19,15 @@ class EmbedPlayer {
     set gray_html5(v: boolean) {
         config.noVideo = !v;
     }
+    /**
+     * 代理EmbedPlayer函数
+     * @param player "player"
+     * @param swf "//static.hdslb.com/play.swf"
+     * @param playerParams url参数式的播放器初始化参数，需要转化为对象格式才能传递给播放器实例
+     * @param playerType 播放器类型：flash/HTML5
+     * @param upgrade 提升播放器版本，可能只在flash格式下有用
+     * @param callbackFn 初始化播放器后的回调函数
+     */
     constructor(player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) {
         this.playerParam = Format.urlObj(`?${playerParams}`);
         this.playerParam.dashSymbol = true;
@@ -29,6 +38,11 @@ class EmbedPlayer {
         this.callbackFn = callbackFn;
         this.gray_loader();
     }
+    /**
+     * 加载外源脚本依赖
+     * @param src 外源脚本src
+     * @param onload 成功加载后的回调函数
+     */
     loadScript(src: string, onload?: () => void) {
         const script = document.createElement("script");
         script.type = "text/javascript";
@@ -37,8 +51,15 @@ class EmbedPlayer {
             script.remove();
             onload();
         });
+        script.addEventListener("error", (e) => {
+            script.remove();
+            toast.error("加载播放器脚本失败！", e.message)
+        });
         document.body.appendChild(script);
     }
+    /**
+     * 初始化HTML5播放器节点
+     */
     loadHtml5Player() {
         if (!this.bofqi) return debug.warn("页面中并不存在播放器节点！", this.playerParam);
         if (!window.bilibiliPlayer) {
@@ -91,6 +112,9 @@ class EmbedPlayer {
         'jwSetVolume': 'volume'
     };
     cElement: HTMLDivElement;
+    /**
+     * 统一HTML5播放器对外接口
+     */
     gray_html5_compatible() {
         this.cElement = this.bofqi.querySelector("#player_placeholder");
         Object.entries(this.apiMaps).forEach(d => {
@@ -119,6 +143,10 @@ class EmbedPlayer {
         "function" == typeof this.callbackFn && (<any>this.cElement).jwAddEventListener("jwplayerMediaLoaded", () => this.callbackFn());
         "function" == typeof window.PlayerMediaLoaded && window.PlayerMediaLoaded();
     }
+    /**
+     * 检查浏览器flash支持性
+     * @returns 支持结果
+     */
     flashChecker() {
         let e = !1, t = 0;
         if (!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase()) && !/Edge/i.test(navigator.userAgent) || /Trident/i.test(navigator.userAgent)) {
@@ -146,15 +174,24 @@ class EmbedPlayer {
             flashVersion: t
         }
     }
+    /**
+     * 初始化flash播放器节点
+     */
     gray_loader_flash() {
         this.flashChecker().hasFlash ? (<any>window).swfobject && (<any>window).swfobject.embedSWF ?
             this.loadFlashPlayer() :
             this.loadScript("//static.hdslb.com/js/swfobject.js", () => this.loadFlashPlayer()) :
             this.getNoFlashTips();
     }
+    /**
+     * 不支持flash提示
+     */
     getNoFlashTips() {
         (<any>window).NoFlashTips ? this.createNoFlashTipsInstance() : this.loadScript("//static.hdslb.com/player/noflashtips/no-flash-tips.min.js", () => this.createNoFlashTipsInstance());
     }
+    /**
+     * 不支持flash提示内容
+     */
     createNoFlashTipsInstance() {
         const msg = {
             backgroundColor: "white",
@@ -196,6 +233,9 @@ class EmbedPlayer {
         new (<any>window).NoFlashTips(this.bofqi, msg);
         this.bofqi.style.removeProperty("position");
     }
+    /**
+     * 加载flash播放器脚本
+     */
     loadFlashPlayer() {
         this.bofqi.innerHTML = '<div id="player_placeholder" class="player"></div>';
         (<any>window).swfobject.embedSWF(this.upgrade ? "//static.hdslb.com/play_recommend.swf" : "//static.hdslb.com/play.swf", "player_placeholder", "950", "482", "0", "", this.playerParam, {
@@ -213,6 +253,9 @@ class EmbedPlayer {
             this.gray_flash_compatible();
         });
     }
+    /**
+     * 统一flash播放器对外接口
+     */
     gray_flash_compatible() {
         this.cElement = this.bofqi.querySelector("#player_placeholder");
         (<any>window).player = {};
@@ -292,6 +335,11 @@ class EmbedPlayer {
             }
         }
     }
+    /**
+     * 播放器附加菜单
+     * @param type 菜单类型
+     * @returns 菜单数据
+     */
     loadExtraMenuConfig(type: string) {
         let v = '20161115', exconfig = [];
         if (type === 'flash' || type === 'flash_gray') {
@@ -305,6 +353,10 @@ class EmbedPlayer {
         }
         return { 'ver': v, 'menuItems': exconfig };
     }
+    /**
+     * 播放器附加菜单回调函数
+     * @param id 菜单类型
+     */
     clickMenu(id: string) {
         setTimeout(() => {
             if (id === 'change_h5') {
@@ -318,6 +370,9 @@ class EmbedPlayer {
             }
         });
     }
+    /**
+     * 根据参数引导播放器类型
+     */
     gray_loader() {
         ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
     }
@@ -350,6 +405,10 @@ class GrayManager extends EmbedPlayer {
             this.codec.support[codecId[i]] = MediaSource.isTypeSupported(mime[i]);
         }
     }
+    /**
+     * 重新加载播放器实例
+     * @param playerParams 播放器实例参数，格式同初始化参数
+     */
     reload(playerParams: string) {
         if (this.playerParam) {
             try {
@@ -369,6 +428,9 @@ class GrayManager extends EmbedPlayer {
         } else
             window.location.reload();
     }
+    /**
+     * 监听url哈希修改
+     */
     HashManage = {
         p: function (e) {
             return (this.p = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
@@ -420,6 +482,11 @@ class GrayManager extends EmbedPlayer {
             location.hash = ""
         }
     }
+    /**
+     * 从url中提取参数
+     * @param e 参数名
+     * @returns 参数值
+     */
     GetUrlValue(e: string) {
         var t = new RegExp("(^|&)".concat(e, "=([^&]*)(&|$)"), "i"),
             n = window.location.search.substr(1).match(t);
@@ -437,6 +504,7 @@ API.EmbedPlayer = () => {
         window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
     }
 }
+// 托管播放器脚本`bilibiliPlayer.min.js`
 config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
     return GM.getResourceText("bilibiliPlayer.js");
 })

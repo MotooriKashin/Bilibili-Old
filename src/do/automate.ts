@@ -13,6 +13,7 @@ interface modules {
         }, document.querySelector("#__bofqi"));
         node && node.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
+    // 播放器自动化操作
     API.switchVideo(() => {
         config.danmakuFirst && (<HTMLElement>document.querySelectorAll(".bilibili-player-filter-btn")[1]).click();
         setTimeout(() => {
@@ -27,6 +28,7 @@ interface modules {
         }, 500)
         config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000);
     })
+    // 播放本地媒体按钮
     API.path.name && API.observerAddedNodes(e => {
         if (e.className && /bilibili-player-danmaku-setting-lite-panel/.test(e.className)) {
             API.runWhile(() => document.querySelector(".bilibili-player-setting-dmask-wrap"), () => {
@@ -40,6 +42,7 @@ interface modules {
             })
         }
     })
+    // 修复顶栏分区数据
     API.runWhile(() => document.querySelector(".bili-header-m"), () => {
         try {
             let node = <HTMLCollectionOf<HTMLDivElement>>(<HTMLDivElement>document.querySelector(".bili-header-m")).getElementsByClassName('nav-name');
@@ -93,6 +96,6 @@ interface modules {
     config.heartbeat && API.xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
         args[1] = args[1].replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
     }, undefined, false);
-    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".lt-row"), () => document.querySelector(".lt-row").remove());
-    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector(".unlogin-popover").remove());
+    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".lt-row"), () => document.querySelector(".lt-row").remove()); // 移除登录提示弹窗
+    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector(".unlogin-popover").remove()); // 移除登录提示弹窗
 }

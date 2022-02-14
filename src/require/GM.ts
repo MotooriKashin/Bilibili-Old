@@ -1,3 +1,4 @@
+// GM系列高级API的封装
 GM.xmlHttpRequest = GM_xmlhttpRequest;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;

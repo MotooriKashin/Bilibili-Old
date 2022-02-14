@@ -299,6 +299,9 @@ interface modules {
                 this.showTable();
             }
         }
+        /**
+         * 添加视频之外的下载数据
+         */
         async getOther() {
             if (!config.ifDlDmCC) return;
             if (API.danmaku.danmaku) {
@@ -386,6 +389,10 @@ interface modules {
                 })
             })
         }
+        /**
+         * 点击下载按钮回调
+         * @param data 被点击的下载数据
+         */
         postData(data: DownloadRocord) {
             !Reflect.has(data, "_name") && (data.filename = this.setFinalName(data));
             switch (config.downloadMethod) {

@@ -12,6 +12,10 @@ class Aria2 {
         config.filepath && (this.setting.directory = config.filepath);
         config.rpcToken && (this.setting.token = config.rpcToken);
     }
+    /**
+     * 生成aria2命令行参数并赋值到剪切板
+     * @param obj 下载配置数据
+     */
     shell(obj: Aria2Data) {
         return new Promise((r: (v: void) => void, j) => {
             let result = "aria2c";
@@ -26,6 +30,10 @@ class Aria2 {
             navigator.clipboard.writeText(result).then(r, e => j(e));
         })
     }
+    /**
+     * 以rpc方式发送aria2下载数据
+     * @param obj 下载配置数据
+     */
     rpc(obj: Aria2Data) {
         obj = { ...this.setting, ...obj };
         const options: Aria2Option = {};
@@ -37,6 +45,13 @@ class Aria2 {
         obj.header && (options["header"] = obj.header);
         return this.postMessage("aria2.addUri", obj.id || <any>new Date().getTime(), [obj.urls, options]);
     }
+    /**
+     * rpc发送接口
+     * @param method 请求类型
+     * @param id 请求唯一标志
+     * @param params 请求参数
+     * @returns Promise托管的请求结果
+     */
     postMessage<T extends keyof Aria2Method>(method: T, id: string, params: any[] = []): Promise<ReturnType<Aria2Method[T]>> {
         const url = `${config.rpcServer}:${config.rpcPort}/jsonrpc`;
         config.rpcToken && params.unshift(`token:${config.rpcToken}`);
@@ -61,6 +76,10 @@ class Aria2 {
             })
         })
     }
+    /**
+     * 查询aria2版本，用于测试aria2 rpc链接情况
+     * @returns Promise托管的aria2版本信息
+     */
     getVersion() {
         return this.postMessage("aria2.getVersion", <any>new Date().getTime())
     }

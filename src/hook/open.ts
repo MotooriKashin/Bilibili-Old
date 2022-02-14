@@ -52,12 +52,12 @@ type XMLHttpRequestResponses = {
         return id = rules.push([one, two]);
     }
     function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once = true) {
-        let id: number;
+        let id: number, temp: [string[], Function][];
         const one = Array.isArray(url) ? url : [url];
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
             try {
                 if (!condition || condition(args)) {
-                    once && id && rules.splice(id - 1, 1);
+                    temp = id && rules.splice(id - 1, 1); // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
                     this.send = () => true; // 禁用XMLHttpRequest.send
                     (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
                     const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
@@ -80,7 +80,10 @@ type XMLHttpRequestResponses = {
                     }).catch(e => {
                         this.dispatchEvent(new ProgressEvent("error"));
                         debug.error("modifyResponse of xhrhookasync", one, e);
-                    }).finally(() => { clearInterval(et) })
+                    }).finally(() => {
+                        clearInterval(et);
+                        !once && (id = rules.push(temp[0])); // 恢复多次监听
+                    })
                     clearInterval(et);
                 }
             } catch (e) { debug.error("condition of xhrhook", one, e) }
