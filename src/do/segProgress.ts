@@ -68,7 +68,7 @@ class SegProgress {
                     img.id = "segmentation-logo"; img.width = 32; img.height = 36; img.src = v.logoUrl;
                 } else {
                     img = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                    img.setAttribute("viewBox", "0 0 32 36");
+                    img.setAttribute("viewBox", "0 -3 32 36");
                     img.innerHTML = `
                     <defs>
                     <radialGradient id="gradient">
@@ -77,7 +77,8 @@ class SegProgress {
                             <stop offset="95%" stop-color="#fcecae"></stop>
                         </radialGradient>
                     </defs>
-                    <circle cx="50%" cy="83%" r="5" fill="url(#gradient)"/>`;
+                    <path style="fill: rgb(252, 236, 174); stroke: rgb(252, 236, 174);" d="M 16 32.097 C 13.312 32.106 10.608 30.145 11 25.897 C 11.265 22.744 16 17.097 16 17.097 C 16 17.097 20.822 22.697 21.022 25.897 C 21.322 30.097 18.801 32.088 16 32.097 Z" transform="matrix(-1, 0, 0, -1, 32.021761, 49.196602)"></path>
+                    <circle cx="16" cy="22" r="5" fill="url(#gradient)"/>`;
                 }
                 img.addEventListener("mousemove", e => e.stopPropagation());
                 img.addEventListener("mouseenter", () => {
@@ -130,7 +131,7 @@ class SegProgress {
             });
             playerArea.addEventListener("mousemove", e => {
                 let clientRect = playerArea.getBoundingClientRect();
-                if (e.pageY < clientRect.top + window.scrollY + clientRect.height * 0.6) {
+                if (e.pageY < clientRect.top + window.scrollY + clientRect.height * 0.65) {
                     hide();
                 } else {
                     visibility = true;
