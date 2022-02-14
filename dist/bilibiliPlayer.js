@@ -57418,7 +57418,7 @@ else {
                     //     d = m ? h.getBufferTimeAtTopQualityLongForm() : h.getBufferTimeAtTopQuality()
                     // } else d = h.getStableBufferTime()
                     let bufferTimeLimit = {};
-                    bufferTimeLimit[120] = bufferTimeLimit[125] = bufferTimeLimit[126] = bufferTimeLimit[127] = 30;
+                    bufferTimeLimit[120] = bufferTimeLimit[125] = bufferTimeLimit[126] = bufferTimeLimit[127] = 40;
                     d = bufferTimeLimit[j.id];
                     d = d ? d : 80;
                 }
