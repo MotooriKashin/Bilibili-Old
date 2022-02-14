@@ -44416,9 +44416,16 @@ else {
             function f() {
                 var a = "",
                     b = null;
-                m && (b = (new Date).getTime(), a += "[" + (b - o) + "]"), n && this && this.getClassName && (a += "[" + this.getClassName() + "]", this.getType && (a += "[" + this.getType() + "]")), a.length > 0 && (a += " "), Array.apply(null, arguments).forEach(function (b) {
+                m && (b = (new Date).getTime(),
+                a += "[" + (b - o) + "]"),
+                n && this && this.getClassName && (a += "[" + this.getClassName() + "]",
+                this.getType && (a += "[" + this.getType() + "]")),
+                a.length > 0 && (a += " "),
+                Array.apply(null, arguments).forEach(function (b) {
                     a += b + " "
-                }), l && void 0, j.trigger(i.default.LOG, {
+                }),
+                l && console.log(a),
+                j.trigger(i.default.LOG, {
                     message: a
                 })
             }
