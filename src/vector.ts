@@ -45,7 +45,7 @@ try {
     config.videoLimit && API.importModule("videoLimit.js"); // 解锁视频限制
     API.importModule("banner.js"); // 移植动态顶栏banner
     config.section && API.importModule("section.js"); // 还原旧版顶栏
-    config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 反差弹幕发送者
+    config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 反查弹幕发送者
     config.downloadContentmenu && API.importModule("rightKey.js"); // 下载右键菜单
     API.importModule().forEach((d: keyof modules) => { d.includes("[run]") && API.importModule(d) }); // 自运行脚本
 } catch (e) { toast.error(API.Name, e) }

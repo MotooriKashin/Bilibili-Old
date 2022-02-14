@@ -145,7 +145,7 @@ declare namespace API {
      */
     export function scriptIntercept(url: string | string[], redirect?: (url: string) => string, text?: (url: string) => string): number;
     /**
-     * 取消jsonphook或脚本拦截，只在注册时设置了`once=force`时才需要使用本方法！
+     * 取消jsonphook或脚本拦截，只在注册时设置了`once=false`时才需要使用本方法！
      * @param id 要取消注册的id，该值为注册时返回值，一个id只允许使用一次！
      */
     export function removeJsonphook(id: number): void;

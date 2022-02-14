@@ -7,7 +7,7 @@ interface modules {
     readonly "oldReplySort.css": string;
 }
 {
-    let tag = true, timer: number;;
+    let tag = true, timer: number;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {

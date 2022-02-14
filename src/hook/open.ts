@@ -110,7 +110,7 @@ declare namespace API {
      */
     export function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once?: boolean): number;
     /**
-     * 注销xhrhook以节约开销，只在注册时设置了`once=force`时才需要使用本方法！ 
+     * 注销xhrhook以节约开销，只在注册时设置了`once=false`时才需要使用本方法！ 
      * @param id `xhrhook`注册时的返回值，一个id只允许使用一次！
      */
     export function removeXhrhook(id: number): [string[], Function][]
