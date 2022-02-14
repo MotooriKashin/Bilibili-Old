@@ -22,10 +22,13 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ba5ee4029b5b37f0dfd4e856044b3f53114c443c/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@8833426bc8b3737721e7b96af96ef9f8219d791d/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e8d0df1b4522ec730478d2f84dcbd25cb90d48e8/dist/comment.min.js
 // ==/UserScript==
 
+/**
+ * 脚本设置接口，自动存储对于设置的修改
+ */
 const config = new Proxy({}, {
     set: (_target, p, value) => {
         _target[p] = value;
@@ -68,7 +71,7 @@ class Url {
         if (this.search) {
             return this.search.substring(1).split("&").reduce((s, d) => {
                 const arr = d.split("=");
-                arr[1] && (s[arr[0]] = arr[1]);
+                s[arr[0]] = arr[1];
                 return s;
             }, {});
         }
@@ -235,6 +238,7 @@ class Format {
         return Format.timeFormat(time * 1e3, true);
     }
 }
+// GM系列高级API的封装
 GM.xmlHttpRequest = GM_xmlhttpRequest;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
@@ -242,6 +246,7 @@ GM.deleteValue = GM_deleteValue;
 GM.listValues = GM_listValues;
 GM.getResourceText = GM_getResourceText;
 GM.getResourceURL = GM_getResourceText;
+// 模块打包入口
 const modules = {};
 /**
  * 不可直接调用，请访问`toast`替代！
@@ -3051,6 +3056,7 @@ option {
 	"danmaku": "danmaku.js",
 	"element": "element.js",
 	"clickRemove": "element.js",
+	"EmbedPlayer": "EmbedPlayer.js",
 	"fnval": "fnval.js",
 	"mediaSession": "MediaMeta.js",
 	"observerAddedNodes": "nodeObserver.js",
@@ -4056,7 +4062,7 @@ option {
             return undefined;
         },
         set: (t, p, v) => {
-            if (window[p] && typeof window[p] !== "function")
+            if (window[p] && typeof window[p] !== "function" && window[p] != v)
                 window[p] = v; // 同步函数以外的全局变量
             else
                 t[p] = v; // 同步接口
@@ -4079,7 +4085,6 @@ option {
     // 模块引导起点
     config.developer && (window.API = API); // 开发者模式
     API.importModule("parameterTrim.js"); // 网址及超链接清理
-    API.importModule("EmbedPlayer.js"); // hook旧版播放器
     API.importModule("replyList.js"); // 回复翻页评论区及楼层号
     config.logReport && API.importModule("logReport.js"); // 拦截B站日志上报
     // 重写分别引导入口，专属对应页面的模块请转向对应引导模块
@@ -4118,7 +4123,7 @@ option {
             API.importModule("medialist.js");
     }
     // 重写之后再引导的全局模块
-    API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效咨询数据
+    API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
     config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     API.importModule("playinfo.js"); // 视频源修复及记录
     API.importModule("player-v2.js"); // 视频信息接口
@@ -4126,7 +4131,7 @@ option {
     config.videoLimit && API.importModule("videoLimit.js"); // 解锁视频限制
     API.importModule("banner.js"); // 移植动态顶栏banner
     config.section && API.importModule("section.js"); // 还原旧版顶栏
-    config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 反差弹幕发送者
+    config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 反查弹幕发送者
     config.downloadContentmenu && API.importModule("rightKey.js"); // 下载右键菜单
     API.importModule().forEach((d) => { d.includes("[run]") && API.importModule(d); }); // 自运行脚本
 }
@@ -4138,6 +4143,9 @@ catch (e) {
 /*!***********************!*/
 /**/modules["accesskey.js"] = /*** ./dist/do/accesskey.js ***/
 `class Accesskey {
+    /**
+     * 创建移动端鉴权获取面板
+     */
     constructor() {
         this.access_key = GM.getValue("access_key", "");
         this.access_date = GM.getValue("access_date", 0);
@@ -4156,6 +4164,9 @@ catch (e) {
         this.foot = API.addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, this.box);
         this.flesh();
     }
+    /**
+     * 重新获取鉴权按钮
+     */
     flesh() {
         if (this.access_key) {
             const temp = API.element.button(() => { this.access(); }, "重新授权", 3);
@@ -4172,6 +4183,9 @@ catch (e) {
             this.foot.innerHTML = \`<div>授权状态：未授权</div><div> </div>\`;
         }
     }
+    /**
+     * 请求移动端鉴权
+     */
     async access() {
         if (!API.uid)
             return (toast.warning("请先登录！"), API.biliQuickLogin());
@@ -4197,6 +4211,9 @@ catch (e) {
         toast.success("账户授权成功！");
         this.flesh();
     }
+    /**
+     * 取消移动端鉴权并清除一切数据
+     */
     async abort() {
         toast("正在取消账户授权，请稍候~");
         this.access_key = "";
@@ -4220,6 +4237,9 @@ catch (e) {
         toast.success("已取消账户授权并销毁痕迹！");
         this.flesh();
     }
+    /**
+     * 登录到biliplus，用于解除视频限制
+     */
     pluslogin(data, resolve, reject) {
         this.num++;
         const iframe = document.createElement("iframe");
@@ -4256,6 +4276,7 @@ new Accesskey();
         }, document.querySelector("#__bofqi"));
         node && node.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
+    // 播放器自动化操作
     API.switchVideo(() => {
         config.danmakuFirst && document.querySelectorAll(".bilibili-player-filter-btn")[1].click();
         setTimeout(() => {
@@ -4270,6 +4291,7 @@ new Accesskey();
         }, 500);
         config.autoPlay && setTimeout(() => { window.player && window.player.play && window.player.play(); }, 1000);
     });
+    // 播放本地媒体按钮
     API.path.name && API.observerAddedNodes(e => {
         if (e.className && /bilibili-player-danmaku-setting-lite-panel/.test(e.className)) {
             API.runWhile(() => document.querySelector(".bilibili-player-setting-dmask-wrap"), () => {
@@ -4284,6 +4306,7 @@ new Accesskey();
             });
         }
     });
+    // 修复顶栏分区数据
     API.runWhile(() => document.querySelector(".bili-header-m"), () => {
         try {
             let node = document.querySelector(".bili-header-m").getElementsByClassName('nav-name');
@@ -4341,8 +4364,8 @@ new Accesskey();
     config.heartbeat && API.xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
         args[1] = args[1].replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
     }, undefined, false);
-    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".lt-row"), () => document.querySelector(".lt-row").remove());
-    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector(".unlogin-popover").remove());
+    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".lt-row"), () => document.querySelector(".lt-row").remove()); // 移除登录提示弹窗
+    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector(".unlogin-popover").remove()); // 移除登录提示弹窗
 }
 
 //# sourceURL=API://@Bilibili-Old/do/automate.js`;
@@ -4373,6 +4396,10 @@ new Accesskey();
             else
                 API.addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
         }
+        /**
+         * 根据页面返回resourceId
+         * @returns resourceId
+         */
         static resourceId() {
             if (location.href.includes("v/douga"))
                 return 1576;
@@ -5390,13 +5417,11 @@ const localMedia = LocalMedia;
 /**/modules["playinfo.js"] = /*** ./dist/do/playinfo.js ***/
 `API.xhrhook("/playurl?", args => {
     const obj = Format.urlObj(args[1]);
-    !obj.sign && obj.fnval && (obj.fnval = API.fnval);
     obj.avid && Number(obj.bvid) && (API.aid = obj.avid);
     obj.bvid && !API.aid && (API.aid = API.abv(obj.bvid));
     obj.cid && Number(obj.cid) && (API.cid = obj.cid);
-    args[1] = Format.objUrl(args[1], obj);
-    args[1].includes("84956560bc028eb7") && (args[1] = API.urlsign(args[1], {}, 8));
-    args[1].includes("pgc") && (API.pgc = true);
+    args[1].includes("84956560bc028eb7") && (args[1] = API.urlsign(args[1], {}, 8)); // 修复失效的appid
+    args[1].includes("pgc") && (API.pgc = true); // ogv视频
 }, async (obj) => {
     try {
         API.__playinfo__ = obj.responseType === "json" ? obj.response : API.jsonCheck(obj.response);
@@ -5441,7 +5466,6 @@ const localMedia = LocalMedia;
 /**/modules["replyList.js"] = /*** ./dist/do/replyList.js ***/
 `{
     let tag = true, timer;
-    ;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
@@ -5521,6 +5545,7 @@ API.runWhile(() => document.querySelector("#bili-header-m"), () => {
             API.addCss(\`
                             .bilibili-progress-segmentation-logo{display:inline-block;position:absolute;top:-12px;height:30px;width:1px; transition: opacity .1s}
                             .bilibili-progress-segmentation-logo>img{position: absolute;top:-14px;transform:translate(-50%,-50%) scale(0.7);left:50%;transition:top 0.1s}
+                            .bilibili-progress-segmentation-logo>svg{position: absolute;top: -19px;width: 32px;height: 36px;transform: translate(-50%, -50%)}
                             .bilibili-player.mode-widescreen .bilibili-progress-segmentation-logo>img,
                             .bilibili-player.mode-webfullscreen .bilibili-progress-segmentation-logo>img,
                             .bilibili-player.mode-fullscreen .bilibili-progress-segmentation-logo>img{top:-18px;left:50%;transform:translate(-50%,-50%) scale(1)}
@@ -5563,11 +5588,28 @@ API.runWhile(() => document.querySelector("#bili-header-m"), () => {
                 title.innerHTML = "-> " + v.content;
                 title.className = "bilibili-progress-detail-chapter";
                 title.style.cssText = "width: auto; transform: translateX(-50%); display: none";
-                let img = document.createElement("img"); // 看点图标
-                img.id = "segmentation-logo";
-                img.width = 32;
-                img.height = 36;
-                img.src = v.logoUrl;
+                let img;
+                if (v.logoUrl) {
+                    img = document.createElement("img"); // 看点图标
+                    img.id = "segmentation-logo";
+                    img.width = 32;
+                    img.height = 36;
+                    img.src = v.logoUrl;
+                }
+                else {
+                    img = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                    img.setAttribute("viewBox", "0 -3 32 36");
+                    img.innerHTML = \`
+                    <defs>
+                    <radialGradient id="gradient">
+                            <stop offset="10%" stop-color="#ffe78f"></stop>
+                            <stop offset="40%" stop-color="#ffe996"></stop>
+                            <stop offset="95%" stop-color="#fcecae"></stop>
+                        </radialGradient>
+                    </defs>
+                    <path style="fill: rgb(252, 236, 174); stroke: rgb(252, 236, 174);" d="M 16 32.097 C 13.312 32.106 10.608 30.145 11 25.897 C 11.265 22.744 16 17.097 16 17.097 C 16 17.097 20.822 22.697 21.022 25.897 C 21.322 30.097 18.801 32.088 16 32.097 Z" transform="matrix(-1, 0, 0, -1, 32.021761, 49.196602)"></path>
+                    <circle cx="16" cy="22" r="5" fill="url(#gradient)"/>\`;
+                }
                 img.addEventListener("mousemove", e => e.stopPropagation());
                 img.addEventListener("mouseenter", () => {
                     title.style.display = "";
@@ -5605,31 +5647,33 @@ API.runWhile(() => document.querySelector("#bili-header-m"), () => {
             }
             setTimeout(() => update(), 500); // 等待进度条完全加载
             chptName.style.top = "-150px";
-            let playerArea = document.getElementsByClassName("bilibili-player-area")[0], timer;
-            playerArea.addEventListener("mousemove", e => {
-                function hide() {
-                    if (timer != null) {
-                        clearTimeout(timer);
-                        timer = null;
-                    }
+            let playerArea = document.getElementsByClassName("bilibili-player-area")[0], visibility = true;
+            function hide() {
+                if (!visibility)
+                    return;
+                visibility = false;
+                for (let i = 0; i < segDivs.length; i++)
+                    segDivs[i].style.opacity = "0";
+                setTimeout(() => {
                     for (let i = 0; i < segDivs.length; i++)
-                        segDivs[i].style.opacity = "0";
-                    setTimeout(() => {
-                        for (let i = 0; i < segDivs.length; i++)
-                            segDivs[i].style.visibility = "hidden";
-                    }, 100);
+                        segDivs[i].style.visibility = "hidden";
+                }, 100);
+            }
+            playerArea.addEventListener("mouseleave", e => {
+                hide();
+            });
+            playerArea.addEventListener("mousemove", e => {
+                let clientRect = playerArea.getBoundingClientRect();
+                if (e.pageY < clientRect.top + window.scrollY + clientRect.height * 0.65) {
+                    hide();
                 }
-                if (timer == null) {
+                else {
+                    visibility = true;
                     for (let i = 0; i < segDivs.length; i++) {
                         segDivs[i].style.visibility = "";
                         segDivs[i].style.opacity = "1";
                     }
                 }
-                else {
-                    clearTimeout(timer);
-                    timer = null;
-                }
-                timer = setTimeout(() => hide(), 5000);
             });
             // 鼠标与看点图标的交互
             trackerWrp.addEventListener("mousemove", e => {
@@ -5882,6 +5926,10 @@ API.segProgress = SegProgress;
         config.filepath && (this.setting.directory = config.filepath);
         config.rpcToken && (this.setting.token = config.rpcToken);
     }
+    /**
+     * 生成aria2命令行参数并赋值到剪切板
+     * @param obj 下载配置数据
+     */
     shell(obj) {
         return new Promise((r, j) => {
             let result = "aria2c";
@@ -5896,6 +5944,10 @@ API.segProgress = SegProgress;
             navigator.clipboard.writeText(result).then(r, e => j(e));
         });
     }
+    /**
+     * 以rpc方式发送aria2下载数据
+     * @param obj 下载配置数据
+     */
     rpc(obj) {
         obj = { ...this.setting, ...obj };
         const options = {};
@@ -5907,6 +5959,13 @@ API.segProgress = SegProgress;
         obj.header && (options["header"] = obj.header);
         return this.postMessage("aria2.addUri", obj.id || new Date().getTime(), [obj.urls, options]);
     }
+    /**
+     * rpc发送接口
+     * @param method 请求类型
+     * @param id 请求唯一标志
+     * @param params 请求参数
+     * @returns Promise托管的请求结果
+     */
     postMessage(method, id, params = []) {
         const url = \`\${config.rpcServer}:\${config.rpcPort}/jsonrpc\`;
         config.rpcToken && params.unshift(\`token:\${config.rpcToken}\`);
@@ -5931,6 +5990,10 @@ API.segProgress = SegProgress;
             });
         });
     }
+    /**
+     * 查询aria2版本，用于测试aria2 rpc链接情况
+     * @returns Promise托管的aria2版本信息
+     */
     getVersion() {
         return this.postMessage("aria2.getVersion", new Date().getTime());
     }
@@ -6192,6 +6255,9 @@ API.aria2 = new Aria2();
                 this.showTable();
             }
         }
+        /**
+         * 添加视频之外的下载数据
+         */
         async getOther() {
             var _a;
             if (!config.ifDlDmCC)
@@ -6286,6 +6352,10 @@ API.aria2 = new Aria2();
                 });
             });
         }
+        /**
+         * 点击下载按钮回调
+         * @param data 被点击的下载数据
+         */
         postData(data) {
             !Reflect.has(data, "_name") && (data.filename = this.setFinalName(data));
             switch (config.downloadMethod) {
@@ -6726,12 +6796,12 @@ API.ef2 = new Ef2();
         return id = rules.push([one, two]);
     }
     function xhrhookasync(url, condition, modifyResponse, once = true) {
-        let id;
+        let id, temp;
         const one = Array.isArray(url) ? url : [url];
         const two = function (args) {
             try {
                 if (!condition || condition(args)) {
-                    once && id && rules.splice(id - 1, 1);
+                    temp = id && rules.splice(id - 1, 1); // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
                     this.send = () => true; // 禁用XMLHttpRequest.send
                     (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
                     const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
@@ -6754,7 +6824,10 @@ API.ef2 = new Ef2();
                     }).catch(e => {
                         this.dispatchEvent(new ProgressEvent("error"));
                         debug.error("modifyResponse of xhrhookasync", one, e);
-                    }).finally(() => { clearInterval(et); });
+                    }).finally(() => {
+                        clearInterval(et);
+                        !once && (id = rules.push(temp[0])); // 恢复多次监听
+                    });
                     clearInterval(et);
                 }
             }
@@ -7799,6 +7872,15 @@ API.clickRemove = ClickRemove;
 /*!***********************!*/
 /**/modules["EmbedPlayer.js"] = /*** ./dist/include/EmbedPlayer.js ***/
 `class EmbedPlayer {
+    /**
+     * 代理EmbedPlayer函数
+     * @param player "player"
+     * @param swf "//static.hdslb.com/play.swf"
+     * @param playerParams url参数式的播放器初始化参数，需要转化为对象格式才能传递给播放器实例
+     * @param playerType 播放器类型：flash/HTML5
+     * @param upgrade 提升播放器版本，可能只在flash格式下有用
+     * @param callbackFn 初始化播放器后的回调函数
+     */
     constructor(player, swf, playerParams, playerType, upgrade, callbackFn) {
         this.flashAddEvents = [];
         this.flashRemoveEvents = [];
@@ -7854,6 +7936,11 @@ API.clickRemove = ClickRemove;
     set gray_html5(v) {
         config.noVideo = !v;
     }
+    /**
+     * 加载外源脚本依赖
+     * @param src 外源脚本src
+     * @param onload 成功加载后的回调函数
+     */
     loadScript(src, onload) {
         const script = document.createElement("script");
         script.type = "text/javascript";
@@ -7862,8 +7949,15 @@ API.clickRemove = ClickRemove;
             script.remove();
             onload();
         });
+        script.addEventListener("error", (e) => {
+            script.remove();
+            toast.error("加载播放器脚本失败！", e.message);
+        });
         document.body.appendChild(script);
     }
+    /**
+     * 初始化HTML5播放器节点
+     */
     loadHtml5Player() {
         if (!this.bofqi)
             return debug.warn("页面中并不存在播放器节点！", this.playerParam);
@@ -7880,6 +7974,9 @@ API.clickRemove = ClickRemove;
             this.gray_html5_compatible();
         }
     }
+    /**
+     * 统一HTML5播放器对外接口
+     */
     gray_html5_compatible() {
         this.cElement = this.bofqi.querySelector("#player_placeholder");
         Object.entries(this.apiMaps).forEach(d => {
@@ -7908,6 +8005,10 @@ API.clickRemove = ClickRemove;
         "function" == typeof this.callbackFn && this.cElement.jwAddEventListener("jwplayerMediaLoaded", () => this.callbackFn());
         "function" == typeof window.PlayerMediaLoaded && window.PlayerMediaLoaded();
     }
+    /**
+     * 检查浏览器flash支持性
+     * @returns 支持结果
+     */
     flashChecker() {
         let e = !1, t = 0;
         if (!!/msie [\\w.]+/.exec(navigator.userAgent.toLowerCase()) && !/Edge/i.test(navigator.userAgent) || /Trident/i.test(navigator.userAgent)) {
@@ -7936,15 +8037,24 @@ API.clickRemove = ClickRemove;
             flashVersion: t
         };
     }
+    /**
+     * 初始化flash播放器节点
+     */
     gray_loader_flash() {
         this.flashChecker().hasFlash ? window.swfobject && window.swfobject.embedSWF ?
             this.loadFlashPlayer() :
             this.loadScript("//static.hdslb.com/js/swfobject.js", () => this.loadFlashPlayer()) :
             this.getNoFlashTips();
     }
+    /**
+     * 不支持flash提示
+     */
     getNoFlashTips() {
         window.NoFlashTips ? this.createNoFlashTipsInstance() : this.loadScript("//static.hdslb.com/player/noflashtips/no-flash-tips.min.js", () => this.createNoFlashTipsInstance());
     }
+    /**
+     * 不支持flash提示内容
+     */
     createNoFlashTipsInstance() {
         const msg = {
             backgroundColor: "white",
@@ -7986,6 +8096,9 @@ API.clickRemove = ClickRemove;
         new window.NoFlashTips(this.bofqi, msg);
         this.bofqi.style.removeProperty("position");
     }
+    /**
+     * 加载flash播放器脚本
+     */
     loadFlashPlayer() {
         this.bofqi.innerHTML = '<div id="player_placeholder" class="player"></div>';
         window.swfobject.embedSWF(this.upgrade ? "//static.hdslb.com/play_recommend.swf" : "//static.hdslb.com/play.swf", "player_placeholder", "950", "482", "0", "", this.playerParam, {
@@ -8003,6 +8116,9 @@ API.clickRemove = ClickRemove;
             this.gray_flash_compatible();
         });
     }
+    /**
+     * 统一flash播放器对外接口
+     */
     gray_flash_compatible() {
         this.cElement = this.bofqi.querySelector("#player_placeholder");
         window.player = {};
@@ -8082,6 +8198,11 @@ API.clickRemove = ClickRemove;
             }
         }
     }
+    /**
+     * 播放器附加菜单
+     * @param type 菜单类型
+     * @returns 菜单数据
+     */
     loadExtraMenuConfig(type) {
         let v = '20161115', exconfig = [];
         if (type === 'flash' || type === 'flash_gray') {
@@ -8096,6 +8217,10 @@ API.clickRemove = ClickRemove;
         }
         return { 'ver': v, 'menuItems': exconfig };
     }
+    /**
+     * 播放器附加菜单回调函数
+     * @param id 菜单类型
+     */
     clickMenu(id) {
         setTimeout(() => {
             if (id === 'change_h5') {
@@ -8109,6 +8234,9 @@ API.clickRemove = ClickRemove;
             }
         });
     }
+    /**
+     * 根据参数引导播放器类型
+     */
     gray_loader() {
         ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
     }
@@ -8116,6 +8244,9 @@ API.clickRemove = ClickRemove;
 class GrayManager extends EmbedPlayer {
     constructor(player, swf, playerParams, playerType, upgrade, callbackFn) {
         super(player, swf, playerParams, playerType, upgrade, callbackFn);
+        /**
+         * 监听url哈希修改
+         */
         this.HashManage = {
             p: function (e) {
                 return (this.p = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
@@ -8185,6 +8316,10 @@ class GrayManager extends EmbedPlayer {
             this.codec.support[codecId[i]] = MediaSource.isTypeSupported(mime[i]);
         }
     }
+    /**
+     * 重新加载播放器实例
+     * @param playerParams 播放器实例参数，格式同初始化参数
+     */
     reload(playerParams) {
         if (this.playerParam) {
             try {
@@ -8206,6 +8341,11 @@ class GrayManager extends EmbedPlayer {
         else
             window.location.reload();
     }
+    /**
+     * 从url中提取参数
+     * @param e 参数名
+     * @returns 参数值
+     */
     GetUrlValue(e) {
         var t = new RegExp("(^|&)".concat(e, "=([^&]*)(&|\$)"), "i"), n = window.location.search.substr(1).match(t);
         if (null != n)
@@ -8223,6 +8363,7 @@ API.EmbedPlayer = () => {
         window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn);
     };
 };
+// 托管播放器脚本\`bilibiliPlayer.min.js\`
 config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
     return GM.getResourceText("bilibiliPlayer.js");
 });
@@ -8231,6 +8372,9 @@ config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, ()
 /*!***********************!*/
 /**/modules["fnval.js"] = /*** ./dist/include/fnval.js ***/
 `{
+    /**
+     * fnval参数标志位
+     */
     class Fnval {
         constructor() {
             this.MP4 = 1;
@@ -8244,6 +8388,7 @@ config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, ()
         }
     }
     const fnval = new Fnval();
+    // 构造播放源请求参数fnval，取当前支持的最大值。
     API.fnval = Reflect.ownKeys(fnval).reduce((s, d) => {
         s += fnval[d];
         return s;
@@ -8254,6 +8399,10 @@ config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, ()
 /*!***********************!*/
 /**/modules["MediaMeta.js"] = /*** ./dist/include/MediaMeta.js ***/
 `{
+    /**
+     * 置媒体控制器MediaMeta信息
+     * @param data MediaMeta数据
+     */
     function mediaSession(data) {
         if (!navigator.mediaSession.metadata)
             navigator.mediaSession.metadata = new MediaMetadata({ ...data });
@@ -13304,7 +13453,7 @@ API.initialStateOfAv = InitialStateOfAv;
         config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         API.runWhile(() => document.querySelector(".new-entry"), () => { var _a; return (_a = document.querySelector(".new-entry")) === null || _a === void 0 ? void 0 : _a.remove(); }); // 移除过期节点
         if (document.compatMode === "BackCompat") { // 怪异模式下样式修复
-            API.addCss(".header-info .count-wrapper div { height:18px; }.bili-header-m .nav-menu .profile-info .i-face { top:5px; }");
+            API.addCss(".header-info .count-wrapper div, .ulike { height:18px !important; }.bili-header-m .nav-menu .profile-info .i-face { top:5px; }");
         }
     }
 }
@@ -13992,9 +14141,9 @@ if (typeof window.webkitRTCSessionDescription !== "undefined")
 `{
     API.mid = (API.path[3] && API.path[3].split("?")[0]) || API.mid;
     config.errands && (API.mid == 11783021 || API.mid == 1988098633 || API.mid == 2042149112) && API.importModule("midInfo.js");
-    config.album && API.importModule("album.js");
-    config.jointime && API.importModule("jointime.js");
-    config.lostVideo && API.importModule("lostVideo.js");
+    config.album && API.importModule("album.js"); // 相簿重定向
+    config.jointime && API.importModule("jointime.js"); // 注册时间
+    config.lostVideo && API.importModule("lostVideo.js"); // 失效视频
 }
 
 //# sourceURL=API://@Bilibili-Old/url/space/space.js`;
