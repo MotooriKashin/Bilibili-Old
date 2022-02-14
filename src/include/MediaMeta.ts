@@ -5,6 +5,10 @@ interface modules {
     readonly "MediaMeta.js": string;
 }
 {
+    /**
+     * 置媒体控制器MediaMeta信息
+     * @param data MediaMeta数据
+     */
     function mediaSession(data: MediaMetadataInit) {
         if (!navigator.mediaSession.metadata) navigator.mediaSession.metadata = new MediaMetadata({ ...data });
         else {

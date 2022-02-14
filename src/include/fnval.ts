@@ -5,6 +5,9 @@ interface modules {
     readonly "fnval.js": string;
 }
 {
+    /**
+     * fnval参数标志位
+     */
     class Fnval {
         MP4 = 1;
         DASH_H265 = 16;
@@ -16,6 +19,7 @@ interface modules {
         DASH_AV1 = 2048;
     }
     const fnval = new Fnval();
+    // 构造播放源请求参数fnval，取当前支持的最大值。
     API.fnval = Reflect.ownKeys(fnval).reduce((s, d) => {
         s += fnval[d];
         return s;

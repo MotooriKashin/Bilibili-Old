@@ -1,3 +1,6 @@
+/**
+ * 脚本设置接口，自动存储对于设置的修改
+ */
 const config = new Proxy(<config>{}, {
     set: (_target, p: string, value) => {
         _target[p] = value;

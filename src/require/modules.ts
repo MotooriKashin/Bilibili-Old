@@ -1,3 +1,4 @@
+// 模块打包入口
 const modules: Partial<modules> = {};
 /**
  * 模块中请复用此接口，以方便导入模块时提示。  
