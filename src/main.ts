@@ -291,7 +291,7 @@ interface modules {
             return undefined;
         },
         set: (t, p, v) => {
-            if (window[p] && typeof window[p] !== "function") window[p] = v; // 同步函数以外的全局变量
+            if (window[p] && typeof window[p] !== "function" && window[p] != v) window[p] = v; // 同步函数以外的全局变量
             else t[p] = v; // 同步接口
             return true;
         }
