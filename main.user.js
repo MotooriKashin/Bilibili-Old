@@ -5281,12 +5281,12 @@ const localMedia = LocalMedia;
             API.alertMessage(\`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！\`, "恢复默认设置").then(d => { d && location.reload(); });
         }
         output() {
-            API.saveAs(JSON.stringify(config, undefined, "\\t"), \`config \${Format.timeFormat(undefined, true)}.json\`, "application/json");
+            API.saveAs(JSON.stringify(GM.getValue("config"), undefined, "\\t"), \`config \${Format.timeFormat(undefined, true)}.json\`, "application/json");
         }
         input(v) {
             v && v[0] && API.readAs(v[0]).then(d => {
                 const data = JSON.parse(d);
-                Object.keys(data).forEach(d => Reflect.has(config, d) && Reflect.set(config, d, data[d]));
+                GM.setValue("config", data);
                 toast.success("已导入本地设置数据，请刷新页面生效！");
             });
         }
