@@ -762,7 +762,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         label: "请求TV源",
         sub: "无水印",
         value: false,
-        float: `请求TV端的视频源，该端口可以获取到无水印的视频源（mp4格式除外），<strong>此类源无法以“右键保存”方式下载，请改用ef2或者aria2，且“referer”选项必须置空！</strong>`
+        float: `请求TV端的视频源，该端口可以获取到无水印的视频源（mp4格式除外），</br><strong>此类源无法以“右键保存”方式下载，请改用ef2或者aria2，且“referer”选项必须置空！</strong></br>大会员专享类视频下载将要求电视端大会员，与一般大会员不互通。授权大会员状态请尝试设置-播放-解除区域/平台限制-账户授权(有效性待测！)`
     })
     API.registerSetting({
         type: "row",
