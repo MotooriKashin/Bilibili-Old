@@ -125,7 +125,7 @@ class LocalMedia {
         return `${m}:${s}`
     }
 }
-const localMedia = LocalMedia;
+API.localMedia = LocalMedia;
 declare namespace API {
     export let localMedia: typeof LocalMedia;
 }
