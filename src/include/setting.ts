@@ -756,6 +756,15 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         float: '画质qn参数，数值越大画质越高，0表示自动。64（720P）以上需要登录，112（1080P+）以上需要大会员。一般只需设置为最大即可，会自动获取到能获取的最高画质。'
     })
     API.registerSetting({
+        type: "switch",
+        sort: "download",
+        key: "TVresource",
+        label: "请求TV源",
+        sub: "无水印",
+        value: false,
+        float: `请求TV端的视频源，该端口可以获取到无水印的视频源（mp4格式除外），<strong>此类源无法以“右键保存”方式下载，请改用ef2或者aria2，且“referer”选项必须置空！</strong>`
+    })
+    API.registerSetting({
         type: "row",
         sort: "download",
         key: "downloadMethod",

@@ -29,13 +29,15 @@ class Sign {
      * @returns 签名后的URL
      */
     static sign(url: string, obj: Record<string, string | number> = {}, id: number | string = 0) {
-        let table: Record<string, string | number> = {};
         this.keySecret = <string[]>this.decode(id);
         obj = { ...Format.urlObj(url), ...obj };
         url = url.split("#")[0].split("?")[0];
         delete obj.sign;
         obj.appkey = this.keySecret[0];
-        Object.keys(obj).sort().map(key => { table[key] = obj[key] });
+        const table = Object.keys(obj).sort().reduce((s, d) => {
+            s[d] = obj[d];
+            return s
+        }, <Record<string, string | number>>{});
         table.sign = id === 3 && table.api ? (API.md5(Format.objUrl("", { api: decodeURIComponent(<string>table.api) }) + this.keySecret[1])) : (API.md5(Format.objUrl("", table) + this.keySecret[1]));
         return Format.objUrl(url, table);
     }

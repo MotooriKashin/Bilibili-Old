@@ -45,7 +45,7 @@ class Url {
      * @returns url字符串
      */
     toJSON() {
-        return (this.url || "") + this.search + this.hash;
+        return ((this.url || "") + this.search + this.hash).replace(/^\?/, "");
     }
 }
 /**

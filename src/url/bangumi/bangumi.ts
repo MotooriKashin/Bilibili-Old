@@ -54,6 +54,7 @@ class Bangumi extends API.rewrite {
     }
     async getIniState() {
         API.path.name = "bangumi";
+        API.pgc = true;
         API.path[5].startsWith('ss') && (this.obj.season_id = location.href.match(/[0-9]+/)[0]);
         API.path[5].startsWith('ep') && (this.obj.ep_id = location.href.match(/[0-9]+/)[0]);
         if (API.uid && !this.epid) {

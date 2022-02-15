@@ -75,6 +75,9 @@ interface modules {
             100023: '480P',
             100022: '360P',
             30280: "320Kbps",
+            30260: "320Kbps",
+            30259: "128Kbps",
+            30257: "64Kbps",
             30255: "AUDIO",
             30250: "ATMOS",
             30232: "128Kbps",
@@ -101,6 +104,10 @@ interface modules {
             30015: '360P',
             30011: '360P',
             464: '预览',
+            336: "1080P",
+            320: "720P",
+            288: "480P",
+            272: "360P",
             208: "1080P",
             192: "720P",
             160: "480P",
@@ -284,7 +291,7 @@ interface modules {
         async contentMenu() {
             if (API.aid && API.cid) {
                 if (!this.links[0]) {
-                    API.__playinfo__ && this.decodePlayinfo(API.__playinfo__);
+                    !config.TVresource && API.__playinfo__ && this.decodePlayinfo(API.__playinfo__);
                     const result = await Promise.all(config.downloadList.reduce((s: Promise<any>[], d) => {
                         !this.type.includes(d) && s.push(this.getContent(d));
                         return s;
@@ -344,12 +351,12 @@ interface modules {
             try {
                 switch (d) {
                     case "dash": result = API.pgc ?
-                        await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
-                        await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
+                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
+                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
                         break;
                     case "flv": result = API.pgc ?
-                        await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
-                        await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
+                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
+                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
                         break;
                     case "mp4": result = API.pgc ?
                         await new API.url().getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }, true) :
@@ -406,7 +413,7 @@ interface modules {
                     .then(GID => toast.success(`已添加下载任务到aria2 RPC主机，任务GID：${GID}`))
                     .catch(e => toast.error(`添加下载任务到aria2 RPC主机出错！`, e))
                     break;
-                default: this.rightKey(data);
+                default: (config.TVresource && (data.type === "flv" || data.type === "avc" || data.type === "hev" || data.type === "av1" || data.type === "aac")) ? toast.warning("TV源视频流不支持本方式下载，请在设置中另选下载方式或关闭请求TV源！") : this.rightKey(data);
             }
         }
         /**
@@ -471,4 +478,10 @@ interface modules {
 }
 declare namespace API {
     export function download(): void;
+}
+interface config {
+    /**
+     * 下载：使用TV源
+     */
+    TVresource: boolean;
 }

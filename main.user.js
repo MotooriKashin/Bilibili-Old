@@ -96,7 +96,7 @@ class Url {
      * @returns url字符串
      */
     toJSON() {
-        return (this.url || "") + this.search + this.hash;
+        return ((this.url || "") + this.search + this.hash).replace(/^\?/, "");
     }
 }
 /**
@@ -6027,6 +6027,9 @@ API.aria2 = new Aria2();
                 100023: '480P',
                 100022: '360P',
                 30280: "320Kbps",
+                30260: "320Kbps",
+                30259: "128Kbps",
+                30257: "64Kbps",
                 30255: "AUDIO",
                 30250: "ATMOS",
                 30232: "128Kbps",
@@ -6053,6 +6056,10 @@ API.aria2 = new Aria2();
                 30015: '360P',
                 30011: '360P',
                 464: '预览',
+                336: "1080P",
+                320: "720P",
+                288: "480P",
+                272: "360P",
                 208: "1080P",
                 192: "720P",
                 160: "480P",
@@ -6241,7 +6248,7 @@ API.aria2 = new Aria2();
         async contentMenu() {
             if (API.aid && API.cid) {
                 if (!this.links[0]) {
-                    API.__playinfo__ && this.decodePlayinfo(API.__playinfo__);
+                    !config.TVresource && API.__playinfo__ && this.decodePlayinfo(API.__playinfo__);
                     const result = await Promise.all(config.downloadList.reduce((s, d) => {
                         !this.type.includes(d) && s.push(this.getContent(d));
                         return s;
@@ -6304,13 +6311,13 @@ API.aria2 = new Aria2();
                 switch (d) {
                     case "dash":
                         result = API.pgc ?
-                            await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
-                            await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
+                            await new API.url().getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
+                            await new API.url().getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
                         break;
                     case "flv":
                         result = API.pgc ?
-                            await new API.url().getJson("api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
-                            await new API.url().getJson("api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
+                            await new API.url().getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
+                            await new API.url().getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
                         break;
                     case "mp4":
                         result = API.pgc ?
@@ -6373,7 +6380,7 @@ API.aria2 = new Aria2();
                         .then(GID => toast.success(\`已添加下载任务到aria2 RPC主机，任务GID：\${GID}\`))
                         .catch(e => toast.error(\`添加下载任务到aria2 RPC主机出错！\`, e));
                     break;
-                default: this.rightKey(data);
+                default: (config.TVresource && (data.type === "flv" || data.type === "avc" || data.type === "hev" || data.type === "av1" || data.type === "aac")) ? toast.warning("TV源视频流不支持本方式下载，请在设置中另选下载方式或关闭请求TV源！") : this.rightKey(data);
             }
         }
         /**
@@ -9621,6 +9628,15 @@ API.rewrite = Rewrite;
         float: '画质qn参数，数值越大画质越高，0表示自动。64（720P）以上需要登录，112（1080P+）以上需要大会员。一般只需设置为最大即可，会自动获取到能获取的最高画质。'
     });
     API.registerSetting({
+        type: "switch",
+        sort: "download",
+        key: "TVresource",
+        label: "请求TV源",
+        sub: "无水印",
+        value: false,
+        float: \`请求TV端的视频源，该端口可以获取到无水印的视频源（mp4格式除外），<strong>此类源无法以“右键保存”方式下载，请改用ef2或者aria2，且“referer”选项必须置空！</strong>\`
+    });
+    API.registerSetting({
         type: "row",
         sort: "download",
         key: "downloadMethod",
@@ -10478,10 +10494,10 @@ API.rewrite = Rewrite;
             "api.bilibili.com/x/player/playurl": { qn: 127, otype: 'json', fourk: 1 },
             "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 127, type: '' },
             "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 127, type: '' },
-            "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-            "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 0, otype: 'json', platform: 'android_i', qn: 208 },
-            "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: 'json', fnver: 0, fnval: API.fnval, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-            "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', fnver: 0, fnval: API.fnval, platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+            "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
+            "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
+            "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+            "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
             "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
             "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
             "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" }
@@ -10496,7 +10512,7 @@ API.rewrite = Rewrite;
      */
     getJson(url, detail, GM = false) {
         let obj = { ...(this.jsonUrlDefault[url] || {}), ...detail };
-        Number(Reflect.get(obj, "appkey")) && (obj = this.sign(obj));
+        (Number(Reflect.get(obj, "appkey")) >= 0) && (obj = this.sign(obj));
         return GM ? xhr.GM({
             url: Format.objUrl(\`//\${url}\`, obj),
             responseType: "json"
@@ -11322,13 +11338,15 @@ API.base64 = Base64;
      * @returns 签名后的URL
      */
     static sign(url, obj = {}, id = 0) {
-        let table = {};
         this.keySecret = this.decode(id);
         obj = { ...Format.urlObj(url), ...obj };
         url = url.split("#")[0].split("?")[0];
         delete obj.sign;
         obj.appkey = this.keySecret[0];
-        Object.keys(obj).sort().map(key => { table[key] = obj[key]; });
+        const table = Object.keys(obj).sort().reduce((s, d) => {
+            s[d] = obj[d];
+            return s;
+        }, {});
         table.sign = id === 3 && table.api ? (API.md5(Format.objUrl("", { api: decodeURIComponent(table.api) }) + this.keySecret[1])) : (API.md5(Format.objUrl("", table) + this.keySecret[1]));
         return Format.objUrl(url, table);
     }
@@ -13390,6 +13408,7 @@ API.initialStateOfAv = InitialStateOfAv;
     async getIniState() {
         var _a, _b, _c;
         API.path.name = "bangumi";
+        API.pgc = true;
         API.path[5].startsWith('ss') && (this.obj.season_id = location.href.match(/[0-9]+/)[0]);
         API.path[5].startsWith('ep') && (this.obj.ep_id = location.href.match(/[0-9]+/)[0]);
         if (API.uid && !this.epid) {
