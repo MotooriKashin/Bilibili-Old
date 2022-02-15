@@ -6,6 +6,7 @@ GM.deleteValue = GM_deleteValue;
 GM.listValues = GM_listValues;
 GM.getResourceText = GM_getResourceText;
 GM.getResourceURL = GM_getResourceText;
+GM.DOM = document;
 
 declare namespace GM {
     interface cookieDetails {
@@ -154,6 +155,7 @@ declare namespace GM {
          */
         delete(details: Record<"name", string>): Promise<void>;
     }
+    let DOM: Document;
 }
 declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
 declare function GM_getResourceText(name: string): string;
