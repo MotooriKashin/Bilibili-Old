@@ -1,7 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2018",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitUseStrict": true,
