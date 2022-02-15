@@ -155,6 +155,15 @@ declare namespace GM {
          */
         delete(details: Record<"name", string>): Promise<void>;
     }
+    /**
+     * 本属性仅供`document.write`系列方法调用，
+     * 其他情况下请一律正常使用`document`！  
+     * 原因是`document.write`重写方法的`document`引用必须来自Tampermonkey沙箱环境，
+     * 否则脚本自身都无法正常使用`GM_setValue`等API。  
+     * 这里通过GM变量传递只是不想暴露到API变量中引发误会，
+     * 而且这个`document`引用本就是Tampermonkey提供的，
+     * 暴露在GM变量中实至名归。
+     */
     let DOM: Document;
 }
 declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
