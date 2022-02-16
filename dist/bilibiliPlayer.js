@@ -1690,8 +1690,7 @@ function Fa() {
             e.AO = e.V + e.ia + "/x/playlist/add";
             e.BO = e.V + e.ia + "/x/playlist/del";
             e.CO = e.V + e.ia + "/x/playlist/update";
-            e.DO = e.V +
-                e.ia + "/x/playlist/video/add";
+            e.DO = e.V + e.ia + "/x/playlist/video/add";
             e.EO = e.V + e.ia + "/x/playlist/video/del";
             e.jD = e.V + e.ia + "/x/playlist/fav/add";
             e.kD = e.V + e.ia + "/x/playlist/fav/del";
@@ -1798,8 +1797,7 @@ function Fa() {
             e.$u = 3;
             e.Gp = 4;
             e.hf = 5;
-            e.jf =
-                6;
+            e.jf = 6;
             e.Wl = 7;
             e.Ip = 8;
             e.gj = 9;
@@ -1914,7 +1912,9 @@ function Fa() {
                 112: "\u9ad8\u6e05 1080P+",
                 116: "\u9ad8\u6e05 1080P60",
                 120: "\u8d85\u6e05 4K",
-                125: "\u771f\u5f69 HDR"
+                125: "\u771f\u5f69 HDR",
+                126: "Dolby",
+                127: "8K"
             };
             e.Lp = {
                 eD: "001111",
@@ -6516,29 +6516,29 @@ function Fa() {
                 this.sd = !0;
                 // 当要切换的画质的编码器与当前不同时，重新加载dashplayer
                 function sameCodec(currentQuality) {
-                    if(!window.GrayManager.codec || !window.GrayManager.codec.loadedSource || !window.GrayManager.codec.loadedSource[b]) return true;
+                    if (!window.GrayManager.codec || !window.GrayManager.codec.loadedSource || !window.GrayManager.codec.loadedSource[b]) return true;
                     let newStream = window.GrayManager.codec.loadedSource[b].codecid;
-                    if(window.GrayManager.codec.loadedSource[currentQuality].codecid == newStream) 
+                    if (window.GrayManager.codec.loadedSource[currentQuality].codecid == newStream)
                         return true;
                     else {
                         return false;
                     }
                 }
-                if (this.S && !this.Kk(this.yd) && !this.Kk(b) && sameCodec(this.yd)) 
-                    return 0 === Number(b) ? (this.S.setAutoSwitchQualityFor("video", !0),  
+                if (this.S && !this.Kk(this.yd) && !this.Kk(b) && sameCodec(this.yd))
+                    return 0 === Number(b) ? (this.S.setAutoSwitchQualityFor("video", !0),
                         g.a.he("DedeUserID")
-                            ? this.S.setAutoSwitchTopQualityFor("video", T.b) 
-                            : this.S.setAutoSwitchTopQualityFor("video", T.a), this.ya = b, b = this.yd, this.sd = !1, d.jg(b), c(!0)) 
-                    : this.S.setAutoSwitchQualityFor("video", !1).setQualityFor("video", b).then(function () {
-                        f.sd = !1;
-                        d.jg(b);
-                        f.ya = b;
-                        c(!0)
-                    }).catch(function (e) {
-                        f.sd = !1;
-                        e &&
-                        e.msg && -1 < e.msg.indexOf("Set quality equal current quality") ? (d.jg(b), f.ya = b, c(!0)) : c(!1)
-                    }), !0;
+                            ? this.S.setAutoSwitchTopQualityFor("video", T.b)
+                            : this.S.setAutoSwitchTopQualityFor("video", T.a), this.ya = b, b = this.yd, this.sd = !1, d.jg(b), c(!0))
+                        : this.S.setAutoSwitchQualityFor("video", !1).setQualityFor("video", b).then(function () {
+                            f.sd = !1;
+                            d.jg(b);
+                            f.ya = b;
+                            c(!0)
+                        }).catch(function (e) {
+                            f.sd = !1;
+                            e &&
+                                e.msg && -1 < e.msg.indexOf("Set quality equal current quality") ? (d.jg(b), f.ya = b, c(!0)) : c(!1)
+                        }), !0;
 
                 this.ka || (this.ma.reset(2), this.ma.reset(3), this.ma.ready(2));
                 var e = {
@@ -6578,11 +6578,11 @@ function Fa() {
                         d.ya = parseInt(b, 10);
                         d.W = f.W;
                         if ("flv" === f.W.type)
-                            for (var q = f.W.segments,u = 0; u < q.length; u++)
+                            for (var q = f.W.segments, u = 0; u < q.length; u++)
                                 if (q[u].url.match(/\/ws\.acgvideo\.com\//)) {
                                     k = "param";
                                     break
-                                } 
+                                }
                         f.Pi && f.W.duration && n && (d.bg = Math.max(0, (f.Pi - f.W.duration) / 1E3), d.yj(f));
                         var h = document.createElement("video"),
                             v = d.J ? d.J.currentTime : d.zd || 0,
@@ -44417,17 +44417,17 @@ else {
                 var a = "",
                     b = null;
                 m && (b = (new Date).getTime(),
-                a += "[" + (b - o) + "]"),
-                n && this && this.getClassName && (a += "[" + this.getClassName() + "]",
-                this.getType && (a += "[" + this.getType() + "]")),
-                a.length > 0 && (a += " "),
-                Array.apply(null, arguments).forEach(function (b) {
-                    a += b + " "
-                }),
-                l && console.log(a),
-                j.trigger(i.default.LOG, {
-                    message: a
-                })
+                    a += "[" + (b - o) + "]"),
+                    n && this && this.getClassName && (a += "[" + this.getClassName() + "]",
+                        this.getType && (a += "[" + this.getType() + "]")),
+                    a.length > 0 && (a += " "),
+                    Array.apply(null, arguments).forEach(function (b) {
+                        a += b + " "
+                    }),
+                    l && console.log(a),
+                    j.trigger(i.default.LOG, {
+                        message: a
+                    })
             }
             var h = this.context,
                 j = (0, g.default)(h).getInstance(),
@@ -46660,10 +46660,10 @@ else {
                 }, b.loadedTime = new Date, b.mediaPresentationDuration = a.duration, b.minBufferTime = a.minBufferTime, b.profiles = "urn:mpeg:dash:profile:isoff-on-demand:2011", b.xmlns = "urn:mpeg:dash:profile:isoff-on-demand:2011", b.type = "static", b.originalUrl = location.href, b.url = location.href, b.Period = {
                     duration: a.duration,
                     AdaptationSet: []
-                }, a.video && (b.Period.AdaptationSet[0] = {}, b.Period.AdaptationSet[0].Representation = ((function() {
+                }, a.video && (b.Period.AdaptationSet[0] = {}, b.Period.AdaptationSet[0].Representation = ((function () {
                     let result = [];
                     // 根据指定的编码器类型筛选出每一个画质等级对应的dash流
-                    if(window.GrayManager.codec) {
+                    if (window.GrayManager.codec) {
                         let support = window.GrayManager.codec.support;
                         let target = window.GrayManager.codec.preference;
                         let quality = {};
@@ -46676,11 +46676,11 @@ else {
                         }
                         for (let i = 0, codecid; i < a.video.length; i++) {
                             codecid = a.video[i].codecid;
-                            if(support[codecid] && codecid <= target && quality[a.video[i].id].codecid < codecid) quality[a.video[i].id] = a.video[i];
+                            if (support[codecid] && codecid <= target && quality[a.video[i].id].codecid < codecid) quality[a.video[i].id] = a.video[i];
                         }
                         window.GrayManager.codec.loadedSource = quality;
-                        for(let k in quality) result.push(quality[k]);
-                        result.sort(function(a,b) { return b.id - a.id });
+                        for (let k in quality) result.push(quality[k]);
+                        result.sort(function (a, b) { return b.id - a.id });
                     } else {
                         result = a.video.filter(function (a) {
                             return 7 === a.codecid
@@ -49952,7 +49952,7 @@ else {
                 x = !1;
                 var c = b.codec;
                 // 根据播放器默认加载的画质等级的视频流修正传递给addSourceBuffer的mime类型
-                if(b.type == "video" && window.GrayManager.codec) {
+                if (b.type == "video" && window.GrayManager.codec) {
                     let streamInfo = window.GrayManager.codec.loadedSource[dashPlayer.state.defaultQuality];
                     b.codec = c = streamInfo.mimeType + ';codecs="' + streamInfo.codecs + '"';
                 }
