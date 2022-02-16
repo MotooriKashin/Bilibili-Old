@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.4
+// @version      7.0.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,8 +22,8 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@8833426bc8b3737721e7b96af96ef9f8219d791d/dist/bilibiliPlayer.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e8d0df1b4522ec730478d2f84dcbd25cb90d48e8/dist/comment.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dd577c4016c45df2767637ac0f4696d9b0c637ea/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dd577c4016c45df2767637ac0f4696d9b0c637ea/dist/comment.min.js
 // ==/UserScript==
 
 /**
@@ -8049,6 +8049,9 @@ API.clickRemove = ClickRemove;
      * 初始化flash播放器节点
      */
     gray_loader_flash() {
+        // flash播放器已不可用，主动更新全局变量
+        this.playerParam.aid && (API.aid = this.playerParam.aid);
+        this.playerParam.cid && (API.cid = this.playerParam.cid);
         this.flashChecker().hasFlash ? window.swfobject && window.swfobject.embedSWF ?
             this.loadFlashPlayer() :
             this.loadScript("//static.hdslb.com/js/swfobject.js", () => this.loadFlashPlayer()) :
