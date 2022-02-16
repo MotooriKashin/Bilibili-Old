@@ -178,6 +178,9 @@ class EmbedPlayer {
      * 初始化flash播放器节点
      */
     gray_loader_flash() {
+        // flash播放器已不可用，主动更新全局变量
+        this.playerParam.aid && (API.aid = this.playerParam.aid);
+        this.playerParam.cid && (API.cid = this.playerParam.cid);
         this.flashChecker().hasFlash ? (<any>window).swfobject && (<any>window).swfobject.embedSWF ?
             this.loadFlashPlayer() :
             this.loadScript("//static.hdslb.com/js/swfobject.js", () => this.loadFlashPlayer()) :
