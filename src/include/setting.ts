@@ -570,7 +570,7 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         label: "修复播放器消息",
         sub: "新番消息",
         type: "switch",
-        value: false,
+        value: true,
         float: '使用新番推荐修复播放器顶部的消息通知。'
     })
     API.registerSetting({

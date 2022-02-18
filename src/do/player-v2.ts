@@ -11,7 +11,7 @@ API.switchVideo(() => {
     config.carousel ? API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true, async () => {
         let str = `<msg><item bgcolor="#000000" catalog="news"><a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a></item><item bgcolor="#000000" catalog="news"><a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a></item></msg>'`;
         try {
-            const result = await xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=104", { responseType: "json" });
+            const result = await xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=531", { responseType: "json" });
             str = result.result.reduce((s, d, i) => {
                 s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.blink}" target="_blank"><font color="#FFFFFF">${d.title}</font></a>]]></item>`;
                 return s;
