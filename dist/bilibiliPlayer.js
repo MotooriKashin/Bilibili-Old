@@ -2005,20 +2005,18 @@ function Fa() {
                 return f.join("")
             };
             e.Br = function (d) {
-                function c(b) {
-                    return isNaN(b) ? "--" : b > n ? (b / n).toFixed(1) + f : b.toString()
+                if (d !== 0 && isNaN(d)) return "--";
+                d = 1 * d || 0;
+                let unit = ["", "\u4e07", "\u4ebf"], i = unit.length - 1, dex = 10000 ** i;
+                while (dex > 1) {
+                    if (d >= dex) {
+                        d = Number((d / dex).toFixed(1));
+                        break;
+                    }
+                    dex = dex / 10000;
+                    i--;
                 }
-                var b = {
-                    "\u4e07": 1E4
-                },
-                    f = b[void 0] ? void 0 : "\u4e07",
-                    n = b[f];
-                if ("number" === typeof d) return c(d);
-                if ("string" === typeof d) {
-                    if (-1 < d.indexOf(void 0)) return d;
-                    if (-1 < d.indexOf(",")) return c(parseInt(d.split(",").join(""), 10))
-                }
-                return "--"
+                return d + unit[i];
             };
             e.gd = function (d) {
                 null == d && (d = 0);
