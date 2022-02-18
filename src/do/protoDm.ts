@@ -19,8 +19,9 @@ interface modules {
             responseType: "arraybuffer",
             credentials: true
         }).then((seg: any) => {
-            let segDm = API.danmaku.segDmDecode(seg);
-            window.player?.setDanmaku(API.danmaku.danmakuFormat(segDm));
+            let dm = API.danmaku.danmakuFormat(API.danmaku.segDmDecode(seg));
+            window.player?.setDanmaku(dm);
+            API.danmaku.danmaku = dm;
         }).catch((e: Error) => {
             toast.error("载入历史弹幕失败", "请尝试刷新页面");
             toast.error(<any>e);
