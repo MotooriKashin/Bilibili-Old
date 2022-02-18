@@ -1546,7 +1546,7 @@
                         type: this.pageType,
                         oid: this.oid,
                         sort: this.sort,
-                        mobi_app: "android"
+                        // mobi_app: "android"
                     },
                     dataType: "jsonp"
                 })
@@ -1579,7 +1579,7 @@
                         oid: this.oid,
                         ps: 10,
                         root: e,
-                        mobi_app: "android"
+                        // mobi_app: "android"
                     },
                     dataType: "jsonp"
                 })
@@ -2596,7 +2596,7 @@
                             rpid: t,
                             oid: r.oid,
                             type: r.pageType,
-                            mobi_app: "android"
+                            // mobi_app: "android"
                         }
                     }).done(function (e) {
                         var n;
