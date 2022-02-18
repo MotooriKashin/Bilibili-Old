@@ -26,6 +26,10 @@ interface modules {
         return result;
     }
 
+    function getAid() {
+        return window.history.state?.aid;
+    }
+
     interface ContainerAttr {
         class: string
     }
@@ -47,6 +51,11 @@ interface modules {
         click: (e: Event) => any;
     }
 
+    interface VideoInfo {
+        aid: string,
+        cid: string
+    }
+
     class CollectionElement {
         container: HTMLDivElement;
         clearfix: HTMLElement;
@@ -63,7 +72,10 @@ interface modules {
             if (onSpread) {
                 this.spread = <HTMLAnchorElement>document.createElement("a");
                 this.spread.className = "item v-part-toggle";
-                this.spread.addEventListener("click", onSpread);
+                this.spread.addEventListener("click", (e) => {
+                    onSpread();
+                    e.preventDefault();
+                });
                 this.clearfix.appendChild(this.spread);
             }
         }
@@ -80,11 +92,17 @@ interface modules {
 
             while (this.items.length < attrs.length)
             {
-                let i = {node: <HTMLAnchorElement>document.createElement("a"),
-                        click: null};
+                let i = {click: null, node: <HTMLAnchorElement>document.createElement("a")};
                 i.node.addEventListener("mouseenter", (e) => this.showFloatTxt(e));
                 i.node.addEventListener("mouseleave", () => this.hideFloatText());
-                i.node.addEventListener("click", (e) => i.click && i.click(e));
+                i.node.addEventListener("click", (e) => {
+                    // 参考vue router-link中防跳转处理
+                    if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey || e.defaultPrevented || e.button != 0)
+                        return;
+
+                    e.preventDefault();
+                    i.click && i.click(e);
+                });
                 this.clearfix.insertBefore(i.node, this.spread);
                 this.items.push(i);
             }
@@ -134,7 +152,7 @@ interface modules {
     }
 
     class CollectionData {
-        notify: {spread: (b: boolean) => any; spreadBtnTop: (n: number) => any} = null;
+        notify: {spread: (b: boolean) => any; spreadBtnTop: (n: number) => any; ep: () => any} = null;
         private _viewEpisodes = [];
         private _ep = 0;
         private _spread = false;
@@ -147,8 +165,8 @@ interface modules {
         }
 
         get ep(): number {
-            if (this.episodes[this._ep].aid != API.aid)
-                this._ep = this.episodes.findIndex((ep) => ep.aid == API.aid)
+            if (this.episodes[this._ep].aid != getAid())
+                this._ep = this.episodes.findIndex((ep) => ep.aid == getAid())
 
             return this._ep;
         }
@@ -213,6 +231,16 @@ interface modules {
             this.calcColCount();
             this.notify?.spread(this._spread);
         }
+
+        updateEp() {
+            let ep = this._ep;
+            if (ep == this.ep)
+                return;
+
+            this._viewEpisodes = this._spread ? this.episodes :
+                    this.calcViewEpisodesOnCollapsed(this.ep);
+            this.notify?.ep();
+        }
     }
 
     class CollectionComponent {
@@ -223,8 +251,18 @@ interface modules {
             this.data = new CollectionData(season);
             this.elem = new CollectionElement(this.data.needSpread()?
                     () => this.data.toggleSpread() : null);
+            // 替换播放器换P处理
+            (<any>window).callAppointPart = (_p: any, video: any) => {
+                let title = null;       //TODO: 获取分p标题
+                let state = {aid: video.aid, cid: video.cid};
+                window.history.pushState(state, title, "/video/av" + video.aid);
+                this.onRouteChanged(state);
+            }
+            window.addEventListener("popstate", (e) => {
+                this.reloadPlayer(e.state);
+                this.onRouteChanged(e.state);
+            });
             window.addEventListener("scroll", () => this.onWindowScroll());
-            //TODO: window.popstate事件响应
 
             this.render();
             player.parentNode.insertBefore(this.elem.container, player);
@@ -236,7 +274,8 @@ interface modules {
                 },
                 spreadBtnTop: (top) => {
                     this.elem.setSpreadAttr({top: top})
-                }
+                },
+                ep: () => this.render()
             }
         }
 
@@ -244,16 +283,25 @@ interface modules {
             this.elem.setContainerAttr({class: "col-" + this.data.colCount});
             this.elem.setItemAttrs(this.data.viewEpisodes.map((p) => {
                 return {
-                    class: p.aid == API.aid? "on" : "",
+                    class: p.aid == getAid()? "on" : "",
                     href: "/video/av" + p.aid,
                     text: p.title,
-                    click: (e) => {}    //TODO: onclick
+                    click: (_e) => {
+                        let video = {aid: p.aid, cid: p.cid};
+                        this.reloadPlayer(video);
+                        (<any>window).callAppointPart(1, video);
+                    }
                 };
             }, this));
             this.elem.setSpreadAttr({
                 top: this.data.spreadBtnTop,
                 text: this.data.spread? "收起" : "展开"
             });
+        }
+
+        reloadPlayer(v: VideoInfo) {
+            //TODO: 写入播放列表信息
+            (<GrayManager>window.GrayManager).reload(`aid=${v.aid}&cid=${v.cid}&has_next=1`);
         }
 
         onWindowScroll() {
@@ -267,16 +315,22 @@ interface modules {
             this.data.spreadBtnTop = window.scrollY <= divY - 20? 0 :
                 Math.min(window.scrollY - divY + 20, maxTop);
         }
+
+        onRouteChanged(_state: VideoInfo) {
+            this.data.updateEp();
+            //TODO: 视频信息 & 评论区刷新
+        }
     }
 
     class Collection {
         component: CollectionComponent;
 
-        constructor (season: any) {
+        constructor (videoData: any) {
             API.runWhile(() => document.getElementById("__bofqi"), () => {
                 try {
                     let player = document.getElementById("__bofqi");
-                    this.component = new CollectionComponent(season, player);
+                    window.history.replaceState({aid: videoData.aid, cid: videoData.cid}, null);
+                    this.component = new CollectionComponent(videoData.ugc_season, player);
                     this.component.render();
                 } catch (e) { toast.error("collection.js", e) }
             })
@@ -288,7 +342,7 @@ interface modules {
         }
 
         static run(videoData: any) {
-            this.needDisplay(videoData) && new Collection(videoData.ugc_season);
+            this.needDisplay(videoData) && new Collection(videoData);
         }
     }
 
