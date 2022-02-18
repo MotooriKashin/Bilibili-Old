@@ -425,6 +425,9 @@ class GrayManager extends EmbedPlayer {
         for (let i in mime) {
             this.codec.support[codecId[i]] = MediaSource.isTypeSupported(mime[i]);
         }
+        location.href.includes("t=") && (this.playerParam.p = this.GetUrlValue("t"));
+        location.href.includes("d=") && (this.playerParam.d = this.GetUrlValue("d"));
+        location.href.includes("lastplaytime=") && (this.playerParam.lastplaytime = this.GetUrlValue("lastplaytime"));
     }
     /**
      * 重新加载播放器实例
