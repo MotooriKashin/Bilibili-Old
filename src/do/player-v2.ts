@@ -8,7 +8,21 @@ interface modules {
 }
 API.switchVideo(() => {
     let ready = false; // 载入时机标记
-    API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true);
+    config.carousel ? API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true, async () => {
+        let str = `<msg><item bgcolor="#000000" catalog="news"><a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a></item><item bgcolor="#000000" catalog="news"><a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a></item></msg>'`;
+        try {
+            const result = await xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=104", { responseType: "json" });
+            str = result.result.reduce((s, d, i) => {
+                s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.blink}" target="_blank"><font color="#FFFFFF">${d.title}</font></a>]]></item>`;
+                return s;
+            }, "<msg>") + "</msg>";
+        } catch (e) { debug.error("获取番剧推荐出错！", e) }
+        const dom = new DOMParser().parseFromString(str, "text/xml");
+        return {
+            response: dom,
+            responseXML: dom
+        }
+    }, false) : API.xhrhook("api.bilibili.com/x/player/carousel.so", () => ready = true);
     xhr({
         url: Format.objUrl("https://api.bilibili.com/x/player/v2", { cid: <any>API.cid, aid: <any>API.aid }),
         responseType: "json",
@@ -29,3 +43,9 @@ API.switchVideo(() => {
         })
     })
 })
+interface config {
+    /**
+     * 修复：播放器通知
+     */
+    carousel: boolean;
+}

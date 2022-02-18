@@ -565,6 +565,15 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
     })
     API.registerSetting({
+        key: "carousel",
+        sort: "restore",
+        label: "修复播放器消息",
+        sub: "新番消息",
+        type: "switch",
+        value: false,
+        float: '使用新番推荐修复播放器顶部的消息通知。'
+    })
+    API.registerSetting({
         key: "bangumi",
         sort: "rewrite",
         label: "bangumi",

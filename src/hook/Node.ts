@@ -18,7 +18,7 @@ interface modules {
             let id: number;
             const one = Array.isArray(url) ? url : [url];
             const two = function (this: HTMLScriptElement) {
-                once && id && NodeHook.jsonp.splice(id - 1, 1);
+                once && id && delete NodeHook.jsonp[id - 1];
                 if (redirect) try { this.src = redirect(this.src) || this.src } catch (e) { debug.error("redirect of jsonphook", one, e) }
                 if (modifyResponse) {
                     const obj = Format.urlObj(this.src);
@@ -39,7 +39,7 @@ interface modules {
             const one = Array.isArray(url) ? url : [url];
             const two = function (this: HTMLScriptElement) {
                 try {
-                    once && id && NodeHook.jsonp.splice(id - 1, 1);
+                    once && id && delete NodeHook.jsonp[id - 1];
                     if (!condition || condition(this.src)) {
                         const obj = Format.urlObj(this.src);
                         const callback = obj.callback;
@@ -88,7 +88,7 @@ interface modules {
             return NodeHook.jsonp.push([one, two]);
         }
         removeJsonphook(id: number) {
-            id && NodeHook.jsonp.splice(id - 1, 1);
+            id >= 0 && delete NodeHook.jsonp[id - 1];
         }
         appendChild() {
             Node.prototype.appendChild = function <T extends Node>(newChild: T): T {

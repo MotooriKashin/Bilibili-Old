@@ -17,7 +17,7 @@ interface modules {
     })
     API.jsonphook("api.bilibili.com/x/v2/reply?", url => {
         tag && (tag = false, API.addCss(API.getCss("comment.css")), config.oldReplySort && API.addCss(API.getCss("oldReplySort.css")));
-        url.includes("mobi_app") && (url += "&mobi_app=android");
+        !url.includes("android") && url.includes("mobi_app") && (url += "&mobi_app=android");
         return url;
     }, undefined, false);
     config.commentLinkDetail && API.observerAddedNodes((node) => {

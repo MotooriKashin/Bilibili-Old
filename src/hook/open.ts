@@ -23,7 +23,7 @@ type XMLHttpRequestResponses = {
     (<any>XMLHttpRequest.prototype.open) = function (this: XMLHttpRequest, ...rest: XMLHttpRequestOpenParams) {
         const args: [method: string, url: string, async?: boolean, username?: string | null, password?: string | null] = [...rest];
         args[1] && rules.forEach(d => {
-            d[0].every(d => args[1].includes(d)) && d[1].call(this, args);
+            d && d[0].every(d => args[1].includes(d)) && d[1].call(this, args);
         })
         return open.call(this, ...args);
     }
@@ -31,7 +31,7 @@ type XMLHttpRequestResponses = {
         let id: number;
         const one = Array.isArray(url) ? url : [url];
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
-            once && id && rules.splice(id - 1, 1);
+            once && id && delete rules[id - 1];
             if (modifyOpen) try { modifyOpen(args) } catch (e) { debug.error("modifyOpen of xhrhook", one, e) }
             if (modifyResponse) try {
                 this.addEventListener("readystatechange", () => {
@@ -52,12 +52,13 @@ type XMLHttpRequestResponses = {
         return id = rules.push([one, two]);
     }
     function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once = true) {
-        let id: number, temp: [string[], Function][];
+        let id: number, temp: [string[], Function];
         const one = Array.isArray(url) ? url : [url];
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
             try {
                 if (!condition || condition(args)) {
-                    temp = id && rules.splice(id - 1, 1); // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
+                    temp = id && rules[id - 1]; // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
+                    delete rules[id - 1];
                     this.send = () => true; // 禁用XMLHttpRequest.send
                     (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
                     const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
@@ -82,7 +83,7 @@ type XMLHttpRequestResponses = {
                         debug.error("modifyResponse of xhrhookasync", one, e);
                     }).finally(() => {
                         clearInterval(et);
-                        !once && (id = rules.push(temp[0])); // 恢复多次监听
+                        !once && (id = rules.push(temp)); // 恢复多次监听
                     })
                     clearInterval(et);
                 }
@@ -92,6 +93,7 @@ type XMLHttpRequestResponses = {
     }
     API.xhrhook = (url: string | string[], modifyOpen?: (args: XMLHttpRequestOpenParams) => void, modifyResponse?: (response: XMLHttpRequestResponses) => void, once?: boolean) => xhrhook(url, modifyOpen, modifyResponse, once);
     API.xhrhookasync = (url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<XMLHttpRequestResponses>, once?: boolean) => xhrhookasync(url, condition, modifyResponse, once);
+    API.removeXhrhook = (id: number) => id >= 0 && delete rules[id - 1];
 }
 declare namespace API {
     /**
@@ -116,5 +118,5 @@ declare namespace API {
      * 注销xhrhook以节约开销，只在注册时设置了`once=false`时才需要使用本方法！ 
      * @param id `xhrhook`注册时的返回值，一个id只允许使用一次！
      */
-    export function removeXhrhook(id: number): [string[], Function][]
+    export function removeXhrhook(id: number): void;
 }
