@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.5
+// @version      7.0.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,8 +22,8 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dd577c4016c45df2767637ac0f4696d9b0c637ea/dist/bilibiliPlayer.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@dd577c4016c45df2767637ac0f4696d9b0c637ea/dist/comment.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bec3f065562e56374088e615d6ce89a986b3365b/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e34ba53279212adc855ff0f17fbdde5d61a4f11e/dist/comment.min.js
 // ==/UserScript==
 
 /**
@@ -592,6 +592,135 @@ const xhr = new Proxy(Xhr, { apply: (target, thisArg, argArray) => { return targ
 
 .bili-header-m .profile-info.on .i-face.scale-in .legalize {
     transform: scale(0.5) translate(38px, 48px)
+}`;
+/*!***********************!*/
+/**/modules["bgray-btn.css"] = /*** ./CSS/bgray-btn.css ***/
+`.player-wrapper {
+    position: relative;
+}
+
+.player-fullscreen-fix {
+    position: fixed;
+    top     : 0;
+    left    : 0;
+    margin  : 0;
+    padding : 0;
+    width   : 100%;
+    height  : 100%;
+}
+
+.player-fullscreen-fix #bofqi .player {
+    position     : fixed !important;
+    border-radius: 0;
+    z-index      : 100000 !important;
+    left         : 0;
+    top          : 0;
+    width        : 100% !important;
+    height       : 100% !important;
+}
+
+.bgray-btn-wrap {
+    position   : absolute;
+    top        : 10px;
+    left       : 50%;
+    margin-left: 490px;
+    width      : 70px;
+    height     : 200px;
+}
+
+.widescreen .bgray-btn-wrap {
+    margin-left: 580px;
+}
+
+.bgray-btn {
+    transition      : all 0.3s;
+    cursor          : pointer;
+    margin          : 10px 0;
+    background-color: #fff;
+    text-align      : center;
+    padding         : 7px 5px;
+    display         : block;
+    left            : 100%;
+    font-size       : 12px;
+    line-height     : 12px;
+    margin-left     : 10px;
+    width           : 20px;
+    border-radius   : 4px;
+    border          : 1px solid #e5e9ef;
+    color           : #99a2aa;
+}
+
+.bgray-btn-feedback {
+    height       : 72px;
+    margin-bottom: 5px;
+}
+
+.bgray-btn-help {
+    height    : 24px;
+    margin-top: 5px;
+}
+
+.bgray-btn:hover {
+    color       : #6d757a;
+    border-color: #6d757a;
+}
+
+.bgray-btn.player-feedback-disable {
+    color: #ccd0d7
+}
+
+.bgray-btn.player-feedback-disable:hover {
+    color       : #ccd0d7;
+    border-color: #ccd0d7;
+}
+
+.bgray-btn.player-feedback-disable {
+    color: #ccd0d7
+}
+
+.bgray-btn.player-feedback-disable:hover {
+    color       : #ccd0d7;
+    border-color: #ccd0d7;
+}
+
+.bgray-btn.active {
+    cursor      : default;
+    color       : #00a1d6;
+    border-color: #00a1d6;
+}
+
+.bgray-line {
+    display      : none;
+    width        : 42px;
+    margin       : 0 auto;
+    border-bottom: 1px solid #e5e9ef;
+}
+
+.bgray-btn {
+    display: none;
+}
+
+.bgray-btn.show {
+    display: block;
+}
+
+@media screen and (min-width: 1400px) {
+    .bgray-btn-wrap {
+        margin-left: 580px;
+    }
+}
+
+.bgray-btn.happyfoolsday {
+    line-height     : 13px;
+    background-color: #00a1d6;
+    border-color    : #00a1d6;
+    color           : #fff;
+}
+
+.bgray-btn.happyfoolsday:hover {
+    background-color: #00b5e5;
+    border-color    : #00b5e5;
+    color           : #fff;
 }`;
 /*!***********************!*/
 /**/modules["bofqi.css"] = /*** ./CSS/bofqi.css ***/
@@ -4503,7 +4632,7 @@ new Accesskey();
             container.classList.add("animated-banner");
             let containerHeight = container.clientHeight;
             let containerWidth = container.clientWidth;
-            let containerScale = containerHeight / 155;
+            let containerScale = (containerHeight + 10) / 155;
             // 初始化资源尺寸
             this.layerConfig.layers.forEach(v => {
                 var _b, _c, _d, _e;
@@ -5390,7 +5519,24 @@ API.localMedia = LocalMedia;
 /**/modules["player-v2.js"] = /*** ./dist/do/player-v2.js ***/
 `API.switchVideo(() => {
     let ready = false; // 载入时机标记
-    API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true);
+    config.carousel ? API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true, async () => {
+        let str = \`<msg><item bgcolor="#000000" catalog="news"><a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a></item><item bgcolor="#000000" catalog="news"><a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a></item></msg>'\`;
+        try {
+            const result = await xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=531", { responseType: "json" });
+            str = result.result.reduce((s, d, i) => {
+                s += \`<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="\${2320 + i}" id="\${314825 + i}"><![CDATA[<a href="\${d.blink}" target="_blank"><font color="#FFFFFF">\${d.title}</font></a>]]></item>\`;
+                return s;
+            }, "<msg>") + "</msg>";
+        }
+        catch (e) {
+            debug.error("获取番剧推荐出错！", e);
+        }
+        const dom = new DOMParser().parseFromString(str, "text/xml");
+        return {
+            response: dom,
+            responseXML: dom
+        };
+    }, false) : API.xhrhook("api.bilibili.com/x/player/carousel.so", () => ready = true);
     xhr({
         url: Format.objUrl("https://api.bilibili.com/x/player/v2", { cid: API.cid, aid: API.aid }),
         responseType: "json",
@@ -5452,8 +5598,9 @@ API.localMedia = LocalMedia;
             credentials: true
         }).then((seg) => {
             var _a;
-            let segDm = API.danmaku.segDmDecode(seg);
-            (_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku(API.danmaku.danmakuFormat(segDm));
+            let dm = API.danmaku.danmakuFormat(API.danmaku.segDmDecode(seg));
+            (_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku(dm);
+            API.danmaku.danmaku = dm;
         }).catch((e) => {
             toast.error("载入历史弹幕失败", "请尝试刷新页面");
             toast.error(e);
@@ -5474,9 +5621,9 @@ API.localMedia = LocalMedia;
         });
         return GM.getResourceText(script);
     });
-    API.jsonphook("api.bilibili.com/x/v2/reply?", url => {
+    API.jsonphook("api.bilibili.com/x/v2/reply", url => {
         tag && (tag = false, API.addCss(API.getCss("comment.css")), config.oldReplySort && API.addCss(API.getCss("oldReplySort.css")));
-        url.includes("mobi_app") && (url += "&mobi_app=android");
+        !url.includes("android") && url.includes("mobi_app") && (url += "&mobi_app=android");
         return url;
     }, undefined, false);
     config.commentLinkDetail && API.observerAddedNodes((node) => {
@@ -6632,7 +6779,7 @@ API.ef2 = new Ef2();
             let id;
             const one = Array.isArray(url) ? url : [url];
             const two = function () {
-                once && id && NodeHook.jsonp.splice(id - 1, 1);
+                once && id && delete NodeHook.jsonp[id - 1];
                 if (redirect)
                     try {
                         this.src = redirect(this.src) || this.src;
@@ -6664,7 +6811,7 @@ API.ef2 = new Ef2();
             const one = Array.isArray(url) ? url : [url];
             const two = function () {
                 try {
-                    once && id && NodeHook.jsonp.splice(id - 1, 1);
+                    once && id && delete NodeHook.jsonp[id - 1];
                     if (!condition || condition(this.src)) {
                         const obj = Format.urlObj(this.src);
                         const callback = obj.callback;
@@ -6723,7 +6870,7 @@ API.ef2 = new Ef2();
             return NodeHook.jsonp.push([one, two]);
         }
         removeJsonphook(id) {
-            id && NodeHook.jsonp.splice(id - 1, 1);
+            id >= 0 && delete NodeHook.jsonp[id - 1];
         }
         appendChild() {
             Node.prototype.appendChild = function (newChild) {
@@ -6762,7 +6909,7 @@ API.ef2 = new Ef2();
     XMLHttpRequest.prototype.open = function (...rest) {
         const args = [...rest];
         args[1] && rules.forEach(d => {
-            d[0].every(d => args[1].includes(d)) && d[1].call(this, args);
+            d && d[0].every(d => args[1].includes(d)) && d[1].call(this, args);
         });
         return open.call(this, ...args);
     };
@@ -6770,7 +6917,7 @@ API.ef2 = new Ef2();
         let id;
         const one = Array.isArray(url) ? url : [url];
         const two = function (args) {
-            once && id && rules.splice(id - 1, 1);
+            once && id && delete rules[id - 1];
             if (modifyOpen)
                 try {
                     modifyOpen(args);
@@ -6809,7 +6956,8 @@ API.ef2 = new Ef2();
         const two = function (args) {
             try {
                 if (!condition || condition(args)) {
-                    temp = id && rules.splice(id - 1, 1); // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
+                    temp = id && rules[id - 1]; // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
+                    delete rules[id - 1];
                     this.send = () => true; // 禁用XMLHttpRequest.send
                     (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
                     const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
@@ -6834,7 +6982,7 @@ API.ef2 = new Ef2();
                         debug.error("modifyResponse of xhrhookasync", one, e);
                     }).finally(() => {
                         clearInterval(et);
-                        !once && (id = rules.push(temp[0])); // 恢复多次监听
+                        !once && (id = rules.push(temp)); // 恢复多次监听
                     });
                     clearInterval(et);
                 }
@@ -6847,6 +6995,7 @@ API.ef2 = new Ef2();
     }
     API.xhrhook = (url, modifyOpen, modifyResponse, once) => xhrhook(url, modifyOpen, modifyResponse, once);
     API.xhrhookasync = (url, condition, modifyResponse, once) => xhrhookasync(url, condition, modifyResponse, once);
+    API.removeXhrhook = (id) => id >= 0 && delete rules[id - 1];
 }
 
 //# sourceURL=API://@Bilibili-Old/hook/open.js`;
@@ -8249,7 +8398,23 @@ API.clickRemove = ClickRemove;
      * 根据参数引导播放器类型
      */
     gray_loader() {
+        this.init_bgray_btn();
         ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
+    }
+    init_bgray_btn() {
+        const prt = this.bofqi.parentElement;
+        const gray = API.addElement("div", { class: "bgray-btn-wrap" }, prt);
+        API.addCss(API.getModule("bgray-btn.css") + (prt.classList.contains("movie_play") ? ".movie_play {overflow: visible;} .bgray-btn-wrap {top: -10px;} #bofqi {box-shadow: 0 0 0;}" : ""));
+        API.addElement("div", { class: "bgray-btn show bgray-btn-feedback" }, gray, \`播放<br/>问题<br/>反馈\`).addEventListener("click", () => {
+            this.feedback ? this.feedback.show() : window.FeedBackInstance ? (this.feedback = new window.FeedBackInstance(), this.feedback.show()) : (gray.querySelector(".bgray-btn.show").classList.add("player-feedback-disable"), this.loadScript("//static.hdslb.com/player/feedback/feedback.min.js", () => {
+                gray.querySelector(".bgray-btn.show").classList.remove("player-feedback-disable");
+                this.feedback = window.FeedBackInstance && new window.FeedBackInstance();
+                this.feedback && this.feedback.show();
+            }));
+        });
+        API.addElement("div", { class: "bgray-btn show bgray-btn-help" }, gray, \`帮助\`).addEventListener("click", () => {
+            window.open("//www.bilibili.com/blackboard/help.html#常见播放问题自救方法");
+        });
     }
 }
 class GrayManager extends EmbedPlayer {
@@ -8326,6 +8491,9 @@ class GrayManager extends EmbedPlayer {
         for (let i in mime) {
             this.codec.support[codecId[i]] = MediaSource.isTypeSupported(mime[i]);
         }
+        location.href.includes("t=") && (this.playerParam.p = this.GetUrlValue("t"));
+        location.href.includes("d=") && (this.playerParam.d = this.GetUrlValue("d"));
+        location.href.includes("lastplaytime=") && (this.playerParam.lastplaytime = this.GetUrlValue("lastplaytime"));
     }
     /**
      * 重新加载播放器实例
@@ -9436,6 +9604,15 @@ API.rewrite = Rewrite;
         type: "switch",
         value: false,
         float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
+    });
+    API.registerSetting({
+        key: "carousel",
+        sort: "restore",
+        label: "修复播放器消息",
+        sub: "新番消息",
+        type: "switch",
+        value: true,
+        float: '使用新番推荐修复播放器顶部的消息通知。'
     });
     API.registerSetting({
         key: "bangumi",
