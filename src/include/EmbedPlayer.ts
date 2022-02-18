@@ -3,6 +3,7 @@ interface modules {
      * 重构B站原生脚本video.min.js
      */
     readonly "EmbedPlayer.js": string;
+    readonly "bgray-btn.css": string;
 }
 class EmbedPlayer {
     playerParam: Record<string, any>;
@@ -377,7 +378,24 @@ class EmbedPlayer {
      * 根据参数引导播放器类型
      */
     gray_loader() {
+        this.init_bgray_btn();
         ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
+    }
+    feedback: { show: () => void }
+    init_bgray_btn() {
+        const prt = this.bofqi.parentElement;
+        const gray = API.addElement("div", { class: "bgray-btn-wrap" }, prt);
+        API.addCss(API.getModule("bgray-btn.css") + (prt.classList.contains("movie_play") ? ".movie_play {overflow: visible;} .bgray-btn-wrap {top: -10px;} #bofqi {box-shadow: 0 0 0;}" : ""));
+        API.addElement("div", { class: "bgray-btn show bgray-btn-feedback" }, gray, `播放<br/>问题<br/>反馈`).addEventListener("click", () => {
+            this.feedback ? this.feedback.show() : (<any>window).FeedBackInstance ? (this.feedback = new (<any>window).FeedBackInstance(), this.feedback.show()) : (gray.querySelector(".bgray-btn.show").classList.add("player-feedback-disable"), this.loadScript("//static.hdslb.com/player/feedback/feedback.min.js", () => {
+                gray.querySelector(".bgray-btn.show").classList.remove("player-feedback-disable");
+                this.feedback = (<any>window).FeedBackInstance && new (<any>window).FeedBackInstance();
+                this.feedback && this.feedback.show();
+            }));
+        });
+        API.addElement("div", { class: "bgray-btn show bgray-btn-help" }, gray, `帮助`).addEventListener("click", () => {
+            window.open("//www.bilibili.com/blackboard/help.html#常见播放问题自救方法");
+        });
     }
 }
 class GrayManager extends EmbedPlayer {
