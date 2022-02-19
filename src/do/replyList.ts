@@ -13,11 +13,13 @@ interface modules {
         setTimeout(() => {
             API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
         });
-        return GM.getResourceText(script);
+        const text = GM.getResourceText(script);
+        if (!text) setTimeout(() => { toast.error("comment.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。"); API.displaySetting("trusteeship") })
+        return text;
     })
     API.jsonphook("api.bilibili.com/x/v2/reply", url => {
         tag && (tag = false, API.addCss(API.getCss("comment.css")), config.oldReplySort && API.addCss(API.getCss("oldReplySort.css")));
-        !url.includes("android") && url.includes("mobi_app") && (url += "&mobi_app=android");
+        url += "&mobi_app=android";
         return url;
     }, undefined, false);
     config.commentLinkDetail && API.observerAddedNodes((node) => {
