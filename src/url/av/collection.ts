@@ -253,9 +253,8 @@ interface modules {
                     () => this.data.toggleSpread() : null);
             // 替换播放器换P处理
             (<any>window).callAppointPart = (_p: any, video: any) => {
-                let title = null;       //TODO: 获取分p标题
                 let state = {aid: video.aid, cid: video.cid};
-                window.history.pushState(state, title, "/video/av" + video.aid);
+                window.history.pushState(state, null, "/video/av" + video.aid);
                 this.onRouteChanged(state);
             }
             window.addEventListener("popstate", (e) => {
@@ -316,9 +315,30 @@ interface modules {
                 Math.min(window.scrollY - divY + 20, maxTop);
         }
 
-        onRouteChanged(_state: VideoInfo) {
+        onRouteChanged(state: VideoInfo) {
             this.data.updateEp();
-            //TODO: 视频信息 & 评论区刷新
+
+            // 视频信息刷新
+            let avComponent = (<any>window).biliUIcomponents;
+            // 评论和标签通过修改组件aid刷新
+            avComponent.$store.state.aid = state.aid;
+            // 简介, 标题, 视频统计
+            xhr({
+                url: Format.objUrl("https://api.bilibili.com/x/web-interface/view/detail", {aid: state.aid}),
+                responseType: "json",
+                credentials: true
+            }).then((d) => {
+                avComponent?.setVideoData(d.data?.View);
+            });
+            // 下方视频推荐
+            xhr({
+                url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/related", {aid: state.aid}),
+                responseType: "json",
+                credentials: true
+            }).then((d) => avComponent.related = d.data);
+            // 收藏/投币状态
+            avComponent.initPage();
+            //TODO: 分区修复 & 点赞数
         }
     }
 
