@@ -37,7 +37,7 @@ class ParameterTrim {
         this.url[1] = location.href; // 暂存URL，以便比较URL变化
         if (this.url[0] != this.url[1]) {
             let href = this.triming(location.href); // 处理链接
-            window.history.replaceState(null, "", href); // 推送到地址栏
+            window.history.replaceState(window.history.state, "", href); // 推送到地址栏
             this.url[0] = location.href; // 刷新暂存
         }
     }

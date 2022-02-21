@@ -60,6 +60,7 @@ class Av extends API.rewrite {
         ];
         this.getIniState();
         this.onload = () => { this.afterFlush() }
+        API.importModule("hookWebpackJsonp.js"); // 修复原生代码错误
     }
     async getIniState() {
         if (API.path[4].toLowerCase().startsWith('bv')) API.aid = <number>API.abv(API.path[4].split("#")[0].split("?")[0]);
@@ -123,7 +124,6 @@ class Av extends API.rewrite {
     afterFlush() {
         API.runWhile(() => document.getElementsByClassName("bili-header-m")[1], () => document.getElementsByClassName("bili-header-m")[1].remove()); // 移除上古顶栏
         window.commentAgent = { seek: (t: number) => window.player && window.player.seek(t) }; // 修复评论跳转
-        API.importModule("hookWebpackJsonp.js"); // 修复原生代码错误
         config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         config.upList && this.__INITIAL_STATE__.videoData.staff && API.importModule("upList.js", { staff: this.__INITIAL_STATE__.videoData.staff }); // 合作UP主
         API.importModule("descBV.js"); // 修复简介中超链接
