@@ -5,9 +5,9 @@ interface modules {
     readonly "logReport.js": string;
 }
 {
-    Object.defineProperty(window, "reportObserver", { get: () => undefined, set: v => true });
-    Object.defineProperty(window, "reportMsgObj", { get: () => undefined, set: v => true });
-    API.xhrhookasync("data.bilibili.com", undefined, undefined, false);
-    API.xhrhookasync("data.bilivideo.com", undefined, undefined, false);
+    Object.defineProperty(window, "reportObserver", { get: () => undefined, set: () => true });
+    Object.defineProperty(window, "reportMsgObj", { get: () => new Proxy({}, { get: () => () => { } }), set: () => true });
+    API.xhrhookasync("data.bilibili.com", (args) => { debug.debug("拦截日志", ...args); return true }, undefined, false);
+    API.xhrhookasync("data.bilivideo.com", (args) => { debug.debug("拦截日志", ...args); return true }, undefined, false);
     API.scriptBlock("log-reporter.js");
 }
