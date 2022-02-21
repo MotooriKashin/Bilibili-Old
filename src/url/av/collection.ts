@@ -191,6 +191,25 @@ interface modules {
             return this._colCount;
         }
 
+        // 转换成/x/player/pagelist中的列表格式
+        get pageList(): Array<any> {
+            let list = [];
+            this.episodes.forEach((ep, i) => {
+                list.push({
+                    aid: ep.aid,
+                    cid: ep.cid,
+                    page: i + 1,
+                    part: ep.title,
+                    duration: ep.page.duration,
+                    dimension: ep.page.dimension,
+                    from: ep.page.from,
+                    vid: "",
+                    weblink: ""
+                });
+            });
+            return list;
+        }
+
         constructor(season: any) {
             this.initEpisodes(season);
             this.calcColCount();
@@ -276,6 +295,17 @@ interface modules {
                 },
                 ep: () => this.render()
             }
+
+            // 拦截播放器换P分P列表API
+            API.xhrhook("/x/player/pagelist", null, (r) => {
+                r.response = JSON.stringify({
+                    code: 0,
+                    message: 0,
+                    ttl: 1,
+                    data: this.data.pageList
+                });
+                r.responseText = r.response;
+            }, false);
         }
 
         render() {
@@ -299,7 +329,6 @@ interface modules {
         }
 
         reloadPlayer(v: VideoInfo) {
-            //TODO: 写入播放列表信息
             (<GrayManager>window.GrayManager).reload(`aid=${v.aid}&cid=${v.cid}&has_next=1`);
         }
 
@@ -346,6 +375,12 @@ interface modules {
         component: CollectionComponent;
 
         constructor (videoData: any) {
+            API.xhrhook("/x/player.so", null, (r) => {
+                // 替换has_next标签值让播放器显示下一P按钮
+                r.response = r.response.replace(/<has_next>\s*0/, "<has_next>1");
+                r.responseText = r.response;
+            }, false);
+
             API.runWhile(() => document.getElementById("__bofqi"), () => {
                 try {
                     let player = document.getElementById("__bofqi");
