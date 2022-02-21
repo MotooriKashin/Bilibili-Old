@@ -201,8 +201,8 @@ class Rewrite {
         this.cleard = true;
         this.dush.forEach(d => {
             try {
-                window[d] = undefined;
-            } catch (e) { debug(d) }
+                Reflect.deleteProperty(window, d);
+            } catch (e) { window[d] = undefined; debug(d) }
         });
         API.EmbedPlayer();
     }
