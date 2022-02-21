@@ -568,10 +568,11 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
         key: "carousel",
         sort: "restore",
         label: "修复播放器消息",
-        sub: "新番消息",
-        type: "switch",
-        value: true,
-        float: '使用新番推荐修复播放器顶部的消息通知。'
+        sub: "也可以留空",
+        type: "mutlti",
+        value: ["番剧推荐"],
+        list: ["番剧推荐", "首页推荐", "实时热搜"],
+        float: '不定多选，多选时随机呈现其中一种，也可以留空。'
     })
     API.registerSetting({
         key: "bangumi",

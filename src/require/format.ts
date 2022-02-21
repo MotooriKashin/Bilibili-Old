@@ -127,19 +127,20 @@ class Format {
     }
     /**
      * 随机截取指定大小子数组
-     * @param arr 母数组
+     * @param res 母数组
      * @param num 子数组大小
-     * @returns 子数组
+     * @returns 子数组，num=1时直接返回该值
      */
-    static randomArray(arr: any[], num: number) {
-        let out = [];
+    static randomArray(res: any[], num: number = 1): any[] | any {
+        const arr = [...res];
+        const out = [];
         num = num || 1;
         num = num < arr.length ? num : arr.length;
         while (out.length < num) {
             var temp = (Math.random() * arr.length) >> 0;
             out.push(arr.splice(temp, 1)[0]);
         }
-        return out;
+        return num === 1 ? out[0] : out;
     }
     /**
      * search参数对象拼合回URL

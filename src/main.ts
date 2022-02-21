@@ -458,7 +458,7 @@ declare namespace API {
      * @param check 一个返回布尔值的函数，用于轮询，当函数返回值为真时执行回调函数
      * @param callback 待执行的回调函数
      * @param delay 轮询间隔：/ms，默认100ms
-     * @param stop 轮询最大延时：/ms，多长时间后终止轮询，不做无谓的等待，默认180ms，即3分钟。为0时永不终止直到为真。
+     * @param stop 轮询最大延时：/s，多长时间后终止轮询，不做无谓的等待，默认180s，即3分钟。为0时永不终止直到为真。
      */
     function runWhile(check: Function, callback: Function, delay?: number, stop?: number): void;
     /**

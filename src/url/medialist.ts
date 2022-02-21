@@ -54,7 +54,7 @@ class Playlist extends API.rewrite {
     constructor(html: keyof modules) {
         super(html);
         this.initPlayerQueryData();
-        history.replaceState(null, null, `https://www.bilibili.com/playlist/video/pl${this.pl}`);
+        history.replaceState(null, null, Format.objUrl(`https://www.bilibili.com/playlist/video/pl${this.pl}`, Format.urlObj(location.href)));
         this.script = [
             {
                 type: "text/javascript",
@@ -122,6 +122,7 @@ class Playlist extends API.rewrite {
             }
         })
         API.switchVideo(() => {
+            !(this.pl == 769) && history.replaceState(null, null, Format.objUrl(API.path.join("/"), Format.urlObj(location.href)));
             const data = this.toview.list.find(d => d.aid == API.aid);
             if (data) {
                 API.tid = data.tid;

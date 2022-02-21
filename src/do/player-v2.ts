@@ -8,21 +8,41 @@ interface modules {
 }
 API.switchVideo(() => {
     let ready = false; // 载入时机标记
-    config.carousel ? API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true, async () => {
-        let str = `<msg><item bgcolor="#000000" catalog="news"><a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a></item><item bgcolor="#000000" catalog="news"><a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a></item></msg>'`;
-        try {
-            const result = await xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=531", { responseType: "json" });
-            str = result.result.reduce((s, d, i) => {
-                s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.blink}" target="_blank"><font color="#FFFFFF">${d.title}</font></a>]]></item>`;
-                return s;
-            }, "<msg>") + "</msg>";
-        } catch (e) { debug.error("获取番剧推荐出错！", e) }
+    API.xhrhookasync("api.bilibili.com/x/player/carousel.so", () => ready = true, async () => {
+        let str = `<msg><item bgcolor="#000000" catalog="news"><![CDATA[<a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a>]]></item><item bgcolor="#000000" catalog="news"><![CDATA[<a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a>]]></item></msg>'`, result: any; try {
+            switch (Format.randomArray(config.carousel)) {
+                case "番剧推荐": result = await xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=531", { responseType: "json" });
+                    str = result.result.reduce((s, d, i) => {
+                        s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.blink}" target="_blank"><font color="#FFFFFF">${d.title}</font></a>]]></item>`;
+                        return s;
+                    }, "<msg>") + "</msg>";
+                    break;
+                case "首页推荐": result = await xhr.get("https://api.bilibili.com/x/web-show/res/loc?pf=0&id=4694", { responseType: "json" });
+                    str = result.data.reduce((s, d, i) => {
+                        d.name && (s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.url}" target="_blank"><font color="#FFFFFF">${d.name}</font></a>]]></item>`);
+                        return s;
+                    }, "<msg>") + "</msg>";
+                    break;
+                case "实时热搜": result = await xhr.get("https://api.bilibili.com/x/web-interface/search/square?limit=10", { responseType: "json" });
+                    str = result.data.trending.list.reduce((s, d, i) => {
+                        s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(d.keyword)}" target="_blank"><font color="#FFFFFF">${d.keyword}</font></a>]]></item>`;
+                        return s;
+                    }, "<msg>") + "</msg>";
+                    break;
+            }
+        } catch (e) { debug.error("获取推荐数据出错！", e) }
         const dom = new DOMParser().parseFromString(str, "text/xml");
+        API.runWhile(() => document.querySelector(".bilibili-player-video-message-show-setting"), () => {
+            document.querySelector(".bilibili-player-video-message-show-setting").addEventListener("click", () => {
+                toast.warning("此处设置已失效，请在脚本设置面板“修复播放器消息”中调整！");
+                API.displaySetting("carousel");
+            })
+        })
         return {
             response: dom,
             responseXML: dom
         }
-    }, false) : API.xhrhook("api.bilibili.com/x/player/carousel.so", () => ready = true);
+    }, false);
     xhr({
         url: Format.objUrl("https://api.bilibili.com/x/player/v2", { cid: <any>API.cid, aid: <any>API.aid }),
         responseType: "json",
@@ -47,5 +67,5 @@ interface config {
     /**
      * 修复：播放器通知
      */
-    carousel: boolean;
+    carousel: ("番剧推荐" | "首页推荐" | "实时热搜")[];
 }

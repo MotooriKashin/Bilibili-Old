@@ -283,6 +283,7 @@ interface config {
          * @returns 设置节点
          */
         static switch(obj: SettingType["switch"], node?: Element) {
+            typeof config[obj.key] === "boolean" || (config[obj.key] = obj.value); // 检查默认值
             node = node || this.itemContain(obj.sort);
             const div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -308,6 +309,7 @@ interface config {
          * @returns 设置节点
          */
         static row(obj: SettingType["row"], node?: Element) {
+            obj.list.includes(config[obj.key]) || (config[obj.key] = obj.value);
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -486,6 +488,7 @@ interface config {
          * @returns 设置节点
          */
         static multi(obj: SettingType["mutlti"], node?: Element) {
+            Array.isArray(config[obj.key]) || (config[obj.key] = obj.value); // 检查默认值
             node = node || this.itemContain(obj.sort);
             let div = document.createElement("div");
             const root = div.attachShadow({ mode: "closed" });
@@ -548,8 +551,8 @@ interface config {
     }
     API.importModule("setting.js"); // 空闲时间检查一下默认设置
     const ui = new Ui();
-    API.displaySetting = (key?: string) => ui.display(key); API.danmaku
+    API.displaySetting = (key?: keyof config) => ui.display(key);
 }
 declare namespace API {
-    function displaySetting(key?: string): void;
+    function displaySetting(key?: keyof config): void;
 }

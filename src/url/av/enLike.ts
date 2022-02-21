@@ -48,7 +48,7 @@ interface modules {
             } catch (e) { toast.error("点赞出错！", e) }
         }
         style() {
-            let style = `.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 25px;vertical-align: middle;margin-right: 6px;}`;
+            let style = `.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 25px;vertical-align: middle;margin-right: 6px;transform: translateY(-1px);}`;
             switch (API.path.name) {
                 case "bangumi": style += `.ulike {position: relative;min-width: 110px;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;transform: translateY(-2px);}`;
                     style += `.van-icon-videodetails_like{margin-left: 25px;}`;
@@ -78,7 +78,7 @@ interface modules {
             else API.biliQuickLogin();
         }
         changeLiked() {
-            this.span.innerHTML = `<i class="van-icon-videodetails_like" style="color: ${this.liked ? "#f36392;" : "#ffffff;text-shadow: 1px 1px #757575, -1px -1px #757575, 1px -1px #757575, -1px 1px #757575;font-size: 23px;"}" ></i>点赞 ${Format.unitFormat(this.number) || "--"}`;
+            this.span.innerHTML = `<i class="van-icon-videodetails_like" style="color: ${this.liked ? "#f36392;" : "#ffffff;text-shadow: 0px -1px #f36392, 0px 1px #f36392, -1px 0px #f36392, 1px 0px #f36392;"}" ></i>点赞 ${Format.unitFormat(this.number) || "--"}`;
         }
         switch() {
             if (this.aid != API.aid) {

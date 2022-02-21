@@ -131,7 +131,7 @@ interface modules {
                 container.style.top = "-42px";
                 container.style.marginBottom = "-42px";
                 container.innerHTML = "";
-                document.querySelector(".b-header-mask-wrp").remove();
+                document.querySelector(".b-header-mask-wrp")?.remove();
             };
             container.classList.add("animated-banner");
             let containerHeight = container.clientHeight;
@@ -335,7 +335,7 @@ interface modules {
         }
     }
     config.bannerGif && API.jsonphook("api.bilibili.com/x/web-interface/index/icon", undefined, response => {
-        response.data = Format.randomArray(JSON.parse(GM.getResourceText("index-icon.json")).fix, 1)[0];
+        response.data = Format.randomArray(JSON.parse(GM.getResourceText("index-icon.json")).fix);
         return response;
     }, false);
     API.jsonphookasync("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
@@ -352,7 +352,6 @@ interface modules {
             loc = Animate.record[url] = rqs[0];
             header = Animate.record[Animate.rid] = rqs[1];
         }
-        // document.querySelector<HTMLDivElement>("#banner_link").style.backgroundImage = `url("${header.data.pic}");`;
         loc.data && Animate.locs.forEach(d => {
             loc.data[d] && (loc.data[d][0].pic = (header && header.data.pic) || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png",
                 loc.data[d][0].litpic = (header && header.data.litpic),
