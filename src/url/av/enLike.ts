@@ -3,7 +3,6 @@ interface modules {
      * 旧版页面添加点赞功能
      */
     readonly "enLike.js": string;
-    readonly "vanfont.css": string;
 }
 {
     class Like {
@@ -12,6 +11,8 @@ interface modules {
         span: HTMLSpanElement;
         liked = false;
         number = API.like || 0;
+        svgLike = `<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1{fill:#f36392;}</style></defs><g><path class="cls-1" d="M10.28,32.77h2.5V13.19h-2.5ZM25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86H5.56a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h6.25l6.8-8.49A3.83,3.83,0,0,1,25.25,5Zm10.14,2.51H22.22l.28-2.92L22.92,5a1.26,1.26,0,0,0-.18-1,1.28,1.28,0,0,0-.82-.56,1.11,1.11,0,0,0-1.25.42l-6.36,8.2-.83,1.11H5.14a2,2,0,0,0-.83.28,2.28,2.28,0,0,0-1.25,2.08V30.41a2,2,0,0,0,.42,1.25,2,2,0,0,0,2.08,1.11H28.89a2.38,2.38,0,0,0,1.39-.41,3.61,3.61,0,0,0,2.08-2.78L36.8,15l2.5.56L36.8,15a2.45,2.45,0,0,0-.14-1.39,2.89,2.89,0,0,0-1.52-.54l.28-2.5Z" transform="translate(-0.56 -0.82)"/></g></svg>`;
+        svgEnLike = `<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1{fill:#f36392;}</style></defs><g><path class="cls-1" d="M12.06,35.27V10.43h-.15l6.7-8.37A3.83,3.83,0,0,1,25.25,5L25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86Zm-2.5,0h-4a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h4Z" transform="translate(-0.56 -0.82)"/></g></svg>`;
         constructor() {
             API.runWhile(() => {
                 this.coin = API.path.name == "watchlater" ? document.querySelector(".u.coin") : document.querySelector("[report-id*=coin]");
@@ -19,7 +20,6 @@ interface modules {
             }, () => this.init())
         }
         init() {
-            API.addCss(API.getModule("vanfont.css"), "vanfont");
             this.style();
             this.aid = API.aid;
             this.span = document.createElement("span");
@@ -48,14 +48,13 @@ interface modules {
             } catch (e) { toast.error("点赞出错！", e) }
         }
         style() {
-            let style = `.ulike {cursor: pointer;}.van-icon-videodetails_like{font-size: 25px;vertical-align: middle;margin-right: 6px;transform: translateY(-1px);}`;
+            let style = `.ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;}`;
             switch (API.path.name) {
-                case "bangumi": style += `.ulike {position: relative;min-width: 110px;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;transform: translateY(-2px);}`;
-                    style += `.van-icon-videodetails_like{margin-left: 25px;}`;
+                case "bangumi": style += `.ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}`;
                     break;
-                case "watchlater": style += `.video-info-module .number .ulike {margin-right: 5px;}`;
+                case "watchlater": style += `.video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}`;
                     break;
-                default: style += `.video-info-m .number .ulike {margin-right: 5px;}`;
+                default: style += `.video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}`;
             }
             API.addCss(style);
         }
@@ -78,7 +77,7 @@ interface modules {
             else API.biliQuickLogin();
         }
         changeLiked() {
-            this.span.innerHTML = `<i class="van-icon-videodetails_like" style="color: ${this.liked ? "#f36392;" : "#ffffff;text-shadow: 0 0 3px #f36392;"}" ></i>点赞 ${Format.unitFormat(this.number) || "--"}`;
+            this.span.innerHTML = `${this.liked ? this.svgEnLike : this.svgLike}</i>点赞 ${Format.unitFormat(this.number) || "--"}`;
         }
         switch() {
             if (this.aid != API.aid) {
