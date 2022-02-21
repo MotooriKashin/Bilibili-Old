@@ -25,6 +25,10 @@ interface modules {
      * UI子菜单栈
      */
     const MENU: Record<string, any> = {};
+    /**
+     * 写作Window读作API  
+     * API对象原型
+     */
     class Window {
         GM = GM;
         config = config;

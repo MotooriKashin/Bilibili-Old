@@ -31,7 +31,8 @@ interface modules {
 }
 declare namespace API {
     /**
-     * 注册切P回调
+     * 注册切P回调  
+     * 未切P播放器初始化完成也会回调一次，所以可用于任何有旧版播放器的页面
      * @param callback 切P时的回调函数
      */
     export function switchVideo(callback: Function): void;

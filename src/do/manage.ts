@@ -17,14 +17,24 @@ interface modules {
             body.appendChild(API.element.button(() => { this.output() }, "导出", 0));
             body.appendChild(API.element.file((v) => { this.input(v) }, false, "导入", [".json"]));
         }
+        /**
+         * 初始化设置
+         */
         restore() {
             GM.deleteValue("config");
             toast.warning("已恢复默认数据，请及时刷新页面避免数据紊乱！")
             API.alertMessage(`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置").then(d => { d && location.reload() });
         }
+        /**
+         * 导出设置
+         */
         output() {
             API.saveAs(JSON.stringify(GM.getValue("config"), undefined, "\t"), `config ${Format.timeFormat(undefined, true)}.json`, "application/json");
         }
+        /**
+         * 导入设置
+         * @param v 被选文件，来自HTMLInputElement.list
+         */
         input(v: FileList) {
             v && v[0] && API.readAs(v[0]).then(d => {
                 const data: { [name: string]: any } = JSON.parse(d);

@@ -26,7 +26,7 @@ class Player extends API.rewrite {
                 src: "//static.hdslb.com/player/js/whitelist.js"
             }
         ];
-        API.path.name = "player";
+        API.path.name = "player"; // 重写标记
         this.flushDocument();
         this.onload = () => { this.afterFlush() }
     }
@@ -51,25 +51,24 @@ class Player extends API.rewrite {
             player_type: API.getUrlValue("player_type"),
             season_type: API.getUrlValue("season_type")
         }
-        if (this.obj.pgc || this.obj.ssid || this.obj.epid) {
+        if (this.obj.pgc || this.obj.ssid || this.obj.epid) { // pgc额外信息
             playerParam["seasonId"] = this.obj.ssid;
             playerParam["episodeId"] = this.obj.epid;
             playerParam["urlparam"] = `module%3Dbangumi%26season_type%3D${playerParam.season_type}`;
         }
-        window.EmbedPlayer("player", "//static.hdslb.com/play.swf", Format.objUrl("", playerParam));
-        window.addEventListener('message', e => {
+        window.EmbedPlayer("player", "//static.hdslb.com/play.swf", Format.objUrl("", playerParam)); // 初始化播放器
+        window.addEventListener('message', e => { // 切p等消息推送，来自拜年祭等实现
             if (e.data.aid) {
                 (<any>window).__playinfo__ = undefined;
                 e.data.as_wide = 1;
                 e.data.dashSymbol = true;
                 e.data.p = 1;
                 e.data.pre_ad = "";
-                // history.replaceState(undefined, undefined, Format.objUrl("https://www.bilibili.com/blackboard/html5player.html", { aid: e.data.aid, cid: e.data.cid }));
                 window.player.destroy();
-                window.player = new (<any>window).BilibiliPlayer(e.data);
+                window.player = new (<any>window).BilibiliPlayer(e.data); // 重新初始化播放器
             }
             if (e.data.title) {
-                API.mediaSession({
+                API.mediaSession({ // 设置媒体面板
                     title: e.data.title,
                     artist: e.data.author?.name,
                     album: document.title,
@@ -79,7 +78,7 @@ class Player extends API.rewrite {
                 })
             }
         })
-        window.parent.postMessage("MediaMeta");
+        window.parent.postMessage("MediaMeta"); // 请求初始媒体面板信息（拜年祭）
     }
 }
 new Player("player.html")

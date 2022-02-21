@@ -10,19 +10,19 @@ interface modules {
     let tag = true, timer: number;
     const script = config.oldReplySort ? "comment.min.js" : "comment.js";
     config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
-        setTimeout(() => {
+        setTimeout(() => { // 评论样式
             API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
         });
         const text = GM.getResourceText(script);
         if (!text) setTimeout(() => { toast.error("comment.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。"); API.displaySetting("trusteeship") })
         return text;
     })
-    API.jsonphook("api.bilibili.com/x/v2/reply", url => {
+    API.jsonphook("api.bilibili.com/x/v2/reply", url => { // 添加参数以获取楼层号
         tag && (tag = false, API.addCss(API.getCss("comment.css")), config.oldReplySort && API.addCss(API.getCss("oldReplySort.css")));
         url += "&mobi_app=android";
         return url;
     }, undefined, false);
-    config.commentLinkDetail && API.observerAddedNodes((node) => {
+    config.commentLinkDetail && API.observerAddedNodes((node) => { // 还原评论链接
         if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
             clearTimeout(timer)
             timer = setTimeout(() => {

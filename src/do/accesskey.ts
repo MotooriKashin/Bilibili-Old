@@ -5,12 +5,21 @@ interface modules {
     readonly "accesskey.js": string;
 }
 class Accesskey {
+    /**
+     * APP access_key
+     */
     access_key = GM.getValue("access_key", "");
+    /**
+     * 授权日期
+     */
     access_date = GM.getValue("access_date", 0);
     box: HTMLDivElement;
     enable: HTMLDivElement;
     disable: HTMLDivElement;
     foot: HTMLElement;
+    /**
+     * 重试次数
+     */
     num = 0;
     /**
      * 创建移动端鉴权获取面板
@@ -52,9 +61,9 @@ class Accesskey {
      * 请求移动端鉴权
      */
     async access() {
-        if (!API.uid) return (toast.warning("请先登录！"), API.biliQuickLogin());
+        if (!API.uid) return (toast.warning("请先登录！"), API.biliQuickLogin()); // 登录状态
         toast("您正在进行账户授权操作，请稍候~")
-        let data = await xhr.GM({
+        let data = await xhr.GM({ // @see indefined {@link https://github.com/ipcjs/bilibili-helper/issues/632#issuecomment-642570675}
             url: API.urlsign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", undefined, 3),
             responseType: "json"
         })
@@ -62,13 +71,13 @@ class Accesskey {
             GM.xmlHttpRequest({
                 method: "GET",
                 url: data.data.confirm_uri,
-                onload: (xhr) => resolve(xhr.finalUrl),
+                onload: (xhr) => resolve(xhr.finalUrl), // 重定向后的url才是目标
                 onerror: (xhr) => reject(xhr),
             });
         })
         data = Format.urlObj(data);
         await new Promise((resolve: (value: void) => void, reject) => { this.pluslogin(data, resolve, reject) });
-        this.access_key = data.access_key;
+        this.access_key = data.access_key; // 保存access_key
         this.access_date = new Date().getTime();
         GM.setValue("access_key", this.access_key);
         GM.setValue("access_date", this.access_date);

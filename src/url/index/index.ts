@@ -36,18 +36,18 @@ class Index extends API.rewrite {
                 src: "//static.hdslb.com/common/js/footer.js"
             }
         ];
-        API.path.name = "index";
+        API.path.name = "index"; // 重写标记
         this.getIniState();
         this.onload = () => { this.afterFlush() }
     }
     async getIniState() {
-        const data = (await xhr({
+        const data = (await xhr({ // 推荐数据
             url: "https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,34,31",
             responseType: "json"
         })).data;
         let result = { locsData: { 23: data[4694], 34: data[34], 31: data[31] } };
-        config.indexLoc && this.reAD(result);
-        (<any>window).__INITIAL_STATE__ = result;
+        config.indexLoc && this.reAD(result); // 广告
+        (<any>window).__INITIAL_STATE__ = result; // 写入__INITIAL_STATE__
         API.importModule("indexSort.js");
         this.flushDocument();
     }

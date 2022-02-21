@@ -55,16 +55,16 @@ class Watchlater extends API.rewrite {
                 src: "//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"
             }
         ];
-        API.path.name = "watchlater";
+        API.path.name = "watchlater"; // 重写标记
         this.mediaSession();
         this.flushDocument();
         this.onload = () => { this.afterFlush() }
     }
     mediaSession() {
-        API.jsonphook("api.bilibili.com/x/v2/history/toview/web", undefined, obj => {
-            API.switchVideo(async () => {
+        API.jsonphook("api.bilibili.com/x/v2/history/toview/web", undefined, obj => { // 记录稍后再看数据
+            API.switchVideo(async () => { // 切p回调
                 const data = obj.data.list.find(d => d.aid == API.aid);
-                data && API.mediaSession({
+                data && API.mediaSession({ // 媒体设置面板
                     title: data.pages.find(d => d.cid == API.cid).part || data.title,
                     artist: data.owner.name,
                     album: data.title,
@@ -81,8 +81,8 @@ class Watchlater extends API.rewrite {
         config.enlike && API.importModule("enLike.js"); // 添加点赞功能
         API.addCss(API.getModule("mini-bofqi.css")); // 修正迷你播放器样式
         API.importModule("videoSort.js"); // 修正分区信息
-        API.path.forEach(d => { d.includes("av") && (API.aid = Number(/[0-9]+/.exec(d)[0])) })
+        API.path.forEach(d => { d.includes("av") && (API.aid = Number(/[0-9]+/.exec(d)[0])) });
     }
 }
-if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater) location.replace("https://www.bilibili.com/watchlater/#/");
+if (API.path[5] && API.path[5].startsWith("watchlater") && config.watchlater) location.replace("https://www.bilibili.com/watchlater/#/"); // 重定向medialist型稍后再看
 new Watchlater("watchlater.html");

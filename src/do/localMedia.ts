@@ -5,13 +5,22 @@ interface modules {
     readonly "localMedia.js": string;
 }
 class LocalMedia {
+    /**
+     * 被选择的文件
+     */
     data: {
         xml: File[],
         json: File[],
         mp4: File[]
     } = { xml: [], json: [], mp4: [] };
-    offset: number = 0; // 弹幕当前偏移
-    keyboard: boolean = false; // 是否已绑定键盘事件
+    /**
+     * 弹幕当前偏移
+     */
+    offset: number = 0;
+    /**
+     * 是否已绑定键盘事件
+     */
+    keyboard: boolean = false;
     constructor(files: FileList) {
         this.change(files);
     }
@@ -23,8 +32,8 @@ class LocalMedia {
         if (file.length === 0) {
             return toast.warning("请选择本地视频或弹幕文件！", "视频：.mp4（且符合浏览器支持的编码）", "弹幕：.xml, .json");
         }
-        this.data = { xml: [], json: [], mp4: [] };
-        this.data = Array.from(file).reduce((d, i) => {
+        this.data = { xml: [], json: [], mp4: [] }; // 初始化选择表
+        this.data = Array.from(file).reduce((d, i) => { // 根据文件后缀名分类被选文件
             /\.xml$/.test(i.name) && d.xml.push(i); // xml弹幕
             /\.json$/.test(i.name) && d.json.push(i); // json弹幕
             /\.mp4$/.test(i.name) && d.mp4.push(i); // mp4视频

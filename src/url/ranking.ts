@@ -39,12 +39,11 @@ class Ranking extends API.rewrite {
                 defer: "defer"
             }
         ];
-        API.path.name = "ranking";
+        API.path.name = "ranking"; // 重写标记
         this.getIniState();
-        this.onload = () => { this.afterFlush() }
     }
     async getIniState() {
-        const json = await xhr({
+        const json = await xhr({ // 排行榜数据
             url: Format.objUrl("https://api.bilibili.com/x/web-interface/ranking", this.obj),
             responseType: "json",
             credentials: true
@@ -54,10 +53,9 @@ class Ranking extends API.rewrite {
         result.channels = [{ name: "全站", tid: 0 }, { name: "动画", tid: 1 }, { name: "国创相关", tid: 168 }, { name: "音乐", tid: 3 }, { name: "舞蹈", tid: 129 }, { name: "游戏", tid: 4 }, { name: "知识", tid: 36 }, { name: "数码", tid: 188 }, { name: "生活", tid: 160 }, { name: "美食", tid: 211 }, { name: "鬼畜", tid: 119 }, { name: "时尚", tid: 155 }, { name: "娱乐", tid: 5 }, { name: "影视", tid: 181 }];
         result.rankList = data.data.list;
         result.note = data.data.note;
-        (<any>window).__INITIAL_STATE__ = result;
+        (<any>window).__INITIAL_STATE__ = result; // 写入__INITIAL_STATE__
         this.flushDocument();
-        API.addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
+        API.addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}"); // 高分辨率屏修补
     }
-    afterFlush() { }
 }
 new Ranking("ranking.html");

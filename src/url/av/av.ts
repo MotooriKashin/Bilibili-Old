@@ -65,9 +65,9 @@ class Av extends API.rewrite {
     async getIniState() {
         if (API.path[4].toLowerCase().startsWith('bv')) API.aid = <number>API.abv(API.path[4].split("#")[0].split("?")[0]);
         API.aid = API.aid || Number((<RegExpExecArray>/[0-9]+/.exec(String(API.path[4])))[0]);
-        API.path.name = "av";
-        await new Promise(r => {
-            xhr({
+        API.path.name = "av";  // 重写页面标记
+        await new Promise(r => { // 获取并构造av页__INITIAL_STATE__
+            xhr({ // 首选接口
                 url: Format.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: API.aid }),
                 responseType: "json",
                 credentials: true
@@ -77,14 +77,14 @@ class Av extends API.rewrite {
                 r(true);
             }).catch(e => {
                 toast.error(`获取av号信息失败，尝试访问第三方接口~`, e);
-                xhr({
+                xhr({ // biliplus开放接口，此接口不稳定，正考虑转化为稳定版本
                     url: Format.objUrl("https://www.biliplus.com/api/view", { id: API.aid }),
                     responseType: "json"
                 }).then(d => {
                     this.__INITIAL_STATE__ = new API.initialStateOfAv(d).plus();
                     this.appendIniState();
                     r(true);
-                }).catch(e => {
+                }).catch(e => { // 上古接口，此接口也不稳定，且不返回bangumi重定向信息
                     toast.error(`第三方接口也没有获取到有效数据~`, e);
                     new API.url().getJson("api.bilibili.com/view", { id: API.aid, page: this.url.searchParams.get("p") }).then(d => {
                         this.__INITIAL_STATE__ = new API.initialStateOfAv(d).view();
@@ -101,10 +101,10 @@ class Av extends API.rewrite {
         if (this.__INITIAL_STATE__.videoData.redirect_url) return toast.warning("番剧重定向...", this.__INITIAL_STATE__.videoData.redirect_url);
         if (this.__INITIAL_STATE__.videoData.stein_guide_cid) this.stop("这似乎是个互动视频！抱歉！旧版播放器无法支持 ಥ_ಥ");
         API.aid = this.__INITIAL_STATE__.aid;
-        API.tid = this.__INITIAL_STATE__.videoData.tid;
-        API.like = this.__INITIAL_STATE__.stat?.like;
-        API.switchVideo(() => {
-            API.mediaSession({
+        API.tid = this.__INITIAL_STATE__.videoData.tid; // 用于修复分区
+        API.like = this.__INITIAL_STATE__.stat?.like; // 用于点赞按钮
+        API.switchVideo(() => { // 切p监听
+            API.mediaSession({ // 设置媒体面板
                 title: this.__INITIAL_STATE__.videoData.pages.find(t => t.cid == API.cid).part || this.__INITIAL_STATE__.videoData.title,
                 artist: this.__INITIAL_STATE__.videoData.owner.name,
                 album: this.__INITIAL_STATE__.videoData.title,
@@ -116,7 +116,7 @@ class Av extends API.rewrite {
         this.flushDocument();
     }
     appendIniState() {
-        this.script.unshift({
+        this.script.unshift({ // 写入__INITIAL_STATE__
             type: "text/javascript",
             text: `window.__INITIAL_STATE__=${JSON.stringify(this.__INITIAL_STATE__)};(function(){var s;(s=document.currentScript||document.scripts[document.scripts.length-1]).parentNode.removeChild(s);}());`
         })
@@ -130,7 +130,7 @@ class Av extends API.rewrite {
         config.commandDm && API.importModule("commandDm.js"); // 互动弹幕
         API.importModule("videoSort.js"); // 修正分区信息
         config.electric && API.jsonphook("api.bilibili.com/x/web-interface/elec/show", url => Format.objUrl(url, { aid: 1, mid: 1 }));
-        /dmid/.test(location.href) && /dm_progress/.test(location.href) && API.importModule("loadByDmid.js");
+        /dmid/.test(location.href) && /dm_progress/.test(location.href) && API.importModule("loadByDmid.js"); // 弹幕锚
     }
 }
 if (/\/s\//.test(location.href)) location.replace(location.href.replace("s/video", "video"));

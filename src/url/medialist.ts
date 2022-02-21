@@ -6,11 +6,29 @@ interface modules {
     readonly "playlist.html": string;
 }
 class Playlist extends API.rewrite {
+    /**
+     * url参数
+     */
     route = Format.urlObj(location.href);
+    /**
+     * medialist类型
+     */
     type = 3;
+    /**
+     * 伪造的pl号
+     */
     pl = /\d+/.exec(API.path[5]) && Number(/\d+/.exec(API.path[5])[0]);
+    /**
+     * 真的是playlist页面？
+     */
     playlist = Boolean(API.path[5].startsWith("pl"));
+    /**
+     * 滚动加载锚
+     */
     oid = "";
+    /**
+     * playlist toview模板
+     */
     toview = {
         "attr": 2,
         "count": 100,
@@ -49,12 +67,18 @@ class Playlist extends API.rewrite {
         "state": 0,
         "type": 2
     };
+    /**
+     * 滚动到底了？
+     */
     has_more = false;
+    /**
+     * 滚动监听
+     */
     observer = new MutationObserver(d => this.Observer(d));
     constructor(html: keyof modules) {
         super(html);
         this.initPlayerQueryData();
-        history.replaceState(null, null, Format.objUrl(`https://www.bilibili.com/playlist/video/pl${this.pl}`, Format.urlObj(location.href)));
+        history.replaceState(null, null, Format.objUrl(`https://www.bilibili.com/playlist/video/pl${this.pl}`, Format.urlObj(location.href))); // 伪造为playlist页面，便于重构，重构完会还原回去
         this.script = [
             {
                 type: "text/javascript",
@@ -97,10 +121,10 @@ class Playlist extends API.rewrite {
                 src: "//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"
             }
         ];
-        API.jsonphookasync("toview", undefined, async url => {
-            history.replaceState(null, null, API.path.join("/"));
+        API.jsonphookasync("toview", undefined, async url => { // hook playlist初始化请求
+            history.replaceState(null, null, API.path.join("/")); // 还原页面url
             try {
-                if (this.playlist || this.pl === 182603655) {
+                if (this.playlist || this.pl === 182603655) { // 备份页面
                     const result = await xhr({
                         url: "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/Json/pl769.json",
                         responseType: "json"
@@ -108,11 +132,11 @@ class Playlist extends API.rewrite {
                     this.toview = result.data;
                     return result;
                 } else {
-                    const rqs = await Promise.all([
+                    const rqs = await Promise.all([ // toview数据来源
                         xhr.get(`https://api.bilibili.com/x/v1/medialist/info?type=${this.type}&biz_id=${this.pl}&tid=0`, { responseType: "json" }),
                         xhr.get(`https://api.bilibili.com/x/v2/medialist/resource/list?type=${this.type}&oid=${this.oid}&otype=2&biz_id=${this.pl}&bvid=&with_current=true&mobi_app=web&ps=20&direction=false&sort_field=1&tid=0&desc=true`, { responseType: "json" })
                     ]);
-                    this.info(rqs[0]);
+                    this.info(rqs[0]); // 分别填充模板
                     this.list(rqs[1]);
                     return { code: 0, data: this.toview, message: "0", ttl: 1 }
                 }
@@ -121,12 +145,12 @@ class Playlist extends API.rewrite {
                 throw e;
             }
         })
-        API.switchVideo(() => {
-            !(this.pl == 769) && history.replaceState(null, null, Format.objUrl(API.path.join("/"), Format.urlObj(location.href)));
+        API.switchVideo(() => { // 切p回调
+            !(this.pl == 769) && history.replaceState(null, null, Format.objUrl(API.path.join("/"), Format.urlObj(location.href))); // 还原被原生脚本修改过的url
             const data = this.toview.list.find(d => d.aid == API.aid);
             if (data) {
                 API.tid = data.tid;
-                API.mediaSession({
+                API.mediaSession({ // 设置媒体面板
                     title: data.pages.find(d => d.cid == API.cid).part || data.title,
                     artist: data.owner.name,
                     album: data.title,
@@ -136,13 +160,16 @@ class Playlist extends API.rewrite {
                 });
                 (Reflect.has(data, "attr") && !!+data.attr.toString(2)[data.attr.toString(2).length - 2] && toast.warning("限制视频，可能无法在播单中直接播放~"));
             }
-            if (this.has_more) {
+            if (this.has_more) { // 继续滚动监听
                 API.runWhile(() => document.querySelector(".bilibili-player-playlist-item"), () => this.startObserver());
             }
         })
         this.flushDocument();
         this.onload = () => this.afterFlush();
     }
+    /**
+     * 初始化medialist类型
+     */
     initPlayerQueryData() {
         if (this.route.business) switch (this.route.business) {
             case "space": this.type = 1;
@@ -156,6 +183,9 @@ class Playlist extends API.rewrite {
             default: this.type = 3;
         }
     }
+    /**
+     * 开始滚动监听
+     */
     startObserver() {
         this.observer.observe(document.querySelector(".bilibili-player-playlist-item").parentElement.parentElement, { attributes: true });
     }
@@ -268,6 +298,10 @@ class Playlist extends API.rewrite {
             }).catch(e => { toast.error("正在加载...", e) })
         }
     }
+    /**
+     * 重构加载更多
+     * @param obj 接口返回数据（json）
+     */
     formatMore(obj: any) {
         const result = obj.data.media_list.reduce((s, d) => {
             s.push({
@@ -296,8 +330,8 @@ class Playlist extends API.rewrite {
             })
             return s;
         }, []);
-        this.list(obj);
-        this.has_more ? window.player?.updatePlaylist(result) : toast.warning("没有更多了！");
+        this.list(obj); // 记录更多数据
+        this.has_more ? window.player?.updatePlaylist(result) : toast.warning("没有更多了！"); // 推送到播放器脚本
     }
 }
 new Playlist("playlist.html");

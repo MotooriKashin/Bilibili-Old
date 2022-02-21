@@ -7,8 +7,17 @@ interface modules {
 }
 {
     class Animate {
+        /**
+         * 缓存已请求内容
+         */
         static record: Record<string, any> = {};
+        /**
+         * 资源id
+         */
         static rid = this.resourceId();
+        /**
+         * locs列表
+         */
         static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
         /**
          * 有在启用了动画banner的配置，且浏览器支持css filter时才加载动画banner的图片资源  
@@ -33,6 +42,9 @@ interface modules {
                 _initState: any;
             }[]
         }
+        /**
+         * layer表单
+         */
         resources: (HTMLVideoElement | HTMLImageElement)[] = [];
         /**
          * container 元素上有其他元素，需使用全局事件判断鼠标位置
@@ -334,10 +346,12 @@ interface modules {
             window.addEventListener('resize', this.handleResize);
         }
     }
+    // 动图彩蛋
     config.bannerGif && API.jsonphook("api.bilibili.com/x/web-interface/index/icon", undefined, response => {
         response.data = Format.randomArray(JSON.parse(GM.getResourceText("index-icon.json")).fix);
         return response;
     }, false);
+    // hook顶栏图片请求
     API.jsonphookasync("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
         const obj = Format.urlObj(url);
         obj.callback = undefined;
@@ -367,6 +381,7 @@ interface modules {
         setTimeout(() => new Animate(header.data));
         return loc;
     }, false);
+    // 顶栏广场
     API.jsonphookasync("api.bilibili.com/plaza/banner", () => true, async url => {
         return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] }
     }, false);

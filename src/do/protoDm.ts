@@ -7,7 +7,7 @@ interface modules {
 {
     API.importModule("worker.js");
     API.importModule("webSocket.js");
-    const id = API.xhrhookasync("history?type=", (args) => {
+    const id = API.xhrhookasync("history?type=", (args) => { // 修复历史弹幕
         const param = Format.urlObj(args[1]);
         if (!window.player?.setDanmaku) {
             API.removeXhrhook(id);

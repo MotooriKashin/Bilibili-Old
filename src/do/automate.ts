@@ -5,6 +5,9 @@ interface modules {
     readonly "automate.js": string;
 }
 {
+    /**
+     * 滚动到播放器
+     */
     function bofqiToView() {
         let str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
         let node = str.reduce((s, d) => {
@@ -15,18 +18,18 @@ interface modules {
     }
     // 播放器自动化操作
     API.switchVideo(() => {
-        config.danmakuFirst && (<HTMLElement>document.querySelectorAll(".bilibili-player-filter-btn")[1]).click();
+        config.danmakuFirst && (<HTMLElement>document.querySelectorAll(".bilibili-player-filter-btn")[1]).click(); // 展示弹幕列表
         setTimeout(() => {
-            config.showBofqi && bofqiToView();
-            config.screenWide && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff") && (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen")).click();
-            config.webFullScreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger") && (<HTMLElement>document.querySelector(".bilibili-player-video-web-fullscreen")).click();
+            config.showBofqi && bofqiToView(); // 滚动到播放器
+            config.screenWide && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff") && (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen")).click(); // 自动宽屏
+            config.webFullScreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger") && (<HTMLElement>document.querySelector(".bilibili-player-video-web-fullscreen")).click(); // 自动网页全屏
             if (config.noDanmaku && !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off")) {
                 if (document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")) {
                     (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")).click(); // 自动关闭弹幕
                 }
             }
         }, 500)
-        config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000);
+        config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000); // 自动播放
     })
     // 播放本地媒体按钮
     API.path.name && API.observerAddedNodes(e => {

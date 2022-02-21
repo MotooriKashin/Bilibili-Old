@@ -161,18 +161,17 @@ interface modules {
             "64Kbps": "background-color: #0d0;"
         }
         constructor() {
-            // 切P后清除下载数据并移除下载面板
-            API.switchVideo(() => { this.type = []; this.links = []; this.table && this.table.remove() });
+            API.switchVideo(() => { this.type = []; this.links = []; this.table && this.table.remove() }); // 切P后清除下载数据并移除下载面板
         }
         /**
          * 整理playurl返回值并提取其中的媒体链接记录到links
          * @param playinfo ajax返回的JSON数据
          */
         decodePlayinfo(playinfo: any) {
-            playinfo.data && this.decodePlayinfo(playinfo.data);
-            playinfo.result && this.decodePlayinfo(playinfo.result);
-            playinfo.durl && this.durl(playinfo.durl);
-            playinfo.dash && this.dash(playinfo.dash);
+            playinfo.data && this.decodePlayinfo(playinfo.data); // data型
+            playinfo.result && this.decodePlayinfo(playinfo.result); // result型
+            playinfo.durl && this.durl(playinfo.durl); // 顶层durl型
+            playinfo.dash && this.dash(playinfo.dash); // 顶层dash型
         }
         /**
          * 根据url确定画质/音质信息  
@@ -196,9 +195,9 @@ interface modules {
          * @param dash dash信息
          */
         dash(dash: any) {
-            dash.video && this.dashVideo(dash.video, dash.duration);
-            dash.audio && this.dashAudio(dash.audio, dash.duration);
-            dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashATMOS(dash.dolby.audio, dash.duration);
+            dash.video && this.dashVideo(dash.video, dash.duration); // dash视频部分
+            dash.audio && this.dashAudio(dash.audio, dash.duration); // dash音频部分
+            dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashATMOS(dash.dolby.audio, dash.duration); // 杜比音效部分
         }
         /**
          * 整理dash视频部分
@@ -211,7 +210,7 @@ interface modules {
                 let type = "";
                 if (!url) return;
                 if (d.codecs) {
-                    type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
+                    type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev"; // 编码类型
                 } else {
                     const id = this.getID(url);
                     type = this.codec.hev.find(d => d === id) ? "hev" : "avc";
@@ -291,16 +290,16 @@ interface modules {
         async contentMenu() {
             if (API.aid && API.cid) {
                 if (!this.links[0]) {
-                    !config.TVresource && API.__playinfo__ && this.decodePlayinfo(API.__playinfo__);
+                    !config.TVresource && API.__playinfo__ && this.decodePlayinfo(API.__playinfo__); // tv源无法从播放器里读取
                     const result = await Promise.all(config.downloadList.reduce((s: Promise<any>[], d) => {
                         !this.type.includes(d) && s.push(this.getContent(d));
                         return s;
                     }, []));
                     result.forEach(d => d && this.decodePlayinfo(d));
-                    await this.getOther();
+                    await this.getOther(); // 其他下载
                 }
                 const title = this.getTitle();
-                this.links.forEach(d => {
+                this.links.forEach(d => { // 初始化文件名
                     !d.filename && (d.filename = title);
                 })
                 this.showTable();
@@ -371,14 +370,14 @@ interface modules {
          */
         showTable() {
             if (!this.links[0]) return toast.warning("未获取到任何下载数据！")
-            this.table && this.table.remove();
+            this.table && this.table.remove(); // 移除已存在的下载面板
             this.table = API.addElement("div");
             const real = this.table.attachShadow({ mode: "closed" });
             const root = API.addElement("div", { class: "table" }, real);
             const cells: { [name: string]: HTMLElement } = {};
-            new API.clickRemove(this.table);
+            new API.clickRemove(this.table); // 点击外部移除
             API.addCss(API.getCss("download.css"), undefined, real);
-            this.links.forEach(d => {
+            this.links.forEach(d => { // 添加下载项
                 const cell = cells[d.type] || API.addElement("div", { class: "cell" }, root);
                 if (!cells[d.type]) {
                     cells[d.type] = cell;
@@ -389,10 +388,10 @@ interface modules {
                 const up = API.addElement("div", { class: "up" }, item, d.quality + (d.flvSplit ? "x" + d.flvSplit : ""));
                 this.color[d.quality] && up.setAttribute("style", this.color[d.quality]);
                 API.addElement("div", { class: "down" }, item, d.size);
-                d.amylose ? item.href = d.url : (item.onclick = () => {
+                d.amylose ? item.href = d.url : (item.onclick = () => { // 点击下载
                     /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-,.\/?%&=]*)?/.test(d.url) ?
                         this.postData(d) :
-                        API.saveAs(d.url, d.filename || `download ${Format.timeFormat(undefined, true)}.txt`, d.contentType || "text/plain");
+                        API.saveAs(d.url, d.filename || `download ${Format.timeFormat(undefined, true)}.txt`, d.contentType || "text/plain"); // 文本类型
                 })
             })
         }

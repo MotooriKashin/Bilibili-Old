@@ -7,6 +7,9 @@ interface modules {
 }
 class Bangumi extends API.rewrite {
     epid = API.path[5].startsWith('ep') ? Number((<string[]>location.href.match(/[0-9]+/))[0]) : null;
+    /**
+     * 页面数据请求参数
+     */
     obj: Record<string, any> = {};
     constructor(html: keyof modules) {
         super(html);
@@ -53,25 +56,25 @@ class Bangumi extends API.rewrite {
         this.onload = () => { this.afterFlush() }
     }
     async getIniState() {
-        API.path.name = "bangumi";
-        API.pgc = true;
+        API.path.name = "bangumi"; // 重写标记
+        API.pgc = true; // pgc标记
         API.path[5].startsWith('ss') && (this.obj.season_id = location.href.match(/[0-9]+/)[0]);
         API.path[5].startsWith('ep') && (this.obj.ep_id = location.href.match(/[0-9]+/)[0]);
-        if (API.uid && !this.epid) {
+        if (API.uid && !this.epid) { // ss页面需要获取历史ep信息
             const data = await xhr({ url: location.href });
             const arr = data.match(/last_ep_id\"\:[0-9]+/) || [];
             this.epid = (arr[0] && arr[0].split(":")[1]) || null;
         }
-        await new Promise(r => {
+        await new Promise(r => { // 请求页面信息并构造__INITIAL_STATE__
             if (this.obj.season_id || this.obj.ep_id) {
-                xhr({
+                xhr({ // 默认接口
                     url: Format.objUrl("https://bangumi.bilibili.com/view/web_api/season", this.obj),
                     responseType: "json",
                     credentials: true
                 }).then(d => {
                     this.__INITIAL_STATE__ = new API.initialStateOfBangumi(d, this.epid).season();
                     r(true);
-                }).catch(e => {
+                }).catch(e => { // 泰区接口
                     toast.error("获取bangumi数据出错！", e);
                     if (config.videoLimit) {
                         xhr({
@@ -91,11 +94,11 @@ class Bangumi extends API.rewrite {
             }
         });
         if (this.__INITIAL_STATE__?.epInfo?.badge === "互动") this.stop("这似乎是个互动番剧！什么！番剧也能互动？可惜旧版播放器不支持 ಥ_ಥ");
-        config.bangumiEplist && this.__INITIAL_STATE__?.epList[1] && (this.__INITIAL_STATE__.special = false, this.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined);
+        config.bangumiEplist && this.__INITIAL_STATE__?.epList[1] && (this.__INITIAL_STATE__.special = false, this.__INITIAL_STATE__.mediaInfo.bkg_cover = undefined); // 特殊背景
         this.appendIniState();
         config.episodeData && API.importModule("episodeData.js"); // 显示分集数据
         API.importModule("restoreData.js"); // 修复页面数据
-        API.switchVideo(() => {
+        API.switchVideo(() => { // 切p回调
             const ep = this.__INITIAL_STATE__.epList.find(d => d.cid == API.cid);
             ep && API.mediaSession({
                 title: ep.index_title || this.__INITIAL_STATE__.mediaInfo.title,
@@ -109,13 +112,13 @@ class Bangumi extends API.rewrite {
         this.flushDocument();
     }
     appendIniState() {
-        if (this.__INITIAL_STATE__.special) {
+        if (this.__INITIAL_STATE__.special) { // 特殊背景页面样式修改
             const head = document.querySelector<HTMLDivElement>(".z-top-container.has-menu");
             head.classList.remove("has-menu");
             head.style.height = "42px";
             document.querySelector("#app").classList.add("special");
         }
-        this.script.unshift({
+        this.script.unshift({ // 写入__INITIAL_STATE__
             type: "text/javascript",
             text: `window.__INITIAL_STATE__=${JSON.stringify(this.__INITIAL_STATE__)};(function(){var s;(s=document.currentScript||document.scripts[document.scripts.length-1]).parentNode.removeChild(s);}());`
         })

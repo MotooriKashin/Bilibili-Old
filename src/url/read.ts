@@ -68,8 +68,11 @@ class Read extends API.rewrite {
         const data = await xhr({ url: location.href, credentials: true });
         this.data = data.includes("__INITIAL_STATE__=") ? JSON.parse(data.match(/INITIAL_STATE__=.+?\;\(function/)[0].replace(/INITIAL_STATE__=/, "").replace(/;\(function/, "")) : "";
         if (!this.data) toast.error("获取专栏数据失败！");
-        this.bars();
+        this.bars(); // 链接重构文章各部分
     }
+    /**
+     * 左侧菜单栏
+     */
     bars() {
         this.temp += this.bar.reduce((o, d) => {
             o = o + `<a href="//www.bilibili.com/read/${d[2]}?from=articleDetail" target="_self" class="tab-item${this.data.readInfo.category.parent_id == d[0] ? " on" : ""}" data-tab-id="${d[0]}"><span>${d[1]}</span></a>`;
@@ -77,6 +80,9 @@ class Read extends API.rewrite {
         }, `<div class="nav-tab-bar"><a href="https://www.bilibili.com/read/home?from=articleDetail" target="_self" class="logo"></a>`) + "</div>";
         this.upinfo();
     }
+    /**
+     * up主信息
+     */
     upinfo() {
         this.temp += `<div class="up-info-holder"><div class="fixed-box"><div class="up-info-block">
             <a class="up-face-holder" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank"><img class="up-face-image" data-face-src="${this.data.readInfo.author.face.replace("http:", "")}" src="//static.hdslb.com/images/member/noface.gif" /></a><div class="up-info-right-block"><div class="row">
@@ -84,6 +90,9 @@ class Read extends API.rewrite {
             </div><div class="right-side-bar"><div class="to-comment"><div class="comment-num-holder"><span class="comment-num"></span></div></div><div class="to-top"></div></div>`;
         this.head();
     }
+    /**
+     * 标题及封面
+     */
     head() {
         this.temp += `<div class="head-container"><div class="banner-img-holder"></div><div class="bangumi-rating-container"></div><div class="argue-flag hidden"></div><div class="title-container">
             <h1 class="title">${this.data.readInfo.title}</h1><div class="info">
@@ -94,10 +103,16 @@ class Read extends API.rewrite {
             <a class="author-face" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank"><img data-face-src="${this.data.readInfo.author.face.replace("http:", "")}" src="${this.data.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/${this.data.readInfo.author.mid}" target="_blank">${this.data.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>`;
         this.body();
     }
+    /**
+     * 专栏主体
+     */
     body() {
         this.temp += `<div class="article-holder">${this.data.readInfo.content}</div><p class="original">本文为我原创</p>`;
         this.tag();
     }
+    /**
+     * 专栏标签
+     */
     tag() {
         this.temp += (this.data.readInfo.tags || []).reduce((o: string, d: any) => {
             o = o + `<li data-tag-id="${d.tid}" class="tag-item"><span class="tag-border"><span class="tag-border-inner"></span></span> <span class="tag-content">${d.name}</span></li>`;
@@ -106,7 +121,7 @@ class Read extends API.rewrite {
         this.origin();
     }
     origin() {
-        (<any>window).original = {
+        (<any>window).original = { // 写入original
             cvid: this.data.cvid,
             author: {
                 name: this.data.readInfo.author.name,
@@ -123,9 +138,9 @@ class Read extends API.rewrite {
             },
             spoiler: "0"
         }
-        document.querySelector(".page-container").innerHTML = this.temp;
+        document.querySelector(".page-container").innerHTML = this.temp; // 修补html模板
         this.flushDocument();
-        API.runWhile(() => document.body, () => API.importModule("user-select.js"));
+        API.runWhile(() => document.body, () => API.importModule("user-select.js")); // 解锁复制/右键
     }
 }
 new Read("read.html");
