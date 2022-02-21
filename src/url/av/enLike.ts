@@ -78,7 +78,7 @@ interface modules {
             else API.biliQuickLogin();
         }
         changeLiked() {
-            this.span.innerHTML = `<i class="van-icon-videodetails_like" style="color: ${this.liked ? "#f36392;" : "#ffffff;text-shadow: 0px -1px #f36392, 0px 1px #f36392, -1px 0px #f36392, 1px 0px #f36392;"}" ></i>点赞 ${Format.unitFormat(this.number) || "--"}`;
+            this.span.innerHTML = `<i class="van-icon-videodetails_like" style="color: ${this.liked ? "#f36392;" : "#ffffff;text-shadow: 0 0 3px #f36392;"}" ></i>点赞 ${Format.unitFormat(this.number) || "--"}`;
         }
         switch() {
             if (this.aid != API.aid) {
