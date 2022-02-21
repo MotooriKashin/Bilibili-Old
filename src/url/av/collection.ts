@@ -18,7 +18,7 @@ interface modules {
     }
 
     function calcOffsetPos(elem: HTMLElement) {
-        let result = {x: 0, y: 0};
+        let result = { x: 0, y: 0 };
         for (let e = elem; e != null; e = <HTMLElement>e.offsetParent) {
             result.x += e.offsetLeft;
             result.y += e.offsetTop;
@@ -62,7 +62,7 @@ interface modules {
         items: EpisodeItem[] = [];
         spread: HTMLAnchorElement = null;
 
-        constructor (onSpread: () => any) {
+        constructor(onSpread: () => any) {
             this.container = <HTMLDivElement>document.createElement("div");
 
             this.clearfix = document.createElement("ul");
@@ -90,9 +90,8 @@ interface modules {
             while (this.items.length > attrs.length)
                 this.clearfix.removeChild(this.items.pop().node);
 
-            while (this.items.length < attrs.length)
-            {
-                let i = {click: null, node: <HTMLAnchorElement>document.createElement("a")};
+            while (this.items.length < attrs.length) {
+                let i = { click: null, node: <HTMLAnchorElement>document.createElement("a") };
                 i.node.addEventListener("mouseenter", (e) => this.showFloatTxt(e));
                 i.node.addEventListener("mouseleave", () => this.hideFloatText());
                 i.node.addEventListener("click", (e) => {
@@ -108,8 +107,7 @@ interface modules {
             }
             // 更新DOM节点属性
             const staticClass = "item";
-            for (let i=0; i<this.items.length; i++)
-            {
+            for (let i = 0; i < this.items.length; i++) {
                 this.items[i].node.className = [staticClass, attrs[i].class].join(' ').trim();
                 this.items[i].node.innerText = attrs[i].text;
                 this.items[i].node.href = attrs[i].href;
@@ -118,8 +116,7 @@ interface modules {
         }
 
         setSpreadAttr(attr: SpreadAttr) {
-            if (this.spread)
-            {
+            if (this.spread) {
                 this.spread.style.top = attr.top + "px";
                 attr.text && (this.spread.innerText = attr.text);
             }
@@ -152,7 +149,7 @@ interface modules {
     }
 
     class CollectionData {
-        notify: {spread: (b: boolean) => any; spreadBtnTop: (n: number) => any; ep: () => any} = null;
+        notify: { spread: (b: boolean) => any; spreadBtnTop: (n: number) => any; ep: () => any } = null;
         private _viewEpisodes = [];
         private _ep = 0;
         private _spread = false;
@@ -176,8 +173,7 @@ interface modules {
         }
 
         set spreadBtnTop(n: number) {
-            if (this._spreadBtnTop != n)
-            {
+            if (this._spreadBtnTop != n) {
                 this._spreadBtnTop = n;
                 this.notify?.spreadBtnTop(this._spreadBtnTop);
             }
@@ -192,10 +188,9 @@ interface modules {
         }
 
         // 转换成/x/player/pagelist中的列表格式
-        get pageList(): Array<any> {
-            let list = [];
-            this.episodes.forEach((ep, i) => {
-                list.push({
+        get pageList() {
+            return <any[]>this.episodes.reduce((s, ep, i) => {
+                s.push({
                     aid: ep.aid,
                     cid: ep.cid,
                     page: i + 1,
@@ -206,15 +201,15 @@ interface modules {
                     vid: "",
                     weblink: ""
                 });
-            });
-            return list;
+                return s;
+            }, []);
         }
 
         constructor(season: any) {
             this.initEpisodes(season);
             this.calcColCount();
             this._viewEpisodes = !this.needSpread() ? this.episodes :
-                    this.calcViewEpisodesOnCollapsed(this.ep);
+                this.calcViewEpisodesOnCollapsed(this.ep);
         }
 
         initEpisodes(season: any) {
@@ -226,14 +221,14 @@ interface modules {
         calcColCount() {
             let w = calcDivWidth(this.episodes[this.ep].title);
             this._colCount = w >= 241 ? 3 : w >= 186 ? 4 :
-                            w >= 149 ? 5 : w >= 123 ? 6 :
-                            window.innerWidth > 1440 ? 7 : 6;
+                w >= 149 ? 5 : w >= 123 ? 6 :
+                    window.innerWidth > 1440 ? 7 : 6;
         }
 
         calcViewEpisodesOnCollapsed(ep: number) {
-            let begin = ep == 0? 0 :
-                        ep - 1 + this._colCount <= this.episodes.length? ep - 1:
-                            this.episodes.length - this._colCount;
+            let begin = ep == 0 ? 0 :
+                ep - 1 + this._colCount <= this.episodes.length ? ep - 1 :
+                    this.episodes.length - this._colCount;
 
             return this.episodes.slice(begin, begin + this._colCount);
         }
@@ -245,7 +240,7 @@ interface modules {
         toggleSpread() {
             this._spread = !this._spread;
             this._viewEpisodes = this._spread ? this.episodes :
-                    this.calcViewEpisodesOnCollapsed(this.ep);
+                this.calcViewEpisodesOnCollapsed(this.ep);
             this._spreadBtnTop = 0;
             this.calcColCount();
             this.notify?.spread(this._spread);
@@ -257,7 +252,7 @@ interface modules {
                 return;
 
             this._viewEpisodes = this._spread ? this.episodes :
-                    this.calcViewEpisodesOnCollapsed(this.ep);
+                this.calcViewEpisodesOnCollapsed(this.ep);
             this.notify?.ep();
         }
     }
@@ -266,13 +261,13 @@ interface modules {
         data: CollectionData;
         elem: CollectionElement;
 
-        constructor (season: any, player: HTMLElement) {
+        constructor(season: any, player: HTMLElement) {
             this.data = new CollectionData(season);
-            this.elem = new CollectionElement(this.data.needSpread()?
-                    () => this.data.toggleSpread() : null);
+            this.elem = new CollectionElement(this.data.needSpread() ?
+                () => this.data.toggleSpread() : null);
             // 替换播放器换P处理
             (<any>window).callAppointPart = (_p: any, video: any) => {
-                let state = {aid: video.aid, cid: video.cid};
+                let state = { aid: video.aid, cid: video.cid };
                 window.history.pushState(state, null, "/video/av" + video.aid);
                 this.onRouteChanged(state);
             }
@@ -288,10 +283,10 @@ interface modules {
                 spread: (spread) => {
                     this.render();
                     // 收起时页面滚动
-                    !spread && window.scroll({top: calcOffsetPos(document.getElementById("viewbox_report")).y});
+                    !spread && window.scroll({ top: calcOffsetPos(document.getElementById("viewbox_report")).y });
                 },
                 spreadBtnTop: (top) => {
-                    this.elem.setSpreadAttr({top: top})
+                    this.elem.setSpreadAttr({ top: top })
                 },
                 ep: () => this.render()
             }
@@ -309,14 +304,14 @@ interface modules {
         }
 
         render() {
-            this.elem.setContainerAttr({class: "col-" + this.data.colCount});
+            this.elem.setContainerAttr({ class: "col-" + this.data.colCount });
             this.elem.setItemAttrs(this.data.viewEpisodes.map((p) => {
                 return {
-                    class: p.aid == getAid()? "on" : "",
+                    class: p.aid == getAid() ? "on" : "",
                     href: "/video/av" + p.aid,
                     text: p.title,
                     click: (_e) => {
-                        let video = {aid: p.aid, cid: p.cid};
+                        let video = { aid: p.aid, cid: p.cid };
                         this.reloadPlayer(video);
                         (<any>window).callAppointPart(1, video);
                     }
@@ -324,7 +319,7 @@ interface modules {
             }, this));
             this.elem.setSpreadAttr({
                 top: this.data.spreadBtnTop,
-                text: this.data.spread? "收起" : "展开"
+                text: this.data.spread ? "收起" : "展开"
             });
         }
 
@@ -340,7 +335,7 @@ interface modules {
             let btn = this.elem.spread;
             let divY = calcOffsetPos(div).y;
             let maxTop = div.clientHeight - btn.clientHeight - 20;
-            this.data.spreadBtnTop = window.scrollY <= divY - 20? 0 :
+            this.data.spreadBtnTop = window.scrollY <= divY - 20 ? 0 :
                 Math.min(window.scrollY - divY + 20, maxTop);
         }
 
@@ -353,7 +348,7 @@ interface modules {
             avComponent.$store.state.aid = state.aid;
             // 简介, 标题, 视频统计
             xhr({
-                url: Format.objUrl("https://api.bilibili.com/x/web-interface/view/detail", {aid: state.aid}),
+                url: Format.objUrl("https://api.bilibili.com/x/web-interface/view/detail", { aid: state.aid }),
                 responseType: "json",
                 credentials: true
             }).then((d) => {
@@ -361,7 +356,7 @@ interface modules {
             });
             // 下方视频推荐
             xhr({
-                url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/related", {aid: state.aid}),
+                url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/related", { aid: state.aid }),
                 responseType: "json",
                 credentials: true
             }).then((d) => avComponent.related = d.data);
@@ -374,7 +369,7 @@ interface modules {
     class Collection {
         component: CollectionComponent;
 
-        constructor (videoData: any) {
+        constructor(videoData: any) {
             API.xhrhook("/x/player.so", null, (r) => {
                 // 替换has_next标签值让播放器显示下一P按钮
                 r.response = r.response.replace(/<has_next>\s*0/, "<has_next>1");
@@ -384,7 +379,7 @@ interface modules {
             API.runWhile(() => document.getElementById("__bofqi"), () => {
                 try {
                     let player = document.getElementById("__bofqi");
-                    window.history.replaceState({aid: videoData.aid, cid: videoData.cid}, null);
+                    window.history.replaceState({ aid: videoData.aid, cid: videoData.cid }, null);
                     this.component = new CollectionComponent(videoData.ugc_season, player);
                     this.component.render();
                 } catch (e) { toast.error("collection.js", e) }
