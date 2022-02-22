@@ -287,11 +287,11 @@ interface modules {
     var API = new Proxy(new Window(), {
         get: (t, p) => {
             if (Reflect.has(t, p)) return t[p]; // 接口存在直接返回
-            if (Reflect.has(window, p) && typeof window[p] !== "function") return window[p]; // 代理函数以外的全局变量，aid关键参数以本方式初始化
             if (typeof p === "string" && modules["apply.json"][p]) { // 接口不存在访问“按需加载”关系表
                 t.importModule(modules["apply.json"][p]);
                 return t[p];
             }
+            if (Reflect.has(window, p) && typeof window[p] !== "function") return window[p]; // 代理函数以外的全局变量，aid关键参数以本方式初始化
             return undefined;
         }
     });

@@ -184,15 +184,14 @@ class Rewrite {
      * 新版播放器修改过播放器设置，这会导致旧版播放器设置读取异常。
      */
     async restorePlayerSetting() {
-        let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
-        let settings_copy = GM.getValue<Record<string, any>>("bilibili_player_settings", {});
-        if (bilibili_player_settings) {
-            let settings = <Record<string, any>>JSON.parse(bilibili_player_settings);
-            if (settings?.video_status?.autopart !== "") GM.setValue<Record<string, any>>("bilibili_player_settings", settings);
-            else if (settings_copy) localStorage.setItem("bilibili_player_settings", JSON.stringify(settings_copy));
-        } else if (settings_copy) {
-            localStorage.setItem("bilibili_player_settings", JSON.stringify(settings_copy));
+        let setting = API.localStorage.getItem("bilibili_player_settings");
+        if (setting) {
+            if (setting.video_status?.autopart !== "") {
+                return GM.setValue("bilibili_player_settings", setting)
+            }
         }
+        setting = GM.getValue("bilibili_player_settings");
+        API.localStorage.setItem("bilibili_player_settings", setting);
     }
     /**
      * 清洗页面及全局变量
@@ -205,6 +204,19 @@ class Rewrite {
             } catch (e) { window[d] = undefined; debug(d) }
         });
         API.EmbedPlayer();
+        if (config.videospeed) { // 记忆播放器速率
+            const videospeed = GM.getValue("videospeed");
+            if (videospeed) {
+                let setting = API.sessionStorage.getItem("bilibili_player_settings");
+                setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
+                API.sessionStorage.setItem("bilibili_player_settings", setting);
+            }
+            API.switchVideo(() => {
+                API.runWhile(() => document.querySelector("#bofqi").querySelector("video"), () => {
+                    document.querySelector("#bofqi").querySelector("video").addEventListener("ratechange", e => GM.setValue("videospeed", (<HTMLVideoElement>e.target).playbackRate || 1));
+                })
+            })
+        }
     }
     /**
      * 刷新页面  
@@ -287,4 +299,8 @@ interface config {
      * 通用：页面重构模式
      */
     compatible: "极端" | "默认" | "兼容";
+    /**
+     * 记忆播放倍速
+     */
+    videospeed: boolean;
 }

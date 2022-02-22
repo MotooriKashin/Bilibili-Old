@@ -24,6 +24,8 @@
 	"removeObserver": "nodeObserver.js",
 	"rebuildPlayerurl": "rebuildPlayerurl.js",
 	"rewrite": "rewrite.js",
+	"localStorage": "storage.js",
+	"sessionStorage": "storage.js",
 	"switchVideo": "switchVideo.js",
 	"url": "url.js",
 	"urlInputCheck": "urlInputCheck.js",

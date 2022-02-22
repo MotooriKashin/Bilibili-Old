@@ -482,6 +482,12 @@ type MenuKey = "common" | "rewrite" | "restore" | "style" | "danmaku" | "player"
             type: "switch",
             value: false,
             action: v => v && (config.screenWide = false)
+        }, {
+            key: "videospeed",
+            sort: "player",
+            label: "记忆播放速率",
+            type: "switch",
+            value: false
         }]
     })
     API.registerSetting({
