@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.7
+// @version      7.0.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@d4e12d1ee2bbf942b3fe998ec3da313d1a672085/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b023f494440881e1466f0db4230388fb917231d9/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e34ba53279212adc855ff0f17fbdde5d61a4f11e/dist/comment.min.js
 // ==/UserScript==
 
@@ -2888,6 +2888,8 @@ option {
 	"removeObserver": "nodeObserver.js",
 	"rebuildPlayerurl": "rebuildPlayerurl.js",
 	"rewrite": "rewrite.js",
+	"localStorage": "storage.js",
+	"sessionStorage": "storage.js",
 	"switchVideo": "switchVideo.js",
 	"url": "url.js",
 	"urlInputCheck": "urlInputCheck.js",
@@ -3882,12 +3884,12 @@ option {
         get: (t, p) => {
             if (Reflect.has(t, p))
                 return t[p]; // 接口存在直接返回
-            if (Reflect.has(window, p) && typeof window[p] !== "function")
-                return window[p]; // 代理函数以外的全局变量，aid关键参数以本方式初始化
             if (typeof p === "string" && modules["apply.json"][p]) { // 接口不存在访问“按需加载”关系表
                 t.importModule(modules["apply.json"][p]);
                 return t[p];
             }
+            if (Reflect.has(window, p) && typeof window[p] !== "function")
+                return window[p]; // 代理函数以外的全局变量，aid关键参数以本方式初始化
             return undefined;
         }
     });
@@ -4115,14 +4117,12 @@ new Accesskey();
         config.danmakuFirst && document.querySelectorAll(".bilibili-player-filter-btn")[1].click(); // 展示弹幕列表
         setTimeout(() => {
             config.showBofqi && bofqiToView(); // 滚动到播放器
-            config.screenWide && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff") && document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen").click(); // 自动宽屏
-            config.webFullScreen && document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger") && document.querySelector(".bilibili-player-video-web-fullscreen").click(); // 自动网页全屏
-            if (config.noDanmaku && !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off")) {
-                if (document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")) {
-                    document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click(); // 自动关闭弹幕
-                }
-            }
         }, 500);
+        config.screenWide && API.runWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff"), () => document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen").click()); // 自动宽屏
+        config.webFullScreen && API.runWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => document.querySelector(".bilibili-player-video-web-fullscreen").click()); // 自动网页全屏
+        config.noDanmaku && API.runWhile(() => document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku"), () => {
+            !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off") && document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click(); // 自动关闭弹幕
+        });
         config.autoPlay && setTimeout(() => { window.player && window.player.play && window.player.play(); }, 1000); // 自动播放
     });
     // 播放本地媒体按钮
@@ -4340,7 +4340,7 @@ new Accesskey();
             container.classList.add("animated-banner");
             let containerHeight = container.clientHeight;
             let containerWidth = container.clientWidth;
-            let containerScale = (containerHeight + 10) / 155;
+            let containerScale = 180 / 155;
             // 初始化资源尺寸
             this.layerConfig.layers.forEach(v => {
                 var _b, _c, _d, _e;
@@ -4514,7 +4514,7 @@ new Accesskey();
             this.handleResize = e => {
                 containerHeight = container.clientHeight;
                 containerWidth = container.clientWidth;
-                containerScale = containerHeight / 155;
+                containerScale = 180 / 155;
                 this.layerConfig.layers.forEach(lc => {
                     lc.resources.forEach((d, i) => {
                         var _b, _c;
@@ -8974,18 +8974,14 @@ API.rebuildPlayerurl = RebuildPlayerurl;
      */
     async restorePlayerSetting() {
         var _a;
-        let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
-        let settings_copy = GM.getValue("bilibili_player_settings", {});
-        if (bilibili_player_settings) {
-            let settings = JSON.parse(bilibili_player_settings);
-            if (((_a = settings === null || settings === void 0 ? void 0 : settings.video_status) === null || _a === void 0 ? void 0 : _a.autopart) !== "")
-                GM.setValue("bilibili_player_settings", settings);
-            else if (settings_copy)
-                localStorage.setItem("bilibili_player_settings", JSON.stringify(settings_copy));
+        let setting = API.localStorage.getItem("bilibili_player_settings");
+        if (setting) {
+            if (((_a = setting.video_status) === null || _a === void 0 ? void 0 : _a.autopart) !== "") {
+                return GM.setValue("bilibili_player_settings", setting);
+            }
         }
-        else if (settings_copy) {
-            localStorage.setItem("bilibili_player_settings", JSON.stringify(settings_copy));
-        }
+        setting = GM.getValue("bilibili_player_settings");
+        API.localStorage.setItem("bilibili_player_settings", setting);
     }
     /**
      * 清洗页面及全局变量
@@ -9002,6 +8998,19 @@ API.rebuildPlayerurl = RebuildPlayerurl;
             }
         });
         API.EmbedPlayer();
+        if (config.videospeed) { // 记忆播放器速率
+            const videospeed = GM.getValue("videospeed");
+            if (videospeed) {
+                let setting = API.sessionStorage.getItem("bilibili_player_settings");
+                setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
+                API.sessionStorage.setItem("bilibili_player_settings", setting);
+            }
+            API.switchVideo(() => {
+                API.runWhile(() => document.querySelector("#bofqi").querySelector("video"), () => {
+                    document.querySelector("#bofqi").querySelector("video").addEventListener("ratechange", e => GM.setValue("videospeed", e.target.playbackRate || 1));
+                });
+            });
+        }
     }
     /**
      * 刷新页面
@@ -9295,6 +9304,12 @@ API.rewrite = Rewrite;
                 type: "switch",
                 value: false,
                 action: v => v && (config.screenWide = false)
+            }, {
+                key: "videospeed",
+                sort: "player",
+                label: "记忆播放速率",
+                type: "switch",
+                value: false
             }]
     });
     API.registerSetting({
@@ -9867,6 +9882,89 @@ API.rewrite = Rewrite;
 }
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
+/*!***********************!*/
+/**/modules["storage.js"] = /*** ./dist/include/storage.js ***/
+`class StorageInterface {
+    constructor(target) {
+        this._ = target;
+    }
+    /**
+     * 清空！
+     */
+    clear() {
+        (this._ ? sessionStorage : localStorage).clear();
+    }
+    ;
+    /**
+     * 读取
+     * @param key 目标键名
+     * @returns 格式化后的数据
+     */
+    getItem(key) {
+        let str = (this._ ? sessionStorage : localStorage).getItem(key);
+        try {
+            str = JSON.parse(str);
+        }
+        catch (e) { }
+        return str;
+    }
+    ;
+    /**
+     * 列出键名数组
+     * @returns 键名数组
+     */
+    keys() {
+        return Object.keys((this._ ? sessionStorage : localStorage));
+    }
+    ;
+    /**
+     * 移除
+     * @param key 目标键名
+     */
+    removeItem(key) {
+        (this._ ? sessionStorage : localStorage).removeItem(key);
+    }
+    ;
+    /**
+     * 添加/修改
+     * @param key
+     * @param value
+     */
+    setItem(key, value) {
+        switch (typeof value) {
+            case "object":
+                (this._ ? sessionStorage : localStorage).setItem(key, JSON.stringify(value));
+                break;
+            case "function":
+                debug.warn("函数类型并不适合这样存储！", key, value);
+                break;
+            default: (this._ ? sessionStorage : localStorage).setItem(key, String(value));
+        }
+    }
+    ;
+    /**
+     * 键值总数
+     */
+    get length() { return (this._ ? sessionStorage : localStorage).length; }
+}
+class LocalStorage extends StorageInterface {
+    constructor() {
+        super(false);
+        this.keys().forEach(d => Object.defineProperty(this, d, { get: () => this.getItem(d), set: v => this.setItem(d, v) }));
+    }
+}
+class SessionStorage extends StorageInterface {
+    constructor() {
+        super(true);
+        this.keys().forEach(d => Object.defineProperty(this, d, { get: () => this.getItem(d), set: v => this.setItem(d, v) }));
+    }
+}
+Object.defineProperties(API, {
+    localStorage: { get: () => new LocalStorage(), set: () => false },
+    sessionStorage: { get: () => new SessionStorage(), set: () => false }
+});
+
+//# sourceURL=API://@Bilibili-Old/include/storage.js`;
 /*!***********************!*/
 /**/modules["switchVideo.js"] = /*** ./dist/include/switchVideo.js ***/
 `{
