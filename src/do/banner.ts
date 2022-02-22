@@ -148,7 +148,7 @@ interface modules {
             container.classList.add("animated-banner");
             let containerHeight = container.clientHeight;
             let containerWidth = container.clientWidth;
-            let containerScale = (containerHeight + 10) / 155;
+            let containerScale = 180 / 155;
 
             // 初始化资源尺寸
             this.layerConfig.layers.forEach(v => {
@@ -327,7 +327,7 @@ interface modules {
             this.handleResize = e => {
                 containerHeight = container.clientHeight;
                 containerWidth = container.clientWidth;
-                containerScale = containerHeight / 155;
+                containerScale = 180 / 155;
                 this.layerConfig.layers.forEach(lc => {
                     lc.resources.forEach((d, i) => {
                         const el: any = this.resources[i];
