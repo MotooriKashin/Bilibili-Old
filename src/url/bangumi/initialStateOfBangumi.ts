@@ -111,6 +111,7 @@ class InitialStateOfBangumi {
         this.__INITIAL_STATE__.newestEp = this.data.newest_ep;
         this.__INITIAL_STATE__.payMent = this.data.payment || {};
         this.__INITIAL_STATE__.pubInfo = this.data.publish;
+        this.__INITIAL_STATE__.rightsInfo = this.data.rights;
         this.__INITIAL_STATE__.seasonList = this.data.seasons || [];
         this.__INITIAL_STATE__.seasonStat = this.data.stat;
         this.__INITIAL_STATE__.special = this.data.bkg_cover ? true : false;
