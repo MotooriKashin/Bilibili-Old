@@ -6262,8 +6262,11 @@ function Fa() {
                     d = this;
                 if ("dash" === b.W.type) {
                     var e = document.createElement("video");
+                    var audioQuality =  b.W.url.audio && b.W.url.audio[0];
+                    audioQuality = audioQuality ? audioQuality.id : 30280;
                     var n = window.dashPlayer = this.S = new window.DashPlayer(e, {
                         defaultQuality: this.yd,
+                        defaultAudioQuality: audioQuality,
                         isAutoPlay: !1,
                         isDynamic: !1,
                         abrStrategy: window.DashPlayer.STRING.ABR_DYNAMIC,
@@ -42047,6 +42050,7 @@ else {
                         videoInfoScheduleTime: 1e3
                     }, this.state = {
                         defaultQuality: 0,
+                        defaultAudioQuality: 0,
                         stableBufferTime: 60,
                         isAutoPlay: !1,
                         abrStrategy: i.STRING.ABR_THROUGHPUT,
@@ -42272,10 +42276,13 @@ else {
                     }
                 }, t.prototype.setDefaultQualityFor = function (t, e) {
                     void 0 === e && (e = 0);
-                    var r = this.getQualityIndexFromQualityNumber(e);
+                    var r = this.getQualityIndexFromQualityNumber(e, t);
                     try {
-                        r >= 0 ? (this.state.currentQualityIndex.video = r, this.player.setDefaultQualityFor(t, r)) : this.error({
-                            msg: "Call setDefaultQualityFor function error, quality: " + e
+                        var p = (this.state.mpd && this.state.mpd[t]).length;
+                        p && (r = Math.min(r, p - 1)),
+                        r >= 0 ? (this.state.currentQualityIndex[t] = r,
+                        this.player.setDefaultQualityFor(t, r)) : this.error({
+                            msg: "Call setDefaultQualityFor function error, quality: " + t
                         })
                     } catch (t) {
                         this.error({
@@ -42433,6 +42440,7 @@ else {
                     var r = window.dashjs,
                         a = this.state;
                     this.state.defaultQuality = this.getQualityIndexFromQualityNumber(a.defaultQuality);
+                    this.state.defaultAudioQuality = this.getQualityIndexFromQualityNumber(a.defaultAudioQuality, "audio");
                     try {
                         var o = r.MediaPlayer().create();
                         this.player = o, this.setDebugLog(), this.bindEvents(t), a.preloadData && o.setPreloadData(a.preloadData), o.initialize(this.video, a.mpd, a.isAutoPlay), o.setABRStrategy(a.abrStrategy || i.STRING.ABR_THROUGHPUT), o.setAutoSwitchQualityFor(i.STRING.VIDEO, a.isAutoSwitch[i.STRING.VIDEO]), o.setAutoSwitchQualityFor(i.STRING.AUDIO, a.isAutoSwitch[i.STRING.AUDIO]), o.setFastSwitchEnabled(!0), o.enableLastBitrateCaching(!1), o.setBufferPruningInterval(30), o.setJumpGaps(!0), this.setStableBufferTime(this.state.stableBufferTime)
@@ -42624,7 +42632,10 @@ else {
                                         }), n && (a.representation[n].push(E), o[n][E.id] = s)
                                     })), e.state.maxQualityIndex[n] = r.length - 1
                                 }
-                            }), this.state.manifestInfo = a, this.state.qualityNumberMap = o, this.setDefaultQualityFor("video", this.state.defaultQuality)
+                            }), this.state.manifestInfo = a, this.state.qualityNumberMap = o, 
+                            this.setDefaultQualityFor("video", this.state.defaultQuality);
+                            // 设置加载的音频质量
+                            this.setDefaultQualityFor("audio", this.state.defaultAudioQuality)
                         }
                     } catch (e) {
                         this.error({
