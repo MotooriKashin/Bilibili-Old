@@ -1,13 +1,9 @@
 interface modules {
-    /**
-     * 自动化处理，包括自动宽屏、自动关弹幕等操作
-     */
+    /** 自动化处理，包括自动宽屏、自动关弹幕等操作 */
     readonly "automate.js": string;
 }
-{
-    /**
-     * 滚动到播放器
-     */
+namespace API {
+    /** 滚动到播放器 */
     function bofqiToView() {
         let str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
         let node = str.reduce((s, d) => {
@@ -17,34 +13,34 @@ interface modules {
         node && node.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
     // 播放器自动化操作
-    API.switchVideo(() => {
+    switchVideo(() => {
         config.danmakuFirst && (<HTMLElement>document.querySelectorAll(".bilibili-player-filter-btn")[1]).click(); // 展示弹幕列表
         setTimeout(() => {
             config.showBofqi && bofqiToView(); // 滚动到播放器
         }, 500)
-        config.screenWide && API.runWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff"), () => (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen")).click()); // 自动宽屏
-        config.webFullScreen && API.runWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => (<HTMLElement>document.querySelector(".bilibili-player-video-web-fullscreen")).click()); // 自动网页全屏
-        config.noDanmaku && API.runWhile(() => document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku"), () => {
+        config.screenWide && runWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-widescreen.icon-24wideoff"), () => (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-widescreen")).click()); // 自动宽屏
+        config.webFullScreen && runWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => (<HTMLElement>document.querySelector(".bilibili-player-video-web-fullscreen")).click()); // 自动网页全屏
+        config.noDanmaku && runWhile(() => document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku"), () => {
             !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off") && (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")).click(); // 自动关闭弹幕
         });
         config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000); // 自动播放
     })
     // 播放本地媒体按钮
-    API.path.name && API.observerAddedNodes(e => {
+    path.name && observerAddedNodes(e => {
         if (e.className && /bilibili-player-danmaku-setting-lite-panel/.test(e.className)) {
-            API.runWhile(() => document.querySelector(".bilibili-player-setting-dmask-wrap"), () => {
-                const node = document.querySelector(".bilibili-player-setting-dmask-wrap").parentElement;
-                const lebel = API.addElement("label", { class: "bpui-checkbox-text", style: "cursor: pointer;display: inline-table;" }, node, "本地文件");
-                const input = API.addElement("input", { type: "file", accept: ".mp4,.xml,.json", multiple: "multiple", style: "width: 0;" }, lebel);
+            runWhile(() => document.querySelector(".bilibili-player-setting-dmask-wrap"), () => {
+                const node = (<any>document).querySelector(".bilibili-player-setting-dmask-wrap").parentElement;
+                const lebel = addElement("label", { class: "bpui-checkbox-text", style: "cursor: pointer;display: inline-table;" }, node, "本地文件");
+                const input = addElement("input", { type: "file", accept: ".mp4,.xml,.json", multiple: "multiple", style: "width: 0;" }, lebel);
                 input.onchange = () => {
                     (!window.player?.setDanmaku) && toast.warning("内部组件丢失，无法载入弹幕文件！");
-                    new API.localMedia(input.files);
+                    input.files && new LocalMedia(input.files);
                 }
             })
         }
     })
     // 修复顶栏分区数据
-    API.runWhile(() => document.querySelector(".bili-header-m"), () => {
+    runWhile(() => document.querySelector(".bili-header-m"), () => {
         try {
             let node = <HTMLCollectionOf<HTMLDivElement>>(<HTMLDivElement>document.querySelector(".bili-header-m")).getElementsByClassName('nav-name');
             if (node[0]) {
@@ -94,9 +90,9 @@ interface modules {
             }
         } catch (e) { debug.error("automate.js", e) }
     })
-    config.heartbeat && API.xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
+    config.heartbeat && xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
         args[1] = args[1].replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
     }, undefined, false);
-    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".lt-row"), () => document.querySelector(".lt-row").remove()); // 移除登录提示弹窗
-    config.unloginPopover && !API.uid && API.runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector(".unlogin-popover").remove()); // 移除登录提示弹窗
+    config.unloginPopover && !uid && runWhile(() => document.querySelector(".lt-row"), () => document.querySelector<any>(".lt-row").remove()); // 移除登录提示弹窗
+    config.unloginPopover && !uid && runWhile(() => document.querySelector(".unlogin-popover"), () => document.querySelector<any>(".unlogin-popover").remove()); // 移除登录提示弹窗
 }

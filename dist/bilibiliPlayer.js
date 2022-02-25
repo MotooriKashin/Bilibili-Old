@@ -28944,9 +28944,9 @@ function Fa() {
                     } else m = this.search(f);
                     let aid = this.search(f, "page", "aid");    // 合集aid字段作为av号
                     m ? 1 !== g.get("video_status", "autopart") ||
-                        e ? (b(aid, m, f, t), c.Tc()) :
+                        e ? (b(aid || void 0, m, f, t), c.Tc()) :
                         this.next(function () {
-                            b(aid, m, f, t);
+                            b(aid || void 0, m, f, t);
                             c.Tc()
                         }, function () {
                             d();

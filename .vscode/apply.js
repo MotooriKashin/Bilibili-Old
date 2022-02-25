@@ -1,4 +1,4 @@
-// 提取接口导出表apply.json
+// 生成接口索引表
 const fs = require("fs");
 const files = require("./files").getFiles;
 
@@ -29,7 +29,7 @@ function getProperty(str) {
             if (end) break;
         }
     }
-    return result.match(/(?<=export +(let|function|const|var) +)[A-Za-z0-9_$]+(?=(\(|:| |\<))/g) || []; // 正则匹配接口名
+    return result.match(/(?<=export +(let|function|async function|const|var|class) *\*? *)[A-Za-z0-9_$]+(?=(\(|:| |\<))/g) || []; // 正则匹配接口名
 }
 new files(path).run().then(d => { // 读取所有模块文件
     const json = d.reduce((s, d) => { // 提取所有模块中的导出接口

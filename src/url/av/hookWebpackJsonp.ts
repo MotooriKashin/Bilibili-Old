@@ -1,10 +1,8 @@
 interface modules {
-    /**
-     * 修复av页原生脚本中的错误代码
-     */
+    /** 修复av页原生脚本中的错误代码 */
     readonly "hookWebpackJsonp.js": string;
 }
-{
+namespace API {
     let webpackJsonpFunction: any;
     Object.defineProperty(window, "webpackJsonp", {
         get() {

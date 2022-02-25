@@ -1,30 +1,18 @@
 interface modules {
-    /**
-     * 下载功能
-     */
+    /** 下载功能 */
     readonly "download.js": string;
     readonly "download.css": string;
 }
-{
-    /**
-     * 一个下载记录
-     */
+namespace API {
+    /** 一个下载记录 */
     type DownloadRocord = {
-        /**
-         * 下载数据类型
-         */
+        /** 下载数据类型 */
         type: string,
-        /**
-         * 下载url，也可以是字符串形式的文本内容，将转为了objectURL以下载
-         */
+        /** 下载url，也可以是字符串形式的文本内容，将转为了objectURL以下载 */
         url: string,
-        /**
-         * 下载项目上标，一般是画质
-         */
+        /** 下载项目上标，一般是画质 */
         quality: string,
-        /**
-         * 下载项目下标，一般是大小
-         */
+        /** 下载项目下标，一般是大小 */
         size: string,
         /**
          * 文件名（含文件名）  
@@ -32,40 +20,26 @@ interface modules {
          * 若是文本，则一定要提供本值
          */
         filename?: string,
-        /**
-         * 以objectURL方式下载时的编码格式，一般为text/plain
-         */
+        /** 以objectURL方式下载时的编码格式，一般为text/plain */
         contentType?: string,
         /**
          * 备用链接，B站一般会同时返回两条备用源  
          * 此数据未必可用，使用前请先进行真值检查！
          */
         backupUrl?: string[],
-        /**
-         * flv专用，flv一般只返回一种画质却可能分成很多段，这里用于标记分段索引
-         */
+        /** flv专用，flv一般只返回一种画质却可能分成很多段，这里用于标记分段索引 */
         flvSplit?: number,
-        /**
-         * 是否以直链形式添加到下载面板a标签，无需二次检查下载方式
-         */
+        /** 是否以直链形式添加到下载面板a标签，无需二次检查下载方式 */
         amylose?: boolean
     }
     class Download {
-        /**
-         * 下载面板
-         */
-        table: HTMLElement;
-        /**
-         * 已获取类型列表
-         */
+        /** 下载面板 */
+        table = addElement("div");
+        /** 已获取类型列表 */
         type: string[] = [];
-        /**
-         * 整理出的链接列表
-         */
+        /** 整理出的链接列表 */
         links: DownloadRocord[] = [];
-        /**
-         * url序号对应的质量信息  
-         */
+        /** url序号对应的质量信息  */
         quality = {
             100029: '4K',
             100028: '1080P60',
@@ -125,17 +99,13 @@ interface modules {
             16: "360P",
             15: "360P"
         };
-        /**
-         * 视频编码信息对应的id，可能不完整
-         */
+        /** 视频编码信息对应的id，可能不完整 */
         codec = {
             hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
             avc: [30120, 30112, 30080, 30064, 30032, 30016],
             av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
         }
-        /**
-         * 颜色表
-         */
+        /** 颜色表 */
         color = {
             "8K": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
             "Dolby": "background-color: #ffe42b;background-image: linear-gradient(to right, #ffe42b, #dfb200);",
@@ -161,7 +131,7 @@ interface modules {
             "64Kbps": "background-color: #0d0;"
         }
         constructor() {
-            API.switchVideo(() => { this.type = []; this.links = []; this.table && this.table.remove() }); // 切P后清除下载数据并移除下载面板
+            switchVideo(() => { this.type = []; this.links = []; this.table && this.table.remove() }); // 切P后清除下载数据并移除下载面板
         }
         /**
          * 整理playurl返回值并提取其中的媒体链接记录到links
@@ -181,14 +151,14 @@ interface modules {
          * @returns 画质/音质信息
          */
         getQuality(url: string, id?: number) {
-            return this.quality[this.getID(url)] || (id && this.quality[id]) || "N/A";
+            return this.quality[<keyof typeof this.quality>this.getID(url)] || (id && this.quality[<keyof typeof this.quality>id]) || "N/A";
         }
         /**
          * 从url中提取可能的id
          * @param url 多媒体url
          */
         getID(url: string) {
-            return Number(/[0-9]+\.((flv)|(mp4)|(m4s))/.exec(url)[0].split(".")[0]);
+            return Number((<any>/[0-9]+\.((flv)|(mp4)|(m4s))/.exec(url))[0].split(".")[0]);
         }
         /**
          * 整理dash部分
@@ -288,9 +258,9 @@ interface modules {
          * 右键下载响应
          */
         async contentMenu() {
-            if (API.aid && API.cid) {
+            if (aid && cid) {
                 if (!this.links[0]) {
-                    !config.TVresource && API.__playinfo__ && this.decodePlayinfo(API.__playinfo__); // tv源无法从播放器里读取
+                    !config.TVresource && __playinfo__ && this.decodePlayinfo(__playinfo__); // tv源无法从播放器里读取
                     const result = await Promise.all(config.downloadList.reduce((s: Promise<any>[], d) => {
                         !this.type.includes(d) && s.push(this.getContent(d));
                         return s;
@@ -310,18 +280,18 @@ interface modules {
          */
         async getOther() {
             if (!config.ifDlDmCC) return;
-            if (API.danmaku.danmaku) {
-                const url = config.dlDmType == "json" ? JSON.stringify(API.danmaku.danmaku, undefined, "\t") : API.danmaku.toXml(API.danmaku.danmaku);
+            if (danmaku.danmaku) {
+                const url = config.dlDmType == "json" ? JSON.stringify(danmaku.danmaku, undefined, "\t") : danmaku.toXml(danmaku.danmaku);
                 this.links.push({
                     url: url,
                     type: "其他",
                     quality: "弹幕",
-                    size: Format.sizeFormat(API.strSize(url)),
-                    filename: `${this.getTitle()}-${API.cid}.${config.dlDmType}`
+                    size: Format.sizeFormat(strSize(url)),
+                    filename: `${this.getTitle()}-${cid}.${config.dlDmType}`
                 })
             }
-            if (API.closedCaption.subtitle) {
-                API.closedCaption.subtitle.forEach(d => {
+            if (closedCaption.subtitle) {
+                closedCaption.subtitle.forEach(d => {
                     this.links.push({
                         url: !d.subtitle_url.includes(":") ? d.subtitle_url.replace("//", "https://") : d.subtitle_url,
                         type: "其他",
@@ -330,7 +300,7 @@ interface modules {
                     })
                 })
             }
-            const data = await API.getAidInfo(API.aid);
+            const data = await getAidInfo(aid);
             data && data?.View?.pic && this.links.push({
                 url: data.View.pic,
                 type: "其他",
@@ -349,17 +319,17 @@ interface modules {
             let result: any;
             try {
                 switch (d) {
-                    case "dash": result = API.pgc ?
-                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true) :
-                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, fnver: 0, fnval: API.fnval }, true);
+                    case "dash": result = pgc ?
+                        await url.getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: aid, cid: cid, fnver: 0, fnval: fnval }, true) :
+                        await url.getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: aid, cid: cid, fnver: 0, fnval: fnval }, true);
                         break;
-                    case "flv": result = API.pgc ?
-                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true) :
-                        await new API.url().getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: API.aid, cid: API.cid, qn: config.downloadQn }, true);
+                    case "flv": result = pgc ?
+                        await url.getJson(config.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: aid, cid: cid, qn: config.downloadQn }, true) :
+                        await url.getJson(config.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: aid, cid: cid, qn: config.downloadQn }, true);
                         break;
-                    case "mp4": result = API.pgc ?
-                        await new API.url().getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: API.cid }, true) :
-                        await new API.url().getJson("app.bilibili.com/v2/playurlproj", { cid: API.cid }, true);
+                    case "mp4": result = pgc ?
+                        await url.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: cid }, true) :
+                        await url.getJson("app.bilibili.com/v2/playurlproj", { cid: cid }, true);
                         break;
                 }
             } catch (e) { }
@@ -371,27 +341,27 @@ interface modules {
         showTable() {
             if (!this.links[0]) return toast.warning("未获取到任何下载数据！")
             this.table && this.table.remove(); // 移除已存在的下载面板
-            this.table = API.addElement("div");
+            this.table = addElement("div");
             const real = this.table.attachShadow({ mode: "closed" });
-            const root = API.addElement("div", { class: "table" }, real);
+            const root = addElement("div", { class: "table" }, real);
             const cells: { [name: string]: HTMLElement } = {};
-            new API.clickRemove(this.table); // 点击外部移除
-            API.addCss(API.getCss("download.css"), undefined, real);
+            new ClickRemove(this.table); // 点击外部移除
+            addCss(getCss("download.css"), undefined, real);
             this.links.forEach(d => { // 添加下载项
-                const cell = cells[d.type] || API.addElement("div", { class: "cell" }, root);
+                const cell = cells[d.type] || addElement("div", { class: "cell" }, root);
                 if (!cells[d.type]) {
                     cells[d.type] = cell;
-                    const div = API.addElement("div", { class: "type" }, cell, d.type);
-                    this.color[d.type] && div.setAttribute("style", this.color[d.type]);
+                    const div = addElement("div", { class: "type" }, cell, d.type);
+                    this.color[<keyof typeof this.color>d.type] && div.setAttribute("style", this.color[<keyof typeof this.color>d.type]);
                 }
-                const item = API.addElement("a", { class: "item", target: "_blank" }, cell);
-                const up = API.addElement("div", { class: "up" }, item, d.quality + (d.flvSplit ? "x" + d.flvSplit : ""));
-                this.color[d.quality] && up.setAttribute("style", this.color[d.quality]);
-                API.addElement("div", { class: "down" }, item, d.size);
+                const item = addElement("a", { class: "item", target: "_blank" }, cell);
+                const up = addElement("div", { class: "up" }, item, d.quality + (d.flvSplit ? "x" + d.flvSplit : ""));
+                this.color[<keyof typeof this.color>d.quality] && up.setAttribute("style", this.color[<keyof typeof this.color>d.quality]);
+                addElement("div", { class: "down" }, item, d.size);
                 d.amylose ? item.href = d.url : (item.onclick = () => { // 点击下载
                     /^https?:\/\/([\w-]+\.)+[\w-]+(\/[\w-,.\/?%&=]*)?/.test(d.url) ?
                         this.postData(d) :
-                        API.saveAs(d.url, d.filename || `download ${Format.timeFormat(undefined, true)}.txt`, d.contentType || "text/plain"); // 文本类型
+                        saveAs(d.url, d.filename || `download ${Format.timeFormat(undefined, true)}.txt`, d.contentType || "text/plain"); // 文本类型
                 })
             })
         }
@@ -402,13 +372,13 @@ interface modules {
         postData(data: DownloadRocord) {
             !Reflect.has(data, "_name") && (data.filename = this.setFinalName(data));
             switch (config.downloadMethod) {
-                case "ef2": API.ef2.sendLinkToIDM({ url: data.url, out: data.filename });
+                case "ef2": ef2.sendLinkToIDM({ url: data.url, out: data.filename });
                     break;
-                case "aria2": API.aria2.shell({ urls: [data.url], out: data.filename })
+                case "aria2": aria2.shell({ urls: [data.url], out: data.filename })
                     .then(() => toast.success(`已复制aria2命令行到剪切板，在cmd等shell中使用即可下载~`))
                     .catch(e => toast.error(`复制aria2命令行失败！`, e))
                     break;
-                case "aira2 RPC": API.aria2.rpc({ urls: [data.url], out: data.filename })
+                case "aira2 RPC": aria2.rpc({ urls: [data.url], out: data.filename })
                     .then(GID => toast.success(`已添加下载任务到aria2 RPC主机，任务GID：${GID}`))
                     .catch(e => toast.error(`添加下载任务到aria2 RPC主机出错！`, e))
                     break;
@@ -421,7 +391,7 @@ interface modules {
          */
         getTitle() {
             const title = document.title.split("_哔哩")[0];
-            const p = location.href.includes("p=") ? location.href.match(/p=\d+/)[0].split("=")[1] : "";
+            const p = location.href.includes("p=") ? (<any>location.href.match(/p=\d+/))[0].split("=")[1] : "";
             return p ? title + p : title;
         }
         /**
@@ -444,7 +414,7 @@ interface modules {
         setFinalName(obj: DownloadRocord) {
             let adv = "";
             let arr = this.getUrlFileName(obj.url);
-            let ars = obj.filename.split(".");
+            let ars = (<any>obj).filename.split(".");
             switch (obj.type) {
                 case "mp4": adv = ".mp4";
                     break;
@@ -466,21 +436,15 @@ interface modules {
          * @param data 下载数据
          */
         rightKey(data: DownloadRocord) {
-            const root = API.element.popupbox({ width: "300px" });
-            API.addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, data.filename);
-            API.addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${data.filename}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
-            API.addElement("div", { style: "font-size: 10px; padding-block-end: 10px;" }, root, '本方式下载不太稳定，不嫌麻烦的话可在设置中更换下载方式。');
+            const root = ElementComponent.popupbox({ width: "300px" });
+            addElement("div", { style: "text-align: center;font-weight: bold;padding-block-end: 10px;" }, root, data.filename);
+            addElement("div", { style: "padding-block-end: 10px;" }, root, `<a href=${data.url} target="_blank" download="${data.filename}">请在此处右键“另存为”以保存文件，IDM的话也可以右键“使用 IDM下载链接”。</a>`);
+            addElement("div", { style: "font-size: 10px; padding-block-end: 10px;" }, root, '本方式下载不太稳定，不嫌麻烦的话可在设置中更换下载方式。');
         }
     }
-    const download = new Download();
-    API.download = () => download.contentMenu();
-}
-declare namespace API {
-    export function download(): void;
-}
-interface config {
+    const _ = new Download();
     /**
-     * 下载：使用TV源
+     * 拉起下载面板
      */
-    TVresource: boolean;
+    export function download() { _.contentMenu(); }
 }

@@ -1,10 +1,8 @@
 interface modules {
-    /**
-     * 禁止挂机检测
-     */
+    /** 禁止挂机检测 */
     readonly "sleepCheck.js": string;
 }
-{
+namespace API {
     const fun = setInterval;
     let flag = 0;
     window.setInterval = (...args) => {

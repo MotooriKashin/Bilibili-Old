@@ -1,10 +1,8 @@
 interface modules {
-    /**
-     * 修复旧版播放器实时弹幕
-     */
+    /** 修复旧版播放器实时弹幕 */
     readonly "webSocket.js": string;
 }
-{
+namespace API {
     let decoder = new TextDecoder();
     let encoder = new TextEncoder();
     let liveChatOld: any; // 对旧播放器建立的ws对象的引用
@@ -81,7 +79,7 @@ interface modules {
 
         liveChat.onopen = function () {
             let body = {
-                "room_id": "video://" + API.aid + "/" + API.cid,
+                "room_id": "video://" + aid + "/" + cid,
                 "platform": "web",
                 "accepts": [1000, 1015]
             };

@@ -1,12 +1,8 @@
 interface modules {
-    /**
-     * 合集列表
-     * 按分p方式显示, 不支持section
-     */
+    /** 合集列表，按分p方式显示, 不支持section */
     readonly "collection.js": string;
 }
-
-{
+namespace API {
     function calcDivWidth(text: string) {
         let elem = document.createElement("div");
         elem.setAttribute("style", "display: inline-block");
@@ -60,7 +56,7 @@ interface modules {
         container: HTMLDivElement;
         clearfix: HTMLElement;
         items: EpisodeItem[] = [];
-        spread: HTMLAnchorElement = null;
+        spread: HTMLAnchorElement = <any>null;
 
         constructor(onSpread: () => any) {
             this.container = <HTMLDivElement>document.createElement("div");
@@ -88,13 +84,13 @@ interface modules {
         setItemAttrs(attrs: Array<ItemAttr>) {
             // 更新分集DOM节点数量
             while (this.items.length > attrs.length)
-                this.clearfix.removeChild(this.items.pop().node);
+                this.clearfix.removeChild((<any>this).items.pop().node);
 
             while (this.items.length < attrs.length) {
-                let i = { click: null, node: <HTMLAnchorElement>document.createElement("a") };
-                i.node.addEventListener("mouseenter", (e) => this.showFloatTxt(e));
+                let i: any = { click: null, node: <HTMLAnchorElement>document.createElement("a") };
+                i.node.addEventListener("mouseenter", (e: any) => this.showFloatTxt(e));
                 i.node.addEventListener("mouseleave", () => this.hideFloatText());
-                i.node.addEventListener("click", (e) => {
+                i.node.addEventListener("click", (e: any) => {
                     // 参考vue router-link中防跳转处理
                     if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey || e.defaultPrevented || e.button != 0)
                         return;
@@ -149,7 +145,7 @@ interface modules {
     }
 
     class CollectionData {
-        notify: { spread: (b: boolean) => any; spreadBtnTop: (n: number) => any; ep: () => any } = null;
+        notify: { spread: (b: boolean) => any; spreadBtnTop: (n: number) => any; ep: () => any } = <any>null;
         private _viewEpisodes = [];
         private _ep = 0;
         private _spread = false;
@@ -162,8 +158,8 @@ interface modules {
         }
 
         get ep(): number {
-            if (this.episodes[this._ep].aid != getAid())
-                this._ep = this.episodes.findIndex((ep) => ep.aid == getAid())
+            if ((<any>this).episodes[this._ep].aid != getAid())
+                this._ep = this.episodes.findIndex((ep: any) => ep.aid == getAid())
 
             return this._ep;
         }
@@ -189,7 +185,7 @@ interface modules {
 
         // 转换成/x/player/pagelist中的列表格式
         get pageList() {
-            return <any[]>this.episodes.reduce((s, ep, i) => {
+            return <any[]>this.episodes.reduce((s, ep: any, i) => {
                 s.push({
                     aid: ep.aid,
                     cid: ep.cid,
@@ -202,7 +198,7 @@ interface modules {
                     weblink: ""
                 });
                 return s;
-            }, []);
+            }, <any>[]);
         }
 
         constructor(season: any) {
@@ -213,13 +209,13 @@ interface modules {
         }
 
         initEpisodes(season: any) {
-            season.sections.forEach((section) => {
+            season.sections.forEach((section: any) => {
                 Array.prototype.push.apply(this.episodes, section.episodes);
             });
         }
 
         calcColCount() {
-            let w = calcDivWidth(this.episodes[this.ep].title);
+            let w = calcDivWidth((<any>this).episodes[this.ep].title);
             this._colCount = w >= 241 ? 3 : w >= 186 ? 4 :
                 w >= 149 ? 5 : w >= 123 ? 6 :
                     window.innerWidth > 1440 ? 7 : 6;
@@ -264,11 +260,11 @@ interface modules {
         constructor(season: any, player: HTMLElement) {
             this.data = new CollectionData(season);
             this.elem = new CollectionElement(this.data.needSpread() ?
-                () => this.data.toggleSpread() : null);
+                () => this.data.toggleSpread() : <any>null);
             // 替换播放器换P处理
             (<any>window).callAppointPart = (_p: any, video: any) => {
                 let state = { aid: video.aid, cid: video.cid };
-                window.history.pushState(state, null, "/video/av" + video.aid);
+                window.history.pushState(state, "", "/video/av" + video.aid);
                 this.onRouteChanged(state);
             }
             window.addEventListener("popstate", (e) => {
@@ -278,12 +274,12 @@ interface modules {
             window.addEventListener("scroll", () => this.onWindowScroll());
 
             this.render();
-            player.parentNode.insertBefore(this.elem.container, player);
+            (<any>player).parentNode.insertBefore(this.elem.container, player);
             this.data.notify = {
                 spread: (spread) => {
                     this.render();
                     // 收起时页面滚动
-                    !spread && window.scroll({ top: calcOffsetPos(document.getElementById("viewbox_report")).y });
+                    !spread && window.scroll({ top: calcOffsetPos(<HTMLDivElement>document.getElementById("viewbox_report")).y });
                 },
                 spreadBtnTop: (top) => {
                     this.elem.setSpreadAttr({ top: top })
@@ -292,7 +288,7 @@ interface modules {
             }
 
             // 拦截播放器换P分P列表API
-            API.xhrhook("/x/player/pagelist", null, (r) => {
+            xhrhook("/x/player/pagelist", undefined, (r) => {
                 r.response = JSON.stringify({
                     code: 0,
                     message: 0,
@@ -324,7 +320,7 @@ interface modules {
         }
 
         reloadPlayer(v: VideoInfo) {
-            (<GrayManager>window.GrayManager).reload(`aid=${v.aid}&cid=${v.cid}&has_next=1`);
+            window.GrayManager.reload(`aid=${v.aid}&cid=${v.cid}&has_next=1`);
         }
 
         onWindowScroll() {
@@ -367,20 +363,20 @@ interface modules {
     }
 
     class Collection {
-        component: CollectionComponent;
+        component: CollectionComponent = <any>undefined;
 
         constructor(videoData: any) {
-            API.xhrhook("/x/player.so", null, (r) => {
+            xhrhook("/x/player.so", undefined, (r) => {
                 // 替换has_next标签值让播放器显示下一P按钮
                 r.response = r.response.replace(/<has_next>\s*0/, "<has_next>1");
                 r.responseText = r.response;
             }, false);
 
-            API.runWhile(() => document.getElementById("__bofqi"), () => {
+            runWhile(() => document.getElementById("__bofqi"), () => {
                 try {
                     let player = document.getElementById("__bofqi");
-                    window.history.replaceState({ aid: videoData.aid, cid: videoData.cid }, null);
-                    this.component = new CollectionComponent(videoData.ugc_season, player);
+                    window.history.replaceState({ aid: videoData.aid, cid: videoData.cid }, "");
+                    this.component = new CollectionComponent(videoData.ugc_season, <any>player);
                     this.component.render();
                 } catch (e) { toast.error("collection.js", e) }
             })

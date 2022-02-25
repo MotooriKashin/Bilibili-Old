@@ -7,7 +7,7 @@ interface modules {
      */
     readonly "md5.js": string;
 }
-{
+namespace API {
     const ERROR = 'input is invalid type';
     const ARRAY_BUFFER = true;
     const HEX_CHARS = '0123456789abcdef'.split('');
@@ -432,14 +432,11 @@ interface modules {
             return base64Str;
         }
     }
-    API.md5 = createMethod();
-}
-declare namespace API {
     /**
      * 获取md5哈希值  
      * 函数属性上还有其他类型md5值获取方法，返回值参考其名，如`md5.hex()`
      * @param str 字符串输入
      * @returns md5输出
      */
-    export function md5(str: string): string;
+    export const md5: (str: string) => string = createMethod();
 }

@@ -1,22 +1,20 @@
 interface modules {
-    /**
-     * 监听播放器切P
-     */
+    /** 监听播放器切P */
     readonly "switchVideo.js": string;
 }
-{
+namespace API {
     const switchlist: Function[] = [];
     /**
-     * 注册切P回调
+     * 注册切P回调  
+     * 实际上是播放器每次初始化完成时回调，意思是首P也能用。
      * @param callback 切P时的回调函数
      */
-    function switchVideo(callback: Function) {
+    export function switchVideo(callback: Function) {
         try {
             if (typeof callback === "function") switchlist.push(callback);
         } catch (e) { toast.error("switchVideo.js", e) }
     }
-    API.switchVideo = (callback: Function) => switchVideo(callback);
-    API.observerAddedNodes((node) => {
+    observerAddedNodes((node) => {
         if (/bilibili-player-area video-state-pause/.test(node.className)) {
             switchlist.forEach(async d => {
                 try {
@@ -28,12 +26,4 @@ interface modules {
             });
         }
     })
-}
-declare namespace API {
-    /**
-     * 注册切P回调  
-     * 未切P播放器初始化完成也会回调一次，所以可用于任何有旧版播放器的页面
-     * @param callback 切P时的回调函数
-     */
-    export function switchVideo(callback: Function): void;
 }

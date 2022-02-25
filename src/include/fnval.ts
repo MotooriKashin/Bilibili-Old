@@ -1,13 +1,9 @@
 interface modules {
-    /**
-     * 默认fnval标记
-     */
+    /** 默认fnval标记 */
     readonly "fnval.js": string;
 }
-{
-    /**
-     * fnval参数标志位
-     */
+namespace API {
+    /** fnval参数标志位（二进制） */
     class Fnval {
         MP4 = 1;
         DASH_H265 = 16;
@@ -18,16 +14,10 @@ interface modules {
         DASH_8K = 1024;
         DASH_AV1 = 2048;
     }
-    const fnval = new Fnval();
-    // 构造播放源请求参数fnval，取当前支持的最大值。
-    API.fnval = Reflect.ownKeys(fnval).reduce((s, d) => {
-        s += fnval[d];
+    const _ = new Fnval();
+    /** 视频格式标志`fnval`的默认值（最高值） */
+    export const fnval = Reflect.ownKeys(_).reduce((s, d) => {
+        s += (<any>_)[d];
         return s;
     }, -1);
-}
-declare namespace API {
-    /**
-     * 视频格式标志：fnval
-     */
-    export let fnval: number;
 }

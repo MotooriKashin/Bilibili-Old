@@ -1,12 +1,10 @@
 interface modules {
-    /**
-     * 旧版播放器支持反差弹幕发送者信息
-     */
+    /** 旧版播放器支持反差弹幕发送者信息 */
     readonly "danmakuHashId.js": string;
     readonly "danmakuHashId.css": string;
 }
-{
-    API.addCss(API.getModule("danmakuHashId.css"));
+namespace API {
+    addCss(getModule("danmakuHashId.css"));
     class DanmakuHashId {
         static count: number = 0; // 正在查询弹幕数
         static catch: { [name: string]: any } = {}; // 已查询弹幕缓存
@@ -23,7 +21,7 @@ interface modules {
             // 临时缓存已查询的 mid
             DanmakuHashId.catch = DanmakuHashId.catch || {};
             this.hash = crc;
-            this.mid = API.midcrc(this.hash);
+            this.mid = midcrc(this.hash);
             this.getInfo();
         }
         async getInfo() {
@@ -41,7 +39,7 @@ interface modules {
                 }
                 if (!this.dm) return setTimeout(() => { this.getInfo() }, 100);
                 if (this.dm.tagName != "LI") return;
-                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || API.jsonCheck(await xhr({ url: Format.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: <any>this.mid }) }));
+                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: Format.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: <any>this.mid }) }));
                 this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' +
                     this.mid + '" class="reply-face"><img src="' +
                     DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
@@ -68,5 +66,5 @@ interface Window {
      * @param crc 弹幕CRC32哈希值
      * @returns 节点占位消息
      */
-    danmakuHashId: (crc: string) => string;
+    danmakuHashId: (crc: string) => string | undefined;
 }

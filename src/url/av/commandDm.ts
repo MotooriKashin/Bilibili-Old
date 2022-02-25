@@ -1,12 +1,10 @@
 interface modules {
-    /**
-     * 互动弹幕相关
-     */
+    /** 互动弹幕相关 */
     readonly "commandDm.js": string;
     readonly "commandDm.css": string;
 }
-{
-    API.addCss(API.getModule("commandDm.css"));
+namespace API {
+    addCss(getModule("commandDm.css"));
     let player: any, widgetContainer: any;
     let playing = false;
     let visible = true;
@@ -15,10 +13,8 @@ interface modules {
         hidden: []   // 未显示的互动弹幕
     };
 
-    /**
-     * 初始化互动弹幕功能
-     */
-    function init(cdm) {
+    /** 初始化互动弹幕功能 */
+    function init(cdm: any) {
         if ((<any>window).player) {
             if (widgetContainer === undefined)
                 widgetContainer = initContainer();
@@ -50,9 +46,7 @@ interface modules {
         return widgetContainer;
     }
 
-    /**
-     * 绑定播放器事件，使用window.player.addEventListener
-     */
+    /** 绑定播放器事件，使用window.player.addEventListener */
     function bindEvents() {
         const EVENT = {
             VIDEO_MEDIA_PLAYING: "video_media_playing",
@@ -140,9 +134,7 @@ interface modules {
         loop();
     }
 
-    /**
-     * 播放器大小更改时触发
-     */
+    /** 播放器大小更改时触发 */
     function resize() {
         // 获得当前播放器显示分辨率与最小分辨率(680x504)时的缩放比，用于UI缩放
         let scaleX = widgetContainer.clientWidth / 680;
@@ -199,14 +191,14 @@ interface modules {
     }
 
     function isLoggedin() {
-        if (API.uid) return true;
+        if (uid) return true;
         player.pause();
-        API.bofqiMessage("请先登录");
-        API.biliQuickLogin();
+        bofqiMessage("请先登录");
+        biliQuickLogin();
     }
 
     function post(url: string, data: any, contentType = "application/x-www-form-urlencoded;charset=UTF-8") {
-        data.csrf = API.getCookies().bili_jct;
+        data.csrf = getCookies().bili_jct;
         return xhr({
             url: url,
             data: Format.objUrl("", data),
@@ -216,9 +208,7 @@ interface modules {
         });
     }
 
-    /**
-     * 弹窗组件
-     */
+    /** 弹窗组件 */
     class PopupWindow {
         popup: HTMLElement;
         duration: number;
@@ -226,7 +216,7 @@ interface modules {
         to: number;
         pos_x: number;
         pos_y: number;
-        constructor(cdm, extra, from) {
+        constructor(cdm: any, extra: any, from: any) {
             this.duration = extra.duration / 1e3 || 5;
             this.from = from || 0;
             this.to = from + (extra.duration / 1e3 || 5);
@@ -249,7 +239,7 @@ interface modules {
         /**
         * 根据视频区域大小等比缩放投票界面
         */
-        resize(scaleX, scaleY, containerWidth, containerHeight) {
+        resize(scaleX: any, scaleY: any, containerWidth: any, containerHeight: any) {
             this.popup.style.transform = "translateX(-50%) translateY(-50%) scale(" + Math.min((scaleX + scaleY) / 2, 1.5) + ")";
             let left = this.pos_x * scaleX;
             let top = this.pos_y * scaleY;
@@ -262,9 +252,7 @@ interface modules {
         }
     }
 
-    /** 
-     * 投票互动UI
-     */
+    /** 投票互动UI */
     class Vote extends PopupWindow {
         total: any;
         voteId: any;
@@ -320,8 +308,8 @@ interface modules {
                 // 发送投票操作到服务器
                 let url = "//api.bilibili.com/x/web-interface/view/dm/vote";
                 post(url, {
-                    aid: API.aid,
-                    cid: API.cid,
+                    aid: aid,
+                    cid: cid,
                     progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
                     vote: idx,
                     vote_id: this.voteId
@@ -356,9 +344,7 @@ interface modules {
             }
             this.resultAnimation();
         }
-        /**
-         * 投票结果的动画
-         */
+        /** 投票结果的动画 */
         resultAnimation() {
             // 投票比例条型图向右展开
             for (let i = 0; i < this.progress.length; i++) {
@@ -422,8 +408,8 @@ interface modules {
             `;
             this.scoreInfo = this.popup.getElementsByClassName("grade-score-info")[0];
             let scoreArea = <HTMLElement>this.popup.getElementsByClassName("grade-score-area")[0];
-            let scoreButton = [];
-            function highlightScores(i) {
+            let scoreButton: any[] = [];
+            function highlightScores(i: number) {
                 for (let m = 0; m < 5; m++) {
                     if (m <= i && !scoreButton[m].highlight) {
                         scoreButton[m].highlight = true;
@@ -475,10 +461,10 @@ interface modules {
                 scoreArea.classList.remove("pointer");
             }
         }
-        goGrade(score) {
+        goGrade(score: number) {
             post("https://api.bilibili.com/x/v2/dm/command/grade/post", {
-                aid: API.aid,
-                cid: API.cid,
+                aid: aid,
+                cid: cid,
                 progress: parseInt(player.getCurrentTime()) * 1000,
                 grade_id: this.gradeInfo.grade_id,
                 grade_score: score
@@ -497,9 +483,7 @@ interface modules {
             this.to = this.from + this.duration;
         }
     }
-    /**
-     * 用于获取收藏列表有关信息
-     */
+    /** 用于获取收藏列表有关信息 */
     class favList {
         static list = []
         static defaultFolderId = 0
@@ -508,8 +492,8 @@ interface modules {
             return xhr({
                 url: Format.objUrl("//api.bilibili.com/x/v3/fav/folder/created/list-all", {
                     type: String(2),
-                    rid: String(API.aid),
-                    up_mid: String(API.uid)
+                    rid: String(aid),
+                    up_mid: String(uid)
                 }),
                 credentials: true
             }).then((resp: any) => {
@@ -526,9 +510,7 @@ interface modules {
         }
     }
 
-    /**
-     * @see https://github.com/SocialSisterYi/bilibili-API-collect
-     */
+    /** @see https://github.com/SocialSisterYi/bilibili-API-collect */
     class biliAPI {
         static verify(resp: any, msg: any) {
             if (resp.code !== 0) {
@@ -540,13 +522,13 @@ interface modules {
         static like(bool: any) {
             bool = bool ? 1 : 2;
             return post("//api.bilibili.com/x/web-interface/archive/like", {
-                aid: API.aid,
+                aid: aid,
                 like: bool
             }, "application/json; charset=utf-8").then((resp: any) => biliAPI.verify(resp, "点赞"));
         }
         static follow() {
             return post("//api.bilibili.com/x/relation/modify", {
-                aid: API.aid,
+                aid: aid,
                 fid: (<any>window).getAuthorInfo().mid,
                 act: 1,
                 re_src: 14
@@ -560,7 +542,7 @@ interface modules {
         }
         static fav() {
             return post("//api.bilibili.com/x/v3/fav/resource/deal", {
-                rid: API.aid,
+                rid: aid,
                 type: 2,
                 add_media_ids: favList.defaultFolderId,
             }).then((resp: any) => {
@@ -570,7 +552,7 @@ interface modules {
         }
         static triple() {
             return post("//api.bilibili.com/x/web-interface/archive/like/triple", {
-                aid: API.aid
+                aid: aid
             }, "application/json; charset=utf-8").then((resp: any) => {
                 biliAPI.verify(resp, "三连");
                 let d = resp.data;
@@ -583,9 +565,7 @@ interface modules {
         }
     }
 
-    /**
-     * 关联视频跳转按钮
-     */
+    /** 关联视频跳转按钮 */
     class Link {
         /*
             extra = {
@@ -638,9 +618,7 @@ interface modules {
         hide() {
             this.button.style.display = "none";
         }
-        /**
-         * 根据视频区域大小缩放，放大倍数限制在最大1.5倍
-         */
+        /** 根据视频区域大小缩放，放大倍数限制在最大1.5倍 */
         resize(scaleX: any, scaleY: any) {
             this.button.style.left = (this.pos_x * scaleX) + "px";
             this.button.style.top = (this.pos_y * scaleY) + "px";
@@ -656,22 +634,13 @@ interface modules {
      * @param aid aid
      * @param cid cid
      */
-    API.loadCommandDm = async (cdm: any[], aid: string | number, cid: string | number) => {
+    export async function loadCommandDm(cdm: any[], aid: string | number, cid: string | number) {
         try {
-            if (aid != API.aid || cid != API.cid || (widgetContainer !== undefined && document.getElementById("bilibiliPlayer").contains(widgetContainer))) {
+            if (aid != aid || cid != cid || (widgetContainer !== undefined && (<HTMLDivElement>document.getElementById("bilibiliPlayer")).contains(widgetContainer))) {
                 // 正在“载入其他视频弹幕”，不必处理互动弹幕
                 return;
             }
             init(cdm); // 由于切P后整个播放器会被销毁重建，每次载入互动弹幕都需要重新绑定事件
         } catch (e) { toast.error("commandDm.js", e) }
     }
-}
-declare namespace API {
-    /**
-     * 载入互动弹幕
-     * @param cdm 互动弹幕原始数据
-     * @param aid aid
-     * @param cid cid
-     */
-    export function loadCommandDm(cdm: any[], aid: string | number, cid: string | number): Promise<void>
 }

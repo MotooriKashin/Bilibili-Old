@@ -1,5 +1,4 @@
 // 构建模块封装require.js
-// ./src/require目录下的文件称之为“预加载模块”，这部分模块无需封装直接运行在脚本相同环境中。
 const fs = require("fs");
 const files = require("./files").getFiles;
 
@@ -12,7 +11,7 @@ new files(path, exclude).run().then(d => {
             if (d.path.endsWith(".json")) {
                 modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n${String(d.data)}\r\n/*!***********************!*/`;
             } else if (d.path.endsWith(".js")) {
-                modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n\`${String(d.data).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\r\n//# sourceURL=API://@${d.path.slice(2).replace("dist", "Bilibili-Old")}\`;\r\n/*!***********************!*/`;
+                modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n\`${String(d.data).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/var API;[\s\S]+\(API\) \{\r?\n/, "").replace(/\}\)\(API \|\| \(API = \{\}\)\);[\s\S]+$/, "")}\r\n//# sourceURL=API://@${d.path.slice(2).replace("dist", "Bilibili-Old")}\`;\r\n/*!***********************!*/`;
             } else {
                 modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n\`${String(d.data).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;\r\n/*!***********************!*/`;
             }

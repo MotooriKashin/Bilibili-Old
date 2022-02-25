@@ -1,12 +1,10 @@
 interface modules {
-    /**
-     * Bangumi分集数据
-     */
+    /** Bangumi分集数据 */
     readonly "episodeData.js": string;
 }
-{
+namespace API {
     let first = 0; // 首p指示
-    API.switchVideo(async () => {
+    switchVideo(async () => {
         try {
             first++;
             let views = <HTMLSpanElement>(<HTMLDivElement>document.querySelector(".view-count")).querySelector("span");
@@ -18,10 +16,10 @@ interface modules {
                 debug.debug("总播放数", views.innerText, " 总弹幕数", danmakus.innerText);
             }
             let data = await xhr({
-                url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": String(API.aid) }),
+                url: Format.objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": String(aid) }),
                 credentials: true
             }); // 获取分集数据
-            data = API.jsonCheck(data).data;
+            data = jsonCheck(data).data;
             let view = data.view;
             let danmaku = data.danmaku;
             view = Format.unitFormat(view);

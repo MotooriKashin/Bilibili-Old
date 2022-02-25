@@ -1,10 +1,8 @@
 interface modules {
-    /**
-     * 塞尔曲线工具
-     */
+    /** 塞尔曲线工具 */
     readonly "cubicBezier.js": string;
 }
-{
+namespace API {
     const NEWTON_ITERATIONS = 4
     const NEWTON_MIN_SLOPE = 0.001
     const SUBDIVISION_PRECISION = 0.0000001
@@ -15,18 +13,18 @@ interface modules {
 
     const float32ArraySupported = typeof Float32Array === 'function'
 
-    function A(aA1, aA2) { return 1.0 - 3.0 * aA2 + 3.0 * aA1 }
-    function B(aA1, aA2) { return 3.0 * aA2 - 6.0 * aA1 }
-    function C(aA1) { return 3.0 * aA1 }
+    function A(aA1: any, aA2: any) { return 1.0 - 3.0 * aA2 + 3.0 * aA1 }
+    function B(aA1: any, aA2: any) { return 3.0 * aA2 - 6.0 * aA1 }
+    function C(aA1: any) { return 3.0 * aA1 }
 
     // Returns x(t) given t, x1, and x2, or y(t) given t, y1, and y2.
-    function calcBezier(aT, aA1, aA2) { return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT }
+    function calcBezier(aT: any, aA1: any, aA2: any) { return ((A(aA1, aA2) * aT + B(aA1, aA2)) * aT + C(aA1)) * aT }
 
     // Returns dx/dt given t, x1, and x2, or dy/dt given t, y1, and y2.
-    function getSlope(aT, aA1, aA2) { return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1) }
+    function getSlope(aT: any, aA1: any, aA2: any) { return 3.0 * A(aA1, aA2) * aT * aT + 2.0 * B(aA1, aA2) * aT + C(aA1) }
 
-    function binarySubdivide(aX, aA, aB, mX1, mX2) {
-        let currentX, currentT, i = 0
+    function binarySubdivide(aX: any, aA: any, aB: any, mX1: any, mX2: any) {
+        let currentX: any, currentT: any, i = 0
         do {
             currentT = aA + (aB - aA) / 2.0
             currentX = calcBezier(currentT, mX1, mX2) - aX
@@ -39,7 +37,7 @@ interface modules {
         return currentT
     }
 
-    function newtonRaphsonIterate(aX, aGuessT, mX1, mX2) {
+    function newtonRaphsonIterate(aX: any, aGuessT: any, mX1: any, mX2: any) {
         for (let i = 0; i < NEWTON_ITERATIONS; ++i) {
             const currentSlope = getSlope(aGuessT, mX1, mX2)
             if (currentSlope === 0.0) {
@@ -51,11 +49,11 @@ interface modules {
         return aGuessT
     }
 
-    function LinearEasing(x) {
+    function LinearEasing(x: any) {
         return x
     }
 
-    API.bezier = function (mX1, mY1, mX2, mY2) {
+    export function bezier(mX1: any, mY1: any, mX2: any, mY2: any) {
         if (!(0 <= mX1 && mX1 <= 1 && 0 <= mX2 && mX2 <= 1)) {
             throw new Error('bezier x values must be in [0, 1] range')
         }
@@ -70,7 +68,7 @@ interface modules {
             sampleValues[i] = calcBezier(i * kSampleStepSize, mX1, mX2)
         }
 
-        function getTForX(aX) {
+        function getTForX(aX: any) {
             let intervalStart = 0.0
             let currentSample = 1
             const lastSample = kSplineTableSize - 1
@@ -94,7 +92,7 @@ interface modules {
             }
         }
 
-        return function BezierEasing(x) {
+        return function BezierEasing(x: any) {
             // Because JavaScript number are imprecise, we should guarantee the extremes are right.
             if (x === 0 || x === 1) {
                 return x
@@ -102,7 +100,4 @@ interface modules {
             return calcBezier(getTForX(x), mY1, mY2)
         }
     }
-}
-declare namespace API {
-    export function bezier(mX1: any, mY1: any, mX2: any, mY2: any): (x: any) => any
 }

@@ -1,11 +1,13 @@
 interface modules {
-    /**
-     * 移植动态顶栏banner
-     */
+    /** 移植动态顶栏banner */
     readonly "banner.js": string;
     readonly "animated-banner.css": string;
 }
-{
+interface config {
+    /** 丰富顶栏动图 */
+    bannerGif: boolean;
+}
+namespace API {
     class Animate {
         /**
          * 缓存已请求内容
@@ -27,7 +29,7 @@ interface modules {
             typeof CSS !== 'undefined' && CSS.supports && CSS.supports('filter: blur(1px)')
             && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         layerConfig: {
-            extensions?: {
+            extensions: {
                 time: any
             },
             layers: {
@@ -41,7 +43,7 @@ interface modules {
                 translate: { offset: number[], initial?: any, offsetCurve?: any },
                 _initState: any;
             }[]
-        }
+        } = <any>{};
         /**
          * layer表单
          */
@@ -51,16 +53,16 @@ interface modules {
          */
         entered = false;
         extensions: any[] = [];
-        handleMouseLeave: (e: any) => void;
-        handleMouseMove: (e: any) => void;
-        handleResize: (e: any) => void;
+        handleMouseLeave: (e: any) => void = <any>undefined;
+        handleMouseMove: (e: any) => void = <any>undefined;
+        handleResize: (e: any) => void = <any>undefined;
         constructor(v: any) {
             if (this.animatedBannerSupport) this.mounted(v);
-            API.addCss(API.getModule("animated-banner.css"), "animated-banner");
+            addCss(getModule("animated-banner.css"), "animated-banner");
             if (v.is_split_layer !== 0) {
-                API.addCss(".blur-bg {display:none}");
+                addCss(".blur-bg {display:none}");
             } else
-                API.addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
+                addCss(".blur-bg {background:none !important;-webkit-backdrop-filter: blur(4px);backdrop-filter: blur(4px)}");
         }
         /**
          * 根据页面返回resourceId
@@ -88,7 +90,7 @@ interface modules {
             if (!this.layerConfig.layers) return;
             try {
                 if ("extensions" in this.layerConfig && "time" in this.layerConfig.extensions) {
-                    let time: number, now = (Date.now() - (new Date).setHours(0, 0, 0, 0)) / 1e3;
+                    let time: number = <any>undefined, now = (Date.now() - (new Date).setHours(0, 0, 0, 0)) / 1e3;
                     let timeCode = Object.keys(this.layerConfig.extensions.time).sort((a, b) => parseInt(a) - parseInt(b));
                     for (let t of timeCode) {
                         if (parseInt(t) < now) time = parseInt(t);
@@ -134,11 +136,11 @@ interface modules {
                 debug.error('load animated banner images error', e)
                 return
             }
-            let container: HTMLDivElement = document.querySelector("#banner_link");
+            let container = <HTMLDivElement>document.querySelector("#banner_link");
             if (!container) {
-                container = document.querySelector(".h-center");
+                container = <HTMLDivElement>document.querySelector(".h-center");
                 if (!container) return this.resources.forEach(d => d.remove());
-                container.parentElement.removeAttribute("style");
+                (<any>container.parentElement).removeAttribute("style");
                 container.style.width = "100%";
                 container.style.top = "-42px";
                 container.style.marginBottom = "-42px";
@@ -190,13 +192,13 @@ interface modules {
             let raf = 0;
 
             const curveParameterToFunc = (param: [number, number, number, number]) => {
-                const o = API.bezier(...param);
-                return v => v > 0 ? o(v) : -o(-v);
+                const o = bezier(...param);
+                return (v: any) => v > 0 ? o(v) : -o(-v);
             }
             let lastDisplace = NaN;
 
             // 根据鼠标位置改变状态
-            const af = t => {
+            const af = (t: any) => {
                 try {
                     if (lastDisplace === displace) {
                         return
@@ -216,21 +218,21 @@ interface modules {
                         }
                         if (v.scale) {
                             const x = v.scale.offset || 0;
-                            const itp = v.scale.offsetCurve ? curveParameterToFunc(v.scale.offsetCurve) : (x => x);
+                            const itp = v.scale.offsetCurve ? curveParameterToFunc(v.scale.offsetCurve) : ((x: any) => x);
                             const offset = x * itp(displace);
                             transform.scale = v._initState.scale + offset;
                         }
                         if (v.rotate) {
                             const x = v.rotate.offset || 0;
-                            const itp = v.rotate.offsetCurve ? curveParameterToFunc(v.rotate.offsetCurve) : (x => x);
+                            const itp = v.rotate.offsetCurve ? curveParameterToFunc(v.rotate.offsetCurve) : ((x: any) => x);
                             const offset = x * itp(displace);
                             transform.rotate = v._initState.rotate + offset;
                         }
                         if (v.translate) {
                             const x = v.translate.offset || [0, 0];
-                            const itp = v.translate.offsetCurve ? curveParameterToFunc(v.translate.offsetCurve) : (x => x);
+                            const itp = v.translate.offsetCurve ? curveParameterToFunc(v.translate.offsetCurve) : ((x: any) => x);
                             const offset = x.map(v => itp(displace) * v);
-                            const translate = v._initState.translate.map((x, i) => (x + offset[i]) * containerScale * (v.scale?.initial || 1));
+                            const translate = v._initState.translate.map((x: any, i: any) => (x + offset[i]) * containerScale * (v.scale?.initial || 1));
                             transform.translate = translate;
                         }
                         (<HTMLElement>a).style.transform = `scale(${transform.scale})` +
@@ -238,7 +240,7 @@ interface modules {
                             `rotate(${transform.rotate}deg)`
                         if (v.blur) {
                             const x = v.blur.offset || 0;
-                            const itp = v.blur.offsetCurve ? curveParameterToFunc(v.blur.offsetCurve) : (x => x);
+                            const itp = v.blur.offsetCurve ? curveParameterToFunc(v.blur.offsetCurve) : ((x: any) => x);
                             const blurOffset = x * itp(displace);
 
                             let res = 0;
@@ -252,7 +254,7 @@ interface modules {
 
                         if (v.opacity) {
                             const x = v.opacity.offset || 0;
-                            const itp = v.opacity.offsetCurve ? curveParameterToFunc(v.opacity.offsetCurve) : (x => x);
+                            const itp = v.opacity.offsetCurve ? curveParameterToFunc(v.opacity.offsetCurve) : ((x: any) => x);
                             const opacityOffset = x * itp(displace);
 
                             const initial = v._initState.opacity;
@@ -288,7 +290,7 @@ interface modules {
                 const timeout = 200;
                 const tempDisplace = displace;
                 cancelAnimationFrame(raf);
-                const leaveAF = t => {
+                const leaveAF = (t: number) => {
                     if (t - now < timeout) {
                         displace = tempDisplace * (1 - (t - now) / 200);
                         af(t);
@@ -346,15 +348,24 @@ interface modules {
             window.addEventListener('resize', this.handleResize);
         }
     }
+    registerSetting({
+        key: "bannerGif",
+        sort: "style",
+        label: "丰富顶栏动图",
+        sub: '搜索框下gif',
+        float: "替换顶栏动图接口，避免单调。",
+        type: "switch",
+        value: true
+    });
     // 动图彩蛋
-    config.bannerGif && API.jsonphook("api.bilibili.com/x/web-interface/index/icon", undefined, response => {
+    config.bannerGif && jsonphook("api.bilibili.com/x/web-interface/index/icon", undefined, response => {
         response.data = Format.randomArray(JSON.parse(GM.getResourceText("index-icon.json")).fix);
         return response;
     }, false);
     // hook顶栏图片请求
-    API.jsonphookasync("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
+    jsonphookasync("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
         const obj = Format.urlObj(url);
-        obj.callback = undefined;
+        obj.callback = <any>undefined;
         let loc = Animate.record[url];
         let header = Animate.record[Animate.rid];
         let rqs: any;
@@ -382,7 +393,7 @@ interface modules {
         return loc;
     }, false);
     // 顶栏广场
-    API.jsonphookasync("api.bilibili.com/plaza/banner", () => true, async url => {
+    jsonphookasync("api.bilibili.com/plaza/banner", () => true, async url => {
         return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] }
     }, false);
 }

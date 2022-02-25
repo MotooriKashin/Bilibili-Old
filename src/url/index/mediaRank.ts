@@ -1,10 +1,8 @@
 interface modules {
-    /**
-     * 电影、电视、纪录片排行
-     */
+    /** 电影、电视、纪录片排行 */
     readonly "mediaRank.js": string;
 }
-{
+namespace API {
     async function fixRank(node: HTMLDivElement) {
         const sorts = {
             bili_movie: ["ranking_movie", 2, "https://www.bilibili.com/ranking/cinema/23/0/3"],
@@ -17,7 +15,7 @@ interface modules {
         section.innerHTML = '<header class="rank-head"><h3>排行</h3></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list"></ul></div><a href="' + sort[2] + '" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>';
         try {
             let data = await xhr({ url: Format.objUrl("https://api.bilibili.com/pgc/season/rank/web/list", { season_type: sort[1], day: '3' }) });
-            data = API.jsonCheck(data).data;
+            data = jsonCheck(data).data;
             let div = node.getElementsByClassName("bangumi-rank-list rank-list")[0];
             for (let i = 0; i < 8; i++) {
                 let li = document.createElement("li"),
@@ -28,7 +26,7 @@ interface modules {
                 li.onmouseover = () => {
                     fw = document.createElement("div");
                     fw.setAttribute("class", "bangumi-info-module");
-                    fw.setAttribute("style", 'left: ' + li.getBoundingClientRect().left + 'px; top: ' + (API.getTotalTop(li) - 150) + 'px;');
+                    fw.setAttribute("style", 'left: ' + li.getBoundingClientRect().left + 'px; top: ' + (getTotalTop(li) - 150) + 'px;');
                     fw.innerHTML = '<div class="v-preview clearfix"><div class="lazy-img cover"><img alt="' + data.list[i].title + '" src="' + data.list[i].cover + '" /></div><div><p class="title">' + data.list[i].title + '</p><p class="desc">' + data.list[i].new_ep.index_show + '</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>' + Format.unitFormat(data.list[i].stat.view) + '</span><span class="danmu"><i class="icon"></i>' + Format.unitFormat(data.list[i].stat.danmaku) + '</span><span class="fav"><i class="icon"></i>' + Format.unitFormat(data.list[i].stat.follow) + '</span></div>';
                     document.body.appendChild(fw);
                 }
@@ -38,7 +36,7 @@ interface modules {
         }
         catch (e) { debug.error("indexSort.js", e) }
     }
-    API.runWhile(() => document.querySelector("#bili_movie"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_movie")))
-    API.runWhile(() => document.querySelector("#bili_teleplay"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_teleplay")))
-    API.runWhile(() => document.querySelector("#bili_documentary"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_documentary")))
+    runWhile(() => document.querySelector("#bili_movie"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_movie")))
+    runWhile(() => document.querySelector("#bili_teleplay"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_teleplay")))
+    runWhile(() => document.querySelector("#bili_documentary"), () => fixRank(<HTMLDivElement>document.querySelector("#bili_documentary")))
 }

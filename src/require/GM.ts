@@ -1,4 +1,4 @@
-// GM系列高级API的封装
+/** 封装脚本管理器提供的API */
 GM.xmlHttpRequest = GM_xmlhttpRequest;
 GM.getValue = GM_getValue;
 GM.setValue = GM_setValue;
@@ -8,47 +8,28 @@ GM.getResourceText = GM_getResourceText;
 GM.getResourceURL = GM_getResourceText;
 GM.DOM = document;
 
+/** 封装脚本管理器API的顶级对象 */
 declare namespace GM {
     interface cookieDetails {
-        /**
-         * 域
-         */
+        /** 域 */
         domain: string,
-        /**
-         * 截止日期时间戳（10位）
-         */
+        /** 截止日期时间戳（10位） */
         expirationDate: number;
-        /**
-         * 客户端专用，不会发送给服务端
-         */
+        /** 客户端专用，不会发送给服务端 */
         hostOnly: boolean;
-        /**
-         * 服务端专用，客户端js无法获取/修改
-         */
+        /** 服务端专用，客户端js无法获取/修改 */
         httpOnly: boolean;
-        /**
-         * 名称
-         */
+        /** 名称 */
         name: string;
-        /**
-         * 子页面路径
-         */
+        /** 路径 */
         path: string;
-        /**
-         * 同源策略
-         */
+        /** 同源策略 */
         sameSite: string;
-        /**
-         * 是否允许通过非安全链接发送给服务器
-         */
+        /** 安全策略 */
         secure: boolean;
-        /**
-         * 会话型cookie，临时有效，随页面一起销毁
-         */
+        /** 会话型cookie，临时有效，随页面一起销毁 */
         session: boolean;
-        /**
-         * 值
-         */
+        /** 值 */
         value: string
     }
     let xmlHttpRequest: typeof GM_xmlhttpRequest;
@@ -173,101 +154,71 @@ declare function GM_getValue<T>(name: string, defaultValue?: T): T;
 declare function GM_setValue<T>(name: string, value: T): void;
 declare function GM_deleteValue(name: string): void;
 declare function GM_listValues(): string[];
-/**
- * `API.xhr.GM`的传参，用于配置`GM_xmlhttpRequest`
- */
+/** `GM_xmlhttpRequest`方法所需参数 */
 interface GMxhrDetails {
-    /**
-     * one of GET, HEAD, POST
-     */
+    /** one of GET, HEAD, POST */
     method?: "GET" | "HEAD" | "POST";
-    /**
-     * the destination URL
-     */
+    /** the destination URL */
     url: string;
-    /**
-     * ie. user-agent, referer, ... (some special headers are not supported by Safari and Android browsers)
-     */
+    /** ie. user-agent, referer, ... (some special headers are not supported by Safari and Android browsers) */
     headers?: { [name: string]: string };
-    /**
-     * some string to send via a POST request
-     */
+    /** some string to send via a POST request */
     data?: string;
-    /**
-     * a cookie to be patched into the sent cookie set
-     */
+    /** a cookie to be patched into the sent cookie set */
     cookie?: string;
-    /**
-     * send the data string in binary mode
-     */
+    /** send the data string in binary mode */
     binary?: boolean;
-    /**
-     * don't cache the resource
-     */
+    /** don't cache the resource */
     nocache?: boolean;
-    /**
-     * revalidate maybe cached content
-     */
+    /** revalidate maybe cached content */
     revalidate?: boolean;
-    /**
-     * a timeout in ms
-     */
+    /** a timeout in ms */
     timeout?: number;
-    /**
-     * a property which will be added to the response object
-     */
+    /** a property which will be added to the response object */
     context?: any;
-    /**
-     * one of arraybuffer, blob, json
-     */
+    /** one of arraybuffer, blob, json */
     responseType?: "arraybuffer" | "blob" | "json";
-    /**
-     * a MIME type for the request
-     */
+    /** a MIME type for the request */
     overrideMimeType?: String;
-    /**
-     * don't send cookies with the requests (please see the fetch notes)
-     */
+    /** don't send cookies with the requests (please see the fetch notes) */
     anonymous?: boolean;
-    /**
-     * (beta) use a fetch instead of a xhr request
-     * (at Chrome this causes xhr.abort, details.timeout and xhr.onprogress to not work and makes xhr.onreadystatechange receive only readyState 4 events)
-     */
+    /** (beta) use a fetch instead of a xhr request. (at Chrome this causes xhr.abort, details.timeout and xhr.onprogress to not work and makes xhr.onreadystatechange receive only readyState 4 events) */
     fetch?: boolean;
-    /**
-     * a user name for authentication
-     */
+    /** a user name for authentication */
     user?: string;
-    /**
-     * a password
-     */
+    /** a password */
     password?: string;
-    /**
-     * callback to be executed if the request was aborted
-     */
+    /** callback to be executed if the request was aborted */
     onabort?: (response: GMxhrResponse) => void;
-    /**
-     * callback to be executed if the request ended up with an error
-     */
+    /** callback to be executed if the request ended up with an error */
     onerror?: (response: GMxhrResponse) => void;
-    /**
-     * callback to be executed if the request started to load
-     */
+    /** callback to be executed if the request started to load */
     onloadstart?: (response: GMxhrResponse) => void;
-    /**
-     * callback to be executed if the request made some progress
-     */
+    /** callback to be executed if the request made some progress */
     onprogress?: (response: GMxhrResponse) => void;
-    /**
-     * callback to be executed if the request's ready state changed
-     */
+    /** callback to be executed if the request's ready state changed */
     onreadystatechange?: (response: GMxhrResponse) => void;
-    /**
-     * callback to be executed if the request failed due to a timeout
-     */
+    /** callback to be executed if the request failed due to a timeout */
     ontimeout?: (response: GMxhrResponse) => void;
-    /**
-     * callback to be executed if the request was loaded
-     */
+    /** callback to be executed if the request was loaded */
     onload?: (response: GMxhrResponse) => void;
+}
+/** `GM_xmlhttpRequest`返回值 */
+interface GMxhrResponse {
+    /** the final URL after all redirects from where the data was loaded */
+    finalUrl: string;
+    /** the ready state */
+    readyState: number;
+    /** the request status */
+    status: number;
+    /** the request status text */
+    statusText: string;
+    /** the request response headers */
+    responseHeaders: any;
+    /** the response data as object if details.responseType was set: ArrayBuffer | Blob | JSON | string */
+    response: any;
+    /** the response data as XML document */
+    responseXML: Document;
+    /** the response data as plain string */
+    responseText: string;
 }

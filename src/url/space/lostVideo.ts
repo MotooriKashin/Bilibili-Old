@@ -1,10 +1,8 @@
 interface modules {
-    /**
-     * 失效视频
-     */
+    /** 失效视频 */
     readonly "lostVideo.js": string;
 }
-{
+namespace API {
     async function getLostVideo(aid: number) {
         let result = []; // 失效视频信息缓存
         try { // 尝试访问Biliplus
@@ -20,7 +18,7 @@ interface modules {
                 if (data.match('/api/view_all?')) {
                     data = data.match(/\/api\/view_all\?.+?\',cloudmoe/)[0].replace(/\',cloudmoe/, "");
                     data = await xhr.GM({ url: `//www.biliplus.com${data}` });
-                    data = API.jsonCheck(data).data;
+                    data = jsonCheck(data).data;
                     result[0] = result[0] || data.info.title;
                     result[1] = result[1] || data.info.pic;
                 }
@@ -39,12 +37,12 @@ interface modules {
         result[1] = result[1] ? result[1].replace("http:", "") : "//i0.hdslb.com/bfs/archive/be27fd62c99036dce67efface486fb0a88ffed06.jpg"; //无法获取有效数据，将封面改为哭脸
         return result;
     }
-    API.observerAddedNodes((node) => {
+    observerAddedNodes((node) => {
         if (/section channel guest/.test(node.className)) {
             let items = node.querySelectorAll(".small-item.disabled");
             items.forEach(d => {
                 let aid = <any>d.getAttribute("data-aid"); // 获取aid
-                aid = Number(aid) || API.abv(aid); // 转化为数字
+                aid = Number(aid) || abv(aid); // 转化为数字
                 d.setAttribute("class", "small-item fakeDanmu-item");
                 d.setAttribute("data-aid", aid);
                 (<HTMLAnchorElement>d.children[0]).href = `//www.bilibili.com/video/av${aid}`;
@@ -63,7 +61,7 @@ interface modules {
         }
         if (/small-item disabled/.test(node.className)) {
             let aid: any = node.getAttribute("data-aid"); // 获取aid
-            aid = Number(aid) || API.abv(aid); // 转化为数字
+            aid = Number(aid) || abv(aid); // 转化为数字
             node.setAttribute("class", "small-item fakeDanmu-item");
             node.setAttribute("data-aid", aid);
             (<HTMLAnchorElement>node.children[0]).href = `//www.bilibili.com/video/av${aid}`;
