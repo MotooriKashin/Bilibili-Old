@@ -44,4 +44,5 @@ namespace API {
     config.section && importModule("section.js"); // 还原旧版顶栏
     config.danmakuHashId && path.name && importModule("danmakuHashId.js"); // 反查弹幕发送者
     config.downloadContentmenu && importModule("rightKey.js"); // 下载右键菜单
+    (<(keyof modules)[]>importModule()).forEach((d: keyof modules) => { d.includes("[run]") && API.importModule(d) }); // 自运行脚本
 }

@@ -277,5 +277,5 @@ namespace API {
         }
     })
     config.developer && (window.API = API); // 开发者模式
-    window.addEventListener("load", () => window.top === window.self && importModule("ui.js", { MENU, SETTING })); // 绘制设置UI
+    window.top === window.self && importModule("ui.js", { MENU, SETTING }); // 绘制设置UI
 }

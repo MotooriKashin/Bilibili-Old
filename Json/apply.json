@@ -40,7 +40,6 @@
 	"sessionStorage": "storage.js",
 	"switchVideo": "switchVideo.js",
 	"toast": "toast.js",
-	"displaySetting": "ui.js",
 	"loginExit": "units.js",
 	"jsonCheck": "units.js",
 	"biliQuickLogin": "units.js",
