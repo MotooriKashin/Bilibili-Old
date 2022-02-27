@@ -19,7 +19,7 @@ namespace API {
         }).then((seg: any) => {
             let dm = danmaku.danmakuFormat(danmaku.segDmDecode(seg));
             window.player?.setDanmaku(dm);
-            danmaku.danmaku = dm;
+            API.danmaku.danmaku = dm;
         }).catch((e: Error) => {
             toast.error("载入历史弹幕失败", "请尝试刷新页面");
             toast.error(<any>e);

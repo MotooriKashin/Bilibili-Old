@@ -27,7 +27,7 @@ namespace API {
                 let danmaku: any = API.danmaku.danmakuFormat(Segments);
                 parseTime = (<any>new Date()) - parseTime;
                 triggerOnMsg(danmaku, loadTime, parseTime);
-                danmaku.danmaku = danmaku;
+                API.danmaku.danmaku = danmaku;
             });
             if ((<any>XMLHttpRequest.prototype).pakku_send === undefined) {
                 loadDanmaku(new Date());

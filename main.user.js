@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.0.9
+// @version      7.1.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -6386,7 +6386,7 @@ option {
                 let danmaku = API.danmaku.danmakuFormat(Segments);
                 parseTime = new Date() - parseTime;
                 triggerOnMsg(danmaku, loadTime, parseTime);
-                danmaku.danmaku = danmaku;
+                API.danmaku.danmaku = danmaku;
             });
             if (XMLHttpRequest.prototype.pakku_send === undefined) {
                 loadDanmaku(new Date());
