@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bdd64615ab1bc3704cd3a3a608e573062e53af29/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a7e9b2cf614c377712ad23e010838e37c61b18c6/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e34ba53279212adc855ff0f17fbdde5d61a4f11e/dist/comment.min.js
 // ==/UserScript==
 
@@ -2486,7 +2486,6 @@ option {
 	"sessionStorage": "storage.js",
 	"switchVideo": "switchVideo.js",
 	"toast": "toast.js",
-	"displaySetting": "ui.js",
 	"loginExit": "units.js",
 	"jsonCheck": "units.js",
 	"biliQuickLogin": "units.js",
@@ -3325,6 +3324,7 @@ option {
     API.config.section && API.importModule("section.js"); // 还原旧版顶栏
     API.config.danmakuHashId && API.path.name && API.importModule("danmakuHashId.js"); // 反查弹幕发送者
     API.config.downloadContentmenu && API.importModule("rightKey.js"); // 下载右键菜单
+    API.importModule().forEach((d) => { d.includes("[run]") && API.importModule(d); }); // 自运行脚本
 
 //# sourceURL=API://@Bilibili-Old/vector.js`;
 /*!***********************!*/
@@ -6680,7 +6680,7 @@ option {
         }
     });
     API.config.developer && (window.API = API); // 开发者模式
-    window.addEventListener("load", () => window.top === window.self && API.importModule("ui.js", { MENU, SETTING })); // 绘制设置UI
+    window.top === window.self && API.importModule("ui.js", { MENU, SETTING }); // 绘制设置UI
 
 //# sourceURL=API://@Bilibili-Old/include/config.js`;
 /*!***********************!*/
@@ -9773,9 +9773,6 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
          * 设置入口
          */
         async stage() {
-            if (document.readyState !== 'complete') {
-                await new Promise(r => window.addEventListener('load', r));
-            }
             if (API.config.settingEntryType)
                 return this.classical();
             const div = API.addElement("div").attachShadow({ mode: "closed" });
@@ -10271,15 +10268,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     /** 设置项表 */
     Ui.list = {};
-    API.importModule("setting.js"); // 空闲时间检查一下默认设置
-    const ui = new Ui();
-    /**
-     * 代开设置界面
-     * @param key 打开后定位到的设置项的key
-     */
-    function displaySetting(key) { ui.display(key); }
-    API.displaySetting = displaySetting;
-    ;
+    API.runWhile(() => document.readyState === 'complete', () => {
+        API.importModule("setting.js"); // 空闲时间检查一下默认设置
+        const ui = new Ui();
+        API.displaySetting = (key) => ui.display(key);
+    });
 
 //# sourceURL=API://@Bilibili-Old/include/ui.js`;
 /*!***********************!*/
