@@ -246,6 +246,22 @@ namespace API {
                 window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
                 window.dispatchEvent(new ProgressEvent("load"));
             }
+            // 注册键盘事件
+            bindKeyMap("F", () => { // 全屏
+                document.querySelector<HTMLDivElement>(".icon-24fullscreen")?.click();
+            });
+            bindKeyMap("D", () => { // 弹幕
+                document.querySelector<HTMLDivElement>(".bilibili-player-video-btn-danmaku")?.click();
+            });
+            bindKeyMap("[", () => { // 上一p
+                window.player.prev();
+            });
+            bindKeyMap("]", () => { // 下一p
+                window.player.next();
+            });
+            bindKeyMap("enter", () => { // 输入框
+                document.querySelector<HTMLInputElement>(".bilibili-player-video-danmaku-input")?.select();
+            });
         }
         /** 添加媒体控制 */
         setActionHandler() {
