@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.0
+// @version      7.1.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a7e9b2cf614c377712ad23e010838e37c61b18c6/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@98bffde09e8e73894f61c04a75bfd37b544adc5b/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e34ba53279212adc855ff0f17fbdde5d61a4f11e/dist/comment.min.js
 // ==/UserScript==
 
@@ -2477,6 +2477,7 @@ option {
 	"saveAs": "file.js",
 	"fnval": "fnval.js",
 	"Format": "format.js",
+	"bindKeyMap": "keymap.js",
 	"mediaSession": "MediaMeta.js",
 	"observerAddedNodes": "nodeObserver.js",
 	"removeObserver": "nodeObserver.js",
@@ -8106,6 +8107,69 @@ option {
 
 //# sourceURL=API://@Bilibili-Old/include/format.js`;
 /*!***********************!*/
+/**/modules["keymap.js"] = /*** ./dist/include/keymap.js ***/
+`"use strict";
+    /** 回调事件栈 */
+    const bindMap = {};
+    /** 是否输入中 */
+    const isTyping = () => {
+        const { activeElement } = document;
+        if (!activeElement) {
+            return false;
+        }
+        if (activeElement.hasAttribute('contenteditable')) {
+            return true;
+        }
+        return ['input', 'textarea'].includes(activeElement.nodeName.toLowerCase());
+    };
+    document.body.addEventListener("keydown", e => {
+        if (isTyping())
+            return;
+        const key = e.key.toLowerCase();
+        e.key && bindMap[key] && bindMap[key].forEach(d => {
+            let disable = d.disable;
+            d.altKey && !e.altKey && (disable = true);
+            d.ctrlKey && !e.ctrlKey && (disable = true);
+            d.metaKey && !e.metaKey && (disable = true);
+            d.repeat && !e.repeat && (disable = true);
+            e.repeat && !d.repeat && (disable = true);
+            d.shiftKey && !e.shiftKey && (disable = true);
+            try {
+                !disable && d.callback();
+            }
+            catch (e) {
+                API.debug.error("keymap.js", e);
+            }
+        });
+    });
+    /**
+     * 注册键盘输入监听
+     * @param key 标准按键名（不区分大小写）
+     * @param callback 回调函数
+     * @param special 附加条件，如长按（长按事件可能会对此触发，请正确添加回调函数以免重复操作）、Ctrl激活等。
+     * @returns 用于禁用事件监听的函数，参数表示是否禁用，不传递参数将根据当前状态进行反操作。
+     */
+    function bindKeyMap(key, callback, special = {}) {
+        const keyl = key.toLowerCase();
+        const map = Object.assign(special, { callback, disable: false });
+        bindMap[keyl] ? bindMap[keyl].push(map) : bindMap[keyl] = [map];
+        /**
+         * 用于禁用事件监听的函数
+         * @param bind 是否禁用，不传递时将根据当前状态进行反操作。
+         */
+        return function changeKeyMap(disable) {
+            if (arguments.length) {
+                map.disable = disable;
+            }
+            else {
+                map.disable = !map.disable;
+            }
+        };
+    }
+    API.bindKeyMap = bindKeyMap;
+
+//# sourceURL=API://@Bilibili-Old/include/keymap.js`;
+/*!***********************!*/
 /**/modules["MediaMeta.js"] = /*** ./dist/include/MediaMeta.js ***/
 `"use strict";
     /**
@@ -8805,6 +8869,25 @@ option {
                 window.dispatchEvent(new ProgressEvent("DOMContentLoaded"));
                 window.dispatchEvent(new ProgressEvent("load"));
             }
+            // 注册键盘事件
+            API.bindKeyMap("F", () => {
+                var _a;
+                (_a = document.querySelector(".icon-24fullscreen")) === null || _a === void 0 ? void 0 : _a.click();
+            });
+            API.bindKeyMap("D", () => {
+                var _a;
+                (_a = document.querySelector(".bilibili-player-video-btn-danmaku")) === null || _a === void 0 ? void 0 : _a.click();
+            });
+            API.bindKeyMap("[", () => {
+                window.player.prev();
+            });
+            API.bindKeyMap("]", () => {
+                window.player.next();
+            });
+            API.bindKeyMap("enter", () => {
+                var _a;
+                (_a = document.querySelector(".bilibili-player-video-danmaku-input")) === null || _a === void 0 ? void 0 : _a.select();
+            });
         }
         /** 添加媒体控制 */
         setActionHandler() {
