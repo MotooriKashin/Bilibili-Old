@@ -6262,7 +6262,7 @@ function Fa() {
                     d = this;
                 if ("dash" === b.W.type) {
                     var e = document.createElement("video");
-                    var audioQuality =  b.W.url.audio && b.W.url.audio[0];
+                    var audioQuality = b.W.url.audio && b.W.url.audio[0];
                     audioQuality = audioQuality ? audioQuality.id : 30280;
                     var n = window.dashPlayer = this.S = new window.DashPlayer(e, {
                         defaultQuality: this.yd,
@@ -28941,11 +28941,11 @@ function Fa() {
                             f - 1;
                         if (this.N[h]) {
                             var m = this.N[h].cid;
-                            var t = this.N[h].episode_id
+                            var t = this.N[h].episode_id;
+                            var aid = this.N[h].avid; // 番剧自动切P更新aid
                         }
                         this.c.f.md = f === this.N.length ? !1 : !0
-                    } else m = this.search(f);
-                    let aid = this.search(f, "page", "aid");    // 合集aid字段作为av号
+                    } else m = this.search(f), aid = this.search(f, "page", "aid");    // 合集aid字段作为av号
                     m ? 1 !== g.get("video_status", "autopart") ||
                         e ? (b(aid || void 0, m, f, t), c.Tc()) :
                         this.next(function () {
@@ -42280,10 +42280,10 @@ else {
                     try {
                         var p = (this.state.mpd && this.state.mpd[t]).length;
                         p && (r = Math.min(r, p - 1)),
-                        r >= 0 ? (this.state.currentQualityIndex[t] = r,
-                        this.player.setDefaultQualityFor(t, r)) : this.error({
-                            msg: "Call setDefaultQualityFor function error, quality: " + t
-                        })
+                            r >= 0 ? (this.state.currentQualityIndex[t] = r,
+                                this.player.setDefaultQualityFor(t, r)) : this.error({
+                                    msg: "Call setDefaultQualityFor function error, quality: " + t
+                                })
                     } catch (t) {
                         this.error({
                             msg: "Call setDefaultQualityFor function error, quality: " + e + ", qualityIndex = " + r,
@@ -42632,8 +42632,8 @@ else {
                                         }), n && (a.representation[n].push(E), o[n][E.id] = s)
                                     })), e.state.maxQualityIndex[n] = r.length - 1
                                 }
-                            }), this.state.manifestInfo = a, this.state.qualityNumberMap = o, 
-                            this.setDefaultQualityFor("video", this.state.defaultQuality);
+                            }), this.state.manifestInfo = a, this.state.qualityNumberMap = o,
+                                this.setDefaultQualityFor("video", this.state.defaultQuality);
                             // 设置加载的音频质量
                             this.setDefaultQualityFor("audio", this.state.defaultAudioQuality)
                         }
