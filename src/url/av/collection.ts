@@ -224,7 +224,7 @@ namespace API {
         calcViewEpisodesOnCollapsed(ep: number) {
             let begin = ep == 0 ? 0 :
                 ep - 1 + this._colCount <= this.episodes.length ? ep - 1 :
-                    this.episodes.length - this._colCount;
+                    Math.max(this.episodes.length - this._colCount, 0);
 
             return this.episodes.slice(begin, begin + this._colCount);
         }
@@ -380,6 +380,7 @@ namespace API {
                     this.component.render();
                 } catch (e) { toast.error("collection.js", e) }
             })
+            toast.warning("视频合集，现以分P样式呈现！", "如需关闭，请访问设置-重构-合集选项。");
         }
 
         static needDisplay(videoData: any): boolean {
@@ -394,5 +395,4 @@ namespace API {
 
     //@ts-ignore
     Collection.run(videoData);
-    toast.warning("视频合集，现以分P样式呈现！", "如需关闭，请访问设置-重构-合集选项。");
 }
