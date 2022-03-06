@@ -74,6 +74,7 @@ namespace API {
                     }).catch(e => { // 泰区接口
                         toast.error("获取bangumi数据出错！", e);
                         if (config.videoLimit) {
+                            this.obj.access_key = GM.getValue("access_key", "");
                             xhr({
                                 url: Format.objUrl(`${config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season`, this.obj),
                                 responseType: "json",
@@ -84,7 +85,7 @@ namespace API {
                                 globalLimit = true;
                                 r(true);
                             }).catch(e => {
-                                debug.error(e);
+                                toast.error(e);
                             })
                         }
                     })

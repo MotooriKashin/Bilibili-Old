@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.1
+// @version      7.1.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5099,16 +5099,20 @@ option {
     }, obj => {
         const response = obj.responseType === "json" ? obj.response : JSON.parse(obj.response);
         if (response) {
-            if (response.result.area_limit) {
-                response.result.area_limit = 0; // 解除区域限制标记
-                response.ban_area_show = 1; // 伪造访问许可
-                API.limit = true;
+            if (response.result) {
+                if (response.result.area_limit) {
+                    response.result.area_limit = 0; // 解除区域限制标记
+                    response.ban_area_show = 1; // 伪造访问许可
+                    API.limit = true;
+                }
+                // 处理两个接口属性名差异
+                if (response.result.progress)
+                    response.result.watch_progress = response.result.progress;
+                if (response.result.vip_info)
+                    response.result.vipInfo = response.result.vip_info;
             }
-            // 处理两个接口属性名差异
-            if (response.result.progress)
-                response.result.watch_progress = response.result.progress;
-            if (response.result.vip_info)
-                response.result.vipInfo = response.result.vip_info;
+            else
+                Object.assign(response, { code: 0, message: "success", result: { area_limit: 0, ban_area_show: 1, follow: 0, follow_status: 2, login: 1, paster: { aid: 0, allow_jump: 0, cid: 0, duration: 0, type: 0, url: "" }, pay: 0, pay_pack_paid: 0, real_price: "0", sponsor: 0 } });
             obj.response = obj.responseType === "json" ? response : JSON.stringify(response);
             obj.responseText = JSON.stringify(response);
         }
@@ -5122,6 +5126,7 @@ option {
         let obj = API.Format.urlObj(args[1]); // 提取请求参数
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         const accesskey = GM.getValue("access_key", "") || undefined;
+        obj.access_key = accesskey;
         if (API.globalLimit) { // 处理泰区视频
             const server = API.config.limitServer || "https://api.global.bilibili.com";
             try {
@@ -5140,7 +5145,6 @@ option {
             }
         }
         else if (API.limit) { // 处理区域限制
-            obj.access_key = accesskey; // 鉴权
             obj.module = (((_b = (_a = API.__INITIAL_STATE__) === null || _a === void 0 ? void 0 : _a.upInfo) === null || _b === void 0 ? void 0 : _b.mid) == 1988098633 || ((_d = (_c = API.__INITIAL_STATE__) === null || _c === void 0 ? void 0 : _c.upInfo) === null || _d === void 0 ? void 0 : _d.mid) == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
             obj.fnval && (obj.fnval = API.fnval); // 提升dash标记清晰度
             try {
@@ -5159,7 +5163,6 @@ option {
             }
         }
         else if (API.pgc && ((_f = (_e = API.__INITIAL_STATE__) === null || _e === void 0 ? void 0 : _e.rightsInfo) === null || _f === void 0 ? void 0 : _f.watch_platform)) { // APP专属限制
-            obj.access_key = accesskey;
             obj.fnval = null;
             obj.fnver = null;
             obj.platform = "android_i";
@@ -9589,6 +9592,14 @@ option {
         title: "管理",
         action: () => API.importModule("manage.js")
     });
+    API.registerSetting({
+        key: "collection",
+        sort: "rewrite",
+        label: "合集",
+        sub: "以分P形式呈现",
+        type: "switch",
+        value: true
+    });
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
 /*!***********************!*/
@@ -12626,6 +12637,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             API.runWhile(() => document.getElementsByClassName("bili-header-m")[1], () => document.getElementsByClassName("bili-header-m")[1].remove()); // 移除上古顶栏
             window.commentAgent = { seek: (t) => window.player && window.player.seek(t) }; // 修复评论跳转
             API.config.enlike && API.importModule("enLike.js"); // 添加点赞功能
+            API.config.collection && API.importModule("collection.js", { videoData: this.__INITIAL_STATE__.videoData }); // av页合集显示
             API.config.upList && this.__INITIAL_STATE__.videoData.staff && API.importModule("upList.js", { staff: this.__INITIAL_STATE__.videoData.staff }); // 合作UP主
             API.importModule("descBV.js"); // 修复简介中超链接
             API.config.commandDm && API.importModule("commandDm.js"); // 互动弹幕
@@ -12963,6 +12975,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     //@ts-ignore
     Collection.run(videoData);
+    API.toast.warning("视频合集，现以分P样式呈现！", "如需关闭，请访问设置-重构-合集选项。");
 
 //# sourceURL=API://@Bilibili-Old/url/av/collection.js`;
 /*!***********************!*/
@@ -14052,6 +14065,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     }).catch(e => {
                         API.toast.error("获取bangumi数据出错！", e);
                         if (API.config.videoLimit) {
+                            this.obj.access_key = GM.getValue("access_key", "");
                             API.xhr({
                                 url: API.Format.objUrl(\`\${API.config.limitServer || "https://api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season\`, this.obj),
                                 responseType: "json",
@@ -14062,7 +14076,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                                 API.globalLimit = true;
                                 r(true);
                             }).catch(e => {
-                                API.debug.error(e);
+                                API.toast.error(e);
                             });
                         }
                     });
@@ -14263,7 +14277,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         global() {
             const ids = [], epList = [];
             this.data.modules.forEach((d) => {
-                d.this.data.episodes.forEach((d) => {
+                d.data.episodes.forEach((d) => {
                     d.ctime = "";
                     d.duration = 1;
                     d.ep_id = d.id;
@@ -14302,7 +14316,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             this.__INITIAL_STATE__.newestEp = this.data.new_ep;
             this.__INITIAL_STATE__.pubInfo = this.data.publish;
             this.__INITIAL_STATE__.pubInfo.is_started = 1;
-            this.__INITIAL_STATE__.rightsInfo = this.data.right;
+            this.__INITIAL_STATE__.rightsInfo = this.data.rights;
             this.__INITIAL_STATE__.seasonStat = this.data.stat;
             this.__INITIAL_STATE__.ssId = this.data.season_id;
             return this.__INITIAL_STATE__;

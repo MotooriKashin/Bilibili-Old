@@ -141,6 +141,8 @@ interface config {
     rpcTest: never;
     /** 设置数据管理 */
     configManage: never;
+    /** av页合集显示 */
+    collection: boolean;
 }
 namespace API {
     registerSetting({
@@ -811,5 +813,13 @@ namespace API {
         type: "action",
         title: "管理",
         action: () => API.importModule("manage.js")
-    })
+    });
+    registerSetting({
+        key: "collection",
+        sort: "rewrite",
+        label: "合集",
+        sub: "以分P形式呈现",
+        type: "switch",
+        value: true
+    });
 }

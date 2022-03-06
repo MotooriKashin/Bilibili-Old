@@ -121,7 +121,7 @@ namespace API {
         global() {
             const ids: number[] = [], epList: { [name: string]: any }[] = [];
             this.data.modules.forEach((d: any) => {
-                d.this.data.episodes.forEach((d: any) => {
+                d.data.episodes.forEach((d: any) => {
                     d.ctime = "";
                     d.duration = 1;
                     d.ep_id = d.id;
@@ -160,7 +160,7 @@ namespace API {
             this.__INITIAL_STATE__.newestEp = this.data.new_ep;
             this.__INITIAL_STATE__.pubInfo = this.data.publish;
             this.__INITIAL_STATE__.pubInfo.is_started = 1;
-            this.__INITIAL_STATE__.rightsInfo = this.data.right;
+            this.__INITIAL_STATE__.rightsInfo = this.data.rights;
             this.__INITIAL_STATE__.seasonStat = this.data.stat;
             this.__INITIAL_STATE__.ssId = this.data.season_id;
             return this.__INITIAL_STATE__;

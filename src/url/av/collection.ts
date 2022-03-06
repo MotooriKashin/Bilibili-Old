@@ -394,4 +394,5 @@ namespace API {
 
     //@ts-ignore
     Collection.run(videoData);
+    toast.warning("视频合集，现以分P样式呈现！", "如需关闭，请访问设置-重构-合集选项。");
 }

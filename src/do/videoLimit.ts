@@ -25,14 +25,16 @@ namespace API {
     }, obj => {
         const response = obj.responseType === "json" ? obj.response : JSON.parse(obj.response);
         if (response) {
-            if (response.result.area_limit) {
-                response.result.area_limit = 0; // 解除区域限制标记
-                response.ban_area_show = 1; // 伪造访问许可
-                limit = true;
-            }
-            // 处理两个接口属性名差异
-            if (response.result.progress) response.result.watch_progress = response.result.progress;
-            if (response.result.vip_info) response.result.vipInfo = response.result.vip_info;
+            if (response.result) {
+                if (response.result.area_limit) {
+                    response.result.area_limit = 0; // 解除区域限制标记
+                    response.ban_area_show = 1; // 伪造访问许可
+                    limit = true;
+                }
+                // 处理两个接口属性名差异
+                if (response.result.progress) response.result.watch_progress = response.result.progress;
+                if (response.result.vip_info) response.result.vipInfo = response.result.vip_info;
+            } else Object.assign(response, { code: 0, message: "success", result: { area_limit: 0, ban_area_show: 1, follow: 0, follow_status: 2, login: 1, paster: { aid: 0, allow_jump: 0, cid: 0, duration: 0, type: 0, url: "" }, pay: 0, pay_pack_paid: 0, real_price: "0", sponsor: 0 } });
             obj.response = obj.responseType === "json" ? response : JSON.stringify(response);
             obj.responseText = JSON.stringify(response);
         }
@@ -44,6 +46,7 @@ namespace API {
         let obj = Format.urlObj(args[1]); // 提取请求参数
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         const accesskey = GM.getValue("access_key", "") || <any>undefined;
+        obj.access_key = accesskey;
         if (globalLimit) { // 处理泰区视频
             const server = config.limitServer || "https://api.global.bilibili.com";
             try {
@@ -61,7 +64,6 @@ namespace API {
             }
         }
         else if (limit) { // 处理区域限制
-            obj.access_key = accesskey; // 鉴权
             obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
             obj.fnval && (obj.fnval = fnval); // 提升dash标记清晰度
             try {
@@ -79,7 +81,6 @@ namespace API {
             }
         }
         else if (pgc && (<any>API).__INITIAL_STATE__?.rightsInfo?.watch_platform) { // APP专属限制
-            obj.access_key = accesskey;
             obj.fnval = <any>null;
             obj.fnver = <any>null;
             obj.platform = "android_i";

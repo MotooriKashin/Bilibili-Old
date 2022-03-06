@@ -122,6 +122,7 @@ namespace API {
             runWhile(() => document.getElementsByClassName("bili-header-m")[1], () => document.getElementsByClassName("bili-header-m")[1].remove()); // 移除上古顶栏
             window.commentAgent = { seek: (t: number) => window.player && window.player.seek(t) }; // 修复评论跳转
             config.enlike && importModule("enLike.js"); // 添加点赞功能
+            config.collection && importModule("collection.js", { videoData: this.__INITIAL_STATE__.videoData }); // av页合集显示
             config.upList && this.__INITIAL_STATE__.videoData.staff && importModule("upList.js", { staff: this.__INITIAL_STATE__.videoData.staff }); // 合作UP主
             importModule("descBV.js"); // 修复简介中超链接
             config.commandDm && importModule("commandDm.js"); // 互动弹幕
