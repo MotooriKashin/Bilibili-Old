@@ -12821,7 +12821,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         calcViewEpisodesOnCollapsed(ep) {
             let begin = ep == 0 ? 0 :
                 ep - 1 + this._colCount <= this.episodes.length ? ep - 1 :
-                    this.episodes.length - this._colCount;
+                    Math.max(this.episodes.length - this._colCount, 0);
             return this.episodes.slice(begin, begin + this._colCount);
         }
         needSpread() {
@@ -12964,6 +12964,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     API.toast.error("collection.js", e);
                 }
             });
+            API.toast.warning("视频合集，现以分P样式呈现！", "如需关闭，请访问设置-重构-合集选项。");
         }
         static needDisplay(videoData) {
             return videoData.videos <= 1 && videoData.ugc_season &&
@@ -12975,7 +12976,6 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     //@ts-ignore
     Collection.run(videoData);
-    API.toast.warning("视频合集，现以分P样式呈现！", "如需关闭，请访问设置-重构-合集选项。");
 
 //# sourceURL=API://@Bilibili-Old/url/av/collection.js`;
 /*!***********************!*/
