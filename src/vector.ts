@@ -10,8 +10,10 @@ namespace API {
     const NOREWRITE = sessionStorage.getItem("NOREWRITE");
     if (NOREWRITE) {
         // 临时禁用重写功能
-        setTimeout(() => toast.warning(NOREWRITE), 1000);
-        sessionStorage.removeItem("NOREWRITE");
+        setTimeout(() => {
+            toast.warning(NOREWRITE);
+            sessionStorage.removeItem("NOREWRITE");
+        }, 1000);
     }
     importModule("parameterTrim.js"); // 网址及超链接清理
     importModule("replyList.js"); // 回复翻页评论区及楼层号

@@ -274,7 +274,7 @@ namespace API {
         }
         /** 临时禁用重写并跳转回新版页面 */
         stop(reason: string) {
-            sessionStorage.setItem("disable_rewrite", reason);
+            sessionStorage.setItem("NOREWRITE", reason);
             location.reload();
         }
     }

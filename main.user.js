@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.2
+// @version      7.1.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3275,8 +3275,10 @@ option {
     const NOREWRITE = API.sessionStorage.getItem("NOREWRITE");
     if (NOREWRITE) {
         // 临时禁用重写功能
-        setTimeout(() => API.toast.warning(NOREWRITE), 1000);
-        API.sessionStorage.removeItem("NOREWRITE");
+        setTimeout(() => {
+            API.toast.warning(NOREWRITE);
+            API.sessionStorage.removeItem("NOREWRITE");
+        }, 1000);
     }
     API.importModule("parameterTrim.js"); // 网址及超链接清理
     API.importModule("replyList.js"); // 回复翻页评论区及楼层号
@@ -8903,7 +8905,7 @@ option {
         }
         /** 临时禁用重写并跳转回新版页面 */
         stop(reason) {
-            API.sessionStorage.setItem("disable_rewrite", reason);
+            API.sessionStorage.setItem("NOREWRITE", reason);
             location.reload();
         }
     }
