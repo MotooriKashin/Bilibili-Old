@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.3
+// @version      7.1.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -13582,9 +13582,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 text = text.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (str) => {
                     return "av" + API.abv(str);
                     ;
-                }).replace(/(av|sm)[0-9]+/gi, (str) => {
+                }).replace(/av[0-9]+/gi, (str) => {
                     str = str.toLowerCase();
-                    return \`<a target="_blank" href="http://acg.tv/\${str}">\${str}</a>\`; // 此域名并未升级https！
+                    return \`<a target="_blank" href="//www.bilibili.com/video/\${str}">\${str}</a>\`;
+                }).replace(/sm[0-9]+/gi, (str) => {
+                    str = str.toLowerCase();
+                    return \`<a target="_blank" href="//www.nicovideo.jp/watch/\${str}">\${str}</a>\`;
+                }).replace(/cv[0-9]+/gi, (str) => {
+                    str = str.toLowerCase();
+                    return \`<a target="_blank" href="//www.bilibili.com/read/\${str}">\${str}</a>\`;
                 });
                 desc[1].innerHTML = text;
             }
