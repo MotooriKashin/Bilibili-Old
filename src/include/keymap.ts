@@ -40,12 +40,11 @@ namespace API {
         const key = e.key.toLowerCase();
         e.key && bindMap[key] && bindMap[key].forEach(d => {
             let disable = d.disable;
-            d.altKey && !e.altKey && (disable = true);
-            d.ctrlKey && !e.ctrlKey && (disable = true);
-            d.metaKey && !e.metaKey && (disable = true);
-            d.repeat && !e.repeat && (disable = true);
-            e.repeat && !d.repeat && (disable = true);
-            d.shiftKey && !e.shiftKey && (disable = true);
+            (Number(d.altKey) ^ Number(e.altKey)) && (disable = true);
+            (Number(d.ctrlKey) ^ Number(e.ctrlKey)) && (disable = true);
+            (Number(d.metaKey) ^ Number(e.metaKey)) && (disable = true);
+            (Number(d.repeat) ^ Number(e.repeat)) && (disable = true);
+            (Number(d.shiftKey) ^ Number(e.shiftKey)) && (disable = true);
             try {
                 !disable && d.callback();
             } catch (e) { debug.error("keymap.js", e) }
