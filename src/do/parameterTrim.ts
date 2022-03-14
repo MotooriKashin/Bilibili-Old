@@ -70,9 +70,11 @@ namespace API {
     const parameterTrim = new ParameterTrim();
     parameterTrim.location(); // 清理网址
     switchVideo(() => { parameterTrim.location() });
-    observerAddedNodes(async (node) => { // 清理新注入节点的a标签
-        node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
-        node.tagName == "A" && parameterTrim.anchor(<any>[node]);
+    observerAddedNodes((node) => { // 清理新注入节点的a标签
+        setTimeout(() => {
+            node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
+            node.tagName == "A" && parameterTrim.anchor(<any>[node]);
+        });
     })
     window.addEventListener("click", e => parameterTrim.click(e), !1); // spm参数在DOM回调中注入，冒泡到window便能将其抹去
 
