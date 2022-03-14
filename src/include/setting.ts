@@ -143,6 +143,8 @@ interface config {
     configManage: never;
     /** av页合集显示 */
     collection: boolean;
+    /** 重构搜索页 */
+    search: boolean;
 }
 namespace API {
     registerSetting({
@@ -822,4 +824,11 @@ namespace API {
         type: "switch",
         value: true
     });
+    registerSetting({
+        key: "search",
+        sort: "rewrite",
+        label: "搜索",
+        type: "switch",
+        value: false
+    })
 }
