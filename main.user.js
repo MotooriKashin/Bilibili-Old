@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.4
+// @version      7.1.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -2398,6 +2398,57 @@ option {
 
 </html>`;
 /*!***********************!*/
+/**/modules["search.html"] = /*** ./HTML/search.html ***/
+`<!DOCTYPE html>
+<html>
+
+<head>
+    <title data-vue-meta="true"> _ 搜索结果_哔哩哔哩_Bilibili</title>
+    <meta data-vue-meta="true" charset="UTF-8">
+    <meta data-vue-meta="true" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta data-vue-meta="true" name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta data-vue-meta="true" name="description"
+        content="点击查看更多相关视频、番剧、影视、直播、专栏、话题、用户等内容；你感兴趣的视频都在B站，bilibili是国内知名的视频弹幕网站，这里有及时的动漫新番，活跃的ACG氛围，有创意的Up主。大家可以在这里找到许多欢乐。">
+    <meta data-vue-meta="true" name="keywords"
+        content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid">
+    <meta data-vue-meta="true" charset="UTF-8">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <link rel="dns-prefetch" href="//s1.hdslb.com">
+    <link rel="dns-prefetch" href="//i0.hdslb.com">
+    <link rel="dns-prefetch" href="//i1.hdslb.com">
+    <link rel="dns-prefetch" href="//i2.hdslb.com">
+    <link rel="dns-prefetch" href="//static.hdslb.com">
+    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico">
+    <link rel="preload"
+        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.1.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css"
+        as="style">
+    <link rel="preload"
+        href="//s1.hdslb.com/bfs/static/jinkela/search/1.search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js"
+        as="script">
+    <link rel="preload"
+        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.0.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css"
+        as="style">
+    <link rel="preload"
+        href="//s1.hdslb.com/bfs/static/jinkela/search/search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js" as="script">
+    <link rel="stylesheet"
+        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.1.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css">
+    <link rel="stylesheet"
+        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.0.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css">
+</head>
+
+<body id="bili-search">
+    <div class="z-top-container"></div>
+    <div id="search-app"></div>
+    <div id="server-search-app" data-server-rendered="true" class="bili-search"></div>
+    <!-- built files will be auto injected -->
+    <div class="footer bili-footer report-wrap-module"></div>
+    <div style="display:none"><a href="https://www.bilibili.com/v/game/match/">赛事库</a> <a
+            href="https://www.bilibili.com/cheese/">课堂</a> <a
+            href="https://www.bilibili.com/festival/2021bnj">2021拜年纪</a></div>
+</body>
+
+</html>`;
+/*!***********************!*/
 /**/modules["watchlater.html"] = /*** ./HTML/watchlater.html ***/
 `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -3316,6 +3367,8 @@ option {
             API.importModule("bnj.js");
         if ((API.config.medialist && /\\/medialist\\/play\\//.test(location.href) && !/watchlater/.test(location.href)) || /\\/playlist\\/video\\/pl/.test(location.href))
             API.importModule("medialist.js");
+        if (API.config.search && API.path[2] == "search.bilibili.com")
+            API.importModule("search.js");
     }
     API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
     API.config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
@@ -4560,9 +4613,11 @@ option {
     const parameterTrim = new ParameterTrim();
     parameterTrim.location(); // 清理网址
     API.switchVideo(() => { parameterTrim.location(); });
-    API.observerAddedNodes(async (node) => {
-        node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
-        node.tagName == "A" && parameterTrim.anchor([node]);
+    API.observerAddedNodes((node) => {
+        setTimeout(() => {
+            node.querySelectorAll && parameterTrim.anchor(node.querySelectorAll("a"));
+            node.tagName == "A" && parameterTrim.anchor([node]);
+        });
     });
     window.addEventListener("click", e => parameterTrim.click(e), !1); // spm参数在DOM回调中注入，冒泡到window便能将其抹去
 
@@ -8133,12 +8188,11 @@ option {
         const key = e.key.toLowerCase();
         e.key && bindMap[key] && bindMap[key].forEach(d => {
             let disable = d.disable;
-            d.altKey && !e.altKey && (disable = true);
-            d.ctrlKey && !e.ctrlKey && (disable = true);
-            d.metaKey && !e.metaKey && (disable = true);
-            d.repeat && !e.repeat && (disable = true);
-            e.repeat && !d.repeat && (disable = true);
-            d.shiftKey && !e.shiftKey && (disable = true);
+            (Number(d.altKey) ^ Number(e.altKey)) && (disable = true);
+            (Number(d.ctrlKey) ^ Number(e.ctrlKey)) && (disable = true);
+            (Number(d.metaKey) ^ Number(e.metaKey)) && (disable = true);
+            (Number(d.repeat) ^ Number(e.repeat)) && (disable = true);
+            (Number(d.shiftKey) ^ Number(e.shiftKey)) && (disable = true);
             try {
                 !disable && d.callback();
             }
@@ -9601,6 +9655,13 @@ option {
         sub: "以分P形式呈现",
         type: "switch",
         value: true
+    });
+    API.registerSetting({
+        key: "search",
+        sort: "rewrite",
+        label: "搜索",
+        type: "switch",
+        value: false
     });
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
@@ -12429,6 +12490,56 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     new Read("read.html");
 
 //# sourceURL=API://@Bilibili-Old/url/read.js`;
+/*!***********************!*/
+/**/modules["search.js"] = /*** ./dist/url/search.js ***/
+`"use strict";
+    class Search extends API.Rewrite {
+        constructor(html) {
+            super(html);
+            /** url参数 */
+            this.obj = API.Format.urlObj(location.href);
+            Reflect.has(this.obj, "keyword") && (document.title = \`\${decodeURIComponent(this.obj.keyword)} _ 搜索结果_哔哩哔哩_Bilibili\`);
+            this.script = [
+                {
+                    type: "text/javascript",
+                    src: "//www.bilibili.com/gentleman/polyfill.js?features=Promise%2CObject.assign%2CString.prototype.includes%2CNumber.isNaN"
+                },
+                {
+                    type: "text/javascript",
+                    src: "//s1.hdslb.com/bfs/static/jinkela/long/js/jquery/jquery1.7.2.min.js"
+                },
+                {
+                    type: "text/javascript",
+                    src: "//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.7.1.min.js"
+                },
+                {
+                    type: "text/javascript",
+                    src: "//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.7.1.vue.min.js"
+                },
+                {
+                    type: "text/javascript",
+                    src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js"
+                },
+                {
+                    src: "//s1.hdslb.com/bfs/static/jinkela/search/1.search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js",
+                    defer: "defer"
+                },
+                {
+                    src: "//s1.hdslb.com/bfs/static/jinkela/search/search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js",
+                    defer: "defer"
+                },
+                {
+                    type: "text/javascript",
+                    charset: "utf-8",
+                    src: "//static.hdslb.com/common/js/footer.js"
+                }
+            ];
+            this.flushDocument();
+        }
+    }
+    new Search("search.html");
+
+//# sourceURL=API://@Bilibili-Old/url/search.js`;
 /*!***********************!*/
 /**/modules["watchlater.js"] = /*** ./dist/url/watchlater.js ***/
 `"use strict";
