@@ -33,7 +33,7 @@ namespace API {
         if (location.href.includes("message.bilibili.com/pages/nav/index_new_sync")) API.addCss(<string>API.getModule("imroot.css"));
         if (location.href.includes("www.bilibili.com/account/history")) importModule("history.js");
         if (config.read && /\/read\/[Cc][Vv]/.test(location.href)) importModule("read.js");
-        if (config.player && /festival\/202[1-2]bnj/.test(location.href)) importModule("bnj.js");
+        if (config.player && /\/festival\//.test(location.href)) importModule("bnj.js");
         if ((config.medialist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) importModule("medialist.js");
         if (config.search && path[2] == "search.bilibili.com") importModule("search.js");
     }
