@@ -7979,15 +7979,22 @@ option {
     /** URL处理函数 */
     class Url {
         constructor(url) {
+            /** 去除查询参数及锚的url */
             this.url = "";
+            /** url中的查询参数 */
             this.search = "";
+            /** url中的 */
             this.hash = "";
-            const search = url.match(new RegExp(\`(?<=\\\\?)[A-Za-z0-9&=%\\\\+\\\\-_\\\\.~!\\\\*'\\\\(\\\\);@\$,\\\\[\\\\]]+\`, "g"));
-            this.search = search ? "?" + search.join("&") : "";
-            const hash = url.match(new RegExp(\`(?<=\\\\#)[A-Za-z0-9&=%\\\\+\\\\-_\\\\.~!\\\\*'\\\\(\\\\);@\$,\\\\[\\\\]\\\\/]+\`, "g"));
-            this.hash = hash ? "#" + hash : "";
+            const search = url.split("?");
+            const hash = url.split("#");
             this.url = url.replace(new RegExp(\`\\\\?[A-Za-z0-9&=%\\\\+\\\\-_\\\\.~!\\\\*'\\\\(\\\\);@\$,\\\\[\\\\]]+\`, "g"), "")
                 .replace(new RegExp(\`\\\\#[A-Za-z0-9&=%\\\\+\\\\-_\\\\.~!\\\\*'\\\\(\\\\);@\$,\\\\[\\\\]\\\\/]+\`, "g"), "");
+            search.forEach((d, i) => search[i] = d.split("#")[0]); // 参数中可能包含锚
+            hash.forEach((d, i) => hash[i] = d.split("?")[0]); // 锚中可能包含参数
+            search.shift();
+            hash.shift();
+            search.length && (this.search = "?" + search.join("&"));
+            hash.length && (this.hash = hash.find(d => d), this.hash = this.hash ? "#" + this.hash : "");
         }
         /**
          * 提取url的查询参数为对象
