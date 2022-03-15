@@ -9,12 +9,12 @@ namespace API {
         search = "";
         hash = "";
         constructor(url: string) {
-            const search = url.match(/(?<=\?)[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]]+/g);
+            const search = url.match(new RegExp(`(?<=\\?)[A-Za-z0-9&=%\\+\\-_\\.~!\\*'\\(\\);@$,\\[\\]]+`, "g"));
             this.search = search ? "?" + search.join("&") : "";
-            const hash = url.match(/(?<=\#)[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]\/]+/g);
+            const hash = url.match(new RegExp(`(?<=\\#)[A-Za-z0-9&=%\\+\\-_\\.~!\\*'\\(\\);@$,\\[\\]\\/]+`, "g"));
             this.hash = hash ? "#" + hash : "";
-            this.url = url.replace(/\?[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]]+/g, "")
-                .replace(/\#[A-Za-z0-9&=%\+\-_\.~!\*'\(\);@$,\[\]\/]+/g, "");
+            this.url = url.replace(new RegExp(`\\?[A-Za-z0-9&=%\\+\\-_\\.~!\\*'\\(\\);@$,\\[\\]]+`, "g"), "")
+                .replace(new RegExp(`\\#[A-Za-z0-9&=%\\+\\-_\\.~!\\*'\\(\\);@$,\\[\\]\\/]+`, "g"), "");
         }
         /**
          * 提取url的查询参数为对象
