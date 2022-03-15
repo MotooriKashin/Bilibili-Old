@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.5
+// @version      7.1.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3363,7 +3363,7 @@ option {
             API.importModule("history.js");
         if (API.config.read && /\\/read\\/[Cc][Vv]/.test(location.href))
             API.importModule("read.js");
-        if (API.config.player && /festival\\/202[1-2]bnj/.test(location.href))
+        if (API.config.player && /\\/festival\\//.test(location.href))
             API.importModule("bnj.js");
         if ((API.config.medialist && /\\/medialist\\/play\\//.test(location.href) && !/watchlater/.test(location.href)) || /\\/playlist\\/video\\/pl/.test(location.href))
             API.importModule("medialist.js");
