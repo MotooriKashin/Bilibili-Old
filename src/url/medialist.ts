@@ -155,11 +155,11 @@ namespace API {
             if (this.route.business) switch (this.route.business) {
                 case "space": this.type = 1;
                     break;
-                case "space_series": this.type = 5; this.pl = <number>this.route.business_id;
+                case "space_series": this.type = 5; this.pl = Number(this.route.business_id);
                     break;
-                case "space_channel": this.type = 6; this.pl = 10 * <number>this.route.business_id + (<number>this.pl) % 10;
+                case "space_channel": this.type = 6; this.pl = 10 * Number(this.route.business_id) + (<number>this.pl) % 10;
                     break;
-                case "space_collection": this.type = 8; this.pl = <number>this.route.business_id;
+                case "space_collection": this.type = 8; this.pl = Number(this.route.business_id);
                     break;
                 default: this.type = 3;
             }

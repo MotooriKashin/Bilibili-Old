@@ -23,7 +23,8 @@ namespace API {
             share_plat: undefined,
             share_session_id: undefined,
             share_tag: undefined,
-            unique_k: undefined
+            unique_k: undefined,
+            from: "search"
         };
         /** url处理 */
         location() {
@@ -49,12 +50,13 @@ namespace API {
          * @returns URL
          */
         triming(url: string) {
-            const obj: any = Format.urlObj(url);
-            obj.bvid && (obj.aid = <string>abv(obj.bvid), obj.bvid = undefined); // 旧版页面一般不支持bvid，转化为aid
-            obj.aid && !Number(obj.aid) && (obj.aid = <string>abv(obj.aid)); // 部分写作aid读作bvid也得转化
-            obj.from == "search" && (obj.from = undefined); // from=search 在直播页面是有效参数
-            Object.assign(obj, this.param); // 清理参数，undefined在objUrl中会被过滤
-            return Format.objUrl(url, obj).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s)); // 非参数型bv号转化为av号
+            const obj = new UrlFormat(url);
+            obj.params.bvid && (obj.searchParams.aid = <string>abv(obj.params.bvid), delete obj.searchParams.bvid); // 旧版页面一般不支持bvid，转化为aid
+            obj.params.aid && (!Number(obj.params.aid)) && (obj.searchParams.aid = <string>abv(obj.params.aid)); // 部分写作aid读作bvid也得转化
+            Object.entries(this.param).forEach(d => {
+                (!d[1] || obj.params[d[0]] == d[1]) && (obj.searchParams[d[0]] = <string>d[1], obj.hashParams[d[0]] = <string>d[1]);
+            });
+            return obj.toJSON().replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s)); // 非参数型bv号转化为av号;
         }
         click(e: MouseEvent) { // 代码copy自B站spm.js
             var f = <HTMLAnchorElement>e.target;

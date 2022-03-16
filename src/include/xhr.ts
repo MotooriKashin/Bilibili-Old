@@ -42,7 +42,7 @@ namespace API {
     interface xhrDetailsSync extends xhrDetails {
         async?: false
     }
-    /** 跨越请求及其值栈 */
+    /** 跨域请求及其值栈 */
     const catches: [string, any] = <any>[];
     /**
      * `XMLHttpRequest`的`Promise`封装

@@ -9,17 +9,11 @@ interface config {
 }
 namespace API {
     class Animate {
-        /**
-         * 缓存已请求内容
-         */
+        /** 缓存已请求内容 */
         static record: Record<string, any> = {};
-        /**
-         * 资源id
-         */
+        /** 资源id */
         static rid = this.resourceId();
-        /**
-         * locs列表
-         */
+        /** locs列表 */
         static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
         /**
          * 有在启用了动画banner的配置，且浏览器支持css filter时才加载动画banner的图片资源  
@@ -44,13 +38,9 @@ namespace API {
                 _initState: any;
             }[]
         } = <any>{};
-        /**
-         * layer表单
-         */
+        /** layer表单 */
         resources: (HTMLVideoElement | HTMLImageElement)[] = [];
-        /**
-         * container 元素上有其他元素，需使用全局事件判断鼠标位置
-         */
+        /** container 元素上有其他元素，需使用全局事件判断鼠标位置 */
         entered = false;
         extensions: any[] = [];
         handleMouseLeave: (e: any) => void = <any>undefined;

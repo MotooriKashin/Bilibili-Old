@@ -3,60 +3,71 @@ interface modules {
     readonly "format.js": string;
 }
 namespace API {
-    /** URL处理函数 */
-    class Url {
-        /** 去除查询参数及锚的url */
-        url = "";
-        /** url中的查询参数 */
-        search = "";
-        /** url中的 */
-        hash = "";
+    export class UrlFormat {
+        /** 去除参数和锚的基链接 */
+        base: string = "";
+        /** 查询参数转化的对象 */
+        searchParams: Record<string, string> = {};
+        /** 锚 */
+        hash: string = "";
+        /** 锚中的参数 */
+        hashParams: Record<string, string> = {};
         constructor(url: string) {
-            const search = url.split("?");
-            const hash = url.split("#");
-            this.url = url.replace(new RegExp(`\\?[A-Za-z0-9&=%\\+\\-_\\.~!\\*'\\(\\);@$,\\[\\]]+`, "g"), "")
-                .replace(new RegExp(`\\#[A-Za-z0-9&=%\\+\\-_\\.~!\\*'\\(\\);@$,\\[\\]\\/]+`, "g"), "");
-            search.forEach((d, i) => search[i] = d.split("#")[0]); // 参数中可能包含锚
-            hash.forEach((d, i) => hash[i] = d.split("?")[0]); // 锚中可能包含参数
-            search.shift();
-            hash.shift();
-            search.length && (this.search = "?" + search.join("&"));
-            hash.length && (this.hash = <string>hash.find(d => d), this.hash = this.hash ? "#" + this.hash : "");
-        }
-        /**
-         * 提取url的查询参数为对象
-         * @returns 参数对象
-         */
-        getSearch() {
-            if (this.search) {
-                return <Record<string, string | number>>this.search.substring(1).split("&").reduce((s, d) => {
+            url = decodeURIComponent(url);
+            const one = url.split("#"); // 分离锚
+            const two = one[0].split("?"); // 分离参数
+            this.base = two[0]; // 分离基链接
+            one.shift();
+            two.shift();
+            // 参数转对象
+            if (two[0]) {
+                this.searchParams = two[0].split("&").reduce((s, d) => {
                     const arr = d.split("=");
                     s[arr[0]] = arr[1];
                     return s;
-                }, <Record<string, any>>{});
+                }, <Record<string, string>>{});
             }
-            else return {}
+            // 锚处理
+            if (one[0]) {
+                const three = one[0].split("?");
+                this.hash = three[0];
+                three.shift();
+                // 锚参数转对象
+                if (three[0]) {
+                    this.hashParams = three[0].split("&").reduce((s, d) => {
+                        const arr = d.split("=");
+                        s[arr[0]] = arr[1];
+                        return s;
+                    }, <Record<string, string>>{});
+                }
+            }
         }
-        /**
-         * 修改/添加url参数
-         * @param obj 参数对象
-         */
-        setSearch(obj: Record<string, string | number>) {
-            let tar = this.getSearch();
-            tar = Object.assign(tar, obj);
-            const result = Object.entries(tar).reduce((s, d) => {
-                d[1] !== null && d[1] !== undefined && (<any>s).push(`${d[0]}=${d[1]}`)
-                return s;
-            }, []).join("&");
-            this.search = result ? "?" + result : "";
-        }
-        /**
-         * 转化为url字符串
-         * @returns url字符串
-         */
+        /** 拼合链接 */
         toJSON() {
-            return ((this.url || "") + this.search + this.hash).replace(/^\?/, "");
+            const base: string[] = []; // 基栈
+            this.base && base.push(this.base); // 基链接
+            // 参数
+            const searchParams = Object.entries(this.searchParams).reduce((s, d) => {
+                d[1] !== null && d[1] !== undefined && (d[0] = encodeURIComponent(d[0]), d[1] = encodeURIComponent(d[1]), s.push(d.join("=")));
+                return s;
+            }, <string[]>[]).join("&");
+            searchParams && base.push(searchParams);
+            const searchParam = base.join("?"); // 含参基链
+            const hash: string[] = []; // 锚栈
+            this.hash && hash.push(this.hash);
+            const hashParams = Object.entries(this.hashParams).reduce((s, d) => {
+                d[1] !== null && d[1] !== undefined && (d[0] = encodeURIComponent(d[0]), d[1] = encodeURIComponent(d[1]), s.push(d.join("=")));
+                return s;
+            }, <string[]>[]).join("&");
+            hashParams && hash.push(hashParams);
+            const hashParam = hash.join("?"); // 含参锚
+            const result: string[] = []; // 结果栈
+            searchParam && result.push(searchParam);
+            hashParam && result.push(hashParam);
+            return result.join("#");
         }
+        /** **【只读属性】** 所有参数（包括锚中的参数） */
+        get params() { return <Record<string, string>>{ ...this.searchParams, ...this.hashParams } }
     }
     /** 格式化工具集 */
     export class Format {
@@ -151,23 +162,24 @@ namespace API {
             return num === 1 ? out[0] : out;
         }
         /**
-         * search参数对象拼合回URL
+         * search参数对象拼合回URL  
          * @param url URL主体，可含search参数和锚
          * @param obj search参数对象
          * @returns 拼合的URL
          */
         static objUrl(url: string = "", obj: Record<string, string | number> = {}) {
-            const result = new Url(url);
-            result.setSearch(obj);
+            const result = new UrlFormat(url);
+            Object.assign(result.searchParams, obj);
             return result.toJSON();
         }
         /**
-         * 提取URL search参数对象
+         * 提取URL search参数对象  
+         * **会一并提取锚里的参数，精细化处理请通过UrlFormat类**
          * @param url 原URL
          * @returns search参数对象
          */
         static urlObj(url: string = "") {
-            return new Url(url).getSearch();
+            return new UrlFormat(url).params;
         }
         /**
          * 秒数 -> hh:mm:ss

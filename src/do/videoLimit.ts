@@ -65,7 +65,7 @@ namespace API {
         }
         else if (limit) { // 处理区域限制
             obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
-            obj.fnval && (obj.fnval = fnval); // 提升dash标记清晰度
+            obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
             try {
                 toast.info("尝试解除区域限制... 访问代理服务器");
                 response = jsonCheck(await xhr.GM({

@@ -30,6 +30,7 @@
 	"readAs": "file.js",
 	"saveAs": "file.js",
 	"fnval": "fnval.js",
+	"UrlFormat": "format.js",
 	"Format": "format.js",
 	"bindKeyMap": "keymap.js",
 	"mediaSession": "MediaMeta.js",
