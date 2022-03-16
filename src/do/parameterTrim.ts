@@ -51,10 +51,11 @@ namespace API {
          */
         triming(url: string) {
             const obj = new UrlFormat(url);
-            obj.params.bvid && (obj.searchParams.aid = <string>abv(obj.params.bvid), delete obj.searchParams.bvid); // 旧版页面一般不支持bvid，转化为aid
-            obj.params.aid && (!Number(obj.params.aid)) && (obj.searchParams.aid = <string>abv(obj.params.aid)); // 部分写作aid读作bvid也得转化
+            const params = obj.params();
+            params.bvid && (params.aid = <string>abv(params.bvid), delete params.bvid); // 旧版页面一般不支持bvid，转化为aid
+            params.aid && (!Number(params.aid)) && (params.aid = <string>abv(params.aid)); // 部分写作aid读作bvid也得转化
             Object.entries(this.param).forEach(d => {
-                (!d[1] || obj.params[d[0]] == d[1]) && (obj.searchParams[d[0]] = <string>d[1], obj.hashParams[d[0]] = <string>d[1]);
+                (!d[1] || params[d[0]] == d[1]) && (delete params[d[0]]);
             });
             return obj.toJSON().replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s)); // 非参数型bv号转化为av号;
         }

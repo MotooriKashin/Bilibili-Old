@@ -7,13 +7,41 @@ namespace API {
         /** 去除参数和锚的基链接 */
         base: string = "";
         /** 查询参数转化的对象 */
-        searchParams: Record<string, string> = {};
+        searchParams = new Proxy(<Record<string, string>>{}, {
+            get: (t, p: string) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p: string, v) => {
+                t[p] = v ? encodeURIComponent(v) : v;
+                return true
+            }
+        });
         /** 锚 */
         hash: string = "";
         /** 锚中的参数 */
-        hashParams: Record<string, string> = {};
+        hashParams = new Proxy(<Record<string, string>>{}, {
+            get: (t, p: string) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p: string, v) => {
+                t[p] = v ? encodeURIComponent(v) : v;
+                return true
+            }
+        });
+        /** 所有参数（包括锚中的参数）。 */
+        params() {
+            return new Proxy(<Record<string, string>>{ ...this.searchParams, ...this.hashParams }, {
+                set: (t, p: string, v) => {
+                    t[p] = v;
+                    (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                },
+                deleteProperty: (t, p: string) => {
+                    delete t[p];
+                    delete (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p];
+                    return true;
+                }
+            });
+        }
         constructor(url: string) {
-            url = decodeURIComponent(url);
+            try {
+                // 原生URL处理函数要求太严格，无法处理自定义链接
+                url = new URL(url).href;
+            } catch (e) { }
             const one = url.split("#"); // 分离锚
             const two = one[0].split("?"); // 分离参数
             this.base = two[0]; // 分离基链接
@@ -21,11 +49,10 @@ namespace API {
             two.shift();
             // 参数转对象
             if (two[0]) {
-                this.searchParams = two[0].split("&").reduce((s, d) => {
+                two[0].split("&").forEach(d => {
                     const arr = d.split("=");
-                    s[arr[0]] = arr[1];
-                    return s;
-                }, <Record<string, string>>{});
+                    this.searchParams[arr[0]] = arr[1];
+                });
             }
             // 锚处理
             if (one[0]) {
@@ -34,11 +61,10 @@ namespace API {
                 three.shift();
                 // 锚参数转对象
                 if (three[0]) {
-                    this.hashParams = three[0].split("&").reduce((s, d) => {
+                    three[0].split("&").forEach(d => {
                         const arr = d.split("=");
-                        s[arr[0]] = arr[1];
-                        return s;
-                    }, <Record<string, string>>{});
+                        this.hashParams[arr[0]] = arr[1];
+                    });
                 }
             }
         }
@@ -48,7 +74,7 @@ namespace API {
             this.base && base.push(this.base); // 基链接
             // 参数
             const searchParams = Object.entries(this.searchParams).reduce((s, d) => {
-                d[1] !== null && d[1] !== undefined && (d[0] = encodeURIComponent(d[0]), d[1] = encodeURIComponent(d[1]), s.push(d.join("=")));
+                d[1] !== null && d[1] !== undefined && s.push(d.join("="));
                 return s;
             }, <string[]>[]).join("&");
             searchParams && base.push(searchParams);
@@ -56,7 +82,7 @@ namespace API {
             const hash: string[] = []; // 锚栈
             this.hash && hash.push(this.hash);
             const hashParams = Object.entries(this.hashParams).reduce((s, d) => {
-                d[1] !== null && d[1] !== undefined && (d[0] = encodeURIComponent(d[0]), d[1] = encodeURIComponent(d[1]), s.push(d.join("=")));
+                d[1] !== null && d[1] !== undefined && s.push(d.join("="));
                 return s;
             }, <string[]>[]).join("&");
             hashParams && hash.push(hashParams);
@@ -66,8 +92,6 @@ namespace API {
             hashParam && result.push(hashParam);
             return result.join("#");
         }
-        /** **【只读属性】** 所有参数（包括锚中的参数） */
-        get params() { return <Record<string, string>>{ ...this.searchParams, ...this.hashParams } }
     }
     /** 格式化工具集 */
     export class Format {
@@ -179,7 +203,7 @@ namespace API {
          * @returns search参数对象
          */
         static urlObj(url: string = "") {
-            return new UrlFormat(url).params;
+            return new UrlFormat(url).params();
         }
         /**
          * 秒数 -> hh:mm:ss
