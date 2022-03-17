@@ -145,6 +145,8 @@ interface config {
     collection: boolean;
     /** 重构搜索页 */
     search: boolean;
+    /** 分区主页 */
+    sortIndex: boolean;
 }
 namespace API {
     registerSetting({
@@ -830,5 +832,14 @@ namespace API {
         label: "搜索",
         type: "switch",
         value: false
+    });
+    registerSetting({
+        key: "sortIndex",
+        sort: "rewrite",
+        label: "分区主页",
+        type: "switch",
+        value: true,
+        init: () => setCookie("i-wanna-go-back", String(2)),
+        action: v => setCookie("i-wanna-go-back", String(v ? 2 : -1))
     })
 }

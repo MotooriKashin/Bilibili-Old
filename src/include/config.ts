@@ -49,6 +49,8 @@ namespace API {
         callback?: (this: HTMLDivElement) => void;
         /** 隐藏本设置项 */
         hidden?: boolean;
+        /** 设置初始化时执行的回调 */
+        init?: () => void;
     }
     export interface SettingType {
         switch: SettingCommon & {
@@ -56,7 +58,7 @@ namespace API {
             type: "switch";
             /** 默认值 */
             value: boolean;
-            /** 用户波动开关时的回调，第一个参数为调整后的value */
+            /** 用户拨动开关时的回调，第一个参数为调整后的value */
             action?: (value: Boolean) => void;
         }
         row: SettingCommon & {
@@ -232,7 +234,7 @@ namespace API {
      */
     function modifyConfig(obj: SettingType[keyof SettingType]) {
         try {
-            Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && (Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value")));
+            Reflect.has(obj, "value") && !Reflect.has(config, Reflect.get(obj, "key")) && (Reflect.set(config, Reflect.get(obj, "key"), Reflect.get(obj, "value")), obj.init && obj.init());
             obj.type == "sort" && obj.list && obj.list.forEach(d => { modifyConfig(d) });
         } catch (e) {
             debug.warn(`UI设置项注册错误！`, obj);
