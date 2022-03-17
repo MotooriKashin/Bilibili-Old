@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.6
+// @version      7.1.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -2527,6 +2527,7 @@ option {
 	"readAs": "file.js",
 	"saveAs": "file.js",
 	"fnval": "fnval.js",
+	"UrlFormat": "format.js",
 	"Format": "format.js",
 	"bindKeyMap": "keymap.js",
 	"mediaSession": "MediaMeta.js",
@@ -3384,6 +3385,121 @@ option {
 
 //# sourceURL=API://@Bilibili-Old/vector.js`;
 /*!***********************!*/
+/**/modules["[run]proxyBigVip.js"] = /*** ./dist/[run]proxyBigVip.js ***/
+`"use strict";
+    const Backup = {};
+    API.registerSetting({
+        key: "proxyBigVip",
+        sort: "player",
+        label: "代理大会员",
+        sub: "借助第三方服务器",
+        type: "sort",
+        list: [{
+                type: "switch",
+                key: "bigvip",
+                value: true,
+                sort: "player",
+                label: "代理开关"
+            }, {
+                key: "proxyServerVision",
+                sort: "player",
+                label: "接口版本",
+                type: "input",
+                input: { type: "text" },
+                value: "0.1.8"
+            }, {
+                key: "proxyBigVipFlesh",
+                sort: "player",
+                label: "刷新签名",
+                type: "action",
+                title: "刷新",
+                disabled: 0,
+                action: () => {
+                    sign().then(d => d ? API.toast.success("已刷新签名！") : API.toast.error("刷新失败！您是否已登录？"));
+                }
+            }]
+    });
+    async function sign() {
+        if (!API.uid)
+            return;
+        const cookies = (await GM.cookie("list", {})).reduce((s, d) => {
+            Reflect.set(s, d.name, encodeURIComponent(d.value));
+            return s;
+        }, {});
+        const data = API.Base64.encode(JSON.stringify({
+            cookie: Object.entries(cookies).reduce((s, d) => {
+                s.push(\`\${d[0]}=\${d[1]}\`);
+                return s;
+            }, []).join(";"),
+            csrf: cookies.bili_jct,
+            level: 6,
+            mid: cookies.DedeUserID,
+            ua: navigator.userAgent,
+            vip: 0
+        }));
+        GM.setValue("bigvipSign", data);
+        return data;
+    }
+    class HookTimeOut {
+        hook;
+        constructor() {
+            this.hook = setTimeout;
+            window.setTimeout = (...args) => {
+                if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
+                    API.toast.warning("禁用播放器强制初始化！", ...args);
+                    return Number.MIN_VALUE;
+                }
+                return this.hook.call(window, ...args);
+            };
+        }
+        relese() {
+            window.setTimeout = this.hook;
+        }
+    }
+    if (API.config.bigvip) {
+        API.xhrhook("season/user/status?", undefined, obj => {
+            const response = API.jsonCheck(obj.responseText);
+            if (response && !response.result.pay && !(response.result.real_price > 0)) {
+                response.result.pay = 1;
+                obj.response = obj.responseText = JSON.stringify(response);
+            }
+        }, false);
+        API.xhrhookasync("/playurl?", args => {
+            const obj = API.Format.urlObj(args[1]);
+            return (API.vipCid && obj.cid && API.vipCid.includes(Number(obj.cid)));
+        }, async (args) => {
+            const hookTimeout = new HookTimeOut();
+            let response;
+            const obj = API.Format.urlObj(args[1]);
+            try {
+                API.toast.info("尝试代理大会员~");
+                response = Backup[obj.cid] || API.jsonCheck(await API.xhr.GM({
+                    url: API.Format.objUrl("http://121.5.226.51/bz/ajax.php", {
+                        act: "bvlink",
+                        ...obj,
+                        version: API.config.proxyServerVision,
+                        sign: GM.getValue("bigvipSign") || await sign()
+                    }),
+                    responseType: "json"
+                }));
+                API.__playinfo__ = response;
+                Backup[obj.cid] = response;
+                API.toast.success(\`解除大会员限制！aid=\${API.aid}, cid=\${API.cid}\`);
+            }
+            catch (e) {
+                API.toast.error("代理大会员失败！", e);
+                response = { "code": -404, "message": e, "data": null };
+            }
+            hookTimeout.relese();
+            return {
+                response: JSON.stringify(response),
+                responseText: JSON.stringify(response)
+            };
+        }, false);
+    }
+
+//# sourceURL=API://@Bilibili-Old/[run]proxyBigVip.js`;
+/*!***********************!*/
 /**/modules["accesskey.js"] = /*** ./dist/do/accesskey.js ***/
 `"use strict";
     class Accesskey {
@@ -3617,13 +3733,9 @@ option {
             this.animatedBannerSupport = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('filter: blur(1px)')
                 && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
             this.layerConfig = {};
-            /**
-             * layer表单
-             */
+            /** layer表单 */
             this.resources = [];
-            /**
-             * container 元素上有其他元素，需使用全局事件判断鼠标位置
-             */
+            /** container 元素上有其他元素，需使用全局事件判断鼠标位置 */
             this.entered = false;
             this.extensions = [];
             this.handleMouseLeave = undefined;
@@ -3940,17 +4052,11 @@ option {
         }
     }
     _a = Animate;
-    /**
-     * 缓存已请求内容
-     */
+    /** 缓存已请求内容 */
     Animate.record = {};
-    /**
-     * 资源id
-     */
+    /** 资源id */
     Animate.rid = _a.resourceId();
-    /**
-     * locs列表
-     */
+    /** locs列表 */
     Animate.locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
     API.registerSetting({
         key: "bannerGif",
@@ -4564,7 +4670,8 @@ option {
                 share_plat: undefined,
                 share_session_id: undefined,
                 share_tag: undefined,
-                unique_k: undefined
+                unique_k: undefined,
+                from: "search"
             };
         }
         /** url处理 */
@@ -4592,12 +4699,14 @@ option {
          * @returns URL
          */
         triming(url) {
-            const obj = API.Format.urlObj(url);
-            obj.bvid && (obj.aid = API.abv(obj.bvid), obj.bvid = undefined); // 旧版页面一般不支持bvid，转化为aid
-            obj.aid && !Number(obj.aid) && (obj.aid = API.abv(obj.aid)); // 部分写作aid读作bvid也得转化
-            obj.from == "search" && (obj.from = undefined); // from=search 在直播页面是有效参数
-            Object.assign(obj, this.param); // 清理参数，undefined在objUrl中会被过滤
-            return API.Format.objUrl(url, obj).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + API.abv(s)); // 非参数型bv号转化为av号
+            const obj = new API.UrlFormat(url);
+            const params = obj.params();
+            params.bvid && (params.aid = API.abv(params.bvid), delete params.bvid); // 旧版页面一般不支持bvid，转化为aid
+            params.aid && (!Number(params.aid)) && (params.aid = API.abv(params.aid)); // 部分写作aid读作bvid也得转化
+            Object.entries(this.param).forEach(d => {
+                (!d[1] || params[d[0]] == d[1]) && (delete params[d[0]]);
+            });
+            return obj.toJSON().replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + API.abv(s)); // 非参数型bv号转化为av号;
         }
         click(e) {
             var f = e.target;
@@ -4824,6 +4933,7 @@ option {
 /*!***********************!*/
 /**/modules["section.js"] = /*** ./dist/do/section.js ***/
 `"use strict";
+    // 替换顶栏
     API.runWhile(() => document.querySelector("#internationalHeader"), () => {
         var _a;
         if (API.path.name)
@@ -4839,6 +4949,7 @@ option {
             API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
         API.addElement("script", { type: "text/javascript", src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js" });
     });
+    // 替换底栏
     API.runWhile(() => document.querySelector(".international-footer"), () => {
         var _a;
         if (API.path.name)
@@ -4848,10 +4959,18 @@ option {
         API.addElement("div", { class: "footer bili-footer report-wrap-module", id: "home_footer" });
         API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/common/js/footer.js" });
     });
+    // 移除新版顶栏
     API.runWhile(() => document.querySelector("#bili-header-m"), () => {
         var _a;
         (_a = document.querySelector("#internationalHeader")) === null || _a === void 0 ? void 0 : _a.remove();
         API.addCss(API.getModule("avatarAnimation.css"));
+    });
+    // 替换第三版顶栏
+    API.runWhile(() => document.body.classList.contains("header-v3"), () => {
+        if (API.path.name)
+            return;
+        document.body.classList.remove("header-v3");
+        API.loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js"); //, () => document.body.classList.remove("header-v3"));
     });
 
 //# sourceURL=API://@Bilibili-Old/do/section.js`;
@@ -5203,7 +5322,7 @@ option {
         }
         else if (API.limit) { // 处理区域限制
             obj.module = (((_b = (_a = API.__INITIAL_STATE__) === null || _a === void 0 ? void 0 : _a.upInfo) === null || _b === void 0 ? void 0 : _b.mid) == 1988098633 || ((_d = (_c = API.__INITIAL_STATE__) === null || _c === void 0 ? void 0 : _c.upInfo) === null || _d === void 0 ? void 0 : _d.mid) == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
-            obj.fnval && (obj.fnval = API.fnval); // 提升dash标记清晰度
+            obj.fnval && (obj.fnval = String(API.fnval)); // 提升dash标记清晰度
             try {
                 API.toast.info("尝试解除区域限制... 访问代理服务器");
                 response = API.jsonCheck(await API.xhr.GM({
@@ -6693,7 +6812,7 @@ option {
      */
     function modifyConfig(obj) {
         try {
-            Reflect.has(obj, "value") && !Reflect.has(API.config, Reflect.get(obj, "key")) && (Reflect.set(API.config, Reflect.get(obj, "key"), Reflect.get(obj, "value")));
+            Reflect.has(obj, "value") && !Reflect.has(API.config, Reflect.get(obj, "key")) && (Reflect.set(API.config, Reflect.get(obj, "key"), Reflect.get(obj, "value")), obj.init && obj.init());
             obj.type == "sort" && obj.list && obj.list.forEach(d => { modifyConfig(d); });
         }
         catch (e) {
@@ -7976,62 +8095,98 @@ option {
 /*!***********************!*/
 /**/modules["format.js"] = /*** ./dist/include/format.js ***/
 `"use strict";
-    /** URL处理函数 */
-    class Url {
+    class UrlFormat {
         constructor(url) {
-            /** 去除查询参数及锚的url */
-            this.url = "";
-            /** url中的查询参数 */
-            this.search = "";
-            /** url中的 */
+            /** 去除参数和锚的基链接 */
+            this.base = "";
+            /** 查询参数转化的对象 */
+            this.searchParams = new Proxy({}, {
+                get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
+                    t[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                }
+            });
+            /** 锚 */
             this.hash = "";
-            const search = url.split("?");
-            const hash = url.split("#");
-            this.url = url.replace(new RegExp(\`\\\\?[A-Za-z0-9&=%\\\\+\\\\-_\\\\.~!\\\\*'\\\\(\\\\);@\$,\\\\[\\\\]]+\`, "g"), "")
-                .replace(new RegExp(\`\\\\#[A-Za-z0-9&=%\\\\+\\\\-_\\\\.~!\\\\*'\\\\(\\\\);@\$,\\\\[\\\\]\\\\/]+\`, "g"), "");
-            search.forEach((d, i) => search[i] = d.split("#")[0]); // 参数中可能包含锚
-            hash.forEach((d, i) => hash[i] = d.split("?")[0]); // 锚中可能包含参数
-            search.shift();
-            hash.shift();
-            search.length && (this.search = "?" + search.join("&"));
-            hash.length && (this.hash = hash.find(d => d), this.hash = this.hash ? "#" + this.hash : "");
-        }
-        /**
-         * 提取url的查询参数为对象
-         * @returns 参数对象
-         */
-        getSearch() {
-            if (this.search) {
-                return this.search.substring(1).split("&").reduce((s, d) => {
-                    const arr = d.split("=");
-                    s[arr[0]] = arr[1];
-                    return s;
-                }, {});
+            /** 锚中的参数 */
+            this.hashParams = new Proxy({}, {
+                get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
+                    t[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                }
+            });
+            try {
+                // 原生URL处理函数要求太严格，无法处理自定义链接
+                url = new URL(url).href;
             }
-            else
-                return {};
+            catch (e) { }
+            const one = url.split("#"); // 分离锚
+            const two = one[0].split("?"); // 分离参数
+            this.base = two[0]; // 分离基链接
+            one.shift();
+            two.shift();
+            // 参数转对象
+            if (two[0]) {
+                two[0].split("&").forEach(d => {
+                    const arr = d.split("=");
+                    this.searchParams[arr[0]] = arr[1];
+                });
+            }
+            // 锚处理
+            if (one[0]) {
+                const three = one[0].split("?");
+                this.hash = three[0];
+                three.shift();
+                // 锚参数转对象
+                if (three[0]) {
+                    three[0].split("&").forEach(d => {
+                        const arr = d.split("=");
+                        this.hashParams[arr[0]] = arr[1];
+                    });
+                }
+            }
         }
-        /**
-         * 修改/添加url参数
-         * @param obj 参数对象
-         */
-        setSearch(obj) {
-            let tar = this.getSearch();
-            tar = Object.assign(tar, obj);
-            const result = Object.entries(tar).reduce((s, d) => {
-                d[1] !== null && d[1] !== undefined && s.push(\`\${d[0]}=\${d[1]}\`);
+        /** 所有参数（包括锚中的参数）。 */
+        params() {
+            return new Proxy({ ...this.searchParams, ...this.hashParams }, {
+                set: (t, p, v) => {
+                    t[p] = v;
+                    (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                },
+                deleteProperty: (t, p) => {
+                    delete t[p];
+                    delete (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p];
+                    return true;
+                }
+            });
+        }
+        /** 拼合链接 */
+        toJSON() {
+            const base = []; // 基栈
+            this.base && base.push(this.base); // 基链接
+            // 参数
+            const searchParams = Object.entries(this.searchParams).reduce((s, d) => {
+                d[1] !== null && d[1] !== undefined && s.push(d.join("="));
                 return s;
             }, []).join("&");
-            this.search = result ? "?" + result : "";
-        }
-        /**
-         * 转化为url字符串
-         * @returns url字符串
-         */
-        toJSON() {
-            return ((this.url || "") + this.search + this.hash).replace(/^\\?/, "");
+            searchParams && base.push(searchParams);
+            const searchParam = base.join("?"); // 含参基链
+            const hash = []; // 锚栈
+            this.hash && hash.push(this.hash);
+            const hashParams = Object.entries(this.hashParams).reduce((s, d) => {
+                d[1] !== null && d[1] !== undefined && s.push(d.join("="));
+                return s;
+            }, []).join("&");
+            hashParams && hash.push(hashParams);
+            const hashParam = hash.join("?"); // 含参锚
+            const result = []; // 结果栈
+            searchParam && result.push(searchParam);
+            hashParam && result.push(hashParam);
+            return result.join("#");
         }
     }
+    API.UrlFormat = UrlFormat;
     /** 格式化工具集 */
     class Format {
         /**
@@ -8126,17 +8281,18 @@ option {
          * @returns 拼合的URL
          */
         static objUrl(url = "", obj = {}) {
-            const result = new Url(url);
-            result.setSearch(obj);
+            const result = new UrlFormat(url);
+            Object.assign(result.searchParams, obj);
             return result.toJSON();
         }
         /**
          * 提取URL search参数对象
+         * **会一并提取锚里的参数，精细化处理请通过UrlFormat类**
          * @param url 原URL
          * @returns search参数对象
          */
         static urlObj(url = "") {
-            return new Url(url).getSearch();
+            return new UrlFormat(url).params();
         }
         /**
          * 秒数 -> hh:mm:ss
@@ -9670,6 +9826,15 @@ option {
         type: "switch",
         value: false
     });
+    API.registerSetting({
+        key: "sortIndex",
+        sort: "rewrite",
+        label: "分区主页",
+        type: "switch",
+        value: true,
+        init: () => API.setCookie("i-wanna-go-back", String(2)),
+        action: v => API.setCookie("i-wanna-go-back", String(v ? 2 : -1))
+    });
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
 /*!***********************!*/
@@ -10869,7 +11034,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["xhr.js"] = /*** ./dist/include/xhr.js ***/
 `"use strict";
-    /** 跨越请求及其值栈 */
+    /** 跨域请求及其值栈 */
     const catches = [];
     function xhr(details) {
         details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
@@ -12037,15 +12202,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                         break;
                     case "space_series":
                         this.type = 5;
-                        this.pl = this.route.business_id;
+                        this.pl = Number(this.route.business_id);
                         break;
                     case "space_channel":
                         this.type = 6;
-                        this.pl = 10 * this.route.business_id + this.pl % 10;
+                        this.pl = 10 * Number(this.route.business_id) + this.pl % 10;
                         break;
                     case "space_collection":
                         this.type = 8;
-                        this.pl = this.route.business_id;
+                        this.pl = Number(this.route.business_id);
                         break;
                     default: this.type = 3;
                 }
@@ -14494,6 +14659,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["ad2info.js"] = /*** ./dist/url/index/ad2info.js ***/
 `"use strict";
+    /** 资讯区图标 */
+    const icon = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA39pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplMzNhZmQ3OS04ZTViLWQ2NDItOTYxZi0yNDM2MGQyN2JhM2YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTFEMzQ4MEJBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTFEMzQ4MEFBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjBiNzNlZjA5LTA1ZmEtNTM0MC1iMWY3LWE4MTljMjFhYmEzMiIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjI2MDJjOTk2LTBiNzQtZDQ0MC1hMzcxLTIxN2Nk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';
     API.runWhile(() => document.querySelector("#bili_ad"), function () {
         const node = document.querySelector("#bili_ad");
         const sight = node.querySelectorAll("a");
@@ -14509,7 +14676,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         technology.innerHTML = "知识";
         digital.href = "//www.bilibili.com/v/tech/";
         digital.innerHTML = "科技";
-        document.querySelector(".icon.icon_t.icon-ad").setAttribute("style", "background-image: url(//cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old/image/news.png);background-position: unset;");
+        document.querySelector(".icon.icon_t.icon-ad").setAttribute("style", \`background-image: url(\${icon});background-position: unset;\`);
     });
     API.runWhile(() => document.querySelector(".report-wrap-module.elevator-module"), function () {
         const node = document.querySelector(".report-wrap-module.elevator-module");
