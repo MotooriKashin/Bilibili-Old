@@ -31,6 +31,7 @@ function getProperty(str) {
     }
     return result.match(/(?<=export +(let|function|async function|const|var|class) *\*? *)[A-Za-z0-9_$]+(?=(\(|:| |\<))/g) || []; // 正则匹配接口名
 }
+console.log("%c提取接口索引表>>>", "color: yellow;");
 new files(path).run().then(d => { // 读取所有模块文件
     const json = d.reduce((s, d) => { // 提取所有模块中的导出接口
         const names = getProperty(String(d.data)); // 当前文件导出接口组

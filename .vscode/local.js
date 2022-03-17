@@ -20,6 +20,7 @@ function getResource() {
     }, meta.resource || []);
 }
 (async function () {
+    console.log("%c生成开发版脚本>>>", "color: yellow;");
     getRequires(); // 加载本地依赖
     getResource(); // 加载本地资源
     let result = Object.keys(meta).reduce((s, d) => { // 处理脚本元数据
@@ -31,5 +32,8 @@ function getResource() {
     }, "// ==UserScript==\r\n");
     result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
     result += await fs.promises.readFile("./dist/index.js"); // 脚本主入口
-    fs.writeFile("./local.user.js", result, (err) => { if (err) throw err });
+    fs.writeFile("./local.user.js", result, (err) => {
+        if (err) throw err
+        console.log("%c编译完成！", "color: green;");
+    });
 })();

@@ -36,6 +36,7 @@ async function getResource() {
     }, []));
 }
 (async function () {
+    console.log("%c生成发行版脚本>>>", "color: yellow;");
     await getResource(_resource, "resource"); // 整理资源项
     let result = Object.keys(meta).reduce((s, d) => { // 处理脚本元数据
         s = Array.isArray(meta[d]) ? meta[d].reduce((a, b) => {
@@ -47,5 +48,8 @@ async function getResource() {
     result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
     result += await fs.promises.readFile("./dist/require.js"); // 模块封装
     result += await fs.promises.readFile("./dist/index.js"); // 脚本主入口
-    fs.writeFile("./main.user.js", result, (err) => { if (err) throw err });
+    fs.writeFile("./main.user.js", result, (err) => {
+        if (err) throw err
+        console.log("%c编译完成！", "color: green;");
+    });
 })();

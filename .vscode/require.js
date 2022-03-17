@@ -4,6 +4,7 @@ const files = require("./files").getFiles;
 
 const path = ["CSS", "HTML", "Json", "dist"]; // 遍历路径
 const exclude = ["Json/pl769.json", "dist/index.js", "dist/require.js", "dist/bilibiliPlayer.js", "dist/comment.js"]; // 排除路径关键词
+console.log("%c封装模块文件>>>", "color: yellow;");
 new files(path, exclude).run().then(d => {
     let modules = ""; // 模块打包处
     let data = d.reduce((s, d) => {
