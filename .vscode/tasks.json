@@ -44,7 +44,7 @@
 				"${workspaceFolder}\\.vscode\\local.js",
 				"${workspaceFolder}"
 			],
-			"label": "local",
+			"label": "develop",
 			"detail": "编译开发版脚本local.user.js",
 			"problemMatcher": [],
 			"dependsOn": [
@@ -58,56 +58,16 @@
 				"${workspaceFolder}\\.vscode\\main.js",
 				"${workspaceFolder}"
 			],
-			"label": "main",
+			"label": "release",
 			"detail": "编译发行版脚本main.user.js",
 			"problemMatcher": [],
 			"dependsOn": [
 				"require"
-			]
-		},
-		{
-			"type": "shell",
-			"command": "Remove-Item",
-			"args": [
-				"${workspaceFolder}\\dist\\*",
-				"-recurse",
-				"-Exclude",
-				"bilibiliPlayer.js",
-				",comment.js",
-				",require.js",
-				",video.js",
-				",README.md"
-			],
-			"dependsOn": [
-				"local"
-			],
-			"detail": "开发环境下编译起点",
-			"label": "develop",
-			"problemMatcher": []
-		},
-		{
-			"type": "shell",
-			"command": "Remove-Item",
-			"args": [
-				"${workspaceFolder}\\dist\\*",
-				"-recurse",
-				"-Exclude",
-				"bilibiliPlayer.js",
-				",comment.js",
-				",require.js",
-				",video.js",
-				",README.md"
-			],
-			"dependsOn": [
-				"main"
 			],
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			},
-			"detail": "发行环境下编译起点",
-			"label": "release",
-			"problemMatcher": []
+			}
 		}
 	]
 }

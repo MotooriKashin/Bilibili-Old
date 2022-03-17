@@ -1,5 +1,5 @@
+/dist/**/*.js
 /dist/**/*.d.ts
 /dist/**/*.d.ts.map
-/dist/require.js
 /third
 /local.user.js
