@@ -51,12 +51,22 @@ namespace API {
         const text = GM.getResourceText(script);
         if (!text) setTimeout(() => { toast.error("comment.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。"); displaySetting("trusteeship") })
         return text;
-    })
+    });
     jsonphook("bilibili.com/x/v2/reply", url => { // 添加参数以获取楼层号
         tag && (tag = false, addCss(getCss("comment.css")), config.oldReplySort && addCss(getCss("oldReplySort.css")));
         url += "&mobi_app=android";
         return url;
-    }, undefined, false);
+    }, r => {
+        setTimeout(() => { // 根据楼中楼获取主楼楼层号
+            if (r && 0 === r.code && r.data && r.data.root && r.data.root.floor) {
+                const item = document.querySelector<HTMLDivElement>(`[data-id="${r.data.root.rpid_str}"]  > .con > .info`);
+                if (item && !item.querySelector(".floor")) {
+                    addElement("span", { class: "floor" }, item, `#${r.data.root.floor}`, true);
+                }
+            }
+        });
+        return r;
+    }, false);
     config.commentLinkDetail && observerAddedNodes((node) => { // 还原评论链接
         if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
             clearTimeout(timer)
@@ -73,5 +83,5 @@ namespace API {
                 })
             }, 100)
         }
-    })
+    });
 }
