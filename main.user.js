@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.7
+// @version      7.1.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,8 +22,8 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3c3680f1cf40ac90b8bf1a0d66d761ab08855789/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@98bffde09e8e73894f61c04a75bfd37b544adc5b/dist/bilibiliPlayer.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e34ba53279212adc855ff0f17fbdde5d61a4f11e/dist/comment.min.js
 // ==/UserScript==
 
 "use strict";
@@ -4910,7 +4910,17 @@ option {
         tag && (tag = false, API.addCss(API.getCss("comment.css")), API.config.oldReplySort && API.addCss(API.getCss("oldReplySort.css")));
         url += "&mobi_app=android";
         return url;
-    }, undefined, false);
+    }, r => {
+        setTimeout(() => {
+            if (r && 0 === r.code && r.data && r.data.root && r.data.root.floor) {
+                const item = document.querySelector(\`[data-id="\${r.data.root.rpid_str}"]  > .con > .info\`);
+                if (item && !item.querySelector(".floor")) {
+                    API.addElement("span", { class: "floor" }, item, \`#\${r.data.root.floor}\`, true);
+                }
+            }
+        });
+        return r;
+    }, false);
     API.config.commentLinkDetail && API.observerAddedNodes((node) => {
         if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
             clearTimeout(timer);
