@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.1.8
+// @version      7.1.9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3384,121 +3384,6 @@ option {
     API.importModule().forEach((d) => { d.includes("[run]") && API.importModule(d); }); // 自运行脚本
 
 //# sourceURL=API://@Bilibili-Old/vector.js`;
-/*!***********************!*/
-/**/modules["[run]proxyBigVip.js"] = /*** ./dist/[run]proxyBigVip.js ***/
-`"use strict";
-    const Backup = {};
-    API.registerSetting({
-        key: "proxyBigVip",
-        sort: "player",
-        label: "代理大会员",
-        sub: "借助第三方服务器",
-        type: "sort",
-        list: [{
-                type: "switch",
-                key: "bigvip",
-                value: true,
-                sort: "player",
-                label: "代理开关"
-            }, {
-                key: "proxyServerVision",
-                sort: "player",
-                label: "接口版本",
-                type: "input",
-                input: { type: "text" },
-                value: "0.1.8"
-            }, {
-                key: "proxyBigVipFlesh",
-                sort: "player",
-                label: "刷新签名",
-                type: "action",
-                title: "刷新",
-                disabled: 0,
-                action: () => {
-                    sign().then(d => d ? API.toast.success("已刷新签名！") : API.toast.error("刷新失败！您是否已登录？"));
-                }
-            }]
-    });
-    async function sign() {
-        if (!API.uid)
-            return;
-        const cookies = (await GM.cookie("list", {})).reduce((s, d) => {
-            Reflect.set(s, d.name, encodeURIComponent(d.value));
-            return s;
-        }, {});
-        const data = API.Base64.encode(JSON.stringify({
-            cookie: Object.entries(cookies).reduce((s, d) => {
-                s.push(\`\${d[0]}=\${d[1]}\`);
-                return s;
-            }, []).join(";"),
-            csrf: cookies.bili_jct,
-            level: 6,
-            mid: cookies.DedeUserID,
-            ua: navigator.userAgent,
-            vip: 0
-        }));
-        GM.setValue("bigvipSign", data);
-        return data;
-    }
-    class HookTimeOut {
-        hook;
-        constructor() {
-            this.hook = setTimeout;
-            window.setTimeout = (...args) => {
-                if (args[1] && args[1] == 1500 && args[0] && args[0].toString() == "function(){f.cz()}") {
-                    API.toast.warning("禁用播放器强制初始化！", ...args);
-                    return Number.MIN_VALUE;
-                }
-                return this.hook.call(window, ...args);
-            };
-        }
-        relese() {
-            window.setTimeout = this.hook;
-        }
-    }
-    if (API.config.bigvip) {
-        API.xhrhook("season/user/status?", undefined, obj => {
-            const response = API.jsonCheck(obj.responseText);
-            if (response && !response.result.pay && !(response.result.real_price > 0)) {
-                response.result.pay = 1;
-                obj.response = obj.responseText = JSON.stringify(response);
-            }
-        }, false);
-        API.xhrhookasync("/playurl?", args => {
-            const obj = API.Format.urlObj(args[1]);
-            return (API.vipCid && obj.cid && API.vipCid.includes(Number(obj.cid)));
-        }, async (args) => {
-            const hookTimeout = new HookTimeOut();
-            let response;
-            const obj = API.Format.urlObj(args[1]);
-            try {
-                API.toast.info("尝试代理大会员~");
-                response = Backup[obj.cid] || API.jsonCheck(await API.xhr.GM({
-                    url: API.Format.objUrl("http://121.5.226.51/bz/ajax.php", {
-                        act: "bvlink",
-                        ...obj,
-                        version: API.config.proxyServerVision,
-                        sign: GM.getValue("bigvipSign") || await sign()
-                    }),
-                    responseType: "json"
-                }));
-                API.__playinfo__ = response;
-                Backup[obj.cid] = response;
-                API.toast.success(\`解除大会员限制！aid=\${API.aid}, cid=\${API.cid}\`);
-            }
-            catch (e) {
-                API.toast.error("代理大会员失败！", e);
-                response = { "code": -404, "message": e, "data": null };
-            }
-            hookTimeout.relese();
-            return {
-                response: JSON.stringify(response),
-                responseText: JSON.stringify(response)
-            };
-        }, false);
-    }
-
-//# sourceURL=API://@Bilibili-Old/[run]proxyBigVip.js`;
 /*!***********************!*/
 /**/modules["accesskey.js"] = /*** ./dist/do/accesskey.js ***/
 `"use strict";
