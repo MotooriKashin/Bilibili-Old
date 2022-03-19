@@ -13,6 +13,7 @@ new files(path, exclude).run().then(d => {
                 modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n${String(d.data)}\r\n/*!***********************!*/`;
             } else if (d.path.endsWith(".js")) {
                 modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n\`${String(d.data).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$').replace(/var API;[\s\S]+\(API\) \{\r?\n/, "").replace(/\}\)\(API \|\| \(API = \{\}\)\);[\s\S]+$/, "")}\r\n//# sourceURL=API://@${d.path.slice(2).replace("dist", "Bilibili-Old")}\`;\r\n/*!***********************!*/`;
+                fs.promises.rm(d.path);
             } else {
                 modules += `\r\n/**/modules["${d.fileFullName}"] = /*** .${d.path.slice(1)} ***/\r\n\`${String(d.data).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;\r\n/*!***********************!*/`;
             }
