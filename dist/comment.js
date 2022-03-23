@@ -1545,8 +1545,7 @@
                         pn: e,
                         type: this.pageType,
                         oid: this.oid,
-                        sort: this.sort,
-                        // mobi_app: "android"
+                        sort: this.sort
                     },
                     dataType: "jsonp"
                 })
@@ -1578,8 +1577,7 @@
                         type: this.pageType,
                         oid: this.oid,
                         ps: 10,
-                        root: e,
-                        // mobi_app: "android"
+                        root: e
                     },
                     dataType: "jsonp"
                 })
@@ -2091,7 +2089,7 @@
                     this._getSubReplyByPage(r, i).done(function (e) {
                         var n,
                             t;
-                        e && 0 === e.code && (t = (n = e.data.page).num * n.size >= n.count, /** 标记已获取主楼层号 */a.addClass("floored"), a.find(".reply-box").html(l._createSubReplyList(e.data.replies, e.data.page.count, !0, r, s, t)), n = Math.ceil(e.data.page.count / e.data.page.size), t = a.find(".paging-box"), a.find(".reply-box").attr("data-page", i).attr("data-total", e.data.page.count), 1 < n ? t.paging({
+                        e && 0 === e.code && (t = (n = e.data.page).num * n.size >= n.count, a.find(".reply-box").html(l._createSubReplyList(e.data.replies, e.data.page.count, !0, r, s, t)), n = Math.ceil(e.data.page.count / e.data.page.size), t = a.find(".paging-box"), a.find(".reply-box").attr("data-page", i).attr("data-total", e.data.page.count), 1 < n ? t.paging({
                             pageCount: n,
                             current: i,
                             backFn: function (e) {
@@ -2438,12 +2436,6 @@
                                     rpid: e
                                 }));
                             l.lastClickOperation = this;
-                            // 触发楼中楼请求，间接获取主楼层号
-                            const item = $(this).parents(".reply-wrap:eq(0)");
-                            if (!item.hasClass("floored")) {
-                                item.addClass("floored");
-                                l._getSubReplyByPage(+item.attr("data-id"), 1);
-                            }
                         } else
                             operalist && (operalist.style.display = "none");
                     }),
@@ -2601,8 +2593,7 @@
                             jsonp: "jsonp",
                             rpid: t,
                             oid: r.oid,
-                            type: r.pageType,
-                            // mobi_app: "android"
+                            type: r.pageType
                         }
                     }).done(function (e) {
                         var n;
