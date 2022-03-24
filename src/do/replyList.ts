@@ -47,6 +47,7 @@ namespace API {
     config.trusteeship && scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => { // 评论样式
             addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            tag && (tag = false, addCss(getCss("comment.css")), config.oldReplySort && addCss(getCss("oldReplySort.css")));
         });
         const text = GM.getResourceText(script);
         if (!text) setTimeout(() => { toast.error("comment.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。"); displaySetting("trusteeship") })

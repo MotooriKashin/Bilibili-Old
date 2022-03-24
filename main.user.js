@@ -22,8 +22,8 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a20c74dd03e9a9d31d6fe135d11de9717a96f4e3/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@98bffde09e8e73894f61c04a75bfd37b544adc5b/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a20c74dd03e9a9d31d6fe135d11de9717a96f4e3/dist/comment.min.js
 // ==/UserScript==
 
 "use strict";
@@ -4785,6 +4785,7 @@ option {
     API.config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
         setTimeout(() => {
             API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            tag && (tag = false, API.addCss(API.getCss("comment.css")), API.config.oldReplySort && API.addCss(API.getCss("oldReplySort.css")));
         });
         const text = GM.getResourceText(script);
         if (!text)
