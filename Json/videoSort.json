@@ -9,6 +9,11 @@
         "音乐",
         "//www.bilibili.com/v/music/"
     ],
+    "5": [
+        5,
+        "娱乐",
+        "//www.bilibili.com/v/ent/"
+    ],
     "29": [
         3,
         "音乐现场",
@@ -339,9 +344,39 @@
         "运动综合",
         "//www.bilibili.com/v/sports/comprehensive"
     ],
+    "239": [
+        160,
+        "家居房产",
+        "//www.bilibili.com/v/life/home"
+    ],
     "240": [
         223,
         "摩托车",
         "//www.bilibili.com/v/car/motorcycle"
-    ]
+    ],
+    "241": [
+        5,
+        "娱乐杂谈",
+        "//www.bilibili.com/v/ent/talker"
+    ],
+    "242": [
+        5,
+        "粉丝创作",
+        "//www.bilibili.com/v/ent/fans"
+    ],
+    "243": [
+        3,
+        "乐评盘点",
+        "//www.bilibili.com/v/music/commentary"
+    ],
+    "244": [
+        3,
+        "音乐教学",
+        "//www.bilibili.com/v/music/tutorial"
+    ],
+    "245": [
+        223,
+        "赛车",
+        "//www.bilibili.com/v/car/racing"
+    ],
 }
