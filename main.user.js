@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.2.0
+// @version      7.2.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,8 +22,8 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@98bffde09e8e73894f61c04a75bfd37b544adc5b/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@a20c74dd03e9a9d31d6fe135d11de9717a96f4e3/dist/comment.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@98bffde09e8e73894f61c04a75bfd37b544adc5b/dist/bilibiliPlayer.min.js
 // ==/UserScript==
 
 "use strict";
@@ -2917,6 +2917,11 @@ option {
         "音乐",
         "//www.bilibili.com/v/music/"
     ],
+    "5": [
+        5,
+        "娱乐",
+        "//www.bilibili.com/v/ent/"
+    ],
     "29": [
         3,
         "音乐现场",
@@ -3247,11 +3252,41 @@ option {
         "运动综合",
         "//www.bilibili.com/v/sports/comprehensive"
     ],
+    "239": [
+        160,
+        "家居房产",
+        "//www.bilibili.com/v/life/home"
+    ],
     "240": [
         223,
         "摩托车",
         "//www.bilibili.com/v/car/motorcycle"
-    ]
+    ],
+    "241": [
+        5,
+        "娱乐杂谈",
+        "//www.bilibili.com/v/ent/talker"
+    ],
+    "242": [
+        5,
+        "粉丝创作",
+        "//www.bilibili.com/v/ent/fans"
+    ],
+    "243": [
+        3,
+        "乐评盘点",
+        "//www.bilibili.com/v/music/commentary"
+    ],
+    "244": [
+        3,
+        "音乐教学",
+        "//www.bilibili.com/v/music/tutorial"
+    ],
+    "245": [
+        223,
+        "赛车",
+        "//www.bilibili.com/v/car/racing"
+    ],
 }
 /*!***********************!*/
 /**/modules["main.js"] = /*** ./dist/main.js ***/
