@@ -3,12 +3,18 @@ interface modules {
     readonly "toast.js": string;
 }
 interface config {
+    /** toastr组 */
+    toast: never;
     /** toastr开关 */
     toastcheck: boolean;
     /** toastr延时 */
     toasttimeout: number;
     /** toastr间隔 */
     toaststep: number;
+    /** toastr测试 */
+    toasttest: never;
+    /** toastr记录 */
+    toastconsole: boolean;
 }
 namespace API {
     class Toast {
@@ -51,8 +57,8 @@ namespace API {
                 item = this.box.insertBefore(item, this.box.firstChild);
                 item.appendChild(this.msg(...msg));
                 this.come(item);
-                setTimeout(() => this.quit(item), (Number(config.toasttimeout) || 4) * 1000);
-            }, this.count * (Number(config.toaststep) || 250));
+                setTimeout(() => this.quit(item), config.toasttimeout * 1000);
+            }, this.count * config.toaststep);
             this.count++;
         }
         static come(item: HTMLDivElement, i: number = 0) {
@@ -102,9 +108,9 @@ namespace API {
      * toast.info的重定向，剩下的请访问对应属性
      * @param msg 消息字符串
      */
-    export function toast(...msg: any[]) { debug.debug(...msg); _.info(...msg) }
-    toast.info = function (...msg: any[]) { debug.debug(...msg); _.info(...msg) }
-    toast.success = function (...msg: any[]) { debug.log(...msg); _.success(...msg) }
-    toast.warning = function (...msg: any[]) { debug.warn(...msg); _.warning(...msg) }
-    toast.error = function (...msg: any[]) { debug.error(...msg); _.error(...msg) }
+    export function toast(...msg: any[]) { config.toastconsole && debug.debug(...msg); _.info(...msg) }
+    toast.info = function (...msg: any[]) { config.toastconsole && debug.debug(...msg); _.info(...msg) }
+    toast.success = function (...msg: any[]) { config.toastconsole && debug.log(...msg); _.success(...msg) }
+    toast.warning = function (...msg: any[]) { config.toastconsole && debug.warn(...msg); _.warning(...msg) }
+    toast.error = function (...msg: any[]) { config.toastconsole && debug.error(...msg); _.error(...msg) }
 }
