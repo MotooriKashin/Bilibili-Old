@@ -4,31 +4,31 @@
 
 .player-fullscreen-fix {
     position: fixed;
-    top     : 0;
-    left    : 0;
-    margin  : 0;
-    padding : 0;
-    width   : 100%;
-    height  : 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .player-fullscreen-fix #bofqi .player {
-    position     : fixed !important;
+    position: fixed !important;
     border-radius: 0;
-    z-index      : 100000 !important;
-    left         : 0;
-    top          : 0;
-    width        : 100% !important;
-    height       : 100% !important;
+    z-index: 100000 !important;
+    left: 0;
+    top: 0;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .bgray-btn-wrap {
-    position   : absolute;
-    top        : 10px;
-    left       : 50%;
+    position: absolute;
+    top: 10px;
+    left: 50%;
     margin-left: 490px;
-    width      : 70px;
-    height     : 200px;
+    width: 70px;
+    height: 200px;
 }
 
 .widescreen .bgray-btn-wrap {
@@ -36,35 +36,35 @@
 }
 
 .bgray-btn {
-    transition      : all 0.3s;
-    cursor          : pointer;
-    margin          : 10px 0;
+    transition: all 0.3s;
+    cursor: pointer;
+    margin: 10px 0;
     background-color: #fff;
-    text-align      : center;
-    padding         : 7px 5px;
-    display         : block;
-    left            : 100%;
-    font-size       : 12px;
-    line-height     : 12px;
-    margin-left     : 10px;
-    width           : 20px;
-    border-radius   : 4px;
-    border          : 1px solid #e5e9ef;
-    color           : #99a2aa;
+    text-align: center;
+    padding: 7px 5px;
+    display: block;
+    left: 100%;
+    font-size: 12px;
+    line-height: 12px;
+    margin-left: 10px;
+    width: 20px;
+    border-radius: 4px;
+    border: 1px solid #e5e9ef;
+    color: #99a2aa;
 }
 
 .bgray-btn-feedback {
-    height       : 72px;
+    height: 72px;
     margin-bottom: 5px;
 }
 
 .bgray-btn-help {
-    height    : 24px;
+    height: 24px;
     margin-top: 5px;
 }
 
 .bgray-btn:hover {
-    color       : #6d757a;
+    color: #6d757a;
     border-color: #6d757a;
 }
 
@@ -73,7 +73,7 @@
 }
 
 .bgray-btn.player-feedback-disable:hover {
-    color       : #ccd0d7;
+    color: #ccd0d7;
     border-color: #ccd0d7;
 }
 
@@ -82,20 +82,20 @@
 }
 
 .bgray-btn.player-feedback-disable:hover {
-    color       : #ccd0d7;
+    color: #ccd0d7;
     border-color: #ccd0d7;
 }
 
 .bgray-btn.active {
-    cursor      : default;
-    color       : #00a1d6;
+    cursor: default;
+    color: #00a1d6;
     border-color: #00a1d6;
 }
 
 .bgray-line {
-    display      : none;
-    width        : 42px;
-    margin       : 0 auto;
+    display: none;
+    width: 42px;
+    margin: 0 auto;
     border-bottom: 1px solid #e5e9ef;
 }
 
@@ -114,14 +114,14 @@
 }
 
 .bgray-btn.happyfoolsday {
-    line-height     : 13px;
+    line-height: 13px;
     background-color: #00a1d6;
-    border-color    : #00a1d6;
-    color           : #fff;
+    border-color: #00a1d6;
+    color: #fff;
 }
 
 .bgray-btn.happyfoolsday:hover {
     background-color: #00b5e5;
-    border-color    : #00b5e5;
-    color           : #fff;
+    border-color: #00b5e5;
+    color: #fff;
 }

@@ -5,25 +5,25 @@
 
 .checkbox {
   align-items: center;
-  display    : flex;
-  min-height : auto;
-  padding    : 0;
-  cursor     : pointer;
+  display: flex;
+  min-height: auto;
+  padding: 0;
+  cursor: pointer;
 }
 
 .checkbox .checklabel {
-  height            : 16px;
+  height: 16px;
   margin-block-start: 0px;
-  position          : relative;
-  width             : 16px;
-  border-radius     : 50%;
+  position: relative;
+  width: 16px;
+  border-radius: 50%;
 }
 
 .checklabel .disc-border {
-  border       : 2px solid rgb(95, 99, 104);
-  box-sizing   : border-box;
-  height       : 16px;
-  width        : 16px;
+  border: 2px solid rgb(95, 99, 104);
+  box-sizing: border-box;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
 }
 
@@ -33,23 +33,23 @@
 
 .checklabel .disc {
   background-color: transparent;
-  position        : absolute;
-  top             : 0;
-  transform       : scale(0);
-  transition      : border-color 200ms, transform 200ms;
-  box-sizing      : border-box;
-  height          : 16px;
-  width           : 16px;
-  border-radius   : 50%;
+  position: absolute;
+  top: 0;
+  transform: scale(0);
+  transition: border-color 200ms, transform 200ms;
+  box-sizing: border-box;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
 }
 
 .checklabel .disc[checked] {
   background-color: rgb(26, 115, 232);
-  transform       : scale(0.5);
+  transform: scale(0.5);
 }
 
 .checkbox .checkvalue {
-  flex               : 1;
+  flex: 1;
   margin-inline-start: 5px;
-  margin-inline-end  : 5px;
+  margin-inline-end: 5px;
 }

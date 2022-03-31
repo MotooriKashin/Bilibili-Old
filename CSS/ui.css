@@ -1,41 +1,41 @@
 .box {
-  left         : 50%;
-  top          : 50%;
-  transform    : translateX(-50%) translateY(-50%);
-  min-width    : 600px;
-  min-height   : 400px;
-  padding      : 0;
-  border       : 0;
-  position     : fixed;
-  z-index      : 11110;
-  display      : block;
-  box-sizing   : border-box;
-  background   : #fff;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  min-width: 600px;
+  min-height: 400px;
+  padding: 0;
+  border: 0;
+  position: fixed;
+  z-index: 11110;
+  display: block;
+  box-sizing: border-box;
+  background: #fff;
   border-radius: 8px;
-  box-shadow   : 0 6px 12px 0 rgba(106, 115, 133, 22%);
-  transition   : transform 0.3s ease-in;
-  line-height  : 14px;
-  font         : 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,
+  box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
+  transition: transform 0.3s ease-in;
+  line-height: 14px;
+  font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,
     Heiti SC, WenQuanYi Micro Hei, sans-serif;
 }
 
 .tool {
-  position                  : absolute;
-  border-bottom-left-radius : 8px;
+  position: absolute;
+  border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  overflow                  : hidden;
-  width                     : 100%;
-  display                   : inline-flex;
-  z-index                   : 1;
-  align-items               : center;
-  justify-content           : flex-end;
-  pointer-events            : none;
+  overflow: hidden;
+  width: 100%;
+  display: inline-flex;
+  z-index: 1;
+  align-items: center;
+  justify-content: flex-end;
+  pointer-events: none;
 }
 
 .tool div {
-  border-radius : 50%;
-  padding       : 10px;
-  transform     : scale(0.8);
+  border-radius: 50%;
+  padding: 10px;
+  transform: scale(0.8);
   pointer-events: visible;
 }
 
@@ -44,51 +44,51 @@
 }
 
 .content {
-  position                  : relative;
-  border-bottom-left-radius : 8px;
+  position: relative;
+  border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  overflow                  : hidden;
-  background-color          : #fff;
+  overflow: hidden;
+  background-color: #fff;
 }
 
 .contain {
-  padding-bottom     : 15px;
+  padding-bottom: 15px;
   background-position: top center;
-  background-size    : contain;
-  background-repeat  : no-repeat;
-  display            : flex;
-  align-items        : flex-start;
-  flex               : 1;
-  height             : 385px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+  height: 385px;
 }
 
 .menu::-webkit-scrollbar,
 .item::-webkit-scrollbar {
-  width : 0 !important;
+  width: 0 !important;
   height: 0 !important;
 }
 
 .menu {
-  flex          : 1 1 0;
-  flex-basis    : calc(480px * 0.2);
-  height        : 100%;
-  position      : sticky;
-  top           : 0;
-  display       : flex;
+  flex: 1 1 0;
+  flex-basis: calc(480px * 0.2);
+  height: 100%;
+  position: sticky;
+  top: 0;
+  display: flex;
   flex-direction: column;
-  min-width     : fit-content;
-  overflow      : auto;
+  min-width: fit-content;
+  overflow: auto;
 }
 
 .item {
-  flex      : 4 4 0;
+  flex: 4 4 0;
   flex-basis: calc(480px * 0.8);
-  height    : 100%;
+  height: 100%;
   box-sizing: border-box;
-  display   : block;
-  margin    : 0 auto;
-  position  : relative;
-  overflow  : auto;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  overflow: auto;
 }
 
 .selected {

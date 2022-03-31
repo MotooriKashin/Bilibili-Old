@@ -1,6 +1,6 @@
 .bb-comment .comment-header .header-page,
 .comment-bilibili-fold .comment-header .header-page {
-    float      : right;
+    float: right;
     line-height: 36px;
 }
 
@@ -15,32 +15,32 @@
 }
 
 .user-card .info .user .vip-icon {
-    max-width       : 58px;
-    height          : 16px;
-    border-radius   : 2px;
-    margin-left     : 8px;
+    max-width: 58px;
+    height: 16px;
+    border-radius: 2px;
+    margin-left: 8px;
     background-color: #FF6699;
-    font-size       : 12px;
-    font-weight     : 400;
-    color           : #fff;
-    white-space     : nowrap;
-    padding         : 1px;
-    padding-inline  : 4px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    white-space: nowrap;
+    padding: 1px;
+    padding-inline: 4px;
 }
 
 .user-card .info .verify {
-    color      : #9499A0;
+    color: #9499A0;
     line-height: 17px;
-    margin-top : 11px;
+    margin-top: 11px;
 }
 
 .user-card .info .verify .auth {
-    display       : inline-block;
+    display: inline-block;
     vertical-align: bottom;
-    position      : relative;
-    left          : -3px;
-    width         : 16px;
-    height        : 16px;
+    position: relative;
+    left: -3px;
+    width: 16px;
+    height: 16px;
 }
 
 .reply-item .reply-con .user .stick {

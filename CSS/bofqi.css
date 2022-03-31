@@ -1,12 +1,12 @@
 #bofqi .player {
-    width  : 980px;
-    height : 620px;
+    width: 980px;
+    height: 620px;
     display: block;
 }
 
 @media screen and (min-width:1400px) {
     #bofqi .player {
-        width : 1160px;
+        width: 1160px;
         height: 720px
     }
 }

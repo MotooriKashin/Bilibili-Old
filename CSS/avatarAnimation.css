@@ -4,21 +4,21 @@
 }
 
 .bili-header-m .profile-info .i-face .pendant {
-    transform : scale(0.5);
-    width     : 112px;
-    height    : 112px;
-    left      : -41px;
-    bottom    : -46px;
-    opacity   : 0;
+    transform: scale(0.5);
+    width: 112px;
+    height: 112px;
+    left: -41px;
+    bottom: -46px;
+    opacity: 0;
     transition: opacity .1s ease-in
 }
 
 .bili-header-m .profile-info.on .i-face {
-    left            : 8px;
-    top             : 0;
-    height          : 32px;
-    width           : 32px;
-    transform       : translateY(10px) translateX(-16px) scale(2);
+    left: 8px;
+    top: 0;
+    height: 32px;
+    width: 32px;
+    transform: translateY(10px) translateX(-16px) scale(2);
     transform-origin: top left
 }
 
@@ -31,7 +31,7 @@
 }
 
 .bili-header-m .profile-info.on .i-face .face {
-    border    : 0;
+    border: 0;
     box-shadow: 0 0 0 2px #fff
 }
 
@@ -41,7 +41,7 @@
 
 .bili-header-m .profile-info.on .scale-in .face {
     height: 32px;
-    width : 32px
+    width: 32px
 }
 
 .bili-header-m .profile-info.on .i-face.scale-in .legalize {

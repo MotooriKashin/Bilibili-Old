@@ -1,30 +1,30 @@
 .contain {
-  margin-bottom       : 3px;
+  margin-bottom: 3px;
   padding-inline-start: 20px;
-  padding-inline-end  : 20px;
-  display             : flex;
-  flex-direction      : column;
-  outline             : none;
-  position            : relative;
+  padding-inline-end: 20px;
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  position: relative;
 }
 
 .header .title {
-  color         : #000;
-  font-size     : 108%;
-  font-weight   : 400;
+  color: #000;
+  font-size: 108%;
+  font-weight: 400;
   letter-spacing: 0.25px;
-  margin-bottom : 12px;
-  margin-top    : 21px;
-  outline       : none;
+  margin-bottom: 12px;
+  margin-top: 21px;
+  outline: none;
   padding-bottom: 4px;
-  padding-top   : 8px;
+  padding-top: 8px;
 }
 
 .card {
   border-radius: 4px;
-  box-shadow   : 0px 0px 1px 1px rgba(60, 64, 67, 30%);
-  flex         : 1;
-  color        : #000;
-  line-height  : 154%;
-  user-select  : text;
+  box-shadow: 0px 0px 1px 1px rgba(60, 64, 67, 30%);
+  flex: 1;
+  color: #000;
+  line-height: 154%;
+  user-select: text;
 }

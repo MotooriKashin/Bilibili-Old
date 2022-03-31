@@ -1,57 +1,57 @@
 .contain {
-  align-items     : center;
-  border-top      : 1px solid rgba(0, 0, 0, 6%);
-  display         : flex;
-  min-height      : 24px;
-  padding         : 0 20px;
-  flex-wrap       : wrap;
-  justify-content : flex-end;
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 6%);
+  display: flex;
+  min-height: 24px;
+  padding: 0 20px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   background-color: transparent !important;
 }
 
 .label {
-  flex                : 1;
-  flex-basis          : 0.000000001px;
-  padding-block-end   : 12px;
-  padding-block-start : 12px;
+  flex: 1;
+  flex-basis: 0.000000001px;
+  padding-block-end: 12px;
+  padding-block-start: 12px;
   padding-inline-start: 12px;
 }
 
 .sub {
-  color      : rgb(95, 99, 104);
+  color: rgb(95, 99, 104);
   font-weight: 400;
 }
 
 .button,
 .action {
-  line-height    : 154%;
-  align-items    : center;
-  border-radius  : 4px;
-  box-sizing     : border-box;
-  cursor         : pointer;
-  display        : inline-flex;
-  flex-shrink    : 0;
-  font-weight    : 500;
-  height         : 32px;
+  line-height: 154%;
+  align-items: center;
+  border-radius: 4px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-weight: 500;
+  height: 32px;
   justify-content: center;
-  min-width      : 5.14em;
-  outline-width  : 0;
-  overflow       : hidden;
-  padding        : 8px 16px;
-  position       : relative;
-  user-select    : none;
+  min-width: 5.14em;
+  outline-width: 0;
+  overflow: hidden;
+  padding: 8px 16px;
+  position: relative;
+  user-select: none;
 }
 
 .action {
-  border          : none;
+  border: none;
   background-color: rgb(26, 115, 232);
-  color           : #fff;
+  color: #fff;
 }
 
 .button {
   background-color: #fff;
-  color           : rgb(26, 115, 232);
-  border          : 1px solid rgba(0, 0, 0, 6%);
+  color: rgb(26, 115, 232);
+  border: 1px solid rgba(0, 0, 0, 6%);
 }
 
 .action:hover {
@@ -72,8 +72,8 @@
 
 .button[disabled],
 .action[disabled] {
-  pointer-events  : none;
+  pointer-events: none;
   background-color: rgba(19, 1, 1, 0.1);
-  border          : 1px solid rgba(0, 0, 0, 0.1);
-  color           : white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: white;
 }
