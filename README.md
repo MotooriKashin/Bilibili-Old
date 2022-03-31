@@ -1,4 +1,4 @@
-![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 94](https://img.shields.io/badge/Google_Chrome_96-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.13](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 100](https://img.shields.io/badge/Google_Chrome_100-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.14](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
 [Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，恢复旧版B站网页样式，尤其是那个小电视播放器。  
 
@@ -72,14 +72,14 @@
 ### 开发环境
 > 
 > 操作系统        Microsoft Windows 11 professional 10.0.22000.258  
-> 浏览器          Google Chrome 96.0.4664.45 (正式版本) （64 位） (cohort: Stable)  
-> 脚本管理器      Tampermonkey Beta 4.14.6148  
+> 浏览器          Google Chrome 100.0.4896.60 (正式版本) （64 位） (cohort: 100_Win_60)  
+> 脚本管理器      Tampermonkey Beta 4.14.6152  
 > 代码编辑器      Visual Studio Code 1.63.0  
-> 编译器          Node.js v12.9.1  
->                TypeScript Version 4.5.2  
+> 编译器          Node.js v16.14.0  
+>                TypeScript Version 4.6.3  
 >
 
-开发者文档参见本仓库[Wiki](https://github.com/MotooriKashin/Bilibili-Old/wiki/%E5%BC%80%E5%8F%91%E8%80%85%E6%96%87%E6%A1%A3)。
+参见[开发者文档](https://github.com/MotooriKashin/Bilibili-Old/blob/master/.github/contributing.md)。
 
 ---
 ### 参考致谢
