@@ -47,19 +47,24 @@ namespace API {
         (<any>window).biliQuickLogin ? (<any>window).biliQuickLogin() : loadScript("//static.hdslb.com/account/bili_quick_login.js", () => biliQuickLogin());
     }
     /**
-     * 加载外源脚本
+     * 加载外源脚本  
+     * 支持加载完成后执行回调函数或者返回Promise
      * @param src 外源脚本url
      * @param onload 加载完成后的回调函数
      */
     export function loadScript(src: string, onload?: () => void) {
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = src;
-        script.addEventListener("load", () => {
-            script.remove();
-            onload && onload();
+        return new Promise((r, j) => {
+            const script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = src;
+            script.addEventListener("load", () => {
+                script.remove();
+                onload && onload();
+                r(true);
+            });
+            script.addEventListener('error', () => j());
+            document.body.appendChild(script);
         });
-        document.body.appendChild(script);
     }
     /**
      * 节点到页面顶部的距离
