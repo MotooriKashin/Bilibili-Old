@@ -266,7 +266,8 @@ namespace API {
                     size: v.fontsize,
                     stime: v.progress / 1000,
                     text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : v.content,
-                    uid: v.midHash
+                    uid: v.midHash,
+                    weight: v.weight
                 };
                 // 添加图片弹幕信息
                 if (v.action && v.action.startsWith("picture:")) result.picture = "//" + v.action.split(":")[1];
@@ -313,6 +314,7 @@ namespace API {
         picture?: string;
         AH?: string;
         zIndex?: number;
+        weight?: number;
     }
     /** proto弹幕对象 */
     export interface danmakuNew {
@@ -325,6 +327,7 @@ namespace API {
         progress: number;
         content: string;
         midHash: string;
+        weight: number;
         action?: string;
         styleClass?: string
     }
