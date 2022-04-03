@@ -17683,7 +17683,7 @@ function Fa() {
                             if (b !== 0) {
                                 c.template.split[0].style.display = "inline-block";
                                 c.template.oJ[0].style.display = "inline-block";
-                                c.g.list.weight && c.template.Iy.html(c.g.list.weight[b]);
+                                c.g.list.weight !== undefined && c.template.Iy.html(c.g.list.weight[b]);
                             }
                         }
                     });
@@ -21386,7 +21386,7 @@ function Fa() {
                             e.list && (e.Sf = e.Sf || e.list.Zj(500), e.Sf())
                         },
                         Lh: function (b) {
-                            if(b.weight && b.weight < e.c.Na.f.block.ai_level) return false;
+                            if(b.weight && b.class === 0 && b.weight < e.c.Na.f.block.ai_level) return false;
                             return !e.c.Na.di(b)
                         },
                         Jx: function (b) {
@@ -21665,7 +21665,7 @@ function Fa() {
                                     c.list.weight = new Array(100).fill(0);
                                     for (var e = +new Date, k = [], h = void 0, q = 0, m = b.danmakuArray.length; q < m; q++) {
                                         h = b.danmakuArray[q], h.gb = b.danmakuArray[q]["class"], k[k.length] = h;
-                                        c.list.weight[h.weight] += 1;
+                                        h.class === 0 ? c.list.weight[h.weight] += 1 : c.list.weight[11] += 1;
                                     }
                                     for(let i = 10; i >= 0; i--) {
                                         c.list.weight[i] += c.list.weight[i + 1];
