@@ -17680,9 +17680,11 @@ function Fa() {
                         move: function () { },
                         change: function (b) {
                             c.set("block", "ai_level", b);
-                            c.template.split[0].style.display = "inline-block";
-                            c.template.oJ[0].style.display = "inline-block";
-                            c.template.Iy.html(c.g.list.weight[b]);
+                            if (b !== 0) {
+                                c.template.split[0].style.display = "inline-block";
+                                c.template.oJ[0].style.display = "inline-block";
+                                c.g.list.weight && c.template.Iy.html(c.g.list.weight[b]);
+                            }
                         }
                     });
                     this.aiFilter.value(c.get().block.ai_level);
