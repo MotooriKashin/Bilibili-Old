@@ -13461,7 +13461,7 @@ function Fa() {
                 e.nb(function (b) {
                     c.En.text(b.BK)
                 });
-                if (this.c.get().block.ai_level != 0) {
+                if (this.c.get().block.ai_level !== 0) {
                     this.split[0].style.display = "inline-block";
                     this.oJ[0].style.display = "inline-block";
                 }
@@ -17638,8 +17638,7 @@ function Fa() {
                     '<div class="' + b + '-block-tabpanel no-bottom" role="normal"><div class="' + b + '-block-tabpanel-title">智能云屏蔽</div>' +
                     `<div class="${b}-block-content"><div class="${b}-block-label"style="width: 72px;display: inline-block;">屏蔽等级</div>
                     <div class="${b}-block-setting"><div class="${b}-setting-ai-level"></div></div>
-                    <div class="${b}-block-label">越高越严格，设为“0级”则不使用云屏蔽</div>
-                    <div class="${b}-block-label" style="margin-bottom:30px">最大屏蔽等级为“硬核会员弹幕模式”</div>
+                    <div class="${b}-block-label" style="margin-bottom:30px">越高越严格，最大屏蔽等级为“硬核会员弹幕模式”</div>
                     </div>` +
                     '</div></div></div>' +
                     '<div class="' + b + '-block-list-hide-btn">\u6536\u8d77</div>'
@@ -17676,7 +17675,7 @@ function Fa() {
                         },
                         $f: function (b) { // 浮动提示
                             b = b * totalLevel;
-                            return b <= 10 ? b + "级" : "硬核";
+                            return b === 0? "关闭" : (b <= 10 ? b + "级" : "硬核");
                         },
                         move: function () { },
                         change: function (b) {
@@ -18047,7 +18046,6 @@ function Fa() {
             e.prototype.di = function (b) {
                 var c = this.f.block,
                     d = this.c;
-                if(b.weight < c.ai_level) return true;
                 try {
                     var e = 7 === b.mode && "[" === b.text[0] ? JSON.parse(b.text)[4] : b.text
                 } catch (C) {
@@ -21386,6 +21384,7 @@ function Fa() {
                             e.list && (e.Sf = e.Sf || e.list.Zj(500), e.Sf())
                         },
                         Lh: function (b) {
+                            if(b.weight && b.weight < e.c.Na.f.block.ai_level) return false;
                             return !e.c.Na.di(b)
                         },
                         Jx: function (b) {
