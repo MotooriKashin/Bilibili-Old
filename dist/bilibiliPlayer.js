@@ -17683,8 +17683,11 @@ function Fa() {
                             if (b !== 0) {
                                 c.template.split[0].style.display = "inline-block";
                                 c.template.oJ[0].style.display = "inline-block";
-                                c.g.list.weight !== undefined && c.template.Iy.html(c.g.list.weight[b]);
+                            } else {
+                                c.template.split[0].style.display = "";
+                                c.template.oJ[0].style.display = "";
                             }
+                            c.g.list.weight !== undefined && c.template.Iy.html(c.g.list.weight[b]);
                         }
                     });
                     this.aiFilter.value(c.get().block.ai_level);
