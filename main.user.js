@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.2.2
+// @version      7.2.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,8 +22,8 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@193d74dd57ae7a3593d3fc3d56cfa9161ec4c6ac/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c7c8da95a3de1b3f2f65929193ba9ada959a543d/dist/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@98bffde09e8e73894f61c04a75bfd37b544adc5b/dist/bilibiliPlayer.min.js
 // ==/UserScript==
 
 "use strict";
@@ -4358,7 +4358,7 @@ option {
                     this.mid + '" target="_blank" class="' +
                     (DanmakuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmakuHashId.catch[this.mid].data.card.name + '</a> ' +
                     DanmakuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' +
-                    DanmakuHashId.catch[this.mid].data.card.level_info.current_level + '"></i></a></div></div></div></div></div></div></div>';
+                    (DanmakuHashId.catch[this.mid].data.card.is_senior_member ? 7 : DanmakuHashId.catch[this.mid].data.card.level_info.current_level) + '"></i></a></div></div></div></div></div></div></div>';
                 DanmakuHashId.count--;
             }
             catch (e) {
@@ -4850,30 +4850,32 @@ option {
 /**/modules["section.js"] = /*** ./dist/do/section.js ***/
 `"use strict";
     // 替换顶栏
-    API.runWhile(() => document.querySelector("#internationalHeader"), () => {
+    API.runWhile(() => document.querySelector("#internationalHeader"), async () => {
         var _a;
         if (API.path.name)
             return;
         API.addCss(".nav-item.live {width: auto;}");
         document.querySelector("#internationalHeader").setAttribute("style", "visibility:hidden;");
-        (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
+        if (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax))
+            await API.loadScript("//static.hdslb.com/js/jquery.min.js");
         ((document.querySelector(".mini-type") &&
             !location.href.includes("blackboard/topic_list") &&
             !location.href.includes("blackboard/x/act_list")) ||
             /festival/.test(location.href)) ?
             API.addElement("div", { class: "z-top-container" }, undefined, undefined, true) :
             API.addElement("div", { class: "z-top-container has-menu" }, undefined, undefined, true);
-        API.addElement("script", { type: "text/javascript", src: "//s1.hdslb.com/bfs/seed/jinkela/header/header.js" });
+        API.loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
     });
     // 替换底栏
-    API.runWhile(() => document.querySelector(".international-footer"), () => {
+    API.runWhile(() => document.querySelector(".international-footer"), async () => {
         var _a;
         if (API.path.name)
             return;
         document.querySelector(".international-footer").remove();
-        (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax)) && API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/js/jquery.min.js" }, undefined, undefined, true);
+        if (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax))
+            await API.loadScript("//static.hdslb.com/js/jquery.min.js");
         API.addElement("div", { class: "footer bili-footer report-wrap-module", id: "home_footer" });
-        API.addElement("script", { type: "text/javascript", src: "//static.hdslb.com/common/js/footer.js" });
+        API.loadScript("//static.hdslb.com/common/js/footer.js");
     });
     // 移除新版顶栏
     API.runWhile(() => document.querySelector("#bili-header-m"), () => {
@@ -4882,11 +4884,14 @@ option {
         API.addCss(API.getModule("avatarAnimation.css"));
     });
     // 替换第三版顶栏
-    API.runWhile(() => document.body.classList.contains("header-v3"), () => {
+    API.runWhile(() => document.body.classList.contains("header-v3") || document.querySelector("#bili-header-container"), async () => {
+        var _a;
         if (API.path.name)
             return;
         document.body.classList.remove("header-v3");
-        API.loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js"); //, () => document.body.classList.remove("header-v3"));
+        if (!((_a = window.\$) === null || _a === void 0 ? void 0 : _a.ajax))
+            await API.loadScript("//static.hdslb.com/js/jquery.min.js");
+        API.loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js");
     });
 
 //# sourceURL=API://@Bilibili-Old/do/section.js`;
@@ -7080,7 +7085,8 @@ option {
                     size: v.fontsize,
                     stime: v.progress / 1000,
                     text: (v.mode != 8 && v.mode != 9) ? v.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, '\\n') : v.content,
-                    uid: v.midHash
+                    uid: v.midHash,
+                    weight: v.weight
                 };
                 // 添加图片弹幕信息
                 if (v.action && v.action.startsWith("picture:"))
@@ -10639,18 +10645,23 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     API.biliQuickLogin = biliQuickLogin;
     /**
      * 加载外源脚本
+     * 支持加载完成后执行回调函数或者返回Promise
      * @param src 外源脚本url
      * @param onload 加载完成后的回调函数
      */
     function loadScript(src, onload) {
-        const script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = src;
-        script.addEventListener("load", () => {
-            script.remove();
-            onload && onload();
+        return new Promise((r, j) => {
+            const script = document.createElement("script");
+            script.type = "text/javascript";
+            script.src = src;
+            script.addEventListener("load", () => {
+                script.remove();
+                onload && onload();
+                r(true);
+            });
+            script.addEventListener('error', () => j());
+            document.body.appendChild(script);
         });
-        document.body.appendChild(script);
     }
     API.loadScript = loadScript;
     /**
