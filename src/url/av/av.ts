@@ -57,6 +57,7 @@ namespace API {
             ];
             this.getIniState();
             this.onload = () => { this.afterFlush() }
+            addCss("#app > div > .bili-header-m.report-wrap-module {display:none}"); // 使上古顶栏移除不可见
             importModule("hookWebpackJsonp.js"); // 修复原生代码错误
         }
         async getIniState() {
