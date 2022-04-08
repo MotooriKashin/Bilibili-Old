@@ -98,6 +98,10 @@ namespace API {
             }
         }
         hookTimeout.relese();
+        if (response.code === -404) throw type === "json" ? { response } : {
+            response: JSON.stringify(response),
+            responseText: JSON.stringify(response)
+        }
         return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)

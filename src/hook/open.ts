@@ -59,7 +59,7 @@ namespace API {
      * 注意部分xhr请求可能有额外的超时判定，所以`modifyResponse`修改未必会生效。
      * @param url 需要拦截的xhr的url匹配关键词或词组，词组间是并的关系，即必须同时满足才会触发拦截回调。
      * @param condition 二次判定**同步**回调函数，不提供或者返回真值时开始拦截，可以通过url等精确判定是否真要拦截。
-     * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，第二个参数为responseType类型，你可以据此确定需要哪些返回值，**注意每种返回值的格式！**
+     * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，第二个参数为responseType类型，你可以据此确定需要哪些返回值，**注意每种返回值的格式！**。如果处理出错，可将默认值以异常或`Promise.reject`形式抛出。
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递`false`，然后自行在不再需要拦截后使用`removeXhrhook`注销。
      * @returns 注册编号，`once=false`时才有用，可用于取消拦截。
      */
@@ -69,6 +69,7 @@ namespace API {
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
             try {
                 if (!condition || condition(args)) {
+                    (<any>this).xhrhookTimes = (<any>this).xhrhookTimes ? (<any>this).xhrhookTimes++ : 1; // 同意实例拦截次数
                     id && (temp = rules[id - 1]); // 临时移除同条件URL的hook，避免代理中使用了同url造成死循环
                     delete rules[id - 1];
                     this.send = () => true; // 禁用XMLHttpRequest.send
@@ -90,9 +91,25 @@ namespace API {
                             this.dispatchEvent(new ProgressEvent("load"));
                             this.dispatchEvent(new ProgressEvent("loadend"));
                         }
-                    }).catch(e => {
-                        this.dispatchEvent(new ProgressEvent("error"));
-                        debug.error("modifyResponse of xhrhookasync", one, e);
+                    }).catch(d => {
+                        if ((<any>this).xhrhookTimes === 1) {
+                            if (d && d.response) { // 抛出的返回值有效，作为默认值还给调用处
+                                Object.defineProperty(this, "response", { configurable: true, value: d.response });
+                                d.responseType && Object.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+                                d.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+                                d.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+                                !this.responseURL && Object.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+                                Object.defineProperty(this, "readyState", { configurable: true, value: 4 });
+                                this.dispatchEvent(new ProgressEvent("readystatechange"));
+                                this.dispatchEvent(new ProgressEvent("load"));
+                                this.dispatchEvent(new ProgressEvent("loadend"));
+                            } else { // 抛出返回值无效，通知xhr事件
+                                this.dispatchEvent(new ProgressEvent("error"));
+                            }
+                        } else { // xhr被其他hook处理中，此处不做任何处理
+                            (<any>this).xhrhookTimes--;
+                        }
+                        debug.error("modifyResponse of xhrhookasync", one, d);
                     }).finally(() => {
                         clearInterval(et);
                         !once && (id = rules.push(temp)); // 恢复多次监听
