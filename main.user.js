@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@193d74dd57ae7a3593d3fc3d56cfa9161ec4c6ac/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0ac42452fd3dcebdfb1034c7b83adda2c2d8b1fa/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c7c8da95a3de1b3f2f65929193ba9ada959a543d/dist/comment.min.js
 // ==/UserScript==
 
@@ -6736,7 +6736,7 @@ option {
                 API.toast("数据返回！正在整合。。。");
             }
             catch (e) { }
-            let danmaku = API.danmaku.danmakuFormat(this.danmaku, API.aid);
+            let danmaku = API.danmaku.danmakuFormat(this.danmaku);
             if (boolean)
                 API.toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + API.Format.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");
             (_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku(danmaku);
@@ -10294,11 +10294,9 @@ option {
         /**
          * 将新版弹幕数组转化为旧版弹幕数组
          * @param dm 新版弹幕数组
-         * @param aid 视频aid，默认取当前视频aid
          * @returns 旧版弹幕数组
          */
-        danmakuFormat(dm, aid) {
-            aid = aid || aid;
+        danmakuFormat(dm) {
             let danmaku = dm.map(function (v) {
                 let result = {
                     class: v.pool,
@@ -10314,17 +10312,15 @@ option {
                 };
                 // 添加图片弹幕信息
                 if (v.action && v.action.startsWith("picture:"))
-                    result.picture = "//" + v.action.split(":")[1];
+                    result.html = \`<img src="//\${v.action.split(":")[1]}" style="width:auto;height:56.25px;">\`;
                 // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
                 // b.AH && (e.className = e.className + " " + b.AH);
                 if (v.styleClass !== undefined)
                     result.AH = v.styleClass;
                 return result;
             });
-            //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
-            if (aid && aid < 400000) {
-                this.specialEffects(danmaku);
-            }
+            //对含有"/n"的弹幕的进行专门处理
+            this.specialEffects(danmaku);
             this.sortDmById(danmaku, "dmid");
             return danmaku;
         }
@@ -10338,7 +10334,7 @@ option {
                 if (obj.aid && obj.cid) {
                     this.getSegDanmaku(obj.aid, obj.cid).then((d) => {
                         var _a;
-                        d = this.danmakuFormat(d, obj.aid);
+                        d = this.danmakuFormat(d);
                         (_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku(d, API.config.concatDanmaku);
                         this.danmaku = d;
                     });
@@ -13050,6 +13046,14 @@ option {
         value: true,
         init: () => API.setCookie("i-wanna-go-back", String(2)),
         action: v => API.setCookie("i-wanna-go-back", String(v ? 2 : -1))
+    });
+    API.registerSetting({
+        key: "concatDanmaku",
+        sort: "danmaku",
+        label: "合并载入弹幕",
+        sub: "本地文件或在线文件",
+        type: "switch",
+        value: false
     });
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
