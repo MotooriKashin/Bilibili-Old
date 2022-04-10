@@ -51,7 +51,7 @@ namespace API {
         isON: boolean = false; // 是否启用
         caption: any; // 当前字幕
         contain: any;
-        captions: any; // 字幕集
+        captions: Record<string, any>[] = []; // 字幕集
         text: any;
         constructor() {
             this.setting = GM.getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
@@ -243,10 +243,9 @@ namespace API {
         async getCaption(data: any) {
             try {
                 this.subtitle = this.captions = data.data.subtitle.subtitles || [];
-                let i = 0; // 指示字幕语言记录
-                this.captions.forEach((d: any, j: any) => {
-                    if (d.lan == this.subtitlePrefer) i = j;
-                })
+                this.convertion(this.captions);
+                let i = this.captions.findIndex(d => d.lan == this.subtitlePrefer);
+                i = i < 0 ? 0 : i;
                 if (this.captions[i]) await this.setCaption(this.captions[i]);
                 if (this.caption) {
                     // 只在有字幕时添加面板
@@ -260,18 +259,39 @@ namespace API {
             } catch (e) { debug.error("closedCaption.js", e) }
         }
         /**
+         * 准备字幕翻译
+         * @param arr 原始字幕组
+         */
+        convertion(arr: any[]) {
+            let chs = false, base: any = undefined;
+            arr.forEach(d => {
+                d.lan && (
+                    d.lan === "zh-CN" && (chs = true),
+                    d.lan.includes("zh") && (base = { ...d }))
+            });
+            if (chs || !base) return;
+            base.lan = "zh-CN";
+            base.lan_doc = "中文（繁=>简）";
+            base.convert = true;
+            arr.push(base);
+        }
+        /**
          * 设置CC字幕
          * @param caption CC字幕对象
          */
         async setCaption(caption?: any) {
             let data = { body: [] }; // 空字幕
             if (caption && caption.subtitle_url) {
-                this.data[caption.subtitle_url] = this.data[caption.subtitle_url] || await xhr({
+                this.data[caption.lan] = this.data[caption.lan] || await xhr({
                     url: caption.subtitle_url,
                     responseType: "json",
                     credentials: false
                 });
-                data = this.data[caption.subtitle_url] || data;
+                if (caption.convert) { // 繁 => 简
+                    this.data[caption.lan] = JSON.parse(cht2chs(JSON.stringify(this.data[caption.lan])));
+                    caption.convert = undefined;
+                }
+                data = this.data[caption.lan] || data;
             }
             (<any>window).player.updateSubtitle(data); // 投喂字幕数据给播放器
             setTimeout(() => {
@@ -283,7 +303,7 @@ namespace API {
             }, 1000);
             if (caption && caption.subtitle_url) {
                 this.caption = caption; // 记忆当前字幕
-                bofqiMessage(["载入字幕", this.captions[0].lan_doc])
+                bofqiMessage(["载入字幕", this.caption.lan_doc])
             } else bofqiMessage("关闭字幕");
         }
     }

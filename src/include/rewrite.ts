@@ -152,7 +152,7 @@ namespace API {
         set onload(v: () => void) {
             this.loadendCallback.push(v);
         }
-        /** @param 旧版网页框架名，**请移除其中的script标签** */
+        /** 旧版网页框架名，**请移除其中的script标签** */
         constructor(html: keyof modules) {
             if (config.compatible === "极端") {
                 GM.DOM.write(<string>getModule(html));

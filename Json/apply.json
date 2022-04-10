@@ -15,6 +15,7 @@
 	"xhrhookasync": "open.js",
 	"removeXhrhook": "open.js",
 	"AllDanmaku": "allDanmaku.js",
+	"cht2chs": "cht2chs.js",
 	"config": "config.js",
 	"registerSetting": "config.js",
 	"registerMenu": "config.js",
