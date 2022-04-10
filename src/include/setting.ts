@@ -908,4 +908,12 @@ namespace API {
         init: () => setCookie("i-wanna-go-back", String(2)),
         action: v => setCookie("i-wanna-go-back", String(v ? 2 : -1))
     })
+    registerSetting({
+        key: "concatDanmaku",
+        sort: "danmaku",
+        label: "合并载入弹幕",
+        sub: "本地文件或在线文件",
+        type: "switch",
+        value: false
+    })
 }

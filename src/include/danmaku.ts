@@ -251,11 +251,9 @@ namespace API {
         /**
          * 将新版弹幕数组转化为旧版弹幕数组
          * @param dm 新版弹幕数组
-         * @param aid 视频aid，默认取当前视频aid
          * @returns 旧版弹幕数组
          */
-        danmakuFormat(dm: danmakuNew[], aid?: number | string) {
-            aid = aid || aid
+        danmakuFormat(dm: danmakuNew[]) {
             let danmaku = dm.map(function (v) {
                 let result: danmaku = {
                     class: v.pool,
@@ -270,16 +268,14 @@ namespace API {
                     weight: v.weight
                 };
                 // 添加图片弹幕信息
-                if (v.action && v.action.startsWith("picture:")) result.picture = "//" + v.action.split(":")[1];
+                if (v.action && v.action.startsWith("picture:")) result.html = `<img src="//${v.action.split(":")[1]}" style="width:auto;height:56.25px;">`;
                 // 利用bilibiliPlayer.js的这行代码，可以添加指定的css类到弹幕上
                 // b.AH && (e.className = e.className + " " + b.AH);
                 if (v.styleClass !== undefined) result.AH = v.styleClass;
                 return result;
             });
-            //对av400000(2012年11月)之前视频中含有"/n"的弹幕的进行专门处理
-            if (aid && aid < 400000) {
-                this.specialEffects(danmaku);
-            }
+            //对含有"/n"的弹幕的进行专门处理
+            this.specialEffects(danmaku);
             this.sortDmById(danmaku, "dmid");
             return danmaku;
         }
@@ -292,7 +288,7 @@ namespace API {
                 let obj = await urlInputCheck(url);
                 if (obj.aid && obj.cid) {
                     this.getSegDanmaku(obj.aid, obj.cid).then((d: any) => {
-                        d = this.danmakuFormat(<any[]>d, obj.aid);
+                        d = this.danmakuFormat(<any[]>d);
                         window.player?.setDanmaku(d, config.concatDanmaku);
                         this.danmaku = d;
                     })
@@ -311,7 +307,7 @@ namespace API {
         stime: number;
         text: string;
         uid: string;
-        picture?: string;
+        html?: string;
         AH?: string;
         zIndex?: number;
         weight?: number;

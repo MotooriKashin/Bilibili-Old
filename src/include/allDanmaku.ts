@@ -156,7 +156,7 @@ namespace API {
                 this.danmaku = this.danmaku.concat(await API.danmaku.getSegDanmaku(undefined, undefined, true));
                 toast("数据返回！正在整合。。。")
             } catch (e) { }
-            let danmaku = API.danmaku.danmakuFormat(this.danmaku, API.aid);
+            let danmaku = API.danmaku.danmakuFormat(this.danmaku);
             if (boolean) toast.success("全弹幕获取成功，正在装填。。。", "总弹幕量：" + Format.unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π");
             window.player?.setDanmaku(danmaku);
             API.danmaku.danmaku = danmaku;
