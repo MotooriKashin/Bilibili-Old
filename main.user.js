@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.2.4
+// @version      7.2.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0ac42452fd3dcebdfb1034c7b83adda2c2d8b1fa/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@924cccbc940706309441f880a84e38bc47c8d554/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c7c8da95a3de1b3f2f65929193ba9ada959a543d/dist/comment.min.js
 // ==/UserScript==
 
@@ -10357,12 +10357,12 @@ option {
      * debug.log的重定向，剩下的请访问对应属性。
      * @param data 要输出的内容
      */
-    API.debug = function (...data) { console.log(\`%c[\${API.Format.timeFormat()}]\`, "color: blue;", ...data); };
-    API.debug.log = function (...data) { console.log(\`%c[\${API.Format.timeFormat()}]\`, "color: blue;", ...data); };
-    API.debug.info = function (...data) { console.info(\`%c[\${API.Format.timeFormat()}]\`, "color: green;", ...data); };
-    API.debug.debug = function (...data) { console.debug(\`[\${API.Format.timeFormat()}]\`, ...data); };
-    API.debug.warn = function (...data) { console.warn(\`[\${API.Format.timeFormat()}]\`, ...data); };
-    API.debug.error = function error(...data) { console.error(\`[\${API.Format.timeFormat()}]\`, ...data); };
+    API.debug = function (...data) { setTimeout(console.log.bind(console, \`%c[\${API.Format.timeFormat()}]\`, "color: blue;", ...data)); };
+    API.debug.log = function (...data) { setTimeout(console.log.bind(console, \`%c[\${API.Format.timeFormat()}]\`, "color: blue;", ...data)); };
+    API.debug.info = function (...data) { setTimeout(console.info.bind(console, \`%c[\${API.Format.timeFormat()}]\`, "color: green;", ...data)); };
+    API.debug.debug = function (...data) { setTimeout(console.debug.bind(console, \`[\${API.Format.timeFormat()}]\`, ...data)); };
+    API.debug.warn = function (...data) { setTimeout(console.warn.bind(console, \`[\${API.Format.timeFormat()}]\`, ...data)); };
+    API.debug.error = function error(...data) { setTimeout(console.error.bind(console, \`[\${API.Format.timeFormat()}]\`, ...data)); };
 
 //# sourceURL=API://@Bilibili-Old/include/debug.js`;
 /*!***********************!*/
@@ -12131,8 +12131,8 @@ option {
             this.cleard = false;
             this.title = document.title;
             if (API.config.compatible === "极端") {
-                GM.DOM.write(API.getModule(html));
-                GM.DOM.close();
+                GM.DOM.open();
+                this.html = html;
             }
             else {
                 API.config.compatible === "默认" && window.stop();
@@ -12162,6 +12162,10 @@ option {
         /** 清洗页面及全局变量 */
         clearWindow() {
             this.cleard = true;
+            if (API.config.compatible === "极端") {
+                GM.DOM.write(API.getModule(this.html));
+                GM.DOM.close();
+            }
             this.dush.forEach(d => {
                 try {
                     Reflect.deleteProperty(window, d);
@@ -17615,6 +17619,17 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                             src: ep.cover
                         }]
                 });
+            });
+            // 修复末尾番剧推荐
+            API.xhrhook("api.bilibili.com/pgc/web/recommend/related/recommend", args => {
+                args[1] = args[1].replace("web/recommend", "season/web");
+            }, r => {
+                try {
+                    const result = API.jsonCheck(r.response);
+                    result.result = result.data.season;
+                    r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+                }
+                catch (e) { }
             });
             this.flushDocument();
         }
