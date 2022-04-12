@@ -18692,12 +18692,12 @@ function Fa() {
                 var t = this.wi = $('<div class="' + n + '-panel-scrollbar"></div>').appendTo(q);
                 this.rl = [];
                 f.f.Fb ? ($.ajax({
-                    url: `https://api.bilibili.com/pgc/web/recommend/related/recommend?season_id=${f.f.Fb}`,
+                    url: `https://api.bilibili.com/pgc/season/web/related/recommend?season_id=${f.f.Fb}`,
                     type: "get",
                     dataType: "json",
                     success: (c) => {
                         try {
-                            this.recommendList(c.result.season.reduce((s, d) => {
+                            this.recommendList(c.data.season.reduce((s, d) => {
                                 s.push([
                                     d.new_ep.cover || d.cover,
                                     d.url,

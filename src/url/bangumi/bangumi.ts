@@ -106,6 +106,16 @@ namespace API {
                         src: ep.cover
                     }]
                 })
+            });
+            // 修复末尾番剧推荐
+            xhrhook("api.bilibili.com/pgc/web/recommend/related/recommend", args => {
+                args[1] = args[1].replace("web/recommend", "season/web");
+            }, r => {
+                try {
+                    const result = jsonCheck(r.response);
+                    result.result = result.data.season;
+                    r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+                } catch (e) { }
             })
             this.flushDocument();
         }
