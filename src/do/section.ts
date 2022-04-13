@@ -32,7 +32,7 @@ namespace API {
         addCss(getModule("avatarAnimation.css"));
     })
     // 替换第三版顶栏
-    runWhile(() => document.body.classList.contains("header-v3") || document.querySelector("#bili-header-container"), async () => {
+    runWhile(() => (document.body && document.body.classList.contains("header-v3")) || document.querySelector("#bili-header-container"), async () => {
         if (path.name) return;
         document.body.classList.remove("header-v3");
         if (!(<any>window).$?.ajax) await loadScript("//static.hdslb.com/js/jquery.min.js");

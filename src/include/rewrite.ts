@@ -148,7 +148,6 @@ namespace API {
         loadendCallback: (() => void)[] = [];
         cleard = false;
         title = document.title;
-        html?: keyof modules;
         /** 添加重写完页面执行的回调函数 */
         set onload(v: () => void) {
             this.loadendCallback.push(v);
@@ -157,7 +156,8 @@ namespace API {
         constructor(html: keyof modules) {
             if (config.compatible === "极端") {
                 GM.DOM.open();
-                this.html = html;
+                GM.DOM.write(<string>getModule(html));
+                GM.DOM.close();
             } else {
                 config.compatible === "默认" && window.stop();
                 document.replaceChild(document.implementation.createDocumentType('html', '', ''), <Node>document.doctype);
@@ -180,10 +180,6 @@ namespace API {
         /** 清洗页面及全局变量 */
         clearWindow() {
             this.cleard = true;
-            if (config.compatible === "极端") {
-                GM.DOM.write(<string>getModule(<keyof modules>this.html));
-                GM.DOM.close();
-            }
             this.dush.forEach(d => {
                 try {
                     Reflect.deleteProperty(window, d);
