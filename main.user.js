@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.2.5
+// @version      7.2.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -4905,7 +4905,7 @@ option {
         API.addCss(API.getModule("avatarAnimation.css"));
     });
     // 替换第三版顶栏
-    API.runWhile(() => document.body.classList.contains("header-v3") || document.querySelector("#bili-header-container"), async () => {
+    API.runWhile(() => (document.body && document.body.classList.contains("header-v3")) || document.querySelector("#bili-header-container"), async () => {
         var _a;
         if (API.path.name)
             return;
@@ -12132,7 +12132,8 @@ option {
             this.title = document.title;
             if (API.config.compatible === "极端") {
                 GM.DOM.open();
-                this.html = html;
+                GM.DOM.write(API.getModule(html));
+                GM.DOM.close();
             }
             else {
                 API.config.compatible === "默认" && window.stop();
@@ -12162,10 +12163,6 @@ option {
         /** 清洗页面及全局变量 */
         clearWindow() {
             this.cleard = true;
-            if (API.config.compatible === "极端") {
-                GM.DOM.write(API.getModule(this.html));
-                GM.DOM.close();
-            }
             this.dush.forEach(d => {
                 try {
                     Reflect.deleteProperty(window, d);
