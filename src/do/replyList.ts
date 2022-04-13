@@ -70,4 +70,33 @@ namespace API {
             }, 100)
         }
     });
+    /** 楼层号栈 */
+    const oids: Record<string, number> = new Proxy({}, {
+        set: (t, p, v, r) => {
+            !Reflect.has(t, p) && Promise.resolve().then(() => {
+                let rp = document.querySelector(`[data-id="${<string>p}"]`);
+                rp && addElement("span", { class: "floor" }, <Element>rp.querySelector(".info"), `#${v}`, true);
+            })
+            return Reflect.set(t, p, v, r)
+        }
+    });
+    const oidc: (Promise<any>)[] = [];
+    jsonphook("api.bilibili.com/x/v2/reply/reply?", param => {
+        const params = Format.urlObj(param);
+        const { oid, root, type } = params;
+        oidc.push(url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type }))
+        params.root && !Reflect.has(oids, params.root) && url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type });
+        return param;
+    }, r => {
+        setTimeout(() => oidc.shift()?.then(d => {
+            if (d.code === 0) {
+                const root = d.data.root;
+                oids[root.rpid] = root.floor;
+                root.replies.forEach((d: any) => {
+                    oids[d.rpid] = d.floor;
+                });
+            }
+        }))
+        return r
+    }, false);
 }

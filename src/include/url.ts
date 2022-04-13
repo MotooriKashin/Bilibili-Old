@@ -17,7 +17,8 @@ namespace API {
             "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
             "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
             "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-            "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" }
+            "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
+            "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" }
         }
         /**
          * 请求封装好的json请求
@@ -48,31 +49,33 @@ namespace API {
      */
     export interface jsonUrlDetail {
         /** 网页端bangumi playurl */
-        "api.bilibili.com/pgc/player/web/playurl": { avid: number, cid: number, qn?: number, fnver?: number, fnval?: number }
+        "api.bilibili.com/pgc/player/web/playurl": { avid: number | string, cid: number | string, qn?: number | string, fnver?: number | string, fnval?: number | string }
         /** 网页端一般视频playurl */
-        "api.bilibili.com/x/player/playurl": { avid: number, cid: number, qn?: number, fnver?: number, fnval?: number }
+        "api.bilibili.com/x/player/playurl": { avid: number | string, cid: number | string, qn?: number | string, fnver?: number | string, fnval?: number | string }
         /** Interface playurl */
-        "interface.bilibili.com/v2/playurl": { cid: number, quality?: number }
+        "interface.bilibili.com/v2/playurl": { cid: number | string, quality?: number | string }
         /** Interface bangumi playuel */
-        "bangumi.bilibili.com/player/web_api/v2/playurl": { cid: number, quality?: number }
+        "bangumi.bilibili.com/player/web_api/v2/playurl": { cid: number | string, quality?: number | string }
         /** 投屏 bangumi playurl */
-        "api.bilibili.com/pgc/player/api/playurlproj": { cid: number }
+        "api.bilibili.com/pgc/player/api/playurlproj": { cid: number | string }
         /** 投屏 普通视频 playurl */
-        "app.bilibili.com/v2/playurlproj": { cid: number }
+        "app.bilibili.com/v2/playurlproj": { cid: number | string }
         /** TV端 bangumi playurl */
-        "api.bilibili.com/pgc/player/api/playurltv": { avid: number, cid: number, qn?: number, fnver?: number, fnval?: number, build?: number }
+        "api.bilibili.com/pgc/player/api/playurltv": { avid: number | string, cid: number | string, qn?: number | string, fnver?: number | string, fnval?: number | string, build?: number | string }
         /** TV 普通视频 playurl */
-        "api.bilibili.com/x/tv/ugc/playurl": { avid: number, cid: number, qn?: number, fnver?: number, fnval?: number, build?: number }
+        "api.bilibili.com/x/tv/ugc/playurl": { avid: number | string, cid: number | string, qn?: number | string, fnver?: number | string, fnval?: number | string, build?: number | string }
         /** Android Play一般视频 */
-        "app.bilibili.com/x/intl/playurl": { aid: number, cid: number, qn?: number, fnver?: number, fnval?: number, build?: number }
+        "app.bilibili.com/x/intl/playurl": { aid: number | string, cid: number | string, qn?: number | string, fnver?: number | string, fnval?: number | string, build?: number | string }
         /** Android Play bangumi视频 */
-        "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { ep_id: number, cid: number, qn?: number, fnver?: number, fnval?: number, build?: number }
+        "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { ep_id: number | string, cid: number | string, qn?: number | string, fnver?: number | string, fnval?: number | string, build?: number | string }
         /**
          * 获取aid信息，包括区域限制
          * @param id 视频aid
          * @param page 分p号
          */
-        "api.bilibili.com/view": { id: number, page?: string | number }
+        "api.bilibili.com/view": { id: number | string, page?: string | number }
+        /** APP楼中楼详情 */
+        "api.bilibili.com/x/v2/reply/detail": { oid: number | string, root: number | string, type: number | string }
     }
     /** 封装好的默认请求，已填好必须的参数 */
     export const url: Url = <any>undefined;
