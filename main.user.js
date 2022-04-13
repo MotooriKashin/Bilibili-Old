@@ -23,7 +23,7 @@
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
 // @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@924cccbc940706309441f880a84e38bc47c8d554/dist/bilibiliPlayer.min.js
-// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c7c8da95a3de1b3f2f65929193ba9ada959a543d/dist/comment.min.js
+// @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@23526752a582f8735b3c7a82cbc84a34a0eff480/dist/comment.min.js
 // ==/UserScript==
 
 "use strict";
@@ -4865,6 +4865,38 @@ option {
             }, 100);
         }
     });
+    /** 楼层号栈 */
+    const oids = new Proxy({}, {
+        set: (t, p, v, r) => {
+            !Reflect.has(t, p) && Promise.resolve().then(() => {
+                let rp = document.querySelector(\`[data-id="\${p}"]\`);
+                rp && API.addElement("span", { class: "floor" }, rp.querySelector(".info"), \`#\${v}\`, true);
+            });
+            return Reflect.set(t, p, v, r);
+        }
+    });
+    const oidc = [];
+    API.jsonphook("api.bilibili.com/x/v2/reply/reply?", param => {
+        const params = API.Format.urlObj(param);
+        const { oid, root, type } = params;
+        oidc.push(API.url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type }));
+        params.root && !Reflect.has(oids, params.root) && API.url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type });
+        return param;
+    }, r => {
+        setTimeout(() => {
+            var _a;
+            return (_a = oidc.shift()) === null || _a === void 0 ? void 0 : _a.then(d => {
+                if (d.code === 0) {
+                    const root = d.data.root;
+                    oids[root.rpid] = root.floor;
+                    root.replies.forEach((d) => {
+                        oids[d.rpid] = d.floor;
+                    });
+                }
+            });
+        });
+        return r;
+    }, false);
 
 //# sourceURL=API://@Bilibili-Old/do/replyList.js`;
 /*!***********************!*/
@@ -14121,7 +14153,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
                 "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
                 "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-                "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" }
+                "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
+                "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" }
             };
         }
         /**
