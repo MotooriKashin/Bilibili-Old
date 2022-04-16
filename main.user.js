@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.2.6
+// @version      7.2.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@924cccbc940706309441f880a84e38bc47c8d554/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5375694256724de0cf448081eb2f70a36125931c/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@23526752a582f8735b3c7a82cbc84a34a0eff480/dist/comment.min.js
 // ==/UserScript==
 
@@ -10292,7 +10292,6 @@ option {
                     uid: attr[6]
                 };
             }
-            this.specialEffects(danmaku);
             this.sortDmById(danmaku, "dmid");
             /**
              * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
@@ -10303,22 +10302,6 @@ option {
             if (!((_a = window.player) === null || _a === void 0 ? void 0 : _a.setDanmaku))
                 return API.toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
             (_b = window.player) === null || _b === void 0 ? void 0 : _b.setDanmaku(danmaku, append);
-        }
-        /**
-         * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
-         * @param dm 弹幕数组
-         */
-        specialEffects(dm) {
-            let textData;
-            for (let i = 0; i < dm.length; i++) {
-                textData = dm[i];
-                if (textData.text.includes('\\n')) {
-                    textData.class = 1;
-                    textData.zIndex = textData.stime * 1000;
-                    if (!(textData.text.includes("█") || textData.text.includes("▂")))
-                        textData.zIndex = textData.zIndex + 1;
-                }
-            }
         }
         segDmDecode(response) {
             return Danmaku.protoSeg.decode(new Uint8Array(response)).elems;
@@ -10351,8 +10334,6 @@ option {
                     result.AH = v.styleClass;
                 return result;
             });
-            //对含有"/n"的弹幕的进行专门处理
-            this.specialEffects(danmaku);
             this.sortDmById(danmaku, "dmid");
             return danmaku;
         }
