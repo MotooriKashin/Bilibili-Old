@@ -3804,12 +3804,20 @@ function Fa() {
                 this.o()
             }
             e.prototype.o = function () {
-                if (this.textData.class != 1) {
+                // 允许所有类型弹幕换行
+                if (this.textData.class != 1 && !this.textData.text.includes("\n")) {
                     if (1 === this.textData.mode || 4 === this.textData.mode || 5 === this.textData.mode || 6 === this.textData.mode)
                         window.String.prototype.trim || (window.String.prototype.trim = function () {
                             return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "")
                         }), this.textData.text &&
                             (this.textData.text = this.textData.text.trim());
+                }
+                // 正确处理弹幕分层
+                // @see #100 
+                if (this.textData.text.includes('\n')) {
+                    this.textData.zIndex = this.textData.stime * 1000;
+                    if (!(this.textData.text.includes("█") || this.textData.text.includes("▂")))
+                        this.textData.zIndex = this.textData.zIndex + 1;
                 }
                 var d = this.Ro(this.textData, this.f);
                 this.element = d.Am;

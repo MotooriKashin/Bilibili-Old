@@ -217,7 +217,6 @@ namespace API {
                     uid: attr[6]
                 };
             }
-            this.specialEffects(danmaku);
             this.sortDmById(danmaku, "dmid");
             /**
              * bilibiliPlayer.js 21394行已经添加如下代码，用于设置弹幕池
@@ -228,22 +227,6 @@ namespace API {
 
             if (!window.player?.setDanmaku) return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
             window.player?.setDanmaku(danmaku, append);
-        }
-        /**
-         * 把有换行符的弹幕的zindex设为它的出现时间(progress)，并且打上“字幕弹幕”标记
-         * @param dm 弹幕数组
-         */
-        specialEffects(dm: danmaku[]) {
-            let textData: danmaku;
-            for (let i = 0; i < dm.length; i++) {
-                textData = dm[i];
-                if (textData.text.includes('\n')) {
-                    textData.class = 1;
-                    textData.zIndex = textData.stime * 1000;
-                    if (!(textData.text.includes("█") || textData.text.includes("▂")))
-                        textData.zIndex = textData.zIndex + 1;
-                }
-            }
         }
         segDmDecode(response: any): danmakuNew[] {
             return Danmaku.protoSeg.decode(new Uint8Array(response)).elems;
@@ -274,8 +257,6 @@ namespace API {
                 if (v.styleClass !== undefined) result.AH = v.styleClass;
                 return result;
             });
-            //对含有"/n"的弹幕的进行专门处理
-            this.specialEffects(danmaku);
             this.sortDmById(danmaku, "dmid");
             return danmaku;
         }
