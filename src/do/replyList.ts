@@ -85,7 +85,7 @@ namespace API {
         const params = Format.urlObj(param);
         const { oid, root, type } = params;
         oidc.push(url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type }))
-        params.root && !Reflect.has(oids, params.root) && url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type });
+        params.root && !Reflect.has(oids, params.root) && url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type }, true);
         return param;
     }, r => {
         setTimeout(() => oidc.shift()?.then(d => {
