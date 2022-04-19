@@ -147,6 +147,8 @@ interface config {
     search: boolean;
     /** 分区主页 */
     sortIndex: boolean;
+    /** 直播回放 */
+    liveRecord: boolean;
 }
 namespace API {
     registerSetting({
@@ -907,12 +909,20 @@ namespace API {
         value: true,
         init: () => setCookie("i-wanna-go-back", String(2)),
         action: v => setCookie("i-wanna-go-back", String(v ? 2 : -1))
-    })
+    });
     registerSetting({
         key: "concatDanmaku",
         sort: "danmaku",
         label: "合并载入弹幕",
         sub: "本地文件或在线文件",
+        type: "switch",
+        value: false
+    });
+    registerSetting({
+        key: "liveRecord",
+        sort: "live",
+        label: "直播回放",
+        sub: "过滤动态中的直播回放",
         type: "switch",
         value: false
     })

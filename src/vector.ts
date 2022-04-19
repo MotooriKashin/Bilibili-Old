@@ -37,6 +37,7 @@ namespace API {
         if (config.player && /\/festival\//.test(location.href)) importModule("bnj.js");
         if ((config.medialist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) importModule("medialist.js");
         if (config.search && path[2] == "search.bilibili.com") importModule("search.js");
+        if (config.liveRecord && path[2] == "t.bilibili.com") importModule("dynamic.js");
     }
     importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
     importModule("playinfo.js"); // 视频源修复及记录
