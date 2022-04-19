@@ -15288,7 +15288,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     API.xhrhook("api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", undefined, r => {
         try {
             const response = API.jsonCheck(r.response);
-            response.data.items = response.data.items.filter((d) => d.modules.module_dynamic.major.archive.badge.text != "直播回放");
+            response.data.items = response.data.items.filter((d) => { var _a, _b, _c, _d, _e; return ((_e = (_d = (_c = (_b = (_a = d.modules) === null || _a === void 0 ? void 0 : _a.module_dynamic) === null || _b === void 0 ? void 0 : _b.major) === null || _c === void 0 ? void 0 : _c.archive) === null || _d === void 0 ? void 0 : _d.badge) === null || _e === void 0 ? void 0 : _e.text) != "直播回放"; });
             r.responseType === "json" ? r.response = response : r.response = r.responseText = JSON.stringify(response);
         }
         catch (e) { }
