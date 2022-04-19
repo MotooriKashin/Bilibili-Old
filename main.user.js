@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.2.7
+// @version      7.2.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3371,6 +3371,7 @@ option {
     API.importModule("parameterTrim.js"); // 网址及超链接清理
     API.importModule("replyList.js"); // 回复翻页评论区及楼层号
     API.config.logReport && API.importModule("logReport.js"); // 拦截B站日志上报
+    API.config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     if (!NOREWRITE) {
         if (API.config.av && /\\/video\\/[AaBb][Vv]/.test(location.href))
             API.importModule("av.js");
@@ -3406,9 +3407,10 @@ option {
             API.importModule("medialist.js");
         if (API.config.search && API.path[2] == "search.bilibili.com")
             API.importModule("search.js");
+        if (API.config.liveRecord && API.path[2] == "t.bilibili.com")
+            API.importModule("dynamic.js");
     }
     API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
-    API.config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     API.importModule("playinfo.js"); // 视频源修复及记录
     API.importModule("player-v2.js"); // 视频信息接口
     API.importModule("automate.js"); // 自动化处理
@@ -4880,7 +4882,7 @@ option {
         const params = API.Format.urlObj(param);
         const { oid, root, type } = params;
         oidc.push(API.url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type }));
-        params.root && !Reflect.has(oids, params.root) && API.url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type });
+        params.root && !Reflect.has(oids, params.root) && API.url.getJson("api.bilibili.com/x/v2/reply/detail", { oid, root, type }, true);
         return param;
     }, r => {
         setTimeout(() => {
@@ -13069,6 +13071,14 @@ option {
         type: "switch",
         value: false
     });
+    API.registerSetting({
+        key: "liveRecord",
+        sort: "live",
+        label: "直播回放",
+        sub: "过滤动态中的直播回放",
+        type: "switch",
+        value: false
+    });
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
 /*!***********************!*/
@@ -15272,6 +15282,19 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     });
 
 //# sourceURL=API://@Bilibili-Old/url/bnj.js`;
+/*!***********************!*/
+/**/modules["dynamic.js"] = /*** ./dist/url/dynamic.js ***/
+`"use strict";
+    API.xhrhook("api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", undefined, r => {
+        try {
+            const response = API.jsonCheck(r.response);
+            response.data.items = response.data.items.filter((d) => d.modules.module_dynamic.major.archive.badge.text != "直播回放");
+            r.responseType === "json" ? r.response = response : r.response = r.responseText = JSON.stringify(response);
+        }
+        catch (e) { }
+    }, false);
+
+//# sourceURL=API://@Bilibili-Old/url/dynamic.js`;
 /*!***********************!*/
 /**/modules["history.js"] = /*** ./dist/url/history.js ***/
 `"use strict";
