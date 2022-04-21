@@ -18,7 +18,6 @@ namespace API {
     importModule("parameterTrim.js"); // 网址及超链接清理
     importModule("replyList.js"); // 回复翻页评论区及楼层号
     config.logReport && importModule("logReport.js"); // 拦截B站日志上报
-    config.protoDm && importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     if (!NOREWRITE) {
         if (config.av && /\/video\/[AaBb][Vv]/.test(location.href)) importModule("av.js");
         if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) importModule("bangumi.js");
@@ -39,6 +38,7 @@ namespace API {
         if (config.search && path[2] == "search.bilibili.com") importModule("search.js");
         if (config.liveRecord && path[2] == "t.bilibili.com") importModule("dynamic.js");
     }
+    config.protoDm && importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
     importModule("playinfo.js"); // 视频源修复及记录
     importModule("player-v2.js"); // 视频信息接口

@@ -74,12 +74,12 @@ namespace API {
             details.headers && (Object.entries(details.headers).forEach(d => xhr.setRequestHeader(d[0], d[1])));
             details.credentials && (xhr.withCredentials = true);
             details.timeout && (xhr.timeout = details.timeout);
-            xhr.onabort = details.onabort || ((ev) => reject(ev));
-            xhr.onerror = details.onerror || ((ev) => reject(ev));
+            xhr.onabort = details.onabort || reject;
+            xhr.onerror = details.onerror || reject;
             details.onloadstart && (xhr.onloadstart = details.onloadstart);
             details.onprogress && (xhr.onprogress = details.onprogress);
             details.onreadystatechange && (xhr.onreadystatechange = details.onreadystatechange);
-            xhr.ontimeout = details.ontimeout || ((ev) => reject(ev));
+            xhr.ontimeout = details.ontimeout || reject;
             xhr.onload = details.onload || (() => resolve(xhr.response));
             xhr.send(details.data);
         })

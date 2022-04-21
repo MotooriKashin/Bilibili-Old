@@ -3371,7 +3371,6 @@ option {
     API.importModule("parameterTrim.js"); // 网址及超链接清理
     API.importModule("replyList.js"); // 回复翻页评论区及楼层号
     API.config.logReport && API.importModule("logReport.js"); // 拦截B站日志上报
-    API.config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     if (!NOREWRITE) {
         if (API.config.av && /\\/video\\/[AaBb][Vv]/.test(location.href))
             API.importModule("av.js");
@@ -3410,6 +3409,7 @@ option {
         if (API.config.liveRecord && API.path[2] == "t.bilibili.com")
             API.importModule("dynamic.js");
     }
+    API.config.protoDm && API.importModule("protoDm.js"); // 旧版播放器新版protobuf弹幕支持
     API.importModule("infoNewNumber.js"); // 移除旧版顶栏失效资讯数据
     API.importModule("playinfo.js"); // 视频源修复及记录
     API.importModule("player-v2.js"); // 视频信息接口
@@ -6568,29 +6568,7 @@ option {
                 triggerOnMsg(danmaku, loadTime, parseTime);
                 API.danmaku.danmaku = danmaku;
             });
-            if (XMLHttpRequest.prototype.pakku_send === undefined) {
-                loadDanmaku(new Date());
-            }
-            else {
-                // 让pakku.js载入弹幕
-                let url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + API.cid + "&pid=" + API.aid + "&segment_index=1";
-                API.xhr({ url: url, responseType: "arraybuffer", credentials: true }).then((response) => {
-                    let Segments = API.danmaku.segDmDecode(response);
-                    // pakku.js处于“休眠中”时，不会修改响应数据，这时的response仅仅是第一个分段的弹幕数据
-                    // 这种情况下需要主动去加载全部的分段(loadDanmaku)
-                    let i = 1;
-                    for (; i < Segments.length; i++) {
-                        // pakku.js处理过的弹幕，在出现时间上按升序排列，可以用这个特征加以区别是否应该载入完整的弹幕
-                        if (Segments[i - 1].progress > Segments[i].progress)
-                            break;
-                    }
-                    if (i != Segments.length)
-                        loadDanmaku(new Date());
-                    else {
-                        triggerOnMsg(API.danmaku.danmakuFormat(Segments), "(pakku.js)", "(pakku.js)");
-                    }
-                });
-            }
+            loadDanmaku(new Date());
         }
         else {
             workerPostMsg.call(this, aMessage, transferList);
@@ -14306,12 +14284,12 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 details.headers && (Object.entries(details.headers).forEach(d => xhr.setRequestHeader(d[0], d[1])));
                 details.credentials && (xhr.withCredentials = true);
                 details.timeout && (xhr.timeout = details.timeout);
-                xhr.onabort = details.onabort || ((ev) => reject(ev));
-                xhr.onerror = details.onerror || ((ev) => reject(ev));
+                xhr.onabort = details.onabort || reject;
+                xhr.onerror = details.onerror || reject;
                 details.onloadstart && (xhr.onloadstart = details.onloadstart);
                 details.onprogress && (xhr.onprogress = details.onprogress);
                 details.onreadystatechange && (xhr.onreadystatechange = details.onreadystatechange);
-                xhr.ontimeout = details.ontimeout || ((ev) => reject(ev));
+                xhr.ontimeout = details.ontimeout || reject;
                 xhr.onload = details.onload || (() => resolve(xhr.response));
                 xhr.send(details.data);
             });

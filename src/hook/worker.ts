@@ -29,28 +29,7 @@ namespace API {
                 triggerOnMsg(danmaku, loadTime, parseTime);
                 API.danmaku.danmaku = danmaku;
             });
-            if ((<any>XMLHttpRequest.prototype).pakku_send === undefined) {
-                loadDanmaku(new Date());
-            }
-            else {
-                // 让pakku.js载入弹幕
-                let url = "https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid=" + cid + "&pid=" + aid + "&segment_index=1";
-                xhr({ url: url, responseType: "arraybuffer", credentials: true }).then((response: any) => {
-                    let Segments = danmaku.segDmDecode(response);
-                    // pakku.js处于“休眠中”时，不会修改响应数据，这时的response仅仅是第一个分段的弹幕数据
-                    // 这种情况下需要主动去加载全部的分段(loadDanmaku)
-                    let i = 1;
-                    for (; i < Segments.length; i++) {
-                        // pakku.js处理过的弹幕，在出现时间上按升序排列，可以用这个特征加以区别是否应该载入完整的弹幕
-                        if (Segments[i - 1].progress > Segments[i].progress) break;
-                    }
-                    if (i != Segments.length)
-                        loadDanmaku(new Date());
-                    else {
-                        triggerOnMsg(danmaku.danmakuFormat(Segments), "(pakku.js)", "(pakku.js)");
-                    }
-                });
-            }
+            loadDanmaku(new Date());
         } else {
             workerPostMsg.call(this, aMessage, <any>transferList);
         }
