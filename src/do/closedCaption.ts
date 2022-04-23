@@ -242,6 +242,7 @@ namespace API {
         /** 获取CC字幕信息 */
         async getCaption(data: any) {
             try {
+                this.data = [];
                 this.subtitle = this.captions = data.data.subtitle.subtitles || [];
                 this.convertion(this.captions);
                 let i = this.captions.findIndex(d => d.lan == this.subtitlePrefer);
