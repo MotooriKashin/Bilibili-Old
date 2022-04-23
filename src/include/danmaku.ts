@@ -92,20 +92,34 @@ namespace API {
          */
         async getSegDanmaku(aid = API.aid, cid = API.cid, bas = false) {
             try {
+                function fetchOneSeg(url: string, credentials = true): Promise<any> {
+                    return new Promise((resolve, reject) => xhr({
+                        url: url,
+                        responseType: "arraybuffer",
+                        credentials,
+                        onload: function () {
+                            if (this.status == 200) resolve(this.response);
+                            else reject({ code: this.status, xhr: this })
+                        }
+                    }).catch(reason => resolve({
+                        status: "rejected", reason, url
+                    })))
+                }
                 // 判断参数是否有效
                 aid = aid || API.aid;
                 cid = cid || API.cid;
                 if (!aid || !cid) throw ["弹幕参数错误！", "aid：" + aid, "cid：" + cid];
                 // 首先获取弹幕分片总数
-                let config = await xhr({
-                    url: Format.objUrl("https://api.bilibili.com/x/v2/dm/web/view", {
+                let config = await fetchOneSeg(
+                    Format.objUrl("https://api.bilibili.com/x/v2/dm/web/view", {
                         type: String(1),
                         oid: String(cid),
                         pid: String(aid)
-                    }),
-                    responseType: "arraybuffer",
-                    credentials: true
-                });
+                    }));
+                if (config.status == "rejected") {
+                    debug.error(config);
+                    throw ["弹幕元数据加载错误！"];
+                }
                 config = Danmaku.protoView.decode(new Uint8Array(config));
                 // dmSge.total代表的分片总数，有时错误地为100
                 // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
@@ -114,30 +128,36 @@ namespace API {
                 let allrequset: any[] = [], allDanmaku: danmakuNew[] = [];
                 // 其他视频的分片总数已经不能从当前window下获取
                 if (aid && (aid != aid)) total = config.dmSge.total;
-                if (!bas) {
-                    // 特殊情况下只需要BAS/高级弹幕时 bas为真
+                let loadProgress = {
+                    num: -1,
+                    loadStatus: document.getElementsByClassName("bilibili-player-danmaku-load-status")[0],
+                    segLoad: function () {
+                        this.loadStatus && (this.loadStatus.innerHTML = `载入弹幕数据（${++this.num}/${parseInt(total)}）`);
+                    }
+                }
+                loadProgress.segLoad();
+                if (!bas) { // 特殊情况下只需要BAS/高级弹幕时 bas为真
                     for (let index = 1; index <= total; index++) {
-                        allrequset.push(xhr({
-                            url: Format.objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
+                        allrequset.push(fetchOneSeg(
+                            Format.objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
                                 type: String(1),
                                 oid: String(cid),
                                 pid: String(aid),
                                 segment_index: String(index)
-                            }),
-                            responseType: "arraybuffer",
-                            credentials: true
-                        }));
+                            })).then(v => {
+                                loadProgress.segLoad();
+                                return v;
+                            }));
                     }
                 }
                 // BAS弹幕
                 if (config.specialDms.length > 0) {
                     for (let index = 0; index < config.specialDms.length; index++) {
                         // 下发的是http链接，但会被chrome的安全措施拦掉，于是替换成https
-                        allrequset.push(xhr({
-                            url: config.specialDms[index].replace("http", "https"),
-                            responseType: "arraybuffer",
-                            credentials: false
-                        }));
+                        allrequset.push(fetchOneSeg(
+                            config.specialDms[index].replace("http", "https"),
+                            false
+                        ));
                     }
                 }
                 // 互动弹幕
@@ -162,7 +182,13 @@ namespace API {
                 }
                 // 解码弹幕
                 (await Promise.all(allrequset)).forEach(d => {
-                    if (d) allDanmaku = allDanmaku.concat(Danmaku.protoSeg.decode(new Uint8Array(d)).elems);
+                    let errorNum = 0;
+                    if (d.status == "rejected") {
+                        debug.error("弹幕文件网络错误", d.url, d.reason);
+                        errorNum++;
+                    }
+                    else allDanmaku = allDanmaku.concat(Danmaku.protoSeg.decode(new Uint8Array(d)).elems);
+                    if (errorNum > 0) toast.error(`${errorNum}个弹幕数据包获取失败，成功${allrequset.length - errorNum}个`)
                 });
                 return allDanmaku.concat(upHighlightDm);
             } catch (e) { toast.error("danmaku.js", e) }
