@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.3.0
+// @version      7.3.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -4755,7 +4755,7 @@ option {
             API.runWhile(() => ready, () => {
                 var _a, _b, _c;
                 // CC字幕
-                ((_b = (_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.subtitle) === null || _b === void 0 ? void 0 : _b.subtitles) && API.closedCaption.getCaption(data);
+                API.config.closedCaption && ((_b = (_a = data === null || data === void 0 ? void 0 : data.data) === null || _a === void 0 ? void 0 : _a.subtitle) === null || _b === void 0 ? void 0 : _b.subtitles) && API.closedCaption.getCaption(data);
                 // 分段进度条
                 API.config.segProgress && ((_c = data === null || data === void 0 ? void 0 : data.data) === null || _c === void 0 ? void 0 : _c.view_points[1]) && new API.SegProgress(data);
             });
@@ -13081,6 +13081,14 @@ option {
         sub: "过滤动态中的直播回放",
         type: "switch",
         value: false
+    });
+    API.registerSetting({
+        key: "closedCaption",
+        sort: "player",
+        label: "CC字幕",
+        sub: '移植自<a href="https://greasyfork.org/scripts/378513">Bilibili CC字幕工具</a>',
+        type: "switch",
+        value: true
     });
 
 //# sourceURL=API://@Bilibili-Old/include/setting.js`;
