@@ -12,6 +12,8 @@ interface config {
     carousel: ("番剧推荐" | "首页推荐" | "实时热搜")[];
     /** 分段进度条 */
     segProgress: boolean;
+    /** CC字幕 */
+    closedCaption: boolean;
 }
 namespace API {
     registerSetting({
@@ -83,7 +85,7 @@ namespace API {
         }).then((data: any) => {
             runWhile(() => ready, () => {
                 // CC字幕
-                data?.data?.subtitle?.subtitles && closedCaption.getCaption(data);
+                config.closedCaption && data?.data?.subtitle?.subtitles && closedCaption.getCaption(data);
                 // 分段进度条
                 config.segProgress && data?.data?.view_points[1] && new SegProgress(data);
             })

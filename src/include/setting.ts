@@ -926,4 +926,12 @@ namespace API {
         type: "switch",
         value: false
     })
+    registerSetting({
+        key: "closedCaption",
+        sort: "player",
+        label: "CC字幕",
+        sub: '移植自<a href="https://greasyfork.org/scripts/378513">Bilibili CC字幕工具</a>',
+        type: "switch",
+        value: true
+    })
 }
