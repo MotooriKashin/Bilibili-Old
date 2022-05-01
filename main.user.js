@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      7.3.1
+// @version      7.3.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin，wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -22,7 +22,7 @@
 // @resource     index-icon.json https://www.bilibili.com/index/index-icon.json
 // @resource     protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js
 // @resource     comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js
-// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5375694256724de0cf448081eb2f70a36125931c/dist/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@d47baeac0cd4ebb307f286d639ded258f193f47c/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@23526752a582f8735b3c7a82cbc84a34a0eff480/dist/comment.min.js
 // ==/UserScript==
 
@@ -6348,7 +6348,65 @@ option {
 /*!***********************!*/
 /**/modules["webSocket.js"] = /*** ./dist/hook/webSocket.js ***/
 `"use strict";
-    let decoder = new TextDecoder();
+    const protobufJSON = '{"nested":{"bilibili":{"nested":{"broadcast":{"nested":{"v1":{"nested":{"AuthReq":{"fields":{"guid":{"type":"string","id":1},"connId":{"type":"string","id":2},"lastMsgId":{"type":"int64","id":3}}},"AuthResp":{"fields":{}},"HeartbeatReq":{"fields":{}},"HeartbeatResp":{"fields":{}},"TargetPath":{"fields":{"targetPaths":{"rule":"repeated","type":"string","id":1}}},"MessageAckReq":{"fields":{"ackId":{"type":"int64","id":1},"ackOrigin":{"type":"string","id":2},"targetPath":{"type":"string","id":3}}},"Subscribe":{"fields":{"type":{"type":"string","id":1},"targetPaths":{"rule":"repeated","type":"string","id":2}}},"Status":{"fields":{"code":{"type":"int32","id":1},"message":{"type":"string","id":2},"details":{"rule":"repeated","type":"google.protobuf.Any","id":3}}},"FrameOption":{"fields":{"messageId":{"type":"int64","id":1},"sequence":{"type":"int64","id":2},"isAck":{"type":"bool","id":3},"status":{"type":"Status","id":4},"ackOrigin":{"type":"string","id":5}}},"BroadcastFrame":{"fields":{"options":{"type":"FrameOption","id":1},"targetPath":{"type":"string","id":2},"body":{"type":"google.protobuf.Any","id":3}}},"RoomJoinEvent":{"fields":{}},"RoomLeaveEvent":{"fields":{}},"RoomOnlineEvent":{"fields":{"online":{"type":"int32","id":1},"allOnline":{"type":"int32","id":2}}},"RoomMessageEvent":{"fields":{"targetPath":{"type":"string","id":1},"body":{"type":"google.protobuf.Any","id":2}}},"RoomErrorEvent":{"fields":{"status":{"type":"Status","id":1}}},"RoomReq":{"oneofs":{"event":{"oneof":["join","leave","online","msg"]}},"fields":{"id":{"type":"string","id":1},"join":{"type":"RoomJoinEvent","id":2},"leave":{"type":"RoomLeaveEvent","id":3},"online":{"type":"RoomOnlineEvent","id":4},"msg":{"type":"RoomMessageEvent","id":5}}},"RoomResp":{"oneofs":{"event":{"oneof":["join","leave","online","msg","err"]}},"fields":{"id":{"type":"string","id":1},"join":{"type":"RoomJoinEvent","id":2},"leave":{"type":"RoomLeaveEvent","id":3},"online":{"type":"RoomOnlineEvent","id":4},"msg":{"type":"RoomMessageEvent","id":5},"err":{"type":"RoomErrorEvent","id":6}}}}}}}}},"google":{"nested":{"protobuf":{"nested":{"Any":{"fields":{"type_url":{"type":"string","id":1},"value":{"type":"bytes","id":2}}},"Empty":{"fields":{}}}}}}}}';
+    const danmakuJSON = '{"nested":{"bilibili":{"nested":{"broadcast":{"nested":{"message":{"nested":{"main":{"nested":{"DanmakuElem":{"fields":{"id":{"type":"int64","id":1},"progress":{"type":"int32","id":2},"mode":{"type":"int32","id":3},"fontsize":{"type":"int32","id":4},"color":{"type":"uint32","id":5},"midHash":{"type":"string","id":6},"content":{"type":"string","id":7},"ctime":{"type":"int64","id":8},"action":{"type":"string","id":9},"pool":{"type":"int32","id":10},"idStr":{"type":"string","id":11}}},"DanmukuEvent":{"fields":{"elems":{"rule":"repeated","type":"DanmakuElem","id":1}}}}}}}}}}}}}';
+    window.protobuf || new Function(GM.getResourceText("protobuf.js"))();
+    const root = window.protobuf.Root.fromJSON(JSON.parse(protobufJSON));
+    const danmakuElem = window.protobuf.Root.fromJSON(JSON.parse(danmakuJSON)).lookupType("bilibili.broadcast.message.main.DanmukuEvent");
+    let sequence = 1;
+    const message = {
+        msgType: root.lookupType("BroadcastFrame"),
+        targetPathType: root.lookupType("TargetPath"),
+        beatReqType: root.lookupType("HeartbeatReq"),
+        ackReqType: root.lookupType("MessageAckReq"),
+        anyType: root.lookupType("google.protobuf.Any"),
+        roomRequest: root.lookupType("RoomReq"),
+        roomResp: root.lookupType("RoomResp"),
+        roomEvents: {
+            join: root.lookupType("RoomJoinEvent"),
+            leave: root.lookupType("RoomLeaveEvent"),
+            online: root.lookupType("RoomOnlineEvent")
+        }
+    };
+    const targetPath = {
+        "AUTH": "/bilibili.broadcast.v1.Broadcast/Auth",
+        "HEARTBEAT": "/bilibili.broadcast.v1.Broadcast/Heartbeat",
+        "SUBSCRIBE": "/bilibili.broadcast.v1.Broadcast/Subscribe",
+        "UNSUBSCRIBE": "/bilibili.broadcast.v1.Broadcast/Unsubscribe",
+        "MSG_ACK": "/bilibili.broadcast.v1.Broadcast/MessageAck",
+        "ENTER": "/bilibili.broadcast.v1.BroadcastRoom/Enter",
+        "ROOMREQ": "/bilibili.broadcast.v1.RoomReq",
+        "ROOMRES": "/bilibili.broadcast.v1.RoomResp",
+        "AUTHREQ": "/bilibili.broadcast.v1.AuthReq",
+        "TARGETPATH": "/bilibili.broadcast.v1.TargetPath",
+        "HEARTBEATRES": "/bilibili.broadcast.v1.HeartbeatResp",
+        "MSG_ACK_REQ": "/bilibili.broadcast.v1.MessageAckReq"
+    };
+    const utils = {
+        encodeAny: function (body, encoder, url) {
+            return url = "type.googleapis.com" + url,
+                message.anyType.create({
+                    type_url: url,
+                    value: encoder.encode(body).finish()
+                });
+        },
+        toBuffer: function (body, encoder) {
+            if (encoder.verify(body))
+                return "";
+            let t = encoder.create(body);
+            return encoder.encode(t).finish();
+        },
+        toMsg: function (body, decoder) {
+            let t;
+            try {
+                t = decoder.toObject(decoder.decode(new Uint8Array(body)));
+            }
+            catch (i) {
+                API.debug.error(i);
+            }
+            return t;
+        }
+    };
     let encoder = new TextEncoder();
     let liveChatOld; // 对旧播放器建立的ws对象的引用
     let liveChat;
@@ -6358,21 +6416,7 @@ option {
     WebSocket.prototype.send = function (...arg) {
         if (wsHookRunOnce && this.url == 'wss://broadcast.chat.bilibili.com:4095/sub') {
             liveChatOld = this;
-            // 切p和掉线之后需要重新启动hook,获得新的引用
-            let onclose = liveChatOld.onclose;
-            liveChatOld.onclose = function () {
-                wsHookRunOnce = true;
-                clearTimeout(liveChat.heatTimer);
-                liveChat.close();
-                onclose.call(this);
-            };
-            // 从bilibiliPlayer.js > b.prototype.xx复制过来
-            // 编码一个数据包
-            // body[Object] : 要发送的信息
-            // option[Number] : 数据包对应的行为
-            //                  =5 一条弹幕数据
-            //                  =7 首个数据包,建立与服务器的连接
-            // return[Buffer] : 包装好的数据
+            // convertToArrayBuffer 编码一个旧播放器接受的数据包
             liveChatOld.convertToArrayBuffer = function (body, option) {
                 let header = [{ "name": "Header Length", "key": "headerLen", "qg": 2, "offset": 4, "value": 16 }, { "name": "Protocol Version", "key": "ver", "qg": 2, "offset": 6, "value": 1 }, { "name": "Operation", "key": "op", "qg": 4, "offset": 8, "value": option }, { "name": "Sequence Id", "key": "seq", "qg": 4, "offset": 12, "value": 1 }];
                 let headerBuf = new ArrayBuffer(16);
@@ -6382,160 +6426,156 @@ option {
                 header.forEach(function (b) {
                     4 === b.qg ? viewer.setInt32(b.offset, b.value) : 2 === b.qg && viewer.setInt16(b.offset, b.value);
                 });
+                function mergeArrayBuffer(headerBuf, bodyBuf) {
+                    headerBuf = new Uint8Array(headerBuf);
+                    bodyBuf = new Uint8Array(bodyBuf);
+                    var d = new Uint8Array(headerBuf.byteLength + bodyBuf.byteLength);
+                    d.set(headerBuf, 0);
+                    d.set(bodyBuf, headerBuf.byteLength);
+                    return d.buffer;
+                }
                 return mergeArrayBuffer(headerBuf, bodyBuf);
+            };
+            // 切p和掉线之后需要重新启动hook,获得新的引用
+            let onclose = liveChatOld.onclose;
+            liveChatOld.onclose = function () {
+                wsHookRunOnce = true;
+                clearTimeout(liveChat.beatTimer);
+                liveChat.close();
+                onclose.call(this);
             };
             wsHookRunOnce = false;
             initLiveChat();
         }
         wssend.call(this, ...arg);
     };
-    // 原函数位于bilibiliPlayer.js > c.a.eK 和 jsc-player > Dl.mergeArrayBuffer
-    // 连接两个buffer
-    function mergeArrayBuffer(headerBuf, bodyBuf) {
-        headerBuf = new Uint8Array(headerBuf);
-        bodyBuf = new Uint8Array(bodyBuf);
-        var d = new Uint8Array(headerBuf.byteLength + bodyBuf.byteLength);
-        d.set(headerBuf, 0);
-        d.set(bodyBuf, headerBuf.byteLength);
-        return d.buffer;
-    }
+    // onopen() -> auth() -> onmessage() -> onAuthed() -> subscribeBase() -> roomBase() -> 开始接收实时弹幕
     function initLiveChat() {
-        // 数据包对应的Operation常量表
-        let Pl = { "WS_OP_HEARTBEAT": 2, "WS_OP_HEARTBEAT_REPLY": 3, "WS_OP_DATA": 1000, "WS_OP_BATCH_DATA": 9, "WS_OP_DISCONNECT_REPLY": 6, "WS_OP_USER_AUTHENTICATION": 7, "WS_OP_CONNECT_SUCCESS": 8, "WS_OP_CHANGEROOM": 12, "WS_OP_CHANGEROOM_REPLY": 13, "WS_OP_REGISTER": 14, "WS_OP_REGISTER_REPLY": 15, "WS_OP_UNREGISTER": 16, "WS_OP_UNREGISTER_REPLY": 17, "WS_OP_OGVCMD_REPLY": 1015, "WS_PACKAGE_HEADER_TOTAL_LENGTH": 18, "WS_PACKAGE_OFFSET": 0, "WS_HEADER_OFFSET": 4, "WS_VERSION_OFFSET": 6, "WS_OPERATION_OFFSET": 8, "WS_SEQUENCE_OFFSET": 12, "WS_COMPRESS_OFFSET": 16, "WS_CONTENTTYPE_OFFSET": 17, "WS_BODY_PROTOCOL_VERSION": 1, "WS_HEADER_DEFAULT_VERSION": 1, "WS_HEADER_DEFAULT_OPERATION": 1, "ws_header_default_sequence": 1, "WS_HEADER_DEFAULT_COMPRESS": 0, "WS_HEADER_DEFAULT_CONTENTTYPE": 0 };
-        // 请求头的参数表
-        let wsBinaryHeaderList = [{ "name": "Header Length", "key": "headerLen", "bytes": 2, "offset": 4, "value": 18 }, { "name": "Protocol Version", "key": "ver", "bytes": 2, "offset": 6, "value": 1 }, { "name": "Operation", "key": "op", "bytes": 4, "offset": 8, "value": 7 }, { "name": "Sequence Id", "key": "seq", "bytes": 4, "offset": 12, "value": 2 }, { "name": "Compress", "key": "compress", "bytes": 1, "offset": 16, "value": 0 }, { "name": "ContentType", "key": "contentType", "bytes": 1, "offset": 17, "value": 0 }];
-        liveChat = new WebSocket('wss://broadcast.chat.bilibili.com:7823/sub');
+        liveChat = new WebSocket("wss://broadcast.chat.bilibili.com:7826/sub?platform=web", "proto");
         liveChat.binaryType = "arraybuffer";
-        liveChat.heatTimer = -1;
-        // 每30秒一个心跳包
+        liveChat.beatTimer = 0;
+        liveChat.msgFlag = {};
+        liveChat.socketKey = "video://" + API.aid + "/" + API.cid;
+        API.pgc && (liveChat.socketKey += "?sid=" + API.__INITIAL_STATE__.ssId + "&epid=" + API.__INITIAL_STATE__.epId);
+        liveChat.sendMsg = function (body, encoder) {
+            void 0 === encoder && (encoder = message.msgType);
+            this.send(utils.toBuffer(body, encoder));
+        };
+        liveChat.auth = function () {
+            this.sendMsg({
+                options: {
+                    sequence: ++sequence
+                },
+                targetPath: targetPath.AUTH,
+                body: utils.encodeAny(message.anyType.create({}), message.anyType, targetPath.AUTHREQ)
+            });
+        };
+        liveChat.onAuthed = function (t) {
+            this.authed = !0;
+            this.subscribeBase(["bilibili.broadcast.message.main.DanmukuEvent"]);
+            this.roomBase(liveChat.socketKey);
+        };
+        liveChat.subscribeBase = function (t, e) {
+            if (void 0 === e && (e = !0),
+                t && t.length) {
+                var i = ++sequence;
+                this.msgFlag[i] = t,
+                    this.sendMsg({
+                        options: {
+                            sequence: i
+                        },
+                        targetPath: e ? targetPath.SUBSCRIBE : targetPath.UNSUBSCRIBE,
+                        body: utils.encodeAny(message.targetPathType.create({
+                            targetPaths: t
+                        }), message.targetPathType, targetPath.TARGETPATH)
+                    });
+            }
+        };
+        liveChat.roomBase = function (t) {
+            let event = {
+                id: t,
+                join: message.roomEvents.join.create({})
+            };
+            var i = ++sequence;
+            this.msgFlag[i] = t,
+                this.sendMsg({
+                    options: {
+                        sequence: i
+                    },
+                    targetPath: targetPath.ENTER,
+                    body: utils.encodeAny(message.roomRequest.create(event), message.roomRequest, targetPath.ROOMREQ)
+                });
+        };
+        liveChat.onRoomMsg = function (t) {
+            var e, i;
+            if (null === (e = t.body) || void 0 === e ? void 0 : e.value) {
+                var o = utils.toMsg(t.body.value, message.roomResp);
+                if (null === (i = o.msg) || void 0 === i ? void 0 : i.targetPath) {
+                    var r = utils.toMsg(o.msg.body.value, danmakuElem);
+                    r.elems.forEach(function (v) {
+                        liveChatOld.onmessage({
+                            data: liveChatOld.convertToArrayBuffer({
+                                cmd: 'DM',
+                                info: [[v.progress / 1000, v.mode, v.fontsize, v.color, v.ctime, "", v.pool, v.midHash, v.idStr].join(","), v.content]
+                            }, 5)
+                        });
+                    });
+                }
+            }
+        };
         liveChat.heartBeat = function () {
             var i = this;
-            clearTimeout(this.heatTimer);
-            var e = this.convertToArrayBuffer({}, Pl.WS_OP_HEARTBEAT);
-            this.send(e);
-            this.heatTimer = window.setTimeout((function () {
-                i.heartBeat();
-            }), 1e3 * 30);
+            this.beatTimer && clearTimeout(this.beatTimer);
+            this.beatTimer = window.setTimeout((function () {
+                if (i.readyState === 1) {
+                    i.sendMsg({
+                        options: {
+                            sequence: ++sequence
+                        },
+                        targetPath: targetPath.HEARTBEAT,
+                        body: utils.encodeAny(message.beatReqType.create({}), message.beatReqType, targetPath.HEARTBEATRES)
+                    });
+                    i.heartBeat();
+                }
+            }), 1e3 * 20);
         };
         liveChat.onopen = function () {
-            let body = {
-                "room_id": "video://" + API.aid + "/" + API.cid,
-                "platform": "web",
-                "accepts": [1000, 1015]
-            };
-            return this.send(this.convertToArrayBuffer(body, 7));
+            this.auth();
+        };
+        liveChat.onclose = function () {
+            if (liveChatOld.readyState === 1) {
+                // 在番剧页面，每6分钟弹幕服务器（即使在用心跳包维持连接活跃的情况下）会主动断开连接，这时需要重连
+                initLiveChat();
+            }
+            else {
+                this.beatTimer && clearTimeout(this.beatTimer);
+            }
         };
         liveChat.onmessage = function (i) {
-            try {
-                var t = this.convertToObject(i.data);
-                if (t) {
-                    switch (t.op) {
-                        case Pl.WS_OP_HEARTBEAT_REPLY:
-                            // 接收到心跳包后,服务器响应当前在线人数的数据
-                            // 旧播放器连接的4095端口,虽然不再下发实时弹幕,但依然照常响应在线人数
-                            // 所以暂时不用替换成新版
-                            // this.onHeartBeatReply(t.body);
+            var t, a = utils.toMsg(i.data, message.msgType);
+            if (this.heartBeat(), a) {
+                if (null == a ? void 0 : a.targetPath)
+                    switch (a.targetPath) {
+                        case targetPath.AUTH:
+                            this.onAuthed(a);
                             break;
-                        case Pl.WS_OP_CONNECT_SUCCESS:
-                            this.heartBeat();
+                        case targetPath.SUBSCRIBE:
+                            //this.onSubscribed(a);
                             break;
-                        // 旧播放器只能处理(连接成功，心跳响应，实时弹幕)三种响应信息
-                        // 新播放器新增的指令和功能就不管了
-                        case Pl.WS_OP_CHANGEROOM_REPLY:
-                            //0 === Number(t.body.code) && this.options.onChangeRoomReply({ data : t && t.body });
+                        case targetPath.UNSUBSCRIBE:
+                            //this.onUnSubscribed(a);
                             break;
-                        case Pl.WS_OP_REGISTER_REPLY:
-                            //0 === Number(t.body.code) && this.options.onRegisterReply({ data : t && t.body });
+                        case targetPath.HEARTBEAT:
+                            //this.bsocket.emit(zd.B_HEARTBEAT, a);
                             break;
-                        case Pl.WS_OP_UNREGISTER_REPLY:
-                            //0 === Number(t.body.code) && this.options.onUnRegisterReply({ data : t && t.body });
-                            break;
-                        case Pl.WS_OP_DATA:
-                        case Pl.WS_OP_BATCH_DATA:
-                            t.body.forEach(function (v) {
-                                liveChatOld.onmessage({
-                                    data: liveChatOld.convertToArrayBuffer({
-                                        cmd: 'DM',
-                                        info: [v[0], v[1]]
-                                    }, 5)
-                                });
-                            });
-                            break;
-                        case Pl.WS_OP_OGVCMD_REPLY:
-                            //this.onOgvCmdReply(t);
+                        case targetPath.ENTER:
+                            this.onRoomMsg(a);
                             break;
                         default:
-                        //this.msgReply(t)
+                        //this.bsocket.emit(zd.B_MSG, a)
                     }
-                }
+                delete this.msgFlag[null === (t = a.options) || void 0 === t ? void 0 : t.sequence];
             }
-            catch (i) {
-                console.error("WebSocket Error : ", i);
-            }
-            return this;
-        };
-        // jsc-player > i.prototype.convertToArrayBuffer,新版播放器的请求头信息更多,需要18字节
-        // 基本与liveChatOld.convertToArrayBuffer相同
-        liveChat.convertToArrayBuffer = function (body, option) {
-            let headerBuf = new ArrayBuffer(Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH);
-            let viewer = new DataView(headerBuf, Pl.WS_PACKAGE_OFFSET);
-            let bodyBuf = encoder.encode(JSON.stringify(body));
-            viewer.setInt32(Pl.WS_PACKAGE_OFFSET, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH + bodyBuf.byteLength);
-            wsBinaryHeaderList[2].value = option;
-            wsBinaryHeaderList.forEach((function (i) {
-                4 === i.bytes ? (viewer.setInt32(i.offset, i.value),
-                    "seq" === i.key && ++i.value) : 2 === i.bytes ? viewer.setInt16(i.offset, i.value) : 1 === i.bytes && viewer.setInt8(i.offset, i.value);
-            }));
-            return mergeArrayBuffer(headerBuf, bodyBuf);
-        };
-        // jsc-player > i.prototype.convertToObject
-        // convertToArrayBuffer对应的解码函数
-        liveChat.convertToObject = function (i) {
-            var e = new DataView(i), t = {};
-            t.packetLen = e.getInt32(Pl.WS_PACKAGE_OFFSET);
-            wsBinaryHeaderList.forEach((function (i) {
-                4 === i.bytes ? t[i.key] = e.getInt32(i.offset) : 2 === i.bytes ? t[i.key] = e.getInt16(i.offset) : 1 === i.bytes && (t[i.key] = e.getInt8(i.offset));
-            }));
-            if (t.op && t.op === Pl.WS_OP_BATCH_DATA) {
-                t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_HEADER_TOTAL_LENGTH, t.packetLen);
-            }
-            else if (t.op && Pl.WS_OP_DATA === t.op) {
-                t.body = this.parseDanmaku(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
-            }
-            else if (t.op && t.op === Pl.WS_OP_OGVCMD_REPLY) {
-                t.body = ""; // this.parseOgvCmd(i, e, Pl.WS_PACKAGE_OFFSET, t.packetLen);
-            }
-            else if (t.op) {
-                t.body = [];
-                for (var a = Pl.WS_PACKAGE_OFFSET, r = t.packetLen, n = "", l = ""; a < i.byteLength; a += r) {
-                    r = e.getInt32(a);
-                    n = e.getInt16(a + Pl.WS_HEADER_OFFSET);
-                    try {
-                        l = JSON.parse(decoder.decode(i.slice(a + n, a + r)));
-                        t.body = l;
-                    }
-                    catch (e) {
-                        l = decoder.decode(i.slice(a + n, a + r));
-                        console.error("decode body error:", new Uint8Array(i), t);
-                    }
-                }
-            }
-            return t;
-        };
-        // jsc-player > i.prototype.parseDanmaku
-        liveChat.parseDanmaku = function (i, e, t, a) {
-            for (var r, n = [], l = t; l < i.byteLength; l += a) {
-                a = e.getInt32(l);
-                r = e.getInt16(l + Pl.WS_HEADER_OFFSET);
-                try {
-                    n.push(JSON.parse(decoder.decode(i.slice(l + r, l + a))));
-                }
-                catch (e) {
-                    n.push(decoder.decode(i.slice(l + r, l + a)));
-                    console.error("decode body error:", new Uint8Array(i));
-                }
-            }
-            return n;
         };
     }
 
@@ -10142,7 +10182,7 @@ option {
             try {
                 function fetchOneSeg(url, credentials = true) {
                     return new Promise((resolve, reject) => API.xhr({
-                        url: url,
+                        url,
                         responseType: "arraybuffer",
                         credentials,
                         onload: function () {
