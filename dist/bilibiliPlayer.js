@@ -21397,7 +21397,8 @@ function Fa() {
                             e.list && (e.Sf = e.Sf || e.list.Zj(500), e.Sf())
                         },
                         Lh: function (b) {
-                            if (b.weight && b.class === 0 && b.weight < e.c.Na.f.block.ai_level) return false;
+                            (b.weight == undefined) && (b.weight = Math.ceil(Math.random() * 11))
+                            if (b.class === 0 && b.weight < e.c.Na.f.block.ai_level) return false;
                             return !e.c.Na.di(b)
                         },
                         Jx: function (b) {
@@ -21777,7 +21778,10 @@ function Fa() {
                     })
                 };
                 e.prototype.NA = function (b) {
-                    this.c.template.Iy.html(this.g.G.length);
+                    if(this.c.cb.block.ai_level > 0)
+                        (Math.ceil(Math.random() * 11) >= this.c.cb.block.ai_level) && (this.c.template.Iy.html(parseInt(this.c.template.Iy.html()) + 1));
+                    else
+                        this.c.template.Iy.html(this.g.G.length);
                     this.c.I.uB(this.g.G.length);
                     b && this.c.template.oJ.html(b)
                 };
