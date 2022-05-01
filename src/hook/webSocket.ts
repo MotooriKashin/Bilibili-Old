@@ -97,8 +97,8 @@ namespace API {
             liveChatOld.onclose = function () {
                 wsHookRunOnce = true;
                 clearTimeout(liveChat.beatTimer);
-                onclose.call(this);
                 liveChat.close();
+                onclose.call(this);
             }
             wsHookRunOnce = false;
             initLiveChat();
@@ -192,14 +192,16 @@ namespace API {
             var i = this;
             this.beatTimer && clearTimeout(this.beatTimer);
             this.beatTimer = window.setTimeout((function () {
-                i.sendMsg({
-                    options: {
-                        sequence: ++sequence
-                    },
-                    targetPath: targetPath.HEARTBEAT,
-                    body: utils.encodeAny(message.beatReqType.create({}), message.beatReqType, targetPath.HEARTBEATRES)
-                })
-                i.heartBeat();
+                if (i.readyState === 1) {
+                    i.sendMsg({
+                        options: {
+                            sequence: ++sequence
+                        },
+                        targetPath: targetPath.HEARTBEAT,
+                        body: utils.encodeAny(message.beatReqType.create({}), message.beatReqType, targetPath.HEARTBEATRES)
+                    })
+                    i.heartBeat();
+                }
             }), 1e3 * 20);
         }
 
@@ -207,9 +209,9 @@ namespace API {
             this.auth();
         }
 
-        liveChat.onclose = function() {
-            if(liveChatOld.readyState === 1) {
-                // 每6分钟弹幕服务器（即使在用心跳包维持连接活跃的情况下）会主动断开连接，这时需要重连
+        liveChat.onclose = function () {
+            if (liveChatOld.readyState === 1) {
+                // 在番剧页面，每6分钟弹幕服务器（即使在用心跳包维持连接活跃的情况下）会主动断开连接，这时需要重连
                 initLiveChat();
             } else {
                 this.beatTimer && clearTimeout(this.beatTimer);
