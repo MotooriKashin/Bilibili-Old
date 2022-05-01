@@ -94,7 +94,7 @@ namespace API {
             try {
                 function fetchOneSeg(url: string, credentials = true): Promise<any> {
                     return new Promise((resolve, reject) => xhr({
-                        url: url,
+                        url,
                         responseType: "arraybuffer",
                         credentials,
                         onload: function () {
