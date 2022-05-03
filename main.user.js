@@ -3565,6 +3565,7 @@ option {
             !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off") && document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku").click(); // 自动关闭弹幕
         });
         API.config.autoPlay && setTimeout(() => { window.player && window.player.play && window.player.play(); }, 1000); // 自动播放
+        API.config.videoDisableAA && API.runWhile(() => document.querySelector("#bilibiliPlayer .bilibili-player-video video"), () => (document.querySelector("#bilibiliPlayer .bilibili-player-video video").style.filter += "contrast(1)"));
     });
     // 播放本地媒体按钮
     API.path.name && API.observerAddedNodes(e => {
@@ -12310,6 +12311,23 @@ option {
             API.bindKeyMap("enter", () => {
                 var _a;
                 (_a = document.querySelector(".bilibili-player-video-danmaku-input")) === null || _a === void 0 ? void 0 : _a.select();
+            });
+            API.bindKeyMap("V", () => {
+                // 开启或关闭视频缩放渲染的抗锯齿
+                // 详见https://github.com/MotooriKashin/Bilibili-Old/issues/292
+                let video = document.querySelector("#bilibiliPlayer .bilibili-player-video video");
+                if (video) {
+                    let filter = video.style.filter;
+                    if (filter.includes("contrast")) {
+                        filter = filter.replace("contrast(1)", "");
+                        API.config.videoDisableAA = false;
+                    }
+                    else {
+                        filter += "contrast(1)";
+                        API.config.videoDisableAA = true;
+                    }
+                    video.style.filter = filter;
+                }
             });
         }
         /** 添加媒体控制 */
