@@ -24,6 +24,7 @@ namespace API {
             !document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku.video-state-danmaku-off") && (<HTMLElement>document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku")).click(); // 自动关闭弹幕
         });
         config.autoPlay && setTimeout(() => { (<any>window).player && (<any>window).player.play && (<any>window).player.play() }, 1000); // 自动播放
+        config.videoDisableAA && runWhile(() => document.querySelector("#bilibiliPlayer .bilibili-player-video video"), () => ((<HTMLElement>document.querySelector("#bilibiliPlayer .bilibili-player-video video")).style.filter += "contrast(1)"));
     })
     // 播放本地媒体按钮
     path.name && observerAddedNodes(e => {

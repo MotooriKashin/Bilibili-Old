@@ -149,6 +149,8 @@ interface config {
     sortIndex: boolean;
     /** 直播回放 */
     liveRecord: boolean;
+    /** 视频渲染抗锯齿 */
+    videoDisableAA: boolean;
 }
 namespace API {
     registerSetting({
