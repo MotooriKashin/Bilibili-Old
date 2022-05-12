@@ -3813,7 +3813,7 @@ function Fa() {
                             (this.textData.text = this.textData.text.trim());
                 }
                 // 正确处理弹幕分层
-                // @see #100 
+                // @see #100
                 if (this.textData.text.includes('\n')) {
                     this.textData.zIndex = this.textData.stime * 1000;
                     if (!(this.textData.text.includes("█") || this.textData.text.includes("▂")))
@@ -5572,7 +5572,7 @@ function Fa() {
                 display: inline-block;
                 width: 175px;
                 padding-top: 5px;
-            }   
+            }
             `,
             ""
         ])
@@ -22836,10 +22836,18 @@ function Fa() {
                 e.orderby = b;
                 var g = e.positive;
                 if ("text" === b) {
-                    for (var n = [], h = f.length - 1; 0 <= h; h--) this.c.Na.di(f[h]) && n.push(f.splice(h, 1)[0]);
-                    n.sort(this.iq(g,
-                        b));
-                    f.sort(this.iq(g, b));
+                    for (var n = [], h = f.length - 1; 0 <= h; h--)
+                        this.c.Na.di(f[h]) && n.push(f.splice(h, 1)[0]);
+                    // 对弹幕文本使用中文(拼音)排序
+                    // 由于内置中文排序会把英文放在中文之后
+                    // 这里在文本以汉字编码区之前的字符开头时, 仍按Unicode排序
+                    let collator = new Intl.Collator("zh");
+                    let defaultCompare = this.iq(g, b);
+                    let compareText = (s, t) =>
+                        s.text.charCodeAt(0) < 0x4e00 || t.text.charCodeAt(0) < 0x4e00? defaultCompare(s, t) :
+                        g? collator.compare(s.text, t.text) : collator.compare(t.text, s.text);
+                    n.sort(compareText);
+                    f.sort(compareText);
                     f = g ? f.concat(n) : n.concat(f);
                     c ? d.G = f : this.G = f
                 } else f.sort(this.iq(g, b));
