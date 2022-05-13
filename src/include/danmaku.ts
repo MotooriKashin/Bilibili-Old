@@ -93,13 +93,14 @@ namespace API {
         async getSegDanmaku(aid = API.aid, cid = API.cid, bas = false) {
             try {
                 function fetchOneSeg(url: string, credentials = true): Promise<any> {
-                    return new Promise((resolve, reject) => xhr({
+                    return new Promise(resolve => xhr({
                         url,
                         responseType: "arraybuffer",
                         credentials,
                         onload: function () {
-                            if (this.status == 200) resolve(this.response);
-                            else reject({ code: this.status, xhr: this })
+                            if ((this.status >= 200 && this.status < 300) || this.status === 304)
+                                resolve(this.response);
+                            else resolve({ status: "rejected", code: this.status, xhr: this })
                         }
                     }).catch(reason => resolve({
                         status: "rejected", reason, url
