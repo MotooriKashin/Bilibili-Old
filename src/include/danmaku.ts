@@ -100,7 +100,7 @@ namespace API {
                         onload: function () {
                             if ((this.status >= 200 && this.status < 300) || this.status === 304)
                                 resolve(this.response);
-                            else resolve({ status: "rejected", code: this.status, xhr: this })
+                            else resolve({ status: "rejected", url, reason: { code: this.status, xhr: this } })
                         }
                     }).catch(reason => resolve({
                         status: "rejected", reason, url
