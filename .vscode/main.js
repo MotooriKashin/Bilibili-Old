@@ -2,7 +2,7 @@
 const fs = require("fs");
 const { exec } = require("child_process"); // 用于执行git命令获取模块commit哈希值
 const meta = require("../meta.json"); // 脚本元数据
-const cdn = "https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old"; // 远程仓库CDN路径，resource资源用
+const cdn = "https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old"; // 远程仓库CDN路径，resource资源用
 /**
  * 脚本相对路径：resource名称（GM_getRresouceText参数名）  
  * 外部资源请直接以resource格式添加进`meta.json`。

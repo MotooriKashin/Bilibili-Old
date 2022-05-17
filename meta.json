@@ -1,7 +1,7 @@
 {
     "name": "Bilibili 旧播放页",
     "namespace": "MotooriKashin",
-    "version": "7.3.3",
+    "version": "7.3.4",
     "description": "恢复Bilibili旧版页面，为了那些念旧的人。",
     "author": "MotooriKashin，wly5556",
     "homepage": "https://github.com/MotooriKashin/Bilibili-Old",
@@ -23,7 +23,7 @@
     "license": "MIT",
     "resource": [
         "index-icon.json https://www.bilibili.com/index/index-icon.json",
-        "protobuf.js https://cdn.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js",
-        "comment.min.js https://cdn.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js"
+        "protobuf.js https://fastly.jsdelivr.net/npm/protobufjs@6.10.1/dist/protobuf.min.js",
+        "comment.min.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c74067196af49a16cb6e520661df7d4d1e7f04e5/src/comment.min.js"
     ]
 }
