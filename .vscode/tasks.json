@@ -2,14 +2,6 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "typescript",
-			"tsconfig": "src/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"label": "tsc"
-		},
-		{
 			"type": "shell",
 			"command": "node",
 			"args": [
@@ -18,9 +10,17 @@
 			],
 			"label": "apply",
 			"detail": "生成接口导出表apply.json",
-			"problemMatcher": [],
+			"problemMatcher": []
+		},
+		{
+			"type": "typescript",
+			"tsconfig": "src/tsconfig.json",
+			"problemMatcher": [
+				"$tsc"
+			],
+			"label": "tsc",
 			"dependsOn": [
-				"tsc"
+				"apply"
 			]
 		},
 		{
@@ -34,7 +34,7 @@
 			"detail": "合成require资源require.js",
 			"problemMatcher": [],
 			"dependsOn": [
-				"apply"
+				"tsc"
 			]
 		},
 		{

@@ -1,7 +1,3 @@
-interface modules {
-    /** xhr库 */
-    readonly "xhr.js": string;
-}
 namespace API {
     /** `API.xhr`的传参，用于配置`XMLHttpRequest` */
     interface xhrDetails {
@@ -44,6 +40,10 @@ namespace API {
     }
     /** 跨域请求及其值栈 */
     const catches: [string, any] = <any>[];
+    /** 请求栈 */
+    const Record: Record<string, any> = {
+        default: {}, arraybuffer: {}, blob: {}, document: {}, json: {}, text: {}
+    };
     /**
      * `XMLHttpRequest`的`Promise`封装
      * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
@@ -59,6 +59,7 @@ namespace API {
     export function xhr(details: xhrDetailsAsync | xhrDetailsSync) {
         details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
         if (details.async === false) {
+            if (Record[details.responseType || "default"][details.url]) return Record[details.responseType || "default"][details.url];
             let xhr = new XMLHttpRequest();
             xhr.open(details.method || 'GET', details.url, false);
             details.responseType && (xhr.responseType = details.responseType);
@@ -66,8 +67,10 @@ namespace API {
             details.headers && (Object.entries(details.headers).forEach(d => xhr.setRequestHeader(d[0], d[1])));
             details.timeout && (xhr.timeout = details.timeout);
             xhr.send(details.data);
+            Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr.response);
             return xhr.response;
         } else return new Promise((resolve, reject) => {
+            if (Record[details.responseType || "default"][details.url]) return resolve(Record[details.responseType || "default"][details.url]);
             let xhr = new XMLHttpRequest();
             xhr.open(details.method || 'GET', details.url);
             details.responseType && (xhr.responseType = details.responseType);
@@ -81,6 +84,7 @@ namespace API {
             details.onreadystatechange && (xhr.onreadystatechange = details.onreadystatechange);
             xhr.ontimeout = details.ontimeout || reject;
             xhr.onload = details.onload || (() => resolve(xhr.response));
+            xhr.addEventListener("load", () => { Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr.response); });
             xhr.send(details.data);
         })
     }
@@ -96,9 +100,17 @@ namespace API {
      */
     xhr.GM = function (details: GMxhrDetails): Promise<any> {
         return new Promise((resolve, reject) => {
+            if (Record[details.responseType || "default"][details.url]) return resolve(Record[details.responseType || "default"][details.url]);
             details.method = details.method || 'GET';
-            details.onload = details.onload || ((xhr) => { catches.push([details.url, xhr.response]); resolve(xhr.response) });
-            details.onerror = details.onerror || ((xhr) => { catches.push([details.url, xhr.response]); reject(xhr.response) });
+            details.onload = details.onload || ((xhr) => {
+                Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr.response);
+                catches.push([details.url, xhr.response]);
+                resolve(xhr.response);
+            });
+            details.onerror = details.onerror || ((xhr) => {
+                catches.push([details.url, xhr.response]);
+                reject(xhr.response);
+            });
             GM.xmlHttpRequest(details);
         })
     }

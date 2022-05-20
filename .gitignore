@@ -1,5 +1,2 @@
-/dist/**/*.js
-/dist/**/*.d.ts
-/dist/**/*.d.ts.map
-/third
+/src/**/*.js
 /local.user.js
