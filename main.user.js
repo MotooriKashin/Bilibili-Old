@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.0
+// @version      8.0.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -554,15 +554,20 @@ const modules = {};
                 "api.bilibili.com/x/player/playurl": { qn: 127, otype: 'json', fourk: 1 },
                 "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 127, type: '' },
                 "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 127, type: '' },
-                "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
-                "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
+                "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: this.ts },
+                "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: this.ts },
                 "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
                 "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: this.ts },
+                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: this.ts },
                 "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
-                "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" }
+                "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" },
+                "app.bilibili.com/x/v2/activity/index": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval: API.fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", offset: 0, platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", tab_id: 0, tab_module_id: 0, ts: this.ts },
+                "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval: API.fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts }
             };
+        }
+        get ts() {
+            return new Date().getTime();
         }
         /**
          * 请求封装好的json请求
@@ -12587,7 +12592,7 @@ const modules = {};
             type: "switch",
             label: "获取TV源",
             sub: "可能无水印",
-            float: \`B战TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【右键另存为】这种下载方式</strong>\`,
+            float: \`B战TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【默认】下载方式</strong>\`,
             value: false,
             callback: v => {
                 if (v) {
@@ -12868,6 +12873,15 @@ const modules = {};
                     }
                 }
             ]
+        },
+        {
+            key: "timeline",
+            menu: "style",
+            type: "switch",
+            label: "港澳台新番时间表",
+            sub: '<a href="//www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
+            float: \`在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。\`,
+            value: false
         }
     ]);
 
@@ -14894,6 +14908,106 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 
 //# sourceURL=file://@Bilibili-Old/vector/playinfo.js`;
 /*!***********************!*/
+/**/modules["timeline.js"] = /*** ./src/vector/timeline.js ***/
+`
+    /** 番剧时间表栈 */
+    const inline = [];
+    /** 提取时间，格式hh:mm */
+    function getDate(ctx) {
+        let result = "";
+        ctx.replace(/\\d{2}:\\d{2}/, d => result = d);
+        return result;
+    }
+    /**
+     * 整体当日数据
+     * @param title 当日名字：周x
+     * @param item 当日番剧数据表
+     */
+    function decodeInline(title, item) {
+        let i = 0;
+        switch (title) {
+            case "周一":
+                i = 1;
+                break;
+            case "周二":
+                i = 2;
+                break;
+            case "周三":
+                i = 3;
+                break;
+            case "周四":
+                i = 4;
+                break;
+            case "周五":
+                i = 5;
+                break;
+            case "周六":
+                i = 6;
+                break;
+            case "周日":
+                i = 7;
+                break;
+        }
+        inline[i] || (inline[i] = {});
+        item.forEach(d => {
+            let time = getDate(d.content);
+            if (time) {
+                inline[i][time] || (inline[i][time] = []);
+                inline[i][time].push({
+                    cover: "",
+                    delay: 0,
+                    delay_id: 0,
+                    delay_index: "",
+                    delay_reason: "",
+                    ep_cover: "",
+                    episode_id: -1,
+                    follows: d.positions.position3,
+                    plays: d.positions.position2,
+                    pub_index: d.positions.position4,
+                    pub_time: time,
+                    pub_ts: -1,
+                    published: 1,
+                    season_id: d.item_id,
+                    square_cover: d.image,
+                    title: d.title
+                });
+            }
+        });
+    }
+    API.doWhile(() => document.querySelector("#bili_bangumi > .bangumi-module")?.__vue__ || window?.__INITIAL_STATE__, async (d) => {
+        try {
+            const index = await API.url.getJson("app.bilibili.com/x/v2/activity/index", { page_id: 167998 });
+            const item = index.data.cards[0].item[0].item;
+            await Promise.all(item.reduce((s, d) => {
+                s.push(API.url.getJson("app.bilibili.com/x/v2/activity/inline", { page_id: d.item_id }).then(t => {
+                    const item = t.data.cards[0].item;
+                    decodeInline(d.title, item);
+                }));
+                return s;
+            }, []));
+            const source = JSON.parse(JSON.stringify(d.timeline || d.timingData));
+            source.forEach((d) => {
+                const i = d.day_of_week;
+                Object.entries(inline[i]).forEach(t => {
+                    if (d.episodes) { // 主页
+                        d.episodes.push(...t[1]);
+                    }
+                    else { // 新番时间表
+                        d.seasonMap[t[0]] || (d.seasonMap[t[0]] = []);
+                        d.seasonMap[t[0]].push(...t[1]);
+                    }
+                });
+            });
+            d.timeline ? d.timeline = source : d.timingData = source;
+        }
+        catch (e) {
+            API.toast.error("获取港澳台番剧时间线出错 ಥ_ಥ");
+            API.debug.error("港澳台番剧时间线", e);
+        }
+    });
+
+//# sourceURL=file://@Bilibili-Old/vector/timeline.js`;
+/*!***********************!*/
 /**/modules["urlCleaner.js"] = /*** ./src/vector/urlCleaner.js ***/
 `
     /** 垃圾参数 */
@@ -15121,6 +15235,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         }
         if (/bangumi\\/media\\/md/.test(location.href)) {
             API.importModule("media.js");
+        }
+        if (API.config.timeline && /anime\\/timeline/.test(location.href)) {
+            API.importModule("timeline.js");
         }
     }
     API.config.logReport && API.importModule("logReport.js"); // 日志拦截
@@ -17802,6 +17919,10 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }, undefined, false);
     API.importModule("primaryMenu.js"); // 顶栏分区修正
     API.importModule("banner.js"); // 顶栏banner修复
+    // 添加港澳台新番时间表
+    API.config.timeline && API.xhrhook("api.bilibili.com/pgc/web/timeline?types=1", undefined, res => {
+        Promise.resolve().then(() => { API.importModule("timeline.js"); });
+    });
 
 //# sourceURL=file://@Bilibili-Old/vector/url/index/index.js`;
 /*!***********************!*/
@@ -17988,8 +18109,8 @@ object {
 <script type="text/javascript" src="//static.hdslb.com/player/js/whitelist.js"></script>`;
 /*!***********************!*/
 /**/modules["player.html"] = /*** ./src/vector/url/player/player.html ***/
-`<!-- <!DOCTYPE html>
-<html lang="zh-CN"> -->
+`<!-- <!DOCTYPE html> -->
+<!-- <html lang="zh-CN"> -->
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -18677,7 +18798,7 @@ object {
 /*!***********************!*/
 /**/modules["search.html"] = /*** ./src/vector/url/search/search.html ***/
 `<!-- <!DOCTYPE html> -->
-<!-- <html> -->
+<!-- <html lang="zh-CN"> -->
 
 <head>
     <title data-vue-meta="true"> _ 搜索结果_哔哩哔哩_Bilibili</title>
