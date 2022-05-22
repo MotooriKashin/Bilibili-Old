@@ -1,41 +1,38 @@
-![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 100](https://img.shields.io/badge/Google_Chrome_100-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.14](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 101](https://img.shields.io/badge/Google_Chrome_101-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.14](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
 
-[Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，恢复旧版B站网页样式，尤其是那个小电视播放器。  
+[Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，恢复旧版B站网页样式，包括旧版播放器。  
+※ 要求浏览器版本支持到[es2020（`Promise.allSettled`）](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%85%BC%E5%AE%B9)
 
 
 ---
 ### 功能实现
-1. 使用[Wayback Machine](https://archive.org/web/)存档的B站当时的前端资源完全重写页面样式，包括：
-   - [Bilibili主页](https://www.bilibili.com)。
-   - 普通视频页面，俗称av页或BV页，例如[av2](https://www.bilibili.com/video/av2)。
-   - 番剧、影视等专属页面，如[冰菓](https://www.bilibili.com/bangumi/play/ss3398/)。
-   - 稍后再看页面，如果你使用“稍后再看”功能的话。
-   - 视频合集页面，这种页面当时本不存在，脚本使用播单功能模拟了一下，例如[bilibili moe 2018 日本动画场应援](https://www.bilibili.com/medialist/play/ml182603655)对应曾经的播单号[pl769](https://www.bilibili.com/playlist/video/pl769)的，其他无法获取到播单号的页面则取前20个视频模拟成播单列表，需要滚动到列表底部才能动态加载更多。
-   - 外链播放器或者说嵌入式播放器，本质是一个纯播放器页面，通常作为子页面嵌入在别的网页中，例如[拜年祭2021](https://www.bilibili.com/festival/2022bnj)专题页面。
-   - [全站排行榜页面](https://www.bilibili.com/ranking)。
-   - 专栏页面，或者说CV页面。
-2. 为重写的页面配套的其他功能，详见脚本自带的设置界面。
+1. 恢复旧版页面
+   - B站主页：https://www.bilibili.com  
+   - av/BV页：[av2](https://www.bilibili.com/video/av2)。
+   - bangumi，[ss3398](https://www.bilibili.com/bangumi/play/ss3398/ "冰菓")。
+   - 稍后再看。
+   - 排行榜：https://www.bilibili.com/ranking
+   - 嵌入式播放器：[拜年祭2021](https://www.bilibili.com/festival/2022bnj)专题页面。
+   - 专栏。
+   - 搜索。
+2. 配套的后续处理
+   - （详见脚本设置）
 
 ---
 ### 关于设置
-名义上这只是一个重写页面样式的脚本，但为了维护重写的页面，脚本提供了大量附属功能，这些功能或许不是人人都需要，所以脚本专门绘制了一个设置界面来管理所有功能的配置，用户可以根据自身需要来自定义每一项功能的启用与否，包括脚本的核心重写页面功能。  
-这个设置界面的入口位于页面的右下角，安装本脚本后在B站页面完全载入的瞬间右下角会出现一个滚动的“齿轮”，鼠标点击该“齿轮”即可呼出设置界面。“齿轮”滚动几秒后自动隐藏以淡化自己的存在，只在鼠标移动到对应位置才会浮现，鼠标移开后再度消失。  
-设置界面列出了所有功能设置项，点击滑块按钮即可选择该功能的启用与否，大部分设置都附带详细的浮窗说明介绍。  
-设置中还可以选择切换设置入口，将滚动的“齿轮”换回经典贴边隐藏的方块，进一步淡化自己的存在感。
-大部分设置的调整都需要刷新页面才会生效，脚本并不会主动去刷新，以免打断您正常使用的内容。
+页面载入完成时，脚本会在页面右下角生成一个“齿轮”，点击即可打开脚本设置界面。（“齿轮”会自动隐藏，感应到鼠标焦点又会浮现。）
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 部分情况下重写之前的网页会一闪而过，取决于脚本注入的速度。
-2. 偶发各种页面形变，功能报错的情况，刷新页面可以缓解，最好是硬刷新，或者到设置“通用”中调整“页面重构模式”。
-3. 反查出的弹幕发送者信息不一定可靠，因为可能存在哈希碰撞，真正的发送者B站从未提供给前端。
-4. B站后来为播放器添加的各种功能，例如互动视频、全景视频、高能进度条等都未能支持。
-5. B站后来升级的HDR、Dobby、8K等HEVC专属画质可能无法支持。
+1. 重写页面之前，新版页面必然已经显示一部分，这种“一闪而过”的现象无法彻底根除。
+2. 重写前已渲染的新版页面残留的代码可能破坏重写后的页面，请通过刷新页面缓解。
+3. 反查弹幕发送者功能提供的信息可能存在碰撞，仅供参考不可作为唯一判据。
+4. 互动视频、全景视频、高能进度条等旧版播放器不支持
+5. HDR、Dobby、8K等HEVC专属画质可能无法支持。
 6. 旧版xml弹幕已获取不到90分钟后的弹幕池，所以如非必要请不要关闭“新版弹幕”功能。
 7. **充电、B币支付等功能在可能已失去维护，请不要使用或者移步新版页面！**
 8. 一些功能由于API的失效做不到完全还原，只能尽可能寻求替代方案。
-9. 设置中“页面重构模式”选项可调整与部分扩展的兼容性，详情请参考设置项的浮动提示。
 
 问题反馈推荐去[Github](https://github.com/MotooriKashin/Bilibili-Old)发issue，GreasyFork的邮件通知系统经常抽风，可能无法及时接收评论和反馈。
 
@@ -71,32 +68,33 @@
 ---
 ### 开发环境
 > 
-> 操作系统        Microsoft Windows 11 professional 10.0.22000.258  
-> 浏览器          Google Chrome 100.0.4896.60 (正式版本) （64 位） (cohort: 100_Win_60)  
-> 脚本管理器      Tampermonkey Beta 4.14.6152  
-> 代码编辑器      Visual Studio Code 1.63.0  
-> 编译器          Node.js v16.14.0  
->                TypeScript Version 4.6.3  
+> 操作系统        Microsoft Windows 11 professional 10.0.22000.527  
+> 浏览器          Google Chrome 101.0.4951.67 (正式版本) （64 位） (cohort: Stable Installs & Version Pins)  
+> 脚本管理器      Tampermonkey Beta 4.14.6160  
+> 代码编辑器      Visual Studio Code 1.67.2 
+> 编译器          Node.js v16.14.2  
+>                TypeScript Version 4.6.4  
 >
 
 参见[开发者文档](https://github.com/MotooriKashin/Bilibili-Old/blob/master/.github/contributing.md)。
 
 ---
 ### 参考致谢
-- [protobufjs](https://github.com/protobufjs/protobuf.js)
-- [toastr](https://github.com/CodeSeven/toastr/)
-- [Wayback Machine](https://archive.org/web/)
-- [bilibiliOldPlayer](https://github.com/indefined/UserScripts)
-- [BiliPlus](https://www.biliplus.com/)
-- [Bilibilijj](https://www.jijidown.com/)
-- [如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)
-- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)
-- [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)
-- [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)
-- [js-md5](https://github.com/emn178/js-md5)
-- [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid)
-- [解除 B 站区域限制](https://greasyfork.org/scripts/25718)
-- [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/)
+- [protobufjs](https://github.com/protobufjs/protobuf.js)：protobuf编解码
+- [toastr](https://github.com/CodeSeven/toastr/)：浮动通知
+- [Wayback Machine](https://archive.org/web/)：旧版页面存档
+- [bilibiliOldPlayer](https://github.com/indefined/UserScripts)：原型参考及指导
+- [BiliPlus](https://www.biliplus.com/)：第三方接口
+- [Bilibilijj](https://www.jijidown.com/)：第三方接口
+- [如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)：av/BV互转算法
+- [Bilibili Evolved](https://github.com/the1812/Bilibili-Evolved)：部分算法参考
+- [Bilibili\_video\_download](https://github.com/Henryhaohao/Bilibili_video_download)：下载接口参考
+- [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
+- [js-md5](https://github.com/emn178/js-md5)：MD5哈希算法参考
+- [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/)：crc逆向原理
+- [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid)：crc逆向算法来源
+- [解除 B 站区域限制](https://greasyfork.org/scripts/25718)：解除视频限制功能参考
+
 
 --- 
 ### 开源许可
