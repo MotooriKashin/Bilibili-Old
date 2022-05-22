@@ -1,8 +1,0 @@
-/* 修复消息页样式 */
-.container[data-v-6969394c] {
-    height: calc(100vh - 42px) !important;
-}
-
-.container[data-v-1c9150a9] {
-    height: calc(100vh - 42px) !important;
-}

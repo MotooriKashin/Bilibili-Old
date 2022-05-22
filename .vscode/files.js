@@ -2,7 +2,7 @@ const fs = require("fs");
 
 module.exports.getFiles = class Files {
     /**
-     * 遍历目录指定目录并返回所偶文件信息
+     * 遍历目录指定目录并返回所有文件信息
      * @param {string[]} path 根目录下的路径名组(无需`./`开头)，将遍历所有子目录
      * @param {string[]} [exclude] 排除路径关键词，过滤相关路径中的文件
      */

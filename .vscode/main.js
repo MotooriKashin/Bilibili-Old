@@ -46,8 +46,9 @@ async function getResource() {
         return s;
     }, "// ==UserScript==\r\n");
     result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
-    result += await fs.promises.readFile("./dist/require.js"); // 模块封装
-    result += await fs.promises.readFile("./dist/index.js"); // 脚本主入口
+    result += await fs.promises.readFile("./src/require.js"); // 模块封装
+    result += await fs.promises.readFile("./src/index.js"); // 脚本主入口
+    result = result.replace(/\r?\n?"use strict";/g, ""); // 严格模式标记
     fs.writeFile("./main.user.js", result, (err) => {
         if (err) throw err
         console.log("%c编译完成！", "color: green;");

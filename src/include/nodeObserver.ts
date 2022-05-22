@@ -1,7 +1,3 @@
-interface modules {
-    /** 监听DOM节点变动 */
-    readonly "nodeObserver.js": string;
-}
 namespace API {
     const nodelist: Function[] = [];
     /**
@@ -14,7 +10,7 @@ namespace API {
         try {
             if (typeof callback === "function") nodelist.push(callback);
             return nodelist.length - 1;
-        } catch (e) { toast.error("nodeObserver.js", e) }
+        } catch (e) { debug.error(e) }
     }
     /**
      * 销毁`observerAddedNodes`监听
@@ -23,14 +19,15 @@ namespace API {
     export function removeObserver(id: number) {
         nodelist.splice(id, 1);
     }
-    (new MutationObserver(d => d.forEach(d => {
+    const observe = new MutationObserver(d => d.forEach(d => {
         d.addedNodes[0] && nodelist.forEach(async f => {
             try {
                 f(d.addedNodes[0])
-            } catch (e) {
-                debug.error(d);
-                debug.error(e);
-            }
+            } catch (e) { debug.error(d).error(e) }
         })
-    }))).observe(document, { childList: true, subtree: true });
+    }));
+    loadAfterClear(() => {
+        try { observe.disconnect(); } catch (e) { }
+        observe.observe(document, { childList: true, subtree: true });
+    });
 }

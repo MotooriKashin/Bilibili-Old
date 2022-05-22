@@ -1,10 +1,6 @@
-interface modules {
-    /** 常用的url请求的封装，以方便提示参数信息及省略默认气息 */
-    readonly "url.js": string;
-}
 namespace API {
     class Url {
-        access_key = GM.getValue("access_key");
+        access_key = config.accessKey.key || undefined;
         /** url的默认参数，即UrlDetail未列出或可选的部分 */
         jsonUrlDefault = {
             "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: 'json', fourk: 1 },
@@ -31,16 +27,16 @@ namespace API {
             let obj: any = { ...(this.jsonUrlDefault[url] || {}), ...detail };
             (Number(Reflect.get(obj, "appkey")) >= 0) && (obj = this.sign(obj));
             return GM ? xhr.GM({
-                url: Format.objUrl(`//${url}`, obj),
+                url: objUrl(`//${url}`, obj),
                 responseType: "json"
             }) : xhr({
-                url: Format.objUrl(`//${url}`, obj),
+                url: objUrl(`//${url}`, obj),
                 responseType: "json",
                 credentials: true
             })
         }
         sign(obj: any) {
-            return Format.urlObj(`?${urlsign("", obj, obj.appkey)}`);
+            return urlObj(`?${urlsign("", obj, obj.appkey)}`);
         }
     }
     /**

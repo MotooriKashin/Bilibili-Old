@@ -1,0 +1,27 @@
+<input type="checkbox" id="checkbox">
+<label for="checkbox"></label>
+<style>
+    input[type="checkbox"] {
+        display: none;
+    }
+
+    input~label {
+        cursor: pointer;
+    }
+
+    input:checked~label:before {
+        content: '\2714';
+    }
+
+    input~label:before {
+        width: 12px;
+        height: 12px;
+        line-height: 14px;
+        vertical-align: text-bottom;
+        border-radius: 3px;
+        border: 1px solid #d3d3d3;
+        display: inline-block;
+        text-align: center;
+        content: ' ';
+    }
+</style>

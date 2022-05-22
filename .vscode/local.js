@@ -1,7 +1,7 @@
 // 构建开发板脚本local.user.js
 const fs = require("fs");
 const meta = require("../meta.json"); // 脚本元数据
-const _requires = ["dist/require.js"]; // 模块封装，开发模式下以require本地资源方式加载
+const _requires = ["src/require.js"]; // 模块封装，开发模式下以require本地资源方式加载
 const _resource = ["dist/bilibiliPlayer.js", "dist/comment.js"]; // 本地资源项
 
 meta.version = "8.0.0"; // 开发模式无需修改脚本版本，固定为大版本+1
@@ -31,7 +31,8 @@ function getResource() {
         return s;
     }, "// ==UserScript==\r\n");
     result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
-    result += await fs.promises.readFile("./dist/index.js"); // 脚本主入口
+    result += await fs.promises.readFile("./src/index.js"); // 脚本主入口
+    result = result.replace(/\r?\n?"use strict";/g, ""); // 严格模式标记
     fs.writeFile("./local.user.js", result, (err) => {
         if (err) throw err
         console.log("%c编译完成！", "color: green;");

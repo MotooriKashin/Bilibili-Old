@@ -18598,7 +18598,7 @@ function Fa() {
                     k.length) {
                     for (var l = function (e) {
                         var l = k[e][1],
-                            q = $('<a class="' + n + '-recommend-video" href="' + (typeof k[e][1] === "string" ? k[e][1] : ("//www.bilibili.com/video/av" + k[e][1])) + '" target="_blank"><div class="' + n + '-recommend-left">' + (k[e][8] ? k[e][8].is_ad_loc && k[e][8].is_ad ? '<i class="promote-icon"></i>' : "" : "") + '<img src="' + b.a.Ni(k[e][0], 160, 100) + '"/><span><i class="' + n + '-iconfont icon-22wait-normal"></i></span></div><div class="' + n + '-recommend-right"><div class="' + n + '-recommend-title"></div><div class="' + n + '-recommend-click"><i class="' + n + '-iconfont icon-12iconplayed"></i>' +
+                            q = $('<a class="' + n + '-recommend-video" href="' + (typeof k[e][1] === "string" ? k[e][1] : ("//www.bilibili.com/video/av" + k[e][1])) + '" target="_blank"><div class="' + n + '-recommend-left">' + (k[e][8] ? k[e][8].is_ad_loc && k[e][8].is_ad ? '<i class="promote-icon"></i>' : "" : "") + '<img src="' + b.a.Ni(k[e][0], 160, 100).replace("http:", "") + '"/><span><i class="' + n + '-iconfont icon-22wait-normal"></i></span></div><div class="' + n + '-recommend-right"><div class="' + n + '-recommend-title"></div><div class="' + n + '-recommend-click"><i class="' + n + '-iconfont icon-12iconplayed"></i>' +
                                 f.ua.Br(k[e][3]) + '</div><div class="' + n + '-recommend-danmaku"><i class="' + n + '-iconfont icon-12icondanmu"></i>' + f.ua.Br(k[e][4]) + "</div></div></a>").appendTo(t).click(function () {
                                     f.u("recommend_click");
                                     k[e][8] && k[e][8].is_ad_loc && (f.u("recommend_ad_click", JSON.stringify(k[e][8])), f.Ia && f.Ia.send({
@@ -21778,7 +21778,7 @@ function Fa() {
                     })
                 };
                 e.prototype.NA = function (b) {
-                    if(this.c.cb.block.ai_level > 0)
+                    if (this.c.cb.block.ai_level > 0)
                         (Math.ceil(Math.random() * 11) >= this.c.cb.block.ai_level) && (this.c.template.Iy.html(parseInt(this.c.template.Iy.html()) + 1));
                     else
                         this.c.template.Iy.html(this.g.G.length);
@@ -59053,4 +59053,4 @@ else {
         c.default = e, b.exports = c.default
     }, {}]
 }, {}, [4]);
-//# sourceURL=API://@Bilibili-Old/bilibiliPlayer.js
+//# sourceURL=file://@Bilibili-Old/bilibiliPlayer.js

@@ -1,0 +1,270 @@
+{
+    "nested": {
+        "bilibili": {
+            "nested": {
+                "broadcast": {
+                    "nested": {
+                        "v1": {
+                            "nested": {
+                                "AuthReq": {
+                                    "fields": {
+                                        "guid": {
+                                            "type": "string",
+                                            "id": 1
+                                        },
+                                        "connId": {
+                                            "type": "string",
+                                            "id": 2
+                                        },
+                                        "lastMsgId": {
+                                            "type": "int64",
+                                            "id": 3
+                                        }
+                                    }
+                                },
+                                "AuthResp": {
+                                    "fields": {}
+                                },
+                                "HeartbeatReq": {
+                                    "fields": {}
+                                },
+                                "HeartbeatResp": {
+                                    "fields": {}
+                                },
+                                "TargetPath": {
+                                    "fields": {
+                                        "targetPaths": {
+                                            "rule": "repeated",
+                                            "type": "string",
+                                            "id": 1
+                                        }
+                                    }
+                                },
+                                "MessageAckReq": {
+                                    "fields": {
+                                        "ackId": {
+                                            "type": "int64",
+                                            "id": 1
+                                        },
+                                        "ackOrigin": {
+                                            "type": "string",
+                                            "id": 2
+                                        },
+                                        "targetPath": {
+                                            "type": "string",
+                                            "id": 3
+                                        }
+                                    }
+                                },
+                                "Subscribe": {
+                                    "fields": {
+                                        "type": {
+                                            "type": "string",
+                                            "id": 1
+                                        },
+                                        "targetPaths": {
+                                            "rule": "repeated",
+                                            "type": "string",
+                                            "id": 2
+                                        }
+                                    }
+                                },
+                                "Status": {
+                                    "fields": {
+                                        "code": {
+                                            "type": "int32",
+                                            "id": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "id": 2
+                                        },
+                                        "details": {
+                                            "rule": "repeated",
+                                            "type": "google.protobuf.Any",
+                                            "id": 3
+                                        }
+                                    }
+                                },
+                                "FrameOption": {
+                                    "fields": {
+                                        "messageId": {
+                                            "type": "int64",
+                                            "id": 1
+                                        },
+                                        "sequence": {
+                                            "type": "int64",
+                                            "id": 2
+                                        },
+                                        "isAck": {
+                                            "type": "bool",
+                                            "id": 3
+                                        },
+                                        "status": {
+                                            "type": "Status",
+                                            "id": 4
+                                        },
+                                        "ackOrigin": {
+                                            "type": "string",
+                                            "id": 5
+                                        }
+                                    }
+                                },
+                                "BroadcastFrame": {
+                                    "fields": {
+                                        "options": {
+                                            "type": "FrameOption",
+                                            "id": 1
+                                        },
+                                        "targetPath": {
+                                            "type": "string",
+                                            "id": 2
+                                        },
+                                        "body": {
+                                            "type": "google.protobuf.Any",
+                                            "id": 3
+                                        }
+                                    }
+                                },
+                                "RoomJoinEvent": {
+                                    "fields": {}
+                                },
+                                "RoomLeaveEvent": {
+                                    "fields": {}
+                                },
+                                "RoomOnlineEvent": {
+                                    "fields": {
+                                        "online": {
+                                            "type": "int32",
+                                            "id": 1
+                                        },
+                                        "allOnline": {
+                                            "type": "int32",
+                                            "id": 2
+                                        }
+                                    }
+                                },
+                                "RoomMessageEvent": {
+                                    "fields": {
+                                        "targetPath": {
+                                            "type": "string",
+                                            "id": 1
+                                        },
+                                        "body": {
+                                            "type": "google.protobuf.Any",
+                                            "id": 2
+                                        }
+                                    }
+                                },
+                                "RoomErrorEvent": {
+                                    "fields": {
+                                        "status": {
+                                            "type": "Status",
+                                            "id": 1
+                                        }
+                                    }
+                                },
+                                "RoomReq": {
+                                    "oneofs": {
+                                        "event": {
+                                            "oneof": [
+                                                "join",
+                                                "leave",
+                                                "online",
+                                                "msg"
+                                            ]
+                                        }
+                                    },
+                                    "fields": {
+                                        "id": {
+                                            "type": "string",
+                                            "id": 1
+                                        },
+                                        "join": {
+                                            "type": "RoomJoinEvent",
+                                            "id": 2
+                                        },
+                                        "leave": {
+                                            "type": "RoomLeaveEvent",
+                                            "id": 3
+                                        },
+                                        "online": {
+                                            "type": "RoomOnlineEvent",
+                                            "id": 4
+                                        },
+                                        "msg": {
+                                            "type": "RoomMessageEvent",
+                                            "id": 5
+                                        }
+                                    }
+                                },
+                                "RoomResp": {
+                                    "oneofs": {
+                                        "event": {
+                                            "oneof": [
+                                                "join",
+                                                "leave",
+                                                "online",
+                                                "msg",
+                                                "err"
+                                            ]
+                                        }
+                                    },
+                                    "fields": {
+                                        "id": {
+                                            "type": "string",
+                                            "id": 1
+                                        },
+                                        "join": {
+                                            "type": "RoomJoinEvent",
+                                            "id": 2
+                                        },
+                                        "leave": {
+                                            "type": "RoomLeaveEvent",
+                                            "id": 3
+                                        },
+                                        "online": {
+                                            "type": "RoomOnlineEvent",
+                                            "id": 4
+                                        },
+                                        "msg": {
+                                            "type": "RoomMessageEvent",
+                                            "id": 5
+                                        },
+                                        "err": {
+                                            "type": "RoomErrorEvent",
+                                            "id": 6
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "google": {
+            "nested": {
+                "protobuf": {
+                    "nested": {
+                        "Any": {
+                            "fields": {
+                                "type_url": {
+                                    "type": "string",
+                                    "id": 1
+                                },
+                                "value": {
+                                    "type": "bytes",
+                                    "id": 2
+                                }
+                            }
+                        },
+                        "Empty": {
+                            "fields": {}
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

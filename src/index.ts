@@ -1,4 +1,4 @@
 (function () {
-    /** 入口点，切换上下文环境回页面 */
+    /** 入口点，切回上下文环境 */
     new Function("GM", "modules", <string>modules["main.js"])(GM, modules);
 })();

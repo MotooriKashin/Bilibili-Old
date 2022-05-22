@@ -29,16 +29,18 @@ function getProperty(str) {
             if (end) break;
         }
     }
-    return result.match(/(?<=export +(let|function|async function|const|var|class) *\*? *)[A-Za-z0-9_$]+(?=(\(|:| |\<))/g) || []; // 正则匹配接口名
+    return result.match(/(?<=export +(let|function|async function|const|var|class|abstract class) *\*? *)[A-Za-z0-9_$]+(?=(\(|:| |\<))/g) || []; // 正则匹配接口名
 }
 console.log("%c提取接口索引表>>>", "color: yellow;");
 new files(path).run().then(d => { // 读取所有模块文件
     const json = d.reduce((s, d) => { // 提取所有模块中的导出接口
-        const names = getProperty(String(d.data)); // 当前文件导出接口组
-        names.forEach(n => { // 标记接口所在文件名
-            s[n] = d.fileFullName.replace(".ts", ".js"); // 实际使用时模块后缀名是.js
-        });
+        if (d.fileFullName.endsWith(".ts")) {
+            const names = getProperty(String(d.data)); // 当前文件导出接口组
+            names.forEach(n => { // 标记接口所在文件名
+                s[n] = d.fileFullName.replace(".ts", ".js"); // 实际使用时模块后缀名是.js
+            });
+        }
         return s;
     }, {});
-    fs.writeFile("./json/apply.json", JSON.stringify(json, undefined, "\t"), () => { });
+    fs.writeFile("./src/apply.json", JSON.stringify(json, undefined, "\t"), () => { });
 });
