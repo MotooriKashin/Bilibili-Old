@@ -39,10 +39,10 @@ namespace API {
         /** 提取节点名 */
         organizeTag() {
             if (!this.quote && this.html[0] === "<") {
-                if (this.html.startsWith(`</${this.tagNames.at(-1)}`)) {
+                if (this.html.startsWith(`</${this.tagNames.reduce((s, d) => s = d,<any>undefined)}`)) {
                     // 闭合标签
                     this.textContent();
-                    this.html = this.html.replace(new RegExp(`^</${this.tagNames.at(-1)}>`), "");
+                    this.html = this.html.replace(new RegExp(`^</${this.tagNames.reduce((s, d) => s = d,<any>undefined)}>`), "");
                     this.popNode();
                 } else {
                     // 节点开始标记
@@ -76,7 +76,7 @@ namespace API {
                         const tagName = this.html.substring(0, this.pos); // 提取节点名
                         const tag = new Vnode(tagName); // 添加Vnode模板
                         this.tagNames.push(tagName); // 节点名压栈
-                        this.targets.at(-1).children.push(tag); // Vnode上树
+                        this.targets.reduce((s, d) => s = d,<any>undefined).children.push(tag); // Vnode上树
                         this.targets.push(tag); // Vnode压栈
                         this.removeScanned(this.pos + 1);
                         func.forEach(d => d()); // 操作栈：属性处理/出栈
@@ -112,7 +112,7 @@ namespace API {
                         const str = this.html.substring(start, this.pos).replace(/\r|\n|"/g, "").replace(/^ +/, "");
                         const prop = str.split("=");
                         const key = <string>prop.shift();
-                        key && key !== "/" && (this.targets.at(-1).props[key] = prop.join("=") || key);
+                        key && key !== "/" && (this.targets.reduce((s, d) => s = d,<any>undefined).props[key] = prop.join("=") || key);
                         start = this.pos;
                     }
                         break;
@@ -121,7 +121,7 @@ namespace API {
                         const str = this.html.substring(start, this.pos).replace(/\r|\n|"/g, "").replace(/^ +/, "");
                         const prop = str.split("=");
                         const key = <string>prop.shift();
-                        key && key !== "/" && (this.targets.at(-1).props[key] = prop.join("=") || key);
+                        key && key !== "/" && (this.targets.reduce((s, d) => s = d,<any>undefined).props[key] = prop.join("=") || key);
                         if (this.html[this.pos - 1] === "/") {
                             this.popNode();
                             popd = true;
@@ -135,7 +135,7 @@ namespace API {
         }
         /** 出栈检查 空元素直接出栈*/
         tagSingle() {
-            switch (this.tagNames.at(-1)) {
+            switch (this.tagNames.reduce((s, d) => s = d,<any>undefined)) {
                 case "area":
                 case "base":
                 case "br":
@@ -173,7 +173,7 @@ namespace API {
             if (text) { // 有效TextContent
                 const tag = new Vnode("text");
                 tag.text = this.text;
-                this.targets.at(-1).children.push(tag);
+                this.targets.reduce((s, d) => s = d,<any>undefined).children.push(tag);
             }
             this.text = ""; // 新节点伊始，重置TextContent
         }

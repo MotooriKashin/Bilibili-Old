@@ -94,14 +94,14 @@ namespace API {
             url: cover,
             up: "封面",
             down: "N/A",
-            fileName: `${title || `av${aid}`}.${cover.split(".").at(-1) || "jpg"}`
+            fileName: `${title || `av${aid}`}.${cover.split(".").reduce((s, d) => s = d, <any>undefined) || "jpg"}`
         });
         bkg_cover && pushDownload({
             group: "封面",
             url: bkg_cover,
             up: "封面",
             down: "N/A",
-            fileName: `${title || `av${aid}`}.${bkg_cover.split(".").at(-1) || "jpg"}`
+            fileName: `${title || `av${aid}`}.${bkg_cover.split(".").reduce((s, d) => s = d, <any>undefined) || "jpg"}`
         });
     }
     /** 默认下载 */
