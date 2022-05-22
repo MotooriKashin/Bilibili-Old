@@ -3,6 +3,13 @@ interface modules {
     readonly "vector.js": string;
 }
 namespace API {
+    if (uid) {
+        // 修复动态时间戳
+        const offset = getCookies()[`bp_video_offset_${uid}`];
+        if (offset) {
+            setCookie(`bp_t_offset_${uid}`, offset);
+        }
+    }
     config.developer && Reflect.set(window, "API", API);
     // 重写模式下，引导之前加载的模块注册的回调都会失效
     // 为此，相关回调包装在`loadAfterClear`方法中

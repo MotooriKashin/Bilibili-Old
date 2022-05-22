@@ -25,7 +25,7 @@ namespace API {
         let response: any; // 初始化返回值
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         let obj = urlObj(args[1]); // 提取请求参数
-        const accesskey = GM.getValue("access_key", "") || <any>undefined;
+        const accesskey = config.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
         if (limit) { // 处理区域限制
             obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿

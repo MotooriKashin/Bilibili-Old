@@ -54,10 +54,11 @@ namespace API {
         return t === "json" ? { response: JSON.parse(result) } : { response: result, responseText: result }
     }, false)
 
-    if (rebuildType =="重定向") {
+    if (rebuildType == "重定向") {
         document.documentElement.replaceChildren(createElements(htmlVnode(getModule("bangumi.html"))));
         appendScripts(getModule("bangumi-script.html")).then(() => loadendEvent());
     } else {
+        (<any>window).__Iris__ = true; // 精确爆破新版番剧脚本
         documentWrite(getModule("bangumi.html")
             .replace('<!-- <!DOCTYPE html> -->', '<!DOCTYPE html>')
             .replace('<!-- <html lang="zh-CN"> -->', '<html lang="zh-CN">')

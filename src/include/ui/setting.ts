@@ -277,6 +277,18 @@ namespace API {
         });
         disableSettingCallback = false;
     }
+    /**
+     * 获取设置项，用于修改设置项`value`以外的属性
+     * @param key 设置项的key，如果是组合设置，格式是`组合key.组员key`
+     */
+    export function getSetting<T extends keyof Setting>(key: string) {
+        const arr = key.split(".");
+        let rsa = <Setting[T]>SETTING.find(d => d.key === arr[0]);
+        if (arr[1] && (<any>rsa).list) {
+            rsa = <any>(<any>rsa).list.find((d: any) => d.key === arr[1]);
+        }
+        return rsa;
+    }
     /** 设置界面 */
     class BilibiliOld extends HTMLElement {
         /** 跟节点 */

@@ -144,10 +144,22 @@ interface config {
         /** 端口 */
         port: string;
     };
+    /** ef2 */
     IDM: {
         wait: boolean;
         silence: boolean;
     }
+    /** 动态顶栏 */
+    animatedBanner: boolean;
+    /** 账户授权 */
+    accessKey: {
+        /** access_key */
+        key: string,
+        /** 授权日期 */
+        date: string,
+        /** 授权Biliplus（第三方区域限制解析服务器） */
+        biliplus: boolean
+    };
 }
 namespace API {
     const CONFIG = GM.getValue<config>("config", <config>{});
@@ -317,7 +329,37 @@ namespace API {
             label: "解除视频播放限制",
             type: "switch",
             value: false,
-            sub: "区域+APP"
+            sub: "区域+APP",
+            float: `默认只能以游客身份获取限制视频源，如果您是大会员，可以考虑【账户授权-授权biliplus服务器】以观看大会员专享区域限制视频。`,
+            callback: v => {
+                if (v) {
+                    alert("是否前往【账户授权】设置？", undefined, [
+                        {
+                            name: "是",
+                            callback: () => {
+                                showSetting("accessKey")
+                            }
+                        },
+                        {
+                            name: "否",
+                            callback: () => { }
+                        }
+                    ])
+                } else {
+                    if (config.accessKey.biliplus) alert("您还在【账户授权】将账户授权给了第三方解析服务器，是否前往取消？", undefined, [
+                        {
+                            name: "是",
+                            callback: () => {
+                                showSetting("accessKey")
+                            }
+                        },
+                        {
+                            name: "否",
+                            callback: () => { }
+                        }
+                    ])
+                }
+            }
         },
         {
             key: "protobufDanmaku",
@@ -1030,6 +1072,83 @@ namespace API {
                     sub: "无需二次确认",
                     float: '取消IDM下载确认对话框，那里会询问是否开启下载以及文件名、保存目录等信息。',
                     value: false
+                }
+            ]
+        },
+        {
+            key: "animatedBanner",
+            menu: "style",
+            type: "switch",
+            label: "动态banner",
+            sub: "移植自新版顶栏",
+            value: false
+        },
+        {
+            key: "accessKey",
+            menu: "common",
+            type: "list",
+            name: "账户授权",
+            list: [
+                {
+                    key: "key",
+                    type: "input",
+                    label: "Token",
+                    sub: "access_key",
+                    float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本脚本访问那些数据的能力。",
+                    props: { type: "text", readonly: "readonly" }
+                },
+                {
+                    key: "date",
+                    type: "input",
+                    label: "授权日期",
+                    sub: "有效期不超过30天",
+                    float: "和cookie一样，access_key这个鉴权参数一般有有效期限，经验告诉我们一般是一个月，过期作废。因为授权是敏感操作，请自行判断是否过期并慎重考虑是否重新授权。",
+                    props: { type: "text", readonly: "readonly" }
+                },
+                {
+                    key: "action",
+                    type: "button",
+                    label: config.accessKey?.key ? "撤销授权" : "授权操作",
+                    float: '',
+                    button: config.accessKey?.key ? "撤销" : "授权",
+                    value: () => {
+                        if (config.accessKey.key) {
+                            alert('注销授权只是保证本脚本不再使用已授权的参数，如果第三方服务器保存有该鉴权，本脚本也无法让人家吐出来＞﹏＜。如果要真正完全销毁该鉴权，可以考虑修改密码等操作，这样会强制所有登录失效，唯一的问题是您的所有设备都必须重新登录。<br>请确认您的操作~', "撤销授权", [
+                                {
+                                    name: "确认撤销",
+                                    callback: () => { AccessKey.remove() }
+                                },
+                                {
+                                    name: "取消操作",
+                                    callback: () => { }
+                                }
+                            ]);
+                        } else {
+                            alert('请仔细阅读上面各项说明并慎重操作，【确认授权】表示您同意本脚本能以网页端以外的鉴权向B站官方服务器证明您的身份，以执行一些本来网页端无权进行的操作。本脚本保证该鉴权不会泄露给任何第三方，代码完全开源且未经压缩混淆敬请放心。<br>请确认您的操作~', "撤销授权", [
+                                {
+                                    name: "确认授权",
+                                    callback: () => {
+                                        AccessKey.get();
+                                    }
+                                },
+                                {
+                                    name: "取消操作",
+                                    callback: () => { }
+                                }
+                            ]);
+                        }
+                    }
+                },
+                {
+                    key: "biliplus",
+                    type: "switch",
+                    label: "授权biliplus服务器",
+                    sub: "解除区域限制",
+                    float: "本脚本使用Biliplus服务器实现【解除区域限制】功能，如果您是大会员账户，则可以选择将账户授权给Biliplus服务器，以支持解析大会员专享区域限制视频。如果不是大会员，则本操作没有任何意义！<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
+                    value: false,
+                    callback: v => {
+                        v ? AccessKey.login() : AccessKey.checkout();
+                    }
                 }
             ]
         }

@@ -1,6 +1,6 @@
 namespace API {
     class Url {
-        access_key = GM.getValue("access_key");
+        access_key = config.accessKey.key || undefined;
         /** url的默认参数，即UrlDetail未列出或可选的部分 */
         jsonUrlDefault = {
             "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: 'json', fourk: 1 },

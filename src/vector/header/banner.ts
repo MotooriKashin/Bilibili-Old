@@ -362,7 +362,7 @@ namespace API {
                 loc.data[0].title = (header && header.data.name) || "";
             }
         })
-        setTimeout(() => new Animate(header.data));
+        config.animatedBanner && setTimeout(() => new Animate(header.data));
         return loc;
     }, false);
 }
