@@ -104,6 +104,9 @@ namespace API {
         if (/bangumi\/media\/md/.test(location.href)) {
             importModule("media.js");
         }
+        if (config.timeline && /anime\/timeline/.test(location.href)) {
+            importModule("timeline.js");
+        }
     }
     config.logReport && importModule("logReport.js"); // 日志拦截
     importModule("protobufDanmaku.js"); // 新版弹幕

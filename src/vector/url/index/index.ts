@@ -6,8 +6,8 @@ interface modules {
     readonly "news.html": string;
 }
 namespace API {
-    if (rebuildType !="重定向") windowClear();
-    if (rebuildType =="重定向") {
+    if (rebuildType != "重定向") windowClear();
+    if (rebuildType == "重定向") {
         document.documentElement.replaceChildren(createElements(htmlVnode(getModule("index.html"))));
         appendScripts(getModule("index-script.html")).then(() => loadendEvent());
     } else {
@@ -165,4 +165,8 @@ namespace API {
     }, undefined, false);
     importModule("primaryMenu.js"); // 顶栏分区修正
     importModule("banner.js"); // 顶栏banner修复
+    // 添加港澳台新番时间表
+    config.timeline && xhrhook("api.bilibili.com/pgc/web/timeline?types=1", undefined, res => {
+        Promise.resolve().then(() => { importModule("timeline.js") })
+    });
 }

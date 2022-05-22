@@ -160,6 +160,8 @@ interface config {
         /** 授权Biliplus（第三方区域限制解析服务器） */
         biliplus: boolean
     };
+    /** 添加港澳台新番时间表 */
+    timeline: boolean;
 }
 namespace API {
     const CONFIG = GM.getValue<config>("config", <config>{});
@@ -863,7 +865,7 @@ namespace API {
             type: "switch",
             label: "获取TV源",
             sub: "可能无水印",
-            float: `B战TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【右键另存为】这种下载方式</strong>`,
+            float: `B战TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【默认】下载方式</strong>`,
             value: false,
             callback: v => {
                 if (v) {
@@ -1151,6 +1153,15 @@ namespace API {
                     }
                 }
             ]
+        },
+        {
+            key: "timeline",
+            menu: "style",
+            type: "switch",
+            label: "港澳台新番时间表",
+            sub: '<a href="//www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
+            float:`在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。`,
+            value: false
         }
     ]);
 }

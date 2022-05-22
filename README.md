@@ -9,12 +9,12 @@
 1. 恢复旧版页面
    - B站主页：https://www.bilibili.com  
    - av/BV页：[av2](https://www.bilibili.com/video/av2)。
-   - bangumi，[ss3398](https://www.bilibili.com/bangumi/play/ss3398/ "冰菓")。
-   - 稍后再看。
+   - bangumi：[ss3398](https://www.bilibili.com/bangumi/play/ss3398/ "冰菓")
+   - 稍后再看
    - 排行榜：https://www.bilibili.com/ranking
-   - 嵌入式播放器：[拜年祭2021](https://www.bilibili.com/festival/2022bnj)专题页面。
-   - 专栏。
-   - 搜索。
+   - 嵌入式播放器：[拜年祭2021](https://www.bilibili.com/festival/2022bnj)专题页面
+   - 专栏
+   - 搜索
 2. 配套的后续处理
    - （详见脚本设置）
 
