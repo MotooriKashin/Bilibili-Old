@@ -14,7 +14,7 @@ namespace API {
     // .onCoinSuccess(n)   页面变为已投币n枚的状态
     // .onFollow()         变为已关注状态
     // .favSubmit(bool)    设置收藏状态，参数bool: true -> “已收藏”状态 false -> 未收藏状态
-    webpackhook(717, 274, (code: string) => code.replace("init:function(){", "init:function(){window.biliUIcomponents=this;"));
+    webpackhook(717, 274, (code: string) => code.replace("init:function(){", "init:function(){window.biliUIcomponents=this;").replace("this.getAdData()", "this.getAdData"));
     // 修复：收藏视频时，在“添加到收藏夹”弹窗中，如果将视频从收藏夹A删除，并同时添加到收藏夹B，点击确定后窗口不消失的问题
     /* 报错原因示意：
         jQuery.when(deferredA,deferredB).done((resultA,resultB) => {

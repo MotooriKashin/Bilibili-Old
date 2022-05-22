@@ -7,6 +7,7 @@ namespace API {
     document.head.appendChild(createElements(htmlVnode(getModule("animated-banner.html"))));
     // 动态banner。移植自B站vue源码
     class Animate {
+        static once = false;
         /** 缓存已请求内容 */
         static record: Record<string, any> = {};
         /** 资源id */
@@ -362,7 +363,7 @@ namespace API {
                 loc.data[0].title = (header && header.data.name) || "";
             }
         })
-        config.animatedBanner && setTimeout(() => new Animate(header.data));
+        config.animatedBanner && !Animate.once && (Animate.once = true,setTimeout(() => new Animate(header.data)));
         return loc;
     }, false);
 }
