@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         Bilibili Old
+// @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      1.0.0
+// @version      8.0.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @resource     protobuf.js https://fastly.jsdelivr.net/npm/protobufjs/dist/light/protobuf.min.js
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c001bbe025fd86586984127bac5707fdc0083ece/dist/bilibiliPlayer.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@23526752a582f8735b3c7a82cbc84a34a0eff480/dist/comment.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
 // ==/UserScript==
 
 
@@ -61,6 +61,7 @@ const modules = {};
 	"statusCheck": "units.js",
 	"url": "url.js",
 	"xhr": "xhr.js",
+	"AccessKey": "accessKey.js",
 	"jsonCheck": "jsonCheck.js",
 	"loginExit": "loginExit.js",
 	"mediaSession": "MediaMeta.js",
@@ -151,6 +152,7 @@ const modules = {};
 	"settingMG": "manage.js",
 	"registerMenu": "setting.js",
 	"registerSetting": "setting.js",
+	"getSetting": "setting.js",
 	"showSetting": "setting.js",
 	"showSettingEntry": "ui.js",
 	"aria2": "aria2.js",
@@ -544,22 +546,24 @@ const modules = {};
 /**/modules["url.js"] = /*** ./src/include/url.js ***/
 `
     class Url {
-        access_key = GM.getValue("access_key");
-        /** url的默认参数，即UrlDetail未列出或可选的部分 */
-        jsonUrlDefault = {
-            "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: 'json', fourk: 1 },
-            "api.bilibili.com/x/player/playurl": { qn: 127, otype: 'json', fourk: 1 },
-            "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 127, type: '' },
-            "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 127, type: '' },
-            "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
-            "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
-            "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-            "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-            "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-            "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
-            "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
-            "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" }
-        };
+        constructor() {
+            this.access_key = API.config.accessKey.key || undefined;
+            /** url的默认参数，即UrlDetail未列出或可选的部分 */
+            this.jsonUrlDefault = {
+                "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: 'json', fourk: 1 },
+                "api.bilibili.com/x/player/playurl": { qn: 127, otype: 'json', fourk: 1 },
+                "interface.bilibili.com/v2/playurl": { appkey: 9, otype: 'json', quality: 127, type: '' },
+                "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: 'json', quality: 127, type: '' },
+                "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
+                "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: new Date().getTime() },
+                "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: 'json', platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+                "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+                "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval: API.fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: 'json', ts: new Date().getTime() },
+                "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
+                "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" }
+            };
+        }
         /**
          * 请求封装好的json请求
          * @param url 请求的url
@@ -674,6 +678,154 @@ const modules = {};
     xhr.port = post;
 
 //# sourceURL=file://@Bilibili-Old/include/xhr.js`;
+/*!***********************!*/
+/**/modules["accessKey.js"] = /*** ./src/include/bilibili/accessKey.js ***/
+`
+    class AccessKey {
+        /** 获取账户授权 */
+        static async get() {
+            if (!API.uid)
+                return (API.toast.warning("请先登录！"), API.biliQuickLogin());
+            const msg = API.config.accessKey.key ? API.toast.custom(0, "warning", "您正在更新账户授权！") : API.toast.custom(0, "info", "您正在进行账户授权操作！");
+            try {
+                let data = await API.xhr.GM({
+                    url: API.urlsign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", undefined, 3),
+                    responseType: "json"
+                });
+                data = await new Promise((resolve, reject) => {
+                    GM.xmlHttpRequest({
+                        method: "GET",
+                        url: data.data.confirm_uri,
+                        onload: (xhr) => resolve(xhr.finalUrl),
+                        onerror: (xhr) => reject(xhr),
+                    });
+                });
+                this.data = data = API.urlObj(data);
+                API.config.accessKey.key = data.access_key;
+                API.config.accessKey.date = API.timeFormat(new Date().getTime(), true);
+                const key = API.getSetting("accessKey.action");
+                key.label = "撤销授权";
+                key.button = "撤销";
+                if (msg) {
+                    msg.type = "success";
+                    msg.data = ["账户授权成功~"];
+                    msg.delay = 3;
+                }
+            }
+            catch (e) {
+                if (msg) {
+                    msg.type = "error";
+                    msg.data = ["账户授权出错 ಥ_ಥ", e];
+                    msg.delay = 3;
+                }
+                API.debug.error("账户授权", e);
+            }
+        }
+        /** 撤销账户授权 */
+        static async remove() {
+            if (!API.config.accessKey.key)
+                return;
+            const msg = API.toast.custom(0, "info", "您正在撤销账户授权！");
+            API.config.accessKey.key = "";
+            API.config.accessKey.date = "";
+            const key = API.getSetting("accessKey.action");
+            key.label = "授权操作";
+            key.button = "授权";
+            if (msg) {
+                msg.type = "success";
+                msg.data = ["撤销授权成功~"];
+                msg.delay = 3;
+            }
+            if (API.config.accessKey.biliplus)
+                API.config.accessKey.biliplus = false;
+        }
+        /** 登录biliplus */
+        static async login() {
+            if (!API.config.accessKey.key) {
+                API.toast.warning("您必须先进行账户授权操作才能使用本功能！");
+                this.disable = true;
+                return API.config.accessKey.biliplus = false;
+            }
+            const msg = API.toast.custom(0, "info", "您正常授权Biliplus登录~");
+            const iframe = document.createElement("iframe");
+            iframe.setAttribute("style", "width: 0px;height: 0px;");
+            iframe.src = API.objUrl("https://www.biliplus.com/login", AccessKey.data);
+            iframe.onload = () => {
+                iframe.remove();
+                if (msg) {
+                    msg.type = "success";
+                    msg.data = ["成功授权Biliplus登录~"];
+                    msg.delay = 3;
+                }
+            };
+            iframe.onerror = ev => {
+                iframe.remove();
+                if (msg) {
+                    msg.type = "error";
+                    msg.data = ["授权Biliplus登录失败~"];
+                    msg.delay = 3;
+                }
+                API.debug.error("授权Biliplus登录", ev);
+                API.alert("是否重试？", "授权Biliplus登录", [
+                    {
+                        name: "是",
+                        callback: () => { this.login(); }
+                    },
+                    {
+                        name: "否",
+                        callback: () => { }
+                    }
+                ]);
+            };
+            document.body.appendChild(iframe);
+        }
+        /** 撤销biliplus登录 */
+        static async checkout() {
+            if (this.disable) {
+                return this.disable = false;
+            }
+            const msg = API.toast.custom(0, "info", "您正常撤销Biliplus登录~");
+            const iframe = document.createElement("iframe");
+            iframe.setAttribute("style", "width: 0px;height: 0px;");
+            iframe.src = "https://www.biliplus.com/login?act=logout";
+            iframe.onload = () => {
+                iframe.remove();
+                if (msg) {
+                    msg.type = "success";
+                    msg.data = ["成功撤销Biliplus登录~", "Token也一并失效，如需恢复，请重新授权！"];
+                    msg.delay = 3;
+                }
+                this.remove();
+            };
+            iframe.onerror = ev => {
+                iframe.remove();
+                if (msg) {
+                    msg.type = "error";
+                    msg.data = ["撤销Biliplus登录失败~"];
+                    msg.delay = 3;
+                }
+                API.debug.error("撤销Biliplus登录", ev);
+                API.alert("是否重试？", "撤销Biliplus登录", [
+                    {
+                        name: "是",
+                        callback: () => { this.checkout(); }
+                    },
+                    {
+                        name: "否",
+                        callback: () => { }
+                    }
+                ]);
+            };
+            document.body.appendChild(iframe);
+        }
+    }
+    /** 参数缓存 */
+    AccessKey.data = GM.getValue("third_login");
+    /** 临时禁用操作 */
+    AccessKey.disable = false;
+    API.AccessKey = AccessKey;
+
+//# sourceURL=file://@Bilibili-Old/include/bilibili/accessKey.js`;
 /*!***********************!*/
 /**/modules["jsonCheck.js"] = /*** ./src/include/bilibili/jsonCheck.js ***/
 `
@@ -854,7 +1006,6 @@ const modules = {};
 /**/modules["segProgress.js"] = /*** ./src/include/bilibili/segProgress.js ***/
 `
     class SegProgress {
-        static cssInited = false;
         constructor(resp) {
             if (!resp || resp.length == 0)
                 return;
@@ -1096,7 +1247,6 @@ const modules = {};
             window.player.addEventListener("video_media_seeked", refreshState);
             chptPanel.onmouseenter = refreshState;
             class timer {
-                static handle;
                 static start() { if (!timer.handle)
                     timer.handle = setInterval(refreshState, 3000); }
                 static stop() { if (timer.handle) {
@@ -1110,6 +1260,7 @@ const modules = {};
                 timer.start();
         }
     }
+    SegProgress.cssInited = false;
     API.SegProgress = SegProgress;
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/segProgress.js`;
@@ -1340,43 +1491,38 @@ const modules = {};
 /**/modules["closedCaption.js"] = /*** ./src/include/bilibili/CC/closedCaption.js ***/
 `
     class ClosedCaption {
-        element = {}; // 节点集合
-        data = {}; // 字幕缓存
-        resizeRate = 100; // 字幕大小倍率
-        subtitle = []; // 字幕栈
-        ON = \`<svg width="22" height="28" viewbox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m4.07787,6.88102l14,0a2,2 0 0 1 2,2l0,10a2,2 0 0 1 -2,2l-14,0a2,2 0 0 1 -2,-2l0,-10a2,2 0 0 1 2,-2zm5,5.5a1,1 0 1 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0zm8,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0z"/></svg>\`;
-        OFF = \`<svg width="22" height="28" viewBox="0 0 22 32" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m15.172,21.87103l-11.172,0a2,2 0 0 1 -2,-2l0,-10c0,-0.34 0.084,-0.658 0.233,-0.938l-0.425,-0.426a1,1 0 1 1 1.414,-1.414l15.556,15.556a1,1 0 0 1 -1.414,1.414l-2.192,-2.192zm-10.21,-10.21c-0.577,0.351 -0.962,0.986 -0.962,1.71l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 0.713,-0.958l-1.751,-1.752zm1.866,-3.79l11.172,0a2,2 0 0 1 2,2l0,10c0,0.34 -0.084,0.658 -0.233,0.938l-2.48,-2.48a1,1 0 0 0 -0.287,-1.958l-1.672,0l-1.328,-1.328l0,-0.672a1,1 0 0 1 1,-1l2,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -1.977,1.695l-5.195,-5.195z"/></svg>\`;
-        color = [
-            { value: '16777215', content: '<span style="color:#FFF;text-shadow: #000 0px 0px 1px">白色</span>' },
-            { value: '16007990', content: '<b style="color:#F44336;text-shadow: #000 0px 0px 1px">红色</b>' },
-            { value: '10233776', content: '<b style="color:#9C27B0;text-shadow: #000 0px 0px 1px">紫色</b>' },
-            { value: '6765239', content: '<b style="color:#673AB7;text-shadow: #000 0px 0px 1px">深紫色</b>' },
-            { value: '4149685', content: '<b style="color:#3F51B5;text-shadow: #000 0px 0px 1px">靛青色</b>' },
-            { value: '2201331', content: '<b style="color:#2196F3;text-shadow: #000 0px 0px 1px">蓝色</b>' },
-            { value: '240116', content: '<b style="color:#03A9F4;text-shadow: #000 0px 0px 1px">亮蓝色</b>' }
-        ];
-        position = [
-            { value: 'bl', content: '左下角' },
-            { value: 'bc', content: '底部居中' },
-            { value: 'br', content: '右下角' },
-            { value: 'tl', content: '左上角' },
-            { value: 'tc', content: '顶部居中' },
-            { value: 'tr', content: '右上角' }
-        ];
-        shadow = [
-            { value: '0', content: '无描边', style: '' },
-            { value: '1', content: '重墨', style: \`text-shadow: #000 1px 0px 1px, #000 0px 1px 1px, #000 0px -1px 1px,#000 -1px 0px 1px;\` },
-            { value: '2', content: '描边', style: \`text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;\` },
-            { value: '3', content: '45°投影', style: \`text-shadow: #000 1px 1px 2px, #000 0px 0px 1px;\` }
-        ];
-        setting;
-        subtitlePrefer; // 首选语言
-        isON = false; // 是否启用
-        caption; // 当前字幕
-        contain;
-        captions = []; // 字幕集
-        text;
         constructor() {
+            this.element = {}; // 节点集合
+            this.data = {}; // 字幕缓存
+            this.resizeRate = 100; // 字幕大小倍率
+            this.subtitle = []; // 字幕栈
+            this.ON = \`<svg width="22" height="28" viewbox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m4.07787,6.88102l14,0a2,2 0 0 1 2,2l0,10a2,2 0 0 1 -2,2l-14,0a2,2 0 0 1 -2,-2l0,-10a2,2 0 0 1 2,-2zm5,5.5a1,1 0 1 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0zm8,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -2,2l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 1,-1l2,0z"/></svg>\`;
+            this.OFF = \`<svg width="22" height="28" viewBox="0 0 22 32" xmlns="http://www.w3.org/2000/svg"><path id="svg_1" fill-rule="evenodd" fill="#99a2aa" d="m15.172,21.87103l-11.172,0a2,2 0 0 1 -2,-2l0,-10c0,-0.34 0.084,-0.658 0.233,-0.938l-0.425,-0.426a1,1 0 1 1 1.414,-1.414l15.556,15.556a1,1 0 0 1 -1.414,1.414l-2.192,-2.192zm-10.21,-10.21c-0.577,0.351 -0.962,0.986 -0.962,1.71l0,3a2,2 0 0 0 2,2l3,0a1,1 0 0 0 0,-2l-2,0a1,1 0 0 1 -1,-1l0,-1a1,1 0 0 1 0.713,-0.958l-1.751,-1.752zm1.866,-3.79l11.172,0a2,2 0 0 1 2,2l0,10c0,0.34 -0.084,0.658 -0.233,0.938l-2.48,-2.48a1,1 0 0 0 -0.287,-1.958l-1.672,0l-1.328,-1.328l0,-0.672a1,1 0 0 1 1,-1l2,0a1,1 0 0 0 0,-2l-3,0a2,2 0 0 0 -1.977,1.695l-5.195,-5.195z"/></svg>\`;
+            this.color = [
+                { value: '16777215', content: '<span style="color:#FFF;text-shadow: #000 0px 0px 1px">白色</span>' },
+                { value: '16007990', content: '<b style="color:#F44336;text-shadow: #000 0px 0px 1px">红色</b>' },
+                { value: '10233776', content: '<b style="color:#9C27B0;text-shadow: #000 0px 0px 1px">紫色</b>' },
+                { value: '6765239', content: '<b style="color:#673AB7;text-shadow: #000 0px 0px 1px">深紫色</b>' },
+                { value: '4149685', content: '<b style="color:#3F51B5;text-shadow: #000 0px 0px 1px">靛青色</b>' },
+                { value: '2201331', content: '<b style="color:#2196F3;text-shadow: #000 0px 0px 1px">蓝色</b>' },
+                { value: '240116', content: '<b style="color:#03A9F4;text-shadow: #000 0px 0px 1px">亮蓝色</b>' }
+            ];
+            this.position = [
+                { value: 'bl', content: '左下角' },
+                { value: 'bc', content: '底部居中' },
+                { value: 'br', content: '右下角' },
+                { value: 'tl', content: '左上角' },
+                { value: 'tc', content: '顶部居中' },
+                { value: 'tr', content: '右上角' }
+            ];
+            this.shadow = [
+                { value: '0', content: '无描边', style: '' },
+                { value: '1', content: '重墨', style: \`text-shadow: #000 1px 0px 1px, #000 0px 1px 1px, #000 0px -1px 1px,#000 -1px 0px 1px;\` },
+                { value: '2', content: '描边', style: \`text-shadow: #000 0px 0px 1px, #000 0px 0px 1px, #000 0px 0px 1px;\` },
+                { value: '3', content: '45°投影', style: \`text-shadow: #000 1px 1px 2px, #000 0px 0px 1px;\` }
+            ];
+            this.isON = false; // 是否启用
+            this.captions = []; // 字幕集
             this.setting = GM.getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
             this.subtitlePrefer = GM.getValue("subtitlePrefer"); // 默认语言
         }
@@ -1658,16 +1804,8 @@ const modules = {};
 /**/modules["allDanmaku.js"] = /*** ./src/include/bilibili/danmaku/allDanmaku.js ***/
 `
     class AllDanmaku {
-        pubdate; // 视频发布时间
-        today; // 当天
-        time; // 备份
-        arrP; // 备份
-        danmaku = [];
-        arrT; // 临时变量
-        timeT; // 临时变量
-        float; // 通知组件
-        note; // 通知组件
         constructor() {
+            this.danmaku = [];
             this.note = API.toast.custom(0, "info", "冷却延时请尽量调大，以免短时间内大量请求被临时封端口！");
             this.float = API.toast.custom(0, "info", "正在尝试获取全部弹幕请耐心等待。。。");
             API.xhr({
@@ -2961,12 +3099,6 @@ const modules = {};
     }
     /** 弹窗组件 */
     class PopupWindow {
-        popup;
-        duration;
-        from;
-        to;
-        pos_x;
-        pos_y;
         constructor(cdm, extra, from) {
             this.duration = extra.duration / 1e3 || 5;
             this.from = from || 0;
@@ -3004,16 +3136,6 @@ const modules = {};
     }
     /** 投票互动UI */
     class Vote extends PopupWindow {
-        total;
-        voteId;
-        options;
-        question;
-        myVote;
-        dialog;
-        result;
-        button;
-        count;
-        progress;
         constructor(cdm, extra, from) {
             super(cdm, extra, from);
             this.popup.style.width = "150px";
@@ -3128,21 +3250,6 @@ const modules = {};
         }
     }
     class Grade extends PopupWindow {
-        /*
-        avg_score: 8.7  <= 平均评分
-        count: 2990
-        duration: 5000
-        grade_id: 14369
-        mid_score: 0    <= 当前用户的评分
-        msg: "评分标题"  <= 最长为8个汉字
-        posX: 344
-        posY: 159
-        skin_selected: "http://i0.hdslb.com/bfs/b/ee3aca3dbc22087341cf312d71a1354af527e444.png"
-        skin_unselected: "http://i0.hdslb.com/bfs/b/1d8fc3daf9201d70189a3778e605d2acf9cae7e9.png"
-        */
-        gradeInfo;
-        scoreInfo;
-        scoreButton;
         constructor(cdm, info, from) {
             super(cdm, info, from);
             this.popup.style.width = "184px";
@@ -3236,8 +3343,6 @@ const modules = {};
     }
     /** 用于获取收藏列表有关信息 */
     class favList {
-        static list = [];
-        static defaultFolderId = 0;
         static get() {
             if (this.list.length > 0)
                 return Promise.resolve(this.list);
@@ -3262,6 +3367,8 @@ const modules = {};
             return this.get().then(() => { return this.defaultFolderId; });
         }
     }
+    favList.list = [];
+    favList.defaultFolderId = 0;
     /** @see https://github.com/SocialSisterYi/bilibili-API-collect */
     class biliAPI {
         static verify(resp, msg) {
@@ -3321,23 +3428,6 @@ const modules = {};
     }
     /** 关联视频跳转按钮 */
     class Link {
-        /*
-            extra = {
-                aid: 2
-                bvid: "BV1xx411c7mD"
-                icon: "http://i0.hdslb.com/bfs/archive/03ef3f34944e0f78b1b4050fc3f9705d1fa905e3.png"
-                posX: 333.5
-                posY: 93.7
-                title: "字幕君交流场所"
-            }
-        */
-        content;
-        aid;
-        from;
-        to;
-        pos_x;
-        pos_y;
-        button;
         constructor(cdm, extra, from) {
             this.content = cdm.content;
             this.aid = extra.aid;
@@ -3467,8 +3557,10 @@ const modules = {};
         }
     };
     class Danmaku {
-        /** 弹幕元数据存档 */
-        dmView = {};
+        constructor() {
+            /** 弹幕元数据存档 */
+            this.dmView = {};
+        }
         /**
          * 生成xml形式的弹幕
          * @param danmaku protoSeg.decode(new Uint8Array(this.response)).elems
@@ -3799,13 +3891,13 @@ const modules = {};
 /**/modules["localDanmaku.js"] = /*** ./src/include/bilibili/danmaku/localDanmaku.js ***/
 `
     class LocalMedia {
-        /** 被选择的文件 */
-        data = { xml: [], json: [], mp4: [] };
-        /** 弹幕当前偏移 */
-        offset = 0;
-        /** 是否已绑定键盘事件 */
-        keyboard = false;
         constructor(files) {
+            /** 被选择的文件 */
+            this.data = { xml: [], json: [], mp4: [] };
+            /** 弹幕当前偏移 */
+            this.offset = 0;
+            /** 是否已绑定键盘事件 */
+            this.keyboard = false;
             this.change(files);
         }
         /**
@@ -4057,21 +4149,6 @@ const modules = {};
         return await API.loadScript("//static.hdslb.com/player/js/bilibiliPlayer.min.js");
     }
     class EmbedPlayer {
-        static asWide = false;
-        playerParam;
-        playerType;
-        upgrade;
-        callbackFn;
-        flashAddEvents = [];
-        flashRemoveEvents = [];
-        pageno = undefined;
-        bofqi = document.querySelector("#bofqi");
-        get gray_html5() {
-            return !API.config.flash;
-        }
-        set gray_html5(v) {
-            API.config.flash = !v;
-        }
         /**
          * 代理EmbedPlayer函数
          * @param player "player"
@@ -4082,6 +4159,92 @@ const modules = {};
          * @param callbackFn 初始化播放器后的回调函数
          */
         constructor(player, swf, playerParams, playerType, upgrade, callbackFn, bofqi) {
+            this.flashAddEvents = [];
+            this.flashRemoveEvents = [];
+            this.pageno = undefined;
+            this.bofqi = document.querySelector("#bofqi");
+            this.eventMaps = {
+                'jwplayerMediaBuffer': 'video_media_buffer',
+                'jwplayerMediaBufferFull': 'video_media_buffer_full',
+                'jwplayerMediaComplete': 'video_media_ended',
+                'jwplayerMediaError': 'video_media_error',
+                'jwplayerMediaLoaded': 'video_media_loaded',
+                'jwplayerMediaMute': 'video_media_mute',
+                'jwplayerMediaSeek': 'video_media_seek',
+                'jwplayerMediaTime': 'video_media_time',
+                'jwplayerMediaVolume': 'video_media_volume'
+            };
+            this.apiMaps = {
+                'mukio_reloadAccess': 'reloadAccess',
+                // 'jwAddEventListener': 'addEventListener',
+                // 'jwRemoveEventListener': 'removeEventListener',
+                'jwPlay': 'play',
+                'jwPause': 'pause',
+                'jwStop': 'stop',
+                'jwSeek': 'seek',
+                'jwPlaylistPrev': 'prev',
+                'jwPlaylistNext': 'next',
+                'jwGetBuffer': 'getBufferRate',
+                'jwGetDuration': 'getDuration',
+                'jwGetFullscreen': 'isFullScreen',
+                'jwGetWidth': 'getWidth',
+                'jwGetHeight': 'getHeight',
+                'jwGetMute': 'isMute',
+                'jwSetMute': 'setMute',
+                'jwGetPlaylist': 'getPlaylist',
+                'jwGetPlaylistIndex': 'getPlaylistIndex',
+                'jwGetPosition': 'getCurrentTime',
+                'jwGetState': 'getState',
+                'jwGetVersion': 'getVersion',
+                'jwGetVolume': 'volume',
+                'jwSetVolume': 'volume'
+            };
+            this.cElement = undefined;
+            this.feedback = undefined;
+            /** 播放器右侧按钮 */
+            this.bgray_btn = [
+                {
+                    tagName: "div",
+                    props: { class: "bgray-btn show bgray-btn-feedback" },
+                    children: [
+                        {
+                            tagName: "text",
+                            text: "播放"
+                        },
+                        {
+                            tagName: "br"
+                        },
+                        {
+                            tagName: "text",
+                            text: "问题"
+                        },
+                        {
+                            tagName: "br"
+                        }, {
+                            tagName: "text",
+                            text: "反馈"
+                        }
+                    ],
+                    event: {
+                        click: (e) => {
+                            const gray = e.target;
+                            this.feedback ? this.feedback.show() : window.FeedBackInstance ? (this.feedback = new window.FeedBackInstance(), this.feedback.show()) : (gray.classList.add("player-feedback-disable"), this.loadScript("//static.hdslb.com/player/feedback/feedback.min.js", () => {
+                                gray.classList.remove("player-feedback-disable");
+                                this.feedback = window.FeedBackInstance && new window.FeedBackInstance();
+                                this.feedback && this.feedback.show();
+                            }));
+                        }
+                    }
+                },
+                {
+                    tagName: "div",
+                    props: { class: "bgray-btn show bgray-btn-help" },
+                    children: [{ tagName: "text", text: "帮助" }],
+                    event: {
+                        click: () => { window.open("//www.bilibili.com/blackboard/help.html#常见播放问题自救方法"); }
+                    }
+                }
+            ];
             this.playerParam = API.urlObj(\`?\${playerParams}\`);
             this.playerParam.dashSymbol = true;
             this.playerParam.aid && Reflect.set(window, "aid", this.playerParam.aid);
@@ -4092,6 +4255,12 @@ const modules = {};
             (EmbedPlayer.asWide || API.config.automate.screenWide) && (this.playerParam.as_wide = 1);
             API.config.automate.autoPlay && (this.playerParam.autoplay = 1);
             this.gray_loader();
+        }
+        get gray_html5() {
+            return !API.config.flash;
+        }
+        set gray_html5(v) {
+            API.config.flash = !v;
         }
         /**
          * 加载外源脚本依赖
@@ -4129,43 +4298,6 @@ const modules = {};
                 this.gray_html5_compatible();
             }
         }
-        eventMaps = {
-            'jwplayerMediaBuffer': 'video_media_buffer',
-            'jwplayerMediaBufferFull': 'video_media_buffer_full',
-            'jwplayerMediaComplete': 'video_media_ended',
-            'jwplayerMediaError': 'video_media_error',
-            'jwplayerMediaLoaded': 'video_media_loaded',
-            'jwplayerMediaMute': 'video_media_mute',
-            'jwplayerMediaSeek': 'video_media_seek',
-            'jwplayerMediaTime': 'video_media_time',
-            'jwplayerMediaVolume': 'video_media_volume'
-        };
-        apiMaps = {
-            'mukio_reloadAccess': 'reloadAccess',
-            // 'jwAddEventListener': 'addEventListener',
-            // 'jwRemoveEventListener': 'removeEventListener',
-            'jwPlay': 'play',
-            'jwPause': 'pause',
-            'jwStop': 'stop',
-            'jwSeek': 'seek',
-            'jwPlaylistPrev': 'prev',
-            'jwPlaylistNext': 'next',
-            'jwGetBuffer': 'getBufferRate',
-            'jwGetDuration': 'getDuration',
-            'jwGetFullscreen': 'isFullScreen',
-            'jwGetWidth': 'getWidth',
-            'jwGetHeight': 'getHeight',
-            'jwGetMute': 'isMute',
-            'jwSetMute': 'setMute',
-            'jwGetPlaylist': 'getPlaylist',
-            'jwGetPlaylistIndex': 'getPlaylistIndex',
-            'jwGetPosition': 'getCurrentTime',
-            'jwGetState': 'getState',
-            'jwGetVersion': 'getVersion',
-            'jwGetVolume': 'volume',
-            'jwSetVolume': 'volume'
-        };
-        cElement = undefined;
         /**
          * 统一HTML5播放器对外接口
          */
@@ -4446,51 +4578,6 @@ const modules = {};
             API.config.downloadBtn && this.append_bgray_btn("下载", () => API.downloadDefault(), "download");
             ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
         }
-        feedback = undefined;
-        /** 播放器右侧按钮 */
-        bgray_btn = [
-            {
-                tagName: "div",
-                props: { class: "bgray-btn show bgray-btn-feedback" },
-                children: [
-                    {
-                        tagName: "text",
-                        text: "播放"
-                    },
-                    {
-                        tagName: "br"
-                    },
-                    {
-                        tagName: "text",
-                        text: "问题"
-                    },
-                    {
-                        tagName: "br"
-                    }, {
-                        tagName: "text",
-                        text: "反馈"
-                    }
-                ],
-                event: {
-                    click: (e) => {
-                        const gray = e.target;
-                        this.feedback ? this.feedback.show() : window.FeedBackInstance ? (this.feedback = new window.FeedBackInstance(), this.feedback.show()) : (gray.classList.add("player-feedback-disable"), this.loadScript("//static.hdslb.com/player/feedback/feedback.min.js", () => {
-                            gray.classList.remove("player-feedback-disable");
-                            this.feedback = window.FeedBackInstance && new window.FeedBackInstance();
-                            this.feedback && this.feedback.show();
-                        }));
-                    }
-                }
-            },
-            {
-                tagName: "div",
-                props: { class: "bgray-btn show bgray-btn-help" },
-                children: [{ tagName: "text", text: "帮助" }],
-                event: {
-                    click: () => { window.open("//www.bilibili.com/blackboard/help.html#常见播放问题自救方法"); }
-                }
-            }
-        ];
         /**
          * 添加播放器旁的按钮
          * @param title 按钮文字，2个字或4个字为宜
@@ -4531,11 +4618,64 @@ const modules = {};
             document.head.appendChild(API.createElements(API.htmlVnode(API.getModule("bgray-btn.html"))));
         }
     }
+    EmbedPlayer.asWide = false;
     class GrayManager extends EmbedPlayer {
-        /** 播放器播放时优先选择的编码、浏览器支持的编码类型 */
-        codec;
         constructor(player, swf, playerParams, playerType, upgrade, callbackFn) {
             super(player, swf, playerParams, playerType, upgrade, callbackFn);
+            /**
+             * 监听url哈希修改
+             */
+            this.HashManage = {
+                p: function (e) {
+                    return (this.p = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
+                        return typeof e;
+                    }
+                        : function (e) {
+                            return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
+                        })(e);
+                },
+                prependHash: "!",
+                _change: function (e, t) {
+                    var n, r = location.hash, i = [], a = "", o = 0, s = {};
+                    r && (r = r.substring(1),
+                        this.prependHash && (r = r.replace(new RegExp("^".concat(this.prependHash.replace(/[-[\\]{}()*+?.,\\\\^\$|#\\s]/g, "\\\\\$&"))), ""))),
+                        i = r.split("&");
+                    for (var u = 0; u < i.length; u++) {
+                        var l = i[u].split("=")[0], d = i[u].split("=")[1];
+                        l && (s[l] = decodeURIComponent(d));
+                    }
+                    if ("object" === this.p(e)) {
+                        n = Object.keys(e).length;
+                        for (var f = 0; f < n; f++) {
+                            var c = e[n[f]];
+                            c ? s[n[f]] = encodeURIComponent(c) : !1 === c && delete s[n[f]];
+                        }
+                    }
+                    else if (t)
+                        s[e] = encodeURIComponent(t);
+                    else {
+                        if (!1 !== t)
+                            return void 0 === e ? s : s[e] || null;
+                        delete s[e];
+                    }
+                    n = Object.keys(s);
+                    for (var h = 0; h < n.length; h++)
+                        a += 0 !== o ? "&" : this.prependHash,
+                            a += "".concat(n[h], "=").concat(s[n[h]]),
+                            o += 1;
+                    return location.hash = a,
+                        s;
+                },
+                get: function (e) {
+                    return this._change(e, null);
+                },
+                set: function (e, t) {
+                    return this._change(e, t);
+                },
+                clear: function () {
+                    location.hash = "";
+                }
+            };
             let codecId = {
                 "AVC": 7,
                 "HEVC": 12,
@@ -4582,60 +4722,6 @@ const modules = {};
             else
                 window.location.reload();
         }
-        /**
-         * 监听url哈希修改
-         */
-        HashManage = {
-            p: function (e) {
-                return (this.p = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (e) {
-                    return typeof e;
-                }
-                    : function (e) {
-                        return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e;
-                    })(e);
-            },
-            prependHash: "!",
-            _change: function (e, t) {
-                var n, r = location.hash, i = [], a = "", o = 0, s = {};
-                r && (r = r.substring(1),
-                    this.prependHash && (r = r.replace(new RegExp("^".concat(this.prependHash.replace(/[-[\\]{}()*+?.,\\\\^\$|#\\s]/g, "\\\\\$&"))), ""))),
-                    i = r.split("&");
-                for (var u = 0; u < i.length; u++) {
-                    var l = i[u].split("=")[0], d = i[u].split("=")[1];
-                    l && (s[l] = decodeURIComponent(d));
-                }
-                if ("object" === this.p(e)) {
-                    n = Object.keys(e).length;
-                    for (var f = 0; f < n; f++) {
-                        var c = e[n[f]];
-                        c ? s[n[f]] = encodeURIComponent(c) : !1 === c && delete s[n[f]];
-                    }
-                }
-                else if (t)
-                    s[e] = encodeURIComponent(t);
-                else {
-                    if (!1 !== t)
-                        return void 0 === e ? s : s[e] || null;
-                    delete s[e];
-                }
-                n = Object.keys(s);
-                for (var h = 0; h < n.length; h++)
-                    a += 0 !== o ? "&" : this.prependHash,
-                        a += "".concat(n[h], "=").concat(s[n[h]]),
-                        o += 1;
-                return location.hash = a,
-                    s;
-            },
-            get: function (e) {
-                return this._change(e, null);
-            },
-            set: function (e, t) {
-                return this._change(e, t);
-            },
-            clear: function () {
-                location.hash = "";
-            }
-        };
         /**
          * 从url中提取参数
          * @param e 参数名
@@ -5155,18 +5241,16 @@ const modules = {};
 /**/modules["toast.js"] = /*** ./src/include/console/toast/toast.js ***/
 `
     class ToastContainer extends HTMLElement {
-        /** 位置列表 */
-        positionList = ["top-right", "top-left", "bottom-right", "bottom-left"];
-        /** 类型列表 */
-        typeList = ["success", "error", "info", "warning", ""];
-        /** 跟节点 */
-        container;
-        status = true;
-        rtl = false;
-        position = "top-right";
-        delay = 4;
         constructor() {
             super();
+            /** 位置列表 */
+            this.positionList = ["top-right", "top-left", "bottom-right", "bottom-left"];
+            /** 类型列表 */
+            this.typeList = ["success", "error", "info", "warning", ""];
+            this.status = true;
+            this.rtl = false;
+            this.position = "top-right";
+            this.delay = 4;
             const root = this.attachShadow({ mode: "closed" });
             root.appendChild(API.createElements(API.htmlVnode(API.getModule("toast.html"))));
             this.container = root.children[0];
@@ -5620,34 +5704,30 @@ const modules = {};
 `
     /** Vdom节点模板 */
     class Vnode {
-        tagName;
-        props = {};
-        children = [];
-        text;
         constructor(tagName) {
+            this.props = {};
+            this.children = [];
             this.tagName = tagName;
         }
     }
     class Scanner {
-        /** HTML */
-        html;
-        /** 当前光标 */
-        pos = 0;
-        /** Vnode */
-        vnode = [];
-        /** 节点名栈 */
-        tagNames = [];
-        /** Vnode栈 */
-        targets = [];
-        /** innerText栈 */
-        text = "";
-        /** 引号栈 */
-        quote = "";
         /**
          * 扫描html文本转化为Vnode
          * @param html html文本
          */
         constructor(html) {
+            /** 当前光标 */
+            this.pos = 0;
+            /** Vnode */
+            this.vnode = [];
+            /** 节点名栈 */
+            this.tagNames = [];
+            /** Vnode栈 */
+            this.targets = [];
+            /** innerText栈 */
+            this.text = "";
+            /** 引号栈 */
+            this.quote = "";
             this.html = html;
             this.targets.push({ children: this.vnode }); // 初始片段
             while (this.html) {
@@ -5658,10 +5738,10 @@ const modules = {};
         /** 提取节点名 */
         organizeTag() {
             if (!this.quote && this.html[0] === "<") {
-                if (this.html.startsWith(\`</\${this.tagNames.at(-1)}\`)) {
+                if (this.html.startsWith(\`</\${this.tagNames.reduce((s, d) => s = d, undefined)}\`)) {
                     // 闭合标签
                     this.textContent();
-                    this.html = this.html.replace(new RegExp(\`^</\${this.tagNames.at(-1)}>\`), "");
+                    this.html = this.html.replace(new RegExp(\`^</\${this.tagNames.reduce((s, d) => s = d, undefined)}>\`), "");
                     this.popNode();
                 }
                 else {
@@ -5696,7 +5776,7 @@ const modules = {};
                         const tagName = this.html.substring(0, this.pos); // 提取节点名
                         const tag = new Vnode(tagName); // 添加Vnode模板
                         this.tagNames.push(tagName); // 节点名压栈
-                        this.targets.at(-1).children.push(tag); // Vnode上树
+                        this.targets.reduce((s, d) => s = d, undefined).children.push(tag); // Vnode上树
                         this.targets.push(tag); // Vnode压栈
                         this.removeScanned(this.pos + 1);
                         func.forEach(d => d()); // 操作栈：属性处理/出栈
@@ -5738,7 +5818,7 @@ const modules = {};
                             const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
                             const prop = str.split("=");
                             const key = prop.shift();
-                            key && key !== "/" && (this.targets.at(-1).props[key] = prop.join("=") || key);
+                            key && key !== "/" && (this.targets.reduce((s, d) => s = d, undefined).props[key] = prop.join("=") || key);
                             start = this.pos;
                         }
                         break;
@@ -5748,7 +5828,7 @@ const modules = {};
                             const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
                             const prop = str.split("=");
                             const key = prop.shift();
-                            key && key !== "/" && (this.targets.at(-1).props[key] = prop.join("=") || key);
+                            key && key !== "/" && (this.targets.reduce((s, d) => s = d, undefined).props[key] = prop.join("=") || key);
                             if (this.html[this.pos - 1] === "/") {
                                 this.popNode();
                                 popd = true;
@@ -5763,7 +5843,7 @@ const modules = {};
         }
         /** 出栈检查 空元素直接出栈*/
         tagSingle() {
-            switch (this.tagNames.at(-1)) {
+            switch (this.tagNames.reduce((s, d) => s = d, undefined)) {
                 case "area":
                 case "base":
                 case "br":
@@ -5802,7 +5882,7 @@ const modules = {};
             if (text) { // 有效TextContent
                 const tag = new Vnode("text");
                 tag.text = this.text;
-                this.targets.at(-1).children.push(tag);
+                this.targets.reduce((s, d) => s = d, undefined).children.push(tag);
             }
             this.text = ""; // 新节点伊始，重置TextContent
         }
@@ -5924,8 +6004,6 @@ const modules = {};
 /**/modules["buttonSwitch.js"] = /*** ./src/include/element/buttonSwitch/buttonSwitch.js ***/
 `
     class ButtonSwitch extends HTMLElement {
-        /** 开关值 */
-        value;
         /** 滑块开关 */
         constructor(obj = {}) {
             super();
@@ -6002,10 +6080,6 @@ const modules = {};
 /**/modules["checkbox.js"] = /*** ./src/include/element/checkbox/checkbox.js ***/
 `
     class Checkbox extends HTMLElement {
-        /** 当前值 */
-        value;
-        /** 标签 */
-        label;
         /** 复选框 */
         constructor(obj) {
             super();
@@ -6252,12 +6326,6 @@ const modules = {};
 /**/modules["inputArea.js"] = /*** ./src/include/element/inputArea/inputArea.js ***/
 `
     class InputArea extends HTMLElement {
-        /** 输入值 */
-        value;
-        /** input元素属性 */
-        props;
-        /** 候选值 */
-        candidate;
         /** 输入框 */
         constructor(obj = {}) {
             super();
@@ -6452,8 +6520,6 @@ const modules = {};
      * @param node 目标节点
      */
     class ClickRemove {
-        cancel;
-        observe;
         constructor(node) {
             node.addEventListener("click", e => e.stopPropagation());
             function remove() {
@@ -6470,17 +6536,10 @@ const modules = {};
     }
     API.ClickRemove = ClickRemove;
     class PopupBox extends HTMLElement {
-        _children;
-        /** 样式 */
-        _style;
-        /** 关闭按钮，false表示点击节点外自动关闭 */
-        _fork;
-        _observe;
-        __contain;
-        __fork;
         /** 弹窗 */
         constructor(obj) {
             super();
+            this.timer = 0;
             const { children, style, fork } = obj;
             const root = this.attachShadow({ mode: "closed" });
             root.appendChild(API.createElements(API.htmlVnode(API.getModule("popupbox.html").replace('<div class="fork"></div>', \`<div class="fork">\${API.getModule("fork.svg")}</div>\`))));
@@ -6521,7 +6580,6 @@ const modules = {};
             this._fork = obj.fork = fork || false;
             document.body.appendChild(this);
         }
-        timer = 0;
         \$children() {
             clearTimeout(this.timer);
             this.timer = setTimeout(() => {
@@ -6578,8 +6636,6 @@ const modules = {};
 /**/modules["pushButton.js"] = /*** ./src/include/element/pushButton/pushButton.js ***/
 `
     class PushButton extends HTMLElement {
-        /** 描述 */
-        button;
         /** 按钮 */
         constructor(obj) {
             super();
@@ -6710,12 +6766,6 @@ const modules = {};
 /**/modules["selectMenu.js"] = /*** ./src/include/element/selectList/selectMenu.js ***/
 `
     class SelectMenu extends HTMLElement {
-        /** 当前值 */
-        value;
-        /** 候选值 */
-        candidate;
-        /** 候选值样式 */
-        styles;
         /** 下拉列表 */
         constructor(obj = {}) {
             super();
@@ -6884,22 +6934,6 @@ const modules = {};
 /**/modules["sliderblock.js"] = /*** ./src/include/element/sliderBlock/sliderblock.js ***/
 `
     class SliderBlock extends HTMLElement {
-        /** 当前值 */
-        value;
-        /** 下限 */
-        min;
-        /** 上限 */
-        max;
-        /** 精细度 */
-        precision;
-        /** 是否在变动时提示当前值 */
-        hint;
-        /** 固化提示 */
-        solid;
-        /** 刷新节点显示 */
-        showChange;
-        /** 垂直 */
-        vertical;
         /** 滑动条 */
         constructor(obj = {}) {
             super();
@@ -10388,44 +10422,29 @@ const modules = {};
 /**/modules["urlFormat.js"] = /*** ./src/include/format/urlFormat.js ***/
 `
     class UrlFormat {
-        /** 去除参数和锚的基链接 */
-        base = "";
-        /** 查询参数转化的对象 */
-        searchParams = new Proxy({}, {
-            get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
-                t[p] = v ? encodeURIComponent(v) : v;
-                return true;
-            }
-        });
-        /** 锚 */
-        hash = "";
-        /** 锚中的参数 */
-        hashParams = new Proxy({}, {
-            get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
-                t[p] = v ? encodeURIComponent(v) : v;
-                return true;
-            }
-        });
-        /** 所有参数（包括锚中的参数）。 */
-        params() {
-            return new Proxy({ ...this.searchParams, ...this.hashParams }, {
-                set: (t, p, v) => {
-                    t[p] = v;
-                    (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p] = v ? encodeURIComponent(v) : v;
-                    return true;
-                },
-                deleteProperty: (t, p) => {
-                    delete t[p];
-                    delete (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p];
-                    return true;
-                }
-            });
-        }
         /**
          * 格式化URL
          * @param url URL字符串
          */
         constructor(url) {
+            /** 去除参数和锚的基链接 */
+            this.base = "";
+            /** 查询参数转化的对象 */
+            this.searchParams = new Proxy({}, {
+                get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
+                    t[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                }
+            });
+            /** 锚 */
+            this.hash = "";
+            /** 锚中的参数 */
+            this.hashParams = new Proxy({}, {
+                get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
+                    t[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                }
+            });
             try {
                 // 原生URL处理函数要求太严格，无法处理自定义链接
                 url = new URL(url).href;
@@ -10456,6 +10475,21 @@ const modules = {};
                     });
                 }
             }
+        }
+        /** 所有参数（包括锚中的参数）。 */
+        params() {
+            return new Proxy({ ...this.searchParams, ...this.hashParams }, {
+                set: (t, p, v) => {
+                    t[p] = v;
+                    (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p] = v ? encodeURIComponent(v) : v;
+                    return true;
+                },
+                deleteProperty: (t, p) => {
+                    delete t[p];
+                    delete (Reflect.has(this.hashParams, p) ? this.hashParams : this.searchParams)[p];
+                    return true;
+                }
+            });
         }
         /** 拼合链接 */
         toJSON() {
@@ -10930,13 +10964,13 @@ const modules = {};
 `
 // @see mcfx的回答（Python） {@link https://www.zhihu.com/question/381784377/answer/1099438784}
     class Abv {
-        base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
-        digitMap = [11, 10, 3, 8, 4, 6];
-        xor = 177451812;
-        add = 8728348608;
-        bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
-        table = {};
         constructor() {
+            this.base58Table = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF';
+            this.digitMap = [11, 10, 3, 8, 4, 6];
+            this.xor = 177451812;
+            this.add = 8728348608;
+            this.bvidTemplate = ['B', 'V', 1, '', '', 4, '', 1, '', 7, '', ''];
+            this.table = {};
             for (let i = 0; i < 58; i++)
                 this.table[this.base58Table[i]] = i;
         }
@@ -11022,10 +11056,10 @@ const modules = {};
 // @see esterTion {@link https://github.com/esterTion/BiliBili_crc2mid}
 // @license GFUL
     class Midcrc {
-        CRCPOLYNOMIAL = 0xEDB88320;
-        crctable = new Array(256);
-        index = new Array(4);
         constructor() {
+            this.CRCPOLYNOMIAL = 0xEDB88320;
+            this.crctable = new Array(256);
+            this.index = new Array(4);
             this.create_table();
         }
         /**
@@ -11253,22 +11287,19 @@ const modules = {};
         return method;
     };
     class Md5 {
-        blocks;
-        buffer8 = new Uint8Array();
-        h0 = 0;
-        h1 = 0;
-        h2 = 0;
-        h3 = 0;
-        start = 0;
-        bytes = 0;
-        hBytes = 0;
-        finalized = false;
-        hashed = false;
-        first = true;
-        array;
-        buffer;
-        lastByteIndex = 0;
         constructor(sharedMemory) {
+            this.buffer8 = new Uint8Array();
+            this.h0 = 0;
+            this.h1 = 0;
+            this.h2 = 0;
+            this.h3 = 0;
+            this.start = 0;
+            this.bytes = 0;
+            this.hBytes = 0;
+            this.finalized = false;
+            this.hashed = false;
+            this.first = true;
+            this.lastByteIndex = 0;
             if (sharedMemory) {
                 blocks[0] = blocks[16] = blocks[1] = blocks[2] = blocks[3] =
                     blocks[4] = blocks[5] = blocks[6] = blocks[7] =
@@ -11712,22 +11743,6 @@ const modules = {};
 /**/modules["sign.js"] = /*** ./src/include/lib/sign.js ***/
 `
     class Sign {
-        static table = [
-            "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
-            "/a_206b\`_.61.bca6117.175bcdadc41850c010c..././1\`\`",
-            "157bdd\`6/bc73632.bcd660baa03a.43841211032b5c4\`6b/",
-            "351a7a6b/.b\`d77da1cdccc25_13bc0a81a6d63.7ad13\`c50",
-            "4_/54d\`3_4_73..2c42\`d4.a3__31b358d706d\`._7a.3_b5.",
-            "12a.7c4b76c.a\`12bb4\`2b2b275c667c85b6d\`c_c\`0d5.051",
-            "bb16d652\`04.7/121d3474b_2.c12\`7386\`0/bdd6ca0c7.22",
-            "244_530/7/.ab\`7.//22a15572502b_08c21./_.\`3164\`c36",
-            "16_d52_d/d22_2c0a.6573355/b\`./bd8a\`bc6114a30_4.\`d",
-            "c02ba/d6.33d05cb/5d34.7d_23_\`_2785\`c60.a\`.4343726",
-            "2aa2\`.1_\`_1.73\`.70.67d.bc671c16382a3d\`71a4.bcb3c7",
-            "40/171b046c/bcc0a603ac620\`372ba_8d706d\`._7a.3_b5.",
-            "c4_a.7562_15\`_a416a/63/c2cbcb\`308a/\`//41b30376.b5" // 7d08...1b1c
-        ];
-        static keySecret;
         /**
          * 签名URL
          * @param url 原URL
@@ -11789,6 +11804,21 @@ const modules = {};
             }, {});
         }
     }
+    Sign.table = [
+        "rbMCKn@KuamXWlPMoJGsKcbiJKUfkPF_8dABscJntvqhRSETg",
+        "/a_206b\`_.61.bca6117.175bcdadc41850c010c..././1\`\`",
+        "157bdd\`6/bc73632.bcd660baa03a.43841211032b5c4\`6b/",
+        "351a7a6b/.b\`d77da1cdccc25_13bc0a81a6d63.7ad13\`c50",
+        "4_/54d\`3_4_73..2c42\`d4.a3__31b358d706d\`._7a.3_b5.",
+        "12a.7c4b76c.a\`12bb4\`2b2b275c667c85b6d\`c_c\`0d5.051",
+        "bb16d652\`04.7/121d3474b_2.c12\`7386\`0/bdd6ca0c7.22",
+        "244_530/7/.ab\`7.//22a15572502b_08c21./_.\`3164\`c36",
+        "16_d52_d/d22_2c0a.6573355/b\`./bd8a\`bc6114a30_4.\`d",
+        "c02ba/d6.33d05cb/5d34.7d_23_\`_2785\`c60.a\`.4343726",
+        "2aa2\`.1_\`_1.73\`.70.67d.bc671c16382a3d\`71a4.bcb3c7",
+        "40/171b046c/bcc0a603ac620\`372ba_8d706d\`._7a.3_b5.",
+        "c4_a.7562_15\`_a416a/63/c2cbcb\`308a/\`//41b30376.b5" // 7d08...1b1c
+    ];
     /**
      * 签名URL
      * @param url 原URL
@@ -12015,7 +12045,39 @@ const modules = {};
             label: "解除视频播放限制",
             type: "switch",
             value: false,
-            sub: "区域+APP"
+            sub: "区域+APP",
+            float: \`默认只能以游客身份获取限制视频源，如果您是大会员，可以考虑【账户授权-授权biliplus服务器】以观看大会员专享区域限制视频。\`,
+            callback: v => {
+                if (v) {
+                    API.alert("是否前往【账户授权】设置？", undefined, [
+                        {
+                            name: "是",
+                            callback: () => {
+                                API.showSetting("accessKey");
+                            }
+                        },
+                        {
+                            name: "否",
+                            callback: () => { }
+                        }
+                    ]);
+                }
+                else {
+                    if (API.config.accessKey.biliplus)
+                        API.alert("您还在【账户授权】将账户授权给了第三方解析服务器，是否前往取消？", undefined, [
+                            {
+                                name: "是",
+                                callback: () => {
+                                    API.showSetting("accessKey");
+                                }
+                            },
+                            {
+                                name: "否",
+                                callback: () => { }
+                            }
+                        ]);
+                }
+            }
         },
         {
             key: "protobufDanmaku",
@@ -12728,6 +12790,84 @@ const modules = {};
                     value: false
                 }
             ]
+        },
+        {
+            key: "animatedBanner",
+            menu: "style",
+            type: "switch",
+            label: "动态banner",
+            sub: "移植自新版顶栏",
+            value: false
+        },
+        {
+            key: "accessKey",
+            menu: "common",
+            type: "list",
+            name: "账户授权",
+            list: [
+                {
+                    key: "key",
+                    type: "input",
+                    label: "Token",
+                    sub: "access_key",
+                    float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本脚本访问那些数据的能力。",
+                    props: { type: "text", readonly: "readonly" }
+                },
+                {
+                    key: "date",
+                    type: "input",
+                    label: "授权日期",
+                    sub: "有效期不超过30天",
+                    float: "和cookie一样，access_key这个鉴权参数一般有有效期限，经验告诉我们一般是一个月，过期作废。因为授权是敏感操作，请自行判断是否过期并慎重考虑是否重新授权。",
+                    props: { type: "text", readonly: "readonly" }
+                },
+                {
+                    key: "action",
+                    type: "button",
+                    label: API.config.accessKey?.key ? "撤销授权" : "授权操作",
+                    float: '',
+                    button: API.config.accessKey?.key ? "撤销" : "授权",
+                    value: () => {
+                        if (API.config.accessKey.key) {
+                            API.alert('注销授权只是保证本脚本不再使用已授权的参数，如果第三方服务器保存有该鉴权，本脚本也无法让人家吐出来＞﹏＜。如果要真正完全销毁该鉴权，可以考虑修改密码等操作，这样会强制所有登录失效，唯一的问题是您的所有设备都必须重新登录。<br>请确认您的操作~', "撤销授权", [
+                                {
+                                    name: "确认撤销",
+                                    callback: () => { API.AccessKey.remove(); }
+                                },
+                                {
+                                    name: "取消操作",
+                                    callback: () => { }
+                                }
+                            ]);
+                        }
+                        else {
+                            API.alert('请仔细阅读上面各项说明并慎重操作，【确认授权】表示您同意本脚本能以网页端以外的鉴权向B站官方服务器证明您的身份，以执行一些本来网页端无权进行的操作。本脚本保证该鉴权不会泄露给任何第三方，代码完全开源且未经压缩混淆敬请放心。<br>请确认您的操作~', "撤销授权", [
+                                {
+                                    name: "确认授权",
+                                    callback: () => {
+                                        API.AccessKey.get();
+                                    }
+                                },
+                                {
+                                    name: "取消操作",
+                                    callback: () => { }
+                                }
+                            ]);
+                        }
+                    }
+                },
+                {
+                    key: "biliplus",
+                    type: "switch",
+                    label: "授权biliplus服务器",
+                    sub: "解除区域限制",
+                    float: "本脚本使用Biliplus服务器实现【解除区域限制】功能，如果您是大会员账户，则可以选择将账户授权给Biliplus服务器，以支持解析大会员专享区域限制视频。如果不是大会员，则本操作没有任何意义！<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
+                    value: false,
+                    callback: v => {
+                        v ? API.AccessKey.login() : API.AccessKey.checkout();
+                    }
+                }
+            ]
         }
     ]);
 
@@ -12823,20 +12963,32 @@ const modules = {};
 /*!***********************!*/
 /**/modules["storage.js"] = /*** ./src/include/storage/storage.js ***/
 `
+var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+};
+var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+};
+    var _StorageInterface__;
     class StorageInterface {
-        #_; // 类型标记：localStorage/sessionStorage
         /**
          *
          * @param target 类型标记：真 ? sessionStorage : localStorage
          */
         constructor(target) {
-            this.#_ = target;
+            _StorageInterface__.set(this, void 0); // 类型标记：localStorage/sessionStorage
+            __classPrivateFieldSet(this, _StorageInterface__, target, "f");
             // 原生Storage支持以属性形式获取/修改存储，使用get/set模拟。
             this.keys().forEach(d => Object.defineProperty(this, d, { get: () => this.getItem(d), set: v => this.setItem(d, v) }));
         }
         /** 清空！ */
         clear() {
-            (this.#_ ? self.sessionStorage : self.localStorage).clear();
+            (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).clear();
         }
         ;
         /**
@@ -12845,7 +12997,7 @@ const modules = {};
          * @returns 格式化后的数据
          */
         getItem(key) {
-            let str = (this.#_ ? self.sessionStorage : self.localStorage).getItem(key);
+            let str = (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).getItem(key);
             try {
                 str = JSON.parse(str);
             }
@@ -12859,7 +13011,7 @@ const modules = {};
          * @returns 键名数组
          */
         keys() {
-            return Object.keys((this.#_ ? self.sessionStorage : self.localStorage));
+            return Object.keys((__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage));
         }
         ;
         /**
@@ -12867,7 +13019,7 @@ const modules = {};
          * @param key 目标键名
          */
         removeItem(key) {
-            (this.#_ ? self.sessionStorage : self.localStorage).removeItem(key);
+            (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).removeItem(key);
         }
         ;
         /**
@@ -12878,18 +13030,19 @@ const modules = {};
         setItem(key, value) {
             switch (typeof value) {
                 case "object":
-                    (this.#_ ? self.sessionStorage : self.localStorage).setItem(key, JSON.stringify(value));
+                    (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).setItem(key, JSON.stringify(value));
                     break;
                 case "function":
                     API.debug.warn("函数类型并不适合这样存储！", key, value);
                     break;
-                default: (this.#_ ? self.sessionStorage : self.localStorage).setItem(key, String(value));
+                default: (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).setItem(key, String(value));
             }
         }
         ;
         /** 条目总数 */
-        get length() { return (this.#_ ? self.sessionStorage : self.localStorage).length; }
+        get length() { return (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).length; }
     }
+    _StorageInterface__ = new WeakMap();
     /** localStorage */
     class LocalStorage extends StorageInterface {
         constructor() { super(false); }
@@ -13314,20 +13467,29 @@ const modules = {};
         disableSettingCallback = false;
     }
     API.registerSetting = registerSetting;
+    /**
+     * 获取设置项，用于修改设置项\`value\`以外的属性
+     * @param key 设置项的key，如果是组合设置，格式是\`组合key.组员key\`
+     */
+    function getSetting(key) {
+        const arr = key.split(".");
+        let rsa = SETTING.find(d => d.key === arr[0]);
+        if (arr[1] && rsa.list) {
+            rsa = rsa.list.find((d) => d.key === arr[1]);
+        }
+        return rsa;
+    }
+    API.getSetting = getSetting;
     /** 设置界面 */
     class BilibiliOld extends HTMLElement {
-        /** 跟节点 */
-        _box;
-        /** 标题栏 */
-        _tool;
-        /** 关闭按钮 */
-        _close;
-        /** 菜单栏 */
-        _menu;
-        /** 项目栏 */
-        _item;
         constructor() {
             super();
+            /** 菜单栈 */
+            this.MENU = {};
+            /** 页面栈 */
+            this.ITEM = {};
+            /** 设置项菜单对应表 */
+            this.SETTING = {};
             const root = this.attachShadow({ mode: "closed" });
             root.appendChild(API.createElements(API.htmlVnode(API.getModule("setting.html"))));
             this._box = root.children[0];
@@ -13342,10 +13504,6 @@ const modules = {};
             this.initMenu();
             disableSettingCallback = false;
         }
-        /** 菜单栈 */
-        MENU = {};
-        /** 页面栈 */
-        ITEM = {};
         /** 初始化菜单 */
         initMenu() {
             this._menu.replaceChildren();
@@ -13364,10 +13522,6 @@ const modules = {};
             });
             this.initItem();
         }
-        /** 当前菜单 */
-        _menuNow;
-        /** 当前页面 */
-        _itemNow;
         /** 菜单选择 */
         menuSelect(key = "common") {
             this._menuNow?.classList.remove("selected");
@@ -13387,8 +13541,6 @@ const modules = {};
             this.menuSelect(this.SETTING[key]);
             key && this._itemNow?.querySelector(\`.\${key}\`)?.scrollIntoView({ behavior: "smooth", block: "start" });
         }
-        /** 设置项菜单对应表 */
-        SETTING = {};
         /** 初始化页面 */
         initItem() {
             SETTING.forEach(d => {
@@ -13567,9 +13719,6 @@ const modules = {};
 /**/modules["ui.js"] = /*** ./src/include/ui/ui.js ***/
 `
     class BilibilEntry extends HTMLElement {
-        root;
-        gear;
-        stage;
         constructor() {
             super();
             this.root = this.attachShadow({ mode: "closed" });
@@ -13613,8 +13762,8 @@ const modules = {};
 /**/modules["aria2.js"] = /*** ./src/include/ui/download/aria2.js ***/
 `
     class Aria2 {
-        setting = {};
         constructor() {
+            this.setting = {};
             API.config.userAgent && (this.setting.userAgent = API.config.userAgent);
             API.config.referer && (this.setting.referer = API.config.referer);
             API.config.filepath && (this.setting.directory = API.config.filepath);
@@ -13751,14 +13900,14 @@ const modules = {};
             url: API.cover,
             up: "封面",
             down: "N/A",
-            fileName: \`\${API.title || \`av\${API.aid}\`}.\${API.cover.split(".").at(-1) || "jpg"}\`
+            fileName: \`\${API.title || \`av\${API.aid}\`}.\${API.cover.split(".").reduce((s, d) => s = d, undefined) || "jpg"}\`
         });
         API.bkg_cover && pushDownload({
             group: "封面",
             url: API.bkg_cover,
             up: "封面",
             down: "N/A",
-            fileName: \`\${API.title || \`av\${API.aid}\`}.\${API.bkg_cover.split(".").at(-1) || "jpg"}\`
+            fileName: \`\${API.title || \`av\${API.aid}\`}.\${API.bkg_cover.split(".").reduce((s, d) => s = d, undefined) || "jpg"}\`
         });
     }
     /** 默认下载 */
@@ -14004,16 +14153,10 @@ const modules = {};
 /**/modules["downloadUI.js"] = /*** ./src/include/ui/download/downloadUI.js ***/
 `
     class BiliOldDownload extends HTMLElement {
-        /** 下载数据 */
-        _data;
-        /** 配置数据备份，从这里修改也是一样的 */
-        obj;
-        /** 跟节点 */
-        _table;
-        /** 点击移除 */
-        observer = new API.ClickRemove(this);
         constructor(obj) {
             super();
+            /** 点击移除 */
+            this.observer = new API.ClickRemove(this);
             const { data } = obj;
             const root = this.attachShadow({ mode: "closed" });
             root.appendChild(API.createElements(API.htmlVnode(API.getModule("downloadUI.html"))));
@@ -14113,8 +14256,8 @@ const modules = {};
 /**/modules["ef2.js"] = /*** ./src/include/ui/download/ef2.js ***/
 `
     class Ef2 {
-        setting = {};
         constructor() {
+            this.setting = {};
             API.config.userAgent && (this.setting.userAgent = API.config.userAgent);
             API.config.referer && (this.setting.referer = API.config.referer);
             API.config.filepath && (this.setting.directory = API.config.filepath);
@@ -14244,96 +14387,94 @@ const modules = {};
 /**/modules["playinfoFilter.js"] = /*** ./src/include/ui/download/playinfoFilter.js ***/
 `
     class PlayinfoFiter {
-        /** id => 质量 */
-        quality = {
-            100032: "8K",
-            100029: '4K',
-            100028: '1080P60',
-            100027: '1080P+',
-            100026: '1080P',
-            100024: '720P',
-            100023: '480P',
-            100022: '360P',
-            30280: "320Kbps",
-            30260: "320Kbps",
-            30259: "128Kbps",
-            30257: "64Kbps",
-            30255: "AUDIO",
-            30250: "ATMOS",
-            30232: "128Kbps",
-            30216: "64Kbps",
-            30127: "8K",
-            30126: "Dolby",
-            30125: "HDR",
-            30121: "4K",
-            30120: "4K",
-            30116: '1080P60',
-            30112: '1080P+',
-            30106: '1080P60',
-            30102: '1080P+',
-            30080: '1080P',
-            30077: '1080P',
-            30076: '720P',
-            30074: '720P',
-            30066: '720P',
-            30064: '720P',
-            30048: "720P",
-            30033: '480P',
-            30032: '480P',
-            30016: '360P',
-            30015: '360P',
-            30011: '360P',
-            464: '预览',
-            336: "1080P",
-            320: "720P",
-            288: "480P",
-            272: "360P",
-            208: "1080P",
-            192: "720P",
-            160: "480P",
-            127: "8K",
-            126: "Dolby",
-            125: "HDR",
-            120: "4K",
-            116: "1080P60",
-            112: "1080P+",
-            80: "1080P",
-            74: "720P60",
-            64: "720P",
-            48: "720P",
-            32: "480P",
-            16: "360P",
-            15: "360P"
-        };
-        /** id => 类型（备用方案） */
-        codec = {
-            hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
-            avc: [30120, 30112, 30080, 30064, 30032, 30016],
-            av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
-        };
-        /** 颜色表 */
-        color = {
-            "8K": "yellow",
-            "Dolby": "pink",
-            "ATMOS": "pink",
-            "AUDIO": "pink",
-            "HDR": "purple",
-            "4K": "purple",
-            "1080P60": "red",
-            "1080P+": "red",
-            "1080P": "red",
-            "720P60": "orange",
-            "720P": "orange",
-            "480P": "blue",
-            "360P": "green",
-            "320Kbps": "red",
-            "128Kbps": "blue",
-            "64Kbps": "green"
-        };
-        record = [];
-        /** 文件名 */
-        fileName;
         constructor(fileName) {
+            /** id => 质量 */
+            this.quality = {
+                100032: "8K",
+                100029: '4K',
+                100028: '1080P60',
+                100027: '1080P+',
+                100026: '1080P',
+                100024: '720P',
+                100023: '480P',
+                100022: '360P',
+                30280: "320Kbps",
+                30260: "320Kbps",
+                30259: "128Kbps",
+                30257: "64Kbps",
+                30255: "AUDIO",
+                30250: "ATMOS",
+                30232: "128Kbps",
+                30216: "64Kbps",
+                30127: "8K",
+                30126: "Dolby",
+                30125: "HDR",
+                30121: "4K",
+                30120: "4K",
+                30116: '1080P60',
+                30112: '1080P+',
+                30106: '1080P60',
+                30102: '1080P+',
+                30080: '1080P',
+                30077: '1080P',
+                30076: '720P',
+                30074: '720P',
+                30066: '720P',
+                30064: '720P',
+                30048: "720P",
+                30033: '480P',
+                30032: '480P',
+                30016: '360P',
+                30015: '360P',
+                30011: '360P',
+                464: '预览',
+                336: "1080P",
+                320: "720P",
+                288: "480P",
+                272: "360P",
+                208: "1080P",
+                192: "720P",
+                160: "480P",
+                127: "8K",
+                126: "Dolby",
+                125: "HDR",
+                120: "4K",
+                116: "1080P60",
+                112: "1080P+",
+                80: "1080P",
+                74: "720P60",
+                64: "720P",
+                48: "720P",
+                32: "480P",
+                16: "360P",
+                15: "360P"
+            };
+            /** id => 类型（备用方案） */
+            this.codec = {
+                hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
+                avc: [30120, 30112, 30080, 30064, 30032, 30016],
+                av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
+            };
+            /** 颜色表 */
+            this.color = {
+                "8K": "yellow",
+                "Dolby": "pink",
+                "ATMOS": "pink",
+                "AUDIO": "pink",
+                "HDR": "purple",
+                "4K": "purple",
+                "1080P60": "red",
+                "1080P+": "red",
+                "1080P": "red",
+                "720P60": "orange",
+                "720P": "orange",
+                "480P": "blue",
+                "360P": "green",
+                "320Kbps": "red",
+                "128Kbps": "blue",
+                "64Kbps": "green"
+            };
+            this.record = [];
             this.fileName = fileName;
         }
         /**
@@ -14542,14 +14683,16 @@ const modules = {};
 `
     /** fnval标志位（二进制） */
     class Fnval {
-        MP4 = 1;
-        DASH_H265 = 16;
-        HDR = 64;
-        DASH_4K = 128;
-        DOLBYAUDIO = 256;
-        DOLBYVIDEO = 512;
-        DASH_8K = 1024;
-        DASH_AV1 = 2048;
+        constructor() {
+            this.MP4 = 1;
+            this.DASH_H265 = 16;
+            this.HDR = 64;
+            this.DASH_4K = 128;
+            this.DOLBYAUDIO = 256;
+            this.DOLBYVIDEO = 512;
+            this.DASH_8K = 1024;
+            this.DASH_AV1 = 2048;
+        }
     }
     const _ = new Fnval();
     /** 视频格式标志\`fnval\`的默认值（最高值） */
@@ -14650,14 +14793,22 @@ const modules = {};
 {
     /** 模块顶层命名空间 */
     const API = new Proxy(new (class {
-        /** 封装脚本管理器API的顶级对象 */
-        GM = GM;
-        /** 脚本名称 */
-        Name = GM.info.script.name;
-        /** 当前版本 */
-        Virsion = GM.info.script.version;
-        /** 脚本管理器及版本 */
-        Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
+        constructor() {
+            /** 封装脚本管理器API的顶级对象 */
+            this.GM = GM;
+            /** 脚本名称 */
+            this.Name = GM.info.script.name;
+            /** 当前版本 */
+            this.Virsion = GM.info.script.version;
+            /** 脚本管理器及版本 */
+            this.Handler = [GM.info.scriptHandler, GM.info.version].join(" ");
+            /**
+             * 获取模块内容
+             * @param key 模块名称
+             * @returns 模块内容
+             */
+            this.getModule = (key) => modules[key];
+        }
         /**
          * 加载模块
          * @param name 模块名称
@@ -14678,12 +14829,6 @@ const modules = {};
             else
                 return; // (<typeof globalThis.API><unknown>this).toast.error(\`模块\${name}并不存在！\`);
         }
-        /**
-         * 获取模块内容
-         * @param key 模块名称
-         * @returns 模块内容
-         */
-        getModule = (key) => modules[key];
     })(), {
         get(t, p, r) {
             // 接口存在直接返回
@@ -14864,6 +15009,13 @@ const modules = {};
 /*!***********************!*/
 /**/modules["vector.js"] = /*** ./src/vector/vector.js ***/
 `
+    if (API.uid) {
+        // 修复动态时间戳
+        const offset = API.getCookies()[\`bp_video_offset_\${API.uid}\`];
+        if (offset) {
+            API.setCookie(\`bp_t_offset_\${API.uid}\`, offset);
+        }
+    }
     API.config.developer && Reflect.set(window, "API", API);
     // 重写模式下，引导之前加载的模块注册的回调都会失效
     // 为此，相关回调包装在\`loadAfterClear\`方法中
@@ -14986,7 +15138,6 @@ const modules = {};
 `
     const Backup = {};
     class HookTimeOut {
-        hook;
         constructor() {
             this.hook = setTimeout;
             window.setTimeout = (...args) => {
@@ -15005,7 +15156,7 @@ const modules = {};
         let response; // 初始化返回值
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         let obj = API.urlObj(args[1]); // 提取请求参数
-        const accesskey = GM.getValue("access_key", "") || undefined;
+        const accesskey = API.config.accessKey.key || undefined;
         obj.access_key = accesskey;
         if (API.limit) { // 处理区域限制
             obj.module = (API.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || API.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
@@ -15331,14 +15482,8 @@ const modules = {};
 `
     API.addCss(API.getModule("danmakuHashId.css"));
     class DanmakuHashId {
-        static count = 0; // 正在查询弹幕数
-        static catch = {}; // 已查询弹幕缓存
-        count = 0; // 当前查询弹幕序号
-        hash; // 当前弹幕哈希值
-        mid; // 当前弹幕mid
-        node;
-        dm;
         constructor(crc) {
+            this.count = 0; // 当前查询弹幕序号
             // 设置正在查询的弹幕数量
             DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
             // 当前查询弹幕排序
@@ -15386,6 +15531,8 @@ const modules = {};
             }
         }
     }
+    DanmakuHashId.count = 0; // 正在查询弹幕数
+    DanmakuHashId.catch = {}; // 已查询弹幕缓存
     window.danmakuHashId = (crc) => {
         try {
             const check = new DanmakuHashId(crc);
@@ -15809,31 +15956,26 @@ const modules = {};
 /*!***********************!*/
 /**/modules["banner.js"] = /*** ./src/vector/header/banner.js ***/
 `
+    var _a;
     document.head.appendChild(API.createElements(API.htmlVnode(API.getModule("animated-banner.html"))));
     // 动态banner。移植自B站vue源码
     class Animate {
-        /** 缓存已请求内容 */
-        static record = {};
-        /** 资源id */
-        static rid = this.resourceId();
-        /** locs列表 */
-        static locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
-        /**
-         * 有在启用了动画banner的配置，且浏览器支持css filter时才加载动画banner的图片资源
-         * safari浏览器在mac屏幕上模糊效果有性能问题，不开启
-         */
-        animatedBannerSupport = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('filter: blur(1px)')
-            && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        layerConfig = {};
-        /** layer表单 */
-        resources = [];
-        /** container 元素上有其他元素，需使用全局事件判断鼠标位置 */
-        entered = false;
-        extensions = [];
-        handleMouseLeave = undefined;
-        handleMouseMove = undefined;
-        handleResize = undefined;
         constructor(v) {
+            /**
+             * 有在启用了动画banner的配置，且浏览器支持css filter时才加载动画banner的图片资源
+             * safari浏览器在mac屏幕上模糊效果有性能问题，不开启
+             */
+            this.animatedBannerSupport = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('filter: blur(1px)')
+                && !/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            this.layerConfig = {};
+            /** layer表单 */
+            this.resources = [];
+            /** container 元素上有其他元素，需使用全局事件判断鼠标位置 */
+            this.entered = false;
+            this.extensions = [];
+            this.handleMouseLeave = undefined;
+            this.handleMouseMove = undefined;
+            this.handleResize = undefined;
             if (this.animatedBannerSupport)
                 this.mounted(v);
             if (v.is_split_layer !== 0) {
@@ -16139,6 +16281,13 @@ const modules = {};
             window.addEventListener('resize', this.handleResize);
         }
     }
+    _a = Animate;
+    /** 缓存已请求内容 */
+    Animate.record = {};
+    /** 资源id */
+    Animate.rid = _a.resourceId();
+    /** locs列表 */
+    Animate.locs = [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142];
     // hook顶栏图片请求
     API.jsonphookasync("api.bilibili.com/x/web-show/res/loc", undefined, async (url) => {
         const obj = API.urlObj(url);
@@ -16166,7 +16315,7 @@ const modules = {};
                 loc.data[0].title = (header && header.data.name) || "";
             }
         });
-        setTimeout(() => new Animate(header.data));
+        API.config.animatedBanner && setTimeout(() => new Animate(header.data));
         return loc;
     }, false);
 
@@ -16457,21 +16606,23 @@ const modules = {};
 `
     /** 模板：//api.bilibili.com/x/web-interface/view/detail?aid=\${aid} */
     class Detail {
-        code = 0;
-        data = {
-            Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
-            Related: [],
-            Reply: { page: {}, replies: [] },
-            Spec: null,
-            Tags: [],
-            View: {},
-            elec: null,
-            hot_share: {},
-            recommend: null,
-            view_addit: {}
-        };
-        message = "0";
-        ttl = 1;
+        constructor() {
+            this.code = 0;
+            this.data = {
+                Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
+                Related: [],
+                Reply: { page: {}, replies: [] },
+                Spec: null,
+                Tags: [],
+                View: {},
+                elec: null,
+                hot_share: {},
+                recommend: null,
+                view_addit: {}
+            };
+            this.message = "0";
+            this.ttl = 1;
+        }
     }
     function view2Detail(data) {
         const result = new Detail();
@@ -16607,11 +16758,9 @@ const modules = {};
         return window.history.state?.aid;
     }
     class CollectionElement {
-        container;
-        clearfix;
-        items = [];
-        spread = null;
         constructor(onSpread) {
+            this.items = [];
+            this.spread = null;
             this.container = document.createElement("div");
             this.clearfix = document.createElement("ul");
             this.clearfix.className = "clearfix";
@@ -16686,13 +16835,19 @@ const modules = {};
         }
     }
     class CollectionData {
-        notify = null;
-        _viewEpisodes = [];
-        _ep = 0;
-        _spread = false;
-        _spreadBtnTop = 0;
-        _colCount = 4;
-        episodes = [];
+        constructor(season) {
+            this.notify = null;
+            this._viewEpisodes = [];
+            this._ep = 0;
+            this._spread = false;
+            this._spreadBtnTop = 0;
+            this._colCount = 4;
+            this.episodes = [];
+            this.initEpisodes(season);
+            this.calcColCount();
+            this._viewEpisodes = !this.needSpread() ? this.episodes :
+                this.calcViewEpisodesOnCollapsed(this.ep);
+        }
         get viewEpisodes() {
             return this._viewEpisodes;
         }
@@ -16733,12 +16888,6 @@ const modules = {};
                 return s;
             }, []);
         }
-        constructor(season) {
-            this.initEpisodes(season);
-            this.calcColCount();
-            this._viewEpisodes = !this.needSpread() ? this.episodes :
-                this.calcViewEpisodesOnCollapsed(this.ep);
-        }
         initEpisodes(season) {
             season.sections.forEach((section) => {
                 Array.prototype.push.apply(this.episodes, section.episodes);
@@ -16777,8 +16926,6 @@ const modules = {};
         }
     }
     class CollectionComponent {
-        data;
-        elem;
         constructor(season, player) {
             this.data = new CollectionData(season);
             this.elem = new CollectionElement(this.data.needSpread() ?
@@ -16877,8 +17024,8 @@ const modules = {};
         }
     }
     class Collection {
-        component = undefined;
         constructor(videoData) {
+            this.component = undefined;
             API.xhrhook("/x/player.so", undefined, (r) => {
                 // 替换has_next标签值让播放器显示下一P按钮
                 r.response = r.response.replace(/<has_next>\\s*0/, "<has_next>1");
@@ -16918,22 +17065,20 @@ const modules = {};
 /**/modules["enLike.js"] = /*** ./src/vector/url/av/enLike.js ***/
 `
     class enLike {
-        /** aid备份 */
-        aid = undefined;
-        /** 锚节点 */
-        coin = undefined;
-        span = undefined;
-        /** 点赞了吗？ */
-        liked = false;
-        /** 点赞数 */
-        number = 0;
-        /** 页面类型 */
-        type;
-        /** 未点赞图标 */
-        svgLike = API.getModule("dislike.svg");
-        /** 已点赞图标 */
-        svgEnLike = API.getModule("like.svg");
         constructor(type, num = 0) {
+            /** aid备份 */
+            this.aid = undefined;
+            /** 锚节点 */
+            this.coin = undefined;
+            this.span = undefined;
+            /** 点赞了吗？ */
+            this.liked = false;
+            /** 点赞数 */
+            this.number = 0;
+            /** 未点赞图标 */
+            this.svgLike = API.getModule("dislike.svg");
+            /** 已点赞图标 */
+            this.svgEnLike = API.getModule("like.svg");
             this.type = type;
             this.number = num;
             API.doWhile(() => {
@@ -17308,7 +17453,7 @@ const modules = {};
 <script type="text/javascript" src="//static.hdslb.com/phoenix/dist/js/comment.min.js"></script>
 <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"></script>
 <script>
-    window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());
+    window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());
 </script>
 <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"
     crossorigin=""></script>
@@ -17408,6 +17553,7 @@ const modules = {};
         API.appendScripts(API.getModule("bangumi-script.html")).then(() => API.loadendEvent());
     }
     else {
+        window.__Iris__ = true; // 精确爆破新版番剧脚本
         API.documentWrite(API.getModule("bangumi.html")
             .replace('<!-- <!DOCTYPE html> -->', '<!DOCTYPE html>')
             .replace('<!-- <html lang="zh-CN"> -->', '<html lang="zh-CN">')
