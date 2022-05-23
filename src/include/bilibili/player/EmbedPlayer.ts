@@ -432,7 +432,6 @@ namespace API {
          */
         gray_loader() {
             this.init_bgray_btn();
-            config.downloadBtn && this.append_bgray_btn("下载", () => downloadDefault(), "download");
             ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
         }
         feedback: { show: () => void } = <any>undefined;
@@ -655,6 +654,7 @@ namespace API {
                     asWide && (EmbedPlayer.asWide = true);
                     bofqi && ((<any>document.querySelector(bofqi)).id = "bofqi");
                     window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
+                    config.downloadBtn && window.GrayManager.append_bgray_btn("下载", () => downloadDefault(), "download");
                 } catch (e) {
                     toast.error("EmbedPlayer 启动播放器出错~");
                     debug.error("EmbedPlayer 启动播放器出错~", e);

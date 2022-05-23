@@ -11,6 +11,7 @@ namespace API {
             navigator.mediaSession.metadata.album = <any>data.album;
             navigator.mediaSession.metadata.artwork = <any>data.artwork;
         }
+        window.GrayManager.setActionHandler();
     }
     function getView() {
         xhr({
