@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.1
+// @version      8.0.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -909,6 +909,7 @@ const modules = {};
             navigator.mediaSession.metadata.album = data.album;
             navigator.mediaSession.metadata.artwork = data.artwork;
         }
+        window.GrayManager.setActionHandler();
     }
     API.mediaSession = mediaSession;
     function getView() {
@@ -4580,7 +4581,6 @@ const modules = {};
          */
         gray_loader() {
             this.init_bgray_btn();
-            API.config.downloadBtn && this.append_bgray_btn("下载", () => API.downloadDefault(), "download");
             ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
         }
         /**
@@ -4757,6 +4757,7 @@ const modules = {};
                     asWide && (EmbedPlayer.asWide = true);
                     bofqi && (document.querySelector(bofqi).id = "bofqi");
                     window.GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn);
+                    API.config.downloadBtn && window.GrayManager.append_bgray_btn("下载", () => API.downloadDefault(), "download");
                 }
                 catch (e) {
                     API.toast.error("EmbedPlayer 启动播放器出错~");
@@ -12624,6 +12625,17 @@ const modules = {};
             value: false
         },
         {
+            key: "downloadNow",
+            menu: "download",
+            type: "button",
+            label: "下载面板",
+            sub: "下载当前视频",
+            value: () => {
+                API.downloadDefault();
+            },
+            button: "呼出"
+        },
+        {
             key: "downloadOther",
             menu: "download",
             type: "switch",
@@ -13929,6 +13941,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         if (downloading)
             return;
         downloading = true;
+        if (!API.cid)
+            return API.toast.warning("请在视频页使用本功能~");
         const data = API.playinfoFiter(API.__playinfo__);
         const request = [];
         const type = API.config.downlaodType.join(" ").toLowerCase();
@@ -16399,6 +16413,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         }
     }
     _a = Animate;
+    Animate.once = false;
     /** 缓存已请求内容 */
     Animate.record = {};
     /** 资源id */
@@ -16432,7 +16447,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 loc.data[0].title = (header && header.data.name) || "";
             }
         });
-        API.config.animatedBanner && setTimeout(() => new Animate(header.data));
+        API.config.animatedBanner && !Animate.once && (Animate.once = true, setTimeout(() => new Animate(header.data)));
         return loc;
     }, false);
 
@@ -16676,7 +16691,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     // .onCoinSuccess(n)   页面变为已投币n枚的状态
     // .onFollow()         变为已关注状态
     // .favSubmit(bool)    设置收藏状态，参数bool: true -> “已收藏”状态 false -> 未收藏状态
-    API.webpackhook(717, 274, (code) => code.replace("init:function(){", "init:function(){window.biliUIcomponents=this;"));
+    API.webpackhook(717, 274, (code) => code.replace("init:function(){", "init:function(){window.biliUIcomponents=this;").replace("this.getAdData()", "this.getAdData"));
     // 修复：收藏视频时，在“添加到收藏夹”弹窗中，如果将视频从收藏夹A删除，并同时添加到收藏夹B，点击确定后窗口不消失的问题
     /* 报错原因示意：
         jQuery.when(deferredA,deferredB).done((resultA,resultB) => {
@@ -17698,7 +17713,6 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["index-script.html"] = /*** ./src/vector/url/index/index-script.html ***/
 `<script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script>
-<script src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"></script>
 <script>
     window.__INITIAL_STATE__ = { locsData: { 23: null, 29: null, 31: null, 34: null, 40: null, 42: null, 44: null, 142: null }, recommendData: null }; (function () { var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());
 </script>
