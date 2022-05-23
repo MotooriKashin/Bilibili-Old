@@ -117,6 +117,8 @@ interface config {
     configManage: never;
     /** 默认下载类型 */
     downlaodType: string[];
+    /** 立即下载 */
+    downloadNow: never;
     /** 请求tv源 */
     TVresource: boolean;
     /** 请求画质参数 */
@@ -896,6 +898,17 @@ namespace API {
             value: false
         },
         {
+            key: "downloadNow",
+            menu: "download",
+            type: "button",
+            label: "下载面板",
+            sub: "下载当前视频",
+            value: () => {
+                downloadDefault()
+            },
+            button: "呼出"
+        },
+        {
             key: "downloadOther",
             menu: "download",
             type: "switch",
@@ -1160,7 +1173,7 @@ namespace API {
             type: "switch",
             label: "港澳台新番时间表",
             sub: '<a href="//www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
-            float:`在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。`,
+            float: `在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。`,
             value: false
         }
     ]);

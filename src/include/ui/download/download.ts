@@ -108,6 +108,7 @@ namespace API {
     export async function downloadDefault() {
         if (downloading) return;
         downloading = true;
+        if (!cid) return toast.warning("请在视频页使用本功能~");
         const data = playinfoFiter(__playinfo__);
         const request: Promise<any>[] = [];
         const type = config.downlaodType.join(" ").toLowerCase();
