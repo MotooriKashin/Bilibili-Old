@@ -1,9 +1,15 @@
 namespace API {
+    /** 信息存档 */
+    let temp: any;
     /**
      * 媒体控制器MediaMeta信息
      * @param data MediaMeta数据
      */
     export function mediaSession(data: MediaMetadataInit) {
+        Promise.resolve().then(() => window.GrayManager.setActionHandler());
+        const check = JSON.stringify(data);
+        if (temp === check) return;
+        temp = check;
         if (!navigator.mediaSession.metadata) navigator.mediaSession.metadata = new MediaMetadata({ ...data });
         else {
             navigator.mediaSession.metadata.title = <any>data.title;
@@ -11,7 +17,6 @@ namespace API {
             navigator.mediaSession.metadata.album = <any>data.album;
             navigator.mediaSession.metadata.artwork = <any>data.artwork;
         }
-        window.GrayManager.setActionHandler();
     }
     function getView() {
         xhr({

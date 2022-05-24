@@ -4,8 +4,15 @@ interface modules {
 }
 namespace API {
     xhrhook("/playurl?", args => {
+        const param = urlObj(args[1]);
         args[1].includes("84956560bc028eb7") && (args[1] = urlsign(args[1], {}, 8)); // 修复失效的appid
         args[1].includes("pgc") && (pgc = true); // ogv视频
+        // 更新关键参数
+        param.aid && (aid = Number(param.aid));
+        param.avid && (aid = Number(param.avid));
+        param.cid && (cid = Number(param.cid));
+        param.seasonId && (ssid = Number(param.seasonId));
+        param.episodeId && (epid = Number(param.episodeId));
     }, async obj => {
         try {
             __playinfo__ = obj.responseType === "json" ? obj.response : jsonCheck(obj.response);
