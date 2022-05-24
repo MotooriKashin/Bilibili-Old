@@ -56,8 +56,8 @@ namespace API {
         if (config.index && path[2] == 'www.bilibili.com' && (!path[3] || (path[3].startsWith('\?') || path[3].startsWith('\#') || path[3].startsWith('index.')))) {
             rebuildType == "重定向" ? redirect("index") : importModule("index.js");
         }
-        if (config.av && /\/video(\/s)?\/[AaBb][Vv]/.test(location.href)) {
-            path[4] === "s" && replaceUrl(location.href.replace("video/s", "video")); // SEO重定向
+        if (config.av && /(\/s)?\/video\/[AaBb][Vv]/.test(location.href)) {
+            path[3] === "s" && replaceUrl(location.href.replace("s/video", "video")); // SEO重定向
             rebuildType == "重定向" ? redirect("av") : importModule("av.js");
         }
         if (config.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) {
