@@ -2,8 +2,6 @@ namespace API {
     export class AccessKey {
         /** 参数缓存 */
         static data = GM.getValue("third_login");
-        /** 临时禁用操作 */
-        static disable = false;
         /** 获取账户授权 */
         static async get() {
             if (!uid) return (toast.warning("请先登录！"), biliQuickLogin());
@@ -55,86 +53,6 @@ namespace API {
                 msg.data = ["撤销授权成功~"];
                 msg.delay = 3;
             }
-            if (config.accessKey.permission) config.accessKey.permission = false;
-        }
-        /** 登录第三方代理服务 */
-        static async login() {
-            if (!config.accessKey.key) {
-                toast.warning("您必须先进行账户授权操作才能使用本功能！");
-                this.disable = true;
-                return config.accessKey.permission = false;
-            }
-            const msg = toast.custom(0, "info", "您正在授权第三方代理服务器登录~");
-            const iframe = document.createElement("iframe");
-            iframe.setAttribute("style", "width: 0px;height: 0px;");
-            iframe.src = objUrl("https://www.biliplus.com/login", <any>AccessKey.data);
-            iframe.onload = () => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "success";
-                    msg.data = ["成功授权第三方代理服务器登录~"];
-                    msg.delay = 3;
-                }
-            }
-            iframe.onerror = ev => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "error";
-                    msg.data = ["授权第三方代理服务器登录失败~"];
-                    msg.delay = 3;
-                }
-                debug.error("授权第三方代理服务器登录", ev);
-                alert("是否重试？", "授权第三方代理服务器登录", [
-                    {
-                        name: "是",
-                        callback: () => { this.login() }
-                    },
-                    {
-                        name: "否",
-                        callback: () => { }
-                    }
-                ]);
-            }
-            document.body.appendChild(iframe);
-        }
-        /** 撤销第三方代理服务器登录 */
-        static async checkout() {
-            if (this.disable) {
-                return this.disable = false;
-            }
-            const msg = toast.custom(0, "info", "您正常撤销第三方代理服务器登录~");
-            const iframe = document.createElement("iframe");
-            iframe.setAttribute("style", "width: 0px;height: 0px;");
-            iframe.src = "https://www.biliplus.com/login?act=logout";
-            iframe.onload = () => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "success";
-                    msg.data = ["成功撤销第三方代理服务器登录~", "Token也一并失效，如需恢复，请重新授权！"];
-                    msg.delay = 3;
-                }
-                this.remove();
-            }
-            iframe.onerror = ev => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "error";
-                    msg.data = ["撤销第三方代理服务器登录失败~"];
-                    msg.delay = 3;
-                }
-                debug.error("撤销第三方代理服务器登录", ev);
-                alert("是否重试？", "撤销第三方代理服务器登录", [
-                    {
-                        name: "是",
-                        callback: () => { this.checkout() }
-                    },
-                    {
-                        name: "否",
-                        callback: () => { }
-                    }
-                ]);
-            }
-            document.body.appendChild(iframe);
         }
     }
 }

@@ -172,8 +172,6 @@ interface config {
         key: string,
         /** 授权日期 */
         date: string,
-        /** 授权代理服务器（第三方区域限制解析服务器） */
-        permission: boolean
     };
     /** 添加港澳台新番时间表 */
     timeline: boolean;
@@ -362,7 +360,7 @@ namespace API {
                     float: `如果选择自定义则需要填写下面的代理服务器，并且转到【账户授权】进行第三方服务器授权。内置服务器则支持以游客身份获取数据，但只能获取flv格式，且大会员画质还是需要授权。`,
                     callback: v => {
                         if (v === "自定义") {
-                            if (!config.accessKey.permission) {
+                            if (!config.accessKey.key) {
                                 alert("自定义服务器一般都要求您授权登录才能使用，是否前往【账户授权】设置？", undefined, [
                                     {
                                         name: "是",
@@ -1152,7 +1150,7 @@ namespace API {
                     type: "input",
                     label: "Token",
                     sub: "access_key",
-                    float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本脚本访问那些数据的能力。",
+                    float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本脚本访问那些数据的能力。<strong>与【解除限制】功能一起使用时请自行确定代理服务器的安全性！</strong>",
                     props: { type: "text", readonly: "readonly" }
                 },
                 {
@@ -1195,17 +1193,6 @@ namespace API {
                                 }
                             ]);
                         }
-                    }
-                },
-                {
-                    key: "permission",
-                    type: "switch",
-                    label: "授权代理服务器",
-                    sub: "解除区域限制",
-                    float: "第三方解除区域限制服务器一般都需要鉴权您的身份才提供服务，<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
-                    value: false,
-                    callback: v => {
-                        v ? AccessKey.login() : AccessKey.checkout();
                     }
                 }
             ]

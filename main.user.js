@@ -744,93 +744,10 @@ const modules = {};
                 msg.data = ["撤销授权成功~"];
                 msg.delay = 3;
             }
-            if (API.config.accessKey.permission)
-                API.config.accessKey.permission = false;
-        }
-        /** 登录第三方代理服务 */
-        static async login() {
-            if (!API.config.accessKey.key) {
-                API.toast.warning("您必须先进行账户授权操作才能使用本功能！");
-                this.disable = true;
-                return API.config.accessKey.permission = false;
-            }
-            const msg = API.toast.custom(0, "info", "您正在授权第三方代理服务器登录~");
-            const iframe = document.createElement("iframe");
-            iframe.setAttribute("style", "width: 0px;height: 0px;");
-            iframe.src = API.objUrl("https://www.biliplus.com/login", AccessKey.data);
-            iframe.onload = () => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "success";
-                    msg.data = ["成功授权第三方代理服务器登录~"];
-                    msg.delay = 3;
-                }
-            };
-            iframe.onerror = ev => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "error";
-                    msg.data = ["授权第三方代理服务器登录失败~"];
-                    msg.delay = 3;
-                }
-                API.debug.error("授权第三方代理服务器登录", ev);
-                API.alert("是否重试？", "授权第三方代理服务器登录", [
-                    {
-                        name: "是",
-                        callback: () => { this.login(); }
-                    },
-                    {
-                        name: "否",
-                        callback: () => { }
-                    }
-                ]);
-            };
-            document.body.appendChild(iframe);
-        }
-        /** 撤销第三方代理服务器登录 */
-        static async checkout() {
-            if (this.disable) {
-                return this.disable = false;
-            }
-            const msg = API.toast.custom(0, "info", "您正常撤销第三方代理服务器登录~");
-            const iframe = document.createElement("iframe");
-            iframe.setAttribute("style", "width: 0px;height: 0px;");
-            iframe.src = "https://www.biliplus.com/login?act=logout";
-            iframe.onload = () => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "success";
-                    msg.data = ["成功撤销第三方代理服务器登录~", "Token也一并失效，如需恢复，请重新授权！"];
-                    msg.delay = 3;
-                }
-                this.remove();
-            };
-            iframe.onerror = ev => {
-                iframe.remove();
-                if (msg) {
-                    msg.type = "error";
-                    msg.data = ["撤销第三方代理服务器登录失败~"];
-                    msg.delay = 3;
-                }
-                API.debug.error("撤销第三方代理服务器登录", ev);
-                API.alert("是否重试？", "撤销第三方代理服务器登录", [
-                    {
-                        name: "是",
-                        callback: () => { this.checkout(); }
-                    },
-                    {
-                        name: "否",
-                        callback: () => { }
-                    }
-                ]);
-            };
-            document.body.appendChild(iframe);
         }
     }
     /** 参数缓存 */
     AccessKey.data = GM.getValue("third_login");
-    /** 临时禁用操作 */
-    AccessKey.disable = false;
     API.AccessKey = AccessKey;
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/accessKey.js`;
@@ -12076,7 +11993,7 @@ const modules = {};
                     float: \`如果选择自定义则需要填写下面的代理服务器，并且转到【账户授权】进行第三方服务器授权。内置服务器则支持以游客身份获取数据，但只能获取flv格式，且大会员画质还是需要授权。\`,
                     callback: v => {
                         if (v === "自定义") {
-                            if (!API.config.accessKey.permission) {
+                            if (!API.config.accessKey.key) {
                                 API.alert("自定义服务器一般都要求您授权登录才能使用，是否前往【账户授权】设置？", undefined, [
                                     {
                                         name: "是",
@@ -12862,7 +12779,7 @@ const modules = {};
                     type: "input",
                     label: "Token",
                     sub: "access_key",
-                    float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本脚本访问那些数据的能力。",
+                    float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本脚本访问那些数据的能力。<strong>与【解除限制】功能一起使用时请自行确定代理服务器的安全性！</strong>",
                     props: { type: "text", readonly: "readonly" }
                 },
                 {
@@ -12906,17 +12823,6 @@ const modules = {};
                                 }
                             ]);
                         }
-                    }
-                },
-                {
-                    key: "permission",
-                    type: "switch",
-                    label: "授权代理服务器",
-                    sub: "解除区域限制",
-                    float: "第三方解除区域限制服务器一般都需要鉴权您的身份才提供服务，<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
-                    value: false,
-                    callback: v => {
-                        v ? API.AccessKey.login() : API.AccessKey.checkout();
                     }
                 }
             ]
@@ -17657,7 +17563,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         API.toast.warning("这大概是个无效bangumi~", "正在进行最后的尝试");
         const obj = API.epid ? { ep_id: API.epid } : { season_id: API.ssid };
         Object.assign(obj, {
-            access_key: (API.config.accessKey.permission && API.config.accessKey.key) || undefined,
+            access_key: API.config.accessKey.key || undefined,
             build: 108003,
             mobi_app: "bstar_a",
             s_locale: "zh_SG"
