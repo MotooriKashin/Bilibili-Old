@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.2
+// @version      8.0.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19,21 +19,24 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     protobuf.js https://fastly.jsdelivr.net/npm/protobufjs/dist/light/protobuf.min.js
+// @require      https://fastly.jsdelivr.net/npm/protobufjs/dist/light/protobuf.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
 // ==/UserScript==
 
 
 /** 封装脚本管理器提供的API */
-GM.xmlHttpRequest = GM_xmlhttpRequest;
-GM.getValue = GM_getValue;
-GM.setValue = GM_setValue;
-GM.deleteValue = GM_deleteValue;
-GM.listValues = GM_listValues;
-GM.getResourceText = GM_getResourceText;
-GM.getResourceURL = GM_getResourceText;
-GM.DOM = document;
+Object.defineProperties(GM, {
+    xmlHttpRequest: { value: GM_xmlhttpRequest },
+    getValue: { value: GM_getValue },
+    setValue: { value: GM_setValue },
+    deleteValue: { value: GM_deleteValue },
+    listValues: { value: GM_listValues },
+    getResourceText: { value: GM_getResourceText },
+    getResourceURL: { value: GM_getResourceURL },
+    DOM: { value: document },
+    protobuf: { value: window.protobuf }
+});
 const modules = {};
 
 /**/modules["apply.json"] = /*** ./src/apply.json ***/
@@ -741,17 +744,17 @@ const modules = {};
                 msg.data = ["撤销授权成功~"];
                 msg.delay = 3;
             }
-            if (API.config.accessKey.biliplus)
-                API.config.accessKey.biliplus = false;
+            if (API.config.accessKey.permission)
+                API.config.accessKey.permission = false;
         }
-        /** 登录biliplus */
+        /** 登录第三方代理服务 */
         static async login() {
             if (!API.config.accessKey.key) {
                 API.toast.warning("您必须先进行账户授权操作才能使用本功能！");
                 this.disable = true;
-                return API.config.accessKey.biliplus = false;
+                return API.config.accessKey.permission = false;
             }
-            const msg = API.toast.custom(0, "info", "您正常授权Biliplus登录~");
+            const msg = API.toast.custom(0, "info", "您正在授权第三方代理服务器登录~");
             const iframe = document.createElement("iframe");
             iframe.setAttribute("style", "width: 0px;height: 0px;");
             iframe.src = API.objUrl("https://www.biliplus.com/login", AccessKey.data);
@@ -759,7 +762,7 @@ const modules = {};
                 iframe.remove();
                 if (msg) {
                     msg.type = "success";
-                    msg.data = ["成功授权Biliplus登录~"];
+                    msg.data = ["成功授权第三方代理服务器登录~"];
                     msg.delay = 3;
                 }
             };
@@ -767,11 +770,11 @@ const modules = {};
                 iframe.remove();
                 if (msg) {
                     msg.type = "error";
-                    msg.data = ["授权Biliplus登录失败~"];
+                    msg.data = ["授权第三方代理服务器登录失败~"];
                     msg.delay = 3;
                 }
-                API.debug.error("授权Biliplus登录", ev);
-                API.alert("是否重试？", "授权Biliplus登录", [
+                API.debug.error("授权第三方代理服务器登录", ev);
+                API.alert("是否重试？", "授权第三方代理服务器登录", [
                     {
                         name: "是",
                         callback: () => { this.login(); }
@@ -784,12 +787,12 @@ const modules = {};
             };
             document.body.appendChild(iframe);
         }
-        /** 撤销biliplus登录 */
+        /** 撤销第三方代理服务器登录 */
         static async checkout() {
             if (this.disable) {
                 return this.disable = false;
             }
-            const msg = API.toast.custom(0, "info", "您正常撤销Biliplus登录~");
+            const msg = API.toast.custom(0, "info", "您正常撤销第三方代理服务器登录~");
             const iframe = document.createElement("iframe");
             iframe.setAttribute("style", "width: 0px;height: 0px;");
             iframe.src = "https://www.biliplus.com/login?act=logout";
@@ -797,7 +800,7 @@ const modules = {};
                 iframe.remove();
                 if (msg) {
                     msg.type = "success";
-                    msg.data = ["成功撤销Biliplus登录~", "Token也一并失效，如需恢复，请重新授权！"];
+                    msg.data = ["成功撤销第三方代理服务器登录~", "Token也一并失效，如需恢复，请重新授权！"];
                     msg.delay = 3;
                 }
                 this.remove();
@@ -806,11 +809,11 @@ const modules = {};
                 iframe.remove();
                 if (msg) {
                     msg.type = "error";
-                    msg.data = ["撤销Biliplus登录失败~"];
+                    msg.data = ["撤销第三方代理服务器登录失败~"];
                     msg.delay = 3;
                 }
-                API.debug.error("撤销Biliplus登录", ev);
-                API.alert("是否重试？", "撤销Biliplus登录", [
+                API.debug.error("撤销第三方代理服务器登录", ev);
+                API.alert("是否重试？", "撤销第三方代理服务器登录", [
                     {
                         name: "是",
                         callback: () => { this.checkout(); }
@@ -896,11 +899,18 @@ const modules = {};
 /*!***********************!*/
 /**/modules["MediaMeta.js"] = /*** ./src/include/bilibili/MediaMeta.js ***/
 `
+    /** 信息存档 */
+    let temp;
     /**
      * 媒体控制器MediaMeta信息
      * @param data MediaMeta数据
      */
     function mediaSession(data) {
+        Promise.resolve().then(() => window.GrayManager.setActionHandler());
+        const check = JSON.stringify(data);
+        if (temp === check)
+            return;
+        temp = check;
         if (!navigator.mediaSession.metadata)
             navigator.mediaSession.metadata = new MediaMetadata({ ...data });
         else {
@@ -909,7 +919,6 @@ const modules = {};
             navigator.mediaSession.metadata.album = data.album;
             navigator.mediaSession.metadata.artwork = data.artwork;
         }
-        window.GrayManager.setActionHandler();
     }
     API.mediaSession = mediaSession;
     function getView() {
@@ -3503,14 +3512,10 @@ const modules = {};
 /**/modules["danmaku.js"] = /*** ./src/include/bilibili/danmaku/danmaku.js ***/
 `
     // 启动protobuf引擎
-    const engine = GM.getResourceText("protobuf.js");
-    if (!engine) {
-        API.debug.error("初始化 protobuf 框架失败~", "请检查资源依赖加载情况！");
+    if (!GM.protobuf) {
+        API.toast.error("protobuf.js加载失败，新版弹幕等功能无法使用 ಥ_ಥ", "这可能是暂时性的网络问题不必惊慌！", "请临时关闭新版弹幕等功能以便正常使用~");
     }
-    else {
-        new Function(GM.getResourceText("protobuf.js"))();
-    }
-    let root = window.protobuf?.Root.fromJSON(API.getModule("bilibiliDanmaku.json"));
+    let root = GM.protobuf?.Root.fromJSON(API.getModule("bilibiliDanmaku.json"));
     const danmakuType = new Proxy({}, {
         get: (t, p, r) => {
             if (!t[p]) {
@@ -4784,7 +4789,7 @@ const modules = {};
     API.config.heartbeat && API.xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
         args[1] = args[1].replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
     }, undefined, false);
-    API.config.videoLimit && API.importModule("videoLimit.js"); // 解锁视频限制
+    API.config.videoLimit.switch && API.importModule("videoLimit.js"); // 解锁视频限制
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/player/EmbedPlayer.js`;
 /*!***********************!*/
@@ -4964,6 +4969,10 @@ const modules = {};
 
     .toast {
         transition: height 1s ease 0s, padding 1s ease 0s;
+    }
+
+    #toast-container {
+        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;
     }
 </style>
 <style type="text/css">
@@ -11960,7 +11969,7 @@ const modules = {};
             callback: v => {
                 if (v) {
                     let isReadry = false;
-                    ["protobuf.js", "bilibiliPlayer.js", "comment.js"].forEach(d => {
+                    ["bilibiliPlayer.js", "comment.js"].forEach(d => {
                         isReadry = GM.getResourceText(d) ? true : false;
                     });
                     if (isReadry) {
@@ -12048,42 +12057,68 @@ const modules = {};
         {
             key: "videoLimit",
             menu: "player",
-            label: "解除视频播放限制",
-            type: "switch",
-            value: false,
-            sub: "区域+APP",
-            float: \`默认只能以游客身份获取限制视频源，如果您是大会员，可以考虑【账户授权-授权biliplus服务器】以观看大会员专享区域限制视频。\`,
-            callback: v => {
-                if (v) {
-                    API.alert("是否前往【账户授权】设置？", undefined, [
-                        {
-                            name: "是",
-                            callback: () => {
-                                API.showSetting("accessKey");
+            type: "list",
+            name: "区域/APP限制",
+            list: [
+                {
+                    key: "switch",
+                    type: "switch",
+                    label: "开关",
+                    value: false
+                },
+                {
+                    key: "server",
+                    type: "select",
+                    label: "服务器类型",
+                    sub: \`<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">公共反代服务器</a>\`,
+                    value: "内置",
+                    candidate: ["内置", "自定义"],
+                    float: \`如果选择自定义则需要填写下面的代理服务器，并且转到【账户授权】进行第三方服务器授权。内置服务器则支持以游客身份获取数据，但只能获取flv格式，且大会员画质还是需要授权。\`,
+                    callback: v => {
+                        if (v === "自定义") {
+                            if (!API.config.accessKey.permission) {
+                                API.alert("自定义服务器一般都要求您授权登录才能使用，是否前往【账户授权】设置？", undefined, [
+                                    {
+                                        name: "是",
+                                        callback: () => {
+                                            API.showSetting("accessKey");
+                                        }
+                                    },
+                                    {
+                                        name: "否",
+                                        callback: () => { }
+                                    }
+                                ]);
                             }
-                        },
-                        {
-                            name: "否",
-                            callback: () => { }
                         }
-                    ]);
+                    }
+                },
+                {
+                    key: "cn",
+                    type: "input",
+                    label: "大陆",
+                    props: { type: "url", placeholder: "www.example.com" },
+                },
+                {
+                    key: "hk",
+                    type: "input",
+                    label: "香港",
+                    props: { type: "url", placeholder: "www.example.com" },
+                },
+                {
+                    key: "tw",
+                    type: "input",
+                    label: "台湾",
+                    props: { type: "url", placeholder: "www.example.com" },
+                },
+                {
+                    key: "th",
+                    type: "input",
+                    label: "泰国",
+                    sub: "暂不支持",
+                    props: { type: "url", placeholder: "www.example.com" },
                 }
-                else {
-                    if (API.config.accessKey.biliplus)
-                        API.alert("您还在【账户授权】将账户授权给了第三方解析服务器，是否前往取消？", undefined, [
-                            {
-                                name: "是",
-                                callback: () => {
-                                    API.showSetting("accessKey");
-                                }
-                            },
-                            {
-                                name: "否",
-                                callback: () => { }
-                            }
-                        ]);
-                }
-            }
+            ]
         },
         {
             key: "protobufDanmaku",
@@ -12874,11 +12909,11 @@ const modules = {};
                     }
                 },
                 {
-                    key: "biliplus",
+                    key: "permission",
                     type: "switch",
-                    label: "授权biliplus服务器",
+                    label: "授权代理服务器",
                     sub: "解除区域限制",
-                    float: "本脚本使用Biliplus服务器实现【解除区域限制】功能，如果您是大会员账户，则可以选择将账户授权给Biliplus服务器，以支持解析大会员专享区域限制视频。如果不是大会员，则本操作没有任何意义！<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
+                    float: "第三方解除区域限制服务器一般都需要鉴权您的身份才提供服务，<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
                     value: false,
                     callback: v => {
                         v ? API.AccessKey.login() : API.AccessKey.checkout();
@@ -14878,8 +14913,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /**/modules["playinfo.js"] = /*** ./src/vector/playinfo.js ***/
 `
     API.xhrhook("/playurl?", args => {
+        const param = API.urlObj(args[1]);
         args[1].includes("84956560bc028eb7") && (args[1] = API.urlsign(args[1], {}, 8)); // 修复失效的appid
         args[1].includes("pgc") && (API.pgc = true); // ogv视频
+        // 更新关键参数
+        param.aid && (API.aid = Number(param.aid));
+        param.avid && (API.aid = Number(param.avid));
+        param.cid && (API.cid = Number(param.cid));
+        param.seasonId && (API.ssid = Number(param.seasonId));
+        param.episodeId && (API.epid = Number(param.episodeId));
     }, async (obj) => {
         try {
             API.__playinfo__ = obj.responseType === "json" ? obj.response : API.jsonCheck(obj.response);
@@ -15201,8 +15243,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         if (API.config.index && API.path[2] == 'www.bilibili.com' && (!API.path[3] || (API.path[3].startsWith('\\?') || API.path[3].startsWith('\\#') || API.path[3].startsWith('index.')))) {
             API.rebuildType == "重定向" ? API.redirect("index") : API.importModule("index.js");
         }
-        if (API.config.av && /\\/video\\/[AaBb][Vv]/.test(location.href)) {
-            API.rebuildType == "重定向" ? API.redirect("av", location.href.replace("s/video", "video")) : API.importModule("av.js");
+        if (API.config.av && /\\/video(\\/s)?\\/[AaBb][Vv]/.test(location.href)) {
+            API.path[4] === "s" && API.replaceUrl(location.href.replace("video/s", "video")); // SEO重定向
+            API.rebuildType == "重定向" ? API.redirect("av") : API.importModule("av.js");
         }
         if (API.config.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href)) {
             API.rebuildType == "重定向" ? API.redirect("bangumi") : API.importModule("bangumi.js");
@@ -15283,42 +15326,74 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             window.setTimeout = this.hook;
         }
     }
-    API.xhrhookasync("/playurl?", () => API.limit, async (args, type) => {
+    async function customServer(obj, area) {
+        if (area === "tw" && !API.config.videoLimit.tw)
+            return customServer(obj, "hk");
+        if (area === "hk" && !API.config.videoLimit.hk)
+            return customServer(obj, "cn");
+        if (area === "cn" && !API.config.videoLimit.cn)
+            throw "无有效代理服务器地址";
+        try {
+            Object.assign(obj, {
+                area,
+                build: 6720300,
+                device: "android",
+                force_host: 2,
+                mobi_app: "android",
+                platform: "android",
+                ts: new Date().getTime()
+            });
+            const result = await API.xhr({
+                url: API.urlsign(\`https://\${API.config.videoLimit[area]}/pgc/player/api/playurl\`, obj, 2),
+                responseType: "json"
+            });
+            if (result.code !== 0)
+                throw result;
+            return result;
+        }
+        catch (e) {
+            API.debug.error("代理服务器", API.config.videoLimit[area], e);
+            if (area === "tw")
+                return customServer(obj, "hk");
+            if (area === "hk")
+                return customServer(obj, "cn");
+            API.toast.error("代理服务器", API.config.videoLimit[area], e);
+            throw "所有代理服务器都已失败！";
+        }
+    }
+    API.xhrhookasync("/playurl?", () => API.limit || API.th, async (args, type) => {
         let response; // 初始化返回值
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         let obj = API.urlObj(args[1]); // 提取请求参数
         const accesskey = API.config.accessKey.key || undefined;
         obj.access_key = accesskey;
-        if (API.limit) { // 处理区域限制
+        if (API.th) { //
+            Object.assign(obj, {
+                area: "th",
+                build: 1001310,
+                device: "android",
+                force_host: 0,
+                mobi_app: "bstar_a",
+                platform: "android"
+            });
+            API.toast.info("尝试解除区域限制... 访问代理服务器");
+            response = API.jsonCheck(await API.xhr.GM({
+                url: API.urlsign(\`https://\${API.config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl\`, obj, 12)
+            }));
+            API.__playinfo__ = response;
+            API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
+        }
+        else if (API.limit) { // 处理区域限制
             obj.module = (API.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || API.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
             obj.fnval && (obj.fnval = String(API.fnval)); // 提升dash标记清晰度
             try {
                 API.toast.info("尝试解除区域限制... 访问代理服务器");
-                response = API.jsonCheck(await API.xhr.GM({
+                response = API.config.videoLimit.server === "内置" ? API.jsonCheck(await API.xhr.GM({
                     url: API.objUrl("https://www.biliplus.com/BPplayurl.php", obj)
-                }));
+                })) : (delete obj.module, await customServer(obj, "tw"));
                 response = { "code": 0, "message": "success", "result": response };
                 API.__playinfo__ = response;
                 API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
-            }
-            catch (e) {
-                API.toast.error("解除限制失败 ಥ_ಥ");
-                API.debug.error("解除限制失败 ಥ_ಥ", e);
-                response = { "code": -404, "message": e, "data": null };
-            }
-        }
-        else if (API.pgc && API.__INITIAL_STATE__?.rightsInfo?.watch_platform) { // APP专属限制
-            obj.fnval = null;
-            obj.fnver = null;
-            obj.platform = "android_i";
-            try {
-                API.toast.info("尝试解除APP限制... 使用移动端flv接口");
-                response = API.jsonCheck(await API.xhr.GM({
-                    url: API.urlsign("https://api.bilibili.com/pgc/player/api/playurl", obj, 1)
-                }));
-                response = { "code": 0, "message": "success", "result": response };
-                API.__playinfo__ = response;
-                API.toast.success(\`解除APP限制！aid=\${API.aid}, cid=\${API.cid}\`);
             }
             catch (e) {
                 API.toast.error("解除限制失败 ಥ_ಥ");
@@ -15758,9 +15833,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 `
     const protobufJSON = API.getModule("bilibiliBroadcast.json");
     const danmakuJSON = API.getModule("bilibiliBroadcastDanmaku.json");
-    window.protobuf || new Function(GM.getResourceText("protobuf.js"))();
-    const root = window.protobuf.Root.fromJSON(protobufJSON);
-    const danmakuElem = window.protobuf.Root.fromJSON(danmakuJSON).lookupType("bilibili.broadcast.message.main.DanmukuEvent");
+    const root = GM.protobuf.Root.fromJSON(protobufJSON);
+    const danmakuElem = GM.protobuf.Root.fromJSON(danmakuJSON).lookupType("bilibili.broadcast.message.main.DanmukuEvent");
     let sequence = 1;
     const message = {
         msgType: root.lookupType("BroadcastFrame"),
@@ -16598,7 +16672,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /**/modules["media.js"] = /*** ./src/vector/url/media.js ***/
 `
     // 解除限制
-    API.config.videoLimit && API.xhrhook("user/status", undefined, res => {
+    API.xhrhook("user/status", undefined, res => {
         try {
             const result = API.jsonCheck(res.response);
             result.result.area_limit = 0;
@@ -17510,14 +17584,14 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 };
                 data.status.paster && (t.paster = data.status.paster || {});
                 API.limit = data.status.area_limit || 0;
-                !API.config.videoLimit && (t.area = API.limit);
+                !API.config.videoLimit.switch && (t.area = API.limit);
                 t.seasonFollowed = 1 === data.status.follow;
             }
             if (data.bangumi) {
                 // -> bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js:1148
                 // 原数据有些问题导致一些回调事件不会正常加载需要主动写入epId、epInfo（顺序）
                 // 如果没有这个错误，根本必须手动重构\`__INITIAL_STATE__\` 🤣
-                var i = JSON.parse(JSON.stringify(data.bangumi));
+                const i = JSON.parse(JSON.stringify(data.bangumi));
                 delete i.episodes;
                 delete i.seasons;
                 delete i.up_info;
@@ -17531,7 +17605,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 if (API.config.bangumiEplist)
                     delete i.bkg_cover;
                 // APP限制
-                API.config.videoLimit && data.bangumi.rights && (data.bangumi.rights.watch_platform = 0);
+                API.config.videoLimit.switch && data.bangumi.rights && (data.bangumi.rights.watch_platform = 0);
                 t.mediaInfo = i;
                 t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = data.bangumi.season_id || -1;
@@ -17567,13 +17641,99 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     location.reload();
                 }
             }
+            else {
+                API.debug.error(result[0]);
+                API.debug.error(result[1]);
+                return globalSession();
+            }
         }
         catch (e) {
-            API.toast.warning("获取视频数据失败！", "尝试Global接口！");
+            API.toast.error("获取视频数据出错 ಥ_ಥ");
             API.debug.error("视频数据", e);
         }
     }
     API.bangumiInitialState = bangumiInitialState;
+    async function globalSession() {
+        API.toast.warning("这大概是个无效bangumi~", "正在进行最后的尝试");
+        const obj = API.epid ? { ep_id: API.epid } : { season_id: API.ssid };
+        Object.assign(obj, {
+            access_key: (API.config.accessKey.permission && API.config.accessKey.key) || undefined,
+            build: 108003,
+            mobi_app: "bstar_a",
+            s_locale: "zh_SG"
+        });
+        try {
+            const result = await API.xhr({
+                url: API.objUrl(\`https://\${API.config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/view/app/season\`, obj),
+                responseType: "json"
+            });
+            if (result.code === 0) {
+                // th = true; 暂不支持播放
+                const t = window.__INITIAL_STATE__;
+                const i = JSON.parse(JSON.stringify(result.result));
+                const episodes = result.result.modules.reduce((s, d) => {
+                    d.data.episodes.forEach((d) => {
+                        s.push({
+                            aid: d.aid,
+                            cid: d.id,
+                            cover: d.cover,
+                            ep_id: d.id,
+                            episode_status: d.status,
+                            from: d.from,
+                            index: d.title,
+                            index_title: d.title_display,
+                            subtitles: d.subtitles
+                        });
+                    });
+                    return s;
+                }, []);
+                delete i.episodes;
+                delete i.seasons;
+                delete i.up_info;
+                delete i.rights;
+                delete i.publish;
+                delete i.newest_ep;
+                delete i.rating;
+                delete i.pay_pack;
+                delete i.payment;
+                delete i.activity;
+                t.mediaInfo = i;
+                t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
+                t.ssId = result.result.season_id || -1;
+                t.epInfo = (API.epid && episodes.find((d) => d.ep_id == API.epid)) || episodes[0];
+                t.epList = episodes;
+                t.seasonList = result.result.series || [];
+                t.upInfo = result.result.up_info || {};
+                t.rightsInfo = result.result.rights || {};
+                t.app = 1 === t.rightsInfo.watch_platform;
+                t.pubInfo = result.result.publish || {};
+                t.newestEp = result.result.new_ep || {};
+                t.mediaRating = result.result.rating || {};
+                t.payPack = result.result.pay_pack || {};
+                t.payMent = result.result.payment || {};
+                t.activity = result.result.activity_dialog || {};
+                t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+                t.epId = API.epid || episodes[0].ep_id;
+                Object.defineProperties(API, {
+                    ssid: {
+                        configurable: true,
+                        get: () => t.ssId
+                    },
+                    epid: {
+                        configurable: true,
+                        get: () => t.epId
+                    }
+                });
+                API.toast.custom(0, "warning", "这大概是一个东南亚版bangumi，很抱歉暂时不支持播放ಥ_ಥ");
+            }
+            else
+                throw result;
+        }
+        catch (e) {
+            API.toast.error("访问国际版B站出错~", e);
+            API.debug.error("BilibiliGlobal", e);
+        }
+    }
 
 //# sourceURL=file://@Bilibili-Old/vector/url/bangumi/bangumi-initial-state.js`;
 /*!***********************!*/
