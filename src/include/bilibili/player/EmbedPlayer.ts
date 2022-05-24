@@ -678,5 +678,5 @@ namespace API {
     config.heartbeat && xhrhook(['api.bilibili.com/x/report/web/heartbeat'], function (args) {
         args[1] = args[1].replace('api.bilibili.com/x/report/web/heartbeat', 'api.bilibili.com/x/click-interface/web/heartbeat');
     }, undefined, false);
-    config.videoLimit && importModule("videoLimit.js"); // 解锁视频限制
+    config.videoLimit.switch && importModule("videoLimit.js"); // 解锁视频限制
 }

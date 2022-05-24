@@ -4,7 +4,7 @@ interface modules {
 }
 namespace API {
     // 解除限制
-    config.videoLimit && xhrhook("user/status", undefined, res => {
+    xhrhook("user/status", undefined, res => {
         try {
             const result = jsonCheck(res.response);
             result.result.area_limit = 0;

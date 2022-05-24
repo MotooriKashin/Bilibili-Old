@@ -21,41 +21,67 @@ namespace API {
             window.setTimeout = this.hook;
         }
     }
-    xhrhookasync("/playurl?", () => limit, async (args, type) => { // 代理限制视频的请求
+    async function customServer(obj: Record<string, string | number>, area: "tw" | "hk" | "cn"): Promise<any> {
+        if (area === "tw" && !config.videoLimit.tw) return customServer(obj, "hk");
+        if (area === "hk" && !config.videoLimit.hk) return customServer(obj, "cn");
+        if (area === "cn" && !config.videoLimit.cn) throw "无有效代理服务器地址";
+        try {
+            Object.assign(obj, {
+                area,
+                build: 6720300,
+                device: "android",
+                force_host: 2,
+                mobi_app: "android",
+                platform: "android",
+                ts: new Date().getTime()
+            });
+            const result = await xhr({
+                url: urlsign(`https://${config.videoLimit[area]}/pgc/player/api/playurl`, obj, 2),
+                responseType: "json"
+            });
+            if (result.code !== 0) throw result;
+            return result;
+        } catch (e) {
+            debug.error("代理服务器", config.videoLimit[area], e);
+            if (area === "tw") return customServer(obj, "hk");
+            if (area === "hk") return customServer(obj, "cn");
+            toast.error("代理服务器", config.videoLimit[area], e);
+            throw "所有代理服务器都已失败！";
+        }
+    }
+    xhrhookasync("/playurl?", () => limit || th, async (args, type) => { // 代理限制视频的请求
         let response: any; // 初始化返回值
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         let obj = urlObj(args[1]); // 提取请求参数
         const accesskey = config.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
-        if (limit) { // 处理区域限制
+        if (th) { //
+            Object.assign(obj, {
+                area: "th",
+                build: 1001310,
+                device: "android",
+                force_host: 0,
+                mobi_app: "bstar_a",
+                platform: "android"
+            });
+            toast.info("尝试解除区域限制... 访问代理服务器");
+            response = jsonCheck(await xhr.GM({
+                url: urlsign(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
+            }));
+            __playinfo__ = response;
+            toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
+        }
+        else if (limit) { // 处理区域限制
             obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
             obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
             try {
                 toast.info("尝试解除区域限制... 访问代理服务器");
-                response = jsonCheck(await xhr.GM({
+                response = config.videoLimit.server === "内置" ? jsonCheck(await xhr.GM({
                     url: objUrl("https://www.biliplus.com/BPplayurl.php", obj)
-                }));
+                })) : (delete obj.module, await customServer(obj, "tw"));
                 response = { "code": 0, "message": "success", "result": response };
                 __playinfo__ = response;
                 toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
-            } catch (e) {
-                toast.error("解除限制失败 ಥ_ಥ");
-                debug.error("解除限制失败 ಥ_ಥ", e);
-                response = { "code": -404, "message": e, "data": null };
-            }
-        }
-        else if (pgc && (<any>API).__INITIAL_STATE__?.rightsInfo?.watch_platform) { // APP专属限制
-            obj.fnval = <any>null;
-            obj.fnver = <any>null;
-            obj.platform = "android_i";
-            try {
-                toast.info("尝试解除APP限制... 使用移动端flv接口");
-                response = jsonCheck(await xhr.GM({
-                    url: urlsign("https://api.bilibili.com/pgc/player/api/playurl", obj, 1)
-                }));
-                response = { "code": 0, "message": "success", "result": response };
-                __playinfo__ = response;
-                toast.success(`解除APP限制！aid=${aid}, cid=${cid}`);
             } catch (e) {
                 toast.error("解除限制失败 ಥ_ಥ");
                 debug.error("解除限制失败 ಥ_ಥ", e);

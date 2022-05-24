@@ -55,16 +55,16 @@ namespace API {
                 msg.data = ["撤销授权成功~"];
                 msg.delay = 3;
             }
-            if (config.accessKey.biliplus) config.accessKey.biliplus = false;
+            if (config.accessKey.permission) config.accessKey.permission = false;
         }
-        /** 登录biliplus */
+        /** 登录第三方代理服务 */
         static async login() {
             if (!config.accessKey.key) {
                 toast.warning("您必须先进行账户授权操作才能使用本功能！");
                 this.disable = true;
-                return config.accessKey.biliplus = false;
+                return config.accessKey.permission = false;
             }
-            const msg = toast.custom(0, "info", "您正常授权Biliplus登录~");
+            const msg = toast.custom(0, "info", "您正在授权第三方代理服务器登录~");
             const iframe = document.createElement("iframe");
             iframe.setAttribute("style", "width: 0px;height: 0px;");
             iframe.src = objUrl("https://www.biliplus.com/login", <any>AccessKey.data);
@@ -72,7 +72,7 @@ namespace API {
                 iframe.remove();
                 if (msg) {
                     msg.type = "success";
-                    msg.data = ["成功授权Biliplus登录~"];
+                    msg.data = ["成功授权第三方代理服务器登录~"];
                     msg.delay = 3;
                 }
             }
@@ -80,11 +80,11 @@ namespace API {
                 iframe.remove();
                 if (msg) {
                     msg.type = "error";
-                    msg.data = ["授权Biliplus登录失败~"];
+                    msg.data = ["授权第三方代理服务器登录失败~"];
                     msg.delay = 3;
                 }
-                debug.error("授权Biliplus登录", ev);
-                alert("是否重试？", "授权Biliplus登录", [
+                debug.error("授权第三方代理服务器登录", ev);
+                alert("是否重试？", "授权第三方代理服务器登录", [
                     {
                         name: "是",
                         callback: () => { this.login() }
@@ -97,12 +97,12 @@ namespace API {
             }
             document.body.appendChild(iframe);
         }
-        /** 撤销biliplus登录 */
+        /** 撤销第三方代理服务器登录 */
         static async checkout() {
             if (this.disable) {
                 return this.disable = false;
             }
-            const msg = toast.custom(0, "info", "您正常撤销Biliplus登录~");
+            const msg = toast.custom(0, "info", "您正常撤销第三方代理服务器登录~");
             const iframe = document.createElement("iframe");
             iframe.setAttribute("style", "width: 0px;height: 0px;");
             iframe.src = "https://www.biliplus.com/login?act=logout";
@@ -110,7 +110,7 @@ namespace API {
                 iframe.remove();
                 if (msg) {
                     msg.type = "success";
-                    msg.data = ["成功撤销Biliplus登录~", "Token也一并失效，如需恢复，请重新授权！"];
+                    msg.data = ["成功撤销第三方代理服务器登录~", "Token也一并失效，如需恢复，请重新授权！"];
                     msg.delay = 3;
                 }
                 this.remove();
@@ -119,11 +119,11 @@ namespace API {
                 iframe.remove();
                 if (msg) {
                     msg.type = "error";
-                    msg.data = ["撤销Biliplus登录失败~"];
+                    msg.data = ["撤销第三方代理服务器登录失败~"];
                     msg.delay = 3;
                 }
-                debug.error("撤销Biliplus登录", ev);
-                alert("是否重试？", "撤销Biliplus登录", [
+                debug.error("撤销第三方代理服务器登录", ev);
+                alert("是否重试？", "撤销第三方代理服务器登录", [
                     {
                         name: "是",
                         callback: () => { this.checkout() }

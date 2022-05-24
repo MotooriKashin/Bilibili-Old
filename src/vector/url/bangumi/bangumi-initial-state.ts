@@ -60,14 +60,14 @@ namespace API {
                 };
                 data.status.paster && (t.paster = data.status.paster || {});
                 limit = data.status.area_limit || 0;
-                !config.videoLimit && (t.area = limit);
+                !config.videoLimit.switch && (t.area = limit);
                 t.seasonFollowed = 1 === data.status.follow;
             }
             if (data.bangumi) {
                 // -> bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js:1148
                 // 原数据有些问题导致一些回调事件不会正常加载需要主动写入epId、epInfo（顺序）
                 // 如果没有这个错误，根本必须手动重构`__INITIAL_STATE__` 🤣
-                var i = JSON.parse(JSON.stringify(data.bangumi));
+                const i = JSON.parse(JSON.stringify(data.bangumi));
                 delete i.episodes;
                 delete i.seasons;
                 delete i.up_info;
@@ -80,7 +80,7 @@ namespace API {
                 delete i.activity;
                 if (config.bangumiEplist) delete i.bkg_cover;
                 // APP限制
-                config.videoLimit && data.bangumi.rights && (data.bangumi.rights.watch_platform = 0);
+                config.videoLimit.switch && data.bangumi.rights && (data.bangumi.rights.watch_platform = 0);
                 t.mediaInfo = i;
                 t.mediaInfo.bkg_cover && (t.special = !0, bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = data.bangumi.season_id || -1;
@@ -116,15 +116,98 @@ namespace API {
                     location.reload();
                 }
             } else {
-                throw [result[0], result[1]];
+                debug.error(result[0]);
+                debug.error(result[1]);
+                return globalSession();
             }
         } catch (e) {
-            toast.custom(0, "warning", "获取视频数据失败！", "这大概不是一个有效的bangumi号");
+            toast.error("获取视频数据出错 ಥ_ಥ");
             debug.error("视频数据", e);
+        }
+    }
+    async function globalSession() {
+        toast.warning("这大概是个无效bangumi~", "正在进行最后的尝试");
+        const obj: Record<string, string | number> = epid ? { ep_id: epid } : { season_id: ssid };
+        Object.assign(obj, {
+            access_key: (config.accessKey.permission && config.accessKey.key) || undefined,
+            build: 108003,
+            mobi_app: "bstar_a",
+            s_locale: "zh_SG"
+        });
+        try {
+            const result = await xhr({
+                url: objUrl(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/view/app/season`, obj),
+                responseType: "json"
+            });
+            if (result.code === 0) {
+                // th = true; 暂不支持播放
+                const t = (<any>window).__INITIAL_STATE__;
+                const i = JSON.parse(JSON.stringify(result.result));
+                const episodes = result.result.modules.reduce((s: any[], d: any) => {
+                    d.data.episodes.forEach((d: any) => {
+                        s.push({
+                            aid: d.aid,
+                            cid: d.id,
+                            cover: d.cover,
+                            ep_id: d.id,
+                            episode_status: d.status,
+                            from: d.from,
+                            index: d.title,
+                            index_title: d.title_display,
+                            subtitles: d.subtitles
+                        })
+                    });
+                    return s;
+                }, []);
+                delete i.episodes;
+                delete i.seasons;
+                delete i.up_info;
+                delete i.rights;
+                delete i.publish;
+                delete i.newest_ep;
+                delete i.rating;
+                delete i.pay_pack;
+                delete i.payment;
+                delete i.activity;
+                t.mediaInfo = i;
+                t.mediaInfo.bkg_cover && (t.special = !0, bkg_cover = t.mediaInfo.bkg_cover);
+                t.ssId = result.result.season_id || -1;
+                t.epInfo = (epid && episodes.find((d: any) => d.ep_id == epid)) || episodes[0];
+                t.epList = episodes;
+                t.seasonList = result.result.series || [];
+                t.upInfo = result.result.up_info || {};
+                t.rightsInfo = result.result.rights || {};
+                t.app = 1 === t.rightsInfo.watch_platform;
+                t.pubInfo = result.result.publish || {};
+                t.newestEp = result.result.new_ep || {};
+                t.mediaRating = result.result.rating || {};
+                t.payPack = result.result.pay_pack || {};
+                t.payMent = result.result.payment || {};
+                t.activity = result.result.activity_dialog || {};
+                t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+                t.epId = epid || episodes[0].ep_id;
+                Object.defineProperties(API, {
+                    ssid: {
+                        configurable: true,
+                        get: () => t.ssId
+                    },
+                    epid: {
+                        configurable: true,
+                        get: () => t.epId
+                    }
+                });
+                toast.custom(0, "warning", "这大概是一个东南亚版bangumi，很抱歉暂时不支持播放ಥ_ಥ");
+            }
+            else throw result;
+        } catch (e) {
+            toast.error("访问国际版B站出错~", e);
+            debug.error("BilibiliGlobal", e);
         }
     }
 }
 declare namespace API {
     /** 背景 */
     let bkg_cover: string | undefined;
+    /** 泰区 */
+    let th: boolean;
 }

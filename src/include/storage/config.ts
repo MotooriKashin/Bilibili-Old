@@ -52,7 +52,20 @@ interface config {
     /** 修复被误伤的视频心跳 */
     heartbeat: boolean;
     /** 解除视频播放限制 */
-    videoLimit: boolean;
+    videoLimit: {
+        /** 是否启用 */
+        switch: boolean;
+        /** 代理服务器 */
+        server: "内置" | "自定义",
+        /** 大陆 */
+        cn: string;
+        /** 香港 */
+        hk: string;
+        /** 台湾 */
+        tw: string;
+        /** 泰国 */
+        th: string;
+    };
     /** 视频渲染抗锯齿 */
     videoDisableAA: boolean;
     /** 日志拦截 */
@@ -159,8 +172,8 @@ interface config {
         key: string,
         /** 授权日期 */
         date: string,
-        /** 授权Biliplus（第三方区域限制解析服务器） */
-        biliplus: boolean
+        /** 授权代理服务器（第三方区域限制解析服务器） */
+        permission: boolean
     };
     /** 添加港澳台新番时间表 */
     timeline: boolean;
@@ -330,40 +343,70 @@ namespace API {
         {
             key: "videoLimit",
             menu: "player",
-            label: "解除视频播放限制",
-            type: "switch",
-            value: false,
-            sub: "区域+APP",
-            float: `默认只能以游客身份获取限制视频源，如果您是大会员，可以考虑【账户授权-授权biliplus服务器】以观看大会员专享区域限制视频。`,
-            callback: v => {
-                if (v) {
-                    alert("是否前往【账户授权】设置？", undefined, [
-                        {
-                            name: "是",
-                            callback: () => {
-                                showSetting("accessKey")
+            type: "list",
+            name: "区域/APP限制",
+            list: [
+                {
+                    key: "switch",
+                    type: "switch",
+                    label: "开关",
+                    value: false
+                },
+                {
+                    key: "server",
+                    type: "select",
+                    label: "服务器类型",
+                    sub: `<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">公共反代服务器</a>`,
+                    value: "内置",
+                    candidate: ["内置", "自定义"],
+                    float: `如果选择自定义则需要填写下面的代理服务器，并且转到【账户授权】进行第三方服务器授权。内置服务器则支持以游客身份获取数据，但只能获取flv格式，且大会员画质还是需要授权。`,
+                    callback: v => {
+                        if (v === "自定义") {
+                            if (!config.accessKey.permission) {
+                                alert("自定义服务器一般都要求您授权登录才能使用，是否前往【账户授权】设置？", undefined, [
+                                    {
+                                        name: "是",
+                                        callback: () => {
+                                            showSetting("accessKey")
+                                        }
+                                    },
+                                    {
+                                        name: "否",
+                                        callback: () => { }
+                                    }
+                                ])
                             }
-                        },
-                        {
-                            name: "否",
-                            callback: () => { }
                         }
-                    ])
-                } else {
-                    if (config.accessKey.biliplus) alert("您还在【账户授权】将账户授权给了第三方解析服务器，是否前往取消？", undefined, [
-                        {
-                            name: "是",
-                            callback: () => {
-                                showSetting("accessKey")
-                            }
-                        },
-                        {
-                            name: "否",
-                            callback: () => { }
-                        }
-                    ])
+                    }
+                },
+                {
+                    key: "cn",
+                    type: "input",
+                    label: "大陆",
+                    props: { type: "url", placeholder: "www.example.com" },
+                },
+                {
+                    key: "hk",
+                    type: "input",
+                    label: "香港",
+                    props: { type: "url", placeholder: "www.example.com" },
                 }
-            }
+                ,
+                {
+                    key: "tw",
+                    type: "input",
+                    label: "台湾",
+                    props: { type: "url", placeholder: "www.example.com" },
+                }
+                ,
+                {
+                    key: "th",
+                    type: "input",
+                    label: "泰国",
+                    sub: "暂不支持",
+                    props: { type: "url", placeholder: "www.example.com" },
+                }
+            ]
         },
         {
             key: "protobufDanmaku",
@@ -1155,11 +1198,11 @@ namespace API {
                     }
                 },
                 {
-                    key: "biliplus",
+                    key: "permission",
                     type: "switch",
-                    label: "授权biliplus服务器",
+                    label: "授权代理服务器",
                     sub: "解除区域限制",
-                    float: "本脚本使用Biliplus服务器实现【解除区域限制】功能，如果您是大会员账户，则可以选择将账户授权给Biliplus服务器，以支持解析大会员专享区域限制视频。如果不是大会员，则本操作没有任何意义！<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
+                    float: "第三方解除区域限制服务器一般都需要鉴权您的身份才提供服务，<br>本脚本无法保证第三方服务器如何使用您的鉴权，<strong>所以务必三思而后行！</strong>",
                     value: false,
                     callback: v => {
                         v ? AccessKey.login() : AccessKey.checkout();
