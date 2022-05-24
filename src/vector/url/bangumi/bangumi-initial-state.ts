@@ -115,9 +115,11 @@ namespace API {
                     sessionStorage.setItem("keepNew", 1);
                     location.reload();
                 }
+            } else {
+                throw [result[0], result[1]];
             }
         } catch (e) {
-            toast.warning("获取视频数据失败！", "尝试Global接口！");
+            toast.custom(0, "warning", "获取视频数据失败！", "这大概不是一个有效的bangumi号");
             debug.error("视频数据", e);
         }
     }
