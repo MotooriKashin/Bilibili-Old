@@ -7,9 +7,8 @@ interface modules {
 namespace API {
     const protobufJSON = getModule("bilibiliBroadcast.json");
     const danmakuJSON = getModule("bilibiliBroadcastDanmaku.json");
-    (<any>window).protobuf || new Function(GM.getResourceText("protobuf.js"))();
-    const root = (<any>window).protobuf.Root.fromJSON(protobufJSON);
-    const danmakuElem = (<any>window).protobuf.Root.fromJSON(danmakuJSON).lookupType("bilibili.broadcast.message.main.DanmukuEvent");
+    const root = GM.protobuf.Root.fromJSON(protobufJSON);
+    const danmakuElem = GM.protobuf.Root.fromJSON(danmakuJSON).lookupType("bilibili.broadcast.message.main.DanmukuEvent");
     let sequence = 1;
     const message = {
         msgType: root.lookupType("BroadcastFrame"),

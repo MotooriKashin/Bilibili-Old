@@ -243,7 +243,7 @@ namespace API {
             callback: v => {
                 if (v) {
                     let isReadry = false;
-                    ["protobuf.js", "bilibiliPlayer.js", "comment.js"].forEach(d => {
+                    ["bilibiliPlayer.js", "comment.js"].forEach(d => {
                         isReadry = GM.getResourceText(d) ? true : false;
                     });
                     if (isReadry) {

@@ -4,14 +4,10 @@ interface modules {
 }
 namespace API {
     // 启动protobuf引擎
-    const engine = GM.getResourceText("protobuf.js");
-    if (!engine) {
-        debug.error("初始化 protobuf 框架失败~", "请检查资源依赖加载情况！");
+    if (!GM.protobuf) {
+        toast.error("protobuf.js加载失败，新版弹幕等功能无法使用 ಥ_ಥ", "这可能是暂时性的网络问题不必惊慌！", "请临时关闭新版弹幕等功能以便正常使用~");
     }
-    else {
-        new Function(GM.getResourceText("protobuf.js"))();
-    }
-    let root = (<any>window).protobuf?.Root.fromJSON(getModule("bilibiliDanmaku.json"));
+    let root = GM.protobuf?.Root.fromJSON(getModule("bilibiliDanmaku.json"));
     /** 来自danmakuProtobuf.json文件 */
     type nested = "DmWebViewReply" | "CommandDm" | "DmSegConfig" | "DanmakuFlagConfig" | "DmSegMobileReply" | "DanmakuElem" | "DanmuWebPlayerConfig";
     const danmakuType = new Proxy(<Record<nested, {

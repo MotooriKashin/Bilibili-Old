@@ -21,7 +21,7 @@
     ],
     "run-at": "document-start",
     "license": "MIT",
-    "resource": [
-        "protobuf.js https://fastly.jsdelivr.net/npm/protobufjs/dist/light/protobuf.min.js"
+    "require": [
+        "https://fastly.jsdelivr.net/npm/protobufjs/dist/light/protobuf.min.js"
     ]
 }

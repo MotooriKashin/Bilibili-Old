@@ -1,12 +1,15 @@
 /** 封装脚本管理器提供的API */
-GM.xmlHttpRequest = GM_xmlhttpRequest;
-GM.getValue = GM_getValue;
-GM.setValue = GM_setValue;
-GM.deleteValue = GM_deleteValue;
-GM.listValues = GM_listValues;
-GM.getResourceText = GM_getResourceText;
-GM.getResourceURL = GM_getResourceText;
-GM.DOM = document;
+Object.defineProperties(GM, {
+    xmlHttpRequest: { value: GM_xmlhttpRequest },
+    getValue: { value: GM_getValue },
+    setValue: { value: GM_setValue },
+    deleteValue: { value: GM_deleteValue },
+    listValues: { value: GM_listValues },
+    getResourceText: { value: GM_getResourceText },
+    getResourceURL: { value: GM_getResourceURL },
+    DOM: { value: document },
+    protobuf: { value: (<any>window).protobuf }
+})
 
 /** 封装脚本管理器API的顶级对象 */
 declare namespace GM {
@@ -32,13 +35,13 @@ declare namespace GM {
         /** 值 */
         value: string
     }
-    let xmlHttpRequest: typeof GM_xmlhttpRequest;
-    let getValue: typeof GM_getValue;
-    let setValue: typeof GM_setValue;
-    let deleteValue: typeof GM_deleteValue;
-    let listValues: typeof GM_listValues;
-    let getResourceText: typeof GM_getResourceText;
-    let getResourceURL: typeof GM_getResourceURL;
+    const xmlHttpRequest: typeof GM_xmlhttpRequest;
+    const getValue: typeof GM_getValue;
+    const setValue: typeof GM_setValue;
+    const deleteValue: typeof GM_deleteValue;
+    const listValues: typeof GM_listValues;
+    const getResourceText: typeof GM_getResourceText;
+    const getResourceURL: typeof GM_getResourceURL;
     const info: {
         downloadMode: string;
         isFirstPartyIsolation: boolean;
@@ -145,7 +148,9 @@ declare namespace GM {
      * 而且这个`document`引用本就是Tampermonkey提供的，
      * 暴露在GM变量中实至名归。
      */
-    let DOM: Document;
+    const DOM: Document;
+    /** protobuf.js */
+    const protobuf: Record<string, any>;
 }
 declare function GM_xmlhttpRequest(details: GMxhrDetails): { abort: () => void };
 declare function GM_getResourceText(name: string): string;
