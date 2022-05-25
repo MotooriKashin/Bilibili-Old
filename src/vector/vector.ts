@@ -108,6 +108,9 @@ namespace API {
         if (config.timeline && /anime\/timeline/.test(location.href)) {
             importModule("timeline.js");
         }
+        if (config.album && /t.bilibili.com\/\d+/.test(location.href)) {
+            importModule("album.js");
+        }
     }
     config.logReport && importModule("logReport.js"); // 日志拦截
     importModule("protobufDanmaku.js"); // 新版弹幕

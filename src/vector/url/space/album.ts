@@ -16,4 +16,10 @@ namespace API {
             })
         }, 1000)
     }, false);
+    xhrhook("api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail", undefined, res => {
+        const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
+        if (result.code === 0) {
+            if (result.data?.card?.desc?.type === 2) location.replace(`https://h.bilibili.com/${result.data.card.desc.rid_str}`)
+        }
+    }, false);
 }
