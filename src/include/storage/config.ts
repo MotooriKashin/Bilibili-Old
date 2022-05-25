@@ -1213,7 +1213,7 @@ namespace API {
             menu: "style",
             type: "switch",
             label: "主页个性化推荐",
-            sub: "默认是全站同一推荐",
+            sub: "默认是全站统一推荐",
             value: false
         }
     ]);

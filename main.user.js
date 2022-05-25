@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.3
+// @version      8.0.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -609,10 +609,10 @@ const modules = {};
     const Record = {
         default: {}, arraybuffer: {}, blob: {}, document: {}, json: {}, text: {}
     };
-    function xhr(details) {
+    function xhr(details, cache = false) {
         details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
         if (details.async === false) {
-            if (Record[details.responseType || "default"][details.url])
+            if (cache && Record[details.responseType || "default"][details.url])
                 return Record[details.responseType || "default"][details.url];
             let xhr = new XMLHttpRequest();
             xhr.open(details.method || 'GET', details.url, false);
@@ -626,7 +626,7 @@ const modules = {};
         }
         else
             return new Promise((resolve, reject) => {
-                if (Record[details.responseType || "default"][details.url])
+                if (cache && Record[details.responseType || "default"][details.url])
                     return resolve(Record[details.responseType || "default"][details.url]);
                 let xhr = new XMLHttpRequest();
                 xhr.open(details.method || 'GET', details.url);
@@ -654,11 +654,12 @@ const modules = {};
     /**
      * \`GM_xmlhttpRequest\`的\`Promise\`封装，用于跨域\`XMLHttpRequest\`请求
      * @param details 以对象形式传递的参数，注意\`onload\`回调会覆盖Promise结果
+     * @param cache 是否缓存结果？默认否
      * @returns \`Promise\`托管的请求结果或者报错信息
      */
-    xhr.GM = function (details) {
+    xhr.GM = function (details, cache = false) {
         return new Promise((resolve, reject) => {
-            if (Record[details.responseType || "default"][details.url])
+            if (cache && Record[details.responseType || "default"][details.url])
                 return resolve(Record[details.responseType || "default"][details.url]);
             details.method = details.method || 'GET';
             details.onload = details.onload || ((xhr) => {
@@ -673,15 +674,15 @@ const modules = {};
             GM.xmlHttpRequest(details);
         });
     };
-    function get(url, details = {}) {
+    function get(url, details = {}, cache = false) {
         !Reflect.has(details, "credentials") && (details.credentials = true);
-        return xhr({ url: url, ...details });
+        return xhr({ url: url, ...details }, cache);
     }
     xhr.get = get;
-    function post(url, data, contentType = "application/x-www-form-urlencoded", details = {}) {
+    function post(url, data, contentType = "application/x-www-form-urlencoded", details = {}, cache = false) {
         !Reflect.has(details, "credentials") && (details.credentials = true);
         details.headers = { "Content-Type": contentType, ...details.headers };
-        return xhr({ url: url, method: "POST", data: data, ...details });
+        return xhr({ url: url, method: "POST", data: data, ...details }, cache);
     }
     xhr.port = post;
 
@@ -843,7 +844,7 @@ const modules = {};
             url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
             credentials: true,
             responseType: "json"
-        }).then(d => {
+        }, true).then(d => {
             if (d.code === 0) {
                 mediaSession({
                     title: API.title = d.data.pages.find((d) => d.cid == API.cid).part,
@@ -859,7 +860,7 @@ const modules = {};
                     url: \`https://api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=\${API.aid}&type=json\`,
                     credentials: true,
                     responseType: "json"
-                }).then(d => {
+                }, true).then(d => {
                     if (d.cid) {
                         mediaSession({
                             title: API.title = d.list.find((d) => d.cid == API.cid).part,
@@ -874,7 +875,7 @@ const modules = {};
                         return API.xhr({
                             url: \`https://www.biliplus.com/api/view?id=\${API.aid}\`,
                             responseType: "json"
-                        }).then(d => {
+                        }, true).then(d => {
                             if (d.cid) {
                                 mediaSession({
                                     title: API.title = d.list.find((d) => d.cid == API.cid).part,
@@ -901,7 +902,7 @@ const modules = {};
                 url: \`https://bangumi.bilibili.com/view/web_api/season?season_id=\${API.ssid}\`,
                 credentials: true,
                 responseType: "json"
-            }).then(d => {
+            }, true).then(d => {
                 if (d.code === 0) {
                     mediaSession({
                         title: API.title = d.result.episodes.find((d) => d.ep_id == API.epid).index_title,
@@ -1279,7 +1280,7 @@ const modules = {};
             if (!cid) {
                 try {
                     // 一般view接口：包含番剧重定向但无法突破有区域限制
-                    let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/view", { "aid": aid }) })).data;
+                    let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/view", { "aid": aid }) }, true)).data;
                     if (data.redirect_url)
                         return urlParam(API.objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
                     catchs.aid[aid] = data.pages;
@@ -1290,7 +1291,7 @@ const modules = {};
                     API.debug.error("view", e);
                     try {
                         // pagelist接口，无区域限制但无法番剧重定向
-                        catchs.aid[aid] = API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }) })).data;
+                        catchs.aid[aid] = API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }) }, true)).data;
                         catchs.aid[aid].forEach((d) => d.aid = aid);
                         return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
                     }
@@ -1298,7 +1299,7 @@ const modules = {};
                         API.debug.error("pagelist", e);
                         try {
                             // 上古view接口：无区域限制但无法番剧重定向，包含部分上古失效视频信息
-                            catchs.aid[aid] = API.jsonCheck(await API.xhr({ url: \`//api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=\${aid}&type=json\` })).list;
+                            catchs.aid[aid] = API.jsonCheck(await API.xhr({ url: \`//api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=\${aid}&type=json\` }, true)).list;
                             catchs.aid[aid].forEach((d) => d.aid = aid);
                             return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
                         }
@@ -1306,7 +1307,7 @@ const modules = {};
                             API.debug.error("appkey", e);
                             try {
                                 // BiliPlus接口：含失效视频信息（一般都有备份）
-                                let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://www.biliplus.com/api/view", { "id": aid }) }));
+                                let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://www.biliplus.com/api/view", { "id": aid }) }, true));
                                 catchs.aid[aid] = data.list || (data.v2_app_api && data.v2_app_api.pages);
                                 catchs.aid[aid].forEach((d) => d.aid = aid);
                                 if (data.v2_app_api && data.v2_app_api.redirect_url)
@@ -1328,7 +1329,7 @@ const modules = {};
                 return catchs.epid[epid];
             pgc = true;
             const param = { ep_id: epid, season_id: ssid };
-            let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", param) })).result;
+            let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", param) }, true)).result;
             ssid = data.season_id;
             catchs.ssid[ssid] = [];
             data.episodes.forEach((d) => {
@@ -1705,7 +1706,7 @@ const modules = {};
                     url: caption.subtitle_url.replace("http:", "https:"),
                     responseType: "json",
                     credentials: false
-                });
+                }, true);
                 if (caption.convert) { // 繁 => 简
                     this.data[caption.lan] = JSON.parse(API.cht2chs(JSON.stringify(this.data[caption.lan])));
                     caption.convert = undefined;
@@ -1744,7 +1745,7 @@ const modules = {};
                 url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
                 responseType: "json",
                 credentials: true
-            }).then(d => {
+            }, true).then(d => {
                 this.pubdate = d.data.pubdate;
                 this.pubdate = API.timeFormat(this.pubdate * 1000, true).split(" ")[0]; // 视频上传日期
                 this.today = API.timeFormat(undefined, true).split(" ")[0]; // 当天日期
@@ -3640,7 +3641,7 @@ const modules = {};
                     }),
                     credentials: true,
                     responseType: "arraybuffer"
-                });
+                }, true);
                 return this.dmView[cid] = danmakuType.DmWebViewReply.decode(new Uint8Array(data));
             }
             catch (e) {
@@ -6271,7 +6272,7 @@ const modules = {};
             ];
             let file = false; // type="file"例外处理
             input.addEventListener("change", () => {
-                obj.value = input.value;
+                obj.value = file ? input.files : input.value;
                 obj.change && obj.change(file ? input.files : input.value);
             });
             // 数据绑定
@@ -12535,7 +12536,7 @@ const modules = {};
             type: "checkbox",
             label: "类型",
             sub: "请求的文件类型",
-            float: '请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。※DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。※flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。',
+            float: '请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。<br>※DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。<br>※flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。',
             value: ["mp4"],
             candidate: ["mp4", "flv", "DASH"]
         },
@@ -12834,6 +12835,14 @@ const modules = {};
             label: "港澳台新番时间表",
             sub: '<a href="//www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
             float: \`在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。\`,
+            value: false
+        },
+        {
+            key: "privateRecommend",
+            menu: "style",
+            type: "switch",
+            label: "主页个性化推荐",
+            sub: "默认是全站统一推荐",
             value: false
         }
     ]);
@@ -13891,7 +13900,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         API.downloadUI.show();
         (/mp4/g.test(type) && request.push(getContent("mp4")));
         data.flv || (/flv/g.test(type) && request.push(getContent("flv")));
-        data.dash || (/dash/g.test(type) && request.push(getContent("dash")));
+        data.aac || (/dash/g.test(type) && request.push(getContent("dash")));
         (await Promise.all(request)).forEach(d => {
             API.playinfoFiter(d, API.downloadUI.obj.data);
         });
@@ -14854,7 +14863,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     url: API.objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: API.cid, aid: API.aid, type: 1 }),
                     responseType: "json",
                     credentials: true
-                }).then(data => {
+                }, true).then(data => {
                     API.config.closedCaption && data?.data?.subtitle?.subtitles && API.closedCaption.getCaption(data.data.subtitle.subtitles);
                     API.config.segProgress && data.data.view_points && data.data.view_points[1] && new API.SegProgress(data.data.view_points);
                 });
@@ -15149,8 +15158,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         if (API.config.index && API.path[2] == 'www.bilibili.com' && (!API.path[3] || (API.path[3].startsWith('\\?') || API.path[3].startsWith('\\#') || API.path[3].startsWith('index.')))) {
             API.rebuildType == "重定向" ? API.redirect("index") : API.importModule("index.js");
         }
-        if (API.config.av && /\\/video(\\/s)?\\/[AaBb][Vv]/.test(location.href)) {
-            API.path[4] === "s" && API.replaceUrl(location.href.replace("video/s", "video")); // SEO重定向
+        if (API.config.av && /(\\/s)?\\/video\\/[AaBb][Vv]/.test(location.href)) {
+            API.path[3] === "s" && API.replaceUrl(location.href.replace("s/video", "video")); // SEO重定向
             API.rebuildType == "重定向" ? API.redirect("av") : API.importModule("av.js");
         }
         if (API.config.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href)) {
@@ -15201,6 +15210,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         }
         if (API.config.timeline && /anime\\/timeline/.test(location.href)) {
             API.importModule("timeline.js");
+        }
+        if (API.config.album && /t.bilibili.com\\/\\d+/.test(location.href)) {
+            API.importModule("album.js");
         }
     }
     API.config.logReport && API.importModule("logReport.js"); // 日志拦截
@@ -15273,7 +15285,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         let obj = API.urlObj(args[1]); // 提取请求参数
         const accesskey = API.config.accessKey.key || undefined;
         obj.access_key = accesskey;
-        if (API.th) { //
+        if (API.th) { // 泰区
             Object.assign(obj, {
                 area: "th",
                 build: 1001310,
@@ -15625,7 +15637,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     return setTimeout(() => { this.getInfo(); }, 100);
                 if (this.dm.tagName != "LI")
                     return;
-                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid }) }));
+                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || API.jsonCheck(await API.xhr({ url: API.objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid }) }, true));
                 this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' +
                     this.mid + '" class="reply-face"><img src="' +
                     DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' +
@@ -16150,7 +16162,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 await Promise.all(this.layerConfig.layers.map(async (v, index) => {
                     return Promise.all(v.resources.map(async (i) => {
                         if (/\\.(webm|mp4)\$/.test(i.src)) {
-                            const res = await API.xhr({ url: i.src, responseType: "blob" });
+                            const res = await API.xhr({ url: i.src, responseType: "blob" }, true);
                             const url = URL.createObjectURL(res);
                             const video = document.createElement('video');
                             video.muted = true;
@@ -16409,8 +16421,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         let rqs;
         if (!loc || !header) {
             rqs = await Promise.all([
-                API.xhr.get(API.objUrl(url, obj), { responseType: "json" }),
-                API.xhr.get(\`https://api.bilibili.com/x/web-show/page/header?resource_id=\${Animate.rid}\`, { responseType: "json" })
+                API.xhr.get(API.objUrl(url, obj), { responseType: "json" }, true),
+                API.xhr.get(\`https://api.bilibili.com/x/web-show/page/header?resource_id=\${Animate.rid}\`, { responseType: "json" }, true)
             ]);
             loc = Animate.record[url] = rqs[0];
             header = Animate.record[Animate.rid] = rqs[1];
@@ -16541,7 +16553,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }, false);
     // 顶栏动图
     API.jsonphookasync("api.bilibili.com/x/web-interface/index/icon", undefined, async () => {
-        const data = await API.xhr.get("https://www.bilibili.com/index/index-icon.json", { responseType: "json" });
+        const data = await API.xhr.get("https://www.bilibili.com/index/index-icon.json", { responseType: "json" }, true);
         return {
             code: 0,
             data: API.subArray(data.fix),
@@ -16804,7 +16816,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             const data = await API.xhr({
                 url: \`https://www.biliplus.com/api/view?id=\${API.aid}\`,
                 responseType: "json"
-            });
+            }, true);
             const res = view2Detail(data);
             if (res.data.View.season) {
                 return location.replace(res.data.View.season.ogv_play_url);
@@ -17212,7 +17224,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
                     credentials: true,
                     responseType: "json"
-                }).then(d => {
+                }, true).then(d => {
                     this.number = API.jsonCheck(d).data.stat.like;
                     this.changeLiked();
                 });
@@ -17309,7 +17321,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             progress = await API.xhr({
                 url: \`https://api.bilibili.com/x/v2/dm/thumbup/detail?oid=\${API.cid}&dmid=\${dmid}\`,
                 credentials: true
-            });
+            }, true);
             progress = API.jsonCheck(progress).data.progress; // 检查xhr返回值并转化为json
             progress && window.player.seek(progress / 1000 - .2);
         }
@@ -17456,12 +17468,12 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     url: API.objUrl("https://bangumi.bilibili.com/view/web_api/season", obj),
                     responseType: "json",
                     credentials: true
-                }),
+                }, true),
                 API.xhr({
                     url: API.objUrl("https://api.bilibili.com/pgc/view/web/season/user/status", obj),
                     responseType: "json",
                     credentials: true
-                })
+                }, true)
             ]);
             const data = {};
             const t = window.__INITIAL_STATE__;
@@ -17572,7 +17584,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             const result = await API.xhr({
                 url: API.objUrl(\`https://\${API.config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/view/app/season\`, obj),
                 responseType: "json"
-            });
+            }, true);
             if (result.code === 0) {
                 // th = true; 暂不支持播放
                 const t = window.__INITIAL_STATE__;
@@ -17735,10 +17747,10 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 const info = await API.xhr({
                     url: \`https://api.bilibili.com/x/tag/info?tag_name=\${(window.__INITIAL_STATE__).mediaInfo.title}\`,
                     responseType: "json"
-                });
+                }, true);
                 related[(window.__INITIAL_STATE__).mediaInfo.title] = result = await API.xhr({
                     url: \`https://api.bilibili.com/x/web-interface/tag/top?tid=\${info.data.tag_id}\`
-                });
+                }, true);
             }
             catch (e) {
                 API.debug.error("相关视频推荐", e);
@@ -17874,30 +17886,49 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             API.toast.error("获取推荐数据失败 ಥ_ಥ");
             API.debug.error("获取推荐数据失败 ಥ_ಥ", reason);
         });
-        // 初始化recommendData
-        API.xhr({
-            url: "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3",
-            responseType: "json"
-        }).then(d => {
-            d.data.item.forEach((d, i, s) => {
-                // 修正数据名
-                s[i].author = d.owner.name;
-                s[i].play = d.stat.view;
-                s[i].aid = d.id;
+        /** 获取recommendData */
+        async function recommendData() {
+            const d = await API.xhr({
+                url: "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3",
+                responseType: "json",
+                credentials: API.config.privateRecommend
             });
-            const one = d.data.item.splice(0, 10);
-            const two = d.data.item.splice(0, 10);
-            t.recommendData = [...one];
-            API.jsonphookasync("api.bilibili.com/x/web-interface/ranking/index", undefined, async (str) => {
-                const obj = API.urlObj(str);
-                if (obj.day == "7") {
-                    return { code: 0, data: two, message: "0", ttl: 1 };
-                }
-                else if (obj.day == "1") {
-                    return { code: 0, data: d.data.item, message: "0", ttl: 1 };
-                }
-                return { code: 0, data: one, message: "0", ttl: 1 };
-            }, false);
+            d.data.item.forEach((d_1, i, s) => {
+                // 修正数据名
+                s[i].author = d_1.owner.name;
+                s[i].play = d_1.stat.view;
+                s[i].aid = d_1.id;
+            });
+            return d.data.item;
+        }
+        // 初始化recommendData
+        recommendData().then(d => {
+            if (API.uid && API.config.privateRecommend) {
+                t.recommendData = d;
+                API.doWhile(() => document.querySelector(".rec-btn.prev"), () => {
+                    API.addElement("span", { class: "rec-btn prev" }, undefined, "刷新", undefined, document.querySelector(".rec-btn.prev")).addEventListener("click", () => {
+                        recommendData().then(d => t.recommendData = d);
+                    });
+                    API.addElement("span", { class: "rec-btn next" }, undefined, "刷新", undefined, document.querySelector(".rec-btn.next")).addEventListener("click", () => {
+                        recommendData().then(d => t.recommendData = d);
+                    });
+                });
+            }
+            else {
+                const one = d.splice(0, 10);
+                const two = d.splice(0, 10);
+                t.recommendData = [...one];
+                API.jsonphookasync("api.bilibili.com/x/web-interface/ranking/index", undefined, async (str) => {
+                    const obj = API.urlObj(str);
+                    if (obj.day == "7") {
+                        return { code: 0, data: two, message: "0", ttl: 1 };
+                    }
+                    else if (obj.day == "1") {
+                        return { code: 0, data: d, message: "0", ttl: 1 };
+                    }
+                    return { code: 0, data: one, message: "0", ttl: 1 };
+                }, false);
+            }
         }).catch(reason => {
             API.toast.error("获取推荐数据失败 ಥ_ಥ");
             API.debug.error("获取推荐数据失败 ಥ_ಥ", reason);
@@ -18945,6 +18976,13 @@ object {
             });
         }, 1000);
     }, false);
+    API.xhrhook("api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail", undefined, res => {
+        const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
+        if (result.code === 0) {
+            if (result.data?.card?.desc?.type === 2)
+                location.replace(\`https://h.bilibili.com/\${result.data.card.desc.rid_str}\`);
+        }
+    }, false);
 
 //# sourceURL=file://@Bilibili-Old/vector/url/space/album.js`;
 /*!***********************!*/
@@ -18954,7 +18992,7 @@ object {
         API.xhr.GM({
             url: API.objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": API.mid }),
             responseType: "json"
-        }).then(d => {
+        }, true).then(d => {
             const jointime = API.timeFormat(d.card.regtime * 1000, true);
             const node = document.querySelector(".info-uid").parentElement.parentElement;
             node.appendChild(API.createElement({
@@ -18992,7 +19030,7 @@ object {
     async function getLostVideo(aid) {
         let result = []; // 失效视频信息缓存
         try { // 尝试访问Biliplus
-            let data = await API.xhr.GM({ url: \`https://www.biliplus.com/video/av\${aid}\` });
+            let data = await API.xhr.GM({ url: \`https://www.biliplus.com/video/av\${aid}\` }, true);
             if (data.match(/\\<title\\>.+?\\ \\-\\ AV/)) {
                 result[0] = data.match(/\\<title\\>.+?\\ \\-\\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
                 result[1] = data.match(/\\<img style=\\"display:none\\"\\ src=\\".+?\\"\\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
@@ -19003,10 +19041,10 @@ object {
         }
         if (!result[0] || !result[1]) {
             try { // 标题或封面无效，尝试访问Biliplus CID缓存库
-                let data = await API.xhr.GM({ url: \`https://www.biliplus.com/all/video/av\${aid}/\` });
+                let data = await API.xhr.GM({ url: \`https://www.biliplus.com/all/video/av\${aid}/\` }, true);
                 if (data.match('/api/view_all?')) {
                     data = data.match(/\\/api\\/view_all\\?.+?\\',cloudmoe/)[0].replace(/\\',cloudmoe/, "");
-                    data = await API.xhr.GM({ url: \`//www.biliplus.com\${data}\` });
+                    data = await API.xhr.GM({ url: \`//www.biliplus.com\${data}\` }, true);
                     data = API.jsonCheck(data).data;
                     result[0] = result[0] || data.info.title;
                     result[1] = result[1] || data.info.pic;
@@ -19018,7 +19056,7 @@ object {
         }
         if (!result[0] || !result[1]) {
             try { // 标题或封面依旧无效，尝试访问jijidown
-                let data = await API.xhr.GM({ url: \`https://www.jijidown.com/video/\${aid}\` });
+                let data = await API.xhr.GM({ url: \`https://www.jijidown.com/video/\${aid}\` }, true);
                 if (data.match('window._INIT')) {
                     result[0] = result[0] || data.match(/\\<title\\>.+?\\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
                     result[1] = result[1] || data.match(/\\"img\\":\\ \\".+?\\",/)[0].match(/http.+?\\",/)[0].replace(/",/, "");
