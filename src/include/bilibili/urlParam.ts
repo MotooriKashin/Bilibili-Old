@@ -48,7 +48,7 @@ namespace API {
             if (!cid) {
                 try {
                     // 一般view接口：包含番剧重定向但无法突破有区域限制
-                    let data = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/view", { "aid": aid }) })).data;
+                    let data = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/view", { "aid": aid }) }, true)).data;
                     if (data.redirect_url) return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
                     catchs.aid[aid] = data.pages;
                     catchs.aid[aid].forEach((d: any) => d.aid = aid);
@@ -57,21 +57,21 @@ namespace API {
                     debug.error("view", e);
                     try {
                         // pagelist接口，无区域限制但无法番剧重定向
-                        catchs.aid[aid] = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }) })).data;
+                        catchs.aid[aid] = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }) }, true)).data;
                         catchs.aid[aid].forEach((d: any) => d.aid = aid);
                         return catchs.aid[aid][<number>p - 1] || catchs.aid[aid][0];
                     } catch (e) {
                         debug.error("pagelist", e);
                         try {
                             // 上古view接口：无区域限制但无法番剧重定向，包含部分上古失效视频信息
-                            catchs.aid[aid] = jsonCheck(await xhr({ url: `//api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=${aid}&type=json` })).list;
+                            catchs.aid[aid] = jsonCheck(await xhr({ url: `//api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=${aid}&type=json` }, true)).list;
                             catchs.aid[aid].forEach((d: any) => d.aid = aid);
                             return catchs.aid[aid][<number>p - 1] || catchs.aid[aid][0];
                         } catch (e) {
                             debug.error("appkey", e);
                             try {
                                 // BiliPlus接口：含失效视频信息（一般都有备份）
-                                let data = jsonCheck(await xhr({ url: objUrl("https://www.biliplus.com/api/view", { "id": aid }) }));
+                                let data = jsonCheck(await xhr({ url: objUrl("https://www.biliplus.com/api/view", { "id": aid }) }, true));
                                 catchs.aid[aid] = data.list || (data.v2_app_api && data.v2_app_api.pages);
                                 catchs.aid[aid].forEach((d: any) => d.aid = aid);
                                 if (data.v2_app_api && data.v2_app_api.redirect_url) return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
@@ -87,7 +87,7 @@ namespace API {
             if (epid && catchs.epid[epid]) return catchs.epid[epid];
             pgc = true;
             const param = { ep_id: epid, season_id: ssid };
-            let data = jsonCheck(await xhr({ url: objUrl("https://bangumi.bilibili.com/view/web_api/season", param) })).result;
+            let data = jsonCheck(await xhr({ url: objUrl("https://bangumi.bilibili.com/view/web_api/season", param) }, true)).result;
             ssid = data.season_id;
             catchs.ssid[ssid] = [];
             data.episodes.forEach((d: any) => {

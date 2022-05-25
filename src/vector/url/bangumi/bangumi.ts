@@ -43,10 +43,10 @@ namespace API {
                 const info = await xhr({
                     url: `https://api.bilibili.com/x/tag/info?tag_name=${((<any>window).__INITIAL_STATE__).mediaInfo.title}`,
                     responseType: "json"
-                });
+                }, true);
                 related[((<any>window).__INITIAL_STATE__).mediaInfo.title] = result = await xhr({
                     url: `https://api.bilibili.com/x/web-interface/tag/top?tid=${info.data.tag_id}`
-                });
+                }, true);
             } catch (e) {
                 debug.error("相关视频推荐", e);
             }

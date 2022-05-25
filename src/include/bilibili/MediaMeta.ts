@@ -23,7 +23,7 @@ namespace API {
             url: `https://api.bilibili.com/x/web-interface/view?aid=${aid}`,
             credentials: true,
             responseType: "json"
-        }).then(d => {
+        }, true).then(d => {
             if (d.code === 0) {
                 mediaSession({
                     title: title = d.data.pages.find((d: any) => d.cid == cid).part,
@@ -38,7 +38,7 @@ namespace API {
                     url: `https://api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=${aid}&type=json`,
                     credentials: true,
                     responseType: "json"
-                }).then(d => {
+                }, true).then(d => {
                     if (d.cid) {
                         mediaSession({
                             title: title = d.list.find((d: any) => d.cid == cid).part,
@@ -52,7 +52,7 @@ namespace API {
                         return xhr({
                             url: `https://www.biliplus.com/api/view?id=${aid}`,
                             responseType: "json"
-                        }).then(d => {
+                        }, true).then(d => {
                             if (d.cid) {
                                 mediaSession({
                                     title: title = d.list.find((d: any) => d.cid == cid).part,
@@ -78,7 +78,7 @@ namespace API {
                 url: `https://bangumi.bilibili.com/view/web_api/season?season_id=${ssid}`,
                 credentials: true,
                 responseType: "json"
-            }).then(d => {
+            }, true).then(d => {
                 if (d.code === 0) {
                     mediaSession({
                         title: title = d.result.episodes.find((d: any) => d.ep_id == epid).index_title,

@@ -39,7 +39,7 @@ namespace API {
                 }
                 if (!this.dm) return setTimeout(() => { this.getInfo() }, 100);
                 if (this.dm.tagName != "LI") return;
-                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/card", { mid: <any>this.mid }) }));
+                DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/card", { mid: <any>this.mid }) }, true));
                 this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' +
                     this.mid + '" class="reply-face"><img src="' +
                     DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' +

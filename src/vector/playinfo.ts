@@ -37,7 +37,7 @@ namespace API {
                     url: objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: cid, aid: aid, type: 1 }),
                     responseType: "json",
                     credentials: true
-                }).then(data => {
+                }, true).then(data => {
                     config.closedCaption && data?.data?.subtitle?.subtitles && closedCaption.getCaption(data.data.subtitle.subtitles);
                     config.segProgress && data.data.view_points && data.data.view_points[1] && new SegProgress(data.data.view_points);
                 });

@@ -41,7 +41,7 @@ namespace API {
     }, false);
     // 顶栏动图
     jsonphookasync("api.bilibili.com/x/web-interface/index/icon", undefined, async () => {
-        const data = await xhr.get("https://www.bilibili.com/index/index-icon.json", { responseType: "json" });
+        const data = await xhr.get("https://www.bilibili.com/index/index-icon.json", { responseType: "json" }, true);
         return {
             code: 0,
             data: subArray(data.fix),

@@ -6,7 +6,7 @@ namespace API {
     async function getLostVideo(aid: number) {
         let result = []; // 失效视频信息缓存
         try { // 尝试访问Biliplus
-            let data = await xhr.GM({ url: `https://www.biliplus.com/video/av${aid}` });
+            let data = await xhr.GM({ url: `https://www.biliplus.com/video/av${aid}` }, true);
             if (data.match(/\<title\>.+?\ \-\ AV/)) {
                 result[0] = data.match(/\<title\>.+?\ \-\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
                 result[1] = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
@@ -14,10 +14,10 @@ namespace API {
         } catch (e) { debug.error("lostVideo.js", e) }
         if (!result[0] || !result[1]) {
             try { // 标题或封面无效，尝试访问Biliplus CID缓存库
-                let data = await xhr.GM({ url: `https://www.biliplus.com/all/video/av${aid}/` });
+                let data = await xhr.GM({ url: `https://www.biliplus.com/all/video/av${aid}/` }, true);
                 if (data.match('/api/view_all?')) {
                     data = data.match(/\/api\/view_all\?.+?\',cloudmoe/)[0].replace(/\',cloudmoe/, "");
-                    data = await xhr.GM({ url: `//www.biliplus.com${data}` });
+                    data = await xhr.GM({ url: `//www.biliplus.com${data}` }, true);
                     data = jsonCheck(data).data;
                     result[0] = result[0] || data.info.title;
                     result[1] = result[1] || data.info.pic;
@@ -26,7 +26,7 @@ namespace API {
         }
         if (!result[0] || !result[1]) {
             try { // 标题或封面依旧无效，尝试访问jijidown
-                let data = await xhr.GM({ url: `https://www.jijidown.com/video/${aid}` });
+                let data = await xhr.GM({ url: `https://www.jijidown.com/video/${aid}` }, true);
                 if (data.match('window._INIT')) {
                     result[0] = result[0] || data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
                     result[1] = result[1] || data.match(/\"img\":\ \".+?\",/)[0].match(/http.+?\",/)[0].replace(/",/, "");

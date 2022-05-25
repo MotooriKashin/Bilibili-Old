@@ -16,7 +16,7 @@ namespace API {
                 url: `https://api.bilibili.com/x/web-interface/view?aid=${aid}`,
                 responseType: "json",
                 credentials: true
-            }).then(d => {
+            }, true).then(d => {
                 this.pubdate = d.data.pubdate;
                 this.pubdate = timeFormat(this.pubdate * 1000, true).split(" ")[0]; // 视频上传日期
                 this.today = timeFormat(undefined, true).split(" ")[0]; // 当天日期

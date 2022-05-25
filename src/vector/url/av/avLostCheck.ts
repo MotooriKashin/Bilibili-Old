@@ -88,7 +88,7 @@ namespace API {
             const data = await xhr({
                 url: `https://www.biliplus.com/api/view?id=${aid}`,
                 responseType: "json"
-            })
+            }, true)
             const res = view2Detail(data);
             if (res.data.View.season) {
                 return location.replace(res.data.View.season.ogv_play_url);

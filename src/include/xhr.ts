@@ -47,19 +47,21 @@ namespace API {
     /**
      * `XMLHttpRequest`的`Promise`封装
      * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
+     * @param cache 是否缓存结果？默认否
      * @returns `Promise`托管的请求结果或者报错信息
      */
-    export function xhr(details: xhrDetailsAsync): Promise<any>;
+    export function xhr(details: xhrDetailsAsync, cache?: boolean): Promise<any>;
     /**
      * `XMLHttpRequest`的封装
      * @param details 以对象形式传递的参数
+     * @param cache 是否缓存结果？默认否
      * @returns 请求结果或者报错信息
      */
-    export function xhr(details: xhrDetailsSync): any;
-    export function xhr(details: xhrDetailsAsync | xhrDetailsSync) {
+    export function xhr(details: xhrDetailsSync, cache?: boolean): any;
+    export function xhr(details: xhrDetailsAsync | xhrDetailsSync, cache = false) {
         details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
         if (details.async === false) {
-            if (Record[details.responseType || "default"][details.url]) return Record[details.responseType || "default"][details.url];
+            if (cache && Record[details.responseType || "default"][details.url]) return Record[details.responseType || "default"][details.url];
             let xhr = new XMLHttpRequest();
             xhr.open(details.method || 'GET', details.url, false);
             details.responseType && (xhr.responseType = details.responseType);
@@ -70,7 +72,7 @@ namespace API {
             Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr.response);
             return xhr.response;
         } else return new Promise((resolve, reject) => {
-            if (Record[details.responseType || "default"][details.url]) return resolve(Record[details.responseType || "default"][details.url]);
+            if (cache && Record[details.responseType || "default"][details.url]) return resolve(Record[details.responseType || "default"][details.url]);
             let xhr = new XMLHttpRequest();
             xhr.open(details.method || 'GET', details.url);
             details.responseType && (xhr.responseType = details.responseType);
@@ -96,11 +98,12 @@ namespace API {
     /**
      * `GM_xmlhttpRequest`的`Promise`封装，用于跨域`XMLHttpRequest`请求
      * @param details 以对象形式传递的参数，注意`onload`回调会覆盖Promise结果
+     * @param cache 是否缓存结果？默认否
      * @returns `Promise`托管的请求结果或者报错信息
      */
-    xhr.GM = function (details: GMxhrDetails): Promise<any> {
+    xhr.GM = function (details: GMxhrDetails, cache = false): Promise<any> {
         return new Promise((resolve, reject) => {
-            if (Record[details.responseType || "default"][details.url]) return resolve(Record[details.responseType || "default"][details.url]);
+            if (cache && Record[details.responseType || "default"][details.url]) return resolve(Record[details.responseType || "default"][details.url]);
             details.method = details.method || 'GET';
             details.onload = details.onload || ((xhr) => {
                 Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr.response);
@@ -126,20 +129,22 @@ namespace API {
      * **本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
      * @param url url链接
      * @param details url外的参数对象
+     * @param cache 是否缓存结果？默认否
      * @returns `Promise`托管的请求结果或者报错信息
      */
-    function get(url: string, details: Omit<xhrDetailsAsync, "url">): Promise<any>;
+    function get(url: string, details: Omit<xhrDetailsAsync, "url">, cache?: boolean): Promise<any>;
     /**
      * `XMLHttpRequest`的GET方法的快捷模式  
      * **本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
      * @param url url链接
      * @param details url外的参数对象
+     * @param cache 是否缓存结果？默认否
      * @returns 请求结果或者报错信息
      */
-    function get(url: string, details: Omit<xhrDetailsSync, "url">): any;
-    function get(url: string, details: Omit<xhrDetailsAsync, "url"> | Omit<xhrDetailsSync, "url"> = {}) {
+    function get(url: string, details: Omit<xhrDetailsSync, "url">, cache?: boolean): any;
+    function get(url: string, details: Omit<xhrDetailsAsync, "url"> | Omit<xhrDetailsSync, "url"> = {}, cache = false) {
         !Reflect.has(details, "credentials") && (details.credentials = true);
-        return (<any>xhr)({ url: url, ...details });
+        return (<any>xhr)({ url: url, ...details }, cache);
     }
     xhr.get = get;
     /**
@@ -160,9 +165,10 @@ namespace API {
      * @param data post数据
      * @param contentType 发送数据使用的编码，默认"application/x-www-form-urlencoded"
      * @param details url、data外的参数对象
+     * @param cache 是否缓存结果？默认否
      * @returns `Promise`托管的请求结果或者报错信息
      */
-    function post(url: string, data: string, contentType?: string, details?: Omit<xhrDetailsAsync, "url" | "data">): Promise<any>;
+    function post(url: string, data: string, contentType?: string, details?: Omit<xhrDetailsAsync, "url" | "data">, cache?: boolean): Promise<any>;
     /**
      * `XMLHttpRequest`的POST方法的快捷模式  
      * 将url、data，Content-Type分别独立为参数，剩余参数放在末尾，方便快速发送ajax  
@@ -171,13 +177,14 @@ namespace API {
      * @param data post数据
      * @param contentType 发送数据使用的编码，默认"application/x-www-form-urlencoded"
      * @param details url、data外的参数对象
+     * @param cache 是否缓存结果？默认否
      * @returns 请求结果或者报错信息
      */
-    function post(url: string, data: string, contentType?: string, details?: Omit<xhrDetailsSync, "url" | "data">): any;
-    function post(url: string, data: string, contentType: string = "application/x-www-form-urlencoded", details: Omit<xhrDetailsAsync, "url" | "data"> | Omit<xhrDetailsSync, "url" | "data"> = {}) {
+    function post(url: string, data: string, contentType?: string, details?: Omit<xhrDetailsSync, "url" | "data">, cache?: boolean): any;
+    function post(url: string, data: string, contentType: string = "application/x-www-form-urlencoded", details: Omit<xhrDetailsAsync, "url" | "data"> | Omit<xhrDetailsSync, "url" | "data"> = {}, cache = false) {
         !Reflect.has(details, "credentials") && (details.credentials = true);
         details.headers = { "Content-Type": contentType, ...details.headers };
-        return (<any>xhr)({ url: url, method: "POST", data: data, ...details })
+        return (<any>xhr)({ url: url, method: "POST", data: data, ...details }, cache)
     }
     xhr.port = post;
 }

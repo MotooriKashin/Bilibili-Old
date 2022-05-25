@@ -293,7 +293,7 @@ namespace API {
                     url: caption.subtitle_url.replace("http:", "https:"),
                     responseType: "json",
                     credentials: false
-                });
+                }, true);
                 if (caption.convert) { // 繁 => 简
                     this.data[caption.lan] = JSON.parse(cht2chs(JSON.stringify(this.data[caption.lan])));
                     caption.convert = undefined;

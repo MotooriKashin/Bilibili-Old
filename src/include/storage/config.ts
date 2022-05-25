@@ -175,6 +175,8 @@ interface config {
     };
     /** 添加港澳台新番时间表 */
     timeline: boolean;
+    /** 主页个性化推荐 */
+    privateRecommend: boolean;
 }
 namespace API {
     const CONFIG = GM.getValue<config>("config", <config>{});
@@ -1204,6 +1206,14 @@ namespace API {
             label: "港澳台新番时间表",
             sub: '<a href="//www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
             float: `在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。`,
+            value: false
+        },
+        {
+            key: "privateRecommend",
+            menu: "style",
+            type: "switch",
+            label: "主页个性化推荐",
+            sub: "默认是全站同一推荐",
             value: false
         }
     ]);

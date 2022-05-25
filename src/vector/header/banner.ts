@@ -90,7 +90,7 @@ namespace API {
                 await Promise.all(this.layerConfig.layers.map(async (v, index) => {
                     return Promise.all(v.resources.map(async (i) => {
                         if (/\.(webm|mp4)$/.test(i.src)) {
-                            const res = await xhr({ url: i.src, responseType: "blob" });
+                            const res = await xhr({ url: i.src, responseType: "blob" }, true);
                             const url = URL.createObjectURL(res);
                             const video = document.createElement('video');
                             video.muted = true;
@@ -345,8 +345,8 @@ namespace API {
         let rqs: any;
         if (!loc || !header) {
             rqs = await Promise.all([
-                xhr.get(objUrl(url, obj), { responseType: "json" }),
-                xhr.get(`https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`, { responseType: "json" })
+                xhr.get(objUrl(url, obj), { responseType: "json" }, true),
+                xhr.get(`https://api.bilibili.com/x/web-show/page/header?resource_id=${Animate.rid}`, { responseType: "json" }, true)
             ]);
             loc = Animate.record[url] = rqs[0];
             header = Animate.record[Animate.rid] = rqs[1];
@@ -363,7 +363,7 @@ namespace API {
                 loc.data[0].title = (header && header.data.name) || "";
             }
         })
-        config.animatedBanner && !Animate.once && (Animate.once = true,setTimeout(() => new Animate(header.data)));
+        config.animatedBanner && !Animate.once && (Animate.once = true, setTimeout(() => new Animate(header.data)));
         return loc;
     }, false);
 }

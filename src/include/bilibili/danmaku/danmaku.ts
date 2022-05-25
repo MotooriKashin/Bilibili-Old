@@ -204,7 +204,7 @@ namespace API {
                     }),
                     credentials: true,
                     responseType: "arraybuffer"
-                })
+                }, true)
                 return this.dmView[cid] = danmakuType.DmWebViewReply.decode(new Uint8Array(data));
             } catch (e) {
                 toast.error("加载弹幕元数据出错！");

@@ -37,7 +37,7 @@ namespace API {
                     url: `https://api.bilibili.com/x/web-interface/view?aid=${aid}`,
                     credentials: true,
                     responseType: "json"
-                }).then(d => {
+                }, true).then(d => {
                     this.number = jsonCheck(d).data.stat.like;
                     this.changeLiked();
                 })

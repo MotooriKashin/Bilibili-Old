@@ -7,7 +7,7 @@ namespace API {
         xhr.GM({
             url: objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": <string>mid }),
             responseType: "json"
-        }).then(d => {
+        }, true).then(d => {
             const jointime = timeFormat(d.card.regtime * 1000, true);
             const node: HTMLDivElement = (<any>document.querySelector(".info-uid")).parentElement.parentElement;
             node.appendChild(createElement({

@@ -55,7 +55,7 @@ namespace API {
         let obj = urlObj(args[1]); // 提取请求参数
         const accesskey = config.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
-        if (th) { //
+        if (th) { // 泰区
             Object.assign(obj, {
                 area: "th",
                 build: 1001310,

@@ -23,12 +23,12 @@ namespace API {
                     url: objUrl("https://bangumi.bilibili.com/view/web_api/season", obj),
                     responseType: "json",
                     credentials: true
-                }),
+                }, true),
                 xhr({ // api接口，带有历史记录信息，同时备用
                     url: objUrl("https://api.bilibili.com/pgc/view/web/season/user/status", obj),
                     responseType: "json",
                     credentials: true
-                })
+                }, true)
             ]);
             const data = <Record<"bangumi" | "status", Record<PropertyKey, any>>>{};
             const t = (<any>window).__INITIAL_STATE__;
@@ -138,7 +138,7 @@ namespace API {
             const result = await xhr({
                 url: objUrl(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/view/app/season`, obj),
                 responseType: "json"
-            });
+            }, true);
             if (result.code === 0) {
                 // th = true; 暂不支持播放
                 const t = (<any>window).__INITIAL_STATE__;
