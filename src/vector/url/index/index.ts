@@ -43,29 +43,49 @@ namespace API {
             toast.error("获取推荐数据失败 ಥ_ಥ");
             debug.error("获取推荐数据失败 ಥ_ಥ", reason);
         });
-        // 初始化recommendData
-        xhr({
-            url: "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3",
-            responseType: "json"
-        }).then(d => {
-            d.data.item.forEach((d: any, i: number, s: any) => {
-                // 修正数据名
-                s[i].author = d.owner.name;
-                s[i].play = d.stat.view;
-                s[i].aid = d.id;
+        /** 获取recommendData */
+        async function recommendData() {
+            const d = await xhr({
+                url: "https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3",
+                responseType: "json",
+                credentials: config.privateRecommend
             });
-            const one = d.data.item.splice(0, 10);
-            const two = d.data.item.splice(0, 10);
-            t.recommendData = [...one];
-            jsonphookasync("api.bilibili.com/x/web-interface/ranking/index", undefined, async str => {
-                const obj = urlObj(str);
-                if (obj.day == "7") {
-                    return { code: 0, data: two, message: "0", ttl: 1 };
-                } else if (obj.day == "1") {
-                    return { code: 0, data: d.data.item, message: "0", ttl: 1 };
-                }
-                return { code: 0, data: one, message: "0", ttl: 1 };
-            }, false);
+            d.data.item.forEach((d_1: any, i: number, s: any) => {
+                // 修正数据名
+                s[i].author = d_1.owner.name;
+                s[i].play = d_1.stat.view;
+                s[i].aid = d_1.id;
+            });
+            return d.data.item;
+        }
+        // 初始化recommendData
+        recommendData().then(d => {
+            if (uid && config.privateRecommend) {
+                t.recommendData = d;
+                doWhile(() => document.querySelector(".rec-btn.prev"), () => {
+                    addElement("span", { class: "rec-btn prev" }, undefined, "刷新", undefined,
+                        document.querySelector<any>(".rec-btn.prev")).addEventListener("click", () => {
+                            recommendData().then(d => t.recommendData = d);
+                        });
+                    addElement("span", { class: "rec-btn next" }, undefined, "刷新", undefined,
+                        document.querySelector<any>(".rec-btn.next")).addEventListener("click", () => {
+                            recommendData().then(d => t.recommendData = d);
+                        });
+                });
+            } else {
+                const one = d.splice(0, 10);
+                const two = d.splice(0, 10);
+                t.recommendData = [...one];
+                jsonphookasync("api.bilibili.com/x/web-interface/ranking/index", undefined, async str => {
+                    const obj = urlObj(str);
+                    if (obj.day == "7") {
+                        return { code: 0, data: two, message: "0", ttl: 1 };
+                    } else if (obj.day == "1") {
+                        return { code: 0, data: d, message: "0", ttl: 1 };
+                    }
+                    return { code: 0, data: one, message: "0", ttl: 1 };
+                }, false);
+            }
         }).catch(reason => {
             toast.error("获取推荐数据失败 ಥ_ಥ");
             debug.error("获取推荐数据失败 ಥ_ಥ", reason);
