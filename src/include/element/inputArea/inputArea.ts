@@ -91,7 +91,7 @@ namespace API {
             ];
             let file = false; // type="file"例外处理
             input.addEventListener("change", () => {
-                obj.value = input.value;
+                obj.value = file ? <any>input.files : input.value;
                 obj.change && obj.change(file ? input.files : input.value)
             });
             // 数据绑定
