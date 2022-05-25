@@ -116,7 +116,7 @@ namespace API {
         downloadUI.show();
         (/mp4/g.test(type) && request.push(getContent("mp4")));
         data.flv || (/flv/g.test(type) && request.push(getContent("flv")));
-        data.dash || (/dash/g.test(type) && request.push(getContent("dash")));
+        data.aac || (/dash/g.test(type) && request.push(getContent("dash")));
         (await Promise.all(request)).forEach(d => {
             playinfoFiter(d, downloadUI.obj.data);
         });
