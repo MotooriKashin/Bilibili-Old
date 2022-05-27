@@ -49,6 +49,49 @@ namespace API {
             }
         } catch (e) { }
     }, false);
+    xhrhookasync("api.bilibili.com/x/player/carousel.so", undefined, async () => {
+        let str = `<msg><item bgcolor="#000000" catalog="news"><![CDATA[<a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a>]]></item><item bgcolor="#000000" catalog="news"><![CDATA[<a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a>]]></item></msg>'`;
+        try {
+            const arr = await Promise.all([
+                xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=531", { responseType: "json" }).then(d => {
+                    return d.result.reduce((s: any, d: any, i: any) => {
+                        s += `<item tooltip="" bgcolor="#000000" catalog="bangumi" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.blink}" target="_blank"><font color="#FFFFFF">${d.title}</font></a>]]></item>`;
+                        return s;
+                    }, "");
+                }).catch(e => {
+                    debug.error("播放器消息", "bangumi", e);
+                    return "";
+                }),
+                xhr.get("https://api.bilibili.com/x/web-show/res/loc?pf=0&id=4694", { responseType: "json" }).then(d => {
+                    return d.data.reduce((s: any, d: any, i: any) => {
+                        d.name && (s += `<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="${d.url}" target="_blank"><font color="#FFFFFF">${d.name}</font></a>]]></item>`);
+                        return s;
+                    }, "");
+                }).catch(e => {
+                    debug.error("播放器消息", "system", e);
+                    return "";
+                }),
+                xhr.get("https://api.bilibili.com/x/web-interface/search/square?limit=10", { responseType: "json" }).then(d => {
+                    return d.data.trending.list.reduce((s: any, d: any, i: any) => {
+                        s += `<item tooltip="" bgcolor="#000000" catalog="news" resourceid="2319" srcid="${2320 + i}" id="${314825 + i}"><![CDATA[<a href="https://search.bilibili.com/all?keyword=${encodeURIComponent(d.keyword)}" target="_blank"><font color="#FFFFFF">${d.keyword}</font></a>]]></item>`;
+                        return s;
+                    }, "<msg>");
+                }).catch(e => {
+                    debug.error("播放器消息", "news", e);
+                    return "";
+                })
+            ]);
+            str = arr.sort(() => 0.5 - Math.random()).reduce((s, d) => {
+                s += d;
+                return s;
+            }, "<msg>") + "</msg>";
+        } catch (e) { debug.error("播放器消息", e) }
+        const dom = new DOMParser().parseFromString(str, "text/xml");
+        return {
+            response: dom,
+            responseXML: dom
+        }
+    }, false);
 }
 declare namespace API {
     /**
