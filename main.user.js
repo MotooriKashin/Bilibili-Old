@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.4
+// @version      8.0.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -12844,6 +12844,15 @@ const modules = {};
             label: "主页个性化推荐",
             sub: "默认是全站统一推荐",
             value: false
+        },
+        {
+            key: "episodeData",
+            menu: "style",
+            type: "switch",
+            label: "分集数据",
+            sub: "Bangumi",
+            float: \`对于Bangumi，显示单集播放量和弹幕，原合计数据显示在鼠标焦点提示文本中。\`,
+            value: false
         }
     ]);
 
@@ -14875,6 +14884,52 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             }
         }
         catch (e) { }
+    }, false);
+    API.xhrhookasync("api.bilibili.com/x/player/carousel.so", undefined, async () => {
+        let str = \`<msg><item bgcolor="#000000" catalog="news"><![CDATA[<a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a>]]></item><item bgcolor="#000000" catalog="news"><![CDATA[<a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a>]]></item></msg>'\`;
+        try {
+            const arr = await Promise.all([
+                API.xhr.get("//api.bilibili.com/pgc/operation/api/slideshow?position_id=531", { responseType: "json" }).then(d => {
+                    return d.result.reduce((s, d, i) => {
+                        s += \`<item tooltip="" bgcolor="#000000" catalog="bangumi" resourceid="2319" srcid="\${2320 + i}" id="\${314825 + i}"><![CDATA[<a href="\${d.blink}" target="_blank"><font color="#FFFFFF">\${d.title}</font></a>]]></item>\`;
+                        return s;
+                    }, "");
+                }).catch(e => {
+                    API.debug.error("播放器消息", "bangumi", e);
+                    return "";
+                }),
+                API.xhr.get("https://api.bilibili.com/x/web-show/res/loc?pf=0&id=4694", { responseType: "json" }).then(d => {
+                    return d.data.reduce((s, d, i) => {
+                        d.name && (s += \`<item tooltip="" bgcolor="#000000" catalog="system" resourceid="2319" srcid="\${2320 + i}" id="\${314825 + i}"><![CDATA[<a href="\${d.url}" target="_blank"><font color="#FFFFFF">\${d.name}</font></a>]]></item>\`);
+                        return s;
+                    }, "");
+                }).catch(e => {
+                    API.debug.error("播放器消息", "system", e);
+                    return "";
+                }),
+                API.xhr.get("https://api.bilibili.com/x/web-interface/search/square?limit=10", { responseType: "json" }).then(d => {
+                    return d.data.trending.list.reduce((s, d, i) => {
+                        s += \`<item tooltip="" bgcolor="#000000" catalog="news" resourceid="2319" srcid="\${2320 + i}" id="\${314825 + i}"><![CDATA[<a href="https://search.bilibili.com/all?keyword=\${encodeURIComponent(d.keyword)}" target="_blank"><font color="#FFFFFF">\${d.keyword}</font></a>]]></item>\`;
+                        return s;
+                    }, "<msg>");
+                }).catch(e => {
+                    API.debug.error("播放器消息", "news", e);
+                    return "";
+                })
+            ]);
+            str = arr.sort(() => 0.5 - Math.random()).reduce((s, d) => {
+                s += d;
+                return s;
+            }, "<msg>") + "</msg>";
+        }
+        catch (e) {
+            API.debug.error("播放器消息", e);
+        }
+        const dom = new DOMParser().parseFromString(str, "text/xml");
+        return {
+            response: dom,
+            responseXML: dom
+        };
     }, false);
 
 //# sourceURL=file://@Bilibili-Old/vector/playinfo.js`;
@@ -17786,8 +17841,47 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     API.importModule("primaryMenu.js"); // 顶栏分区修正
     API.importModule("banner.js"); // 顶栏banner修复
     API.importModule("loadByDmId.js"); // 弹幕ID跳转
+    API.config.episodeData && API.importModule("episodeData.js"); // 分集数据
 
 //# sourceURL=file://@Bilibili-Old/vector/url/bangumi/bangumi.js`;
+/*!***********************!*/
+/**/modules["episodeData.js"] = /*** ./src/vector/url/bangumi/episodeData.js ***/
+`
+    let first = 0; // 首p指示
+    API.switchVideo(async () => {
+        try {
+            first++;
+            let views = document.querySelector(".view-count").querySelector("span");
+            let danmakus = document.querySelector(".danmu-count").querySelector("span");
+            if (first === 1) {
+                const [view, danmaku] = [
+                    API.unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.views),
+                    API.unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.danmakus)
+                ];
+                // 首p时辈分总播放数和总弹幕数
+                views.setAttribute("title", "总播放数 " + view);
+                danmakus.setAttribute("title", "总弹幕数 " + danmaku);
+                API.debug.log("总播放数：", view, "总弹幕数", danmaku);
+            }
+            let data = await API.xhr({
+                url: API.objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": API.aid }),
+                credentials: true
+            }); // 获取分集数据
+            data = API.jsonCheck(data).data;
+            let view = data.view;
+            let danmaku = data.danmaku;
+            view = API.unitFormat(view);
+            danmaku = API.unitFormat(danmaku);
+            views.innerText = view;
+            danmakus.innerText = danmaku;
+            API.debug.debug("播放", view + " 弹幕", danmaku);
+        }
+        catch (e) {
+            API.debug.error("episodeData.js", e);
+        }
+    });
+
+//# sourceURL=file://@Bilibili-Old/vector/url/bangumi/episodeData.js`;
 /*!***********************!*/
 /**/modules["index-script.html"] = /*** ./src/vector/url/index/index-script.html ***/
 `<script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script>
