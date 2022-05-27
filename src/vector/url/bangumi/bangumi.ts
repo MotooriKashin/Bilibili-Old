@@ -81,4 +81,5 @@ namespace API {
     importModule("primaryMenu.js"); // 顶栏分区修正
     importModule("banner.js"); // 顶栏banner修复
     importModule("loadByDmId.js"); // 弹幕ID跳转
+    config.episodeData && importModule("episodeData.js"); // 分集数据
 }

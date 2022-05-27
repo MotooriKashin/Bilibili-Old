@@ -177,6 +177,8 @@ interface config {
     timeline: boolean;
     /** 主页个性化推荐 */
     privateRecommend: boolean;
+    /** 分集数据 */
+    episodeData: boolean;
 }
 namespace API {
     const CONFIG = GM.getValue<config>("config", <config>{});
@@ -1214,6 +1216,15 @@ namespace API {
             type: "switch",
             label: "主页个性化推荐",
             sub: "默认是全站统一推荐",
+            value: false
+        },
+        {
+            key: "episodeData",
+            menu: "style",
+            type: "switch",
+            label: "分集数据",
+            sub: "Bangumi",
+            float: `对于Bangumi，显示单集播放量和弹幕，原合计数据显示在鼠标焦点提示文本中。`,
             value: false
         }
     ]);
