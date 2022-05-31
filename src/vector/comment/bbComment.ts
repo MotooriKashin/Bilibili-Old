@@ -4,45 +4,43 @@ interface modules {
     readonly "comment.css": string;
 }
 namespace API {
-    let bbComment = (<any>window).bbComment;
-    let timer: number;
-    /** 是否触发拦截 */
-    let load = false;
-    if (bbComment) {
-        const text = GM.getResourceText("comment.js");
-        if (text) new Function(GM.getResourceText("comment.js"))();
-    }
+    let load = false, timer = 0; // 是否载入
+    const arr: any[] = []; // 接口暂存
     Object.defineProperty(window, "bbComment", {
         set: v => {
             if (!load) {
-                load = true;
-                return
+                // 压栈
+                arr.unshift(v);
             }
-            bbComment = v;
-            addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
-            addCss(getModule("comment.css"));
+            Promise.resolve().then(() => {
+                document.querySelectorAll("style").forEach(d => {
+                    d.textContent && d.textContent.includes(".bb-comment") && d.remove();
+                });
+                addCss(getModule("comment.css"));
+                addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            })
         },
         get: () => {
-            if (!bbComment) {
-                const text = GM.getResourceText("comment.js");
-                if (!text) return debug.error("加载 comment.min.js 失败 ಥ_ಥ");
-                new Function(GM.getResourceText("comment.js"))();
-                return class {
-                    constructor() {
-                        setTimeout(() => new (<any>window).bbComment(...arguments), 100);
-                    }
-                    on() { }
-                }
+            if (load) {
+                // 出栈
+                return arr[0];
             }
-            return bbComment;
-        },
-        configurable: true
-    });
-    config.trusteeship && scriptIntercept("comment.min.js", undefined, url => {
-        const text = GM.getResourceText("comment.js");
-        load = true;
-        if (!text) setTimeout(() => { toast.error("comment.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。"); })
-        return text;
+            return class { // 等待载入
+                constructor() {
+                    let text = GM.getResourceText("comment.js");
+                    if (text) {
+                        new Function(text)();
+
+                    }
+                    else {
+                        toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
+                    }
+                    load = true;
+                    setTimeout(() => new (<any>window).bbComment(...arguments), 100);
+                }
+                on() { }
+            }
+        }
     });
     config.commentLinkDetail && observerAddedNodes((node) => { // 还原评论链接
         if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
