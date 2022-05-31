@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.5
+// @version      8.0.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
 // ==/UserScript==
 
 
@@ -15391,48 +15391,42 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["bbComment.js"] = /*** ./src/vector/comment/bbComment.js ***/
 `
-    let bbComment = window.bbComment;
-    let timer;
-    /** 是否触发拦截 */
-    let load = false;
-    if (bbComment) {
-        const text = GM.getResourceText("comment.js");
-        if (text)
-            new Function(GM.getResourceText("comment.js"))();
-    }
+    let load = false, timer = 0; // 是否载入
+    const arr = []; // 接口暂存
     Object.defineProperty(window, "bbComment", {
         set: v => {
             if (!load) {
-                load = true;
-                return;
+                // 压栈
+                arr.unshift(v);
             }
-            bbComment = v;
-            API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
-            API.addCss(API.getModule("comment.css"));
+            Promise.resolve().then(() => {
+                document.querySelectorAll("style").forEach(d => {
+                    d.textContent && d.textContent.includes(".bb-comment") && d.remove();
+                });
+                API.addCss(API.getModule("comment.css"));
+                API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+            });
         },
         get: () => {
-            if (!bbComment) {
-                const text = GM.getResourceText("comment.js");
-                if (!text)
-                    return API.debug.error("加载 comment.min.js 失败 ಥ_ಥ");
-                new Function(GM.getResourceText("comment.js"))();
-                return class {
-                    constructor() {
-                        setTimeout(() => new window.bbComment(...arguments), 100);
-                    }
-                    on() { }
-                };
+            if (load) {
+                // 出栈
+                return arr[0];
             }
-            return bbComment;
-        },
-        configurable: true
-    });
-    API.config.trusteeship && API.scriptIntercept("comment.min.js", undefined, url => {
-        const text = GM.getResourceText("comment.js");
-        load = true;
-        if (!text)
-            setTimeout(() => { API.toast.error("comment.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。"); });
-        return text;
+            return class {
+                constructor() {
+                    let text = GM.getResourceText("comment.js");
+                    if (text) {
+                        new Function(text)();
+                    }
+                    else {
+                        API.toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
+                    }
+                    load = true;
+                    setTimeout(() => new window.bbComment(...arguments), 100);
+                }
+                on() { }
+            };
+        }
     });
     API.config.commentLinkDetail && API.observerAddedNodes((node) => {
         if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
