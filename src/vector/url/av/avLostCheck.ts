@@ -24,16 +24,20 @@ namespace API {
     function view2Detail(data: any) {
         const result = new Detail();
         if (data.v2_app_api) {
-            xhrhook(`api.bilibili.com/x/web-interface/view?aid=${aid}`, undefined, (res) => {
-                const result = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(data.v2_app_api)}}`;
-                res.responseType === "json" ? res.response = JSON.parse(result) : res.response = res.responseText = result;
-            }, false);
             delete data.v2_app_api.redirect_url; // 番剧重定向会导致404，弃之
             result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
             result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
             result.data.Tags = data.v2_app_api.tag;
             result.data.View = data.v2_app_api;
-            return { ...result }
+            xhrhook(`api.bilibili.com/x/web-interface/view?aid=${aid}`, undefined, (res) => {
+                const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
+                res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+            }, false);
+            xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${aid}`, undefined, (res) => {
+                const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid })}}`;
+                res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+            }, false);
+            return JSON.parse(JSON.stringify(result));
         }
         else return v1api(data);
     }
@@ -61,7 +65,7 @@ namespace API {
             stat: {
                 aid: data.aid || data.id || aid,
                 coin: data.coins,
-                danmaku: -1,
+                danmaku: data.video_review,
                 dislike: 0,
                 evaluation: "",
                 favorite: data.favorites,
@@ -80,7 +84,15 @@ namespace API {
             videos: data.list.length
         }
         data.bangumi && (result.data.View.season = data.bangumi);
-        return { ...result }
+        xhrhook(`api.bilibili.com/x/web-interface/view?aid=${aid}`, undefined, (res) => {
+            const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
+            res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+        }, false);
+        xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${aid}`, undefined, (res) => {
+            const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid })}}`;
+            res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+        }, false);
+        return JSON.parse(JSON.stringify(result))
     }
     async function check(call: (res: any) => void) {
         try {

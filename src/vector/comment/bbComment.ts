@@ -14,7 +14,7 @@ namespace API {
             }
             Promise.resolve().then(() => {
                 document.querySelectorAll("style").forEach(d => {
-                    d.textContent && d.textContent.includes(".bb-comment") && d.remove();
+                    d.textContent && d.textContent.includes("热门评论") && d.remove();
                 });
                 addCss(getModule("comment.css"));
                 addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
