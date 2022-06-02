@@ -126,7 +126,6 @@ namespace API {
         }
     }
     async function globalSession() {
-        toast.warning("这大概是个无效bangumi~", "正在进行最后的尝试");
         const obj: Record<string, string | number> = epid ? { ep_id: epid } : { season_id: ssid };
         Object.assign(obj, {
             access_key: config.accessKey.key || undefined,
@@ -196,6 +195,7 @@ namespace API {
                         get: () => t.epId
                     }
                 });
+                th = true;
                 toast.custom(0, "warning", "这大概是一个东南亚版bangumi，很抱歉暂时不支持播放ಥ_ಥ");
             }
             else throw result;

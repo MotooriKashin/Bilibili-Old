@@ -27,6 +27,8 @@
 	"loginExit": "loginExit.js",
 	"mediaSession": "MediaMeta.js",
 	"setMediaSession": "MediaMeta.js",
+	"noreferer": "noreferer.js",
+	"enreferer": "noreferer.js",
 	"biliQuickLogin": "quickLogin.js",
 	"SegProgress": "segProgress.js",
 	"switchVideo": "switchVideo.js",
@@ -131,5 +133,6 @@
 	"collection": "collection.js",
 	"enLike": "enLike.js",
 	"upList": "upList.js",
-	"bangumiInitialState": "bangumi-initial-state.js"
+	"bangumiInitialState": "bangumi-initial-state.js",
+	"bstarPlayurl": "bstarPlayurl.js"
 }

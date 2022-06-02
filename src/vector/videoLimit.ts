@@ -56,18 +56,22 @@ namespace API {
         const accesskey = config.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
         if (th) { // 泰区
+            noreferer();
             Object.assign(obj, {
                 area: "th",
                 build: 1001310,
                 device: "android",
-                force_host: 0,
+                force_host: 2,
+                download: 1,
                 mobi_app: "bstar_a",
-                platform: "android"
+                platform: "android",
+                ts: new Date().getTime()
             });
             toast.info("尝试解除区域限制... 访问代理服务器");
-            response = jsonCheck(await xhr.GM({
+            response = jsonCheck((await xhr.GM({
                 url: urlsign(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
-            }));
+            })).replace(/bstar1-mirrorakam\.akamaized\.net/g, "sz-mirrorks3.bilivideo.com"));
+            response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
             __playinfo__ = response;
             toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
         }
