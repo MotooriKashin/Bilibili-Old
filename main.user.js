@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.6
+// @version      8.0.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
 // ==/UserScript==
 
 
@@ -69,6 +69,8 @@ const modules = {};
 	"loginExit": "loginExit.js",
 	"mediaSession": "MediaMeta.js",
 	"setMediaSession": "MediaMeta.js",
+	"noreferer": "noreferer.js",
+	"enreferer": "noreferer.js",
 	"biliQuickLogin": "quickLogin.js",
 	"SegProgress": "segProgress.js",
 	"switchVideo": "switchVideo.js",
@@ -173,7 +175,8 @@ const modules = {};
 	"collection": "collection.js",
 	"enLike": "enLike.js",
 	"upList": "upList.js",
-	"bangumiInitialState": "bangumi-initial-state.js"
+	"bangumiInitialState": "bangumi-initial-state.js",
+	"bstarPlayurl": "bstarPlayurl.js"
 }
 /*!***********************!*/
 /**/modules["domWrite.js"] = /*** ./src/include/domWrite.js ***/
@@ -923,6 +926,24 @@ const modules = {};
     API.setMediaSession = setMediaSession;
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/MediaMeta.js`;
+/*!***********************!*/
+/**/modules["noreferer.js"] = /*** ./src/include/bilibili/noreferer.js ***/
+`
+    const meta = document.createElement("meta");
+    meta.name = "referrer";
+    meta.content = "no-referrer";
+    /** 禁用referer 访问非网页端url时必须 */
+    function noreferer() {
+        document.head.contains(meta) || document.head.appendChild(meta);
+    }
+    API.noreferer = noreferer;
+    /** 启用referer 解除noreferer */
+    function enreferer() {
+        document.head.contains(meta) && meta.remove();
+    }
+    API.enreferer = enreferer;
+
+//# sourceURL=file://@Bilibili-Old/include/bilibili/noreferer.js`;
 /*!***********************!*/
 /**/modules["quickLogin.js"] = /*** ./src/include/bilibili/quickLogin.js ***/
 `
@@ -1702,11 +1723,7 @@ const modules = {};
         async setCaption(caption) {
             let data = { body: [] }; // 空字幕
             if (caption && caption.subtitle_url) {
-                this.data[caption.lan] = this.data[caption.lan] || await API.xhr({
-                    url: caption.subtitle_url.replace("http:", "https:"),
-                    responseType: "json",
-                    credentials: false
-                }, true);
+                this.data[caption.lan] = this.data[caption.lan] || await (await fetch(caption.subtitle_url.replace("http:", "https:"))).json();
                 if (caption.convert) { // 繁 => 简
                     this.data[caption.lan] = JSON.parse(API.cht2chs(JSON.stringify(this.data[caption.lan])));
                     caption.convert = undefined;
@@ -11749,8 +11766,8 @@ const modules = {};
         "16_d52_d/d22_2c0a.6573355/b\`./bd8a\`bc6114a30_4.\`d",
         "c02ba/d6.33d05cb/5d34.7d_23_\`_2785\`c60.a\`.4343726",
         "2aa2\`.1_\`_1.73\`.70.67d.bc671c16382a3d\`71a4.bcb3c7",
-        "40/171b046c/bcc0a603ac620\`372ba_8d706d\`._7a.3_b5.",
-        "c4_a.7562_15\`_a416a/63/c2cbcb\`308a/\`//41b30376.b5" // 7d08...1b1c
+        "c4_a.7562_15\`_a416a/63/c2cbcb\`308d706d\`._7a.3_b5.",
+        "40/171b046c/bcc0a603ac620\`372ba_8a/\`//41b30376.b5" // 7d08...1b1c
     ];
     /**
      * 签名URL
@@ -12033,7 +12050,7 @@ const modules = {};
                     key: "th",
                     type: "input",
                     label: "泰国",
-                    sub: "暂不支持",
+                    sub: \`不可用！<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">或者参看教程</a>\`,
                     props: { type: "url", placeholder: "www.example.com" },
                 }
             ]
@@ -12546,7 +12563,7 @@ const modules = {};
             type: "switch",
             label: "获取TV源",
             sub: "可能无水印",
-            float: \`B战TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【默认】下载方式</strong>\`,
+            float: \`B站TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【默认】下载方式</strong>\`,
             value: false,
             callback: v => {
                 if (v) {
@@ -12811,7 +12828,7 @@ const modules = {};
                             ]);
                         }
                         else {
-                            API.alert('请仔细阅读上面各项说明并慎重操作，【确认授权】表示您同意本脚本能以网页端以外的鉴权向B站官方服务器证明您的身份，以执行一些本来网页端无权进行的操作。本脚本保证该鉴权不会泄露给任何第三方，代码完全开源且未经压缩混淆敬请放心。<br>请确认您的操作~', "撤销授权", [
+                            API.alert('请仔细阅读上面各项说明并慎重操作，【确认授权】表示您同意本脚本能以网页端以外的鉴权向B站官方服务器证明您的身份，以执行一些本来网页端无权进行的操作。如果【解除限制】中自定义了第三方解析服务器，请仔细斟酌第三方的可信度，<strong>如无必要，切莫授权！</strong>。<br>请确认您的操作~', "撤销授权", [
                                 {
                                     name: "确认授权",
                                     callback: () => {
@@ -14853,7 +14870,31 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         catch (e) { }
     }, false);
     let timer, tag = false; // 过滤栈
-    API.xhrhook("api.bilibili.com/x/player.so", undefined, res => {
+    API.xhrhook("api.bilibili.com/x/player.so", () => {
+        if (!tag && API.th && window.__INITIAL_STATE__?.epInfo?.subtitles) {
+            if (window.__INITIAL_STATE__.epInfo.subtitles[0]) {
+                API.config.closedCaption && API.closedCaption.getCaption(window.__INITIAL_STATE__.epInfo.subtitles.reduce((s, d) => {
+                    s.push({
+                        ai_type: 0,
+                        id: d.id,
+                        id_str: d.id,
+                        is_lock: false,
+                        lan: d.key,
+                        lan_doc: d.title,
+                        subtitle_url: d.url,
+                        type: 0
+                    });
+                    return s;
+                }, []));
+                tag = true;
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    tag = false;
+                }, 1000);
+            }
+        }
+        return true;
+    }, res => {
         try {
             if (API.statusCheck(res.status)) {
                 let subtitle = "", view_points;
@@ -15341,18 +15382,22 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         const accesskey = API.config.accessKey.key || undefined;
         obj.access_key = accesskey;
         if (API.th) { // 泰区
+            API.noreferer();
             Object.assign(obj, {
                 area: "th",
                 build: 1001310,
                 device: "android",
-                force_host: 0,
+                force_host: 2,
+                download: 1,
                 mobi_app: "bstar_a",
-                platform: "android"
+                platform: "android",
+                ts: new Date().getTime()
             });
             API.toast.info("尝试解除区域限制... 访问代理服务器");
-            response = API.jsonCheck(await API.xhr.GM({
+            response = API.jsonCheck((await API.xhr.GM({
                 url: API.urlsign(\`https://\${API.config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl\`, obj, 12)
-            }));
+            })).replace(/bstar1-mirrorakam\\.akamaized\\.net/g, "sz-mirrorks3.bilivideo.com"));
+            response = { "code": 0, "message": "success", "result": await API.bstarPlayurl(response) };
             API.__playinfo__ = response;
             API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
         }
@@ -15401,7 +15446,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             }
             Promise.resolve().then(() => {
                 document.querySelectorAll("style").forEach(d => {
-                    d.textContent && d.textContent.includes(".bb-comment") && d.remove();
+                    d.textContent && d.textContent.includes("热门评论") && d.remove();
                 });
                 API.addCss(API.getModule("comment.css"));
                 API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
@@ -16800,16 +16845,20 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     function view2Detail(data) {
         const result = new Detail();
         if (data.v2_app_api) {
-            API.xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, undefined, (res) => {
-                const result = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(data.v2_app_api)}}\`;
-                res.responseType === "json" ? res.response = JSON.parse(result) : res.response = res.responseText = result;
-            }, false);
             delete data.v2_app_api.redirect_url; // 番剧重定向会导致404，弃之
             result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
             result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
             result.data.Tags = data.v2_app_api.tag;
             result.data.View = data.v2_app_api;
-            return { ...result };
+            API.xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, undefined, (res) => {
+                const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+                res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+            }, false);
+            API.xhrhook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${API.aid}\`, undefined, (res) => {
+                const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}\`;
+                res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+            }, false);
+            return JSON.parse(JSON.stringify(result));
         }
         else
             return v1api(data);
@@ -16838,7 +16887,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             stat: {
                 aid: data.aid || data.id || API.aid,
                 coin: data.coins,
-                danmaku: -1,
+                danmaku: data.video_review,
                 dislike: 0,
                 evaluation: "",
                 favorite: data.favorites,
@@ -16857,7 +16906,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             videos: data.list.length
         };
         data.bangumi && (result.data.View.season = data.bangumi);
-        return { ...result };
+        API.xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, undefined, (res) => {
+            const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+            res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+        }, false);
+        API.xhrhook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${API.aid}\`, undefined, (res) => {
+            const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}\`;
+            res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+        }, false);
+        return JSON.parse(JSON.stringify(result));
     }
     async function check(call) {
         try {
@@ -17621,7 +17678,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     API.bangumiInitialState = bangumiInitialState;
     async function globalSession() {
-        API.toast.warning("这大概是个无效bangumi~", "正在进行最后的尝试");
+        API.toast.info("Bangumi号可能无效~", "正在尝试泰区代理接口~");
         const obj = API.epid ? { ep_id: API.epid } : { season_id: API.ssid };
         Object.assign(obj, {
             access_key: API.config.accessKey.key || undefined,
@@ -17691,6 +17748,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                         get: () => t.epId
                     }
                 });
+                API.th = true;
                 API.toast.custom(0, "warning", "这大概是一个东南亚版bangumi，很抱歉暂时不支持播放ಥ_ಥ");
             }
             else
@@ -17838,6 +17896,327 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     API.config.episodeData && API.importModule("episodeData.js"); // 分集数据
 
 //# sourceURL=file://@Bilibili-Old/vector/url/bangumi/bangumi.js`;
+/*!***********************!*/
+/**/modules["bstarPlayurl.js"] = /*** ./src/vector/url/bangumi/bstarPlayurl.js ***/
+`
+    /** DASH playurl result模板 */
+    class Playurl {
+        constructor() {
+            this.accept_description = ["高清 1080P+", "高清 1080P", "高清 720P", "清晰 480P", "流畅 360P"];
+            this.accept_format = "hdflv2,flv,flv720,flv480,mp4";
+            this.accept_quality = [112, 80, 64, 32, 16];
+            this.bp = 0;
+            this.code = 0;
+            this.dash = {
+                audio: [],
+                dolby: { audio: [], type: "NONE" },
+                duration: 0,
+                min_buffer_time: 1.5,
+                minBufferTime: 1.5,
+                video: []
+            };
+            this.fnval = 0;
+            this.fnver = 0;
+            this.format = "flv480";
+            this.from = "local";
+            this.has_paid = false;
+            this.is_preview = 0;
+            this.message = "";
+            this.no_rexcode = 1;
+            this.quality = 32;
+            this.result = "suee";
+            this.seek_param = "start";
+            this.seek_type = "offset";
+            this.status = 2;
+            this.support_formats = [
+                {
+                    description: "高清 1080P+",
+                    display_desc: "1080P",
+                    format: "hdflv2",
+                    need_login: true,
+                    need_vip: true,
+                    new_description: "1080P 高码率",
+                    quality: 112,
+                    superscript: "高码率"
+                },
+                {
+                    description: "高清 1080P",
+                    display_desc: "1080P",
+                    format: "flv",
+                    need_login: true,
+                    new_description: "1080P 高清",
+                    quality: 80,
+                    superscript: ""
+                },
+                {
+                    description: "高清 720P",
+                    display_desc: "720P",
+                    format: "flv720",
+                    need_login: true,
+                    new_description: "720P 高清",
+                    quality: 64,
+                    superscript: ""
+                },
+                {
+                    description: "清晰 480P",
+                    display_desc: "480P",
+                    format: "flv480",
+                    new_description: "480P 清晰",
+                    quality: 32,
+                    superscript: ""
+                },
+                {
+                    description: "流畅 360P",
+                    display_desc: "360P",
+                    format: "mp4",
+                    new_description: "360P 流畅",
+                    quality: 16,
+                    superscript: ""
+                }
+            ];
+            this.timelength = 0;
+            this.type = "DASH";
+            this.video_codecid = 7;
+            this.video_project = true;
+        }
+    }
+    /** 编码表 */
+    const codecs = {
+        default: {
+            30112: 'avc1.640028',
+            112: 'avc1.640028',
+            30102: 'hev1.1.6.L120.90',
+            102: 'hev1.1.6.L120.90',
+            30080: 'avc1.640028',
+            80: 'avc1.640028',
+            30077: 'hev1.1.6.L120.90',
+            77: 'hev1.1.6.L120.90',
+            30064: 'avc1.64001F',
+            64: 'avc1.64001F',
+            30066: 'hev1.1.6.L120.90',
+            66: 'hev1.1.6.L120.90',
+            30032: 'avc1.64001E',
+            32: 'avc1.64001E',
+            30033: 'hev1.1.6.L120.90',
+            33: 'hev1.1.6.L120.90',
+            30011: 'hev1.1.6.L120.90',
+            11: 'hev1.1.6.L120.90',
+            30016: 'avc1.64001E',
+            16: 'avc1.64001E',
+            30280: 'mp4a.40.2',
+            30232: 'mp4a.40.2',
+            30216: 'mp4a.40.2', // 低码音频
+        },
+        app: {
+            30016: 'avc1.64001E',
+            16: 'avc1.64001E',
+            30032: 'avc1.64001F',
+            32: 'avc1.64001F',
+            30064: 'avc1.640028',
+            64: 'avc1.640028',
+            30080: 'avc1.640032',
+            80: 'avc1.640032',
+            30216: 'mp4a.40.2',
+            30232: 'mp4a.40.2',
+            30280: 'mp4a.40.2' // APP源 高码音频 
+        }
+    };
+    /** 帧率表 */
+    const frameRate = {
+        30112: '16000/672',
+        112: '16000/672',
+        30102: '16000/672',
+        102: '16000/672',
+        30080: '16000/672',
+        80: '16000/672',
+        30077: '16000/656',
+        77: '16000/656',
+        30064: '16000/672',
+        64: '16000/672',
+        30066: '16000/656',
+        66: '16000/656',
+        30032: '16000/672',
+        32: '16000/672',
+        30033: '16000/656',
+        33: '16000/656',
+        30011: '16000/656',
+        11: '16000/656',
+        30016: '16000/672',
+        16: '16000/672'
+    };
+    /** 分辨率表 */
+    const resolution = {
+        30112: [1920, 1080],
+        112: [1920, 1080],
+        30102: [1920, 1080],
+        102: [1920, 1080],
+        30080: [1920, 1080],
+        80: [1920, 1080],
+        30077: [1920, 1080],
+        77: [1920, 1080],
+        30064: [1280, 720],
+        64: [1280, 720],
+        30066: [1280, 720],
+        66: [1280, 720],
+        30032: [852, 480],
+        32: [852, 480],
+        30033: [852, 480],
+        33: [852, 480],
+        30011: [640, 360],
+        11: [640, 360],
+        30016: [640, 360],
+        16: [640, 360], // 360P
+    };
+    /**
+     * 获取链接idxs
+     * @param url 下载链接
+     * @param duration 媒体时长
+     */
+    function getIdxs(url, duration) {
+        let range = Math.round(duration * 3.5);
+        range = range < 6000 ? 6000 : range;
+        return API.xhr({
+            url: url.replace("http:", "https:"),
+            responseType: 'arraybuffer',
+            headers: { 'Range': \`bytes=0-\${range}\` }
+        });
+    }
+    /** idxs暂存 */
+    const OBJ = {};
+    /**
+     * 重构泰区playurl为网页可解析形式
+     * @param ogv 原始数据(json)
+     */
+    async function bstarPlayurl(ogv) {
+        const playurl = new Playurl();
+        playurl.quality = ogv.data.video_info.stream_list[0].stream_info.quality || ogv.data.video_info.quality;
+        const num = playurl.accept_quality.indexOf(playurl.quality);
+        playurl.format = playurl.accept_format.split(",")[num];
+        playurl.timelength = ogv.data.video_info.timelength;
+        playurl.accept_quality.splice(0, num);
+        playurl.support_formats.splice(0, num);
+        playurl.accept_description.splice(0, num);
+        playurl.accept_format = playurl.accept_format.split(",");
+        playurl.accept_format.splice(0, num);
+        playurl.accept_format = playurl.accept_format.join(",");
+        playurl.dash.duration = Math.ceil(playurl.timelength / 1000);
+        playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
+        await Promise.all(ogv.data.video_info.stream_list.reduce((s, d, i) => {
+            if (d.dash_video && d.dash_video.base_url) {
+                s.push((async (d) => {
+                    OBJ[\`sidx\${API.cid}\`] || (OBJ[\`sidx\${API.cid}\`] = {});
+                    const id = d.stream_info.quality || d.dash_video.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
+                    if (!OBJ[\`sidx\${API.cid}\`][id]) {
+                        let data = new Uint8Array(await getIdxs(d.dash_video.base_url, playurl.dash.duration));
+                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                        // 首个“sidx”出现4字节之前的部分为索引起始点
+                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                        // 首个“mooc”出现前5字节结束索引
+                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                        // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
+                        OBJ[\`sidx\${API.cid}\`][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        API.debug("DASH-video：", id, OBJ[\`sidx\${API.cid}\`][id]);
+                    }
+                    playurl.dash.video.push({
+                        SegmentBase: {
+                            Initialization: OBJ[\`sidx\${API.cid}\`][id][0],
+                            indexRange: OBJ[\`sidx\${API.cid}\`][id][1]
+                        },
+                        segment_base: {
+                            initialization: OBJ[\`sidx\${API.cid}\`][id][0],
+                            index_range: OBJ[\`sidx\${API.cid}\`][id][1]
+                        },
+                        backupUrl: [],
+                        backup_url: [],
+                        bandwidth: d.dash_video.bandwidth,
+                        baseUrl: d.dash_video.base_url,
+                        base_url: d.dash_video.base_url,
+                        codecid: d.dash_video.codecid,
+                        codecs: codecs.app[id] || codecs.default[id],
+                        frameRate: frameRate[id],
+                        frame_rate: frameRate[id],
+                        height: resolution[id][1],
+                        id: d.stream_info.quality,
+                        md5: d.dash_video.md5,
+                        mimeType: "video/mp4",
+                        mime_type: "video/mp4",
+                        sar: "1:1",
+                        size: d.dash_video.size,
+                        startWithSAP: 1,
+                        start_with_sap: 1,
+                        width: resolution[id][0]
+                    });
+                })(d));
+            }
+            !i && ogv.data.video_info.dash_audio.forEach((d) => {
+                s.push((async (d) => {
+                    OBJ[\`sidx\${API.cid}\`] || (OBJ[\`sidx\${API.cid}\`] = {});
+                    const id = d.id || d.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
+                    if (!OBJ[\`sidx\${API.cid}\`][id]) {
+                        let data = new Uint8Array(await getIdxs(d.base_url, playurl.dash.duration));
+                        let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
+                        // 首个“sidx”出现4字节之前的部分为索引起始点
+                        let indexRangeStart = hex_data.indexOf('73696478') / 2 - 4;
+                        // 首个“mooc”出现前5字节结束索引
+                        let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
+                        // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
+                        OBJ[\`sidx\${API.cid}\`][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                        API.debug("DASH-video：", id, OBJ[\`sidx\${API.cid}\`][id]);
+                    }
+                    playurl.dash.audio.push({
+                        SegmentBase: {
+                            Initialization: OBJ[\`sidx\${API.cid}\`][id][0],
+                            indexRange: OBJ[\`sidx\${API.cid}\`][id][1]
+                        },
+                        segment_base: {
+                            initialization: OBJ[\`sidx\${API.cid}\`][id][0],
+                            index_range: OBJ[\`sidx\${API.cid}\`][id][1]
+                        },
+                        backupUrl: [],
+                        backup_url: [],
+                        bandwidth: d.bandwidth,
+                        baseUrl: d.base_url,
+                        base_url: d.base_url,
+                        codecid: d.codecid,
+                        codecs: codecs.app[id] || codecs.default[id],
+                        frameRate: "",
+                        frame_rate: "",
+                        height: 0,
+                        id: id,
+                        md5: d.md5,
+                        mimeType: "audio/mp4",
+                        mime_type: "audio/mp4",
+                        sar: "",
+                        size: d.size,
+                        startWithSAP: 0,
+                        start_with_sap: 0,
+                        width: 0
+                    });
+                })(d));
+            });
+            return s;
+        }, []));
+        // video排序
+        const avc = [], hev = [], video = [];
+        playurl.dash.video.forEach((d) => {
+            if (d.codecid == 7)
+                avc.push(d);
+            else
+                hev.push(d);
+        });
+        let length = avc.length > hev.length ? avc.length : hev.length;
+        for (let i = length - 1; i >= 0; i--) {
+            if (avc[i])
+                video.push(avc[i]);
+            if (hev[i])
+                video.push(hev[i]);
+        }
+        playurl.dash.video = video;
+        return playurl;
+    }
+    API.bstarPlayurl = bstarPlayurl;
+
+//# sourceURL=file://@Bilibili-Old/vector/url/bangumi/bstarPlayurl.js`;
 /*!***********************!*/
 /**/modules["episodeData.js"] = /*** ./src/vector/url/bangumi/episodeData.js ***/
 `
