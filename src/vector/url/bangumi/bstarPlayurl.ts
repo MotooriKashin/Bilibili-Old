@@ -187,7 +187,7 @@ namespace API {
      */
     export async function bstarPlayurl(ogv: Record<string, any>) {
         const playurl = new Playurl();
-        playurl.quality = ogv.data.video_info.quality;
+        playurl.quality = ogv.data.video_info.stream_list[0].stream_info.quality || ogv.data.video_info.quality;
         const num = playurl.accept_quality.indexOf(playurl.quality);
         playurl.format = playurl.accept_format.split(",")[num];
         playurl.timelength = ogv.data.video_info.timelength;
@@ -202,7 +202,7 @@ namespace API {
         playurl.dash.duration = Math.ceil(playurl.timelength / 1000);
         playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
 
-        await Promise.all(ogv.data.video_info.stream_list.reduce((s: any[], d: any) => {
+        await Promise.all(ogv.data.video_info.stream_list.reduce((s: any[], d: any, i: number) => {
             if (d.dash_video && d.dash_video.base_url) {
                 s.push((async d => {
                     OBJ[`sidx${cid}`] || (OBJ[`sidx${cid}`] = {});
@@ -249,7 +249,7 @@ namespace API {
                     })
                 })(d));
             }
-            playurl.dash.audio.forEach((d: any) => {
+            !i && (<any>ogv.data.video_info.dash_audio).forEach((d: any) => {
                 s.push((async d => {
                     OBJ[`sidx${cid}`] || (OBJ[`sidx${cid}`] = {});
                     const id = d.id || d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];

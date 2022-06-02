@@ -289,11 +289,7 @@ namespace API {
         async setCaption(caption?: any) {
             let data = { body: [] }; // 空字幕
             if (caption && caption.subtitle_url) {
-                this.data[caption.lan] = this.data[caption.lan] || await xhr({
-                    url: caption.subtitle_url.replace("http:", "https:"),
-                    responseType: "json",
-                    credentials: false
-                }, true);
+                this.data[caption.lan] = this.data[caption.lan] || await (await fetch(caption.subtitle_url.replace("http:", "https:"))).json();
                 if (caption.convert) { // 繁 => 简
                     this.data[caption.lan] = JSON.parse(cht2chs(JSON.stringify(this.data[caption.lan])));
                     caption.convert = undefined;

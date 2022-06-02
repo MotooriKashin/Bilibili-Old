@@ -126,6 +126,7 @@ namespace API {
         }
     }
     async function globalSession() {
+        toast.info("Bangumi号可能无效~", "正在尝试泰区代理接口~");
         const obj: Record<string, string | number> = epid ? { ep_id: epid } : { season_id: ssid };
         Object.assign(obj, {
             access_key: config.accessKey.key || undefined,

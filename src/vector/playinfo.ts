@@ -19,7 +19,31 @@ namespace API {
         } catch (e) { }
     }, false);
     let timer: number, tag = false; // 过滤栈
-    xhrhook("api.bilibili.com/x/player.so", undefined, res => {
+    xhrhook("api.bilibili.com/x/player.so", () => {
+        if (!tag && th && (<any>window).__INITIAL_STATE__?.epInfo?.subtitles) {
+            if ((<any>window).__INITIAL_STATE__.epInfo.subtitles[0]) {
+                config.closedCaption && closedCaption.getCaption((<any>window).__INITIAL_STATE__.epInfo.subtitles.reduce((s: any[], d: any) => {
+                    s.push({
+                        ai_type: 0,
+                        id: d.id,
+                        id_str: d.id,
+                        is_lock: false,
+                        lan: d.key,
+                        lan_doc: d.title,
+                        subtitle_url: d.url,
+                        type: 0
+                    })
+                    return s;
+                }, []));
+                tag = true;
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    tag = false
+                }, 1000);
+            }
+        }
+        return true;
+    }, res => {
         try {
             if (statusCheck(res.status)) {
                 let subtitle = "", view_points;
