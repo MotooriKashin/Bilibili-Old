@@ -405,7 +405,7 @@ namespace API {
                     key: "th",
                     type: "input",
                     label: "泰国",
-                    sub: `不可用！<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">或者参看教程</a>`,
+                    sub: `不可用！<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/314" target="_blank">#314</a>`,
                     props: { type: "url", placeholder: "www.example.com" },
                 }
             ]
