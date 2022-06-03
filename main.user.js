@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.7
+// @version      8.0.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/comment.min.js
 // ==/UserScript==
 
 
@@ -74,6 +74,7 @@ const modules = {};
 	"biliQuickLogin": "quickLogin.js",
 	"SegProgress": "segProgress.js",
 	"switchVideo": "switchVideo.js",
+	"uposWithGM": "uposWithGM.js",
 	"urlParam": "urlParam.js",
 	"closedCaption": "closedCaption.js",
 	"allDanmaku": "allDanmaku.js",
@@ -121,8 +122,9 @@ const modules = {};
 	"scriptIntercept": "Node.js",
 	"removeJsonphook": "Node.js",
 	"xhrhook": "open.js",
-	"xhrhookasync": "open.js",
+	"xhrhookAsync": "open.js",
 	"removeXhrhook": "open.js",
+	"xhrhookUltra": "open.js",
 	"webpackhook": "webpackJsonp.js",
 	"abv": "abv.js",
 	"Base64": "Base64.js",
@@ -1253,6 +1255,162 @@ const modules = {};
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/switchVideo.js`;
 /*!***********************!*/
+/**/modules["uposWithGM.js"] = /*** ./src/include/bilibili/uposWithGM.js ***/
+`
+    /**
+     * 修改xhr响应
+     * @param target 目标XMLHttpRequest
+     * @param res GM.xmlHttpRequest响应
+     * @param v 目标XMLHttpRequest对应的回调
+     */
+    function defineRes(target, res, v) {
+        Object.defineProperties(target, {
+            status: {
+                configurable: true,
+                writable: true,
+                value: res.status
+            },
+            statusText: {
+                configurable: true,
+                writable: true,
+                value: res.statusText
+            },
+            response: {
+                configurable: true,
+                writable: true,
+                value: res.response
+            },
+            responseText: {
+                configurable: true,
+                writable: true,
+                value: res.responseText
+            },
+            responseXML: {
+                configurable: true,
+                writable: true,
+                value: res.responseXML
+            },
+            responseURL: {
+                configurable: true,
+                writable: true,
+                value: res.finalUrl
+            }
+        });
+        v();
+    }
+    /**
+     * GM.xmlHttpRequest代理视频请求
+     * @param url 视频流url关键词，若为数组，数组间是并的关系，即必须同时满足才会代理
+     * @param UserAgent 指定UserAgent
+     */
+    function uposWithGM(url = ".m4s", UserAgent = API.config.userAgent) {
+        API.xhrhookUltra(url, function (target, args) {
+            const obj = {
+                method: args[0],
+                url: args[1],
+                headers: {
+                    "user-agent": API.config.userAgent
+                },
+                onloadstart: (res) => {
+                    defineRes(this, res, () => { });
+                }
+            };
+            args[2] || (obj.anonymous = true);
+            Object.defineProperties(this, {
+                responseType: {
+                    configurable: true,
+                    set: v => {
+                        obj.responseType = v;
+                    },
+                    get: () => obj.responseType
+                },
+                onload: {
+                    configurable: true,
+                    set: v => {
+                        obj.onload = (res) => {
+                            defineRes(this, res, v);
+                        };
+                    },
+                    get: () => obj.onload
+                },
+                onerror: {
+                    configurable: true,
+                    set: v => {
+                        obj.onerror = (res) => {
+                            defineRes(this, res, v);
+                        };
+                    },
+                    get: () => obj.onerror
+                },
+                timeout: {
+                    configurable: true,
+                    set: v => {
+                        obj.timeout = v;
+                    },
+                    get: () => obj.timeout
+                },
+                ontimeout: {
+                    configurable: true,
+                    set: v => {
+                        obj.ontimeout = (res) => {
+                            defineRes(this, res, v);
+                        };
+                    },
+                    get: () => obj.ontimeout
+                },
+                onprogress: {
+                    configurable: true,
+                    set: v => {
+                        obj.onprogress = (res) => {
+                            defineRes(this, res, v.bind(this, new ProgressEvent("progress", {
+                                lengthComputable: res.lengthComputable,
+                                loaded: res.loaded,
+                                total: res.total
+                            })));
+                        };
+                    },
+                    get: () => obj.onprogress
+                },
+                onabort: {
+                    configurable: true,
+                    set: v => {
+                        obj.onabort = (res) => {
+                            defineRes(this, res, v);
+                        };
+                    },
+                    get: () => obj.onabort
+                },
+                onreadystatechange: {
+                    configurable: true,
+                    set: v => {
+                        obj.onreadystatechange = (res) => {
+                            defineRes(this, res, v);
+                        };
+                    },
+                    get: () => obj.onreadystatechange
+                },
+                setRequestHeader: {
+                    configurable: true,
+                    value: (name, value) => {
+                        obj.headers && (obj.headers[name] = value);
+                    }
+                },
+                send: {
+                    configurable: true,
+                    value: (body) => {
+                        obj.method === "POST" && body && (obj.data = body);
+                        const tar = GM.xmlHttpRequest(obj);
+                        this.abort = tar.abort.bind(tar);
+                        return true;
+                    }
+                }
+            });
+        });
+    }
+    API.uposWithGM = uposWithGM;
+
+//# sourceURL=file://@Bilibili-Old/include/bilibili/uposWithGM.js`;
+/*!***********************!*/
 /**/modules["urlParam.js"] = /*** ./src/include/bilibili/urlParam.js ***/
 `
     /** 将数据缓存起来，以免重复查询 */
@@ -1260,6 +1418,7 @@ const modules = {};
     /**
      * 从url中提取aid/cid/ssid/epid等信息，提取不到就尝试获取
      * @param url B站视频页url，或者提供视频相关参数
+     * @param redirect 是否处理Bangumi重定向？注意对于失效视频，请主动置为\`false\`
      * @returns 对于bangumi，会设置\`pgc=true\`
      * @example
      * urlParam(location.href); // 完整url：会自动识别下面这些参数
@@ -1278,7 +1437,7 @@ const modules = {};
      * urlParam("season_id=3398"); // season_id
      * urlParam("ep_id=84795"); // ep_id
      */
-    async function urlParam(url = location.href) {
+    async function urlParam(url = location.href, redirect = true) {
         url && !url.includes("?") && (url = "?" + url);
         const obj = API.urlObj(url);
         let { aid, cid, ssid, epid, p } = obj;
@@ -1331,7 +1490,7 @@ const modules = {};
                                 let data = API.jsonCheck(await API.xhr({ url: API.objUrl("https://www.biliplus.com/api/view", { "id": aid }) }, true));
                                 catchs.aid[aid] = data.list || (data.v2_app_api && data.v2_app_api.pages);
                                 catchs.aid[aid].forEach((d) => d.aid = aid);
-                                if (data.v2_app_api && data.v2_app_api.redirect_url)
+                                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
                                     return urlParam(API.objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
                                 return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
                             }
@@ -1700,6 +1859,7 @@ const modules = {};
             let chs = false, base = undefined;
             arr.forEach(d => {
                 d.lan && (d.lan === "zh-CN" && (chs = true),
+                    d.lan === "zh-Hans" && (chs = true),
                     d.lan.includes("zh") && (base = { ...d }));
                 API.config.downloadOther && API.pushDownload({
                     group: "CC字幕",
@@ -6607,7 +6767,7 @@ const modules = {};
             let timer; // 过滤短时间重复操作
             node.addEventListener("click", () => {
                 clearTimeout(timer);
-                setTimeout(() => {
+                timer = setTimeout(() => {
                     value();
                 }, 100);
             });
@@ -10738,7 +10898,7 @@ const modules = {};
      * @param modifyOpen 修改XMLHttpRequest.open参数的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。
      * @param modifyResponse 修改XMLHttpRequest返回值的回调函数，第一个参数为一个对象，可能包含response、responseType、responseText、responseXML中的一种或多种原始数据，可以在其基础上进行修改并赋值回去，**注意每种返回值的格式！**
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递\`false\`，然后自行在不再需要拦截后使用\`removeXhrhook\`注销。
-     * @returns 注册编号，\`once=false\`时才有用，可用于取消拦截。
+     * @returns 注册编号，\`once=false\`时才有用，用于使用\`removeXhrhook\`取消拦截。
      */
     function xhrhook(url, modifyOpen, modifyResponse, once = true) {
         let id;
@@ -10786,9 +10946,9 @@ const modules = {};
      * @param condition 二次判定**同步**回调函数，不提供或者返回真值时开始拦截，可以通过url等精确判定是否真要拦截。
      * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，第二个参数为responseType类型，你可以据此确定需要哪些返回值，**注意每种返回值的格式！**。如果处理出错，可将默认值以异常或\`Promise.reject\`形式抛出。
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递\`false\`，然后自行在不再需要拦截后使用\`removeXhrhook\`注销。
-     * @returns 注册编号，\`once=false\`时才有用，可用于取消拦截。
+     * @returns 注册编号，\`once=false\`时才有用，用于使用\`removeXhrhook\`取消拦截。
      */
-    function xhrhookasync(url, condition, modifyResponse, once = true) {
+    function xhrhookAsync(url, condition, modifyResponse, once = true) {
         let id, temp;
         const one = Array.isArray(url) ? url : [url];
         const two = function (args) {
@@ -10850,13 +11010,32 @@ const modules = {};
         };
         return id = rules.push([one, two]);
     }
-    API.xhrhookasync = xhrhookasync;
+    API.xhrhookAsync = xhrhookAsync;
     /**
      * 注销xhrhook以节约开销，只在注册时设置了\`once=false\`时才需要使用本方法！
      * @param id \`xhrhook\`注册时的返回值，一个id只允许使用一次！
      */
     function removeXhrhook(id) { id >= 0 && delete rules[id - 1]; }
     API.removeXhrhook = removeXhrhook;
+    /**
+     * \`xhrhook\`高级版本，用于另外两种封装的hook方法实现不了的操作，通过modify回调理论上可以实现任何xhrhook操作。
+     * @param url 需要拦截的xhr的url匹配关键词或词组，词组间是并的关系，即必须同时满足才会触发拦截回调。
+     * @param modify 实现hook的回调函数，\`this\`和第一个参数为该XMLHttpRequest实例，第二个参数为传递给实例open方法的参数序列。
+     * @returns 注册编号，用于使用\`removeXhrhook\`取消拦截。
+     */
+    function xhrhookUltra(url, modify) {
+        const one = Array.isArray(url) ? url : [url];
+        const two = function (args) {
+            try {
+                modify.call(this, this, args);
+            }
+            catch (e) {
+                API.debug.error("xhrhook modify", one, modify, e);
+            }
+        };
+        return rules.push([one, two]);
+    }
+    API.xhrhookUltra = xhrhookUltra;
 
 //# sourceURL=file://@Bilibili-Old/include/hook/open.js`;
 /*!***********************!*/
@@ -12441,7 +12620,7 @@ const modules = {};
                             return API.toast.warning("请输入视频链接或参数~");
                         API.toast.info(\`正在解析url：\${API.config.onlineDanmaku.url}\`);
                         try {
-                            const d = await API.urlParam(API.config.onlineDanmaku.url);
+                            const d = await API.urlParam(API.config.onlineDanmaku.url, false);
                             if (d.aid && d.cid) {
                                 API.toast.info("参数解析成功，正在获取弹幕数据~", d);
                                 API.debug(API.config.onlineDanmaku.url, d);
@@ -12467,6 +12646,7 @@ const modules = {};
                             }
                         }
                         catch (e) {
+                            API.toast.error("在线弹幕", e);
                             API.debug.error("在线弹幕", e);
                         }
                     },
@@ -14780,11 +14960,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     Object.defineProperty(window, "reportMsgObj", {
         get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true, configurable: true
     });
-    API.xhrhookasync("data.bilibili.com", (args) => {
+    API.xhrhookAsync("data.bilibili.com", (args) => {
         API.debug.debug("拦截日志", ...args);
         return true;
     }, undefined, false);
-    API.xhrhookasync("data.bilivideo.com", (args) => {
+    API.xhrhookAsync("data.bilivideo.com", (args) => {
         API.debug.debug("拦截日志", ...args);
         return true;
     }, undefined, false);
@@ -14926,7 +15106,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         }
         catch (e) { }
     }, false);
-    API.xhrhookasync("api.bilibili.com/x/player/carousel.so", undefined, async () => {
+    API.xhrhookAsync("api.bilibili.com/x/player/carousel.so", undefined, async () => {
         let str = \`<msg><item bgcolor="#000000" catalog="news"><![CDATA[<a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a>]]></item><item bgcolor="#000000" catalog="news"><![CDATA[<a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a>]]></item></msg>'\`;
         try {
             const arr = await Promise.all([
@@ -15375,14 +15555,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             throw "所有代理服务器都已失败！";
         }
     }
-    API.xhrhookasync("/playurl?", () => API.limit || API.th, async (args, type) => {
+    API.xhrhookAsync("/playurl?", () => API.limit || API.th, async (args, type) => {
         let response; // 初始化返回值
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         let obj = API.urlObj(args[1]); // 提取请求参数
         const accesskey = API.config.accessKey.key || undefined;
         obj.access_key = accesskey;
         if (API.th) { // 泰区
-            API.noreferer();
+            // noreferer();
+            API.uposWithGM();
             Object.assign(obj, {
                 area: "th",
                 build: 1001310,
@@ -15765,7 +15946,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["historyDanmaku.js"] = /*** ./src/vector/danmaku/historyDanmaku.js ***/
 `
-    const id = API.xhrhookasync("history?type=", (args) => {
+    const id = API.xhrhookAsync("history?type=", (args) => {
         const param = API.urlObj(args[1]);
         if (!window.player?.setDanmaku) {
             API.removeXhrhook(id);
@@ -17711,17 +17892,33 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     });
                     return s;
                 }, []);
-                delete i.episodes;
-                delete i.seasons;
-                delete i.up_info;
-                delete i.rights;
-                delete i.publish;
-                delete i.newest_ep;
-                delete i.rating;
-                delete i.pay_pack;
-                delete i.payment;
-                delete i.activity;
-                t.mediaInfo = i;
+                t.mediaInfo = {
+                    actors: i.actor?.info,
+                    alias: i.alias,
+                    areas: i.areas,
+                    cover: i.cover,
+                    evaluate: i.evaluate,
+                    is_paster_ads: 0,
+                    jp_title: i.origin_name,
+                    link: i.link,
+                    media_id: -1,
+                    mode: i.mode,
+                    paster_text: "",
+                    season_id: i.season_id,
+                    season_status: i.status,
+                    season_title: i.season_title,
+                    season_type: i.type,
+                    series_title: i.title,
+                    square_cover: i.square_cover,
+                    staff: i.actor?.info,
+                    stat: i.stat,
+                    style: i.styles?.reduce((s, d) => {
+                        s.push(d.name);
+                        return s;
+                    }, []),
+                    title: i.title,
+                    total_ep: i.total,
+                };
                 t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = result.result.season_id || -1;
                 t.epInfo = (API.epid && episodes.find((d) => d.ep_id == API.epid)) || episodes[0];
@@ -17730,7 +17927,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 t.upInfo = result.result.up_info || {};
                 t.rightsInfo = result.result.rights || {};
                 t.app = 1 === t.rightsInfo.watch_platform;
+                result.result.publish.is_started = 1;
+                result.result.publish?.time_length_show === "已完结" && (result.result.publish.is_finish = 1);
                 t.pubInfo = result.result.publish || {};
+                result.result.new_ep.desc = result.result.new_ep.new_ep_display;
+                result.result.new_ep.index = result.result.new_ep.title;
                 t.newestEp = result.result.new_ep || {};
                 t.mediaRating = result.result.rating || {};
                 t.payPack = result.result.pay_pack || {};
@@ -17749,13 +17950,17 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     }
                 });
                 API.th = true;
-                API.toast.custom(0, "warning", "这大概是一个东南亚版bangumi，很抱歉暂时不支持播放ಥ_ಥ");
+                API.xhrhook("api.bilibili.com/pgc/web/season/stat", undefined, (res) => {
+                    const t = \`{"code": 0,"message":"0","ttl":1,"result":\${JSON.stringify(result.result.stat)}}\`;
+                    res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+                }, false);
+                API.toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用脚本【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
             }
             else
                 throw result;
         }
         catch (e) {
-            API.toast.error("访问国际版B站出错~", e);
+            API.toast.error("访问泰区B站出错，请检查泰区代理服务器设置~", "或许这就是个无效Bangumi？", e);
             API.debug.error("BilibiliGlobal", e);
         }
     }
@@ -17844,7 +18049,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }, true);
     // 修复相关视频推荐 接口来自md页面
     const related = {};
-    API.xhrhookasync("x/web-interface/archive/related", () => (window.__INITIAL_STATE__).mediaInfo.title, async (u, t) => {
+    API.xhrhookAsync("x/web-interface/archive/related", () => (window.__INITIAL_STATE__).mediaInfo.title, async (u, t) => {
         let result = '{ code: 0, data: [], message: "0" }';
         if (related[(window.__INITIAL_STATE__).mediaInfo.title]) {
             result = related[(window.__INITIAL_STATE__).mediaInfo.title];
@@ -17880,7 +18085,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     API.title && (document.title = API.title);
     API.doWhile(() => window.__INITIAL_STATE__, d => {
         API.bangumiInitialState().then(() => {
-            API.config.enlike && new API.enLike("bangumi");
+            API.config.enlike && new API.enLike("bangumi", d.mediaInfo.stat.likes);
             if (d.special) {
                 // 带海报的bangumi隐藏顶栏banner和wrapper
                 API.addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
