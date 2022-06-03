@@ -190,7 +190,21 @@ namespace API {
                 t.ssId = result.result.season_id || -1;
                 t.epInfo = (epid && episodes.find((d: any) => d.ep_id == epid)) || episodes[0];
                 t.epList = episodes;
-                t.seasonList = result.result.series || [];
+                t.seasonList = result.result.series?.seasons?.reduce((s: any[], d: any) => {
+                    s.push({
+                        badge: "独家",
+                        badge_type: 1,
+                        cover: "",
+                        media_id: -1,
+                        new_ep: {},
+                        season_id: d.season_id,
+                        season_title: d.quarter_title,
+                        season_type: 1,
+                        stat: {},
+                        title: d.quarter_title
+                    })
+                    return s;
+                }, []) || [];
                 t.upInfo = result.result.up_info || {};
                 t.rightsInfo = result.result.rights || {};
                 t.app = 1 === t.rightsInfo.watch_platform;

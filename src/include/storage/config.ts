@@ -405,7 +405,6 @@ namespace API {
                     key: "th",
                     type: "input",
                     label: "泰国",
-                    sub: `不可用！<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/314" target="_blank">#314</a>`,
                     props: { type: "url", placeholder: "www.example.com" },
                 }
             ]
