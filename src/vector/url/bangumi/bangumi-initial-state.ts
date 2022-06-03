@@ -115,6 +115,9 @@ namespace API {
                     sessionStorage.setItem("keepNew", 1);
                     location.reload();
                 }
+                if (t.upInfo.mid == /** Classic_Anime */677043260 || t.upInfo.mid == /** Anime_Ongoing */688418886) {
+                    th = true;
+                }
             } else {
                 debug.error(result[0]);
                 debug.error(result[1]);
