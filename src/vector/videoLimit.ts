@@ -55,42 +55,44 @@ namespace API {
         let obj = urlObj(args[1]); // 提取请求参数
         const accesskey = config.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
-        if (th) { // 泰区
-            // noreferer();
-            uposWithGM();
-            Object.assign(obj, {
-                area: "th",
-                build: 1001310,
-                device: "android",
-                force_host: 2,
-                download: 1,
-                mobi_app: "bstar_a",
-                platform: "android",
-                ts: new Date().getTime()
-            });
-            toast.info("尝试解除区域限制... 访问代理服务器");
-            response = jsonCheck((await xhr.GM({
-                url: urlsign(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
-            })).replace(/bstar1-mirrorakam\.akamaized\.net/g, "sz-mirrorks3.bilivideo.com"));
-            response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
-            __playinfo__ = response;
-            toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
-        }
-        else if (limit) { // 处理区域限制
-            obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
-            obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
-            try {
+        Backup[epid] && (response = Backup[epid]); // 启用备份
+        if (!response) {
+            if (th) { // 泰区
+                uposWithGM();
+                Object.assign(obj, {
+                    area: "th",
+                    build: 1001310,
+                    device: "android",
+                    force_host: 2,
+                    download: 1,
+                    mobi_app: "bstar_a",
+                    platform: "android",
+                    ts: new Date().getTime()
+                });
                 toast.info("尝试解除区域限制... 访问代理服务器");
-                response = config.videoLimit.server === "内置" ? jsonCheck(await xhr.GM({
-                    url: objUrl("https://www.biliplus.com/BPplayurl.php", obj)
-                })) : (delete obj.module, await customServer(obj, "tw"));
-                response = { "code": 0, "message": "success", "result": response };
+                response = jsonCheck((await xhr.GM({
+                    url: urlsign(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
+                })).replace(/bstar1-mirrorakam\.akamaized\.net/g, "sz-mirrorks3.bilivideo.com"));
+                response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
                 __playinfo__ = response;
                 toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
-            } catch (e) {
-                toast.error("解除限制失败 ಥ_ಥ");
-                debug.error("解除限制失败 ಥ_ಥ", e);
-                response = { "code": -404, "message": e, "data": null };
+            }
+            else if (limit) { // 处理区域限制
+                obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
+                obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
+                try {
+                    toast.info("尝试解除区域限制... 访问代理服务器");
+                    response = config.videoLimit.server === "内置" ? jsonCheck(await xhr.GM({
+                        url: objUrl("https://www.biliplus.com/BPplayurl.php", obj)
+                    })) : (delete obj.module, await customServer(obj, "tw"));
+                    response = { "code": 0, "message": "success", "result": response };
+                    __playinfo__ = response;
+                    toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
+                } catch (e) {
+                    toast.error("解除限制失败 ಥ_ಥ");
+                    debug.error("解除限制失败 ಥ_ಥ", e);
+                    response = { "code": -404, "message": e, "data": null };
+                }
             }
         }
         hookTimeout.relese();
@@ -99,6 +101,7 @@ namespace API {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)
         }
+        Backup[epid] = response;
         return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)
