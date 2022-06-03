@@ -69,11 +69,10 @@ const modules = {};
 	"loginExit": "loginExit.js",
 	"mediaSession": "MediaMeta.js",
 	"setMediaSession": "MediaMeta.js",
-	"noreferer": "noreferer.js",
-	"enreferer": "noreferer.js",
 	"biliQuickLogin": "quickLogin.js",
 	"SegProgress": "segProgress.js",
 	"switchVideo": "switchVideo.js",
+	"uposReplace": "uposReplace.js",
 	"uposWithGM": "uposWithGM.js",
 	"urlParam": "urlParam.js",
 	"closedCaption": "closedCaption.js",
@@ -929,24 +928,6 @@ const modules = {};
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/MediaMeta.js`;
 /*!***********************!*/
-/**/modules["noreferer.js"] = /*** ./src/include/bilibili/noreferer.js ***/
-`
-    const meta = document.createElement("meta");
-    meta.name = "referrer";
-    meta.content = "no-referrer";
-    /** 禁用referer 访问非网页端url时必须 */
-    function noreferer() {
-        document.head.contains(meta) || document.head.appendChild(meta);
-    }
-    API.noreferer = noreferer;
-    /** 启用referer 解除noreferer */
-    function enreferer() {
-        document.head.contains(meta) && meta.remove();
-    }
-    API.enreferer = enreferer;
-
-//# sourceURL=file://@Bilibili-Old/include/bilibili/noreferer.js`;
-/*!***********************!*/
 /**/modules["quickLogin.js"] = /*** ./src/include/bilibili/quickLogin.js ***/
 `
     /**
@@ -1255,8 +1236,52 @@ const modules = {};
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/switchVideo.js`;
 /*!***********************!*/
+/**/modules["uposReplace.js"] = /*** ./src/include/bilibili/uposReplace.js ***/
+`
+    /** upos服务器 */
+    const UPOS = {
+        "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
+        "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
+        "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
+        "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
+        "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
+        "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
+        "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
+        "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
+        "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
+        "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
+        "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
+        "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
+        "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
+        "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
+        "js（华为）": "upos-tf-all-js.bilivideo.com",
+        "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
+        "akamai（海外）": "upos-hz-mirrorakam.akamaized.net",
+    };
+    /** 过滤短时间重复通知 */
+    let dis = false, timer = 0;
+    /**
+     * 替换UPOS服务器
+     * @param str playurl或包含视频URL的字符串
+     * @param uposName 替换的代理服务器名 \`∈ keyof typeof UPOS\`
+     */
+    function uposReplace(str, uposName) {
+        if (uposName === "不替换")
+            return str;
+        !dis && API.toast.custom(10, "warning", "已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${uposName}\`, \`UPOS：\${UPOS[uposName]}\`);
+        dis = true;
+        clearTimeout(timer);
+        timer = setTimeout(() => dis = false, 1e3);
+        return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS[uposName]}/\`);
+    }
+    API.uposReplace = uposReplace;
+
+//# sourceURL=file://@Bilibili-Old/include/bilibili/uposReplace.js`;
+/*!***********************!*/
 /**/modules["uposWithGM.js"] = /*** ./src/include/bilibili/uposWithGM.js ***/
 `
+    /** hook标记，防止重复操作 */
+    let isHooking = false;
     /**
      * 修改xhr响应
      * @param target 目标XMLHttpRequest
@@ -1304,12 +1329,14 @@ const modules = {};
      * @param UserAgent 指定UserAgent
      */
     function uposWithGM(url = ".m4s", UserAgent = API.config.userAgent) {
+        if (isHooking)
+            return;
         API.xhrhookUltra(url, function (target, args) {
             const obj = {
                 method: args[0],
                 url: args[1],
                 headers: {
-                    "user-agent": API.config.userAgent
+                    "user-agent": UserAgent
                 },
                 onloadstart: (res) => {
                     defineRes(this, res, () => { });
@@ -1406,6 +1433,7 @@ const modules = {};
                 }
             });
         });
+        isHooking = true;
     }
     API.uposWithGM = uposWithGM;
 
@@ -12025,6 +12053,8 @@ const modules = {};
             return (API.isArray(result) || API.isObject(result)) ? new Proxy(result, new API.ProxyHandler(saveConfig)) : result;
         }
     });
+    /** upos服务器 */
+    const UPOS = ['ks3（金山）', 'ks3b（金山）', 'ks3c（金山）', 'ks32（金山）', 'kodo（七牛）', 'kodob（七牛）', 'cos（腾讯）', 'cosb（腾讯）', 'coso1（腾讯）', 'coso2（腾讯）', 'bos（腾讯）', 'hw（华为）', 'hwb（华为）', 'uphw（华为）', 'js（华为）', 'hk（香港）', 'akamai（海外）'];
     API.registerMenu([
         { key: "common", name: "通用", svg: API.getModule("wrench.svg") },
         { key: "rewrite", name: "重构", svg: API.getModule("note.svg") },
@@ -12229,7 +12259,6 @@ const modules = {};
                     key: "th",
                     type: "input",
                     label: "泰国",
-                    sub: \`不可用！<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/314" target="_blank">#314</a>\`,
                     props: { type: "url", placeholder: "www.example.com" },
                 }
             ]
@@ -12733,7 +12762,7 @@ const modules = {};
             type: "checkbox",
             label: "类型",
             sub: "请求的文件类型",
-            float: '请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。<br>※DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。<br>※flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。',
+            float: '请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※ mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。<br>※ DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。<br>※ flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。',
             value: ["mp4"],
             candidate: ["mp4", "flv", "DASH"]
         },
@@ -12856,7 +12885,7 @@ const modules = {};
             type: "input",
             label: "User-Agent",
             sub: '高级设置',
-            float: 'B站视频一般都需要有效User-Agent，否则会403。（默认下载方式以外才有意义。）',
+            float: 'B站视频一般都需要有效User-Agent，否则会403。（默认下载方式以外才有意义。）<br>※ <strong>本项会同时影响替换UPOS服务器后能否播放，默认值才是经检验的最合适的值！</strong>',
             value: "Bilibili Freedoooooom/MarkII",
             candidate: ["Bilibili Freedoooooom/MarkII"]
         },
@@ -13050,6 +13079,50 @@ const modules = {};
             sub: "Bangumi",
             float: \`对于Bangumi，显示单集播放量和弹幕，原合计数据显示在鼠标焦点提示文本中。\`,
             value: false
+        },
+        {
+            key: "uposReplace",
+            menu: "player",
+            type: "list",
+            name: "替换UPOS服务器",
+            list: [
+                {
+                    key: "nor",
+                    type: "select",
+                    label: "一般视频",
+                    sub: "不推荐",
+                    value: "不替换",
+                    float: \`对于一般视频应该充分相信B站分配给你的视频服务器就是最合适的，所以一般不推荐主动替换。\`,
+                    candidate: ["不替换"].concat(UPOS)
+                },
+                {
+                    key: "gat",
+                    type: "select",
+                    label: "代理：港澳台或大陆",
+                    sub: "看情况",
+                    value: "不替换",
+                    float: \`解除港澳台限制获取到的视频服务器必定是海外的Akamai，在一些大陆网络中可能体验并不好，可以看情况指定其他服务器。港澳台（及海外）网络访问大陆服务器同理。<br>※ 替换的服务器大概率有【referer】【UserAgent】限制，脚本尝试通过GM钩子绕过，方案可能并不稳定，若出问题请禁用替换或者前往Github反馈。\`,
+                    candidate: ["不替换"].concat(UPOS)
+                },
+                {
+                    key: "th",
+                    type: "select",
+                    label: "代理：泰区",
+                    sub: "必选",
+                    value: "ks3（金山）",
+                    float: \`泰区视频返回的服务器ban了大陆IP，所以必须进行替换！请根据自身网络情况选择。<br>※ 替换的服务器有【referer】【UserAgent】限制，脚本尝试通过GM钩子绕过，方案可能并不稳定，若出问题前往Github反馈。\`,
+                    candidate: UPOS
+                },
+                {
+                    key: "dl",
+                    type: "select",
+                    label: "下载",
+                    sub: "不推荐",
+                    value: "不替换",
+                    float: \`替换下载功能获取到的视频服务器，对于播放器已获取到的视频源，已经在上面的选项中处理过了。剩下的跟一般视频同理，不推荐替换。<br>※ 注意有【referer】【UserAgent】限制视频源，请在下载面板将【referer】置空，【UserAgent】设为有效值（默认值肯定有效！）\`,
+                    candidate: ["不替换"].concat(UPOS)
+                }
+            ]
         }
     ]);
 
@@ -14099,6 +14172,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         downloading = true;
         if (!API.cid)
             return API.toast.warning("请在视频页使用本功能~");
+        if (API.th)
+            API.toast.warning("泰区视频！", "请将【referer】置空，【UserAgent】设为默认值，并选用【默认】以外的方式进行下载~");
         const data = API.playinfoFiter(API.__playinfo__);
         const request = [];
         const type = API.config.downlaodType.join(" ").toLowerCase();
@@ -14154,7 +14229,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             }
         }
         catch (e) { }
-        return result;
+        return JSON.parse(API.uposReplace(JSON.stringify(result), API.config.uposReplace.dl));
     }
 
 //# sourceURL=file://@Bilibili-Old/include/ui/download/download.js`;
@@ -15043,9 +15118,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         param.cid && (API.cid = Number(param.cid));
         param.seasonId && (API.ssid = Number(param.seasonId));
         param.episodeId && (API.epid = Number(param.episodeId));
-    }, async (obj) => {
+    }, obj => {
         try {
-            API.__playinfo__ = obj.responseType === "json" ? obj.response : API.jsonCheck(obj.response);
+            const str = API.uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, API.config.uposReplace.nor);
+            API.__playinfo__ = JSON.parse(str);
+            obj.responseType === "json" ? obj.response = API.__playinfo__ : obj.response = obj.responseText = str;
         }
         catch (e) { }
     }, false);
@@ -15537,10 +15614,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 platform: "android",
                 ts: new Date().getTime()
             });
-            const result = await API.xhr({
-                url: API.urlsign(\`https://\${API.config.videoLimit[area]}/pgc/player/api/playurl\`, obj, 2),
-                responseType: "json"
-            });
+            const result = API.jsonCheck(API.uposReplace(await API.xhr({
+                url: API.urlsign(\`https://\${API.config.videoLimit[area]}/pgc/player/api/playurl\`, obj, 2)
+            }), API.config.uposReplace.gat));
             if (result.code !== 0)
                 throw result;
             return result;
@@ -15561,43 +15637,53 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         let obj = API.urlObj(args[1]); // 提取请求参数
         const accesskey = API.config.accessKey.key || undefined;
         obj.access_key = accesskey;
-        if (API.th) { // 泰区
-            // noreferer();
-            API.uposWithGM();
-            Object.assign(obj, {
-                area: "th",
-                build: 1001310,
-                device: "android",
-                force_host: 2,
-                download: 1,
-                mobi_app: "bstar_a",
-                platform: "android",
-                ts: new Date().getTime()
-            });
-            API.toast.info("尝试解除区域限制... 访问代理服务器");
-            response = API.jsonCheck((await API.xhr.GM({
-                url: API.urlsign(\`https://\${API.config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl\`, obj, 12)
-            })).replace(/bstar1-mirrorakam\\.akamaized\\.net/g, "sz-mirrorks3.bilivideo.com"));
-            response = { "code": 0, "message": "success", "result": await API.bstarPlayurl(response) };
-            API.__playinfo__ = response;
-            API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
-        }
-        else if (API.limit) { // 处理区域限制
-            obj.module = (API.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || API.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
-            obj.fnval && (obj.fnval = String(API.fnval)); // 提升dash标记清晰度
-            try {
-                API.toast.info("尝试解除区域限制... 访问代理服务器");
-                response = API.config.videoLimit.server === "内置" ? API.jsonCheck(await API.xhr.GM({
-                    url: API.objUrl("https://www.biliplus.com/BPplayurl.php", obj)
-                })) : (delete obj.module, await customServer(obj, "tw"));
-                response = { "code": 0, "message": "success", "result": response };
-                API.__playinfo__ = response;
-                API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
+        Backup[API.epid] && (response = Backup[API.epid]); // 启用备份
+        if (!response) {
+            if (API.th) { // 泰区
+                API.uposWithGM();
+                Object.assign(obj, {
+                    area: "th",
+                    build: 1001310,
+                    device: "android",
+                    force_host: 2,
+                    download: 1,
+                    mobi_app: "bstar_a",
+                    platform: "android",
+                    ts: new Date().getTime()
+                });
+                try {
+                    API.toast.info("尝试解除区域限制... 访问代理服务器");
+                    response = API.jsonCheck(API.uposReplace(await API.xhr.GM({
+                        url: API.urlsign(\`https://\${API.config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl\`, obj, 12)
+                    }), API.config.uposReplace.th));
+                    response = { "code": 0, "message": "success", "result": await API.bstarPlayurl(response) };
+                    API.__playinfo__ = response;
+                    API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
+                }
+                catch (e) {
+                    API.toast.error("解除限制失败 ಥ_ಥ");
+                    API.debug.error("解除限制失败 ಥ_ಥ", e);
+                    response = { "code": -404, "message": e, "data": null };
+                }
             }
-            catch (e) {
-                API.toast.error("解除限制失败 ಥ_ಥ");
-                API.debug.error("解除限制失败 ಥ_ಥ", e);
-                response = { "code": -404, "message": e, "data": null };
+            else if (API.limit) { // 处理区域限制
+                API.config.uposReplace.gat !== "不替换" && API.uposWithGM();
+                obj.module = (API.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || API.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
+                obj.fnval && (obj.fnval = String(API.fnval)); // 提升dash标记清晰度
+                try {
+                    API.toast.info("尝试解除区域限制... 访问代理服务器");
+                    response = API.config.videoLimit.server === "内置" ? API.jsonCheck(API.uposReplace(await API.xhr.GM({
+                        url: API.objUrl("https://www.biliplus.com/BPplayurl.php", obj)
+                    }), API.config.uposReplace.gat)) : (delete obj.module, await customServer(obj, "tw"));
+                    response = { "code": 0, "message": "success", "result": response };
+                    API.__playinfo__ = response;
+                    API.toast.success(\`解除区域限制！aid=\${API.aid}, cid=\${API.cid}\`);
+                }
+                catch (e) {
+                    API.toast.error("解除限制失败 ಥ_ಥ");
+                    API.debug.error("解除限制失败 ಥ_ಥ", e);
+                    response = { "code": -404, "message": e, "data": null };
+                }
             }
         }
         hookTimeout.relese();
@@ -15607,6 +15693,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 response: JSON.stringify(response),
                 responseText: JSON.stringify(response)
             };
+        Backup[API.epid] = response;
         return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)
@@ -17923,7 +18010,21 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 t.ssId = result.result.season_id || -1;
                 t.epInfo = (API.epid && episodes.find((d) => d.ep_id == API.epid)) || episodes[0];
                 t.epList = episodes;
-                t.seasonList = result.result.series || [];
+                t.seasonList = result.result.series?.seasons?.reduce((s, d) => {
+                    s.push({
+                        badge: "独家",
+                        badge_type: 1,
+                        cover: "",
+                        media_id: -1,
+                        new_ep: {},
+                        season_id: d.season_id,
+                        season_title: d.quarter_title,
+                        season_type: 1,
+                        stat: {},
+                        title: d.quarter_title
+                    });
+                    return s;
+                }, []) || [];
                 t.upInfo = result.result.up_info || {};
                 t.rightsInfo = result.result.rights || {};
                 t.app = 1 === t.rightsInfo.watch_platform;
