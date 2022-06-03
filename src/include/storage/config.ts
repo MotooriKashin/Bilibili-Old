@@ -793,7 +793,7 @@ namespace API {
                         if (!config.onlineDanmaku.url) return toast.warning("请输入视频链接或参数~");
                         toast.info(`正在解析url：${config.onlineDanmaku.url}`);
                         try {
-                            const d = await urlParam(config.onlineDanmaku.url);
+                            const d = await urlParam(config.onlineDanmaku.url, false);
                             if (d.aid && d.cid) {
                                 toast.info("参数解析成功，正在获取弹幕数据~", d);
                                 debug(config.onlineDanmaku.url, d);
@@ -816,7 +816,10 @@ namespace API {
                             } else {
                                 toast.warning("提取弹幕参数失败，请检查输入~");
                             }
-                        } catch (e) { debug.error("在线弹幕", e); }
+                        } catch (e) {
+                            toast.error("在线弹幕", e);
+                            debug.error("在线弹幕", e);
+                        }
 
                     },
                     button: "加载"

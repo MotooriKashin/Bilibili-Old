@@ -49,14 +49,15 @@ namespace API {
             throw "所有代理服务器都已失败！";
         }
     }
-    xhrhookasync("/playurl?", () => limit || th, async (args, type) => { // 代理限制视频的请求
+    xhrhookAsync("/playurl?", () => limit || th, async (args, type) => { // 代理限制视频的请求
         let response: any; // 初始化返回值
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
         let obj = urlObj(args[1]); // 提取请求参数
         const accesskey = config.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
         if (th) { // 泰区
-            noreferer();
+            // noreferer();
+            uposWithGM();
             Object.assign(obj, {
                 area: "th",
                 build: 1001310,

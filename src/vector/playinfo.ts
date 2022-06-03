@@ -73,7 +73,7 @@ namespace API {
             }
         } catch (e) { }
     }, false);
-    xhrhookasync("api.bilibili.com/x/player/carousel.so", undefined, async () => {
+    xhrhookAsync("api.bilibili.com/x/player/carousel.so", undefined, async () => {
         let str = `<msg><item bgcolor="#000000" catalog="news"><![CDATA[<a href="//app.bilibili.com/?from=bfq" target="_blank"><font color="#ffffff">客户端下载</font></a>]]></item><item bgcolor="#000000" catalog="news"><![CDATA[<a href="http://link.acg.tv/forum.php" target="_blank"><font color="#ffffff">bug反馈传送门</font></a>]]></item></msg>'`;
         try {
             const arr = await Promise.all([

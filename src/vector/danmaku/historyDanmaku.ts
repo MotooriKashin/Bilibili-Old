@@ -3,7 +3,7 @@ interface modules {
     readonly "historyDanmaku.js": string
 }
 namespace API {
-    const id = xhrhookasync("history?type=", (args) => { // 修复历史弹幕
+    const id = xhrhookAsync("history?type=", (args) => { // 修复历史弹幕
         const param = urlObj(args[1]);
         if (!window.player?.setDanmaku) {
             removeXhrhook(id);

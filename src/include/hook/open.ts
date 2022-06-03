@@ -25,7 +25,7 @@ namespace API {
      * @param modifyOpen 修改XMLHttpRequest.open参数的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。
      * @param modifyResponse 修改XMLHttpRequest返回值的回调函数，第一个参数为一个对象，可能包含response、responseType、responseText、responseXML中的一种或多种原始数据，可以在其基础上进行修改并赋值回去，**注意每种返回值的格式！**
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递`false`，然后自行在不再需要拦截后使用`removeXhrhook`注销。
-     * @returns 注册编号，`once=false`时才有用，可用于取消拦截。
+     * @returns 注册编号，`once=false`时才有用，用于使用`removeXhrhook`取消拦截。
      */
     export function xhrhook(url: string | string[], modifyOpen?: (args: XMLHttpRequestOpenParams) => void, modifyResponse?: (response: XMLHttpRequestResponses) => void, once = true) {
         let id: number;
@@ -59,9 +59,9 @@ namespace API {
      * @param condition 二次判定**同步**回调函数，不提供或者返回真值时开始拦截，可以通过url等精确判定是否真要拦截。
      * @param modifyResponse 提供XMLHttpRequest返回值的回调函数，第一个参数为数组，包含原xhr的open方法传递的所有参数，其中索引2位置上就是原url。请以XMLHttpRequestResponses格式提供返回值，第二个参数为responseType类型，你可以据此确定需要哪些返回值，**注意每种返回值的格式！**。如果处理出错，可将默认值以异常或`Promise.reject`形式抛出。
      * @param once 为节约性能开销，默认只拦截符合条件的xhr**一次**后便会注销，如果要多次拦截，请传递`false`，然后自行在不再需要拦截后使用`removeXhrhook`注销。
-     * @returns 注册编号，`once=false`时才有用，可用于取消拦截。
+     * @returns 注册编号，`once=false`时才有用，用于使用`removeXhrhook`取消拦截。
      */
-    export function xhrhookasync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<Omit<XMLHttpRequestResponses, "status" | "statusText">>, once = true) {
+    export function xhrhookAsync(url: string | string[], condition?: (args: XMLHttpRequestOpenParams) => boolean, modifyResponse?: (args: XMLHttpRequestOpenParams, type: XMLHttpRequestResponseType) => Promise<Omit<XMLHttpRequestResponses, "status" | "statusText">>, once = true) {
         let id: number, temp: [string[], Function];
         const one = Array.isArray(url) ? url : [url];
         const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
@@ -123,4 +123,19 @@ namespace API {
      * @param id `xhrhook`注册时的返回值，一个id只允许使用一次！
      */
     export function removeXhrhook(id: number) { id >= 0 && delete rules[id - 1]; }
+    /**
+     * `xhrhook`高级版本，用于另外两种封装的hook方法实现不了的操作，通过modify回调理论上可以实现任何xhrhook操作。
+     * @param url 需要拦截的xhr的url匹配关键词或词组，词组间是并的关系，即必须同时满足才会触发拦截回调。
+     * @param modify 实现hook的回调函数，`this`和第一个参数为该XMLHttpRequest实例，第二个参数为传递给实例open方法的参数序列。
+     * @returns 注册编号，用于使用`removeXhrhook`取消拦截。
+     */
+    export function xhrhookUltra(url: string | string[], modify: (this: XMLHttpRequest, xhr: XMLHttpRequest, args: XMLHttpRequestOpenParams) => void) {
+        const one = Array.isArray(url) ? url : [url];
+        const two = function (this: XMLHttpRequest, args: XMLHttpRequestOpenParams) {
+            try {
+                modify.call(this, this, args);
+            } catch (e) { debug.error("xhrhook modify", one, modify, e) }
+        }
+        return rules.push([one, two]);
+    }
 }

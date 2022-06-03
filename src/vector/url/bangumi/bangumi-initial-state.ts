@@ -159,17 +159,33 @@ namespace API {
                     });
                     return s;
                 }, []);
-                delete i.episodes;
-                delete i.seasons;
-                delete i.up_info;
-                delete i.rights;
-                delete i.publish;
-                delete i.newest_ep;
-                delete i.rating;
-                delete i.pay_pack;
-                delete i.payment;
-                delete i.activity;
-                t.mediaInfo = i;
+                t.mediaInfo = {
+                    actors: i.actor?.info,
+                    alias: i.alias,
+                    areas: i.areas,
+                    cover: i.cover,
+                    evaluate: i.evaluate,
+                    is_paster_ads: 0,
+                    jp_title: i.origin_name,
+                    link: i.link,
+                    media_id: -1,
+                    mode: i.mode,
+                    paster_text: "",
+                    season_id: i.season_id,
+                    season_status: i.status,
+                    season_title: i.season_title,
+                    season_type: i.type,
+                    series_title: i.title,
+                    square_cover: i.square_cover,
+                    staff: i.actor?.info,
+                    stat: i.stat,
+                    style: i.styles?.reduce((s: any[], d: any) => {
+                        s.push(d.name);
+                        return s;
+                    }, []),
+                    title: i.title,
+                    total_ep: i.total,
+                };
                 t.mediaInfo.bkg_cover && (t.special = !0, bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = result.result.season_id || -1;
                 t.epInfo = (epid && episodes.find((d: any) => d.ep_id == epid)) || episodes[0];
@@ -178,8 +194,15 @@ namespace API {
                 t.upInfo = result.result.up_info || {};
                 t.rightsInfo = result.result.rights || {};
                 t.app = 1 === t.rightsInfo.watch_platform;
+
+                result.result.publish.is_started = 1;
+                result.result.publish?.time_length_show === "已完结" && (result.result.publish.is_finish = 1);
                 t.pubInfo = result.result.publish || {};
+
+                result.result.new_ep.desc = result.result.new_ep.new_ep_display;
+                result.result.new_ep.index = result.result.new_ep.title;
                 t.newestEp = result.result.new_ep || {};
+
                 t.mediaRating = result.result.rating || {};
                 t.payPack = result.result.pay_pack || {};
                 t.payMent = result.result.payment || {};
@@ -197,11 +220,15 @@ namespace API {
                     }
                 });
                 th = true;
-                toast.custom(0, "warning", "这大概是一个东南亚版bangumi，很抱歉暂时不支持播放ಥ_ಥ");
+                xhrhook("api.bilibili.com/pgc/web/season/stat", undefined, (res) => {
+                    const t = `{"code": 0,"message":"0","ttl":1,"result":${JSON.stringify(result.result.stat)}}`;
+                    res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+                }, false);
+                toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用脚本【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
             }
             else throw result;
         } catch (e) {
-            toast.error("访问国际版B站出错~", e);
+            toast.error("访问泰区B站出错，请检查泰区代理服务器设置~", "或许这就是个无效Bangumi？", e);
             debug.error("BilibiliGlobal", e);
         }
     }

@@ -168,7 +168,7 @@ interface GMxhrDetails {
     /** ie. user-agent, referer, ... (some special headers are not supported by Safari and Android browsers) */
     headers?: { [name: string]: string };
     /** some string to send via a POST request */
-    data?: string;
+    data?: Document | XMLHttpRequestBodyInit | null;
     /** a cookie to be patched into the sent cookie set */
     cookie?: string;
     /** send the data string in binary mode */
@@ -226,4 +226,10 @@ interface GMxhrResponse {
     responseXML: Document;
     /** the response data as plain string */
     responseText: string;
+    /** A boolean value indicating if the total work to be done, and the amount of work already done, by the underlying process is calculable. In other words, it tells if the progress is measurable or not. It defaults to `false`. */
+    lengthComputable: boolean;
+    /** A number representing the amount of work already performed by the underlying process. The ratio of work done can be calculated with the property and `ProgressEvent.total`. When downloading a resource using HTTP, this only represent the part of the content itself, not headers and other overhead. It defaults to `0`. */
+    loaded: number;
+    /** A number representing the total amount of work that the underlying process is in the progress of performing. When downloading a resource using HTTP, this only represent the content itself, not headers and other overhead. It defaults to `0`. */
+    total: number;
 }

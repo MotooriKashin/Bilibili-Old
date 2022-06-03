@@ -32,7 +32,7 @@ namespace API {
             let timer: number // 过滤短时间重复操作
             node.addEventListener("click", () => {
                 clearTimeout(timer);
-                setTimeout(() => {
+                timer = setTimeout(() => {
                     value();
                 }, 100);
             });

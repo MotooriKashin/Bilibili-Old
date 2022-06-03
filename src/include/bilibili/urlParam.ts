@@ -8,6 +8,7 @@ namespace API {
     /**
      * 从url中提取aid/cid/ssid/epid等信息，提取不到就尝试获取
      * @param url B站视频页url，或者提供视频相关参数
+     * @param redirect 是否处理Bangumi重定向？注意对于失效视频，请主动置为`false`
      * @returns 对于bangumi，会设置`pgc=true`
      * @example
      * urlParam(location.href); // 完整url：会自动识别下面这些参数
@@ -26,7 +27,7 @@ namespace API {
      * urlParam("season_id=3398"); // season_id
      * urlParam("ep_id=84795"); // ep_id
      */
-    export async function urlParam(url = location.href): Promise<Record<PropertyKey, any>> {
+    export async function urlParam(url = location.href, redirect = true): Promise<Record<PropertyKey, any>> {
         url && !url.includes("?") && (url = "?" + url);
         const obj = urlObj(url);
         let { aid, cid, ssid, epid, p } = obj;
@@ -74,7 +75,7 @@ namespace API {
                                 let data = jsonCheck(await xhr({ url: objUrl("https://www.biliplus.com/api/view", { "id": aid }) }, true));
                                 catchs.aid[aid] = data.list || (data.v2_app_api && data.v2_app_api.pages);
                                 catchs.aid[aid].forEach((d: any) => d.aid = aid);
-                                if (data.v2_app_api && data.v2_app_api.redirect_url) return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
+                                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url) return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
                                 return catchs.aid[aid][<number>p - 1] || catchs.aid[aid][0];
                             } catch (e) { debug.error("biliplus", e); }
                         }

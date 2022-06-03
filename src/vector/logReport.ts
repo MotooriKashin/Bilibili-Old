@@ -4,19 +4,19 @@ interface modules {
 }
 namespace API {
     Object.defineProperty(window, "reportObserver", {
-        get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true,configurable:true
+        get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true, configurable: true
     });
     Object.defineProperty(window, "rec_rp", {
-        get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true,configurable:true
+        get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true, configurable: true
     });
     Object.defineProperty(window, "reportMsgObj", {
-        get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true,configurable:true
+        get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true, configurable: true
     });
-    xhrhookasync("data.bilibili.com", (args) => {
+    xhrhookAsync("data.bilibili.com", (args) => {
         debug.debug("拦截日志", ...args);
         return true;
     }, undefined, false);
-    xhrhookasync("data.bilivideo.com", (args) => {
+    xhrhookAsync("data.bilivideo.com", (args) => {
         debug.debug("拦截日志", ...args);
         return true;
     }, undefined, false);

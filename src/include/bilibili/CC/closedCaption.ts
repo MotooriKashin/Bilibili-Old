@@ -267,6 +267,7 @@ namespace API {
             arr.forEach(d => {
                 d.lan && (
                     d.lan === "zh-CN" && (chs = true),
+                    d.lan === "zh-Hans" && (chs = true),
                     d.lan.includes("zh") && (base = { ...d }));
                 config.downloadOther && pushDownload({
                     group: "CC字幕",

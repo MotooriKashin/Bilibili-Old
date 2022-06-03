@@ -34,7 +34,7 @@ namespace API {
     }, true);
     // 修复相关视频推荐 接口来自md页面
     const related: Record<string, string> = {};
-    xhrhookasync("x/web-interface/archive/related", () => ((<any>window).__INITIAL_STATE__).mediaInfo.title, async (u, t) => {
+    xhrhookAsync("x/web-interface/archive/related", () => ((<any>window).__INITIAL_STATE__).mediaInfo.title, async (u, t) => {
         let result = '{ code: 0, data: [], message: "0" }';
         if (related[((<any>window).__INITIAL_STATE__).mediaInfo.title]) {
             result = related[((<any>window).__INITIAL_STATE__).mediaInfo.title];
@@ -68,7 +68,7 @@ namespace API {
     title && (document.title = title);
     doWhile(() => (<any>window).__INITIAL_STATE__, d => {
         bangumiInitialState().then(() => {
-            config.enlike && new enLike("bangumi");
+            config.enlike && new enLike("bangumi", d.mediaInfo.stat.likes);
             if (d.special) {
                 // 带海报的bangumi隐藏顶栏banner和wrapper
                 addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
