@@ -109,6 +109,7 @@ namespace API {
         if (downloading) return;
         downloading = true;
         if (!cid) return toast.warning("请在视频页使用本功能~");
+        if (th) toast.warning("泰区视频！", "请将【referer】置空，【UserAgent】设为默认值，并选用【默认】以外的方式进行下载~");
         const data = playinfoFiter(__playinfo__);
         const request: Promise<any>[] = [];
         const type = config.downlaodType.join(" ").toLowerCase();
