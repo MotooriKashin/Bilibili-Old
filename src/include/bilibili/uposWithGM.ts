@@ -1,4 +1,6 @@
 namespace API {
+    /** hook标记，防止重复操作 */
+    let isHooking = false;
     /**
      * 修改xhr响应
      * @param target 目标XMLHttpRequest
@@ -46,12 +48,13 @@ namespace API {
      * @param UserAgent 指定UserAgent
      */
     export function uposWithGM(url: string | string[] = ".m4s", UserAgent = config.userAgent) {
+        if (isHooking) return;
         xhrhookUltra(url, function (target, args) {
             const obj: GMxhrDetails = {
                 method: <"GET" | "HEAD" | "POST">args[0],
                 url: args[1],
                 headers: {
-                    "user-agent": config.userAgent
+                    "user-agent": UserAgent
                 },
                 onloadstart: (res) => {
                     defineRes(this, res, () => { });
@@ -148,5 +151,6 @@ namespace API {
                 }
             })
         });
+        isHooking = true;
     }
 }

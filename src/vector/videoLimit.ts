@@ -35,10 +35,9 @@ namespace API {
                 platform: "android",
                 ts: new Date().getTime()
             });
-            const result = await xhr({
-                url: urlsign(`https://${config.videoLimit[area]}/pgc/player/api/playurl`, obj, 2),
-                responseType: "json"
-            });
+            const result = jsonCheck(uposReplace(await xhr({
+                url: urlsign(`https://${config.videoLimit[area]}/pgc/player/api/playurl`, obj, 2)
+            }), config.uposReplace.gat));
             if (result.code !== 0) throw result;
             return result;
         } catch (e) {
@@ -69,22 +68,29 @@ namespace API {
                     platform: "android",
                     ts: new Date().getTime()
                 });
-                toast.info("尝试解除区域限制... 访问代理服务器");
-                response = jsonCheck((await xhr.GM({
-                    url: urlsign(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
-                })).replace(/bstar1-mirrorakam\.akamaized\.net/g, "sz-mirrorks3.bilivideo.com"));
-                response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
-                __playinfo__ = response;
-                toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
+                try {
+                    toast.info("尝试解除区域限制... 访问代理服务器");
+                    response = jsonCheck(uposReplace(await xhr.GM({
+                        url: urlsign(`https://${config.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
+                    }), config.uposReplace.th));
+                    response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
+                    __playinfo__ = response;
+                    toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);
+                } catch (e) {
+                    toast.error("解除限制失败 ಥ_ಥ");
+                    debug.error("解除限制失败 ಥ_ಥ", e);
+                    response = { "code": -404, "message": e, "data": null };
+                }
             }
             else if (limit) { // 处理区域限制
+                config.uposReplace.gat !== "不替换" && uposWithGM();
                 obj.module = ((<any>API).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>API).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
                 obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
                 try {
                     toast.info("尝试解除区域限制... 访问代理服务器");
-                    response = config.videoLimit.server === "内置" ? jsonCheck(await xhr.GM({
+                    response = config.videoLimit.server === "内置" ? jsonCheck(uposReplace(await xhr.GM({
                         url: objUrl("https://www.biliplus.com/BPplayurl.php", obj)
-                    })) : (delete obj.module, await customServer(obj, "tw"));
+                    }), config.uposReplace.gat)) : (delete obj.module, await customServer(obj, "tw"));
                     response = { "code": 0, "message": "success", "result": response };
                     __playinfo__ = response;
                     toast.success(`解除区域限制！aid=${aid}, cid=${cid}`);

@@ -158,6 +158,6 @@ namespace API {
                     break;
             }
         } catch (e) { }
-        return result;
+        return JSON.parse(uposReplace(JSON.stringify(result), config.uposReplace.dl));
     }
 }

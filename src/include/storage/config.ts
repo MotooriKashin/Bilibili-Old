@@ -179,6 +179,17 @@ interface config {
     privateRecommend: boolean;
     /** 分集数据 */
     episodeData: boolean;
+    /** 替换UPOS服务器 */
+    uposReplace: {
+        /** 一般视频 */
+        nor: "ks3（金山）" | "ks3b（金山）" | "ks3c（金山）" | "ks32（金山）" | "kodo（七牛）" | "kodob（七牛）" | "cos（腾讯）" | "cosb（腾讯）" | "coso1（腾讯）" | "coso2（腾讯）" | "bos（腾讯）" | "hw（华为）" | "hwb（华为）" | "uphw（华为）" | "js（华为）" | "hk（香港）" | "akamai（海外）" | "不替换";
+        /** 港澳台+大陆代理 */
+        gat: "ks3（金山）" | "ks3b（金山）" | "ks3c（金山）" | "ks32（金山）" | "kodo（七牛）" | "kodob（七牛）" | "cos（腾讯）" | "cosb（腾讯）" | "coso1（腾讯）" | "coso2（腾讯）" | "bos（腾讯）" | "hw（华为）" | "hwb（华为）" | "uphw（华为）" | "js（华为）" | "hk（香港）" | "akamai（海外）" | "不替换";
+        /** 泰区代理 */
+        th: "ks3（金山）" | "ks3b（金山）" | "ks3c（金山）" | "ks32（金山）" | "kodo（七牛）" | "kodob（七牛）" | "cos（腾讯）" | "cosb（腾讯）" | "coso1（腾讯）" | "coso2（腾讯）" | "bos（腾讯）" | "hw（华为）" | "hwb（华为）" | "uphw（华为）" | "js（华为）" | "hk（香港）" | "akamai（海外）";
+        /** 下载 */
+        dl: "ks3（金山）" | "ks3b（金山）" | "ks3c（金山）" | "ks32（金山）" | "kodo（七牛）" | "kodob（七牛）" | "cos（腾讯）" | "cosb（腾讯）" | "coso1（腾讯）" | "coso2（腾讯）" | "bos（腾讯）" | "hw（华为）" | "hwb（华为）" | "uphw（华为）" | "js（华为）" | "hk（香港）" | "akamai（海外）" | "不替换";
+    }
 }
 namespace API {
     const CONFIG = GM.getValue<config>("config", <config>{});
@@ -200,6 +211,8 @@ namespace API {
             return (isArray(result) || isObject(result)) ? new Proxy(result, new ProxyHandler(saveConfig)) : result;
         }
     });
+    /** upos服务器 */
+    const UPOS = ['ks3（金山）', 'ks3b（金山）', 'ks3c（金山）', 'ks32（金山）', 'kodo（七牛）', 'kodob（七牛）', 'cos（腾讯）', 'cosb（腾讯）', 'coso1（腾讯）', 'coso2（腾讯）', 'bos（腾讯）', 'hw（华为）', 'hwb（华为）', 'uphw（华为）', 'js（华为）', 'hk（香港）', 'akamai（海外）'];
     registerMenu([
         { key: "common", name: "通用", svg: getModule("wrench.svg") },
         { key: "rewrite", name: "重构", svg: getModule("note.svg") },
@@ -904,7 +917,7 @@ namespace API {
             type: "checkbox",
             label: "类型",
             sub: "请求的文件类型",
-            float: '请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。<br>※DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。<br>※flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。',
+            float: '请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※ mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。<br>※ DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。<br>※ flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。',
             value: ["mp4"],
             candidate: ["mp4", "flv", "DASH"]
         },
@@ -1035,7 +1048,7 @@ namespace API {
             type: "input",
             label: "User-Agent",
             sub: '高级设置',
-            float: 'B站视频一般都需要有效User-Agent，否则会403。（默认下载方式以外才有意义。）',
+            float: 'B站视频一般都需要有效User-Agent，否则会403。（默认下载方式以外才有意义。）<br>※ <strong>本项会同时影响替换UPOS服务器后能否播放，默认值才是经检验的最合适的值！</strong>',
             value: "Bilibili Freedoooooom/MarkII",
             candidate: ["Bilibili Freedoooooom/MarkII"]
         },
@@ -1228,6 +1241,50 @@ namespace API {
             sub: "Bangumi",
             float: `对于Bangumi，显示单集播放量和弹幕，原合计数据显示在鼠标焦点提示文本中。`,
             value: false
+        },
+        {
+            key: "uposReplace",
+            menu: "player",
+            type: "list",
+            name: "替换UPOS服务器",
+            list: [
+                {
+                    key: "nor",
+                    type: "select",
+                    label: "一般视频",
+                    sub: "不推荐",
+                    value: "不替换",
+                    float: `对于一般视频应该充分相信B站分配给你的视频服务器就是最合适的，所以一般不推荐主动替换。`,
+                    candidate: ["不替换"].concat(UPOS)
+                },
+                {
+                    key: "gat",
+                    type: "select",
+                    label: "代理：港澳台或大陆",
+                    sub: "看情况",
+                    value: "不替换",
+                    float: `解除港澳台限制获取到的视频服务器必定是海外的Akamai，在一些大陆网络中可能体验并不好，可以看情况指定其他服务器。港澳台（及海外）网络访问大陆服务器同理。<br>※ 替换的服务器大概率有【referer】【UserAgent】限制，脚本尝试通过GM钩子绕过，方案可能并不稳定，若出问题请禁用替换或者前往Github反馈。`,
+                    candidate: ["不替换"].concat(UPOS)
+                },
+                {
+                    key: "th",
+                    type: "select",
+                    label: "代理：泰区",
+                    sub: "必选",
+                    value: "ks3（金山）",
+                    float: `泰区视频返回的服务器ban了大陆IP，所以必须进行替换！请根据自身网络情况选择。<br>※ 替换的服务器有【referer】【UserAgent】限制，脚本尝试通过GM钩子绕过，方案可能并不稳定，若出问题前往Github反馈。`,
+                    candidate: UPOS
+                },
+                {
+                    key: "dl",
+                    type: "select",
+                    label: "下载",
+                    sub: "不推荐",
+                    value: "不替换",
+                    float: `替换下载功能获取到的视频服务器，对于播放器已获取到的视频源，已经在上面的选项中处理过了。剩下的跟一般视频同理，不推荐替换。<br>※ 注意有【referer】【UserAgent】限制视频源，请在下载面板将【referer】置空，【UserAgent】设为有效值（默认值肯定有效！）`,
+                    candidate: ["不替换"].concat(UPOS)
+                }
+            ]
         }
     ]);
 }

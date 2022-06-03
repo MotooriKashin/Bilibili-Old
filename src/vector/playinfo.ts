@@ -13,9 +13,11 @@ namespace API {
         param.cid && (cid = Number(param.cid));
         param.seasonId && (ssid = Number(param.seasonId));
         param.episodeId && (epid = Number(param.episodeId));
-    }, async obj => {
+    }, obj => {
         try {
-            __playinfo__ = obj.responseType === "json" ? obj.response : jsonCheck(obj.response);
+            const str = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, config.uposReplace.nor);
+            __playinfo__ = JSON.parse(str);
+            obj.responseType === "json" ? obj.response = __playinfo__ : obj.response = obj.responseText = str;
         } catch (e) { }
     }, false);
     let timer: number, tag = false; // 过滤栈
