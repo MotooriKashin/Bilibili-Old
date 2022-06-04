@@ -59,6 +59,8 @@ namespace API {
         type?: "button" | "checkbox" | "color" | "date" | "datetime" | "datetime-local" | "email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week"
         /** 元素的宽度：/px，`type="image"`限定 */
         width?: number;
+        /** 校验输入的正则 **字符串形式** */
+        pattern?: string;
     }
     /** 配置数据 */
     interface Value {
