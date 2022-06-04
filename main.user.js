@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.0.8
+// @version      8.0.9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -15663,6 +15663,18 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 catch (e) {
                     API.toast.error("解除限制失败 ಥ_ಥ");
                     API.debug.error("解除限制失败 ಥ_ಥ", e);
+                    if (!accesskey) {
+                        API.alert("这似乎是一个泰区限制视频，需要授权解析服务器使用您的账户才能尝试解析。<strong>但这意味着解析服务器会获得您账户的部分权限，请务必确认对反的可靠性然后操作！</strong><br>是否前往账户授权？", "解除限制出错", [
+                            {
+                                name: "立即前往",
+                                callback: () => API.showSetting("accessKey")
+                            },
+                            {
+                                name: "还是算了",
+                                callback: () => { }
+                            }
+                        ]);
+                    }
                     response = { "code": -404, "message": e, "data": null };
                 }
             }
@@ -15682,6 +15694,18 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 catch (e) {
                     API.toast.error("解除限制失败 ಥ_ಥ");
                     API.debug.error("解除限制失败 ಥ_ಥ", e);
+                    if (API.config.videoLimit.server === "自定义") {
+                        API.alert("您将代理服务器设置为【自定义】，服务器返回出错，这可能是您由于未进行【账户授权】或者授权过期。<br>是否前往账户授权？", "解除限制出错", [
+                            {
+                                name: "立即前往",
+                                callback: () => API.showSetting("accessKey")
+                            },
+                            {
+                                name: "还是算了",
+                                callback: () => { }
+                            }
+                        ]);
+                    }
                     response = { "code": -404, "message": e, "data": null };
                 }
             }
