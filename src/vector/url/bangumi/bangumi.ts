@@ -32,6 +32,15 @@ namespace API {
             r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
         } catch (e) { }
     }, true);
+    // 解除区域限制（重定向模式）
+    config.videoLimit.switch && xhrhook("bangumi.bilibili.com/view/web_api/season/user/status", undefined, res => {
+        try {
+            const data = res.responseType === "json" ? res.response : JSON.parse(res.response);
+            data.result.area_limit = 0;
+            data.result.ban_area_show = 0;
+            res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
+        } catch (e) { }
+    }, false);
     // 修复相关视频推荐 接口来自md页面
     const related: Record<string, string> = {};
     xhrhookAsync("x/web-interface/archive/related", () => ((<any>window).__INITIAL_STATE__).mediaInfo.title, async (u, t) => {
@@ -75,7 +84,7 @@ namespace API {
             }
             // -> bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js:1148
             // epid回调经常无法触发导致不加载评论区，手动加载之
-            (<any>document).querySelector("#app")?.__vue__.loadComment();
+            doWhile(() => (<any>document).querySelector("#app")?.__vue__, d => d.loadComment());
         });
     });
     importModule("primaryMenu.js"); // 顶栏分区修正
