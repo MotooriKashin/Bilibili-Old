@@ -1083,7 +1083,7 @@
                         return '<img src="' + f.trimHttp(f.webp(n.url, {
                             w: 100,
                             h: 100
-                        })) + '"' + ("s" == t ? ' class="small"' : "") + ' alt="' + n.text + '">'
+                        })) + '"' + ("s" == t ? ' class="small"' : "") + ' alt="' + n.text + '" title="' + n.text + '">'
                     }
                     return e
                 })
@@ -1455,7 +1455,7 @@
                 var n,
                     t = e.cardbg,
                     r = "";
-                return "suit" === t.type && (e = (n = t.fan.number).toString(), n < 1e5 && (e = "0".repeat(6 - e.length) + e), r = '<div class="sailing-info" style="color:' + t.fan.color + '">NO.<br>' + e + "</div>"),
+                return "suit" === t.type && (e = (n = t.fan.number).toString(), n < 1e5 && (e = "0".repeat(6 - e.length) + e), r = '<div class="sailing-info" style="color:' + t.fan.color + '" title="' + t.name + '">NO.<br>' + e + "</div>"),
                     '<div class="sailing"><img class="sailing-img" src="' + f.trimHttp(f.webp(t.image, {
                         w: 576,
                         h: 96
