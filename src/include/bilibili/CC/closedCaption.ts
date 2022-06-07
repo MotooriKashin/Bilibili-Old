@@ -133,11 +133,13 @@ namespace API {
             <a class="bpui-button" href="https://member.bilibili.com/v2#/zimu/my-zimu/zimu-editor?cid=${cid}&aid=${aid}" target="_blank" title="" style="margin-right: 0px; height: 24px; padding: 0px 6px;">添加字幕</a>`;
             let list = this.element.language.children[1].children[2];
             this.text = this.element.language.children[1].children[0];
-            // this.element.language.children[2].onclick = () => {
-            //     importModule("download");
-            //     config.reset.dlother = 1; // 开启其他下载
-            //     download(); // 拉起下载面板
-            // }
+            this.element.language.children[2].onclick = () => {
+                this.caption.subtitle_url && fetch(this.caption.subtitle_url).then(d => {
+                    d.blob().then(d => {
+                        saveAs(d, `${title}-${this.caption.lan_doc}.json`);
+                    })
+                })
+            }
             list.children[0].onclick = () => {
                 this.text.innerHTML = "关闭";
                 this.setCaption();
