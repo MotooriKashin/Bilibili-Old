@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.0
+// @version      8.1.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -18242,12 +18242,57 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["bstarPlayurl.js"] = /*** ./src/vector/url/bangumi/bstarPlayurl.js ***/
 `
+    const descriptionMap = {
+        127: "超高清 8K",
+        126: "杜比视界",
+        125: "HDR",
+        120: "超清 4K",
+        116: "高清 1080P60",
+        112: "高清 1080P+",
+        80: "高清 1080P",
+        74: "高清 720P60",
+        64: "高清 720P",
+        48: "高清 720P",
+        32: "清晰 480P",
+        16: "流畅 360P",
+        15: "流畅 360P"
+    };
+    const formatMap = {
+        127: "hdflv2",
+        126: "hdflv2",
+        125: "hdflv2",
+        120: "hdflv2",
+        116: "flv_p60",
+        112: "hdflv2",
+        80: "flv",
+        74: "flv720_p60",
+        64: "flv720",
+        48: "flv720",
+        32: "flv480",
+        16: "mp4",
+        15: "mp4"
+    };
+    const qualityMap = {
+        127: "8K",
+        126: "Dolby",
+        125: "HDR",
+        120: "4K",
+        116: "1080P60",
+        112: "1080P+",
+        80: "1080P",
+        74: "720P60",
+        64: "720P",
+        48: "720P",
+        32: "480P",
+        16: "360P",
+        15: "360P"
+    };
     /** DASH playurl result模板 */
     class Playurl {
         constructor() {
-            this.accept_description = ["高清 1080P+", "高清 1080P", "高清 720P", "清晰 480P", "流畅 360P"];
-            this.accept_format = "hdflv2,flv,flv720,flv480,mp4";
-            this.accept_quality = [112, 80, 64, 32, 16];
+            this.accept_description = [];
+            this.accept_format = "";
+            this.accept_quality = [];
             this.bp = 0;
             this.code = 0;
             this.dash = {
@@ -18271,52 +18316,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             this.seek_param = "start";
             this.seek_type = "offset";
             this.status = 2;
-            this.support_formats = [
-                {
-                    description: "高清 1080P+",
-                    display_desc: "1080P",
-                    format: "hdflv2",
-                    need_login: true,
-                    need_vip: true,
-                    new_description: "1080P 高码率",
-                    quality: 112,
-                    superscript: "高码率"
-                },
-                {
-                    description: "高清 1080P",
-                    display_desc: "1080P",
-                    format: "flv",
-                    need_login: true,
-                    new_description: "1080P 高清",
-                    quality: 80,
-                    superscript: ""
-                },
-                {
-                    description: "高清 720P",
-                    display_desc: "720P",
-                    format: "flv720",
-                    need_login: true,
-                    new_description: "720P 高清",
-                    quality: 64,
-                    superscript: ""
-                },
-                {
-                    description: "清晰 480P",
-                    display_desc: "480P",
-                    format: "flv480",
-                    new_description: "480P 清晰",
-                    quality: 32,
-                    superscript: ""
-                },
-                {
-                    description: "流畅 360P",
-                    display_desc: "360P",
-                    format: "mp4",
-                    new_description: "360P 流畅",
-                    quality: 16,
-                    superscript: ""
-                }
-            ];
+            this.support_formats = [];
             this.timelength = 0;
             this.type = "DASH";
             this.video_codecid = 7;
@@ -18431,17 +18431,12 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
      * @param ogv 原始数据(json)
      */
     async function bstarPlayurl(ogv) {
+        debugger;
         const playurl = new Playurl();
+        const set = [];
         playurl.quality = ogv.data.video_info.stream_list[0].stream_info.quality || ogv.data.video_info.quality;
-        const num = playurl.accept_quality.indexOf(playurl.quality);
-        playurl.format = playurl.accept_format.split(",")[num];
+        playurl.format = formatMap[playurl.quality];
         playurl.timelength = ogv.data.video_info.timelength;
-        playurl.accept_quality.splice(0, num);
-        playurl.support_formats.splice(0, num);
-        playurl.accept_description.splice(0, num);
-        playurl.accept_format = playurl.accept_format.split(",");
-        playurl.accept_format.splice(0, num);
-        playurl.accept_format = playurl.accept_format.join(",");
         playurl.dash.duration = Math.ceil(playurl.timelength / 1000);
         playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
         await Promise.all(ogv.data.video_info.stream_list.reduce((s, d, i) => {
@@ -18449,6 +18444,17 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 s.push((async (d) => {
                     OBJ[\`sidx\${API.cid}\`] || (OBJ[\`sidx\${API.cid}\`] = {});
                     const id = d.stream_info.quality || d.dash_video.base_url.match(/[0-9]+\\.m4s/)[0].split(".")[0];
+                    playurl.accept_description.push(descriptionMap[id]);
+                    set.push(formatMap[id]);
+                    playurl.accept_quality.push(id);
+                    playurl.support_formats.push({
+                        description: descriptionMap[id],
+                        display_desc: qualityMap[id],
+                        format: formatMap[id],
+                        new_description: descriptionMap[id],
+                        quality: id,
+                        superscript: ""
+                    });
                     if (!OBJ[\`sidx\${API.cid}\`][id]) {
                         let data = new Uint8Array(await getIdxs(d.dash_video.base_url, playurl.dash.duration));
                         let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
@@ -18555,6 +18561,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 video.push(hev[i]);
         }
         playurl.dash.video = video;
+        // 字符串化格式
+        playurl.accept_format = set.join(",");
         return playurl;
     }
     API.bstarPlayurl = bstarPlayurl;
