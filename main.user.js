@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.1
+// @version      8.1.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -10993,7 +10993,7 @@ const modules = {};
                     Object.defineProperty(this, "status", { configurable: true, value: 200 });
                     Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
                     this.dispatchEvent(new ProgressEvent("readystatechange"));
-                    modifyResponse && modifyResponse(args, this.responseType).then(d => {
+                    modifyResponse ? modifyResponse(args, this.responseType).then(d => {
                         clearInterval(et);
                         if (d) {
                             Object.defineProperty(this, "response", { configurable: true, value: d.response });
@@ -11030,7 +11030,7 @@ const modules = {};
                     }).finally(() => {
                         clearInterval(et);
                         !once && (id = rules.push(temp)); // 恢复多次监听
-                    });
+                    }) : (this.abort(), !once && (id = rules.push(temp)));
                     clearInterval(et);
                 }
             }
@@ -12075,8 +12075,8 @@ const modules = {};
             svg: API.getModule("warn.svg"),
             type: "switch",
             value: false,
-            float: \`启用开发者模式，暴露顶层命名空间API到全局以便于调试。\`,
-            sub: "暴露API到window",
+            float: \`暴露顶层命名空间到全局，变量名API，挂载有脚本导出的所有接口，可以在全局作用域中使用，方便进行调试等操作。\`,
+            sub: "暴露顶层命名空间",
             callback: v => {
                 v ? (!window.API && (window.API = API)) : (window.API && Reflect.deleteProperty(window, "API"));
             }
@@ -12089,6 +12089,7 @@ const modules = {};
             type: "switch",
             value: false,
             sub: '右下角贴边隐藏',
+            float: '原滋原味保护旧版页面，不添加、修改或删除任何元素是本脚本的终极追求。<br>开启后将贴边隐藏设置入口，页面加载完成时也不会有任何提示，需要将鼠标移动到页面右下角以上一定感应区域才会显现。',
             callback: () => {
                 API.showSettingEntry();
             }
@@ -12099,7 +12100,7 @@ const modules = {};
             label: "日志拦截",
             svg: API.getModule("linechart.svg"),
             sub: "拦截B站日志上报",
-            float: "网页端日志采集太频繁，稍微动下鼠标都要发送数条日志请求，给network调试带来额外的困扰。",
+            float: "网页端日志采集太频繁，稍微动下鼠标都要发送数条日志请求，给调试工作带来额外的困扰，所以一股脑都屏蔽了干净。<br>ps：APP端其实日志更多，只能说眼不见为净吧~",
             type: "switch",
             value: false
         },
@@ -12109,7 +12110,7 @@ const modules = {};
             label: "托管原生脚本",
             svg: API.getModule("migrate.svg"),
             sub: "代为修复和维护",
-            float: '脚本很多功能依赖此实现，如非必要请不要关闭。<br>使用jsdelivr作为资源CDN，但国内部分网络环境可能访问不善，出现这种情况时请临时关闭以暂时使用本脚本。',
+            float: '托管修复后的原生脚本，很多功能依赖此基础，如非必要请不要关闭。<br>由于jsdelivr CDN被墙，托管资源加载不正常时请临时关闭。',
             type: "switch",
             value: true,
             callback: v => {
@@ -12139,7 +12140,7 @@ const modules = {};
                     type: "switch",
                     label: "开关",
                     value: true,
-                    sub: '感谢 <a href="//github.com/CodeSeven/toastr" target="_blank">toastr</a> 提供技术支持！'
+                    sub: '感谢 <a href="//github.com/CodeSeven/toastr" target="_blank">toastr</a> 提供支持！'
                 },
                 {
                     key: "rtl",
@@ -12198,13 +12199,13 @@ const modules = {};
             label: "av/BV",
             type: "switch",
             value: true,
-            float: '重构以恢复旧版av视频播放页。'
+            sub: '旧版一般视频播放页面'
         },
         {
             key: "videoLimit",
             menu: "player",
             type: "list",
-            name: "区域/APP限制",
+            name: "解除区域/APP限制",
             list: [
                 {
                     key: "switch",
@@ -12243,25 +12244,33 @@ const modules = {};
                     key: "cn",
                     type: "input",
                     label: "大陆",
+                    sub: "大陆反代",
                     props: { type: "url", placeholder: "www.example.com" },
+                    float: '海外用户用来观看大陆限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>'
                 },
                 {
                     key: "hk",
                     type: "input",
                     label: "香港",
+                    sub: "香港反代",
                     props: { type: "url", placeholder: "www.example.com" },
+                    float: '香港以外的用户用来观看香港澳门限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>'
                 },
                 {
                     key: "tw",
                     type: "input",
                     label: "台湾",
+                    sub: "台湾反代",
                     props: { type: "url", placeholder: "www.example.com" },
+                    float: '台湾以外的用户用来观看台湾限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>'
                 },
                 {
                     key: "th",
                     type: "input",
                     label: "泰国",
+                    sub: "泰国（东南亚）反代",
                     props: { type: "url", placeholder: "www.example.com" },
+                    float: '用来观看泰国（东南亚）限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>'
                 }
             ]
         },
@@ -12272,7 +12281,7 @@ const modules = {};
             sub: "protobuf",
             type: "switch",
             value: true,
-            float: \`添加旧版播放器新版proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。</br>”\`
+            float: \`为旧版播放器添加proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。\`
         },
         {
             key: "section",
@@ -12307,7 +12316,7 @@ const modules = {};
             label: "页面重构模式",
             svg: API.getModule("vernier.svg"),
             type: "select",
-            sub: "页面不正常时的选择",
+            sub: "改善脚本兼容性",
             value: "重写",
             candidate: ["重定向", "重写"],
             float: \`重定向：先重定向再重写页面框架，完全避免被新版页面污染，减少页面出问题的概率。<br>重写：直接重写页面，所有在本脚本之前注入的浏览器扩展和脚本都将失效！<br>※ 本脚本一直在尝试使用各种方法在优化重构页面方案同时改进兼容性，但始终没有完美的解决办法，只能说非常抱歉！\`
@@ -12342,10 +12351,9 @@ const modules = {};
             key: "bangumi",
             menu: "rewrite",
             label: "bangumi",
-            sub: "ss/ep",
+            sub: "旧版Bangumi页面",
             type: "switch",
-            value: true,
-            float: '重构以恢复旧版bangumi播放页。'
+            value: true
         },
         {
             type: "switch",
@@ -12353,7 +12361,7 @@ const modules = {};
             label: "稍后再看",
             value: true,
             menu: "rewrite",
-            float: '重构以恢复旧版稍后再看。'
+            sub: '旧版稍后再看页面'
         },
         {
             type: "switch",
@@ -12361,7 +12369,7 @@ const modules = {};
             label: "嵌入",
             value: true,
             menu: "rewrite",
-            float: '重构以恢复旧版嵌入播放器。'
+            sub: '旧版嵌入式播放器'
         },
         {
             type: "switch",
@@ -12369,7 +12377,7 @@ const modules = {};
             label: "主页",
             value: true,
             menu: "rewrite",
-            float: '重构以恢复旧版主页'
+            sub: '旧版主页'
         },
         {
             type: "switch",
@@ -12377,7 +12385,7 @@ const modules = {};
             label: "排行榜",
             value: true,
             menu: "rewrite",
-            float: "重构以恢复旧版全站排行榜。"
+            sub: "旧版全站排行榜"
         },
         {
             type: "switch",
@@ -12385,15 +12393,16 @@ const modules = {};
             label: "专栏",
             value: true,
             menu: "rewrite",
-            float: "重构以启用旧版专栏。"
+            sub: "旧版专栏页面"
         },
         {
             key: "medialist",
             menu: "rewrite",
             label: "medialist",
+            sub: "旧版播单相关页面",
             type: "switch",
             value: true,
-            float: "用旧版av页重构medialist页面。该页面使用曾经的播单页面进行模拟，初始状态视频数据为20，你可以滚送到播单底部以动态加载更多。另外由于播单已被官方禁用，您无法对播单进行收藏等操作，也不能访问播单详情页面。"
+            float: "使用旧版播单页面重构medialist相关页面，初始状态视频数据为20，可以滚送到播单底部以动态加载更多。另外由于播单已被官方禁用，您无法对播单进行收藏等操作，也不能访问播单详情页面。"
         },
         {
             key: "automate",
@@ -12509,17 +12518,17 @@ const modules = {};
         {
             type: "switch",
             key: "errands",
-            label: '恢复对于<a href="//space.bilibili.com/11783021" target="_blank">番剧出差</a>和<a href="//space.bilibili.com/1988098633" target="_blank">DM組</a>的访问',
-            sub: '还好没赶尽杀绝',
+            label: '恢复对限制UP主空间的访问',
+            sub: '<a href="//space.bilibili.com/11783021" target="_blank">哔哩哔哩番剧出差</a>、<a href="//space.bilibili.com/1988098633" target="_blank">b站_DM組</a>和<a href="//space.bilibili.com/2042149112" target="_blank">b站_EN組</a>',
             value: true,
             menu: "restore",
-            float: '使用备份数据修复对于番剧出差官方空间的访问。'
+            float: '使用备份数据修复对于港澳台官方番剧、影视剧和综艺投稿账户的访问。'
         },
         {
             type: "switch",
             key: "album",
             label: "还原个人空间相簿链接",
-            sub: "相簿比动态页面好看",
+            sub: "相簿也是时泪啊",
             value: false,
             menu: "restore",
             float: '将个人空间的相簿链接从动态重定向回原来的相簿。'
@@ -12540,17 +12549,17 @@ const modules = {};
             sub: \`有些甚至评论还在！\`,
             type: "switch",
             value: false,
-            float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。</br>※ 依赖第三方数据库且未必有效，<strong>请谨慎考虑是否开启！</strong>'
+            float: '使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。'
         },
         {
             type: "select",
             menu: "player",
             key: "codecType",
-            label: "优先载入的视频编码类型",
+            label: "视频编码",
             sub: "AVC、HEVC或AV1",
             value: "AVC",
             candidate: ["AVC", "HEVC", "AV1"],
-            float: '播放器会尽量优先加载所选择的编码，可根据设备解码能力与实际需要调整这个设置项。AVC兼容性最佳，AV1次之，HEVC则只有Safari支持，edge可通过一些操作进行支持。有关视频编码格式可查阅其他专业文档。',
+            float: '指定播放器优先加载的视频编码格式，可根据设备解码能力与实际需要调整这个设置项。<br>※ AVC：兼容性最好，文件体积较大<br>※ AV1：兼容性次之，文件体积较小<br>※ HEVC：兼容性最差，文件体积较小<br>压制效果要分视频讨论，在AVC大幅降低码率的今天，AV1或许可能是画质最好的选择，但一般都只能软解（考验硬件水平以及比硬解费电）。HEVC则除了Safari用户外不推荐考虑，令微软、谷歌都抛弃的版权流氓！',
             callback: v => {
                 let mime = {
                     "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
@@ -12575,13 +12584,15 @@ const modules = {};
             key: "search",
             menu: "rewrite",
             label: "搜索",
+            sub: '旧版搜索页面',
             type: "switch",
-            value: false
+            value: true
         },
         {
             key: "sortIndex",
             menu: "rewrite",
             label: "分区主页",
+            sub: "暂未实现，请善用B站施舍的【回到旧版】按钮",
             type: "switch",
             value: true,
             callback: v => API.setCookie("i-wanna-go-back", String(v ? 2 : -1))
@@ -12600,7 +12611,8 @@ const modules = {};
             label: "CC字幕",
             sub: '移植自<a href="https://greasyfork.org/scripts/378513" target="_blank">Bilibili CC字幕工具</a>',
             type: "switch",
-            value: true
+            value: true,
+            float: '没有简体中文时将提供一个繁体到简体的硬翻译，不考虑使用习惯等情况的那种。'
         },
         {
             key: "segProgress",
@@ -12701,7 +12713,7 @@ const modules = {};
             list: [
                 {
                     key: "concat",
-                    label: "合并已有弹幕",
+                    label: "与已有弹幕合并",
                     type: "switch",
                     value: false
                 },
@@ -12738,7 +12750,8 @@ const modules = {};
                     value: () => {
                         API.allDanmaku();
                     },
-                    button: "开始"
+                    button: "开始",
+                    float: '通过获取所有历史弹幕来实现，但每天的历史弹幕池其实有上限（远低于普通弹幕池），超出的部分是获取不到的，所以最后获取到的总数其实未必达得到【全弹幕】的要求（甚至可能不如普通弹幕池）。另外高级弹幕、代码弹幕等并不在历史弹幕池内，如果普通池内没有，想通过本功能来获取只是徒劳。'
                 }
             ]
         },
@@ -12879,7 +12892,8 @@ const modules = {};
                         ]);
                         break;
                 }
-            }
+            },
+            float: '默认下载方式请不要直接左键点击，右键另存为是更正确合理的操作。'
         },
         {
             key: "userAgent",
@@ -12897,7 +12911,7 @@ const modules = {};
             type: "input",
             label: "referer",
             sub: "高级设置",
-            float: 'B站视频一般填主站域名即可，其他会403。<strong>TV源必须置空！</strong>（默认下载方式以外才有意义。）',
+            float: 'B站视频一般填主站域名即可，其他会403。<strong>TV源/泰区视频必须置空！港澳台替换UPOS服务器后也可能需要置空。</strong>（默认下载方式以外才有意义。）',
             value: location.origin,
             candidate: [location.origin]
         },
@@ -13062,7 +13076,7 @@ const modules = {};
             type: "switch",
             label: "港澳台新番时间表",
             sub: '<a href="//www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
-            float: \`在主页番剧分区中，需主动从最新切换到响应的星期才会显示当天的数据。\`,
+            float: \`在主页番剧分区中，可能需主动从最新切换到响应的星期才会显示当天的数据。\`,
             value: false
         },
         {
@@ -13619,6 +13633,20 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         padding-inline-start: 12px;
     }
 
+    .switch>.label,
+    .button>.label,
+    .select>.label,
+    .input>.label,
+    .slider>.label {
+        flex: 2;
+    }
+
+    .select>.value,
+    .input>.value,
+    .slider>.value {
+        flex: 3;
+    }
+
     .sub {
         color: rgb(95, 99, 104);
         font-weight: 400;
@@ -13832,9 +13860,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             <div class="value"></div></div>\`)[0]));
             switch (set.type) {
                 case "button":
+                    part.classList.add("button");
                     part.lastChild.appendChild(new API.PushButton(set));
                     break;
                 case "checkbox":
+                    part.classList.add("checkbox");
                     const checkbox = API.addElement("div", undefined, part.lastChild);
                     set.candidate.forEach(t => {
                         checkbox.appendChild(new API.Checkbox(new Proxy({ label: t, value: set.value.includes(t) }, {
@@ -13855,15 +13885,19 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                     });
                     break;
                 case "input":
+                    part.classList.add("input");
                     part.lastChild.appendChild(new API.InputArea(set));
                     break;
                 case "select":
+                    part.classList.add("select");
                     part.lastChild.appendChild(new API.SelectMenu(set));
                     break;
                 case "slider":
+                    part.classList.add("slider");
                     part.lastChild.appendChild(new API.SliderBlock(set));
                     break;
                 case "switch":
+                    part.classList.add("switch");
                     part.lastChild.appendChild(new API.ButtonSwitch(set));
                     break;
             }
@@ -15042,6 +15076,10 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         return true;
     }, undefined, false);
     API.xhrhookAsync("data.bilivideo.com", (args) => {
+        API.debug.debug("拦截日志", ...args);
+        return true;
+    }, undefined, false);
+    API.xhrhookAsync("cm.bilibili.com", (args) => {
         API.debug.debug("拦截日志", ...args);
         return true;
     }, undefined, false);
