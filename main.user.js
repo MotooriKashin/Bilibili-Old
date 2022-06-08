@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.2
+// @version      8.1.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19579,7 +19579,7 @@ object {
     if (API.rebuildType != "重定向")
         API.windowClear();
     // 三日接口以外过期
-    API.jsonphook("api.bilibili.com/x/web-interface/ranking", d => d.replace(/day=\\d+/, "day=3"), undefined, false);
+    API.jsonphook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], d => d.replace(/day=\\d+/, "day=3"), undefined, false);
     if (API.rebuildType == "重定向") {
         document.documentElement.replaceChildren(API.createElements(API.htmlVnode(API.getModule("ranking.html"))));
         API.appendScripts(API.getModule("ranking-script.html")).then(() => API.loadendEvent());
