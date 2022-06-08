@@ -406,9 +406,11 @@ namespace API {
             <div class="value"></div></div>`
             )[0]));
             switch (set.type) {
-                case "button": (<HTMLDivElement>part.lastChild).appendChild(new PushButton(set));
+                case "button": part.classList.add("button");
+                    (<HTMLDivElement>part.lastChild).appendChild(new PushButton(set));
                     break;
-                case "checkbox": const checkbox = addElement("div", undefined, <HTMLDivElement>part.lastChild);
+                case "checkbox": part.classList.add("checkbox");
+                    const checkbox = addElement("div", undefined, <HTMLDivElement>part.lastChild);
                     set.candidate.forEach(t => {
                         checkbox.appendChild(new Checkbox(new Proxy({ label: t, value: set.value.includes(t) }, {
                             set: (tar, ppt, val, rcv) => {
@@ -426,13 +428,17 @@ namespace API {
                         })))
                     });
                     break;
-                case "input": (<HTMLDivElement>part.lastChild).appendChild(new InputArea(set));
+                case "input": part.classList.add("input");
+                    (<HTMLDivElement>part.lastChild).appendChild(new InputArea(set));
                     break;
-                case "select": (<HTMLDivElement>part.lastChild).appendChild(new SelectMenu(set));
+                case "select": part.classList.add("select");
+                    (<HTMLDivElement>part.lastChild).appendChild(new SelectMenu(set));
                     break;
-                case "slider": (<HTMLDivElement>part.lastChild).appendChild(new SliderBlock(set));
+                case "slider": part.classList.add("slider");
+                    (<HTMLDivElement>part.lastChild).appendChild(new SliderBlock(set));
                     break;
-                case "switch": (<HTMLDivElement>part.lastChild).appendChild(new ButtonSwitch(set));
+                case "switch": part.classList.add("switch");
+                    (<HTMLDivElement>part.lastChild).appendChild(new ButtonSwitch(set));
                     break;
             }
             set.float && new FloatQuote(part, set.float);
