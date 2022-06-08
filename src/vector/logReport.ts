@@ -20,5 +20,9 @@ namespace API {
         debug.debug("拦截日志", ...args);
         return true;
     }, undefined, false);
+    xhrhookAsync("cm.bilibili.com", (args) => {
+        debug.debug("拦截日志", ...args);
+        return true;
+    }, undefined, false);
     scriptBlock("log-reporter.js");
 }

@@ -76,7 +76,7 @@ namespace API {
                     Object.defineProperty(this, "status", { configurable: true, value: 200 });
                     Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
                     this.dispatchEvent(new ProgressEvent("readystatechange"));
-                    modifyResponse && modifyResponse(args, this.responseType).then(d => {
+                    modifyResponse ? modifyResponse(args, this.responseType).then(d => {
                         clearInterval(et);
                         if (d) {
                             Object.defineProperty(this, "response", { configurable: true, value: d.response });
@@ -111,7 +111,7 @@ namespace API {
                     }).finally(() => {
                         clearInterval(et);
                         !once && (id = rules.push(temp)); // 恢复多次监听
-                    })
+                    }) : (this.abort(), !once && (id = rules.push(temp)))
                     clearInterval(et);
                 }
             } catch (e) { debug.error("condition of xhrhook", one, e) }
