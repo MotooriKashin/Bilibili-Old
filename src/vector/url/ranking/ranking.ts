@@ -5,10 +5,10 @@ interface modules {
     readonly "ranking-script.html": string;
 }
 namespace API {
-    if (rebuildType !="重定向") windowClear();
+    if (rebuildType != "重定向") windowClear();
     // 三日接口以外过期
-    jsonphook("api.bilibili.com/x/web-interface/ranking", d => d.replace(/day=\d+/, "day=3"), undefined, false);
-    if (rebuildType =="重定向") {
+    jsonphook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], d => d.replace(/day=\d+/, "day=3"), undefined, false);
+    if (rebuildType == "重定向") {
         document.documentElement.replaceChildren(createElements(htmlVnode(getModule("ranking.html"))));
         appendScripts(getModule("ranking-script.html")).then(() => loadendEvent());
     } else {
