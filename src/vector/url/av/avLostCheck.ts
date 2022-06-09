@@ -97,6 +97,13 @@ namespace API {
     async function check(call: (res: any) => void) {
         try {
             toast.info(`正在进一步查询 av${aid} 的信息~`);
+            const card = await xhr({
+                url: `https://api.bilibili.com/x/article/cards?ids=av${aid}`,
+                responseType: "json"
+            })
+            if (card.data[`av${aid}`]) {
+                if (card.data[`av${aid}`].redirect_url) location.replace(card.data[`av${aid}`].redirect_url);
+            }
             const data = await xhr({
                 url: `https://www.biliplus.com/api/view?id=${aid}`,
                 responseType: "json"
@@ -104,10 +111,6 @@ namespace API {
             const res = view2Detail(data);
             if (res.data.View.season) {
                 return location.replace(res.data.View.season.ogv_play_url);
-                // 不重定向直接在av页载入Bangumi
-                // avPgc = true;
-                // ssid = res.data.View.season.season_id;
-                // res.data.View.season.ogv_play_url.replace(/[eE][pP]\d+/, (d: string) => epid = <any>d.substring(2));;
             }
             call(res);
             setTimeout(() => {

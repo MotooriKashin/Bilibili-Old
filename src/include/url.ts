@@ -19,7 +19,8 @@ namespace API {
             "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
             "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" },
             "app.bilibili.com/x/v2/activity/index": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", offset: 0, platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", tab_id: 0, tab_module_id: 0, ts: this.ts },
-            "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts }
+            "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts },
+            "bangumi.bilibili.com/api/season_v5": { appkey: 2, build: "2040100", platform: "android" }
         }
         /**
          * 请求封装好的json请求
@@ -81,6 +82,8 @@ namespace API {
         "app.bilibili.com/x/v2/activity/index": { page_id: number }
         /** APP端新番时间表 */
         "app.bilibili.com/x/v2/activity/inline": { page_id: number }
+        /** bangumi信息接口 */
+        "bangumi.bilibili.com/api/season_v5": { season_id: number }
     }
     /** 封装好的默认请求，已填好必须的参数 */
     export const url: Url = <any>undefined;
