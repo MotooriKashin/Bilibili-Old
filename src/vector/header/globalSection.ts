@@ -18,9 +18,18 @@ namespace API {
         if (!(<any>window).jQuery) await loadScript("//static.hdslb.com/js/jquery.min.js");
         loadScript("//static.hdslb.com/common/js/footer.js");
     }
+    /** 样式表清理 */
+    function styleClear() {
+        const d = document.styleSheets;
+        for (let i = 0; i < d.length; i++) {
+            (d[i].href?.includes("laputa-footer")
+                || d[i].href?.includes("laputa-header"))
+                && (d[i].disabled = true);
+        }
+    }
     addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;}");
     // 顶栏
-    doWhile(() => document.querySelector("#internationalHeader"), t => {
+    doWhile(() => document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader"), t => {
         let menu = false; // 是否完整类型
         if (
             document.querySelector(".mini-type")
@@ -33,11 +42,13 @@ namespace API {
             || location.href.includes("blackboard/x/act_list")
             || document.querySelector(".large-header")
             || document.querySelector(".bili-banner")
+            || (t.getAttribute("type") == "all")
         ) {
             menu = true;
         }
         t.setAttribute("class", `z-top-container${menu ? " has-menu" : ""}`);
         header(menu);
+        styleClear();
     })
     // 上古顶栏
     doWhile(() => document.querySelector(".z_top_container"), t => {
@@ -46,10 +57,11 @@ namespace API {
         header(true);
     })
     // 底栏
-    doWhile(() => document.querySelector(".international-footer"), t => {
+    doWhile(() => document.querySelector(".international-footer") || document.querySelector("#biliMainFooter"), t => {
         t.setAttribute("class", "footer bili-footer report-wrap-module");
         t.setAttribute("id", "home_footer");
-        footer()
+        footer();
+        styleClear();
     })
     // 鼠标放在顶栏上的动效
     doWhile(() => document.querySelector("#bili-header-m"), () => {

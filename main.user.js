@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.3
+// @version      8.1.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -570,7 +570,8 @@ const modules = {};
                 "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
                 "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" },
                 "app.bilibili.com/x/v2/activity/index": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval: API.fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", offset: 0, platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", tab_id: 0, tab_module_id: 0, ts: this.ts },
-                "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval: API.fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts }
+                "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 3030000, c_locale: "zh_CN", channel: "master", fnval: API.fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts },
+                "bangumi.bilibili.com/api/season_v5": { appkey: 2, build: "2040100", platform: "android" }
             };
         }
         get ts() {
@@ -843,86 +844,24 @@ const modules = {};
         }
     }
     API.mediaSession = mediaSession;
-    function getView() {
-        API.xhr({
-            url: \`https://api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`,
-            credentials: true,
-            responseType: "json"
-        }, true).then(d => {
-            if (d.code === 0) {
-                mediaSession({
-                    title: API.title = d.data.pages.find((d) => d.cid == API.cid).part,
-                    artist: d.data.owner.name,
-                    album: d.data.title,
-                    artwork: [
-                        { src: API.cover = d.data.pic }
-                    ]
-                });
-            }
-            else {
-                return API.xhr({
-                    url: \`https://api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=\${API.aid}&type=json\`,
-                    credentials: true,
-                    responseType: "json"
-                }, true).then(d => {
-                    if (d.cid) {
-                        mediaSession({
-                            title: API.title = d.list.find((d) => d.cid == API.cid).part,
-                            artist: d.author,
-                            album: d.title,
-                            artwork: [
-                                { src: API.cover = d.pic }
-                            ]
-                        });
-                    }
-                    else {
-                        return API.xhr({
-                            url: \`https://www.biliplus.com/api/view?id=\${API.aid}\`,
-                            responseType: "json"
-                        }, true).then(d => {
-                            if (d.cid) {
-                                mediaSession({
-                                    title: API.title = d.list.find((d) => d.cid == API.cid).part,
-                                    artist: d.author,
-                                    album: d.title,
-                                    artwork: [
-                                        { src: API.cover = d.pic }
-                                    ]
-                                });
-                            }
-                            else {
-                                return Promise.reject("未能获取到播放数据~");
-                            }
-                        });
-                    }
-                });
-            }
-        }).catch(e => { API.debug.error(e); });
-    }
     /** 设置媒体控制信息 */
     function setMediaSession() {
-        if (API.ssid && API.epid) {
-            API.xhr({
-                url: \`https://bangumi.bilibili.com/view/web_api/season?season_id=\${API.ssid}\`,
-                credentials: true,
-                responseType: "json"
-            }, true).then(d => {
-                if (d.code === 0) {
-                    mediaSession({
-                        title: API.title = d.result.episodes.find((d) => d.ep_id == API.epid).index_title,
-                        artist: d.result.actors,
-                        album: d.result.title,
-                        artwork: [
-                            { src: API.cover = d.result.episodes.find((d) => d.ep_id == API.epid).cover }
-                        ]
-                    });
-                }
-                else
-                    getView();
-            });
-        }
-        else
-            getView();
+        API.xhr({
+            url: \`https://api.bilibili.com/x/article/cards?ids=av\${API.aid}\`,
+            responseType: "json"
+        }, true).then(d => {
+            if (d.data[\`av\${API.aid}\`]) {
+                mediaSession({
+                    title: d.data[\`av\${API.aid}\`].title,
+                    artist: d.data[\`av\${API.aid}\`].owner.name,
+                    album: API.epid ? \`ep\${API.epid}\` : \`av\${API.aid}\`,
+                    artwork: [
+                        { src: API.cover = d.data[\`av\${API.aid}\`].pic }
+                    ]
+                });
+                API.title = API.epid ? \`ep\${API.epid}\` : \`av\${API.aid}\` + " " + d.data[\`av\${API.aid}\`].title;
+            }
+        }).catch(e => { API.debug.error("MediaSession", e); });
     }
     API.setMediaSession = setMediaSession;
 
@@ -12089,7 +12028,7 @@ const modules = {};
             type: "switch",
             value: false,
             sub: '右下角贴边隐藏',
-            float: '原滋原味保护旧版页面，不添加、修改或删除任何元素是本脚本的终极追求。<br>开启后将贴边隐藏设置入口，页面加载完成时也不会有任何提示，需要将鼠标移动到页面右下角以上一定感应区域才会显现。',
+            float: '原滋原味保护旧版页面，不添加、修改或删除任何元素是本脚本的终极追求。<br>开启后将贴边隐藏设置入口，页面加载完成时也不会有任何提示，需要将鼠标移动到页面右下角以上一定感应区域才会显现。<br>※ <strong>Firefox用户切莫开启！</strong>',
             callback: () => {
                 API.showSettingEntry();
             }
@@ -16889,9 +16828,18 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             await API.loadScript("//static.hdslb.com/js/jquery.min.js");
         API.loadScript("//static.hdslb.com/common/js/footer.js");
     }
+    /** 样式表清理 */
+    function styleClear() {
+        const d = document.styleSheets;
+        for (let i = 0; i < d.length; i++) {
+            (d[i].href?.includes("laputa-footer")
+                || d[i].href?.includes("laputa-header"))
+                && (d[i].disabled = true);
+        }
+    }
     API.addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;}");
     // 顶栏
-    API.doWhile(() => document.querySelector("#internationalHeader"), t => {
+    API.doWhile(() => document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader"), t => {
         let menu = false; // 是否完整类型
         if (document.querySelector(".mini-type")
             || /festival/.test(location.href)) {
@@ -16900,11 +16848,13 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         if (location.href.includes("blackboard/topic_list")
             || location.href.includes("blackboard/x/act_list")
             || document.querySelector(".large-header")
-            || document.querySelector(".bili-banner")) {
+            || document.querySelector(".bili-banner")
+            || (t.getAttribute("type") == "all")) {
             menu = true;
         }
         t.setAttribute("class", \`z-top-container\${menu ? " has-menu" : ""}\`);
         header(menu);
+        styleClear();
     });
     // 上古顶栏
     API.doWhile(() => document.querySelector(".z_top_container"), t => {
@@ -16913,10 +16863,11 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         header(true);
     });
     // 底栏
-    API.doWhile(() => document.querySelector(".international-footer"), t => {
+    API.doWhile(() => document.querySelector(".international-footer") || document.querySelector("#biliMainFooter"), t => {
         t.setAttribute("class", "footer bili-footer report-wrap-module");
         t.setAttribute("id", "home_footer");
         footer();
+        styleClear();
     });
     // 鼠标放在顶栏上的动效
     API.doWhile(() => document.querySelector("#bili-header-m"), () => {
@@ -17251,6 +17202,14 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     async function check(call) {
         try {
             API.toast.info(\`正在进一步查询 av\${API.aid} 的信息~\`);
+            const card = await API.xhr({
+                url: \`https://api.bilibili.com/x/article/cards?ids=av\${API.aid}\`,
+                responseType: "json"
+            });
+            if (card.data[\`av\${API.aid}\`]) {
+                if (card.data[\`av\${API.aid}\`].redirect_url)
+                    location.replace(card.data[\`av\${API.aid}\`].redirect_url);
+            }
             const data = await API.xhr({
                 url: \`https://www.biliplus.com/api/view?id=\${API.aid}\`,
                 responseType: "json"
@@ -17258,10 +17217,6 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             const res = view2Detail(data);
             if (res.data.View.season) {
                 return location.replace(res.data.View.season.ogv_play_url);
-                // 不重定向直接在av页载入Bangumi
-                // avPgc = true;
-                // ssid = res.data.View.season.season_id;
-                // res.data.View.season.ogv_play_url.replace(/[eE][pP]\\d+/, (d: string) => epid = <any>d.substring(2));;
             }
             call(res);
             setTimeout(() => {
@@ -19846,13 +19801,13 @@ object {
 /*!***********************!*/
 /**/modules["jointime.js"] = /*** ./src/vector/url/space/jointime.js ***/
 `
-    API.doWhile(() => document.querySelector(".info-uid"), () => {
+    API.doWhile(() => document.querySelector(".section.user-info"), t => {
         API.xhr.GM({
             url: API.objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": API.mid }),
             responseType: "json"
         }, true).then(d => {
             const jointime = API.timeFormat(d.card.regtime * 1000, true);
-            const node = document.querySelector(".info-uid").parentElement.parentElement;
+            const node = t.lastChild;
             node.appendChild(API.createElement({
                 tagName: "div",
                 props: { class: "info-regtime", style: "display: inline-block;word-break: break-all;" },

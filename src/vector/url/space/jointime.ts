@@ -3,13 +3,13 @@ interface modules {
     readonly "jointime.js": string;
 }
 namespace API {
-    doWhile(() => document.querySelector(".info-uid"), () => {
+    doWhile(() => document.querySelector(".section.user-info"), t => {
         xhr.GM({
             url: objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": <string>mid }),
             responseType: "json"
         }, true).then(d => {
             const jointime = timeFormat(d.card.regtime * 1000, true);
-            const node: HTMLDivElement = (<any>document.querySelector(".info-uid")).parentElement.parentElement;
+            const node = <HTMLDivElement>t.lastChild;
             node.appendChild(createElement({
                 tagName: "div",
                 props: { class: "info-regtime", style: "display: inline-block;word-break: break-all;" },
