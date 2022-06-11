@@ -7,7 +7,7 @@
 - 浏览器及脚本管理工具：推荐 Chrome + Tampermonkey.
 
 ### 开发语言 TypeScript
-- target: es2020: ESNext新特性不报错就可以用且推荐用，但不要为了强行使用引入任何`Polyfill`.
+- target: es2020: ESNext新特性不报错就可以用且推荐用，确实有需要请提供`Polyfill`.
 - 原生ts/js语言，不想使用任何前端框架.
 
 ### 源码目录
