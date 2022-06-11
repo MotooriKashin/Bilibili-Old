@@ -80,6 +80,7 @@ namespace API {
             this._children = obj.children = children || document.createDocumentFragment();
             this._style = obj.style = style || "";
             this._fork = obj.fork = fork || false;
+            this.__fork.addEventListener("click", () => this.remove());
             document.body.appendChild(this);
         }
         timer = 0;
@@ -95,10 +96,10 @@ namespace API {
         $fork() {
             if (this._fork) {
                 this._observe.cancel();
-                this.__fork.style.display = "none";
+                this.__fork.style.display = "";
             } else {
                 this._observe.observe();
-                this.__fork.style.display = "";
+                this.__fork.style.display = "none";
             }
         }
     }
