@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.4
+// @version      8.1.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -15080,6 +15080,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             return undefined;
         }
     });
+    API.importModule("polyfill.js"); // polyfill
     API.importModule("vector.js"); // 引导模块
 }
 
@@ -16940,6 +16941,28 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }, false);
 
 //# sourceURL=file://@Bilibili-Old/vector/header/primaryMenu.js`;
+/*!***********************!*/
+/**/modules["polyfill.js"] = /*** ./src/vector/polyfill/polyfill.js ***/
+`
+    API.importModule("replaceChildren.js"); //  Element.prototype.replaceChildren
+
+//# sourceURL=file://@Bilibili-Old/vector/polyfill/polyfill.js`;
+/*!***********************!*/
+/**/modules["replaceChildren.js"] = /*** ./src/vector/polyfill/replaceChildren.js ***/
+`
+if (typeof Element.prototype.replaceChildren === 'undefined') {
+    Object.defineProperty(Element.prototype, 'replaceChildren', {
+        configurable: true,
+        enumerable: false,
+        value: function () {
+            while (this.lastChild)
+                this.removeChild(this.lastChild);
+            this.append.call(this, ...arguments);
+        }
+    });
+}
+
+//# sourceURL=file://@Bilibili-Old/vector/polyfill/replaceChildren.js`;
 /*!***********************!*/
 /**/modules["dynamic.js"] = /*** ./src/vector/url/dynamic.js ***/
 `
