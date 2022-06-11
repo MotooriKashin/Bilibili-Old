@@ -6582,11 +6582,13 @@ const modules = {};
         transform: scale(0.8);
         right: 10px;
         top: 10px;
+        height: 20px;
+        width: 20px;
+        pointer-events: visible;
     }
 
     .fork:hover {
         border-radius: 50%;
-        pointer-events: visible;
         background-color: rgba(0, 0, 0, 10%);
     }
 </style>`;
@@ -6657,6 +6659,7 @@ const modules = {};
             this._children = obj.children = children || document.createDocumentFragment();
             this._style = obj.style = style || "";
             this._fork = obj.fork = fork || false;
+            this.__fork.addEventListener("click", () => this.remove());
             document.body.appendChild(this);
         }
         \$children() {
@@ -6671,11 +6674,11 @@ const modules = {};
         \$fork() {
             if (this._fork) {
                 this._observe.cancel();
-                this.__fork.style.display = "none";
+                this.__fork.style.display = "";
             }
             else {
                 this._observe.observe();
-                this.__fork.style.display = "";
+                this.__fork.style.display = "none";
             }
         }
     }
