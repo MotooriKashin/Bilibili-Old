@@ -49,7 +49,8 @@ interface modules {
             }
             return undefined;
         }
-    })
+    });
+    API.importModule("polyfill.js"); // polyfill
     API.importModule("vector.js"); // 引导模块
 }
 /** 
