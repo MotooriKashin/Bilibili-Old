@@ -3,6 +3,7 @@ namespace API {
         127: "超高清 8K",
         126: "杜比视界",
         125: "HDR",
+        121: "超清 4K",
         120: "超清 4K",
         116: "高清 1080P60",
         112: "高清 1080P+",
@@ -12,12 +13,14 @@ namespace API {
         48: "高清 720P",
         32: "清晰 480P",
         16: "流畅 360P",
-        15: "流畅 360P"
+        15: "流畅 360P",
+        6: "流畅 240P"
     }
     const formatMap = {
         127: "hdflv2",
         126: "hdflv2",
         125: "hdflv2",
+        121: "hdflv2",
         120: "hdflv2",
         116: "flv_p60",
         112: "hdflv2",
@@ -27,12 +30,14 @@ namespace API {
         48: "flv720",
         32: "flv480",
         16: "mp4",
-        15: "mp4"
+        15: "mp4",
+        6: "mp4"
     }
     const qualityMap = {
         127: "8K",
         126: "Dolby",
         125: "HDR",
+        121: "4K",
         120: "4K",
         116: "1080P60",
         112: "1080P+",
@@ -42,7 +47,8 @@ namespace API {
         48: "720P",
         32: "480P",
         16: "360P",
-        15: "360P"
+        15: "360P",
+        6: "240P"
     }
     /** DASH playurl result模板 */
     class Playurl {
@@ -81,6 +87,10 @@ namespace API {
     /** 编码表 */
     const codecs = {
         default: {
+            30121: 'hev1.1.6.L156.90',
+            121: 'hev1.1.6.L156.90',
+            30120: 'avc1.64003C',
+            120: 'avc1.64003C',
             30112: 'avc1.640028', // 1080P+
             112: 'avc1.640028', // 1080P+
             30102: 'hev1.1.6.L120.90', // HEVC 1080P+
@@ -101,6 +111,8 @@ namespace API {
             11: 'hev1.1.6.L120.90', // HEVC 360P
             30016: 'avc1.64001E', // 360P
             16: 'avc1.64001E', // 360P
+            30006: 'avc1.64001E', //240P
+            6: 'avc1.64001E', // 240P
             30280: 'mp4a.40.2', // 高码音频
             30232: 'mp4a.40.2', // 中码音频
             30216: 'mp4a.40.2', // 低码音频
@@ -121,6 +133,10 @@ namespace API {
     }
     /** 帧率表 */
     const frameRate = {
+        30121: '16000/672',
+        121: '16000/672',
+        30120: '16000/672',
+        120: '16000/672',
         30112: '16000/672',
         112: '16000/672',
         30102: '16000/672',
@@ -140,10 +156,16 @@ namespace API {
         30011: '16000/656',
         11: '16000/656',
         30016: '16000/672',
-        16: '16000/672'
+        16: '16000/672',
+        30006: '16000/672',
+        6: '16000/672',
     }
     /** 分辨率表 */
     const resolution = {
+        30121: [3840, 2160],
+        121: [3840, 2160],
+        30120: [3840, 2160],
+        120: [3840, 2160],
         30112: [1920, 1080], // 1080P+
         112: [1920, 1080], // 1080P+
         30102: [1920, 1080], // HEVC 1080P+
@@ -164,6 +186,8 @@ namespace API {
         11: [640, 360], // HEVC 360P
         30016: [640, 360], // 360P
         16: [640, 360], // 360P
+        30006: [426, 240], // 240P
+        6: [426, 240] // 240P
     }
     /**
      * 获取链接idxs
@@ -241,7 +265,7 @@ namespace API {
                         codecs: (<any>codecs.app)[id] || (<any>codecs.default)[id],
                         frameRate: (<any>frameRate)[id],
                         frame_rate: (<any>frameRate)[id],
-                        height: (<any>resolution)[id][1],
+                        height: (<any>resolution)[id] && (<any>resolution)[id][1],
                         id: d.stream_info.quality,
                         md5: d.dash_video.md5,
                         mimeType: "video/mp4",
@@ -250,7 +274,7 @@ namespace API {
                         size: d.dash_video.size,
                         startWithSAP: 1,
                         start_with_sap: 1,
-                        width: (<any>resolution)[id][0]
+                        width: (<any>resolution)[id] && (<any>resolution)[id][0]
                     })
                 })(d));
             }

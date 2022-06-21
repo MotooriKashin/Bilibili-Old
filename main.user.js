@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.5
+// @version      8.1.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -18267,6 +18267,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         127: "超高清 8K",
         126: "杜比视界",
         125: "HDR",
+        121: "超清 4K",
         120: "超清 4K",
         116: "高清 1080P60",
         112: "高清 1080P+",
@@ -18276,12 +18277,14 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         48: "高清 720P",
         32: "清晰 480P",
         16: "流畅 360P",
-        15: "流畅 360P"
+        15: "流畅 360P",
+        6: "流畅 240P"
     };
     const formatMap = {
         127: "hdflv2",
         126: "hdflv2",
         125: "hdflv2",
+        121: "hdflv2",
         120: "hdflv2",
         116: "flv_p60",
         112: "hdflv2",
@@ -18291,12 +18294,14 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         48: "flv720",
         32: "flv480",
         16: "mp4",
-        15: "mp4"
+        15: "mp4",
+        6: "mp4"
     };
     const qualityMap = {
         127: "8K",
         126: "Dolby",
         125: "HDR",
+        121: "4K",
         120: "4K",
         116: "1080P60",
         112: "1080P+",
@@ -18306,7 +18311,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         48: "720P",
         32: "480P",
         16: "360P",
-        15: "360P"
+        15: "360P",
+        6: "240P"
     };
     /** DASH playurl result模板 */
     class Playurl {
@@ -18347,6 +18353,10 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
     /** 编码表 */
     const codecs = {
         default: {
+            30121: 'hev1.1.6.L156.90',
+            121: 'hev1.1.6.L156.90',
+            30120: 'avc1.64003C',
+            120: 'avc1.64003C',
             30112: 'avc1.640028',
             112: 'avc1.640028',
             30102: 'hev1.1.6.L120.90',
@@ -18367,6 +18377,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
             11: 'hev1.1.6.L120.90',
             30016: 'avc1.64001E',
             16: 'avc1.64001E',
+            30006: 'avc1.64001E',
+            6: 'avc1.64001E',
             30280: 'mp4a.40.2',
             30232: 'mp4a.40.2',
             30216: 'mp4a.40.2', // 低码音频
@@ -18387,6 +18399,10 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
     };
     /** 帧率表 */
     const frameRate = {
+        30121: '16000/672',
+        121: '16000/672',
+        30120: '16000/672',
+        120: '16000/672',
         30112: '16000/672',
         112: '16000/672',
         30102: '16000/672',
@@ -18406,10 +18422,16 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         30011: '16000/656',
         11: '16000/656',
         30016: '16000/672',
-        16: '16000/672'
+        16: '16000/672',
+        30006: '16000/672',
+        6: '16000/672',
     };
     /** 分辨率表 */
     const resolution = {
+        30121: [3840, 2160],
+        121: [3840, 2160],
+        30120: [3840, 2160],
+        120: [3840, 2160],
         30112: [1920, 1080],
         112: [1920, 1080],
         30102: [1920, 1080],
@@ -18429,7 +18451,9 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         30011: [640, 360],
         11: [640, 360],
         30016: [640, 360],
-        16: [640, 360], // 360P
+        16: [640, 360],
+        30006: [426, 240],
+        6: [426, 240] // 240P
     };
     /**
      * 获取链接idxs
@@ -18505,7 +18529,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                         codecs: codecs.app[id] || codecs.default[id],
                         frameRate: frameRate[id],
                         frame_rate: frameRate[id],
-                        height: resolution[id][1],
+                        height: resolution[id] && resolution[id][1],
                         id: d.stream_info.quality,
                         md5: d.dash_video.md5,
                         mimeType: "video/mp4",
@@ -18514,7 +18538,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                         size: d.dash_video.size,
                         startWithSAP: 1,
                         start_with_sap: 1,
-                        width: resolution[id][0]
+                        width: resolution[id] && resolution[id][0]
                     });
                 })(d));
             }
