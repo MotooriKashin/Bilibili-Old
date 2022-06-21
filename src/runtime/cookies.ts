@@ -35,7 +35,7 @@ window.addEventListener("message", ev => {
 })
 /** 获取cookie序列 突破httponly限制 */
 export function getCookiesEs() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve: (value: chrome.cookies.Cookie[]) => void, reject) => {
         window.postMessage({
             $type: "getCookies",
             data: {
