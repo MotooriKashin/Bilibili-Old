@@ -100,6 +100,7 @@ export function videoLimit() {
                 obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
                 try {
                     toast.info("尝试解除区域限制... 访问代理服务器");
+                    setting.uposReplace.gat !== "不替换" && window.postMessage({ $type: "th" });
                     response = setting.videoLimit.server === "内置" ? jsonCheck(await xhr({
                         url: objUrl("https://www.biliplus.com/BPplayurl.php", obj)
                     })) : (delete obj.module, await customServer(obj, "tw"));

@@ -192,7 +192,7 @@ async function globalSession() {
             responseType: "json"
         }, true);
         if (result.code === 0) {
-            window.postMessage({ $type: "th" }) // 更新泰区请求规则
+            window.postMessage({ $type: "th" }); // 更新泰区请求规则
             await new Promise(r => doWhile(() => (<any>window).__INITIAL_STATE__, r));
             const t = (<any>window).__INITIAL_STATE__;
             const i = JSON.parse(JSON.stringify(result.result));
