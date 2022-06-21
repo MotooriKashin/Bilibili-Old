@@ -21,7 +21,6 @@ assignees: ''
 **运行环境**
  - 操作系统：Windows11 professional 10.0.22000.527
  - 浏览器：Google Chrome 99.0.4844.74
- - 脚本管理器：Tampermonkey 4.14.6125
 
 **补充内容**
 其他补充内容。

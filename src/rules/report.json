@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "reporter",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "cm.bilibili.com"
+            ],
+            "resourceTypes": [
+                "xmlhttprequest"
+            ],
+            "requestMethods": [
+                "post"
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "spmid",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "data.bilibili.com"
+            ],
+            "resourceTypes": [
+                "xmlhttprequest"
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "data.bilivideo.com"
+            ],
+            "resourceTypes": [
+                "xmlhttprequest"
+            ]
+        }
+    }
+]

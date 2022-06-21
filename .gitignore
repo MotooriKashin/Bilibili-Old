@@ -1,2 +1,5 @@
 /src/**/*.js
-/local.user.js
+node_modules
+dist
+*.crx
+*.pem

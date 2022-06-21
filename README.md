@@ -1,8 +1,8 @@
-![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 101](https://img.shields.io/badge/Google_Chrome_101-pass-green.svg?longCache=true) ![Firefox 89](https://img.shields.io/badge/Mozilla_Firefox_89-pass-green.svg?longCache=true) ![Tampermonkey 4.14](https://img.shields.io/badge/Tampermonkey_4.14-pass-green.svg?longCache=true)
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 102](https://img.shields.io/badge/Google_Chrome_102-pass-green.svg?longCache=true)
 
-[Tampermonkey](https://www.tampermonkey.net/)（chrome）脚本，恢复旧版B站网页样式，包括旧版播放器。  
-※ 要求浏览器版本支持到[es2020（`Promise.allSettled`）](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled#%E6%B5%8F%E8%A7%88%E5%99%A8%E5%85%BC%E5%AE%B9)
-
+（chrome）Manifest V3扩展，恢复旧版B站网页样式，包括旧版播放器。鉴于油猴脚本还能使用，暂未计划上架任何扩展商店。 
+随着Manifest V3标准的推行以及扩展的权限的进一步收紧，根据Manifest V3推进时间表，6月起chrome拓展商店将不再接收旧标准的新扩展发布（已发布的旧标准扩展仍允许更新），最迟明年（2023）6月（chrome禁止运行旧标准扩展时间），现在所谓的油猴脚本（用户脚本）将在chrome浏览器上面临被封杀（参见[Tampermonkey作者的发文](https://groups.google.com/a/chromium.org/g/chromium-extensions/c/hQeJzPbG-js)）的风险。凡事预则立，不预则废，为应对说远也不远的危机，提前将原油猴脚本移植为了符合Manifest V3标准的扩展，欢迎测试和反馈。  
+Manifest V3 仍在快速更新标准，扩展使用最新标准编写，所以只能支持最新版chrome浏览器（内核版本>=102）。不保证兼容其他chrome内核浏览器，也暂时没有适配其他非chrome浏览器的计划。
 
 ---
 ### 功能实现
@@ -15,18 +15,15 @@
    - 嵌入式播放器：[拜年祭2021](https://www.bilibili.com/festival/2022bnj)专题页面
    - 专栏
    - 搜索
-2. 配套的后续处理
-   - （详见脚本设置）
+2. 附加功能
+   - （详见选项界面）
 
----
-### 关于设置
-页面载入完成时，脚本会在页面右下角生成一个“齿轮”，点击即可打开脚本设置界面。（“齿轮”会自动隐藏，感应到鼠标焦点又会浮现。）
 
 ---
 ### 已知问题
 **以下问题这里可能处于并将长期处于无法解决状态，请多担待！**
-1. 重写页面之前，新版页面必然已经显示一部分，这种“一闪而过”的现象无法彻底根除。
-2. 重写前已渲染的新版页面残留的代码可能破坏重写后的页面，请通过刷新页面缓解。
+1. 打开浏览器首次访问B站，由于后台脚本并未初始化，可能出现页面异常，请刷新一次页面。。
+2. 重写前已渲染的新版页面残留的代码可能破坏重写后的页面，也请通过刷新页面缓解。
 3. 反查弹幕发送者功能提供的信息可能存在碰撞，仅供参考不可作为唯一判据。
 4. 互动视频、全景视频、高能进度条等旧版播放器不支持
 5. HDR、Dobby、8K等HEVC专属画质可能无法支持。
@@ -69,11 +66,9 @@
 ### 开发环境
 > 
 > 操作系统        Microsoft Windows 11 professional 10.0.22000.527  
-> 浏览器          Google Chrome 101.0.4951.67 (正式版本) （64 位） (cohort: Stable Installs & Version Pins)  
-> 脚本管理器      Tampermonkey Beta 4.14.6160  
-> 代码编辑器      Visual Studio Code 1.67.2 
+> 浏览器          Google Chrome 102.0.5005.115 (正式版本) （64 位） (cohort: Stable Installs & Version Pins)   
+> 代码编辑器      Visual Studio Code 1.68.0 
 > 编译器          Node.js v16.14.2  
->                TypeScript Version 4.6.4  
 >
 
 参见[开发者文档](https://github.com/MotooriKashin/Bilibili-Old/blob/master/.github/contributing.md)。

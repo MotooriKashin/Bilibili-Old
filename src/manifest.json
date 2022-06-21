@@ -1,0 +1,78 @@
+{
+    "action": {
+        "default_icon": {
+            "128": "/images/icon128.png",
+            "16": "/images/icon16.png",
+            "32": "/images/icon32.png",
+            "48": "/images/icon48.png"
+        },
+        "default_popup": "popup/popup.html"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "all_frames": true,
+            "js": [
+                "content/content.js"
+            ],
+            "matches": [
+                "http://*.bilibili.com/*",
+                "https://*.bilibili.com/*"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "declarative_net_request": {
+        "rule_resources": [
+            {
+                "id": "report",
+                "enabled": false,
+                "path": "rules/report.json"
+            }
+        ]
+    },
+    "default_locale": "zh_CN",
+    "description": "__MSG_description__",
+    "host_permissions": [
+        "file:///*",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "icons": {
+        "128": "/images/icon128.png",
+        "16": "/images/icon16.png",
+        "32": "/images/icon32.png",
+        "48": "/images/icon48.png"
+    },
+    "manifest_version": 3,
+    "name": "__MSG_name__",
+    "options_page": "options/options.html",
+    "permissions": [
+        "storage",
+        "tabs",
+        "activeTab",
+        "scripting",
+        "cookies",
+        "declarativeNetRequest",
+        "declarativeNetRequestWithHostAccess",
+        "declarativeNetRequestFeedback"
+    ],
+    "version": "1.0",
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "content/*",
+                "content/**/*",
+                "bilibili/*",
+                "bilibili/**/*"
+            ],
+            "matches": [
+                "http://*.bilibili.com/*",
+                "https://*.bilibili.com/*"
+            ]
+        }
+    ]
+}

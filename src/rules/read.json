@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "article-web",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "stylesheet"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "article-web",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    }
+]

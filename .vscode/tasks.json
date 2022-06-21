@@ -2,67 +2,37 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\.vscode\\apply.js",
-				"${workspaceFolder}"
-			],
-			"label": "apply",
-			"detail": "生成接口导出表apply.json",
-			"problemMatcher": []
-		},
-		{
-			"type": "typescript",
-			"tsconfig": "src/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"label": "tsc",
+			"type": "npm",
+			"script": "tsc",
+			"problemMatcher": [],
+			"label": "npm: tsc",
+			"detail": "TypeScript编译",
 			"dependsOn": [
-				"apply"
+				"npm: dist"
 			]
 		},
 		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\.vscode\\require.js",
-				"${workspaceFolder}"
-			],
-			"label": "require",
-			"detail": "合成require资源require.js",
+			"type": "npm",
+			"script": "dist",
 			"problemMatcher": [],
-			"dependsOn": [
-				"tsc"
-			]
+			"label": "npm: dist",
+			"detail": "生成【加载已解压的扩展程序】目录"
 		},
 		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\.vscode\\local.js",
-				"${workspaceFolder}"
-			],
-			"label": "develop",
-			"detail": "编译开发版脚本local.user.js",
+			"type": "npm",
+			"script": "update",
 			"problemMatcher": [],
-			"dependsOn": [
-				"require"
-			]
+			"label": "npm: update",
+			"detail": "更新包依赖"
 		},
 		{
-			"type": "shell",
-			"command": "node",
-			"args": [
-				"${workspaceFolder}\\.vscode\\main.js",
-				"${workspaceFolder}"
-			],
-			"label": "release",
-			"detail": "编译发行版脚本main.user.js",
+			"type": "npm",
+			"script": "esbuild",
 			"problemMatcher": [],
+			"label": "npm: esbuild",
+			"detail": "打包内容脚本",
 			"dependsOn": [
-				"require"
+				"npm: tsc"
 			],
 			"group": {
 				"kind": "build",

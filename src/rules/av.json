@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "laputa",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "stylesheet"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "long/font",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "stylesheet"
+            ]
+        }
+    },
+    {
+        "id": 3,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "stardust",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "stylesheet"
+            ]
+        }
+    },
+    {
+        "id": 4,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "sentry",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 5,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "main/video",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    }
+]
