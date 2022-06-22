@@ -72,11 +72,11 @@ recommendData(setting.privateRecommend).then(d => {
         doWhile(() => document.querySelector(".rec-btn.prev"), () => {
             addElement("span", { class: "rec-btn prev" }, undefined, "刷新", undefined,
                 document.querySelector<any>(".rec-btn.prev")).addEventListener("click", () => {
-                    recommendData().then(d => __INITIAL_STATE__.recommendData = d);
+                    recommendData(setting.privateRecommend).then(d => __INITIAL_STATE__.recommendData = d);
                 });
             addElement("span", { class: "rec-btn next" }, undefined, "刷新", undefined,
                 document.querySelector<any>(".rec-btn.next")).addEventListener("click", () => {
-                    recommendData().then(d => __INITIAL_STATE__.recommendData = d);
+                    recommendData(setting.privateRecommend).then(d => __INITIAL_STATE__.recommendData = d);
                 });
         });
     } else {
