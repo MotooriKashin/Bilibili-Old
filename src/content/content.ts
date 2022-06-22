@@ -212,14 +212,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 window.postMessage(message);
                 break;
             case "getPageInfo":
-                sendResponse({
-                    aid: storage.ss.getItem("aid"),
-                    cid: storage.ss.getItem("cid"),
-                    pgc: storage.ss.getItem("pgc"),
-                    playerParam: storage.ss.getItem("playerParam"),
-                    cover: storage.ss.getItem("cover"),
-                    title: storage.ss.getItem("title")
-                })
+                if (location.href.includes("www.bilibili.com")) {
+                    // 由于 sendResponse 是只此一次先到先得
+                    // 还是先判断一下页面所在域
+                    sendResponse({
+                        aid: storage.ss.getItem("aid"),
+                        cid: storage.ss.getItem("cid"),
+                        pgc: storage.ss.getItem("pgc"),
+                        playerParam: storage.ss.getItem("playerParam"),
+                        cover: storage.ss.getItem("cover"),
+                        title: storage.ss.getItem("title")
+                    })
+                }
                 break;
             case "downloadDefault":
             case "localMedia":
