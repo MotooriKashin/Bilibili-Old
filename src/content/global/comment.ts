@@ -28,7 +28,7 @@ export function loadComment() {
             return class { // 等待载入
                 constructor() {
                     if (!loading) {
-                        loadScript(`chrome-extension://${storage.ss.getItem("bilibili-old")}/bilibili/comment.min.js`).then(() => {
+                        loadScript(`chrome-extension://${storage.ss.getItem("bilibili-old")}/bilibili/comment.js`).then(() => {
                             load = true;
                             addCssEs("content/global/comment.css");
                         })
