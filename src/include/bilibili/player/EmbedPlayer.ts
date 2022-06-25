@@ -667,7 +667,7 @@ namespace API {
     }
     // 托管播放器脚本`bilibiliPlayer.min.js`
     config.trusteeship && scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
-        const text = GM.getResourceText("bilibiliPlayer.js")
+        const text = GM.GM_getResourceText("bilibiliPlayer.js")
         if (!text) setTimeout(() => {
             toast.error("bilibiliPlayer.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。");
             showSetting("trusteeship");

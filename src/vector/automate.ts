@@ -32,15 +32,15 @@ namespace API {
     let setting = localStorage.getItem("bilibili_player_settings");
     if (setting) {
         if (setting.video_status?.autopart !== "") {
-            GM.setValue("bilibili_player_settings", setting);
+            GM.GM_setValue("bilibili_player_settings", setting);
         }
     } else {
-        setting = GM.getValue("bilibili_player_settings");
+        setting = GM.GM_getValue("bilibili_player_settings");
         setting && localStorage.setItem("bilibili_player_settings", setting);
     }
     // 记忆播放器速率
     if (config.automate.videospeed) {
-        const videospeed = GM.getValue("videospeed");
+        const videospeed = GM.GM_getValue("videospeed");
         if (videospeed) {
             let setting = sessionStorage.getItem("bilibili_player_settings");
             setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
@@ -48,7 +48,7 @@ namespace API {
         }
         switchVideo(() => {
             doWhile(() => document.querySelector("#bofqi")?.querySelector<HTMLVideoElement>("video"), d => {
-                d.addEventListener("ratechange", e => GM.setValue("videospeed", (<HTMLVideoElement>e.target).playbackRate || 1));
+                d.addEventListener("ratechange", e => GM.GM_setValue("videospeed", (<HTMLVideoElement>e.target).playbackRate || 1));
             })
         })
     }

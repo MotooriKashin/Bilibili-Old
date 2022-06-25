@@ -1,12 +1,12 @@
 /** 封装脚本管理器提供的API */
 Object.defineProperties(GM, {
-    xmlHttpRequest: { value: GM_xmlhttpRequest },
-    getValue: { value: GM_getValue },
-    setValue: { value: GM_setValue },
-    deleteValue: { value: GM_deleteValue },
-    listValues: { value: GM_listValues },
-    getResourceText: { value: GM_getResourceText },
-    getResourceURL: { value: GM_getResourceURL },
+    GM_xmlHttpRequest: { value: GM_xmlhttpRequest },
+    GM_getValue: { value: GM_getValue },
+    GM_setValue: { value: GM_setValue },
+    GM_deleteValue: { value: GM_deleteValue },
+    GM_listValues: { value: GM_listValues },
+    GM_getResourceText: { value: GM_getResourceText },
+    GM_getResourceURL: { value: GM_getResourceURL },
     DOM: { value: document },
     protobuf: { value: (<any>window).protobuf }
 })
@@ -35,13 +35,13 @@ declare namespace GM {
         /** 值 */
         value: string
     }
-    const xmlHttpRequest: typeof GM_xmlhttpRequest;
-    const getValue: typeof GM_getValue;
-    const setValue: typeof GM_setValue;
-    const deleteValue: typeof GM_deleteValue;
-    const listValues: typeof GM_listValues;
-    const getResourceText: typeof GM_getResourceText;
-    const getResourceURL: typeof GM_getResourceURL;
+    const GM_xmlHttpRequest: typeof GM_xmlhttpRequest;
+    const GM_getValue: typeof globalThis.GM_getValue;
+    const GM_setValue: typeof globalThis.GM_setValue;
+    const GM_deleteValue: typeof globalThis.GM_deleteValue;
+    const GM_listValues: typeof globalThis.GM_listValues;
+    const GM_getResourceText: typeof globalThis.GM_getResourceText;
+    const GM_getResourceURL: typeof globalThis.GM_getResourceURL;
     const info: {
         downloadMode: string;
         isFirstPartyIsolation: boolean;

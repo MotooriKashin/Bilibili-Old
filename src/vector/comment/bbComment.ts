@@ -27,7 +27,7 @@ namespace API {
             }
             return class { // 等待载入
                 constructor() {
-                    let text = GM.getResourceText("comment.js");
+                    let text = GM.GM_getResourceText("comment.js");
                     if (text) {
                         new Function(text)();
 

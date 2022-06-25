@@ -53,8 +53,8 @@ namespace API {
         captions: Record<string, any>[] = []; // 字幕集
         text: any;
         constructor() {
-            this.setting = GM.getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
-            this.subtitlePrefer = GM.getValue("subtitlePrefer"); // 默认语言
+            this.setting = GM.GM_getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
+            this.subtitlePrefer = GM.GM_getValue("subtitlePrefer"); // 默认语言
         }
         /** 绘制字幕面板 */
         initUI() {
@@ -87,7 +87,7 @@ namespace API {
             span.subtitle-item-text {color:#${("000000" + this.setting.color.toString(16)).slice(-6)};}
             span.subtitle-item {font-size: ${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
             span.subtitle-item {${(<any>this.shadow)[this.setting.shadow].style}}`, "caption-style");
-            GM.setValue("subtitle", this.setting);
+            GM.GM_setValue("subtitle", this.setting);
         }
         /** 切换字幕大小 */
         changeResize() {
@@ -100,7 +100,7 @@ namespace API {
             this.contain.className = 'subtitle-position subtitle-position-'
                 + (this.setting.position || 'bc');
             this.contain.style = '';
-            GM.setValue("subtitle", this.setting);
+            GM.GM_setValue("subtitle", this.setting);
         }
         /** 字幕图标切换 */
         iconSwitch(caption?: any) {
@@ -151,7 +151,7 @@ namespace API {
                 temp.onclick = () => {
                     this.text.innerHTML = d.lan_doc;
                     this.iconSwitch(d);
-                    GM.setValue("subtitlePrefer", this.subtitlePrefer = d.lan);
+                    GM.GM_setValue("subtitlePrefer", this.subtitlePrefer = d.lan);
                 }
             })
         }

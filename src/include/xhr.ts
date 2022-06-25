@@ -114,7 +114,7 @@ namespace API {
                 catches.push([details.url, xhr.response]);
                 reject(xhr.response);
             });
-            GM.xmlHttpRequest(details);
+            GM.GM_xmlHttpRequest(details);
         })
     }
     /**

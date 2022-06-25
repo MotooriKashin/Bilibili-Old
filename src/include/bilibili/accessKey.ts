@@ -1,7 +1,7 @@
 namespace API {
     export class AccessKey {
         /** 参数缓存 */
-        static data = GM.getValue("third_login");
+        static data = GM.GM_getValue("third_login");
         /** 获取账户授权 */
         static async get() {
             if (!uid) return (toast.warning("请先登录！"), biliQuickLogin());
@@ -12,7 +12,7 @@ namespace API {
                     responseType: "json"
                 })
                 data = await new Promise((resolve, reject) => {
-                    GM.xmlHttpRequest({
+                    GM.GM_xmlHttpRequest({
                         method: "GET",
                         url: data.data.confirm_uri,
                         onload: (xhr) => resolve(xhr.finalUrl), // 重定向后的url才是目标

@@ -144,7 +144,7 @@ namespace API {
                     configurable: true,
                     value: (body?: GMxhrDetails["data"]) => {
                         obj.method === "POST" && body && (obj.data = body);
-                        const tar = GM.xmlHttpRequest(obj);
+                        const tar = GM.GM_xmlHttpRequest(obj);
                         this.abort = tar.abort.bind(tar);
                         return true;
                     }

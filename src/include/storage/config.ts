@@ -192,13 +192,13 @@ interface config {
     }
 }
 namespace API {
-    const CONFIG = GM.getValue<config>("config", <config>{});
+    const CONFIG = GM.GM_getValue<config>("config", <config>{});
     /** 计时器id */
     let timer: number;
     /** 保存设置 */
     export function saveConfig() {
         clearTimeout(timer);
-        timer = setTimeout(() => GM.setValue("config", JSON.parse(JSON.stringify(CONFIG))), 1e3);
+        timer = setTimeout(() => GM.GM_setValue("config", JSON.parse(JSON.stringify(CONFIG))), 1e3);
     }
     export const config = new Proxy(CONFIG, {
         set: (t, p: keyof config, v) => {
@@ -273,7 +273,7 @@ namespace API {
                 if (v) {
                     let isReadry = false;
                     ["bilibiliPlayer.js", "comment.js"].forEach(d => {
-                        isReadry = GM.getResourceText(d) ? true : false;
+                        isReadry = GM.GM_getResourceText(d) ? true : false;
                     });
                     if (isReadry) {
                         toast.success("外部资源安装成功~", "可以正常【托管原生脚本】~");

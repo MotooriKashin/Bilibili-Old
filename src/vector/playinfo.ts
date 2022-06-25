@@ -17,6 +17,7 @@ namespace API {
         try {
             const str = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, config.uposReplace.nor);
             __playinfo__ = JSON.parse(str);
+            if (__playinfo__.code === 87005) toast.warning(__playinfo__.message, "请到新版页面完成付费操作！");
             obj.responseType === "json" ? obj.response = __playinfo__ : obj.response = obj.responseText = str;
         } catch (e) { }
     }, false);
