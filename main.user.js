@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.6
+// @version      8.1.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -27,13 +27,13 @@
 
 /** 封装脚本管理器提供的API */
 Object.defineProperties(GM, {
-    xmlHttpRequest: { value: GM_xmlhttpRequest },
-    getValue: { value: GM_getValue },
-    setValue: { value: GM_setValue },
-    deleteValue: { value: GM_deleteValue },
-    listValues: { value: GM_listValues },
-    getResourceText: { value: GM_getResourceText },
-    getResourceURL: { value: GM_getResourceURL },
+    GM_xmlHttpRequest: { value: GM_xmlhttpRequest },
+    GM_getValue: { value: GM_getValue },
+    GM_setValue: { value: GM_setValue },
+    GM_deleteValue: { value: GM_deleteValue },
+    GM_listValues: { value: GM_listValues },
+    GM_getResourceText: { value: GM_getResourceText },
+    GM_getResourceURL: { value: GM_getResourceURL },
     DOM: { value: document },
     protobuf: { value: window.protobuf }
 });
@@ -676,7 +676,7 @@ const modules = {};
                 catches.push([details.url, xhr.response]);
                 reject(xhr.response);
             });
-            GM.xmlHttpRequest(details);
+            GM.GM_xmlHttpRequest(details);
         });
     };
     function get(url, details = {}, cache = false) {
@@ -707,7 +707,7 @@ const modules = {};
                     responseType: "json"
                 });
                 data = await new Promise((resolve, reject) => {
-                    GM.xmlHttpRequest({
+                    GM.GM_xmlHttpRequest({
                         method: "GET",
                         url: data.data.confirm_uri,
                         onload: (xhr) => resolve(xhr.finalUrl),
@@ -753,7 +753,7 @@ const modules = {};
         }
     }
     /** 参数缓存 */
-    AccessKey.data = GM.getValue("third_login");
+    AccessKey.data = GM.GM_getValue("third_login");
     API.AccessKey = AccessKey;
 
 //# sourceURL=file://@Bilibili-Old/include/bilibili/accessKey.js`;
@@ -1365,7 +1365,7 @@ const modules = {};
                     configurable: true,
                     value: (body) => {
                         obj.method === "POST" && body && (obj.data = body);
-                        const tar = GM.xmlHttpRequest(obj);
+                        const tar = GM.GM_xmlHttpRequest(obj);
                         this.abort = tar.abort.bind(tar);
                         return true;
                     }
@@ -1603,8 +1603,8 @@ const modules = {};
             ];
             this.isON = false; // 是否启用
             this.captions = []; // 字幕集
-            this.setting = GM.getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
-            this.subtitlePrefer = GM.getValue("subtitlePrefer"); // 默认语言
+            this.setting = GM.GM_getValue("subtitle", { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' });
+            this.subtitlePrefer = GM.GM_getValue("subtitlePrefer"); // 默认语言
         }
         /** 绘制字幕面板 */
         initUI() {
@@ -1639,7 +1639,7 @@ const modules = {};
             span.subtitle-item-text {color:#\${("000000" + this.setting.color.toString(16)).slice(-6)};}
             span.subtitle-item {font-size: \${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
             span.subtitle-item {\${this.shadow[this.setting.shadow].style}}\`, "caption-style");
-            GM.setValue("subtitle", this.setting);
+            GM.GM_setValue("subtitle", this.setting);
         }
         /** 切换字幕大小 */
         changeResize() {
@@ -1652,7 +1652,7 @@ const modules = {};
             this.contain.className = 'subtitle-position subtitle-position-'
                 + (this.setting.position || 'bc');
             this.contain.style = '';
-            GM.setValue("subtitle", this.setting);
+            GM.GM_setValue("subtitle", this.setting);
         }
         /** 字幕图标切换 */
         iconSwitch(caption) {
@@ -1703,7 +1703,7 @@ const modules = {};
                 temp.onclick = () => {
                     this.text.innerHTML = d.lan_doc;
                     this.iconSwitch(d);
-                    GM.setValue("subtitlePrefer", this.subtitlePrefer = d.lan);
+                    GM.GM_setValue("subtitlePrefer", this.subtitlePrefer = d.lan);
                 };
             });
         }
@@ -4841,7 +4841,7 @@ const modules = {};
     API.loadVideoScript = loadVideoScript;
     // 托管播放器脚本\`bilibiliPlayer.min.js\`
     API.config.trusteeship && API.scriptIntercept("bilibiliPlayer.min.js", undefined, () => {
-        const text = GM.getResourceText("bilibiliPlayer.js");
+        const text = GM.GM_getResourceText("bilibiliPlayer.js");
         if (!text)
             setTimeout(() => {
                 API.toast.error("bilibiliPlayer.js 资源加载失败！您可以在设置中临时关闭“托管原生脚本”。");
@@ -11977,13 +11977,13 @@ const modules = {};
 /*!***********************!*/
 /**/modules["config.js"] = /*** ./src/include/storage/config.js ***/
 `
-    const CONFIG = GM.getValue("config", {});
+    const CONFIG = GM.GM_getValue("config", {});
     /** 计时器id */
     let timer;
     /** 保存设置 */
     function saveConfig() {
         clearTimeout(timer);
-        timer = setTimeout(() => GM.setValue("config", JSON.parse(JSON.stringify(CONFIG))), 1e3);
+        timer = setTimeout(() => GM.GM_setValue("config", JSON.parse(JSON.stringify(CONFIG))), 1e3);
     }
     API.saveConfig = saveConfig;
     API.config = new Proxy(CONFIG, {
@@ -12059,7 +12059,7 @@ const modules = {};
                 if (v) {
                     let isReadry = false;
                     ["bilibiliPlayer.js", "comment.js"].forEach(d => {
-                        isReadry = GM.getResourceText(d) ? true : false;
+                        isReadry = GM.GM_getResourceText(d) ? true : false;
                     });
                     if (isReadry) {
                         API.toast.success("外部资源安装成功~", "可以正常【托管原生脚本】~");
@@ -13335,7 +13335,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     API.settingMG = {
         /** 初始化设置 */
         restore() {
-            GM.deleteValue("config");
+            GM.GM_deleteValue("config");
             API.toast.warning("已恢复默认数据，请及时刷新页面避免数据紊乱！");
             API.alert(\`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！\`, "恢复默认设置", [
                 { name: "刷新页面", callback: () => location.reload() }
@@ -13343,14 +13343,14 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         },
         /** 导出设置 */
         output() {
-            API.saveAs(JSON.stringify(GM.getValue("config"), undefined, "\\t"), \`config \${API.timeFormat(undefined, true)}.json\`, "application/json");
+            API.saveAs(JSON.stringify(GM.GM_getValue("config"), undefined, "\\t"), \`config \${API.timeFormat(undefined, true)}.json\`, "application/json");
         },
         /** 导入设置 */
         input() {
             API.fileRead("application/json", true).then(d => {
                 d && d[0] && API.readAs(d[0]).then(d => {
                     const data = JSON.parse(d);
-                    GM.setValue("config", data);
+                    GM.GM_setValue("config", data);
                     API.alert(\`已恢复备份数据，请及时<strong>刷新</strong>页面避免数据紊乱！\`, "恢复默认设置", [
                         { name: "刷新页面", callback: () => location.reload() }
                     ]);
@@ -14978,16 +14978,16 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     let setting = API.localStorage.getItem("bilibili_player_settings");
     if (setting) {
         if (setting.video_status?.autopart !== "") {
-            GM.setValue("bilibili_player_settings", setting);
+            GM.GM_setValue("bilibili_player_settings", setting);
         }
     }
     else {
-        setting = GM.getValue("bilibili_player_settings");
+        setting = GM.GM_getValue("bilibili_player_settings");
         setting && API.localStorage.setItem("bilibili_player_settings", setting);
     }
     // 记忆播放器速率
     if (API.config.automate.videospeed) {
-        const videospeed = GM.getValue("videospeed");
+        const videospeed = GM.GM_getValue("videospeed");
         if (videospeed) {
             let setting = API.sessionStorage.getItem("bilibili_player_settings");
             setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
@@ -14995,7 +14995,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         }
         API.switchVideo(() => {
             API.doWhile(() => document.querySelector("#bofqi")?.querySelector("video"), d => {
-                d.addEventListener("ratechange", e => GM.setValue("videospeed", e.target.playbackRate || 1));
+                d.addEventListener("ratechange", e => GM.GM_setValue("videospeed", e.target.playbackRate || 1));
             });
         });
     }
@@ -15105,6 +15105,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         try {
             const str = API.uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, API.config.uposReplace.nor);
             API.__playinfo__ = JSON.parse(str);
+            if (API.__playinfo__.code === 87005)
+                API.toast.warning(API.__playinfo__.message, "请到新版页面完成付费操作！");
             obj.responseType === "json" ? obj.response = API.__playinfo__ : obj.response = obj.responseText = str;
         }
         catch (e) { }
@@ -15734,7 +15736,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
             }
             return class {
                 constructor() {
-                    let text = GM.getResourceText("comment.js");
+                    let text = GM.GM_getResourceText("comment.js");
                     if (text) {
                         new Function(text)();
                     }
