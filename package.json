@@ -28,7 +28,6 @@
   "homepage": "https://github.com/MotooriKashin/Bilibili-Old#readme",
   "dependencies": {
     "@types/chrome": "^0.0.190",
-    "@types/node": "^18.0.0",
     "esbuild": "^0.14.43",
     "fs-extra": "^10.1.0",
     "protobufjs": "^6.11.3",
