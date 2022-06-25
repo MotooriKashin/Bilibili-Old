@@ -9,6 +9,7 @@ import { xhr } from "../xhr";
 import { closedCaption } from "./closedCaption";
 import { SegProgress } from "./segProgress";
 import { uposReplace } from "./uposReplace";
+import { toast } from "../toast/toast";
 
 /** 播放信息相关 */
 export function playinfo() {
@@ -27,6 +28,10 @@ export function playinfo() {
             const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, setting.uposReplace.nor);
             obj.responseType === "json" ? obj.response = JSON.parse(data) : obj.response = obj.responseText = data;
             storage.ss.setItem("__playinfo__", data);
+            Promise.resolve().then(() => {
+                const d = JSON.parse(data);
+                if (d.code === 87005) toast.warning(d.message, "请到新版页面付费后继续！")
+            })
         } catch (e) { }
     }, false);
     let timer: number, tag = false; // 过滤栈

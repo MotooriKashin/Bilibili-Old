@@ -1,4 +1,3 @@
-/src/**/*.js
 node_modules
 dist
 *.crx
