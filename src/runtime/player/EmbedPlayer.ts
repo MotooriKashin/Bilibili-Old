@@ -55,6 +55,8 @@ class EmbedPlayer {
             Reflect.set(window, ...d);
             storage.ss.setItem(...d);
         });
+        this.playerParam.seasonId && storage.ss.setItem("ssid", this.playerParam.seasonId);
+        this.playerParam.episodeId && storage.ss.setItem("epid", this.playerParam.episodeId);
         (EmbedPlayer.asWide || setting.automate.screenWide) && (this.playerParam.as_wide = 1);
         setting.automate.autoPlay && (this.playerParam.autoplay = 1);
         this.gray_loader();
