@@ -23,7 +23,7 @@
                 {
                     "header": "Access-Control-Allow-Origin",
                     "operation": "set",
-                    "value": "https://www.bilibili.com"
+                    "value": "*"
                 },
                 {
                     "header": "Access-Control-Expose-Headers",
@@ -63,7 +63,7 @@
                 {
                     "header": "Access-Control-Allow-Origin",
                     "operation": "set",
-                    "value": "https://www.bilibili.com"
+                    "value": "*"
                 },
                 {
                     "header": "Access-Control-Expose-Headers",
