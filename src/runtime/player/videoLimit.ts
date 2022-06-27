@@ -62,9 +62,15 @@ async function customServer(obj: Record<string, string | number>, area: "tw" | "
 export function videoLimit() {
     xhrhookAsync("/playurl?", () => storage.ss.getItem("limit") || storage.ss.getItem("th"), async (args, type) => { // 代理限制视频的请求
         let response: any; // 初始化返回值
+        const obj = urlObj(args[1]); // 提取请求参数
+        obj.seasonId && storage.ss.setItem("ssid", obj.seasonId);
+        obj.episodeId && storage.ss.setItem("epid", obj.episodeId);
+        obj.ep_id && storage.ss.setItem("epid", obj.ep_id);
+        obj.aid && ((<any>window).aid = Number(obj.aid)) && storage.ss.setItem("aid", obj.aid);
+        obj.avid && ((<any>window).aid = Number(obj.avid)) && storage.ss.setItem("aid", obj.avid);
+        obj.cid && ((<any>window).cid = Number(obj.cid)) && storage.ss.setItem("cid", obj.cid);
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
-        const epid = storage.ss.getItem("epid");
-        let obj = urlObj(args[1]); // 提取请求参数
+        const epid = obj.ep_id || obj.episodeId || storage.ss.getItem("epid");
         const accesskey = setting.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
         Backup[epid] && (response = Backup[epid]);

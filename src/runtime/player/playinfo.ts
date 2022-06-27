@@ -18,11 +18,12 @@ export function playinfo() {
         args[1].includes("84956560bc028eb7") && (args[1] = urlsign(args[1], {}, 8)); // 修复失效的appid
         args[1].includes("pgc") && storage.ss.setItem("pgc", 1); // ogv视频
         // 更新关键参数
-        param.aid && ((<any>window).aid = Number(param.aid));
-        param.avid && ((<any>window).aid = Number(param.avid));
-        param.cid && ((<any>window).cid = Number(param.cid));
+        param.aid && ((<any>window).aid = Number(param.aid)) && storage.ss.setItem("aid", param.aid);
+        param.avid && ((<any>window).aid = Number(param.avid)) && storage.ss.setItem("aid", param.avid);
+        param.cid && ((<any>window).cid = Number(param.cid)) && storage.ss.setItem("cid", param.cid);
         param.seasonId && storage.ss.setItem("ssid", param.seasonId);
         param.episodeId && storage.ss.setItem("epid", param.episodeId);
+        param.ep_id && storage.ss.setItem("epid", param.ep_id);
     }, obj => {
         try {
             const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, setting.uposReplace.nor);
