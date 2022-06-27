@@ -1,3 +1,5 @@
 /src/**/*.js
 /local.user.js
 /node_modules
+*.crx
+*.pem
