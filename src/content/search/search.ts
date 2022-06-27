@@ -1,6 +1,10 @@
-import { loadScript } from "../../runtime/element/addElement";
+import { windowClear } from "../../runtime/clearWindow";
+import { doWhile } from "../../runtime/doWhile";
 import { createElements } from "../../runtime/element/createElement";
+import { appendScripts } from "../../runtime/element/createScripts";
 import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { replaceUrl } from "../../runtime/urlClean";
+import script from "./script.html";
 import html from "./search.html";
 
 // 备份标题
@@ -11,12 +15,14 @@ Array.from(document.styleSheets).forEach(d => d.disabled = true);
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
-// 降级内容脚本
-loadScript(chrome.runtime.getURL("content/search/userscript.js"));
-// 监听页面重定向
-window.addEventListener("beforeunload", () => {
-    // 注销针对性请求拦截
-    chrome.runtime.sendMessage({
-        $type: "updateSessionRules"
-    }).catch(e => console.error(e))
-});
+
+// 清理全局变量
+windowClear();
+// 无关键词搜索应使用裸origin
+doWhile(() => location.href.endsWith('all'), () => {
+    replaceUrl(location.origin);
+}, 10, 30);
+// 禁用__INITIAL_STATE__干扰
+Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
+// 启动原生脚本
+appendScripts(script);

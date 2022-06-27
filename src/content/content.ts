@@ -15,6 +15,7 @@ import { storage } from "../runtime/storage";
 import { debug } from "../runtime/debug";
 import { sendSessionRules } from "../runtime/sessionRule";
 import { backCompat } from "../runtime/backCompat";
+import { loadScript } from "../runtime/element/addElement";
 
 // 404 怪异模式处理
 const is404 = storage.ss.getItem("404");
@@ -47,7 +48,7 @@ switch (true) {
     case (/player\./.test(location.href) && !location.href.includes("ancient")):
         pageName = "player";
         break;
-    case (/\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href):
+    case ((/\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)):
         pageName = "playlist";
         break;
     case (/\/v\/popular\//.test(location.href)):
@@ -74,18 +75,18 @@ chrome.storage.local.get().then(setting => {
                 sendSessionRules(index);
                 sendSessionRules(section);
                 // 注入专属内容脚本，基本只用来引入 userscript 下同
-                files.push("content/index/index.js");
+                loadScript(chrome.runtime.getURL("content/index/index.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "av":
             if (setting[pageName]) {
                 sendSessionRules(av);
                 sendSessionRules(section);
-                files.push("content/av/av.js");
+                loadScript(chrome.runtime.getURL("content/av/av.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "bangumi":
@@ -93,78 +94,69 @@ chrome.storage.local.get().then(setting => {
                 backCompat();
                 sendSessionRules(bangumi);
                 sendSessionRules(section);
-                files.push("content/bangumi/bangumi.js");
+                loadScript(chrome.runtime.getURL("content/bangumi/bangumi.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "watchlater":
             if (setting[pageName]) {
                 sendSessionRules(watchlater);
                 sendSessionRules(section);
-                files.push("content/watchlater/watchlater.js");
+                loadScript(chrome.runtime.getURL("content/watchlater/watchlater.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "player":
             if (setting[pageName]) {
                 sendSessionRules(player);
                 sendSessionRules(section);
-                files.push("content/player/player.js");
+                loadScript(chrome.runtime.getURL("content/player/player.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "playlist":
             if (setting[pageName]) {
                 sendSessionRules(playlist);
                 sendSessionRules(section);
-                files.push("content/playlist/playlist.js");
+                loadScript(chrome.runtime.getURL("content/playlist/playlist.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "ranking":
             if (setting[pageName]) {
                 sendSessionRules(ranking);
                 sendSessionRules(section);
-                files.push("content/ranking/ranking.js");
+                loadScript(chrome.runtime.getURL("content/ranking/ranking.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "read":
             if (setting[pageName]) {
                 sendSessionRules(read);
                 sendSessionRules(section);
-                files.push("content/read/read.js");
+                loadScript(chrome.runtime.getURL("content/read/read.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         case "search":
             if (setting[pageName]) {
                 sendSessionRules(search);
                 sendSessionRules(section);
-                files.push("content/search/search.js");
+                loadScript(chrome.runtime.getURL("content/search/search.js"));
             } else {
-                files.push("content/global/global.js");
+                loadScript(chrome.runtime.getURL("content/global/global.js"));
             }
             break;
         default: // 未重写页面，用于启动全局默认 userscript
             setting.section && sendSessionRules(section);
-            files.push("content/global/global.js");
+            loadScript(chrome.runtime.getURL("content/global/global.js"));
             break;
-    }
-    if (files.length > 0) {
-        chrome.runtime.sendMessage({
-            $type: "executeScript",
-            data: {
-                files,
-                injectImmediately: true
-            }
-        }).catch(e => debug.error(e))
     }
 });
 // 监听来自页面的消息
@@ -241,6 +233,11 @@ window.addEventListener("click", anchorClick, !1);
 window.addEventListener("contextmenu", anchorClick, !1);
 // 页面载入完成处理
 document.addEventListener("DOMContentLoaded", () => anchorClean(document.querySelectorAll("a")));
+// 页面卸载
+window.addEventListener("beforeunload", () => {
+    // 清理缓存
+    storage.ss.clear();
+})
 // 处理注入的节点
 let timer: number;
 observerAddedNodes((node) => {

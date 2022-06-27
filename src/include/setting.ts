@@ -29,7 +29,7 @@ export const SETTING = {
     index: true,
     ranking: true,
     read: true,
-    medialist: true,
+    playlist: true,
     automate: {
         danmakuFirst: false,
         showBofqi: false,

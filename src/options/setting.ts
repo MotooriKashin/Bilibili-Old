@@ -335,7 +335,7 @@ export const settingDefault = [
         sub: "旧版专栏页面"
     },
     {
-        key: "medialist",
+        key: "playlist",
         menu: "rewrite",
         label: "medialist",
         sub: "旧版播单相关页面",
@@ -925,5 +925,5 @@ export const settingDefault = [
                 value: false
             }
         ]
-    },
+    }
 ]
