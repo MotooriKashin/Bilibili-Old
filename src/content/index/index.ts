@@ -17,7 +17,6 @@ import { appendScripts } from "../../runtime/element/createScripts";
 import { debug } from "../../runtime/debug";
 import { toast } from "../../runtime/toast/toast";
 import { setting } from "../../runtime/setting";
-import { windowClear } from "../../runtime/clearWindow";
 import html from "./index.html";
 
 
@@ -25,8 +24,6 @@ import html from "./index.html";
 Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
-// 清理全局变量
-windowClear();
 const __INITIAL_STATE__: any = (<any>window).__INITIAL_STATE__ = {
     locsData: {
         23: null,

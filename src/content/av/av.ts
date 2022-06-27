@@ -10,7 +10,6 @@ import { avLostCheck } from "./avLostCheck";
 import { banner, primaryMenu } from "../global/banner";
 import { loadComment } from "../global/comment";
 import { loadByDmId } from "./loadByDmId";
-import { windowClear } from "../../runtime/clearWindow";
 import { createElements } from "../../runtime/element/createElement";
 import { htmlVnode } from "../../runtime/element/htmlVnode";
 import html from "./av.html";
@@ -24,8 +23,6 @@ Array.from(document.styleSheets).forEach(d => d.disabled = true);
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
-// 清理全局变量
-windowClear();
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本

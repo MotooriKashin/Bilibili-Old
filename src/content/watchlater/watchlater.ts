@@ -1,4 +1,3 @@
-import { windowClear } from "../../runtime/clearWindow";
 import { createElements } from "../../runtime/element/createElement";
 import { appendScripts } from "../../runtime/element/createScripts";
 import { htmlVnode } from "../../runtime/element/htmlVnode";
@@ -21,8 +20,6 @@ document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
 
-// 清理全局变量
-windowClear();
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本

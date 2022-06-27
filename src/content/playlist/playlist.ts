@@ -16,7 +16,6 @@ import { setting } from "../../runtime/setting";
 import { enLike } from "../global/enLike";
 import { banner, primaryMenu } from "../global/banner";
 import { loadByDmId } from "../av/loadByDmId";
-import { windowClear } from "../../runtime/clearWindow";
 import html from "./playlist.html";
 import { createElements } from "../../runtime/element/createElement";
 import { htmlVnode } from "../../runtime/element/htmlVnode";
@@ -31,8 +30,6 @@ document.documentElement.replaceWith(createElements(htmlVnode(html)));
 title && !title.includes("404") && (document.title = title);
 
 const path = location.href.split("/");
-// 清理全局变量
-windowClear();
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本

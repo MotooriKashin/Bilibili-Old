@@ -1,4 +1,3 @@
-import { windowClear } from "../../runtime/clearWindow";
 import { doWhile } from "../../runtime/doWhile";
 import { createElements } from "../../runtime/element/createElement";
 import { appendScripts } from "../../runtime/element/createScripts";
@@ -16,8 +15,6 @@ document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
 
-// 清理全局变量
-windowClear();
 // 无关键词搜索应使用裸origin
 doWhile(() => location.href.endsWith('all'), () => {
     replaceUrl(location.origin);

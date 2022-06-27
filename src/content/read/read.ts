@@ -1,4 +1,3 @@
-import { windowClear } from "../../runtime/clearWindow";
 import { debug } from "../../runtime/debug";
 import { appendScripts } from "../../runtime/element/createScripts";
 import { rightCopy } from "../../runtime/rightCopy";
@@ -19,8 +18,6 @@ document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
 
-// 清理全局变量
-windowClear();
 // 评论脚本
 loadComment();
 xhr.get(location.href).then(data => {
