@@ -766,8 +766,8 @@ export const settingDefault = [
         label: "referer",
         sub: "高级设置",
         float: 'B站视频一般填主站域名即可，其他会403。<strong>TV源/泰区视频必须置空！港澳台替换UPOS服务器后也可能需要置空。</strong>（默认下载方式以外才有意义。）',
-        value: location.origin,
-        candidate: [location.origin]
+        value: "https://www.bilibili.com",
+        candidate: ["https://www.bilibili.com"]
     },
     {
         key: "filepath",
