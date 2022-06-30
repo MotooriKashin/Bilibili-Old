@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.7
+// @version      8.1.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -17881,6 +17881,42 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                 payPack: r
             };
     }
+    function V(t, e) {
+        var i = Number(t), n = 1 === e || 4 === e || "番剧" === e || "国创" === e ? "话" : "集";
+        return isNaN(i) ? t : "第".concat(i).concat(n);
+    }
+    function Q(t, e) {
+        var i = {
+            1: "番剧",
+            2: "电影",
+            3: "纪录片",
+            4: "国创",
+            5: "电视剧",
+            7: "综艺",
+            music: "音乐"
+        };
+        return [26484, 26481].indexOf(e) > -1 ? i.music : i[t] || "番剧";
+    }
+    function setTitle(t, e, i, n) {
+        var s = !(arguments.length > 4 && void 0 !== arguments[4]) || arguments[4], o = "";
+        if (i = void 0 === i ? "番剧" : i,
+            e && i)
+            if (s && t) {
+                var a = V(t, i);
+                o = "".concat(e, "：").concat(a, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+            }
+            else
+                o = "".concat(e, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+        else
+            o = "番剧".concat(n ? "_bilibili" : "", "_哔哩哔哩");
+        if ("undefined" != typeof window) {
+            var r = window.document.createElement("div");
+            r.innerHTML = o,
+                o = r.innerText || r.textContent,
+                r = null;
+        }
+        return o;
+    }
     async function bangumiInitialState() {
         try {
             const obj = API.epid ? { ep_id: API.epid } : { season_id: API.ssid };
@@ -17982,6 +18018,15 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                 if (t.upInfo.mid == /** Classic_Anime */ 677043260 || t.upInfo.mid == /** Anime_Ongoing */ 688418886) {
                     API.th = true;
                 }
+                const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), !0);
+                function loopTitle() {
+                    API.doWhile(() => document.title != title, () => {
+                        document.title = title;
+                        if (document.title != title)
+                            loopTitle();
+                    });
+                }
+                loopTitle();
             }
             else {
                 API.debug.error(result[0]);
@@ -18106,6 +18151,15 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                     res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
                 }, false);
                 API.toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用脚本【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
+                const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), !0);
+                function loopTitle() {
+                    API.doWhile(() => document.title != title, () => {
+                        document.title = title;
+                        if (document.title != title)
+                            loopTitle();
+                    });
+                }
+                loopTitle();
             }
             else
                 throw result;
@@ -19059,22 +19113,40 @@ object {
 `
     API.addCss(API.getModule("bnj.css"));
     // loadVideoScript(".festival-video-player", true);
+    window.bnj = false; // 是否载入
+    const arr = []; // 接口暂存
+    // 以嵌入式播放器替换原播放器
     API.doWhile(() => window.__INITIAL_STATE__, () => {
         // 替换播放器节点
         const node = document.querySelector("#bilibili-player").parentElement;
         const root = node.attachShadow({ mode: "closed" }); // 使用shadow覆盖视频节点而不影响页面其他功能
         const iframe = document.createElement('iframe');
-        iframe.src = \`https://www.bilibili.com/blackboard/html5player.html?aid=\${window.__INITIAL_STATE__.videoInfo.aid}&cid=\${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1\`;
+        iframe.src = \`https://www.bilibili.com/blackboard/html5player.html?aid=\${window.__INITIAL_STATE__.videoInfo.aid}&cid=\${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1&bnj=1\`;
         iframe.setAttribute("style", "width: 906px; height: 556px;border:none;");
         root.appendChild(iframe);
     });
-    // 销毁顶层播放器
-    API.doWhile(() => window.player, () => {
-        try {
-            window.player.stop();
+    // 暂存播放器启动命令
+    Object.defineProperty(window, "EmbedPlayer", {
+        configurable: true,
+        set: v => {
+            if (!window.bnj) {
+                // 压栈
+                arr.unshift(v);
+            }
+        },
+        get: () => {
+            if (window.bnj) {
+                Object.defineProperty(window, "EmbedPlayer", { configurable: true, value: arr[0] });
+                // 出栈
+                return arr[0];
+            }
+            else {
+                return function () {
+                    // 轮询播放器启动命令
+                    setTimeout(() => window.EmbedPlayer(...arguments), 100);
+                };
+            }
         }
-        catch (e) { }
-        Object.defineProperty(window, "player", { get: () => window.oldPlayer, configurable: true });
     });
 
 //# sourceURL=file://@Bilibili-Old/vector/url/player/bnj.js`;
@@ -19184,36 +19256,48 @@ object {
     if (API.rebuildType != "重定向")
         API.windowClear();
     document.domain = "bilibili.com";
-    API.loadVideoScript();
+    API.loadVideoScript(undefined, true);
     function run() {
-        return API.urlParam(location.href).then(d => {
-            if (!d.cid)
-                throw d;
-            const playerParam = {
-                aid: d.aid,
-                cid: d.cid,
-                p: API.getUrlValue("P"),
-                // autoplay: getUrlValue("autoplay"), 深恶痛绝
-                as_wide: API.getUrlValue("as_wide"),
-                bnj: API.getUrlValue("bnj"),
-                player_type: API.getUrlValue("player_type"),
-                season_type: API.getUrlValue("season_type")
-            };
-            if (d.pgc || d.ssid || d.epid) {
-                !playerParam.season_type && (playerParam.season_type = "1");
-                Reflect.set(playerParam, "seasonId", d.ssid);
-                Reflect.set(playerParam, "episodeId", d.epid);
-                Reflect.set(playerParam, "urlparam", \`module%3Dbangumi%26season_type%3D\${playerParam.season_type}\`);
+        const playerParam = {
+            aid: API.getUrlValue("aid") || API.getUrlValue("avid"),
+            cid: API.getUrlValue("cid"),
+            p: API.getUrlValue("P"),
+            // autoplay: getUrlValue("autoplay"), 深恶痛绝
+            as_wide: API.getUrlValue("as_wide"),
+            bnj: API.getUrlValue("bnj"),
+            player_type: API.getUrlValue("player_type"),
+            season_type: API.getUrlValue("season_type")
+        };
+        if (playerParam.bnj) {
+            try {
+                window.parent.EmbedPlayer = window.EmbedPlayer;
+                window.parent.bnj = true;
             }
-            // 初始化播放器
-            window.EmbedPlayer("player", "//static.hdslb.com/play.swf", API.objUrl("", playerParam));
-            // 暴露嵌入播放器
-            API.doWhile(() => window.player, () => {
-                try {
-                    window.parent.oldPlayer = window.player;
+            catch (e) { }
+        }
+        else {
+            // 读取信息
+            API.urlParam(location.href).then(d => {
+                if (!d.cid)
+                    throw d;
+                playerParam.aid = d.aid;
+                playerParam.cid = d.cid;
+                if (d.pgc || d.ssid || d.epid) {
+                    !playerParam.season_type && (playerParam.season_type = "1");
+                    Reflect.set(playerParam, "seasonId", d.ssid);
+                    Reflect.set(playerParam, "episodeId", d.epid);
+                    Reflect.set(playerParam, "urlparam", \`module%3Dbangumi%26season_type%3D\${playerParam.season_type}\`);
                 }
-                catch (e) { }
+                // 初始化播放器
+                window.EmbedPlayer("player", "//static.hdslb.com/play.swf", API.objUrl("", playerParam));
             });
+        }
+        // 暴露嵌入播放器
+        API.doWhile(() => window.player, () => {
+            try {
+                window.parent.player = window.player;
+            }
+            catch (e) { }
         });
     }
     if (API.rebuildType == "重定向") {

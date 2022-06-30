@@ -15,6 +15,43 @@ namespace API {
             payPack: r
         }
     }
+    function V(t: any, e: any) {
+        var i: any = Number(t)
+            , n = 1 === e || 4 === e || "番剧" === e || "国创" === e ? "话" : "集";
+        return isNaN(i) ? t : "第".concat(i).concat(n)
+    }
+    function Q(t: any, e?: any) {
+        var i: any = {
+            1: "番剧",
+            2: "电影",
+            3: "纪录片",
+            4: "国创",
+            5: "电视剧",
+            7: "综艺",
+            music: "音乐"
+        };
+        return [26484, 26481].indexOf(e) > -1 ? i.music : i[t] || "番剧"
+    }
+    function setTitle(t: any, e: any, i: any, n: any) {
+        var s = !(arguments.length > 4 && void 0 !== arguments[4]) || arguments[4]
+            , o: any = "";
+        if (i = void 0 === i ? "番剧" : i,
+            e && i)
+            if (s && t) {
+                var a = V(t, i);
+                o = "".concat(e, "：").concat(a, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩")
+            } else
+                o = "".concat(e, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+        else
+            o = "番剧".concat(n ? "_bilibili" : "", "_哔哩哔哩");
+        if ("undefined" != typeof window) {
+            var r: any = window.document.createElement("div");
+            r.innerHTML = o,
+                o = r.innerText || r.textContent,
+                r = null
+        }
+        return o
+    }
     export async function bangumiInitialState(): Promise<any> {
         try {
             const obj: Record<string, string | number> = epid ? { ep_id: epid } : { season_id: ssid };
@@ -118,6 +155,14 @@ namespace API {
                 if (t.upInfo.mid == /** Classic_Anime */677043260 || t.upInfo.mid == /** Anime_Ongoing */688418886) {
                     th = true;
                 }
+                const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), !0);
+                function loopTitle() {
+                    doWhile(() => document.title != title, () => {
+                        document.title = title;
+                        if (document.title != title) loopTitle();
+                    })
+                }
+                loopTitle();
             } else {
                 debug.error(result[0]);
                 debug.error(result[1]);
@@ -242,6 +287,14 @@ namespace API {
                     res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
                 }, false);
                 toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用脚本【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
+                const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), !0);
+                function loopTitle() {
+                    doWhile(() => document.title != title, () => {
+                        document.title = title;
+                        if (document.title != title) loopTitle();
+                    })
+                }
+                loopTitle();
             }
             else throw result;
         } catch (e) {
