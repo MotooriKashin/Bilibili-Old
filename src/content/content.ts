@@ -235,6 +235,8 @@ window.addEventListener("contextmenu", anchorClick, !1);
 document.addEventListener("DOMContentLoaded", () => anchorClean(document.querySelectorAll("a")));
 // 页面卸载
 window.addEventListener("beforeunload", () => {
+    // 清空已应用规则
+    sendSessionRules();
     // 清理缓存
     storage.ss.clear();
 })

@@ -78,4 +78,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // 移除关联会话规则集
     updateSessionRules(tabId);
-})
+});
