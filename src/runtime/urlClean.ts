@@ -20,7 +20,8 @@ const paramsSet = new Set([
     'share_session_id',
     'share_tag',
     'unique_k',
-    'vd_source'
+    'vd_source',
+    'csource'
 ]);
 /** 精准爆破 */
 const paramArr = Object.entries({
