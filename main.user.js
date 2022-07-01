@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.8
+// @version      8.1.9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -15336,7 +15336,8 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         'share_plat',
         'share_session_id',
         'share_tag',
-        'unique_k'
+        'unique_k',
+        'csource'
     ]);
     /** url处理栈 */
     const hookStack = [];
@@ -15713,29 +15714,69 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 /*!***********************!*/
 /**/modules["bbComment.js"] = /*** ./src/vector/comment/bbComment.js ***/
 `
-    let load = false, timer = 0; // 是否载入
+    let loading = false, load = false, timer = 0; // 是否载入
     const arr = []; // 接口暂存
     Object.defineProperty(window, "bbComment", {
+        configurable: true,
         set: v => {
             if (!load) {
                 // 压栈
                 arr.unshift(v);
             }
-            Promise.resolve().then(() => {
-                document.querySelectorAll("style").forEach(d => {
-                    d.textContent && d.textContent.includes("热门评论") && d.remove();
-                });
-                API.addCss(API.getModule("comment.css"));
-                API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
-            });
         },
         get: () => {
             if (load) {
+                Promise.resolve().then(() => {
+                    document.querySelectorAll("style").forEach(d => {
+                        d.textContent && d.textContent.includes("热门评论") && d.remove();
+                    });
+                    API.addCss(API.getModule("comment.css"));
+                    API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+                });
+                Object.defineProperty(window, "bbComment", { configurable: true, value: arr[0] });
                 // 出栈
                 return arr[0];
             }
             return class {
                 constructor() {
+                    if (!loading) {
+                        let text = GM.GM_getResourceText("comment.js");
+                        if (text) {
+                            new Function(text)();
+                        }
+                        else {
+                            API.toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
+                        }
+                        load = true;
+                    }
+                    loading = true;
+                    setTimeout(() => new window.bbComment(...arguments), 100);
+                }
+                on() { }
+            };
+        }
+    });
+    Object.defineProperty(window, "initComment", {
+        configurable: true,
+        set: v => true,
+        get: () => {
+            if (load) {
+                Promise.resolve().then(() => {
+                    document.querySelectorAll("style").forEach(d => {
+                        d.textContent && d.textContent.includes("热门评论") && d.remove();
+                    });
+                    API.addCss(API.getModule("comment.css"));
+                    API.addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+                });
+                function initComment(tar, init) {
+                    new arr[0](tar, init.oid, init.pageType, init.userStatus);
+                }
+                Object.defineProperty(window, "initComment", { configurable: true, value: initComment });
+                // 出栈
+                return initComment;
+            }
+            return function () {
+                if (!loading) {
                     let text = GM.GM_getResourceText("comment.js");
                     if (text) {
                         new Function(text)();
@@ -15744,9 +15785,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                         API.toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
                     }
                     load = true;
-                    setTimeout(() => new window.bbComment(...arguments), 100);
                 }
-                on() { }
+                loading = true;
+                setTimeout(() => window.initComment(...arguments), 100);
             };
         }
     });

@@ -4,44 +4,83 @@ interface modules {
     readonly "comment.css": string;
 }
 namespace API {
-    let load = false, timer = 0; // 是否载入
+    let loading = false, load = false, timer = 0; // 是否载入
     const arr: any[] = []; // 接口暂存
     Object.defineProperty(window, "bbComment", {
+        configurable: true,
         set: v => {
             if (!load) {
                 // 压栈
                 arr.unshift(v);
             }
-            Promise.resolve().then(() => {
-                document.querySelectorAll("style").forEach(d => {
-                    d.textContent && d.textContent.includes("热门评论") && d.remove();
-                });
-                addCss(getModule("comment.css"));
-                addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
-            })
         },
         get: () => {
             if (load) {
+                Promise.resolve().then(() => {
+                    document.querySelectorAll("style").forEach(d => {
+                        d.textContent && d.textContent.includes("热门评论") && d.remove();
+                    });
+                    addCss(getModule("comment.css"));
+                    addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+                })
+                Object.defineProperty(window, "bbComment", { configurable: true, value: arr[0] });
                 // 出栈
                 return arr[0];
             }
             return class { // 等待载入
                 constructor() {
-                    let text = GM.GM_getResourceText("comment.js");
-                    if (text) {
-                        new Function(text)();
-
+                    if (!loading) {
+                        let text = GM.GM_getResourceText("comment.js");
+                        if (text) {
+                            new Function(text)();
+                        }
+                        else {
+                            toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
+                        }
+                        load = true;
                     }
-                    else {
-                        toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
-                    }
-                    load = true;
+                    loading = true;
                     setTimeout(() => new (<any>window).bbComment(...arguments), 100);
                 }
                 on() { }
             }
         }
     });
+    Object.defineProperty(window, "initComment", {
+        configurable: true,
+        set: v => true,
+        get: () => {
+            if (load) {
+                Promise.resolve().then(() => {
+                    document.querySelectorAll("style").forEach(d => {
+                        d.textContent && d.textContent.includes("热门评论") && d.remove();
+                    });
+                    addCss(getModule("comment.css"));
+                    addElement("link", { rel: "stylesheet", href: "//static.hdslb.com/phoenix/dist/css/comment.min.css" }, document.head);
+                })
+                function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
+                    new arr[0](tar, init.oid, init.pageType, init.userStatus);
+                }
+                Object.defineProperty(window, "initComment", { configurable: true, value: initComment });
+                // 出栈
+                return initComment;
+            }
+            return function () {
+                if (!loading) {
+                    let text = GM.GM_getResourceText("comment.js");
+                    if (text) {
+                        new Function(text)();
+                    }
+                    else {
+                        toast.warning("外部资源：comment.js 加载失败！", "无法恢复翻页评论区！");
+                    }
+                    load = true;
+                }
+                loading = true;
+                setTimeout(() => (<any>window).initComment(...arguments), 100);
+            }
+        }
+    })
     config.commentLinkDetail && observerAddedNodes((node) => { // 还原评论链接
         if (/l_id/.test(node.id) || /reply-wrap/.test(node.className)) {
             clearTimeout(timer)
