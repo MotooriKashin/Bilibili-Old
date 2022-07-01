@@ -50059,7 +50059,8 @@ else {
                 // 根据播放器默认加载的画质等级的视频流修正传递给addSourceBuffer的mime类型
                 if (b.type == "video" && window.GrayManager.codec) {
                     let streamInfo = window.GrayManager.codec.loadedSource[dashPlayer.state.defaultQuality];
-                    b.codec = c = streamInfo.mimeType + ';codecs="' + streamInfo.codecs + '"';
+                    // defaultQuality 为0（自动）时，streamInfo可能获取不到
+                    streamInfo && (b.codec = c = streamInfo.mimeType + ';codecs="' + streamInfo.codecs + '"');
                 }
                 try {
                     if (c.match(/application\/mp4;\s*codecs="(stpp|wvtt).*"/i)) throw new Error("not really supported");
