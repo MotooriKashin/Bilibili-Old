@@ -20,7 +20,8 @@ namespace API {
         'share_plat',
         'share_session_id',
         'share_tag',
-        'unique_k'
+        'unique_k',
+        'csource'
     ]);
     /** url处理栈 */
     const hookStack: [string[], (url: UrlFormat) => void][] = [];
