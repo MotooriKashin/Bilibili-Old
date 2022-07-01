@@ -22844,8 +22844,8 @@ function Fa() {
                     let collator = new Intl.Collator("zh");
                     let defaultCompare = this.iq(g, b);
                     let compareText = (s, t) =>
-                        s.text.charCodeAt(0) < 0x4e00 || t.text.charCodeAt(0) < 0x4e00? defaultCompare(s, t) :
-                        g? collator.compare(s.text, t.text) : collator.compare(t.text, s.text);
+                        s.text.charCodeAt(0) < 0x4e00 || t.text.charCodeAt(0) < 0x4e00 ? defaultCompare(s, t) :
+                            g ? collator.compare(s.text, t.text) : collator.compare(t.text, s.text);
                     n.sort(compareText);
                     f.sort(compareText);
                     f = g ? f.concat(n) : n.concat(f);
@@ -59053,4 +59053,3 @@ else {
         c.default = e, b.exports = c.default
     }, {}]
 }, {}, [4]);
-//# sourceURL=file://@Bilibili-Old/bilibiliPlayer.js
