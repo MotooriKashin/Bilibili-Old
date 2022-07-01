@@ -3,10 +3,10 @@ import { isObject } from "../lib/typeof";
 import { urlPack } from "../lib/url";
 import { uposReplace } from "../player/uposReplace";
 import { setting } from "../setting";
-import { storage } from "../storage";
 import { switchVideo } from "../switchVideo";
 import { toast } from "../toast/toast";
 import { fnval } from "../variable/fnval";
+import { VAR } from "../variable/variable";
 import { downloadUI, DownloadUpColer } from "./downloadUI";
 import { DownloadDate, playinfoFiter } from "./playinfoFilter";
 
@@ -100,31 +100,31 @@ function contactDownloadDate(target: DownloadDate, source: DownloadDate) {
 /** 封面等下载 */
 function getCover() {
     if (!setting.downloadOther) return;
-    const cover: string = storage.ss.getItem("cover"),
-        bkg_cover: string = storage.ss.getItem("bkg_cover"),
-        title: string = storage.ss.getItem("title");
+    const cover: string = VAR.cover,
+        bkg_cover: string = VAR.bkg_cover,
+        title: string = VAR.title;
     cover && pushDownload({
         group: "封面",
         url: cover,
         up: "封面",
         down: "N/A",
-        fileName: `${title || `av${(<any>window).aid}`}.${cover.split(".").reduce((s, d) => s = d, <any>undefined) || "jpg"}`
+        fileName: `${title || `av${VAR.aid}`}.${cover.split(".").reduce((s, d) => s = d, <any>undefined) || "jpg"}`
     });
     bkg_cover && pushDownload({
         group: "封面",
         url: bkg_cover,
         up: "封面",
         down: "N/A",
-        fileName: `${title || `av${(<any>window).aid}`}.${bkg_cover.split(".").reduce((s, d) => s = d, <any>undefined) || "jpg"}`
+        fileName: `${title || `av${VAR.aid}`}.${bkg_cover.split(".").reduce((s, d) => s = d, <any>undefined) || "jpg"}`
     });
 }
 /** 默认下载 */
 export async function downloadDefault() {
     if (downloading) return;
     downloading = true;
-    if (!(<any>window).cid) return toast.warning("请在视频页使用本功能~");
-    if (storage.ss.getItem("th")) toast.warning("泰区视频！", "请将【referer】置空，【UserAgent】设为默认值，并选用【默认】以外的方式进行下载~");
-    const data = playinfoFiter(storage.ss.getItem("__playinfo__"));
+    if (!VAR.cid) return toast.warning("请在视频页使用本功能~");
+    if (VAR.th) toast.warning("泰区视频！", "请将【referer】置空，【UserAgent】设为默认值，并选用【默认】以外的方式进行下载~");
+    const data = playinfoFiter(VAR.__playinfo__);
     const request: Promise<any>[] = [];
     const type = setting.downlaodType.join(" ").toLowerCase();
     downloadUI.obj.data = data;
@@ -156,20 +156,20 @@ export function downloadOther() {
 async function getContent(d: "dash" | "flv" | "mp4") {
     d = <"dash" | "flv" | "mp4">d.toLowerCase();
     let result: any;
-    const pgc = storage.ss.getItem("pgc");
+    const pgc = VAR.pgc;
     try {
         switch (d) {
             case "dash": result = pgc ?
-                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: (<any>window).aid, cid: (<any>window).cid, fnver: 0, fnval: fnval }) :
-                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: (<any>window).aid, cid: (<any>window).cid, fnver: 0, fnval: fnval });
+                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: VAR.aid, cid: VAR.cid, fnver: 0, fnval: fnval }) :
+                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: VAR.aid, cid: VAR.cid, fnver: 0, fnval: fnval });
                 break;
             case "flv": result = pgc ?
-                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: (<any>window).aid, cid: (<any>window).cid, qn: setting.downloadQn }) :
-                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: (<any>window).aid, cid: (<any>window).cid, qn: setting.downloadQn });
+                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/pgc/player/api/playurltv" : "api.bilibili.com/pgc/player/web/playurl", { avid: VAR.aid, cid: VAR.cid, qn: setting.downloadQn }) :
+                await urlPack.getJson(setting.TVresource ? "api.bilibili.com/x/tv/ugc/playurl" : "api.bilibili.com/x/player/playurl", { avid: VAR.aid, cid: VAR.cid, qn: setting.downloadQn });
                 break;
             case "mp4": result = pgc ?
-                await urlPack.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: (<any>window).cid }) :
-                await urlPack.getJson("app.bilibili.com/v2/playurlproj", { cid: (<any>window).cid });
+                await urlPack.getJson("api.bilibili.com/pgc/player/api/playurlproj", { cid: VAR.cid }) :
+                await urlPack.getJson("app.bilibili.com/v2/playurlproj", { cid: VAR.cid });
                 break;
         }
     } catch (e) { }

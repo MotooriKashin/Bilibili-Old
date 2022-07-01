@@ -3,32 +3,32 @@ import { debug } from "../debug";
 import { objUrl, urlObj } from "../format/url";
 import { xhrhook, xhrhookAsync } from "../hook/xhr";
 import { setting } from "../setting";
-import { storage } from "../storage";
 import { statusCheck } from "../unit";
 import { xhr } from "../xhr";
 import { closedCaption } from "./closedCaption";
 import { SegProgress } from "./segProgress";
 import { uposReplace } from "./uposReplace";
 import { toast } from "../toast/toast";
+import { VAR } from "../variable/variable";
 
 /** 播放信息相关 */
 export function playinfo() {
     xhrhook("/playurl?", args => {
         const param = urlObj(args[1]);
         args[1].includes("84956560bc028eb7") && (args[1] = urlsign(args[1], {}, 8)); // 修复失效的appid
-        args[1].includes("pgc") && storage.ss.setItem("pgc", 1); // ogv视频
+        args[1].includes("pgc") && (VAR.pgc = 1); // ogv视频
         // 更新关键参数
-        param.aid && ((<any>window).aid = Number(param.aid)) && storage.ss.setItem("aid", param.aid);
-        param.avid && ((<any>window).aid = Number(param.avid)) && storage.ss.setItem("aid", param.avid);
-        param.cid && ((<any>window).cid = Number(param.cid)) && storage.ss.setItem("cid", param.cid);
-        param.seasonId && storage.ss.setItem("ssid", param.seasonId);
-        param.episodeId && storage.ss.setItem("epid", param.episodeId);
-        param.ep_id && storage.ss.setItem("epid", param.ep_id);
+        param.aid && (VAR.aid = Number(param.aid)) && (VAR.aid = param.aid);
+        param.avid && (VAR.aid = Number(param.avid)) && (VAR.aid = param.avid);
+        param.cid && (VAR.cid = Number(param.cid)) && (VAR.cid = param.cid);
+        param.seasonId && (VAR.ssid = param.seasonId);
+        param.episodeId && (VAR.epid = param.episodeId);
+        param.ep_id && (VAR.epid = param.ep_id);
     }, obj => {
         try {
             const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, setting.uposReplace.nor);
             obj.responseType === "json" ? obj.response = JSON.parse(data) : obj.response = obj.responseText = data;
-            storage.ss.setItem("__playinfo__", data);
+            VAR.__playinfo__ = <any>data;
             Promise.resolve().then(() => {
                 const d = JSON.parse(data);
                 if (d.code === 87005) toast.warning(d.message, "请到新版页面付费后继续！")
@@ -37,9 +37,9 @@ export function playinfo() {
     }, false);
     let timer: number, tag = false; // 过滤栈
     xhrhook("api.bilibili.com/x/player.so", () => {
-        if (!tag && storage.ss.getItem("th") && (<any>window).__INITIAL_STATE__?.epInfo?.subtitles) {
-            if ((<any>window).__INITIAL_STATE__.epInfo.subtitles[0]) {
-                setting.closedCaption && closedCaption.getCaption((<any>window).__INITIAL_STATE__.epInfo.subtitles.reduce((s: any[], d: any) => {
+        if (!tag && VAR.th && VAR.__INITIAL_STATE__?.epInfo?.subtitles) {
+            if (VAR.__INITIAL_STATE__.epInfo.subtitles[0]) {
+                setting.closedCaption && closedCaption.getCaption(VAR.__INITIAL_STATE__.epInfo.subtitles.reduce((s: any[], d: any) => {
                     s.push({
                         ai_type: 0,
                         id: d.id,
@@ -75,7 +75,7 @@ export function playinfo() {
             } else {
                 // 404会触发接口多次请求，需要过滤
                 !tag && xhr({
-                    url: objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: (<any>window).cid, aid: (<any>window).aid, type: 1 }),
+                    url: objUrl("https://api.bilibili.com/x/v2/dm/view", { oid: VAR.cid, aid: VAR.aid, type: 1 }),
                     responseType: "json",
                     credentials: true
                 }, true).then(data => {

@@ -4,13 +4,13 @@ import { debug } from "../debug";
 import { objUrl, urlObj } from "../format/url";
 import { xhrhookAsync } from "../hook/xhr";
 import { setting } from "../setting";
-import { storage } from "../storage";
 import { toast } from "../toast/toast";
 import { jsonCheck } from "../unit";
 import { fnval } from "../variable/fnval";
 import { xhr } from "../xhr";
 import { bstarPlayurl } from "./bstarPlayurl";
 import { uposReplace } from "./uposReplace";
+import { VAR } from "../variable/variable";
 
 
 const Backup: Record<string, any> = {};
@@ -60,22 +60,22 @@ async function customServer(obj: Record<string, string | number>, area: "tw" | "
 }
 /** 解除播放限制 */
 export function videoLimit() {
-    xhrhookAsync("/playurl?", () => storage.ss.getItem("limit") || storage.ss.getItem("th"), async (args, type) => { // 代理限制视频的请求
+    xhrhookAsync("/playurl?", () => Boolean(VAR.limit || VAR.th), async (args, type) => { // 代理限制视频的请求
         let response: any; // 初始化返回值
         const obj = urlObj(args[1]); // 提取请求参数
-        obj.seasonId && storage.ss.setItem("ssid", obj.seasonId);
-        obj.episodeId && storage.ss.setItem("epid", obj.episodeId);
-        obj.ep_id && storage.ss.setItem("epid", obj.ep_id);
-        obj.aid && ((<any>window).aid = Number(obj.aid)) && storage.ss.setItem("aid", obj.aid);
-        obj.avid && ((<any>window).aid = Number(obj.avid)) && storage.ss.setItem("aid", obj.avid);
-        obj.cid && ((<any>window).cid = Number(obj.cid)) && storage.ss.setItem("cid", obj.cid);
+        obj.seasonId && (VAR.ssid = obj.seasonId);
+        obj.episodeId && (VAR.epid = obj.episodeId);
+        obj.ep_id && (VAR.epid = obj.ep_id);
+        obj.aid && (VAR.aid = Number(obj.aid)) && (VAR.aid = obj.aid);
+        obj.avid && (VAR.aid = Number(obj.avid)) && (VAR.aid = obj.avid);
+        obj.cid && (VAR.cid = Number(obj.cid)) && (VAR.cid = obj.cid);
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
-        const epid = obj.ep_id || obj.episodeId || storage.ss.getItem("epid");
+        const epid = obj.ep_id || obj.episodeId || VAR.epid;
         const accesskey = setting.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
         Backup[epid] && (response = Backup[epid]);
         if (!response) {
-            if (storage.ss.getItem("th")) { // 泰区
+            if (VAR.th) { // 泰区
                 Object.assign(obj, {
                     area: "th",
                     build: 1001310,
@@ -92,7 +92,7 @@ export function videoLimit() {
                         url: urlsign(`https://${setting.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
                     }), setting.uposReplace.th));
                     response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
-                    toast.success(`解除区域限制！aid=${(<any>window).aid}, cid=${(<any>window).cid}`);
+                    toast.success(`解除区域限制！aid=${VAR.aid}, cid=${VAR.cid}`);
                 } catch (e) {
                     toast.error("解除限制失败 ಥ_ಥ");
                     debug.error("解除限制失败 ಥ_ಥ", e);
@@ -101,8 +101,8 @@ export function videoLimit() {
                     }
                     response = { "code": -404, "message": e, "data": null };
                 }
-            } else if (storage.ss.getItem("limit")) { // 处理区域限制
-                obj.module = ((<any>window).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>window).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
+            } else if (VAR.limit) { // 处理区域限制
+                obj.module = (VAR.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || VAR.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
                 obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
                 try {
                     toast.info("尝试解除区域限制... 访问代理服务器");
@@ -112,7 +112,7 @@ export function videoLimit() {
                     })) : (delete obj.module, await customServer(obj, "tw"));
                     response = JSON.parse(uposReplace(JSON.stringify(response), setting.uposReplace.gat));
                     response = { "code": 0, "message": "success", "result": response };
-                    toast.success(`解除区域限制！aid=${(<any>window).aid}, cid=${(<any>window).cid}`);
+                    toast.success(`解除区域限制！aid=${VAR.aid}, cid=${VAR.cid}`);
                 } catch (e) {
                     toast.error("解除限制失败 ಥ_ಥ");
                     debug.error("解除限制失败 ಥ_ಥ", e);
@@ -129,7 +129,7 @@ export function videoLimit() {
             responseText: JSON.stringify(response)
         }
         Backup[epid] = response;
-        storage.ss.setItem("__playinfo__", response);
+        VAR.__playinfo__ = response;
         return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)

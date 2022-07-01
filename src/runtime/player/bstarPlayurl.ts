@@ -1,4 +1,5 @@
 import { debug } from "../debug";
+import { VAR } from "../variable/variable";
 import { xhr } from "../xhr";
 
 const descriptionMap = {
@@ -224,7 +225,7 @@ export async function bstarPlayurl(ogv: Record<string, any>) {
     await Promise.all(ogv.data.video_info.stream_list.reduce((s: any[], d: any, i: number) => {
         if (d.dash_video && d.dash_video.base_url) {
             s.push((async d => {
-                OBJ[`sidx${(<any>window).cid}`] || (OBJ[`sidx${(<any>window).cid}`] = {});
+                OBJ[`sidx${VAR.cid}`] || (OBJ[`sidx${VAR.cid}`] = {});
                 const id: keyof typeof descriptionMap = d.stream_info.quality || d.dash_video.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
                 playurl.accept_description.push(descriptionMap[id]);
                 set.push(formatMap[id]);
@@ -237,7 +238,7 @@ export async function bstarPlayurl(ogv: Record<string, any>) {
                     quality: id,
                     superscript: ""
                 })
-                if (!OBJ[`sidx${(<any>window).cid}`][id]) {
+                if (!OBJ[`sidx${VAR.cid}`][id]) {
                     let data = new Uint8Array(await getIdxs(d.dash_video.base_url, playurl.dash.duration));
                     let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                     // 首个“sidx”出现4字节之前的部分为索引起始点
@@ -245,17 +246,17 @@ export async function bstarPlayurl(ogv: Record<string, any>) {
                     // 首个“mooc”出现前5字节结束索引
                     let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
                     // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
-                    OBJ[`sidx${(<any>window).cid}`][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
-                    debug("DASH-video：", id, OBJ[`sidx${(<any>window).cid}`][id]);
+                    OBJ[`sidx${VAR.cid}`][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                    debug("DASH-video：", id, OBJ[`sidx${VAR.cid}`][id]);
                 }
                 (<any>playurl.dash.video).push({
                     SegmentBase: {
-                        Initialization: OBJ[`sidx${(<any>window).cid}`][id][0],
-                        indexRange: OBJ[`sidx${(<any>window).cid}`][id][1]
+                        Initialization: OBJ[`sidx${VAR.cid}`][id][0],
+                        indexRange: OBJ[`sidx${VAR.cid}`][id][1]
                     },
                     segment_base: {
-                        initialization: OBJ[`sidx${(<any>window).cid}`][id][0],
-                        index_range: OBJ[`sidx${(<any>window).cid}`][id][1]
+                        initialization: OBJ[`sidx${VAR.cid}`][id][0],
+                        index_range: OBJ[`sidx${VAR.cid}`][id][1]
                     },
                     backupUrl: [],
                     backup_url: [],
@@ -281,9 +282,9 @@ export async function bstarPlayurl(ogv: Record<string, any>) {
         }
         !i && (<any>ogv.data.video_info.dash_audio).forEach((d: any) => {
             s.push((async d => {
-                OBJ[`sidx${(<any>window).cid}`] || (OBJ[`sidx${(<any>window).cid}`] = {});
+                OBJ[`sidx${VAR.cid}`] || (OBJ[`sidx${VAR.cid}`] = {});
                 const id = d.id || d.base_url.match(/[0-9]+\.m4s/)[0].split(".")[0];
-                if (!OBJ[`sidx${(<any>window).cid}`][id]) {
+                if (!OBJ[`sidx${VAR.cid}`][id]) {
                     let data = new Uint8Array(await getIdxs(d.base_url, playurl.dash.duration));
                     let hex_data = Array.prototype.map.call(data, x => ('00' + x.toString(16)).slice(-2)).join('');
                     // 首个“sidx”出现4字节之前的部分为索引起始点
@@ -291,17 +292,17 @@ export async function bstarPlayurl(ogv: Record<string, any>) {
                     // 首个“mooc”出现前5字节结束索引
                     let indexRagneEnd = hex_data.indexOf('6d6f6f66') / 2 - 5;
                     // 挂载到BLOD下，切换清晰度直接继承使用（以cid为切p标记）
-                    OBJ[`sidx${(<any>window).cid}`][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
-                    debug("DASH-video：", id, OBJ[`sidx${(<any>window).cid}`][id]);
+                    OBJ[`sidx${VAR.cid}`][id] = ['0-' + String(indexRangeStart - 1), String(indexRangeStart) + '-' + String(indexRagneEnd)];
+                    debug("DASH-video：", id, OBJ[`sidx${VAR.cid}`][id]);
                 }
                 (<any>playurl.dash.audio).push({
                     SegmentBase: {
-                        Initialization: OBJ[`sidx${(<any>window).cid}`][id][0],
-                        indexRange: OBJ[`sidx${(<any>window).cid}`][id][1]
+                        Initialization: OBJ[`sidx${VAR.cid}`][id][0],
+                        indexRange: OBJ[`sidx${VAR.cid}`][id][1]
                     },
                     segment_base: {
-                        initialization: OBJ[`sidx${(<any>window).cid}`][id][0],
-                        index_range: OBJ[`sidx${(<any>window).cid}`][id][1]
+                        initialization: OBJ[`sidx${VAR.cid}`][id][0],
+                        index_range: OBJ[`sidx${VAR.cid}`][id][1]
                     },
                     backupUrl: [],
                     backup_url: [],

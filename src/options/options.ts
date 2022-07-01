@@ -9,13 +9,13 @@ import { InputArea } from "../runtime/element/inputArea/inputArea.js";
 import { PushButton } from "../runtime/element/pushButton/pushButton.js";
 import { SelectMenu } from "../runtime/element/selectList/selectMenu.js";
 import { SliderBlock } from "../runtime/element/sliderBlock/sliderblock.js";
-import { storage } from "../runtime/storage.js";
+import { sessionStorage } from "../runtime/storage.js";
 import { menu } from "./menu.js";
 import { settingDefault, showSetting } from "./setting.js";
 import { toast } from "../runtime/toast/toast.js";
 
 // 暴露拓展ID
-storage.ss.setItem("bilibili-old", chrome.runtime.id);
+sessionStorage.setItem("bilibili-old", chrome.runtime.id);
 class BilibiliOld extends HTMLElement {
     $root: ShadowRoot;
     $menu: HTMLDivElement;
@@ -66,7 +66,7 @@ class BilibiliOld extends HTMLElement {
             return s;
         }, ""))));
         chrome.storage.local.get().then(d => {
-            storage.ss.setItem("setting", d);
+            sessionStorage.setItem("setting", d);
             new Proxy(settingDefault, new ProxyHandler(() => {
                 const news = settingDefault.reduce((s, f) => {
                     this.$showSetting[f.menu] = f.menu;
@@ -87,7 +87,7 @@ class BilibiliOld extends HTMLElement {
                     return s;
                 }, <Record<string, any>>{})
                 chrome.storage.local.set(news);
-                storage.ss.setItem("setting", news);
+                sessionStorage.setItem("setting", news);
             })).forEach(e => {
                 const target = <HTMLDivElement>this.$item.querySelector(`.item${e.menu}`);
                 if (e.type == "list") {

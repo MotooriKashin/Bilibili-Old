@@ -11,16 +11,16 @@ import read from "../rules/read.json";
 import search from "../rules/search.json";
 import th from "../rules/th.json";
 import { observerAddedNodes } from "../runtime/nodeObserver";
-import { storage } from "../runtime/storage";
+import { sessionStorage } from "../runtime/storage";
 import { debug } from "../runtime/debug";
 import { sendSessionRules } from "../runtime/sessionRule";
 import { backCompat } from "../runtime/backCompat";
 import { loadScript } from "../runtime/element/addElement";
 
 // 404 怪异模式处理
-const is404 = storage.ss.getItem("404");
+const is404 = sessionStorage.getItem("404");
 if (is404) {
-    storage.ss.removeItem("404");
+    sessionStorage.removeItem("404");
     replaceUrl(is404);
 }
 
@@ -66,7 +66,7 @@ switch (true) {
 chrome.storage.local.get().then(setting => {
     /** 暴露设置给所有内容脚本以免异步获取 */
     Object.defineProperty(window, "setting", { value: setting });
-    storage.ss.setItem("setting", setting);
+    sessionStorage.setItem("setting", setting);
     const files: string[] = [];
     switch (pageName) {
         case "index": // 主页
@@ -208,12 +208,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     // 由于 sendResponse 是只此一次先到先得
                     // 还是先判断一下页面所在域
                     sendResponse({
-                        aid: storage.ss.getItem("aid"),
-                        cid: storage.ss.getItem("cid"),
-                        pgc: storage.ss.getItem("pgc"),
-                        playerParam: storage.ss.getItem("playerParam"),
-                        cover: storage.ss.getItem("cover"),
-                        title: storage.ss.getItem("title")
+                        aid: sessionStorage.getItem("aid"),
+                        cid: sessionStorage.getItem("cid"),
+                        pgc: sessionStorage.getItem("pgc"),
+                        playerParam: sessionStorage.getItem("playerParam"),
+                        cover: sessionStorage.getItem("cover"),
+                        title: sessionStorage.getItem("title")
                     })
                 }
                 break;
@@ -238,7 +238,7 @@ window.addEventListener("beforeunload", () => {
     // 清空已应用规则
     sendSessionRules();
     // 清理缓存
-    storage.ss.clear();
+    sessionStorage.clear();
 })
 // 处理注入的节点
 let timer: number;
@@ -252,4 +252,4 @@ observerAddedNodes((node) => {
 });
 
 // 暴露拓展ID
-storage.ss.setItem("bilibili-old", chrome.runtime.id);
+sessionStorage.setItem("bilibili-old", chrome.runtime.id);

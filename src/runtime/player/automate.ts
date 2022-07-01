@@ -1,6 +1,6 @@
 import { doWhile } from "../doWhile";
 import { setting } from "../setting";
-import { storage } from "../storage";
+import { sessionStorage, localStorage } from "../storage";
 import { switchVideo } from "../switchVideo";
 import { setMediaSession } from "./MediaMeta";
 
@@ -30,24 +30,24 @@ export function automate() {
         setMediaSession();
     });
     // 切换到弹幕列表
-    setting.automate.danmakuFirst && storage.ss.setItem("player_last_filter_tab_info", 4);
+    setting.automate.danmakuFirst && sessionStorage.setItem("player_last_filter_tab_info", 4);
     // 备份播放数据
-    let bilibili_player_settings = storage.ls.getItem("bilibili_player_settings");
+    let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
     if (bilibili_player_settings) {
         if (bilibili_player_settings.video_status?.autopart !== "") {
             setting.bilibili_player_settings = bilibili_player_settings;
         }
     } else {
         bilibili_player_settings = setting.bilibili_player_settings;
-        bilibili_player_settings && storage.ls.setItem("bilibili_player_settings", bilibili_player_settings);
+        bilibili_player_settings && localStorage.setItem("bilibili_player_settings", bilibili_player_settings);
     }
     // 记忆播放器速率
     if (setting.automate.videospeed) {
         const videospeed = setting.videospeed;
         if (videospeed) {
-            let setting = storage.ss.getItem("bilibili_player_settings");
+            let setting = sessionStorage.getItem("bilibili_player_settings");
             setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
-            storage.ss.setItem("bilibili_player_settings", setting);
+            sessionStorage.setItem("bilibili_player_settings", setting);
         }
         switchVideo(() => {
             doWhile(() => document.querySelector("#bofqi")?.querySelector<HTMLVideoElement>("video"), d => {

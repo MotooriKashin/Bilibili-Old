@@ -64,14 +64,5 @@ class LocalStorage extends StorageInterface {
 class SessionStorage extends StorageInterface {
     constructor() { super(true); }
 }
-/** localStorage/sessionStorage */
-export const storage = {
-    /** localStorage */
-    get ls() {
-        return new LocalStorage()
-    },
-    /** sessionStorage */
-    get ss() {
-        return new SessionStorage()
-    }
-}
+export const localStorage = new LocalStorage();
+export const sessionStorage = new SessionStorage();

@@ -3,12 +3,13 @@ import { urlObj } from "../../runtime/format/url";
 import { xhrhook } from "../../runtime/hook/xhr";
 import { jsonphook } from "../../runtime/hook/Node";
 import { setting } from "../../runtime/setting";
-import { storage } from "../../runtime/storage";
+import { sessionStorage } from "../../runtime/storage";
 import { toast } from "../../runtime/toast/toast";
 import { getUrlValue } from "../../runtime/unit";
 import { xhr } from "../../runtime/xhr";
 import { collection } from "./collection";
 import { upList } from "./upList";
+import { VAR } from "../../runtime/variable/variable";
 
 /** 模板：//api.bilibili.com/x/web-interface/view/detail?aid=${aid} */
 class Detail {
@@ -36,12 +37,12 @@ function view2Detail(data: any) {
         result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
         result.data.Tags = data.v2_app_api.tag;
         result.data.View = data.v2_app_api;
-        xhrhook(`api.bilibili.com/x/web-interface/view?aid=${(<any>window).aid}`, undefined, (res) => {
+        xhrhook(`api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`, undefined, (res) => {
             const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
             res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
         }, false);
-        xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${(<any>window).aid}`, undefined, (res) => {
-            const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: (<any>window).aid })}}`;
+        xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${VAR.aid}`, undefined, (res) => {
+            const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: VAR.aid })}}`;
             res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
         }, false);
         return JSON.parse(JSON.stringify(result));
@@ -58,7 +59,7 @@ function v1api(data: any) {
         vip: {}
     };
     result.data.View = {
-        aid: data.aid || data.id || (<any>window).aid,
+        aid: data.aid || data.id || VAR.aid,
         cid: data.list[p ? p - 1 : 0].cid,
         copyright: 1,
         ctime: data.created,
@@ -70,7 +71,7 @@ function v1api(data: any) {
         pubdate: data.lastupdatets,
         rights: {},
         stat: {
-            aid: data.aid || data.id || (<any>window).aid,
+            aid: data.aid || data.id || VAR.aid,
             coin: data.coins,
             danmaku: data.video_review,
             dislike: 0,
@@ -91,28 +92,28 @@ function v1api(data: any) {
         videos: data.list.length
     }
     data.bangumi && (result.data.View.season = data.bangumi);
-    xhrhook(`api.bilibili.com/x/web-interface/view?aid=${(<any>window).aid}`, undefined, (res) => {
+    xhrhook(`api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`, undefined, (res) => {
         const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
         res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
     }, false);
-    xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${(<any>window).aid}`, undefined, (res) => {
-        const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: (<any>window).aid })}}`;
+    xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${VAR.aid}`, undefined, (res) => {
+        const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: VAR.aid })}}`;
         res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
     }, false);
     return JSON.parse(JSON.stringify(result))
 }
 async function check(call: (res: any) => void) {
     try {
-        toast.info(`正在进一步查询 av${(<any>window).aid} 的信息~`);
+        toast.info(`正在进一步查询 av${VAR.aid} 的信息~`);
         const card = await xhr({
-            url: `https://api.bilibili.com/x/article/cards?ids=av${(<any>window).aid}`,
+            url: `https://api.bilibili.com/x/article/cards?ids=av${VAR.aid}`,
             responseType: "json"
         })
-        if (card.data[`av${(<any>window).aid}`]) {
-            if (card.data[`av${(<any>window).aid}`].redirect_url) location.replace(card.data[`av${(<any>window).aid}`].redirect_url);
+        if (card.data[`av${VAR.aid}`]) {
+            if (card.data[`av${VAR.aid}`].redirect_url) location.replace(card.data[`av${VAR.aid}`].redirect_url);
         }
         const data = await xhr({
-            url: `https://www.biliplus.com/api/view?id=${(<any>window).aid}`,
+            url: `https://www.biliplus.com/api/view?id=${VAR.aid}`,
             responseType: "json"
         }, true)
         const res = view2Detail(data);
@@ -134,14 +135,14 @@ export function avLostCheck() {
         if (0 !== res.code) {
             const obj = urlObj(r);
             if (obj.aid) {
-                (<any>window).aid = <number>obj.aid;
+                VAR.aid = <number>obj.aid;
                 check(call);
                 return true
             }
         } else {
             if (res.data && res.data.View) {
                 if (res.data.View.stein_guide_cid) {
-                    storage.ss.setItem("keepNew", 1);
+                    sessionStorage.setItem("keepNew", 1);
                     location.reload();
                 }
                 Promise.resolve().then(() => {

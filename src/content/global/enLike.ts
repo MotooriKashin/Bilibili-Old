@@ -10,6 +10,7 @@ import { uid } from "../../runtime/variable/uid";
 import { xhr } from "../../runtime/xhr";
 import dislike from "../../images/svg/dislike.svg";
 import like from "../../images/svg/like.svg";
+import { VAR } from "../../runtime/variable/variable";
 
 export class enLike {
     /** aid备份 */
@@ -32,12 +33,12 @@ export class enLike {
         this.number = num;
         doWhile(() => { // 目标节点存在后才初始化
             this.coin = type === "watchlater" ? document.querySelector<any>(".u.coin") : document.querySelector<any>("[report-id*=coin]");
-            return this.coin && (<any>window).aid;
+            return this.coin && VAR.aid;
         }, () => this.init())
     }
     init() {
         this.style();
-        this.aid = (<any>window).aid;
+        this.aid = VAR.aid;
         this.span = document.createElement("span");
         this.span.classList.add("ulike");
         (<any>this).coin.parentElement.insertBefore(this.span, this.coin);
@@ -46,7 +47,7 @@ export class enLike {
         switchVideo(() => this.switch());
         try {
             !this.number && xhr({ // 获取点赞数
-                url: `https://api.bilibili.com/x/web-interface/view?aid=${(<any>window).aid}`,
+                url: `https://api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`,
                 credentials: true,
                 responseType: "json"
             }, true).then(d => {
@@ -54,7 +55,7 @@ export class enLike {
                 this.changeLiked();
             })
             uid && xhr({ // 获取点赞了吗？
-                url: `https://api.bilibili.com/x/web-interface/archive/has/like?aid=${(<any>window).aid}`,
+                url: `https://api.bilibili.com/x/web-interface/archive/has/like?aid=${VAR.aid}`,
                 credentials: true,
                 responseType: "json"
             }).then(d => {
@@ -85,7 +86,7 @@ export class enLike {
             xhr({
                 url: "https://api.bilibili.com/x/web-interface/archive/like",
                 method: "POST",
-                data: `aid=${(<any>window).aid}&like=${like}&csrf=${getCookies().bili_jct}`,
+                data: `aid=${VAR.aid}&like=${like}&csrf=${getCookies().bili_jct}`,
                 credentials: true,
                 responseType: "json"
             }).then(d => {
@@ -105,10 +106,10 @@ export class enLike {
     }
     /** 切p后刷新数据 */
     switch() {
-        if (this.aid != (<any>window).aid) {
-            this.aid = (<any>window).aid;
+        if (this.aid != VAR.aid) {
+            this.aid = VAR.aid;
             xhr({
-                url: `https://api.bilibili.com/x/web-interface/view?aid=${(<any>window).aid}`,
+                url: `https://api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`,
                 credentials: true,
                 responseType: "json"
             }).then(d => {

@@ -4,7 +4,6 @@ import { appendScripts } from "../../runtime/element/createScripts";
 import { xhrhook, xhrhookAsync } from "../../runtime/hook/xhr";
 import { loadVideoScript } from "../../runtime/player/EmbedPlayer";
 import { setting } from "../../runtime/setting";
-import { storage } from "../../runtime/storage";
 import { jsonCheck } from "../../runtime/unit";
 import { xhr } from "../../runtime/xhr";
 import { loadByDmId } from "../av/loadByDmId";
@@ -17,6 +16,7 @@ import script from "./script.html";
 import html from "./bangumi.html";
 import { createElements } from "../../runtime/element/createElement";
 import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { VAR } from "../../runtime/variable/variable";
 
 // 备份标题
 const title = document.title;
@@ -28,10 +28,10 @@ document.documentElement.replaceWith(createElements(htmlVnode(html)));
 title && !title.includes("404") && (document.title = title);
 
 // bangumi标记
-storage.ss.setItem("pgc", 1);
+VAR.pgc = 1;
 // bangumi参数信息
-location.href.replace(/[sS][sS]\d+/, d => <any>storage.ss.setItem("ssid", d.substring(2)));
-location.href.replace(/[eE][pP]\d+/, d => <any>storage.ss.setItem("epid", d.substring(2)));
+location.href.replace(/[sS][sS]\d+/, d => VAR.ssid = d.substring(2));
+location.href.replace(/[eE][pP]\d+/, d => VAR.epid = d.substring(2));
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本

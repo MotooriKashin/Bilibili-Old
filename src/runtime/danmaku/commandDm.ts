@@ -6,6 +6,7 @@ import { toast } from "../toast/toast";
 import { biliQuickLogin } from "../unit";
 import { uid } from "../variable/uid";
 import { xhr } from "../xhr";
+import { VAR } from "../variable/variable";
 
 addCssEs("runtime/danmaku/commandDm.css");
 let player: any, widgetContainer: any;
@@ -18,10 +19,10 @@ let commandDm = {
 
 /** 初始化互动弹幕功能 */
 function init(cdm: any) {
-    if ((<any>window).player) {
+    if (VAR.player) {
         if (widgetContainer === undefined)
             widgetContainer = initContainer();
-        player = (<any>window).player;
+        player = VAR.player;
         bindEvents();
         load(cdm);
     } else throw "获取window.player失败";
@@ -311,8 +312,8 @@ class Vote extends PopupWindow {
             // 发送投票操作到服务器
             let url = "//api.bilibili.com/x/web-interface/view/dm/vote";
             post(url, {
-                aid: (<any>window).aid,
-                cid: (<any>window).cid,
+                aid: VAR.aid,
+                cid: VAR.cid,
                 progress: Math.max(Math.round(1e3 * player.getCurrentTime()), 1),
                 vote: idx,
                 vote_id: this.voteId
@@ -466,8 +467,8 @@ class Grade extends PopupWindow {
     }
     goGrade(score: number) {
         post("https://api.bilibili.com/x/v2/dm/command/grade/post", {
-            aid: (<any>window).aid,
-            cid: (<any>window).cid,
+            aid: VAR.aid,
+            cid: VAR.cid,
             progress: parseInt(player.getCurrentTime()) * 1000,
             grade_id: this.gradeInfo.grade_id,
             grade_score: score
@@ -495,7 +496,7 @@ class favList {
         return xhr({
             url: objUrl("//api.bilibili.com/x/v3/fav/folder/created/list-all", {
                 type: 2,
-                rid: (<any>window).aid,
+                rid: VAR.aid,
                 up_mid: uid
             }),
             credentials: true
@@ -525,13 +526,13 @@ class biliAPI {
     static like(bool: any) {
         bool = bool ? 1 : 2;
         return post("//api.bilibili.com/x/web-interface/archive/like", {
-            aid: (<any>window).aid,
+            aid: VAR.aid,
             like: bool
         }, "application/json; charset=utf-8").then((resp: any) => biliAPI.verify(resp, "点赞"));
     }
     static follow() {
         return post("//api.bilibili.com/x/relation/modify", {
-            aid: (<any>window).aid,
+            aid: VAR.aid,
             fid: (<any>window).getAuthorInfo().mid,
             act: 1,
             re_src: 14
@@ -545,7 +546,7 @@ class biliAPI {
     }
     static fav() {
         return post("//api.bilibili.com/x/v3/fav/resource/deal", {
-            rid: (<any>window).aid,
+            rid: VAR.aid,
             type: 2,
             add_media_ids: favList.defaultFolderId,
         }).then((resp: any) => {
@@ -555,7 +556,7 @@ class biliAPI {
     }
     static triple() {
         return post("//api.bilibili.com/x/web-interface/archive/like/triple", {
-            aid: (<any>window).aid
+            aid: VAR.aid
         }, "application/json; charset=utf-8").then((resp: any) => {
             biliAPI.verify(resp, "三连");
             let d = resp.data;

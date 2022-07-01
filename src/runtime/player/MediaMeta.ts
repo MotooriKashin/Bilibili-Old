@@ -1,5 +1,5 @@
 import { debug } from "../debug";
-import { storage } from "../storage";
+import { VAR } from "../variable/variable";
 import { xhr } from "../xhr";
 
 /** 信息存档 */
@@ -23,8 +23,8 @@ export function mediaSession(data: MediaMetadataInit) {
 }
 /** 设置媒体控制信息 */
 export function setMediaSession() {
-    const epid = storage.ss.getItem("epid");
-    const aid = (<any>window).aid;
+    const epid = VAR.epid;
+    const aid = VAR.aid;
     xhr({
         url: `https://api.bilibili.com/x/article/cards?ids=av${aid}`,
         responseType: "json"
@@ -38,8 +38,8 @@ export function setMediaSession() {
                     { src: d.data[`av${aid}`].pic }
                 ]
             });
-            storage.ss.setItem("cover", d.data[`av${aid}`].pic);
-            storage.ss.setItem("title", d.data[`av${aid}`].title);
+            VAR.cover = d.data[`av${aid}`].pic;
+            VAR.title = d.data[`av${aid}`].title;
         }
     }).catch(e => { debug.error("MediaSession", e) })
 }

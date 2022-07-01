@@ -1,4 +1,5 @@
 import { addCss } from "../element/addElement";
+import { VAR } from "../variable/variable";
 
 export class SegProgress {
     static cssInited = false;
@@ -39,7 +40,7 @@ export class SegProgress {
         let sliderBar = <HTMLElement>document.getElementsByClassName("bilibili-player-video-progress-bar")[0];
         let handleWidth = document.getElementsByClassName("bpui-slider-handle")[0].clientWidth; // 进度条圆形把手的宽度
         let trackerWrp = <HTMLElement>document.getElementsByClassName("bpui-slider-tracker-wrp")[0]; // 进度条可控区域，28px
-        let videoDuration = (<any>window).player.getDuration(); // 视频总时长
+        let videoDuration = VAR.player.getDuration(); // 视频总时长
 
         // 创建显示在视频预览缩略图上方的看点标题
         let chptName = document.createElement("div");
@@ -85,7 +86,7 @@ export class SegProgress {
                     title.style.display = "none";
                     img.style.zIndex = "";
                 });
-                img.addEventListener("click", () => (<any>window).player.seek(v.from));
+                img.addEventListener("click", () => VAR.player.seek(v.from));
                 seg.appendChild(title);
                 seg.appendChild(img);
             } else if (type == "2") {
@@ -157,7 +158,7 @@ export class SegProgress {
                 }
                 if (closestPoint == 1e6) chptName.innerHTML = "";
             });
-            (<any>window).player.addEventListener("video_player_resize", () => update());
+            VAR.player.addEventListener("video_player_resize", () => update());
             trackerWrp.addEventListener("mouseleave", () => {
                 for (let i = 0; i < segDivs.length; i++) {
                     segDivs[i].className = "bilibili-progress-segmentation-logo";
@@ -183,7 +184,7 @@ export class SegProgress {
         // 用当前播放进度刷新面板
         function refreshState() {
             if (!chptInfo) return;
-            let progress = (<any>window).player.getCurrentTime();
+            let progress = VAR.player.getCurrentTime();
             for (let i = 0, v; i < view_points.length; i++) {
                 v = view_points[i];
                 if (progress < v.to) {
@@ -221,7 +222,7 @@ export class SegProgress {
                                         <span style="margin-left: 138px">${timeFormat(Math.floor(v.from / 60))}:${timeFormat(v.from % 60)}</span>
                                         <span style="margin-right: 5px; float: right;">${dura >= 60 ? `${Math.floor(dura / 60)}分` : ""}${dura > 0 ? `${dura % 60}秒` : ""}</span>`;
                     div.onclick = (jumpto => () => {
-                        (<any>window).player.seek(jumpto);
+                        VAR.player.seek(jumpto);
                         let active = document.querySelector(".bilibili-player-chapter-info.active");
                         active && active.classList.remove("active");
                         div.classList.add("active");
@@ -234,15 +235,15 @@ export class SegProgress {
             // 将当前的播放进度对应的UI卡片显示为灰色底色
             refreshState();
         }
-        (<any>window).player.addEventListener("video_media_seeked", refreshState);
+        VAR.player.addEventListener("video_media_seeked", refreshState);
         chptPanel.onmouseenter = refreshState;
         class timer {
             static handle: any;
             static start() { if (!timer.handle) timer.handle = setInterval(refreshState, 3000) }
             static stop() { if (timer.handle) { clearInterval(timer.handle); timer.handle = null } }
         }
-        (<any>window).player.addEventListener("video_media_playing", timer.start);
-        (<any>window).player.addEventListener("video_media_pause", timer.stop);
-        if ((<any>window).player.getState() == "PLAYING") timer.start();
+        VAR.player.addEventListener("video_media_playing", timer.start);
+        VAR.player.addEventListener("video_media_pause", timer.stop);
+        if (VAR.player.getState() == "PLAYING") timer.start();
     }
 }

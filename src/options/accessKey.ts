@@ -4,7 +4,7 @@ import { showAlert } from "../runtime/element/alert";
 import { timeFormat } from "../runtime/format/time";
 import { urlObj } from "../runtime/format/url";
 import { urlsign } from "../runtime/lib/sign";
-import { storage } from "../runtime/storage";
+import { sessionStorage } from "../runtime/storage";
 import { toast } from "../runtime/toast/toast";
 
 export class AccessKey {
@@ -17,7 +17,7 @@ export class AccessKey {
             if (!uid) {
                 toast.warning("请先到B站网页端登录！");
             } else {
-                this.setting = storage.ss.getItem("setting");
+                this.setting = sessionStorage.getItem("setting");
                 let arr: any = [];
                 if (this.setting.accessKey.key) {
                     arr = [

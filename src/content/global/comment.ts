@@ -1,5 +1,5 @@
 import { addCssEs, addElement, loadScript } from "../../runtime/element/addElement";
-import { storage } from "../../runtime/storage";
+import { sessionStorage } from "../../runtime/storage";
 
 /** 替换评论区 */
 export function loadComment() {
@@ -28,7 +28,7 @@ export function loadComment() {
             return class { // 等待载入
                 constructor() {
                     if (!loading) {
-                        loadScript(`chrome-extension://${storage.ss.getItem("bilibili-old")}/bilibili/comment.js`).then(() => {
+                        loadScript(`chrome-extension://${sessionStorage.getItem("bilibili-old")}/bilibili/comment.js`).then(() => {
                             load = true;
                             addCssEs("content/global/comment.css");
                         })
@@ -60,7 +60,7 @@ export function loadComment() {
             }
             return function () {
                 if (!loading) {
-                    loadScript(`chrome-extension://${storage.ss.getItem("bilibili-old")}/bilibili/comment.min.js`).then(() => {
+                    loadScript(`chrome-extension://${sessionStorage.getItem("bilibili-old")}/bilibili/comment.min.js`).then(() => {
                         load = true;
                         addCssEs("content/global/comment.css");
                     })

@@ -8,7 +8,7 @@ import { urlObj } from "../format/url";
 import { xhrhook } from "../hook/xhr";
 import { playerKeyMap } from "../playerKeyMap";
 import { setting } from "../setting";
-import { storage } from "../storage";
+import { sessionStorage } from "../storage";
 import { toast } from "../toast/toast";
 import { automate } from "./automate";
 import bgraybtn from "./bgray-btn.html";
@@ -17,7 +17,7 @@ import { videoLimit } from "./videoLimit";
 
 async function loadBilibiliPlayer() {
     if (!(<any>window).jQuery) await loadScript("//static.hdslb.com/js/jquery.min.js");
-    return await loadScript(`chrome-extension://${storage.ss.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js`);
+    return await loadScript(`chrome-extension://${sessionStorage.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js`);
 }
 loadBilibiliPlayer();
 class EmbedPlayer {
@@ -53,14 +53,14 @@ class EmbedPlayer {
         this.callbackFn = <() => void>callbackFn;
         Object.entries(this.playerParam).forEach(d => {
             Reflect.set(window, ...d);
-            storage.ss.setItem(...d);
+            sessionStorage.setItem(...d);
         });
-        this.playerParam.seasonId && storage.ss.setItem("ssid", this.playerParam.seasonId);
-        this.playerParam.episodeId && storage.ss.setItem("epid", this.playerParam.episodeId);
+        this.playerParam.seasonId && sessionStorage.setItem("ssid", this.playerParam.seasonId);
+        this.playerParam.episodeId && sessionStorage.setItem("epid", this.playerParam.episodeId);
         (EmbedPlayer.asWide || setting.automate.screenWide) && (this.playerParam.as_wide = 1);
         setting.automate.autoPlay && (this.playerParam.autoplay = 1);
         this.gray_loader();
-        storage.ss.setItem("playerParam", this.playerParam);
+        sessionStorage.setItem("playerParam", this.playerParam);
     }
     /**
      * 加载外源脚本依赖
@@ -629,6 +629,7 @@ export function loadVideoScript(bofqi?: string, asWide = false) {
         configurable: true,
         get: () => (player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) => {
             try {
+                delete (<any>window).__playinfo__; // 网页提供的源可能无法使用？
                 asWide && (EmbedPlayer.asWide = true);
                 bofqi && ((<any>document.querySelector(bofqi)).id = "bofqi");
                 (<any>window).GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)

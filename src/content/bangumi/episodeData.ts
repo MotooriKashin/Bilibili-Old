@@ -3,6 +3,7 @@ import { unitFormat } from "../../runtime/format/unit";
 import { objUrl } from "../../runtime/format/url";
 import { switchVideo } from "../../runtime/switchVideo";
 import { jsonCheck } from "../../runtime/unit";
+import { VAR } from "../../runtime/variable/variable";
 import { xhr } from "../../runtime/xhr";
 
 let first = 0; // 首p指示
@@ -15,8 +16,8 @@ export function episodeData() {
             let danmakus = <HTMLSpanElement>(<HTMLDivElement>document.querySelector(".danmu-count")).querySelector("span");
             if (first === 1) {
                 const [view, danmaku] = [
-                    unitFormat((<any>window).__INITIAL_STATE__.mediaInfo.stat.views),
-                    unitFormat((<any>window).__INITIAL_STATE__.mediaInfo.stat.danmakus)
+                    unitFormat(VAR.__INITIAL_STATE__.mediaInfo.stat.views),
+                    unitFormat(VAR.__INITIAL_STATE__.mediaInfo.stat.danmakus)
                 ];
                 // 首p时辈分总播放数和总弹幕数
                 views.setAttribute("title", "总播放数 " + view);
@@ -24,7 +25,7 @@ export function episodeData() {
                 debug.log("总播放数：", view, "总弹幕数", danmaku);
             }
             let data = await xhr({
-                url: objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": (<any>window).aid }),
+                url: objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": VAR.aid }),
                 credentials: true
             }); // 获取分集数据
             data = jsonCheck(data).data;
