@@ -79,3 +79,15 @@ export function AnchorClick(e: MouseEvent) { // 代码copy自B站spm.js
     }
     anchorClean(<any>[f]);
 }
+/**
+ * @see Max3 {@link https://greasyfork.org/zh-CN/scripts/393995/discussions/139993 }
+ */
+(<any>window).navigation?.addEventListener('navigate', (e: any) => {
+    const newURL = urlClean(e.destination.url)
+    if (e.destination.url != newURL) {
+        e.preventDefault(); // 阻止原事件看情况是否转发
+        if (newURL == window.location.href) return // 如果清理后和原来一样就直接返回
+        // 否则就处理清理后的链接
+        window.history.replaceState(window.history.state, "", newURL);
+    }
+});
