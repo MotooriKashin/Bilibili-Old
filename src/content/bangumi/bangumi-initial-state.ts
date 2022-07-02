@@ -147,7 +147,7 @@ export async function bangumiInitialState(): Promise<any> {
             t.payMent = data.bangumi.payment || {};
             t.activity = data.bangumi.activity || {};
             t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-            t.epId = epid || data.bangumi.episodes[0].ep_id;
+            t.epId = Number(epid || data.bangumi.episodes[0].ep_id);
             VAR.ssid = t.ssId;
             VAR.epid = t.epId;
             if (t.epInfo.badge === "互动") {
@@ -276,7 +276,7 @@ async function globalSession() {
             t.payMent = result.result.payment || {};
             t.activity = result.result.activity_dialog || {};
             t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-            t.epId = epid || episodes[0].ep_id;
+            t.epId = Number(epid || episodes[0].ep_id);
             VAR.ssid = t.ssId;
             VAR.epid = t.epId;
             VAR.th = 1;
