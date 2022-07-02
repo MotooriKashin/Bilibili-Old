@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.1.9
+// @version      8.2.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -18375,7 +18375,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         32: "清晰 480P",
         16: "流畅 360P",
         15: "流畅 360P",
-        6: "流畅 240P"
+        6: "流畅 240P",
+        5: "流畅 144P"
     };
     const formatMap = {
         127: "hdflv2",
@@ -18392,7 +18393,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         32: "flv480",
         16: "mp4",
         15: "mp4",
-        6: "mp4"
+        6: "mp4",
+        5: "mp4"
     };
     const qualityMap = {
         127: "8K",
@@ -18409,7 +18411,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         32: "480P",
         16: "360P",
         15: "360P",
-        6: "240P"
+        6: "240P",
+        5: "144P"
     };
     /** DASH playurl result模板 */
     class Playurl {
@@ -18476,6 +18479,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
             16: 'avc1.64001E',
             30006: 'avc1.64001E',
             6: 'avc1.64001E',
+            30005: 'avc1.64001E',
+            5: 'avc1.64001E',
             30280: 'mp4a.40.2',
             30232: 'mp4a.40.2',
             30216: 'mp4a.40.2', // 低码音频
@@ -18522,6 +18527,8 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         16: '16000/672',
         30006: '16000/672',
         6: '16000/672',
+        30005: '16000/672',
+        5: '16000/672'
     };
     /** 分辨率表 */
     const resolution = {
@@ -18550,7 +18557,9 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
         30016: [640, 360],
         16: [640, 360],
         30006: [426, 240],
-        6: [426, 240] // 240P
+        6: [426, 240],
+        30005: [256, 144],
+        5: [256, 144] // 144P
     };
     /**
      * 获取链接idxs
