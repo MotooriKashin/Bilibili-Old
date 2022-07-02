@@ -2,6 +2,10 @@ import { debug } from "../debug";
 import { VAR } from "../variable/variable";
 import { xhr } from "../xhr";
 
+/**
+ * 以下表格可能需要经常更新
+ * @see JasonKhew96 {@link https://github.com/ipcjs/bilibili-helper/}
+ */
 const descriptionMap = {
     127: "超高清 8K",
     126: "杜比视界",
@@ -17,7 +21,8 @@ const descriptionMap = {
     32: "清晰 480P",
     16: "流畅 360P",
     15: "流畅 360P",
-    6: "流畅 240P"
+    6: "流畅 240P",
+    5: "流畅 144P"
 }
 const formatMap = {
     127: "hdflv2",
@@ -34,7 +39,8 @@ const formatMap = {
     32: "flv480",
     16: "mp4",
     15: "mp4",
-    6: "mp4"
+    6: "mp4",
+    5: "mp4"
 }
 const qualityMap = {
     127: "8K",
@@ -51,7 +57,8 @@ const qualityMap = {
     32: "480P",
     16: "360P",
     15: "360P",
-    6: "240P"
+    6: "240P",
+    5: "144P"
 }
 /** DASH playurl result模板 */
 class Playurl {
@@ -116,6 +123,8 @@ const codecs = {
         16: 'avc1.64001E', // 360P
         30006: 'avc1.64001E', //240P
         6: 'avc1.64001E', // 240P
+        30005: 'avc1.64001E', // 144P
+        5: 'avc1.64001E', // 144P
         30280: 'mp4a.40.2', // 高码音频
         30232: 'mp4a.40.2', // 中码音频
         30216: 'mp4a.40.2', // 低码音频
@@ -162,6 +171,8 @@ const frameRate = {
     16: '16000/672',
     30006: '16000/672',
     6: '16000/672',
+    30005: '16000/672',
+    5: '16000/672'
 }
 /** 分辨率表 */
 const resolution = {
@@ -190,7 +201,9 @@ const resolution = {
     30016: [640, 360], // 360P
     16: [640, 360], // 360P
     30006: [426, 240], // 240P
-    6: [426, 240] // 240P
+    6: [426, 240], // 240P
+    30005: [256, 144], // 144P
+    5: [256, 144] // 144P
 }
 /**
  * 获取链接idxs
