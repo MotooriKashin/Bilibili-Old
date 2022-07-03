@@ -7323,7 +7323,7 @@ function Fa() {
                     d = this.gg(),
                     e = c;
                 l.a.Bu[b] && (e = l.a.Bu[b] + ' <span style="opacity: 0.5;">(' + c + ")</span>");
-                if (this.S) return this.J && this.J.destroy(), this.J = null, this.S && this.S.destroy(), this.S = null, this.trigger(l.a.h.pb, l.a.hj, b, "error_type:" + f.Cf + ",url:" + d + ",message:" + c.replace(",", ".")), this.f.Tm = !1, this.ka || (this.ma.complete(3, !1, '<span style="opacity: 0.5;">' + e + "</span>"), this.ma.reset(2), this.ma.reset(3)), window.setTimeout(function () {
+                if (this.S) return this.J && this.J.destroy(), this.J = null, this.S && this.S.destroy(), this.S = null, this.trigger(l.a.h.pb, l.a.hj, b, "error_type:" + f.Cf + ",url:" + d + ",message:" + c.replace(",", ".")), /* 禁止重连访问flv this.f.Tm = !1, */ this.ka || (this.ma.complete(3, !1, '<span style="opacity: 0.5;">' + e + "</span>"), this.ma.reset(2), this.ma.reset(3)), window.setTimeout(function () {
                     f.mm({
                         ic: function (b) {
                             f.Fi("\u91cd\u65b0\u8fde\u63a5\u81f3\u670d\u52a1\u5668\u5931\u8d25");
