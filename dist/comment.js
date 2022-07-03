@@ -1094,7 +1094,7 @@
                         i,
                         a,
                         o;
-                    0 <= e.indexOf(t) && (r = (o = n[t]).prefix_icon ? '<img src="' + o.prefix_icon + '" class="jump-img"/>' : "", a = f.unhtml(o.title), i = 0 === o.pc_url ? o.pc_url : t.indexOf("http") ? t : this._createLinkById(t), a = r + (0 === o.state ? '<a href="' + i + '" data-report="' + this.jumpReportIndex + '" class="comment-jump-url" target="_blank">' + a + "</a>" : a), this.jumpReport[this.jumpReportIndex] = o.click_report, this.jumpReportIndex++, o = new RegExp(t.replace(/\?/, "\\?"), "ig"), e = e.replace(o, a))
+                    0 <= e.indexOf(t) && (r = (o = n[t]).prefix_icon ? '<img src="' + o.prefix_icon + '" class="jump-img"/>' : "", a = f.unhtml(o.title), i = 0 === o.pc_url ? o.pc_url : t.startsWith("http") ? t : this._createLinkById(t), a = r + (0 === o.state ? '<a href="' + i + '" data-report="' + this.jumpReportIndex + '" class="comment-jump-url" target="_blank">' + a + "</a>" : a), this.jumpReport[this.jumpReportIndex] = o.click_report, this.jumpReportIndex++, o = new RegExp(t.replace(/\?/, "\\?"), "ig"), e = e.replace(o, a))
                 }
                 return e
             },
