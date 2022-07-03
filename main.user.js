@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.0
+// @version      8.2.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,7 +20,7 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@0a9428ec27e073a6263c8f82c5753f28196e42e0/dist/comment.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@64b5bc46811d66b5c11b23abe4769f0b24ba400e/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
 // ==/UserScript==
 
