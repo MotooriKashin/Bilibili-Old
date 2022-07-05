@@ -31054,7 +31054,7 @@ function Fa() {
                                 withCredentials: !0
                             },
                             success: d => {
-                                if (d && d.data !== undefined && d.data.total !== undefined
+                                if (d && 0 === d.code && d.data !== undefined && d.data.total !== undefined
                                     && !isNaN(d.data.total))
                                     c.a.Hh(this.yf.Jz, { count: d.data.total })
                                 else c.a.Hh(this.yf.Jz, pcOnline);
