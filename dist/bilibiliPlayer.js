@@ -22844,8 +22844,8 @@ function Fa() {
                     let collator = new Intl.Collator("zh");
                     let defaultCompare = this.iq(g, b);
                     let compareText = (s, t) =>
-                        s.text.charCodeAt(0) < 0x4e00 || t.text.charCodeAt(0) < 0x4e00? defaultCompare(s, t) :
-                        g? collator.compare(s.text, t.text) : collator.compare(t.text, s.text);
+                        s.text.charCodeAt(0) < 0x4e00 || t.text.charCodeAt(0) < 0x4e00 ? defaultCompare(s, t) :
+                            g ? collator.compare(s.text, t.text) : collator.compare(t.text, s.text);
                     n.sort(compareText);
                     f.sort(compareText);
                     f = g ? f.concat(n) : n.concat(f);
@@ -31054,7 +31054,7 @@ function Fa() {
                                 withCredentials: !0
                             },
                             success: d => {
-                                if (d && d.data !== undefined && d.data.total !== undefined
+                                if (d && 0 === d.code && d.data !== undefined && d.data.total !== undefined
                                     && !isNaN(d.data.total))
                                     c.a.Hh(this.yf.Jz, { count: d.data.total })
                                 else c.a.Hh(this.yf.Jz, pcOnline);
