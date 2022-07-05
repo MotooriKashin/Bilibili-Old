@@ -122,7 +122,7 @@ namespace API {
                 t.mediaInfo.bkg_cover && (t.special = !0, bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = data.bangumi.season_id || -1;
                 t.mdId = data.bangumi.media_id;
-                t.epInfo = (epid && data.bangumi.episodes.find((d: any) => d.ep_id == epid)) || data.bangumi.episodes[0];
+                t.epInfo = (epid && data.bangumi.episodes.find((d: any) => d.ep_id == epid)) || data.bangumi.episodes[0] || {};
                 t.epList = data.bangumi.episodes || [];
                 t.seasonList = data.bangumi.seasons || [];
                 t.upInfo = data.bangumi.up_info || {};
@@ -135,7 +135,7 @@ namespace API {
                 t.payMent = data.bangumi.payment || {};
                 t.activity = data.bangumi.activity || {};
                 t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-                t.epId = epid || data.bangumi.episodes[0].ep_id;
+                t.epId = Number(epid || t.epInfo.ep_id);
                 // 记录bangumi参数备用
                 Object.defineProperties(API, {
                     ssid: {
@@ -236,7 +236,7 @@ namespace API {
                 };
                 t.mediaInfo.bkg_cover && (t.special = !0, bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = result.result.season_id || -1;
-                t.epInfo = (epid && episodes.find((d: any) => d.ep_id == epid)) || episodes[0];
+                t.epInfo = (epid && episodes.find((d: any) => d.ep_id == epid)) || episodes[0] || {};
                 t.epList = episodes;
                 t.seasonList = result.result.series?.seasons?.reduce((s: any[], d: any) => {
                     s.push({
@@ -270,7 +270,7 @@ namespace API {
                 t.payMent = result.result.payment || {};
                 t.activity = result.result.activity_dialog || {};
                 t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-                t.epId = epid || episodes[0].ep_id;
+                t.epId = Number(epid || t.epInfo.ep_id);
                 Object.defineProperties(API, {
                     ssid: {
                         configurable: true,
