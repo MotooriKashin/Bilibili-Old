@@ -267,8 +267,10 @@ async function globalSession() {
             result.result.publish?.time_length_show === "已完结" && (result.result.publish.is_finish = 1);
             t.pubInfo = result.result.publish || {};
 
-            result.result.new_ep.desc = result.result.new_ep.new_ep_display;
-            result.result.new_ep.index = result.result.new_ep.title;
+            if (result.result.new_ep) {
+                result.result.new_ep.desc = result.result.new_ep.new_ep_display;
+                result.result.new_ep.index = result.result.new_ep.title;
+            }
             t.newestEp = result.result.new_ep || {};
 
             t.mediaRating = result.result.rating || {};
