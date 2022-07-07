@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.2
+// @version      8.2.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@4237be79c9e3fd8fc6dbbe4e12ec92fc00d99c67/dist/bilibiliPlayer.min.js
 // @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ce9802d9f4346dc9d64859e068b870a20eb711d7/dist/comment.min.js
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@c0468a0d8ba0d7d65f4328c42f8b6d8364809fb7/dist/bilibiliPlayer.min.js
 // ==/UserScript==
 
 
@@ -17146,7 +17146,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
     // 修复：移除上古顶栏
     API.webpackhook(717, 609, () => \`()=>{}\`);
     // 修复：BV/cv -> 超链接
-    API.webpackhook(717, 2, code => code.replace("av\$1</a>')", \`av\$1</a>').replace(/(?!<a[^>]*>)cv([0-9]+)(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/read/cv\$1/" target="_blank" data-view="\$1">cv\$1</a>').replace(/(?!<a[^>]*>)(bv1)(\\\\w{9})(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/video/bv1\$2/" target="_blank">\$1\$2</a>')\`));
+    API.webpackhook(717, 2, code => code.replace("av\$1</a>')", \`av\$1</a>').replace(/(?!<a[^>]*>)cv([0-9]+)(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/read/cv\$1/" target="_blank" data-view="\$1">cv\$1</a>').replace(/(?!<a[^>]*>)(bv1)(\\\\w{9})(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/video/bv1\$2/" target="_blank">\$1\$2</a>')\`).replace("http://acg.tv/sm", "https://www.nicovideo.jp/watch/sm"));
     // 添加：播放器启动代码
     // 无\`__INITIAL_STATE__\`启动
     API.webpackhook(717, 286, code => code.replace('e("setVideoData",t)', \`e("setVideoData",t);\$("#bofqi").attr("id","__bofqi").html('<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>');new Function(t.embedPlayer)();\`));
@@ -18026,7 +18026,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                 t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = data.bangumi.season_id || -1;
                 t.mdId = data.bangumi.media_id;
-                t.epInfo = (API.epid && data.bangumi.episodes.find((d) => d.ep_id == API.epid)) || data.bangumi.episodes[0];
+                t.epInfo = (API.epid && data.bangumi.episodes.find((d) => d.ep_id == API.epid)) || data.bangumi.episodes[0] || {};
                 t.epList = data.bangumi.episodes || [];
                 t.seasonList = data.bangumi.seasons || [];
                 t.upInfo = data.bangumi.up_info || {};
@@ -18039,7 +18039,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                 t.payMent = data.bangumi.payment || {};
                 t.activity = data.bangumi.activity || {};
                 t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-                t.epId = API.epid || data.bangumi.episodes[0].ep_id;
+                t.epId = Number(API.epid || t.epInfo.ep_id);
                 // 记录bangumi参数备用
                 Object.defineProperties(API, {
                     ssid: {
@@ -18144,7 +18144,7 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                 };
                 t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
                 t.ssId = result.result.season_id || -1;
-                t.epInfo = (API.epid && episodes.find((d) => d.ep_id == API.epid)) || episodes[0];
+                t.epInfo = (API.epid && episodes.find((d) => d.ep_id == API.epid)) || episodes[0] || {};
                 t.epList = episodes;
                 t.seasonList = result.result.series?.seasons?.reduce((s, d) => {
                     s.push({
@@ -18167,15 +18167,17 @@ if (typeof Element.prototype.replaceChildren === 'undefined') {
                 result.result.publish.is_started = 1;
                 result.result.publish?.time_length_show === "已完结" && (result.result.publish.is_finish = 1);
                 t.pubInfo = result.result.publish || {};
-                result.result.new_ep.desc = result.result.new_ep.new_ep_display;
-                result.result.new_ep.index = result.result.new_ep.title;
+                if (result.result.new_ep) {
+                    result.result.new_ep.desc = result.result.new_ep.new_ep_display;
+                    result.result.new_ep.index = result.result.new_ep.title;
+                }
                 t.newestEp = result.result.new_ep || {};
                 t.mediaRating = result.result.rating || {};
                 t.payPack = result.result.pay_pack || {};
                 t.payMent = result.result.payment || {};
                 t.activity = result.result.activity_dialog || {};
                 t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-                t.epId = API.epid || episodes[0].ep_id;
+                t.epId = Number(API.epid || t.epInfo.ep_id);
                 Object.defineProperties(API, {
                     ssid: {
                         configurable: true,
