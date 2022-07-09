@@ -19,9 +19,8 @@
                 "content/content.js"
             ],
             "matches": [
-                "file:///*",
-                "http://*/*",
-                "https://*/*"
+                "http://*.bilibili.com/*",
+                "https://*.bilibili.com/*"
             ],
             "run_at": "document_start"
         }
