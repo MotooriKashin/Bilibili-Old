@@ -51,7 +51,7 @@ namespace API {
             if (two[0]) {
                 two[0].split("&").forEach(d => {
                     const arr = d.split("=");
-                    this.searchParams[arr[0]] = arr[1];
+                    arr[0] && (this.searchParams[<string>arr.shift()] = arr.join("="));
                 });
             }
             // 锚处理
@@ -63,7 +63,7 @@ namespace API {
                 if (three[0]) {
                     three[0].split("&").forEach(d => {
                         const arr = d.split("=");
-                        this.hashParams[arr[0]] = arr[1];
+                        arr[0] && (this.searchParams[<string>arr.shift()] = arr.join("="));
                     });
                 }
             }
