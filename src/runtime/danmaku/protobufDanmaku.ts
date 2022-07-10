@@ -4,7 +4,7 @@ import { setting } from "../setting";
 import { VAR } from "../variable/variable";
 import { danmaku } from "./danmaku";
 import { historyDanmaku } from "./historyDanmaku";
-import { liveDanmaku } from "./liveDamaku";
+import { liveDanmaku } from "./liveDanmaku";
 
 /** 加载新版弹幕 */
 export function loadDanmakuEngine() {
