@@ -30,8 +30,10 @@ export function playinfo() {
             obj.responseType === "json" ? obj.response = JSON.parse(data) : obj.response = obj.responseText = data;
             VAR.__playinfo__ = <any>data;
             Promise.resolve().then(() => {
-                const d = JSON.parse(data);
-                if (d.code === 87005) toast.warning(d.message, "请到新版页面付费后继续！")
+                try {
+                    const d = JSON.parse(data);
+                    if (d.code === 87005) toast.warning(d.message, "请到新版页面付费后继续！");
+                } catch (e) { }
             })
         } catch (e) { }
     }, false);
