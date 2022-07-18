@@ -1,7 +1,7 @@
 import { pushDownload } from "../download/download";
 import { urlObj } from "../format/url";
 import { setting } from "../setting";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 import { danmaku } from "./danmaku";
 import { historyDanmaku } from "./historyDanmaku";
 import { liveDanmaku } from "./liveDanmaku";
@@ -39,7 +39,7 @@ export function loadDanmakuEngine() {
                         data: Dm,
                         up: "当前",
                         down: `N/A`,
-                        callback: () => danmaku.saveDanmaku(Dm, `${VAR.title || VAR.cid}`)
+                        callback: () => danmaku.saveDanmaku(Dm, `${API.title || API.cid}`)
                     });
                 });
                 loadDanmaku(new Date());

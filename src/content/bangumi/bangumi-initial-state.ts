@@ -5,7 +5,7 @@ import { xhrhook } from "../../runtime/hook/xhr";
 import { setting } from "../../runtime/setting";
 import { sessionStorage } from "../../runtime/storage";
 import { toast } from "../../runtime/toast/toast";
-import { VAR } from "../../runtime/variable/variable";
+import { API } from "../../runtime/variable/variable";
 import { xhr } from "../../runtime/xhr";
 
 /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
@@ -63,8 +63,8 @@ function setTitle(t: any, e: any, i: any, n: any) {
 }
 export async function bangumiInitialState(): Promise<any> {
     try {
-        let ssid = VAR.ssid;
-        let epid = VAR.epid;
+        let ssid = API.ssid;
+        let epid = API.epid;
         const obj: Record<string, string | number> = epid ? { ep_id: epid } : { season_id: ssid };
         const result = await Promise.allSettled([
             xhr({ // bangumi接口，更符合旧版数据构造
@@ -108,8 +108,8 @@ export async function bangumiInitialState(): Promise<any> {
                 }
             };
             data.status.paster && (t.paster = data.status.paster || {});
-            VAR.limit = data.status.area_limit || 0;
-            !setting.videoLimit.switch && (t.area = VAR.limit);
+            API.limit = data.status.area_limit || 0;
+            !setting.videoLimit.switch && (t.area = API.limit);
             t.seasonFollowed = 1 === data.status.follow;
         }
         if (data.bangumi) {
@@ -131,7 +131,7 @@ export async function bangumiInitialState(): Promise<any> {
             // APP限制
             setting.videoLimit.switch && data.bangumi.rights && (data.bangumi.rights.watch_platform = 0);
             t.mediaInfo = i;
-            t.mediaInfo.bkg_cover && (t.special = !0, VAR.bkg_cover = t.mediaInfo.bkg_cover);
+            t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
             t.ssId = data.bangumi.season_id || -1;
             t.mdId = data.bangumi.media_id;
             t.epInfo = (epid && data.bangumi.episodes.find((d: any) => d.ep_id == epid)) || data.bangumi.episodes[0] || {};
@@ -148,15 +148,15 @@ export async function bangumiInitialState(): Promise<any> {
             t.activity = data.bangumi.activity || {};
             t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
             t.epId = Number(epid || t.epInfo.ep_id);
-            VAR.ssid = t.ssId;
-            VAR.epid = t.epId;
+            API.ssid = t.ssId;
+            API.epid = t.epId;
             if (t.epInfo.badge === "互动") {
                 // 番剧能互动？ .e.g: https://www.bilibili.com/bangumi/play/ep385091
                 sessionStorage.setItem("keepNew", 1);
                 location.reload();
             }
             if (t.upInfo.mid == /** Classic_Anime */677043260 || t.upInfo.mid == /** Anime_Ongoing */688418886) {
-                VAR.th = 1;
+                API.th = 1;
             }
             const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), !0);
             function loopTitle() {
@@ -178,8 +178,8 @@ export async function bangumiInitialState(): Promise<any> {
 }
 async function globalSession() {
     toast.info("Bangumi号可能无效~", "正在尝试泰区代理接口~");
-    let ssid = VAR.ssid;
-    let epid = VAR.epid;
+    let ssid = API.ssid;
+    let epid = API.epid;
     const obj: Record<string, string | number> = epid ? { ep_id: epid } : { season_id: ssid };
     Object.assign(obj, {
         access_key: setting.accessKey.key || undefined,
@@ -240,7 +240,7 @@ async function globalSession() {
                 title: i.title,
                 total_ep: i.total,
             };
-            t.mediaInfo.bkg_cover && (t.special = !0, VAR.bkg_cover = t.mediaInfo.bkg_cover);
+            t.mediaInfo.bkg_cover && (t.special = !0, API.bkg_cover = t.mediaInfo.bkg_cover);
             t.ssId = result.result.season_id || -1;
             t.epInfo = (epid && episodes.find((d: any) => d.ep_id == epid)) || episodes[0] || {};
             t.epList = episodes;
@@ -279,9 +279,9 @@ async function globalSession() {
             t.activity = result.result.activity_dialog || {};
             t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
             t.epId = Number(epid || t.epInfo.ep_id);
-            VAR.ssid = t.ssId;
-            VAR.epid = t.epId;
-            VAR.th = 1;
+            API.ssid = t.ssId;
+            API.epid = t.epId;
+            API.th = 1;
             xhrhook("api.bilibili.com/pgc/web/season/stat", undefined, (res) => {
                 const t = `{"code": 0,"message":"0","ttl":1,"result":${JSON.stringify(result.result.stat)}}`;
                 res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;

@@ -1,7 +1,7 @@
 import { sessionStorage } from "../storage";
 
 /** 全局变量挂载对象 */
-export const VAR = {
+export const API = {
     get aid() {
         return <number>(<any>window).aid || sessionStorage.getItem("aid");
     },

@@ -16,7 +16,7 @@ import script from "./script.html";
 import html from "./bangumi.html";
 import { createElements } from "../../runtime/element/createElement";
 import { htmlVnode } from "../../runtime/element/htmlVnode";
-import { VAR } from "../../runtime/variable/variable";
+import { API } from "../../runtime/variable/variable";
 
 // 备份标题
 const title = document.title;
@@ -28,10 +28,10 @@ document.documentElement.replaceWith(createElements(htmlVnode(html)));
 title && !title.includes("404") && (document.title = title);
 
 // bangumi标记
-VAR.pgc = 1;
+API.pgc = 1;
 // bangumi参数信息
-location.href.replace(/[sS][sS]\d+/, d => VAR.ssid = d.substring(2));
-location.href.replace(/[eE][pP]\d+/, d => VAR.epid = d.substring(2));
+location.href.replace(/[sS][sS]\d+/, d => API.ssid = d.substring(2));
+location.href.replace(/[eE][pP]\d+/, d => API.epid = d.substring(2));
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本

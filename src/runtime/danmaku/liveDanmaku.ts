@@ -3,7 +3,7 @@ import danmakuJSON from "./bilibiliBroadcastDanmaku.json";
 import protobuf from "protobufjs/light";
 import { debug } from "../debug";
 import { danmakuNew } from "./danmaku";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 
 const root = protobuf.Root.fromJSON(protobufJSON);
 const danmakuElem = protobuf.Root.fromJSON(danmakuJSON).lookupType("bilibili.broadcast.message.main.DanmukuEvent");
@@ -76,8 +76,8 @@ function initLiveChat() {
     liveChat.binaryType = "arraybuffer";
     liveChat.beatTimer = 0;
     liveChat.msgFlag = {};
-    liveChat.socketKey = "video://" + VAR.aid + "/" + VAR.cid;
-    VAR.pgc && (liveChat.socketKey += "?sid=" + VAR.__INITIAL_STATE__.ssId + "&epid=" + VAR.__INITIAL_STATE__.epId);
+    liveChat.socketKey = "video://" + API.aid + "/" + API.cid;
+    API.pgc && (liveChat.socketKey += "?sid=" + API.__INITIAL_STATE__.ssId + "&epid=" + API.__INITIAL_STATE__.epId);
 
     liveChat.sendMsg = function (body: any, encoder: any) {
         void 0 === encoder && (encoder = message.msgType)

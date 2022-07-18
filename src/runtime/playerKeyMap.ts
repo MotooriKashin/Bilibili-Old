@@ -1,6 +1,6 @@
 import { bindKeyMap } from "./hook/keymap.js";
 import { setting } from "./setting.js";
-import { VAR } from "./variable/variable.js";
+import { API } from "./variable/variable.js";
 
 /** 注册播放按键 */
 export function playerKeyMap() {
@@ -12,10 +12,10 @@ export function playerKeyMap() {
         document.querySelector<HTMLDivElement>(".bilibili-player-video-btn-danmaku")?.click();
     });
     bindKeyMap("[", () => { // 上一p
-        VAR.player.prev();
+        API.player.prev();
     });
     bindKeyMap("]", () => { // 下一p
-        VAR.player.next();
+        API.player.next();
     });
     bindKeyMap("enter", () => { // 输入框
         document.querySelector<HTMLInputElement>(".bilibili-player-video-danmaku-input")?.select();

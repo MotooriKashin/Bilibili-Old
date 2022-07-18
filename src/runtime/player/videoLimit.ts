@@ -10,7 +10,7 @@ import { fnval } from "../variable/fnval";
 import { xhr } from "../xhr";
 import { bstarPlayurl } from "./bstarPlayurl";
 import { uposReplace } from "./uposReplace";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 
 
 const Backup: Record<string, any> = {};
@@ -60,22 +60,22 @@ async function customServer(obj: Record<string, string | number>, area: "tw" | "
 }
 /** 解除播放限制 */
 export function videoLimit() {
-    xhrhookAsync("/playurl?", () => Boolean(VAR.limit || VAR.th), async (args, type) => { // 代理限制视频的请求
+    xhrhookAsync("/playurl?", () => Boolean(API.limit || API.th), async (args, type) => { // 代理限制视频的请求
         let response: any; // 初始化返回值
         const obj = urlObj(args[1]); // 提取请求参数
-        obj.seasonId && (VAR.ssid = obj.seasonId);
-        obj.episodeId && (VAR.epid = obj.episodeId);
-        obj.ep_id && (VAR.epid = obj.ep_id);
-        obj.aid && (VAR.aid = Number(obj.aid)) && (VAR.aid = obj.aid);
-        obj.avid && (VAR.aid = Number(obj.avid)) && (VAR.aid = obj.avid);
-        obj.cid && (VAR.cid = Number(obj.cid)) && (VAR.cid = obj.cid);
+        obj.seasonId && (API.ssid = obj.seasonId);
+        obj.episodeId && (API.epid = obj.episodeId);
+        obj.ep_id && (API.epid = obj.ep_id);
+        obj.aid && (API.aid = Number(obj.aid)) && (API.aid = obj.aid);
+        obj.avid && (API.aid = Number(obj.avid)) && (API.aid = obj.avid);
+        obj.cid && (API.cid = Number(obj.cid)) && (API.cid = obj.cid);
         const hookTimeout = new HookTimeOut(); // 过滤播放器请求延时代码
-        const epid = obj.ep_id || obj.episodeId || VAR.epid;
+        const epid = obj.ep_id || obj.episodeId || API.epid;
         const accesskey = setting.accessKey.key || <any>undefined;
         obj.access_key = accesskey;
         Backup[epid] && (response = Backup[epid]);
         if (!response) {
-            if (VAR.th) { // 泰区
+            if (API.th) { // 泰区
                 Object.assign(obj, {
                     area: "th",
                     build: 1001310,
@@ -92,7 +92,7 @@ export function videoLimit() {
                         url: urlsign(`https://${setting.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
                     }), setting.uposReplace.th));
                     response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
-                    toast.success(`解除区域限制！aid=${VAR.aid}, cid=${VAR.cid}`);
+                    toast.success(`解除区域限制！aid=${API.aid}, cid=${API.cid}`);
                 } catch (e) {
                     toast.error("解除限制失败 ಥ_ಥ");
                     debug.error("解除限制失败 ಥ_ಥ", e);
@@ -101,8 +101,8 @@ export function videoLimit() {
                     }
                     response = { "code": -404, "message": e, "data": null };
                 }
-            } else if (VAR.limit) { // 处理区域限制
-                obj.module = (VAR.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || VAR.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
+            } else if (API.limit) { // 处理区域限制
+                obj.module = (API.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || API.__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
                 obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
                 try {
                     toast.info("尝试解除区域限制... 访问代理服务器");
@@ -112,7 +112,7 @@ export function videoLimit() {
                     })) : (delete obj.module, await customServer(obj, "tw"));
                     response = JSON.parse(uposReplace(JSON.stringify(response), setting.uposReplace.gat));
                     response = { "code": 0, "message": "success", "result": response };
-                    toast.success(`解除区域限制！aid=${VAR.aid}, cid=${VAR.cid}`);
+                    toast.success(`解除区域限制！aid=${API.aid}, cid=${API.cid}`);
                 } catch (e) {
                     toast.error("解除限制失败 ಥ_ಥ");
                     debug.error("解除限制失败 ಥ_ಥ", e);
@@ -129,7 +129,7 @@ export function videoLimit() {
             responseText: JSON.stringify(response)
         }
         Backup[epid] = response;
-        VAR.__playinfo__ = response;
+        API.__playinfo__ = response;
         return type === "json" ? { response } : {
             response: JSON.stringify(response),
             responseText: JSON.stringify(response)

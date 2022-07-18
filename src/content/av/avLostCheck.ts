@@ -9,7 +9,7 @@ import { getUrlValue } from "../../runtime/unit";
 import { xhr } from "../../runtime/xhr";
 import { collection } from "./collection";
 import { upList } from "./upList";
-import { VAR } from "../../runtime/variable/variable";
+import { API } from "../../runtime/variable/variable";
 
 /** 模板：//api.bilibili.com/x/web-interface/view/detail?aid=${aid} */
 class Detail {
@@ -37,12 +37,12 @@ function view2Detail(data: any) {
         result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
         result.data.Tags = data.v2_app_api.tag;
         result.data.View = data.v2_app_api;
-        xhrhook(`api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`, undefined, (res) => {
+        xhrhook(`api.bilibili.com/x/web-interface/view?aid=${API.aid}`, undefined, (res) => {
             const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
             res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
         }, false);
-        xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${VAR.aid}`, undefined, (res) => {
-            const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: VAR.aid })}}`;
+        xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${API.aid}`, undefined, (res) => {
+            const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}`;
             res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
         }, false);
         return JSON.parse(JSON.stringify(result));
@@ -59,7 +59,7 @@ function v1api(data: any) {
         vip: {}
     };
     result.data.View = {
-        aid: data.aid || data.id || VAR.aid,
+        aid: data.aid || data.id || API.aid,
         cid: data.list[p ? p - 1 : 0].cid,
         copyright: 1,
         ctime: data.created,
@@ -71,7 +71,7 @@ function v1api(data: any) {
         pubdate: data.lastupdatets,
         rights: {},
         stat: {
-            aid: data.aid || data.id || VAR.aid,
+            aid: data.aid || data.id || API.aid,
             coin: data.coins,
             danmaku: data.video_review,
             dislike: 0,
@@ -92,28 +92,28 @@ function v1api(data: any) {
         videos: data.list.length
     }
     data.bangumi && (result.data.View.season = data.bangumi);
-    xhrhook(`api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`, undefined, (res) => {
+    xhrhook(`api.bilibili.com/x/web-interface/view?aid=${API.aid}`, undefined, (res) => {
         const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
         res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
     }, false);
-    xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${VAR.aid}`, undefined, (res) => {
-        const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: VAR.aid })}}`;
+    xhrhook(`api.bilibili.com/x/web-interface/archive/stat?aid=${API.aid}`, undefined, (res) => {
+        const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}`;
         res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
     }, false);
     return JSON.parse(JSON.stringify(result))
 }
 async function check(call: (res: any) => void) {
     try {
-        toast.info(`正在进一步查询 av${VAR.aid} 的信息~`);
+        toast.info(`正在进一步查询 av${API.aid} 的信息~`);
         const card = await xhr({
-            url: `https://api.bilibili.com/x/article/cards?ids=av${VAR.aid}`,
+            url: `https://api.bilibili.com/x/article/cards?ids=av${API.aid}`,
             responseType: "json"
         })
-        if (card.data[`av${VAR.aid}`]) {
-            if (card.data[`av${VAR.aid}`].redirect_url) location.replace(card.data[`av${VAR.aid}`].redirect_url);
+        if (card.data[`av${API.aid}`]) {
+            if (card.data[`av${API.aid}`].redirect_url) location.replace(card.data[`av${API.aid}`].redirect_url);
         }
         const data = await xhr({
-            url: `https://www.biliplus.com/api/view?id=${VAR.aid}`,
+            url: `https://www.biliplus.com/api/view?id=${API.aid}`,
             responseType: "json"
         }, true)
         const res = view2Detail(data);
@@ -135,7 +135,7 @@ export function avLostCheck() {
         if (0 !== res.code) {
             const obj = urlObj(r);
             if (obj.aid) {
-                VAR.aid = <number>obj.aid;
+                API.aid = <number>obj.aid;
                 check(call);
                 return true
             }

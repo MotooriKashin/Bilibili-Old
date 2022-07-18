@@ -8,7 +8,7 @@ import { setting } from "../setting";
 import { toast } from "../toast/toast";
 import { jsonCheck } from "../unit";
 import { uid } from "../variable/uid";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 import { xhr } from "../xhr";
 import { danmaku, danmakuNew } from "./danmaku";
 
@@ -26,7 +26,7 @@ class AllDanmaku {
         this.note = toast.custom(0, "info", "冷却延时请尽量调大，以免短时间内大量请求被临时封端口！");
         this.float = toast.custom(0, "info", "正在尝试获取全部弹幕请耐心等待。。。");
         xhr({
-            url: `https://api.bilibili.com/x/web-interface/view?aid=${VAR.aid}`,
+            url: `https://api.bilibili.com/x/web-interface/view?aid=${API.aid}`,
             responseType: "json",
             credentials: true
         }, true).then(d => {
@@ -138,7 +138,7 @@ class AllDanmaku {
             let data = await xhr({
                 url: objUrl("https://api.bilibili.com/x/v2/dm/history/index", {
                     type: <any>1,
-                    oid: VAR.cid,
+                    oid: API.cid,
                     month: this.arrT.slice(0, 2).join("-")
                 }),
                 credentials: true
@@ -207,20 +207,20 @@ class AllDanmaku {
             this.floatChange("success", ["全弹幕获取成功，正在装填。。。", "总弹幕量：" + unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π"], 3);
         }
         this.noteChange("info", ["执行结束~"], 3);
-        VAR.player?.setDanmaku(Dm);
+        API.player?.setDanmaku(Dm);
         setting.downloadOther && pushDownload({
             group: "弹幕",
             data: Dm,
             up: "全弹幕",
             down: `N/A`,
-            callback: () => danmaku.saveDanmaku(Dm, `[全弹幕]${VAR.title || VAR.cid}`)
+            callback: () => danmaku.saveDanmaku(Dm, `[全弹幕]${API.title || API.cid}`)
         });
     }
 }
 /** 全弹幕装填 */
 export function allDanmaku() {
     if (!uid) return toast.warning("请登录后使用 ಥ_ಥ")
-    if (!VAR.player) return toast.warning("请在播放页面使用本功能 →_→");
-    if (!VAR.player.setDanmaku) return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
+    if (!API.player) return toast.warning("请在播放页面使用本功能 →_→");
+    if (!API.player.setDanmaku) return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
     new AllDanmaku()
 }

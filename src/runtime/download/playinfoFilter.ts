@@ -3,7 +3,7 @@ import { sizeFormat } from "../format/size";
 import { subArray } from "../format/subArray";
 import { setting } from "../setting";
 import { toast } from "../toast/toast";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 import { aria2 } from "./aria2";
 import { DownloadUpColer } from "./downloadUI";
 import { ef2 } from "./ef2";
@@ -258,7 +258,7 @@ class PlayinfoFiter {
  * @param prev 其他已解码的数据，用于合并
  * @param fileName 文件名
  */
-export function playinfoFiter(playinfo: Record<"data" | "result" | "durl" | "dash", any>, prev: DownloadDate = {}, fileName: string = VAR.title) {
+export function playinfoFiter(playinfo: Record<"data" | "result" | "durl" | "dash", any>, prev: DownloadDate = {}, fileName: string = API.title) {
     return new PlayinfoFiter(fileName).filter(playinfo).reduce((s, d) => {
         s[d.type] || (s[d.type] = []);
         const obj: DownloadDate[keyof DownloadDate][0] = {

@@ -13,7 +13,7 @@ import { urlParam } from "../urlParam";
 import { pushDownload } from "../download/download";
 import { LocalMedia } from "./localDanmaku";
 import { allDanmaku } from "./allDanmaku";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 // 启动protobuf引擎
 const root = protobuf.Root.fromJSON(bilibiliDanmaku);
 /** 来自danmakuProtobuf.json文件 */
@@ -81,7 +81,7 @@ class Danmaku {
         let xml = DM.reduce((s, d) => {
             s += `<d p="${d.stime},${d.mode},${d.size},${d.color},${d.date},${d.class},${d.uid},${d.dmid}">${d.text.replace(/[<">'&]/g, (a: string) => { return <string>{ '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }).replace(/(\n|\r\n)/g, "/n")}</d>\r\n`;
             return s;
-        }, '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>' + VAR.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n');
+        }, '<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>' + API.cid + '</chatid><mission>0</mission><maxlimit>99999</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\r\n');
         xml += "</i>";
         /**
          * remove-invalid-xml-characters.js
@@ -167,16 +167,16 @@ class Danmaku {
     segDmDecode(response: any): danmakuNew[] {
         return danmakuType.DmSegMobileReply.decode(new Uint8Array(response)).elems;
     }
-    async getSegDanmaku(aid = VAR.aid, cid = VAR.cid) {
+    async getSegDanmaku(aid = API.aid, cid = API.cid) {
         try {
             if (!aid || !cid) throw `无法获取弹幕 aid：${aid} cid：${cid}`;
             const dmMeta = await this.dmWebView(aid, cid);
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             const pageSize = dmMeta.dmSge.pageSize ? dmMeta.dmSge.pageSize / 1000 : 360;
-            loadProgress.total = (VAR.player && VAR.player.getDuration && (VAR.player.getDuration() / pageSize + 1)) || dmMeta.dmSge.total;
+            loadProgress.total = (API.player && API.player.getDuration && (API.player.getDuration() / pageSize + 1)) || dmMeta.dmSge.total;
             // 其他视频的分片总数已经不能从当前window下获取
-            if (aid && (aid != VAR.aid)) loadProgress.total = dmMeta.dmSge.total;
+            if (aid && (aid != API.aid)) loadProgress.total = dmMeta.dmSge.total;
             let result: danmakuNew[] = []; // 弹幕栈
             const req: Promise<danmakuNew[]>[] = []; // 请求栈
             for (let index = 1; index <= loadProgress.total; index++) {
@@ -197,7 +197,7 @@ class Danmaku {
      * @param aid aid
      * @param cid cid
      */
-    async dmWebView(aid = VAR.aid, cid = VAR.cid) {
+    async dmWebView(aid = API.aid, cid = API.cid) {
         try {
             if (this.dmView[cid]) return this.dmView[cid];
             const data = await xhr({
@@ -221,7 +221,7 @@ class Danmaku {
      * @param aid aid
      * @param cid cid
      */
-    async dmWebSeg(i: number, aid = VAR.aid, cid = VAR.cid) {
+    async dmWebSeg(i: number, aid = API.aid, cid = API.cid) {
         try {
             const data = await xhr({
                 url: objUrl("https://api.bilibili.com/x/v2/dm/web/seg.so", {
@@ -247,7 +247,7 @@ class Danmaku {
      * @param cid cid
      * @param config 弹幕元数据
      */
-    async specialDms(aid = VAR.aid, cid = VAR.cid, config?: any) {
+    async specialDms(aid = API.aid, cid = API.cid, config?: any) {
         let result: danmakuNew[] = [];
         try {
             config = config || await this.dmWebView(aid, cid);
@@ -341,8 +341,8 @@ class Danmaku {
          */
         // setDanmaku = (dm) => {......}
 
-        if (!VAR.player?.setDanmaku) return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-        VAR.player?.setDanmaku(danmaku, append);
+        if (!API.player?.setDanmaku) return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
+        API.player?.setDanmaku(danmaku, append);
     }
     /**
      * 获取历史弹幕
@@ -350,7 +350,7 @@ class Danmaku {
      * @param cid 弹幕所在视频的 cid，不填则取当前视频的cid
      * @returns 解析好的弹幕数组
      */
-    async getHistoryDanmaku(date: string, cid = VAR.cid) {
+    async getHistoryDanmaku(date: string, cid = API.cid) {
         if (!date || !uid) return;
         let dm = await xhr({
             url: objUrl("https://api.bilibili.com/x/v2/dm/web/history/seg.so", {
@@ -370,7 +370,7 @@ class Danmaku {
      */
     saveDanmaku(dm: danmaku[], fileName?: string) {
         let data = setting.danmakuSaveType === "xml" ? this.toXml(dm) : JSON.stringify(dm, undefined, '\t');
-        saveAs(data, `${fileName || VAR.title || VAR.cid}${setting.danmakuSaveType === "xml" ? ".xml" : ".json"}`);
+        saveAs(data, `${fileName || API.title || API.cid}${setting.danmakuSaveType === "xml" ? ".xml" : ".json"}`);
     }
 }
 /** 旧版播放器对应的弹幕对象 */
@@ -409,8 +409,8 @@ export const danmaku = new Danmaku();
 window.addEventListener("message", async ev => {
     if (typeof ev.data === "object") {
         if (ev.data.$type == "onlineDanmaku") {
-            if (!VAR.player) return toast.warning("请在播放页面使用本功能 →_→");
-            if (!VAR.player.setDanmaku) return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
+            if (!API.player) return toast.warning("请在播放页面使用本功能 →_→");
+            if (!API.player.setDanmaku) return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
             if (!ev.data.url) return toast.warning("请输入视频链接或参数~");
             toast.info(`正在解析url：${ev.data.url}`);
             try {
@@ -422,7 +422,7 @@ window.addEventListener("message", async ev => {
                     if (dm) {
                         const dat = danmaku.danmakuFormat(dm);
                         toast.success("获取弹幕成功~");
-                        VAR.player?.setDanmaku(dat, setting.danmakuContact);
+                        API.player?.setDanmaku(dat, setting.danmakuContact);
                         setting.downloadOther && pushDownload({
                             group: "弹幕",
                             data: dat,

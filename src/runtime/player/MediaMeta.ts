@@ -1,5 +1,5 @@
 import { debug } from "../debug";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 import { xhr } from "../xhr";
 
 /** 信息存档 */
@@ -23,8 +23,8 @@ export function mediaSession(data: MediaMetadataInit) {
 }
 /** 设置媒体控制信息 */
 export function setMediaSession() {
-    const epid = VAR.epid;
-    const aid = VAR.aid;
+    const epid = API.epid;
+    const aid = API.aid;
     xhr({
         url: `https://api.bilibili.com/x/article/cards?ids=av${aid}`,
         responseType: "json"
@@ -38,8 +38,8 @@ export function setMediaSession() {
                     { src: d.data[`av${aid}`].pic }
                 ]
             });
-            VAR.cover = d.data[`av${aid}`].pic;
-            VAR.title = d.data[`av${aid}`].title;
+            API.cover = d.data[`av${aid}`].pic;
+            API.title = d.data[`av${aid}`].title;
         }
     }).catch(e => { debug.error("MediaSession", e) })
 }

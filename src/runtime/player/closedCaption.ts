@@ -4,7 +4,7 @@ import { pushDownload } from "../download/download";
 import { addCss, addCssEs, addElement } from "../element/addElement";
 import { cht2chs } from "../format/cht2chs";
 import { setting } from "../setting";
-import { VAR } from "../variable/variable";
+import { API } from "../variable/variable";
 import { videoFloat } from "./videoFloat";
 
 /**
@@ -96,7 +96,7 @@ class ClosedCaption {
     }
     /** 切换字幕大小 */
     changeResize() {
-        this.resizeRate = this.setting.scale ? VAR.player.getWidth() / 1280 * 100 : 100;
+        this.resizeRate = this.setting.scale ? API.player.getWidth() / 1280 * 100 : 100;
         this.changeStyle();
     }
     /** 切换字幕位置 */
@@ -135,7 +135,7 @@ class ClosedCaption {
             <li class="bpui-selectmenu-list-row" data-value="close">关闭</li>
             </ul></div>
             <button class="bpui-button" style="padding: 0px 8px;">下载</button>
-            <a class="bpui-button" href="https://member.bilibili.com/v2#/zimu/my-zimu/zimu-editor?cid=${VAR.cid}&aid=${VAR.aid}" target="_blank" title="" style="margin-right: 0px; height: 24px; padding: 0px 6px;">添加字幕</a>`;
+            <a class="bpui-button" href="https://member.bilibili.com/v2#/zimu/my-zimu/zimu-editor?cid=${API.cid}&aid=${API.aid}" target="_blank" title="" style="margin-right: 0px; height: 24px; padding: 0px 6px;">添加字幕</a>`;
         let list = this.element.language.children[1].children[2];
         this.text = this.element.language.children[1].children[0];
         this.element.language.children[2].onclick = () => {
@@ -256,7 +256,7 @@ class ClosedCaption {
             if (this.captions[i]) await this.setCaption(this.captions[i]);
             if (this.caption) {
                 // 只在有字幕时添加面板
-                VAR.player.addEventListener('video_resize', (event: any) => {
+                API.player.addEventListener('video_resize', (event: any) => {
                     (<any>this.changeResize)(event);
                 });
                 let anchor = <HTMLDivElement>document.querySelector(".bilibili-player-video-btn-quality");
@@ -281,7 +281,7 @@ class ClosedCaption {
                 url: d.subtitle_url,
                 up: d.lan,
                 down: d.lan_doc,
-                fileName: `${sessionStorage.getItem("title") || `av${VAR.aid}`}-${d.lan_doc}.json`
+                fileName: `${sessionStorage.getItem("title") || `av${API.aid}`}-${d.lan_doc}.json`
             });
         });
         if (chs || !base) return;
@@ -304,12 +304,12 @@ class ClosedCaption {
             }
             data = this.data[caption.lan] || data;
         }
-        VAR.player.updateSubtitle(data); // 投喂字幕数据给播放器
+        API.player.updateSubtitle(data); // 投喂字幕数据给播放器
         setTimeout(() => {
-            if (VAR.player.getState() == "PLAYING") {
+            if (API.player.getState() == "PLAYING") {
                 // 刷新一次播放状态
-                VAR.player.pause();
-                VAR.player.play();
+                API.player.pause();
+                API.player.play();
             }
         }, 1000);
         if (caption && caption.subtitle_url) {
