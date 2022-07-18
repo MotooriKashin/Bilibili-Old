@@ -58,8 +58,8 @@ class ClosedCaption {
     captions: Record<string, any>[] = []; // 字幕集
     text: any;
     constructor() {
-        this.setting = setting.subtitle || { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' };
-        this.subtitlePrefer = setting.subtitlePrefer; // 默认语言
+        this.setting = (<any>setting).subtitle || { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' };
+        this.subtitlePrefer = (<any>setting).subtitlePrefer; // 默认语言
     }
     /** 绘制字幕面板 */
     initUI() {
@@ -92,7 +92,7 @@ class ClosedCaption {
             span.subtitle-item-text {color:#${("000000" + this.setting.color.toString(16)).slice(-6)};}
             span.subtitle-item {font-size: ${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
             span.subtitle-item {${(<any>this.shadow)[this.setting.shadow].style}}`, "caption-style");
-        setting.subtitle = JSON.parse(JSON.stringify(this.setting));
+        (<any>setting).subtitle = JSON.parse(JSON.stringify(this.setting));
     }
     /** 切换字幕大小 */
     changeResize() {
@@ -105,7 +105,7 @@ class ClosedCaption {
         this.contain.className = 'subtitle-position subtitle-position-'
             + (this.setting.position || 'bc');
         this.contain.style = '';
-        setting.subtitle = JSON.parse(JSON.stringify(this.setting));
+        (<any>setting).subtitle = JSON.parse(JSON.stringify(this.setting));
     }
     /** 字幕图标切换 */
     iconSwitch(caption?: any) {
@@ -156,7 +156,7 @@ class ClosedCaption {
             temp.onclick = () => {
                 this.text.innerHTML = d.lan_doc;
                 this.iconSwitch(d);
-                setting.subtitlePrefer = JSON.parse(JSON.stringify(this.subtitlePrefer = d.lan));
+                (<any>setting).subtitlePrefer = JSON.parse(JSON.stringify(this.subtitlePrefer = d.lan));
             }
         })
     }

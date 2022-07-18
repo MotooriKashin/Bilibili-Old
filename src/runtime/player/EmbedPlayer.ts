@@ -254,16 +254,6 @@ class EmbedPlayer {
             ],
             hasOrText: !1
         };
-        setting.downloadBtn && msg.btnList.push({
-            title: "下载视频",
-            width: 166,
-            height: 40,
-            type: "download",
-            theme: "orange",
-            onClick: e => {
-                window.postMessage({ $type: "download" })
-            }
-        })
         new (<any>window).NoFlashTips(this.bofqi, msg);
         this.bofqi.style.removeProperty("position");
     }
@@ -633,9 +623,6 @@ export function loadVideoScript(bofqi?: string, asWide = false) {
                 asWide && (EmbedPlayer.asWide = true);
                 bofqi && ((<any>document.querySelector(bofqi)).id = "bofqi");
                 (<any>window).GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
-                setting.downloadBtn && (<any>window).GrayManager.append_bgray_btn("下载", () => {
-                    window.postMessage({ $type: "download" })
-                }, "download");
             } catch (e) {
                 toast.error("EmbedPlayer 启动播放器出错~");
                 debug.error("EmbedPlayer 启动播放器出错~", e);

@@ -26,7 +26,7 @@ export function playinfo() {
         param.ep_id && (API.epid = param.ep_id);
     }, obj => {
         try {
-            const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, setting.uposReplace.nor);
+            const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, <any>setting.uposReplace.nor);
             obj.responseType === "json" ? obj.response = JSON.parse(data) : obj.response = obj.responseText = data;
             API.__playinfo__ = <any>data;
             Promise.resolve().then(() => {

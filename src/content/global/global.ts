@@ -15,7 +15,7 @@ import { section } from "./section";
 
 const path = location.href.split("/");
 // 日志拦截
-setting.report && blockReport();
+setting.logReport && blockReport();
 // // 拜年祭
 setting.player && /\/festival\//.test(location.href) && bnj();
 // // message页面

@@ -35,15 +35,15 @@ export function automate() {
     let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
     if (bilibili_player_settings) {
         if (bilibili_player_settings.video_status?.autopart !== "") {
-            setting.bilibili_player_settings = bilibili_player_settings;
+            (<any>setting).bilibili_player_settings = bilibili_player_settings;
         }
     } else {
-        bilibili_player_settings = setting.bilibili_player_settings;
+        bilibili_player_settings = (<any>setting).bilibili_player_settings;
         bilibili_player_settings && localStorage.setItem("bilibili_player_settings", bilibili_player_settings);
     }
     // 记忆播放器速率
     if (setting.automate.videospeed) {
-        const videospeed = setting.videospeed;
+        const videospeed = (<any>setting).videospeed;
         if (videospeed) {
             let setting = sessionStorage.getItem("bilibili_player_settings");
             setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
@@ -52,7 +52,7 @@ export function automate() {
         switchVideo(() => {
             doWhile(() => document.querySelector("#bofqi")?.querySelector<HTMLVideoElement>("video"), d => {
                 d.addEventListener("ratechange", e => {
-                    setting.videospeed = (<HTMLVideoElement>e.target).playbackRate || 1;
+                    (<any>setting).videospeed = (<HTMLVideoElement>e.target).playbackRate || 1;
                 });
             })
         })

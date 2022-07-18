@@ -90,7 +90,7 @@ export function videoLimit() {
                     toast.info("尝试解除区域限制... 访问代理服务器");
                     response = jsonCheck(uposReplace(await xhr({
                         url: urlsign(`https://${setting.videoLimit.th || 'api.global.bilibili.com'}/intl/gateway/v2/ogv/playurl`, obj, 12)
-                    }), setting.uposReplace.th));
+                    }), <any>setting.uposReplace.th));
                     response = { "code": 0, "message": "success", "result": await bstarPlayurl(response) };
                     toast.success(`解除区域限制！aid=${API.aid}, cid=${API.cid}`);
                 } catch (e) {
@@ -110,7 +110,7 @@ export function videoLimit() {
                     response = setting.videoLimit.server === "内置" ? jsonCheck(await xhr({
                         url: objUrl("https://www.biliplus.com/BPplayurl.php", obj)
                     })) : (delete obj.module, await customServer(obj, "tw"));
-                    response = JSON.parse(uposReplace(JSON.stringify(response), setting.uposReplace.gat));
+                    response = JSON.parse(uposReplace(JSON.stringify(response), <any>setting.uposReplace.gat));
                     response = { "code": 0, "message": "success", "result": response };
                     toast.success(`解除区域限制！aid=${API.aid}, cid=${API.cid}`);
                 } catch (e) {

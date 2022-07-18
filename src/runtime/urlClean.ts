@@ -1,6 +1,6 @@
-import { loginExit } from "../content/global/loginExit.js";
-import { abv } from "./lib/abv.js";
-import { UrlFormat } from "./format/url.js";
+import { loginExit } from "../content/global/loginExit";
+import { abv } from "./lib/abv";
+import { UrlFormat } from "./format/url";
 
 /** 垃圾参数序列 */
 const paramsSet = new Set([

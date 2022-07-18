@@ -173,7 +173,7 @@ async function getContent(d: "dash" | "flv" | "mp4") {
                 break;
         }
     } catch (e) { }
-    return JSON.parse(uposReplace(JSON.stringify(result), setting.uposReplace.dl));
+    return JSON.parse(uposReplace(JSON.stringify(result), <any>setting.uposReplace.dl));
 }
 window.addEventListener("message", ev => {
     if (typeof ev.data === "object") {
