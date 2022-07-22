@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.3
+// @version      8.2.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -1872,7 +1872,7 @@ const modules = {};
                 API.videoFloat("载入字幕：", this.caption.lan_doc, () => { });
             }
             else
-                API.videoFloat("关闭弹幕");
+                API.videoFloat("关闭字幕");
         }
     }
     /** 为旧版播放器追加CC字幕功能 */
@@ -6812,7 +6812,6 @@ const modules = {};
         margin: 0;
         width: 100%;
         padding: 0;
-        border-radius: 0 0 4px 4px;
         max-height: 120px;
         background-color: #fff;
         border: 1px solid #ccd0d7;
@@ -10541,7 +10540,7 @@ const modules = {};
             if (two[0]) {
                 two[0].split("&").forEach(d => {
                     const arr = d.split("=");
-                    this.searchParams[arr[0]] = arr[1];
+                    arr[0] && (this.searchParams[arr.shift()] = arr.join("="));
                 });
             }
             // 锚处理
@@ -10553,7 +10552,7 @@ const modules = {};
                 if (three[0]) {
                     three[0].split("&").forEach(d => {
                         const arr = d.split("=");
-                        this.hashParams[arr[0]] = arr[1];
+                        arr[0] && (this.searchParams[arr.shift()] = arr.join("="));
                     });
                 }
             }
@@ -13176,32 +13175,19 @@ const modules = {};
 /*!***********************!*/
 /**/modules["storage.js"] = /*** ./src/include/storage/storage.js ***/
 `
-var __classPrivateFieldSet = (this && this.__classPrivateFieldSet) || function (receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-};
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-    var _StorageInterface__;
     class StorageInterface {
         /**
          *
          * @param target 类型标记：真 ? sessionStorage : localStorage
          */
         constructor(target) {
-            _StorageInterface__.set(this, void 0); // 类型标记：localStorage/sessionStorage
-            __classPrivateFieldSet(this, _StorageInterface__, target, "f");
+            this._ = target;
             // 原生Storage支持以属性形式获取/修改存储，使用get/set模拟。
             this.keys().forEach(d => Object.defineProperty(this, d, { get: () => this.getItem(d), set: v => this.setItem(d, v) }));
         }
         /** 清空！ */
         clear() {
-            (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).clear();
+            (this._ ? self.sessionStorage : self.localStorage).clear();
         }
         ;
         /**
@@ -13210,7 +13196,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
          * @returns 格式化后的数据
          */
         getItem(key) {
-            let str = (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).getItem(key);
+            let str = (this._ ? self.sessionStorage : self.localStorage).getItem(key);
             try {
                 str = JSON.parse(str);
             }
@@ -13224,7 +13210,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
          * @returns 键名数组
          */
         keys() {
-            return Object.keys((__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage));
+            return Object.keys((this._ ? self.sessionStorage : self.localStorage));
         }
         ;
         /**
@@ -13232,7 +13218,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
          * @param key 目标键名
          */
         removeItem(key) {
-            (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).removeItem(key);
+            (this._ ? self.sessionStorage : self.localStorage).removeItem(key);
         }
         ;
         /**
@@ -13243,19 +13229,18 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         setItem(key, value) {
             switch (typeof value) {
                 case "object":
-                    (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).setItem(key, JSON.stringify(value));
+                    (this._ ? self.sessionStorage : self.localStorage).setItem(key, JSON.stringify(value));
                     break;
                 case "function":
                     API.debug.warn("函数类型并不适合这样存储！", key, value);
                     break;
-                default: (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).setItem(key, String(value));
+                default: (this._ ? self.sessionStorage : self.localStorage).setItem(key, String(value));
             }
         }
         ;
         /** 条目总数 */
-        get length() { return (__classPrivateFieldGet(this, _StorageInterface__, "f") ? self.sessionStorage : self.localStorage).length; }
+        get length() { return (this._ ? self.sessionStorage : self.localStorage).length; }
     }
-    _StorageInterface__ = new WeakMap();
     /** localStorage */
     class LocalStorage extends StorageInterface {
         constructor() { super(false); }
@@ -13266,13 +13251,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     // 声明导出，值需要get/set代理以实时更新
     /** localStorage */
-    API.localStorage = undefined;
+    API.localStorage = new LocalStorage();
     /** sessionStorage */
-    API.sessionStorage = undefined;
-    Object.defineProperties(API, {
-        localStorage: { get: () => new LocalStorage(), set: () => false },
-        sessionStorage: { get: () => new SessionStorage(), set: () => false }
-    });
+    API.sessionStorage = new SessionStorage();
 
 //# sourceURL=file://@Bilibili-Old/include/storage/storage.js`;
 /*!***********************!*/
@@ -13473,6 +13454,15 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         margin: 0 auto;
         position: relative;
         overflow: auto;
+        background-image: linear-gradient(to top, white, white),
+        linear-gradient(to top, white, white),
+        linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));
+        background-position: bottom center, top center, bottom center, top center;
+        background-color: white;
+        background-repeat: no-repeat;
+        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;
+        background-attachment: local, local, scroll, scroll;
     }
 
     .item>div {
@@ -14684,7 +14674,9 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
                 48: "720P",
                 32: "480P",
                 16: "360P",
-                15: "360P"
+                15: "360P",
+                6: "240P",
+                5: "144P"
             };
             /** id => 类型（备用方案） */
             this.codec = {
@@ -16159,7 +16151,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
 
 //# sourceURL=file://@Bilibili-Old/vector/danmaku/listSoDanmaku.js`;
 /*!***********************!*/
-/**/modules["liveDamaku.js"] = /*** ./src/vector/danmaku/liveDamaku.js ***/
+/**/modules["liveDanmaku.js"] = /*** ./src/vector/danmaku/liveDanmaku.js ***/
 `
     const protobufJSON = API.getModule("bilibiliBroadcast.json");
     const danmakuJSON = API.getModule("bilibiliBroadcastDanmaku.json");
@@ -16391,7 +16383,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
         };
     }
 
-//# sourceURL=file://@Bilibili-Old/vector/danmaku/liveDamaku.js`;
+//# sourceURL=file://@Bilibili-Old/vector/danmaku/liveDanmaku.js`;
 /*!***********************!*/
 /**/modules["protobufDanmaku.js"] = /*** ./src/vector/danmaku/protobufDanmaku.js ***/
 `
