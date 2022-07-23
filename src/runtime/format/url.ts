@@ -1,6 +1,6 @@
 export class UrlFormat {
     /** 去除参数和锚的基链接 */
-    base: string = "";
+    base: string = <any>undefined;
     /** 查询参数转化的对象 */
     searchParams = new Proxy(<Record<string, string>>{}, {
         get: (t, p: string) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p: string, v) => {
@@ -9,7 +9,7 @@ export class UrlFormat {
         }
     });
     /** 锚 */
-    hash: string = "";
+    hash: string = <any>undefined;
     /** 锚中的参数 */
     hashParams = new Proxy(<Record<string, string>>{}, {
         get: (t, p: string) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p: string, v) => {
@@ -54,8 +54,8 @@ export class UrlFormat {
             });
         }
         // 锚处理
-        if (one[0]) {
-            const three = one[0].split("?");
+        if (one[0] || one[0] === "") {
+            const three = one.join("#").split("?");
             this.hash = three[0];
             three.shift();
             // 锚参数转对象
@@ -89,6 +89,7 @@ export class UrlFormat {
         const result: string[] = []; // 结果栈
         searchParam && result.push(searchParam);
         hashParam && result.push(hashParam);
+        if (this.hash === "") result.push(""); // 空锚
         return result.join("#");
     }
 }
