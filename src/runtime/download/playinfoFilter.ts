@@ -55,6 +55,7 @@ class PlayinfoFiter {
         30259: "128Kbps",
         30257: "64Kbps",
         30255: "AUDIO",
+        30251: "FLAC",
         30250: "ATMOS",
         30232: "128Kbps",
         30216: "64Kbps",
@@ -113,6 +114,7 @@ class PlayinfoFiter {
     color: Record<string, DownloadUpColer> = {
         "8K": "yellow",
         "Dolby": "pink",
+        "FLAC": "pink",
         "ATMOS": "pink",
         "AUDIO": "pink",
         "HDR": "purple",
@@ -182,6 +184,7 @@ class PlayinfoFiter {
         dash.video && this.dashVideo(dash.video, dash.duration); // dash视频部分
         dash.audio && this.dashAudio(dash.audio, dash.duration); // dash音频部分
         dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration); // 杜比音效部分
+        dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac") // 无损音频部分
     }
     /**
      * 整理dash视频部分
@@ -216,8 +219,9 @@ class PlayinfoFiter {
      * 整理dash音频部分
      * @param audio dash音频信息
      * @param duration duration信息，配合bandwidth能计算出文件大小
+     * @param fmt 音频拓展名，默认`.m4a`
      */
-    dashAudio(audio: any[], duration: number) {
+    dashAudio(audio: any[], duration: number, fmt = ".m4a") {
         audio.forEach(d => {
             const url: any[] = d.backupUrl || d.backup_url || [];
             (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
@@ -228,7 +232,7 @@ class PlayinfoFiter {
                 quality: qua,
                 size: sizeFormat(d.bandwidth * duration / 8),
                 color: this.color[qua] || "",
-                fileName: `${this.fileName}${qua}.m4a`
+                fileName: `${this.fileName}${qua}.${fmt}`
             })
         })
     }
