@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.4
+// @version      8.2.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -10509,7 +10509,7 @@ const modules = {};
          */
         constructor(url) {
             /** 去除参数和锚的基链接 */
-            this.base = "";
+            this.base = undefined;
             /** 查询参数转化的对象 */
             this.searchParams = new Proxy({}, {
                 get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
@@ -10518,7 +10518,7 @@ const modules = {};
                 }
             });
             /** 锚 */
-            this.hash = "";
+            this.hash = undefined;
             /** 锚中的参数 */
             this.hashParams = new Proxy({}, {
                 get: (t, p) => t[p] ? decodeURIComponent(t[p]) : t[p], set: (t, p, v) => {
@@ -10544,8 +10544,8 @@ const modules = {};
                 });
             }
             // 锚处理
-            if (one[0]) {
-                const three = one[0].split("?");
+            if (one[0] || one[0] === "") {
+                const three = one.join("#").split("?");
                 this.hash = three[0];
                 three.shift();
                 // 锚参数转对象
@@ -10594,6 +10594,8 @@ const modules = {};
             const result = []; // 结果栈
             searchParam && result.push(searchParam);
             hashParam && result.push(hashParam);
+            if (this.hash === "")
+                result.push(""); // 空锚
             return result.join("#");
         }
     }
