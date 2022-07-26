@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.5
+// @version      8.2.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b7b65656bcd6f430dc684e308fe634db29c55222/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@4237be79c9e3fd8fc6dbbe4e12ec92fc00d99c67/dist/bilibiliPlayer.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@ce9802d9f4346dc9d64859e068b870a20eb711d7/dist/comment.min.js
 // ==/UserScript==
 
 
@@ -14632,6 +14632,7 @@ const modules = {};
                 30259: "128Kbps",
                 30257: "64Kbps",
                 30255: "AUDIO",
+                30251: "FLAC",
                 30250: "ATMOS",
                 30232: "128Kbps",
                 30216: "64Kbps",
@@ -14690,6 +14691,7 @@ const modules = {};
             this.color = {
                 "8K": "yellow",
                 "Dolby": "pink",
+                "FLAC": "pink",
                 "ATMOS": "pink",
                 "AUDIO": "pink",
                 "HDR": "purple",
@@ -14760,6 +14762,7 @@ const modules = {};
             dash.video && this.dashVideo(dash.video, dash.duration); // dash视频部分
             dash.audio && this.dashAudio(dash.audio, dash.duration); // dash音频部分
             dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration); // 杜比音效部分
+            dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac"); // 无损音频部分
         }
         /**
          * 整理dash视频部分
@@ -14796,8 +14799,9 @@ const modules = {};
          * 整理dash音频部分
          * @param audio dash音频信息
          * @param duration duration信息，配合bandwidth能计算出文件大小
+         * @param fmt 音频拓展名，默认\`.m4a\`
          */
-        dashAudio(audio, duration) {
+        dashAudio(audio, duration, fmt = ".m4a") {
             audio.forEach(d => {
                 const url = d.backupUrl || d.backup_url || [];
                 (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
@@ -14808,7 +14812,7 @@ const modules = {};
                     quality: qua,
                     size: API.sizeFormat(d.bandwidth * duration / 8),
                     color: this.color[qua] || "",
-                    fileName: \`\${this.fileName}\${qua}.m4a\`
+                    fileName: \`\${this.fileName}\${qua}.\${fmt}\`
                 });
             });
         }
