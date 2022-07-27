@@ -4,6 +4,8 @@ interface modules {
     readonly "comment.css": string;
 }
 namespace API {
+    // 评论ip属地开关标记
+    (<any>window).COMMENT_LOCATION = config.commentLocation;
     let loading = false, load = false, timer = 0; // 是否载入
     const arr: any[] = []; // 接口暂存
     Object.defineProperty(window, "bbComment", {

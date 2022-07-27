@@ -189,7 +189,9 @@ interface config {
         th: "ks3（金山）" | "ks3b（金山）" | "ks3c（金山）" | "ks32（金山）" | "kodo（七牛）" | "kodob（七牛）" | "cos（腾讯）" | "cosb（腾讯）" | "coso1（腾讯）" | "coso2（腾讯）" | "bos（腾讯）" | "hw（华为）" | "hwb（华为）" | "uphw（华为）" | "js（华为）" | "hk（香港）" | "akamai（海外）";
         /** 下载 */
         dl: "ks3（金山）" | "ks3b（金山）" | "ks3c（金山）" | "ks32（金山）" | "kodo（七牛）" | "kodob（七牛）" | "cos（腾讯）" | "cosb（腾讯）" | "coso1（腾讯）" | "coso2（腾讯）" | "bos（腾讯）" | "hw（华为）" | "hwb（华为）" | "uphw（华为）" | "js（华为）" | "hk（香港）" | "akamai（海外）" | "不替换";
-    }
+    };
+    /** 评论ip属地 */
+    commentLocation: boolean;
 }
 namespace API {
     const CONFIG = GM.GM_getValue<config>("config", <config>{});
@@ -1299,6 +1301,14 @@ namespace API {
                     candidate: ["不替换"].concat(UPOS)
                 }
             ]
+        },
+        {
+            key: "commentLocation",
+            menu: "style",
+            type: "switch",
+            label: "显示评论ip属地",
+            sub: "国内省级，国外国级",
+            value: true
         }
     ]);
 }

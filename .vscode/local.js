@@ -4,7 +4,7 @@ const meta = require("../meta.json"); // 脚本元数据
 const _requires = ["src/require.js"]; // 模块封装，开发模式下以require本地资源方式加载
 const _resource = ["dist/bilibiliPlayer.js", "dist/comment.js"]; // 本地资源项
 
-meta.version = "8.0.0"; // 开发模式无需修改脚本版本，固定为大版本+1
+meta.version = "9.0.0"; // 开发模式无需修改脚本版本，固定为大版本+1
 
 function getRequires() {
     meta.require = _requires.reduce((s, d) => {
