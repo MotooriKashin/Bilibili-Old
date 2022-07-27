@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.6
+// @version      8.2.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,7 +20,7 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@b7b65656bcd6f430dc684e308fe634db29c55222/dist/comment.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e13f6c7b05a9c9496cf41c5705791efefc360e65/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@4237be79c9e3fd8fc6dbbe4e12ec92fc00d99c67/dist/bilibiliPlayer.min.js
 // ==/UserScript==
 
@@ -13082,6 +13082,14 @@ const modules = {};
                     candidate: ["不替换"].concat(UPOS)
                 }
             ]
+        },
+        {
+            key: "commentLocation",
+            menu: "style",
+            type: "switch",
+            label: "显示评论ip属地",
+            sub: "国内省级，国外国级",
+            value: true
         }
     ]);
 
@@ -15712,6 +15720,8 @@ const modules = {};
 /*!***********************!*/
 /**/modules["bbComment.js"] = /*** ./src/vector/comment/bbComment.js ***/
 `
+    // 评论ip属地开关标记
+    window.COMMENT_LOCATION = API.config.commentLocation;
     let loading = false, load = false, timer = 0; // 是否载入
     const arr = []; // 接口暂存
     Object.defineProperty(window, "bbComment", {
