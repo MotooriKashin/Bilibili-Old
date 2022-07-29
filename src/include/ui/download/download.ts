@@ -37,8 +37,12 @@ namespace API {
     /** 下载数据栈 */
     const Record: DownloadDate = {};
     let downloading = false;
+    let isCover = false;
     // 切P清栈
-    switchVideo(() => Object.keys(Record).forEach(d => delete Record[d]));
+    switchVideo(() => {
+        isCover = false;
+        Object.keys(Record).forEach(d => delete Record[d])
+    });
     /**
      * 添加数据到下载面板
      * @param obj 数据配置
@@ -88,7 +92,8 @@ namespace API {
     }
     /** 封面等下载 */
     function getCover() {
-        if (!config.downloadOther) return;
+        if (!config.downloadOther || isCover) return;
+        isCover = true;
         cover && pushDownload({
             group: "封面",
             url: cover,
