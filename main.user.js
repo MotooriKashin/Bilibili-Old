@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      8.2.7
+// @version      8.2.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -20,8 +20,8 @@
 // @run-at       document-start
 // @license      MIT
 // @require      https://fastly.jsdelivr.net/npm/protobufjs@6.11.0/dist/light/protobuf.min.js
-// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e13f6c7b05a9c9496cf41c5705791efefc360e65/dist/comment.min.js
 // @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@4237be79c9e3fd8fc6dbbe4e12ec92fc00d99c67/dist/bilibiliPlayer.min.js
+// @resource     comment.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@e13f6c7b05a9c9496cf41c5705791efefc360e65/dist/comment.min.js
 // ==/UserScript==
 
 
@@ -14086,8 +14086,12 @@ const modules = {};
     /** 下载数据栈 */
     const Record = {};
     let downloading = false;
+    let isCover = false;
     // 切P清栈
-    API.switchVideo(() => Object.keys(Record).forEach(d => delete Record[d]));
+    API.switchVideo(() => {
+        isCover = false;
+        Object.keys(Record).forEach(d => delete Record[d]);
+    });
     /**
      * 添加数据到下载面板
      * @param obj 数据配置
@@ -14126,8 +14130,9 @@ const modules = {};
     }
     /** 封面等下载 */
     function getCover() {
-        if (!API.config.downloadOther)
+        if (!API.config.downloadOther || isCover)
             return;
+        isCover = true;
         API.cover && pushDownload({
             group: "封面",
             url: API.cover,
