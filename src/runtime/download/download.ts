@@ -48,8 +48,12 @@ interface DownloadRecord {
 /** 下载数据栈 */
 const Record: DownloadDate = {};
 let downloading = false;
+let isCover = false;
 // 切P清栈
-switchVideo(() => Object.keys(Record).forEach(d => delete Record[d]));
+switchVideo(() => {
+    isCover = false;
+    Object.keys(Record).forEach(d => delete Record[d])
+});
 /**
  * 添加数据到下载面板
  * @param obj 数据配置
@@ -99,7 +103,8 @@ function contactDownloadDate(target: DownloadDate, source: DownloadDate) {
 }
 /** 封面等下载 */
 function getCover() {
-    if (!setting.downloadOther) return;
+    if (!setting.downloadOther || isCover) return;
+    isCover = true;
     const cover: string = API.cover,
         bkg_cover: string = API.bkg_cover,
         title: string = API.title;
