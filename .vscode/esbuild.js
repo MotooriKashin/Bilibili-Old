@@ -33,7 +33,14 @@ async function getResource() {
         return s;
     }, []));
 }
-
+function getLocalResource() {
+    const _resource = ["src/bilibili/bilibiliPlayer.js"];
+    meta.resource = _resource.reduce((s, d) => {
+        const arr = d.split("/");
+        s.push(`${arr[arr.length - 1]} file:///${process.cwd().replace(/\\/g, "/")}/${d}`);
+        return s;
+    }, meta.resource || []);
+}
 import("fs-extra").then(d => {
     d.emptyDir("./dist").then(() => {
         // 源代码已打包大部分资源，以下是扩展以绝对路径访问的资源
@@ -116,7 +123,7 @@ import("fs-extra").then(d => {
                     }
                 }
             ).then(async () => {
-                await getResource(_resource, "resource"); // 整理资源项
+                process.env.NODE_ENV === "development" ? getLocalResource() : await getResource(_resource, "resource"); // 整理资源项
                 let result = Object.keys(meta).reduce((s, d) => { // 处理脚本元数据
                     s = Array.isArray(meta[d]) ? meta[d].reduce((a, b) => {
                         a = `${a}// @${d.padEnd(13, " ")}${b}\r\n`;

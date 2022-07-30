@@ -67,7 +67,6 @@ const dushs = [
     "vd",
     "videoWidgetsJsonP",
     "webAbTest",
-    "webpackJsonp",
     "__getClientLogo",
     "_arrayLikeToArray",
     "_arrayWithHoles",
