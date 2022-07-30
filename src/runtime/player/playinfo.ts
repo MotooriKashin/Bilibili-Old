@@ -12,7 +12,7 @@ import { API } from "../variable/variable";
 import { urlObj, objUrl } from "../format/url";
 
 /** 播放信息相关 */
-export function playinfo() {
+export function dealwithPlayinfo() {
     xhrhook("/playurl?", args => {
         const param = urlObj(args[1]);
         args[1].includes("84956560bc028eb7") && (args[1] = urlsign(args[1], {}, 8)); // 修复失效的appid

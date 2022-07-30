@@ -125,8 +125,8 @@ import("fs-extra").then(d => {
                     return s;
                 }, "// ==UserScript==\r\n");
                 result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
+                result += "const modules =`\r\n" + String(await fs.promises.readFile("./dist/tampermonkey/vector.js")).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "\r\n`;"
                 result += await fs.promises.readFile("./dist/tampermonkey/index.js"); // 脚本主入口
-                result = result.replace('const modules = "";', `const modules = \`\r\n${String(await fs.promises.readFile("./dist/tampermonkey/vector.js")).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`;`);
                 await fs.promises.writeFile("./main.user.js", result.replace(/\r/g, '').replace(/\n/g, '\r\n'));
                 await d.remove("./dist/tampermonkey");
             }).catch(e => {

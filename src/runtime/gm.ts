@@ -1,3 +1,4 @@
+import { isUserScript } from "../tampermonkey/check";
 import { mutex } from "./variable/mutex";
 
 /** xmlHttpRequest栈 */
@@ -9,7 +10,7 @@ const cookiesEs: [(value: chrome.cookies.Cookie[]) => void, (reason?: any) => vo
 // 内容脚本回调
 window.addEventListener("message", ev => {
     // 用户脚本兼容
-    if (GM_getValue) return GM_getValue("config");
+    if (isUserScript) return;
     if (typeof ev.data === "object" && ev.data.flag === mutex) {
         switch (ev.data.$type) {
             case "xhrGMResponse":
@@ -37,8 +38,21 @@ window.addEventListener("message", ev => {
     }
 })
 export const GM = {
+    /** 用户脚本模式限定 */
+    xhr(details: GMxhrDetails) {
+        return new Promise((resolve: (value: any) => void, reject) => {
+            details.method = details.method || 'GET';
+            details.onload = details.onload || ((xhr) => {
+                resolve(xhr.response);
+            });
+            details.onerror = details.onerror || ((xhr) => {
+                reject(xhr.response);
+            });
+            GM_xmlhttpRequest(details);
+        })
+    },
     /** 跨域请求 */
-    xmlHttpRequest(input: URL | RequestInfo, init?: RequestInit | undefined) {
+    xmlHttpRequest(input: URL | RequestInfo, init?: RequestInit) {
         return new Promise((resolve: (value: string) => void, reject) => {
             window.postMessage({
                 $type: "xhrGM",
@@ -67,19 +81,28 @@ export const GM = {
     },
     /** 储存数据 */
     setValue(key: string, value: any) {
-        const obj: Record<string, any> = {};
-        obj[key] = value;
-        window.postMessage({
-            $type: "setValue",
-            data: obj
-        })
+        if (isUserScript) {
+            GM_setValue(key, value);
+        } else {
+            const obj: Record<string, any> = {};
+            obj[key] = value;
+            window.postMessage({
+                $type: "setValue",
+                data: obj
+            })
+        }
     },
     /** 删除存储 */
     deleteValue(...key: string[]) {
-        window.postMessage({
-            $type: "setValue",
-            data: key
-        })
+        if (isUserScript) {
+            key.forEach(d => GM_deleteValue(d));
+
+        } else {
+            window.postMessage({
+                $type: "setValue",
+                data: key
+            })
+        }
     },
     /** 获取cookie */
     cookie() {

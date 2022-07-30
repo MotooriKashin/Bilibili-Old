@@ -11,13 +11,15 @@ import { sessionStorage } from "../storage";
 import { toast } from "../toast/toast";
 import { automate } from "./automate";
 import bgraybtn from "./bgray_btn.html";
-import { playinfo as dealwithPlayinfo } from "./playinfo";
+import { dealwithPlayinfo } from "./playinfo";
 import { videoLimit } from "./video_limit";
 import { urlObj } from "../format/url";
 import { API } from "../variable/variable";
+import { isUserScript } from "../../tampermonkey/check";
 
 async function loadBilibiliPlayer() {
     if (!(<any>window).jQuery) await loadScript("//static.hdslb.com/js/jquery.min.js");
+    if (isUserScript) return new Function(GM_getResourceText("bilibiliPlayer.js"))();
     return await loadScript(`chrome-extension://${sessionStorage.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js`);
 }
 loadBilibiliPlayer();

@@ -8,6 +8,7 @@ import { API } from "../variable/variable";
 import { videoFloat } from "./video_float";
 import { GM } from "../gm";
 import css from "./closed_caption.css";
+import { isUserScript } from "../../tampermonkey/check";
 
 /**
  * 旧版播放器支持CC字幕  
@@ -61,12 +62,22 @@ class ClosedCaption {
     text: any;
     constructor() {
         this.setting = { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' };
-        GM.getValue("subtitle").then(d => {
+        if (isUserScript) {
+            const d = GM_getValue("subtitle", this.setting);
             d && (this.setting = d);
-        });
-        GM.getValue("subtitlePrefer").then(d => {
-            this.subtitlePrefer = d; // 默认语言
-        })
+        } else {
+            GM.getValue("subtitle").then(d => {
+                d && (this.setting = d);
+            });
+        }
+        if (isUserScript) {
+            const d = GM_getValue("subtitlePrefer", undefined);
+            this.subtitlePrefer = d;
+        } else {
+            GM.getValue("subtitlePrefer").then(d => {
+                this.subtitlePrefer = d; // 默认语言
+            })
+        }
     }
     /** 绘制字幕面板 */
     initUI() {

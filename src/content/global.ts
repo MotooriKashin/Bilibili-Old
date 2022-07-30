@@ -17,6 +17,7 @@ import { album } from "./space/album";
 import { spacePage } from "./space/space";
 import { disableWebRTC } from "./web_rtc";
 import css from "../content/avatar_animation.css";
+import { isUserScript } from "../tampermonkey/check";
 
 export function globalVector() {
     // 主脚本有可能多次注入，全局脚本只运行一次
@@ -56,7 +57,7 @@ export function globalVector() {
     setting.album && /t.bilibili.com\/\d+/.test(location.href) && album();
     // 与内容脚本传递数据
     window.addEventListener("message", ev => {
-        if ((<any>GM_getValue)) return;
+        if (isUserScript) return;
         if (typeof ev.data === "object") {
             switch (ev.data.$type) {
                 case "getPageInfo":

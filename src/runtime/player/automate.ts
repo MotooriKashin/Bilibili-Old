@@ -1,3 +1,4 @@
+import { isUserScript } from "../../tampermonkey/check";
 import { doWhile } from "../do_while";
 import { GM } from "../gm";
 import { setting } from "../setting";
@@ -39,19 +40,33 @@ export function automate() {
             GM.setValue("bilibili_player_settings", bilibili_player_settings);
         }
     } else {
-        GM.getValue("bilibili_player_settings").then(d => {
+        if (isUserScript) {
+            const d = GM_getValue("bilibili_player_settings");
             d && localStorage.setItem("bilibili_player_settings", d);
-        })
+        } else {
+            GM.getValue("bilibili_player_settings").then(d => {
+                d && localStorage.setItem("bilibili_player_settings", d);
+            })
+        }
     }
     // 记忆播放器速率
     if (setting.automate.videospeed) {
-        GM.getValue("videospeed").then(videospeed => {
+        if (isUserScript) {
+            const videospeed = GM_getValue("videospeed");
             if (videospeed) {
                 let setting = sessionStorage.getItem("bilibili_player_settings");
                 setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
                 sessionStorage.setItem("bilibili_player_settings", setting);
             }
-        });
+        } else {
+            GM.getValue("videospeed").then(videospeed => {
+                if (videospeed) {
+                    let setting = sessionStorage.getItem("bilibili_player_settings");
+                    setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
+                    sessionStorage.setItem("bilibili_player_settings", setting);
+                }
+            });
+        }
         switchVideo(() => {
             doWhile(() => document.querySelector("#bofqi")?.querySelector<HTMLVideoElement>("video"), d => {
                 d.addEventListener("ratechange", e => {

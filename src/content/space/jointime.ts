@@ -3,11 +3,12 @@ import { createElement } from "../../runtime/element/create_element";
 import { timeFormat } from "../../runtime/format/time";
 import { GM } from "../../runtime/gm";
 import { jsonCheck } from "../../runtime/unit";
+import { isUserScript } from "../../tampermonkey/check";
 
 /** 注册时间 */
 export function jointime(mid: number) {
     doWhile(() => document.querySelector(".section.user-info"), t => {
-        GM.xmlHttpRequest(`https://account.bilibili.com/api/member/getCardByMid"?mid=${mid}`)
+        (isUserScript ? GM.xhr({ url: `https://account.bilibili.com/api/member/getCardByMid"?mid=${mid}` }) : GM.xmlHttpRequest(`https://account.bilibili.com/api/member/getCardByMid"?mid=${mid}`))
             .then(d => {
                 const data = jsonCheck(d);
                 const jointime = timeFormat(data.card.regtime * 1000, true);

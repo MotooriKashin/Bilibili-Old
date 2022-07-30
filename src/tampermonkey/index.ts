@@ -1,5 +1,4 @@
 (function () {
-    const modules = "";
     /** 入口点，切回上下文环境 */
     new Function(
         "GM",
@@ -22,6 +21,8 @@
         GM_listValues
     );
 })();
+/** **用户脚本模块占位不可使用！** */
+declare const modules: string;
 /** 封装脚本管理器API的顶级对象 */
 declare namespace GM {
     interface cookieDetails {

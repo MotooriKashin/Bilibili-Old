@@ -4,6 +4,7 @@ import { fnval } from "../variable/fnval";
 import { xhr } from "../xhr";
 import { objUrl } from "../format/url";
 import { urlsign } from "./sign";
+import { isUserScript } from "../../tampermonkey/check";
 
 class UrlPack {
     get ts() {
@@ -37,11 +38,15 @@ class UrlPack {
      */
     getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T], gm?: boolean) {
         const str = objUrl(url, <any>Object.assign(this.jsonUrlDefault[url], detail));
-        return gm ? GM.xmlHttpRequest((<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str, { credentials: "include" }).then(d => JSON.parse(d)) : xhr({
-            url: (<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str,
-            responseType: "json",
-            credentials: true
-        });
+        return gm
+            ? isUserScript
+                ? GM.xhr({ url: (<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str, responseType: "json" })
+                : GM.xmlHttpRequest((<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str, { credentials: "include" }).then(d => JSON.parse(d))
+            : xhr({
+                url: (<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str,
+                responseType: "json",
+                credentials: true
+            });
     }
 }
 /**

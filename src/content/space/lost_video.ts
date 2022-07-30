@@ -3,11 +3,12 @@ import { debug } from "../../runtime/debug";
 import { observerAddedNodes } from "../../runtime/node_observer";
 import { jsonCheck } from "../../runtime/unit";
 import { GM } from "../../runtime/gm";
+import { isUserScript } from "../../tampermonkey/check";
 
 async function getLostVideo(aid: number) {
     let result = []; // 失效视频信息缓存
     try { // 尝试访问Biliplus
-        let data: any = await GM.xmlHttpRequest(`https://www.biliplus.com/video/av${aid}`);
+        let data: any = await (isUserScript ? GM.xhr({ url: `https://www.biliplus.com/video/av${aid}` }) : GM.xmlHttpRequest(`https://www.biliplus.com/video/av${aid}`));
         if (data.match(/\<title\>.+?\ \-\ AV/)) {
             result[0] = data.match(/\<title\>.+?\ \-\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
             result[1] = data.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
@@ -15,10 +16,10 @@ async function getLostVideo(aid: number) {
     } catch (e) { debug.error("lostVideo.js", e) }
     if (!result[0] || !result[1]) {
         try { // 标题或封面无效，尝试访问Biliplus CID缓存库
-            let data: any = await GM.xmlHttpRequest(`https://www.biliplus.com/all/video/av${aid}/`);
+            let data: any = await (isUserScript ? GM.xhr({ url: `https://www.biliplus.com/all/video/av${aid}` }) : GM.xmlHttpRequest(`https://www.biliplus.com/all/video/av${aid}/`));
             if (data.match('/api/view_all?')) {
                 data = data.match(/\/api\/view_all\?.+?\',cloudmoe/)[0].replace(/\',cloudmoe/, "");
-                data = await GM.xmlHttpRequest(`//www.biliplus.com${data}`);
+                data = await (isUserScript ? GM.xhr({ url: `//www.biliplus.com${aid}` }) : GM.xmlHttpRequest(`//www.biliplus.com${data}`));
                 data = jsonCheck(data).data;
                 result[0] = result[0] || data.info.title;
                 result[1] = result[1] || data.info.pic;
@@ -27,7 +28,7 @@ async function getLostVideo(aid: number) {
     }
     if (!result[0] || !result[1]) {
         try { // 标题或封面依旧无效，尝试访问jijidown
-            let data: any = await GM.xmlHttpRequest(`https://www.jijidown.com/video/${aid}`);
+            let data: any = await (isUserScript ? GM.xhr({ url: `https://www.jijidown.com/video/${aid}` }) : GM.xmlHttpRequest(`https://www.jijidown.com/video/${aid}`));
             if (data.match('window._INIT')) {
                 result[0] = result[0] || data.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
                 result[1] = result[1] || data.match(/\"img\":\ \".+?\",/)[0].match(/http.+?\",/)[0].replace(/",/, "");
