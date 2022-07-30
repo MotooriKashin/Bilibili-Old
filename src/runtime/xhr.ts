@@ -37,8 +37,6 @@ interface xhrDetailsAsync extends xhrDetails {
 interface xhrDetailsSync extends xhrDetails {
     async?: false
 }
-/** 跨域请求及其值栈 */
-const catches: [string, any] = <any>[];
 /** 请求栈 */
 const Record: Record<string, any> = {
     default: {}, arraybuffer: {}, blob: {}, document: {}, json: {}, text: {}
@@ -89,11 +87,6 @@ export function xhr(details: xhrDetailsAsync | xhrDetailsSync, cache = false) {
         xhr.send(details.data);
     })
 }
-/**
- * 跨域请求日志
- * @returns 跨域请求及其结果
- */
-xhr.log = () => catches;
 /**
  * `XMLHttpRequest`的GET方法的快捷模式  
  * **本方法默认带上了cookies，如需禁用请在details中提供headers对象并将其credentials属性置为false**
