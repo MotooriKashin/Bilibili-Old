@@ -1,4 +1,4 @@
-import { loadScript } from "./element/addElement";
+import { loadScript } from "./element/add_element";
 
 /**
  * 检查B站json接口返回值并格式化为json  

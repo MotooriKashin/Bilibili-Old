@@ -1,6 +1,6 @@
-import { doWhile } from "../../runtime/doWhile";
+import { doWhile } from "../../runtime/do_while";
 import { setting } from "../../runtime/setting";
-import { sleepCheck } from "./sleepCheck";
+import { sleepCheck } from "./sleep_check";
 
 /** live页面 */
 export function livePage() {

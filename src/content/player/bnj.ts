@@ -1,5 +1,5 @@
-import { doWhile } from "../../runtime/doWhile";
-import { addCssEs } from "../../runtime/element/addElement";
+import { doWhile } from "../../runtime/do_while";
+import { addCssEs } from "../../runtime/element/add_element";
 
 /** 拜年祭页面 */
 export function bnj() {

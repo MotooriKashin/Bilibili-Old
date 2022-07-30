@@ -1,5 +1,5 @@
 import { debug } from "../debug.js";
-import { doWhile } from "../doWhile.js";
+import { doWhile } from "../do_while";
 
 /** 特殊键盘事件 */
 interface keySpecial {

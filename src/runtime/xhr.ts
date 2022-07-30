@@ -164,34 +164,3 @@ function post(url: string, data: string, contentType: string = "application/x-ww
     return (<any>xhr)({ url: url, method: "POST", data: data, ...details }, cache)
 }
 xhr.port = post;
-/** GMxhr栈 */
-const xhrGM: [(value: string) => void, (reason?: any) => void][] = [];
-window.addEventListener("message", ev => {
-    if (typeof ev.data === "object") {
-        if (ev.data.$type == "xhrGMResponse") {
-            if (xhrGM[ev.data.index]) {
-                ev.data.resolve && xhrGM[ev.data.index][0](ev.data.resolve);
-                ev.data.reject && xhrGM[ev.data.index][1](ev.data.reject);
-            }
-        }
-    }
-})
-function GM(input: URL | RequestInfo, init?: RequestInit | undefined) {
-    return new Promise((resolve: (value: string) => void, reject) => {
-        window.postMessage({
-            $type: "xhrGM",
-            data: {
-                index: xhrGM.push([resolve, reject]) - 1,
-                input,
-                init
-            }
-        })
-    });
-}
-/**
- * 去除CORS限制版xhr，底层和参数同`fetch`，**但返回值已处理成字符串**，*否则无法穿透各种上下文*，所以不能用来发二进制请求！
- * @param input fetch的第一个参数，一般未请求的url
- * @param init fetch的第二个参数（可选），一般用来设置url之外的信息
- * @returns Promise托管的字符串返回值
- */
-xhr.GM = GM;

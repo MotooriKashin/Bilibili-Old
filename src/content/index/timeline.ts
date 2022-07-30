@@ -1,6 +1,6 @@
 import { urlPack } from "../../runtime/lib/url";
 import { debug } from "../../runtime/debug";
-import { doWhile } from "../../runtime/doWhile";
+import { doWhile } from "../../runtime/do_while";
 import { toast } from "../../runtime/toast/toast";
 
 /** 番剧时间表栈 */

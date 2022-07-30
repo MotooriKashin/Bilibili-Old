@@ -1,8 +1,8 @@
-import { createElement, createElements } from "./createElement.js";
-import { HorizontalLine } from "./horizontal/horizontal.js";
-import { htmlVnode } from "./htmlVnode.js";
-import { PopupBox } from "./popupbox.js";
-import { PushButton } from "./pushButton/pushButton";
+import { createElement, createElements } from "./create_element";
+import { HorizontalLine } from "./horizontal/horizontal";
+import { htmlVnode } from "./html_vnode";
+import { PopupBox } from "./popupbox";
+import { PushButton } from "./push_button/push_button";
 
 interface Button {
     /** 按钮上的文字 */

@@ -1,5 +1,6 @@
-import { createElements } from "../createElement.js";
-import { htmlVnode } from "../htmlVnode.js";
+import { mutex } from "../../variable/mutex";
+import { createElements } from "../create_element";
+import { htmlVnode } from "../html_vnode";
 import checkbox from "./checkbox.html";
 
 /** 配置数据 */
@@ -49,4 +50,4 @@ export class Checkbox extends HTMLElement {
         this.label = obj.label = label;
     }
 }
-customElements.get("check-box") || customElements.define("check-box", Checkbox);
+customElements.get(`check-box${mutex}`) || customElements.define(`check-box${mutex}`, Checkbox);

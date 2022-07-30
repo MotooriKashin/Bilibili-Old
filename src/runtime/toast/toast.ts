@@ -1,10 +1,11 @@
 import { isObject } from "../lib/typeof.js";
-import { createElements } from "../element/createElement.js";
-import { htmlVnode } from "../element/htmlVnode.js";
+import { createElements } from "../element/create_element";
+import { htmlVnode } from "../element/html_vnode";
 import fork from "../../images/svg/fork.svg";
-import { ProxyHandler } from "../lib/proxyHandler.js";
+import { ProxyHandler } from "../lib/proxy_handler";
 import html from "./toast.html";
-import { setting } from "../setting.js";
+import { setting } from "../setting";
+import { mutex } from "../variable/mutex.js";
 
 /** toast节点 */
 interface ToastElement extends HTMLDivElement {
@@ -166,7 +167,7 @@ class ToastContainer extends HTMLElement {
     }
 }
 // 内容脚本无法使用自定义节点🤣
-customElements?.get(`toast-container`) || customElements?.define(`toast-container`, ToastContainer);
+customElements.get(`toast-container${mutex}`) || customElements.define(`toast-container${mutex}`, ToastContainer);
 const node: ToastContainer = <any>(customElements ? new ToastContainer() : { toast: () => { } });
 function Toast(type: ToastElement["type"], ...data: any[]) {
     return node.toast(node.delay, type, ...data);

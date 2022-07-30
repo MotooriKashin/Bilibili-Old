@@ -1,7 +1,7 @@
 import { setting } from "../../runtime/setting";
 import { album } from "./album";
 import { jointime } from "./jointime";
-import { lostVideo } from "./lostVideo";
+import { lostVideo } from "./lost_video";
 import { midInfo } from "./midInfo";
 
 /** 个人空间 */

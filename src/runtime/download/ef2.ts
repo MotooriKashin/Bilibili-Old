@@ -1,4 +1,4 @@
-import { Base64 } from "../lib/Base64";
+import { Base64 } from "../lib/base64";
 import { setting } from "../setting";
 
 export interface EF2Data {

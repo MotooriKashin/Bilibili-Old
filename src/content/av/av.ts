@@ -1,24 +1,31 @@
-import { appendScripts } from "../../runtime/element/createScripts";
-import { webpackhook } from "../../runtime/hook/webpackJsonp";
-import { loadVideoScript } from "../../runtime/player/EmbedPlayer";
-import script from "./script.html";
-import menuConfig from "./menuConfig.txt";
+import { createElements } from "../../runtime/element/create_element";
+import { htmlVnode } from "../../runtime/element/html_vnode";
+import { jsonphookasync } from "../../runtime/hook/node";
+import { webpackhook } from "../../runtime/hook/webpack_jsonp";
+import { loadVideoScript } from "../../runtime/player/embed_player";
 import { setting } from "../../runtime/setting";
-import { jsonphookasync } from "../../runtime/hook/Node";
-import { enLike } from "../global/enLike";
-import { avLostCheck } from "./avLostCheck";
-import { banner, primaryMenu } from "../global/banner";
-import { loadComment } from "../global/comment";
-import { loadByDmId } from "./loadByDmId";
-import { createElements } from "../../runtime/element/createElement";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { sessionStorage } from "../../runtime/storage";
+import { loadComment } from "../comment";
 import html from "./av.html";
+import script from "./script.html";
+import menuConfig from "./menu_config.txt";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { enLike } from "./en_like";
+import { avLostCheck } from "./av_lost_check";
+import { banner, primaryMenu } from "../banner";
+import { loadByDmId } from "./load_by_dm_id";
+import { replaceUrl } from "../../runtime/url_clean";
+import { globalVector } from "../global";
+import { keepNewCheck } from "./keep_new";
 
-
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
+// 重定向SEO页面
+location.href.includes("/s/video") && replaceUrl(location.href.replace("/s/video", "/video"));
 // 备份标题
 const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
@@ -55,7 +62,6 @@ webpackhook(717, 2, code => code.replace("av$1</a>')", `av$1</a>').replace(/(?!<
 webpackhook(717, 286, code => code.replace('e("setVideoData",t)', `e("setVideoData",t);$("#bofqi").attr("id","__bofqi").html('<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>');new Function(t.embedPlayer)();`));
 // 跳过充电鸣谢
 setting.automate.electric && jsonphookasync("api.bilibili.com/x/web-interface/elec/show", undefined, async () => { return { code: -404 } }, false);
-
 // 禁用__INITIAL_STATE__干扰
 Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
 // 加载原生脚本
@@ -70,8 +76,5 @@ primaryMenu();
 banner();
 // 弹幕ID跳转
 loadByDmId();
-// 顶栏动效
-window.postMessage({
-    $type: "insertCSS",
-    data: ["content/global/avatarAnimation.css"]
-})
+// 全局入口
+globalVector();

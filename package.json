@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc -p ./tsconfig.json  --noEmit",
-    "dist": "node .vscode/dist.js",
     "update": "npm update",
-    "esbuild": "node .vscode/esbuild.js"
+    "build": "cross-env NODE_ENV=production node .vscode/esbuild.js",
+    "test": "cross-env NODE_ENV=development node .vscode/esbuild.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
   "homepage": "https://github.com/MotooriKashin/Bilibili-Old#readme",
   "dependencies": {
     "@types/chrome": "^0.0.190",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.14.43",
     "fs-extra": "^10.1.0",
     "protobufjs": "^6.11.3",

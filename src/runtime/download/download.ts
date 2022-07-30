@@ -1,14 +1,14 @@
-import { saveAs } from "../../include/file";
+import { saveAs } from "../lib/file";
 import { isObject } from "../lib/typeof";
 import { urlPack } from "../lib/url";
-import { uposReplace } from "../player/uposReplace";
+import { uposReplace } from "../player/upos_replace";
 import { setting } from "../setting";
-import { switchVideo } from "../switchVideo";
+import { switchVideo } from "../switch_video";
 import { toast } from "../toast/toast";
 import { fnval } from "../variable/fnval";
 import { API } from "../variable/variable";
-import { downloadUI, DownloadUpColer } from "./downloadUI";
-import { DownloadDate, playinfoFiter } from "./playinfoFilter";
+import { downloadUI, DownloadUpColer } from "./download_ui";
+import { DownloadDate, playinfoFiter } from "./playinfo_filter";
 
 /** 下载记录 */
 interface DownloadRecord {
@@ -105,9 +105,9 @@ function contactDownloadDate(target: DownloadDate, source: DownloadDate) {
 function getCover() {
     if (!setting.downloadOther || isCover) return;
     isCover = true;
-    const cover: string = API.cover,
-        bkg_cover: string = API.bkg_cover,
-        title: string = API.title;
+    const cover = <string>API.cover,
+        bkg_cover = <string>API.bkg_cover,
+        title = <string>API.title;
     cover && pushDownload({
         group: "封面",
         url: cover,
@@ -129,7 +129,7 @@ export async function downloadDefault() {
     downloading = true;
     if (!API.cid) return toast.warning("请在视频页使用本功能~");
     if (API.th) toast.warning("泰区视频！", "请将【referer】置空，【UserAgent】设为默认值，并选用【默认】以外的方式进行下载~");
-    const data = playinfoFiter(API.__playinfo__);
+    const data = playinfoFiter(<Record<"data" | "result" | "durl" | "dash", any>>API.__playinfo__);
     const request: Promise<any>[] = [];
     const type = setting.downlaodType.join(" ").toLowerCase();
     downloadUI.obj.data = data;

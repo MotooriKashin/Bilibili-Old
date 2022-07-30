@@ -1,49 +1,61 @@
-import { debug } from "../../runtime/debug";
-import { doWhile } from "../../runtime/doWhile";
-import { appendScripts } from "../../runtime/element/createScripts";
-import { objUrl, urlObj } from "../../runtime/format/url";
-import { jsonphookasync } from "../../runtime/hook/Node";
-import { loadVideoScript } from "../../runtime/player/EmbedPlayer";
-import { videoFloat } from "../../runtime/player/videoFloat";
-import { switchVideo } from "../../runtime/switchVideo";
-import { toast } from "../../runtime/toast/toast";
-import { replaceUrl } from "../../runtime/urlClean";
-import { xhr } from "../../runtime/xhr";
-import { loadComment } from "../global/comment";
 import toview from "./toview.json";
 import script from "./script.html";
-import { setting } from "../../runtime/setting";
-import { enLike } from "../global/enLike";
-import { banner, primaryMenu } from "../global/banner";
-import { loadByDmId } from "../av/loadByDmId";
 import html from "./playlist.html";
-import { createElements } from "../../runtime/element/createElement";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { createElements } from "../../runtime/element/create_element";
+import { htmlVnode } from "../../runtime/element/html_vnode";
+import { loadVideoScript } from "../../runtime/player/embed_player";
+import { sessionStorage } from "../../runtime/storage";
+import { loadComment } from "../comment";
+import { urlObj, objUrl } from "../../runtime/format/url";
+import { replaceUrl } from "../../runtime/url_clean";
+import { path } from "../../runtime/variable/path";
+import { debug } from "../../runtime/debug";
+import { doWhile } from "../../runtime/do_while";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { jsonphookasync } from "../../runtime/hook/node";
+import { videoFloat } from "../../runtime/player/video_float";
+import { setting } from "../../runtime/setting";
+import { switchVideo } from "../../runtime/switch_video";
+import { toast } from "../../runtime/toast/toast";
+import { xhr } from "../../runtime/xhr";
+import { enLike } from "../av/en_like";
+import { loadByDmId } from "../av/load_by_dm_id";
+import { primaryMenu, banner } from "../banner";
+import { globalVector } from "../global";
+import { keepNewCheck } from "../av/keep_new";
 
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
 // 备份标题
 const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
-
-const path = location.href.split("/");
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本
 loadComment();
+
 /** 页面参数 */
 const route = urlObj(location.href);
+/** medialist类型 */
 let type = 3,
+    /** playlist id */
     pl = -1,
+    /** 原生playlist页面 */
     isPl = Boolean(path[5].startsWith("pl")),
+    /** 已加载列表锚点 */
     oid = "",
+    /** 还有更多 */
     has_more = false,
-    observer = new MutationObserver(d => Observer(d)); // 滚动锚
+    /** 滚动锚 */
+    observer = new MutationObserver(d => Observer(d));
 path[5].replace(/\d+/, d => pl = <any>d);
-if (route.business) { // 却分medialist类型
+// 区分medialist类型
+if (route.business) {
     switch (route.business) {
         case "space": type = 1;
             break;
@@ -56,7 +68,8 @@ if (route.business) { // 却分medialist类型
         default: type = 3;
     }
 }
-!isPl && replaceUrl(objUrl(`https://www.bilibili.com/playlist/video/pl${pl}`, route)); // 伪装页面
+// 伪装页面
+!isPl && replaceUrl(objUrl(`https://www.bilibili.com/playlist/video/pl${pl}`, route));
 function info(obj: Record<string, any>) {
     toview.attr = obj.data.attr;
     toview.count = obj.data.media_count;
@@ -226,3 +239,5 @@ banner();
 loadByDmId();
 // 跳过充电鸣谢
 setting.automate.electric && jsonphookasync("api.bilibili.com/x/web-interface/elec/show", undefined, async () => { return { code: -404 } }, false);
+// 全局入口
+globalVector();

@@ -1,5 +1,5 @@
-import { objUrl, urlObj } from "../format/url.js";
-import { md5 } from "./md5.js";
+import { URLEs } from "../format/url";
+import { md5 } from "./md5";
 
 class Sign {
     static table = [
@@ -27,16 +27,19 @@ class Sign {
      */
     static sign(url: string, obj: Record<string, string | number> = {}, id: number | string = 0) {
         this.keySecret = <string[]>this.decode(id);
-        obj = { ...urlObj(url), ...obj };
-        url = url.split("#")[0].split("?")[0];
-        delete obj.sign;
-        obj.appkey = this.keySecret[0];
-        const table = Object.keys(obj).sort().reduce((s, d) => {
-            s[d] = obj[d];
-            return s
-        }, <Record<string, string | number>>{});
-        table.sign = id === 3 && table.api ? (md5(objUrl("", { api: decodeURIComponent(<string>table.api) }) + this.keySecret[1])) : (md5(objUrl("", table) + this.keySecret[1]));
-        return objUrl(url, table);
+        const urlobj = new URLEs(url);
+        const params = url ? urlobj.searchParams : new URLSearchParams();
+        Object.entries(obj).forEach(d => {
+            if (d[1] || d[1] === "") {
+                params.set(d[0], <string>d[1])
+            }
+        });
+        params.delete("sign");
+        params.set("appkey", this.keySecret[0]);
+        params.sort();
+        params.set("sign", md5(id === 3 && params.has("api") ? new URLSearchParams({ api: decodeURIComponent(<string>params.get("api")) }).toString() : params.toString() + this.keySecret[1]))
+
+        return urlobj ? urlobj.toString() : params.toString();
     }
     /**
      * 提取appkey和盐

@@ -1,19 +1,19 @@
 import protobuf from "protobufjs/light";
-import { fileRead, saveAs } from "../../include/file";
+import { fileRead, saveAs } from "../lib/file";
 import { crc32 } from "../lib/crc32";
 import { debug } from "../debug";
-import { objUrl } from "../format/url";
 import { setting } from "../setting";
 import { toast } from "../toast/toast";
 import { uid } from "../variable/uid";
 import { xhr } from "../xhr";
-import bilibiliDanmaku from "./bilibiliDanmaku.json";
-import { loadCommandDm } from "./commandDm";
-import { urlParam } from "../urlParam";
+import bilibiliDanmaku from "./bilibili_danmaku.json";
+import { loadCommandDm } from "./command_dm";
+import { urlParam } from "../url_param";
 import { pushDownload } from "../download/download";
-import { LocalMedia } from "./localDanmaku";
-import { allDanmaku } from "./allDanmaku";
+import { LocalMedia } from "./local_danmaku";
+import { allDanmaku } from "./all_danmaku";
 import { API } from "../variable/variable";
+import { objUrl } from "../format/url";
 // 启动protobuf引擎
 const root = protobuf.Root.fromJSON(bilibiliDanmaku);
 /** 来自danmakuProtobuf.json文件 */
@@ -174,7 +174,7 @@ class Danmaku {
             // dmSge.total代表的分片总数，有时错误地为100
             // 故需要按照 视频时长/分片时长(一般是360秒) 把分片总数计算出来
             const pageSize = dmMeta.dmSge.pageSize ? dmMeta.dmSge.pageSize / 1000 : 360;
-            loadProgress.total = (API.player && API.player.getDuration && (API.player.getDuration() / pageSize + 1)) || dmMeta.dmSge.total;
+            loadProgress.total = ((<any>window).player && (<any>window).player.getDuration && ((<any>window).player.getDuration() / pageSize + 1)) || dmMeta.dmSge.total;
             // 其他视频的分片总数已经不能从当前window下获取
             if (aid && (aid != API.aid)) loadProgress.total = dmMeta.dmSge.total;
             let result: danmakuNew[] = []; // 弹幕栈
@@ -341,8 +341,8 @@ class Danmaku {
          */
         // setDanmaku = (dm) => {......}
 
-        if (!API.player?.setDanmaku) return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-        API.player?.setDanmaku(danmaku, append);
+        if (!(<any>window).player?.setDanmaku) return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
+        (<any>window).player?.setDanmaku(danmaku, append);
     }
     /**
      * 获取历史弹幕
@@ -409,8 +409,8 @@ export const danmaku = new Danmaku();
 window.addEventListener("message", async ev => {
     if (typeof ev.data === "object") {
         if (ev.data.$type == "onlineDanmaku") {
-            if (!API.player) return toast.warning("请在播放页面使用本功能 →_→");
-            if (!API.player.setDanmaku) return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
+            if (!(<any>window).player) return toast.warning("请在播放页面使用本功能 →_→");
+            if (!(<any>window).player.setDanmaku) return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
             if (!ev.data.url) return toast.warning("请输入视频链接或参数~");
             toast.info(`正在解析url：${ev.data.url}`);
             try {
@@ -422,7 +422,7 @@ window.addEventListener("message", async ev => {
                     if (dm) {
                         const dat = danmaku.danmakuFormat(dm);
                         toast.success("获取弹幕成功~");
-                        API.player?.setDanmaku(dat, setting.danmakuContact);
+                        (<any>window).player?.setDanmaku(dat, setting.danmakuContact);
                         setting.downloadOther && pushDownload({
                             group: "弹幕",
                             data: dat,

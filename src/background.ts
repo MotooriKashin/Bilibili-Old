@@ -1,24 +1,21 @@
-import { updateSessionRules } from "./include/updateSessionRules.js";
-import { SETTING } from "./include/setting.js";
-import { chromeCookies } from "./include/cookie.js";
+import { chromeCookies } from "./runtime/chrome/cookie";
+import { changeSetting, initSetting } from "./runtime/chrome/setting";
+import { updateSessionRules } from "./runtime/chrome/update_session_rules";
 
-// 初始化设置
-chrome.storage.local.get(SETTING).then(setting => {
-    // 更新 declarativeNetRequest 静态规则集
-    const updateRulesetOptions = Object.entries(setting).reduce((s, d) => {
-        switch (d[0]) {
-            case "report": d[1] ? s.enableRulesetIds.push("report") : s.disableRulesetIds.push("report");
-                break;
-        }
-        return s;
-    }, <Required<chrome.declarativeNetRequest.UpdateRulesetOptions>>{ disableRulesetIds: [], enableRulesetIds: [] });
-    chrome.declarativeNetRequest.updateEnabledRulesets(updateRulesetOptions);
-
-    // 保存设置
-    chrome.storage.local.set(setting);
+// 安装扩展
+chrome.management.onInstalled.addListener(i => {
+    initSetting();
 });
+// 创建浏览器窗口
+chrome.windows.onCreated.addListener(w => {
+    initSetting();
+});
+// 存储发生变化
+chrome.storage.onChanged.addListener((changes, areaName) => {
+    changeSetting();
+})
 
-// 消息接收
+// 消息传递，响应内容脚本提权操作
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (typeof message === "object") {
         switch (message.$type) {
@@ -51,13 +48,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         sender.tab?.id && chrome.tabs.sendMessage(sender.tab.id, {
                             $type: "xhrGMResponse",
                             resolve: d,
-                            index: message.data.index
+                            index: message.data.index,
+                            flag: message.data.flag
                         })
                     }, d => {
                         sender.tab?.id && chrome.tabs.sendMessage(sender.tab.id, {
                             $type: "xhrGMResponse",
                             reject: d,
-                            index: message.data.index
+                            index: message.data.index,
+                            flag: message.data.flag
                         })
                     })
                 break;
@@ -66,14 +65,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     sender.tab?.id && chrome.tabs.sendMessage(sender.tab.id, {
                         $type: "cookiesResponse",
                         resolve: d,
-                        index: message.data.index
+                        index: message.data.index,
+                        flag: message.data.flag
                     })
                 })
                 break;
         }
     }
 });
-
 // 窗口关闭
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
     // 移除关联会话规则集

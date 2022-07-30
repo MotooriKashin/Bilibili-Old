@@ -1,25 +1,29 @@
-import { createElements } from "../../runtime/element/createElement";
-import { appendScripts } from "../../runtime/element/createScripts";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { createElements } from "../../runtime/element/create_element";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { htmlVnode } from "../../runtime/element/html_vnode";
 import { xhrhook } from "../../runtime/hook/xhr";
-import { loadVideoScript } from "../../runtime/player/EmbedPlayer";
+import { loadVideoScript } from "../../runtime/player/embed_player";
 import { setting } from "../../runtime/setting";
-import { loadByDmId } from "../av/loadByDmId";
-import { banner, primaryMenu } from "../global/banner";
-import { loadComment } from "../global/comment";
-import { enLike } from "../global/enLike";
+import { sessionStorage } from "../../runtime/storage";
+import { enLike } from "../av/en_like";
+import { loadByDmId } from "../av/load_by_dm_id";
+import { primaryMenu, banner } from "../banner";
+import { loadComment } from "../comment";
+import { globalVector } from "../global";
 import script from "./script.html";
 import html from "./watchlater.html";
+import { keepNewCheck } from "../av/keep_new";
 
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
 // 备份标题
 const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
-
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本
@@ -38,8 +42,5 @@ primaryMenu();
 banner();
 // 弹幕ID跳转
 loadByDmId();
-// 顶栏动效
-window.postMessage({
-    $type: "insertCSS",
-    data: ["content/global/avatarAnimation.css"]
-})
+// 全局入口
+globalVector();

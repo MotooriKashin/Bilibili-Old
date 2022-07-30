@@ -1,8 +1,9 @@
-import { doWhile } from "../doWhile";
+import { doWhile } from "../do_while";
+import { GM } from "../gm";
 import { setting } from "../setting";
 import { sessionStorage, localStorage } from "../storage";
-import { switchVideo } from "../switchVideo";
-import { setMediaSession } from "./MediaMeta";
+import { switchVideo } from "../switch_video";
+import { setMediaSession } from "./media_meta";
 
 /** 滚动到播放器 */
 function bofqiToView() {
@@ -35,24 +36,26 @@ export function automate() {
     let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
     if (bilibili_player_settings) {
         if (bilibili_player_settings.video_status?.autopart !== "") {
-            (<any>setting).bilibili_player_settings = bilibili_player_settings;
+            GM.setValue("bilibili_player_settings", bilibili_player_settings);
         }
     } else {
-        bilibili_player_settings = (<any>setting).bilibili_player_settings;
-        bilibili_player_settings && localStorage.setItem("bilibili_player_settings", bilibili_player_settings);
+        GM.getValue("bilibili_player_settings").then(d => {
+            d && localStorage.setItem("bilibili_player_settings", d);
+        })
     }
     // 记忆播放器速率
     if (setting.automate.videospeed) {
-        const videospeed = (<any>setting).videospeed;
-        if (videospeed) {
-            let setting = sessionStorage.getItem("bilibili_player_settings");
-            setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
-            sessionStorage.setItem("bilibili_player_settings", setting);
-        }
+        GM.getValue("videospeed").then(videospeed => {
+            if (videospeed) {
+                let setting = sessionStorage.getItem("bilibili_player_settings");
+                setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
+                sessionStorage.setItem("bilibili_player_settings", setting);
+            }
+        });
         switchVideo(() => {
             doWhile(() => document.querySelector("#bofqi")?.querySelector<HTMLVideoElement>("video"), d => {
                 d.addEventListener("ratechange", e => {
-                    (<any>setting).videospeed = (<HTMLVideoElement>e.target).playbackRate || 1;
+                    GM.setValue("videospeed", (<HTMLVideoElement>e.target).playbackRate || 1);
                 });
             })
         })

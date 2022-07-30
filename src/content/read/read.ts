@@ -1,18 +1,23 @@
-import { debug } from "../../runtime/debug";
-import { appendScripts } from "../../runtime/element/createScripts";
-import { rightCopy } from "../../runtime/rightCopy";
-import { toast } from "../../runtime/toast/toast";
-import { xhr } from "../../runtime/xhr";
-import { loadComment } from "../global/comment";
 import script from "./script.html";
 import html from "./read.html";
-import { createElements } from "../../runtime/element/createElement";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { debug } from "../../runtime/debug";
+import { createElements } from "../../runtime/element/create_element";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { htmlVnode } from "../../runtime/element/html_vnode";
+import { sessionStorage } from "../../runtime/storage";
+import { toast } from "../../runtime/toast/toast";
+import { xhr } from "../../runtime/xhr";
+import { loadComment } from "../comment";
+import { rightCopyEnable } from "../../runtime/rightCopy";
+import { globalVector } from "../global";
+import { keepNewCheck } from "../av/keep_new";
 
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
 // 备份标题
 const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
@@ -80,7 +85,9 @@ xhr.get(location.href).then(data => {
     (<HTMLDivElement>document.querySelector(".page-container")).innerHTML = temp;
     appendScripts(script);
     // 解锁右键
-    rightCopy();
+    rightCopyEnable();
 }).catch(e => {
     debug.error(e)
-})
+});
+// 全局入口
+globalVector();

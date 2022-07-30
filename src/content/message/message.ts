@@ -1,4 +1,4 @@
-import { addCssEs } from "../../runtime/element/addElement"
+import { addCssEs } from "../../runtime/element/add_element"
 
 /** message页面 */
 export function messagePage() {

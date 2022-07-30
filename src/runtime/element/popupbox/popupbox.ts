@@ -1,7 +1,8 @@
-import { createElements } from "../createElement.js";
-import { htmlVnode } from "../htmlVnode.js";
+import { createElements } from "../create_element";
+import { htmlVnode } from "../html_vnode";
 import popupbox from "./popupbox.html";
 import forks from "../../../images/svg/fork.svg";
+import { mutex } from "../../variable/mutex";
 
 
 /** 配置数据 */
@@ -105,4 +106,4 @@ export class PopupBox extends HTMLElement {
         }
     }
 }
-customElements.get("popup-box") || customElements.define("popup-box", PopupBox);
+customElements.get(`popup-box${mutex}`) || customElements.define(`popup-box${mutex}`, PopupBox);

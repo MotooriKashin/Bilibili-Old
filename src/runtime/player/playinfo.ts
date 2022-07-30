@@ -1,29 +1,29 @@
 import { urlsign } from "../lib/sign";
 import { debug } from "../debug";
-import { objUrl, urlObj } from "../format/url";
 import { xhrhook, xhrhookAsync } from "../hook/xhr";
 import { setting } from "../setting";
 import { statusCheck } from "../unit";
 import { xhr } from "../xhr";
-import { closedCaption } from "./closedCaption";
-import { SegProgress } from "./segProgress";
-import { uposReplace } from "./uposReplace";
+import { closedCaption } from "./closed_caption";
+import { SegProgress } from "./seg_progress";
+import { uposReplace } from "./upos_replace";
 import { toast } from "../toast/toast";
 import { API } from "../variable/variable";
+import { urlObj, objUrl } from "../format/url";
 
 /** 播放信息相关 */
 export function playinfo() {
     xhrhook("/playurl?", args => {
         const param = urlObj(args[1]);
         args[1].includes("84956560bc028eb7") && (args[1] = urlsign(args[1], {}, 8)); // 修复失效的appid
-        args[1].includes("pgc") && (API.pgc = 1); // ogv视频
+        args[1].includes("pgc") && (API.pgc = true); // ogv视频
         // 更新关键参数
-        param.aid && (API.aid = Number(param.aid)) && (API.aid = param.aid);
-        param.avid && (API.aid = Number(param.avid)) && (API.aid = param.avid);
-        param.cid && (API.cid = Number(param.cid)) && (API.cid = param.cid);
-        param.seasonId && (API.ssid = param.seasonId);
-        param.episodeId && (API.epid = param.episodeId);
-        param.ep_id && (API.epid = param.ep_id);
+        param.aid && (API.aid = Number(param.aid)) && (API.aid = <number>param.aid);
+        param.avid && (API.aid = Number(param.avid)) && (API.aid = <number>param.avid);
+        param.cid && (API.cid = Number(param.cid)) && (API.cid = <number>param.cid);
+        param.seasonId && (API.ssid = <number>param.seasonId);
+        param.episodeId && (API.epid = <number>param.episodeId);
+        param.ep_id && (API.epid = <number>param.ep_id);
     }, obj => {
         try {
             const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, <any>setting.uposReplace.nor);

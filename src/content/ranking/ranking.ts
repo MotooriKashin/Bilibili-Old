@@ -1,22 +1,26 @@
-import { addCss } from "../../runtime/element/addElement";
-import { appendScripts } from "../../runtime/element/createScripts";
-import { jsonphook } from "../../runtime/hook/Node";
-import { replaceUrl } from "../../runtime/urlClean";
-import { banner, primaryMenu } from "../global/banner";
 import script from "./script.html";
 import html from "./ranking.html";
-import { createElements } from "../../runtime/element/createElement";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { addCss } from "../../runtime/element/add_element";
+import { createElements } from "../../runtime/element/create_element";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { htmlVnode } from "../../runtime/element/html_vnode";
+import { jsonphook } from "../../runtime/hook/node";
+import { sessionStorage } from "../../runtime/storage";
+import { replaceUrl } from "../../runtime/url_clean";
+import { primaryMenu, banner } from "../banner";
+import { globalVector } from "../global";
+import { keepNewCheck } from "../av/keep_new";
 
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
 // 备份标题
 const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
-
 // 还原旧版排行榜URL 原生脚本赖以初始化
 replaceUrl(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
 // 三日接口以外过期
@@ -31,3 +35,5 @@ addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !import
 primaryMenu();
 // 顶栏banner修复
 banner();
+// 全局入口
+globalVector();

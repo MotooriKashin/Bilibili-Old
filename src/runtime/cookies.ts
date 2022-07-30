@@ -21,27 +21,3 @@ export function setCookie(name: string, value: string, days = 365) {
     exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1000);
     document.cookie = name + '=' + escape(value) + ';expires=' + exp.toUTCString() + '; path=/; domain=.bilibili.com';
 }
-/** cookies请求栈 */
-const CookiesEs: [(value: chrome.cookies.Cookie[]) => void, (reason?: any) => void][] = [];
-window.addEventListener("message", ev => {
-    if (typeof ev.data === "object") {
-        if (ev.data.$type == "cookiesResponse") {
-            if (CookiesEs[ev.data.index]) {
-                ev.data.resolve && CookiesEs[ev.data.index][0](ev.data.resolve);
-                ev.data.reject && CookiesEs[ev.data.index][1](ev.data.reject);
-            }
-        }
-    }
-})
-/** 获取cookie序列 突破httponly限制 */
-export function getCookiesEs() {
-    return new Promise((resolve: (value: chrome.cookies.Cookie[]) => void, reject) => {
-        window.postMessage({
-            $type: "getCookies",
-            data: {
-                url: "bilibili.com",
-                index: CookiesEs.push([resolve, reject]) - 1
-            }
-        })
-    })
-}

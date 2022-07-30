@@ -1,14 +1,13 @@
-import { doWhile } from "../../runtime/doWhile";
-import { createElement } from "../../runtime/element/createElement";
+import { doWhile } from "../../runtime/do_while";
+import { createElement } from "../../runtime/element/create_element";
 import { timeFormat } from "../../runtime/format/time";
-import { objUrl } from "../../runtime/format/url";
+import { GM } from "../../runtime/gm";
 import { jsonCheck } from "../../runtime/unit";
-import { xhr } from "../../runtime/xhr";
 
 /** 注册时间 */
 export function jointime(mid: number) {
     doWhile(() => document.querySelector(".section.user-info"), t => {
-        xhr.GM(objUrl("https://account.bilibili.com/api/member/getCardByMid", { "mid": mid }))
+        GM.xmlHttpRequest(`https://account.bilibili.com/api/member/getCardByMid"?mid=${mid}`)
             .then(d => {
                 const data = jsonCheck(d);
                 const jointime = timeFormat(data.card.regtime * 1000, true);

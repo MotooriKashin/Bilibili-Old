@@ -1,7 +1,9 @@
-import { objUrl, urlObj } from "../format/url.js";
-import { setting } from "../setting.js";
-import { fnval } from "../variable/fnval.js";
-import { urlsign } from "./sign.js";
+import { GM } from "../gm";
+import { setting } from "../setting";
+import { fnval } from "../variable/fnval";
+import { xhr } from "../xhr";
+import { objUrl } from "../format/url";
+import { urlsign } from "./sign";
 
 class UrlPack {
     get ts() {
@@ -30,16 +32,16 @@ class UrlPack {
      * 请求封装好的json请求
      * @param url 请求的url
      * @param detail 请求所需配置数据
-     * @param GM 是否使用跨域请求
+     * @param gm 是否使用跨域请求
      * @returns Promise封装的返回值
      */
-    getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T]) {
-        let obj: any = { ...(this.jsonUrlDefault[url] || {}), ...detail };
-        (Number(Reflect.get(obj, "appkey")) >= 0) && (obj = this.sign(obj));
-        return fetch(objUrl(`//${url}`, obj), { credentials: "include" }).then(d => d.json())
-    }
-    sign(obj: any) {
-        return urlObj(`?${urlsign("", obj, obj.appkey)}`);
+    getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T], gm?: boolean) {
+        const str = objUrl(url, <any>Object.assign(this.jsonUrlDefault[url], detail));
+        return gm ? GM.xmlHttpRequest((<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str, { credentials: "include" }).then(d => JSON.parse(d)) : xhr({
+            url: (<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str,
+            responseType: "json",
+            credentials: true
+        });
     }
 }
 /**

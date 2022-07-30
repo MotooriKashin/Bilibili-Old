@@ -46,13 +46,15 @@ export function jsonphook(url: string | string[], redirect?: (url: string) => st
         if (redirect) try { this.src = redirect(this.src) || this.src } catch (e) { debug.error("redirect of jsonphook", one, e) }
         if (modifyResponse) {
             const obj = urlObj(this.src);
-            const callback: any = obj.callback;
-            const call: any = window[callback];
-            const url = this.src;
-            if (call) {
-                (<any>window)[callback] = function (v: any) {
-                    try { v = modifyResponse(v, url, call) || v } catch (e) { debug.error("modifyResponse of jsonphook", one, e) }
-                    return v !== true && call(v);
+            if (obj) {
+                const callback: any = obj.callback;
+                const call: any = window[callback];
+                const url = this.src;
+                if (call) {
+                    (<any>window)[callback] = function (v: any) {
+                        try { v = modifyResponse(v, url, call) || v } catch (e) { debug.error("modifyResponse of jsonphook", one, e) }
+                        return v !== true && call(v);
+                    }
                 }
             }
         }
@@ -75,18 +77,20 @@ export function jsonphookasync(url: string | string[], condition?: (url: string)
             once && id && delete jsonp[id - 1];
             if (!condition || condition(this.src)) {
                 const obj = urlObj(this.src);
-                const callback = obj.callback;
-                const call = (<any>window)[callback];
-                if (call) {
-                    modifyResponse && modifyResponse(this.src).then(d => {
-                        (<any>window)[callback](d);
-                        this.dispatchEvent(new ProgressEvent("load"));
-                    }).catch(e => {
-                        this.dispatchEvent(new ProgressEvent("error"));
-                        debug.error("modifyResponse of xhrhookasync", one, e);
-                    })
+                if (obj) {
+                    const callback: any = obj.callback;
+                    const call = (<any>window)[callback];
+                    if (call) {
+                        modifyResponse && modifyResponse(this.src).then(d => {
+                            (<any>window)[callback](d);
+                            this.dispatchEvent(new ProgressEvent("load"));
+                        }).catch(e => {
+                            this.dispatchEvent(new ProgressEvent("error"));
+                            debug.error("modifyResponse of xhrhookasync", one, e);
+                        })
+                    }
+                    this.removeAttribute("src");
                 }
-                this.removeAttribute("src");
             }
         } catch (e) { debug.error("jsonphook", one, e) }
     }

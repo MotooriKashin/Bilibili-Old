@@ -1,7 +1,7 @@
-import { addCss } from "./element/addElement.js";
+import { addCss } from "./element/add_element";
 
 /** 右键复制 */
-export function rightCopy() {
+export function rightCopyEnable() {
     addCss(`* {
         -webkit-user-select: text !important;
         -moz-user-select: text !important;

@@ -1,42 +1,37 @@
-// 用于执行用户脚本中执行不了的操作
-import { abv } from "../../runtime/lib/abv";
-import { doWhile } from "../../runtime/doWhile";
-import { addElement } from "../../runtime/element/addElement";
-import { createElements } from "../../runtime/element/createElement";
-import { htmlVnode, Vdom } from "../../runtime/element/htmlVnode";
-import { urlObj } from "../../runtime/format/url";
-import { getTotalTop, jsonCheck } from "../../runtime/unit";
-import { jsonphook, jsonphookasync } from "../../runtime/hook/Node";
-import { uid } from "../../runtime/variable/uid";
-import news from "./news.html";
-import { unitFormat } from "../../runtime/format/unit";
-import { banner, primaryMenu } from "../global/banner";
-import { xhrhook } from "../../runtime/hook/xhr";
-import { timeline } from "./timeline";
-import { appendScripts } from "../../runtime/element/createScripts";
 import { debug } from "../../runtime/debug";
-import { toast } from "../../runtime/toast/toast";
+import { doWhile } from "../../runtime/do_while";
+import { addElement } from "../../runtime/element/add_element";
+import { createElements } from "../../runtime/element/create_element";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { htmlVnode, Vdom } from "../../runtime/element/html_vnode";
+import { jsonphook, jsonphookasync } from "../../runtime/hook/node";
+import { abv } from "../../runtime/lib/abv";
+import { urlObj } from "../../runtime/format/url";
 import { setting } from "../../runtime/setting";
+import { toast } from "../../runtime/toast/toast";
+import { uid } from "../../runtime/variable/uid";
+import { adblock } from "./ad_block";
 import html from "./index.html";
+import news from "./news.html";
+import { __INITIAL_STATE__ } from "./initial_state";
+import { recommendData } from "./recommend_data";
+import { xhrhook } from "../../runtime/hook/xhr";
+import { getTotalTop, jsonCheck } from "../../runtime/unit";
+import { unitFormat } from "../../runtime/format/unit";
+import { timeline } from "./timeline";
+import { banner, primaryMenu } from "../banner";
+import { sessionStorage } from "../../runtime/storage";
+import { globalVector } from "../global";
+import { keepNewCheck } from "../av/keep_new";
 
-
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
-// 刷新样式表
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
+// 重构页面框架
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
-const __INITIAL_STATE__: any = (<any>window).__INITIAL_STATE__ = {
-    locsData: {
-        23: null,
-        29: null,
-        31: null,
-        34: null,
-        40: null,
-        42: null,
-        44: null,
-        142: null
-    },
-    recommendData: null
-};
+// 写入__INITIAL_STATE__
+(<any>window).__INITIAL_STATE__ = __INITIAL_STATE__;
 // 启动原生脚本
 appendScripts(`
 <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"></script>
@@ -45,14 +40,6 @@ appendScripts(`
 <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"></script>
 <script src="//static.hdslb.com/common/js/footer.js"></script>
 `);
-/**
- * 广告过滤
- * @param prev 原始locsData
- * @returns 无广告数据
- */
-function adblock(prev: Record<"is_ad", boolean>[]) {
-    return prev.filter(d => !d.is_ad);
-}
 // 初始化locsData
 fetch("https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,29,31,34,40,42,44")
     .then(d => d.text())
@@ -69,6 +56,7 @@ fetch("https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,29,31,34,40,42
         debug.error("获取推荐数据失败 ಥ_ಥ", reason);
         toast.error("获取推荐数据失败 ಥ_ಥ");
     });
+// 修复首页推荐
 recommendData(setting.privateRecommend).then(d => {
     if (uid && setting.privateRecommend) {
         __INITIAL_STATE__.recommendData = d;
@@ -88,31 +76,20 @@ recommendData(setting.privateRecommend).then(d => {
         __INITIAL_STATE__.recommendData = [...one];
         jsonphookasync("api.bilibili.com/x/web-interface/ranking/index", undefined, async str => {
             const obj = urlObj(str);
-            if (obj.day == "7") {
-                return { code: 0, data: two, message: "0", ttl: 1 };
-            } else if (obj.day == "1") {
-                return { code: 0, data: d, message: "0", ttl: 1 };
+            if (obj) {
+                if (obj.day == "7") {
+                    return { code: 0, data: two, message: "0", ttl: 1 };
+                } else if (obj.day == "1") {
+                    return { code: 0, data: d, message: "0", ttl: 1 };
+                }
+                return { code: 0, data: one, message: "0", ttl: 1 };
             }
-            return { code: 0, data: one, message: "0", ttl: 1 };
         }, false);
     }
 }).catch(reason => {
     toast.error("获取推荐数据失败 ಥ_ಥ");
     debug.error("获取推荐数据失败 ಥ_ಥ", reason);
 });
-/** 获取recommendData */
-async function recommendData(privateRecommend = false) {
-    const d = await fetch("https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3", {
-        credentials: privateRecommend ? "include" : "omit"
-    }).then(d => d.json());
-    d.data.item.forEach((d_1: any, i: number, s: any) => {
-        // 修正数据名
-        s[i].author = d_1.owner.name;
-        s[i].play = d_1.stat.view;
-        s[i].aid = d_1.id;
-    });
-    return d.data.item;
-}
 // 分区修正
 doWhile(() => document.querySelector("#ranking_ad"), () => {
     const vue = (<any>document.querySelector("#app > div.report-wrap-module.elevator-module")).__vue__;
@@ -161,9 +138,9 @@ xhrhook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", args => {
 jsonphook(["newlist", "rid=202"], url => url.replace("rid=202", "rid=203"), undefined, false);
 // 修正电影/电视剧/纪录片排行
 jsonphook("api.bilibili.com/x/web-interface/ranking/region", url => {
-    const obj = urlObj(url);
+    const obj = new URL(url);
     let arr: [HTMLDivElement, number, string] = <any>undefined;
-    switch (obj.rid) {
+    switch (obj.searchParams.get("rid")) {
         case "23":
             arr = [<HTMLDivElement>document.querySelector("#ranking_movie"), 2, "/ranking/cinema/23/0/3"];
             break;
@@ -204,14 +181,10 @@ jsonphook("api.bilibili.com/x/web-interface/ranking/region", url => {
     }
     return url;
 }, undefined, false);
-primaryMenu(); // 顶栏分区修正
-banner(); // banner修复
 // 添加港澳台新番时间表
 xhrhook("api.bilibili.com/pgc/web/timeline?types=1", undefined, res => {
     setting.timeline && timeline();
 });
-// 顶栏动效
-window.postMessage({
-    $type: "insertCSS",
-    data: ["content/global/avatarAnimation.css"]
-})
+primaryMenu(); // 顶栏分区修正
+banner(); // banner修复
+globalVector(); // 全局入口

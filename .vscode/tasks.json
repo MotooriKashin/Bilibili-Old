@@ -6,17 +6,7 @@
 			"script": "tsc",
 			"problemMatcher": [],
 			"label": "npm: tsc",
-			"detail": "TypeScript编译",
-			"dependsOn": [
-				"npm: dist"
-			]
-		},
-		{
-			"type": "npm",
-			"script": "dist",
-			"problemMatcher": [],
-			"label": "npm: dist",
-			"detail": "生成【加载已解压的扩展程序】目录"
+			"detail": "TypeScript编译"
 		},
 		{
 			"type": "npm",
@@ -27,17 +17,25 @@
 		},
 		{
 			"type": "npm",
-			"script": "esbuild",
+			"script": "test",
+			"group": "test",
 			"problemMatcher": [],
-			"label": "npm: esbuild",
-			"detail": "打包内容脚本",
+			"label": "npm: test",
+			"detail": "编译：开发模式",
 			"dependsOn": [
 				"npm: tsc"
-			],
+			]
+		},
+		{
+			"type": "npm",
+			"script": "build",
 			"group": {
 				"kind": "build",
 				"isDefault": true
-			}
+			},
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "编译：发行模式"
 		}
 	]
 }

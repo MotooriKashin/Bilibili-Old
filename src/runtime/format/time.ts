@@ -1,4 +1,4 @@
-import { integerFormat } from "./integer.js";
+import { integerFormat } from "./integer";
 
 /**
  * 格式化时间

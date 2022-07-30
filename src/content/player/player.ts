@@ -1,25 +1,23 @@
-import { doWhile } from "../../runtime/doWhile";
-import { createElements } from "../../runtime/element/createElement";
-import { appendScripts } from "../../runtime/element/createScripts";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
-import { objUrl } from "../../runtime/format/url";
-import { loadVideoScript } from "../../runtime/player/EmbedPlayer";
-import { getUrlValue } from "../../runtime/unit";
-import { urlParam } from "../../runtime/urlParam";
 import script from "./script.html";
 import html from "./player.html";
+import { createElements } from "../../runtime/element/create_element";
+import { htmlVnode } from "../../runtime/element/html_vnode";
+import { loadVideoScript } from "../../runtime/player/embed_player";
+import { sessionStorage } from "../../runtime/storage";
+import { doWhile } from "../../runtime/do_while";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { objUrl } from "../../runtime/format/url";
+import { getUrlValue } from "../../runtime/unit";
+import { urlParam } from "../../runtime/url_param";
+import { globalVector } from "../global";
 
-
-// 备份标题
-const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
+// 重写标记
+sessionStorage.setItem("rebuild", true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
-// 还原标题
-title && !title.includes("404") && (document.title = title);
 // 加载播放器脚本
 loadVideoScript(undefined, true);
+// 正域
 document.domain = "bilibili.com";
 // 加载原生脚本
 appendScripts(script).then(() => {
@@ -61,3 +59,5 @@ appendScripts(script).then(() => {
         } catch (e) { }
     });
 });
+// 全局入口
+globalVector();

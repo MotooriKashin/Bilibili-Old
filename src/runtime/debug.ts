@@ -1,4 +1,4 @@
-import { timeFormat } from "./format/time.js";
+import { timeFormat } from "./format/time";
 
 /** 分组标记 */
 const group = {

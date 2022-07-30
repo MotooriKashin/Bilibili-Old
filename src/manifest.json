@@ -6,7 +6,7 @@
             "32": "/images/icon32.png",
             "48": "/images/icon48.png"
         },
-        "default_popup": "popup/popup.html"
+        "default_popup": "popup.html"
     },
     "background": {
         "service_worker": "background.js",
@@ -16,11 +16,10 @@
         {
             "all_frames": true,
             "js": [
-                "content/content.js"
+                "content.js"
             ],
             "matches": [
-                "http://*.bilibili.com/*",
-                "https://*.bilibili.com/*"
+                "*://*.bilibili.com/*"
             ],
             "run_at": "document_start"
         }
@@ -37,9 +36,7 @@
     "default_locale": "zh_CN",
     "description": "__MSG_description__",
     "host_permissions": [
-        "file:///*",
-        "http://*/*",
-        "https://*/*"
+        "<all_urls>"
     ],
     "icons": {
         "128": "/images/icon128.png",
@@ -49,13 +46,14 @@
     },
     "manifest_version": 3,
     "name": "__MSG_name__",
-    "options_page": "options/options.html",
+    "options_page": "options.html",
     "permissions": [
         "storage",
         "tabs",
         "activeTab",
         "scripting",
         "cookies",
+        "management",
         "declarativeNetRequest",
         "declarativeNetRequestWithHostAccess",
         "declarativeNetRequestFeedback"
@@ -64,14 +62,10 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "content/*",
-                "content/**/*",
-                "bilibili/*",
-                "bilibili/**/*"
+                "*"
             ],
             "matches": [
-                "http://*.bilibili.com/*",
-                "https://*.bilibili.com/*"
+                "*://*.bilibili.com/*"
             ]
         }
     ]

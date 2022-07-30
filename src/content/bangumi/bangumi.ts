@@ -1,37 +1,42 @@
-import { debug } from "../../runtime/debug";
-import { addCss } from "../../runtime/element/addElement";
-import { appendScripts } from "../../runtime/element/createScripts";
-import { xhrhook, xhrhookAsync } from "../../runtime/hook/xhr";
-import { loadVideoScript } from "../../runtime/player/EmbedPlayer";
-import { setting } from "../../runtime/setting";
-import { jsonCheck } from "../../runtime/unit";
-import { xhr } from "../../runtime/xhr";
-import { loadByDmId } from "../av/loadByDmId";
-import { banner, primaryMenu } from "../global/banner";
-import { loadComment } from "../global/comment";
-import { enLike } from "../global/enLike";
-import { bangumiInitialState } from "./bangumi-initial-state";
-import { episodeData } from "./episodeData";
 import script from "./script.html";
 import html from "./bangumi.html";
-import { createElements } from "../../runtime/element/createElement";
-import { htmlVnode } from "../../runtime/element/htmlVnode";
+import { createElements } from "../../runtime/element/create_element";
+import { htmlVnode } from "../../runtime/element/html_vnode";
+import { sessionStorage } from "../../runtime/storage";
 import { API } from "../../runtime/variable/variable";
+import { loadVideoScript } from "../../runtime/player/embed_player";
+import { loadComment } from "../comment";
+import { xhrhook, xhrhookAsync } from "../../runtime/hook/xhr";
+import { jsonCheck } from "../../runtime/unit";
+import { setting } from "../../runtime/setting";
+import { debug } from "../../runtime/debug";
+import { xhr } from "../../runtime/xhr";
+import { appendScripts } from "../../runtime/element/create_scripts";
+import { addCss } from "../../runtime/element/add_element";
+import { enLike } from "../av/en_like";
+import { bangumiInitialState } from "./bangumi_initial_state";
+import { loadByDmId } from "../av/load_by_dm_id";
+import { primaryMenu, banner } from "../banner";
+import { episodeData } from "./episode_data";
+import { globalVector } from "../global";
+import { keepNewCheck } from "../av/keep_new";
 
+// 重写检查
+keepNewCheck();
+// 重写标记
+sessionStorage.setItem("rebuild", true);
 // 备份标题
 const title = document.title;
-// 清理样式表
-Array.from(document.styleSheets).forEach(d => d.disabled = true);
 // 刷新样式表
 document.documentElement.replaceWith(createElements(htmlVnode(html)));
 // 还原标题
 title && !title.includes("404") && (document.title = title);
 
 // bangumi标记
-API.pgc = 1;
+API.pgc = true;
 // bangumi参数信息
-location.href.replace(/[sS][sS]\d+/, d => API.ssid = d.substring(2));
-location.href.replace(/[eE][pP]\d+/, d => API.epid = d.substring(2));
+location.href.replace(/[sS][sS]\d+/, d => API.ssid = <any>Number(d.substring(2)));
+location.href.replace(/[eE][pP]\d+/, d => API.epid = <any>Number(d.substring(2)));
 // 加载播放器脚本
 loadVideoScript();
 // 评论脚本
@@ -88,9 +93,6 @@ xhrhookAsync("x/web-interface/archive/related", () => ((<any>window).__INITIAL_S
     }
     return t === "json" ? { response: JSON.parse(result) } : { response: result, responseText: result }
 }, false);
-
-// 加载原生脚本
-appendScripts(script);
 // 初始化__INITIAL_STATE__
 bangumiInitialState().then(() => {
     setting.enlike && new enLike("bangumi", (<any>window).__INITIAL_STATE__.mediaInfo.stat.likes);
@@ -102,6 +104,8 @@ bangumiInitialState().then(() => {
     // epid回调经常无法触发导致不加载评论区，手动加载之
     // doWhile(() => (<any>document).querySelector("#app")?.__vue__, d => d.loadComment());
 });
+// 加载原生脚本
+appendScripts(script);
 // 顶栏分区修正
 primaryMenu();
 // 顶栏banner修复
@@ -110,8 +114,5 @@ banner();
 loadByDmId();
 // 分集数据
 episodeData();
-// 顶栏动效
-window.postMessage({
-    $type: "insertCSS",
-    data: ["content/global/avatarAnimation.css"]
-})
+// 全局入口
+globalVector();

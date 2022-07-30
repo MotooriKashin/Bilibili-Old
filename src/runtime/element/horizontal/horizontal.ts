@@ -1,5 +1,6 @@
-import { createElements } from "../createElement.js";
-import { htmlVnode } from "../htmlVnode.js";
+import { mutex } from "../../variable/mutex";
+import { createElements } from "../create_element";
+import { htmlVnode } from "../html_vnode";
 import horizontal from "./horizontal.html";
 
 
@@ -11,4 +12,4 @@ export class HorizontalLine extends HTMLElement {
         root.appendChild(createElements(htmlVnode(horizontal)));
     }
 }
-customElements.get("horizontal-line") || customElements.define("horizontal-line", HorizontalLine);
+customElements.get(`horizontal-line${mutex}`) || customElements.define(`horizontal-line${mutex}`, HorizontalLine);
