@@ -1,7 +1,8 @@
 import { debug } from "../runtime/debug";
 import { doWhile } from "../runtime/do_while";
-import { addCss, addCssEs, addElement, loadScript } from "../runtime/element/add_element";
+import { addCss, addElement, loadScript } from "../runtime/element/add_element";
 import { banner, primaryMenu } from "./banner";
+import css from "../content/avatar_animation.css";
 
 /** 加载底栏脚本 */
 async function header(menu = false) {
@@ -91,7 +92,7 @@ export function section() {
     })
     // 鼠标放在顶栏上的动效
     doWhile(() => document.querySelector("#bili-header-m"), () => {
-        addCssEs("content/avatar_animation.css");
+        addCss(css);
     });
     // v3版顶栏
     doWhile(() => (document.body && document.body.classList.contains("header-v3")) || document.querySelector("#bili-header-container"), () => {

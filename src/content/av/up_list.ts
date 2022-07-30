@@ -1,5 +1,6 @@
 import { doWhile } from "../../runtime/do_while";
-import { addCssEs } from "../../runtime/element/add_element";
+import { addCss } from "../../runtime/element/add_element";
+import css from "../../content/av/up_list.css";
 
 export function upList(staff: Record<string, any>[]) {
     doWhile(() => document.querySelector<HTMLDivElement>("#v_upinfo"), node => {
@@ -15,6 +16,6 @@ export function upList(staff: Record<string, any>[]) {
             return s;
         }, fl) + `</div>`;
         node.innerHTML = fl;
-        addCssEs("content/av/up_list.css");
+        addCss(css);
     });
 }

@@ -8,6 +8,8 @@ const getValue: [(value: any) => void, (reason?: any) => void][] = [];
 const cookiesEs: [(value: chrome.cookies.Cookie[]) => void, (reason?: any) => void][] = [];
 // 内容脚本回调
 window.addEventListener("message", ev => {
+    // 用户脚本兼容
+    if (GM_getValue) return GM_getValue("config");
     if (typeof ev.data === "object" && ev.data.flag === mutex) {
         switch (ev.data.$type) {
             case "xhrGMResponse":

@@ -1,14 +1,15 @@
 import { midcrc } from "../lib/crc32";
 import { debug } from "../debug";
-import { addCssEs } from "../element/add_element";
+import { addCss } from "../element/add_element";
 import { toast } from "../toast/toast";
 import { jsonCheck } from "../unit";
 import { xhr } from "../xhr";
 import { objUrl } from "../format/url";
+import css from "./danmaku_hash_id.css";
 
 /** 反查弹幕发送者 */
 export function danmakuHashId() {
-    addCssEs("runtime/danmaku/danmaku_hash_id.css");
+    addCss(css);
     class DanmakuHashId {
         static count: number = 0; // 正在查询弹幕数
         static catch: { [name: string]: any } = {}; // 已查询弹幕缓存

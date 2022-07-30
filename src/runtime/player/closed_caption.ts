@@ -1,12 +1,13 @@
 import { saveAs } from "../lib/file";
 import { debug } from "../debug";
 import { pushDownload } from "../download/download";
-import { addCss, addCssEs, addElement } from "../element/add_element";
+import { addCss, addElement } from "../element/add_element";
 import { cht2chs } from "../format/cht_2_chs";
 import { setting } from "../setting";
 import { API } from "../variable/variable";
 import { videoFloat } from "./video_float";
 import { GM } from "../gm";
+import css from "./closed_caption.css";
 
 /**
  * 旧版播放器支持CC字幕  
@@ -87,7 +88,7 @@ class ClosedCaption {
         this.fontshadow();
         this.fontposition();
         this.fontopacrity();
-        addCssEs("runtime/player/closed_caption.css");
+        addCss(css);
         this.changeResize();
         this.changePosition();
     }

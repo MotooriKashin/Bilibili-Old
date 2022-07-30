@@ -1,5 +1,5 @@
 import { debug } from "../debug";
-import { addCssEs } from "../element/add_element";
+import { addCss } from "../element/add_element";
 import { getCookies } from "../cookies";
 import { toast } from "../toast/toast";
 import { biliQuickLogin } from "../unit";
@@ -7,8 +7,9 @@ import { uid } from "../variable/uid";
 import { xhr } from "../xhr";
 import { API } from "../variable/variable";
 import { objUrl } from "../format/url";
+import css from "../danmaku/command_dm.css";
 
-addCssEs("runtime/danmaku/command_dm.css");
+addCss(css);
 let player: any, widgetContainer: any;
 let playing = false;
 let visible = true;

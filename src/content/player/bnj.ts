@@ -1,9 +1,10 @@
 import { doWhile } from "../../runtime/do_while";
-import { addCssEs } from "../../runtime/element/add_element";
+import { addCss } from "../../runtime/element/add_element";
+import css from "../../content/player/bnj.css";
 
 /** 拜年祭页面 */
 export function bnj() {
-    addCssEs("content/player/bnj.css");
+    addCss(css);
     (<any>window).bnj = false; // 是否载入
     const arr: any[] = []; // 接口暂存
     // 以嵌入式播放器替换原播放器
