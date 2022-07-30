@@ -3,7 +3,6 @@ import html from "./player.html";
 import { createElements } from "../../runtime/element/create_element";
 import { htmlVnode } from "../../runtime/element/html_vnode";
 import { loadVideoScript } from "../../runtime/player/embed_player";
-import { sessionStorage } from "../../runtime/storage";
 import { doWhile } from "../../runtime/do_while";
 import { appendScripts } from "../../runtime/element/create_scripts";
 import { objUrl } from "../../runtime/format/url";
@@ -12,8 +11,6 @@ import { urlParam } from "../../runtime/url_param";
 import { globalVector } from "../global";
 
 export function palyerPage() {
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 刷新样式表
     document.documentElement.replaceWith(createElements(htmlVnode(html)));
     // 加载播放器脚本

@@ -4,7 +4,6 @@ import html from "./playlist.html";
 import { createElements } from "../../runtime/element/create_element";
 import { htmlVnode } from "../../runtime/element/html_vnode";
 import { loadVideoScript } from "../../runtime/player/embed_player";
-import { sessionStorage } from "../../runtime/storage";
 import { loadComment } from "../comment";
 import { urlObj, objUrl } from "../../runtime/format/url";
 import { replaceUrl } from "../../runtime/url_clean";
@@ -27,8 +26,6 @@ import { keepNewCheck } from "../av/keep_new";
 export function playlistPage() {
     // 重写检查
     keepNewCheck();
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 备份标题
     const title = document.title;
     // 刷新样式表

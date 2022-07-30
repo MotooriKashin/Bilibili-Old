@@ -4,7 +4,6 @@ import { jsonphookasync } from "../../runtime/hook/node";
 import { webpackhook } from "../../runtime/hook/webpack_jsonp";
 import { loadVideoScript } from "../../runtime/player/embed_player";
 import { setting } from "../../runtime/setting";
-import { sessionStorage } from "../../runtime/storage";
 import { loadComment } from "../comment";
 import html from "./av.html";
 import script from "./script.html";
@@ -21,8 +20,6 @@ import { keepNewCheck } from "./keep_new";
 export function avPage() {
     // 重写检查
     keepNewCheck();
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 重定向SEO页面
     location.href.includes("/s/video") && replaceUrl(location.href.replace("/s/video", "/video"));
     // 备份标题

@@ -93,7 +93,8 @@ import("fs-extra").then(d => {
                     charset: 'utf8', // 文件编码
                     loader: { // 文件对应的解析方式
                         '.html': 'text', // HTML文件解析为字符串
-                        '.svg': 'text' // HTML文件解析为字符串
+                        '.svg': 'text', // HTML文件解析为字符串
+                        ".css": 'text' // css文件解析为字符串
                     },
                     // splitting: true, // 拆分文件 文件拆分只支持esm格式暂时不现实
                     // chunkNames: 'chunks/[name]-[hash]', // 拆分块名称
@@ -114,12 +115,13 @@ import("fs-extra").then(d => {
                     bundle: true, // 打包
                     outdir: 'dist', // 输出目录
                     outbase: "src", // 输入目录
-                    format: 'esm', // 输出格式
+                    format: 'iife', // 输出格式
                     treeShaking: true, // 清除无效代码
                     charset: 'utf8', // 文件编码
                     loader: { // 文件对应的解析方式
                         '.html': 'text', // HTML文件解析为字符串
-                        '.svg': 'text' // HTML文件解析为字符串
+                        '.svg': 'text', // HTML文件解析为字符串
+                        ".css": 'text' // css文件解析为字符串
                     }
                 }
             ).then(async () => {

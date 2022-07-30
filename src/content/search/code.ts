@@ -2,7 +2,6 @@ import { doWhile } from "../../runtime/do_while";
 import { createElements } from "../../runtime/element/create_element";
 import { appendScripts } from "../../runtime/element/create_scripts";
 import { htmlVnode } from "../../runtime/element/html_vnode";
-import { sessionStorage } from "../../runtime/storage";
 import { replaceUrl } from "../../runtime/url_clean";
 import { globalVector } from "../global";
 import script from "./script.html";
@@ -12,8 +11,6 @@ import { keepNewCheck } from "../av/keep_new";
 export function searchPage() {
     // 重写检查
     keepNewCheck();
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 备份标题
     const title = document.title;
     // 刷新样式表

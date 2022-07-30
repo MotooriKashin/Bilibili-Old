@@ -1,6 +1,4 @@
-import { addCss } from "../runtime/element/add_element";
 import { setting } from "../runtime/setting";
-import { sessionStorage } from "../runtime/storage";
 import { path } from "../runtime/variable/path";
 import { API } from "../runtime/variable/variable";
 import { loadComment } from "./comment";
@@ -16,7 +14,6 @@ import { section } from "./section";
 import { album } from "./space/album";
 import { spacePage } from "./space/space";
 import { disableWebRTC } from "./web_rtc";
-import css from "../content/avatar_animation.css";
 import { isUserScript } from "../tampermonkey/check";
 
 export function globalVector() {
@@ -24,15 +21,10 @@ export function globalVector() {
     if ((<any>window).BILIOLD_GOLBAL) return;
     (<any>window).BILIOLD_GOLBAL = true;
 
-    if (!sessionStorage.getItem("rebuild")) {
-        // 旧版顶栏底栏
-        setting.section && section();
-        // 翻页评论区
-        setting.comment && loadComment();
-    } else {
-        // 顶栏动效
-        addCss(css);
-    }
+    // 旧版顶栏底栏
+    setting.section && section();
+    // 翻页评论区
+    setting.comment && loadComment();
     // 日志拦截
     setting.logReport && blockReport();
     // 拜年祭

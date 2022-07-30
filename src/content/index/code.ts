@@ -20,15 +20,12 @@ import { getTotalTop, jsonCheck } from "../../runtime/unit";
 import { unitFormat } from "../../runtime/format/unit";
 import { timeline } from "./timeline";
 import { banner, primaryMenu } from "../banner";
-import { sessionStorage } from "../../runtime/storage";
 import { globalVector } from "../global";
 import { keepNewCheck } from "../av/keep_new";
 
 export function indexPage() {
     // 重写检查
     keepNewCheck();
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 重构页面框架
     document.documentElement.replaceWith(createElements(htmlVnode(html)));
     // 写入__INITIAL_STATE__

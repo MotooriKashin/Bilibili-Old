@@ -4,7 +4,6 @@ import { htmlVnode } from "../../runtime/element/html_vnode";
 import { xhrhook } from "../../runtime/hook/xhr";
 import { loadVideoScript } from "../../runtime/player/embed_player";
 import { setting } from "../../runtime/setting";
-import { sessionStorage } from "../../runtime/storage";
 import { enLike } from "../av/en_like";
 import { loadByDmId } from "../av/load_by_dm_id";
 import { primaryMenu, banner } from "../banner";
@@ -17,8 +16,6 @@ import { keepNewCheck } from "../av/keep_new";
 export function watchlaterPage() {
     // 重写检查
     keepNewCheck();
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 备份标题
     const title = document.title;
     // 刷新样式表

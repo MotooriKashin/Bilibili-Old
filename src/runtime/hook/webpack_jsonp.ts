@@ -8,7 +8,10 @@ Object.defineProperty(window, "webpackJsonp", {
     set: v => hook = v,
     get: () => {
         if (hook) {
-            if (isArray(hook)) return hook;
+            if (isArray(hook)) {
+                if (hook.length > 1) hook.shift();
+                return hook;
+            };
             return (chunkIds: any[], moreModules: any[], executeModules: any[]) => {
                 if (arr[moreModules.length]) {
                     const obj = arr[moreModules.length];

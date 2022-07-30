@@ -2,7 +2,6 @@ import script from "./script.html";
 import html from "./bangumi.html";
 import { createElements } from "../../runtime/element/create_element";
 import { htmlVnode } from "../../runtime/element/html_vnode";
-import { sessionStorage } from "../../runtime/storage";
 import { API } from "../../runtime/variable/variable";
 import { loadVideoScript } from "../../runtime/player/embed_player";
 import { loadComment } from "../comment";
@@ -24,8 +23,6 @@ import { keepNewCheck } from "../av/keep_new";
 export function bangumiPage() {
     // 重写检查
     keepNewCheck();
-    // 重写标记
-    sessionStorage.setItem("rebuild", true);
     // 备份标题
     const title = document.title;
     // 刷新样式表

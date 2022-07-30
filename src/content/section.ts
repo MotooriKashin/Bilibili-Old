@@ -2,7 +2,7 @@ import { debug } from "../runtime/debug";
 import { doWhile } from "../runtime/do_while";
 import { addCss, addElement, loadScript } from "../runtime/element/add_element";
 import { banner, primaryMenu } from "./banner";
-import css from "../content/avatar_animation.css";
+import css from "./avatar_animation.css";
 
 /** 加载底栏脚本 */
 async function header(menu = false) {
@@ -76,7 +76,6 @@ export function section() {
     // 顶栏
     doWhile(() => document.querySelector("#internationalHeader"), replaceHeader);
     doWhile(() => document.querySelector("#biliMainHeader"), replaceHeader);
-    doWhile(() => document.querySelector(".z-top-container"), replaceHeader);
     // 上古顶栏
     doWhile(() => document.querySelector(".z_top_container"), t => {
         t.setAttribute("class", "z-top-container has-menu");
@@ -85,6 +84,7 @@ export function section() {
     })
     // 底栏
     doWhile(() => document.querySelector(".international-footer") || document.querySelector("#biliMainFooter"), t => {
+        t.replaceChildren();
         t.setAttribute("class", "footer bili-footer report-wrap-module");
         t.setAttribute("id", "home_footer");
         footer();
@@ -92,7 +92,7 @@ export function section() {
     })
     // 鼠标放在顶栏上的动效
     doWhile(() => document.querySelector("#bili-header-m"), () => {
-        addCss(css);
+        addCss(css, "avatarAnimation");
     });
     // v3版顶栏
     doWhile(() => (document.body && document.body.classList.contains("header-v3")) || document.querySelector("#bili-header-container"), () => {

@@ -94,7 +94,6 @@ if (location.host.includes("bilibili.com")) {
     window.addEventListener("beforeunload", () => {
         // 清空已应用规则
         sendSessionRules();
-        sessionStorage.removeItem("rebuild");
     });
 }
 // 暴露拓展ID

@@ -1,13 +1,11 @@
 import { danmakuHashId } from "../danmaku/danmaku_hash_id";
 import { loadDanmakuEngine } from "../danmaku/protobuf_danmaku";
 import { debug } from "../debug";
-import { loadScript } from "../element/add_element";
 import { createElement, createElements } from "../element/create_element";
 import { htmlVnode, Vdom } from "../element/html_vnode";
 import { xhrhook } from "../hook/xhr";
 import { playerKeyMap } from "./player_key_map";
 import { setting } from "../setting";
-import { sessionStorage } from "../storage";
 import { toast } from "../toast/toast";
 import { automate } from "./automate";
 import bgraybtn from "./bgray_btn.html";
@@ -15,14 +13,9 @@ import { dealwithPlayinfo } from "./playinfo";
 import { videoLimit } from "./video_limit";
 import { urlObj } from "../format/url";
 import { API } from "../variable/variable";
-import { isUserScript } from "../../tampermonkey/check";
+import { loadBilibiliPlayer } from "./load_bilibili_player";
 
-async function loadBilibiliPlayer() {
-    if (!(<any>window).jQuery) await loadScript("//static.hdslb.com/js/jquery.min.js");
-    if (isUserScript) return new Function(GM_getResourceText("bilibiliPlayer.js"))();
-    return await loadScript(`chrome-extension://${sessionStorage.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js`);
-}
-loadBilibiliPlayer();
+
 class EmbedPlayer {
     static asWide = false;
     playerParam: Record<string, any>;
@@ -85,7 +78,6 @@ class EmbedPlayer {
     }
     /** 初始化HTML5播放器节点 */
     loadHtml5Player() {
-        if (!this.bofqi) return debug.warn("页面中并不存在播放器节点！", this.playerParam);
         if (!(<any>window).bilibiliPlayer) {
             loadBilibiliPlayer().then(() => {
                 this.bofqi.innerHTML = '<div class="player"><div id="bilibiliPlayer"></div></div><div id="player_placeholder"></div>';
@@ -400,6 +392,7 @@ class EmbedPlayer {
      * 根据参数引导播放器类型
      */
     gray_loader() {
+        if (!this.bofqi) return debug.warn("播放器节点未初始化，请稍候~", this.playerParam);
         this.init_bgray_btn();
         ("html5" === this.playerType || this.gray_html5) ? this.loadHtml5Player() : this.gray_loader_flash();
     }
