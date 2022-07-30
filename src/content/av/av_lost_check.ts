@@ -13,6 +13,7 @@ import { urlObj } from "../../runtime/format/url";
 import { loadScriptEs } from "../../runtime/element/create_scripts";
 import { variableCleaner } from "../../runtime/variable/clean";
 import { isUserScript } from "../../tampermonkey/check";
+import { bangumiPage } from "../bangumi/code";
 
 /** 模板：//api.bilibili.com/x/web-interface/view/detail?aid=${aid} */
 class Detail {
@@ -118,7 +119,7 @@ async function check(call: (res: any) => void) {
                 sessionStorage.setItem("redirect", card.data[`av${API.aid}`].redirect_url);
                 call(new Detail()); // 必须先返回，否则超时跳转404
                 variableCleaner();
-                if (isUserScript) return;
+                if (isUserScript) return bangumiPage();
                 return loadScriptEs("content/bangumi/bangumi.js");
             }
         }
@@ -132,7 +133,7 @@ async function check(call: (res: any) => void) {
             res.data.View.season = undefined;
             call(res);
             variableCleaner();
-            if (isUserScript) return;
+            if (isUserScript) return bangumiPage();
             return loadScriptEs("content/bangumi/bangumi.js");
         }
         call(res);

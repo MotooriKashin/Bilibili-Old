@@ -4317,6 +4317,14 @@ var ProxyHandler = class {
 // src/runtime/toast/toast.html
 var toast_default = '<div id="toast-container"></div>\\r\\n<style type="text/css">\\r\\n    .toast-close-button>svg {\\r\\n        width: 12px;\\r\\n        height: 12px;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        transition: height 1s ease 0s, padding 1s ease 0s;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    /*\\r\\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\\r\\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\\r\\n     * make sure you copy the url from the website since the url may change between versions.\\r\\n     */\\r\\n    .toast-title {\\r\\n        font-weight: bold;\\r\\n    }\\r\\n\\r\\n    .toast-message {\\r\\n        -ms-word-wrap: break-word;\\r\\n        word-wrap: break-word;\\r\\n    }\\r\\n\\r\\n    .toast-message a,\\r\\n    .toast-message label {\\r\\n        color: #FFFFFF;\\r\\n    }\\r\\n\\r\\n    .toast-message a:hover {\\r\\n        color: #CCCCCC;\\r\\n        text-decoration: none;\\r\\n    }\\r\\n\\r\\n    .toast-close-button {\\r\\n        position: relative;\\r\\n        right: -0.3em;\\r\\n        top: -0.3em;\\r\\n        float: right;\\r\\n        font-size: 20px;\\r\\n        font-weight: bold;\\r\\n        color: #FFFFFF;\\r\\n        -webkit-text-shadow: 0 1px 0 #ffffff;\\r\\n        text-shadow: 0 1px 0 #ffffff;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n        line-height: 1;\\r\\n    }\\r\\n\\r\\n    .toast-close-button:hover,\\r\\n    .toast-close-button:focus {\\r\\n        color: #000000;\\r\\n        text-decoration: none;\\r\\n        cursor: pointer;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    .rtl .toast-close-button {\\r\\n        left: -0.3em;\\r\\n        float: left;\\r\\n        right: 0.3em;\\r\\n    }\\r\\n\\r\\n    /*Additional properties for button version\\r\\n     iOS requires the button element instead of an anchor tag.\\r\\n     If you want the anchor version, it requires \`href="#"\`.*/\\r\\n    button.toast-close-button {\\r\\n        padding: 0;\\r\\n        cursor: pointer;\\r\\n        background: transparent;\\r\\n        border: 0;\\r\\n        -webkit-appearance: none;\\r\\n    }\\r\\n\\r\\n    .toast-top-center {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-center {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-full-width {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-full-width {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-left {\\r\\n        top: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-top-right {\\r\\n        top: 12px;\\r\\n        right: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-right {\\r\\n        right: 12px;\\r\\n        bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-left {\\r\\n        bottom: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        pointer-events: none;\\r\\n        /*overrides*/\\r\\n    }\\r\\n\\r\\n    #toast-container * {\\r\\n        -moz-box-sizing: border-box;\\r\\n        -webkit-box-sizing: border-box;\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    #toast-container>div {\\r\\n        position: relative;\\r\\n        pointer-events: auto;\\r\\n        overflow: hidden;\\r\\n        margin: 0 0 6px;\\r\\n        padding: 15px 15px 15px 50px;\\r\\n        width: 300px;\\r\\n        -moz-border-radius: 3px 3px 3px 3px;\\r\\n        -webkit-border-radius: 3px 3px 3px 3px;\\r\\n        border-radius: 3px 3px 3px 3px;\\r\\n        background-position: 15px center;\\r\\n        background-repeat: no-repeat;\\r\\n        -moz-box-shadow: 0 0 12px #999999;\\r\\n        -webkit-box-shadow: 0 0 12px #999999;\\r\\n        box-shadow: 0 0 12px #999999;\\r\\n        color: #FFFFFF;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n    }\\r\\n\\r\\n    #toast-container>div.rtl {\\r\\n        direction: rtl;\\r\\n        padding: 15px 50px 15px 15px;\\r\\n        background-position: right 15px center;\\r\\n    }\\r\\n\\r\\n    #toast-container>div:hover {\\r\\n        -moz-box-shadow: 0 0 12px #000000;\\r\\n        -webkit-box-shadow: 0 0 12px #000000;\\r\\n        box-shadow: 0 0 12px #000000;\\r\\n        opacity: 1;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\\r\\n        filter: alpha(opacity=100);\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-info {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-error {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-success {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-warning {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-center>div,\\r\\n    #toast-container.toast-bottom-center>div {\\r\\n        width: 300px;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-full-width>div,\\r\\n    #toast-container.toast-bottom-full-width>div {\\r\\n        width: 96%;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        background-color: #030303;\\r\\n    }\\r\\n\\r\\n    .toast-success {\\r\\n        background-color: #51A351;\\r\\n    }\\r\\n\\r\\n    .toast-error {\\r\\n        background-color: #BD362F;\\r\\n    }\\r\\n\\r\\n    .toast-info {\\r\\n        background-color: #2F96B4;\\r\\n    }\\r\\n\\r\\n    .toast-warning {\\r\\n        background-color: #F89406;\\r\\n    }\\r\\n\\r\\n    .toast-progress {\\r\\n        position: absolute;\\r\\n        left: 0;\\r\\n        bottom: 0;\\r\\n        height: 4px;\\r\\n        background-color: #000000;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    /*Responsive Design*/\\r\\n    @media all and (max-width: 240px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 11em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 241px) and (max-width: 480px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 18em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 481px) and (max-width: 768px) {\\r\\n        #toast-container>div {\\r\\n            padding: 15px 15px 15px 50px;\\r\\n            width: 25em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 15px 50px 15px 15px;\\r\\n        }\\r\\n    }\\r\\n</style>';
 
+// src/tampermonkey/check.ts
+var isUserScript = false;
+try {
+  GM_getValue("config");
+  isUserScript = true;
+} catch {
+}
+
 // src/runtime/variable/mutex.ts
 var mutex = Math.random().toString(36).substring(2);
 
@@ -4325,8 +4333,8 @@ var xhrGM = [];
 var getValue = [];
 var cookiesEs = [];
 window.addEventListener("message", (ev) => {
-  if (GM_getValue)
-    return GM_getValue("config");
+  if (isUserScript)
+    return;
   if (typeof ev.data === "object" && ev.data.flag === mutex) {
     switch (ev.data.\$type) {
       case "xhrGMResponse":
@@ -4367,11 +4375,6 @@ var GM = {
     });
   },
   xmlHttpRequest(input, init2) {
-    if (GM_xmlhttpRequest) {
-      return new Promise((resolve, reject) => {
-        GM_xmlhttpRequest;
-      });
-    }
     return new Promise((resolve, reject) => {
       window.postMessage({
         \$type: "xhrGM",
@@ -4398,7 +4401,7 @@ var GM = {
     });
   },
   setValue(key, value) {
-    if (GM_setValue) {
+    if (isUserScript) {
       GM_setValue(key, value);
     } else {
       const obj = {};
@@ -4410,7 +4413,7 @@ var GM = {
     }
   },
   deleteValue(...key) {
-    if (GM_deleteValue) {
+    if (isUserScript) {
       key.forEach((d) => GM_deleteValue(d));
     } else {
       window.postMessage({
@@ -4613,7 +4616,7 @@ var sessionStorage2 = new SessionStorage();
 // src/runtime/setting.ts
 var setting = setting_default;
 function getSetting() {
-  if (GM_getValue) {
+  if (isUserScript) {
     let save2 = function() {
       GM_setValue("config", newSetting);
     };
@@ -5494,7 +5497,7 @@ var UrlPack = class {
   };
   getJson(url, detail, gm) {
     const str = objUrl(url, Object.assign(this.jsonUrlDefault[url], detail));
-    return gm ? GM_xmlhttpRequest ? GM.xhr({ url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, responseType: "json" }) : GM.xmlHttpRequest(this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, { credentials: "include" }).then((d) => JSON.parse(d)) : xhr({
+    return gm ? isUserScript ? GM.xhr({ url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, responseType: "json" }) : GM.xmlHttpRequest(this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, { credentials: "include" }).then((d) => JSON.parse(d)) : xhr({
       url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str,
       responseType: "json",
       credentials: true
@@ -8927,7 +8930,7 @@ function automate() {
       GM.setValue("bilibili_player_settings", bilibili_player_settings);
     }
   } else {
-    if (GM_getValue) {
+    if (isUserScript) {
       const d = GM_getValue("bilibili_player_settings");
       d && localStorage.setItem("bilibili_player_settings", d);
     } else {
@@ -8937,7 +8940,7 @@ function automate() {
     }
   }
   if (setting.automate.videospeed) {
-    if (GM_getValue) {
+    if (isUserScript) {
       const videospeed = GM_getValue("videospeed");
       if (videospeed) {
         let setting2 = sessionStorage2.getItem("bilibili_player_settings");
@@ -12183,7 +12186,7 @@ var ClosedCaption = class {
   text;
   constructor() {
     this.setting = { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: "bc" };
-    if (GM_getValue) {
+    if (isUserScript) {
       const d = GM_getValue("subtitle", this.setting);
       d && (this.setting = d);
     } else {
@@ -12191,7 +12194,7 @@ var ClosedCaption = class {
         d && (this.setting = d);
       });
     }
-    if (GM_getValue) {
+    if (isUserScript) {
       const d = GM_getValue("subtitlePrefer", void 0);
       this.subtitlePrefer = d;
     } else {
@@ -13289,7 +13292,7 @@ function videoLimit() {
 async function loadBilibiliPlayer() {
   if (!window.jQuery)
     await loadScript("//static.hdslb.com/js/jquery.min.js");
-  if (GM_getValue)
+  if (isUserScript)
     return new Function(GM_getResourceText("bilibiliPlayer.js"))();
   return await loadScript(\`chrome-extension://\${sessionStorage2.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js\`);
 }
@@ -14595,154 +14598,316 @@ function variableCleaner() {
   });
 }
 
-// src/content/av/av_lost_check.ts
-var Detail = class {
-  code = 0;
-  data = {
-    Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
-    Related: [],
-    Reply: { page: {}, replies: [] },
-    Spec: null,
-    Tags: [],
-    View: {},
-    elec: null,
-    hot_share: {},
-    recommend: null,
-    view_addit: {}
+// src/content/bangumi/script.html
+var script_default2 = '<script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n<script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\\/script>\\r\\n<script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\\/script>\\r\\n<script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n<script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js"><\\/script>\\r\\n<script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\\/script>\\r\\n<script>\\r\\n    window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\\r\\n<\\/script>\\r\\n<script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n    crossorigin=""><\\/script>\\r\\n<script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n    crossorigin=""><\\/script>\\r\\n<script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>';
+
+// src/content/bangumi/bangumi.html
+var bangumi_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\\r\\n    <style type="text/css">\\r\\n        .new-entry {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="app" data-server-rendered="true" class="main-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n</body>\\r\\n\\r\\n</html>';
+
+// src/content/bangumi/bangumi_initial_state.ts
+function setEpStat(status, pay, payPackPaid, loginInfo) {
+  var s = 0, o = false, a = (1 === loginInfo.vipType || 2 === loginInfo.vipType) && 1 === loginInfo.vipStatus, r = "number" == typeof payPackPaid ? payPackPaid : -1;
+  return 1 === pay ? s = 0 : 6 === status || 7 === status ? s = loginInfo.isLogin ? a ? 0 : 1 : 2 : 8 === status || 9 === status ? (s = loginInfo.isLogin ? 1 : 2, o = true) : 12 === status ? s = loginInfo.isLogin ? 1 === r ? 0 : 1 : 2 : 13 === status && (s = loginInfo.isLogin ? a ? 0 : 1 : 2), {
+    status: s,
+    isPay: 6 === status || 7 === status || 8 === status || 9 === status || 12 === status || 13 === status,
+    isVip: a,
+    vipNeedPay: o,
+    payPack: r
   };
-  message = "0";
-  ttl = 1;
-};
-function view2Detail(data) {
-  const result = new Detail();
-  if (data.v2_app_api) {
-    delete data.v2_app_api.redirect_url;
-    result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
-    result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
-    result.data.Tags = data.v2_app_api.tag;
-    result.data.View = data.v2_app_api;
-    xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, void 0, (res) => {
-      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
-      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-    }, false);
-    xhrhook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${API.aid}\`, void 0, (res) => {
-      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}\`;
-      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-    }, false);
-    return JSON.parse(JSON.stringify(result));
-  } else
-    return v1api(data);
 }
-function v1api(data) {
-  const result = new Detail();
-  const p = Number(getUrlValue("p"));
-  result.data.Card.card = {
-    face: "//static.hdslb.com/images/akari.jpg",
-    mid: data.mid,
-    name: data.author,
-    vip: {}
-  };
-  result.data.View = {
-    aid: data.aid || data.id || API.aid,
-    cid: data.list[p ? p - 1 : 0].cid,
-    copyright: 1,
-    ctime: data.created,
-    dimension: { width: 1920, height: 1080, rotate: 0 },
-    duration: -1,
-    owner: result.data.Card.card,
-    pages: data.list,
-    pic: data.pic,
-    pubdate: data.lastupdatets,
-    rights: {},
-    stat: {
-      aid: data.aid || data.id || API.aid,
-      coin: data.coins,
-      danmaku: data.video_review,
-      dislike: 0,
-      evaluation: "",
-      favorite: data.favorites,
-      his_rank: 0,
-      like: -1,
-      now_rank: 0,
-      reply: -1,
-      share: -1,
-      view: data.play
-    },
-    state: 0,
-    subtitle: { allow_submit: false, list: [] },
-    tid: data.tid,
-    title: data.title,
-    tname: data.typename,
-    videos: data.list.length
-  };
-  data.bangumi && (result.data.View.season = data.bangumi);
-  xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, void 0, (res) => {
-    const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
-    res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-  }, false);
-  xhrhook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${API.aid}\`, void 0, (res) => {
-    const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}\`;
-    res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-  }, false);
-  return JSON.parse(JSON.stringify(result));
+function V(t, e) {
+  var i = Number(t), n = 1 === e || 4 === e || "番剧" === e || "国创" === e ? "话" : "集";
+  return isNaN(i) ? t : "第".concat(i).concat(n);
 }
-async function check(call) {
+function Q(t, e) {
+  var i = {
+    1: "番剧",
+    2: "电影",
+    3: "纪录片",
+    4: "国创",
+    5: "电视剧",
+    7: "综艺",
+    music: "音乐"
+  };
+  return [26484, 26481].indexOf(e) > -1 ? i.music : i[t] || "番剧";
+}
+function setTitle(t, e, i, n) {
+  var s = !(arguments.length > 4 && void 0 !== arguments[4]) || arguments[4], o = "";
+  if (i = void 0 === i ? "番剧" : i, e && i)
+    if (s && t) {
+      var a = V(t, i);
+      o = "".concat(e, "：").concat(a, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+    } else
+      o = "".concat(e, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+  else
+    o = "番剧".concat(n ? "_bilibili" : "", "_哔哩哔哩");
+  if ("undefined" != typeof window) {
+    var r = window.document.createElement("div");
+    r.innerHTML = o, o = r.innerText || r.textContent, r = null;
+  }
+  return o;
+}
+async function bangumiInitialState() {
   try {
-    toast.info(\`正在进一步查询 av\${API.aid} 的信息~\`);
-    const card = await xhr({
-      url: \`https://api.bilibili.com/x/article/cards?ids=av\${API.aid}\`,
-      responseType: "json"
-    });
-    if (card.data[\`av\${API.aid}\`]) {
-      if (card.data[\`av\${API.aid}\`].redirect_url) {
-        sessionStorage2.setItem("redirect", card.data[\`av\${API.aid}\`].redirect_url);
-        call(new Detail());
-        variableCleaner();
-        return loadScriptEs("content/bangumi/bangumi.js");
+    let ssid = API.ssid;
+    let epid = API.epid;
+    const obj = epid ? { ep_id: epid } : { season_id: ssid };
+    const result = await Promise.allSettled([
+      xhr({
+        url: objUrl("https://bangumi.bilibili.com/view/web_api/season", obj),
+        responseType: "json",
+        credentials: true
+      }, true),
+      xhr({
+        url: objUrl("https://api.bilibili.com/pgc/view/web/season/user/status", obj),
+        responseType: "json",
+        credentials: true
+      }, true)
+    ]);
+    const data = {};
+    await new Promise((r) => doWhile(() => window.__INITIAL_STATE__, r));
+    const t = window.__INITIAL_STATE__;
+    result[0].status === "fulfilled" && result[0].value.code === 0 && (data.bangumi = result[0].value.result);
+    result[1].status === "fulfilled" && result[1].value.code === 0 && (data.status = result[1].value.result);
+    if (data.status) {
+      const i = data.status.progress ? data.status.progress.last_ep_id : -1, n = data.status.progress ? data.status.progress.last_ep_index : "", s = data.status.progress ? data.status.progress.last_time : 0, o = data.status.vip_info || {};
+      !epid && i > 0 && (epid = i);
+      t.userStat = {
+        loaded: true,
+        error: void 0 === data.status.pay,
+        follow: data.status.follow || 0,
+        pay: data.status.pay || 0,
+        payPackPaid: data.status.pay_pack_paid || 0,
+        sponsor: data.status.sponsor || 0,
+        watchProgress: {
+          lastEpId: 0 === i ? -1 : i,
+          lastEpIndex: n,
+          lastTime: s
+        },
+        vipInfo: {
+          due_date: o.due_date || 0,
+          status: o.status || 0,
+          type: o.type || 0
+        }
+      };
+      data.status.paster && (t.paster = data.status.paster || {});
+      API.limit = data.status.area_limit || 0;
+      !setting.videoLimit.switch && (t.area = API.limit);
+      t.seasonFollowed = 1 === data.status.follow;
+    }
+    if (data.bangumi) {
+      let loopTitle2 = function() {
+        doWhile(() => document.title != title, () => {
+          document.title = title;
+          if (document.title != title)
+            loopTitle2();
+        });
+      };
+      var loopTitle = loopTitle2;
+      const i = JSON.parse(JSON.stringify(data.bangumi));
+      delete i.episodes;
+      delete i.seasons;
+      delete i.up_info;
+      delete i.rights;
+      delete i.publish;
+      delete i.newest_ep;
+      delete i.rating;
+      delete i.pay_pack;
+      delete i.payment;
+      delete i.activity;
+      if (setting.bangumiEplist)
+        delete i.bkg_cover;
+      setting.videoLimit.switch && data.bangumi.rights && (data.bangumi.rights.watch_platform = 0);
+      t.mediaInfo = i;
+      t.mediaInfo.bkg_cover && (t.special = true, API.bkg_cover = t.mediaInfo.bkg_cover);
+      t.ssId = data.bangumi.season_id || -1;
+      t.mdId = data.bangumi.media_id;
+      t.epInfo = epid && data.bangumi.episodes.find((d) => d.ep_id == epid) || data.bangumi.episodes[0] || {};
+      t.epList = data.bangumi.episodes || [];
+      t.seasonList = data.bangumi.seasons || [];
+      t.upInfo = data.bangumi.up_info || {};
+      t.rightsInfo = data.bangumi.rights || {};
+      t.app = 1 === t.rightsInfo.watch_platform;
+      t.pubInfo = data.bangumi.publish || {};
+      t.newestEp = data.bangumi.newest_ep || {};
+      t.mediaRating = data.bangumi.rating || {};
+      t.payPack = data.bangumi.pay_pack || {};
+      t.payMent = data.bangumi.payment || {};
+      t.activity = data.bangumi.activity || {};
+      t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+      t.epId = Number(epid || t.epInfo.ep_id);
+      API.ssid = t.ssId;
+      API.epid = t.epId;
+      if (t.epInfo.badge === "互动") {
+        sessionStorage2.setItem("keepNew", "旧版页面不支持互动视频！已重定向回新版页面，番剧能互动🤣");
+        location.reload();
       }
+      if (t.upInfo.mid == 677043260 || t.upInfo.mid == 688418886) {
+        API.th = true;
+      }
+      const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), true);
+      loopTitle2();
+    } else {
+      debug.error(result[0]);
+      debug.error(result[1]);
+      return globalSession();
     }
-    const data = await xhr({
-      url: \`https://www.biliplus.com/api/view?id=\${API.aid}\`,
-      responseType: "json"
-    }, true);
-    const res = view2Detail(data);
-    if (res.data.View.season) {
-      sessionStorage2.setItem("redirect", res.data.View.season.ogv_play_url);
-      res.data.View.season = void 0;
-      call(res);
-      variableCleaner();
-      return loadScriptEs("content/bangumi/bangumi.js");
-    }
-    call(res);
-    setTimeout(() => {
-      toast.custom(0, "warning", "这大概是一个无效av号~", "本页面使用缓存数据生成，并无法播放！", "部分上古视频还存在评论区哦~");
-    }, 1e3);
   } catch (e) {
-    debug.error(e);
+    toast.error("获取视频数据出错 ಥ_ಥ");
+    debug.error("视频数据", e);
   }
 }
-function avLostCheck() {
-  jsonphook("api.bilibili.com/x/web-interface/view/detail", void 0, (res, r, call) => {
-    if (0 !== res.code) {
-      const obj = urlObj(r);
-      if (obj.aid) {
-        API.aid = obj.aid;
-        check(call);
-        return true;
-      }
-    } else {
-      if (res.data && res.data.View) {
-        if (res.data.View.stein_guide_cid) {
-          sessionStorage2.setItem("keepNew", "旧版页面不支持互动视频！已重定向回新版页面🤣");
-          location.reload();
-        }
-        Promise.resolve().then(() => {
-          setting.upList && res.data.View.staff && upList(res.data.View.staff);
-          setting.collection && res.data.View.is_season_display && res.data.View.ugc_season && collection(res.data.View);
+async function globalSession() {
+  toast.info("Bangumi号可能无效~", "正在尝试泰区代理接口~");
+  let ssid = API.ssid;
+  let epid = API.epid;
+  const obj = epid ? { ep_id: epid } : { season_id: ssid };
+  Object.assign(obj, {
+    access_key: setting.accessKey.key || void 0,
+    build: 108003,
+    mobi_app: "bstar_a",
+    s_locale: "zh_SG"
+  });
+  try {
+    const result = await xhr({
+      url: objUrl(\`https://\${setting.videoLimit.th || "api.global.bilibili.com"}/intl/gateway/v2/ogv/view/app/season\`, obj),
+      responseType: "json"
+    }, true);
+    if (result.code === 0) {
+      let loopTitle2 = function() {
+        doWhile(() => document.title != title, () => {
+          document.title = title;
+          if (document.title != title)
+            loopTitle2();
         });
+      };
+      var loopTitle = loopTitle2;
+      window.postMessage({ \$type: "th" });
+      await new Promise((r) => doWhile(() => window.__INITIAL_STATE__, r));
+      const t = window.__INITIAL_STATE__;
+      const i = JSON.parse(JSON.stringify(result.result));
+      const episodes = result.result.modules.reduce((s, d) => {
+        d.data.episodes.forEach((d2) => {
+          s.push({
+            aid: d2.aid,
+            cid: d2.id,
+            cover: d2.cover,
+            ep_id: d2.id,
+            episode_status: d2.status,
+            from: d2.from,
+            index: d2.title,
+            index_title: d2.title_display,
+            subtitles: d2.subtitles
+          });
+        });
+        return s;
+      }, []);
+      t.mediaInfo = {
+        actors: i.actor?.info,
+        alias: i.alias,
+        areas: i.areas,
+        cover: i.cover,
+        evaluate: i.evaluate,
+        is_paster_ads: 0,
+        jp_title: i.origin_name,
+        link: i.link,
+        media_id: -1,
+        mode: i.mode,
+        paster_text: "",
+        season_id: i.season_id,
+        season_status: i.status,
+        season_title: i.season_title,
+        season_type: i.type,
+        series_title: i.title,
+        square_cover: i.square_cover,
+        staff: i.actor?.info,
+        stat: i.stat,
+        style: i.styles?.reduce((s, d) => {
+          s.push(d.name);
+          return s;
+        }, []),
+        title: i.title,
+        total_ep: i.total
+      };
+      t.mediaInfo.bkg_cover && (t.special = true, API.bkg_cover = t.mediaInfo.bkg_cover);
+      t.ssId = result.result.season_id || -1;
+      t.epInfo = epid && episodes.find((d) => d.ep_id == epid) || episodes[0] || {};
+      t.epList = episodes;
+      t.seasonList = result.result.series?.seasons?.reduce((s, d) => {
+        s.push({
+          badge: "独家",
+          badge_type: 1,
+          cover: "",
+          media_id: -1,
+          new_ep: {},
+          season_id: d.season_id,
+          season_title: d.quarter_title,
+          season_type: 1,
+          stat: {},
+          title: d.quarter_title
+        });
+        return s;
+      }, []) || [];
+      t.upInfo = result.result.up_info || {};
+      t.rightsInfo = result.result.rights || {};
+      t.app = 1 === t.rightsInfo.watch_platform;
+      result.result.publish.is_started = 1;
+      result.result.publish?.time_length_show === "已完结" && (result.result.publish.is_finish = 1);
+      t.pubInfo = result.result.publish || {};
+      if (result.result.new_ep) {
+        result.result.new_ep.desc = result.result.new_ep.new_ep_display;
+        result.result.new_ep.index = result.result.new_ep.title;
       }
+      t.newestEp = result.result.new_ep || {};
+      t.mediaRating = result.result.rating || {};
+      t.payPack = result.result.pay_pack || {};
+      t.payMent = result.result.payment || {};
+      t.activity = result.result.activity_dialog || {};
+      t.epStat = setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+      t.epId = Number(epid || t.epInfo.ep_id);
+      API.ssid = t.ssId;
+      API.epid = t.epId;
+      API.th = true;
+      xhrhook("api.bilibili.com/pgc/web/season/stat", void 0, (res) => {
+        const t2 = \`{"code": 0,"message":"0","ttl":1,"result":\${JSON.stringify(result.result.stat)}}\`;
+        res.responseType === "json" ? res.response = JSON.parse(t2) : res.response = res.responseText = t2;
+      }, false);
+      toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
+      const title = setTitle(t.epInfo.index, t.mediaInfo.title, Q(t.mediaInfo.season_type), true);
+      loopTitle2();
+    } else
+      throw result;
+  } catch (e) {
+    toast.error("访问泰区B站出错，请检查泰区代理服务器设置~", "或许这就是个无效Bangumi？", e);
+    debug.error("BilibiliGlobal", e);
+  }
+}
+
+// src/content/av/load_by_dm_id.ts
+function loadByDmId() {
+  const dmid = urlObj(location.href).dmid;
+  let progress = Number(urlObj(location.href).dm_progress);
+  let first2 = 0;
+  switchVideo(async () => {
+    if (!window.player?.seek) {
+      await new Promise((r) => {
+        doWhile(() => window.player?.seek, r);
+      });
     }
-  }, false);
+    if (first2)
+      return;
+    first2++;
+    if (progress)
+      return window.player.seek(progress);
+    if (dmid) {
+      progress = await xhr({
+        url: \`https://api.bilibili.com/x/v2/dm/thumbup/detail?oid=\${API.cid}&dmid=\${dmid}\`,
+        credentials: true
+      }, true);
+      progress = jsonCheck(progress).data.progress;
+      progress && window.player.seek(progress / 1e3 - 0.2);
+    }
+  });
 }
 
 // src/runtime/lib/cubic_bezier.ts
@@ -15220,115 +15385,40 @@ var banner = () => {
   }, false);
 };
 
-// src/content/av/load_by_dm_id.ts
-function loadByDmId() {
-  const dmid = urlObj(location.href).dmid;
-  let progress = Number(urlObj(location.href).dm_progress);
-  let first = 0;
+// src/content/bangumi/episode_data.ts
+var first = 0;
+function episodeData() {
   switchVideo(async () => {
-    if (!window.player?.seek) {
-      await new Promise((r) => {
-        doWhile(() => window.player?.seek, r);
-      });
-    }
-    if (first)
-      return;
-    first++;
-    if (progress)
-      return window.player.seek(progress);
-    if (dmid) {
-      progress = await xhr({
-        url: \`https://api.bilibili.com/x/v2/dm/thumbup/detail?oid=\${API.cid}&dmid=\${dmid}\`,
-        credentials: true
-      }, true);
-      progress = jsonCheck(progress).data.progress;
-      progress && window.player.seek(progress / 1e3 - 0.2);
-    }
-  });
-}
-
-// src/runtime/url_clean.ts
-var paramsSet = /* @__PURE__ */ new Set([
-  "spm_id_from",
-  "from_source",
-  "msource",
-  "bsource",
-  "seid",
-  "source",
-  "session_id",
-  "visit_id",
-  "sourceFrom",
-  "from_spmid",
-  "share_source",
-  "share_medium",
-  "share_plat",
-  "share_session_id",
-  "share_tag",
-  "unique_k",
-  "vd_source",
-  "csource"
-]);
-var paramArr = Object.entries({
-  from: ["search"]
-});
-function replaceUrl(url) {
-  window.history.replaceState(window.history.state, "", url);
-}
-function urlClean(str) {
-  const base = str.split("#")[0].split("?")[0];
-  const url = new URLEs(str);
-  if (url) {
-    const params = url.searchParams;
-    if (params.has("bvid")) {
-      params.set("aid", abv(params.get("bvid")));
-      params.delete("bvid");
-    }
-    if (params.has("aid") && !Number(params.get("aid"))) {
-      params.set("aid", abv(params.get("aid")));
-    }
-    paramsSet.forEach((d) => {
-      params.delete(d);
-    });
-    paramArr.forEach((d) => {
-      if (params.has(d[0])) {
-        if (d[1].includes(params.get(d[0]))) {
-          params.delete(d[0]);
-        }
+    try {
+      first++;
+      let views = document.querySelector(".view-count").querySelector("span");
+      let danmakus = document.querySelector(".danmu-count").querySelector("span");
+      if (first === 1) {
+        const [view2, danmaku3] = [
+          unitFormat(API.__INITIAL_STATE__.mediaInfo.stat.views),
+          unitFormat(API.__INITIAL_STATE__.mediaInfo.stat.danmakus)
+        ];
+        views.setAttribute("title", "总播放数 " + view2);
+        danmakus.setAttribute("title", "总弹幕数 " + danmaku3);
+        debug.log("总播放数：", view2, "总弹幕数", danmaku3);
       }
-    });
-    return (base + url.search + url.hash).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
-  } else
-    return str;
-}
-function anchorClean(list) {
-  list.forEach((d) => {
-    if (!d.href)
-      return;
-    d.href = urlClean(d.href);
+      let data = await xhr({
+        url: objUrl("https://api.bilibili.com/x/web-interface/archive/stat", { "aid": API.aid }),
+        credentials: true
+      });
+      data = jsonCheck(data).data;
+      let view = data.view;
+      let danmaku2 = data.danmaku;
+      view = unitFormat(view);
+      danmaku2 = unitFormat(danmaku2);
+      views.innerText = view;
+      danmakus.innerText = danmaku2;
+      debug.debug("播放", view + " 弹幕", danmaku2);
+    } catch (e) {
+      debug.error("episodeData.js", e);
+    }
   });
 }
-function AnchorClick(e) {
-  var f = e.target;
-  for (; f && "A" !== f.tagName; ) {
-    f = f.parentNode;
-  }
-  if ("A" !== (null == f ? void 0 : f.tagName)) {
-    return;
-  }
-  anchorClean([f]);
-}
-window.navigation?.addEventListener("navigate", (e) => {
-  const newURL = urlClean(e.destination.url);
-  if (e.destination.url != newURL) {
-    e.preventDefault();
-    if (newURL == window.location.href)
-      return;
-    window.history.replaceState(window.history.state, "", newURL);
-  }
-});
-window.addEventListener("click", AnchorClick, false);
-window.addEventListener("contextmenu", AnchorClick, false);
-document.addEventListener("DOMContentLoaded", () => anchorClean(document.querySelectorAll("a")));
 
 // src/runtime/variable/path.ts
 var path = location.href.split("/");
@@ -15650,7 +15740,7 @@ function album() {
 // src/content/space/jointime.ts
 function jointime(mid) {
   doWhile(() => document.querySelector(".section.user-info"), (t) => {
-    (GM_xmlhttpRequest ? GM.xhr({ url: \`https://account.bilibili.com/api/member/getCardByMid"?mid=\${mid}\` }) : GM.xmlHttpRequest(\`https://account.bilibili.com/api/member/getCardByMid"?mid=\${mid}\`)).then((d) => {
+    (isUserScript ? GM.xhr({ url: \`https://account.bilibili.com/api/member/getCardByMid"?mid=\${mid}\` }) : GM.xmlHttpRequest(\`https://account.bilibili.com/api/member/getCardByMid"?mid=\${mid}\`)).then((d) => {
       const data = jsonCheck(d);
       const jointime2 = timeFormat(data.card.regtime * 1e3, true);
       const node2 = t.lastChild;
@@ -15688,7 +15778,7 @@ function jointime(mid) {
 async function getLostVideo(aid) {
   let result = [];
   try {
-    let data = await (GM_xmlhttpRequest ? GM.xhr({ url: \`https://www.biliplus.com/video/av\${aid}\` }) : GM.xmlHttpRequest(\`https://www.biliplus.com/video/av\${aid}\`));
+    let data = await (isUserScript ? GM.xhr({ url: \`https://www.biliplus.com/video/av\${aid}\` }) : GM.xmlHttpRequest(\`https://www.biliplus.com/video/av\${aid}\`));
     if (data.match(/\\<title\\>.+?\\ \\-\\ AV/)) {
       result[0] = data.match(/\\<title\\>.+?\\ \\-\\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
       result[1] = data.match(/\\<img style=\\"display:none\\"\\ src=\\".+?\\"\\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
@@ -15698,10 +15788,10 @@ async function getLostVideo(aid) {
   }
   if (!result[0] || !result[1]) {
     try {
-      let data = await (GM_xmlhttpRequest ? GM.xhr({ url: \`https://www.biliplus.com/all/video/av\${aid}\` }) : GM.xmlHttpRequest(\`https://www.biliplus.com/all/video/av\${aid}/\`));
+      let data = await (isUserScript ? GM.xhr({ url: \`https://www.biliplus.com/all/video/av\${aid}\` }) : GM.xmlHttpRequest(\`https://www.biliplus.com/all/video/av\${aid}/\`));
       if (data.match("/api/view_all?")) {
         data = data.match(/\\/api\\/view_all\\?.+?\\',cloudmoe/)[0].replace(/\\',cloudmoe/, "");
-        data = await (GM_xmlhttpRequest ? GM.xhr({ url: \`//www.biliplus.com\${aid}\` }) : GM.xmlHttpRequest(\`//www.biliplus.com\${data}\`));
+        data = await (isUserScript ? GM.xhr({ url: \`//www.biliplus.com\${aid}\` }) : GM.xmlHttpRequest(\`//www.biliplus.com\${data}\`));
         data = jsonCheck(data).data;
         result[0] = result[0] || data.info.title;
         result[1] = result[1] || data.info.pic;
@@ -15712,7 +15802,7 @@ async function getLostVideo(aid) {
   }
   if (!result[0] || !result[1]) {
     try {
-      let data = await (GM_xmlhttpRequest ? GM.xhr({ url: \`https://www.jijidown.com/video/\${aid}\` }) : GM.xmlHttpRequest(\`https://www.jijidown.com/video/\${aid}\`));
+      let data = await (isUserScript ? GM.xhr({ url: \`https://www.jijidown.com/video/\${aid}\` }) : GM.xmlHttpRequest(\`https://www.jijidown.com/video/\${aid}\`));
       if (data.match("window._INIT")) {
         result[0] = result[0] || data.match(/\\<title\\>.+?\\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
         result[1] = result[1] || data.match(/\\"img\\":\\ \\".+?\\",/)[0].match(/http.+?\\",/)[0].replace(/",/, "");
@@ -15915,7 +16005,7 @@ function globalVector() {
   setting.timeline && /anime\\/timeline/.test(location.href) && timeline();
   setting.album && /t.bilibili.com\\/\\d+/.test(location.href) && album();
   window.addEventListener("message", (ev) => {
-    if (GM_getValue)
+    if (isUserScript)
       return;
     if (typeof ev.data === "object") {
       switch (ev.data.\$type) {
@@ -15938,6 +16028,89 @@ function globalVector() {
   });
 }
 
+// src/runtime/url_clean.ts
+var paramsSet = /* @__PURE__ */ new Set([
+  "spm_id_from",
+  "from_source",
+  "msource",
+  "bsource",
+  "seid",
+  "source",
+  "session_id",
+  "visit_id",
+  "sourceFrom",
+  "from_spmid",
+  "share_source",
+  "share_medium",
+  "share_plat",
+  "share_session_id",
+  "share_tag",
+  "unique_k",
+  "vd_source",
+  "csource"
+]);
+var paramArr = Object.entries({
+  from: ["search"]
+});
+function replaceUrl(url) {
+  window.history.replaceState(window.history.state, "", url);
+}
+function urlClean(str) {
+  const base = str.split("#")[0].split("?")[0];
+  const url = new URLEs(str);
+  if (url) {
+    const params = url.searchParams;
+    if (params.has("bvid")) {
+      params.set("aid", abv(params.get("bvid")));
+      params.delete("bvid");
+    }
+    if (params.has("aid") && !Number(params.get("aid"))) {
+      params.set("aid", abv(params.get("aid")));
+    }
+    paramsSet.forEach((d) => {
+      params.delete(d);
+    });
+    paramArr.forEach((d) => {
+      if (params.has(d[0])) {
+        if (d[1].includes(params.get(d[0]))) {
+          params.delete(d[0]);
+        }
+      }
+    });
+    return (base + url.search + url.hash).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
+  } else
+    return str;
+}
+function anchorClean(list) {
+  list.forEach((d) => {
+    if (!d.href)
+      return;
+    d.href = urlClean(d.href);
+  });
+}
+function AnchorClick(e) {
+  var f = e.target;
+  for (; f && "A" !== f.tagName; ) {
+    f = f.parentNode;
+  }
+  if ("A" !== (null == f ? void 0 : f.tagName)) {
+    return;
+  }
+  anchorClean([f]);
+}
+window.navigation?.addEventListener("navigate", (e) => {
+  const newURL = urlClean(e.destination.url);
+  if (e.destination.url != newURL) {
+    e.preventDefault();
+    if (newURL == window.location.href)
+      return;
+    window.history.replaceState(window.history.state, "", newURL);
+  }
+});
+window.addEventListener("click", AnchorClick, false);
+window.addEventListener("contextmenu", AnchorClick, false);
+document.addEventListener("DOMContentLoaded", () => anchorClean(document.querySelectorAll("a")));
+
 // src/content/av/keep_new.ts
 function keepNewCheck() {
   const keepNew = sessionStorage.getItem("keepNew");
@@ -15952,6 +16125,235 @@ function keepNewCheck() {
     replaceUrl(redirect);
     sessionStorage.removeItem("redirect");
   }
+}
+
+// src/content/bangumi/code.ts
+function bangumiPage() {
+  keepNewCheck();
+  sessionStorage2.setItem("rebuild", true);
+  const title = document.title;
+  document.documentElement.replaceWith(createElements(htmlVnode(bangumi_default)));
+  title && !title.includes("404") && (document.title = title);
+  API.pgc = true;
+  location.href.replace(/[sS][sS]\\d+/, (d) => API.ssid = Number(d.substring(2)));
+  location.href.replace(/[eE][pP]\\d+/, (d) => API.epid = Number(d.substring(2)));
+  loadVideoScript();
+  loadComment();
+  xhrhook("api.bilibili.com/pgc/web/recommend/related/recommend", (args) => {
+    args[1] = args[1].replace("web/recommend", "season/web");
+  }, (r) => {
+    try {
+      const result = jsonCheck(r.response);
+      result.result = result.data.season;
+      r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+    } catch (e) {
+    }
+  });
+  xhrhook("bangumi.bilibili.com/ext/web_api/season_count", (args) => {
+    args[1] = args[1].replace("bangumi.bilibili.com/ext/web_api/season_count", "api.bilibili.com/pgc/web/season/stat");
+  }, (r) => {
+    try {
+      const result = jsonCheck(r.response);
+      result.result.favorites = result.result.follow;
+      r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+    } catch (e) {
+    }
+  }, true);
+  setting.videoLimit.switch && xhrhook("bangumi.bilibili.com/view/web_api/season/user/status", void 0, (res) => {
+    try {
+      const data = res.responseType === "json" ? res.response : JSON.parse(res.response);
+      data.result.area_limit = 0;
+      data.result.ban_area_show = 0;
+      res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
+    } catch (e) {
+    }
+  }, false);
+  const related = {};
+  xhrhookAsync("x/web-interface/archive/related", () => window.__INITIAL_STATE__.mediaInfo.title, async (u, t) => {
+    let result = '{ code: 0, data: [], message: "0" }';
+    if (related[window.__INITIAL_STATE__.mediaInfo.title]) {
+      result = related[window.__INITIAL_STATE__.mediaInfo.title];
+    } else {
+      try {
+        const info = await xhr({
+          url: \`https://api.bilibili.com/x/tag/info?tag_name=\${window.__INITIAL_STATE__.mediaInfo.title}\`,
+          responseType: "json"
+        }, true);
+        related[window.__INITIAL_STATE__.mediaInfo.title] = result = await xhr({
+          url: \`https://api.bilibili.com/x/web-interface/tag/top?tid=\${info.data.tag_id}\`
+        }, true);
+      } catch (e) {
+        debug.error("相关视频推荐", e);
+      }
+    }
+    return t === "json" ? { response: JSON.parse(result) } : { response: result, responseText: result };
+  }, false);
+  bangumiInitialState().then(() => {
+    setting.enlike && new enLike("bangumi", window.__INITIAL_STATE__.mediaInfo.stat.likes);
+    if (window.__INITIAL_STATE__.special) {
+      addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
+    }
+  });
+  appendScripts(script_default2);
+  primaryMenu();
+  banner();
+  loadByDmId();
+  episodeData();
+  globalVector();
+}
+
+// src/content/av/av_lost_check.ts
+var Detail = class {
+  code = 0;
+  data = {
+    Card: { archive_count: -1, article_count: -1, card: {}, follower: -1, following: false, like_num: -1, space: {} },
+    Related: [],
+    Reply: { page: {}, replies: [] },
+    Spec: null,
+    Tags: [],
+    View: {},
+    elec: null,
+    hot_share: {},
+    recommend: null,
+    view_addit: {}
+  };
+  message = "0";
+  ttl = 1;
+};
+function view2Detail(data) {
+  const result = new Detail();
+  if (data.v2_app_api) {
+    delete data.v2_app_api.redirect_url;
+    result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
+    result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
+    result.data.Tags = data.v2_app_api.tag;
+    result.data.View = data.v2_app_api;
+    xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, void 0, (res) => {
+      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+    }, false);
+    xhrhook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${API.aid}\`, void 0, (res) => {
+      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}\`;
+      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+    }, false);
+    return JSON.parse(JSON.stringify(result));
+  } else
+    return v1api(data);
+}
+function v1api(data) {
+  const result = new Detail();
+  const p = Number(getUrlValue("p"));
+  result.data.Card.card = {
+    face: "//static.hdslb.com/images/akari.jpg",
+    mid: data.mid,
+    name: data.author,
+    vip: {}
+  };
+  result.data.View = {
+    aid: data.aid || data.id || API.aid,
+    cid: data.list[p ? p - 1 : 0].cid,
+    copyright: 1,
+    ctime: data.created,
+    dimension: { width: 1920, height: 1080, rotate: 0 },
+    duration: -1,
+    owner: result.data.Card.card,
+    pages: data.list,
+    pic: data.pic,
+    pubdate: data.lastupdatets,
+    rights: {},
+    stat: {
+      aid: data.aid || data.id || API.aid,
+      coin: data.coins,
+      danmaku: data.video_review,
+      dislike: 0,
+      evaluation: "",
+      favorite: data.favorites,
+      his_rank: 0,
+      like: -1,
+      now_rank: 0,
+      reply: -1,
+      share: -1,
+      view: data.play
+    },
+    state: 0,
+    subtitle: { allow_submit: false, list: [] },
+    tid: data.tid,
+    title: data.title,
+    tname: data.typename,
+    videos: data.list.length
+  };
+  data.bangumi && (result.data.View.season = data.bangumi);
+  xhrhook(\`api.bilibili.com/x/web-interface/view?aid=\${API.aid}\`, void 0, (res) => {
+    const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+    res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+  }, false);
+  xhrhook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${API.aid}\`, void 0, (res) => {
+    const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: API.aid })}}\`;
+    res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+  }, false);
+  return JSON.parse(JSON.stringify(result));
+}
+async function check(call) {
+  try {
+    toast.info(\`正在进一步查询 av\${API.aid} 的信息~\`);
+    const card = await xhr({
+      url: \`https://api.bilibili.com/x/article/cards?ids=av\${API.aid}\`,
+      responseType: "json"
+    });
+    if (card.data[\`av\${API.aid}\`]) {
+      if (card.data[\`av\${API.aid}\`].redirect_url) {
+        sessionStorage2.setItem("redirect", card.data[\`av\${API.aid}\`].redirect_url);
+        call(new Detail());
+        variableCleaner();
+        if (isUserScript)
+          return bangumiPage();
+        return loadScriptEs("content/bangumi/bangumi.js");
+      }
+    }
+    const data = await xhr({
+      url: \`https://www.biliplus.com/api/view?id=\${API.aid}\`,
+      responseType: "json"
+    }, true);
+    const res = view2Detail(data);
+    if (res.data.View.season) {
+      sessionStorage2.setItem("redirect", res.data.View.season.ogv_play_url);
+      res.data.View.season = void 0;
+      call(res);
+      variableCleaner();
+      if (isUserScript)
+        return bangumiPage();
+      return loadScriptEs("content/bangumi/bangumi.js");
+    }
+    call(res);
+    setTimeout(() => {
+      toast.custom(0, "warning", "这大概是一个无效av号~", "本页面使用缓存数据生成，并无法播放！", "部分上古视频还存在评论区哦~");
+    }, 1e3);
+  } catch (e) {
+    debug.error(e);
+  }
+}
+function avLostCheck() {
+  jsonphook("api.bilibili.com/x/web-interface/view/detail", void 0, (res, r, call) => {
+    if (0 !== res.code) {
+      const obj = urlObj(r);
+      if (obj.aid) {
+        API.aid = obj.aid;
+        check(call);
+        return true;
+      }
+    } else {
+      if (res.data && res.data.View) {
+        if (res.data.View.stein_guide_cid) {
+          sessionStorage2.setItem("keepNew", "旧版页面不支持互动视频！已重定向回新版页面🤣");
+          location.reload();
+        }
+        Promise.resolve().then(() => {
+          setting.upList && res.data.View.staff && upList(res.data.View.staff);
+          setting.collection && res.data.View.is_season_display && res.data.View.ugc_season && collection(res.data.View);
+        });
+      }
+    }
+  }, false);
 }
 
 // src/content/av/code.ts
@@ -16197,6 +16599,9 @@ if (setting.index && path[2] == "www.bilibili.com" && (!path[3] || (path[3].star
 if (setting.av && /(\\/s)?\\/video\\/[AaBb][Vv]/.test(location.href)) {
   path[3] === "s" && replaceUrl(location.href.replace("s/video", "video"));
   avPage();
+}
+if (setting.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href)) {
+  bangumiPage();
 }
 /**
  * remove-invalid-xml-characters.js
