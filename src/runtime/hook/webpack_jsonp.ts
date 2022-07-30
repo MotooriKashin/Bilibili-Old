@@ -1,4 +1,5 @@
 import { isArray } from "../lib/typeof.js";
+import { API } from "../variable/variable.js";
 
 /** 暂存 */
 let hook: any;
@@ -9,7 +10,7 @@ Object.defineProperty(window, "webpackJsonp", {
     get: () => {
         if (hook) {
             if (isArray(hook)) {
-                if (hook.length > 1) hook.shift();
+                if (API.rewrite && hook.length > 1) hook.shift();
                 return hook;
             };
             return (chunkIds: any[], moreModules: any[], executeModules: any[]) => {

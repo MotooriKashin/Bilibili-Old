@@ -1,5 +1,6 @@
 import { toast } from "../../runtime/toast/toast";
 import { replaceUrl } from "../../runtime/url_clean";
+import { API } from "../../runtime/variable/variable";
 import { globalVector } from "../global";
 
 /** 检查是否禁用恢复旧版页面 */
@@ -17,4 +18,5 @@ export function keepNewCheck() {
         replaceUrl(redirect);
         sessionStorage.removeItem("redirect");
     }
+    API.rewrite = true;
 }

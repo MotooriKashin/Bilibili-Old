@@ -53,6 +53,8 @@ export const API = {
     pgc: <boolean><unknown>undefined,
     /** 播放器启动参数 */
     playerParam: <Record<string, string>><unknown>undefined,
+    /** 是否已重写页面 */
+    rewrite: false,
     // 调试接口集成 
     GM,
     urlParam,

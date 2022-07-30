@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js file:///E:/Github/Bilibili-Old/src/bilibili/bilibiliPlayer.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3ae20f30de5ad37882b474aa886ea06f9641886b/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -4099,230 +4099,6 @@ const modules =`
   var isArray = Array.isArray;
   var isObject = (val) => val !== null && typeof val === "object";
 
-  // src/runtime/hook/webpack_jsonp.ts
-  var hook;
-  var arr = [];
-  var param = [];
-  Object.defineProperty(window, "webpackJsonp", {
-    set: (v) => hook = v,
-    get: () => {
-      if (hook) {
-        if (isArray(hook)) {
-          if (hook.length > 1)
-            hook.shift();
-          return hook;
-        }
-        ;
-        return (chunkIds, moreModules, executeModules) => {
-          if (arr[moreModules.length]) {
-            const obj = arr[moreModules.length];
-            const pam = param[moreModules.length];
-            Object.entries(obj).forEach((d) => {
-              let code = moreModules[d[0]];
-              if (code) {
-                code = code.toString();
-                d[1].forEach((e) => code = e(code));
-                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
-              }
-            });
-          }
-          return hook(chunkIds, moreModules, executeModules);
-        };
-      }
-    },
-    configurable: true
-  });
-  function webpackhook(len, pos, rpc, params = ["t", "e", "i"]) {
-    if (!arr[len]) {
-      arr[len] = {};
-      param[len] = params;
-    }
-    arr[len][pos] = arr[len][pos] || [];
-    arr[len][pos].push((code) => rpc(code));
-  }
-
-  // src/runtime/lib/crc32.ts
-  var Midcrc = class {
-    CRCPOLYNOMIAL = 3988292384;
-    crctable = new Array(256);
-    index = new Array(4);
-    constructor() {
-      this.create_table();
-    }
-    run(input) {
-      let ht = parseInt("0x" + input) ^ 4294967295, snum, i, lastindex, deepCheckData;
-      for (i = 3; i >= 0; i--) {
-        this.index[3 - i] = this.getcrcindex(ht >>> i * 8);
-        snum = this.crctable[this.index[3 - i]];
-        ht ^= snum >>> (3 - i) * 8;
-      }
-      for (i = 0; i < 1e7; i++) {
-        lastindex = this.crc32lastindex(i);
-        if (lastindex == this.index[3]) {
-          deepCheckData = this.deepCheck(i, this.index);
-          if (deepCheckData[0])
-            break;
-        }
-      }
-      if (i == 1e7)
-        return -1;
-      return Number(i + "" + deepCheckData[1]);
-    }
-    create_table() {
-      let crcreg, i, j;
-      for (i = 0; i < 256; ++i) {
-        crcreg = i;
-        for (j = 0; j < 8; ++j) {
-          if ((crcreg & 1) !== 0) {
-            crcreg = this.CRCPOLYNOMIAL ^ crcreg >>> 1;
-          } else {
-            crcreg >>>= 1;
-          }
-        }
-        this.crctable[i] = crcreg;
-      }
-    }
-    crc32(input) {
-      if (typeof input != "string")
-        input = input.toString();
-      let crcstart = 4294967295, len = input.length, index;
-      for (let i = 0; i < len; ++i) {
-        index = (crcstart ^ input.charCodeAt(i)) & 255;
-        crcstart = crcstart >>> 8 ^ this.crctable[index];
-      }
-      return crcstart;
-    }
-    crc32lastindex(input) {
-      if (typeof input != "string")
-        input = input.toString();
-      let crcstart = 4294967295, len = input.length, index;
-      for (let i = 0; i < len; ++i) {
-        index = (crcstart ^ input.charCodeAt(i)) & 255;
-        crcstart = crcstart >>> 8 ^ this.crctable[index];
-      }
-      return index;
-    }
-    getcrcindex(t) {
-      for (let i = 0; i < 256; i++)
-        if (this.crctable[i] >>> 24 == t)
-          return i;
-      return -1;
-    }
-    deepCheck(i, index) {
-      let tc = 0, str = "", hash = this.crc32(i);
-      tc = hash & 255 ^ index[2];
-      if (!(tc <= 57 && tc >= 48))
-        return [0];
-      str += tc - 48;
-      hash = this.crctable[index[2]] ^ hash >>> 8;
-      tc = hash & 255 ^ index[1];
-      if (!(tc <= 57 && tc >= 48))
-        return [0];
-      str += tc - 48;
-      hash = this.crctable[index[1]] ^ hash >>> 8;
-      tc = hash & 255 ^ index[0];
-      if (!(tc <= 57 && tc >= 48))
-        return [0];
-      str += tc - 48;
-      hash = this.crctable[index[0]] ^ hash >>> 8;
-      return [1, str];
-    }
-  };
-  var crc = new Midcrc();
-  function midcrc(input) {
-    return crc.run(input);
-  }
-  function crc32(input) {
-    return ((crc.crc32(input) + 1) * -1 >>> 0).toString(16);
-  }
-
-  // src/runtime/do_while.ts
-  function doWhile(check2, callback, delay = 100, stop = 180) {
-    let timer2 = setInterval(() => {
-      const d = check2();
-      if (d) {
-        clearInterval(timer2);
-        callback(d);
-      }
-    }, delay);
-    stop && setTimeout(() => clearInterval(timer2), stop * 1e3);
-  }
-
-  // src/runtime/element/add_element.ts
-  function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
-    let element = document.createElement(tag);
-    attribute && Object.entries(attribute).forEach((d) => element.setAttribute(d[0], d[1]));
-    parrent = parrent || document.body;
-    innerHTML && (element.innerHTML = innerHTML);
-    replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
-    return element;
-  }
-  async function addCss(txt, id, parrent) {
-    if (!parrent && !document.head) {
-      await new Promise((r) => doWhile(() => document.body, r));
-    }
-    parrent = parrent || document.head;
-    const style = document.createElement("style");
-    style.setAttribute("type", "text/css");
-    id && !parrent.querySelector(\`#\${id}\`) && style.setAttribute("id", id);
-    style.appendChild(document.createTextNode(txt));
-    parrent.appendChild(style);
-  }
-  function loadScript(src, onload) {
-    return new Promise((r, j) => {
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = src;
-      script.addEventListener("load", () => {
-        script.remove();
-        onload && onload();
-        r(true);
-      });
-      script.addEventListener("error", () => {
-        script.remove();
-        j();
-      });
-      (document.body || document.head || document.documentElement || document).appendChild(script);
-    });
-  }
-
-  // src/images/svg/fork.svg
-  var fork_default = '<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>';
-
-  // src/runtime/lib/proxy_handler.ts
-  function get(t, p, r) {
-    try {
-      return Reflect.get(t, p, r);
-    } catch (e) {
-      return t[p];
-    }
-  }
-  var ProxyHandler = class {
-    constructor(callback) {
-      return {
-        deleteProperty: (target, key) => {
-          Promise.resolve().then(() => callback());
-          return Reflect.deleteProperty(target, key);
-        },
-        get: (target, key, receiver) => {
-          const res = get(target, key, receiver);
-          const targetIsArray = isArray(res);
-          if (isObject(res) || targetIsArray) {
-            return new Proxy(res, new ProxyHandler(callback));
-          }
-          return res;
-        },
-        set: (target, key, value, receiver) => {
-          value !== get(target, key, receiver) && Promise.resolve().then(() => callback());
-          return Reflect.set(target, key, value, receiver);
-        }
-      };
-    }
-  };
-
-  // src/runtime/toast/toast.html
-  var toast_default = '<div id="toast-container"></div>\\r\\n<style type="text/css">\\r\\n    .toast-close-button>svg {\\r\\n        width: 12px;\\r\\n        height: 12px;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        transition: height 1s ease 0s, padding 1s ease 0s;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    /*\\r\\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\\r\\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\\r\\n     * make sure you copy the url from the website since the url may change between versions.\\r\\n     */\\r\\n    .toast-title {\\r\\n        font-weight: bold;\\r\\n    }\\r\\n\\r\\n    .toast-message {\\r\\n        -ms-word-wrap: break-word;\\r\\n        word-wrap: break-word;\\r\\n    }\\r\\n\\r\\n    .toast-message a,\\r\\n    .toast-message label {\\r\\n        color: #FFFFFF;\\r\\n    }\\r\\n\\r\\n    .toast-message a:hover {\\r\\n        color: #CCCCCC;\\r\\n        text-decoration: none;\\r\\n    }\\r\\n\\r\\n    .toast-close-button {\\r\\n        position: relative;\\r\\n        right: -0.3em;\\r\\n        top: -0.3em;\\r\\n        float: right;\\r\\n        font-size: 20px;\\r\\n        font-weight: bold;\\r\\n        color: #FFFFFF;\\r\\n        -webkit-text-shadow: 0 1px 0 #ffffff;\\r\\n        text-shadow: 0 1px 0 #ffffff;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n        line-height: 1;\\r\\n    }\\r\\n\\r\\n    .toast-close-button:hover,\\r\\n    .toast-close-button:focus {\\r\\n        color: #000000;\\r\\n        text-decoration: none;\\r\\n        cursor: pointer;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    .rtl .toast-close-button {\\r\\n        left: -0.3em;\\r\\n        float: left;\\r\\n        right: 0.3em;\\r\\n    }\\r\\n\\r\\n    /*Additional properties for button version\\r\\n     iOS requires the button element instead of an anchor tag.\\r\\n     If you want the anchor version, it requires \`href="#"\`.*/\\r\\n    button.toast-close-button {\\r\\n        padding: 0;\\r\\n        cursor: pointer;\\r\\n        background: transparent;\\r\\n        border: 0;\\r\\n        -webkit-appearance: none;\\r\\n    }\\r\\n\\r\\n    .toast-top-center {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-center {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-full-width {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-full-width {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-left {\\r\\n        top: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-top-right {\\r\\n        top: 12px;\\r\\n        right: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-right {\\r\\n        right: 12px;\\r\\n        bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-left {\\r\\n        bottom: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        pointer-events: none;\\r\\n        /*overrides*/\\r\\n    }\\r\\n\\r\\n    #toast-container * {\\r\\n        -moz-box-sizing: border-box;\\r\\n        -webkit-box-sizing: border-box;\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    #toast-container>div {\\r\\n        position: relative;\\r\\n        pointer-events: auto;\\r\\n        overflow: hidden;\\r\\n        margin: 0 0 6px;\\r\\n        padding: 15px 15px 15px 50px;\\r\\n        width: 300px;\\r\\n        -moz-border-radius: 3px 3px 3px 3px;\\r\\n        -webkit-border-radius: 3px 3px 3px 3px;\\r\\n        border-radius: 3px 3px 3px 3px;\\r\\n        background-position: 15px center;\\r\\n        background-repeat: no-repeat;\\r\\n        -moz-box-shadow: 0 0 12px #999999;\\r\\n        -webkit-box-shadow: 0 0 12px #999999;\\r\\n        box-shadow: 0 0 12px #999999;\\r\\n        color: #FFFFFF;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n    }\\r\\n\\r\\n    #toast-container>div.rtl {\\r\\n        direction: rtl;\\r\\n        padding: 15px 50px 15px 15px;\\r\\n        background-position: right 15px center;\\r\\n    }\\r\\n\\r\\n    #toast-container>div:hover {\\r\\n        -moz-box-shadow: 0 0 12px #000000;\\r\\n        -webkit-box-shadow: 0 0 12px #000000;\\r\\n        box-shadow: 0 0 12px #000000;\\r\\n        opacity: 1;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\\r\\n        filter: alpha(opacity=100);\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-info {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-error {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-success {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-warning {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-center>div,\\r\\n    #toast-container.toast-bottom-center>div {\\r\\n        width: 300px;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-full-width>div,\\r\\n    #toast-container.toast-bottom-full-width>div {\\r\\n        width: 96%;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        background-color: #030303;\\r\\n    }\\r\\n\\r\\n    .toast-success {\\r\\n        background-color: #51A351;\\r\\n    }\\r\\n\\r\\n    .toast-error {\\r\\n        background-color: #BD362F;\\r\\n    }\\r\\n\\r\\n    .toast-info {\\r\\n        background-color: #2F96B4;\\r\\n    }\\r\\n\\r\\n    .toast-warning {\\r\\n        background-color: #F89406;\\r\\n    }\\r\\n\\r\\n    .toast-progress {\\r\\n        position: absolute;\\r\\n        left: 0;\\r\\n        bottom: 0;\\r\\n        height: 4px;\\r\\n        background-color: #000000;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    /*Responsive Design*/\\r\\n    @media all and (max-width: 240px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 11em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 241px) and (max-width: 480px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 18em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 481px) and (max-width: 768px) {\\r\\n        #toast-container>div {\\r\\n            padding: 15px 15px 15px 50px;\\r\\n            width: 25em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 15px 50px 15px 15px;\\r\\n        }\\r\\n    }\\r\\n</style>';
-
   // src/tampermonkey/check.ts
   var isUserScript = false;
   try {
@@ -4444,577 +4220,6 @@ const modules =`
       });
     }
   };
-
-  // src/runtime/chrome/setting.json
-  var setting_default = {
-    logReport: false,
-    toast: {
-      status: true,
-      rtl: false,
-      position: "top-right",
-      delay: 4,
-      type: "warning"
-    },
-    av: true,
-    videoLimit: {
-      switch: false,
-      server: "内置",
-      cn: "",
-      hk: "",
-      tw: "",
-      th: ""
-    },
-    protobufDanmaku: true,
-    section: true,
-    danmakuHashId: false,
-    flash: false,
-    enlike: false,
-    upList: false,
-    commandDm: false,
-    bangumi: true,
-    watchlater: true,
-    player: true,
-    index: true,
-    ranking: true,
-    read: true,
-    playlist: true,
-    automate: {
-      danmakuFirst: false,
-      showBofqi: false,
-      screenWide: false,
-      noDanmaku: false,
-      autoPlay: false,
-      webFullScreen: false,
-      videospeed: false,
-      electric: false
-    },
-    heartbeat: false,
-    bangumiEplist: false,
-    history: false,
-    searchHistory: false,
-    liveP2p: true,
-    sleepCheck: true,
-    errands: true,
-    album: false,
-    jointime: false,
-    restore: false,
-    codecType: "AVC",
-    collection: true,
-    search: true,
-    liveRecord: false,
-    closedCaption: true,
-    segProgress: false,
-    videoDisableAA: false,
-    commentLinkDetail: false,
-    downlaodType: [
-      "mp4"
-    ],
-    TVresource: false,
-    downloadQn: 127,
-    downloadOther: false,
-    danmakuSaveType: "xml",
-    downloadMethod: "默认",
-    userAgent: "Bilibili Freedoooooom/MarkII",
-    referer: "https://www.bilibili.com",
-    filepath: "",
-    aria2: {
-      token: "",
-      server: "http://localhost",
-      port: 6800
-    },
-    animatedBanner: false,
-    accessKey: {
-      key: "",
-      date: ""
-    },
-    timeline: false,
-    privateRecommend: false,
-    episodeData: false,
-    comment: false,
-    lostVideo: false,
-    uposReplace: {
-      nor: "不替换",
-      gat: "不替换",
-      th: "ks3（金山）",
-      dl: "不替换"
-    },
-    danmakuContact: false,
-    allDanmaku: 3,
-    IDM: {
-      wait: false,
-      silence: false
-    },
-    development: false
-  };
-
-  // src/runtime/storage.ts
-  var LocalStorage = class {
-    clear() {
-      self.localStorage.clear();
-    }
-    getItem(key) {
-      let str = self.localStorage.getItem(key);
-      try {
-        str = JSON.parse(str);
-      } catch (e) {
-      }
-      return str;
-    }
-    keys() {
-      return Object.keys(self.localStorage);
-    }
-    removeItem(key) {
-      self.localStorage.removeItem(key);
-    }
-    setItem(key, value) {
-      switch (typeof value) {
-        case "object":
-          self.localStorage.setItem(key, JSON.stringify(value));
-          break;
-        case "function":
-          console.warn("函数类型并不适合这样存储！", key, value);
-          break;
-        default:
-          self.localStorage.setItem(key, String(value));
-      }
-    }
-    get length() {
-      return self.localStorage.length;
-    }
-  };
-  var SessionStorage = class {
-    clear() {
-      self.sessionStorage.clear();
-    }
-    getItem(key) {
-      let str = self.sessionStorage.getItem(key);
-      try {
-        str = JSON.parse(str);
-      } catch (e) {
-      }
-      return str;
-    }
-    keys() {
-      return Object.keys(self.sessionStorage);
-    }
-    removeItem(key) {
-      self.sessionStorage.removeItem(key);
-    }
-    setItem(key, value) {
-      switch (typeof value) {
-        case "object":
-          self.sessionStorage.setItem(key, JSON.stringify(value));
-          break;
-        case "function":
-          console.warn("函数类型并不适合这样存储！", key, value);
-          break;
-        default:
-          self.sessionStorage.setItem(key, String(value));
-      }
-    }
-    get length() {
-      return self.sessionStorage.length;
-    }
-  };
-  var localStorage = new LocalStorage();
-  var sessionStorage2 = new SessionStorage();
-
-  // src/runtime/setting.ts
-  var setting = setting_default;
-  function getSetting() {
-    if (isUserScript) {
-      let save2 = function() {
-        GM_setValue("config", newSetting);
-      };
-      var save = save2;
-      const newSetting = GM_getValue("config", setting_default);
-      setting = new Proxy(newSetting, new ProxyHandler(save2));
-    } else {
-      let save2 = function() {
-        GM.setValue("setting", newSetting);
-        sessionStorage2.setItem("setting", newSetting);
-      };
-      var save = save2;
-      const newSetting = sessionStorage2.getItem("setting");
-      newSetting ? setting = new Proxy(newSetting, new ProxyHandler(save2)) : setTimeout(getSetting);
-    }
-  }
-  chrome?.storage ? chrome.storage.local.get().then((d) => setting = d.setting) : getSetting();
-
-  // src/runtime/toast/toast.ts
-  var ToastContainer = class extends HTMLElement {
-    positionList = ["top-right", "top-left", "bottom-right", "bottom-left"];
-    typeList = ["success", "error", "info", "warning", ""];
-    container;
-    status = true;
-    rtl = false;
-    position = "top-right";
-    delay = 4;
-    constructor() {
-      super();
-      const root3 = this.attachShadow({ mode: "closed" });
-      root3.appendChild(createElements(htmlVnode(toast_default)));
-      this.container = root3.children[0];
-      Object.defineProperties(this, {
-        status: {
-          get: () => setting.toast.status,
-          set: (v) => {
-            if (v === setting.toast.status)
-              return;
-            setting.toast.status = v;
-          }
-        },
-        rtl: {
-          get: () => setting.toast.rtl,
-          set: (v) => {
-            if (v === setting.toast.rtl)
-              return;
-            setting.toast.rtl = v;
-            v ? this.container.childNodes.forEach((d) => {
-              d.classList.add("rtl");
-            }) : this.container.childNodes.forEach((d) => {
-              d.classList.remove("rtl");
-            });
-          }
-        },
-        position: {
-          get: () => setting.toast.position,
-          set: (v) => {
-            if (v === setting.toast.position)
-              return;
-            if (!this.positionList.includes(v))
-              return;
-            setting.toast.position = v;
-            this.container.className = \`toast-\${v}\`;
-          }
-        },
-        delay: {
-          get: () => setting.toast.delay,
-          set: (v) => {
-            if (v === setting.toast.delay)
-              return;
-            setting.toast.delay = v;
-          }
-        }
-      });
-    }
-    toast(delay, type, ...data) {
-      if (!this.status)
-        return;
-      document.body.contains(this) || document.body.appendChild(this);
-      this.container.className = \`toast-\${this.position}\`;
-      let html = \`<div class="toast\${type ? " toast-" + type : ""}\${this.rtl ? " rtl" : ""}" aria-live="assertive" style="padding-top: 0px;padding-bottom: 0px;height: 0px;"><div class="toast-message">\`;
-      !delay && (html += \`<div class="toast-close-button">\${fork_default}</div>\`);
-      data.forEach((d, i) => {
-        if (isObject(d)) {
-          try {
-            d = JSON.stringify(d, void 0, "<br>");
-          } catch (e) {
-          }
-        }
-        html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
-      });
-      html += "</div></div>";
-      const node2 = createElements(htmlVnode(html));
-      const toast2 = node2.children[0];
-      this.container.insertBefore(node2, this.container.firstChild);
-      toast2.setAttribute("style", \`height: \${toast2.scrollHeight + 30}px;\`);
-      let hovering = false;
-      toast2.addEventListener("mouseover", () => hovering = true);
-      toast2.addEventListener("mouseout", () => hovering = false);
-      Object.defineProperties(toast2, {
-        "type": {
-          get: () => type,
-          set: (v) => {
-            if (v === type)
-              return;
-            if (!this.typeList.includes(v))
-              return;
-            type && toast2.classList.remove(\`toast-\${type}\`);
-            v && toast2.classList.add(\`toast-\${v}\`);
-            toast2.classList;
-            type = v;
-          }
-        },
-        "data": {
-          get: () => new Proxy(data, new ProxyHandler(ToastContainer.organizeDate.bind(ToastContainer, toast2))),
-          set: (v) => {
-            if (v === data)
-              return;
-            data = v;
-            ToastContainer.organizeDate(toast2);
-          }
-        },
-        "delay": {
-          get: () => delay,
-          set: (v) => {
-            if (v === delay)
-              return;
-            if (isNaN(v))
-              return;
-            if (delay === 0)
-              delay = v, ToastContainer.countDown(toast2);
-            delay = v;
-            if (v === 0) {
-              hovering ? toast2.addEventListener("mouseout", () => ToastContainer.remove(toast2)) : ToastContainer.remove(toast2);
-            }
-          }
-        }
-      });
-      !delay ? toast2.children[0].children[0].addEventListener("click", () => ToastContainer.remove(toast2)) : ToastContainer.countDown(toast2);
-      return toast2;
-    }
-    static countDown(node2) {
-      node2.delay && setTimeout(() => {
-        node2.delay--;
-        this.countDown(node2);
-      }, 1e3);
-    }
-    static remove(node2) {
-      node2.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
-      setTimeout(() => node2.remove(), 1e3);
-    }
-    static organizeDate(node2) {
-      let html = !node2.delay ? \`<div class="toast-close-button">\${fork_default}</div>\` : "";
-      node2.data.forEach((d, i) => {
-        if (isObject(d)) {
-          try {
-            d = JSON.stringify(d, void 0, "<br>");
-          } catch (e) {
-          }
-        }
-        html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
-      });
-      node2.children[0].replaceChildren(createElements(htmlVnode(html)));
-      node2.setAttribute("style", \`height: \${node2.firstChild.clientHeight + 30}px;\`);
-      !node2.delay && node2.children[0].children[0].addEventListener("click", () => ToastContainer.remove(node2));
-    }
-  };
-  customElements.get(\`toast-container\${mutex}\`) || customElements.define(\`toast-container\${mutex}\`, ToastContainer);
-  var node = customElements ? new ToastContainer() : { toast: () => {
-  } };
-  function Toast(type, ...data) {
-    return node.toast(node.delay, type, ...data);
-  }
-  function toast(...data) {
-    return Toast.bind(node, "")(...data);
-  }
-  toast.success = Toast.bind(node, "success");
-  toast.error = Toast.bind(node, "error");
-  toast.info = Toast.bind(node, "info");
-  toast.warning = Toast.bind(node, "warning");
-  toast.custom = node.toast.bind(node);
-
-  // src/runtime/unit.ts
-  function jsonCheck(data) {
-    let result = typeof data === "string" ? JSON.parse(data) : data;
-    if ("code" in result && result.code !== 0) {
-      let msg = result.msg || result.message || "";
-      throw [result.code, msg];
-    }
-    return result;
-  }
-  function getTotalTop(node2) {
-    var sum = 0;
-    do {
-      sum += node2.offsetTop;
-      node2 = node2.offsetParent;
-    } while (node2);
-    return sum;
-  }
-  function biliQuickLogin() {
-    window.biliQuickLogin ? window.biliQuickLogin() : loadScript("//static.hdslb.com/account/bili_quick_login.js", () => biliQuickLogin());
-  }
-  function getUrlValue(name) {
-    const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
-    const r = window.location.search.substr(1).match(reg);
-    if (r != null)
-      return decodeURIComponent(r[2]);
-    return null;
-  }
-  function statusCheck(status) {
-    return status >= 200 && status < 300 || status === 304;
-  }
-
-  // src/runtime/xhr.ts
-  var Record = {
-    default: {},
-    arraybuffer: {},
-    blob: {},
-    document: {},
-    json: {},
-    text: {}
-  };
-  function xhr(details, cache = false) {
-    details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
-    if (details.async === false) {
-      if (cache && Record[details.responseType || "default"][details.url])
-        return Record[details.responseType || "default"][details.url];
-      let xhr2 = new XMLHttpRequest();
-      xhr2.open(details.method || "GET", details.url, false);
-      details.responseType && (xhr2.responseType = details.responseType);
-      details.credentials && (xhr2.withCredentials = true);
-      details.headers && Object.entries(details.headers).forEach((d) => xhr2.setRequestHeader(d[0], d[1]));
-      details.timeout && (xhr2.timeout = details.timeout);
-      xhr2.send(details.data);
-      Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr2.response);
-      return xhr2.response;
-    } else
-      return new Promise((resolve, reject) => {
-        if (cache && Record[details.responseType || "default"][details.url])
-          return resolve(Record[details.responseType || "default"][details.url]);
-        let xhr2 = new XMLHttpRequest();
-        xhr2.open(details.method || "GET", details.url);
-        details.responseType && (xhr2.responseType = details.responseType);
-        details.headers && Object.entries(details.headers).forEach((d) => xhr2.setRequestHeader(d[0], d[1]));
-        details.credentials && (xhr2.withCredentials = true);
-        details.timeout && (xhr2.timeout = details.timeout);
-        xhr2.onabort = details.onabort || reject;
-        xhr2.onerror = details.onerror || reject;
-        details.onloadstart && (xhr2.onloadstart = details.onloadstart);
-        details.onprogress && (xhr2.onprogress = details.onprogress);
-        details.onreadystatechange && (xhr2.onreadystatechange = details.onreadystatechange);
-        xhr2.ontimeout = details.ontimeout || reject;
-        xhr2.onload = details.onload || (() => resolve(xhr2.response));
-        xhr2.addEventListener("load", () => {
-          Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr2.response);
-        });
-        xhr2.send(details.data);
-      });
-  }
-  function get2(url, details = {}, cache = false) {
-    !Reflect.has(details, "credentials") && (details.credentials = true);
-    return xhr({ url, ...details }, cache);
-  }
-  xhr.get = get2;
-  function post(url, data, contentType = "application/x-www-form-urlencoded", details = {}, cache = false) {
-    !Reflect.has(details, "credentials") && (details.credentials = true);
-    details.headers = { "Content-Type": contentType, ...details.headers };
-    return xhr({ url, method: "POST", data, ...details }, cache);
-  }
-  xhr.port = post;
-
-  // src/runtime/danmaku/danmaku_hash_id.css
-  var danmaku_hash_id_default = "/* 反查弹幕发送者相关样式 */\\r\\n.bb-comment,\\r\\n.comment-bilibili-fold {\\r\\n    font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;\\r\\n    font-size: 0;\\r\\n    zoom: 1;\\r\\n    min-height: 100px;\\r\\n    background: #fff;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list,\\r\\n.comment-bilibili-fold .comment-list {\\r\\n    padding-top: 20px;\\r\\n}\\r\\n\\r\\n.bb-comment *,\\r\\n.comment-bilibili-fold * {\\r\\n    box-sizing: content-box;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face {\\r\\n    display: inline-block;\\r\\n    position: relative;\\r\\n    margin-right: 10px;\\r\\n    vertical-align: top;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face img,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face img {\\r\\n    width: 24px;\\r\\n    height: 24px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con {\\r\\n    display: inline-block;\\r\\n    width: calc(100% - 34px);\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user,\\r\\n.comment-bilibili-fold .comment-list .list-item .user {\\r\\n    font-size: 12px;\\r\\n    font-weight: 700;\\r\\n    line-height: 18px;\\r\\n    padding-bottom: 4px;\\r\\n    display: block;\\r\\n    word-wrap: break-word;\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user .name,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user .name {\\r\\n    position: relative;\\r\\n    top: -1px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .level {\\r\\n    margin: 0 15px 0 8px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l0,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l0 {\\r\\n    background-position: -23px -28px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l1,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l1 {\\r\\n    background-position: -23px -92px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l2,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l2 {\\r\\n    background-position: -23px -156px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l3,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l3 {\\r\\n    background-position: -23px -220px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l4,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l4 {\\r\\n    background-position: -23px -284px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l5,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l5 {\\r\\n    background-position: -23px -348px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l6,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l6 {\\r\\n    background-position: -23px -412px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l7,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l7 {\\r\\n    background-position: -23px -476px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l8,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l8 {\\r\\n    background-position: -23px -540px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l9,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l9 {\\r\\n    background-position: -23px -604px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level {\\r\\n    display: inline-block;\\r\\n    width: 19px;\\r\\n    height: 9px;\\r\\n    vertical-align: middle;\\r\\n    margin: 0 8px;\\r\\n    background: url(data:image/png;base64,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) no-repeat;\\r\\n}";
-
-  // src/runtime/danmaku/danmaku_hash_id.ts
-  function danmakuHashId() {
-    addCss(danmaku_hash_id_default);
-    class DanmakuHashId {
-      static count = 0;
-      static catch = {};
-      count = 0;
-      hash;
-      mid;
-      node;
-      dm;
-      constructor(crc2) {
-        DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
-        this.count = DanmakuHashId.count;
-        DanmakuHashId.catch = DanmakuHashId.catch || {};
-        this.hash = crc2;
-        this.mid = midcrc(this.hash);
-        this.getInfo();
-      }
-      async getInfo() {
-        try {
-          this.node = document.querySelector(".bilibili-player-context-menu-container.active");
-          if (!this.node)
-            return setTimeout(() => {
-              this.getInfo();
-            }, 100);
-          this.node = this.node.children[0];
-          let j = 0;
-          for (let i = this.node.children.length - 1; i >= 0; i--) {
-            if (this.node.children[i].textContent.includes("mid")) {
-              this.dm = this.node.children[i];
-              j++;
-              if (this.count === j)
-                break;
-            }
-          }
-          if (!this.dm)
-            return setTimeout(() => {
-              this.getInfo();
-            }, 100);
-          if (this.dm.tagName != "LI")
-            return;
-          DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid }) }, true));
-          this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' + this.mid + '" class="reply-face"><img src="' + DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' + this.mid + '" href="//space.bilibili.com/' + this.mid + '" target="_blank" class="' + (DanmakuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmakuHashId.catch[this.mid].data.card.name + "</a> " + DanmakuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + (DanmakuHashId.catch[this.mid].data.card.is_senior_member ? 7 : DanmakuHashId.catch[this.mid].data.card.level_info.current_level) + '"></i></a></div></div></div></div></div></div></div>';
-          DanmakuHashId.count--;
-        } catch (e) {
-          DanmakuHashId.count--;
-          toast.error("反差弹幕发送者信息失败 ಥ_ಥ");
-          debug.error(e);
-        }
-      }
-    }
-    window.danmakuHashId = (crc2) => {
-      try {
-        const check2 = new DanmakuHashId(crc2);
-        return \`hash: \${check2.hash} mid: \${check2.mid}\`;
-      } catch (e) {
-        debug.error(e);
-      }
-    };
-  }
-
-  // src/runtime/lib/file.ts
-  function readAs(file, type = "string", encoding = "utf-8") {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      switch (type) {
-        case "ArrayBuffer":
-          reader.readAsArrayBuffer(file);
-          break;
-        case "DataURL":
-          reader.readAsDataURL(file);
-          break;
-        case "string":
-          reader.readAsText(file, encoding);
-          break;
-      }
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (e) => reject(e);
-    });
-  }
-  async function saveAs(content, fileName, contentType = "text/plain") {
-    const a = document.createElement("a");
-    const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.addEventListener("load", () => URL.revokeObjectURL(a.href));
-    a.click();
-  }
-  function fileRead(accept, multiple) {
-    return new Promise((resolve) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      accept && (input.accept = accept);
-      multiple && (input.multiple = multiple);
-      input.style.opacity = "0";
-      input.addEventListener("change", () => resolve(input.files));
-      document.body.appendChild(input);
-      input.click();
-    });
-  }
-
-  // src/runtime/variable/fnval.ts
-  var Fnval = class {
-    MP4 = 1;
-    DASH_H265 = 16;
-    HDR = 64;
-    DASH_4K = 128;
-    DOLBYAUDIO = 256;
-    DOLBYVIDEO = 512;
-    DASH_8K = 1024;
-    DASH_AV1 = 2048;
-  };
-  var _ = new Fnval();
-  var fnval = Reflect.ownKeys(_).reduce((s, d) => {
-    s += _[d];
-    return s;
-  }, -1);
 
   // src/runtime/lib/md5.ts
   var ERROR = "input is invalid type";
@@ -5478,6 +4683,973 @@ const modules =`
   urlsign.encode = (key, secret) => Sign.encode(key, secret);
   urlsign.list = () => Sign.list();
 
+  // src/runtime/lib/abv.ts
+  var Abv = class {
+    base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
+    digitMap = [11, 10, 3, 8, 4, 6];
+    xor = 177451812;
+    add = 8728348608;
+    bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
+    table = {};
+    constructor() {
+      for (let i = 0; i < 58; i++)
+        this.table[this.base58Table[i]] = i;
+    }
+    check(input) {
+      if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
+        return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
+      if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
+        return this.bvToAv("BV" + input);
+      if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
+        return this.bvToAv(String(input));
+      throw input;
+    }
+    bvToAv(BV) {
+      let r = 0;
+      for (let i = 0; i < 6; i++)
+        r += this.table[BV[this.digitMap[i]]] * 58 ** i;
+      return r - this.add ^ this.xor;
+    }
+    avToBv(av) {
+      let bv = Array.from(this.bvidTemplate);
+      av = (av ^ this.xor) + this.add;
+      for (let i = 0; i < 6; i++)
+        bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
+      return bv.join("");
+    }
+  };
+  function abv(input) {
+    return new Abv().check(input);
+  }
+
+  // src/runtime/do_while.ts
+  function doWhile(check2, callback, delay = 100, stop = 180) {
+    let timer2 = setInterval(() => {
+      const d = check2();
+      if (d) {
+        clearInterval(timer2);
+        callback(d);
+      }
+    }, delay);
+    stop && setTimeout(() => clearInterval(timer2), stop * 1e3);
+  }
+
+  // src/runtime/element/add_element.ts
+  function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
+    let element = document.createElement(tag);
+    attribute && Object.entries(attribute).forEach((d) => element.setAttribute(d[0], d[1]));
+    parrent = parrent || document.body;
+    innerHTML && (element.innerHTML = innerHTML);
+    replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+    return element;
+  }
+  async function addCss(txt, id, parrent) {
+    if (!parrent && !document.head) {
+      await new Promise((r) => doWhile(() => document.body, r));
+    }
+    parrent = parrent || document.head;
+    const style = document.createElement("style");
+    style.setAttribute("type", "text/css");
+    id && !parrent.querySelector(\`#\${id}\`) && style.setAttribute("id", id);
+    style.appendChild(document.createTextNode(txt));
+    parrent.appendChild(style);
+  }
+  function loadScript(src, onload) {
+    return new Promise((r, j) => {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = src;
+      script.addEventListener("load", () => {
+        script.remove();
+        onload && onload();
+        r(true);
+      });
+      script.addEventListener("error", () => {
+        script.remove();
+        j();
+      });
+      (document.body || document.head || document.documentElement || document).appendChild(script);
+    });
+  }
+
+  // src/runtime/unit.ts
+  function jsonCheck(data) {
+    let result = typeof data === "string" ? JSON.parse(data) : data;
+    if ("code" in result && result.code !== 0) {
+      let msg = result.msg || result.message || "";
+      throw [result.code, msg];
+    }
+    return result;
+  }
+  function getTotalTop(node2) {
+    var sum = 0;
+    do {
+      sum += node2.offsetTop;
+      node2 = node2.offsetParent;
+    } while (node2);
+    return sum;
+  }
+  function biliQuickLogin() {
+    window.biliQuickLogin ? window.biliQuickLogin() : loadScript("//static.hdslb.com/account/bili_quick_login.js", () => biliQuickLogin());
+  }
+  function getUrlValue(name) {
+    const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
+    const r = window.location.search.substr(1).match(reg);
+    if (r != null)
+      return decodeURIComponent(r[2]);
+    return null;
+  }
+  function statusCheck(status) {
+    return status >= 200 && status < 300 || status === 304;
+  }
+
+  // src/runtime/xhr.ts
+  var Record = {
+    default: {},
+    arraybuffer: {},
+    blob: {},
+    document: {},
+    json: {},
+    text: {}
+  };
+  function xhr(details, cache = false) {
+    details.method == "POST" && (details.headers = details.headers || {}, !details.headers["Content-Type"] && Reflect.set(details.headers, "Content-Type", "application/x-www-form-urlencoded"));
+    if (details.async === false) {
+      if (cache && Record[details.responseType || "default"][details.url])
+        return Record[details.responseType || "default"][details.url];
+      let xhr2 = new XMLHttpRequest();
+      xhr2.open(details.method || "GET", details.url, false);
+      details.responseType && (xhr2.responseType = details.responseType);
+      details.credentials && (xhr2.withCredentials = true);
+      details.headers && Object.entries(details.headers).forEach((d) => xhr2.setRequestHeader(d[0], d[1]));
+      details.timeout && (xhr2.timeout = details.timeout);
+      xhr2.send(details.data);
+      Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr2.response);
+      return xhr2.response;
+    } else
+      return new Promise((resolve, reject) => {
+        if (cache && Record[details.responseType || "default"][details.url])
+          return resolve(Record[details.responseType || "default"][details.url]);
+        let xhr2 = new XMLHttpRequest();
+        xhr2.open(details.method || "GET", details.url);
+        details.responseType && (xhr2.responseType = details.responseType);
+        details.headers && Object.entries(details.headers).forEach((d) => xhr2.setRequestHeader(d[0], d[1]));
+        details.credentials && (xhr2.withCredentials = true);
+        details.timeout && (xhr2.timeout = details.timeout);
+        xhr2.onabort = details.onabort || reject;
+        xhr2.onerror = details.onerror || reject;
+        details.onloadstart && (xhr2.onloadstart = details.onloadstart);
+        details.onprogress && (xhr2.onprogress = details.onprogress);
+        details.onreadystatechange && (xhr2.onreadystatechange = details.onreadystatechange);
+        xhr2.ontimeout = details.ontimeout || reject;
+        xhr2.onload = details.onload || (() => resolve(xhr2.response));
+        xhr2.addEventListener("load", () => {
+          Promise.resolve().then(() => Record[details.responseType || "default"][details.url] = xhr2.response);
+        });
+        xhr2.send(details.data);
+      });
+  }
+  function get(url, details = {}, cache = false) {
+    !Reflect.has(details, "credentials") && (details.credentials = true);
+    return xhr({ url, ...details }, cache);
+  }
+  xhr.get = get;
+  function post(url, data, contentType = "application/x-www-form-urlencoded", details = {}, cache = false) {
+    !Reflect.has(details, "credentials") && (details.credentials = true);
+    details.headers = { "Content-Type": contentType, ...details.headers };
+    return xhr({ url, method: "POST", data, ...details }, cache);
+  }
+  xhr.port = post;
+
+  // src/runtime/url_param.ts
+  var catchs = { aid: {}, ssid: {}, epid: {} };
+  async function urlParam(url = location.href, redirect = true) {
+    url && !url.includes("?") && (url = "?" + url);
+    const obj = urlObj(url);
+    let { aid, cid, ssid, epid, p } = obj;
+    let pgc = false;
+    !aid && (aid = obj.avid);
+    !aid && url.replace(/[aA][vV]\\d+/, (d) => aid = d.substring(2));
+    !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = abv(d));
+    !aid && obj.bvid && (aid = abv(obj.bvid));
+    aid && !Number(aid) && (aid = abv(aid));
+    p = p || 1;
+    !ssid && (ssid = obj.seasonId);
+    !ssid && (ssid = obj.season_id);
+    !ssid && url.replace(/[sS][sS]\\d+/, (d) => ssid = d.substring(2));
+    !epid && (epid = obj.episodeId);
+    !epid && (epid = obj.ep_id);
+    !epid && url.replace(/[eE][pP]\\d+/, (d) => epid = d.substring(2));
+    if (!ssid && !epid && aid) {
+      if (catchs.aid[aid])
+        return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+      if (!cid) {
+        try {
+          let data = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/view", { "aid": aid }) }, true)).data;
+          if (data.redirect_url)
+            return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
+          catchs.aid[aid] = data.pages;
+          catchs.aid[aid].forEach((d) => d.aid = aid);
+          return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+        } catch (e) {
+          debug.error("view", e);
+          try {
+            catchs.aid[aid] = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }) }, true)).data;
+            catchs.aid[aid].forEach((d) => d.aid = aid);
+            return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+          } catch (e2) {
+            debug.error("pagelist", e2);
+            try {
+              catchs.aid[aid] = jsonCheck(await xhr({ url: \`//api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=\${aid}&type=json\` }, true)).list;
+              catchs.aid[aid].forEach((d) => d.aid = aid);
+              return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+            } catch (e3) {
+              debug.error("appkey", e3);
+              try {
+                let data = jsonCheck(await xhr({ url: objUrl("https://www.biliplus.com/api/view", { "id": aid }) }, true));
+                catchs.aid[aid] = data.list || data.v2_app_api && data.v2_app_api.pages;
+                catchs.aid[aid].forEach((d) => d.aid = aid);
+                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
+                  return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
+                return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+              } catch (e4) {
+                debug.error("biliplus", e4);
+              }
+            }
+          }
+        }
+      }
+    }
+    if (ssid || epid) {
+      if (ssid && catchs.ssid[ssid])
+        return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+      if (epid && catchs.epid[epid])
+        return catchs.epid[epid];
+      pgc = true;
+      const param2 = { ep_id: epid, season_id: ssid };
+      let data = jsonCheck(await xhr({ url: objUrl("https://bangumi.bilibili.com/view/web_api/season", param2) }, true)).result;
+      ssid = data.season_id;
+      catchs.ssid[ssid] = [];
+      data.episodes.forEach((d) => {
+        Object.assign(d, { ssid, pgc, epid: d.ep_id });
+        catchs.aid[d.aid] = catchs.aid[d.aid] || [];
+        catchs.aid[d.aid].push(d);
+        catchs.ssid[ssid].push(catchs.epid[d.ep_id] = d);
+      });
+      if (epid)
+        return catchs.epid[epid];
+      return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+    }
+    return { aid, cid, ssid, epid, p, pgc };
+  }
+
+  // src/runtime/chrome/setting.json
+  var setting_default = {
+    logReport: false,
+    toast: {
+      status: true,
+      rtl: false,
+      position: "top-right",
+      delay: 4,
+      type: "warning"
+    },
+    av: true,
+    videoLimit: {
+      switch: false,
+      server: "内置",
+      cn: "",
+      hk: "",
+      tw: "",
+      th: ""
+    },
+    protobufDanmaku: true,
+    section: true,
+    danmakuHashId: false,
+    flash: false,
+    enlike: false,
+    upList: false,
+    commandDm: false,
+    bangumi: true,
+    watchlater: true,
+    player: true,
+    index: true,
+    ranking: true,
+    read: true,
+    playlist: true,
+    automate: {
+      danmakuFirst: false,
+      showBofqi: false,
+      screenWide: false,
+      noDanmaku: false,
+      autoPlay: false,
+      webFullScreen: false,
+      videospeed: false,
+      electric: false
+    },
+    heartbeat: false,
+    bangumiEplist: false,
+    history: false,
+    searchHistory: false,
+    liveP2p: true,
+    sleepCheck: true,
+    errands: true,
+    album: false,
+    jointime: false,
+    restore: false,
+    codecType: "AVC",
+    collection: true,
+    search: true,
+    liveRecord: false,
+    closedCaption: true,
+    segProgress: false,
+    videoDisableAA: false,
+    commentLinkDetail: false,
+    downlaodType: [
+      "mp4"
+    ],
+    TVresource: false,
+    downloadQn: 127,
+    downloadOther: false,
+    danmakuSaveType: "xml",
+    downloadMethod: "默认",
+    userAgent: "Bilibili Freedoooooom/MarkII",
+    referer: "https://www.bilibili.com",
+    filepath: "",
+    aria2: {
+      token: "",
+      server: "http://localhost",
+      port: 6800
+    },
+    animatedBanner: false,
+    accessKey: {
+      key: "",
+      date: ""
+    },
+    timeline: false,
+    privateRecommend: false,
+    episodeData: false,
+    comment: false,
+    lostVideo: false,
+    uposReplace: {
+      nor: "不替换",
+      gat: "不替换",
+      th: "ks3（金山）",
+      dl: "不替换"
+    },
+    danmakuContact: false,
+    allDanmaku: 3,
+    IDM: {
+      wait: false,
+      silence: false
+    },
+    development: false
+  };
+
+  // src/runtime/lib/proxy_handler.ts
+  function get2(t, p, r) {
+    try {
+      return Reflect.get(t, p, r);
+    } catch (e) {
+      return t[p];
+    }
+  }
+  var ProxyHandler = class {
+    constructor(callback) {
+      return {
+        deleteProperty: (target, key) => {
+          Promise.resolve().then(() => callback());
+          return Reflect.deleteProperty(target, key);
+        },
+        get: (target, key, receiver) => {
+          const res = get2(target, key, receiver);
+          const targetIsArray = isArray(res);
+          if (isObject(res) || targetIsArray) {
+            return new Proxy(res, new ProxyHandler(callback));
+          }
+          return res;
+        },
+        set: (target, key, value, receiver) => {
+          value !== get2(target, key, receiver) && Promise.resolve().then(() => callback());
+          return Reflect.set(target, key, value, receiver);
+        }
+      };
+    }
+  };
+
+  // src/runtime/storage.ts
+  var LocalStorage = class {
+    clear() {
+      self.localStorage.clear();
+    }
+    getItem(key) {
+      let str = self.localStorage.getItem(key);
+      try {
+        str = JSON.parse(str);
+      } catch (e) {
+      }
+      return str;
+    }
+    keys() {
+      return Object.keys(self.localStorage);
+    }
+    removeItem(key) {
+      self.localStorage.removeItem(key);
+    }
+    setItem(key, value) {
+      switch (typeof value) {
+        case "object":
+          self.localStorage.setItem(key, JSON.stringify(value));
+          break;
+        case "function":
+          console.warn("函数类型并不适合这样存储！", key, value);
+          break;
+        default:
+          self.localStorage.setItem(key, String(value));
+      }
+    }
+    get length() {
+      return self.localStorage.length;
+    }
+  };
+  var SessionStorage = class {
+    clear() {
+      self.sessionStorage.clear();
+    }
+    getItem(key) {
+      let str = self.sessionStorage.getItem(key);
+      try {
+        str = JSON.parse(str);
+      } catch (e) {
+      }
+      return str;
+    }
+    keys() {
+      return Object.keys(self.sessionStorage);
+    }
+    removeItem(key) {
+      self.sessionStorage.removeItem(key);
+    }
+    setItem(key, value) {
+      switch (typeof value) {
+        case "object":
+          self.sessionStorage.setItem(key, JSON.stringify(value));
+          break;
+        case "function":
+          console.warn("函数类型并不适合这样存储！", key, value);
+          break;
+        default:
+          self.sessionStorage.setItem(key, String(value));
+      }
+    }
+    get length() {
+      return self.sessionStorage.length;
+    }
+  };
+  var localStorage = new LocalStorage();
+  var sessionStorage2 = new SessionStorage();
+
+  // src/runtime/setting.ts
+  var setting = setting_default;
+  function getSetting() {
+    if (isUserScript) {
+      let save2 = function() {
+        GM_setValue("config", newSetting);
+      };
+      var save = save2;
+      const newSetting = GM_getValue("config", setting_default);
+      setting = new Proxy(newSetting, new ProxyHandler(save2));
+    } else {
+      let save2 = function() {
+        GM.setValue("setting", newSetting);
+        sessionStorage2.setItem("setting", newSetting);
+      };
+      var save = save2;
+      const newSetting = sessionStorage2.getItem("setting");
+      newSetting ? setting = new Proxy(newSetting, new ProxyHandler(save2)) : setTimeout(getSetting);
+    }
+  }
+  chrome?.storage ? chrome.storage.local.get().then((d) => setting = d.setting) : getSetting();
+
+  // src/runtime/variable/variable.ts
+  var API = {
+    get aid() {
+      return window.aid;
+    },
+    set aid(v) {
+      window.aid = v;
+    },
+    get cid() {
+      return window.cid;
+    },
+    set cid(v) {
+      window.cid = v;
+    },
+    get ssid() {
+      return window.ssid;
+    },
+    set ssid(v) {
+      window.ssid = v;
+    },
+    get epid() {
+      return window.epid;
+    },
+    set epid(v) {
+      window.epid = v;
+    },
+    get __INITIAL_STATE__() {
+      return window.__INITIAL_STATE__;
+    },
+    set __INITIAL_STATE__(v) {
+      window.__INITIAL_STATE__ = v;
+    },
+    __playinfo__: void 0,
+    limit: void 0,
+    bkg_cover: void 0,
+    cover: void 0,
+    title: void 0,
+    th: void 0,
+    pgc: void 0,
+    playerParam: void 0,
+    rewrite: false,
+    GM,
+    urlParam,
+    xhr,
+    urlsign,
+    objUrl,
+    urlObj,
+    URLEs
+  };
+  setting.development && Reflect.set(window, "API", API);
+
+  // src/runtime/hook/webpack_jsonp.ts
+  var hook;
+  var arr = [];
+  var param = [];
+  Object.defineProperty(window, "webpackJsonp", {
+    set: (v) => hook = v,
+    get: () => {
+      if (hook) {
+        if (isArray(hook)) {
+          if (API.rewrite && hook.length > 1)
+            hook.shift();
+          return hook;
+        }
+        ;
+        return (chunkIds, moreModules, executeModules) => {
+          if (arr[moreModules.length]) {
+            const obj = arr[moreModules.length];
+            const pam = param[moreModules.length];
+            Object.entries(obj).forEach((d) => {
+              let code = moreModules[d[0]];
+              if (code) {
+                code = code.toString();
+                d[1].forEach((e) => code = e(code));
+                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
+              }
+            });
+          }
+          return hook(chunkIds, moreModules, executeModules);
+        };
+      }
+    },
+    configurable: true
+  });
+  function webpackhook(len, pos, rpc, params = ["t", "e", "i"]) {
+    if (!arr[len]) {
+      arr[len] = {};
+      param[len] = params;
+    }
+    arr[len][pos] = arr[len][pos] || [];
+    arr[len][pos].push((code) => rpc(code));
+  }
+
+  // src/runtime/lib/crc32.ts
+  var Midcrc = class {
+    CRCPOLYNOMIAL = 3988292384;
+    crctable = new Array(256);
+    index = new Array(4);
+    constructor() {
+      this.create_table();
+    }
+    run(input) {
+      let ht = parseInt("0x" + input) ^ 4294967295, snum, i, lastindex, deepCheckData;
+      for (i = 3; i >= 0; i--) {
+        this.index[3 - i] = this.getcrcindex(ht >>> i * 8);
+        snum = this.crctable[this.index[3 - i]];
+        ht ^= snum >>> (3 - i) * 8;
+      }
+      for (i = 0; i < 1e7; i++) {
+        lastindex = this.crc32lastindex(i);
+        if (lastindex == this.index[3]) {
+          deepCheckData = this.deepCheck(i, this.index);
+          if (deepCheckData[0])
+            break;
+        }
+      }
+      if (i == 1e7)
+        return -1;
+      return Number(i + "" + deepCheckData[1]);
+    }
+    create_table() {
+      let crcreg, i, j;
+      for (i = 0; i < 256; ++i) {
+        crcreg = i;
+        for (j = 0; j < 8; ++j) {
+          if ((crcreg & 1) !== 0) {
+            crcreg = this.CRCPOLYNOMIAL ^ crcreg >>> 1;
+          } else {
+            crcreg >>>= 1;
+          }
+        }
+        this.crctable[i] = crcreg;
+      }
+    }
+    crc32(input) {
+      if (typeof input != "string")
+        input = input.toString();
+      let crcstart = 4294967295, len = input.length, index;
+      for (let i = 0; i < len; ++i) {
+        index = (crcstart ^ input.charCodeAt(i)) & 255;
+        crcstart = crcstart >>> 8 ^ this.crctable[index];
+      }
+      return crcstart;
+    }
+    crc32lastindex(input) {
+      if (typeof input != "string")
+        input = input.toString();
+      let crcstart = 4294967295, len = input.length, index;
+      for (let i = 0; i < len; ++i) {
+        index = (crcstart ^ input.charCodeAt(i)) & 255;
+        crcstart = crcstart >>> 8 ^ this.crctable[index];
+      }
+      return index;
+    }
+    getcrcindex(t) {
+      for (let i = 0; i < 256; i++)
+        if (this.crctable[i] >>> 24 == t)
+          return i;
+      return -1;
+    }
+    deepCheck(i, index) {
+      let tc = 0, str = "", hash = this.crc32(i);
+      tc = hash & 255 ^ index[2];
+      if (!(tc <= 57 && tc >= 48))
+        return [0];
+      str += tc - 48;
+      hash = this.crctable[index[2]] ^ hash >>> 8;
+      tc = hash & 255 ^ index[1];
+      if (!(tc <= 57 && tc >= 48))
+        return [0];
+      str += tc - 48;
+      hash = this.crctable[index[1]] ^ hash >>> 8;
+      tc = hash & 255 ^ index[0];
+      if (!(tc <= 57 && tc >= 48))
+        return [0];
+      str += tc - 48;
+      hash = this.crctable[index[0]] ^ hash >>> 8;
+      return [1, str];
+    }
+  };
+  var crc = new Midcrc();
+  function midcrc(input) {
+    return crc.run(input);
+  }
+  function crc32(input) {
+    return ((crc.crc32(input) + 1) * -1 >>> 0).toString(16);
+  }
+
+  // src/images/svg/fork.svg
+  var fork_default = '<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>';
+
+  // src/runtime/toast/toast.html
+  var toast_default = '<div id="toast-container"></div>\\r\\n<style type="text/css">\\r\\n    .toast-close-button>svg {\\r\\n        width: 12px;\\r\\n        height: 12px;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        transition: height 1s ease 0s, padding 1s ease 0s;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    /*\\r\\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\\r\\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\\r\\n     * make sure you copy the url from the website since the url may change between versions.\\r\\n     */\\r\\n    .toast-title {\\r\\n        font-weight: bold;\\r\\n    }\\r\\n\\r\\n    .toast-message {\\r\\n        -ms-word-wrap: break-word;\\r\\n        word-wrap: break-word;\\r\\n    }\\r\\n\\r\\n    .toast-message a,\\r\\n    .toast-message label {\\r\\n        color: #FFFFFF;\\r\\n    }\\r\\n\\r\\n    .toast-message a:hover {\\r\\n        color: #CCCCCC;\\r\\n        text-decoration: none;\\r\\n    }\\r\\n\\r\\n    .toast-close-button {\\r\\n        position: relative;\\r\\n        right: -0.3em;\\r\\n        top: -0.3em;\\r\\n        float: right;\\r\\n        font-size: 20px;\\r\\n        font-weight: bold;\\r\\n        color: #FFFFFF;\\r\\n        -webkit-text-shadow: 0 1px 0 #ffffff;\\r\\n        text-shadow: 0 1px 0 #ffffff;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n        line-height: 1;\\r\\n    }\\r\\n\\r\\n    .toast-close-button:hover,\\r\\n    .toast-close-button:focus {\\r\\n        color: #000000;\\r\\n        text-decoration: none;\\r\\n        cursor: pointer;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    .rtl .toast-close-button {\\r\\n        left: -0.3em;\\r\\n        float: left;\\r\\n        right: 0.3em;\\r\\n    }\\r\\n\\r\\n    /*Additional properties for button version\\r\\n     iOS requires the button element instead of an anchor tag.\\r\\n     If you want the anchor version, it requires \`href="#"\`.*/\\r\\n    button.toast-close-button {\\r\\n        padding: 0;\\r\\n        cursor: pointer;\\r\\n        background: transparent;\\r\\n        border: 0;\\r\\n        -webkit-appearance: none;\\r\\n    }\\r\\n\\r\\n    .toast-top-center {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-center {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-full-width {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-full-width {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-left {\\r\\n        top: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-top-right {\\r\\n        top: 12px;\\r\\n        right: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-right {\\r\\n        right: 12px;\\r\\n        bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-left {\\r\\n        bottom: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        pointer-events: none;\\r\\n        /*overrides*/\\r\\n    }\\r\\n\\r\\n    #toast-container * {\\r\\n        -moz-box-sizing: border-box;\\r\\n        -webkit-box-sizing: border-box;\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    #toast-container>div {\\r\\n        position: relative;\\r\\n        pointer-events: auto;\\r\\n        overflow: hidden;\\r\\n        margin: 0 0 6px;\\r\\n        padding: 15px 15px 15px 50px;\\r\\n        width: 300px;\\r\\n        -moz-border-radius: 3px 3px 3px 3px;\\r\\n        -webkit-border-radius: 3px 3px 3px 3px;\\r\\n        border-radius: 3px 3px 3px 3px;\\r\\n        background-position: 15px center;\\r\\n        background-repeat: no-repeat;\\r\\n        -moz-box-shadow: 0 0 12px #999999;\\r\\n        -webkit-box-shadow: 0 0 12px #999999;\\r\\n        box-shadow: 0 0 12px #999999;\\r\\n        color: #FFFFFF;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n    }\\r\\n\\r\\n    #toast-container>div.rtl {\\r\\n        direction: rtl;\\r\\n        padding: 15px 50px 15px 15px;\\r\\n        background-position: right 15px center;\\r\\n    }\\r\\n\\r\\n    #toast-container>div:hover {\\r\\n        -moz-box-shadow: 0 0 12px #000000;\\r\\n        -webkit-box-shadow: 0 0 12px #000000;\\r\\n        box-shadow: 0 0 12px #000000;\\r\\n        opacity: 1;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\\r\\n        filter: alpha(opacity=100);\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-info {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-error {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-success {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-warning {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-center>div,\\r\\n    #toast-container.toast-bottom-center>div {\\r\\n        width: 300px;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-full-width>div,\\r\\n    #toast-container.toast-bottom-full-width>div {\\r\\n        width: 96%;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        background-color: #030303;\\r\\n    }\\r\\n\\r\\n    .toast-success {\\r\\n        background-color: #51A351;\\r\\n    }\\r\\n\\r\\n    .toast-error {\\r\\n        background-color: #BD362F;\\r\\n    }\\r\\n\\r\\n    .toast-info {\\r\\n        background-color: #2F96B4;\\r\\n    }\\r\\n\\r\\n    .toast-warning {\\r\\n        background-color: #F89406;\\r\\n    }\\r\\n\\r\\n    .toast-progress {\\r\\n        position: absolute;\\r\\n        left: 0;\\r\\n        bottom: 0;\\r\\n        height: 4px;\\r\\n        background-color: #000000;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    /*Responsive Design*/\\r\\n    @media all and (max-width: 240px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 11em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 241px) and (max-width: 480px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 18em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 481px) and (max-width: 768px) {\\r\\n        #toast-container>div {\\r\\n            padding: 15px 15px 15px 50px;\\r\\n            width: 25em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 15px 50px 15px 15px;\\r\\n        }\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/toast/toast.ts
+  var ToastContainer = class extends HTMLElement {
+    positionList = ["top-right", "top-left", "bottom-right", "bottom-left"];
+    typeList = ["success", "error", "info", "warning", ""];
+    container;
+    status = true;
+    rtl = false;
+    position = "top-right";
+    delay = 4;
+    constructor() {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      root3.appendChild(createElements(htmlVnode(toast_default)));
+      this.container = root3.children[0];
+      Object.defineProperties(this, {
+        status: {
+          get: () => setting.toast.status,
+          set: (v) => {
+            if (v === setting.toast.status)
+              return;
+            setting.toast.status = v;
+          }
+        },
+        rtl: {
+          get: () => setting.toast.rtl,
+          set: (v) => {
+            if (v === setting.toast.rtl)
+              return;
+            setting.toast.rtl = v;
+            v ? this.container.childNodes.forEach((d) => {
+              d.classList.add("rtl");
+            }) : this.container.childNodes.forEach((d) => {
+              d.classList.remove("rtl");
+            });
+          }
+        },
+        position: {
+          get: () => setting.toast.position,
+          set: (v) => {
+            if (v === setting.toast.position)
+              return;
+            if (!this.positionList.includes(v))
+              return;
+            setting.toast.position = v;
+            this.container.className = \`toast-\${v}\`;
+          }
+        },
+        delay: {
+          get: () => setting.toast.delay,
+          set: (v) => {
+            if (v === setting.toast.delay)
+              return;
+            setting.toast.delay = v;
+          }
+        }
+      });
+    }
+    toast(delay, type, ...data) {
+      if (!this.status)
+        return;
+      document.body.contains(this) || document.body.appendChild(this);
+      this.container.className = \`toast-\${this.position}\`;
+      let html = \`<div class="toast\${type ? " toast-" + type : ""}\${this.rtl ? " rtl" : ""}" aria-live="assertive" style="padding-top: 0px;padding-bottom: 0px;height: 0px;"><div class="toast-message">\`;
+      !delay && (html += \`<div class="toast-close-button">\${fork_default}</div>\`);
+      data.forEach((d, i) => {
+        if (isObject(d)) {
+          try {
+            d = JSON.stringify(d, void 0, "<br>");
+          } catch (e) {
+          }
+        }
+        html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
+      });
+      html += "</div></div>";
+      const node2 = createElements(htmlVnode(html));
+      const toast2 = node2.children[0];
+      this.container.insertBefore(node2, this.container.firstChild);
+      toast2.setAttribute("style", \`height: \${toast2.scrollHeight + 30}px;\`);
+      let hovering = false;
+      toast2.addEventListener("mouseover", () => hovering = true);
+      toast2.addEventListener("mouseout", () => hovering = false);
+      Object.defineProperties(toast2, {
+        "type": {
+          get: () => type,
+          set: (v) => {
+            if (v === type)
+              return;
+            if (!this.typeList.includes(v))
+              return;
+            type && toast2.classList.remove(\`toast-\${type}\`);
+            v && toast2.classList.add(\`toast-\${v}\`);
+            toast2.classList;
+            type = v;
+          }
+        },
+        "data": {
+          get: () => new Proxy(data, new ProxyHandler(ToastContainer.organizeDate.bind(ToastContainer, toast2))),
+          set: (v) => {
+            if (v === data)
+              return;
+            data = v;
+            ToastContainer.organizeDate(toast2);
+          }
+        },
+        "delay": {
+          get: () => delay,
+          set: (v) => {
+            if (v === delay)
+              return;
+            if (isNaN(v))
+              return;
+            if (delay === 0)
+              delay = v, ToastContainer.countDown(toast2);
+            delay = v;
+            if (v === 0) {
+              hovering ? toast2.addEventListener("mouseout", () => ToastContainer.remove(toast2)) : ToastContainer.remove(toast2);
+            }
+          }
+        }
+      });
+      !delay ? toast2.children[0].children[0].addEventListener("click", () => ToastContainer.remove(toast2)) : ToastContainer.countDown(toast2);
+      return toast2;
+    }
+    static countDown(node2) {
+      node2.delay && setTimeout(() => {
+        node2.delay--;
+        this.countDown(node2);
+      }, 1e3);
+    }
+    static remove(node2) {
+      node2.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
+      setTimeout(() => node2.remove(), 1e3);
+    }
+    static organizeDate(node2) {
+      let html = !node2.delay ? \`<div class="toast-close-button">\${fork_default}</div>\` : "";
+      node2.data.forEach((d, i) => {
+        if (isObject(d)) {
+          try {
+            d = JSON.stringify(d, void 0, "<br>");
+          } catch (e) {
+          }
+        }
+        html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
+      });
+      node2.children[0].replaceChildren(createElements(htmlVnode(html)));
+      node2.setAttribute("style", \`height: \${node2.firstChild.clientHeight + 30}px;\`);
+      !node2.delay && node2.children[0].children[0].addEventListener("click", () => ToastContainer.remove(node2));
+    }
+  };
+  customElements.get(\`toast-container\${mutex}\`) || customElements.define(\`toast-container\${mutex}\`, ToastContainer);
+  var node = customElements ? new ToastContainer() : { toast: () => {
+  } };
+  function Toast(type, ...data) {
+    return node.toast(node.delay, type, ...data);
+  }
+  function toast(...data) {
+    return Toast.bind(node, "")(...data);
+  }
+  toast.success = Toast.bind(node, "success");
+  toast.error = Toast.bind(node, "error");
+  toast.info = Toast.bind(node, "info");
+  toast.warning = Toast.bind(node, "warning");
+  toast.custom = node.toast.bind(node);
+
+  // src/runtime/danmaku/danmaku_hash_id.css
+  var danmaku_hash_id_default = "/* 反查弹幕发送者相关样式 */\\r\\n.bb-comment,\\r\\n.comment-bilibili-fold {\\r\\n    font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;\\r\\n    font-size: 0;\\r\\n    zoom: 1;\\r\\n    min-height: 100px;\\r\\n    background: #fff;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list,\\r\\n.comment-bilibili-fold .comment-list {\\r\\n    padding-top: 20px;\\r\\n}\\r\\n\\r\\n.bb-comment *,\\r\\n.comment-bilibili-fold * {\\r\\n    box-sizing: content-box;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face {\\r\\n    display: inline-block;\\r\\n    position: relative;\\r\\n    margin-right: 10px;\\r\\n    vertical-align: top;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face img,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face img {\\r\\n    width: 24px;\\r\\n    height: 24px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con {\\r\\n    display: inline-block;\\r\\n    width: calc(100% - 34px);\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user,\\r\\n.comment-bilibili-fold .comment-list .list-item .user {\\r\\n    font-size: 12px;\\r\\n    font-weight: 700;\\r\\n    line-height: 18px;\\r\\n    padding-bottom: 4px;\\r\\n    display: block;\\r\\n    word-wrap: break-word;\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user .name,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user .name {\\r\\n    position: relative;\\r\\n    top: -1px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .level {\\r\\n    margin: 0 15px 0 8px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l0,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l0 {\\r\\n    background-position: -23px -28px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l1,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l1 {\\r\\n    background-position: -23px -92px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l2,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l2 {\\r\\n    background-position: -23px -156px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l3,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l3 {\\r\\n    background-position: -23px -220px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l4,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l4 {\\r\\n    background-position: -23px -284px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l5,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l5 {\\r\\n    background-position: -23px -348px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l6,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l6 {\\r\\n    background-position: -23px -412px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l7,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l7 {\\r\\n    background-position: -23px -476px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l8,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l8 {\\r\\n    background-position: -23px -540px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l9,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l9 {\\r\\n    background-position: -23px -604px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level {\\r\\n    display: inline-block;\\r\\n    width: 19px;\\r\\n    height: 9px;\\r\\n    vertical-align: middle;\\r\\n    margin: 0 8px;\\r\\n    background: url(data:image/png;base64,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) no-repeat;\\r\\n}";
+
+  // src/runtime/danmaku/danmaku_hash_id.ts
+  function danmakuHashId() {
+    addCss(danmaku_hash_id_default);
+    class DanmakuHashId {
+      static count = 0;
+      static catch = {};
+      count = 0;
+      hash;
+      mid;
+      node;
+      dm;
+      constructor(crc2) {
+        DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
+        this.count = DanmakuHashId.count;
+        DanmakuHashId.catch = DanmakuHashId.catch || {};
+        this.hash = crc2;
+        this.mid = midcrc(this.hash);
+        this.getInfo();
+      }
+      async getInfo() {
+        try {
+          this.node = document.querySelector(".bilibili-player-context-menu-container.active");
+          if (!this.node)
+            return setTimeout(() => {
+              this.getInfo();
+            }, 100);
+          this.node = this.node.children[0];
+          let j = 0;
+          for (let i = this.node.children.length - 1; i >= 0; i--) {
+            if (this.node.children[i].textContent.includes("mid")) {
+              this.dm = this.node.children[i];
+              j++;
+              if (this.count === j)
+                break;
+            }
+          }
+          if (!this.dm)
+            return setTimeout(() => {
+              this.getInfo();
+            }, 100);
+          if (this.dm.tagName != "LI")
+            return;
+          DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid }) }, true));
+          this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' + this.mid + '" class="reply-face"><img src="' + DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' + this.mid + '" href="//space.bilibili.com/' + this.mid + '" target="_blank" class="' + (DanmakuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmakuHashId.catch[this.mid].data.card.name + "</a> " + DanmakuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + (DanmakuHashId.catch[this.mid].data.card.is_senior_member ? 7 : DanmakuHashId.catch[this.mid].data.card.level_info.current_level) + '"></i></a></div></div></div></div></div></div></div>';
+          DanmakuHashId.count--;
+        } catch (e) {
+          DanmakuHashId.count--;
+          toast.error("反差弹幕发送者信息失败 ಥ_ಥ");
+          debug.error(e);
+        }
+      }
+    }
+    window.danmakuHashId = (crc2) => {
+      try {
+        const check2 = new DanmakuHashId(crc2);
+        return \`hash: \${check2.hash} mid: \${check2.mid}\`;
+      } catch (e) {
+        debug.error(e);
+      }
+    };
+  }
+
+  // src/runtime/lib/file.ts
+  function readAs(file, type = "string", encoding = "utf-8") {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      switch (type) {
+        case "ArrayBuffer":
+          reader.readAsArrayBuffer(file);
+          break;
+        case "DataURL":
+          reader.readAsDataURL(file);
+          break;
+        case "string":
+          reader.readAsText(file, encoding);
+          break;
+      }
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (e) => reject(e);
+    });
+  }
+  async function saveAs(content, fileName, contentType = "text/plain") {
+    const a = document.createElement("a");
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.addEventListener("load", () => URL.revokeObjectURL(a.href));
+    a.click();
+  }
+  function fileRead(accept, multiple) {
+    return new Promise((resolve) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      accept && (input.accept = accept);
+      multiple && (input.multiple = multiple);
+      input.style.opacity = "0";
+      input.addEventListener("change", () => resolve(input.files));
+      document.body.appendChild(input);
+      input.click();
+    });
+  }
+
+  // src/runtime/variable/fnval.ts
+  var Fnval = class {
+    MP4 = 1;
+    DASH_H265 = 16;
+    HDR = 64;
+    DASH_4K = 128;
+    DOLBYAUDIO = 256;
+    DOLBYVIDEO = 512;
+    DASH_8K = 1024;
+    DASH_AV1 = 2048;
+  };
+  var _ = new Fnval();
+  var fnval = Reflect.ownKeys(_).reduce((s, d) => {
+    s += _[d];
+    return s;
+  }, -1);
+
   // src/runtime/lib/url.ts
   var UrlPack = class {
     get ts() {
@@ -5588,177 +5760,6 @@ const modules =`
       });
     }
   });
-
-  // src/runtime/lib/abv.ts
-  var Abv = class {
-    base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
-    digitMap = [11, 10, 3, 8, 4, 6];
-    xor = 177451812;
-    add = 8728348608;
-    bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
-    table = {};
-    constructor() {
-      for (let i = 0; i < 58; i++)
-        this.table[this.base58Table[i]] = i;
-    }
-    check(input) {
-      if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
-        return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-      if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-        return this.bvToAv("BV" + input);
-      if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-        return this.bvToAv(String(input));
-      throw input;
-    }
-    bvToAv(BV) {
-      let r = 0;
-      for (let i = 0; i < 6; i++)
-        r += this.table[BV[this.digitMap[i]]] * 58 ** i;
-      return r - this.add ^ this.xor;
-    }
-    avToBv(av) {
-      let bv = Array.from(this.bvidTemplate);
-      av = (av ^ this.xor) + this.add;
-      for (let i = 0; i < 6; i++)
-        bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
-      return bv.join("");
-    }
-  };
-  function abv(input) {
-    return new Abv().check(input);
-  }
-
-  // src/runtime/url_param.ts
-  var catchs = { aid: {}, ssid: {}, epid: {} };
-  async function urlParam(url = location.href, redirect = true) {
-    url && !url.includes("?") && (url = "?" + url);
-    const obj = urlObj(url);
-    let { aid, cid, ssid, epid, p } = obj;
-    let pgc = false;
-    !aid && (aid = obj.avid);
-    !aid && url.replace(/[aA][vV]\\d+/, (d) => aid = d.substring(2));
-    !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = abv(d));
-    !aid && obj.bvid && (aid = abv(obj.bvid));
-    aid && !Number(aid) && (aid = abv(aid));
-    p = p || 1;
-    !ssid && (ssid = obj.seasonId);
-    !ssid && (ssid = obj.season_id);
-    !ssid && url.replace(/[sS][sS]\\d+/, (d) => ssid = d.substring(2));
-    !epid && (epid = obj.episodeId);
-    !epid && (epid = obj.ep_id);
-    !epid && url.replace(/[eE][pP]\\d+/, (d) => epid = d.substring(2));
-    if (!ssid && !epid && aid) {
-      if (catchs.aid[aid])
-        return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-      if (!cid) {
-        try {
-          let data = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/view", { "aid": aid }) }, true)).data;
-          if (data.redirect_url)
-            return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
-          catchs.aid[aid] = data.pages;
-          catchs.aid[aid].forEach((d) => d.aid = aid);
-          return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-        } catch (e) {
-          debug.error("view", e);
-          try {
-            catchs.aid[aid] = jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/player/pagelist", { "aid": aid }) }, true)).data;
-            catchs.aid[aid].forEach((d) => d.aid = aid);
-            return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-          } catch (e2) {
-            debug.error("pagelist", e2);
-            try {
-              catchs.aid[aid] = jsonCheck(await xhr({ url: \`//api.bilibili.com/view?appkey=8e9fc618fbd41e28&id=\${aid}&type=json\` }, true)).list;
-              catchs.aid[aid].forEach((d) => d.aid = aid);
-              return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-            } catch (e3) {
-              debug.error("appkey", e3);
-              try {
-                let data = jsonCheck(await xhr({ url: objUrl("https://www.biliplus.com/api/view", { "id": aid }) }, true));
-                catchs.aid[aid] = data.list || data.v2_app_api && data.v2_app_api.pages;
-                catchs.aid[aid].forEach((d) => d.aid = aid);
-                if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
-                  return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
-                return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
-              } catch (e4) {
-                debug.error("biliplus", e4);
-              }
-            }
-          }
-        }
-      }
-    }
-    if (ssid || epid) {
-      if (ssid && catchs.ssid[ssid])
-        return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
-      if (epid && catchs.epid[epid])
-        return catchs.epid[epid];
-      pgc = true;
-      const param2 = { ep_id: epid, season_id: ssid };
-      let data = jsonCheck(await xhr({ url: objUrl("https://bangumi.bilibili.com/view/web_api/season", param2) }, true)).result;
-      ssid = data.season_id;
-      catchs.ssid[ssid] = [];
-      data.episodes.forEach((d) => {
-        Object.assign(d, { ssid, pgc, epid: d.ep_id });
-        catchs.aid[d.aid] = catchs.aid[d.aid] || [];
-        catchs.aid[d.aid].push(d);
-        catchs.ssid[ssid].push(catchs.epid[d.ep_id] = d);
-      });
-      if (epid)
-        return catchs.epid[epid];
-      return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
-    }
-    return { aid, cid, ssid, epid, p, pgc };
-  }
-
-  // src/runtime/variable/variable.ts
-  var API = {
-    get aid() {
-      return window.aid;
-    },
-    set aid(v) {
-      window.aid = v;
-    },
-    get cid() {
-      return window.cid;
-    },
-    set cid(v) {
-      window.cid = v;
-    },
-    get ssid() {
-      return window.ssid;
-    },
-    set ssid(v) {
-      window.ssid = v;
-    },
-    get epid() {
-      return window.epid;
-    },
-    set epid(v) {
-      window.epid = v;
-    },
-    get __INITIAL_STATE__() {
-      return window.__INITIAL_STATE__;
-    },
-    set __INITIAL_STATE__(v) {
-      window.__INITIAL_STATE__ = v;
-    },
-    __playinfo__: void 0,
-    limit: void 0,
-    bkg_cover: void 0,
-    cover: void 0,
-    title: void 0,
-    th: void 0,
-    pgc: void 0,
-    playerParam: void 0,
-    GM,
-    urlParam,
-    xhr,
-    urlsign,
-    objUrl,
-    urlObj,
-    URLEs
-  };
-  setting.development && Reflect.set(window, "API", API);
 
   // src/runtime/element/popupbox.html
   var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
@@ -16152,6 +16153,7 @@ const modules =`
       replaceUrl(redirect);
       sessionStorage.removeItem("redirect");
     }
+    API.rewrite = true;
   }
 
   // src/content/bangumi/code.ts
