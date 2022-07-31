@@ -1,2 +1,2 @@
 main.user.js linguist-generated=true
-/src/**/*.js linguist-generated=true
+./src/bilibili/**/* linguist-generated=true
