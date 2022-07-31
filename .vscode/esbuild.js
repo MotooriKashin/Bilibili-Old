@@ -1,6 +1,7 @@
 const fs = require("fs");
 const { exec } = require("child_process"); // 用于执行git命令获取模块commit哈希值
 const meta = require("../src/tampermonkey/meta.json"); // 脚本元数据
+const meta_bb_comment = require("../src/tampermonkey/meta_bb_comment.json");  // 翻页评论区脚本愿数据
 const cdn = "https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old"; // 远程仓库CDN路径，resource资源用
 
 /**
@@ -23,9 +24,7 @@ function getHash(path) {
         })
     })
 }
-/**
- * 整理资源项
- */
+/** 整理资源项 */
 async function getResource() {
     meta["resource"] = meta["resource"] || [];
     await Promise.all(Object.keys(_resource).reduce((s, d) => {
@@ -33,6 +32,7 @@ async function getResource() {
         return s;
     }, []));
 }
+/** 整理本地资源项 */
 function getLocalResource() {
     const _resource = ["src/bilibili/bilibiliPlayer.js"];
     meta.resource = _resource.reduce((s, d) => {
@@ -40,6 +40,33 @@ function getLocalResource() {
         s.push(`${arr[arr.length - 1]} file:///${process.cwd().replace(/\\/g, "/")}/${d}`);
         return s;
     }, meta.resource || []);
+}
+/** 编译主用户脚本 */
+async function bilibiliOld() {
+    process.env.NODE_ENV === "development" ? getLocalResource() : await getResource(_resource, "resource"); // 整理资源项
+    let result = Object.keys(meta).reduce((s, d) => { // 处理脚本元数据
+        s = Array.isArray(meta[d]) ? meta[d].reduce((a, b) => {
+            a = `${a}// @${d.padEnd(13, " ")}${b}\r\n`;
+            return a;
+        }, s) : `${s}// @${d.padEnd(13, " ")}${meta[d]}\r\n`;
+        return s;
+    }, "// ==UserScript==\r\n");
+    result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
+    result += "const modules =`\r\n" + String(await fs.promises.readFile("./dist/tampermonkey/vector.js")).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "\r\n`;"
+    result += await fs.promises.readFile("./dist/tampermonkey/index.js"); // 脚本主入口
+    await fs.promises.writeFile("./main.user.js", result.replace(/\r/g, '').replace(/\n/g, '\r\n'));
+}
+async function bbComment(meta = meta_bb_comment) {
+    let result = Object.keys(meta).reduce((s, d) => { // 处理脚本元数据
+        s = Array.isArray(meta[d]) ? meta[d].reduce((a, b) => {
+            a = `${a}// @${d.padEnd(13, " ")}${b}\r\n`;
+            return a;
+        }, s) : `${s}// @${d.padEnd(13, " ")}${meta[d]}\r\n`;
+        return s;
+    }, "// ==UserScript==\r\n");
+    result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
+    result += await fs.promises.readFile("./dist/tampermonkey/bb_comment.js"); // 脚本主入口
+    await fs.promises.writeFile("./bb_comment.user.js", result.replace(/\r/g, '').replace(/\n/g, '\r\n'));
 }
 import("fs-extra").then(d => {
     d.emptyDir("./dist").then(() => {
@@ -111,7 +138,8 @@ import("fs-extra").then(d => {
                 {
                     entryPoints: [ // 入口脚本
                         'src/tampermonkey/vector.ts', // 用户脚本
-                        'src/tampermonkey/index.ts' // 脚本本体
+                        'src/tampermonkey/index.ts', // 脚本本体
+                        'src/tampermonkey/bb_comment.ts' // 翻页评论区
                     ],
                     bundle: true, // 打包
                     outdir: 'dist', // 输出目录
@@ -126,19 +154,12 @@ import("fs-extra").then(d => {
                     }
                 }
             ).then(async () => {
-                process.env.NODE_ENV === "development" ? getLocalResource() : await getResource(_resource, "resource"); // 整理资源项
-                let result = Object.keys(meta).reduce((s, d) => { // 处理脚本元数据
-                    s = Array.isArray(meta[d]) ? meta[d].reduce((a, b) => {
-                        a = `${a}// @${d.padEnd(13, " ")}${b}\r\n`;
-                        return a;
-                    }, s) : `${s}// @${d.padEnd(13, " ")}${meta[d]}\r\n`;
-                    return s;
-                }, "// ==UserScript==\r\n");
-                result += "// ==/UserScript==\r\n\r\n"; // 元数据关闭标签
-                result += "const modules =`\r\n" + String(await fs.promises.readFile("./dist/tampermonkey/vector.js")).replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + "\r\n`;"
-                result += await fs.promises.readFile("./dist/tampermonkey/index.js"); // 脚本主入口
-                await fs.promises.writeFile("./main.user.js", result.replace(/\r/g, '').replace(/\n/g, '\r\n'));
-                await d.remove("./dist/tampermonkey");
+                await Promise.all([
+                    bilibiliOld(), // 编译主脚本
+                    bbComment()
+                ]
+                );
+                return d.remove("./dist/tampermonkey");
             }).catch(e => {
                 console.error("编译用户脚本出错", e);
                 process.exit(1);
