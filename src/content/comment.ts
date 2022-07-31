@@ -26,8 +26,17 @@ export function loadComment() {
         get: () => {
             return Feedback ? Feedback : class {
                 constructor() {
+                    if (!loading) {
+                        loadScript("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js").then(() => {
+                            Array.from(document.styleSheets).forEach(d => {
+                                d.href && d.href.includes("comment") && (d.disabled = true);
+                            })
+                        });
+                        loading = true;
+                    }
                     setTimeout(() => new (<any>window).bbComment(...arguments))
                 }
+                on() { }
             }
         }
     });
