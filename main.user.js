@@ -12267,10 +12267,14 @@ const modules =`
       this.setting = { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: "bc" };
       if (isUserScript) {
         const d = GM_getValue("subtitle", this.setting);
-        d && (this.setting = d);
+        this.setting = new Proxy(d, new ProxyHandler(() => {
+          GM_setValue("subtitle", d);
+        }));
       } else {
-        GM.getValue("subtitle").then((d) => {
-          d && (this.setting = d);
+        GM.getValue("subtitle", this.setting).then((d) => {
+          this.setting = new Proxy(d, new ProxyHandler(() => {
+            GM.setValue("subtitle", d);
+          }));
         });
       }
       if (isUserScript) {
@@ -12313,7 +12317,6 @@ const modules =`
             span.subtitle-item-text {color:#\${("000000" + this.setting.color.toString(16)).slice(-6)};}
             span.subtitle-item {font-size: \${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
             span.subtitle-item {\${this.shadow[this.setting.shadow].style}}\`, "caption-style");
-      GM.setValue("subtitle", JSON.parse(JSON.stringify(this.setting)));
     }
     changeResize() {
       this.resizeRate = this.setting.scale ? window.player.getWidth() / 1280 * 100 : 100;
@@ -12323,7 +12326,6 @@ const modules =`
       this.contain = document.querySelector(".bilibili-player-video-subtitle>div");
       this.contain.className = "subtitle-position subtitle-position-" + (this.setting.position || "bc");
       this.contain.style = "";
-      GM.setValue("subtitle", JSON.parse(JSON.stringify(this.setting)));
     }
     iconSwitch(caption) {
       if (caption) {

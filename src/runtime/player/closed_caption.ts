@@ -9,6 +9,7 @@ import { videoFloat } from "./video_float";
 import { GM } from "../gm";
 import css from "./closed_caption.css";
 import { isUserScript } from "../../tampermonkey/check";
+import { ProxyHandler } from "../lib/proxy_handler";
 
 /**
  * 旧版播放器支持CC字幕  
@@ -64,10 +65,10 @@ class ClosedCaption {
         this.setting = { backgroundopacity: 0.5, color: 16777215, fontsize: 1, isclosed: false, scale: true, shadow: "0", position: 'bc' };
         if (isUserScript) {
             const d = GM_getValue("subtitle", this.setting);
-            d && (this.setting = d);
+            this.setting = new Proxy(d, new ProxyHandler(() => { GM_setValue("subtitle", d) }))
         } else {
-            GM.getValue("subtitle").then(d => {
-                d && (this.setting = d);
+            GM.getValue("subtitle", this.setting).then(d => {
+                this.setting = new Proxy(d, new ProxyHandler(() => { GM.setValue("subtitle", d) }));
             });
         }
         if (isUserScript) {
@@ -110,7 +111,6 @@ class ClosedCaption {
             span.subtitle-item-text {color:#${("000000" + this.setting.color.toString(16)).slice(-6)};}
             span.subtitle-item {font-size: ${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
             span.subtitle-item {${(<any>this.shadow)[this.setting.shadow].style}}`, "caption-style");
-        GM.setValue("subtitle", JSON.parse(JSON.stringify(this.setting)));
     }
     /** 切换字幕大小 */
     changeResize() {
@@ -123,7 +123,6 @@ class ClosedCaption {
         this.contain.className = 'subtitle-position subtitle-position-'
             + (this.setting.position || 'bc');
         this.contain.style = '';
-        GM.setValue("subtitle", JSON.parse(JSON.stringify(this.setting)));
     }
     /** 字幕图标切换 */
     iconSwitch(caption?: any) {
