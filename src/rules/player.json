@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "urlFilter": "main/video",
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    }
+]

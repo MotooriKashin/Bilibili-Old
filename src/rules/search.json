@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "laputa",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "block"
+        },
+        "condition": {
+            "requestDomains": [
+                "s1.hdslb.com"
+            ],
+            "urlFilter": "laputa",
+            "resourceTypes": [
+                "script"
+            ]
+        }
+    }
+]

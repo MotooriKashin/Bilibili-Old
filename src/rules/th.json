@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "priority": 1,
+        "action": {
+            "type": "modifyHeaders",
+            "requestHeaders": [
+                {
+                    "header": "user-agent",
+                    "operation": "set",
+                    "value": "Bilibili Freedoooooom/MarkII"
+                },
+                {
+                    "header": "referer",
+                    "operation": "remove"
+                },
+                {
+                    "header": "origin",
+                    "operation": "remove"
+                }
+            ],
+            "responseHeaders": [
+                {
+                    "header": "Access-Control-Allow-Origin",
+                    "operation": "set",
+                    "value": "*"
+                },
+                {
+                    "header": "Access-Control-Expose-Headers",
+                    "operation": "set",
+                    "value": "Content-Length,Content-Range,x-service-module"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": ".m4s?",
+            "resourceTypes": [
+                "xmlhttprequest"
+            ]
+        }
+    },
+    {
+        "id": 2,
+        "priority": 1,
+        "action": {
+            "type": "modifyHeaders",
+            "requestHeaders": [
+                {
+                    "header": "user-agent",
+                    "operation": "set",
+                    "value": "Bilibili Freedoooooom/MarkII"
+                },
+                {
+                    "header": "referer",
+                    "operation": "remove"
+                },
+                {
+                    "header": "origin",
+                    "operation": "remove"
+                }
+            ],
+            "responseHeaders": [
+                {
+                    "header": "Access-Control-Allow-Origin",
+                    "operation": "set",
+                    "value": "*"
+                },
+                {
+                    "header": "Access-Control-Expose-Headers",
+                    "operation": "set",
+                    "value": "Content-Length,Content-Range,x-service-module"
+                }
+            ]
+        },
+        "condition": {
+            "urlFilter": ".flv?",
+            "resourceTypes": [
+                "xmlhttprequest"
+            ]
+        }
+    }
+]

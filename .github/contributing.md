@@ -1,67 +1,66 @@
 # 代码贡献指南
-### 开发环境搭建
-- 代码编辑及编译生成工作全部使用[Visual Studio Code](https://code.visualstudio.com/)作为IDE.
-- 安装[Git](https://git-scm.com/)作为版本管理工具.
-- 安装[Node.js](https://nodejs.org/en/)作为编译环境.
-- 全局安装[TypeScript]以支持TypeScript语言的编译. →`npm install -g typescript`.
-- 浏览器及脚本管理工具：推荐 Chrome + Tampermonkey.
+本项目是自 2019 年 12 月 09 日[B站](https://www.bilibili.com/)弃用旧版播放器以来尝试恢复旧版页面的各种尝试。从最初一个简单的用户脚本，对失效功能的修补，对更多改版页面的恢复，维护工作已俨然超出个人的能力范围。所以诚邀各位旧版页面的爱好者参与进来共同维护，不胜感激。  
 
-### 开发语言 TypeScript
-- target: es2020: ESNext新特性不报错就可以用且推荐用，确实有需要请提供`Polyfill`.
-- 原生ts/js语言，不想使用任何前端框架.
+**使用最新的开发工具，追随最新的前端标准，使用最新的语言特性。** 业余项目，无须束手束脚。
 
-### 源码目录
-- `/src/`: ts源代码以及相关的其他纯文本文档，**本目录下载不许存在同名文件，就算再不同子目录中！**
-- `/dist/`: B站原生代码，主要使用于维护不容易通过其他手段修复的功能.
-- `/main.user.js`: 编译生成的脚本，另外本地版"local.user.js"供开发者使用.
+### 开发环境
+- [Visual Studio Code](https://code.visualstudio.com/).
+- [Node.js](https://nodejs.org/).
+- [Google Chrome](https://www.google.com/chrome/).
 
-### 模块化
-本项目基于TypeScript的`namespace`语法设计了一种模块体系，可以将代码拆分为任意多的ts模块文件，以便进行开发和维护。此模块化体系具有以下特点：
-- 运行上下文回到了页面，可以直接访问全局变量，同时通过专门的`GM`对象引用了脚本管理器提供的高级API.
-- 使用文件名(含拓展名)作为唯一索引，不可重复.
-- 同步按需加载.
+### TypeScript
+- 既已[manifest V3](https://developer.chrome.com/docs/extensions/mv3/manifest/)，何妨ESNext，任何最新特性放开手用就是.
+- 推荐[modules](https://www.typescriptlang.org/docs/handbook/modules.html)而不是[namespace](https://www.typescriptlang.org/docs/handbook/namespaces.html)来组织代码.
+- 全栈TypeScript化，除了修复并托管的B站播放器脚本`bilibiliPlayer.js`.
 
-模块原则上必须使用同一个顶层命名空间`namespace`——API.  
-模块可以分为两种类型：业务模块和依赖库：后者声明定义了各种函数、类等对象供前者调用以执行一些功能。
-#### 库
-纯粹的变量定义声明所在的模块，使用`export`关键词导出所有数据：变量、函数、类……  
-作为库的模块无须主动加载，只要使用标准格式编写就行了，如下文定义了`md5`函数的库：
+### 目录结构
 ```
-namespace API {
-  export function md5(str:string){
-    /** 具体函数实现略 */
-  }
-}
-```
-#### 业务模块
-实际执行一定功能的模块，可以直接调用库中使用`export`关键词导出的数据，但**禁止使用`export`关键词导出任何数据**.  
-功能代码需要主动使用`importModule`载入运行，用法类似于函数调用.    
-业务模块需要再顶部（一般）拓展`modules`声明，已告诉语法解释器这个模块的存在.
-```
-interface modules{
-  /** 业务模块简介 */
-  readonly "${模块名}.js": string;
-}
-namespace API{
-  // do something
-}
+├─dist                     【加载已解压的扩展程序】  
+└─src                      源代码  
+    ├─bilibili             托管的B站原生脚本  
+    ├─content              内容脚本（MAIN）
+    ├─images               扩展图片资源  
+    ├─rules                [declarativeNetRequest](https://developer.chrome.com/extensions/declarativeNetRequest)静态规则集  
+    ├─runtime              模块仓库  
+    │  ├─chrome            [后台脚本](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Background_scripts)、[弹出页面](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Popups)和[选项页面](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Options_pages)限定模块  
+    │  ├─content           内容脚本（ISOLATED）限定模块  
+    └──locales             i18n目录  
 ```
 
-### GM对象
-模块中无法直接使用脚本管理器提供的高级API，取而代之的是一个可用的全局变量`GM`，该变量封装于`GM.ts`，并在`meta.json`声明了目前用到的高级API，请自行按需拓展.  
-封装的高级API作为`GM`变量的属性使用，看起来像GM3后的`GM.`系列，实际上仍是`GM_`系列，也就是说还是同步的.
+### 开发  
+项目本体是[manifest V3](https://developer.chrome.com/docs/extensions/mv3/manifest/)扩展，同时编译为Tampermonkey用户脚本。  
+使用TypeScript开发，`esbuild`打包，官方tsc工具只用于开发模式下的语法检查。
 
-### 编译
-脚本编译流程已编写为VSCode的任务链，直接运行`release`任务即可完成编译生成的操作，最终产物为`main.user.js`。——该任务已设为默认任务，可以直接使用快捷键`Ctrl` + `Shift` + `B`发起.  
-脚本元数据在根目录`meta.json`，可以在这里更新版本号。  
+1. 命令`update`（VSCode任务`npm: update`或者命令行`npm run update`）更新npm依赖.
+2. 命令`tsc`（VSCode任务`npm: tsc`或者命令行`npm run tsc`）进行语法检查.
+3. 命令`build`（VSCode任务`npm: build`或者命令行`npm run build`）编译打包生成扩展和用户脚本。
+4. 命令`test`（VSCode任务`npm: test`或者命令行`npm run test`）编译打包生成开发模式扩展和用户脚本，会自动执行前置命令`tsc`进行语法检查.
 
-#### 开发版
-项目提供另一条开发者专用的任务链，任务名为`develop`，生成名为`local.user.js`的脚本，该版本利用Tampermonkey支持加载本地资源的特性直接加载本地仓库中的模块封装，达到一次编译即可调试的目的。  
-安装了本地版脚本`local.user.js`后，以后代码修改后运行`release`任务编译后，无须再脚本管理器中更新脚本便可以直接刷新调试。  
-但这也意味着如果本项目有其他贡献者提交并推送到远程仓库后，您需要主动同步并运行一次`release`任务以更新本地模块缓存——这应该不是很麻烦的事，对于开发者而言。  
-Windows版Chorme + Tampermonkey支持加载本地资源，Firefox似乎不支持，其他浏览器或者脚本管理器支持情况未知。  
-注意：如果`local.user.js`有改动(很少)，就需要再运行一次`develop`任务并更新脚本管理器中的`local.user.js`，这一般发生在涉及对于`index.ts`的修改和`meta.json`版本号之外的修改。
+### Pull Request
+可以直接向主分支`master`发起pr，有志于长期合作的也可以像仓库所有者申请合作者权限。
 
-### 合并请求
-合并请求可以直接向主分支`master`发起pr，有志于长期合作的也可以像仓库所有者申请合作者权限。  
-源代码和编译后的脚本`main.user.js`请尽量不要共用一个提交，因为编译生成脚本时可能会用到当前commit哈希数据，显然提交前是获取不到该值的。
+### 扩展相关
+拓展架构分为后台脚本、选项页面、弹出页面、内容脚本以及注入进页面的降级为普通脚本“主脚本”组成，各部分之间通过消息传递机制进行沟通。
+#### 后台脚本
+Manifest V3取消了常驻的后台页面，改为基于Server Worker，这带来了一些列限制需要特别注意：
+   1. 后台脚本无法使用任何涉及DOM的运行环境，包括通常的顶层上下文`window`。
+   2. 后台脚本有5分钟强制休眠的机制，任何全局变量都面临丢失的风险，所以原则上不要使用任何全局变量。
+   3. 后台脚本禁止使用XMLHttpRequest，访问网络只能通过fetch。
+   4. ~~后台脚本只支持最基础的 ESNext module，不能将json作为模块导入。~~ （引入[esbuild](https://esbuild.github.io)后已无妨）
+
+新标准是铁了心让后台脚本无法主动执行任何业务逻辑，成为真真正正的“后台”脚本，充当一个在后台为扩展其他部分服务的角色（残废*🤣）。主要是通过`storage`和消息传递机制处理其他部分（主要是内容脚本和“主脚本”）无权进行的操作并将结果返还回去。
+#### 选项页面和弹出页面
+选项页面和弹出页面在新标准中没有什么大的改动，不过这两者都是与用户交互的，一个作为扩展设置调整界面，一个提供了一些针对当前页面可执行的操作，通过消息机制将用户的选择发送给内容脚本和“主脚本”处理。
+#### 内容脚本
+内容脚本即注入到标签页（独立上下文）中脚本，在新标准中也有了新的注意事项：
+   1. 严格的CSP策略导致内容脚本无法以任何手段突破独立上下文环境的封锁，包括但不限于`eval`、`setTimeout/setInterval`和`new Function`都无法使用，也不允许往页面中添加内联或拓展外源的script元素。
+   2. 内容脚本无法以任何手段及时获取到页面上下文中的任何JavaScript变量，反之亦然，就算通过消息机制传递任何不可克隆的对象都被禁止。
+   3. 内容脚本往DOM上自定义的非原生属性对页面上下文不可见，反之亦然。
+   4. ~~内容脚本不支持静态的 ESNext module 你敢信！~~ （引入[esbuild](https://esbuild.github.io)后已无妨）
+   5. 内容脚本不支持`customElements`你敢信！
+
+以上限制基本锁死了内容脚本能够对页面进行的修改，除非你不打算与页面上下文有任何交互，也不管不顾页面上下文任何看待你对于DOM的修改，否则用来承载对页面的针对性修改工作是完全不称职的。（残废*🤣🤣）只能当作消息传递的中间人：对于来自“主脚本”的请求消息，内容脚本有权处理就处理，无权处理就打包发送给后台脚本再等待后台脚本返回处理结果打包发还给“主脚本”；同时选项页面和弹出页面有任何消息进行打包传递。
+#### “主脚本”
+以script标签直接关联到拓展内部的脚本，上下文回到了页面，但也彻底失去了作为拓展一部分的任何特权，只能以消息传递机制向内容脚本申请自己的诉求。  
+任何实际的对页面执行的业务代码实际上都是“主脚本”负责的。使用标准的 ESNext module 语法编写，实际业务逻辑进一步细分到每一个具体的业务模块及依赖模块中。  
+为避免代码冲突和消息传递紊乱，原则同一时间运行一个“主脚本”。
