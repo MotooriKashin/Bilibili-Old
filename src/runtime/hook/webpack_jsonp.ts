@@ -5,11 +5,15 @@ import { API } from "../variable/variable.js";
 let hook: any;
 const arr: Record<number, ((code: string) => typeof code)[]>[] = [];
 const param: [string, string, string][] = [];
+/** 备份已写入的分片数据，因为全局原生脚本可能启动比本脚本快，直接覆盖会出问题 */
+let webpackJsonp = (<any>window).webpackJsonp;
 Object.defineProperty(window, "webpackJsonp", {
     set: v => hook = v,
     get: () => {
         if (hook) {
             if (isArray(hook)) {
+                // 新版页面如果写入了数据会导致重构的旧版页面出问题
+                // 旧版页面分片不会大于1，直接弹出已有数据应该可以，不然还真不好处理，如何区分新旧版页面分片数据？
                 if (API.rewrite && hook.length > 1) hook.shift();
                 return hook;
             };
@@ -32,6 +36,7 @@ Object.defineProperty(window, "webpackJsonp", {
     },
     configurable: true
 });
+(<any>window).webpackJsonp = webpackJsonp;
 /**
  * hook webpack打包的代码并进行修复
  * @param len 索引总长度，用于唯一定位该脚本

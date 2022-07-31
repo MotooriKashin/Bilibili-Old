@@ -1,4 +1,3 @@
-import { debug } from "../runtime/debug";
 import { doWhile } from "../runtime/do_while";
 import { addCss, addElement, loadScript } from "../runtime/element/add_element";
 import { banner, primaryMenu } from "./banner";
@@ -66,7 +65,6 @@ function replaceHeader(t: Element) {
         t.setAttribute("class", `z-top-container${menu ? " has-menu" : ""}`);
         t.removeAttribute("id");
     }
-    debug(t);
     header(menu);
     styleClear();
 }

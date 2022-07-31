@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3ae20f30de5ad37882b474aa886ea06f9641886b/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js file:///E:/Github/Bilibili-Old/src/bilibili/bilibiliPlayer.js
 // ==/UserScript==
 
 const modules =`
@@ -5225,6 +5225,7 @@ const modules =`
   var hook;
   var arr = [];
   var param = [];
+  var webpackJsonp = window.webpackJsonp;
   Object.defineProperty(window, "webpackJsonp", {
     set: (v) => hook = v,
     get: () => {
@@ -5254,6 +5255,7 @@ const modules =`
     },
     configurable: true
   });
+  window.webpackJsonp = webpackJsonp;
   function webpackhook(len, pos, rpc, params = ["t", "e", "i"]) {
     if (!arr[len]) {
       arr[len] = {};
@@ -15716,7 +15718,6 @@ const modules =`
       t.setAttribute("class", \`z-top-container\${menu ? " has-menu" : ""}\`);
       t.removeAttribute("id");
     }
-    debug(t);
     header(menu);
     styleClear();
   }
