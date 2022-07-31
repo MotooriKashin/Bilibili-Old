@@ -13938,11 +13938,24 @@ const modules =`
     Object.defineProperty(window, "bbComment", {
       configurable: true,
       set: (v) => {
+        if (!v.prototype._createNickNameDom) {
+          return loadScript("//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js").then(() => {
+            Array.from(document.styleSheets).forEach((d) => {
+              d.href && d.href.includes("comment") && (d.disabled = true);
+            });
+          });
+        }
         Feedback = v;
         bbCommentModify();
         Object.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
       },
-      get: () => Feedback
+      get: () => {
+        return Feedback ? Feedback : class {
+          constructor() {
+            setTimeout(() => new window.bbComment(...arguments));
+          }
+        };
+      }
     });
     Object.defineProperty(window, "initComment", {
       configurable: true,
