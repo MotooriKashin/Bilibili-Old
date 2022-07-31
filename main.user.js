@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js file:///E:/Github/Bilibili-Old/src/bilibili/bilibiliPlayer.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3ae20f30de5ad37882b474aa886ea06f9641886b/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -3659,6 +3659,22 @@ const modules =`
       module2.exports = require_index_light();
     }
   });
+
+  // src/tampermonkey/polyfill/chrome.ts
+  self.chrome || Reflect.defineProperty(self, "chrome", { value: {} });
+
+  // src/tampermonkey/polyfill/replace_children.ts
+  if (typeof Element.prototype.replaceChildren === "undefined") {
+    Object.defineProperty(Element.prototype, "replaceChildren", {
+      configurable: true,
+      enumerable: false,
+      value: function() {
+        while (this.lastChild)
+          this.removeChild(this.lastChild);
+        this.append.call(this, ...arguments);
+      }
+    });
+  }
 
   // src/runtime/element/create_element.ts
   function createSVG(element) {
