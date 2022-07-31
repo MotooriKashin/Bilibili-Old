@@ -1,4 +1,4 @@
-![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 103](https://img.shields.io/badge/Google_Chrome_103-pass-green.svg?longCache=true)
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 103](https://img.shields.io/badge/Google_Chrome_103-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
 
 Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括小电视播放器。
 
