@@ -1,3 +1,5 @@
+import "./polyfill/polyfill"
+
 import { avPage } from "../content/av/code";
 import { bangumiPage } from "../content/bangumi/code";
 import { globalVector } from "../content/global";
