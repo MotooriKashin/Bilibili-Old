@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.0
+// @version      9.0.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -58,19 +58,19 @@ const modules =`
       "use strict";
       module2.exports = asPromise;
       function asPromise(fn, ctx) {
-        var params = new Array(arguments.length - 1), offset = 0, index = 2, pending = true;
+        var params = new Array(arguments.length - 1), offset2 = 0, index = 2, pending = true;
         while (index < arguments.length)
-          params[offset++] = arguments[index++];
+          params[offset2++] = arguments[index++];
         return new Promise(function executor(resolve, reject) {
-          params[offset] = function callback(err) {
+          params[offset2] = function callback(err) {
             if (pending) {
               pending = false;
               if (err)
                 reject(err);
               else {
-                var params2 = new Array(arguments.length - 1), offset2 = 0;
-                while (offset2 < params2.length)
-                  params2[offset2++] = arguments[offset2];
+                var params2 = new Array(arguments.length - 1), offset3 = 0;
+                while (offset3 < params2.length)
+                  params2[offset3++] = arguments[offset3];
                 resolve.apply(null, params2);
               }
             }
@@ -148,8 +148,8 @@ const modules =`
         return String.fromCharCode.apply(String, chunk.slice(0, i2));
       };
       var invalidEncoding = "invalid encoding";
-      base64.decode = function decode(string, buffer2, offset) {
-        var start = offset;
+      base64.decode = function decode(string, buffer2, offset2) {
+        var start = offset2;
         var j = 0, t;
         for (var i2 = 0; i2 < string.length; ) {
           var c = string.charCodeAt(i2++);
@@ -163,24 +163,24 @@ const modules =`
               j = 1;
               break;
             case 1:
-              buffer2[offset++] = t << 2 | (c & 48) >> 4;
+              buffer2[offset2++] = t << 2 | (c & 48) >> 4;
               t = c;
               j = 2;
               break;
             case 2:
-              buffer2[offset++] = (t & 15) << 4 | (c & 60) >> 2;
+              buffer2[offset2++] = (t & 15) << 4 | (c & 60) >> 2;
               t = c;
               j = 3;
               break;
             case 3:
-              buffer2[offset++] = (t & 3) << 6 | c;
+              buffer2[offset2++] = (t & 3) << 6 | c;
               j = 0;
               break;
           }
         }
         if (j === 1)
           throw Error(invalidEncoding);
-        return offset - start;
+        return offset2 - start;
       };
       base64.test = function test(string) {
         return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?\$/.test(string);
@@ -487,29 +487,29 @@ const modules =`
         }
         return String.fromCharCode.apply(String, chunk.slice(0, i));
       };
-      utf8.write = function utf8_write(string, buffer2, offset) {
-        var start = offset, c1, c2;
+      utf8.write = function utf8_write(string, buffer2, offset2) {
+        var start = offset2, c1, c2;
         for (var i = 0; i < string.length; ++i) {
           c1 = string.charCodeAt(i);
           if (c1 < 128) {
-            buffer2[offset++] = c1;
+            buffer2[offset2++] = c1;
           } else if (c1 < 2048) {
-            buffer2[offset++] = c1 >> 6 | 192;
-            buffer2[offset++] = c1 & 63 | 128;
+            buffer2[offset2++] = c1 >> 6 | 192;
+            buffer2[offset2++] = c1 & 63 | 128;
           } else if ((c1 & 64512) === 55296 && ((c2 = string.charCodeAt(i + 1)) & 64512) === 56320) {
             c1 = 65536 + ((c1 & 1023) << 10) + (c2 & 1023);
             ++i;
-            buffer2[offset++] = c1 >> 18 | 240;
-            buffer2[offset++] = c1 >> 12 & 63 | 128;
-            buffer2[offset++] = c1 >> 6 & 63 | 128;
-            buffer2[offset++] = c1 & 63 | 128;
+            buffer2[offset2++] = c1 >> 18 | 240;
+            buffer2[offset2++] = c1 >> 12 & 63 | 128;
+            buffer2[offset2++] = c1 >> 6 & 63 | 128;
+            buffer2[offset2++] = c1 & 63 | 128;
           } else {
-            buffer2[offset++] = c1 >> 12 | 224;
-            buffer2[offset++] = c1 >> 6 & 63 | 128;
-            buffer2[offset++] = c1 & 63 | 128;
+            buffer2[offset2++] = c1 >> 12 | 224;
+            buffer2[offset2++] = c1 >> 6 & 63 | 128;
+            buffer2[offset2++] = c1 & 63 | 128;
           }
         }
-        return offset - start;
+        return offset2 - start;
       };
     }
   });
@@ -523,17 +523,17 @@ const modules =`
         var SIZE = size || 8192;
         var MAX = SIZE >>> 1;
         var slab = null;
-        var offset = SIZE;
+        var offset2 = SIZE;
         return function pool_alloc(size2) {
           if (size2 < 1 || size2 > MAX)
             return alloc(size2);
-          if (offset + size2 > SIZE) {
+          if (offset2 + size2 > SIZE) {
             slab = alloc(SIZE);
-            offset = 0;
+            offset2 = 0;
           }
-          var buf = slice.call(slab, offset, offset += size2);
-          if (offset & 7)
-            offset = (offset | 7) + 1;
+          var buf = slice.call(slab, offset2, offset2 += size2);
+          if (offset2 & 7)
+            offset2 = (offset2 | 7) + 1;
           return buf;
         };
       }
@@ -1548,11 +1548,11 @@ const modules =`
         "string",
         "bytes"
       ];
-      function bake(values, offset) {
+      function bake(values, offset2) {
         var i = 0, o = {};
-        offset |= 0;
+        offset2 |= 0;
         while (i < values.length)
-          o[s[i + offset]] = values[i++];
+          o[s[i + offset2]] = values[i++];
         return o;
       }
       types.basic = bake([
@@ -3678,14 +3678,14 @@ const modules =`
 
   // src/runtime/element/create_element.ts
   function createSVG(element) {
-    const node2 = document.createElementNS("http://www.w3.org/2000/svg", element.tagName);
+    const node4 = document.createElementNS("http://www.w3.org/2000/svg", element.tagName);
     element.props && Object.entries(element.props).forEach((d) => {
-      node2.setAttribute(d[0], d[1]);
+      node4.setAttribute(d[0], d[1]);
     });
     element.children && element.children.forEach((d) => {
-      node2.appendChild(createSVG(d));
+      node4.appendChild(createSVG(d));
     });
-    return node2;
+    return node4;
   }
   function createElement(element) {
     if (element.tagName === "text") {
@@ -3694,18 +3694,18 @@ const modules =`
     if (element.tagName === "svg") {
       return createSVG(element);
     }
-    const node2 = document.createElement(element.tagName);
+    const node4 = document.createElement(element.tagName);
     element.props && Object.entries(element.props).forEach((d) => {
-      node2.setAttribute(d[0], d[1]);
+      node4.setAttribute(d[0], d[1]);
     });
-    element.text && node2.appendChild(document.createTextNode(element.text));
+    element.text && node4.appendChild(document.createTextNode(element.text));
     element.event && Object.entries(element.event).forEach((d) => {
-      node2.addEventListener(...d);
+      node4.addEventListener(...d);
     });
     element.children && element.children.forEach((d) => {
-      node2.appendChild(createElement(d));
+      node4.appendChild(createElement(d));
     });
-    return node2;
+    return node4;
   }
   function createElements(elements) {
     const fragment = document.createDocumentFragment();
@@ -4650,7 +4650,7 @@ const modules =`
       params.delete("sign");
       params.set("appkey", this.keySecret[0]);
       params.sort();
-      params.set("sign", md5(id === 3 && params.has("api") ? new URLSearchParams({ api: decodeURIComponent(params.get("api")) }).toString() : params.toString() + this.keySecret[1]));
+      params.set("sign", md5((id === 3 && params.has("api") ? \`api=\${decodeURIComponent(params.get("api"))}\` : params.toString()) + this.keySecret[1]));
       return urlobj ? urlobj.toString() : params.toString();
     }
     static decode(id) {
@@ -4797,12 +4797,12 @@ const modules =`
     }
     return result;
   }
-  function getTotalTop(node2) {
+  function getTotalTop(node4) {
     var sum = 0;
     do {
-      sum += node2.offsetTop;
-      node2 = node2.offsetParent;
-    } while (node2);
+      sum += node4.offsetTop;
+      node4 = node4.offsetParent;
+    } while (node4);
     return sum;
   }
   function biliQuickLogin() {
@@ -5058,7 +5058,9 @@ const modules =`
       wait: false,
       silence: false
     },
-    development: false
+    development: false,
+    settingEntryType: false,
+    downloadBtn: true
   };
 
   // src/runtime/lib/proxy_handler.ts
@@ -5166,22 +5168,22 @@ const modules =`
 
   // src/runtime/setting.ts
   var setting = setting_default;
+  var newSetting;
   function getSetting() {
     if (isUserScript) {
-      let save2 = function() {
-        GM_setValue("config", newSetting);
-      };
-      var save = save2;
-      const newSetting = GM_getValue("config", setting_default);
-      setting = new Proxy(newSetting, new ProxyHandler(save2));
+      newSetting = GM_getValue("config", setting_default);
+      setting = new Proxy(newSetting, new ProxyHandler(saveConfig));
     } else {
-      let save2 = function() {
-        GM.setValue("setting", newSetting);
-        sessionStorage2.setItem("setting", newSetting);
-      };
-      var save = save2;
-      const newSetting = sessionStorage2.getItem("setting");
-      newSetting ? setting = new Proxy(newSetting, new ProxyHandler(save2)) : setTimeout(getSetting);
+      newSetting = sessionStorage2.getItem("setting");
+      newSetting ? setting = new Proxy(newSetting, new ProxyHandler(saveConfig)) : setTimeout(getSetting);
+    }
+  }
+  function saveConfig() {
+    if (isUserScript) {
+      GM_setValue("config", JSON.parse(JSON.stringify(newSetting)));
+    } else {
+      GM.setValue("setting", JSON.parse(JSON.stringify(newSetting)));
+      sessionStorage2.setItem("setting", JSON.parse(JSON.stringify(newSetting)));
     }
   }
   chrome?.storage ? chrome.storage.local.get().then((d) => setting = d.setting) : getSetting();
@@ -5456,9 +5458,9 @@ const modules =`
         html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
       });
       html += "</div></div>";
-      const node2 = createElements(htmlVnode(html));
-      const toast2 = node2.children[0];
-      this.container.insertBefore(node2, this.container.firstChild);
+      const node4 = createElements(htmlVnode(html));
+      const toast2 = node4.children[0];
+      this.container.insertBefore(node4, this.container.firstChild);
       toast2.setAttribute("style", \`height: \${toast2.scrollHeight + 30}px;\`);
       let hovering = false;
       toast2.addEventListener("mouseover", () => hovering = true);
@@ -5505,19 +5507,19 @@ const modules =`
       !delay ? toast2.children[0].children[0].addEventListener("click", () => ToastContainer.remove(toast2)) : ToastContainer.countDown(toast2);
       return toast2;
     }
-    static countDown(node2) {
-      node2.delay && setTimeout(() => {
-        node2.delay--;
-        this.countDown(node2);
+    static countDown(node4) {
+      node4.delay && setTimeout(() => {
+        node4.delay--;
+        this.countDown(node4);
       }, 1e3);
     }
-    static remove(node2) {
-      node2.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
-      setTimeout(() => node2.remove(), 1e3);
+    static remove(node4) {
+      node4.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
+      setTimeout(() => node4.remove(), 1e3);
     }
-    static organizeDate(node2) {
-      let html = !node2.delay ? \`<div class="toast-close-button">\${fork_default}</div>\` : "";
-      node2.data.forEach((d, i) => {
+    static organizeDate(node4) {
+      let html = !node4.delay ? \`<div class="toast-close-button">\${fork_default}</div>\` : "";
+      node4.data.forEach((d, i) => {
         if (isObject(d)) {
           try {
             d = JSON.stringify(d, void 0, "<br>");
@@ -5526,9 +5528,9 @@ const modules =`
         }
         html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
       });
-      node2.children[0].replaceChildren(createElements(htmlVnode(html)));
-      node2.setAttribute("style", \`height: \${node2.firstChild.clientHeight + 30}px;\`);
-      !node2.delay && node2.children[0].children[0].addEventListener("click", () => ToastContainer.remove(node2));
+      node4.children[0].replaceChildren(createElements(htmlVnode(html)));
+      node4.setAttribute("style", \`height: \${node4.firstChild.clientHeight + 30}px;\`);
+      !node4.delay && node4.children[0].children[0].addEventListener("click", () => ToastContainer.remove(node4));
     }
   };
   customElements.get(\`toast-container\${mutex}\`) || customElements.define(\`toast-container\${mutex}\`, ToastContainer);
@@ -5692,7 +5694,7 @@ const modules =`
       "bangumi.bilibili.com/api/season_v5": { appkey: 2, build: "2040100", platform: "android" }
     };
     getJson(url, detail, gm) {
-      const str = objUrl(url, Object.assign(this.jsonUrlDefault[url], detail));
+      const str = objUrl(url, { ...this.jsonUrlDefault[url], ...detail });
       return gm ? isUserScript ? GM.xhr({ url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, responseType: "json" }) : GM.xmlHttpRequest(this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, { credentials: "include" }).then((d) => JSON.parse(d)) : xhr({
         url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str,
         responseType: "json",
@@ -5766,8 +5768,8 @@ const modules =`
       debug.error("switchVideo.js", e);
     }
   }
-  observerAddedNodes((node2) => {
-    if (/bilibili-player-area video-state-pause/.test(node2.className)) {
+  observerAddedNodes((node4) => {
+    if (/bilibili-player-area video-state-pause/.test(node4.className)) {
       switchlist.forEach(async (d) => {
         try {
           d();
@@ -5786,10 +5788,10 @@ const modules =`
   var ClickRemove = class {
     cancel;
     observe;
-    constructor(node2) {
-      node2.addEventListener("click", (e) => e.stopPropagation());
+    constructor(node4) {
+      node4.addEventListener("click", (e) => e.stopPropagation());
       function remove() {
-        node2.remove();
+        node4.remove();
         document.removeEventListener("click", remove);
       }
       this.cancel = () => document.removeEventListener("click", remove);
@@ -6515,6 +6517,8 @@ const modules =`
     return JSON.parse(uposReplace(JSON.stringify(result), setting.uposReplace.dl));
   }
   window.addEventListener("message", (ev) => {
+    if (isUserScript)
+      return;
     if (typeof ev.data === "object") {
       if (ev.data.\$type == "downloadDefault") {
         downloadDefault();
@@ -7385,9 +7389,9 @@ const modules =`
 
   // src/runtime/player/video_float.ts
   function videoFloat(data, hint, callback, time = 5) {
-    const node2 = document.querySelector(".bilibili-player-video-toast-wrp");
-    if (node2 && data) {
-      const flt = node2.appendChild(createElement(htmlVnode(
+    const node4 = document.querySelector(".bilibili-player-video-toast-wrp");
+    if (node4 && data) {
+      const flt = node4.appendChild(createElement(htmlVnode(
         \`<div class="bilibili-player-video-toast-bottom">
                     <div class="bilibili-player-video-toast-item bilibili-player-video-toast-pay">
                         <span class="video-float-hint-text">\${data}</span>
@@ -8005,6 +8009,8 @@ const modules =`
   };
   var danmaku = new Danmaku();
   window.addEventListener("message", async (ev) => {
+    if (isUserScript)
+      return;
     if (typeof ev.data === "object") {
       if (ev.data.\$type == "onlineDanmaku") {
         if (!window.player)
@@ -8930,11 +8936,11 @@ const modules =`
   // src/runtime/player/automate.ts
   function bofqiToView() {
     let str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
-    let node2 = str.reduce((s, d) => {
+    let node4 = str.reduce((s, d) => {
       s = s || document.querySelector(d);
       return s;
     }, document.querySelector("#__bofqi"));
-    node2 && node2.scrollIntoView({ behavior: "smooth", block: "center" });
+    node4 && node4.scrollIntoView({ behavior: "smooth", block: "center" });
   }
   function automate() {
     switchVideo(() => {
@@ -12536,7 +12542,7 @@ const modules =`
         videoFloat("载入字幕：", this.caption.lan_doc, () => {
         });
       } else
-        videoFloat("关闭弹幕");
+        videoFloat("关闭字幕");
     }
   };
   var closedCaption = new ClosedCaption();
@@ -13771,7 +13777,10 @@ const modules =`
         }
       }
     ];
+    bgray_btn_title = [];
     append_bgray_btn(title, callback, className) {
+      if (this.bgray_btn_title.includes(title))
+        return;
       const vdom = {
         tagName: "div",
         props: { class: \`bgray-btn show bgray-btn-\${className || "any"}\` },
@@ -13794,6 +13803,7 @@ const modules =`
           });
         }
       }
+      this.bgray_btn_title.push(title);
       this.bgray_btn.push(vdom);
       this.init_bgray_btn();
     }
@@ -13912,6 +13922,7 @@ const modules =`
           asWide && (EmbedPlayer.asWide = true);
           bofqi && (document.querySelector(bofqi).id = "bofqi");
           window.GrayManager = new GrayManager(player2, swf, playerParams, playerType, upgrade, callbackFn);
+          isUserScript && window.GrayManager.append_bgray_btn("下载", () => downloadDefault());
         } catch (e) {
           toast.error("EmbedPlayer 启动播放器出错~");
           debug.error("EmbedPlayer 启动播放器出错~", e);
@@ -14572,7 +14583,7 @@ const modules =`
 
   // src/content/av/up_list.ts
   function upList(staff) {
-    doWhile(() => document.querySelector("#v_upinfo"), (node2) => {
+    doWhile(() => document.querySelector("#v_upinfo"), (node4) => {
       let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
       fl = staff.reduce((s, d) => {
         s = s + \`<div class="up-card">
@@ -14584,7 +14595,7 @@ const modules =`
                 </div></div>\`;
         return s;
       }, fl) + \`</div>\`;
-      node2.innerHTML = fl;
+      node4.innerHTML = fl;
       addCss(up_list_default);
     });
   }
@@ -15313,20 +15324,20 @@ const modules =`
               if (v2.scale) {
                 const x = v2.scale.offset || 0;
                 const itp = v2.scale.offsetCurve ? curveParameterToFunc(v2.scale.offsetCurve) : (x2) => x2;
-                const offset = x * itp(displace);
-                transform.scale = v2._initState.scale + offset;
+                const offset2 = x * itp(displace);
+                transform.scale = v2._initState.scale + offset2;
               }
               if (v2.rotate) {
                 const x = v2.rotate.offset || 0;
                 const itp = v2.rotate.offsetCurve ? curveParameterToFunc(v2.rotate.offsetCurve) : (x2) => x2;
-                const offset = x * itp(displace);
-                transform.rotate = v2._initState.rotate + offset;
+                const offset2 = x * itp(displace);
+                transform.rotate = v2._initState.rotate + offset2;
               }
               if (v2.translate) {
                 const x = v2.translate.offset || [0, 0];
                 const itp = v2.translate.offsetCurve ? curveParameterToFunc(v2.translate.offsetCurve) : (x2) => x2;
-                const offset = x.map((v3) => itp(displace) * v3);
-                const translate = v2._initState.translate.map((x2, i2) => (x2 + offset[i2]) * containerScale * (v2.scale?.initial || 1));
+                const offset2 = x.map((v3) => itp(displace) * v3);
+                const translate = v2._initState.translate.map((x2, i2) => (x2 + offset2[i2]) * containerScale * (v2.scale?.initial || 1));
                 transform.translate = translate;
               }
               a.style.transform = \`scale(\${transform.scale})translate(\${transform.translate[0]}px, \${transform.translate[1]}px)rotate(\${transform.rotate}deg)\`;
@@ -15680,8 +15691,8 @@ const modules =`
     window.bnj = false;
     const arr2 = [];
     doWhile(() => window.__INITIAL_STATE__, () => {
-      const node2 = document.querySelector("#bilibili-player").parentElement;
-      const root3 = node2.attachShadow({ mode: "closed" });
+      const node4 = document.querySelector("#bilibili-player").parentElement;
+      const root3 = node4.attachShadow({ mode: "closed" });
       const iframe = document.createElement("iframe");
       iframe.src = \`https://www.bilibili.com/blackboard/html5player.html?aid=\${window.__INITIAL_STATE__.videoInfo.aid}&cid=\${window.__INITIAL_STATE__.videoInfo.cid}&enable_ssl=1&crossDomain=1&as_wide=1&bnj=1\`;
       iframe.setAttribute("style", "width: 906px; height: 556px;border:none;");
@@ -15711,8 +15722,8 @@ const modules =`
   var avatar_animation_default = "/* 鼠标放在顶栏上的动效 */\\r\\n.bili-header-m .profile-info .i-face .face {\\r\\n    border: 0\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info .i-face .pendant {\\r\\n    transform: scale(0.5);\\r\\n    width: 112px;\\r\\n    height: 112px;\\r\\n    left: -41px;\\r\\n    bottom: -46px;\\r\\n    opacity: 0;\\r\\n    transition: opacity .1s ease-in\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face {\\r\\n    left: 8px !important;\\r\\n    top: 0 !important;\\r\\n    height: 32px !important;\\r\\n    width: 32px !important;\\r\\n    transform: translateY(10px) translateX(-16px) scale(2);\\r\\n    transform-origin: top left\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .legalize {\\r\\n    transform: scale(0.5) translate(10px, 15px)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .pendant {\\r\\n    opacity: 1\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .face {\\r\\n    border: 0;\\r\\n    box-shadow: 0 0 0 2px #fff\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in {\\r\\n    transform: translateY(5px) translateX(-10px) scale(1.75)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .scale-in .face {\\r\\n    height: 32px;\\r\\n    width: 32px\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in .legalize {\\r\\n    transform: scale(0.5) translate(38px, 48px)\\r\\n}";
 
   // src/content/section.ts
-  async function header(menu = false) {
-    if (menu) {
+  async function header(menu2 = false) {
+    if (menu2) {
       primaryMenu();
       banner();
     }
@@ -15745,21 +15756,21 @@ const modules =`
     }
   }
   function replaceHeader(t) {
-    let menu = false;
+    let menu2 = false;
     if (document.querySelector(".mini-type") || /festival/.test(location.href)) {
-      menu = false;
+      menu2 = false;
     }
     if (location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || t.getAttribute("type") == "all") {
-      menu = true;
+      menu2 = true;
     }
     if (t.parentElement?.id === "app") {
-      addElement("div", { class: \`z-top-container\${menu ? " has-menu" : ""}\` }, void 0, void 0, true);
+      addElement("div", { class: \`z-top-container\${menu2 ? " has-menu" : ""}\` }, void 0, void 0, true);
       t.setAttribute("hidden", "hidden");
     } else {
-      t.setAttribute("class", \`z-top-container\${menu ? " has-menu" : ""}\`);
+      t.setAttribute("class", \`z-top-container\${menu2 ? " has-menu" : ""}\`);
       t.removeAttribute("id");
     }
-    header(menu);
+    header(menu2);
     styleClear();
   }
   function section() {
@@ -15817,8 +15828,8 @@ const modules =`
       (isUserScript ? GM.xhr({ url: \`https://account.bilibili.com/api/member/getCardByMid?mid=\${mid}\` }) : GM.xmlHttpRequest(\`https://account.bilibili.com/api/member/getCardByMid?mid=\${mid}\`)).then((d) => {
         const data = jsonCheck(d);
         const jointime2 = timeFormat(data.card.regtime * 1e3, true);
-        const node2 = t.lastChild;
-        node2.appendChild(createElement({
+        const node4 = t.lastChild;
+        node4.appendChild(createElement({
           tagName: "div",
           props: { class: "info-regtime", style: "display: inline-block;word-break: break-all;" },
           children: [
@@ -15890,9 +15901,9 @@ const modules =`
     return result;
   }
   function lostVideo() {
-    observerAddedNodes((node2) => {
-      if (/section channel guest/.test(node2.className)) {
-        let items = node2.querySelectorAll(".small-item.disabled");
+    observerAddedNodes((node4) => {
+      if (/section channel guest/.test(node4.className)) {
+        let items = node4.querySelectorAll(".small-item.disabled");
         items.forEach((d) => {
           let aid = d.getAttribute("data-aid");
           aid = Number(aid) || abv(aid);
@@ -15912,22 +15923,22 @@ const modules =`
           });
         });
       }
-      if (/small-item disabled/.test(node2.className)) {
-        let aid = node2.getAttribute("data-aid");
+      if (/small-item disabled/.test(node4.className)) {
+        let aid = node4.getAttribute("data-aid");
         aid = Number(aid) || abv(aid);
-        node2.setAttribute("class", "small-item fakeDanmu-item");
-        node2.setAttribute("data-aid", aid);
-        node2.children[0].href = \`//www.bilibili.com/video/av\${aid}\`;
-        node2.children[1].href = \`//www.bilibili.com/video/av\${aid}\`;
-        node2.children[0].setAttribute("target", "_blank");
-        node2.children[1].setAttribute("target", "_blank");
-        node2.children[0].setAttribute("class", "cover cover-normal");
-        node2.children[1].setAttribute("style", "text-decoration : line-through;color : #ff0000;");
+        node4.setAttribute("class", "small-item fakeDanmu-item");
+        node4.setAttribute("data-aid", aid);
+        node4.children[0].href = \`//www.bilibili.com/video/av\${aid}\`;
+        node4.children[1].href = \`//www.bilibili.com/video/av\${aid}\`;
+        node4.children[0].setAttribute("target", "_blank");
+        node4.children[1].setAttribute("target", "_blank");
+        node4.children[0].setAttribute("class", "cover cover-normal");
+        node4.children[1].setAttribute("style", "text-decoration : line-through;color : #ff0000;");
         getLostVideo(aid).then((data) => {
-          node2.children[1].setAttribute("title", data[0]);
-          node2.children[1].text = data[0];
-          node2.children[0].children[0].alt = data[0];
-          node2.children[0].children[0].src = data[1];
+          node4.children[1].setAttribute("title", data[0]);
+          node4.children[1].text = data[0];
+          node4.children[0].children[0].alt = data[0];
+          node4.children[0].children[0].src = data[1];
         });
       }
     });
@@ -16633,15 +16644,15 @@ const modules =`
           html += \`</ul></div><a href="\${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>\`;
           const vnode = htmlVnode(html);
           vnode[1].children[0].children?.forEach((d2, i) => {
-            let node2;
+            let node4;
             d2.event = {
               "mouseover": (e) => {
                 const target = e.target;
                 const nodes = createElements(htmlVnode(\`<div class="bangumi-info-module" style="left: \${target.getBoundingClientRect().left}px; top: \${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="\${data.list[i].title}" src="\${data.list[i].cover.replace("http:", "")}" /></div><div><p class="title">\${data.list[i].title}</p><p class="desc">\${data.list[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>\${unitFormat(data.list[i].stat.view)}</span><span class="danmu"><i class="icon"></i>\${unitFormat(data.list[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>\${unitFormat(data.list[i].stat.follow)}</span></div></div>\`));
-                node2 = nodes.children[0];
+                node4 = nodes.children[0];
                 document.body.appendChild(nodes);
               },
-              "mouseout": () => node2.remove()
+              "mouseout": () => node4.remove()
             };
           });
           arr2[0].replaceChildren(createElements(vnode));
@@ -24058,10 +24069,10 @@ const modules =`
         calcScroll(d.target);
       });
     }
-    function calcScroll(node2) {
-      const maxHeight = node2.scrollHeight;
-      const scroll = /\\d+/.exec(node2.style.top) ? Number(/\\d+/.exec(node2.style.top)) : 0;
-      if (node2.className.includes("hidden"))
+    function calcScroll(node4) {
+      const maxHeight = node4.scrollHeight;
+      const scroll = /\\d+/.exec(node4.style.top) ? Number(/\\d+/.exec(node4.style.top)) : 0;
+      if (node4.className.includes("hidden"))
         return;
       if (maxHeight - scroll > 0 && maxHeight - scroll < 600) {
         observer.disconnect();
@@ -24303,6 +24314,2207 @@ const modules =`
     globalVector();
   }
 
+  // src/images/svg/wrench.svg
+  var wrench_default = '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>';
+
+  // src/images/svg/note.svg
+  var note_default = '<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>';
+
+  // src/images/svg/dmset.svg
+  var dmset_default = '<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>';
+
+  // src/images/svg/stethoscope.svg
+  var stethoscope_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>';
+
+  // src/images/svg/play.svg
+  var play_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>';
+
+  // src/images/svg/palette.svg
+  var palette_default = '<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>';
+
+  // src/images/svg/bioscope.svg
+  var bioscope_default = '<svg viewBox="0 0 1024 1024"><path d="M392.448 275.911111a92.416 92.416 0 1 1-184.832 0 92.416 92.416 0 0 1 184.832 0"></path><path d="M826.624 464.583111l-63.744 36.864v-48.64a72.206222 72.206222 0 0 0-71.68-71.936H190.72a72.192 72.192 0 0 0-71.936 71.936V748.231111a71.936 71.936 0 0 0 71.936 71.936H691.2a71.936 71.936 0 0 0 71.936-71.936v-23.808l63.488 37.888a51.2 51.2 0 0 0 76.8-44.544V508.871111a51.2 51.2 0 0 0-76.8-44.288M572.928 369.351111c79.459556 0.142222 143.985778-64.156444 144.128-143.616 0.142222-79.459556-64.156444-143.985778-143.616-144.128-79.260444-0.142222-143.701333 63.857778-144.128 143.104-0.426667 79.459556 63.644444 144.213333 143.104 144.64h0.512"></path><path d="M425.216 512.967111l124.16 71.936a25.6 25.6 0 0 1 0 42.496l-124.16 71.68a25.6 25.6 0 0 1-37.12-21.248V534.471111a25.6 25.6 0 0 1 37.12-21.504"></path></svg>';
+
+  // src/images/svg/download.svg
+  var download_default = '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>';
+
+  // src/runtime/chrome/menu.ts
+  var menu = [
+    {
+      key: "common",
+      value: "通用",
+      svg: wrench_default
+    },
+    {
+      key: "rewrite",
+      value: "重构",
+      svg: note_default
+    },
+    {
+      key: "danmaku",
+      value: "弹幕",
+      svg: dmset_default
+    },
+    {
+      key: "restore",
+      value: "修复",
+      svg: stethoscope_default
+    },
+    {
+      key: "player",
+      value: "播放",
+      svg: play_default
+    },
+    {
+      key: "style",
+      value: "样式",
+      svg: palette_default
+    },
+    {
+      key: "live",
+      value: "直播",
+      svg: bioscope_default
+    },
+    {
+      key: "download",
+      value: "下载",
+      svg: download_default
+    }
+  ];
+
+  // src/images/svg/linechart.svg
+  var linechart_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>';
+
+  // src/images/svg/blind.svg
+  var blind_default = '<svg viewBox="0 0 24 24"><g><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></g></svg>';
+
+  // src/images/svg/warn.svg
+  var warn_default = '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>';
+
+  // src/runtime/element/horizontal/horizontal.html
+  var horizontal_default = '<div class="hr"></div>\\r\\n<style type="text/css">\\r\\n    .hr {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        grid-gap: 0;\\r\\n        gap: 0;\\r\\n        justify-content: space-between;\\r\\n        flex-shrink: 0;\\r\\n        height: 1px;\\r\\n        background-color: rgba(136, 136, 136, 0.1);\\r\\n        width: 100%;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/horizontal/horizontal.ts
+  var HorizontalLine = class extends HTMLElement {
+    constructor() {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      root3.appendChild(createElements(htmlVnode(horizontal_default)));
+    }
+  };
+  customElements.get(\`horizontal-line\${mutex}\`) || customElements.define(\`horizontal-line\${mutex}\`, HorizontalLine);
+
+  // src/runtime/element/push_button/push_button.html
+  var push_button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/push_button/push_button.ts
+  var PushButton = class extends HTMLElement {
+    button;
+    constructor(obj) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      const { button, func } = obj;
+      root3.appendChild(createElements(htmlVnode(push_button_default)));
+      const node4 = root3.children[0];
+      Object.defineProperty(obj, "button", {
+        set: (v) => {
+          if (this.button === v)
+            return;
+          node4.textContent = v;
+          this.button = v;
+        },
+        get: () => this.button
+      });
+      let timer2;
+      node4.addEventListener("click", () => {
+        clearTimeout(timer2);
+        timer2 = setTimeout(() => {
+          func();
+        }, 100);
+      });
+      this.button = obj.button = button || "点击";
+    }
+  };
+  customElements.get(\`push-button\${mutex}\`) || customElements.define(\`push-button\${mutex}\`, PushButton);
+
+  // src/runtime/element/alert.ts
+  function showAlert(data, head, button) {
+    const part = createElements(htmlVnode(
+      \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
+                <span>\${head || "Bilibili Old"}</span>
+            </div>
+            <div style="margin-bottom: 10px;"><div>\${data}</div></div>\`
+    ));
+    let popup;
+    if (button && button.length) {
+      part.appendChild(new HorizontalLine());
+      const node4 = part.appendChild(createElement({
+        tagName: "div",
+        props: { style: "display: flex;align-items: center;justify-content: space-around;" }
+      }));
+      button.forEach((d) => {
+        node4.appendChild(new PushButton({
+          button: d.name,
+          func: () => {
+            d.callback();
+            popup.remove();
+          }
+        }));
+      });
+    }
+    popup = new PopupBox({ children: part, style: "max-width: 360px; max-height: 300px;" });
+  }
+
+  // src/runtime/chrome/manage.ts
+  var settingMG = {
+    restore() {
+      if (isUserScript) {
+        GM_deleteValue("config");
+      } else {
+        chrome.storage.local.clear();
+      }
+      toast.warning("已恢复默认数据，请及时刷新页面避免数据紊乱！");
+      showAlert(\`已恢复默认数据，请及时<strong>刷新</strong>页面避免数据紊乱！\`, "恢复默认设置", [
+        { name: "刷新页面", callback: () => location.reload() }
+      ]);
+    },
+    output() {
+      if (isUserScript) {
+        return saveAs(JSON.stringify(GM_getValue("config"), void 0, "	"), \`Bilibili-Old-\${timeFormat(void 0, true)}.json\`, "application/json");
+      }
+      chrome.storage.local.get((d) => {
+        saveAs(JSON.stringify(d, void 0, "	"), \`Bilibili-Old-\${timeFormat(void 0, true)}.json\`, "application/json");
+      });
+    },
+    input() {
+      fileRead("application/json", true).then((d) => {
+        d && d[0] && readAs(d[0]).then((d2) => {
+          const data = JSON.parse(d2);
+          isUserScript ? GM_setValue("config", data) : chrome.storage.local.set({ setting: data });
+          showAlert(\`已恢复备份数据，请及时<strong>刷新</strong>页面避免数据紊乱！\`, "恢复默认设置", [
+            { name: "刷新页面", callback: () => location.reload() }
+          ]);
+        });
+      });
+    }
+  };
+
+  // src/runtime/chrome/cookie.ts
+  async function chromeCookies(str = "") {
+    return await chrome.cookies.getAll({ domain: str });
+  }
+  function cookiesArr2Obj(cookies) {
+    return cookies.reduce((s, d) => {
+      s[d.name] = d.value;
+      return s;
+    }, {});
+  }
+
+  // src/runtime/chrome/access_key.ts
+  var AccessKey = class {
+    setting = {};
+    constructor() {
+      if (isUserScript) {
+        if (!uid) {
+          toast.warning("请先到B站网页端登录！");
+        } else {
+          this.setting = setting;
+          let arr2 = [];
+          if (this.setting.accessKey.key) {
+            arr2 = [
+              {
+                name: "刷新授权",
+                callback: () => {
+                  this.get();
+                }
+              },
+              {
+                name: "撤销授权",
+                callback: () => {
+                  this.remove();
+                }
+              },
+              {
+                name: "取消操作",
+                callback: () => {
+                }
+              }
+            ];
+          } else {
+            arr2 = [
+              {
+                name: "立即授权",
+                callback: () => {
+                  this.get();
+                }
+              },
+              {
+                name: "取消操作",
+                callback: () => {
+                }
+              }
+            ];
+          }
+          showAlert("【账户授权】表示您同意本扩展能以网页端以外的鉴权向B站官方服务器证明您的身份，以执行一些本来网页端无权进行的操作。如果【解除限制】中自定义了第三方解析服务器，请仔细斟酌第三方的可信度，<strong>如无必要，切莫授权！</strong>。", "账户授权", arr2);
+        }
+      } else {
+        location.hash = "accessKey";
+        chromeCookies("bilibili.com").then((d) => {
+          const uid2 = cookiesArr2Obj(d).DedeUserID;
+          if (!uid2) {
+            toast.warning("请先到B站网页端登录！");
+          } else {
+            this.setting = sessionStorage2.getItem("setting");
+            let arr2 = [];
+            if (this.setting.accessKey.key) {
+              arr2 = [
+                {
+                  name: "刷新授权",
+                  callback: () => {
+                    this.get();
+                  }
+                },
+                {
+                  name: "撤销授权",
+                  callback: () => {
+                    this.remove();
+                  }
+                },
+                {
+                  name: "取消操作",
+                  callback: () => {
+                  }
+                }
+              ];
+            } else {
+              arr2 = [
+                {
+                  name: "立即授权",
+                  callback: () => {
+                    this.get();
+                  }
+                },
+                {
+                  name: "取消操作",
+                  callback: () => {
+                  }
+                }
+              ];
+            }
+            showAlert("【账户授权】表示您同意本扩展能以网页端以外的鉴权向B站官方服务器证明您的身份，以执行一些本来网页端无权进行的操作。如果【解除限制】中自定义了第三方解析服务器，请仔细斟酌第三方的可信度，<strong>如无必要，切莫授权！</strong>。", "账户授权", arr2);
+          }
+        });
+      }
+    }
+    async get() {
+      const msg = this.setting.accessKey.key ? toast.custom(0, "warning", "您正在更新账户授权！") : toast.custom(0, "info", "您正在进行账户授权操作！");
+      try {
+        if (isUserScript) {
+          let data = await GM.xhr({
+            url: urlsign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", void 0, 3),
+            responseType: "json"
+          });
+          data = await new Promise((resolve, reject) => {
+            GM_xmlhttpRequest({
+              method: "GET",
+              url: data.data.confirm_uri,
+              onload: (xhr2) => resolve(xhr2.finalUrl),
+              onerror: (xhr2) => reject(xhr2)
+            });
+          });
+          data = urlObj(data);
+          setting.accessKey.key = data.access_key;
+          setting.accessKey.date = timeFormat(new Date().getTime(), true);
+          if (msg) {
+            msg.type = "success";
+            msg.data = ["账户授权成功~"];
+            msg.delay = 3;
+          }
+        } else {
+          let data = await fetch(urlsign("https://passport.bilibili.com/login/app/third?api=https%3A%2F%2Fwww.mcbbs.net%2Ftemplate%2Fmcbbs%2Fimage%2Fspecial_photo_bg.png", void 0, 3), {
+            credentials: "include"
+          }).then((d) => d.json());
+          const xhr2 = new XMLHttpRequest();
+          xhr2.open("GET", data.data.confirm_uri);
+          xhr2.withCredentials = true;
+          xhr2.addEventListener("load", async () => {
+            const data2 = urlObj(xhr2.responseURL);
+            this.setting.accessKey.key = data2.access_key;
+            this.setting.accessKey.date = timeFormat(new Date().getTime(), true);
+            if (msg) {
+              msg.type = "success";
+              msg.data = ["账户授权成功~", "3秒后自动刷新页面！"];
+              msg.delay = 3;
+            }
+            chrome.storage.local.set({ setting: this.setting });
+            setTimeout(() => location.reload(), 3e3);
+          });
+          xhr2.addEventListener("error", (e) => {
+            if (msg) {
+              msg.type = "success";
+              msg.data = ["账户授权出错 ಥ_ಥ", e];
+              msg.delay = 3;
+            }
+          });
+          xhr2.send();
+        }
+      } catch (e) {
+        if (msg) {
+          msg.type = "error";
+          msg.data = ["账户授权出错 ಥ_ಥ", e];
+          msg.delay = 3;
+        }
+        debug.error("账户授权", e);
+        isUserScript || chrome.storage.local.set({ setting: this.setting });
+      }
+    }
+    async remove() {
+      if (!this.setting.accessKey.key)
+        return;
+      const msg = toast.custom(0, "info", "您正在撤销账户授权！");
+      this.setting.accessKey.key = "";
+      this.setting.accessKey.date = "";
+      if (msg) {
+        msg.type = "success";
+        msg.data = ["撤销授权成功~", "3秒后自动刷新页面！"];
+        msg.delay = 3;
+      }
+      isUserScript || chrome.storage.local.set({ setting: this.setting });
+      setTimeout(() => location.reload(), 3e3);
+    }
+  };
+
+  // src/runtime/chrome/settings.ts
+  var upos = Object.keys(UPOS);
+  function showSetting(str) {
+    window.postMessage({
+      \$type: "showSetting",
+      data: str
+    });
+  }
+  var settingDefault = [
+    {
+      key: "development",
+      menu: "common",
+      label: "开发者模式",
+      svg: warn_default,
+      sub: "暴露调试接口到控制台",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "logReport",
+      menu: "common",
+      label: "日志拦截",
+      svg: linechart_default,
+      sub: "拦截B站日志上报",
+      float: "网页端日志采集太频繁，稍微动下鼠标都要发送数条日志请求，给调试工作带来额外的困扰，所以一股脑都屏蔽了干净。<br>ps：APP端其实日志更多，只能说眼不见为净吧~",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "toast",
+      menu: "common",
+      type: "list",
+      name: "toastr",
+      list: [
+        {
+          key: "status",
+          type: "switch",
+          label: "开关",
+          value: true,
+          sub: '感谢 <a href="https://github.com/CodeSeven/toastr" target="_blank">toastr</a> 提供支持！'
+        },
+        {
+          key: "rtl",
+          type: "switch",
+          label: "镜像",
+          sub: "左右翻转",
+          value: false
+        },
+        {
+          key: "position",
+          type: "select",
+          label: "位置",
+          value: "top-right",
+          sub: "四角",
+          candidate: ["top-right", "top-left", "bottom-right", "bottom-left"]
+        },
+        {
+          key: "delay",
+          type: "slider",
+          label: "时长",
+          sub: "单位：/秒",
+          value: 4,
+          min: 1,
+          max: 60,
+          precision: 59
+        },
+        {
+          key: "type",
+          type: "select",
+          label: "类型",
+          sub: "测试限定",
+          value: "warning",
+          candidate: ["info", "success", "warning", "error"],
+          styles: {
+            info: "color: #2F96B4",
+            success: "color: #51A351",
+            warning: "color: #F89406",
+            error: "color: #BD362F"
+          }
+        },
+        {
+          key: "test",
+          type: "input",
+          label: "测试",
+          sub: "请输入一句话~",
+          candidate: ["Hello World!"],
+          change: (v) => {
+            setting.toast && toast[setting.toast.type](v);
+          }
+        }
+      ]
+    },
+    {
+      key: "av",
+      menu: "rewrite",
+      label: "av/BV",
+      type: "switch",
+      value: true,
+      sub: "旧版一般视频播放页面"
+    },
+    {
+      key: "videoLimit",
+      menu: "player",
+      type: "list",
+      name: "解除区域/APP限制",
+      list: [
+        {
+          key: "switch",
+          type: "switch",
+          label: "开关",
+          value: false
+        },
+        {
+          key: "server",
+          type: "select",
+          label: "服务器类型",
+          sub: \`<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">公共反代服务器</a>\`,
+          value: "内置",
+          candidate: ["内置", "自定义"],
+          float: \`如果选择自定义则需要填写下面的代理服务器，并且转到【账户授权】进行第三方服务器授权。内置服务器则支持以游客身份获取数据，但只能获取flv格式，且大会员画质还是需要授权。<br>※ 内置服务器不支持泰区。\`,
+          callback: (v) => {
+            if (v === "自定义") {
+              if (!setting.accessKey.key) {
+                showAlert("自定义服务器一般都要求您授权登录才能使用，是否前往【账户授权】设置？", void 0, [
+                  {
+                    name: "是",
+                    callback: () => {
+                      showSetting("accessKey");
+                    }
+                  },
+                  {
+                    name: "否",
+                    callback: () => {
+                    }
+                  }
+                ]);
+              }
+            }
+          }
+        },
+        {
+          key: "cn",
+          type: "input",
+          label: "大陆",
+          sub: "大陆反代",
+          props: { type: "url", placeholder: "www.example.com" },
+          float: "海外用户用来观看大陆限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>"
+        },
+        {
+          key: "hk",
+          type: "input",
+          label: "香港",
+          sub: "香港反代",
+          props: { type: "url", placeholder: "www.example.com" },
+          float: "香港以外的用户用来观看香港澳门限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>"
+        },
+        {
+          key: "tw",
+          type: "input",
+          label: "台湾",
+          sub: "台湾反代",
+          props: { type: "url", placeholder: "www.example.com" },
+          float: "台湾以外的用户用来观看台湾限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>"
+        },
+        {
+          key: "th",
+          type: "input",
+          label: "泰国",
+          sub: "泰国（东南亚）反代",
+          props: { type: "url", placeholder: "www.example.com" },
+          float: "用来观看泰国（东南亚）限定视频的代理服务器。<br>※ <strong>启用【账户授权】意味着该服务器能获取您的部分账户权限，请自行确认服务器可靠性！</strong>"
+        }
+      ]
+    },
+    {
+      key: "uposReplace",
+      menu: "player",
+      type: "list",
+      name: "替换UPOS服务器",
+      list: [
+        {
+          key: "nor",
+          type: "select",
+          label: "一般视频",
+          sub: "不推荐",
+          value: "不替换",
+          float: \`对于一般视频应该充分相信B站分配给你的视频服务器就是最合适的，所以一般不推荐主动替换。\`,
+          candidate: ["不替换"].concat(upos)
+        },
+        {
+          key: "gat",
+          type: "select",
+          label: "代理：港澳台或大陆",
+          sub: "看情况",
+          value: "不替换",
+          float: \`解除港澳台限制获取到的视频服务器必定是海外的Akamai，在一些大陆网络中可能体验并不好，可以看情况指定其他服务器。港澳台（及海外）网络访问大陆服务器同理。<br>※ 替换后若出问题请禁用替换或者前往Github反馈。\`,
+          candidate: ["不替换"].concat(upos)
+        },
+        {
+          key: "th",
+          type: "select",
+          label: "代理：泰区",
+          sub: "必选",
+          value: "ks3（金山）",
+          float: \`泰区视频返回的服务器ban了大陆IP，所以必须进行替换！请根据自身网络情况选择。<br>※ 替换后若出问题前往Github反馈。\`,
+          candidate: upos
+        },
+        {
+          key: "dl",
+          type: "select",
+          label: "下载",
+          sub: "不推荐",
+          value: "不替换",
+          float: \`替换下载功能获取到的视频服务器，对于播放器已获取到的视频源，已经在上面的选项中处理过了。剩下的跟一般视频同理，不推荐替换。<br>※ 注意有【referer】【UserAgent】限制视频源，请在下载面板将【referer】置空，【UserAgent】设为有效值（默认值肯定有效！）\`,
+          candidate: ["不替换"].concat(upos)
+        }
+      ]
+    },
+    {
+      key: "protobufDanmaku",
+      menu: "danmaku",
+      label: "启用新版弹幕",
+      sub: "protobuf",
+      type: "switch",
+      value: true,
+      float: \`为旧版播放器添加proto弹幕支持。由于旧版xml弹幕已获取不到90分钟后的弹幕，本功能不建议禁用。\`
+    },
+    {
+      key: "section",
+      menu: "style",
+      label: "统一换回旧版顶栏",
+      sub: "针对未重构的页面",
+      type: "switch",
+      value: true,
+      float: "非重构页面顶栏底栏也替换为旧版。"
+    },
+    {
+      key: "danmakuHashId",
+      menu: "danmaku",
+      label: "反查弹幕发送者",
+      sub: "结果仅供参考！",
+      type: "switch",
+      value: false,
+      float: "旧版播放器上右键弹幕将显示弹幕发送者。</br>※ 使用哈希逆向算法，存在碰撞可能性，所示信息仅供参考，或者干脆查不出来。"
+    },
+    {
+      key: "flash",
+      menu: "player",
+      label: "flash播放器",
+      sub: "可用于临时不加载视频进入视频页面",
+      float: "临时启用flash播放器以拦截播放器载入，如需下载视频可切换到“下载”标签呼出下载面板，恢复播放器请点击HTML5按钮或在设置中关闭本功能。",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "enlike",
+      menu: "player",
+      label: "添加点赞功能",
+      sub: "自制、简陋",
+      type: "switch",
+      value: false,
+      float: "旧版播放器的时代点赞功能还未存在，本扩展代为设计了个丑丑的点赞功能。注意对于bangumi，点赞数据计算的是单P的。"
+    },
+    {
+      key: "upList",
+      menu: "style",
+      label: "UP主列表",
+      sub: "展示合作者",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "commandDm",
+      menu: "danmaku",
+      label: "添加互动弹幕",
+      sub: "投票弹窗等",
+      type: "switch",
+      value: false,
+      float: \`可以使用新版的一些弹窗互动组件。目前可用组件：评分弹窗、投屏弹窗、关联视频跳转按钮、带“UP主”标识弹幕。</br>※ <strong>需要同时开启新版proto弹幕。</strong>\`
+    },
+    {
+      key: "bangumi",
+      menu: "rewrite",
+      label: "bangumi",
+      sub: "旧版Bangumi页面",
+      type: "switch",
+      value: true
+    },
+    {
+      type: "switch",
+      key: "watchlater",
+      label: "稍后再看",
+      value: true,
+      menu: "rewrite",
+      sub: "旧版稍后再看页面"
+    },
+    {
+      type: "switch",
+      key: "player",
+      label: "嵌入",
+      value: true,
+      menu: "rewrite",
+      sub: "旧版嵌入式播放器"
+    },
+    {
+      type: "switch",
+      key: "index",
+      label: "主页",
+      value: true,
+      menu: "rewrite",
+      sub: "旧版主页"
+    },
+    {
+      type: "switch",
+      key: "ranking",
+      label: "排行榜",
+      value: true,
+      menu: "rewrite",
+      sub: "旧版全站排行榜"
+    },
+    {
+      type: "switch",
+      key: "read",
+      label: "专栏",
+      value: true,
+      menu: "rewrite",
+      sub: "旧版专栏页面"
+    },
+    {
+      key: "playlist",
+      menu: "rewrite",
+      label: "medialist",
+      sub: "旧版播单相关页面",
+      type: "switch",
+      value: true,
+      float: "使用旧版播单页面重构medialist相关页面，初始状态视频数据为20，可以滚送到播单底部以动态加载更多。另外由于播单已被官方禁用，您无法对播单进行收藏等操作，也不能访问播单详情页面。"
+    },
+    {
+      key: "automate",
+      menu: "player",
+      type: "list",
+      name: "自动化操作",
+      list: [
+        {
+          key: "danmakuFirst",
+          label: "自动展开弹幕列表",
+          float: "自动从推荐视频切换到播放弹幕列表。",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "showBofqi",
+          label: "自动滚动到播放器",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "screenWide",
+          label: "自动宽屏",
+          type: "switch",
+          value: false,
+          callback: (v) => {
+            if (v) {
+              setting.automate.webFullScreen = false;
+              chrome.storage.local.set({ setting });
+            }
+          }
+        },
+        {
+          key: "noDanmaku",
+          label: "自动关弹幕",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "autoPlay",
+          label: "自动播放",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "webFullScreen",
+          label: "自动网页全屏",
+          type: "switch",
+          value: false,
+          callback: (v) => {
+            if (v) {
+              setting.automate.screenWide = false;
+              chrome.storage.local.set({ setting });
+            }
+          }
+        },
+        {
+          key: "videospeed",
+          label: "记忆播放速率",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "electric",
+          label: "跳过充电鸣谢",
+          type: "switch",
+          value: false
+        }
+      ]
+    },
+    {
+      key: "heartbeat",
+      menu: "restore",
+      label: "修复视频心跳",
+      sub: "出现不记录播放历史症状时的选择",
+      float: "尝试修复可能被广告拦截扩展误伤的视频心跳。",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "bangumiEplist",
+      menu: "player",
+      label: "保留番剧回目列表",
+      sub: "牺牲特殊背景图",
+      type: "switch",
+      value: false,
+      float: "部分带特殊背景图片的番剧会隐藏播放器下方的番剧回目列表，二者不可得兼，只能选一。"
+    },
+    {
+      type: "switch",
+      key: "history",
+      label: "只显示视频历史",
+      sub: "去除专栏、直播记录",
+      value: false,
+      menu: "style"
+    },
+    {
+      type: "switch",
+      key: "searchHistory",
+      label: "去除历史记录页面搜索框",
+      sub: "其实留着也没什么",
+      value: false,
+      menu: "style"
+    },
+    {
+      type: "switch",
+      key: "liveP2p",
+      label: "禁止P2P上传",
+      sub: "小水管禁不起别人白嫖！",
+      value: true,
+      menu: "live",
+      float: "禁止直播间使用WebRTC进行P2P共享上传，以免暴露ip地址，并为小水管节约带宽。"
+    },
+    {
+      type: "switch",
+      key: "sleepCheck",
+      label: "禁止挂机检测",
+      sub: "就喜欢挂后台听个响不行吗！",
+      value: true,
+      menu: "live",
+      float: "禁止直播间5分钟不操作判定挂机并切断直播，可以放心挂后台听个响。"
+    },
+    {
+      type: "switch",
+      key: "album",
+      label: "还原个人空间相簿链接",
+      sub: "相簿也是时泪啊",
+      value: false,
+      menu: "restore",
+      float: "将个人空间的相簿链接从动态重定向回原来的相簿。"
+    },
+    {
+      type: "switch",
+      key: "jointime",
+      label: "显示账号注册时间",
+      sub: "历史不该被隐藏",
+      value: false,
+      menu: "restore",
+      float: "在空间显示对应账号的注册时间。"
+    },
+    {
+      key: "lostVideo",
+      menu: "restore",
+      label: "修复失效视频信息",
+      sub: \`有些甚至评论还在！\`,
+      type: "switch",
+      value: false,
+      float: "使用第三方数据修复收藏、频道等处的失效视频信息。（以红色删除线标记）</br>访问失效视频链接时将尝试重建av页面。"
+    },
+    {
+      type: "select",
+      menu: "player",
+      key: "codecType",
+      label: "视频编码",
+      sub: "AVC、HEVC或AV1",
+      value: "AVC",
+      candidate: ["AVC", "HEVC", "AV1"],
+      float: "指定播放器优先加载的视频编码格式，可根据设备解码能力与实际需要调整这个设置项。<br>※ AVC：兼容性最好，文件体积较大<br>※ AV1：兼容性次之，文件体积较小<br>※ HEVC：兼容性最差，文件体积较小<br>压制效果要分视频讨论，在AVC大幅降低码率的今天，AV1或许可能是画质最好的选择，但一般都只能软解（考验硬件水平以及比硬解费电）。HEVC则除了Safari用户外不推荐考虑，令微软、谷歌都抛弃的版权流氓！",
+      callback: (v) => {
+        let mime = {
+          "HEVC": 'video/mp4;codecs="hev1.1.6.L120.90"',
+          "AV1": 'video/mp4;codecs="av01.0.01M.08.0.110.01.01.01.0"',
+          "AVC": 'video/mp4;codecs="avc1.640028"'
+        };
+        if (!MediaSource.isTypeSupported(mime[v])) {
+          toast.warning(\`播放器不支持\${v}编码格式\`, "将继续使用AVC编码");
+          setting.codecType = "AVC";
+          chrome.storage.local.set({ setting });
+        }
+      }
+    },
+    {
+      key: "collection",
+      menu: "rewrite",
+      label: "合集",
+      sub: "以分P形式呈现",
+      type: "switch",
+      value: true
+    },
+    {
+      key: "search",
+      menu: "rewrite",
+      label: "搜索",
+      sub: "旧版搜索页面",
+      type: "switch",
+      value: true
+    },
+    {
+      key: "liveRecord",
+      menu: "live",
+      label: "直播回放",
+      sub: "过滤动态中的直播回放",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "closedCaption",
+      menu: "player",
+      label: "CC字幕",
+      sub: '移植自<a href="https://greasyfork.org/scripts/378513" target="_blank">Bilibili CC字幕工具</a>',
+      type: "switch",
+      value: true,
+      float: "没有简体中文时将提供一个繁体到简体的硬翻译，不考虑使用习惯等情况的那种。"
+    },
+    {
+      key: "segProgress",
+      menu: "player",
+      label: "分段进度条",
+      sub: "视频看点",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "videoDisableAA",
+      menu: "player",
+      label: "禁用视频渲染抗锯齿",
+      sub: '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明',
+      type: "switch",
+      value: false,
+      float: \`听说chrome渲染视频，在视频像素跟屏幕像素不是1:1对应的情况下，使用的抗锯齿算法会导致画面模糊，而且可能还会产生色差。屏幕分辨率与视频分辨率差别越大越明显。本选项用来提供一个【锯齿】【模糊】二选一的选项，请根据自身观感决定启用与否。\`
+    },
+    {
+      key: "comment",
+      menu: "style",
+      label: "翻页评论区",
+      sub: "非重写页面",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "commentLinkDetail",
+      menu: "style",
+      label: "还原评论中的超链接",
+      sub: "av、ss或ep",
+      type: "switch",
+      value: false
+    },
+    {
+      key: "configManage",
+      menu: "common",
+      type: "button",
+      label: "设置数据",
+      sub: "备份/还原",
+      svg: blind_default,
+      func: () => {
+        showAlert("设置数据包含您个人对于设置的自定义调整，您可以选择恢复默认数据、导出为本地文件或者从本地文件中恢复。", "设置数据", [
+          { name: "默认", callback: settingMG.restore },
+          { name: "导出", callback: settingMG.output },
+          { name: "导入", callback: settingMG.input }
+        ]);
+      },
+      button: "管理"
+    },
+    {
+      key: "downlaodType",
+      menu: "download",
+      type: "checkbox",
+      label: "类型",
+      sub: "请求的文件类型",
+      float: "请求的文件类型，实际显示取决于服务器是否提供了该类型的文件。而播放器已载入的文件将直接推送到下载面板，无论这里是否勾选了对应类型。换言之：这里决定的是发送请求的类型而不是实际获取到的类型。各类型简介如下：<br>※ mp4：后缀名.mp4，无需任何后续操作的最适合的下载类型，但是画质选择极少，一般最高不超过1080P，如果画质类型为【预览】则说明是付费视频的预览片段，下载意义不大。<br>※ DASH：新型浏览体解决方案，可以看成是把一个mp4文件拆开成一个只有画面的文件和一个只有声音的文件，提供的后缀名都是.m4s，为了方便可以将画面文件修改为.m4v，声音文件修改为.m4a。这种类型下载一个画面文件+一个声音文件，然后用ffmmpeg等工具混流为一个完整视频文件，在下载面板中声音文件显示为【aac】，画面文件则可能有可能存在【avc】【hev】【av1】三种，代表了画面的编码算法，任选其一即可。一般而言在乎画质选【hev】（部分画质如【杜比视界】似乎只以这种格式提供），在乎兼容性【avc】（毕竟mp4默认编码），【av1】则是新型编码标准，12代CPU或30系显卡以外的PC硬件都不支持硬解（不过还可以软解，效果看CPU算力），属于“站未来”的类型。<br>※ flv：flash时代（已落幕）的流媒体遗存，后缀名.flv，本是媲美mp4的格式，如果一个文件没有分成多个片段的话，如果下载面板只有一个片段，那么祝贺本视频没有遭遇到“分尸”，下载后无需后续操作，直接当成mp4文件即可，如果有多个片段，则需全部下载后用ffmpeg等工具拼接起来（与DASH分别代表了两种切片类型，一个是音视频分流，一个是时间轴分段），段数大于2还不如改下载DASH，DASH只要下载2个文件而且还有专属画质。",
+      value: ["mp4"],
+      candidate: ["mp4", "flv", "DASH"]
+    },
+    {
+      key: "TVresource",
+      menu: "download",
+      type: "switch",
+      label: "获取TV源",
+      sub: "可能无水印",
+      float: \`B站TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【默认】下载方式</strong>\`,
+      value: false,
+      callback: (v) => {
+        if (v) {
+          setting.referer = "";
+          toast.warning("您选择获取TV源，已经referer设置置空~", "注意：TV源无法使用默认方式下载");
+        } else {
+          setting.referer = "https://www.bilibili.com";
+          toast.warning("您放弃获取TV源，已经referer设置为默认值");
+        }
+        chrome.storage.local.set({ setting });
+      }
+    },
+    {
+      key: "downloadQn",
+      menu: "download",
+      type: "select",
+      label: "画质参数",
+      sub: "flv限定",
+      float: \`以数字代表的画质参数，因为mp4不能选择画质而DASH默认提供所有画质，所以只对flv格式有效。一般无脑选最高即可，不存在或者权限不足时会主动向下降级，目前最高画质是127（8K）。\`,
+      value: "127",
+      candidate: ["0", "15", "16", "32", "48", "64", "74", "80", "112", "116", "120", "125", "126", "127"]
+    },
+    {
+      key: "downloadOther",
+      menu: "download",
+      type: "switch",
+      label: "其他下载",
+      sub: "提供弹幕、字幕等的下载",
+      value: false
+    },
+    {
+      key: "danmakuSaveType",
+      menu: "danmaku",
+      type: "select",
+      label: "弹幕格式",
+      sub: "下载",
+      value: "xml",
+      candidate: ["xml", "json"]
+    },
+    {
+      key: "danmakuContact",
+      menu: "danmaku",
+      type: "switch",
+      label: "合并已有弹幕",
+      sub: "载入本地文件或者在线弹幕时",
+      value: false
+    },
+    {
+      key: "allDanmaku",
+      menu: "danmaku",
+      type: "slider",
+      label: "全弹幕装填冷却时间",
+      sub: "单位：/s",
+      value: 3,
+      min: 1,
+      max: 30,
+      precision: 29
+    },
+    {
+      key: "downloadMethod",
+      menu: "download",
+      type: "select",
+      label: "下载方式",
+      value: "默认",
+      candidate: ["默认", "IDM+ef2", "aria2", "aria2+rpc"],
+      callback: (v) => {
+        switch (v) {
+          case "IDM+ef2":
+            showAlert(
+              'IDM（Internet Download Manager）是Windows端著名的的下载工具，通过作者的另一款名为<a href="https://github.com/MotooriKashin/ef2" target="_blank">ef2</a>辅助工具，本扩展支持直接从浏览器拉起IDM下载文件。<br>是否确定使用本方式？',
+              "下载方式",
+              [
+                {
+                  name: "确定",
+                  callback: () => {
+                    showSetting("IDM");
+                  }
+                },
+                {
+                  name: "取消",
+                  callback: () => {
+                    setting.downloadMethod = "默认";
+                    chrome.storage.local.set({ setting });
+                  }
+                }
+              ]
+            );
+            break;
+          case "aria2":
+            showAlert(
+              "aria2是全平台著名的命令行下载工具，本方式将复制下载命令到剪切板以方便使用aria2进行下载，<br>是否确定使用本方式下载？",
+              "下载方式",
+              [
+                {
+                  name: "确定",
+                  callback: () => {
+                    showSetting("aria2");
+                  }
+                },
+                {
+                  name: "取消",
+                  callback: () => {
+                    setting.downloadMethod = "默认";
+                    chrome.storage.local.set({ setting });
+                  }
+                }
+              ]
+            );
+            break;
+          case "aria2+rpc":
+            showAlert(
+              "aria2支持rpc模式，从浏览器端直接发送下载命令，第一次使用须要到下面配置rpc设置，是否使用本方式进行下载？",
+              "下载方式",
+              [
+                {
+                  name: "确定",
+                  callback: () => {
+                    showSetting("aria2");
+                  }
+                },
+                {
+                  name: "取消",
+                  callback: () => {
+                    setting.downloadMethod = "默认";
+                    chrome.storage.local.set({ setting });
+                  }
+                }
+              ]
+            );
+            break;
+        }
+      },
+      float: "默认下载方式请不要直接左键点击，右键另存为是更正确合理的操作。"
+    },
+    {
+      key: "userAgent",
+      menu: "download",
+      type: "input",
+      label: "User-Agent",
+      sub: "高级设置",
+      float: "B站视频一般都需要有效User-Agent，否则会403。（默认下载方式以外才有意义。）<br>※ <strong>本项会同时影响替换UPOS服务器后能否播放，默认值才是经检验的最合适的值！</strong>",
+      value: "Bilibili Freedoooooom/MarkII",
+      candidate: ["Bilibili Freedoooooom/MarkII"]
+    },
+    {
+      key: "referer",
+      menu: "download",
+      type: "input",
+      label: "referer",
+      sub: "高级设置",
+      float: "B站视频一般填主站域名即可，其他会403。<strong>TV源/泰区视频必须置空！港澳台替换UPOS服务器后也可能需要置空。</strong>（默认下载方式以外才有意义。）",
+      value: "https://www.bilibili.com",
+      candidate: ["https://www.bilibili.com"]
+    },
+    {
+      key: "filepath",
+      menu: "download",
+      type: "input",
+      label: "下载目录",
+      sub: "Windows端注意反斜杠！",
+      float: "（默认下载方式以外才有意义。）"
+    },
+    {
+      key: "aria2",
+      menu: "download",
+      type: "list",
+      name: "aria2",
+      list: [
+        {
+          key: "token",
+          type: "input",
+          label: "令牌",
+          sub: "token",
+          props: { type: "password" },
+          float: "如果没有使用token可置空"
+        },
+        {
+          key: "server",
+          type: "input",
+          label: "主机",
+          sub: "url",
+          props: { type: "url", placeholder: "http://localhost" },
+          value: "http://localhost"
+        },
+        {
+          key: "port",
+          type: "input",
+          label: "端口",
+          props: { type: "number", placeholder: "6800" },
+          value: "6800"
+        },
+        {
+          key: "test",
+          type: "button",
+          label: "测试RPC连接",
+          button: "测试",
+          func: () => {
+            const msg = toast.custom(0, "info", "正在测试RPC连接可用性~");
+            aria2.getVersion().then((d) => {
+              if (msg) {
+                msg.type = "success";
+                msg.data = [\`RPC设置正常！aria2版本：\${d.version}\`];
+                msg.delay = 3;
+              }
+              console.log(\`RPC设置正常！\`, d);
+            }).catch((e) => {
+              if (msg) {
+                msg.type = "error";
+                msg.data = ["RPC链接不正常 ಥ_ಥ", "请检查aria2设置等再试~"];
+                msg.delay = 3;
+              }
+              console.error("RPC链接异常！请检查aria2设置等再试~", e);
+            });
+          }
+        }
+      ]
+    },
+    {
+      key: "animatedBanner",
+      menu: "style",
+      type: "switch",
+      label: "动态banner",
+      sub: "移植自新版顶栏",
+      value: false
+    },
+    {
+      key: "accessKey",
+      menu: "common",
+      type: "list",
+      name: "账户授权",
+      list: [
+        {
+          key: "key",
+          type: "input",
+          label: "Token",
+          sub: "access_key",
+          float: "网页端B站使用cookie来判断用户身份，但是移动端或者授权第三方登录，则使用一个名为access_key的参数。B站有一些只有APP/TV端才能获取的数据，启用本功能将赋予本扩展访问那些数据的能力。<strong>与【解除限制】功能一起使用时请自行确定代理服务器的安全性！</strong>",
+          props: { type: "text", readonly: "readonly" }
+        },
+        {
+          key: "date",
+          type: "input",
+          label: "授权日期",
+          sub: "有效期不超过30天",
+          float: "和cookie一样，access_key这个鉴权参数一般有有效期限，经验告诉我们一般是一个月，过期作废。因为授权是敏感操作，请自行判断是否过期并慎重考虑是否重新授权。",
+          props: { type: "text", readonly: "readonly" }
+        },
+        {
+          key: "action",
+          type: "button",
+          label: "账户授权",
+          sub: "风险操作",
+          svg: warn_default,
+          func: () => {
+            new AccessKey();
+          },
+          button: "操作"
+        }
+      ]
+    },
+    {
+      key: "timeline",
+      menu: "style",
+      type: "switch",
+      label: "港澳台新番时间表",
+      sub: '<a href="https://www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
+      float: \`在主页番剧分区中，可能需主动从最新切换到响应的星期才会显示当天的数据。\`,
+      value: false
+    },
+    {
+      key: "privateRecommend",
+      menu: "style",
+      type: "switch",
+      label: "主页个性化推荐",
+      sub: "默认是全站统一推荐",
+      value: false
+    },
+    {
+      key: "episodeData",
+      menu: "style",
+      type: "switch",
+      label: "分集数据",
+      sub: "Bangumi",
+      float: \`对于Bangumi，显示单集播放量和弹幕，原合计数据显示在鼠标焦点提示文本中。\`,
+      value: false
+    },
+    {
+      key: "IDM",
+      menu: "download",
+      type: "list",
+      name: "ef2",
+      list: [
+        {
+          key: "wait",
+          type: "switch",
+          label: "稍后下载",
+          sub: "添加到IDM下载列表",
+          float: "需要手动到IDM中开始下载，注意B站下载链接有时效，请及时下载！",
+          value: false
+        },
+        {
+          key: "silence",
+          type: "switch",
+          label: "静默下载",
+          sub: "无需二次确认",
+          float: "取消IDM下载确认对话框，那里会询问是否开启下载以及文件名、保存目录等信息。",
+          value: false
+        }
+      ]
+    }
+  ];
+
+  // src/runtime/element/button_switch/button_switch.html
+  var button_switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/button_switch/button_switch.ts
+  var ButtonSwitch = class extends HTMLElement {
+    value;
+    constructor(obj = {}) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      root3.appendChild(createElements(htmlVnode(button_switch_default)));
+      const [bar, knob, circle] = [
+        root3.children[0].children[0],
+        root3.children[0].children[1],
+        root3.children[0].children[1].children[0]
+      ];
+      const { value, callback } = obj;
+      let initing = true;
+      Object.defineProperty(obj, "value", {
+        set: (v) => {
+          if (this.value === v)
+            return;
+          if (v) {
+            bar.setAttribute("checked", "checked");
+            knob.setAttribute("checked", "checked");
+            circle.setAttribute("checked", "checked");
+          } else {
+            bar.removeAttribute("checked");
+            knob.removeAttribute("checked");
+            circle.removeAttribute("checked");
+          }
+          this.value = v;
+          !initing && callback && callback(v);
+        },
+        get: () => this.value
+      });
+      this.addEventListener("click", () => {
+        obj.value = !this.value;
+      });
+      this.value = obj.value = value || false;
+      initing = false;
+    }
+  };
+  customElements.get(\`button-switch\${mutex}\`) || customElements.define(\`button-switch\${mutex}\`, ButtonSwitch);
+
+  // src/runtime/element/checkbox/checkbox.html
+  var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
+<label for="checkbox"></label>\\r
+<style>\\r
+    input[type="checkbox"] {\\r
+        display: none;\\r
+    }\\r
+\\r
+    input~label {\\r
+        cursor: pointer;\\r
+    }\\r
+\\r
+    input:checked~label:before {\\r
+        content: '\\\\2714';\\r
+    }\\r
+\\r
+    input~label:before {\\r
+        width: 12px;\\r
+        height: 12px;\\r
+        line-height: 14px;\\r
+        vertical-align: text-bottom;\\r
+        border-radius: 3px;\\r
+        border: 1px solid #d3d3d3;\\r
+        display: inline-block;\\r
+        text-align: center;\\r
+        content: ' ';\\r
+    }\\r
+</style>\`;
+
+  // src/runtime/element/checkbox/checkbox.ts
+  var Checkbox = class extends HTMLElement {
+    value;
+    label;
+    constructor(obj) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      const { label, value } = obj;
+      root3.appendChild(createElements(htmlVnode(checkbox_default)));
+      const [input, text] = [
+        root3.children[0],
+        root3.children[1]
+      ];
+      Object.defineProperties(obj, {
+        value: {
+          set: (v) => {
+            if (this.value === v)
+              return;
+            this.value = v;
+          },
+          get: () => this.value
+        },
+        label: {
+          set: (v) => {
+            if (this.label === v)
+              return;
+            text.textContent = v;
+            this.label = v;
+          },
+          get: () => this.label
+        }
+      });
+      text.addEventListener("click", () => {
+        obj.value = !this.value;
+      });
+      input.checked = this.value = obj.value = value || false;
+      this.label = obj.label = label;
+    }
+  };
+  customElements.get(\`check-box\${mutex}\`) || customElements.define(\`check-box\${mutex}\`, Checkbox);
+
+  // src/runtime/element/float_quote/float_quote.html
+  var float_quote_default = '<div class="float">\\r\\n    <div class="arrow"></div>\\r\\n    <div class="message"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .float {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11111;\\r\\n        min-width: 40px;\\r\\n        min-height: 30px;\\r\\n        display: block;\\r\\n        padding: 8px;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgb(106, 115, 133, 22%);\\r\\n        user-select: text;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .arrow {\\r\\n        left: 16%;\\r\\n        top: 100%;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        border-left: 4px solid transparent;\\r\\n        border-right: 4px solid transparent;\\r\\n        border-top: 8px solid #fff;\\r\\n        position: absolute;\\r\\n        user-select: text;\\r\\n    }\\r\\n\\r\\n    .message {\\r\\n        margin-top: -4px;\\r\\n        box-sizing: border-box;\\r\\n        height: 100%;\\r\\n        position: relative;\\r\\n        user-select: text;\\r\\n        word-wrap: break-word;\\r\\n        word-break: break-all;\\r\\n        font-size: 12px;\\r\\n        line-height: 1.15;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/float_quote/float_quote.ts
+  var FloatQuote = class extends HTMLElement {
+    constructor(node4, data) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      root3.appendChild(createElements(htmlVnode(float_quote_default)));
+      const real = root3.children[0];
+      real.children[1].innerHTML = data;
+      node4.onmouseover = (ev) => {
+        document.body.appendChild(this);
+        let rect = real.getBoundingClientRect();
+        real.style.left = \`\${node4.getBoundingClientRect().x + ev.offsetX}px\`;
+        real.style.top = \`\${node4.getBoundingClientRect().y + ev.offsetY - rect.height}px\`;
+        real.style.width = \`\${Math.sqrt(rect.width * rect.height) * 4 / 3}px\`;
+      };
+      node4.onmouseout = () => {
+        try {
+          this.remove();
+        } catch (e) {
+        }
+      };
+      real.onmouseout = () => {
+        try {
+          this.remove();
+        } catch (e) {
+        }
+      };
+    }
+  };
+  customElements.get(\`float-quote\${mutex}\`) || customElements.define(\`float-quote\${mutex}\`, FloatQuote);
+
+  // src/runtime/element/input_area/input_area.html
+  var input_area_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/scrollbar.html
+  var scrollbar_default = '<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/input_area/input_area.ts
+  var InputArea = class extends HTMLElement {
+    value;
+    props;
+    candidate;
+    constructor(obj = {}) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      const { value, candidate, props, change } = obj;
+      let initing = true;
+      root3.appendChild(createElements(htmlVnode(input_area_default + scrollbar_default)));
+      const [input, ul] = [
+        root3.children[0].children[0],
+        root3.children[0].children[1]
+      ];
+      let file = false;
+      input.addEventListener("change", () => {
+        obj.value = file ? input.files : input.value;
+      });
+      Object.defineProperties(obj, {
+        value: {
+          set: (v) => {
+            if (file)
+              return;
+            if (this.value === v)
+              return;
+            input.value = v;
+            this.value = v;
+            !initing && change && change(file ? input.files : input.value);
+          },
+          get: () => file ? input.files : this.value
+        },
+        props: {
+          set: (v) => {
+            if (this.props === v)
+              return;
+            this.props = v;
+            flushProps();
+          },
+          get: () => this.props && new Proxy(this.props, new ProxyHandler(flushProps))
+        },
+        candidate: {
+          set: (v) => {
+            if (this.candidate === v)
+              return;
+            this.candidate = v;
+            flushList();
+          },
+          get: () => this.candidate && new Proxy(this.candidate, new ProxyHandler(flushList))
+        }
+      });
+      const flushProps = () => Object.entries(obj.props).forEach((d) => {
+        input.setAttribute(d[0], d[1]);
+        if (d[0] === "type") {
+          switch (d[1]) {
+            case "file":
+              if (file)
+                break;
+              file = true;
+              ul.setAttribute("style", "display: none;");
+              break;
+            default:
+              if (file) {
+                file = false;
+                ul.removeAttribute("style");
+              }
+          }
+        }
+      });
+      let mutex2 = 0;
+      const flushList = () => {
+        clearTimeout(mutex2);
+        mutex2 = setTimeout(() => {
+          ul.replaceChildren(createElements(obj.candidate.reduce((s, d, i, t) => {
+            s.push({
+              tagName: "li",
+              props: { class: "input-list-row" },
+              event: {
+                click: () => {
+                  obj.value = d;
+                }
+              },
+              children: [{
+                tagName: "span",
+                text: d
+              }, {
+                tagName: "div",
+                props: { class: "cancel" },
+                event: {
+                  click: (e) => {
+                    t.splice(i, 1);
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }
+                }
+              }]
+            });
+            return s;
+          }, [])));
+        });
+      };
+      this.value = obj.value = value || "";
+      this.props = obj.props = props || {};
+      this.candidate = obj.candidate = candidate || [];
+      initing = file;
+    }
+  };
+  customElements.get(\`input-area\${mutex}\`) || customElements.define(\`input-area\${mutex}\`, InputArea);
+
+  // src/runtime/element/select_list/select_menu.html
+  var select_menu_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/select_list/select_menu.ts
+  var SelectMenu = class extends HTMLElement {
+    value;
+    candidate;
+    styles;
+    constructor(obj = {}) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      const { value, candidate, styles, callback } = obj;
+      let initing = true;
+      root3.appendChild(createElements(htmlVnode(select_menu_default + scrollbar_default)));
+      const [txt, list] = [
+        root3.children[0].children[0].children[0],
+        root3.children[0].children[2]
+      ];
+      Object.defineProperties(obj, {
+        value: {
+          set: (v) => {
+            if (this.value === v)
+              return;
+            txt.textContent = v;
+            this.value = v;
+            this.styles && this.styles[v] ? txt.setAttribute("style", this.styles[v]) : txt.removeAttribute("style");
+            !initing && callback && callback(v);
+          },
+          get: () => this.value
+        },
+        candidate: {
+          set: (v) => {
+            if (this.candidate === v)
+              return;
+            this.candidate = v;
+            flushList();
+          },
+          get: () => this.candidate && new Proxy(this.candidate, new ProxyHandler(flushList))
+        },
+        styles: {
+          set: (v) => {
+            if (this.styles === v)
+              return;
+            this.styles = v;
+            flushList();
+          },
+          get: () => this.styles && new Proxy(this.styles, new ProxyHandler(flushList))
+        }
+      });
+      let mutex2 = 0;
+      const flushList = () => {
+        clearTimeout(mutex2);
+        setTimeout(() => {
+          list.replaceChildren(createElements(obj.candidate.reduce((s, d) => {
+            s.push({
+              tagName: "li",
+              props: { class: "selectmenu-list-row" },
+              children: [{
+                tagName: "span",
+                text: d,
+                props: this.styles && this.styles[d] ? { style: this.styles[d] } : void 0
+              }],
+              event: {
+                click: () => {
+                  obj.value = d;
+                }
+              }
+            });
+            return s;
+          }, [])));
+        });
+      };
+      this.styles = obj.styles = styles || {};
+      this.candidate = obj.candidate = candidate || [];
+      this.value = obj.value = value || "";
+      initing = false;
+    }
+  };
+  customElements.get(\`select-menu\${mutex}\`) || customElements.define(\`select-menu\${mutex}\`, SelectMenu);
+
+  // src/runtime/element/slider_block/slider_blcok.html
+  var slider_blcok_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/slider_block/slider_block.ts
+  function offset(node4) {
+    const result = {
+      top: 0,
+      left: 0
+    };
+    const onwer = node4.ownerDocument;
+    if (node4 === onwer.body) {
+      result.top = node4.offsetTop;
+      result.left = node4.offsetLeft;
+    } else {
+      let rect = void 0;
+      try {
+        rect = node4.getBoundingClientRect();
+      } catch {
+      }
+      if (!rect || !onwer.documentElement.contains(node4)) {
+        rect && (result.top = rect.top, result.left = rect.left);
+        return result;
+      }
+      result.top = rect.top + onwer.body.scrollTop - onwer.documentElement.clientTop;
+      result.left = rect.left + onwer.body.scrollLeft - onwer.documentElement.clientLeft;
+    }
+    return result;
+  }
+  var SliderBlock = class extends HTMLElement {
+    value;
+    min;
+    max;
+    precision;
+    hint;
+    solid;
+    showChange;
+    vertical;
+    constructor(obj = {}) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      const { value, min, max, precision, hint, solid, vertical, callback } = obj;
+      let initing = true;
+      root3.appendChild(createElements(htmlVnode(slider_blcok_default)));
+      const [handle, progress, hinter, wrp] = [
+        root3.children[0].children[0].children[0].children[0].children[0],
+        root3.children[0].children[0].children[0].children[0].children[1],
+        root3.children[0].children[0].children[0].children[0].children[0].children[0],
+        root3.children[0].children[0].children[0]
+      ];
+      const mouseLinster = (e) => {
+        const { pageX, pageY } = e;
+        const offsetX = this.vertical ? pageY - offset(wrp).top - 7 : pageX - offset(wrp).left - 7;
+        const allX = wrp.offsetWidth - 14;
+        const pv = (0 > offsetX ? 0 : offsetX > allX ? allX : offsetX) / allX;
+        obj.value = (this.max - this.min) * Math.round(pv * this.precision) / this.precision + this.min;
+      };
+      this.addEventListener("click", mouseLinster);
+      const mouseClear = () => {
+        window.removeEventListener("mousemove", mouseLinster);
+        window.removeEventListener("mouseup", mouseClear);
+      };
+      handle.addEventListener("mousedown", () => {
+        window.addEventListener("mousemove", mouseLinster);
+        window.addEventListener("mouseup", mouseClear);
+      });
+      handle.addEventListener("mouseover", () => this.showChange());
+      let nHint = 0;
+      this.showChange = () => {
+        const pv = (this.value - this.min) / (this.max - this.min) * 100;
+        handle.style.cssText = \`left: \${((wrp.offsetWidth - 14) * (this.value - this.min) / (this.max - this.min) + 7) / wrp.offsetWidth * 100}%;\`;
+        progress.style.cssText = \`width: \${pv}%;\`;
+        if (this.hint) {
+          hinter.textContent = this.value;
+          if (hinter.style.display !== "block")
+            hinter.style.display = "block";
+          if (this.solid)
+            return;
+          clearTimeout(nHint);
+          nHint = setTimeout(() => hinter.style.display = "", 300);
+        }
+        ;
+      };
+      Object.defineProperties(obj, {
+        value: {
+          get: () => this.value,
+          set: (v) => {
+            if (this.vertical)
+              v = this.max - v + this.min;
+            v = (this.max - this.min) * Math.round((v - this.min) / (this.max - this.min) * this.precision) / this.precision + this.min;
+            if (v === this.value)
+              return;
+            this.value = v;
+            this.showChange();
+            !initing && callback && callback(v);
+          }
+        },
+        min: {
+          get: () => this.min,
+          set: (v) => {
+            if (v === this.min || v >= this.max)
+              return;
+            this.min = v;
+            if (v > this.value)
+              obj.value = v;
+            this.showChange();
+          }
+        },
+        max: {
+          get: () => this.max,
+          set: (v) => {
+            if (v === this.max || v <= this.min)
+              return;
+            this.max = v;
+            if (v < this.value)
+              obj.value = v;
+            this.showChange();
+          }
+        },
+        precision: {
+          get: () => this.precision,
+          set: (v) => {
+            if (v === this.precision)
+              return;
+            this.precision = v;
+            obj.value = obj.value;
+          }
+        },
+        hint: {
+          get: () => this.hint,
+          set: (v) => {
+            if (v === this.hint)
+              return;
+            this.hint = v;
+          }
+        },
+        solid: {
+          get: () => this.solid,
+          set: (v) => {
+            if (v === this.solid)
+              return;
+            this.solid = v;
+            this.showChange();
+          }
+        },
+        vertical: {
+          get: () => this.vertical,
+          set: (v) => {
+            if (v === this.vertical)
+              return;
+            this.vertical = v;
+            this.style.transform = v ? "rotate(-90deg)" : "";
+          }
+        }
+      });
+      this.value = obj.value = value || 0;
+      this.min = obj.min = min || 0;
+      this.max = obj.max = max || 100;
+      this.precision = obj.precision = precision || 100;
+      this.hint = obj.hint = hint || true;
+      this.solid = obj.solid = solid || false;
+      this.vertical = obj.solid = vertical || false;
+      initing = false;
+    }
+    connectedCallback() {
+      setTimeout(() => this.showChange());
+    }
+  };
+  customElements.get(\`slider-block\${mutex}\`) || customElements.define(\`slider-block\${mutex}\`, SliderBlock);
+
+  // src/tampermonkey/setting.html
+  var setting_default2 = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        display: none;\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
+
+  // src/tampermonkey/setting.ts
+  var MENU = [];
+  var SETTING = [];
+  function registerMenu(mus) {
+    const arr2 = isArray(mus) ? mus : [mus];
+    arr2.forEach((d) => MENU.push(d));
+  }
+  var disableSettingCallback = false;
+  function registerSetting(sets) {
+    disableSettingCallback = true;
+    const arr2 = isArray(sets) ? sets : [sets];
+    arr2.forEach((d) => {
+      let tag = false;
+      if (d.type !== "list") {
+        Reflect.has(setting, d.key) && (d.value = Reflect.get(setting, d.key));
+        d = new Proxy(d, {
+          set: (t, p, v, r) => {
+            if (p === "value") {
+              if (!tag) {
+                setting[d.key] = v;
+                return true;
+              }
+              tag = false;
+              disableSettingCallback || t.callback && Promise.resolve().then(() => t.callback(v));
+            }
+            return Reflect.set(t, p, v, r);
+          }
+        });
+        setting[d.key] = d.value;
+        Object.defineProperty(setting, d.key, {
+          set: (v) => {
+            tag = true;
+            d.value = v;
+          },
+          get: () => d.value
+        });
+      } else {
+        const obj = Reflect.has(setting, d.key) && JSON.parse(JSON.stringify(setting[d.key]));
+        const bak = {};
+        setting[d.key] = new Proxy(bak, {});
+        d.list.forEach((t, i, a) => {
+          obj && obj[t.key] && (t.value = obj[t.key]);
+          a[i] = new Proxy(t, {
+            set: (t2, p, v, r) => {
+              if (p === "value") {
+                if (!tag) {
+                  setting[d.key][t2.key] = v;
+                  return true;
+                }
+                tag = false;
+                disableSettingCallback || t2.callback && Promise.resolve().then(() => t2.callback(v));
+              }
+              return Reflect.set(t2, p, v, r);
+            }
+          });
+          bak[t.key] = a[i].value;
+          Object.defineProperty(bak, t.key, {
+            get: () => a[i].value,
+            set: (v) => {
+              tag = true;
+              a[i].value = v;
+            }
+          });
+          setting[d.key][t.key] = t.value;
+        });
+      }
+      SETTING.push(d);
+    });
+    disableSettingCallback = false;
+  }
+  var BilibiliOld = class extends HTMLElement {
+    _box;
+    _tool;
+    _close;
+    _menu;
+    _item;
+    constructor() {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      root3.appendChild(createElements(htmlVnode(setting_default2)));
+      this._box = root3.children[0];
+      this._tool = root3.children[0].children[0];
+      this._close = root3.children[0].children[0].children[0];
+      this._menu = root3.children[0].children[1].children[0].children[0];
+      this._item = root3.children[0].children[1].children[0].children[1];
+      this._close.appendChild(createElements(htmlVnode(fork_default)));
+      this._close.addEventListener("click", () => this._box.removeAttribute("style"));
+      document.body.appendChild(this);
+      disableSettingCallback = true;
+      this.initMenu();
+      disableSettingCallback = false;
+    }
+    MENU = {};
+    ITEM = {};
+    initMenu() {
+      this._menu.replaceChildren();
+      MENU.forEach((d) => {
+        const menuitem = this._menu.appendChild(createElement(htmlVnode(
+          \`<div class="menuitem">\${(d.svg ? \`<div class="icon">\${d.svg}</div>\` : "") + d.value}</div>\`
+        )[0]));
+        this.MENU[d.key] = menuitem;
+        menuitem.addEventListener("click", () => {
+          this.menuSelect(d.key);
+        });
+        this.ITEM[d.key] = this._item.appendChild(createElement(htmlVnode(
+          \`<div class="item\${d.key}">
+                    <div class="contain1">
+                        <div class="header">
+                            <h2 class="title">\${d.value}</h2>
+                        </div>
+                    </div>
+                    <div class="card"></div>
+                </div>\`
+        )[0]));
+      });
+      this.initItem();
+    }
+    _menuNow;
+    _itemNow;
+    menuSelect(key = "common") {
+      this._menuNow?.classList.remove("selected");
+      this._menuNow?.removeAttribute("style");
+      this._menuNow = this.MENU[key];
+      this.MENU[key].classList.add("selected");
+      this._itemNow?.removeAttribute("style");
+      this._itemNow = this.ITEM[key];
+      this.ITEM[key].setAttribute("style", \`display: block;\`);
+    }
+    show(key) {
+      this._box.setAttribute("style", "display: block;");
+      this.menuSelect(this.SETTING[key]);
+      key && this._itemNow?.querySelector(\`.\${key}\`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    SETTING = {};
+    initItem() {
+      SETTING.forEach((d) => {
+        this.SETTING[d.key] = d.menu;
+        if (d.type === "list") {
+          const node4 = this.ITEM[d.menu];
+          node4.appendChild(createElements(htmlVnode(
+            \`<div class="contain1 \${d.key}">
+                        <div class="header">
+                            <h2 class="title">\${d.name}</h2>
+                        </div>
+                    </div>
+                    <div class="card"></div>\`
+          )));
+          d.list.forEach((t) => {
+            this.SETTING[\`\${d.key}-\${t.key}\`] = d.menu;
+            this.appendItem(node4.lastChild, t, d.key);
+          });
+        } else {
+          this.appendItem(this.ITEM[d.menu].children[1], d);
+        }
+      });
+    }
+    appendItem(node4, set, str) {
+      const part = node4.appendChild(createElement(htmlVnode(
+        \`<div class="contain2 \${(str ? \`\${str}-\` : "") + set.key}">\${set.svg ? \`<div class="icon">\${set.svg}</div>\` : ""}
+        <div class="label">\${set.label + (set.sub ? \`<div class="sub">\${set.sub}</div>\` : "")}</div>
+        <div class="value"></div></div>\`
+      )[0]));
+      switch (set.type) {
+        case "button":
+          part.classList.add("button");
+          part.lastChild.appendChild(new PushButton(set));
+          break;
+        case "checkbox":
+          part.classList.add("checkbox");
+          const checkbox = addElement("div", void 0, part.lastChild);
+          set.candidate.forEach((t) => {
+            checkbox.appendChild(new Checkbox(new Proxy({ label: t, value: set.value.includes(t) }, {
+              set: (tar, ppt, val, rcv) => {
+                if (ppt === "value") {
+                  if (val) {
+                    set.value.includes(t) || set.value.push(t);
+                  } else {
+                    const i = set.value.indexOf(t);
+                    i >= 0 && set.value.splice(i, 1);
+                  }
+                  saveConfig();
+                }
+                return Reflect.set(tar, ppt, val, rcv);
+              }
+            })));
+          });
+          break;
+        case "input":
+          part.classList.add("input");
+          part.lastChild.appendChild(new InputArea(set));
+          break;
+        case "select":
+          part.classList.add("select");
+          part.lastChild.appendChild(new SelectMenu(set));
+          break;
+        case "slider":
+          part.classList.add("slider");
+          part.lastChild.appendChild(new SliderBlock(set));
+          break;
+        case "switch":
+          part.classList.add("switch");
+          part.lastChild.appendChild(new ButtonSwitch(set));
+          break;
+      }
+      set.float && new FloatQuote(part, set.float);
+    }
+  };
+  customElements.get("bilibili-old") || customElements.define("bilibili-old", BilibiliOld);
+  var node2;
+  function showSetting2(key) {
+    node2 || (node2 = new BilibiliOld());
+    document.body.contains(node2) || document.body.appendChild(node2);
+    node2.show(key);
+  }
+
+  // src/tampermonkey/ui.html
+  var ui_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
+
+  // src/images/svg/gear.svg
+  var gear_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>';
+
+  // src/tampermonkey/ui.ts
+  settingDefault.push(
+    {
+      key: "settingEntryType",
+      menu: "common",
+      label: "贴边隐藏设置入口",
+      svg: gear_default,
+      type: "switch",
+      value: false,
+      sub: "右下角贴边隐藏",
+      float: "原滋原味保护旧版页面，不添加、修改或删除任何元素是本脚本的终极追求。<br>开启后将贴边隐藏设置入口，页面加载完成时也不会有任何提示，需要将鼠标移动到页面右下角以上一定感应区域才会显现。<br>※ <strong>Firefox用户切莫开启！</strong>",
+      callback: () => {
+        showSettingEntry();
+      }
+    },
+    {
+      key: "downloadBtn",
+      menu: "download",
+      type: "switch",
+      label: "下载按钮",
+      sub: "播放器右上角",
+      value: false
+    },
+    {
+      key: "downloadNow",
+      menu: "download",
+      type: "button",
+      label: "下载面板",
+      sub: "下载当前视频",
+      func: () => {
+        downloadDefault();
+      },
+      button: "呼出"
+    },
+    {
+      key: "onlineDanmaku",
+      menu: "danmaku",
+      name: "在线弹幕",
+      type: "list",
+      list: [
+        {
+          key: "url",
+          label: "视频链接或参数",
+          type: "input",
+          float: "请提供对应视频的完整url或者能提取有效信息的参数，比如：<br>av806828803<br>av806828803?p=1<br>BV1T34y1o72w<br>ss3398<br>ep84795<br>aid=806828803<br>aid=806828803&p=1<br>avid=806828803<br>bvid=1T34y1o72w<br>bvid=BV1T34y1o72w<br>ssid=3398<br>epid=84795<br>season_id=3398<br>ep_id=84795",
+          props: { placeholder: "av806828803" }
+        },
+        {
+          key: "concat",
+          label: "合并已有弹幕",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "action",
+          label: "(👉ﾟヮﾟ)👉",
+          type: "button",
+          func: async () => {
+            if (!window.player)
+              return toast.warning("请在播放页面使用本功能 →_→");
+            if (!window.player.setDanmaku)
+              return toast.warning("内部组件丢失！", "请检查【托管原生脚本】功能是否开启！");
+            if (!setting.onlineDanmaku.url)
+              return toast.warning("请输入视频链接或参数~");
+            toast.info(\`正在解析url：\${setting.onlineDanmaku.url}\`);
+            try {
+              const d = await urlParam(setting.onlineDanmaku.url, false);
+              if (d.aid && d.cid) {
+                toast.info("参数解析成功，正在获取弹幕数据~", d);
+                debug(setting.onlineDanmaku.url, d);
+                let dm = await danmaku.getSegDanmaku(d.aid, d.cid);
+                if (dm) {
+                  const dat = danmaku.danmakuFormat(dm);
+                  toast.success("获取弹幕成功~");
+                  window.player?.setDanmaku(dat, setting.danmakuContact);
+                  setting.downloadOther && pushDownload({
+                    group: "弹幕",
+                    data: dat,
+                    up: "在线",
+                    down: \`N/A\`,
+                    callback: () => danmaku.saveDanmaku(dat, setting.onlineDanmaku.url)
+                  });
+                } else {
+                  toast.error("获取弹幕失败，请在控制台检查原因~");
+                }
+              } else {
+                toast.warning("提取弹幕参数失败，请检查输入~");
+              }
+            } catch (e) {
+              toast.error("在线弹幕", e);
+              debug.error("在线弹幕", e);
+            }
+          },
+          button: "加载"
+        }
+      ]
+    },
+    {
+      key: "allAction",
+      menu: "danmaku",
+      label: "(👉ﾟヮﾟ)👉",
+      type: "button",
+      func: () => {
+        allDanmaku();
+      },
+      button: "开始",
+      float: "通过获取所有历史弹幕来实现，但每天的历史弹幕池其实有上限（远低于普通弹幕池），超出的部分是获取不到的，所以最后获取到的总数其实未必达得到【全弹幕】的要求（甚至可能不如普通弹幕池）。另外高级弹幕、代码弹幕等并不在历史弹幕池内，如果普通池内没有，想通过本功能来获取只是徒劳。"
+    },
+    {
+      key: "localMedia",
+      menu: "player",
+      type: "list",
+      name: "播放本地文件",
+      list: [
+        {
+          key: "concat",
+          label: "与已有弹幕合并",
+          type: "switch",
+          value: false
+        },
+        {
+          key: "file",
+          label: "选择本地文件或者弹幕",
+          type: "input",
+          props: { type: "file", accept: "video/mp4,application/xml,application/json", multiple: "multiple" },
+          change: (v) => {
+            new LocalMedia(v);
+          }
+        }
+      ]
+    }
+  );
+  registerMenu(menu);
+  registerSetting(settingDefault);
+  var BilibilEntry = class extends HTMLElement {
+    root;
+    gear;
+    stage;
+    constructor() {
+      super();
+      this.root = this.attachShadow({ mode: "closed" });
+      this.root.appendChild(createElements(htmlVnode(ui_default.replace('<div class="gear"></div>', \`<div class="gear">\${gear_default}</div>\`))));
+      this.stage = this.root.children[0];
+      this.gear = this.root.children[1];
+      this.stage.remove();
+      this.gear.remove();
+      this.gear.addEventListener("mouseover", () => this.gear.style.opacity = "0.8");
+      this.gear.addEventListener("mouseout", () => this.gear.style.opacity = "0");
+      this.gear.addEventListener("click", () => {
+        showSetting2();
+      });
+      this.stage.addEventListener("click", () => {
+        showSetting2();
+      });
+    }
+    change() {
+      if (setting.settingEntryType) {
+        this.root.contains(this.gear) && this.gear.remove();
+        this.root.contains(this.stage) || this.root.appendChild(this.stage);
+      } else {
+        this.root.contains(this.stage) && this.stage.remove();
+        if (!this.root.contains(this.gear)) {
+          this.root.appendChild(this.gear);
+          setTimeout(() => {
+            this.gear.style.opacity = "0";
+          }, 2e3);
+        }
+      }
+    }
+  };
+  customElements.get("bilibili-entry") || customElements.define("bilibili-entry", BilibilEntry);
+  var node3 = new BilibilEntry();
+  function showSettingEntry() {
+    document.body.contains(node3) || document.body.appendChild(node3);
+    node3.change();
+  }
+
   // src/tampermonkey/vector.ts
   replaceUrl(urlClean(location.href));
   if (setting.index && path[2] == "www.bilibili.com" && (!path[3] || (path[3].startsWith("?") || path[3].startsWith("#") || path[3].startsWith("index.")))) {
@@ -24334,6 +26546,9 @@ const modules =`
     searchPage();
   }
   globalVector();
+  doWhile(() => document.readyState === "complete", () => {
+    window.top === window.self && showSettingEntry();
+  });
 })();
 /**
  * remove-invalid-xml-characters.js
