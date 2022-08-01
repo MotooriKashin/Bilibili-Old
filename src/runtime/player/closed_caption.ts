@@ -332,7 +332,7 @@ class ClosedCaption {
         if (caption && caption.subtitle_url) {
             this.caption = caption; // 记忆当前字幕
             videoFloat("载入字幕：", this.caption.lan_doc, () => { });
-        } else videoFloat("关闭弹幕");
+        } else videoFloat("关闭字幕");
     }
 }
 /** 为旧版播放器追加CC字幕功能 */
