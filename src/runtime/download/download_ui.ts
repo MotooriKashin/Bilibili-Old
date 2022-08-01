@@ -1,7 +1,7 @@
 import { ProxyHandler } from "../lib/proxy_handler";
 import { createElements } from "../element/create_element";
 import { htmlVnode, Vdom } from "../element/html_vnode";
-import { ClickRemove } from "../element/popupbox";
+import { ClickRemove } from "../element/popupbox/popupbox";
 import html from "./download_ui.html";
 import { DownloadDate } from "./playinfo_filter";
 import { mutex } from "../variable/mutex";

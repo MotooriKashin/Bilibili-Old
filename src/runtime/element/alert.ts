@@ -1,7 +1,7 @@
 import { createElement, createElements } from "./create_element";
 import { HorizontalLine } from "./horizontal/horizontal";
 import { htmlVnode } from "./html_vnode";
-import { PopupBox } from "./popupbox";
+import { PopupBox } from "./popupbox/popupbox";
 import { PushButton } from "./push_button/push_button";
 
 interface Button {
