@@ -14,6 +14,8 @@ import { videoLimit } from "./video_limit";
 import { urlObj } from "../format/url";
 import { API } from "../variable/variable";
 import { loadBilibiliPlayer } from "./load_bilibili_player";
+import { downloadDefault } from "../download/download";
+import { isUserScript } from "../../tampermonkey/check";
 
 
 class EmbedPlayer {
@@ -441,6 +443,7 @@ class EmbedPlayer {
             }
         }
     ];
+    bgray_btn_title: string[] = [];
     /**
      * 添加播放器旁的按钮
      * @param title 按钮文字，2个字或4个字为宜
@@ -448,6 +451,7 @@ class EmbedPlayer {
      * @param className 追加按钮class属性
      */
     append_bgray_btn(title: string, callback: () => void, className?: string) {
+        if (this.bgray_btn_title.includes(title)) return;
         const vdom: Vdom = {
             tagName: "div",
             props: { class: `bgray-btn show bgray-btn-${className || "any"}` },
@@ -468,6 +472,7 @@ class EmbedPlayer {
                 })
             }
         }
+        this.bgray_btn_title.push(title);
         this.bgray_btn.push(vdom);
         this.init_bgray_btn();
     }
@@ -617,7 +622,8 @@ export function loadVideoScript(bofqi?: string, asWide = false) {
                 delete (<any>window).__playinfo__; // 网页提供的源可能无法使用？
                 asWide && (EmbedPlayer.asWide = true);
                 bofqi && ((<any>document.querySelector(bofqi)).id = "bofqi");
-                (<any>window).GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn)
+                (<any>window).GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn);
+                isUserScript && (<any>window).GrayManager.append_bgray_btn("下载", () => downloadDefault());
             } catch (e) {
                 toast.error("EmbedPlayer 启动播放器出错~");
                 debug.error("EmbedPlayer 启动播放器出错~", e);

@@ -96,5 +96,7 @@
         "wait": false,
         "silence": false
     },
-    "development": false
+    "development": false,
+    "settingEntryType": false,
+    "downloadBtn": true
 }

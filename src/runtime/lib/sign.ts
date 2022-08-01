@@ -37,7 +37,7 @@ class Sign {
         params.delete("sign");
         params.set("appkey", this.keySecret[0]);
         params.sort();
-        params.set("sign", md5(id === 3 && params.has("api") ? new URLSearchParams({ api: decodeURIComponent(<string>params.get("api")) }).toString() : params.toString() + this.keySecret[1]))
+        params.set("sign", md5((id === 3 && params.has("api") ? `api=${decodeURIComponent(<string>params.get("api"))}` : params.toString()) + this.keySecret[1]))
 
         return urlobj ? urlobj.toString() : params.toString();
     }

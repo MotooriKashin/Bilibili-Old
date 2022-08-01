@@ -14,6 +14,7 @@ import { LocalMedia } from "./local_danmaku";
 import { allDanmaku } from "./all_danmaku";
 import { API } from "../variable/variable";
 import { objUrl } from "../format/url";
+import { isUserScript } from "../../tampermonkey/check";
 // 启动protobuf引擎
 const root = protobuf.Root.fromJSON(bilibiliDanmaku);
 /** 来自danmakuProtobuf.json文件 */
@@ -407,6 +408,7 @@ export interface danmakuNew {
 /** 弹幕相关 */
 export const danmaku = new Danmaku();
 window.addEventListener("message", async ev => {
+    if (isUserScript) return;
     if (typeof ev.data === "object") {
         if (ev.data.$type == "onlineDanmaku") {
             if (!(<any>window).player) return toast.warning("请在播放页面使用本功能 →_→");

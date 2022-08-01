@@ -13,6 +13,8 @@ import { watchlaterPage } from "../content/watchlater/code";
 import { setting } from "../runtime/setting";
 import { replaceUrl, urlClean } from "../runtime/url_clean";
 import { path } from "../runtime/variable/path";
+import { doWhile } from "../runtime/do_while";
+import { showSettingEntry } from "./ui";
 
 // 网址清理
 replaceUrl(urlClean(location.href));
@@ -46,3 +48,6 @@ if (setting.search && path[2] == "search.bilibili.com") {
     searchPage();
 };
 globalVector();
+doWhile(() => document.readyState === 'complete', () => {
+    window.top === window.self && showSettingEntry(); // 绘制设置UI
+});

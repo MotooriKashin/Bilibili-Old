@@ -37,7 +37,7 @@ class UrlPack {
      * @returns Promise封装的返回值
      */
     getJson<T extends keyof jsonUrlDetail>(url: T, detail: jsonUrlDetail[T], gm?: boolean) {
-        const str = objUrl(url, <any>Object.assign(this.jsonUrlDefault[url], detail));
+        const str = objUrl(url, <any>{ ...this.jsonUrlDefault[url], ...detail });
         return gm
             ? isUserScript
                 ? GM.xhr({ url: (<any>this.jsonUrlDefault[url]).appkey > 0 ? urlsign(str, undefined, (<any>this.jsonUrlDefault[url]).appkey) : str, responseType: "json" })

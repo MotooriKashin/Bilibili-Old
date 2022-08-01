@@ -7,184 +7,9 @@ import { settingMG } from "./manage.js";
 import { aria2 } from "../download/aria2";
 import { AccessKey } from "./access_key";
 import { UPOS } from "../player/upos_replace";
-import DEFAULT_SETTING from "./setting.json";
-import { MenuName } from "./menu";
-import { HTMLInputAttribudeMap } from "../element/input_area/input_area";
-import { sessionStorage } from "../storage";
+import { Setting, SettingList } from "./menu";
+import { setting } from "../setting";
 
-interface SettingList {
-    /** 主键 */
-    key: keyof typeof DEFAULT_SETTING;
-    /** 设置项类型 */
-    type: "list";
-    /** 所属菜单 */
-    menu: keyof MenuName;
-    /** 设置列表 */
-    list: (SettingL[keyof SettingL])[];
-    /** 组合名称 */
-    name: string;
-}
-interface SettingO {
-    /** 名称 */
-    label: string;
-    /** 图标 */
-    svg?: string;
-    /** 副标题 */
-    sub?: string;
-    /** 浮动信息 */
-    float?: string;
-}
-/** 通用设置内容，用于继承 */
-interface SettingConfig extends SettingO {
-    /** 主键 */
-    key: keyof typeof DEFAULT_SETTING;
-    /** 所属菜单 */
-    menu: keyof MenuName;
-
-}
-interface SettingN extends SettingO {
-    /** 主键 */
-    key: string;
-}
-/** 设置项配置 */
-interface Setting {
-    /** 开关 */
-    switch: SettingConfig & {
-        /** 设置项类型 */
-        type: "switch";
-        /** 默认值 */
-        value: boolean;
-        callback?: (v: boolean) => void
-    };
-    /** 复选 */
-    checkbox: SettingConfig & {
-        /** 设置项类型 */
-        type: "checkbox";
-        /** 默认值 */
-        value: string[];
-        /** 候选值 */
-        candidate: string[];
-        callback?: (v: boolean) => void
-    };
-    /** 按钮 */
-    button: SettingConfig & {
-        /** 设置项类型 */
-        type: "button";
-        /** 点击回调 */
-        func: () => void;
-        /** 按钮标题 */
-        button?: string;
-    };
-    /** 单选 */
-    select: SettingConfig & {
-        /** 设置项类型 */
-        type: "select";
-        /** 默认值 */
-        value: string;
-        /** 候选值 */
-        candidate: string[];
-        /** 候选值对应的样式 */
-        styles?: Record<string, string>
-        callback?: (v: string) => void
-    };
-    /** 滑动条 */
-    slider: SettingConfig & {
-        /** 设置项类型 */
-        type: "slider";
-        /** 默认值 ∈ [min, max] */
-        value: number;
-        /** 最小值 默认0 */
-        min?: number;
-        /** 最大值 默认100 */
-        max?: number;
-        /** 刻度数 默认100 */
-        precision?: number;
-        /** 变动时显示当前值 默认真 */
-        hint?: boolean;
-        callback?: (v: number) => void
-    };
-    /** 输入框 */
-    input: SettingConfig & {
-        /** 设置项类型 */
-        type: "input";
-        /** 默认值 */
-        value?: string;
-        /** 候选值 可作为提示 */
-        candidate?: string[];
-        /** 输入框（HTMLInputElement）属性 */
-        props?: HTMLInputAttribudeMap;
-        change?: (v: string | FileList) => void
-    };
-}
-interface SettingL {
-    /** 开关 */
-    switch: SettingN & {
-        /** 设置项类型 */
-        type: "switch";
-        /** 默认值 */
-        value: boolean
-        callback?: (v: boolean) => void
-    };
-    /** 复选 */
-    checkbox: SettingN & {
-        /** 设置项类型 */
-        type: "checkbox";
-        /** 默认值 */
-        value: string[];
-        /** 候选值 */
-        candidate: string[];
-        callback?: (v: boolean) => void
-    };
-    /** 按钮 */
-    button: SettingN & {
-        /** 设置项类型 */
-        type: "button";
-        /** 点击回调 */
-        func: () => void;
-        /** 按钮标题 */
-        button?: string;
-    };
-    /** 单选 */
-    select: SettingN & {
-        /** 设置项类型 */
-        type: "select";
-        /** 默认值 */
-        value: string;
-        /** 候选值 */
-        candidate: string[];
-        /** 候选值对应的样式 */
-        styles?: Record<string, string>;
-        callback?: (v: string) => void;
-    };
-    /** 滑动条 */
-    slider: SettingN & {
-        /** 设置项类型 */
-        type: "slider";
-        /** 默认值 ∈ [min, max] */
-        value: number;
-        /** 最小值 默认0 */
-        min?: number;
-        /** 最大值 默认100 */
-        max?: number;
-        /** 刻度数 默认100 */
-        precision?: number;
-        /** 变动时显示当前值 默认真 */
-        hint?: boolean;
-        callback?: (v: number) => void
-    };
-    /** 输入框 */
-    input: SettingN & {
-        /** 设置项类型 */
-        type: "input";
-        /** 默认值 */
-        value?: string;
-        /** 候选值 可作为提示 */
-        candidate?: string[];
-        /** 输入框（HTMLInputElement）属性 */
-        props?: HTMLInputAttribudeMap;
-        change?: (v: string | FileList) => void
-    };
-}
 
 const upos = Object.keys(UPOS);
 
@@ -276,7 +101,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                 sub: '请输入一句话~',
                 candidate: ["Hello World!"],
                 change: (v: string | FileList) => {
-                    const setting = sessionStorage.getItem("setting");
                     setting.toast && toast[<"info">setting.toast.type](v);
                 }
             }
@@ -312,7 +136,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                 float: `如果选择自定义则需要填写下面的代理服务器，并且转到【账户授权】进行第三方服务器授权。内置服务器则支持以游客身份获取数据，但只能获取flv格式，且大会员画质还是需要授权。<br>※ 内置服务器不支持泰区。`,
                 callback: (v: string) => {
                     if (v === "自定义") {
-                        const setting = sessionStorage.getItem("setting");
                         if (!setting.accessKey.key) {
                             showAlert("自定义服务器一般都要求您授权登录才能使用，是否前往【账户授权】设置？", undefined, [
                                 {
@@ -555,7 +378,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                 value: false,
                 callback: (v: any) => {
                     if (v) {
-                        const setting = sessionStorage.getItem("setting");
                         setting.automate.webFullScreen = false
                         chrome.storage.local.set({ setting });
                     }
@@ -580,7 +402,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                 value: false,
                 callback: (v: any) => {
                     if (v) {
-                        const setting = sessionStorage.getItem("setting");
                         setting.automate.screenWide = false
                         chrome.storage.local.set({ setting });
                     }
@@ -696,7 +517,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
             };
             if (!MediaSource.isTypeSupported(mime[<keyof typeof mime>v])) {
                 toast.warning(`播放器不支持${v}编码格式`, "将继续使用AVC编码");
-                const setting = sessionStorage.getItem("setting");
                 setting.codecType = "AVC";
                 chrome.storage.local.set({ setting });
             }
@@ -803,7 +623,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
         float: `B站TV端视频源一般都没有水印，因为会员和主站不互通，如非tv大会员将获取不到专属画质。<strong>获取到的下载源将不支持【默认】下载方式</strong>`,
         value: false,
         callback: (v: any) => {
-            const setting = sessionStorage.getItem("setting");
             if (v) {
                 setting.referer = "";
                 toast.warning("您选择获取TV源，已经referer设置置空~", "注意：TV源无法使用默认方式下载");
@@ -880,7 +699,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                         {
                             name: "取消",
                             callback: () => {
-                                const setting = sessionStorage.getItem("setting");
                                 setting.downloadMethod = "默认";
                                 chrome.storage.local.set({ setting });
                             }
@@ -899,7 +717,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                         {
                             name: "取消",
                             callback: () => {
-                                const setting = sessionStorage.getItem("setting");
                                 setting.downloadMethod = "默认";
                                 chrome.storage.local.set({ setting })
                             }
@@ -918,7 +735,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
                         {
                             name: "取消",
                             callback: () => {
-                                const setting = sessionStorage.getItem("setting");
                                 setting.downloadMethod = "默认";
                                 chrome.storage.local.set({ setting });
                             }

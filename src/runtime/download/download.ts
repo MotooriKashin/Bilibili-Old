@@ -1,3 +1,4 @@
+import { isUserScript } from "../../tampermonkey/check";
 import { saveAs } from "../lib/file";
 import { isObject } from "../lib/typeof";
 import { urlPack } from "../lib/url";
@@ -181,6 +182,7 @@ async function getContent(d: "dash" | "flv" | "mp4") {
     return JSON.parse(uposReplace(JSON.stringify(result), <any>setting.uposReplace.dl));
 }
 window.addEventListener("message", ev => {
+    if (isUserScript) return;
     if (typeof ev.data === "object") {
         if (ev.data.$type == "downloadDefault") {
             downloadDefault();
