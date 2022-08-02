@@ -5179,14 +5179,16 @@ const modules =`
     }
   }
   function saveConfig() {
-    if (isUserScript) {
-      GM_setValue("config", JSON.parse(JSON.stringify(newSetting)));
-    } else {
-      GM.setValue("setting", JSON.parse(JSON.stringify(newSetting)));
-      sessionStorage2.setItem("setting", JSON.parse(JSON.stringify(newSetting)));
+    if (newSetting) {
+      if (isUserScript) {
+        GM_setValue("config", JSON.parse(JSON.stringify(newSetting)));
+      } else {
+        GM.setValue("setting", JSON.parse(JSON.stringify(newSetting)));
+        sessionStorage2.setItem("setting", JSON.parse(JSON.stringify(newSetting)));
+      }
     }
   }
-  chrome?.storage ? chrome.storage.local.get().then((d) => setting = d.setting) : getSetting();
+  getSetting();
 
   // src/runtime/variable/variable.ts
   var API = {
@@ -26065,7 +26067,6 @@ const modules =`
                 return true;
               }
               tag = false;
-              disableSettingCallback || t.callback && Promise.resolve().then(() => t.callback(v));
             }
             return Reflect.set(t, p, v, r);
           }
@@ -26092,7 +26093,6 @@ const modules =`
                   return true;
                 }
                 tag = false;
-                disableSettingCallback || t2.callback && Promise.resolve().then(() => t2.callback(v));
               }
               return Reflect.set(t2, p, v, r);
             }
