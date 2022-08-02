@@ -110,8 +110,10 @@ class BiliOldDownload extends HTMLElement {
     }
     /** 显示下载面板 */
     show() {
-        document.body.contains(this) || document.body.appendChild(this);
-        this.observer.observe();
+        if (!document.body.contains(this)) {
+            document.body.appendChild(this);
+            this.observer.observe();
+        }
     }
 }
 customElements.get(`biliold-download${mutex}`) || customElements.define(`biliold-download${mutex}`, BiliOldDownload);

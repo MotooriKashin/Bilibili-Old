@@ -143,6 +143,7 @@ export async function downloadDefault() {
     });
     getCover();
     contactDownloadDate(downloadUI.obj.data, Record);
+    downloadUI.show();
     downloading = false;
 }
 /** 其他下载，下载视频外的数据 */
