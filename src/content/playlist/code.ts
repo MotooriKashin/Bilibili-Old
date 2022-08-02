@@ -22,6 +22,7 @@ import { loadByDmId } from "../av/load_by_dm_id";
 import { primaryMenu, banner } from "../banner";
 import { globalVector } from "../global";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function playlistPage() {
     // 重写检查
@@ -226,7 +227,7 @@ export function playlistPage() {
         }
     });
     // 加载原生脚本
-    appendScripts(script);
+    appendScripts(script).then(loadEvent);
     // 点赞功能
     setting.enlike && new enLike();
     // 顶栏分区修正

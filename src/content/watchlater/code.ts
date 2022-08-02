@@ -12,6 +12,7 @@ import { globalVector } from "../global";
 import script from "./script.html";
 import html from "./watchlater.html";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function watchlaterPage() {
     // 重写检查
@@ -29,7 +30,7 @@ export function watchlaterPage() {
     // 修正直播错误
     xhrhook("api.live.bilibili.com/bili/living_v2/", undefined, r => { r.response = r.responseText = ` ${r.response}` }, false);
     // 加载原生脚本
-    appendScripts(script);
+    appendScripts(script).then(loadEvent);
     // 修复评论视频跳转接口
     (<any>window).commentAgent = { seek: (t: number) => (<any>window).player && (<any>window).player.seek(t) };
     // 添加点赞功能

@@ -9,6 +9,7 @@ import { replaceUrl } from "../../runtime/url_clean";
 import { primaryMenu, banner } from "../banner";
 import { globalVector } from "../global";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function rankingPage() {
     // 重写检查
@@ -26,7 +27,7 @@ export function rankingPage() {
     // 禁用__INITIAL_STATE__干扰
     Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
     // 启动原生脚本
-    appendScripts(script);
+    appendScripts(script).then(loadEvent);
     // 高分辨率屏修补
     addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
     // 顶栏分区修正

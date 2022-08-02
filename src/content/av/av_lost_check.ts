@@ -118,7 +118,6 @@ async function check(call: (res: any) => void) {
             if (card.data[`av${API.aid}`].redirect_url) {
                 sessionStorage.setItem("redirect", card.data[`av${API.aid}`].redirect_url);
                 call(new Detail()); // 必须先返回，否则超时跳转404
-                variableCleaner();
                 if (isUserScript) return bangumiPage();
                 return loadScriptEs("content/bangumi/bangumi.js");
             }
@@ -132,7 +131,6 @@ async function check(call: (res: any) => void) {
             sessionStorage.setItem("redirect", res.data.View.season.ogv_play_url);
             res.data.View.season = undefined;
             call(res);
-            variableCleaner();
             if (isUserScript) return bangumiPage();
             return loadScriptEs("content/bangumi/bangumi.js");
         }

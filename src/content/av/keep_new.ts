@@ -1,3 +1,5 @@
+import { debug } from "../../runtime/debug";
+import { doWhile } from "../../runtime/do_while";
 import { toast } from "../../runtime/toast/toast";
 import { replaceUrl } from "../../runtime/url_clean";
 import { API } from "../../runtime/variable/variable";
@@ -19,4 +21,6 @@ export function keepNewCheck() {
         sessionStorage.removeItem("redirect");
     }
     API.rewrite = true;
+    // 防止babelPolyfill报错跳出
+    Reflect.defineProperty(window, "_babelPolyfill", { get: () => undefined, set: () => true });
 }

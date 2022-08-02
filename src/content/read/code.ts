@@ -10,6 +10,7 @@ import { loadComment } from "../comment";
 import { rightCopyEnable } from "../../runtime/rightCopy";
 import { globalVector } from "../global";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function readPage() {
     // 重写检查
@@ -81,7 +82,7 @@ export function readPage() {
             spoiler: "0"
         };
         (<HTMLDivElement>document.querySelector(".page-container")).innerHTML = temp;
-        appendScripts(script);
+        appendScripts(script).then(loadEvent);
         // 解锁右键
         rightCopyEnable();
     }).catch(e => {

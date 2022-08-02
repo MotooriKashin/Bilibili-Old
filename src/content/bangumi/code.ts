@@ -19,6 +19,7 @@ import { primaryMenu, banner } from "../banner";
 import { episodeData } from "./episode_data";
 import { globalVector } from "../global";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function bangumiPage() {
     // 重写检查
@@ -72,9 +73,9 @@ export function bangumiPage() {
     }, false);
     // 修复相关视频推荐 接口来自md页面
     const related: Record<string, string> = {};
-    xhrhookAsync("x/web-interface/archive/related", () => ((<any>window).__INITIAL_STATE__).mediaInfo.title, async (u, t) => {
+    xhrhookAsync("x/web-interface/archive/related", () => ((<any>window).__INITIAL_STATE__)?.mediaInfo?.title, async (u, t) => {
         let result = '{ code: 0, data: [], message: "0" }';
-        if (related[((<any>window).__INITIAL_STATE__).mediaInfo.title]) {
+        if (related[((<any>window).__INITIAL_STATE__)?.mediaInfo?.title]) {
             result = related[((<any>window).__INITIAL_STATE__).mediaInfo.title];
         } else {
             try {
@@ -93,7 +94,7 @@ export function bangumiPage() {
     }, false);
     // 初始化__INITIAL_STATE__
     bangumiInitialState().then(() => {
-        setting.enlike && new enLike("bangumi", (<any>window).__INITIAL_STATE__.mediaInfo.stat.likes);
+        setting.enlike && new enLike("bangumi", (<any>window).__INITIAL_STATE__?.mediaInfo?.stat?.likes);
         if ((<any>window).__INITIAL_STATE__.special) {
             // 带海报的bangumi隐藏顶栏banner和wrapper
             addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
@@ -103,7 +104,7 @@ export function bangumiPage() {
         // doWhile(() => (<any>document).querySelector("#app")?.__vue__, d => d.loadComment());
     });
     // 加载原生脚本
-    appendScripts(script);
+    appendScripts(script).then(loadEvent);
     // 顶栏分区修正
     primaryMenu();
     // 顶栏banner修复

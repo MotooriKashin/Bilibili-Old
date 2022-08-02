@@ -16,6 +16,7 @@ import { loadByDmId } from "./load_by_dm_id";
 import { replaceUrl } from "../../runtime/url_clean";
 import { globalVector } from "../global";
 import { keepNewCheck } from "./keep_new";
+import { loadEvent } from "./load_event";
 
 export function avPage() {
     // 重写检查
@@ -63,7 +64,7 @@ export function avPage() {
     // 禁用__INITIAL_STATE__干扰
     Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
     // 加载原生脚本
-    appendScripts(script);
+    appendScripts(script).then(loadEvent);
     // 点赞
     setting.enlike && new enLike();
     // 深度审查

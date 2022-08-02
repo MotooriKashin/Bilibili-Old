@@ -7,6 +7,7 @@ import { globalVector } from "../global";
 import script from "./script.html";
 import html from "./search.html";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function searchPage() {
     // 重写检查
@@ -24,7 +25,7 @@ export function searchPage() {
     // 禁用__INITIAL_STATE__干扰
     Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
     // 启动原生脚本
-    appendScripts(script);
+    appendScripts(script).then(loadEvent);
     // 全局入口
     globalVector();
 }

@@ -39,7 +39,7 @@ export class enLike {
     init() {
         this.style();
         this.aid = API.aid;
-        this.span = document.createElement("span");
+        this.span = document.querySelector(".ulike") || document.createElement("span");
         this.span.classList.add("ulike");
         (<any>this).coin.parentElement.insertBefore(this.span, this.coin);
         this.changeLiked();

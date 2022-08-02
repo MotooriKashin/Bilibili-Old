@@ -22,6 +22,7 @@ import { timeline } from "./timeline";
 import { banner, primaryMenu } from "../banner";
 import { globalVector } from "../global";
 import { keepNewCheck } from "../av/keep_new";
+import { loadEvent } from "../av/load_event";
 
 export function indexPage() {
     // 重写检查
@@ -37,7 +38,7 @@ export function indexPage() {
 <script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"></script>
 <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"></script>
 <script src="//static.hdslb.com/common/js/footer.js"></script>
-`);
+`).then(loadEvent);
     // 初始化locsData
     fetch("https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,29,31,34,40,42,44")
         .then(d => d.text())
