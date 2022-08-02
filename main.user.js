@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.1
+// @version      9.0.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5781,10 +5781,10 @@ const modules =`
     }
   });
 
-  // src/runtime/element/popupbox.html
+  // src/runtime/element/popupbox/popupbox.html
   var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
 
-  // src/runtime/element/popupbox.ts
+  // src/runtime/element/popupbox/popupbox.ts
   var ClickRemove = class {
     cancel;
     observe;
@@ -5971,8 +5971,10 @@ const modules =`
       this._table.replaceChildren(createElements(vdoms));
     }
     show() {
-      document.body.contains(this) || document.body.appendChild(this);
-      this.observer.observe();
+      if (!document.body.contains(this)) {
+        document.body.appendChild(this);
+        this.observer.observe();
+      }
     }
   };
   customElements.get(\`biliold-download\${mutex}\`) || customElements.define(\`biliold-download\${mutex}\`, BiliOldDownload);
@@ -6494,6 +6496,7 @@ const modules =`
     });
     getCover();
     contactDownloadDate(downloadUI.obj.data, Record2);
+    downloadUI.show();
     downloading = false;
   }
   async function getContent(d) {
@@ -12813,7 +12816,7 @@ const modules =`
       try {
         const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, setting.uposReplace.nor);
         obj.responseType === "json" ? obj.response = JSON.parse(data) : obj.response = obj.responseText = data;
-        API.__playinfo__ = data;
+        API.__playinfo__ = JSON.parse(data);
         Promise.resolve().then(() => {
           try {
             const d = JSON.parse(data);
@@ -14202,7 +14205,7 @@ const modules =`
     init() {
       this.style();
       this.aid = API.aid;
-      this.span = document.createElement("span");
+      this.span = document.querySelector(".ulike") || document.createElement("span");
       this.span.classList.add("ulike");
       this.coin.parentElement.insertBefore(this.span, this.coin);
       this.changeLiked();
@@ -14597,90 +14600,6 @@ const modules =`
       }, fl) + \`</div>\`;
       node4.innerHTML = fl;
       addCss(up_list_default);
-    });
-  }
-
-  // src/runtime/variable/clean.ts
-  var dushs = [
-    "__INITIAL_STATE__",
-    "__PGC_USERSTATE__",
-    "__BILI_CONFIG__",
-    "Sentry",
-    "__mobxGlobals",
-    "__mobxInstanceCount",
-    "_babelPolyfill",
-    "BiliJsBridge",
-    "LazyLoad",
-    "lazyload",
-    "Bjax",
-    "BPlayer",
-    "BwpElement",
-    "BwpMediaSource",
-    "bPlayer",
-    "PlayerAgent",
-    "PlayerSetOnline",
-    "abtest",
-    "ad_rp",
-    "ad_url",
-    "bPlayer",
-    "bsourceFrom",
-    "deltaFilter",
-    "directiveDispatcher",
-    "flashChecker",
-    "getAuthorInfo",
-    "gqs",
-    "heimu",
-    "insertLink",
-    "insertScript",
-    "iris",
-    "isBiliPlayer",
-    "isEmbedPlayer",
-    "isInit",
-    "jsurl",
-    "jsUrls",
-    "loginInfoCallbacks",
-    "md",
-    "nano",
-    "nanoWidgetsJsonp",
-    "player",
-    "playerInfo",
-    "player_fullwin",
-    "player_widewin",
-    "rec_rp",
-    "regeneratorRuntime",
-    "reportConfig",
-    "reportFistAdFs",
-    "reportObserver",
-    "setSize",
-    "setSizeStyle",
-    "vd",
-    "videoWidgetsJsonP",
-    "webAbTest",
-    "BiliCm",
-    "BiliHeader",
-    "UserStatus",
-    "jvsCert",
-    "mOxie",
-    "moxie",
-    "plupload",
-    "recaptcha",
-    "setTid",
-    "show1080p",
-    "showCoopModal",
-    "showPay",
-    "swfobject",
-    "tabSocket",
-    "__BiliUser__",
-    "___grecaptcha_cfg",
-    "__core-js_shared__"
-  ];
-  function variableCleaner() {
-    dushs.forEach((d) => {
-      try {
-        Reflect.deleteProperty(window, d);
-      } catch (e) {
-        window[d] = void 0;
-      }
     });
   }
 
@@ -16207,6 +16126,14 @@ const modules =`
       sessionStorage.removeItem("redirect");
     }
     API.rewrite = true;
+    Reflect.defineProperty(window, "_babelPolyfill", { get: () => void 0, set: () => true });
+  }
+
+  // src/content/av/load_event.ts
+  function loadEvent() {
+    doWhile(() => document.readyState === "complete", () => {
+      document.querySelector("#jvs-cert") || window.dispatchEvent(new ProgressEvent("load"));
+    });
   }
 
   // src/content/bangumi/code.ts
@@ -16250,9 +16177,9 @@ const modules =`
       }
     }, false);
     const related = {};
-    xhrhookAsync("x/web-interface/archive/related", () => window.__INITIAL_STATE__.mediaInfo.title, async (u, t) => {
+    xhrhookAsync("x/web-interface/archive/related", () => window.__INITIAL_STATE__?.mediaInfo?.title, async (u, t) => {
       let result = '{ code: 0, data: [], message: "0" }';
-      if (related[window.__INITIAL_STATE__.mediaInfo.title]) {
+      if (related[window.__INITIAL_STATE__?.mediaInfo?.title]) {
         result = related[window.__INITIAL_STATE__.mediaInfo.title];
       } else {
         try {
@@ -16270,12 +16197,12 @@ const modules =`
       return t === "json" ? { response: JSON.parse(result) } : { response: result, responseText: result };
     }, false);
     bangumiInitialState().then(() => {
-      setting.enlike && new enLike("bangumi", window.__INITIAL_STATE__.mediaInfo.stat.likes);
+      setting.enlike && new enLike("bangumi", window.__INITIAL_STATE__?.mediaInfo?.stat?.likes);
       if (window.__INITIAL_STATE__.special) {
         addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
       }
     });
-    appendScripts(script_default2);
+    appendScripts(script_default2).then(loadEvent);
     primaryMenu();
     banner();
     loadByDmId();
@@ -16385,7 +16312,6 @@ const modules =`
         if (card.data[\`av\${API.aid}\`].redirect_url) {
           sessionStorage2.setItem("redirect", card.data[\`av\${API.aid}\`].redirect_url);
           call(new Detail());
-          variableCleaner();
           if (isUserScript)
             return bangumiPage();
           return loadScriptEs("content/bangumi/bangumi.js");
@@ -16400,7 +16326,6 @@ const modules =`
         sessionStorage2.setItem("redirect", res.data.View.season.ogv_play_url);
         res.data.View.season = void 0;
         call(res);
-        variableCleaner();
         if (isUserScript)
           return bangumiPage();
         return loadScriptEs("content/bangumi/bangumi.js");
@@ -16457,7 +16382,7 @@ const modules =`
       return { code: -404 };
     }, false);
     Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
-    appendScripts(script_default);
+    appendScripts(script_default).then(loadEvent);
     setting.enlike && new enLike();
     avLostCheck();
     primaryMenu();
@@ -16516,7 +16441,7 @@ const modules =`
 <script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>
 <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>
 <script src="//static.hdslb.com/common/js/footer.js"><\\/script>
-\`);
+\`).then(loadEvent);
     fetch("https://api.bilibili.com/x/web-show/res/locs?pf=0&ids=4694,29,31,34,40,42,44").then((d) => d.text()).then((d) => {
       d = JSON.parse(d.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s)));
       __INITIAL_STATE__.locsData[23] = adblock(d.data[4694]);
@@ -24145,7 +24070,7 @@ const modules =`
         doWhile(() => document.querySelector(".bilibili-player-playlist-item"), () => startObserver());
       }
     });
-    appendScripts(script_default4);
+    appendScripts(script_default4).then(loadEvent);
     setting.enlike && new enLike();
     primaryMenu();
     banner();
@@ -24171,7 +24096,7 @@ const modules =`
     replaceUrl(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
     jsonphook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], (d) => d.replace(/day=\\d+/, "day=3"), void 0, false);
     Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
-    appendScripts(script_default5);
+    appendScripts(script_default5).then(loadEvent);
     addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
     primaryMenu();
     banner();
@@ -24260,7 +24185,7 @@ const modules =`
         spoiler: "0"
       };
       document.querySelector(".page-container").innerHTML = temp2;
-      appendScripts(script_default6);
+      appendScripts(script_default6).then(loadEvent);
       rightCopyEnable();
     }).catch((e) => {
       debug.error(e);
@@ -24284,7 +24209,7 @@ const modules =`
       replaceUrl(location.origin);
     }, 10, 30);
     Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
-    appendScripts(script_default7);
+    appendScripts(script_default7).then(loadEvent);
     globalVector();
   }
 
@@ -24305,7 +24230,7 @@ const modules =`
     xhrhook("api.live.bilibili.com/bili/living_v2/", void 0, (r) => {
       r.response = r.responseText = \` \${r.response}\`;
     }, false);
-    appendScripts(script_default8);
+    appendScripts(script_default8).then(loadEvent);
     window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
     setting.enlike && new enLike("watchlater");
     primaryMenu();
