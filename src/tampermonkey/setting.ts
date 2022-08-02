@@ -47,7 +47,6 @@ export function registerSetting(sets: (Setting[keyof Setting] | SettingList) | (
                             return true;
                         }
                         tag = false;
-                        disableSettingCallback || ((<any>t).callback && Promise.resolve().then(() => (<any>t).callback(v)));
                     }
                     return Reflect.set(t, p, v, r);
                 }
@@ -75,7 +74,6 @@ export function registerSetting(sets: (Setting[keyof Setting] | SettingList) | (
                                 return true
                             }
                             tag = false;
-                            disableSettingCallback || ((<any>t).callback && Promise.resolve().then(() => (<any>t).callback(v)));
                         }
                         return Reflect.set(t, p, v, r);
                     }

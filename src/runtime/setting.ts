@@ -19,12 +19,14 @@ function getSetting() {
 }
 /** 保存设置数据 */
 export function saveConfig() {
-    if (isUserScript) {
-        GM_setValue("config", JSON.parse(JSON.stringify(newSetting)));
-    } else {
-        GM.setValue("setting", JSON.parse(JSON.stringify(newSetting)));
-        sessionStorage.setItem("setting", JSON.parse(JSON.stringify(newSetting)));
+    if (newSetting) {
+        if (isUserScript) {
+            GM_setValue("config", JSON.parse(JSON.stringify(newSetting)));
+        } else {
+            GM.setValue("setting", JSON.parse(JSON.stringify(newSetting)));
+            sessionStorage.setItem("setting", JSON.parse(JSON.stringify(newSetting)));
+        }
     }
 }
-chrome?.storage ? chrome.storage.local.get().then(d => setting = d.setting) : getSetting();
+getSetting();
 // TODO: 如果未来MV3支持将注册任意代码为内容脚本，设置数据只能异步获取的问题将迎刃而解。——应该会支持的吧，否则Tampermonkey等用户脚本管理器真的得死了🤣

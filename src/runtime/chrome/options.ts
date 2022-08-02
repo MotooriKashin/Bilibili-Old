@@ -13,7 +13,8 @@ import { sessionStorage } from "../storage";
 import { menu } from "./menu";
 import { settingDefault, showSetting } from "./settings";
 import { toast } from "../toast/toast";
-import SETTING_DEFAULT from "./setting.json";
+import { saveConfig, setting } from "../setting";
+import { doWhile } from "../do_while";
 
 // 暴露拓展ID
 sessionStorage.setItem("bilibili-old", chrome.runtime.id);
@@ -67,31 +68,72 @@ class BilibiliOld extends HTMLElement {
             return s;
         }, ""))));
         chrome.storage.local.get().then(({ setting }) => {
-            setting = Object.assign(SETTING_DEFAULT, setting || {});
             sessionStorage.setItem("setting", setting);
-            new Proxy(settingDefault, new ProxyHandler(() => {
-                const news = settingDefault.reduce((s, f: any) => {
-                    this.$showSetting[f.menu] = f.menu;
-                    this.$showSetting[f.key] = f.menu;
-                    if (f.type == "list") {
-                        f.list?.forEach((e: any) => {
-                            if (Reflect.has(setting[f.key], e.key)) {
-                                s[f.key] || (s[f.key] = {});
-                                s[f.key][e.key] = e.value
+        })
+        /** 用于初始化设置时临时禁用回调的标记 */
+        let disableSettingCallback = true;
+        doWhile(() => sessionStorage.getItem("setting"), () => {
+            const SETTING: any[] = [];
+            settingDefault.forEach(d => {
+                let tag = false;
+                if (d.type !== "list") {
+                    Reflect.has(setting, d.key) && ((<any>d).value = Reflect.get(setting, d.key));
+                    d = new Proxy(d, {
+                        set: (t, p, v, r) => {
+                            if (p === "value") {
+                                if (!tag) {
+                                    (<any>setting)[d.key] = v;
+                                    return true;
+                                }
+                                tag = false;
                             }
-                            this.$showSetting[e.key] = f.menu;
-                        })
-                    } else {
-                        if (Reflect.has(setting, f.key)) {
-                            s[f.key] = f.value
+                            return Reflect.set(t, p, v, r);
                         }
-                    }
-                    return s;
-                }, <Record<string, any>>{})
-                chrome.storage.local.set({ setting: news });
-                sessionStorage.setItem("setting", news);
-            })).forEach((e: any) => {
+                    });
+                    // 先赋值再修改才能枚举到哦~
+                    (<any>setting)[d.key] = (<any>d).value;
+                    Object.defineProperty(setting, d.key, {
+                        set: v => {
+                            tag = true;
+                            (<any>d).value = v;
+                        },
+                        get: () => (<any>d).value
+                    });
+                } else {
+                    const obj = Reflect.has(setting, d.key) && JSON.parse(JSON.stringify(setting[d.key]));
+                    const bak: any = {};
+                    (<any>setting)[d.key] = new Proxy(bak, {});
+                    d.list.forEach((t, i, a) => {
+                        obj && obj[t.key] && ((<any>t).value = obj[t.key]);
+                        a[i] = new Proxy(t, {
+                            set: (t, p, v, r) => {
+                                if (p === "value") {
+                                    if (!tag) {
+                                        (<any>setting)[d.key][t.key] = v;
+                                        return true
+                                    }
+                                    tag = false;
+                                }
+                                return Reflect.set(t, p, v, r);
+                            }
+                        });
+                        bak[t.key] = (<any>a)[i].value;
+                        Object.defineProperty(bak, t.key, {
+                            get: () => (<any>a)[i].value,
+                            set: v => {
+                                tag = true;
+                                (<any>a)[i].value = v;
+                            }
+                        });
+                        (<any>setting)[d.key][t.key] = (<any>t).value;
+                    });
+                }
+                SETTING.push(d);
+            });
+            SETTING.forEach((e: any) => {
                 const target = <HTMLDivElement>this.$item.querySelector(`.item${e.menu}`);
+                this.$showSetting[e.key] = e.menu;
+                this.$showSetting[e.menu] = e.menu;
                 if (e.type == "list") {
                     target.appendChild(createElements(htmlVnode(
                         `<div class="contain1 con1${e.key}">
@@ -102,13 +144,12 @@ class BilibiliOld extends HTMLElement {
                         <div class="card"></div>`
                     )));
                     e.list?.forEach((f: any) => {
-                        typeof f.value === "function" || (f.value = setting[e.key][f.key]);
-                        this.$initItem(<HTMLDivElement>target.querySelector(`.con1${e.key}`)?.nextSibling, <any>f, setting, setting[e.key] && setting[e.key][f.key]);
+                        this.$showSetting[f.key] = e.menu;
+                        this.$initItem(<HTMLDivElement>target.querySelector(`.con1${e.key}`)?.nextSibling, <any>f);
                     })
                 }
                 else {
-                    typeof e.value === "function" || (e.value = setting[e.key]);
-                    this.$initItem(<HTMLDivElement>target.querySelector(`.con1${e.menu}`)?.nextSibling, e, setting, setting[e.key]);
+                    this.$initItem(<HTMLDivElement>target.querySelector(`.con1${e.menu}`)?.nextSibling, e);
                 }
             });
             location.hash ? showSetting(location.hash.substring(1)) : showSetting("common");
@@ -117,7 +158,8 @@ class BilibiliOld extends HTMLElement {
                 this.style.opacity = "";
                 toast.info("Bilibili Old设置界面", "调整设置后可能需要刷新页面才会生效哦~")
             }, 300);
-        })
+            disableSettingCallback = false;
+        });
         window.addEventListener("message", ev => {
             if (ev.data.$type == "showSetting") {
                 location.hash = ev.data.data;
@@ -125,10 +167,13 @@ class BilibiliOld extends HTMLElement {
                 this.$item.querySelector(`.con1${ev.data.data}`)?.scrollIntoView({ behavior: "smooth", block: "start" })
                 this.$item.querySelector(`.con2${ev.data.data}`)?.scrollIntoView({ behavior: "smooth", block: "start" })
             }
+            if (ev.data.$type == "setValue") {
+                chrome.storage.local.set(ev.data.data);
+            }
         })
     }
     $showSetting: Record<string, string> = {};
-    $initItem(node: HTMLDivElement, info: any, set: Record<string, any>, value: any) {
+    $initItem(node: HTMLDivElement, info: any) {
         const part = node.appendChild(<HTMLDivElement>createElement(htmlVnode(
             `<div class="contain2 con2${info.key}">${info.svg ? `<div class="icon">${info.svg}</div>` : ""}
         <div class="label">${info.label + (info.sub ? `<div class="sub">${info.sub}</div>` : "")}</div>
@@ -149,7 +194,7 @@ class BilibiliOld extends HTMLElement {
                                     const i = info.value.indexOf(t);
                                     i >= 0 && (<any[]>info.value).splice(i, 1);
                                 }
-                                chrome.storage.local.set({ setting: set });
+                                saveConfig();
                                 info.callback && info.callback(info.value)
                             }
                             return Reflect.set(tar, ppt, val, rcv);
