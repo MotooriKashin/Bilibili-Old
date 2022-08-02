@@ -28,7 +28,7 @@ export function dealwithPlayinfo() {
         try {
             const data = uposReplace(obj.responseType === "json" ? JSON.stringify(obj.response) : obj.response, <any>setting.uposReplace.nor);
             obj.responseType === "json" ? obj.response = JSON.parse(data) : obj.response = obj.responseText = data;
-            API.__playinfo__ = <any>data;
+            API.__playinfo__ = JSON.parse(data);
             Promise.resolve().then(() => {
                 try {
                     const d = JSON.parse(data);
