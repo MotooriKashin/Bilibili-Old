@@ -8174,6 +8174,17 @@ const modules =`
   function removeXhrhook(id) {
     id >= 0 && delete rules[id - 1];
   }
+  function xhrhookUltra(url, modify) {
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      try {
+        modify.call(this, this, args);
+      } catch (e) {
+        debug.error("xhrhook modify", one, modify, e);
+      }
+    };
+    return rules.push([one, two]);
+  }
 
   // src/runtime/danmaku/history_danmaku.ts
   function historyDanmaku() {
@@ -13266,6 +13277,152 @@ const modules =`
     return playurl;
   }
 
+  // src/tampermonkey/upos_gm.ts
+  var isHooking = false;
+  function defineRes(target, res, v) {
+    Object.defineProperties(target, {
+      status: {
+        configurable: true,
+        writable: true,
+        value: res.status
+      },
+      statusText: {
+        configurable: true,
+        writable: true,
+        value: res.statusText
+      },
+      response: {
+        configurable: true,
+        writable: true,
+        value: res.response
+      },
+      responseText: {
+        configurable: true,
+        writable: true,
+        value: res.responseText
+      },
+      responseXML: {
+        configurable: true,
+        writable: true,
+        value: res.responseXML
+      },
+      responseURL: {
+        configurable: true,
+        writable: true,
+        value: res.finalUrl
+      }
+    });
+    v();
+  }
+  function uposWithGM(url = ".m4s", UserAgent = setting.userAgent) {
+    if (isHooking)
+      return;
+    xhrhookUltra(url, function(target, args) {
+      const obj = {
+        method: args[0],
+        url: args[1],
+        headers: {
+          "user-agent": UserAgent
+        },
+        onloadstart: (res) => {
+          defineRes(this, res, () => {
+          });
+        }
+      };
+      args[2] || (obj.anonymous = true);
+      Object.defineProperties(this, {
+        responseType: {
+          configurable: true,
+          set: (v) => {
+            obj.responseType = v;
+          },
+          get: () => obj.responseType
+        },
+        onload: {
+          configurable: true,
+          set: (v) => {
+            obj.onload = (res) => {
+              defineRes(this, res, v);
+            };
+          },
+          get: () => obj.onload
+        },
+        onerror: {
+          configurable: true,
+          set: (v) => {
+            obj.onerror = (res) => {
+              defineRes(this, res, v);
+            };
+          },
+          get: () => obj.onerror
+        },
+        timeout: {
+          configurable: true,
+          set: (v) => {
+            obj.timeout = v;
+          },
+          get: () => obj.timeout
+        },
+        ontimeout: {
+          configurable: true,
+          set: (v) => {
+            obj.ontimeout = (res) => {
+              defineRes(this, res, v);
+            };
+          },
+          get: () => obj.ontimeout
+        },
+        onprogress: {
+          configurable: true,
+          set: (v) => {
+            obj.onprogress = (res) => {
+              defineRes(this, res, v.bind(this, new ProgressEvent("progress", {
+                lengthComputable: res.lengthComputable,
+                loaded: res.loaded,
+                total: res.total
+              })));
+            };
+          },
+          get: () => obj.onprogress
+        },
+        onabort: {
+          configurable: true,
+          set: (v) => {
+            obj.onabort = (res) => {
+              defineRes(this, res, v);
+            };
+          },
+          get: () => obj.onabort
+        },
+        onreadystatechange: {
+          configurable: true,
+          set: (v) => {
+            obj.onreadystatechange = (res) => {
+              defineRes(this, res, v);
+            };
+          },
+          get: () => obj.onreadystatechange
+        },
+        setRequestHeader: {
+          configurable: true,
+          value: (name, value) => {
+            obj.headers && (obj.headers[name] = value);
+          }
+        },
+        send: {
+          configurable: true,
+          value: (body) => {
+            obj.method === "POST" && body && (obj.data = body);
+            const tar = GM_xmlhttpRequest(obj);
+            this.abort = tar.abort.bind(tar);
+            return true;
+          }
+        }
+      });
+    });
+    isHooking = true;
+  }
+
   // src/runtime/player/video_limit.ts
   var Backup = {};
   var HookTimeOut = class {
@@ -13334,6 +13491,7 @@ const modules =`
       Backup[epid] && (response = Backup[epid]);
       if (!response) {
         if (API.th) {
+          isUserScript && uposWithGM();
           Object.assign(obj, {
             area: "th",
             build: 1001310,
@@ -13360,6 +13518,7 @@ const modules =`
             response = { "code": -404, "message": e, "data": null };
           }
         } else if (API.limit) {
+          isUserScript && setting.uposReplace.gat !== "不替换" && uposWithGM();
           obj.module = window.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || window.__INITIAL_STATE__?.upInfo?.mid == 2042149112 ? "movie" : "bangumi";
           obj.fnval && (obj.fnval = String(fnval));
           try {

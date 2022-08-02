@@ -10,6 +10,8 @@ import { bstarPlayurl } from "./bstar_playurl";
 import { uposReplace } from "./upos_replace";
 import { API } from "../variable/variable";
 import { urlObj, objUrl } from "../format/url";
+import { isUserScript } from "../../tampermonkey/check";
+import { uposWithGM } from "../../tampermonkey/upos_gm";
 
 
 const Backup: Record<string, any> = {};
@@ -75,6 +77,7 @@ export function videoLimit() {
         Backup[epid] && (response = Backup[epid]);
         if (!response) {
             if (API.th) { // 泰区
+                isUserScript && uposWithGM();
                 Object.assign(obj, {
                     area: "th",
                     build: 1001310,
@@ -101,6 +104,7 @@ export function videoLimit() {
                     response = { "code": -404, "message": e, "data": null };
                 }
             } else if (API.limit) { // 处理区域限制
+                isUserScript && setting.uposReplace.gat !== "不替换" && uposWithGM();
                 obj.module = ((<any>window).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>window).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
                 obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
                 try {
