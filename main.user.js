@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.2
+// @version      9.0.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -3665,7 +3665,7 @@ const modules =`
 
   // src/tampermonkey/polyfill/replace_children.ts
   if (typeof Element.prototype.replaceChildren === "undefined") {
-    Object.defineProperty(Element.prototype, "replaceChildren", {
+    Reflect.defineProperty(Element.prototype, "replaceChildren", {
       configurable: true,
       enumerable: false,
       value: function() {
@@ -5246,7 +5246,7 @@ const modules =`
   var arr = [];
   var param = [];
   var webpackJsonp = window.webpackJsonp;
-  Object.defineProperty(window, "webpackJsonp", {
+  Reflect.defineProperty(window, "webpackJsonp", {
     set: (v) => hook = v,
     get: () => {
       if (hook) {
@@ -5892,7 +5892,7 @@ const modules =`
       root3.appendChild(createElements(htmlVnode(download_ui_default)));
       this._table = root3.children[0];
       this.obj = obj;
-      Object.defineProperty(obj, "data", {
+      Reflect.defineProperty(obj, "data", {
         configurable: true,
         get: () => new Proxy(this._data, new ProxyHandler(() => this.\$data())),
         set: (v) => {
@@ -8096,9 +8096,9 @@ const modules =`
                 (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
                 (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
                 modifyResponse(response);
-                Object.defineProperty(this, "response", { configurable: true, value: response.response });
-                response.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
-                response.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
+                Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
+                response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
+                response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
               }
             } catch (e) {
               debug.error("modifyResponse of xhrhook", one, e);
@@ -8124,18 +8124,18 @@ const modules =`
           const et = setInterval(() => {
             this.dispatchEvent(new ProgressEvent("progress"));
           }, 50);
-          Object.defineProperty(this, "status", { configurable: true, value: 200 });
-          Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
+          Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
+          Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
           this.dispatchEvent(new ProgressEvent("readystatechange"));
           modifyResponse ? modifyResponse(args, this.responseType).then((d) => {
             clearInterval(et);
             if (d) {
-              Object.defineProperty(this, "response", { configurable: true, value: d.response });
-              d.responseType && Object.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
-              d.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-              d.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-              !this.responseURL && Object.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-              Object.defineProperty(this, "readyState", { configurable: true, value: 4 });
+              Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+              d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+              d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+              d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+              !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+              Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
               this.dispatchEvent(new ProgressEvent("readystatechange"));
               this.dispatchEvent(new ProgressEvent("load"));
               this.dispatchEvent(new ProgressEvent("loadend"));
@@ -8143,12 +8143,12 @@ const modules =`
           }).catch((d) => {
             if (this.xhrhookTimes === 1) {
               if (d && d.response) {
-                Object.defineProperty(this, "response", { configurable: true, value: d.response });
-                d.responseType && Object.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
-                d.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-                d.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-                !this.responseURL && Object.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-                Object.defineProperty(this, "readyState", { configurable: true, value: 4 });
+                Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+                d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+                d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+                d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+                !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+                Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
                 this.dispatchEvent(new ProgressEvent("readystatechange"));
                 this.dispatchEvent(new ProgressEvent("load"));
                 this.dispatchEvent(new ProgressEvent("loadend"));
@@ -14078,11 +14078,11 @@ const modules =`
     }
   };
   function loadVideoScript(bofqi, asWide = false) {
-    Object.defineProperty(window, "EmbedPlayer", {
+    Reflect.defineProperty(window, "EmbedPlayer", {
       configurable: true,
       get: () => (player2, swf, playerParams, playerType, upgrade, callbackFn) => {
         try {
-          delete window.__playinfo__;
+          Reflect.deleteProperty(window, "__playinfo__");
           asWide && (EmbedPlayer.asWide = true);
           bofqi && (document.querySelector(bofqi).id = "bofqi");
           window.GrayManager = new GrayManager(player2, swf, playerParams, playerType, upgrade, callbackFn);
@@ -14110,7 +14110,7 @@ const modules =`
   var loading = false;
   var load2 = false;
   function loadComment() {
-    Object.defineProperty(window, "bbComment", {
+    Reflect.defineProperty(window, "bbComment", {
       configurable: true,
       set: (v) => {
         if (!v.prototype._createNickNameDom) {
@@ -14122,7 +14122,7 @@ const modules =`
         }
         Feedback = v;
         bbCommentModify();
-        Object.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
+        Reflect.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
       },
       get: () => {
         return Feedback ? Feedback : class {
@@ -14142,7 +14142,7 @@ const modules =`
         };
       }
     });
-    Object.defineProperty(window, "initComment", {
+    Reflect.defineProperty(window, "initComment", {
       configurable: true,
       set: (v) => true,
       get: () => {
@@ -14151,7 +14151,7 @@ const modules =`
             new Feedback(tar, init2.oid, init2.pageType, init2.userStatus);
           };
           var initComment = initComment2;
-          Object.defineProperty(window, "initComment", { configurable: true, value: initComment2 });
+          Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment2 });
           return initComment2;
         }
         return function() {
@@ -14164,6 +14164,18 @@ const modules =`
           setTimeout(() => window.initComment(...arguments), 100);
         };
       }
+    });
+    jsonphook(["api.bilibili.com/x/v2/reply", "sort=2"], void 0, (res) => {
+      if (0 === res.code && res.data?.page) {
+        const page = res.page;
+        jsonphook("api.bilibili.com/x/v2/reply", void 0, (res2) => {
+          if (0 === res2.code && res2.data?.page) {
+            res2.data.page = page;
+          }
+          return res2;
+        }, false);
+      }
+      return res;
     });
   }
   function bbCommentModify() {
@@ -15724,17 +15736,17 @@ const modules =`
 
   // src/content/log_report.ts
   function blockReport() {
-    Object.defineProperty(window, "reportObserver", {
+    Reflect.defineProperty(window, "reportObserver", {
       get: () => new Proxy(() => true, { get: (t, p, r) => r }),
       set: () => true,
       configurable: true
     });
-    Object.defineProperty(window, "rec_rp", {
+    Reflect.defineProperty(window, "rec_rp", {
       get: () => new Proxy(() => true, { get: (t, p, r) => r }),
       set: () => true,
       configurable: true
     });
-    Object.defineProperty(window, "reportMsgObj", {
+    Reflect.defineProperty(window, "reportMsgObj", {
       get: () => new Proxy(() => true, { get: (t, p, r) => r }),
       set: () => true,
       configurable: true
@@ -15778,7 +15790,7 @@ const modules =`
       iframe.setAttribute("style", "width: 906px; height: 556px;border:none;");
       root3.appendChild(iframe);
     });
-    Object.defineProperty(window, "EmbedPlayer", {
+    Reflect.defineProperty(window, "EmbedPlayer", {
       configurable: true,
       set: (v) => {
         if (!window.bnj) {
@@ -15787,7 +15799,7 @@ const modules =`
       },
       get: () => {
         if (window.bnj) {
-          Object.defineProperty(window, "EmbedPlayer", { configurable: true, value: arr2[0] });
+          Reflect.defineProperty(window, "EmbedPlayer", { configurable: true, value: arr2[0] });
           return arr2[0];
         } else {
           return function() {
@@ -15809,7 +15821,7 @@ const modules =`
     }
     if (window.loginInfoCallbacks && window.onLoginInfoLoaded) {
       let fun = window.onLoginInfoLoaded;
-      Object.defineProperty(window, "onLoginInfoLoaded", {
+      Reflect.defineProperty(window, "onLoginInfoLoaded", {
         configurable: true,
         get: () => fun,
         set: (t) => {
@@ -16288,6 +16300,17 @@ const modules =`
     }
     API.rewrite = true;
     Reflect.defineProperty(window, "_babelPolyfill", { get: () => void 0, set: () => true });
+    if (isUserScript) {
+      window.nanoWidgetsJsonp = true;
+      Reflect.defineProperty(window, "nano", {
+        get: () => new Proxy(() => true, { get: (t, p, r) => r }),
+        set: () => true,
+        configurable: true
+      });
+      Reflect.deleteProperty(window, "__INITIAL_STATE__");
+      Reflect.deleteProperty(window, "player");
+      Reflect.deleteProperty(window, "__playinfo__");
+    }
   }
 
   // src/content/av/load_event.ts
@@ -16363,6 +16386,7 @@ const modules =`
         addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
       }
     });
+    window.__Iris__ = true;
     appendScripts(script_default2).then(loadEvent);
     primaryMenu();
     banner();
@@ -16542,7 +16566,7 @@ const modules =`
     setting.automate.electric && jsonphookasync("api.bilibili.com/x/web-interface/elec/show", void 0, async () => {
       return { code: -404 };
     }, false);
-    Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
+    Reflect.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
     appendScripts(script_default).then(loadEvent);
     setting.enlike && new enLike();
     avLostCheck();
@@ -24256,7 +24280,7 @@ const modules =`
     title && !title.includes("404") && (document.title = title);
     replaceUrl(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
     jsonphook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], (d) => d.replace(/day=\\d+/, "day=3"), void 0, false);
-    Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
+    Reflect.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
     appendScripts(script_default5).then(loadEvent);
     addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
     primaryMenu();
@@ -24369,7 +24393,7 @@ const modules =`
     doWhile(() => location.href.endsWith("all"), () => {
       replaceUrl(location.origin);
     }, 10, 30);
-    Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
+    Reflect.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: void 0 });
     appendScripts(script_default7).then(loadEvent);
     globalVector();
   }
@@ -24502,7 +24526,7 @@ const modules =`
       const { button, func } = obj;
       root3.appendChild(createElements(htmlVnode(push_button_default)));
       const node4 = root3.children[0];
-      Object.defineProperty(obj, "button", {
+      Reflect.defineProperty(obj, "button", {
         set: (v) => {
           if (this.button === v)
             return;
@@ -25705,7 +25729,7 @@ const modules =`
       ];
       const { value, callback } = obj;
       let initing = true;
-      Object.defineProperty(obj, "value", {
+      Reflect.defineProperty(obj, "value", {
         set: (v) => {
           if (this.value === v)
             return;
@@ -26231,7 +26255,7 @@ const modules =`
           }
         });
         setting[d.key] = d.value;
-        Object.defineProperty(setting, d.key, {
+        Reflect.defineProperty(setting, d.key, {
           set: (v) => {
             tag = true;
             d.value = v;
@@ -26257,7 +26281,7 @@ const modules =`
             }
           });
           bak[t.key] = a[i].value;
-          Object.defineProperty(bak, t.key, {
+          Reflect.defineProperty(bak, t.key, {
             get: () => a[i].value,
             set: (v) => {
               tag = true;
