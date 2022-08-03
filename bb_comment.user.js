@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.0
+// @version      2.0.1
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -35,6 +35,194 @@
       });
       (document.body || document.head || document.documentElement || document).appendChild(script);
     });
+  }
+
+  // src/runtime/format/integer.ts
+  function integerFormat(num, byte = 2) {
+    return num < 10 ** byte ? (Array(byte).join("0") + num).slice(-1 * byte) : num;
+  }
+
+  // src/runtime/format/time.ts
+  function timeFormat(time = new Date().getTime(), type) {
+    const date = new Date(time);
+    const arr = date.toLocaleString().split(" ");
+    const day = arr[0].split("/");
+    day[1] = integerFormat(day[1], 2);
+    day[2] = integerFormat(day[2], 2);
+    return type ? day.join("-") + " " + arr[1] : arr[1];
+  }
+
+  // src/runtime/debug.ts
+  var group = {
+    i: 0,
+    call: []
+  };
+  function debug(...data) {
+    group.call.push(console.log.bind(console, `%c[${timeFormat()}]`, "color: blue;", ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  }
+  debug.assert = function(condition, ...data) {
+    group.call.push(console.assert.bind(console, `[${timeFormat()}]`, ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.clear = function() {
+    group.i = 0;
+    group.call = [];
+    setTimeout(console.clear.bind(console));
+    return debug;
+  };
+  debug.debug = function(...data) {
+    group.call.push(console.debug.bind(console, `[${timeFormat()}]`, ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.error = function(...data) {
+    group.call.push(console.error.bind(console, `[${timeFormat()}]`, ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.group = function(...data) {
+    group.i++;
+    group.call.push(console.group.bind(console, `[${timeFormat()}]`, ...arguments));
+    return debug;
+  };
+  debug.groupCollapsed = function(...data) {
+    group.i++;
+    group.call.push(console.groupCollapsed.bind(console, `[${timeFormat()}]`, ...arguments));
+    return debug;
+  };
+  debug.groupEnd = function() {
+    if (group.i) {
+      group.i--;
+      group.call.push(console.groupEnd.bind(console));
+      !group.i && (group.call.push(() => group.call = []), group.call.forEach((d) => setTimeout(d)));
+    }
+    return debug;
+  };
+  debug.info = function(...data) {
+    group.call.push(console.info.bind(console, `%c[${timeFormat()}]`, "color: blue;", ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.log = function(...data) {
+    group.call.push(console.log.bind(console, `%c[${timeFormat()}]`, "color: blue;", ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.table = function(tabularData, properties) {
+    group.call.push(console.table.bind(console, ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.time = function(label) {
+    console.time(label);
+    return debug;
+  };
+  debug.timeEnd = function(label) {
+    console.timeEnd(label);
+    return debug;
+  };
+  debug.timeLog = function(label, ...data) {
+    console.timeLog(label, `[${timeFormat()}]`, ...data);
+    return debug;
+  };
+  debug.trace = function(...data) {
+    group.call.push(console.trace.bind(console, ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+  debug.warn = function(...data) {
+    group.call.push(console.warn.bind(console, `[${timeFormat()}]`, ...arguments));
+    !group.i && setTimeout(group.call.shift());
+    return debug;
+  };
+
+  // src/runtime/format/url.ts
+  var URLEs = class extends URL {
+    constructor(url, base) {
+      if (!base && typeof url === "string" && !/^[a-z]+:/.test(url)) {
+        if (url.includes("=") && !url.includes("?") || !/^[A-Za-z0-9]/.test(url)) {
+          base = location.origin;
+        } else {
+          const str = url.startsWith("//") ? "" : "//";
+          url = location.protocol + str + url;
+        }
+      }
+      super(url, base);
+    }
+  };
+  function urlObj(url) {
+    const res = new URLEs(url);
+    const result = {};
+    res.searchParams.forEach((v, k) => {
+      result[k] = v;
+    });
+    return result;
+  }
+
+  // src/runtime/hook/node.ts
+  var appendChildHead = HTMLHeadElement.prototype.appendChild;
+  var appendChildBody = HTMLBodyElement.prototype.appendChild;
+  var insertBeforeHead = HTMLHeadElement.prototype.insertBefore;
+  var insertBeforeBody = HTMLBodyElement.prototype.insertBefore;
+  var jsonp = [];
+  HTMLHeadElement.prototype.appendChild = function(newChild) {
+    newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+      d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
+    });
+    return appendChildHead.call(this, newChild);
+  };
+  HTMLBodyElement.prototype.appendChild = function(newChild) {
+    newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+      d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
+    });
+    return appendChildBody.call(this, newChild);
+  };
+  HTMLHeadElement.prototype.insertBefore = function(newChild, refChild) {
+    newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+      d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
+    });
+    return insertBeforeHead.call(this, newChild, refChild);
+  };
+  HTMLBodyElement.prototype.insertBefore = function(newChild, refChild) {
+    newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+      d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
+    });
+    return insertBeforeBody.call(this, newChild, refChild);
+  };
+  function jsonphook(url, redirect, modifyResponse, once = true) {
+    let id;
+    const one = Array.isArray(url) ? url : [url];
+    const two = function() {
+      once && id && delete jsonp[id - 1];
+      if (redirect)
+        try {
+          this.src = redirect(this.src) || this.src;
+        } catch (e) {
+          debug.error("redirect of jsonphook", one, e);
+        }
+      if (modifyResponse) {
+        const obj = urlObj(this.src);
+        if (obj) {
+          const callback = obj.callback;
+          const call = window[callback];
+          const url2 = this.src;
+          if (call) {
+            window[callback] = function(v) {
+              try {
+                v = modifyResponse(v, url2, call) || v;
+              } catch (e) {
+                debug.error("modifyResponse of jsonphook", one, e);
+              }
+              return v !== true && call(v);
+            };
+          }
+        }
+      }
+    };
+    return id = jsonp.push([one, two]);
   }
 
   // src/content/comment.ts
@@ -96,6 +284,18 @@
           setTimeout(() => window.initComment(...arguments), 100);
         };
       }
+    });
+    jsonphook(["api.bilibili.com/x/v2/reply", "sort=2"], void 0, (res) => {
+      if (0 === res.code && res.data?.page) {
+        const page = res.page;
+        jsonphook("api.bilibili.com/x/v2/reply", void 0, (res2) => {
+          if (0 === res2.code && res2.data?.page) {
+            res2.data.page = page;
+          }
+          return res2;
+        }, false);
+      }
+      return res;
     });
   }
   function bbCommentModify() {
