@@ -10,7 +10,7 @@ let Feedback: any,
 /** 替换评论区 */
 export function loadComment() {
     // 评论组件捕获
-    Object.defineProperty(window, "bbComment", {
+    Reflect.defineProperty(window, "bbComment", {
         configurable: true,
         set: v => {
             if (!v.prototype._createNickNameDom) {
@@ -22,7 +22,7 @@ export function loadComment() {
             }
             Feedback = v;
             bbCommentModify();
-            Object.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
+            Reflect.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
         },
         get: () => {
             return Feedback ? Feedback : class {
@@ -42,7 +42,7 @@ export function loadComment() {
         }
     });
     // 新版评论组件捕获
-    Object.defineProperty(window, "initComment", {
+    Reflect.defineProperty(window, "initComment", {
         configurable: true,
         set: v => true,
         get: () => {
@@ -50,7 +50,7 @@ export function loadComment() {
                 function initComment(tar: string, init: Record<"oid" | "pageType" | "userStatus", any>) {
                     new Feedback(tar, init.oid, init.pageType, init.userStatus);
                 }
-                Object.defineProperty(window, "initComment", { configurable: true, value: initComment });
+                Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment });
                 // 出栈
                 return initComment;
             }

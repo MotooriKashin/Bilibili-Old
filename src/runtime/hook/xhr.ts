@@ -42,9 +42,9 @@ export function xhrhook(url: string | string[], modifyOpen?: (args: XMLHttpReque
                         (this.responseType === "" || this.responseType === "text") && (response.responseText = <string>this.responseText);
                         (this.responseType === "" || this.responseType === "document") && (response.responseXML = <Document>this.responseXML);
                         modifyResponse(response);
-                        Object.defineProperty(this, "response", { configurable: true, value: response.response });
-                        response.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
-                        response.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
+                        Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
+                        response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
+                        response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
                     }
                 } catch (e) { debug.error("modifyResponse of xhrhook", one, e) }
             })
@@ -74,18 +74,18 @@ export function xhrhookAsync(url: string | string[], condition?: (args: XMLHttpR
                 this.send = () => true; // 禁用XMLHttpRequest.send
                 (!args[2] || args[2] === true) && (this.timeout = 0); // 禁用超时
                 const et = setInterval(() => { this.dispatchEvent(new ProgressEvent("progress")); }, 50);
-                Object.defineProperty(this, "status", { configurable: true, value: 200 });
-                Object.defineProperty(this, "readyState", { configurable: true, value: 2 });
+                Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
+                Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
                 this.dispatchEvent(new ProgressEvent("readystatechange"));
                 modifyResponse ? modifyResponse(args, this.responseType).then(d => {
                     clearInterval(et);
                     if (d) {
-                        Object.defineProperty(this, "response", { configurable: true, value: d.response });
-                        d.responseType && Object.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
-                        d.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-                        d.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-                        !this.responseURL && Object.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-                        Object.defineProperty(this, "readyState", { configurable: true, value: 4 });
+                        Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+                        d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+                        d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+                        d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+                        !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+                        Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
                         this.dispatchEvent(new ProgressEvent("readystatechange"));
                         this.dispatchEvent(new ProgressEvent("load"));
                         this.dispatchEvent(new ProgressEvent("loadend"));
@@ -93,12 +93,12 @@ export function xhrhookAsync(url: string | string[], condition?: (args: XMLHttpR
                 }).catch(d => {
                     if ((<any>this).xhrhookTimes === 1) {
                         if (d && d.response) { // 抛出的返回值有效，作为默认值还给调用处
-                            Object.defineProperty(this, "response", { configurable: true, value: d.response });
-                            d.responseType && Object.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
-                            d.responseText && Object.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-                            d.responseXML && Object.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-                            !this.responseURL && Object.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-                            Object.defineProperty(this, "readyState", { configurable: true, value: 4 });
+                            Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+                            d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+                            d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+                            d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+                            !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+                            Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
                             this.dispatchEvent(new ProgressEvent("readystatechange"));
                             this.dispatchEvent(new ProgressEvent("load"));
                             this.dispatchEvent(new ProgressEvent("loadend"));

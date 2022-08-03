@@ -27,7 +27,7 @@ export class ButtonSwitch extends HTMLElement {
         const { value, callback } = obj;
         let initing = true;
         // 数据绑定
-        Object.defineProperty(obj, "value", {
+        Reflect.defineProperty(obj, "value", {
             set: v => {
                 if (this.value === v) return;
                 if (v) {

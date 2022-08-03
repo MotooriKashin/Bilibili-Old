@@ -29,7 +29,7 @@ class BiliOldDownload extends HTMLElement {
         root.appendChild(createElements(htmlVnode(html)));
         this._table = <HTMLDivElement>root.children[0];
         this.obj = obj;
-        Object.defineProperty(obj, "data", {
+        Reflect.defineProperty(obj, "data", {
             configurable: true,
             get: () => new Proxy(this._data, new ProxyHandler(() => this.$data())),
             set: (v) => {

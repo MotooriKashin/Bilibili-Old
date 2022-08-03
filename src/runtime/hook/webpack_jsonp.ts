@@ -7,7 +7,7 @@ const arr: Record<number, ((code: string) => typeof code)[]>[] = [];
 const param: [string, string, string][] = [];
 /** 备份已写入的分片数据，因为全局原生脚本可能启动比本脚本快，直接覆盖会出问题 */
 let webpackJsonp = (<any>window).webpackJsonp;
-Object.defineProperty(window, "webpackJsonp", {
+Reflect.defineProperty(window, "webpackJsonp", {
     set: v => hook = v,
     get: () => {
         if (hook) {

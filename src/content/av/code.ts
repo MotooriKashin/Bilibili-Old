@@ -62,7 +62,7 @@ export function avPage() {
     // 跳过充电鸣谢
     setting.automate.electric && jsonphookasync("api.bilibili.com/x/web-interface/elec/show", undefined, async () => { return { code: -404 } }, false);
     // 禁用__INITIAL_STATE__干扰
-    Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
+    Reflect.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
     // 加载原生脚本
     appendScripts(script).then(loadEvent);
     // 点赞

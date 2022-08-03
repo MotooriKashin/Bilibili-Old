@@ -92,7 +92,7 @@ class BilibiliOld extends HTMLElement {
                     });
                     // 先赋值再修改才能枚举到哦~
                     (<any>setting)[d.key] = (<any>d).value;
-                    Object.defineProperty(setting, d.key, {
+                    Reflect.defineProperty(setting, d.key, {
                         set: v => {
                             tag = true;
                             (<any>d).value = v;
@@ -118,7 +118,7 @@ class BilibiliOld extends HTMLElement {
                             }
                         });
                         bak[t.key] = (<any>a)[i].value;
-                        Object.defineProperty(bak, t.key, {
+                        Reflect.defineProperty(bak, t.key, {
                             get: () => (<any>a)[i].value,
                             set: v => {
                                 tag = true;

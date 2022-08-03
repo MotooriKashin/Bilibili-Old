@@ -1,5 +1,5 @@
 if (typeof Element.prototype.replaceChildren === 'undefined') {
-    Object.defineProperty(Element.prototype, 'replaceChildren', {
+    Reflect.defineProperty(Element.prototype, 'replaceChildren', {
         configurable: true,
         enumerable: false,
         value: function (this: Element) {

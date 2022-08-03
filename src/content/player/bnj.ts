@@ -18,7 +18,7 @@ export function bnj() {
         root.appendChild(iframe);
     });
     // 暂存播放器启动命令
-    Object.defineProperty(window, "EmbedPlayer", {
+    Reflect.defineProperty(window, "EmbedPlayer", {
         configurable: true,
         set: v => {
             if (!(<any>window).bnj) {
@@ -28,7 +28,7 @@ export function bnj() {
         },
         get: () => {
             if ((<any>window).bnj) {
-                Object.defineProperty(window, "EmbedPlayer", { configurable: true, value: arr[0] });
+                Reflect.defineProperty(window, "EmbedPlayer", { configurable: true, value: arr[0] });
                 // 出栈
                 return arr[0];
             } else {

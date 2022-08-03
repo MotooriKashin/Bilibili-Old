@@ -12,7 +12,7 @@ async function header(menu = false) {
     // 备份 onLoginInfoLoaded 回调 一些功能依赖这个回调，但`header.js`会直接覆盖已注册的回调
     if ((<any>window).loginInfoCallbacks && (<any>window).onLoginInfoLoaded) {
         let fun = (<any>window).onLoginInfoLoaded;
-        Object.defineProperty(window, "onLoginInfoLoaded", {
+        Reflect.defineProperty(window, "onLoginInfoLoaded", {
             configurable: true,
             get: () => fun,
             set: t => {

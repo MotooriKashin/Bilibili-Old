@@ -22,7 +22,7 @@ export class PushButton extends HTMLElement {
         root.appendChild(createElements(htmlVnode(pushButton)));
         const node = <HTMLDivElement>root.children[0];
         // 数据绑定
-        Object.defineProperty(obj, "button", {
+        Reflect.defineProperty(obj, "button", {
             set: v => {
                 if (this.button === v) return;
                 node.textContent = v;

@@ -25,7 +25,7 @@ export function rankingPage() {
     // 三日接口以外过期
     jsonphook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], d => d.replace(/day=\d+/, "day=3"), undefined, false);
     // 禁用__INITIAL_STATE__干扰
-    Object.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
+    Reflect.defineProperty(window, "__INITIAL_STATE__", { configurable: true, value: undefined });
     // 启动原生脚本
     appendScripts(script).then(loadEvent);
     // 高分辨率屏修补

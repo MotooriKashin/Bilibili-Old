@@ -615,7 +615,7 @@ export class GrayManager extends EmbedPlayer {
  * @param asWide 是否启用宽屏模式
  */
 export function loadVideoScript(bofqi?: string, asWide = false) {
-    Object.defineProperty(window, "EmbedPlayer", {
+    Reflect.defineProperty(window, "EmbedPlayer", {
         configurable: true,
         get: () => (player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) => {
             try {
