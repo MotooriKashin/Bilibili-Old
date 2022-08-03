@@ -11,7 +11,6 @@ import { upList } from "./up_list";
 import { API } from "../../runtime/variable/variable";
 import { urlObj } from "../../runtime/format/url";
 import { loadScriptEs } from "../../runtime/element/create_scripts";
-import { variableCleaner } from "../../runtime/variable/clean";
 import { isUserScript } from "../../tampermonkey/check";
 import { bangumiPage } from "../bangumi/code";
 
