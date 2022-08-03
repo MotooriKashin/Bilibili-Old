@@ -66,12 +66,13 @@ export function loadComment() {
         }
     });
     // 修复按时间排序评论翻页数
-    jsonphook(["api.bilibili.com/x/v2/reply", "sort=2"], undefined, res => {
+    jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], undefined, res => {
         if (0 === res.code && res.data?.page) {
             const page = res.page;
-            jsonphook("api.bilibili.com/x/v2/reply", undefined, res => {
+            jsonphook("api.bilibili.com/x/v2/reply?", undefined, res => {
                 if (0 === res.code && res.data?.page) {
-                    res.data.page = page;
+                    page.count && (res.data.page.count = page.count);
+                    page.acount && (res.data.page.acount = page.acount);
                 }
                 return res;
             }, false);

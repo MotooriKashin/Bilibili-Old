@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.1
+// @version      2.0.2
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -285,12 +285,13 @@
         };
       }
     });
-    jsonphook(["api.bilibili.com/x/v2/reply", "sort=2"], void 0, (res) => {
+    jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
       if (0 === res.code && res.data?.page) {
         const page = res.page;
-        jsonphook("api.bilibili.com/x/v2/reply", void 0, (res2) => {
+        jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
           if (0 === res2.code && res2.data?.page) {
-            res2.data.page = page;
+            page.count && (res2.data.page.count = page.count);
+            page.acount && (res2.data.page.acount = page.acount);
           }
           return res2;
         }, false);

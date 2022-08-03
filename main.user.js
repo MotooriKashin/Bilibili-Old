@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.3
+// @version      9.0.4
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -14165,12 +14165,13 @@ const modules =`
         };
       }
     });
-    jsonphook(["api.bilibili.com/x/v2/reply", "sort=2"], void 0, (res) => {
+    jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
       if (0 === res.code && res.data?.page) {
         const page = res.page;
-        jsonphook("api.bilibili.com/x/v2/reply", void 0, (res2) => {
+        jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
           if (0 === res2.code && res2.data?.page) {
-            res2.data.page = page;
+            page.count && (res2.data.page.count = page.count);
+            page.acount && (res2.data.page.acount = page.acount);
           }
           return res2;
         }, false);
