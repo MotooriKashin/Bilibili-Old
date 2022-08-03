@@ -1,8 +1,7 @@
-import { debug } from "../../runtime/debug";
-import { doWhile } from "../../runtime/do_while";
 import { toast } from "../../runtime/toast/toast";
 import { replaceUrl } from "../../runtime/url_clean";
 import { API } from "../../runtime/variable/variable";
+import { isUserScript } from "../../tampermonkey/check";
 import { globalVector } from "../global";
 
 /** 检查是否禁用恢复旧版页面 */
@@ -23,4 +22,14 @@ export function keepNewCheck() {
     API.rewrite = true;
     // 防止babelPolyfill报错跳出
     Reflect.defineProperty(window, "_babelPolyfill", { get: () => undefined, set: () => true });
+    if (isUserScript) {
+        // 爆破新版播放器核心脚本
+        (<any>window).nanoWidgetsJsonp = true;
+        Reflect.defineProperty(window, "nano", {
+            get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true, configurable: true
+        });
+        Reflect.deleteProperty(window, "__INITIAL_STATE__");
+        Reflect.deleteProperty(window, "player");
+        Reflect.deleteProperty(window, "__playinfo__");
+    }
 }

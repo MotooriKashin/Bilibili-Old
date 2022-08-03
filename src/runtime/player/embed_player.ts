@@ -619,7 +619,7 @@ export function loadVideoScript(bofqi?: string, asWide = false) {
         configurable: true,
         get: () => (player: string, swf: string, playerParams: string, playerType?: string, upgrade?: boolean, callbackFn?: () => void) => {
             try {
-                delete (<any>window).__playinfo__; // 网页提供的源可能无法使用？
+                Reflect.deleteProperty(window, "__playinfo__"); // 网页提供的源可能无法使用？
                 asWide && (EmbedPlayer.asWide = true);
                 bofqi && ((<any>document.querySelector(bofqi)).id = "bofqi");
                 (<any>window).GrayManager = new GrayManager(player, swf, playerParams, playerType, upgrade, callbackFn);

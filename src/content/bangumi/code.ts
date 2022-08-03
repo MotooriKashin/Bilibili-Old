@@ -103,6 +103,8 @@ export function bangumiPage() {
         // epid回调经常无法触发导致不加载评论区，手动加载之
         // doWhile(() => (<any>document).querySelector("#app")?.__vue__, d => d.loadComment());
     });
+    // 精确爆破新版番剧脚本
+    (<any>window).__Iris__ = true;
     // 加载原生脚本
     appendScripts(script).then(loadEvent);
     // 顶栏分区修正
