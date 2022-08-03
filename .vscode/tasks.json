@@ -21,10 +21,7 @@
 			"group": "test",
 			"problemMatcher": [],
 			"label": "npm: test",
-			"detail": "编译：开发模式",
-			"dependsOn": [
-				"npm: tsc"
-			]
+			"detail": "编译：开发模式"
 		},
 		{
 			"type": "npm",
