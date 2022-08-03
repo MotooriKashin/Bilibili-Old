@@ -230,7 +230,7 @@
   var loading = false;
   var load = false;
   function loadComment() {
-    Object.defineProperty(window, "bbComment", {
+    Reflect.defineProperty(window, "bbComment", {
       configurable: true,
       set: (v) => {
         if (!v.prototype._createNickNameDom) {
@@ -242,7 +242,7 @@
         }
         Feedback = v;
         bbCommentModify();
-        Object.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
+        Reflect.defineProperty(window, "bbComment", { configurable: true, value: Feedback });
       },
       get: () => {
         return Feedback ? Feedback : class {
@@ -262,7 +262,7 @@
         };
       }
     });
-    Object.defineProperty(window, "initComment", {
+    Reflect.defineProperty(window, "initComment", {
       configurable: true,
       set: (v) => true,
       get: () => {
@@ -271,7 +271,7 @@
             new Feedback(tar, init.oid, init.pageType, init.userStatus);
           };
           var initComment = initComment2;
-          Object.defineProperty(window, "initComment", { configurable: true, value: initComment2 });
+          Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment2 });
           return initComment2;
         }
         return function() {
