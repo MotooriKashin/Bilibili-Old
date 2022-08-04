@@ -6,6 +6,7 @@ import { setting } from "../runtime/setting";
 import { registerMenu, registerSetting, showSetting } from "./setting";
 import html from "./ui.html";
 import gear from "../images/svg/gear.svg";
+import stethoscope from "../images/svg/stethoscope.svg";
 import { downloadDefault, pushDownload } from "../runtime/download/download";
 import { allDanmaku } from "../runtime/danmaku/all_danmaku";
 import { danmaku } from "../runtime/danmaku/danmaku";
@@ -15,6 +16,16 @@ import { urlParam } from "../runtime/url_param";
 import { LocalMedia } from "../runtime/danmaku/local_danmaku";
 
 settingDefault.push(
+    {
+        key: "windowStop",
+        menu: "common",
+        label: "重构加固",
+        svg: stethoscope,
+        type: "switch",
+        value: false,
+        sub: "中止DOM解析",
+        float: `重构旧版页面前使用 window.stop 方法停止原有页面解析渲染，减少重构后页面被破坏的可能性。<br>※ 此选项可能导致网站图标加载失败，其他扩展及脚本兼容不兼容等问题，<strong>请在不得不启用时才启用！</strong>`
+    },
     {
         key: "settingEntryType",
         menu: "common",

@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3ae20f30de5ad37882b474aa886ea06f9641886b/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js file:///E:/Github/Bilibili-Old/src/bilibili/bilibiliPlayer.js
 // ==/UserScript==
 
 const modules =`
@@ -5060,7 +5060,8 @@ const modules =`
     },
     development: false,
     settingEntryType: false,
-    downloadBtn: true
+    downloadBtn: true,
+    windowStop: false
   };
 
   // src/runtime/lib/proxy_handler.ts
@@ -16302,6 +16303,7 @@ const modules =`
     API.rewrite = true;
     Reflect.defineProperty(window, "_babelPolyfill", { get: () => void 0, set: () => true });
     if (isUserScript) {
+      setting.windowStop && window.stop();
       window.nanoWidgetsJsonp = true;
       Reflect.defineProperty(window, "nano", {
         get: () => new Proxy(() => true, { get: (t, p, r) => r }),
@@ -26449,6 +26451,16 @@ const modules =`
 
   // src/tampermonkey/ui.ts
   settingDefault.push(
+    {
+      key: "windowStop",
+      menu: "common",
+      label: "重构加固",
+      svg: stethoscope_default,
+      type: "switch",
+      value: false,
+      sub: "中止DOM解析",
+      float: \`重构旧版页面前使用 window.stop 方法停止原有页面解析渲染，减少重构后页面被破坏的可能性。<br>※ 此选项可能导致网站图标加载失败，其他扩展及脚本兼容不兼容等问题，<strong>请在实在没有办法的情况下才启用！</strong>\`
+    },
     {
       key: "settingEntryType",
       menu: "common",

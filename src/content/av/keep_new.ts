@@ -1,3 +1,4 @@
+import { setting } from "../../runtime/setting";
 import { toast } from "../../runtime/toast/toast";
 import { replaceUrl } from "../../runtime/url_clean";
 import { API } from "../../runtime/variable/variable";
@@ -23,6 +24,7 @@ export function keepNewCheck() {
     // 防止babelPolyfill报错跳出
     Reflect.defineProperty(window, "_babelPolyfill", { get: () => undefined, set: () => true });
     if (isUserScript) {
+        setting.windowStop && window.stop();
         // 爆破新版播放器核心脚本
         (<any>window).nanoWidgetsJsonp = true;
         Reflect.defineProperty(window, "nano", {

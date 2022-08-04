@@ -98,5 +98,6 @@
     },
     "development": false,
     "settingEntryType": false,
-    "downloadBtn": true
+    "downloadBtn": true,
+    "windowStop": false
 }
