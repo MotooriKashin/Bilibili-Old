@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.4
+// @version      9.0.5
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js file:///E:/Github/Bilibili-Old/src/bilibili/bilibiliPlayer.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3ae20f30de5ad37882b474aa886ea06f9641886b/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -26459,7 +26459,7 @@ const modules =`
       type: "switch",
       value: false,
       sub: "中止DOM解析",
-      float: \`重构旧版页面前使用 window.stop 方法停止原有页面解析渲染，减少重构后页面被破坏的可能性。<br>※ 此选项可能导致网站图标加载失败，其他扩展及脚本兼容不兼容等问题，<strong>请在实在没有办法的情况下才启用！</strong>\`
+      float: \`重构旧版页面前使用 window.stop 方法停止原有页面解析渲染，减少重构后页面被破坏的可能性。<br>※ 此选项可能导致网站图标加载失败，其他扩展及脚本兼容不兼容等问题，<strong>请在不得不启用时才启用！</strong>\`
     },
     {
       key: "settingEntryType",
