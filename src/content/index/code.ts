@@ -4,7 +4,7 @@ import { addElement } from "../../runtime/element/add_element";
 import { createElements } from "../../runtime/element/create_element";
 import { appendScripts } from "../../runtime/element/create_scripts";
 import { htmlVnode, Vdom } from "../../runtime/element/html_vnode";
-import { jsonphook, jsonphookasync } from "../../runtime/hook/node";
+import { jsonphook, jsonphookasync } from "../../runtime/hook/jsonp";
 import { abv } from "../../runtime/lib/abv";
 import { urlObj } from "../../runtime/format/url";
 import { setting } from "../../runtime/setting";

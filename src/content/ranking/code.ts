@@ -4,7 +4,7 @@ import { addCss } from "../../runtime/element/add_element";
 import { createElements } from "../../runtime/element/create_element";
 import { appendScripts } from "../../runtime/element/create_scripts";
 import { htmlVnode } from "../../runtime/element/html_vnode";
-import { jsonphook } from "../../runtime/hook/node";
+import { jsonphook } from "../../runtime/hook/jsonp";
 import { replaceUrl } from "../../runtime/url_clean";
 import { primaryMenu, banner } from "../banner";
 import { globalVector } from "../global";

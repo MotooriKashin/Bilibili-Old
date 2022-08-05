@@ -1,4 +1,4 @@
-import { Base64 } from "../lib/base64";
+import { Base64 } from "../lib/base_64";
 import { objUrl } from "../format/url";
 import { setting } from "../setting";
 import { xhr } from "../xhr";

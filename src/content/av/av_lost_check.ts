@@ -1,6 +1,6 @@
 import { debug } from "../../runtime/debug";
 import { xhrhook } from "../../runtime/hook/xhr";
-import { jsonphook } from "../../runtime/hook/node";
+import { jsonphook } from "../../runtime/hook/jsonp";
 import { setting } from "../../runtime/setting";
 import { sessionStorage } from "../../runtime/storage";
 import { toast } from "../../runtime/toast/toast";
