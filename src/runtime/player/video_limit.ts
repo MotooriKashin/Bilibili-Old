@@ -104,7 +104,9 @@ export function videoLimit() {
                     response = { "code": -404, "message": e, "data": null };
                 }
             } else if (API.limit) { // 处理区域限制
-                isUserScript && setting.uposReplace.gat !== "不替换" && uposWithGM();
+                if (setting.uposReplace.gat !== "不替换") {
+                    isUserScript ? uposWithGM() : window.postMessage({ $type: "th" });
+                }
                 obj.module = ((<any>window).__INITIAL_STATE__?.upInfo?.mid == 1988098633 || (<any>window).__INITIAL_STATE__?.upInfo?.mid == 2042149112) ? "movie" : "bangumi"; // 支持影视区投稿
                 obj.fnval && (obj.fnval = String(fnval)); // 提升dash标记清晰度
                 try {
