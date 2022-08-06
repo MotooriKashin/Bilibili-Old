@@ -16252,7 +16252,7 @@ const modules =`
           }
         }
       });
-      return (base + url.search + url.hash).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
+      return url.toJSON().replace(url.origin + url.pathname, base).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
     } else
       return str;
   }
