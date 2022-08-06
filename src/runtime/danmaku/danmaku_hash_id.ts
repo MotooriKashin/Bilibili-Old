@@ -9,7 +9,7 @@ import css from "./danmaku_hash_id.css";
 
 /** 反查弹幕发送者 */
 export function danmakuHashId() {
-    addCss(css);
+    addCss(css, "danmaku-hash-id");
     class DanmakuHashId {
         static count: number = 0; // 正在查询弹幕数
         static catch: { [name: string]: any } = {}; // 已查询弹幕缓存

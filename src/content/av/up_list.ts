@@ -16,6 +16,6 @@ export function upList(staff: Record<string, any>[]) {
             return s;
         }, fl) + `</div>`;
         node.innerHTML = fl;
-        addCss(css);
+        addCss(css, "up-list");
     });
 }

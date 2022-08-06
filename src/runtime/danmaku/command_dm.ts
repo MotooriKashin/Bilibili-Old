@@ -9,7 +9,6 @@ import { API } from "../variable/variable";
 import { objUrl } from "../format/url";
 import css from "../danmaku/command_dm.css";
 
-addCss(css);
 let player: any, widgetContainer: any;
 let playing = false;
 let visible = true;
@@ -641,6 +640,7 @@ class Link {
  */
 export async function loadCommandDm(cdm: any[], aid: string | number, cid: string | number) {
     try {
+        addCss(css, "command-dm");
         if (aid != aid || cid != cid || (widgetContainer !== undefined && (<HTMLDivElement>document.getElementById("bilibiliPlayer")).contains(widgetContainer))) {
             // 正在“载入其他视频弹幕”，不必处理互动弹幕
             return;

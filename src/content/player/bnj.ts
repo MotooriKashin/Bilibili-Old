@@ -4,7 +4,7 @@ import css from "../../content/player/bnj.css";
 
 /** 拜年祭页面 */
 export function bnj() {
-    addCss(css);
+    addCss(css, "bnj");
     (<any>window).bnj = false; // 是否载入
     const arr: any[] = []; // 接口暂存
     // 以嵌入式播放器替换原播放器
