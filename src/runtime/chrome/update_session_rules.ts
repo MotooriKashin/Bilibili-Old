@@ -1,5 +1,3 @@
-/** 规则id（自增以避免重复） */
-let i = 0;
 /**
  * 【后台脚本】更新 declarativeNetRequest 会话规则表  
  * 可不传递`rules`以清空该标签所有已运用的规则
@@ -10,8 +8,7 @@ export function updateSessionRules(tabId: number, rules?: chrome.declarativeNetR
     if (rules) {
         // 有规则添加规则
         rules.forEach(d => {
-            // 为每条规则打上唯一id
-            d.id = Number(`${tabId}${++i}${tabId}`);
+            // 为每条规则限定标签ID
             d.condition.tabIds = [tabId];
         });
         chrome.declarativeNetRequest.updateSessionRules({ addRules: rules });
