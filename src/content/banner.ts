@@ -5,7 +5,7 @@ import { addCss } from "../runtime/element/add_element";
 import { createElements } from "../runtime/element/create_element";
 import { htmlVnode } from "../runtime/element/html_vnode";
 import { subArray } from "../runtime/format/sub_array";
-import { jsonphookasync } from "../runtime/hook/jsonp";
+import { jsonphookasync } from "../runtime/hook/node";
 import { setting } from "../runtime/setting";
 import bannerStyle from "./animated_banner.html";
 

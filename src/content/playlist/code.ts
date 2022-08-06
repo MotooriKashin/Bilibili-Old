@@ -11,7 +11,7 @@ import { path } from "../../runtime/variable/path";
 import { debug } from "../../runtime/debug";
 import { doWhile } from "../../runtime/do_while";
 import { appendScripts } from "../../runtime/element/create_scripts";
-import { jsonphookasync } from "../../runtime/hook/jsonp";
+import { jsonphookasync } from "../../runtime/hook/node";
 import { videoFloat } from "../../runtime/player/video_float";
 import { setting } from "../../runtime/setting";
 import { switchVideo } from "../../runtime/switch_video";

@@ -1,6 +1,6 @@
 import { createElements } from "../../runtime/element/create_element";
 import { htmlVnode } from "../../runtime/element/html_vnode";
-import { jsonphookasync } from "../../runtime/hook/jsonp";
+import { jsonphookasync } from "../../runtime/hook/node";
 import { webpackhook } from "../../runtime/hook/webpack_jsonp";
 import { loadVideoScript } from "../../runtime/player/embed_player";
 import { setting } from "../../runtime/setting";

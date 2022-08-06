@@ -1,5 +1,5 @@
 import { loadScript } from "../runtime/element/add_element";
-import { jsonphook } from "../runtime/hook/jsonp";
+import { jsonphook } from "../runtime/hook/node";
 
 /** bbComment栈 */
 let Feedback: any,
