@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.5
+// @version      9.0.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5556,7 +5556,7 @@ const modules =`
 
   // src/runtime/danmaku/danmaku_hash_id.ts
   function danmakuHashId() {
-    addCss(danmaku_hash_id_default);
+    addCss(danmaku_hash_id_default, "danmaku-hash-id");
     class DanmakuHashId {
       static count = 0;
       static catch = {};
@@ -6829,7 +6829,6 @@ const modules =`
   var command_dm_default = '.commandDm-popup {\\r\\n    border-radius: 1rem;\\r\\n    background-color: #f5f5f5;\\r\\n    position: absolute;\\r\\n    cursor: default;\\r\\n    opacity: 0;\\r\\n    transition: opacity 0.2s;\\r\\n    padding: 0.8rem 1rem;\\r\\n}\\r\\n\\r\\n.commandDm-popup.on {\\r\\n    opacity: 1;\\r\\n}\\r\\n\\r\\n.vote-dialog {\\r\\n    overflow: hidden;\\r\\n    display: flex;\\r\\n    flex-direction: column;\\r\\n}\\r\\n\\r\\n.vote-panel {\\r\\n    display: flex;\\r\\n    justify-content: space-between;\\r\\n    width: 100%;\\r\\n}\\r\\n\\r\\n.vote-title,\\r\\n.grade-title {\\r\\n    font-weight: bolder;\\r\\n    margin-bottom: 0.5rem;\\r\\n}\\r\\n\\r\\n.vote-option {\\r\\n    display: flex;\\r\\n    flex-direction: column;\\r\\n    width: 100%;\\r\\n}\\r\\n\\r\\n.vote-button {\\r\\n    text-align: center;\\r\\n    min-width: 85px;\\r\\n    display: inline-block;\\r\\n    padding: 0.3rem 2rem;\\r\\n    border: 1px solid #00a1d6;\\r\\n    border-radius: 5px;\\r\\n    margin: 0.2rem 0;\\r\\n    background-color: #fff;\\r\\n    cursor: pointer;\\r\\n}\\r\\n\\r\\n.vote-button:hover {\\r\\n    background-color: #1baada;\\r\\n    color: #f5f5f5;\\r\\n    transition: all 0.15s ease-out;\\r\\n}\\r\\n\\r\\n.vote-button::before {\\r\\n    position: absolute;\\r\\n    padding: 0 1.8rem;\\r\\n    left: 0;\\r\\n    content: attr(idx);\\r\\n}\\r\\n\\r\\n.vote-progress-bg {\\r\\n    border-radius: 5px;\\r\\n    min-width: 85px;\\r\\n    margin: 0.2rem 0;\\r\\n    border: 1px solid #1a1a1a6b;\\r\\n    background-color: white;\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.vote-progress {\\r\\n    transition: width 0.3s, background-color 0.2s;\\r\\n    animation: opacity-animation 0.5s;\\r\\n    overflow: hidden;\\r\\n    display: inline-block;\\r\\n    border-radius: 4px 0 0 4px;\\r\\n    background-color: #d3d3d3;\\r\\n    text-align: left;\\r\\n    overflow: visible;\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.vote-progress-blue {\\r\\n    background-color: #9fdef3;\\r\\n}\\r\\n\\r\\n.vote-progress-desc {\\r\\n    display: inline-block;\\r\\n    margin: 0.3rem 0.8rem;\\r\\n}\\r\\n\\r\\n@keyframes opacity-animation {\\r\\n    from {\\r\\n        opacity: 0;\\r\\n    }\\r\\n\\r\\n    to {\\r\\n        opacity: 1;\\r\\n    }\\r\\n}\\r\\n\\r\\n.vote-count {\\r\\n    display: inline-block;\\r\\n    position: absolute;\\r\\n    right: 0.8rem;\\r\\n    top: 0.3rem;\\r\\n}\\r\\n\\r\\n.vote-count::after {\\r\\n    content: "票";\\r\\n}\\r\\n\\r\\n.bilibili-player-video-popup {\\r\\n    z-index: 100;\\r\\n    position: absolute;\\r\\n    top: 0;\\r\\n    left: 0;\\r\\n    width: 100%;\\r\\n    height: 100%;\\r\\n    pointer-events: none;\\r\\n}\\r\\n\\r\\n.bilibili-player-video-popup>* {\\r\\n    pointer-events: all;\\r\\n}\\r\\n\\r\\n.link-button {\\r\\n    animation: opacity-animation 0.2s;\\r\\n    position: absolute;\\r\\n    left: 40%;\\r\\n    top: 20%;\\r\\n    background-color: #f5f5f5;\\r\\n    padding: 0.4rem 1rem;\\r\\n    border-radius: 0.6rem;\\r\\n    font-size: large;\\r\\n    box-shadow: #888888c7 0px 0px 6px;\\r\\n}\\r\\n\\r\\n.link-button:hover {\\r\\n    color: #00a1d6;\\r\\n    cursor: pointer;\\r\\n}\\r\\n\\r\\n.link-button>* {\\r\\n    vertical-align: middle;\\r\\n}\\r\\n\\r\\n.link-button>img {\\r\\n    transform: scale(0.7) translateY(-1px);\\r\\n}\\r\\n\\r\\n.danmaku-up-icon::before {\\r\\n    content: "UP主";\\r\\n    background-color: #00a1d6;\\r\\n    border-radius: 5px;\\r\\n    font-size: 0.8em;\\r\\n    padding: 0.1em;\\r\\n    transform: translateY(-0.1em);\\r\\n    display: inline-block;\\r\\n    box-shadow: #888888c7 0px 0px 6px;\\r\\n}\\r\\n\\r\\n.grade-score-area>div {\\r\\n    display: inline-block;\\r\\n    position: relative;\\r\\n    width: 41px;\\r\\n    transition: width 0.3s;\\r\\n}\\r\\n\\r\\n.grade-score-area.pointer {\\r\\n    cursor: pointer;\\r\\n}\\r\\n\\r\\n.grade-score-area>div:last-child {\\r\\n    width: 20px;\\r\\n}\\r\\n\\r\\n.grade-score-area .score-button {\\r\\n    filter: grayscale(1);\\r\\n}\\r\\n\\r\\n.grade-score-area .highlight .score-button {\\r\\n    filter: none;\\r\\n}\\r\\n\\r\\n.grade-score-area .bg {\\r\\n    position: absolute;\\r\\n    left: 0;\\r\\n    filter: blur(9px);\\r\\n    visibility: hidden;\\r\\n}\\r\\n\\r\\n.grade-score-area .highlight .bg {\\r\\n    visibility: visible;\\r\\n}\\r\\n\\r\\n.grade-score-info {\\r\\n    position: absolute;\\r\\n    right: 1rem;\\r\\n    bottom: 0.6rem;\\r\\n    opacity: 0;\\r\\n}\\r\\n\\r\\n@keyframes grade-score-showup {\\r\\n    0% {\\r\\n        opacity: 0;\\r\\n        transform: translateY(5px);\\r\\n    }\\r\\n\\r\\n    100% {\\r\\n        opacity: 1;\\r\\n        transform: translateY(0);\\r\\n    }\\r\\n}\\r\\n\\r\\n@keyframes grade-score-hit {\\r\\n    0% {\\r\\n        filter: brightness(1);\\r\\n    }\\r\\n\\r\\n    30% {\\r\\n        filter: brightness(1.5);\\r\\n    }\\r\\n\\r\\n    100% {\\r\\n        filter: brightness(1);\\r\\n    }\\r\\n}';
 
   // src/runtime/danmaku/command_dm.ts
-  addCss(command_dm_default);
   var player;
   var widgetContainer;
   var playing = false;
@@ -7383,6 +7382,7 @@ const modules =`
   };
   async function loadCommandDm(cdm, aid, cid) {
     try {
+      addCss(command_dm_default, "command-dm");
       if (aid != aid || cid != cid || widgetContainer !== void 0 && document.getElementById("bilibiliPlayer").contains(widgetContainer)) {
         return;
       }
@@ -14169,7 +14169,7 @@ const modules =`
     jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
       if (0 === res.code && res.data?.page) {
         const page = res.page;
-        jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
+        page && jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
           if (0 === res2.code && res2.data?.page) {
             page.count && (res2.data.page.count = page.count);
             page.acount && (res2.data.page.acount = page.acount);
@@ -14774,7 +14774,7 @@ const modules =`
         return s;
       }, fl) + \`</div>\`;
       node4.innerHTML = fl;
-      addCss(up_list_default);
+      addCss(up_list_default, "up-list");
     });
   }
 
@@ -15773,7 +15773,7 @@ const modules =`
 
   // src/content/message/message.ts
   function messagePage() {
-    addCss(message_default);
+    addCss(message_default, "message");
   }
 
   // src/content/player/bnj.css
@@ -15781,7 +15781,7 @@ const modules =`
 
   // src/content/player/bnj.ts
   function bnj() {
-    addCss(bnj_default);
+    addCss(bnj_default, "bnj");
     window.bnj = false;
     const arr2 = [];
     doWhile(() => window.__INITIAL_STATE__, () => {
