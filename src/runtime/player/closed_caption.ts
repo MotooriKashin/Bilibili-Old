@@ -132,6 +132,7 @@ class ClosedCaption {
             this.setCaption(caption);
             this.text.innerHTML = caption.lan_doc;
             this.element.language.children[2].disabled = false;
+            GM.setValue("subtitlePrefer", JSON.parse(JSON.stringify(this.subtitlePrefer = caption.lan)));
         }
         else {
             this.isON = false;
@@ -139,6 +140,7 @@ class ClosedCaption {
             this.setCaption();
             this.text.innerHTML = "关闭";
             this.element.language.children[2].disabled = true;
+            GM.setValue("subtitlePrefer", JSON.parse(JSON.stringify(this.subtitlePrefer = "关闭")));
         }
     }
     /** 字幕选择 */
@@ -164,16 +166,15 @@ class ClosedCaption {
         }
         list.children[0].onclick = () => {
             this.text.innerHTML = "关闭";
-            this.setCaption();
+            this.iconSwitch();
         }
-        this.text.innerHTML = this.caption.lan_doc;
+        this.text.innerHTML = this.caption ? this.caption.lan_doc : "关闭";
         this.captions = this.captions.reverse();
         this.captions.forEach((d: any) => {
             let temp = addElement("div", { class: "bpui-selectmenu-list-row", "data-value": d.lan }, list, d.lan_doc, true);
             temp.onclick = () => {
                 this.text.innerHTML = d.lan_doc;
                 this.iconSwitch(d);
-                GM.setValue("subtitlePrefer", JSON.parse(JSON.stringify(this.subtitlePrefer = d.lan)));
             }
         })
     }
@@ -268,10 +269,14 @@ class ClosedCaption {
             this.data = [];
             this.subtitle = this.captions = data || [];
             this.convertion(this.captions);
-            let i = this.captions.findIndex(d => d.lan == this.subtitlePrefer);
-            i = i < 0 ? 0 : i;
-            if (this.captions[i]) await this.setCaption(this.captions[i]);
-            if (this.caption) {
+            if (this.subtitlePrefer === "关闭") {
+                this.setCaption();
+            } else {
+                let i = this.captions.findIndex(d => d.lan == this.subtitlePrefer);
+                i = i < 0 ? 0 : i;
+                if (this.captions[i]) await this.setCaption(this.captions[i]);
+            }
+            if (this.captions.length) {
                 // 只在有字幕时添加面板
                 (<any>window).player.addEventListener('video_resize', (event: any) => {
                     (<any>this.changeResize)(event);
@@ -332,7 +337,10 @@ class ClosedCaption {
         if (caption && caption.subtitle_url) {
             this.caption = caption; // 记忆当前字幕
             videoFloat("载入字幕：", this.caption.lan_doc, () => { });
-        } else videoFloat("关闭字幕");
+        } else {
+
+            videoFloat("关闭字幕");
+        }
     }
 }
 /** 为旧版播放器追加CC字幕功能 */
