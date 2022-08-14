@@ -269,9 +269,7 @@ class ClosedCaption {
             this.data = [];
             this.subtitle = this.captions = data || [];
             this.convertion(this.captions);
-            if (this.subtitlePrefer === "关闭") {
-                this.setCaption();
-            } else {
+            if (this.subtitlePrefer !== "关闭") {
                 let i = this.captions.findIndex(d => d.lan == this.subtitlePrefer);
                 i = i < 0 ? 0 : i;
                 if (this.captions[i]) await this.setCaption(this.captions[i]);
