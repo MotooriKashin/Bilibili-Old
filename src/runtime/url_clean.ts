@@ -46,7 +46,6 @@ export function urlClean(str: string) {
         if (params.has("bvid")) {
             // 旧版页面一般不支持bvid，转化为aid
             params.set("aid", <string>abv(<string>params.get("bvid")));
-            params.delete("bvid");
         }
         if (params.has("aid") && !Number(params.get("aid"))) {
             // B站偶有发病出现名为aid实为bvid的情况
@@ -64,7 +63,7 @@ export function urlClean(str: string) {
                 }
             }
         });
-        return url.toJSON().replace(url.origin + url.pathname, base).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s));
+        return url.toJSON().replace(url.origin + url.pathname, base.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s)));
     }
     else return str;
 }
