@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.7
+// @version      9.0.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -15862,14 +15862,18 @@ const modules =`
       menu2 = true;
     }
     if (t.parentElement?.id === "app") {
-      addElement("div", { class: \`z-top-container\${menu2 ? " has-menu" : ""}\` }, void 0, void 0, true);
       t.setAttribute("hidden", "hidden");
+      if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container"))
+        return;
+      addElement("div", { class: \`z-top-container\${menu2 ? " has-menu" : ""}\` }, void 0, void 0, true);
     } else {
+      if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container"))
+        return;
       t.setAttribute("class", \`z-top-container\${menu2 ? " has-menu" : ""}\`);
       t.removeAttribute("id");
     }
-    header(menu2);
     styleClear();
+    header(menu2);
   }
   function section() {
     addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;}");
@@ -16241,7 +16245,6 @@ const modules =`
       const params = url.searchParams;
       if (params.has("bvid")) {
         params.set("aid", abv(params.get("bvid")));
-        params.delete("bvid");
       }
       if (params.has("aid") && !Number(params.get("aid"))) {
         params.set("aid", abv(params.get("aid")));
@@ -16256,7 +16259,7 @@ const modules =`
           }
         }
       });
-      return url.toJSON().replace(url.origin + url.pathname, base).replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
+      return url.toJSON().replace(url.origin + url.pathname, base.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s)));
     } else
       return str;
   }
@@ -16392,6 +16395,8 @@ const modules =`
       if (window.__INITIAL_STATE__.special) {
         addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
       }
+      if (document.compatMode === "BackCompat")
+        addCss(".header-info > .count-wrapper {height: 18px !important;}");
     });
     window.__Iris__ = true;
     appendScripts(script_default2).then(loadEvent);
