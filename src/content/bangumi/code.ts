@@ -99,9 +99,8 @@ export function bangumiPage() {
             // 带海报的bangumi隐藏顶栏banner和wrapper
             addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
         }
-        // -> bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js:1148
-        // epid回调经常无法触发导致不加载评论区，手动加载之
-        // doWhile(() => (<any>document).querySelector("#app")?.__vue__, d => d.loadComment());
+        // 修复怪异模式下人类所不能理解的样式问题 ಥ_ಥ
+        if (document.compatMode === "BackCompat") addCss(".header-info > .count-wrapper {height: 18px !important;}");
     });
     // 精确爆破新版番剧脚本
     (<any>window).__Iris__ = true;
