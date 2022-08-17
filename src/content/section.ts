@@ -58,15 +58,17 @@ function replaceHeader(t: Element) {
         menu = true;
     }
     if (t.parentElement?.id === "app") {
+        t.setAttribute("hidden", "hidden");
+        if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container")) return;
         // 顶栏包含在vue中，直接修改将导致vue绑定出错影响页面其他节点，只能隐藏之
         addElement("div", { class: `z-top-container${menu ? " has-menu" : ""}` }, undefined, undefined, true);
-        t.setAttribute("hidden", "hidden");
     } else {
+        if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container")) return;
         t.setAttribute("class", `z-top-container${menu ? " has-menu" : ""}`);
         t.removeAttribute("id");
     }
-    header(menu);
     styleClear();
+    header(menu);
 }
 /** 替换顶栏底栏 */
 export function section() {
