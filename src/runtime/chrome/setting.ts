@@ -53,8 +53,14 @@ export function changeSetting() {
             }
             if (setting.av) { // av
                 const matches = [
-                    "*://www.bilibili.com/video/*",
-                    "*://www.bilibili.com/s/video/*"
+                    "*://www.bilibili.com/video/av*",
+                    "*://www.bilibili.com/video/AV*",
+                    "*://www.bilibili.com/video/bv*",
+                    "*://www.bilibili.com/video/BV*",
+                    "*://www.bilibili.com/s/video/av*",
+                    "*://www.bilibili.com/s/video/AV*",
+                    "*://www.bilibili.com/s/video/bv*",
+                    "*://www.bilibili.com/s/video/BV*",
                 ];
                 registers.push(registerContentScripts("content/av/av.js", matches, "av"));
                 excludeMatches || (excludeMatches = []);
