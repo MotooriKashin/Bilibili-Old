@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.8
+// @version      9.0.9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6411f55dbadcab36a2910101fea8e1f4a5cf026a/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@031fb438d6d4059adb86766103beb51ee45f819e/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -7001,9 +7001,18 @@ const modules =`
   }
   function post2(url, data, contentType = "application/x-www-form-urlencoded;charset=UTF-8") {
     data.csrf = getCookies().bili_jct;
+    function searchParams(obj) {
+      const res = new URLEs("");
+      Object.entries(obj).forEach((d) => {
+        if (d[1] || d[1] === "") {
+          res.searchParams.set(d[0], d[1]);
+        }
+      });
+      return res.search.slice(1);
+    }
     return xhr({
       url,
-      data: objUrl("", data),
+      data: searchParams(data),
       headers: { "Content-Type": contentType },
       method: "POST",
       credentials: true
