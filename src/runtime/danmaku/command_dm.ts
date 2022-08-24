@@ -6,7 +6,7 @@ import { biliQuickLogin } from "../unit";
 import { uid } from "../variable/uid";
 import { xhr } from "../xhr";
 import { API } from "../variable/variable";
-import { objUrl } from "../format/url";
+import { objUrl, URLEs } from "../format/url";
 import css from "../danmaku/command_dm.css";
 
 let player: any, widgetContainer: any;
@@ -203,9 +203,18 @@ function isLoggedin() {
 
 function post(url: string, data: any, contentType = "application/x-www-form-urlencoded;charset=UTF-8") {
     data.csrf = getCookies().bili_jct;
+    function searchParams(obj: Record<string, string | number>) {
+        const res = new URLEs("");
+        Object.entries(obj).forEach(d => {
+            if (d[1] || d[1] === "") {
+                res.searchParams.set(d[0], <string>d[1])
+            }
+        });
+        return res.search.slice(1);
+    }
     return xhr({
         url: url,
-        data: objUrl("", data),
+        data: searchParams(data),
         headers: { "Content-Type": contentType },
         method: "POST",
         credentials: true
