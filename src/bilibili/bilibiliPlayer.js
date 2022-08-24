@@ -16319,11 +16319,13 @@ function Fa() {
                                 if (!this.transform) {
                                     let x, y, offset = 0;
                                     x = y = 90 / e.pv_y_size; // 缩略图以90px高度的目标进行缩放
-                                    if(dashPlayer) {
+                                    if (dashPlayer) {
                                         let mediaInfo = dashPlayer.getVideoInfo().mediaInfo;
                                         let ratio = mediaInfo.width / mediaInfo.height;
-                                        x = ratio * 90 / e.pv_x_size;
-                                        offset = (e.pv_x_size / e.pv_y_size - ratio) * 90 / 2;
+                                        if (ratio > 1) {
+                                            x = ratio * 90 / e.pv_x_size;
+                                            offset = (e.pv_x_size / e.pv_y_size - ratio) * 90 / 2;
+                                        }
                                     }
                                     this.transform = `translateX(${offset}px) scaleX(${x}) scaleY(${y})`;
                                 }
