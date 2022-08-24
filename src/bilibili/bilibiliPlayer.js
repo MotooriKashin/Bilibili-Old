@@ -16316,10 +16316,21 @@ function Fa() {
                                     pv_x_size: parseInt($(b).data("pv_x_size"), 10) || 160,
                                     pv_y_size: parseInt($(b).data("pv_y_size"), 10) || 90
                                 };
+                                if (!this.transform) {
+                                    let x, y, offset = 0;
+                                    x = y = 90 / e.pv_y_size; // 缩略图以90px高度的目标进行缩放
+                                    if(dashPlayer) {
+                                        let mediaInfo = dashPlayer.getVideoInfo().mediaInfo;
+                                        let ratio = mediaInfo.width / mediaInfo.height;
+                                        x = ratio * 90 / e.pv_x_size;
+                                        offset = (e.pv_x_size / e.pv_y_size - ratio) * 90 / 2;
+                                    }
+                                    this.transform = `translateX(${offset}px) scaleX(${x}) scaleY(${y})`;
+                                }
                                 b.css({
                                     width: e.pv_x_size,
                                     height: e.pv_y_size,
-                                    "transform": "scale(" + 160 / e.pv_x_size + ")",
+                                    "transform": this.transform,
                                     "transform-origin": "0 0",
                                     "background-image": "url(" + c[Math.floor(f / 100)] + ")",
                                     "background-position": -(f % 100 % e.pv_x_len) * e.pv_x_size + "px " + -Math.floor(f % 100 / e.pv_y_len) * e.pv_y_size + "px"
