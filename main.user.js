@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@031fb438d6d4059adb86766103beb51ee45f819e/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bbe8d8ca9b67e1a957e11c755be86004f53fc0b9/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
