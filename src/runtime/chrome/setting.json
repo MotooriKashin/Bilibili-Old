@@ -99,5 +99,6 @@
     "development": false,
     "settingEntryType": false,
     "downloadBtn": true,
-    "windowStop": false
+    "windowStop": false,
+    "flacEnabled": true
 }

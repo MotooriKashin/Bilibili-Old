@@ -16,7 +16,7 @@ import { API } from "../variable/variable";
 import { loadBilibiliPlayer } from "./load_bilibili_player";
 import { downloadDefault } from "../download/download";
 import { isUserScript } from "../../tampermonkey/check";
-
+import { FlacSwitch } from "./flac_switch"
 
 class EmbedPlayer {
     static asWide = false;
@@ -514,6 +514,7 @@ export class GrayManager extends EmbedPlayer {
         location.href.includes("t=") && (this.playerParam.p = this.GetUrlValue("t"));
         location.href.includes("d=") && (this.playerParam.d = this.GetUrlValue("d"));
         location.href.includes("lastplaytime=") && (this.playerParam.lastplaytime = this.GetUrlValue("lastplaytime"));
+        new FlacSwitch();
     }
     /**
      * 重新加载播放器实例

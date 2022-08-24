@@ -6299,6 +6299,8 @@ function Fa() {
                         abrStrategy: window.DashPlayer.STRING.ABR_DYNAMIC,
                         stableBufferTime: 80
                     });
+                    // 向外部暴露一个用于无缝刷新音视频流的方法
+                    window.reloadMedia = (callback) => this.reloadMedia(callback);
                     $(e).appendTo(this.template.ga.empty());
                     this.om(e);
                     n.initialize(b.W.url).then(function () {
@@ -6538,7 +6540,10 @@ function Fa() {
                     })
                 } catch (ua) { }
             };
-            e.prototype.quality = function (b, c) {
+            e.prototype.reloadMedia = function(callback) {
+                this.quality(this.yd, callback, true);
+            }
+            e.prototype.quality = function (b, c, forced) {
                 var f = this,
                     d = this;
                 this.sd = !0;
@@ -6552,7 +6557,7 @@ function Fa() {
                         return false;
                     }
                 }
-                if (this.S && !this.Kk(this.yd) && !this.Kk(b) && sameCodec(this.yd))
+                if (this.S && !this.Kk(this.yd) && !this.Kk(b) && sameCodec(this.yd) && !forced)
                     return 0 === Number(b) ? (this.S.setAutoSwitchQualityFor("video", !0),
                         g.a.he("DedeUserID")
                             ? this.S.setAutoSwitchTopQualityFor("video", T.b)
@@ -46817,7 +46822,10 @@ else {
                             startWithSAP: a.startWithSAP
                         }
                     });
-                })())), a.audio && (b.Period.AdaptationSet[1] = {}, b.Period.AdaptationSet[1].Representation = a.audio.map(function (a) {
+                })())), a.audio && (b.Period.AdaptationSet[1] = {}, 
+                    b.Period.AdaptationSet[1].Representation = ((a.flac && a.flac.audio 
+                        && window.flac && (window.flac.init(), window.flac.enabled)) ? // 开启FLAC后将普通音频流替换为FLAC流
+                        (a.flac.audio.codecs = "flac", [a.flac.audio]) : a.audio).map(function (a) {
                     return {
                         BaseURL: {
                             __text: a.baseUrl
@@ -57517,6 +57525,8 @@ else {
                 else if (b === g.default.AUDIO && c) {
                     var k = e.getCurrentBufferLevel(f.getReadOnlyMetricsFor(g.default.VIDEO));
                     d = isNaN(j.fragmentDuration) ? k : Math.max(k, j.fragmentDuration)
+                    if (j.id == "30251") //限制音频流载入时长，避免爆缓存
+                        d = Math.min(d, 30);
                 } else {
                     // var l = j.mediaInfo.streamInfo;
                     // if (i.isPlayingAtTopQuality(l)) {
