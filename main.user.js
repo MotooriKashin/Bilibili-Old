@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@3ae20f30de5ad37882b474aa886ea06f9641886b/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@6411f55dbadcab36a2910101fea8e1f4a5cf026a/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -4787,6 +4787,13 @@ const modules =`
       (document.body || document.head || document.documentElement || document).appendChild(script);
     });
   }
+  function addCssEs(path2) {
+    const files = isArray(path2) ? path2 : [path2];
+    window.postMessage({
+      \$type: "insertCSS",
+      data: files
+    });
+  }
 
   // src/runtime/unit.ts
   function jsonCheck(data) {
@@ -5042,7 +5049,6 @@ const modules =`
       date: ""
     },
     timeline: false,
-    privateRecommend: false,
     episodeData: false,
     comment: false,
     lostVideo: false,
@@ -5061,7 +5067,8 @@ const modules =`
     development: false,
     settingEntryType: false,
     downloadBtn: true,
-    windowStop: false
+    windowStop: false,
+    flacEnabled: true
   };
 
   // src/runtime/lib/proxy_handler.ts
@@ -13572,8 +13579,62 @@ const modules =`
         toast.warning("bilibiliPlayer.min.js 已回滚~", "当前可能无法访问 jsdelivr ！", "反查弹幕发送者等部分播放器增强功能暂时无法使用🤣");
       });
     }
+    addCssEs("bilibili/bilibiliPlayer.css");
     return await loadScript(\`chrome-extension://\${sessionStorage.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js\`);
   }
+
+  // src/runtime/player/flac_switch.ts
+  var FlacSwitch = class {
+    constructor() {
+      if (setting.flacEnabled == void 0) {
+        setting.flacEnabled = true;
+      }
+      window.flac = {
+        enabled: setting.flacEnabled,
+        init: () => {
+          this.initUI();
+        }
+      };
+    }
+    initUI() {
+      if (document.querySelector("#bilibili-player-flac-btn"))
+        return;
+      let anchor = document.querySelector(".bilibili-player-video-btn-quality");
+      let btn = document.createElement("div");
+      btn.setAttribute("class", "bilibili-player-video-btn");
+      btn.setAttribute("id", "bilibili-player-flac-btn");
+      btn.setAttribute("style", "display: block; width: 35px; position: relative");
+      btn.innerHTML = "<div>FLAC</div>";
+      addCss(\`
+        #bilibili-player-flac-btn.on > div::after {
+            content: "";
+            position: absolute;
+            top: 20%;
+            left: 0;
+            width: 100%;
+            height: 57%;
+            background-image: linear-gradient(120deg, #dedfce, #6594a3);
+            opacity: 0.5;
+            border-radius: 5px;
+        }
+        \`, "flacBtnCss");
+      if (setting.flacEnabled) {
+        btn.classList.add("on");
+      }
+      btn.onclick = () => {
+        window.flac.enabled = setting.flacEnabled = !setting.flacEnabled;
+        btn.setAttribute("class", setting.flacEnabled ? "bilibili-player-video-btn on" : "bilibili-player-video-btn");
+        window.reloadMedia((succeed) => {
+          if (succeed)
+            videoFloat(\`已\${setting.flacEnabled ? "启用" : "关闭"}HiRes 音频\`);
+          else
+            videoFloat(\`\${setting.flacEnabled ? "启用" : "关闭"}HiRes 音频出错！\`);
+        });
+      };
+      if (!document.querySelector("#bilibili-player-flac-btn"))
+        anchor.insertAdjacentElement("beforebegin", btn);
+    }
+  };
 
   // src/runtime/player/embed_player.ts
   var _EmbedPlayer = class {
@@ -14012,6 +14073,7 @@ const modules =`
       location.href.includes("t=") && (this.playerParam.p = this.GetUrlValue("t"));
       location.href.includes("d=") && (this.playerParam.d = this.GetUrlValue("d"));
       location.href.includes("lastplaytime=") && (this.playerParam.lastplaytime = this.GetUrlValue("lastplaytime"));
+      new FlacSwitch();
     }
     reload(playerParams) {
       if (this.playerParam) {
@@ -16615,9 +16677,9 @@ const modules =`
   };
 
   // src/content/index/recommend_data.ts
-  async function recommendData(privateRecommend = false) {
+  async function recommendData() {
     const d = await fetch("https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3", {
-      credentials: privateRecommend ? "include" : "omit"
+      credentials: "include"
     }).then((d2) => d2.json());
     d.data.item.forEach((d_1, i, s) => {
       s[i].author = d_1.owner.name;
@@ -16652,8 +16714,8 @@ const modules =`
       debug.error("获取推荐数据失败 ಥ_ಥ", reason);
       toast.error("获取推荐数据失败 ಥ_ಥ");
     });
-    recommendData(setting.privateRecommend).then((d) => {
-      if (uid && setting.privateRecommend) {
+    recommendData().then((d) => {
+      if (uid) {
         __INITIAL_STATE__.recommendData = d;
         doWhile(() => document.querySelector(".rec-btn.prev"), () => {
           addElement(
@@ -16664,7 +16726,7 @@ const modules =`
             void 0,
             document.querySelector(".rec-btn.prev")
           ).addEventListener("click", () => {
-            recommendData(setting.privateRecommend).then((d2) => __INITIAL_STATE__.recommendData = d2);
+            recommendData().then((d2) => __INITIAL_STATE__.recommendData = d2);
           });
           addElement(
             "span",
@@ -16674,7 +16736,7 @@ const modules =`
             void 0,
             document.querySelector(".rec-btn.next")
           ).addEventListener("click", () => {
-            recommendData(setting.privateRecommend).then((d2) => __INITIAL_STATE__.recommendData = d2);
+            recommendData().then((d2) => __INITIAL_STATE__.recommendData = d2);
           });
         });
       } else {
@@ -25679,14 +25741,6 @@ const modules =`
       label: "港澳台新番时间表",
       sub: '<a href="https://www.bilibili.com/anime/timeline/" target="_blank">立即前往</a>',
       float: \`在主页番剧分区中，可能需主动从最新切换到响应的星期才会显示当天的数据。\`,
-      value: false
-    },
-    {
-      key: "privateRecommend",
-      menu: "style",
-      type: "switch",
-      label: "主页个性化推荐",
-      sub: "默认是全站统一推荐",
       value: false
     },
     {
