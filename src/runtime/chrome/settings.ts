@@ -883,14 +883,6 @@ export const settingDefault: (Setting[keyof Setting] | SettingList)[] = [
         value: false
     },
     {
-        key: "privateRecommend",
-        menu: "style",
-        type: "switch",
-        label: "主页个性化推荐",
-        sub: "默认是全站统一推荐",
-        value: false
-    },
-    {
         key: "episodeData",
         menu: "style",
         type: "switch",

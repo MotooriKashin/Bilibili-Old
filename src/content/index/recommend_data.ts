@@ -1,7 +1,7 @@
 /** 获取recommendData */
-export async function recommendData(privateRecommend = false) {
+export async function recommendData() {
     const d = await fetch("https://api.bilibili.com/x/web-interface/index/top/rcmd?fresh_type=3", {
-        credentials: privateRecommend ? "include" : "omit"
+        credentials: "include"
     }).then(d => d.json());
     d.data.item.forEach((d_1: any, i: number, s: any) => {
         // 修正数据名

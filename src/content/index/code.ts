@@ -56,17 +56,17 @@ export function indexPage() {
             toast.error("获取推荐数据失败 ಥ_ಥ");
         });
     // 修复首页推荐
-    recommendData(setting.privateRecommend).then(d => {
-        if (uid && setting.privateRecommend) {
+    recommendData().then(d => {
+        if (uid) {
             __INITIAL_STATE__.recommendData = d;
             doWhile(() => document.querySelector(".rec-btn.prev"), () => {
                 addElement("span", { class: "rec-btn prev" }, undefined, "刷新", undefined,
                     document.querySelector<any>(".rec-btn.prev")).addEventListener("click", () => {
-                        recommendData(setting.privateRecommend).then(d => __INITIAL_STATE__.recommendData = d);
+                        recommendData().then(d => __INITIAL_STATE__.recommendData = d);
                     });
                 addElement("span", { class: "rec-btn next" }, undefined, "刷新", undefined,
                     document.querySelector<any>(".rec-btn.next")).addEventListener("click", () => {
-                        recommendData(setting.privateRecommend).then(d => __INITIAL_STATE__.recommendData = d);
+                        recommendData().then(d => __INITIAL_STATE__.recommendData = d);
                     });
             });
         } else {

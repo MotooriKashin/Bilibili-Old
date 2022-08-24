@@ -1,5 +1,5 @@
 import { isUserScript } from "../../tampermonkey/check";
-import { loadScript } from "../element/add_element";
+import { addCssEs, loadScript } from "../element/add_element";
 import { toast } from "../toast/toast";
 
 /** 加载旧版播放器脚本 最好启动播放器时再加载，否则若jQuery被覆盖可能引发各种问题 */
@@ -12,5 +12,6 @@ export async function loadBilibiliPlayer() {
             toast.warning("bilibiliPlayer.min.js 已回滚~", "当前可能无法访问 jsdelivr ！", "反查弹幕发送者等部分播放器增强功能暂时无法使用🤣");
         });
     }
+    addCssEs("bilibili/bilibiliPlayer.css");
     return await loadScript(`chrome-extension://${sessionStorage.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js`);
 }
