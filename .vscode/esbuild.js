@@ -109,7 +109,6 @@ import("fs-extra").then(d => {
                         'src/content/read/read.ts', // 专栏
                         'src/content/search/search.ts' // 搜索
                     ],
-                    target: "chrome76", // 目标标准
                     bundle: true, // 打包
                     sourcemap: process.env.NODE_ENV === "development", // map文件
                     minify: process.env.NODE_ENV === "production", // 压缩
@@ -141,6 +140,7 @@ import("fs-extra").then(d => {
                         'src/tampermonkey/index.ts', // 脚本本体
                         'src/tampermonkey/bb_comment.ts' // 翻页评论区
                     ],
+                    target: "chrome76", // 目标标准
                     bundle: true, // 打包
                     outdir: 'dist', // 输出目录
                     outbase: "src", // 输入目录
