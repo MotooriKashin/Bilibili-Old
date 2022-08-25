@@ -31,7 +31,7 @@ export function keepNewCheck() {
             get: () => new Proxy(() => true, { get: (t, p, r) => r }), set: () => true, configurable: true
         });
         Reflect.deleteProperty(window, "__INITIAL_STATE__");
-        Reflect.deleteProperty(window, "player");
+        (<any>window).player?.pause(); // 尝试清除已销毁的新版播放器
         Reflect.deleteProperty(window, "__playinfo__");
     }
 }
