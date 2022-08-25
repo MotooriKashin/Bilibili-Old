@@ -20,7 +20,7 @@ import { loadEvent } from "./load_event";
 
 export function avPage() {
     // 重写检查
-    keepNewCheck();
+    keepNewCheck(2);
     // 重定向SEO页面
     location.href.includes("/s/video") && replaceUrl(location.href.replace("/s/video", "/video"));
     // 备份标题

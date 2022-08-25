@@ -5238,7 +5238,7 @@ const modules =`
     th: void 0,
     pgc: void 0,
     playerParam: void 0,
-    rewrite: false,
+    rewrite: 0,
     GM,
     urlParam,
     xhr,
@@ -5259,11 +5259,15 @@ const modules =`
     get: () => {
       if (hook) {
         if (isArray(hook)) {
-          if (API.rewrite && hook.length > 1)
-            hook.shift();
+          if (API.rewrite) {
+            if (API.rewrite === 2) {
+              hook = void 0;
+            } else {
+              hook.shift();
+            }
+          }
           return hook;
         }
-        ;
         return (chunkIds, moreModules, executeModules) => {
           if (arr[moreModules.length]) {
             const obj = arr[moreModules.length];
@@ -16431,7 +16435,7 @@ const modules =`
   document.addEventListener("DOMContentLoaded", () => anchorClean(document.querySelectorAll("a")));
 
   // src/content/av/keep_new.ts
-  function keepNewCheck() {
+  function keepNewCheck(jsonp2) {
     var _a3;
     const keepNew = sessionStorage.getItem("keepNew");
     const redirect = sessionStorage.getItem("redirect");
@@ -16445,7 +16449,7 @@ const modules =`
       replaceUrl(redirect);
       sessionStorage.removeItem("redirect");
     }
-    API.rewrite = true;
+    API.rewrite = jsonp2 || 1;
     Reflect.defineProperty(window, "_babelPolyfill", { get: () => void 0, set: () => true });
     if (isUserScript) {
       setting.windowStop && window.stop();
@@ -16705,7 +16709,7 @@ const modules =`
 
   // src/content/av/code.ts
   function avPage() {
-    keepNewCheck();
+    keepNewCheck(2);
     location.href.includes("/s/video") && replaceUrl(location.href.replace("/s/video", "/video"));
     const title = document.title;
     document.documentElement.replaceWith(createElements(htmlVnode(av_default)));
@@ -24472,7 +24476,7 @@ const modules =`
 
   // src/content/read/code.ts
   function readPage() {
-    keepNewCheck();
+    keepNewCheck(2);
     const title = document.title;
     document.documentElement.replaceWith(createElements(htmlVnode(read_default)));
     title && !title.includes("404") && (document.title = title);

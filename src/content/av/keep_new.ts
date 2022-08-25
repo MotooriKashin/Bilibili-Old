@@ -5,8 +5,11 @@ import { API } from "../../runtime/variable/variable";
 import { isUserScript } from "../../tampermonkey/check";
 import { globalVector } from "../global";
 
-/** 检查是否禁用恢复旧版页面 */
-export function keepNewCheck() {
+/**
+ * 检查是否禁用恢复旧版页面
+ * @param jsonp 定义如何处理webpackJsonp，新旧页面webpackJsonp可能跨版本，明确指出将避免一些问题
+ */
+export function keepNewCheck(jsonp?: 2) {
     const keepNew = sessionStorage.getItem("keepNew");
     const redirect = sessionStorage.getItem("redirect");
     if (keepNew) {
@@ -20,7 +23,7 @@ export function keepNewCheck() {
         replaceUrl(redirect);
         sessionStorage.removeItem("redirect");
     }
-    API.rewrite = true;
+    API.rewrite = jsonp || 1;
     // 防止babelPolyfill报错跳出
     Reflect.defineProperty(window, "_babelPolyfill", { get: () => undefined, set: () => true });
     if (isUserScript) {

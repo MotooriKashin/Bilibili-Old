@@ -14,7 +14,7 @@ import { loadEvent } from "../av/load_event";
 
 export function readPage() {
     // 重写检查
-    keepNewCheck();
+    keepNewCheck(2);
     // 备份标题
     const title = document.title;
     // 刷新样式表

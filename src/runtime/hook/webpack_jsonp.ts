@@ -14,9 +14,15 @@ Reflect.defineProperty(window, "webpackJsonp", {
             if (isArray(hook)) {
                 // 新版页面如果写入了数据会导致重构的旧版页面出问题
                 // 旧版页面分片不会大于1，直接弹出已有数据应该可以，不然还真不好处理，如何区分新旧版页面分片数据？
-                if (API.rewrite && hook.length > 1) hook.shift();
+                if (API.rewrite) {
+                    if (API.rewrite === 2) {
+                        hook = undefined;
+                    } else {
+                        hook.shift();
+                    }
+                }
                 return hook;
-            };
+            }
             return (chunkIds: any[], moreModules: any[], executeModules: any[]) => {
                 if (arr[moreModules.length]) {
                     const obj = arr[moreModules.length];
