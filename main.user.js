@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.0.9
+// @version      9.1.0
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5681,11 +5681,12 @@ const modules =`
   }, -1);
 
   // src/runtime/lib/url.ts
+  var _a;
   var UrlPack = class {
     get ts() {
       return new Date().getTime();
     }
-    access_key = setting.accessKey?.key || void 0;
+    access_key = ((_a = setting.accessKey) == null ? void 0 : _a.key) || void 0;
     jsonUrlDefault = {
       "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: "json", fourk: 1 },
       "api.bilibili.com/x/player/playurl": { qn: 127, otype: "json", fourk: 1 },
@@ -5931,10 +5932,11 @@ const modules =`
           ]
         };
         d[1].forEach((d2) => {
+          var _a3;
           const a = { class: "item", target: "_blank" };
           d2.href && (a.href = d2.href);
           d2.fileName && (a.download = d2.fileName);
-          vdom.children?.push({
+          (_a3 = vdom.children) == null ? void 0 : _a3.push({
             tagName: "a",
             props: a,
             children: [
@@ -7460,6 +7462,7 @@ const modules =`
       this.danmaku();
     }
     async danmaku() {
+      var _a3;
       if (!danmaku.loadLocalDm) {
         return toast.error("载入本地弹幕失败：本地弹幕组件丢失！", "本功能只能在旧版播放器使用~");
         ;
@@ -7472,12 +7475,13 @@ const modules =`
         danmaku.loadLocalDm(data, Boolean(i) || setting.danmakuContact);
       });
       this.data.json.forEach(async (d, i) => {
+        var _a4;
         let data = JSON.parse(await readAs(d)) || [];
         toast("本地弹幕：" + d.name, "载入模式：" + (this.data.xml[0] || i || setting.danmakuContact ? "与当前弹幕合并" : "替换当前弹幕"));
-        window.player?.setDanmaku(data, this.data.xml[0] || Boolean(i) || setting.danmakuContact);
+        (_a4 = window.player) == null ? void 0 : _a4.setDanmaku(data, this.data.xml[0] || Boolean(i) || setting.danmakuContact);
       });
       this.offset = 0;
-      if (!window.player?.offsetDanmaku)
+      if (!((_a3 = window.player) == null ? void 0 : _a3.offsetDanmaku))
         return toast.error("绑定键盘事件失败：弹幕偏移组件丢失！");
       else {
         toast("已绑定键盘事件", "可以通过键盘 , 和 . 两个键（即上标为 < 和 > 的两个键）提前或延后弹幕偏移，频度1秒/次");
@@ -7599,9 +7603,10 @@ const modules =`
       if (this.note) {
         this.note.type = type;
         data.forEach((d) => {
+          var _a3, _b;
           if (this.note.data.length >= 20)
-            this.note?.data.shift();
-          this.note?.data.push(d);
+            (_a3 = this.note) == null ? void 0 : _a3.data.shift();
+          (_b = this.note) == null ? void 0 : _b.data.push(d);
         });
         delay !== void 0 && (this.note.delay = delay);
       }
@@ -7713,6 +7718,7 @@ const modules =`
       }
     }
     async done(boolean) {
+      var _a3;
       try {
         this.noteChange("info", ["正在获取BAS/代码弹幕专包。。。"]);
         this.danmaku = this.danmaku.concat(await danmaku.specialDms());
@@ -7723,7 +7729,7 @@ const modules =`
         this.floatChange("success", ["全弹幕获取成功，正在装填。。。", "总弹幕量：" + unitFormat(this.danmaku.length), "同时推送至下载面板，可右键保存 π_π"], 3);
       }
       this.noteChange("info", ["执行结束~"], 3);
-      window.player?.setDanmaku(Dm);
+      (_a3 = window.player) == null ? void 0 : _a3.setDanmaku(Dm);
       setting.downloadOther && pushDownload({
         group: "弹幕",
         data: Dm,
@@ -7981,6 +7987,7 @@ const modules =`
       }
     }
     loadLocalDm(xml, append) {
+      var _a3, _b;
       let doc = new DOMParser().parseFromString(xml, "application/xml");
       let dm = doc.querySelectorAll("d");
       if (dm.length == 0) {
@@ -8006,9 +8013,9 @@ const modules =`
         };
       }
       this.sortDmById(danmaku2, "dmid");
-      if (!window.player?.setDanmaku)
+      if (!((_a3 = window.player) == null ? void 0 : _a3.setDanmaku))
         return toast.error("刷新弹幕列表失败：播放器内部调用丢失！");
-      window.player?.setDanmaku(danmaku2, append);
+      (_b = window.player) == null ? void 0 : _b.setDanmaku(danmaku2, append);
     }
     async getHistoryDanmaku(date, cid = API.cid) {
       if (!date || !uid)
@@ -8031,6 +8038,7 @@ const modules =`
   };
   var danmaku = new Danmaku();
   window.addEventListener("message", async (ev) => {
+    var _a3;
     if (isUserScript)
       return;
     if (typeof ev.data === "object") {
@@ -8051,7 +8059,7 @@ const modules =`
             if (dm) {
               const dat = danmaku.danmakuFormat(dm);
               toast.success("获取弹幕成功~");
-              window.player?.setDanmaku(dat, setting.danmakuContact);
+              (_a3 = window.player) == null ? void 0 : _a3.setDanmaku(dat, setting.danmakuContact);
               setting.downloadOther && pushDownload({
                 group: "弹幕",
                 data: dat,
@@ -8206,8 +8214,9 @@ const modules =`
   // src/runtime/danmaku/history_danmaku.ts
   function historyDanmaku() {
     const id = xhrhookAsync("history?type=", (args) => {
+      var _a3;
       const param2 = urlObj(args[1]);
-      if (!window.player?.setDanmaku) {
+      if (!((_a3 = window.player) == null ? void 0 : _a3.setDanmaku)) {
         removeXhrhook(id);
         return false;
       } else if (!param2.date)
@@ -8217,8 +8226,9 @@ const modules =`
         responseType: "arraybuffer",
         credentials: true
       }).then((seg) => {
+        var _a4;
         let dm = danmaku.danmakuFormat(danmaku.segDmDecode(seg));
-        window.player?.setDanmaku(dm);
+        (_a4 = window.player) == null ? void 0 : _a4.setDanmaku(dm);
         setting.downloadOther && pushDownload({
           group: "弹幕",
           data: dm,
@@ -8895,10 +8905,12 @@ const modules =`
   // src/runtime/player/player_key_map.ts
   function playerKeyMap() {
     bindKeyMap("F", () => {
-      document.querySelector(".icon-24fullscreen")?.click();
+      var _a3;
+      (_a3 = document.querySelector(".icon-24fullscreen")) == null ? void 0 : _a3.click();
     });
     bindKeyMap("D", () => {
-      document.querySelector(".bilibili-player-video-btn-danmaku")?.click();
+      var _a3;
+      (_a3 = document.querySelector(".bilibili-player-video-btn-danmaku")) == null ? void 0 : _a3.click();
     });
     bindKeyMap("[", () => {
       window.player.prev();
@@ -8907,7 +8919,8 @@ const modules =`
       window.player.next();
     });
     bindKeyMap("enter", () => {
-      document.querySelector(".bilibili-player-video-danmaku-input")?.select();
+      var _a3;
+      (_a3 = document.querySelector(".bilibili-player-video-danmaku-input")) == null ? void 0 : _a3.select();
     });
     bindKeyMap("V", () => {
       let video = document.querySelector("#bilibiliPlayer .bilibili-player-video video");
@@ -8976,6 +8989,7 @@ const modules =`
     node4 && node4.scrollIntoView({ behavior: "smooth", block: "center" });
   }
   function automate() {
+    var _a3;
     switchVideo(() => {
       setting.automate.webFullScreen && doWhile(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => document.querySelector(".bilibili-player-video-web-fullscreen").click());
       setting.automate.noDanmaku && doWhile(() => document.querySelector(".bilibili-player-video-btn.bilibili-player-video-btn-danmaku"), (d) => {
@@ -8990,7 +9004,7 @@ const modules =`
     setting.automate.danmakuFirst && sessionStorage2.setItem("player_last_filter_tab_info", 4);
     let bilibili_player_settings = localStorage.getItem("bilibili_player_settings");
     if (bilibili_player_settings) {
-      if (bilibili_player_settings.video_status?.autopart !== "") {
+      if (((_a3 = bilibili_player_settings.video_status) == null ? void 0 : _a3.autopart) !== "") {
         GM.setValue("bilibili_player_settings", bilibili_player_settings);
       }
     } else {
@@ -9021,7 +9035,10 @@ const modules =`
         });
       }
       switchVideo(() => {
-        doWhile(() => document.querySelector("#bofqi")?.querySelector("video"), (d) => {
+        doWhile(() => {
+          var _a4;
+          return (_a4 = document.querySelector("#bofqi")) == null ? void 0 : _a4.querySelector("video");
+        }, (d) => {
           d.addEventListener("ratechange", (e) => {
             GM.setValue("videospeed", e.target.playbackRate || 1);
           });
@@ -12367,7 +12384,8 @@ const modules =`
       this.changePosition();
     }
     changeStyle() {
-      document.querySelector("#caption-style")?.remove();
+      var _a3;
+      (_a3 = document.querySelector("#caption-style")) == null ? void 0 : _a3.remove();
       addCss(\`span.subtitle-item-background{opacity: \${this.setting.backgroundopacity};}
             span.subtitle-item-text {color:#\${("000000" + this.setting.color.toString(16)).slice(-6)};}
             span.subtitle-item {font-size: \${this.setting.fontsize * this.resizeRate}%;line-height: 110%;}
@@ -12864,7 +12882,8 @@ const modules =`
     }, false);
     let timer2, tag = false;
     xhrhook("api.bilibili.com/x/player.so", () => {
-      if (!tag && API.th && API.__INITIAL_STATE__?.epInfo?.subtitles) {
+      var _a3, _b;
+      if (!tag && API.th && ((_b = (_a3 = API.__INITIAL_STATE__) == null ? void 0 : _a3.epInfo) == null ? void 0 : _b.subtitles)) {
         if (API.__INITIAL_STATE__.epInfo.subtitles[0]) {
           setting.closedCaption && closedCaption.getCaption(API.__INITIAL_STATE__.epInfo.subtitles.reduce((s, d) => {
             s.push({
@@ -12905,7 +12924,8 @@ const modules =`
             responseType: "json",
             credentials: true
           }, true).then((data) => {
-            setting.closedCaption && data?.data?.subtitle?.subtitles && closedCaption.getCaption(data.data.subtitle.subtitles);
+            var _a3, _b;
+            setting.closedCaption && ((_b = (_a3 = data == null ? void 0 : data.data) == null ? void 0 : _a3.subtitle) == null ? void 0 : _b.subtitles) && closedCaption.getCaption(data.data.subtitle.subtitles);
             setting.segProgress && data.data.view_points && data.data.view_points[1] && new SegProgress(data.data.view_points);
           });
           tag = true;
@@ -13497,6 +13517,7 @@ const modules =`
   }
   function videoLimit() {
     xhrhookAsync("/playurl?", () => API.limit || API.th, async (args, type) => {
+      var _a3, _b, _c, _d;
       let response;
       const obj = urlObj(args[1]);
       obj.seasonId && (API.ssid = obj.seasonId);
@@ -13540,7 +13561,7 @@ const modules =`
           }
         } else if (API.limit) {
           isUserScript && setting.uposReplace.gat !== "不替换" && uposWithGM();
-          obj.module = window.__INITIAL_STATE__?.upInfo?.mid == 1988098633 || window.__INITIAL_STATE__?.upInfo?.mid == 2042149112 ? "movie" : "bangumi";
+          obj.module = ((_b = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.upInfo) == null ? void 0 : _b.mid) == 1988098633 || ((_d = (_c = window.__INITIAL_STATE__) == null ? void 0 : _c.upInfo) == null ? void 0 : _d.mid) == 2042149112 ? "movie" : "bangumi";
           obj.fnval && (obj.fnval = String(fnval));
           try {
             toast.info("尝试解除区域限制... 访问代理服务器");
@@ -13578,10 +13599,13 @@ const modules =`
 
   // src/runtime/player/load_bilibili_player.ts
   async function loadBilibiliPlayer() {
+    var _a3;
     if (!window.jQuery)
       await loadScript("//static.hdslb.com/js/jquery.min.js");
     if (isUserScript) {
       const player2 = GM_getResourceText("bilibiliPlayer.js");
+      (_a3 = window.player) == null ? void 0 : _a3.pause();
+      Reflect.deleteProperty(window, "player");
       if (player2)
         return new Function(GM_getResourceText("bilibiliPlayer.js"))();
       return loadScript("//static.hdslb.com/player/js/bilibiliPlayer.min.js").then(() => {
@@ -14018,6 +14042,7 @@ const modules =`
     ];
     bgray_btn_title = [];
     append_bgray_btn(title, callback, className) {
+      var _a3, _b, _c;
       if (this.bgray_btn_title.includes(title))
         return;
       const vdom = {
@@ -14035,8 +14060,8 @@ const modules =`
         let str = arr2.shift() || "";
         str += arr2.shift() || "";
         if (str) {
-          vdom.children?.length && vdom.children?.push({ tagName: "br" });
-          vdom.children?.push({
+          ((_a3 = vdom.children) == null ? void 0 : _a3.length) && ((_b = vdom.children) == null ? void 0 : _b.push({ tagName: "br" }));
+          (_c = vdom.children) == null ? void 0 : _c.push({
             tagName: "text",
             text: str
           });
@@ -14242,10 +14267,12 @@ const modules =`
       }
     });
     jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
-      if (0 === res.code && res.data?.page) {
+      var _a3;
+      if (0 === res.code && ((_a3 = res.data) == null ? void 0 : _a3.page)) {
         const page = res.page;
         page && jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
-          if (0 === res2.code && res2.data?.page) {
+          var _a4;
+          if (0 === res2.code && ((_a4 = res2.data) == null ? void 0 : _a4.page)) {
             page.count && (res2.data.page.count = page.count);
             page.acount && (res2.data.page.acount = page.acount);
           }
@@ -14320,6 +14347,7 @@ const modules =`
       }
     };
     Feedback.prototype._createListCon = function(item, i, pos) {
+      var _a3, _b;
       const blCon = this._parentBlacklistDom(item, i, pos);
       const con = [
         '<div class="con ' + (pos == i ? "no-border" : "") + '">',
@@ -14334,7 +14362,7 @@ const modules =`
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? \`<span class="reply-location">\${item?.reply_control?.location || ""}</span>\` : "",
+        ((_a3 = item == null ? void 0 : item.reply_control) == null ? void 0 : _a3.location) ? \`<span class="reply-location">\${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>\` : "",
         "</span>",
         item.lottery_id ? "" : '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         item.lottery_id ? "" : '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -14354,6 +14382,7 @@ const modules =`
       return item.state === this.blacklistCode ? blCon : con;
     };
     Feedback.prototype._createSubReplyItem = function(item, i) {
+      var _a3, _b;
       if (item.invisible) {
         return "";
       }
@@ -14373,7 +14402,7 @@ const modules =`
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? \`<span class="reply-location">\${item?.reply_control?.location || ""}</span>\` : "",
+        ((_a3 = item == null ? void 0 : item.reply_control) == null ? void 0 : _a3.location) ? \`<span class="reply-location">\${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>\` : "",
         "</span>",
         '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -14554,7 +14583,8 @@ const modules =`
     return result;
   }
   function getAid() {
-    return window.history.state?.aid;
+    var _a3;
+    return (_a3 = window.history.state) == null ? void 0 : _a3.aid;
   }
   var CollectionElement = class {
     container;
@@ -14651,9 +14681,10 @@ const modules =`
       return this._spreadBtnTop;
     }
     set spreadBtnTop(n) {
+      var _a3;
       if (this._spreadBtnTop != n) {
         this._spreadBtnTop = n;
-        this.notify?.spreadBtnTop(this._spreadBtnTop);
+        (_a3 = this.notify) == null ? void 0 : _a3.spreadBtnTop(this._spreadBtnTop);
       }
     }
     get spread() {
@@ -14700,18 +14731,20 @@ const modules =`
       return this._colCount < this.episodes.length || this.spread;
     }
     toggleSpread() {
+      var _a3;
       this._spread = !this._spread;
       this._viewEpisodes = this._spread ? this.episodes : this.calcViewEpisodesOnCollapsed(this.ep);
       this._spreadBtnTop = 0;
       this.calcColCount();
-      this.notify?.spread(this._spread);
+      (_a3 = this.notify) == null ? void 0 : _a3.spread(this._spread);
     }
     updateEp() {
+      var _a3;
       let ep = this._ep;
       if (ep == this.ep)
         return;
       this._viewEpisodes = this._spread ? this.episodes : this.calcViewEpisodesOnCollapsed(this.ep);
-      this.notify?.ep();
+      (_a3 = this.notify) == null ? void 0 : _a3.ep();
     }
   };
   var CollectionComponent = class {
@@ -14792,7 +14825,8 @@ const modules =`
         responseType: "json",
         credentials: true
       }).then((d) => {
-        avComponent?.setVideoData(d.data?.View);
+        var _a3;
+        avComponent == null ? void 0 : avComponent.setVideoData((_a3 = d.data) == null ? void 0 : _a3.View);
       });
       xhr({
         url: objUrl("https://api.bilibili.com/x/web-interface/archive/related", { aid: state.aid }),
@@ -15013,6 +15047,7 @@ const modules =`
     }
   }
   async function globalSession() {
+    var _a3, _b, _c, _d, _e, _f;
     toast.info("Bangumi号可能无效~", "正在尝试泰区代理接口~");
     let ssid = API.ssid;
     let epid = API.epid;
@@ -15058,7 +15093,7 @@ const modules =`
           return s;
         }, []);
         t.mediaInfo = {
-          actors: i.actor?.info,
+          actors: (_a3 = i.actor) == null ? void 0 : _a3.info,
           alias: i.alias,
           areas: i.areas,
           cover: i.cover,
@@ -15075,9 +15110,9 @@ const modules =`
           season_type: i.type,
           series_title: i.title,
           square_cover: i.square_cover,
-          staff: i.actor?.info,
+          staff: (_b = i.actor) == null ? void 0 : _b.info,
           stat: i.stat,
-          style: i.styles?.reduce((s, d) => {
+          style: (_c = i.styles) == null ? void 0 : _c.reduce((s, d) => {
             s.push(d.name);
             return s;
           }, []),
@@ -15088,7 +15123,7 @@ const modules =`
         t.ssId = result.result.season_id || -1;
         t.epInfo = epid && episodes.find((d) => d.ep_id == epid) || episodes[0] || {};
         t.epList = episodes;
-        t.seasonList = result.result.series?.seasons?.reduce((s, d) => {
+        t.seasonList = ((_e = (_d = result.result.series) == null ? void 0 : _d.seasons) == null ? void 0 : _e.reduce((s, d) => {
           s.push({
             badge: "独家",
             badge_type: 1,
@@ -15102,12 +15137,12 @@ const modules =`
             title: d.quarter_title
           });
           return s;
-        }, []) || [];
+        }, [])) || [];
         t.upInfo = result.result.up_info || {};
         t.rightsInfo = result.result.rights || {};
         t.app = 1 === t.rightsInfo.watch_platform;
         result.result.publish.is_started = 1;
-        result.result.publish?.time_length_show === "已完结" && (result.result.publish.is_finish = 1);
+        ((_f = result.result.publish) == null ? void 0 : _f.time_length_show) === "已完结" && (result.result.publish.is_finish = 1);
         t.pubInfo = result.result.publish || {};
         if (result.result.new_ep) {
           result.result.new_ep.desc = result.result.new_ep.new_ep_display;
@@ -15144,9 +15179,13 @@ const modules =`
     let progress = Number(urlObj(location.href).dm_progress);
     let first2 = 0;
     switchVideo(async () => {
-      if (!window.player?.seek) {
+      var _a3;
+      if (!((_a3 = window.player) == null ? void 0 : _a3.seek)) {
         await new Promise((r) => {
-          doWhile(() => window.player?.seek, r);
+          doWhile(() => {
+            var _a4;
+            return (_a4 = window.player) == null ? void 0 : _a4.seek;
+          }, r);
         });
       }
       if (first2)
@@ -15367,6 +15406,7 @@ const modules =`
         return 142;
       }
       async mounted(v) {
+        var _a3;
         this.layerConfig = JSON.parse(v.split_layer);
         if (!this.layerConfig.layers)
           return;
@@ -15427,7 +15467,7 @@ const modules =`
           container.style.top = "-42px";
           container.style.marginBottom = "-42px";
           container.innerHTML = "";
-          document.querySelector(".b-header-mask-wrp")?.remove();
+          (_a3 = document.querySelector(".b-header-mask-wrp")) == null ? void 0 : _a3.remove();
         }
         ;
         container.classList.add("animated-banner");
@@ -15435,14 +15475,16 @@ const modules =`
         let containerWidth = container.clientWidth;
         let containerScale = 180 / 155;
         this.layerConfig.layers.forEach((v2) => {
+          var _a4, _b, _c, _d;
           v2._initState = {
             scale: 1,
-            rotate: v2.rotate?.initial || 0,
-            translate: v2.translate?.initial || [0, 0],
-            blur: v2.blur?.initial || 0,
-            opacity: v2.opacity?.initial === void 0 ? 1 : v2.opacity.initial
+            rotate: ((_a4 = v2.rotate) == null ? void 0 : _a4.initial) || 0,
+            translate: ((_b = v2.translate) == null ? void 0 : _b.initial) || [0, 0],
+            blur: ((_c = v2.blur) == null ? void 0 : _c.initial) || 0,
+            opacity: ((_d = v2.opacity) == null ? void 0 : _d.initial) === void 0 ? 1 : v2.opacity.initial
           };
           v2.resources.forEach((i, index) => {
+            var _a5, _b2;
             const el = this.resources[index];
             if (el.tagName === "VIDEO") {
               if (el.parentNode) {
@@ -15454,7 +15496,7 @@ const modules =`
               el.dataset.height = el.naturalHeight;
               el.dataset.width = el.naturalWidth;
             }
-            const initial = v2.scale?.initial === void 0 ? 1 : v2.scale?.initial;
+            const initial = ((_a5 = v2.scale) == null ? void 0 : _a5.initial) === void 0 ? 1 : (_b2 = v2.scale) == null ? void 0 : _b2.initial;
             el.height = el.dataset.height * containerScale * initial;
             el.width = el.dataset.width * containerScale * initial;
           });
@@ -15506,7 +15548,10 @@ const modules =`
                 const x = v2.translate.offset || [0, 0];
                 const itp = v2.translate.offsetCurve ? curveParameterToFunc(v2.translate.offsetCurve) : (x2) => x2;
                 const offset2 = x.map((v3) => itp(displace) * v3);
-                const translate = v2._initState.translate.map((x2, i2) => (x2 + offset2[i2]) * containerScale * (v2.scale?.initial || 1));
+                const translate = v2._initState.translate.map((x2, i2) => {
+                  var _a4;
+                  return (x2 + offset2[i2]) * containerScale * (((_a4 = v2.scale) == null ? void 0 : _a4.initial) || 1);
+                });
                 transform.translate = translate;
               }
               a.style.transform = \`scale(\${transform.scale})translate(\${transform.translate[0]}px, \${transform.translate[1]}px)rotate(\${transform.rotate}deg)\`;
@@ -15588,7 +15633,10 @@ const modules =`
               handleLeave();
             }
           }
-          this.extensions.map((v2) => v2.handleMouseMove?.({ e, displace }));
+          this.extensions.map((v2) => {
+            var _a4;
+            return (_a4 = v2.handleMouseMove) == null ? void 0 : _a4.call(v2, { e, displace });
+          });
         };
         this.handleResize = (e) => {
           containerHeight = container.clientHeight;
@@ -15596,16 +15644,20 @@ const modules =`
           containerScale = 180 / 155;
           this.layerConfig.layers.forEach((lc) => {
             lc.resources.forEach((d, i) => {
+              var _a4, _b;
               const el = this.resources[i];
-              el.height = el.dataset.height * containerScale * (lc.scale?.initial || 1);
-              el.width = el.dataset.width * containerScale * (lc.scale?.initial || 1);
+              el.height = el.dataset.height * containerScale * (((_a4 = lc.scale) == null ? void 0 : _a4.initial) || 1);
+              el.width = el.dataset.width * containerScale * (((_b = lc.scale) == null ? void 0 : _b.initial) || 1);
             });
           });
           cancelAnimationFrame(raf);
           raf = requestAnimationFrame((t) => {
             af(t);
           });
-          this.extensions.map((v2) => v2.handleResize?.(e));
+          this.extensions.map((v2) => {
+            var _a4;
+            return (_a4 = v2.handleResize) == null ? void 0 : _a4.call(v2, e);
+          });
         };
         document.addEventListener("mouseleave", this.handleMouseLeave);
         window.addEventListener("mousemove", this.handleMouseMove);
@@ -15683,7 +15735,10 @@ const modules =`
     xhrhook("api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", void 0, (r) => {
       try {
         const response = jsonCheck(r.response);
-        response.data.items = response.data.items.filter((d) => d.modules?.module_dynamic?.major?.archive?.badge?.text != "直播回放");
+        response.data.items = response.data.items.filter((d) => {
+          var _a3, _b, _c, _d, _e;
+          return ((_e = (_d = (_c = (_b = (_a3 = d.modules) == null ? void 0 : _a3.module_dynamic) == null ? void 0 : _b.major) == null ? void 0 : _c.archive) == null ? void 0 : _d.badge) == null ? void 0 : _e.text) != "直播回放";
+        });
         r.responseType === "json" ? r.response = response : r.response = r.responseText = JSON.stringify(response);
       } catch (e) {
       }
@@ -15696,7 +15751,10 @@ const modules =`
       let obj = new URL(args[1]), max = obj.searchParams.get("max") || "", view_at = obj.searchParams.get("view_at") || "";
       args[1] = objUrl("//api.bilibili.com/x/web-interface/history/cursor", { max, view_at, type: "archive", ps: "20" });
     }, void 0, false);
-    setting.searchHistory && doWhile(() => document.querySelector(".b-head-search"), () => document.querySelector(".b-head-search")?.remove());
+    setting.searchHistory && doWhile(() => document.querySelector(".b-head-search"), () => {
+      var _a3;
+      return (_a3 = document.querySelector(".b-head-search")) == null ? void 0 : _a3.remove();
+    });
   }
 
   // src/content/index/timeline.ts
@@ -15758,7 +15816,10 @@ const modules =`
     });
   }
   var timeline = () => {
-    doWhile(() => document.querySelector("#bili_bangumi > .bangumi-module")?.__vue__ || window?.__INITIAL_STATE__, async (d) => {
+    doWhile(() => {
+      var _a3;
+      return ((_a3 = document.querySelector("#bili_bangumi > .bangumi-module")) == null ? void 0 : _a3.__vue__) || (window == null ? void 0 : window.__INITIAL_STATE__);
+    }, async (d) => {
       try {
         const index = await urlPack.getJson("app.bilibili.com/x/v2/activity/index", { page_id: 167998 });
         const item = index.data.cards[0].item[0].item;
@@ -15919,12 +15980,14 @@ const modules =`
     loadScript("//static.hdslb.com/common/js/footer.js");
   }
   function styleClear() {
+    var _a3, _b;
     const d = document.styleSheets;
     for (let i = 0; i < d.length; i++) {
-      (d[i].href?.includes("laputa-footer") || d[i].href?.includes("laputa-header")) && (d[i].disabled = true);
+      (((_a3 = d[i].href) == null ? void 0 : _a3.includes("laputa-footer")) || ((_b = d[i].href) == null ? void 0 : _b.includes("laputa-header"))) && (d[i].disabled = true);
     }
   }
   function replaceHeader(t) {
+    var _a3;
     let menu2 = false;
     if (document.querySelector(".mini-type") || /festival/.test(location.href)) {
       menu2 = false;
@@ -15932,7 +15995,7 @@ const modules =`
     if (location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || t.getAttribute("type") == "all") {
       menu2 = true;
     }
-    if (t.parentElement?.id === "app") {
+    if (((_a3 = t.parentElement) == null ? void 0 : _a3.id) === "app") {
       t.setAttribute("hidden", "hidden");
       if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container"))
         return;
@@ -15951,8 +16014,9 @@ const modules =`
     doWhile(() => document.querySelector("#internationalHeader"), replaceHeader);
     doWhile(() => document.querySelector("#biliMainHeader"), replaceHeader);
     doWhile(() => document.querySelector(".z_top_container"), (t) => {
+      var _a3;
       t.setAttribute("class", "z-top-container has-menu");
-      document.querySelector(".header")?.remove();
+      (_a3 = document.querySelector(".header")) == null ? void 0 : _a3.remove();
       header(true);
     });
     doWhile(() => document.querySelector(".international-footer") || document.querySelector("#biliMainFooter"), (t) => {
@@ -15987,9 +16051,10 @@ const modules =`
       }, 1e3);
     }, false);
     xhrhook("api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail", void 0, (res) => {
+      var _a3, _b, _c;
       const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
       if (result.code === 0) {
-        if (result.data?.card?.desc?.type === 2)
+        if (((_c = (_b = (_a3 = result.data) == null ? void 0 : _a3.card) == null ? void 0 : _b.desc) == null ? void 0 : _c.type) === 2)
           location.replace(\`https://h.bilibili.com/\${result.data.card.desc.rid_str}\`);
       }
     }, false);
@@ -16351,7 +16416,8 @@ const modules =`
     }
     anchorClean([f]);
   }
-  window.navigation?.addEventListener("navigate", (e) => {
+  var _a2;
+  (_a2 = window.navigation) == null ? void 0 : _a2.addEventListener("navigate", (e) => {
     const newURL = urlClean(e.destination.url);
     if (e.destination.url != newURL) {
       e.preventDefault();
@@ -16366,6 +16432,7 @@ const modules =`
 
   // src/content/av/keep_new.ts
   function keepNewCheck() {
+    var _a3;
     const keepNew = sessionStorage.getItem("keepNew");
     const redirect = sessionStorage.getItem("redirect");
     if (keepNew) {
@@ -16389,7 +16456,7 @@ const modules =`
         configurable: true
       });
       Reflect.deleteProperty(window, "__INITIAL_STATE__");
-      Reflect.deleteProperty(window, "player");
+      (_a3 = window.player) == null ? void 0 : _a3.pause();
       Reflect.deleteProperty(window, "__playinfo__");
     }
   }
@@ -16442,9 +16509,13 @@ const modules =`
       }
     }, false);
     const related = {};
-    xhrhookAsync("x/web-interface/archive/related", () => window.__INITIAL_STATE__?.mediaInfo?.title, async (u, t) => {
+    xhrhookAsync("x/web-interface/archive/related", () => {
+      var _a3, _b;
+      return (_b = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.mediaInfo) == null ? void 0 : _b.title;
+    }, async (u, t) => {
+      var _a3, _b;
       let result = '{ code: 0, data: [], message: "0" }';
-      if (related[window.__INITIAL_STATE__?.mediaInfo?.title]) {
+      if (related[(_b = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.mediaInfo) == null ? void 0 : _b.title]) {
         result = related[window.__INITIAL_STATE__.mediaInfo.title];
       } else {
         try {
@@ -16462,7 +16533,8 @@ const modules =`
       return t === "json" ? { response: JSON.parse(result) } : { response: result, responseText: result };
     }, false);
     bangumiInitialState().then(() => {
-      setting.enlike && new enLike("bangumi", window.__INITIAL_STATE__?.mediaInfo?.stat?.likes);
+      var _a3, _b, _c;
+      setting.enlike && new enLike("bangumi", (_c = (_b = (_a3 = window.__INITIAL_STATE__) == null ? void 0 : _a3.mediaInfo) == null ? void 0 : _b.stat) == null ? void 0 : _c.likes);
       if (window.__INITIAL_STATE__.special) {
         addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
       }
@@ -16497,10 +16569,11 @@ const modules =`
     ttl = 1;
   };
   function view2Detail(data) {
+    var _a3;
     const result = new Detail();
     if (data.v2_app_api) {
       delete data.v2_app_api.redirect_url;
-      result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
+      result.data.Card.follower = (_a3 = data.v2_app_api.owner_ext) == null ? void 0 : _a3.fans;
       result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
       result.data.Tags = data.v2_app_api.tag;
       result.data.View = data.v2_app_api;
@@ -16796,7 +16869,8 @@ const modules =`
     xhrhook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", (args) => {
       args[1] = args[1].includes("List") ? args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web") : args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web");
     }, (obj) => {
-      let response = obj.responseText?.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+      var _a3;
+      let response = (_a3 = obj.responseText) == null ? void 0 : _a3.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
       if (response) {
         response = JSON.parse(response);
         response.data.text_link = { text: "233秒居然能做这些！", link: "//vc.bilibili.com" };
@@ -16829,6 +16903,7 @@ const modules =`
       }
       if (arr2) {
         fetch(\`https://api.bilibili.com/pgc/season/rank/web/list?season_type=\${arr2[1]}&day=3\`).then((d) => d.json()).then((d) => {
+          var _a3;
           const data = jsonCheck(d).data;
           let html = \`<header class="rank-head"><h3>排行</h3><div class="bili-dropdown rank-dropdown"><span class="selected">三日</span><i class="icon icon-arrow-down"></i><ul class="dropdown-list"><li class="dropdown-item" style="display: none;">三日</li><li class="dropdown-item">一周</li></ul></div></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list">\`;
           for (let i = 0; i < 8; i++) {
@@ -16836,7 +16911,7 @@ const modules =`
           }
           html += \`</ul></div><a href="\${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>\`;
           const vnode = htmlVnode(html);
-          vnode[1].children[0].children?.forEach((d2, i) => {
+          (_a3 = vnode[1].children[0].children) == null ? void 0 : _a3.forEach((d2, i) => {
             let node4;
             d2.event = {
               "mouseover": (e) => {
@@ -24204,6 +24279,7 @@ const modules =`
       toview_default.stat.view = obj.data.cnt_info.play;
     }
     function list(obj) {
+      var _a3;
       obj.data.media_list.reduce((s, d) => {
         s.push({
           aid: d.id,
@@ -24255,7 +24331,7 @@ const modules =`
         return s;
       }, toview_default.list);
       has_more = obj.data.has_more;
-      oid = toview_default.list.at(-1)?.aid;
+      oid = (_a3 = toview_default.list.at(-1)) == null ? void 0 : _a3.aid;
     }
     function Observer(record) {
       record.forEach((d) => {
@@ -24283,14 +24359,16 @@ const modules =`
       observer.observe(document.querySelector(".bilibili-player-playlist-item").parentElement.parentElement, { attributes: true });
     }
     function formatMore(obj) {
+      var _a3;
       const result = obj.data.media_list.reduce((s, d) => {
         s.push({
           ao: d.rights && d.rights.pay,
           Sz: d.upper && d.upper.face,
           Te: d.pages.reduce((s2, f) => {
+            var _a4, _b, _c;
             s2.push({
-              Da: d.bangumi?.ep_id,
-              Fb: d.bangumi?.season?.season_id,
+              Da: (_a4 = d.bangumi) == null ? void 0 : _a4.ep_id,
+              Fb: (_c = (_b = d.bangumi) == null ? void 0 : _b.season) == null ? void 0 : _c.season_id,
               aid: d.id,
               duration: f.duration,
               from: f.from,
@@ -24311,7 +24389,7 @@ const modules =`
         return s;
       }, []);
       list(obj);
-      has_more ? window.player?.updatePlaylist(result) : videoFloat("没有更多了！");
+      has_more ? (_a3 = window.player) == null ? void 0 : _a3.updatePlaylist(result) : videoFloat("没有更多了！");
     }
     jsonphookasync("toview", void 0, async (url) => {
       replaceUrl(path.join("/"));
@@ -26420,18 +26498,20 @@ const modules =`
     _menuNow;
     _itemNow;
     menuSelect(key = "common") {
-      this._menuNow?.classList.remove("selected");
-      this._menuNow?.removeAttribute("style");
+      var _a3, _b, _c;
+      (_a3 = this._menuNow) == null ? void 0 : _a3.classList.remove("selected");
+      (_b = this._menuNow) == null ? void 0 : _b.removeAttribute("style");
       this._menuNow = this.MENU[key];
       this.MENU[key].classList.add("selected");
-      this._itemNow?.removeAttribute("style");
+      (_c = this._itemNow) == null ? void 0 : _c.removeAttribute("style");
       this._itemNow = this.ITEM[key];
       this.ITEM[key].setAttribute("style", \`display: block;\`);
     }
     show(key) {
+      var _a3, _b;
       this._box.setAttribute("style", "display: block;");
       this.menuSelect(this.SETTING[key]);
-      key && this._itemNow?.querySelector(\`.\${key}\`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      key && ((_b = (_a3 = this._itemNow) == null ? void 0 : _a3.querySelector(\`.\${key}\`)) == null ? void 0 : _b.scrollIntoView({ behavior: "smooth", block: "start" }));
     }
     SETTING = {};
     initItem() {
@@ -26589,6 +26669,7 @@ const modules =`
           label: "(👉ﾟヮﾟ)👉",
           type: "button",
           func: async () => {
+            var _a3;
             if (!window.player)
               return toast.warning("请在播放页面使用本功能 →_→");
             if (!window.player.setDanmaku)
@@ -26605,7 +26686,7 @@ const modules =`
                 if (dm) {
                   const dat = danmaku.danmakuFormat(dm);
                   toast.success("获取弹幕成功~");
-                  window.player?.setDanmaku(dat, setting.danmakuContact);
+                  (_a3 = window.player) == null ? void 0 : _a3.setDanmaku(dat, setting.danmakuContact);
                   setting.downloadOther && pushDownload({
                     group: "弹幕",
                     data: dat,
