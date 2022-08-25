@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.3
+// @version      2.0.4
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -286,10 +286,12 @@
       }
     });
     jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
-      if (0 === res.code && res.data?.page) {
+      var _a;
+      if (0 === res.code && ((_a = res.data) == null ? void 0 : _a.page)) {
         const page = res.page;
         page && jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
-          if (0 === res2.code && res2.data?.page) {
+          var _a2;
+          if (0 === res2.code && ((_a2 = res2.data) == null ? void 0 : _a2.page)) {
             page.count && (res2.data.page.count = page.count);
             page.acount && (res2.data.page.acount = page.acount);
           }
@@ -364,6 +366,7 @@
       }
     };
     Feedback.prototype._createListCon = function(item, i, pos) {
+      var _a, _b;
       const blCon = this._parentBlacklistDom(item, i, pos);
       const con = [
         '<div class="con ' + (pos == i ? "no-border" : "") + '">',
@@ -378,7 +381,7 @@
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? `<span class="reply-location">${item?.reply_control?.location || ""}</span>` : "",
+        ((_a = item == null ? void 0 : item.reply_control) == null ? void 0 : _a.location) ? `<span class="reply-location">${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>` : "",
         "</span>",
         item.lottery_id ? "" : '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         item.lottery_id ? "" : '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -398,6 +401,7 @@
       return item.state === this.blacklistCode ? blCon : con;
     };
     Feedback.prototype._createSubReplyItem = function(item, i) {
+      var _a, _b;
       if (item.invisible) {
         return "";
       }
@@ -417,7 +421,7 @@
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? `<span class="reply-location">${item?.reply_control?.location || ""}</span>` : "",
+        ((_a = item == null ? void 0 : item.reply_control) == null ? void 0 : _a.location) ? `<span class="reply-location">${((_b = item == null ? void 0 : item.reply_control) == null ? void 0 : _b.location) || ""}</span>` : "",
         "</span>",
         '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
