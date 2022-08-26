@@ -1,7 +1,7 @@
 const fs = require("fs");
 const { exec } = require("child_process"); // 用于执行git命令获取模块commit哈希值
 const meta = require("../src/tampermonkey/meta.json"); // 脚本元数据
-const meta_bb_comment = require("../src/tampermonkey/meta_bb_comment.json");  // 翻页评论区脚本愿数据
+const meta_bb_comment = require("../src/tampermonkey/meta_bb_comment.json");  // 翻页评论区脚本元数据
 const cdn = "https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old"; // 远程仓库CDN路径，resource资源用
 
 /**
@@ -95,7 +95,7 @@ import("fs-extra").then(d => {
                 {
                     entryPoints: [ // 入口脚本
                         'src/background.ts', // 背景脚本
-                        'src/content.ts', // 背景脚本
+                        'src/content.ts', // 内容脚本
                         'src/runtime/chrome/popup.ts', // 弹出窗口
                         'src/runtime/chrome/options.ts', // 选项页面
                         'src/content/vector.ts', // 全局
@@ -120,7 +120,7 @@ import("fs-extra").then(d => {
                     charset: 'utf8', // 文件编码
                     loader: { // 文件对应的解析方式
                         '.html': 'text', // HTML文件解析为字符串
-                        '.svg': 'text', // HTML文件解析为字符串
+                        '.svg': 'text', // svg文件解析为字符串
                         ".css": 'text' // css文件解析为字符串
                     },
                     // splitting: true, // 拆分文件 文件拆分只支持esm格式暂时不现实
@@ -149,7 +149,7 @@ import("fs-extra").then(d => {
                     charset: 'utf8', // 文件编码
                     loader: { // 文件对应的解析方式
                         '.html': 'text', // HTML文件解析为字符串
-                        '.svg': 'text', // HTML文件解析为字符串
+                        '.svg': 'text', // svg文件解析为字符串
                         ".css": 'text' // css文件解析为字符串
                     }
                 }
