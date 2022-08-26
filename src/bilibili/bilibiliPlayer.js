@@ -51818,6 +51818,9 @@ else {
                         var b = Math.max(.2 * Ga, 1),
                             c = Ga - b;
                         sa.setBufferToKeep(parseFloat(b).toFixed(5)), sa.setBufferAheadToKeep(parseFloat(c).toFixed(5))
+                        let bufferTimeLimit = sa.getStableBufferTime(za, Na.representationId) - 5;
+                        sa.setStableBufferTime(bufferTimeLimit, za, Na.representationId);
+                        Ca("Decreased buffer limit for type: " + za + ", StableBufferTime: " + bufferTimeLimit)
                     }
                     return void (a.error.code !== J && ma() || (Ca("Clearing playback buffer to overcome quota exceed situation for type: " + za), qa.trigger(u.default.QUOTA_EXCEEDED, {
                         sender: Ba,
@@ -55001,11 +55004,29 @@ else {
                 return tb
             }
 
-            function S(a) {
-                nb = a
+            let bufferTimeLimit = {
+                video: {
+                    "120": 40, // 4K
+                    "125": 40, // HDR
+                    "126": 40, // Dobly
+                    "127": 40  // 8K
+                },
+                audio: {
+                    "30251": 30  // flac
+                }
             }
 
-            function T() {
+            function S(a, type, quality) { // setStableBufferTime
+                if (type != undefined && quality != undefined) {
+                    bufferTimeLimit[type][quality] = Math.max(a, 10);
+                }
+                else nb = a
+            }
+
+            function T(type, quality) { // getStableBufferTime
+                if (type != undefined && quality != undefined) {
+                    return bufferTimeLimit[type][quality] || (isNaN(nb) ? Ab ? v : u : nb);
+                }
                 return isNaN(nb) ? Ab ? v : u : nb
             }
 
@@ -57534,22 +57555,19 @@ else {
             function d(a, b, c) {
                 var d = NaN,
                     j = a.getCurrentRepresentationInfo();
+                let type = j.mediaInfo.type;
+                let quality = j.id;
                 if (b === g.default.FRAGMENTED_TEXT);
                 else if (b === g.default.AUDIO && c) {
                     var k = e.getCurrentBufferLevel(f.getReadOnlyMetricsFor(g.default.VIDEO));
                     d = isNaN(j.fragmentDuration) ? k : Math.max(k, j.fragmentDuration)
-                    if (j.id == "30251") //限制音频流载入时长，避免爆缓存
-                        d = Math.min(d, 30);
+                    d = Math.min(h.getStableBufferTime(type, quality), d);
                 } else {
-                    // var l = j.mediaInfo.streamInfo;
                     // if (i.isPlayingAtTopQuality(l)) {
                     //     var m = l.manifestInfo.duration >= h.getLongFormContentDurationThreshold();
                     //     d = m ? h.getBufferTimeAtTopQualityLongForm() : h.getBufferTimeAtTopQuality()
                     // } else d = h.getStableBufferTime()
-                    let bufferTimeLimit = {};
-                    bufferTimeLimit[120] = bufferTimeLimit[125] = bufferTimeLimit[126] = bufferTimeLimit[127] = 40;
-                    d = bufferTimeLimit[j.id];
-                    d = d ? d : 80;
+                    d = h.getStableBufferTime(type, quality);
                 }
                 return d
             }
