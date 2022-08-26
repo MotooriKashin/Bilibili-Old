@@ -1,5 +1,5 @@
+import { URLES } from "./format/url";
 import { abv } from "./lib/abv";
-import { URLEs } from "./format/url";
 
 /** 垃圾参数序列 */
 const paramsSet = new Set([
@@ -39,31 +39,31 @@ export function replaceUrl(url: string) {
  * @param str 原始url
  */
 export function urlClean(str: string) {
-    const base = str.split("#")[0].split("?")[0];
-    const url = new URLEs(str);
+    const url = new URLES(str);
     if (url) {
-        const params = url.searchParams;
-        if (params.has("bvid")) {
+        const params = url.params;
+        if (params.bvid) {
             // 旧版页面一般不支持bvid，转化为aid
-            params.set("aid", <string>abv(<string>params.get("bvid")));
+            params.aid = <string>abv(params.bvid);
         }
-        if (params.has("aid") && !Number(params.get("aid"))) {
+        if (params.aid && !Number(params.aid)) {
             // B站偶有发病出现名为aid实为bvid的情况
-            params.set("aid", <string>abv(<string>params.get("aid")));
+            params.aid = <string>abv(params.aid);
         }
         paramsSet.forEach(d => {
             // 通杀
-            params.delete(d);
+            delete params[d];
         });
         paramArr.forEach(d => {
             // 点杀
-            if (params.has(d[0])) {
-                if (d[1].includes(<string>params.get(d[0]))) {
-                    params.delete(d[0]);
+            if (params[d[0]]) {
+                if (d[1].includes(<string>params[d[0]])) {
+                    delete params[d[0]];
                 }
             }
         });
-        return url.toJSON().replace(url.origin + url.pathname, base.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s)));
+        url.base = url.base.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, s => "av" + abv(s));
+        return url.toJSON();
     }
     else return str;
 }

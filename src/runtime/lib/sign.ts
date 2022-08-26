@@ -1,4 +1,4 @@
-import { URLEs } from "../format/url";
+import { URLES } from "../format/url";
 import { md5 } from "./md5";
 
 class Sign {
@@ -27,19 +27,27 @@ class Sign {
      */
     static sign(url: string, obj: Record<string, string | number> = {}, id: number | string = 0) {
         this.keySecret = <string[]>this.decode(id);
-        const urlobj = new URLEs(url);
-        const params = url ? urlobj.searchParams : new URLSearchParams();
-        Object.entries(obj).forEach(d => {
-            if (d[1] || d[1] === "") {
-                params.set(d[0], <string>d[1])
-            }
-        });
-        params.delete("sign");
-        params.set("appkey", this.keySecret[0]);
-        params.sort();
-        params.set("sign", md5((id === 3 && params.has("api") ? `api=${decodeURIComponent(<string>params.get("api"))}` : params.toString()) + this.keySecret[1]))
+        // const urlobj = new URLEs(url);
+        // const params = url ? urlobj.searchParams : new URLSearchParams();
+        // Object.entries(obj).forEach(d => {
+        //     if (d[1] || d[1] === "") {
+        //         params.set(d[0], <string>d[1])
+        //     }
+        // });
+        // params.delete("sign");
+        // params.set("appkey", this.keySecret[0]);
+        // params.sort();
+        // params.set("sign", md5((id === 3 && params.has("api") ? `api=${decodeURIComponent(<string>params.get("api"))}` : params.toString()) + this.keySecret[1]))
 
-        return urlobj ? urlobj.toString() : params.toString();
+        // return urlobj ? urlobj.toString() : params.toString();
+        const res = new URLES(url);
+        Object.assign(res.params, obj);
+        delete res.params.sign;
+        res.params.appkey = this.keySecret[0];
+        res.sort();
+        res.params.sign = md5(((id === 3 && res.params.api) ? `api=${decodeURIComponent(<string>res.params.api)}` : res.param) + this.keySecret[1]);
+
+        return res.toJSON();
     }
     /**
      * 提取appkey和盐

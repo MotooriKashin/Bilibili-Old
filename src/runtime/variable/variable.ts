@@ -1,9 +1,28 @@
 import { GM } from "../gm";
-import { objUrl, URLEs, urlObj } from "../format/url";
+import { objUrl, URLES, urlObj } from "../format/url";
 import { urlsign } from "../lib/sign";
 import { urlParam } from "../url_param";
 import { xhr } from "../xhr";
 import { setting } from "../setting";
+import { addCss, addElement, loadScript } from "../element/add_element";
+import { fileRead, saveAs } from "../lib/file";
+import { md5 } from "../lib/md5";
+import { timeFormat } from "../format/time";
+import { sizeFormat } from "../format/size";
+import { removeXhrhook, xhrhook, xhrhookAsync, xhrhookUltra } from "../hook/xhr";
+import { jsonphook, jsonphookasync, removeJsonphook } from "../hook/node";
+import { htmlVnode } from "../element/html_vnode";
+import { appendScripts } from "../element/create_scripts";
+import { toast } from "../toast/toast";
+import { debug } from "../debug";
+import { crc32 } from "../lib/crc32";
+import { Base64 } from "../lib/base64";
+import { getCookies, setCookie } from "../cookies";
+import { doWhile } from "../do_while";
+import { mutex } from "./mutex";
+import { path } from "./path";
+import { integerFormat } from "../format/integer";
+import { showAlert } from "../element/alert";
 
 /** 全局变量挂载对象 本变量将在开发者模式下暴露到window下，需要调试的接口可挂载于此 */
 export const API = {
@@ -62,6 +81,34 @@ export const API = {
     urlsign,
     objUrl,
     urlObj,
-    URLEs
+    URLES,
+    addCss,
+    addElement,
+    saveAs,
+    md5,
+    timeFormat,
+    sizeFormat,
+    integerFormat,
+    xhrhook,
+    xhrhookAsync,
+    xhrhookUltra,
+    removeXhrhook,
+    jsonphook,
+    jsonphookasync,
+    removeJsonphook,
+    htmlVnode,
+    loadScript,
+    appendScripts,
+    toast,
+    debug,
+    crc32,
+    Base64,
+    getCookies,
+    setCookie,
+    doWhile,
+    mutex,
+    path,
+    fileRead,
+    showAlert
 }
 setting.development && Reflect.set(window, "API", API);
