@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.1.0
+// @version      9.1.1
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@bbe8d8ca9b67e1a957e11c755be86004f53fc0b9/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5c146c5e4ae9ee37b7baec3a719d6cd05fb375b5/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -5262,7 +5262,7 @@ const modules =`
           if (API.rewrite) {
             if (API.rewrite === 2) {
               hook = void 0;
-            } else {
+            } else if (hook.length > 1) {
               hook.shift();
             }
           }
