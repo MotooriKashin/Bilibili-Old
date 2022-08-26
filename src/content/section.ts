@@ -59,11 +59,11 @@ function replaceHeader(t: Element) {
     }
     if (t.parentElement?.id === "app") {
         t.setAttribute("hidden", "hidden");
-        if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container")) return;
+        if (document.querySelector("#bili-header-m") || (document.querySelector(".z-top-container") && !document.querySelector(".z-top-container")?.id)) return;
         // 顶栏包含在vue中，直接修改将导致vue绑定出错影响页面其他节点，只能隐藏之
         addElement("div", { class: `z-top-container${menu ? " has-menu" : ""}` }, undefined, undefined, true);
     } else {
-        if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container")) return;
+        if (document.querySelector("#bili-header-m") || (document.querySelector(".z-top-container") && !document.querySelector(".z-top-container")?.id)) return;
         t.setAttribute("class", `z-top-container${menu ? " has-menu" : ""}`);
         t.removeAttribute("id");
     }
@@ -72,10 +72,11 @@ function replaceHeader(t: Element) {
 }
 /** 替换顶栏底栏 */
 export function section() {
-    addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;}");
+    addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}");
     // 顶栏
     doWhile(() => document.querySelector("#internationalHeader"), replaceHeader);
     doWhile(() => document.querySelector("#biliMainHeader"), replaceHeader);
+    doWhile(() => document.querySelector(".bili-header-default"), replaceHeader);
     // 上古顶栏
     doWhile(() => document.querySelector(".z_top_container"), t => {
         t.setAttribute("class", "z-top-container has-menu");
