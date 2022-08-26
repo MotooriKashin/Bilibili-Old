@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.4
+// @version      2.0.5
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -17,6 +17,7 @@
 (() => {
   // src/runtime/lib/typeof.ts
   var isArray = Array.isArray;
+  var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
 
   // src/runtime/element/add_element.ts
   function loadScript(src, onload) {
@@ -140,26 +141,53 @@
   };
 
   // src/runtime/format/url.ts
-  var URLEs = class extends URL {
-    constructor(url, base) {
-      if (!base && typeof url === "string" && !/^[a-z]+:/.test(url)) {
-        if (url.includes("=") && !url.includes("?") || !/^[A-Za-z0-9]/.test(url)) {
-          base = location.origin;
-        } else {
-          const str = url.startsWith("//") ? "" : "//";
-          url = location.protocol + str + url;
-        }
+  var URLES = class {
+    hash;
+    base;
+    params = {};
+    get param() {
+      return Object.entries(this.params).reduce((s, d) => {
+        return s += `${s ? "&" : ""}${d[0]}=${d[1]}`;
+      }, "");
+    }
+    constructor(url) {
+      const arr1 = url.split("#");
+      let str = arr1.shift();
+      this.hash = arr1.join("#");
+      (this.hash || url.includes("#")) && (this.hash = `#${this.hash}`);
+      const arr2 = str.split("?");
+      this.base = arr2.shift();
+      str = arr2.join("?");
+      if (str) {
+        str.split("&").forEach((d) => {
+          const arr3 = d.split("=");
+          const key = arr3.shift();
+          let value = arr3.join("=") || "";
+          try {
+            if (!isNumber(value)) {
+              value = JSON.parse(value);
+            }
+          } catch {
+            value === "undefined" && (value = void 0);
+            value === "NaN" && (value = NaN);
+          }
+          this.params[key] = value;
+        });
       }
-      super(url, base);
+    }
+    sort() {
+      this.params = Object.keys(this.params).sort().reduce((s, d) => {
+        s[d] = this.params[d];
+        return s;
+      }, {});
+    }
+    toJSON() {
+      return `${this.base ? this.param ? this.base + "?" : this.base : ""}${this.param}${this.hash || ""}`;
     }
   };
   function urlObj(url) {
-    const res = new URLEs(url);
-    const result = {};
-    res.searchParams.forEach((v, k) => {
-      result[k] = v;
-    });
-    return result;
+    const res = new URLES(url);
+    return res.params;
   }
 
   // src/runtime/hook/node.ts

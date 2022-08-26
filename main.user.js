@@ -3987,36 +3987,64 @@ const modules =`
     return debug;
   };
 
+  // src/runtime/lib/typeof.ts
+  var isArray = Array.isArray;
+  var isObject = (val) => val !== null && typeof val === "object";
+  var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
+
   // src/runtime/format/url.ts
-  var URLEs = class extends URL {
-    constructor(url, base) {
-      if (!base && typeof url === "string" && !/^[a-z]+:/.test(url)) {
-        if (url.includes("=") && !url.includes("?") || !/^[A-Za-z0-9]/.test(url)) {
-          base = location.origin;
-        } else {
-          const str = url.startsWith("//") ? "" : "//";
-          url = location.protocol + str + url;
-        }
+  var URLES = class {
+    hash;
+    base;
+    params = {};
+    get param() {
+      return Object.entries(this.params).reduce((s, d) => {
+        return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
+      }, "");
+    }
+    constructor(url) {
+      const arr1 = url.split("#");
+      let str = arr1.shift();
+      this.hash = arr1.join("#");
+      (this.hash || url.includes("#")) && (this.hash = \`#\${this.hash}\`);
+      const arr2 = str.split("?");
+      this.base = arr2.shift();
+      str = arr2.join("?");
+      if (str) {
+        str.split("&").forEach((d) => {
+          const arr3 = d.split("=");
+          const key = arr3.shift();
+          let value = arr3.join("=") || "";
+          try {
+            if (!isNumber(value)) {
+              value = JSON.parse(value);
+            }
+          } catch {
+            value === "undefined" && (value = void 0);
+            value === "NaN" && (value = NaN);
+          }
+          this.params[key] = value;
+        });
       }
-      super(url, base);
+    }
+    sort() {
+      this.params = Object.keys(this.params).sort().reduce((s, d) => {
+        s[d] = this.params[d];
+        return s;
+      }, {});
+    }
+    toJSON() {
+      return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
     }
   };
   function objUrl(url, obj) {
-    const res = new URLEs(url);
-    Object.entries(obj).forEach((d) => {
-      if (d[1] || d[1] === "") {
-        res.searchParams.set(d[0], d[1]);
-      }
-    });
+    const res = new URLES(url);
+    Object.assign(res.params, obj);
     return res.toJSON();
   }
   function urlObj(url) {
-    const res = new URLEs(url);
-    const result = {};
-    res.searchParams.forEach((v, k) => {
-      result[k] = v;
-    });
-    return result;
+    const res = new URLES(url);
+    return res.params;
   }
 
   // src/runtime/hook/node.ts
@@ -4110,10 +4138,9 @@ const modules =`
     };
     return id = jsonp.push([one, two]);
   }
-
-  // src/runtime/lib/typeof.ts
-  var isArray = Array.isArray;
-  var isObject = (val) => val !== null && typeof val === "object";
+  function removeJsonphook(id) {
+    id >= 0 && delete jsonp[id - 1];
+  }
 
   // src/tampermonkey/check.ts
   var isUserScript = false;
@@ -4640,18 +4667,13 @@ const modules =`
   var Sign = class {
     static sign(url, obj = {}, id = 0) {
       this.keySecret = this.decode(id);
-      const urlobj = new URLEs(url);
-      const params = url ? urlobj.searchParams : new URLSearchParams();
-      Object.entries(obj).forEach((d) => {
-        if (d[1] || d[1] === "") {
-          params.set(d[0], d[1]);
-        }
-      });
-      params.delete("sign");
-      params.set("appkey", this.keySecret[0]);
-      params.sort();
-      params.set("sign", md5((id === 3 && params.has("api") ? \`api=\${decodeURIComponent(params.get("api"))}\` : params.toString()) + this.keySecret[1]));
-      return urlobj ? urlobj.toString() : params.toString();
+      const res = new URLES(url);
+      Object.assign(res.params, obj);
+      delete res.params.sign;
+      res.params.appkey = this.keySecret[0];
+      res.sort();
+      res.params.sign = md5((id === 3 && res.params.api ? \`api=\${decodeURIComponent(res.params.api)}\` : res.param) + this.keySecret[1]);
+      return res.toJSON();
     }
     static decode(id) {
       if (typeof id === "number") {
@@ -5198,198 +5220,213 @@ const modules =`
   }
   getSetting();
 
-  // src/runtime/variable/variable.ts
-  var API = {
-    get aid() {
-      return window.aid;
-    },
-    set aid(v) {
-      window.aid = v;
-    },
-    get cid() {
-      return window.cid;
-    },
-    set cid(v) {
-      window.cid = v;
-    },
-    get ssid() {
-      return window.ssid;
-    },
-    set ssid(v) {
-      window.ssid = v;
-    },
-    get epid() {
-      return window.epid;
-    },
-    set epid(v) {
-      window.epid = v;
-    },
-    get __INITIAL_STATE__() {
-      return window.__INITIAL_STATE__;
-    },
-    set __INITIAL_STATE__(v) {
-      window.__INITIAL_STATE__ = v;
-    },
-    __playinfo__: void 0,
-    limit: void 0,
-    bkg_cover: void 0,
-    cover: void 0,
-    title: void 0,
-    th: void 0,
-    pgc: void 0,
-    playerParam: void 0,
-    rewrite: 0,
-    GM,
-    urlParam,
-    xhr,
-    urlsign,
-    objUrl,
-    urlObj,
-    URLEs
-  };
-  setting.development && Reflect.set(window, "API", API);
+  // src/runtime/lib/file.ts
+  function readAs(file, type = "string", encoding = "utf-8") {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      switch (type) {
+        case "ArrayBuffer":
+          reader.readAsArrayBuffer(file);
+          break;
+        case "DataURL":
+          reader.readAsDataURL(file);
+          break;
+        case "string":
+          reader.readAsText(file, encoding);
+          break;
+      }
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (e) => reject(e);
+    });
+  }
+  async function saveAs(content, fileName, contentType = "text/plain") {
+    const a = document.createElement("a");
+    const file = new Blob([content], { type: contentType });
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.addEventListener("load", () => URL.revokeObjectURL(a.href));
+    a.click();
+  }
+  function fileRead(accept, multiple) {
+    return new Promise((resolve) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      accept && (input.accept = accept);
+      multiple && (input.multiple = multiple);
+      input.style.opacity = "0";
+      input.addEventListener("change", () => resolve(input.files));
+      document.body.appendChild(input);
+      input.click();
+    });
+  }
 
-  // src/runtime/hook/webpack_jsonp.ts
-  var hook;
-  var arr = [];
-  var param = [];
-  var webpackJsonp = window.webpackJsonp;
-  Reflect.defineProperty(window, "webpackJsonp", {
-    set: (v) => hook = v,
-    get: () => {
-      if (hook) {
-        if (isArray(hook)) {
-          if (API.rewrite) {
-            if (API.rewrite === 2) {
-              hook = void 0;
-            } else if (hook.length > 1) {
-              hook.shift();
-            }
-          }
-          return hook;
+  // src/runtime/format/size.ts
+  function sizeFormat(size = 0) {
+    let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1e3 ** i;
+    while (dex > 1) {
+      if (size >= vor) {
+        size = Number((size / dex).toFixed(2));
+        break;
+      }
+      dex = dex / 1024;
+      vor = vor / 1e3;
+      i--;
+    }
+    return size ? size + unit[i] : "N/A";
+  }
+
+  // src/runtime/hook/xhr.ts
+  var rules = [];
+  var open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function(...rest) {
+    const args = [...rest];
+    args[1] && rules.forEach((d) => {
+      d && d[0].every((d2) => args[1].includes(d2)) && d[1].call(this, args);
+    });
+    return open.call(this, ...args);
+  };
+  function xhrhook(url, modifyOpen, modifyResponse, once = true) {
+    let id;
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      once && id && delete rules[id - 1];
+      if (modifyOpen)
+        try {
+          modifyOpen(args);
+        } catch (e) {
+          debug.error("modifyOpen of xhrhook", one, e);
         }
-        return (chunkIds, moreModules, executeModules) => {
-          if (arr[moreModules.length]) {
-            const obj = arr[moreModules.length];
-            const pam = param[moreModules.length];
-            Object.entries(obj).forEach((d) => {
-              let code = moreModules[d[0]];
-              if (code) {
-                code = code.toString();
-                d[1].forEach((e) => code = e(code));
-                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
+      if (modifyResponse)
+        try {
+          this.addEventListener("readystatechange", () => {
+            try {
+              if (this.readyState === 4) {
+                const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
+                (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
+                (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
+                modifyResponse(response);
+                Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
+                response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
+                response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
               }
-            });
-          }
-          return hook(chunkIds, moreModules, executeModules);
-        };
+            } catch (e) {
+              debug.error("modifyResponse of xhrhook", one, e);
+            }
+          });
+        } catch (e) {
+          debug.error("modifyResponse of xhrhook", one, e);
+        }
+    };
+    return id = rules.push([one, two]);
+  }
+  function xhrhookAsync(url, condition, modifyResponse, once = true) {
+    let id, temp2;
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      try {
+        if (!condition || condition(args)) {
+          this.xhrhookTimes = this.xhrhookTimes ? this.xhrhookTimes++ : 1;
+          id && (temp2 = rules[id - 1]);
+          delete rules[id - 1];
+          this.send = () => true;
+          (!args[2] || args[2] === true) && (this.timeout = 0);
+          const et = setInterval(() => {
+            this.dispatchEvent(new ProgressEvent("progress"));
+          }, 50);
+          Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
+          Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
+          this.dispatchEvent(new ProgressEvent("readystatechange"));
+          modifyResponse ? modifyResponse(args, this.responseType).then((d) => {
+            clearInterval(et);
+            if (d) {
+              Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+              d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+              d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+              d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+              !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+              Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
+              this.dispatchEvent(new ProgressEvent("readystatechange"));
+              this.dispatchEvent(new ProgressEvent("load"));
+              this.dispatchEvent(new ProgressEvent("loadend"));
+            }
+          }).catch((d) => {
+            if (this.xhrhookTimes === 1) {
+              if (d && d.response) {
+                Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
+                d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
+                d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
+                d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
+                !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
+                Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
+                this.dispatchEvent(new ProgressEvent("readystatechange"));
+                this.dispatchEvent(new ProgressEvent("load"));
+                this.dispatchEvent(new ProgressEvent("loadend"));
+              } else {
+                this.dispatchEvent(new ProgressEvent("error"));
+              }
+            } else {
+              this.xhrhookTimes--;
+            }
+            debug.error("modifyResponse of xhrhookasync", one, d);
+          }).finally(() => {
+            clearInterval(et);
+            !once && (id = rules.push(temp2));
+          }) : (this.abort(), !once && (id = rules.push(temp2)));
+          clearInterval(et);
+        }
+      } catch (e) {
+        debug.error("condition of xhrhook", one, e);
       }
-    },
-    configurable: true
-  });
-  window.webpackJsonp = webpackJsonp;
-  function webpackhook(len, pos, rpc, params = ["t", "e", "i"]) {
-    if (!arr[len]) {
-      arr[len] = {};
-      param[len] = params;
-    }
-    arr[len][pos] = arr[len][pos] || [];
-    arr[len][pos].push((code) => rpc(code));
+    };
+    return id = rules.push([one, two]);
+  }
+  function removeXhrhook(id) {
+    id >= 0 && delete rules[id - 1];
+  }
+  function xhrhookUltra(url, modify) {
+    const one = Array.isArray(url) ? url : [url];
+    const two = function(args) {
+      try {
+        modify.call(this, this, args);
+      } catch (e) {
+        debug.error("xhrhook modify", one, modify, e);
+      }
+    };
+    return rules.push([one, two]);
   }
 
-  // src/runtime/lib/crc32.ts
-  var Midcrc = class {
-    CRCPOLYNOMIAL = 3988292384;
-    crctable = new Array(256);
-    index = new Array(4);
-    constructor() {
-      this.create_table();
-    }
-    run(input) {
-      let ht = parseInt("0x" + input) ^ 4294967295, snum, i, lastindex, deepCheckData;
-      for (i = 3; i >= 0; i--) {
-        this.index[3 - i] = this.getcrcindex(ht >>> i * 8);
-        snum = this.crctable[this.index[3 - i]];
-        ht ^= snum >>> (3 - i) * 8;
-      }
-      for (i = 0; i < 1e7; i++) {
-        lastindex = this.crc32lastindex(i);
-        if (lastindex == this.index[3]) {
-          deepCheckData = this.deepCheck(i, this.index);
-          if (deepCheckData[0])
-            break;
-        }
-      }
-      if (i == 1e7)
-        return -1;
-      return Number(i + "" + deepCheckData[1]);
-    }
-    create_table() {
-      let crcreg, i, j;
-      for (i = 0; i < 256; ++i) {
-        crcreg = i;
-        for (j = 0; j < 8; ++j) {
-          if ((crcreg & 1) !== 0) {
-            crcreg = this.CRCPOLYNOMIAL ^ crcreg >>> 1;
-          } else {
-            crcreg >>>= 1;
-          }
-        }
-        this.crctable[i] = crcreg;
-      }
-    }
-    crc32(input) {
-      if (typeof input != "string")
-        input = input.toString();
-      let crcstart = 4294967295, len = input.length, index;
-      for (let i = 0; i < len; ++i) {
-        index = (crcstart ^ input.charCodeAt(i)) & 255;
-        crcstart = crcstart >>> 8 ^ this.crctable[index];
-      }
-      return crcstart;
-    }
-    crc32lastindex(input) {
-      if (typeof input != "string")
-        input = input.toString();
-      let crcstart = 4294967295, len = input.length, index;
-      for (let i = 0; i < len; ++i) {
-        index = (crcstart ^ input.charCodeAt(i)) & 255;
-        crcstart = crcstart >>> 8 ^ this.crctable[index];
-      }
-      return index;
-    }
-    getcrcindex(t) {
-      for (let i = 0; i < 256; i++)
-        if (this.crctable[i] >>> 24 == t)
-          return i;
-      return -1;
-    }
-    deepCheck(i, index) {
-      let tc = 0, str = "", hash = this.crc32(i);
-      tc = hash & 255 ^ index[2];
-      if (!(tc <= 57 && tc >= 48))
-        return [0];
-      str += tc - 48;
-      hash = this.crctable[index[2]] ^ hash >>> 8;
-      tc = hash & 255 ^ index[1];
-      if (!(tc <= 57 && tc >= 48))
-        return [0];
-      str += tc - 48;
-      hash = this.crctable[index[1]] ^ hash >>> 8;
-      tc = hash & 255 ^ index[0];
-      if (!(tc <= 57 && tc >= 48))
-        return [0];
-      str += tc - 48;
-      hash = this.crctable[index[0]] ^ hash >>> 8;
-      return [1, str];
-    }
-  };
-  var crc = new Midcrc();
-  function midcrc(input) {
-    return crc.run(input);
+  // src/runtime/element/create_scripts.ts
+  function createScripts(elements) {
+    return elements.reduce((s, d) => {
+      s.push(createElement(d));
+      return s;
+    }, []);
   }
-  function crc32(input) {
-    return ((crc.crc32(input) + 1) * -1 >>> 0).toString(16);
+  function loopScript(scripts) {
+    return new Promise((r, j) => {
+      const prev = scripts.shift();
+      if (prev) {
+        if (prev.src) {
+          prev.addEventListener("load", () => r(loopScript(scripts)));
+          prev.addEventListener("abort", () => r(loopScript(scripts)));
+          prev.addEventListener("error", () => r(loopScript(scripts)));
+          return document.body.appendChild(prev);
+        }
+        document.body.appendChild(prev);
+        r(loopScript(scripts));
+      } else
+        r(void 0);
+    });
+  }
+  function appendScripts(elements) {
+    return loopScript(createScripts(htmlVnode(elements)));
+  }
+  function loadScriptEs(path2) {
+    const files = isArray(path2) ? path2 : [path2];
+    window.postMessage({
+      \$type: "executeScript",
+      data: files
+    });
   }
 
   // src/images/svg/fork.svg
@@ -5562,239 +5599,145 @@ const modules =`
   toast.warning = Toast.bind(node, "warning");
   toast.custom = node.toast.bind(node);
 
-  // src/runtime/danmaku/danmaku_hash_id.css
-  var danmaku_hash_id_default = "/* 反查弹幕发送者相关样式 */\\r\\n.bb-comment,\\r\\n.comment-bilibili-fold {\\r\\n    font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;\\r\\n    font-size: 0;\\r\\n    zoom: 1;\\r\\n    min-height: 100px;\\r\\n    background: #fff;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list,\\r\\n.comment-bilibili-fold .comment-list {\\r\\n    padding-top: 20px;\\r\\n}\\r\\n\\r\\n.bb-comment *,\\r\\n.comment-bilibili-fold * {\\r\\n    box-sizing: content-box;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face {\\r\\n    display: inline-block;\\r\\n    position: relative;\\r\\n    margin-right: 10px;\\r\\n    vertical-align: top;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face img,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face img {\\r\\n    width: 24px;\\r\\n    height: 24px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con {\\r\\n    display: inline-block;\\r\\n    width: calc(100% - 34px);\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user,\\r\\n.comment-bilibili-fold .comment-list .list-item .user {\\r\\n    font-size: 12px;\\r\\n    font-weight: 700;\\r\\n    line-height: 18px;\\r\\n    padding-bottom: 4px;\\r\\n    display: block;\\r\\n    word-wrap: break-word;\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user .name,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user .name {\\r\\n    position: relative;\\r\\n    top: -1px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .level {\\r\\n    margin: 0 15px 0 8px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l0,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l0 {\\r\\n    background-position: -23px -28px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l1,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l1 {\\r\\n    background-position: -23px -92px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l2,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l2 {\\r\\n    background-position: -23px -156px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l3,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l3 {\\r\\n    background-position: -23px -220px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l4,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l4 {\\r\\n    background-position: -23px -284px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l5,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l5 {\\r\\n    background-position: -23px -348px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l6,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l6 {\\r\\n    background-position: -23px -412px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l7,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l7 {\\r\\n    background-position: -23px -476px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l8,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l8 {\\r\\n    background-position: -23px -540px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l9,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l9 {\\r\\n    background-position: -23px -604px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level {\\r\\n    display: inline-block;\\r\\n    width: 19px;\\r\\n    height: 9px;\\r\\n    vertical-align: middle;\\r\\n    margin: 0 8px;\\r\\n    background: url(data:image/png;base64,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) no-repeat;\\r\\n}";
-
-  // src/runtime/danmaku/danmaku_hash_id.ts
-  function danmakuHashId() {
-    addCss(danmaku_hash_id_default, "danmaku-hash-id");
-    class DanmakuHashId {
-      static count = 0;
-      static catch = {};
-      count = 0;
-      hash;
-      mid;
-      node;
-      dm;
-      constructor(crc2) {
-        DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
-        this.count = DanmakuHashId.count;
-        DanmakuHashId.catch = DanmakuHashId.catch || {};
-        this.hash = crc2;
-        this.mid = midcrc(this.hash);
-        this.getInfo();
+  // src/runtime/lib/crc32.ts
+  var Midcrc = class {
+    CRCPOLYNOMIAL = 3988292384;
+    crctable = new Array(256);
+    index = new Array(4);
+    constructor() {
+      this.create_table();
+    }
+    run(input) {
+      let ht = parseInt("0x" + input) ^ 4294967295, snum, i, lastindex, deepCheckData;
+      for (i = 3; i >= 0; i--) {
+        this.index[3 - i] = this.getcrcindex(ht >>> i * 8);
+        snum = this.crctable[this.index[3 - i]];
+        ht ^= snum >>> (3 - i) * 8;
       }
-      async getInfo() {
-        try {
-          this.node = document.querySelector(".bilibili-player-context-menu-container.active");
-          if (!this.node)
-            return setTimeout(() => {
-              this.getInfo();
-            }, 100);
-          this.node = this.node.children[0];
-          let j = 0;
-          for (let i = this.node.children.length - 1; i >= 0; i--) {
-            if (this.node.children[i].textContent.includes("mid")) {
-              this.dm = this.node.children[i];
-              j++;
-              if (this.count === j)
-                break;
-            }
+      for (i = 0; i < 1e7; i++) {
+        lastindex = this.crc32lastindex(i);
+        if (lastindex == this.index[3]) {
+          deepCheckData = this.deepCheck(i, this.index);
+          if (deepCheckData[0])
+            break;
+        }
+      }
+      if (i == 1e7)
+        return -1;
+      return Number(i + "" + deepCheckData[1]);
+    }
+    create_table() {
+      let crcreg, i, j;
+      for (i = 0; i < 256; ++i) {
+        crcreg = i;
+        for (j = 0; j < 8; ++j) {
+          if ((crcreg & 1) !== 0) {
+            crcreg = this.CRCPOLYNOMIAL ^ crcreg >>> 1;
+          } else {
+            crcreg >>>= 1;
           }
-          if (!this.dm)
-            return setTimeout(() => {
-              this.getInfo();
-            }, 100);
-          if (this.dm.tagName != "LI")
-            return;
-          DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid }) }, true));
-          this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' + this.mid + '" class="reply-face"><img src="' + DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' + this.mid + '" href="//space.bilibili.com/' + this.mid + '" target="_blank" class="' + (DanmakuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmakuHashId.catch[this.mid].data.card.name + "</a> " + DanmakuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + (DanmakuHashId.catch[this.mid].data.card.is_senior_member ? 7 : DanmakuHashId.catch[this.mid].data.card.level_info.current_level) + '"></i></a></div></div></div></div></div></div></div>';
-          DanmakuHashId.count--;
-        } catch (e) {
-          DanmakuHashId.count--;
-          toast.error("反差弹幕发送者信息失败 ಥ_ಥ");
-          debug.error(e);
         }
+        this.crctable[i] = crcreg;
       }
     }
-    window.danmakuHashId = (crc2) => {
-      try {
-        const check2 = new DanmakuHashId(crc2);
-        return \`hash: \${check2.hash} mid: \${check2.mid}\`;
-      } catch (e) {
-        debug.error(e);
+    crc32(input) {
+      if (typeof input != "string")
+        input = input.toString();
+      let crcstart = 4294967295, len = input.length, index;
+      for (let i = 0; i < len; ++i) {
+        index = (crcstart ^ input.charCodeAt(i)) & 255;
+        crcstart = crcstart >>> 8 ^ this.crctable[index];
       }
-    };
-  }
-
-  // src/runtime/lib/file.ts
-  function readAs(file, type = "string", encoding = "utf-8") {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      switch (type) {
-        case "ArrayBuffer":
-          reader.readAsArrayBuffer(file);
-          break;
-        case "DataURL":
-          reader.readAsDataURL(file);
-          break;
-        case "string":
-          reader.readAsText(file, encoding);
-          break;
-      }
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (e) => reject(e);
-    });
-  }
-  async function saveAs(content, fileName, contentType = "text/plain") {
-    const a = document.createElement("a");
-    const file = new Blob([content], { type: contentType });
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.addEventListener("load", () => URL.revokeObjectURL(a.href));
-    a.click();
-  }
-  function fileRead(accept, multiple) {
-    return new Promise((resolve) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      accept && (input.accept = accept);
-      multiple && (input.multiple = multiple);
-      input.style.opacity = "0";
-      input.addEventListener("change", () => resolve(input.files));
-      document.body.appendChild(input);
-      input.click();
-    });
-  }
-
-  // src/runtime/variable/fnval.ts
-  var Fnval = class {
-    MP4 = 1;
-    DASH_H265 = 16;
-    HDR = 64;
-    DASH_4K = 128;
-    DOLBYAUDIO = 256;
-    DOLBYVIDEO = 512;
-    DASH_8K = 1024;
-    DASH_AV1 = 2048;
-  };
-  var _ = new Fnval();
-  var fnval = Reflect.ownKeys(_).reduce((s, d) => {
-    s += _[d];
-    return s;
-  }, -1);
-
-  // src/runtime/lib/url.ts
-  var _a;
-  var UrlPack = class {
-    get ts() {
-      return new Date().getTime();
+      return crcstart;
     }
-    access_key = ((_a = setting.accessKey) == null ? void 0 : _a.key) || void 0;
-    jsonUrlDefault = {
-      "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: "json", fourk: 1 },
-      "api.bilibili.com/x/player/playurl": { qn: 127, otype: "json", fourk: 1 },
-      "interface.bilibili.com/v2/playurl": { appkey: 9, otype: "json", quality: 127, type: "" },
-      "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: "json", quality: 127, type: "" },
-      "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: this.ts },
-      "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: this.ts },
-      "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: "json", platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-      "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: "json", platform: "android", mobi_app: "android_tv_yst", build: 102801 },
-      "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: "json", ts: this.ts },
-      "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: "json", ts: this.ts },
-      "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
-      "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" },
-      "app.bilibili.com/x/v2/activity/index": { appkey: 1, build: 303e4, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", offset: 0, platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", tab_id: 0, tab_module_id: 0, ts: this.ts },
-      "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 303e4, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts },
-      "bangumi.bilibili.com/api/season_v5": { appkey: 2, build: "2040100", platform: "android" }
-    };
-    getJson(url, detail, gm) {
-      const str = objUrl(url, { ...this.jsonUrlDefault[url], ...detail });
-      return gm ? isUserScript ? GM.xhr({ url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, responseType: "json" }) : GM.xmlHttpRequest(this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, { credentials: "include" }).then((d) => JSON.parse(d)) : xhr({
-        url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str,
-        responseType: "json",
-        credentials: true
-      });
+    crc32lastindex(input) {
+      if (typeof input != "string")
+        input = input.toString();
+      let crcstart = 4294967295, len = input.length, index;
+      for (let i = 0; i < len; ++i) {
+        index = (crcstart ^ input.charCodeAt(i)) & 255;
+        crcstart = crcstart >>> 8 ^ this.crctable[index];
+      }
+      return index;
+    }
+    getcrcindex(t) {
+      for (let i = 0; i < 256; i++)
+        if (this.crctable[i] >>> 24 == t)
+          return i;
+      return -1;
+    }
+    deepCheck(i, index) {
+      let tc = 0, str = "", hash = this.crc32(i);
+      tc = hash & 255 ^ index[2];
+      if (!(tc <= 57 && tc >= 48))
+        return [0];
+      str += tc - 48;
+      hash = this.crctable[index[2]] ^ hash >>> 8;
+      tc = hash & 255 ^ index[1];
+      if (!(tc <= 57 && tc >= 48))
+        return [0];
+      str += tc - 48;
+      hash = this.crctable[index[1]] ^ hash >>> 8;
+      tc = hash & 255 ^ index[0];
+      if (!(tc <= 57 && tc >= 48))
+        return [0];
+      str += tc - 48;
+      hash = this.crctable[index[0]] ^ hash >>> 8;
+      return [1, str];
     }
   };
-  var urlPack = new UrlPack();
+  var crc = new Midcrc();
+  function midcrc(input) {
+    return crc.run(input);
+  }
+  function crc32(input) {
+    return ((crc.crc32(input) + 1) * -1 >>> 0).toString(16);
+  }
 
-  // src/runtime/player/upos_replace.ts
-  var UPOS = {
-    "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
-    "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
-    "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
-    "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
-    "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
-    "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
-    "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
-    "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
-    "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
-    "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
-    "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
-    "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
-    "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
-    "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
-    "js（华为）": "upos-tf-all-js.bilivideo.com",
-    "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
-    "akamai（海外）": "upos-hz-mirrorakam.akamaized.net"
+  // src/runtime/lib/base64.ts
+  var Base64 = class {
+    static encode(str) {
+      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+        return String.fromCharCode("0x" + p1);
+      }));
+    }
+    static decode(str) {
+      return decodeURIComponent(atob(str).split("").map(function(c) {
+        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(""));
+    }
   };
-  var dis = false;
-  var timer = 0;
-  function uposReplace(str, uposName) {
-    if (uposName === "不替换")
-      return str;
-    !dis && toast.custom(10, "warning", "已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${uposName}\`, \`UPOS：\${UPOS[uposName]}\`);
-    dis = true;
-    clearTimeout(timer);
-    timer = setTimeout(() => dis = false, 1e3);
-    return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS[uposName]}/\`);
+
+  // src/runtime/cookies.ts
+  function getCookies() {
+    return document.cookie.split("; ").reduce((s, d) => {
+      let key = d.split("=")[0];
+      let val = d.split("=")[1];
+      s[key] = unescape(val);
+      return s;
+    }, {});
+  }
+  function setCookie(name, value, days = 365) {
+    const exp = new Date();
+    exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1e3);
+    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + "; path=/; domain=.bilibili.com";
   }
 
-  // src/runtime/node_observer.ts
-  var nodelist = [];
-  function observerAddedNodes(callback) {
-    try {
-      if (typeof callback === "function")
-        nodelist.push(callback);
-      return nodelist.length - 1;
-    } catch (e) {
-      debug.error(e);
-    }
-  }
-  var observe = new MutationObserver((d) => d.forEach((d2) => {
-    d2.addedNodes[0] && nodelist.forEach(async (f) => {
-      try {
-        f(d2.addedNodes[0]);
-      } catch (e) {
-        debug.error(d2).error(e);
-      }
-    });
-  }));
-  observe.observe(document, { childList: true, subtree: true });
+  // src/runtime/variable/path.ts
+  var path = location.href.split("/");
 
-  // src/runtime/switch_video.ts
-  var switchlist = [];
-  function switchVideo(callback) {
-    try {
-      if (typeof callback === "function")
-        switchlist.push(callback);
-    } catch (e) {
-      debug.error("switchVideo.js", e);
+  // src/runtime/element/horizontal/horizontal.html
+  var horizontal_default = '<div class="hr"></div>\\r\\n<style type="text/css">\\r\\n    .hr {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        grid-gap: 0;\\r\\n        gap: 0;\\r\\n        justify-content: space-between;\\r\\n        flex-shrink: 0;\\r\\n        height: 1px;\\r\\n        background-color: rgba(136, 136, 136, 0.1);\\r\\n        width: 100%;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/horizontal/horizontal.ts
+  var HorizontalLine = class extends HTMLElement {
+    constructor() {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      root3.appendChild(createElements(htmlVnode(horizontal_default)));
     }
-  }
-  observerAddedNodes((node4) => {
-    if (/bilibili-player-area video-state-pause/.test(node4.className)) {
-      switchlist.forEach(async (d) => {
-        try {
-          d();
-        } catch (e) {
-          debug.error(d);
-          debug.error(e);
-        }
-      });
-    }
-  });
+  };
+  customElements.get(\`horizontal-line\${mutex}\`) || customElements.define(\`horizontal-line\${mutex}\`, HorizontalLine);
 
   // src/runtime/element/popupbox/popupbox.html
   var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
@@ -5888,6 +5831,388 @@ const modules =`
     }
   };
   customElements.get(\`popup-box\${mutex}\`) || customElements.define(\`popup-box\${mutex}\`, PopupBox);
+
+  // src/runtime/element/push_button/push_button.html
+  var push_button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
+
+  // src/runtime/element/push_button/push_button.ts
+  var PushButton = class extends HTMLElement {
+    button;
+    constructor(obj) {
+      super();
+      const root3 = this.attachShadow({ mode: "closed" });
+      const { button, func } = obj;
+      root3.appendChild(createElements(htmlVnode(push_button_default)));
+      const node4 = root3.children[0];
+      Reflect.defineProperty(obj, "button", {
+        set: (v) => {
+          if (this.button === v)
+            return;
+          node4.textContent = v;
+          this.button = v;
+        },
+        get: () => this.button
+      });
+      let timer2;
+      node4.addEventListener("click", () => {
+        clearTimeout(timer2);
+        timer2 = setTimeout(() => {
+          func();
+        }, 100);
+      });
+      this.button = obj.button = button || "点击";
+    }
+  };
+  customElements.get(\`push-button\${mutex}\`) || customElements.define(\`push-button\${mutex}\`, PushButton);
+
+  // src/runtime/element/alert.ts
+  function showAlert(data, head, button) {
+    const part = createElements(htmlVnode(
+      \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
+                <span>\${head || "Bilibili Old"}</span>
+            </div>
+            <div style="margin-bottom: 10px;"><div>\${data}</div></div>\`
+    ));
+    let popup;
+    if (button && button.length) {
+      part.appendChild(new HorizontalLine());
+      const node4 = part.appendChild(createElement({
+        tagName: "div",
+        props: { style: "display: flex;align-items: center;justify-content: space-around;" }
+      }));
+      button.forEach((d) => {
+        node4.appendChild(new PushButton({
+          button: d.name,
+          func: () => {
+            d.callback();
+            popup.remove();
+          }
+        }));
+      });
+    }
+    popup = new PopupBox({ children: part, style: "max-width: 360px; max-height: 300px;" });
+  }
+
+  // src/runtime/variable/variable.ts
+  var API = {
+    get aid() {
+      return window.aid;
+    },
+    set aid(v) {
+      window.aid = v;
+    },
+    get cid() {
+      return window.cid;
+    },
+    set cid(v) {
+      window.cid = v;
+    },
+    get ssid() {
+      return window.ssid;
+    },
+    set ssid(v) {
+      window.ssid = v;
+    },
+    get epid() {
+      return window.epid;
+    },
+    set epid(v) {
+      window.epid = v;
+    },
+    get __INITIAL_STATE__() {
+      return window.__INITIAL_STATE__;
+    },
+    set __INITIAL_STATE__(v) {
+      window.__INITIAL_STATE__ = v;
+    },
+    __playinfo__: void 0,
+    limit: void 0,
+    bkg_cover: void 0,
+    cover: void 0,
+    title: void 0,
+    th: void 0,
+    pgc: void 0,
+    playerParam: void 0,
+    rewrite: 0,
+    GM,
+    urlParam,
+    xhr,
+    urlsign,
+    objUrl,
+    urlObj,
+    URLES,
+    addCss,
+    addElement,
+    saveAs,
+    md5,
+    timeFormat,
+    sizeFormat,
+    integerFormat,
+    xhrhook,
+    xhrhookAsync,
+    xhrhookUltra,
+    removeXhrhook,
+    jsonphook,
+    jsonphookasync,
+    removeJsonphook,
+    htmlVnode,
+    loadScript,
+    appendScripts,
+    toast,
+    debug,
+    crc32,
+    Base64,
+    getCookies,
+    setCookie,
+    doWhile,
+    mutex,
+    path,
+    fileRead,
+    showAlert
+  };
+  setting.development && Reflect.set(window, "API", API);
+
+  // src/runtime/hook/webpack_jsonp.ts
+  var hook;
+  var arr = [];
+  var param = [];
+  var webpackJsonp = window.webpackJsonp;
+  Reflect.defineProperty(window, "webpackJsonp", {
+    set: (v) => hook = v,
+    get: () => {
+      if (hook) {
+        if (isArray(hook)) {
+          if (API.rewrite) {
+            if (API.rewrite === 2) {
+              hook = void 0;
+            } else if (hook.length > 1) {
+              hook.shift();
+            }
+          }
+          return hook;
+        }
+        return (chunkIds, moreModules, executeModules) => {
+          if (arr[moreModules.length]) {
+            const obj = arr[moreModules.length];
+            const pam = param[moreModules.length];
+            Object.entries(obj).forEach((d) => {
+              let code = moreModules[d[0]];
+              if (code) {
+                code = code.toString();
+                d[1].forEach((e) => code = e(code));
+                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
+              }
+            });
+          }
+          return hook(chunkIds, moreModules, executeModules);
+        };
+      }
+    },
+    configurable: true
+  });
+  window.webpackJsonp = webpackJsonp;
+  function webpackhook(len, pos, rpc, params = ["t", "e", "i"]) {
+    if (!arr[len]) {
+      arr[len] = {};
+      param[len] = params;
+    }
+    arr[len][pos] = arr[len][pos] || [];
+    arr[len][pos].push((code) => rpc(code));
+  }
+
+  // src/runtime/danmaku/danmaku_hash_id.css
+  var danmaku_hash_id_default = "/* 反查弹幕发送者相关样式 */\\r\\n.bb-comment,\\r\\n.comment-bilibili-fold {\\r\\n    font-family: Microsoft YaHei, Arial, Helvetica, sans-serif;\\r\\n    font-size: 0;\\r\\n    zoom: 1;\\r\\n    min-height: 100px;\\r\\n    background: #fff;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list,\\r\\n.comment-bilibili-fold .comment-list {\\r\\n    padding-top: 20px;\\r\\n}\\r\\n\\r\\n.bb-comment *,\\r\\n.comment-bilibili-fold * {\\r\\n    box-sizing: content-box;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face {\\r\\n    display: inline-block;\\r\\n    position: relative;\\r\\n    margin-right: 10px;\\r\\n    vertical-align: top;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-face img,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-face img {\\r\\n    width: 24px;\\r\\n    height: 24px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con {\\r\\n    display: inline-block;\\r\\n    width: calc(100% - 34px);\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user,\\r\\n.comment-bilibili-fold .comment-list .list-item .user {\\r\\n    font-size: 12px;\\r\\n    font-weight: 700;\\r\\n    line-height: 18px;\\r\\n    padding-bottom: 4px;\\r\\n    display: block;\\r\\n    word-wrap: break-word;\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .reply-con .user .name,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .reply-con .user .name {\\r\\n    position: relative;\\r\\n    top: -1px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .reply-box .reply-item .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .reply-box .reply-item .level {\\r\\n    margin: 0 15px 0 8px;\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l0,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l0 {\\r\\n    background-position: -23px -28px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l1,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l1 {\\r\\n    background-position: -23px -92px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l2,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l2 {\\r\\n    background-position: -23px -156px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l3,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l3 {\\r\\n    background-position: -23px -220px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l4,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l4 {\\r\\n    background-position: -23px -284px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l5,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l5 {\\r\\n    background-position: -23px -348px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l6,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l6 {\\r\\n    background-position: -23px -412px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l7,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l7 {\\r\\n    background-position: -23px -476px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l8,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l8 {\\r\\n    background-position: -23px -540px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level.l9,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level.l9 {\\r\\n    background-position: -23px -604px\\r\\n}\\r\\n\\r\\n.bb-comment .comment-list .list-item .user .level,\\r\\n.comment-bilibili-fold .comment-list .list-item .user .level {\\r\\n    display: inline-block;\\r\\n    width: 19px;\\r\\n    height: 9px;\\r\\n    vertical-align: middle;\\r\\n    margin: 0 8px;\\r\\n    background: url(data:image/png;base64,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) no-repeat;\\r\\n}";
+
+  // src/runtime/danmaku/danmaku_hash_id.ts
+  function danmakuHashId() {
+    addCss(danmaku_hash_id_default, "danmaku-hash-id");
+    class DanmakuHashId {
+      static count = 0;
+      static catch = {};
+      count = 0;
+      hash;
+      mid;
+      node;
+      dm;
+      constructor(crc2) {
+        DanmakuHashId.count = DanmakuHashId.count ? DanmakuHashId.count + 1 : 1;
+        this.count = DanmakuHashId.count;
+        DanmakuHashId.catch = DanmakuHashId.catch || {};
+        this.hash = crc2;
+        this.mid = midcrc(this.hash);
+        this.getInfo();
+      }
+      async getInfo() {
+        try {
+          this.node = document.querySelector(".bilibili-player-context-menu-container.active");
+          if (!this.node)
+            return setTimeout(() => {
+              this.getInfo();
+            }, 100);
+          this.node = this.node.children[0];
+          let j = 0;
+          for (let i = this.node.children.length - 1; i >= 0; i--) {
+            if (this.node.children[i].textContent.includes("mid")) {
+              this.dm = this.node.children[i];
+              j++;
+              if (this.count === j)
+                break;
+            }
+          }
+          if (!this.dm)
+            return setTimeout(() => {
+              this.getInfo();
+            }, 100);
+          if (this.dm.tagName != "LI")
+            return;
+          DanmakuHashId.catch[this.mid] = DanmakuHashId.catch[this.mid] || jsonCheck(await xhr({ url: objUrl("https://api.bilibili.com/x/web-interface/card", { mid: this.mid }) }, true));
+          this.dm.innerHTML = '<div style="min-height:0px;z-index:-5;background-color: unset;" class="bb-comment"><div style="padding-top: 0;" class="comment-list"><div class="list-item"><div class="reply-box"><div style="padding:0px" class="reply-item reply-wrap"><div style="margin-left: 15px;vertical-align: middle;" data-usercard-mid="' + this.mid + '" class="reply-face"><img src="' + DanmakuHashId.catch[this.mid].data.card.face + '@52w_52h.webp" alt=""></div><div class="reply-con"><div class="user" style="padding-bottom: 0;top: 3px;"><a style="display:initial;padding: 0px;" data-usercard-mid="' + this.mid + '" href="//space.bilibili.com/' + this.mid + '" target="_blank" class="' + (DanmakuHashId.catch[this.mid].data.card.vip.vipType > 1 ? "name vip-red-name" : "name") + '">' + DanmakuHashId.catch[this.mid].data.card.name + "</a> " + DanmakuHashId.catch[this.mid].data.card.sex + '<a style="display:initial;padding: 0px;" href="//www.bilibili.com/blackboard/help.html#%E4%BC%9A%E5%91%98%E7%AD%89%E7%BA%A7%E7%9B%B8%E5%85%B3" target="_blank"><i class="level l' + (DanmakuHashId.catch[this.mid].data.card.is_senior_member ? 7 : DanmakuHashId.catch[this.mid].data.card.level_info.current_level) + '"></i></a></div></div></div></div></div></div></div>';
+          DanmakuHashId.count--;
+        } catch (e) {
+          DanmakuHashId.count--;
+          toast.error("反差弹幕发送者信息失败 ಥ_ಥ");
+          debug.error(e);
+        }
+      }
+    }
+    window.danmakuHashId = (crc2) => {
+      try {
+        const check2 = new DanmakuHashId(crc2);
+        return \`hash: \${check2.hash} mid: \${check2.mid}\`;
+      } catch (e) {
+        debug.error(e);
+      }
+    };
+  }
+
+  // src/runtime/variable/fnval.ts
+  var Fnval = class {
+    MP4 = 1;
+    DASH_H265 = 16;
+    HDR = 64;
+    DASH_4K = 128;
+    DOLBYAUDIO = 256;
+    DOLBYVIDEO = 512;
+    DASH_8K = 1024;
+    DASH_AV1 = 2048;
+  };
+  var _ = new Fnval();
+  var fnval = Reflect.ownKeys(_).reduce((s, d) => {
+    s += _[d];
+    return s;
+  }, -1);
+
+  // src/runtime/lib/url.ts
+  var _a;
+  var UrlPack = class {
+    get ts() {
+      return new Date().getTime();
+    }
+    access_key = ((_a = setting.accessKey) == null ? void 0 : _a.key) || void 0;
+    jsonUrlDefault = {
+      "api.bilibili.com/pgc/player/web/playurl": { qn: 127, otype: "json", fourk: 1 },
+      "api.bilibili.com/x/player/playurl": { qn: 127, otype: "json", fourk: 1 },
+      "interface.bilibili.com/v2/playurl": { appkey: 9, otype: "json", quality: 127, type: "" },
+      "bangumi.bilibili.com/player/web_api/v2/playurl": { appkey: 9, module: "bangumi", otype: "json", quality: 127, type: "" },
+      "api.bilibili.com/pgc/player/api/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", module: "bangumi", otype: "json", platform: "android_i", qn: 127, ts: this.ts },
+      "app.bilibili.com/v2/playurlproj": { access_key: this.access_key, appkey: 1, build: "2040100", device: "android", expire: "0", mid: "0", mobi_app: "android_i", otype: "json", platform: "android_i", qn: 127, ts: this.ts },
+      "api.bilibili.com/pgc/player/api/playurltv": { appkey: 6, qn: 127, fourk: 1, otype: "json", platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+      "api.bilibili.com/x/tv/ugc/playurl": { appkey: 6, qn: 127, fourk: 1, otype: "json", platform: "android", mobi_app: "android_tv_yst", build: 102801 },
+      "app.bilibili.com/x/intl/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: "json", ts: this.ts },
+      "apiintl.biliapi.net/intl/gateway/ogv/player/api/playurl": { access_key: this.access_key, mobi_app: "android_i", fnver: 0, fnval, qn: 127, platform: "android", fourk: 1, build: 2100110, appkey: 0, otype: "json", ts: this.ts },
+      "api.bilibili.com/view": { type: "json", appkey: "8e9fc618fbd41e28" },
+      "api.bilibili.com/x/v2/reply/detail": { build: "6042000", channel: "master", mobi_app: "android", platform: "android", prev: "0", ps: "20" },
+      "app.bilibili.com/x/v2/activity/index": { appkey: 1, build: 303e4, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", offset: 0, platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", tab_id: 0, tab_module_id: 0, ts: this.ts },
+      "app.bilibili.com/x/v2/activity/inline": { appkey: 1, build: 303e4, c_locale: "zh_CN", channel: "master", fnval, fnver: 0, force_host: 0, fourk: 1, https_url_req: 0, mobi_app: "android_i", platform: "android", player_net: 1, qn: 32, s_locale: "zh_CN", ts: this.ts },
+      "bangumi.bilibili.com/api/season_v5": { appkey: 2, build: "2040100", platform: "android" }
+    };
+    getJson(url, detail, gm) {
+      const str = objUrl(\`https://\${url}\`, { ...this.jsonUrlDefault[url], ...detail });
+      return gm ? isUserScript ? GM.xhr({ url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, responseType: "json" }) : GM.xmlHttpRequest(this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str, { credentials: "include" }).then((d) => JSON.parse(d)) : xhr({
+        url: this.jsonUrlDefault[url].appkey > 0 ? urlsign(str, void 0, this.jsonUrlDefault[url].appkey) : str,
+        responseType: "json",
+        credentials: true
+      });
+    }
+  };
+  var urlPack = new UrlPack();
+
+  // src/runtime/player/upos_replace.ts
+  var UPOS = {
+    "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
+    "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
+    "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
+    "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
+    "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
+    "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
+    "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
+    "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
+    "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
+    "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
+    "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
+    "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
+    "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
+    "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
+    "js（华为）": "upos-tf-all-js.bilivideo.com",
+    "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
+    "akamai（海外）": "upos-hz-mirrorakam.akamaized.net"
+  };
+  var dis = false;
+  var timer = 0;
+  function uposReplace(str, uposName) {
+    if (uposName === "不替换")
+      return str;
+    !dis && toast.custom(10, "warning", "已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${uposName}\`, \`UPOS：\${UPOS[uposName]}\`);
+    dis = true;
+    clearTimeout(timer);
+    timer = setTimeout(() => dis = false, 1e3);
+    return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS[uposName]}/\`);
+  }
+
+  // src/runtime/node_observer.ts
+  var nodelist = [];
+  function observerAddedNodes(callback) {
+    try {
+      if (typeof callback === "function")
+        nodelist.push(callback);
+      return nodelist.length - 1;
+    } catch (e) {
+      debug.error(e);
+    }
+  }
+  var observe = new MutationObserver((d) => d.forEach((d2) => {
+    d2.addedNodes[0] && nodelist.forEach(async (f) => {
+      try {
+        f(d2.addedNodes[0]);
+      } catch (e) {
+        debug.error(d2).error(e);
+      }
+    });
+  }));
+  observe.observe(document, { childList: true, subtree: true });
+
+  // src/runtime/switch_video.ts
+  var switchlist = [];
+  function switchVideo(callback) {
+    try {
+      if (typeof callback === "function")
+        switchlist.push(callback);
+    } catch (e) {
+      debug.error("switchVideo.js", e);
+    }
+  }
+  observerAddedNodes((node4) => {
+    if (/bilibili-player-area video-state-pause/.test(node4.className)) {
+      switchlist.forEach(async (d) => {
+        try {
+          d();
+        } catch (e) {
+          debug.error(d);
+          debug.error(e);
+        }
+      });
+    }
+  });
 
   // src/runtime/download/download_ui.html
   var download_ui_default = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
@@ -5996,21 +6321,6 @@ const modules =`
   customElements.get(\`biliold-download\${mutex}\`) || customElements.define(\`biliold-download\${mutex}\`, BiliOldDownload);
   var downloadUI = new BiliOldDownload({ data: {} });
 
-  // src/runtime/format/size.ts
-  function sizeFormat(size = 0) {
-    let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1e3 ** i;
-    while (dex > 1) {
-      if (size >= vor) {
-        size = Number((size / dex).toFixed(2));
-        break;
-      }
-      dex = dex / 1024;
-      vor = vor / 1e3;
-      i--;
-    }
-    return size ? size + unit[i] : "N/A";
-  }
-
   // src/runtime/format/sub_array.ts
   function subArray(res, num = 1) {
     const arr2 = [...res];
@@ -6023,20 +6333,6 @@ const modules =`
     }
     return num === 1 ? out[0] : out;
   }
-
-  // src/runtime/lib/base64.ts
-  var Base64 = class {
-    static encode(str) {
-      return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-        return String.fromCharCode("0x" + p1);
-      }));
-    }
-    static decode(str) {
-      return decodeURIComponent(atob(str).split("").map(function(c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(""));
-    }
-  };
 
   // src/runtime/download/aria2.ts
   var Aria2 = class {
@@ -6548,16 +6844,6 @@ const modules =`
   // src/runtime/danmaku/danmaku.ts
   var import_light = __toESM(require_light());
 
-  // src/runtime/cookies.ts
-  function getCookies() {
-    return document.cookie.split("; ").reduce((s, d) => {
-      let key = d.split("=")[0];
-      let val = d.split("=")[1];
-      s[key] = unescape(val);
-      return s;
-    }, {});
-  }
-
   // src/runtime/variable/uid.ts
   var uid = Number(getCookies().DedeUserID);
 
@@ -7007,18 +7293,9 @@ const modules =`
   }
   function post2(url, data, contentType = "application/x-www-form-urlencoded;charset=UTF-8") {
     data.csrf = getCookies().bili_jct;
-    function searchParams(obj) {
-      const res = new URLEs("");
-      Object.entries(obj).forEach((d) => {
-        if (d[1] || d[1] === "") {
-          res.searchParams.set(d[0], d[1]);
-        }
-      });
-      return res.search.slice(1);
-    }
     return xhr({
       url,
-      data: searchParams(data),
+      data: objUrl("", data),
       headers: { "Content-Type": contentType },
       method: "POST",
       credentials: true
@@ -8094,126 +8371,6 @@ const modules =`
       }
     }
   });
-
-  // src/runtime/hook/xhr.ts
-  var rules = [];
-  var open = XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open = function(...rest) {
-    const args = [...rest];
-    args[1] && rules.forEach((d) => {
-      d && d[0].every((d2) => args[1].includes(d2)) && d[1].call(this, args);
-    });
-    return open.call(this, ...args);
-  };
-  function xhrhook(url, modifyOpen, modifyResponse, once = true) {
-    let id;
-    const one = Array.isArray(url) ? url : [url];
-    const two = function(args) {
-      once && id && delete rules[id - 1];
-      if (modifyOpen)
-        try {
-          modifyOpen(args);
-        } catch (e) {
-          debug.error("modifyOpen of xhrhook", one, e);
-        }
-      if (modifyResponse)
-        try {
-          this.addEventListener("readystatechange", () => {
-            try {
-              if (this.readyState === 4) {
-                const response = { response: this.response, responseType: this.responseType, status: this.status, statusText: this.statusText };
-                (this.responseType === "" || this.responseType === "text") && (response.responseText = this.responseText);
-                (this.responseType === "" || this.responseType === "document") && (response.responseXML = this.responseXML);
-                modifyResponse(response);
-                Reflect.defineProperty(this, "response", { configurable: true, value: response.response });
-                response.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: response.responseText });
-                response.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: response.responseXML });
-              }
-            } catch (e) {
-              debug.error("modifyResponse of xhrhook", one, e);
-            }
-          });
-        } catch (e) {
-          debug.error("modifyResponse of xhrhook", one, e);
-        }
-    };
-    return id = rules.push([one, two]);
-  }
-  function xhrhookAsync(url, condition, modifyResponse, once = true) {
-    let id, temp2;
-    const one = Array.isArray(url) ? url : [url];
-    const two = function(args) {
-      try {
-        if (!condition || condition(args)) {
-          this.xhrhookTimes = this.xhrhookTimes ? this.xhrhookTimes++ : 1;
-          id && (temp2 = rules[id - 1]);
-          delete rules[id - 1];
-          this.send = () => true;
-          (!args[2] || args[2] === true) && (this.timeout = 0);
-          const et = setInterval(() => {
-            this.dispatchEvent(new ProgressEvent("progress"));
-          }, 50);
-          Reflect.defineProperty(this, "status", { configurable: true, value: 200 });
-          Reflect.defineProperty(this, "readyState", { configurable: true, value: 2 });
-          this.dispatchEvent(new ProgressEvent("readystatechange"));
-          modifyResponse ? modifyResponse(args, this.responseType).then((d) => {
-            clearInterval(et);
-            if (d) {
-              Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
-              d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
-              d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-              d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-              !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-              Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
-              this.dispatchEvent(new ProgressEvent("readystatechange"));
-              this.dispatchEvent(new ProgressEvent("load"));
-              this.dispatchEvent(new ProgressEvent("loadend"));
-            }
-          }).catch((d) => {
-            if (this.xhrhookTimes === 1) {
-              if (d && d.response) {
-                Reflect.defineProperty(this, "response", { configurable: true, value: d.response });
-                d.responseType && Reflect.defineProperty(this, "responseType", { configurable: true, value: d.responseType });
-                d.responseText && Reflect.defineProperty(this, "responseText", { configurable: true, value: d.responseText });
-                d.responseXML && Reflect.defineProperty(this, "responseXML", { configurable: true, value: d.responseXML });
-                !this.responseURL && Reflect.defineProperty(this, "responseURL", { configurable: true, value: args[1] });
-                Reflect.defineProperty(this, "readyState", { configurable: true, value: 4 });
-                this.dispatchEvent(new ProgressEvent("readystatechange"));
-                this.dispatchEvent(new ProgressEvent("load"));
-                this.dispatchEvent(new ProgressEvent("loadend"));
-              } else {
-                this.dispatchEvent(new ProgressEvent("error"));
-              }
-            } else {
-              this.xhrhookTimes--;
-            }
-            debug.error("modifyResponse of xhrhookasync", one, d);
-          }).finally(() => {
-            clearInterval(et);
-            !once && (id = rules.push(temp2));
-          }) : (this.abort(), !once && (id = rules.push(temp2)));
-          clearInterval(et);
-        }
-      } catch (e) {
-        debug.error("condition of xhrhook", one, e);
-      }
-    };
-    return id = rules.push([one, two]);
-  }
-  function removeXhrhook(id) {
-    id >= 0 && delete rules[id - 1];
-  }
-  function xhrhookUltra(url, modify) {
-    const one = Array.isArray(url) ? url : [url];
-    const two = function(args) {
-      try {
-        modify.call(this, this, args);
-      } catch (e) {
-        debug.error("xhrhook modify", one, modify, e);
-      }
-    };
-    return rules.push([one, two]);
-  }
 
   // src/runtime/danmaku/history_danmaku.ts
   function historyDanmaku() {
@@ -14427,40 +14584,6 @@ const modules =`
   // src/content/av/menu_config.txt
   var menu_config_default = '[{name:"首页",route:"/",tid:"",locid:23,sub:[]},{name:"动画",route:"douga",tid:1,locid:52,count:"",subMenuSize:162,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2507,leftId:2452,rightId:2453},sub:[{name:"MAD·AMV",route:"mad",tid:24,ps:15,rps:10,ad:{active:!0,dataLocId:151},desc:"具有一定制作程度的动画或静画的二次创作视频",url:"//www.bilibili.com/video/douga-mad-1.html"},{name:"MMD·3D",route:"mmd",tid:25,ps:15,rps:10,ad:{active:!0,dataLocId:152},desc:"使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频",url:"//www.bilibili.com/video/douga-mmd-1.html"},{name:"短片·手书·配音",route:"voice",tid:47,ps:15,rps:10,desc:"追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音",url:"//www.bilibili.com/video/douga-voice-1.html"},{name:"手办·模玩",route:"garage_kit",tid:210,ps:15,rps:10,desc:"手办模玩的测评、改造或其他衍生内容",url:""},{name:"特摄",route:"tokusatsu",tid:86,ps:15,rps:10,desc:"特摄相关衍生视频",url:"//www.bilibili.com/video/cinephile-tokusatsu.html"},{name:"综合",route:"other",tid:27,ps:15,rps:10,ad:{active:!0,dataLocId:153},desc:"以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容",url:"//www.bilibili.com/video/douga-else-1.html"}]},{name:"番剧",route:"anime",tid:13,url:"//www.bilibili.com/anime/",takeOvered:!0,count:"",subMenuSize:172,combination:!0,sub:[{name:"连载动画",tid:33,route:"serial",desc:"当季连载的动画番剧",url:"//www.bilibili.com/video/bangumi-two-1.html"},{name:"完结动画",tid:32,route:"finish",desc:"已完结的动画番剧合集",url:"//www.bilibili.com/video/part-twoelement-1.html"},{name:"资讯",tid:51,route:"information",desc:"动画番剧相关资讯视频",url:"//www.bilibili.com/video/douga-else-information-1.html"},{name:"官方延伸",tid:152,route:"offical",desc:"动画番剧为主题的宣传节目、采访视频，及声优相关视频",url:"//www.bilibili.com/video/bagumi_offical_1.html"},{name:"新番时间表",url:"//www.bilibili.com/anime/timeline/",desc:""},{name:"番剧索引",url:"//www.bilibili.com/anime/index/",desc:""}]},{name:"国创",tid:167,route:"guochuang",url:"//www.bilibili.com/guochuang/",takeOvered:!0,count:"",subMenuSize:214,combination:!0,sub:[{name:"国产动画",tid:153,route:"chinese",desc:"我国出品的PGC动画",url:"//www.bilibili.com/video/bangumi_chinese_1.html"},{name:"国产原创相关",tid:168,route:"original",desc:"",url:"//www.bilibili.com/video/guochuang-fanvid-1.html"},{name:"布袋戏",tid:169,route:"puppetry",desc:"",url:"//www.bilibili.com/video/glove-puppetry-1.html"},{name:"动态漫·广播剧",tid:195,route:"motioncomic",desc:"",url:""},{name:"资讯",tid:170,route:"information",desc:"",url:"//www.bilibili.com/video/guochuang-offical-1.html"},{name:"新番时间表",url:"//www.bilibili.com/guochuang/timeline/",desc:""},{name:"国产动画索引",url:"//www.bilibili.com/guochuang/index/",desc:""}]},{name:"音乐",route:"music",tid:3,locid:58,count:"",subMenuSize:268,slider:{width:620,height:220},viewTag:!0,customComponent:{name:"Energy",titleId:2511,leftId:2462,rightId:3131,rightType:"slide"},sub:[{name:"原创音乐",route:"original",tid:28,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:243},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"原创歌曲及纯音乐，包括改编、重编曲及remix",url:"//www.bilibili.com/video/music-original-1.html"},{name:"翻唱",route:"cover",tid:31,ps:15,rps:10,ad:{active:!0,dataLocId:245},viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"对曲目的人声再演绎视频",url:"//www.bilibili.com/video/music-Cover-1.html"},{name:"演奏",route:"perform",tid:59,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"乐器和非传统乐器器材的演奏作品",url:"//www.bilibili.com/video/music-perform-1.html"},{name:"VOCALOID·UTAU",route:"vocaloid",tid:30,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:247},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作",url:"//www.bilibili.com/video/music-vocaloid-1.html"},{name:"音乐现场",route:"live",tid:29,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等",url:"//www.bilibili.com/video/music-oped-1.html"},{name:"MV",route:"mv",tid:193,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV",url:"//www.bilibili.com/video/music-coordinate-1.html"},{name:"乐评盘点",route:"commentary",tid:243,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐教学",route:"tutorial",tid:244,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以音乐教学为目的的内容",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐综合",route:"other",tid:130,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"所有无法被收纳到其他音乐二级分区的音乐类视频",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音频",customZone:"Audio",route:"audio",url:"//www.bilibili.com/audio/home?musicType=music"},{name:"说唱",url:"//www.bilibili.com/v/rap"}]},{name:"舞蹈",route:"dance",tid:129,locid:64,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2513,leftId:2472,rightId:2473},sub:[{name:"宅舞",route:"otaku",tid:20,ps:15,rps:10,ad:{active:!0,dataLocId:249},desc:"与ACG相关的翻跳、原创舞蹈",url:"//www.bilibili.com/video/dance-1.html"},{name:"街舞",route:"hiphop",tid:198,ps:15,rps:10,ad:{active:!0,dataLocId:251},desc:"收录街舞相关内容，包括赛事现场、舞室作品、个人翻跳、FREESTYLE等",url:""},{name:"明星舞蹈",route:"star",tid:199,ps:15,rps:10,desc:"国内外明星发布的官方舞蹈及其翻跳内容",url:""},{name:"中国舞",route:"china",tid:200,ps:15,rps:10,ad:{active:!0,dataLocId:253},desc:"传承中国艺术文化的舞蹈内容，包括古典舞、民族民间舞、汉唐舞、古风舞等",url:""},{name:"舞蹈综合",route:"three_d",tid:154,ps:15,rps:10,desc:"收录无法定义到其他舞蹈子分区的舞蹈视频",url:""},{name:"舞蹈教程",route:"demo",tid:156,ps:10,rps:6,desc:"镜面慢速，动作分解，基础教程等具有教学意义的舞蹈视频",url:"//www.bilibili.com/video/dance-demo-1.html"}]},{name:"游戏",route:"game",tid:4,locid:70,count:"",subMenuSize:240,slider:{width:470,height:216},viewTag:!0,customComponent:{name:"Energy",titleId:3761,leftId:3765,rightId:3775,rightType:"slide"},recommendCardType:"GameGroomBox",sub:[{name:"单机游戏",route:"stand_alone",tid:17,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:255},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以所有平台（PC、主机、移动端）的单机或联机游戏为主的视频内容，包括游戏预告、CG、实况解说及相关的评测、杂谈与视频剪辑等",url:"//www.bilibili.com/video/videogame-1.html"},{name:"电子竞技",route:"esports",tid:171,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:257},desc:"具有高对抗性的电子竞技游戏项目，其相关的赛事、实况、攻略、解说、短剧等视频。",url:"//www.bilibili.com/video/esports-1.html"},{name:"手机游戏",route:"mobile",tid:172,ps:10,rps:7,rankshow:1,viewHotTag:!0,desc:"以手机及平板设备为主要平台的游戏，其相关的实况、攻略、解说、短剧、演示等视频。",url:"//www.bilibili.com/video/mobilegame-1.html"},{name:"网络游戏",route:"online",tid:65,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:259},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由网络运营商运营的多人在线游戏，以及电子竞技的相关游戏内容。包括赛事、攻略、实况、解说等相关视频",url:"//www.bilibili.com/video/onlinegame-1.html"},{name:"桌游棋牌",route:"board",tid:173,ps:5,rps:3,rankshow:1,viewHotTag:!0,desc:"桌游、棋牌、卡牌对战等及其相关电子版游戏的实况、攻略、解说、演示等视频。",url:"//www.bilibili.com/video/boardgame-1.html"},{name:"GMV",route:"gmv",tid:121,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由游戏素材制作的MV视频。以游戏内容或CG为主制作的，具有一定创作程度的MV类型的视频",url:"//www.bilibili.com/video/gmv-1.html"},{name:"音游",route:"music",tid:136,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"各个平台上，通过配合音乐与节奏而进行的音乐类游戏视频",url:"//www.bilibili.com/video/music-game-1.html"},{name:"Mugen",route:"mugen",tid:19,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以Mugen引擎为平台制作、或与Mugen相关的游戏视频",url:"//www.bilibili.com/video/game-mugen-1.html"},{name:"游戏赛事",url:"//www.bilibili.com/v/game/match/",newIcon:!0}]},{name:"知识",route:"knowledge",tid:36,locid:76,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2058,leftId:2047,rightId:2048},sub:[{name:"科学科普",route:"science",tid:201,ps:15,rps:10,ad:{active:!0,dataLocId:261},desc:"回答你的十万个为什么"},{name:"社科·法律·心理",route:"social_science",tid:124,ps:15,rps:10,ad:{active:!0,dataLocId:263},desc:"基于社会科学、法学、心理学展开或个人观点输出的知识视频"},{name:"人文历史",route:"humanity_history",tid:228,ps:15,rps:10,desc:"看看古今人物，聊聊历史过往，品品文学典籍"},{name:"财经商业",route:"business",tid:207,ps:15,rps:10,desc:"说金融市场，谈宏观经济，一起畅聊商业故事"},{name:"校园学习",route:"campus",tid:208,ps:15,rps:10,ad:{active:!0,dataLocId:265},desc:"老师很有趣，学生也有才，我们一起搞学习"},{name:"职业职场",route:"career",tid:209,ps:15,rps:10,desc:"职业分享、升级指南，一起成为最有料的职场人"},{name:"设计·创意",route:"design",tid:229,ps:15,rps:10,desc:"天马行空，创意设计，都在这里"},{name:"野生技能协会",route:"skill",tid:122,ps:15,rps:10,desc:"技能党集合，是时候展示真正的技术了"}]},{name:"科技",route:"tech",tid:188,locid:2977,count:"",subMenuSize:80,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2980,leftId:2978,rightId:2979},sub:[{name:"数码",route:"digital",tid:95,ps:15,rps:10,viewHotTag:!0,desc:"科技数码产品大全，一起来做发烧友",url:"#"},{name:"软件应用",route:"application",tid:230,ps:15,rps:10,viewHotTag:!0,desc:"超全软件应用指南",url:"#"},{name:"计算机技术",route:"computer_tech",tid:231,ps:15,rps:10,viewHotTag:!0,desc:"研究分析、教学演示、经验分享......有关计算机技术的都在这里",url:"#"},{name:"科工机械",route:"industry",tid:232,ps:15,rps:10,viewHotTag:!0,desc:"从小芯片到大工程，一起见证科工力量",url:"#"},{name:"极客DIY",route:"diy",tid:233,ps:15,rps:10,viewHotTag:!0,desc:"炫酷技能，极客文化，硬核技巧，准备好你的惊讶",url:"#"}]},{name:"运动",route:"sports",tid:234,locid:4639,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4646,rightId:4652,rightType:"slide"},sub:[{name:"篮球·足球",route:"basketballfootball",tid:235,ps:15,rps:10,ad:{active:!0,dataLocId:4656},desc:"与篮球、足球相关的视频，包括但不限于篮足球赛事、教学、评述、剪辑、剧情等相关内容",url:"#"},{name:"健身",route:"aerobics",tid:164,ps:15,rps:10,desc:"与健身相关的视频，包括但不限于瑜伽、CrossFit、健美、力量举、普拉提、街健等相关内容",url:"//www.bilibili.com/video/fashion-body-1.html"},{name:"竞技体育",route:"athletic",tid:236,ps:15,rps:10,desc:"与竞技体育相关的视频，包括但不限于乒乓、羽毛球、排球、赛车等竞技项目的赛事、评述、剪辑、剧情等相关内容",url:"#"},{name:"运动文化",route:"culture",tid:237,ps:15,rps:10,desc:"与运动文化相关的视频，包络但不限于球鞋、球衣、球星卡等运动衍生品的分享、解读，体育产业的分析、科普等相关内容",url:"#"},{name:"运动综合",route:"comprehensive",tid:238,ps:15,rps:10,desc:"与运动综合相关的视频，包括但不限于钓鱼、骑行、滑板等日常运动分享、教学、Vlog等相关内容",url:"#"}]},{name:"汽车",route:"car",tid:223,locid:4428,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4435,rightId:4441,rightType:"slide"},sub:[{name:"汽车生活",route:"life",tid:176,ps:15,rps:10,ad:{active:!0,dataLocId:4445},desc:"分享汽车及出行相关的生活体验类视频",url:"#"},{name:"汽车文化",route:"culture",tid:224,ps:15,rps:10,desc:"汽车改装、品牌历史、汽车设计、老爷车、汽车模型等",url:"#"},{name:"赛车",route:"racing",tid:245,ps:15,rps:10,desc:"F1等汽车运动相关",url:"#"},{name:"汽车极客",route:"geek",tid:225,ps:15,rps:10,desc:"汽车硬核达人聚集地，包括DIY造车、专业评测和技术知识分享",url:"#"},{name:"摩托车",route:"motorcycle",tid:240,ps:15,rps:10,desc:"骑士们集合啦",url:"#"},{name:"智能出行",route:"smart",tid:226,ps:15,rps:10,desc:"探索新能源汽车和未来智能出行的前沿阵地",url:"#"},{name:"购车攻略",route:"strategy",tid:227,ps:15,rps:10,desc:"丰富详实的购车建议和新车体验",url:"#"}]},{name:"生活",route:"life",tid:160,locid:88,count:"",subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2062,leftId:1674,rightId:1670},sub:[{name:"搞笑",route:"funny",tid:138,ps:15,rps:10,ad:{active:!0,dataLocId:273},desc:"各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频",url:"//www.bilibili.com/video/ent_funny_1.html",locid:4204,recommendId:4210,slider:{width:620,height:220},customComponent:{name:"Energy",leftId:4212,rightId:4218,rightType:"slide"}},{name:"家居房产",route:"home",tid:239,ps:15,rps:10,ad:{active:!0,dataLocId:275},desc:"与买房、装修、居家生活相关的分享",url:"#"},{name:"手工",route:"handmake",tid:161,ps:15,rps:10,desc:"手工制品的制作过程或成品展示、教程、测评类视频",url:"//www.bilibili.com/video/ent-handmake-1.html"},{name:"绘画",route:"painting",tid:162,ps:15,rps:10,desc:"绘画过程或绘画教程，以及绘画相关的所有视频",url:"//www.bilibili.com/video/ent-painting-1.html"},{name:"日常",route:"daily",tid:21,ps:15,rps:10,desc:"记录日常生活，分享生活故事",url:"//www.bilibili.com/video/ent-life-1.html"}]},{name:"美食",route:"food",tid:211,locid:4243,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4258,rightId:4264},sub:[{name:"美食制作",route:"make",tid:76,ps:15,rps:10,ad:{active:!0,dataLocId:4268},desc:"学做人间美味，展示精湛厨艺",url:"#"},{name:"美食侦探",route:"detective",tid:212,ps:15,rps:10,desc:"寻找美味餐厅，发现街头美食",url:"#"},{name:"美食测评",route:"measurement",tid:213,ps:15,rps:10,desc:"吃货世界，品尝世间美味",url:"#"},{name:"田园美食",route:"rural",tid:214,ps:15,rps:10,desc:"品味乡野美食，寻找山与海的味道",url:"#"},{name:"美食记录",route:"record",tid:215,ps:15,rps:10,desc:"记录一日三餐，给生活添一点幸福感",url:"#"}]},{name:"动物圈",route:"animal",tid:217,locid:4365,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4376,rightId:4381,rightType:"slide"},sub:[{name:"喵星人",route:"cat",tid:218,ps:15,rps:10,desc:"喵喵喵喵喵",url:"#",ad:{active:!0,dataLocId:4385}},{name:"汪星人",route:"dog",tid:219,ps:15,rps:10,desc:"汪汪汪汪汪",url:"#"},{name:"大熊猫",route:"panda",tid:220,ps:15,rps:10,desc:"芝麻汤圆营业中",url:"#"},{name:"野生动物",route:"wild_animal",tid:221,ps:15,rps:10,desc:"内有“猛兽”出没",url:"#"},{name:"爬宠",route:"reptiles",tid:222,ps:15,rps:10,desc:"鳞甲有灵",url:"#"},{name:"动物综合",route:"animal_composite",tid:75,ps:15,rps:10,desc:"收录除上述子分区外，其余动物相关视频以及非动物主体或多个动物主体的动物相关延伸内容",url:"#"}]},{name:"鬼畜",route:"kichiku",tid:119,locid:100,count:"",subMenuSize:182,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2509,leftId:2482,rightId:2483},sub:[{name:"鬼畜调教",route:"guide",tid:22,ps:15,rps:10,ad:{active:!0,dataLocId:285},desc:"使用素材在音频、画面上做一定处理，达到与BGM一定的同步感",url:"//www.bilibili.com/video/ent-Kichiku-1.html"},{name:"音MAD",route:"mad",tid:26,ps:15,rps:10,ad:{active:!0,dataLocId:287},desc:"使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件",url:"//www.bilibili.com/video/douga-kichiku-1.html"},{name:"人力VOCALOID",route:"manual_vocaloid",tid:126,ps:15,rps:10,desc:"将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术",url:"//www.bilibili.com/video/kichiku-manual_vocaloid-1.html"},{name:"鬼畜剧场",route:"theatre",tid:216,ps:15,rps:10,desc:"使用素材进行人工剪辑编排的有剧情的作品"},{name:"教程演示",route:"course",tid:127,ps:10,rps:6,rightComponent:{name:"CmImgList",id:148},ad:{active:!0,dataLocId:289},hideDropdown:!1,desc:"鬼畜相关的教程演示",url:"//www.bilibili.com/video/kichiku-course-1.html"}]},{name:"时尚",route:"fashion",tid:155,locid:94,count:"",subMenuSize:124,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2515,leftId:2492,rightId:2493},sub:[{name:"美妆护肤",route:"makeup",tid:157,ps:15,rps:10,ad:{active:!0,dataLocId:279},desc:"彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评",url:"//www.bilibili.com/video/fashion-makeup-fitness-1.html"},{name:"穿搭",route:"clothing",tid:158,ps:15,rps:10,ad:{active:!0,dataLocId:281},desc:"穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等",url:"//www.bilibili.com/video/fashion-clothing-1.html"},{name:"时尚潮流",route:"trend",tid:159,ps:15,rps:10,desc:"时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普",url:"#"}]},{name:"资讯",route:"information",tid:202,locid:4076,count:"",subMenuSize:60,slider:{width:620,height:220},viewTag:!1,sub:[{name:"热点",route:"hotspot",tid:203,ps:18,rps:10,desc:"全民关注的时政热门资讯"},{name:"环球",route:"global",tid:204,ps:18,rps:10,desc:"全球范围内发生的具有重大影响力的事件动态"},{name:"社会",route:"social",tid:205,ps:18,rps:10,desc:"日常生活的社会事件、社会问题、社会风貌的报道"},{name:"综合",route:"multiple",tid:206,ps:18,rps:10,desc:"除上述领域外其它垂直领域的综合资讯"}]},{name:"娱乐",route:"ent",tid:5,locid:82,count:"",subMenuSize:62,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2067,leftId:2065,rightId:2066},sub:[{name:"综艺",route:"variety",tid:71,ps:15,rps:10,ad:{active:!0,dataLocId:267},desc:"所有综艺相关，全部一手掌握！",url:"//www.bilibili.com/video/ent-variety-1.html"},{name:"娱乐杂谈",route:"talker",tid:241,ps:15,rps:10,ad:{active:!0,dataLocId:269},desc:"娱乐人物解读、娱乐热点点评、娱乐行业分析"},{name:"粉丝创作",route:"fans",tid:242,ps:15,rps:10,desc:"粉丝向创作视频"},{name:"明星综合",route:"celebrity",tid:137,ps:15,rps:10,desc:"娱乐圈动态、明星资讯相关"}]},{name:"影视",route:"cinephile",tid:181,locid:2211,count:"",subMenuSize:84,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2309,leftId:2307,rightId:2308},sub:[{name:"影视杂谈",route:"cinecism",tid:182,ps:15,rps:10,ad:{active:!0,dataLocId:2212},desc:"影视评论、解说、吐槽、科普等",url:"//www.bilibili.com/video/cinephile-cinecism.html"},{name:"影视剪辑",route:"montage",tid:183,ps:15,rps:10,ad:{active:!0,dataLocId:2213},desc:"对影视素材进行剪辑再创作的视频",url:"//www.bilibili.com/video/cinephile-montage.html"},{name:"短片",route:"shortfilm",tid:85,ps:15,rps:10,desc:"追求自我表达且具有特色的短片",url:"//www.bilibili.com/video/cinephile-shortfilm.html"},{name:"预告·资讯",route:"trailer_info",tid:184,ps:15,rps:10,ad:{active:!0,dataLocId:2214},desc:"影视类相关资讯，预告，花絮等视频",url:"//www.bilibili.com/video/cinephile-trailer-info.html"}]},{name:"纪录片",route:"documentary",tid:177,url:"//www.bilibili.com/documentary/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"人文·历史",tid:37,route:"history",dise:"",url:"//www.bilibili.com/video/doco-history.html"},{name:"科学·探索·自然",tid:178,route:"science",dise:"",url:"//www.bilibili.com/video/doco-science.html"},{name:"军事",tid:179,route:"military",dise:"",url:"//www.bilibili.com/video/doco-military.html"},{name:"社会·美食·旅行",tid:180,route:"travel",dise:"",url:"//www.bilibili.com/video/doco-travel.html"},{name:"纪录片索引",url:"//www.bilibili.com/documentary/index/"}]},{name:"电影",route:"movie",tid:23,url:"//www.bilibili.com/movie/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"华语电影",tid:147,route:"chinese",desc:"",url:"//www.bilibili.com/video/movie_chinese_1.html"},{name:"欧美电影",tid:145,route:"west",desc:"",url:"//www.bilibili.com/video/movie_west_1.html"},{name:"日本电影",tid:146,route:"japan",desc:"",url:"//www.bilibili.com/video/movie_japan_1.html"},{name:"其他国家",tid:83,route:"movie",desc:"",url:"//www.bilibili.com/video/movie-movie-1.html"},{name:"电影索引",url:"//www.bilibili.com/movie/index/"}]},{name:"电视剧",route:"tv",tid:11,url:"//www.bilibili.com/tv/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"国产剧",tid:185,route:"mainland",desc:"",url:"//www.bilibili.com/video/tv-mainland.html"},{name:"海外剧",tid:187,route:"overseas",desc:"",url:"//www.bilibili.com/video/tv-overseas.html"},{name:"电视剧索引",url:"//www.bilibili.com/tv/index/"}]},{name:"虚拟UP主",route:"virtual",locid:4735,count:"",isHide:!0,subMenuSize:60,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:4754,leftId:4756},sub:[{name:"游戏",route:"game",tid:4,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/game"},{name:"音乐",route:"music",tid:3,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/music"},{name:"动画",route:"douga",tid:1,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/douga"},{name:"其他",route:"other",tid:0,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/other"}]}]';
 
-  // src/runtime/element/create_scripts.ts
-  function createScripts(elements) {
-    return elements.reduce((s, d) => {
-      s.push(createElement(d));
-      return s;
-    }, []);
-  }
-  function loopScript(scripts) {
-    return new Promise((r, j) => {
-      const prev = scripts.shift();
-      if (prev) {
-        if (prev.src) {
-          prev.addEventListener("load", () => r(loopScript(scripts)));
-          prev.addEventListener("abort", () => r(loopScript(scripts)));
-          prev.addEventListener("error", () => r(loopScript(scripts)));
-          return document.body.appendChild(prev);
-        }
-        document.body.appendChild(prev);
-        r(loopScript(scripts));
-      } else
-        r(void 0);
-    });
-  }
-  function appendScripts(elements) {
-    return loopScript(createScripts(htmlVnode(elements)));
-  }
-  function loadScriptEs(path2) {
-    const files = isArray(path2) ? path2 : [path2];
-    window.postMessage({
-      \$type: "executeScript",
-      data: files
-    });
-  }
-
   // src/images/svg/dislike.svg
   var dislike_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M10.28,32.77h2.5V13.19h-2.5ZM25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86H5.56a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h6.25l6.8-8.49A3.83,3.83,0,0,1,25.25,5Zm10.14,2.51H22.22l.28-2.92L22.92,5a1.26,1.26,0,0,0-.18-1,1.28,1.28,0,0,0-.82-.56,1.11,1.11,0,0,0-1.25.42l-6.36,8.2-.83,1.11H5.14a2,2,0,0,0-.83.28,2.28,2.28,0,0,0-1.25,2.08V30.41a2,2,0,0,0,.42,1.25,2,2,0,0,0,2.08,1.11H28.89a2.38,2.38,0,0,0,1.39-.41,3.61,3.61,0,0,0,2.08-2.78L36.8,15l2.5.56L36.8,15a2.45,2.45,0,0,0-.14-1.39,2.89,2.89,0,0,0-1.52-.54l.28-2.5Z" transform="translate(-0.56 -0.82)" /></g></svg>';
 
@@ -15731,9 +15854,6 @@ const modules =`
     });
   }
 
-  // src/runtime/variable/path.ts
-  var path = location.href.split("/");
-
   // src/content/dynamic.ts
   function dynamicPage() {
     xhrhook("api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", void 0, (r) => {
@@ -15991,7 +16111,7 @@ const modules =`
     }
   }
   function replaceHeader(t) {
-    var _a3;
+    var _a3, _b, _c;
     let menu2 = false;
     if (document.querySelector(".mini-type") || /festival/.test(location.href)) {
       menu2 = false;
@@ -16001,11 +16121,11 @@ const modules =`
     }
     if (((_a3 = t.parentElement) == null ? void 0 : _a3.id) === "app") {
       t.setAttribute("hidden", "hidden");
-      if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container"))
+      if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container") && !((_b = document.querySelector(".z-top-container")) == null ? void 0 : _b.id))
         return;
       addElement("div", { class: \`z-top-container\${menu2 ? " has-menu" : ""}\` }, void 0, void 0, true);
     } else {
-      if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container"))
+      if (document.querySelector("#bili-header-m") || document.querySelector(".z-top-container") && !((_c = document.querySelector(".z-top-container")) == null ? void 0 : _c.id))
         return;
       t.setAttribute("class", \`z-top-container\${menu2 ? " has-menu" : ""}\`);
       t.removeAttribute("id");
@@ -16014,9 +16134,10 @@ const modules =`
     header(menu2);
   }
   function section() {
-    addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;}");
+    addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}");
     doWhile(() => document.querySelector("#internationalHeader"), replaceHeader);
     doWhile(() => document.querySelector("#biliMainHeader"), replaceHeader);
+    doWhile(() => document.querySelector(".bili-header-default"), replaceHeader);
     doWhile(() => document.querySelector(".z_top_container"), (t) => {
       var _a3;
       t.setAttribute("class", "z-top-container has-menu");
@@ -16379,27 +16500,27 @@ const modules =`
     window.history.replaceState(window.history.state, "", url);
   }
   function urlClean(str) {
-    const base = str.split("#")[0].split("?")[0];
-    const url = new URLEs(str);
+    const url = new URLES(str);
     if (url) {
-      const params = url.searchParams;
-      if (params.has("bvid")) {
-        params.set("aid", abv(params.get("bvid")));
+      const params = url.params;
+      if (params.bvid) {
+        params.aid = abv(params.bvid);
       }
-      if (params.has("aid") && !Number(params.get("aid"))) {
-        params.set("aid", abv(params.get("aid")));
+      if (params.aid && !Number(params.aid)) {
+        params.aid = abv(params.aid);
       }
       paramsSet.forEach((d) => {
-        params.delete(d);
+        delete params[d];
       });
       paramArr.forEach((d) => {
-        if (params.has(d[0])) {
-          if (d[1].includes(params.get(d[0]))) {
-            params.delete(d[0]);
+        if (params[d[0]]) {
+          if (d[1].includes(params[d[0]])) {
+            delete params[d[0]];
           }
         }
       });
-      return url.toJSON().replace(url.origin + url.pathname, base.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s)));
+      url.base = url.base.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
+      return url.toJSON();
     } else
       return str;
   }
@@ -24665,80 +24786,6 @@ const modules =`
 
   // src/images/svg/warn.svg
   var warn_default = '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>';
-
-  // src/runtime/element/horizontal/horizontal.html
-  var horizontal_default = '<div class="hr"></div>\\r\\n<style type="text/css">\\r\\n    .hr {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        grid-gap: 0;\\r\\n        gap: 0;\\r\\n        justify-content: space-between;\\r\\n        flex-shrink: 0;\\r\\n        height: 1px;\\r\\n        background-color: rgba(136, 136, 136, 0.1);\\r\\n        width: 100%;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n</style>';
-
-  // src/runtime/element/horizontal/horizontal.ts
-  var HorizontalLine = class extends HTMLElement {
-    constructor() {
-      super();
-      const root3 = this.attachShadow({ mode: "closed" });
-      root3.appendChild(createElements(htmlVnode(horizontal_default)));
-    }
-  };
-  customElements.get(\`horizontal-line\${mutex}\`) || customElements.define(\`horizontal-line\${mutex}\`, HorizontalLine);
-
-  // src/runtime/element/push_button/push_button.html
-  var push_button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
-
-  // src/runtime/element/push_button/push_button.ts
-  var PushButton = class extends HTMLElement {
-    button;
-    constructor(obj) {
-      super();
-      const root3 = this.attachShadow({ mode: "closed" });
-      const { button, func } = obj;
-      root3.appendChild(createElements(htmlVnode(push_button_default)));
-      const node4 = root3.children[0];
-      Reflect.defineProperty(obj, "button", {
-        set: (v) => {
-          if (this.button === v)
-            return;
-          node4.textContent = v;
-          this.button = v;
-        },
-        get: () => this.button
-      });
-      let timer2;
-      node4.addEventListener("click", () => {
-        clearTimeout(timer2);
-        timer2 = setTimeout(() => {
-          func();
-        }, 100);
-      });
-      this.button = obj.button = button || "点击";
-    }
-  };
-  customElements.get(\`push-button\${mutex}\`) || customElements.define(\`push-button\${mutex}\`, PushButton);
-
-  // src/runtime/element/alert.ts
-  function showAlert(data, head, button) {
-    const part = createElements(htmlVnode(
-      \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
-                <span>\${head || "Bilibili Old"}</span>
-            </div>
-            <div style="margin-bottom: 10px;"><div>\${data}</div></div>\`
-    ));
-    let popup;
-    if (button && button.length) {
-      part.appendChild(new HorizontalLine());
-      const node4 = part.appendChild(createElement({
-        tagName: "div",
-        props: { style: "display: flex;align-items: center;justify-content: space-around;" }
-      }));
-      button.forEach((d) => {
-        node4.appendChild(new PushButton({
-          button: d.name,
-          func: () => {
-            d.callback();
-            popup.remove();
-          }
-        }));
-      });
-    }
-    popup = new PopupBox({ children: part, style: "max-width: 360px; max-height: 300px;" });
-  }
 
   // src/runtime/chrome/manage.ts
   var settingMG = {
