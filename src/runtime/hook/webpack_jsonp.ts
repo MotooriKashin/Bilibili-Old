@@ -17,7 +17,7 @@ Reflect.defineProperty(window, "webpackJsonp", {
                 if (API.rewrite) {
                     if (API.rewrite === 2) {
                         hook = undefined;
-                    } else {
+                    } else if (hook.length > 1) {
                         hook.shift();
                     }
                 }
