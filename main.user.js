@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.1.1
+// @version      9.1.2
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -4039,7 +4039,11 @@ const modules =`
   };
   function objUrl(url, obj) {
     const res = new URLES(url);
-    Object.assign(res.params, obj);
+    Object.entries(obj).forEach((d) => {
+      if (d[1] === void 0 || d[1] === null)
+        return;
+      res.params[d[0]] = d[1];
+    });
     return res.toJSON();
   }
   function urlObj(url) {

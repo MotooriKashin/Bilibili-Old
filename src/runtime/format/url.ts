@@ -57,7 +57,10 @@ export class URLES {
  */
 export function objUrl(url: string, obj: Record<string, string | number | boolean>) {
     const res = new URLES(url);
-    Object.assign(res.params, obj);
+    Object.entries(obj).forEach(d => {
+        if (d[1] === undefined || d[1] === null) return;
+        res.params[d[0]] = <any>d[1];
+    });
     return res.toJSON();
 }
 /**
