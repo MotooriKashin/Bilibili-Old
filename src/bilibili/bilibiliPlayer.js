@@ -3359,7 +3359,7 @@ function Fa() {
                         d = f.attr("data-id"),
                         f = parseInt(f.attr("data-disabled"), 10),
                         d = b.Rj[d];
-                    f ? c.preventDefault() : ("function" === typeof d && d(b.mp, c), b.hide())
+                    f ? c.preventDefault() : (("function" === typeof d && d(b.mp, c)) || b.hide())
                 }).on("contextmenu", function () {
                     return !1
                 });
@@ -21979,7 +21979,7 @@ function Fa() {
                                 })(f[k]);
                             else this.Ko = !0, b.Gd.oa.addClass(g), h.unshift({
                                 type: "tabs",
-                                text: "\u64ad\u653e\u901f\u5ea6",
+                                text: "播放速度",
                                 Lt: function () {
                                     for (var d = $('<div class="' + c.prefix + '-contextmenu-subwrapp">'), e = [{
                                         name: "0.5",
@@ -21999,7 +21999,7 @@ function Fa() {
                                     }, {
                                         name: "2.0",
                                         value: 2
-                                    }], f = 1, k = 0; k < e.length; k++) e[k].value === c.video.playbackRate && (f = c.video.playbackRate),
+                                    }], f = c.video.playbackRate, k = 0; k < e.length; k++) 
                                         d.append('<span data-rate="' + e[k].value + '">' + e[k].name + "</span>");
                                     var g = d.find("span");
                                     g.hover(function () {
@@ -22061,34 +22061,113 @@ function Fa() {
                                     });
                                     return d
                                 }
-                            }), c.cs() ? h.push({
-                                type: "function",
-                                text: c.template.ga.hasClass("video-mirror") ? '<span class="active">\u955c\u50cf</span>' : "\u955c\u50cf",
-                                click: function () {
-                                    c.u("videomirror_contextmenu",
-                                        !c.template.ga.hasClass("video-mirror"));
-                                    c.X && c.X.getItem("videomirror").value(!c.template.ga.hasClass("video-mirror"));
-                                    c.Di("video_status", "videomirror", c.X.getItem("videomirror").value())
+                            });
+                            h.push({
+                                type: "tabs",
+                                text: "快捷操作",
+                                Lt: function () {
+                                    var d = $('<div class="' + c.prefix + '-contextmenu-subwrapp">');
+                                    e = [{
+                                        name: c.controller.Gn() ? "关灯" : "开灯",
+                                        click: function () {
+                                            c.controller.Wt(c.controller.Gn() ? "off" : "on");
+                                            c.u("light_onoff")
+                                            this.innerHTML = c.controller.Gn() ? "关灯" : "开灯";
+                                        }
+                                    }, {
+                                        name: "镜像",
+                                        click: function () {
+                                            c.u("videomirror_contextmenu",
+                                                !c.template.ga.hasClass("video-mirror"));
+                                            c.X && c.X.getItem("videomirror").value(!c.template.ga.hasClass("video-mirror"));
+                                            c.Di("video_status", "videomirror", c.X.getItem("videomirror").value())
+                                            c.template.ga.hasClass("video-mirror") ? this.style.color = "#00a1d6" : this.style.color = ""
+                                        },
+                                        init: function () {
+                                            c.template.ga.hasClass("video-mirror") ? this.style.color = "#00a1d6" : this.style.color = ""
+                                        }
+                                    }, {
+                                        name: "复制视频空降链接",
+                                        click: function () {
+                                            const url = new URL(window.location.href);
+                                            url.searchParams.set('t', player.getCurrentTime().toFixed(1));
+                                            navigator.clipboard.writeText(url.href)
+                                                .then(() => this.innerHTML = "空降链接复制成功");
+                                        }, init: function () {
+                                            this.style.width = "110px";
+                                        }
+                                    }];
+                                    for (let n = 0; n < e.length; n++) {
+                                        let button = $('<span>' + e[n].name + "</span>");
+                                        d.append(button);
+                                        button.click(e[n].click);
+                                        e[n].init && e[n].init.call(button[0]);
+                                    }
+                                    var h = d.find("span");
+                                    h.hover(function () {
+                                        var b = $(this);
+                                        h.not(b).removeClass("hover");
+                                        b.addClass("hover")
+                                    }, function () {
+                                        $(this).removeClass("hover")
+                                    });
+                                    return d
                                 }
-                            }) : h.push({
+                            });
+                            h.push({
                                 type: "function",
-                                text: c.controller.Gn() ? "\u5173\u706f" : "\u5f00\u706f",
-                                click: function () {
-                                    c.controller.Wt(c.controller.Gn() ? "off" : "on");
-                                    c.u("light_onoff")
+                                text: `自定义播放速度 - 当前 ${c.video.playbackRate}x`,
+                                click: function (_, event) {
+                                    let info = event.target;
+                                    info.style.display = "none";
+                                    let container = $(`<span><input type="number" step="0.1" min="0.1" max="10" value=${c.video.playbackRate}><span>应用</span></span>`);
+                                    let applyBtn = container.find("span");
+                                    applyBtn.attr("style", `
+                                        width: 42px;
+                                        height: 28px;
+                                        line-height: 28px;
+                                        text-align: center;
+                                        white-space: pre;
+                                        border-radius: 4px;
+                                        cursor: pointer;
+                                        display: inline-block;
+                                        color: #eee;
+                                        transition: background .2s,color .2s;
+                                    `);
+                                    applyBtn.hover(function () {
+                                        this.style.backgroundColor = "hsla(0,0%,100%,.2)";
+                                    }, function () {
+                                        this.style.backgroundColor = ""
+                                    });
+                                    let speed = container.find("input");
+                                    speed.attr("style", `
+                                        margin-left: 20px;
+                                        margin-right: 25px;
+                                        margin-top: 10px;
+                                        margin-bottom: 10px;
+                                        width: 40px;
+                                        height: 14px;
+                                    `);
+                                    speed.keydown(function (event) {
+                                        if (event.key === "Enter") {
+                                            event.preventDefault();
+                                            applyBtn.click();
+                                        }
+                                    });
+                                    info.after(container[0]);
+                                    applyBtn.click(function() {
+                                        let e = Number(speed.val());
+                                        c.video.playbackRate = e;
+                                        c.f.qa || c.Di("video_status", "videospeed", e);
+                                        c.u("videospeed_contextmenu", speed.val());
+                                        b.Gd.hide()
+                                    });
+                                    return true;
                                 }
-                            }, {
+                            });
+                            h = h.concat(this.Px).reverse(), h.unshift({
                                 type: "function",
-                                text: c.template.ga.hasClass("video-mirror") ? '<span class="active">\u955c\u50cf</span>' : "\u955c\u50cf",
-                                click: function () {
-                                    c.u("videomirror_contextmenu",
-                                        !c.template.ga.hasClass("video-mirror"));
-                                    c.X && c.X.getItem("videomirror").value(!c.template.ga.hasClass("video-mirror"));
-                                    c.Di("video_status", "videomirror", c.X.getItem("videomirror").value())
-                                }
-                            }), h = h.concat(this.Px).reverse(), h.unshift({
-                                type: "function",
-                                text: c.Zv() ? '<span class="active">\u89c6\u9891\u7edf\u8ba1\u4fe1\u606f</span>' : "\u89c6\u9891\u7edf\u8ba1\u4fe1\u606f",
+                                text: c.Zv() ? '<span class="active">视频统计信息</span>' : "视频统计信息",
                                 click: function () {
                                     c.Zv() ? c.lF() : c.OF()
                                 }
