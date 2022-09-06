@@ -17,6 +17,7 @@ import { loadBilibiliPlayer } from "./load_bilibili_player";
 import { downloadDefault } from "../download/download";
 import { isUserScript } from "../../tampermonkey/check";
 import { FlacSwitch } from "./flac_switch"
+import { getUrlValue } from "../unit";
 
 class EmbedPlayer {
     static asWide = false;
@@ -49,6 +50,13 @@ class EmbedPlayer {
         this.playerType = <string>playerType;
         this.upgrade = <boolean>upgrade;
         this.callbackFn = <() => void>callbackFn;
+
+        const urlParam = urlObj(location.href);
+        urlParam.d && (this.playerParam.d = urlParam.d);
+        urlParam.t && (this.playerParam.t = urlParam.t);
+        urlParam.start_progress && (this.playerParam.start_progress = urlParam.start_progress);
+        urlParam.lastplaytime && (this.playerParam.lastplaytime = urlParam.lastplaytime);
+
         Object.entries(this.playerParam).forEach(d => {
             Reflect.set(window, ...d);
         });
