@@ -120,9 +120,11 @@ class ClosedCaption {
     /** 切换字幕位置 */
     changePosition() {
         this.contain = document.querySelector(".bilibili-player-video-subtitle>div");
-        this.contain.className = 'subtitle-position subtitle-position-'
-            + (this.setting.position || 'bc');
-        this.contain.style = '';
+        if (this.contain) {
+            this.contain.className = 'subtitle-position subtitle-position-'
+                + (this.setting.position || 'bc');
+            this.contain.style = '';
+        }
     }
     /** 字幕图标切换 */
     iconSwitch(caption?: any) {

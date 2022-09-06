@@ -38,7 +38,7 @@ export function dealwithPlayinfo() {
         } catch (e) { }
     }, false);
     let timer: number, tag = false; // 过滤栈
-    xhrhook("api.bilibili.com/x/player.so", () => {
+    xhrhook("api.bilibili.com/x/player.so", async () => {
         if (!tag && API.th && API.__INITIAL_STATE__?.epInfo?.subtitles) {
             if (API.__INITIAL_STATE__.epInfo.subtitles[0]) {
                 setting.closedCaption && closedCaption.getCaption(API.__INITIAL_STATE__.epInfo.subtitles.reduce((s: any[], d: any) => {
@@ -62,7 +62,7 @@ export function dealwithPlayinfo() {
             }
         }
         return true;
-    }, res => {
+    }, async res => {
         try {
             if (statusCheck(res.status)) {
                 let subtitle = "", view_points;
