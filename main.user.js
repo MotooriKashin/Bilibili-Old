@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.1.2
+// @version      9.1.3
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19,7 +19,7 @@
 // @grant        GM.cookie
 // @run-at       document-start
 // @license      MIT
-// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@5c146c5e4ae9ee37b7baec3a719d6cd05fb375b5/src/bilibili/bilibiliPlayer.min.js
+// @resource     bilibiliPlayer.js https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@596394f4a2910fd5ca7a52667938e2523a20b2a3/src/bilibili/bilibiliPlayer.min.js
 // ==/UserScript==
 
 const modules =`
@@ -12562,8 +12562,10 @@ const modules =`
     }
     changePosition() {
       this.contain = document.querySelector(".bilibili-player-video-subtitle>div");
-      this.contain.className = "subtitle-position subtitle-position-" + (this.setting.position || "bc");
-      this.contain.style = "";
+      if (this.contain) {
+        this.contain.className = "subtitle-position subtitle-position-" + (this.setting.position || "bc");
+        this.contain.style = "";
+      }
     }
     iconSwitch(caption) {
       if (caption) {
@@ -13046,7 +13048,7 @@ const modules =`
       }
     }, false);
     let timer2, tag = false;
-    xhrhook("api.bilibili.com/x/player.so", () => {
+    xhrhook("api.bilibili.com/x/player.so", async () => {
       var _a3, _b;
       if (!tag && API.th && ((_b = (_a3 = API.__INITIAL_STATE__) == null ? void 0 : _a3.epInfo) == null ? void 0 : _b.subtitles)) {
         if (API.__INITIAL_STATE__.epInfo.subtitles[0]) {
@@ -13071,7 +13073,7 @@ const modules =`
         }
       }
       return true;
-    }, (res) => {
+    }, async (res) => {
       try {
         if (statusCheck(res.status)) {
           let subtitle = "", view_points;
@@ -13856,6 +13858,11 @@ const modules =`
       this.playerType = playerType;
       this.upgrade = upgrade;
       this.callbackFn = callbackFn;
+      const urlParam2 = urlObj(location.href);
+      urlParam2.d && (this.playerParam.d = urlParam2.d);
+      urlParam2.t && (this.playerParam.t = urlParam2.t);
+      urlParam2.start_progress && (this.playerParam.start_progress = urlParam2.start_progress);
+      urlParam2.lastplaytime && (this.playerParam.lastplaytime = urlParam2.lastplaytime);
       Object.entries(this.playerParam).forEach((d) => {
         Reflect.set(window, ...d);
       });
