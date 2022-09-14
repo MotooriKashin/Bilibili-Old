@@ -219,3 +219,8 @@ class BilibiliOld extends HTMLElement {
     }
 }
 customElements.get("bilibili-old") || customElements.define("bilibili-old", BilibiliOld);
+// 页面卸载
+window.addEventListener("beforeunload", () => {
+    // 清空已应用规则
+    sessionStorage.clear();
+});

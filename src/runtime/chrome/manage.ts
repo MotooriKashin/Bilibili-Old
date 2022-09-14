@@ -32,10 +32,14 @@ export const settingMG = {
         fileRead("application/json", true).then(d => {
             d && d[0] && readAs(d[0]).then(d => {
                 const data: Record<string, any> = JSON.parse(d);
-                isUserScript ? GM_setValue("config", data) : chrome.storage.local.set({ setting: data })
-                showAlert(`已恢复备份数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置", [
-                    { name: "刷新页面", callback: () => location.reload() }
-                ]);
+                if (typeof data === "object") {
+                    isUserScript ? GM_setValue("config", data) : chrome.storage.local.set(data)
+                    showAlert(`已恢复备份数据，请及时<strong>刷新</strong>页面避免数据紊乱！`, "恢复默认设置", [
+                        { name: "刷新页面", callback: () => location.reload() }
+                    ]);
+                } else {
+                    toast.warning("所选文件或许不是有效的设置数据！");
+                }
             });
         });
     }

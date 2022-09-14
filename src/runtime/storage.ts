@@ -11,7 +11,20 @@ class LocalStorage {
      */
     getItem(key: string) {
         let str: any = self.localStorage.getItem(key);
-        try { str = JSON.parse(str) } catch (e) { }
+        try { str = JSON.parse(str) } catch (e) {
+            switch (str) {
+                case "undefined":
+                    str = undefined;
+                    break;
+                case "null":
+                    str = null;
+                    break;
+                case "NaN":
+                    str = NaN;
+                    break;
+                default:
+            }
+        }
         return str;
     };
     /**
@@ -59,7 +72,20 @@ class SessionStorage {
      */
     getItem(key: string) {
         let str: any = self.sessionStorage.getItem(key);
-        try { str = JSON.parse(str) } catch (e) { }
+        try { str = JSON.parse(str) } catch (e) {
+            switch (str) {
+                case "undefined":
+                    str = undefined;
+                    break;
+                case "null":
+                    str = null;
+                    break;
+                case "NaN":
+                    str = NaN;
+                    break;
+                default:
+            }
+        }
         return str;
     };
     /**
