@@ -219,7 +219,7 @@ function bbCommentModify() {
             '<span class="like ' + (item.action == 1 ? 'liked' : '') + '"><i></i><span>' + (item.like ? item.like : '') + '</span></span>',
             '<span class="hate ' + (item.action == 2 ? 'hated' : '') + '"><i></i></span>',
             '<span class="reply btn-hover">回复</span>',
-            item.dialog != item.rpid ? '<span class="dialog btn-hover" dialog="' + item.dialog + '">查看对话</span>' : '',
+            item.dialog != item.rpid ? '<span class="dialog btn-hover" dialog-id="' + item.dialog + '" data-id="' + item.rpid + '">查看对话</span>' : '',
             '<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(item.mid) ? '<li class="blacklist">加入黑名单</li>' : '') + (this._canReport(item.mid) ? '<li class="report">举报</li>' : '') + (this._canDel(item.mid) ? '<li class="del" data-mid="' + item.mid + '">删除</li>' : '') + '</ul></div></div>',
             '</div>',
             '</div>'].join('');
@@ -243,7 +243,8 @@ function bbCommentModify() {
             let clickTarget = this;
             clickTarget.innerHTML = "正在载入……";
             let rootid = clickTarget.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id"); // 楼中楼所属的父级评论的id
-            let dialogid = clickTarget.getAttribute("dialog");
+            let dialogid = clickTarget.getAttribute("dialog-id");
+            let selfRpid = clickTarget.getAttribute("data-id");
             // 载入所需的样式
             addCss(`
             .comment-dialog .dialog{display:none!important}
@@ -323,7 +324,14 @@ function bbCommentModify() {
                                     nextPage(resp.data.cursor.max_floor);
                                 }
                             });
-                        } else fixEmojiPosition(replyBox);
+                        } else {
+                            fixEmojiPosition(replyBox);
+                            // 高亮被查看上下文的评论
+                            (<HTMLElement>replyBox.querySelector(`div[data-id="${selfRpid}"]`)).style.cssText = `
+                            background: linear-gradient(45deg, rgba(115,108,231,0.13) 0%, rgba(0,161,214,0.13) 67%, rgba(0,212,255,0.13) 100%);
+                            border-radius: 15px;
+                            margin-right: 15px;`
+                        }
                     }
                     nextPage(resp.data.cursor.max_floor);
                 }
