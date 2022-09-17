@@ -14407,6 +14407,7 @@ const modules =`
   var loading = false;
   var load2 = false;
   function loadComment() {
+    let events = {};
     Reflect.defineProperty(window, "bbComment", {
       configurable: true,
       set: (v) => {
@@ -14432,9 +14433,16 @@ const modules =`
               });
               loading = true;
             }
-            setTimeout(() => new window.bbComment(...arguments));
+            setTimeout(() => {
+              let bbcomment = new window.bbComment(...arguments);
+              bbcomment.events && (bbcomment.events = Object.assign(bbcomment.events, events));
+            });
           }
-          on() {
+          on(eventName, cb) {
+            if (!events[eventName]) {
+              events[eventName] = [];
+            }
+            events[eventName].push(cb);
           }
         };
       }

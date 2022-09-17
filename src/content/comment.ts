@@ -9,6 +9,7 @@ let Feedback: any,
     load = false;;
 /** 替换评论区 */
 export function loadComment() {
+    let events: any = {}; // 用于暂存页面事件
     // 评论组件捕获
     Reflect.defineProperty(window, "bbComment", {
         configurable: true,
@@ -35,9 +36,18 @@ export function loadComment() {
                         });
                         loading = true;
                     }
-                    setTimeout(() => new (<any>window).bbComment(...arguments))
+                    setTimeout(() => {
+                        let bbcomment = new (<any>window).bbComment(...arguments);
+                        bbcomment.events && (bbcomment.events = Object.assign(bbcomment.events, events));
+                    })
                 }
-                on() { }
+                on(eventName: string, cb: Function) {
+                    // 旧版bbcomment未准备好时，临时储存其他脚本希望挂载在bbcomment上的事件（主要是moreLinkClick事件）
+                    if (!events[eventName]) {
+                        events[eventName] = [];
+                    }
+                    events[eventName].push(cb);
+                }
             }
         }
     });
