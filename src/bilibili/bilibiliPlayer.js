@@ -21977,92 +21977,92 @@ function Fa() {
                                     "others" === k.kx ? k.tb = n : "self" === k.kx && (k.tb = g);
                                     h.unshift(k)
                                 })(f[k]);
-                            else this.Ko = !0, b.Gd.oa.addClass(g), h.unshift({
-                                type: "tabs",
-                                text: "播放速度",
-                                Lt: function () {
-                                    for (var d = $('<div class="' + c.prefix + '-contextmenu-subwrapp">'), e = [{
-                                        name: "0.5",
-                                        value: .5
-                                    }, {
-                                        name: "0.75",
-                                        value: .75
-                                    }, {
-                                        name: "\u6b63\u5e38",
-                                        value: 1
-                                    }, {
-                                        name: "1.25",
-                                        value: 1.25
-                                    }, {
-                                        name: "1.5",
-                                        value: 1.5
-                                    }, {
-                                        name: "2.0",
-                                        value: 2
-                                    }], f = c.video.playbackRate, k = 0; k < e.length; k++) 
-                                        d.append('<span data-rate="' + e[k].value + '">' + e[k].name + "</span>");
-                                    var g = d.find("span");
-                                    g.hover(function () {
-                                        var b = $(this);
-                                        g.not(b).removeClass("hover");
-                                        b.addClass("hover")
-                                    }, function () {
-                                        $(this).removeClass("hover")
-                                    });
-                                    new q.a(d, {
-                                        type: "click.tab",
-                                        Ve: '[data-rate="' + f + '"]',
-                                        selector: "span",
-                                        Oa: function (d) {
-                                            d = d.attr("data-rate");
-                                            var e = Number(d);
-                                            c.video.playbackRate = e;
-                                            c.f.qa || c.Di("video_status", "videospeed", e);
-                                            c.u("videospeed_contextmenu", d);
-                                            b.Gd.hide()
-                                        }
-                                    });
-                                    return d
-                                }
-                            }, {
-                                type: "tabs",
-                                text: "\u753b\u9762\u6bd4\u4f8b",
-                                Lt: function () {
-                                    for (var d = $('<div class="' + c.prefix + '-contextmenu-subwrapp">'), e = [{
-                                        name: "\u9ed8\u8ba4",
-                                        value: "video-size-default"
-                                    }, {
-                                        name: "4:3",
-                                        value: "video-size-4-3"
-                                    }, {
-                                        name: "16:9 ",
-                                        value: "video-size-16-9"
-                                    }], f = "video-size-default", k = c.controller.Zw(), g = ["video-size-default", "video-size-4-3", "video-size-16-9"], n = 0; n < e.length; n++) k === e[n].value && (f = e[n].value), d.append('<span data-ratio-class="' + e[n].value + '">' + e[n].name + "</span>");
-                                    var h = d.find("span");
-                                    h.hover(function () {
-                                        var b = $(this);
-                                        h.not(b).removeClass("hover");
-                                        b.addClass("hover")
-                                    }, function () {
-                                        $(this).removeClass("hover")
-                                    });
-                                    new q.a(d, {
-                                        type: "click.tab",
-                                        Ve: '[data-ratio-class="' + f + '"]',
-                                        selector: "span",
-                                        Oa: function (d) {
-                                            d = d.attr("data-ratio-class");
-                                            c.template.ga.removeClass(g.join(" ")).addClass(d);
-                                            c.controller.MA();
-                                            c.controller.Zw(d);
-                                            "video-size-default" !== d && c.u("screen_proportion");
-                                            b.Gd.hide()
-                                        }
-                                    });
-                                    return d
-                                }
-                            });
-                            if(c.cs()) {
+                            else {
+                                this.Ko = !0, b.Gd.oa.addClass(g), h.unshift({
+                                    type: "tabs",
+                                    text: "播放速度",
+                                    Lt: function () {
+                                        for (var d = $('<div class="' + c.prefix + '-contextmenu-subwrapp">'), e = [{
+                                            name: "0.5",
+                                            value: .5
+                                        }, {
+                                            name: "0.75",
+                                            value: .75
+                                        }, {
+                                            name: "\u6b63\u5e38",
+                                            value: 1
+                                        }, {
+                                            name: "1.25",
+                                            value: 1.25
+                                        }, {
+                                            name: "1.5",
+                                            value: 1.5
+                                        }, {
+                                            name: "2.0",
+                                            value: 2
+                                        }], f = c.video.playbackRate, k = 0; k < e.length; k++)
+                                            d.append('<span data-rate="' + e[k].value + '">' + e[k].name + "</span>");
+                                        var g = d.find("span");
+                                        g.hover(function () {
+                                            var b = $(this);
+                                            g.not(b).removeClass("hover");
+                                            b.addClass("hover")
+                                        }, function () {
+                                            $(this).removeClass("hover")
+                                        });
+                                        new q.a(d, {
+                                            type: "click.tab",
+                                            Ve: '[data-rate="' + f + '"]',
+                                            selector: "span",
+                                            Oa: function (d) {
+                                                d = d.attr("data-rate");
+                                                var e = Number(d);
+                                                c.video.playbackRate = e;
+                                                c.f.qa || c.Di("video_status", "videospeed", e);
+                                                c.u("videospeed_contextmenu", d);
+                                                b.Gd.hide()
+                                            }
+                                        });
+                                        return d
+                                    }
+                                }, {
+                                    type: "tabs",
+                                    text: "\u753b\u9762\u6bd4\u4f8b",
+                                    Lt: function () {
+                                        for (var d = $('<div class="' + c.prefix + '-contextmenu-subwrapp">'), e = [{
+                                            name: "\u9ed8\u8ba4",
+                                            value: "video-size-default"
+                                        }, {
+                                            name: "4:3",
+                                            value: "video-size-4-3"
+                                        }, {
+                                            name: "16:9 ",
+                                            value: "video-size-16-9"
+                                        }], f = "video-size-default", k = c.controller.Zw(), g = ["video-size-default", "video-size-4-3", "video-size-16-9"], n = 0; n < e.length; n++) k === e[n].value && (f = e[n].value), d.append('<span data-ratio-class="' + e[n].value + '">' + e[n].name + "</span>");
+                                        var h = d.find("span");
+                                        h.hover(function () {
+                                            var b = $(this);
+                                            h.not(b).removeClass("hover");
+                                            b.addClass("hover")
+                                        }, function () {
+                                            $(this).removeClass("hover")
+                                        });
+                                        new q.a(d, {
+                                            type: "click.tab",
+                                            Ve: '[data-ratio-class="' + f + '"]',
+                                            selector: "span",
+                                            Oa: function (d) {
+                                                d = d.attr("data-ratio-class");
+                                                c.template.ga.removeClass(g.join(" ")).addClass(d);
+                                                c.controller.MA();
+                                                c.controller.Zw(d);
+                                                "video-size-default" !== d && c.u("screen_proportion");
+                                                b.Gd.hide()
+                                            }
+                                        });
+                                        return d
+                                    }
+                                });
                                 h.push({
                                     type: "tabs",
                                     text: "快捷操作",
@@ -22156,7 +22156,7 @@ function Fa() {
                                             }
                                         });
                                         info.after(container[0]);
-                                        applyBtn.click(function() {
+                                        applyBtn.click(function () {
                                             let e = Number(speed.val());
                                             c.video.playbackRate = e;
                                             c.f.qa || c.Di("video_status", "videospeed", e);
