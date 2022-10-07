@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.1.5
+// @version      9.1.6
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -14473,8 +14473,8 @@ const modules =`
     jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
       var _a3;
       if (0 === res.code && ((_a3 = res.data) == null ? void 0 : _a3.page)) {
-        const page = res.page;
-        page && jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
+        const page = res.data.page;
+        page && jsonphook(["api.bilibili.com/x/v2/reply?", "sort=0"], void 0, (res2) => {
           var _a4;
           if (0 === res2.code && ((_a4 = res2.data) == null ? void 0 : _a4.page)) {
             page.count && (res2.data.page.count = page.count);
@@ -15213,6 +15213,7 @@ const modules =`
     return o;
   }
   async function bangumiInitialState() {
+    var _a3;
     try {
       let ssid = API.ssid;
       let epid = API.epid;
@@ -15269,6 +15270,27 @@ const modules =`
           });
         };
         var loopTitle = loopTitle2;
+        if (data.bangumi.season_id && data.bangumi.total_ep && !((_a3 = data.bangumi.episodes) == null ? void 0 : _a3[0])) {
+          try {
+            const section2 = await xhr(
+              {
+                url: \`https://api.bilibili.com/pgc/web/season/section?season_id=\${data.bangumi.season_id}\`,
+                responseType: "json",
+                credentials: true
+              }
+            );
+            data.bangumi.episodes = section2.result.main_section.episodes.concat(...section2.result.section.map((d) => d.episodes)).map((d) => {
+              d.ep_id = d.id;
+              d.episode_status = d.status;
+              d.index = d.title;
+              d.index_title = d.long_title;
+              d.premiere = Boolean(d.is_premiere);
+              return d;
+            });
+          } catch (e) {
+            toast.warning(\`获取ep列表失败，请刷新页面重试！\`);
+          }
+        }
         const i = JSON.parse(JSON.stringify(data.bangumi));
         delete i.episodes;
         delete i.seasons;
