@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.5
+// @version      2.0.6
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19,7 +19,30 @@
   var isArray = Array.isArray;
   var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
 
+  // src/runtime/do_while.ts
+  function doWhile(check, callback, delay = 100, stop = 180) {
+    let timer = setInterval(() => {
+      const d = check();
+      if (d) {
+        clearInterval(timer);
+        callback(d);
+      }
+    }, delay);
+    stop && setTimeout(() => clearInterval(timer), stop * 1e3);
+  }
+
   // src/runtime/element/add_element.ts
+  async function addCss(txt, id, parrent) {
+    if (!parrent && !document.head) {
+      await new Promise((r) => doWhile(() => document.body, r));
+    }
+    parrent = parrent || document.head;
+    const style = document.createElement("style");
+    style.setAttribute("type", "text/css");
+    id && !parrent.querySelector(`#${id}`) && style.setAttribute("id", id);
+    style.appendChild(document.createTextNode(txt));
+    parrent.appendChild(style);
+  }
   function loadScript(src, onload) {
     return new Promise((r, j) => {
       const script = document.createElement("script");
@@ -258,6 +281,7 @@
   var loading = false;
   var load = false;
   function loadComment() {
+    let events = {};
     Reflect.defineProperty(window, "bbComment", {
       configurable: true,
       set: (v) => {
@@ -283,9 +307,16 @@
               });
               loading = true;
             }
-            setTimeout(() => new window.bbComment(...arguments));
+            setTimeout(() => {
+              let bbcomment = new window.bbComment(...arguments);
+              bbcomment.events && (bbcomment.events = Object.assign(bbcomment.events, events));
+            });
           }
-          on() {
+          on(eventName, cb) {
+            if (!events[eventName]) {
+              events[eventName] = [];
+            }
+            events[eventName].push(cb);
           }
         };
       }
@@ -316,8 +347,8 @@
     jsonphook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
       var _a;
       if (0 === res.code && ((_a = res.data) == null ? void 0 : _a.page)) {
-        const page = res.page;
-        page && jsonphook("api.bilibili.com/x/v2/reply?", void 0, (res2) => {
+        const page = res.data.page;
+        page && jsonphook(["api.bilibili.com/x/v2/reply?", "sort=0"], void 0, (res2) => {
           var _a2;
           if (0 === res2.code && ((_a2 = res2.data) == null ? void 0 : _a2.page)) {
             page.count && (res2.data.page.count = page.count);
@@ -454,10 +485,116 @@
         '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
         '<span class="reply btn-hover">回复</span>',
+        item.dialog != item.rpid ? '<span class="dialog btn-hover" dialog-id="' + item.dialog + '" data-id="' + item.rpid + '">查看对话</span>' : "",
         '<div class="operation btn-hover btn-hide-re"><div class="spot"></div><div class="opera-list"><ul>' + (this._canBlackList(item.mid) ? '<li class="blacklist">加入黑名单</li>' : "") + (this._canReport(item.mid) ? '<li class="report">举报</li>' : "") + (this._canDel(item.mid) ? '<li class="del" data-mid="' + item.mid + '">删除</li>' : "") + "</ul></div></div>",
         "</div>",
         "</div>"
       ].join("");
+    };
+    addCss(`.bb-comment .comment-list .list-item .info .btn-hover, .comment-bilibili-fold .comment-list .list-item .info .btn-hover {
+        line-height: 24px;
+    }`, "comment-btn-24pxH");
+    addCss(`.operation.btn-hide-re .opera-list {visibility: visible}`, "keep-operalist-visible");
+    const _registerEvent = Feedback.prototype._registerEvent;
+    Feedback.prototype._registerEvent = function(e) {
+      _registerEvent.call(this, e);
+      let n = this.$root;
+      let $ = window.$;
+      if (e)
+        n = $(e);
+      let l = this;
+      n.on("click.dialog", ".dialog", function() {
+        let clickTarget = this;
+        clickTarget.innerHTML = "正在载入……";
+        let rootid = clickTarget.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id");
+        let dialogid = clickTarget.getAttribute("dialog-id");
+        let selfRpid = clickTarget.getAttribute("data-id");
+        addCss(`
+            .comment-dialog .dialog{display:none!important}
+            .comment-dialog > .comment-list{transform:translateY(-13px)}
+            .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}
+            .comment-dialog-container{width:600px;z-index:100000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}
+            .comment-dialog-container.hidden{opacity:0}`, "comment-dialog");
+        let container = document.createElement("div");
+        container.className = "comment-dialog-container hidden";
+        container.innerHTML = `
+            <div class="comment-dialog bb-comment">
+            <div class="comment-list">
+            <div class="list-item" data-id="${rootid}">
+            <div class="con" style="border:none;margin:0;padding:0;">
+            <div class="reply-box">
+            </div></div></div></div></div>`;
+        document.body.appendChild(container);
+        let replyBox = container.getElementsByClassName("reply-box")[0];
+        setTimeout(() => {
+          let closeWindow = (e2) => {
+            if (!container.contains(e2.target) && e2.target != container) {
+              container.className = "comment-dialog-container hidden";
+              setTimeout(() => container.remove(), 100);
+              clickTarget.innerHTML = "查看对话";
+              window.removeEventListener("click", closeWindow, false);
+            }
+          };
+          window.addEventListener("click", closeWindow);
+        }, 0);
+        function fetchDialog(minFloor) {
+          return $.ajax({
+            url: "//api.bilibili.com/x/v2/reply/dialog/cursor",
+            type: "GET",
+            data: {
+              type: l.pageType,
+              oid: l.oid,
+              root: rootid,
+              dialog: dialogid,
+              size: 20,
+              min_floor: minFloor
+            },
+            xhrFields: { withCredentials: true }
+          });
+        }
+        function fixEmojiPosition(node) {
+          node = $(node);
+          node.find(".reply-item").each(function(_, n2) {
+            var t = $(n2).find(".reply-face"), r = $(n2).find(".user"), n2 = $(n2).find(".name");
+            t && r && n2 && (10 < n2.offset().top - r.offset().top ? t.css("top", "32px") : t.css("top", "0"));
+          });
+        }
+        fetchDialog(0).done((resp) => {
+          if (resp.code == 0 && resp.data.replies && resp.data.replies.length > 0) {
+            let nextPage2 = function(minFloor) {
+              if (minFloor < resp.data.dialog.max_floor) {
+                fetchDialog(minFloor + 1).done((resp2) => {
+                  if (resp2.code == 0 && resp2.data.replies && resp2.data.replies.length > 0) {
+                    replyBox.insertAdjacentHTML("beforeend", l._createSubReplyList(resp2.data.replies, resp2.data.replies.length, true, rootid, null, false));
+                    nextPage2(resp2.data.cursor.max_floor);
+                  }
+                });
+              } else {
+                fixEmojiPosition(replyBox);
+                replyBox.querySelector(`div[data-id="${selfRpid}"]`).style.cssText = `
+                            background: linear-gradient(45deg, rgba(115,108,231,0.13) 0%, rgba(0,161,214,0.13) 67%, rgba(0,212,255,0.13) 100%);
+                            border-radius: 15px;
+                            margin-right: 15px;`;
+              }
+            };
+            var nextPage = nextPage2;
+            replyBox.innerHTML = l._createSubReplyList(resp.data.replies, resp.data.replies.length, true, rootid, null, false);
+            l._registerEvent(container);
+            container.className = "comment-dialog-container";
+            fixEmojiPosition(replyBox);
+            nextPage2(resp.data.cursor.max_floor);
+          }
+        });
+      });
+      n.off("click.operation", ".spot");
+      n.on("click.operation", ".spot", function(e2) {
+        let operalist = this.parentNode.getElementsByClassName("opera-list")[0];
+        if (l.lastClickOperation != this || operalist && operalist.style.display == "none") {
+          $(".opera-list").hide(), $(this).siblings(".opera-list").show(), e2.stopPropagation(), $(this).hasClass("more-operation") && (e2 = +$(this).parents(".reply-wrap:eq(0)").attr("data-id"));
+          l.lastClickOperation = this;
+        } else
+          operalist && (operalist.style.display = "none");
+      });
     };
   }
 
