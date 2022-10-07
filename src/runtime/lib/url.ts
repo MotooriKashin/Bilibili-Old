@@ -91,3 +91,6 @@ export interface jsonUrlDetail {
 }
 /** 封装好的默认请求，已填好必须的参数 */
 export const urlPack = new UrlPack();
+
+// https://bangumi.bilibili.com/view/web_api/media?media_id=28339092
+// https://bangumi.bilibili.com/view/api/season?ep_id=675689 sign!

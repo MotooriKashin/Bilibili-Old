@@ -8,6 +8,48 @@ import { toast } from "../../runtime/toast/toast";
 import { API } from "../../runtime/variable/variable";
 import { xhr } from "../../runtime/xhr";
 
+interface EPISODE_NEW {
+    aid: number;
+    badge: string;
+    badge_info: { bg_color: string; bg_color_night: string; text: string; }
+    badge_type: number;
+    cid: number;
+    cover: string;
+    from: string;
+    id: number;
+    is_premiere: number;
+    long_title: string;
+    share_url: string;
+    status: number;
+    title: string;
+    vid: string;
+}
+
+interface EPISODE {
+    aid: number;
+    attr: number;
+    badge: string;
+    badge_type: number;
+    bvid: string;
+    cid: number;
+    cover: string;
+    ctime: string;
+    duration: number;
+    ep_id: number;
+    episode_status: number;
+    episode_type: number;
+    from: string;
+    index: string;
+    index_title: string;
+    mid: number;
+    page: number;
+    premiere: false
+    pub_real_time: string;
+    section_id: number;
+    section_type: number;
+    vid: string;
+}
+
 /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
 function setEpStat(status: number, pay: number, payPackPaid: number, loginInfo: Record<string, any>) {
     var s = 0
@@ -113,6 +155,29 @@ export async function bangumiInitialState(): Promise<any> {
             t.seasonFollowed = 1 === data.status.follow;
         }
         if (data.bangumi) {
+            if (data.bangumi.season_id && data.bangumi.total_ep && !data.bangumi.episodes?.[0]) {
+                try { // bangumi未能获取到列表，额外请求之
+                    const section = await xhr(
+                        {
+                            url: `https://api.bilibili.com/pgc/web/season/section?season_id=${data.bangumi.season_id}`,
+                            responseType: "json",
+                            credentials: true
+                        }
+                    );
+                    data.bangumi.episodes = section.result.main_section.episodes
+                        .concat(...section.result.section.map((d: any) => d.episodes))
+                        .map((d: any) => {
+                            d.ep_id = d.id;
+                            d.episode_status = d.status;
+                            d.index = d.title;
+                            d.index_title = d.long_title;
+                            d.premiere = Boolean(d.is_premiere);
+                            return d;
+                        });
+                } catch (e) {
+                    toast.warning(`获取ep列表失败，请刷新页面重试！`);
+                }
+            }
             // -> bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js:1148
             // 原数据有些问题导致一些回调事件不会正常加载需要主动写入epId、epInfo（顺序）
             // 如果没有这个错误，根本必须手动重构`__INITIAL_STATE__` 🤣
