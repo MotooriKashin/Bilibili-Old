@@ -75,4 +75,10 @@ export function automate() {
             })
         })
     }
+    // 禁止bpx-player自动播放
+    try {
+        const bpx_player_profile = localStorage.getItem("bpx_player_profile") || { media: { autoplay: false } };
+        bpx_player_profile.media.autoplay = false;
+        localStorage.setItem("bpx_player_profile", bpx_player_profile);
+    } catch (e) { }
 }
