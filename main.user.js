@@ -16327,6 +16327,15 @@ const modules =`
       document.body.classList.remove("header-v3");
       header(true);
     });
+    xhrhookAsync("api.live.bilibili.com/ajax/feed/count", void 0, async (arg, type) => {
+      const response = '{ "code": 0, "data": { "count": 0 } }';
+      return type === "json" ? {
+        response: JSON.parse(response)
+      } : {
+        response,
+        responseText: response
+      };
+    }, false);
   }
 
   // src/content/space/album.ts
@@ -16604,6 +16613,12 @@ const modules =`
     if (window.BILIOLD_GOLBAL)
       return;
     window.BILIOLD_GOLBAL = true;
+    if (uid) {
+      const offset2 = getCookies()[\`bp_video_offset_\${uid}\`];
+      if (offset2) {
+        setCookie(\`bp_t_offset_\${uid}\`, offset2);
+      }
+    }
     setting.section && section();
     setting.comment && loadComment();
     setting.logReport && blockReport();
@@ -17028,7 +17043,7 @@ const modules =`
 
   // src/content/index/ad_block.ts
   function adblock(prev) {
-    return prev.filter((d) => !d.is_ad);
+    return prev.filter((d) => !d.is_ad && d.id);
   }
 
   // src/content/index/index.html
