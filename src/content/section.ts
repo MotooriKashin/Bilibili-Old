@@ -2,6 +2,7 @@ import { doWhile } from "../runtime/do_while";
 import { addCss, addElement, loadScript } from "../runtime/element/add_element";
 import { banner, primaryMenu } from "./banner";
 import css from "./avatar_animation.css";
+import { xhrhookAsync } from "../runtime/hook/xhr";
 
 /** 加载底栏脚本 */
 async function header(menu = false) {
@@ -99,5 +100,17 @@ export function section() {
     doWhile(() => (document.body && document.body.classList.contains("header-v3")) || document.querySelector("#bili-header-container"), () => {
         document.body.classList.remove("header-v3");
         header(true);
-    })
+    });
+
+    // 顶栏动态直播回复数目接口失效，强制标记为0
+    xhrhookAsync('api.live.bilibili.com/ajax/feed/count', undefined, async (arg, type) => {
+        const response = '{ "code": 0, "data": { "count": 0 } }';
+        return type === "json"
+            ? {
+                response: JSON.parse(response)
+            } : {
+                response: response,
+                responseText: response
+            }
+    }, false);
 }

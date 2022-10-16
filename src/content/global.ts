@@ -15,11 +15,21 @@ import { album } from "./space/album";
 import { spacePage } from "./space/space";
 import { disableWebRTC } from "./web_rtc";
 import { isUserScript } from "../tampermonkey/check";
+import { uid } from "../runtime/variable/uid";
+import { getCookies, setCookie } from "../runtime/cookies";
 
 export function globalVector() {
     // 主脚本有可能多次注入，全局脚本只运行一次
     if ((<any>window).BILIOLD_GOLBAL) return;
     (<any>window).BILIOLD_GOLBAL = true;
+
+    // 顶栏动态记录参数失效，另行找补
+    if (uid) {
+        const offset = getCookies()[`bp_video_offset_${uid}`];
+        if (offset) {
+            setCookie(`bp_t_offset_${uid}`, offset);
+        }
+    }
 
     // 旧版顶栏底栏
     setting.section && section();
@@ -68,5 +78,5 @@ export function globalVector() {
                 default:
             }
         }
-    })
+    });
 }
