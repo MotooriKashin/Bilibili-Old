@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.1.6
+// @version      9.1.7
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -4813,13 +4813,6 @@ const modules =`
       (document.body || document.head || document.documentElement || document).appendChild(script);
     });
   }
-  function addCssEs(path2) {
-    const files = isArray(path2) ? path2 : [path2];
-    window.postMessage({
-      \$type: "insertCSS",
-      data: files
-    });
-  }
 
   // src/runtime/unit.ts
   function jsonCheck(data) {
@@ -9233,6 +9226,12 @@ const modules =`
           });
         });
       });
+    }
+    try {
+      const bpx_player_profile = localStorage.getItem("bpx_player_profile") || { media: { autoplay: false } };
+      bpx_player_profile.media.autoplay = false;
+      localStorage.setItem("bpx_player_profile", bpx_player_profile);
+    } catch (e) {
     }
   }
 
@@ -13803,7 +13802,6 @@ const modules =`
         toast.warning("bilibiliPlayer.min.js 已回滚~", "当前可能无法访问 jsdelivr ！", "反查弹幕发送者等部分播放器增强功能暂时无法使用🤣");
       });
     }
-    addCssEs("bilibili/bilibiliPlayer.css");
     return await loadScript(\`chrome-extension://\${sessionStorage.getItem("bilibili-old")}/bilibili/bilibiliPlayer.js\`);
   }
 
