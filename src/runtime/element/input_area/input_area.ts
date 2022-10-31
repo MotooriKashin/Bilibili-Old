@@ -98,6 +98,9 @@ export class InputArea extends HTMLElement {
         let file = false; // type="file"例外处理
         input.addEventListener("change", () => {
             obj.value = file ? <any>input.files : input.value;
+            if (file) {
+                !initing && change && change(file ? input.files : input.value);
+            }
         });
         // 数据绑定
         Object.defineProperties(obj, {
@@ -178,7 +181,7 @@ export class InputArea extends HTMLElement {
         this.value = obj.value = value || "";
         this.props = obj.props = props || {};
         this.candidate = obj.candidate = candidate || [];
-        initing = file;
+        initing = false;
     }
 }
 customElements.get(`input-area${mutex}`) || customElements.define(`input-area${mutex}`, InputArea);
