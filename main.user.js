@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      9.1.7
+// @version      9.1.8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -26276,6 +26276,9 @@ const modules =`
       let file = false;
       input.addEventListener("change", () => {
         obj.value = file ? input.files : input.value;
+        if (file) {
+          !initing && change && change(file ? input.files : input.value);
+        }
       });
       Object.defineProperties(obj, {
         value: {
@@ -26362,7 +26365,7 @@ const modules =`
       this.value = obj.value = value || "";
       this.props = obj.props = props || {};
       this.candidate = obj.candidate = candidate || [];
-      initing = file;
+      initing = false;
     }
   };
   customElements.get(\`input-area\${mutex}\`) || customElements.define(\`input-area\${mutex}\`, InputArea);
