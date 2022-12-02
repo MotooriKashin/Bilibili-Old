@@ -1,4 +1,4 @@
-![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 103](https://img.shields.io/badge/Google_Chrome_103-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
+![Windows 11](https://img.shields.io/badge/Microsoft_Windows_11-pass-green.svg?longCache=true) ![Chrome 107](https://img.shields.io/badge/Google_Chrome_107-pass-green.svg?longCache=true) ![Tampermonkey 4.18](https://img.shields.io/badge/Tampermonkey_4.18-pass-green.svg?longCache=true)  ![Manifest V3](https://img.shields.io/badge/Manifest_V3-pass-green.svg?longCache=true)  
 
 Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括小电视播放器。
 
@@ -114,10 +114,10 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
 ---
 ### 开发环境
 > 
-> 操作系统        Microsoft Windows 11 professional 10.0.22000.778  
-> 浏览器          Google Chrome 103.0.5060.134 (正式版本) （64 位） (cohort: Stable)   
-> 代码编辑器      Visual Studio Code 1.69.2 
-> 编译器          Node.js v16.14.2  
+> 操作系统        Microsoft Windows 11 professional 10.0.22621.819  
+> 浏览器          Google Chrome 107.0.5304.123 (正式版本) （64 位） (cohort: 107_control)    
+> 代码编辑器      Visual Studio Code 1.73.1  
+> 编译器          Node.js v19.1.0  
 >
 
 参见[开发者文档](https://github.com/MotooriKashin/Bilibili-Old/blob/master/.github/contributing.md)。
