@@ -1,0 +1,26 @@
+.container {
+    position: fixed;
+    top: 16px;
+    left: 100%;
+    background: hsla(0, 0%, 95.7%, .8);
+    border-radius: 2px;
+    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);
+    color: #000;
+    width: 381px;
+    z-index: 1;
+}
+
+.title {
+    text-align: center;
+    margin-top: 16px;
+    margin-bottom: 3px;
+    font-size: 12px;
+}
+
+.content {
+    font-size: 12px;
+    line-height: 19px;
+    padding: 0 16px 16px;
+    text-align: justify;
+    white-space: pre-line;
+}

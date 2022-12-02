@@ -1,37 +1,16 @@
 {
-  "name": "bilibili-old",
-  "version": "1.0.0",
-  "description": "恢复Bilibili旧版页面，为了那些念旧的人。",
-  "main": "index.js",
-  "scripts": {
-    "tsc": "tsc -p ./tsconfig.json  --noEmit",
-    "update": "npm update",
-    "build": "cross-env NODE_ENV=production node .vscode/esbuild.js",
-    "test": "cross-env NODE_ENV=development node .vscode/esbuild.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MotooriKashin/Bilibili-Old.git"
-  },
-  "keywords": [
-    "bilibili",
-    "chrome-extension",
-    "manifest-v3",
-    "typescript",
-    "chrome"
-  ],
-  "author": "MotooriKashin",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/MotooriKashin/Bilibili-Old/issues"
-  },
-  "homepage": "https://github.com/MotooriKashin/Bilibili-Old#readme",
   "dependencies": {
-    "@types/chrome": "^0.0.190",
-    "cross-env": "^7.0.3",
-    "esbuild": "^0.14.43",
-    "fs-extra": "^10.1.0",
-    "protobufjs": "^6.11.3",
-    "typescript": "^4.7.3"
+    "@blod/blod": "file:src",
+    "@blod/extension": "file:extension",
+    "@blod/userscript": "file:userscript"
+  },
+  "devDependencies": {
+    "esbuild": "^0.15.13",
+    "fs-extra": "^11.1.0",
+    "typescript": "^4.8.4"
+  },
+  "scripts": {
+    "extension": "node extension/build.js",
+    "userscript": "node userscript/build.js"
   }
 }

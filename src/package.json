@@ -1,0 +1,16 @@
+{
+  "name": "@blod/blod",
+  "version": "1.0.0",
+  "description": "用户脚本",
+  "main": "bilibili-old",
+  "author": "MotootiKashin",
+  "license": "MIT",
+  "dependencies": {
+    "@types/md5": "^2.3.2",
+    "navigation-api-types": "^0.3.0",
+    "md5": "^2.3.0"
+  },
+  "scripts": {
+    "tsc": "tsc --noEmit"
+  }
+}

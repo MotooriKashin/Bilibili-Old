@@ -3,36 +3,21 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "tsc",
-			"problemMatcher": [],
-			"label": "npm: tsc",
-			"detail": "TypeScript编译"
-		},
-		{
-			"type": "npm",
-			"script": "update",
-			"problemMatcher": [],
-			"label": "npm: update",
-			"detail": "更新包依赖"
-		},
-		{
-			"type": "npm",
-			"script": "test",
-			"group": "test",
-			"problemMatcher": [],
-			"label": "npm: test",
-			"detail": "编译：开发模式"
-		},
-		{
-			"type": "npm",
-			"script": "build",
+			"script": "extension",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"problemMatcher": [],
-			"label": "npm: build",
-			"detail": "编译：发行模式"
+			"label": "npm: extension",
+			"detail": "编译浏览器扩展"
+		},
+		{
+			"type": "npm",
+			"script": "userscript",
+			"problemMatcher": [],
+			"label": "npm: userscript",
+			"detail": "编译用户脚本：Bilibili 旧播放页"
 		}
 	]
 }
