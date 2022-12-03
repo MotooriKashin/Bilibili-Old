@@ -54,6 +54,8 @@ VSCode里的typescript项目，使用esbuild编译打包为对应chrome扩展和
 
 测试：VSCode里运行用户脚本对应的编译任务会将`main.user.js`生成到userscript目录下，使用Tampermonkey等脚本管理器加载即可测试。  
 
+提交：请尽量不要将`*.user.js`放进提交里，除非确信此次修改要直接推送给用户。  
+
 注意：新版用户脚本需要启用`<><![CDATA[]]></>`兼容支持，一般在脚本管理器里卸载重装即可。
 
 #### 主模块

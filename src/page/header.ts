@@ -83,6 +83,7 @@ export class Header {
         });
         this.plaza();
         this.indexIcon();
+        this.styleFix();
     }
     static banner() {
         jsonpHook.async("api.bilibili.com/x/web-show/res/loc", undefined, async url => {
@@ -146,14 +147,8 @@ export class Header {
         }
     }
     /** 迷你顶栏 */
-    protected static miniHeader() {
-        addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper,.nav-menu > .blur-bg { display: none; }", 'mini-header')
-            .then(d => {
-                // 页面加载完成再判定一次
-                poll(() => document.readyState === 'complete', () => {
-                    this.isMiniHead() || (d.disabled = true);
-                });
-            });
+    protected miniHeader() {
+        this.oldHeader.classList.remove('has-menu');
     }
     /** 是否mini顶栏 */
     protected static isMiniHead(d?: HTMLElement) {
@@ -173,16 +168,13 @@ export class Header {
     }
     /** 监听新版顶栏 */
     protected hookHeadV2() {
-        poll(() => document.querySelector<HTMLElement>('#internationalHeader'), d => {
-            Header.isMiniHead(d) && Header.miniHeader();
+        poll(() => {
+            return document.querySelector<HTMLElement>('#internationalHeader')
+                || document.querySelector<HTMLElement>('#biliMainHeader')
+                || document.querySelector<HTMLElement>('#bili-header-container');
+        }, d => {
+            Header.isMiniHead(d) && this.miniHeader();
             this.loadOldHeader(d);
-        });
-        poll(() => (<any>window).BiliHeader, () => {
-            Header.isMiniHead() && Header.miniHeader();
-            this.loadOldHeader(
-                document.querySelector<HTMLElement>('#biliMainHeader')!
-                || document.querySelector<HTMLElement>('#bili-header-container')!
-            );
         });
         // 远古顶栏
         poll(() => document.querySelector<HTMLElement>('.z_top_container'), d => {
@@ -198,13 +190,18 @@ export class Header {
     protected oldHeader = document.createElement('div');
     /** 加载旧版顶栏 */
     protected loadOldHeader(target?: HTMLElement) {
-        target && (target.style.display = 'none');
+        if (target) {
+            target.style.display = 'none';
+            target.hidden = true;
+            // target.attachShadow({ mode: 'closed' });
+        }
         if (this.oldHeadLoaded) return;
         this.oldHeadLoaded = true;
+        addCss('#internationalHeader,#biliMainHeader,#bili-header-container{display: none;}');
         document.body.insertBefore(this.oldHeader, document.body.firstChild);
         ((<any>window).jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js"))
             .then(() => loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js"))
-            .then(() => { this.styleFix() });
+            .then(() => { Header.styleFix(); });
         Header.primaryMenu();
         Header.banner();
     }
@@ -219,9 +216,10 @@ export class Header {
             })
     }
     /** 顶栏样式修复 */
-    protected styleFix() {
-        addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}");
+    protected static styleFix() {
+        addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", 'lt-row-fix');
         addCss(avatarAnimation, "avatarAnimation");
+        poll(() => document.readyState === 'complete', () => this.styleFix());
     }
     /** 禁用新版顶栏相关样式 */
     protected async styleClear() {
