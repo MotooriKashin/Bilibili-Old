@@ -45,7 +45,7 @@ export class Player {
     }
     protected EmbedPlayer() {
         // 1.x/2.x播放器
-        methodHook(window, 'EmbedPlayer', () => this.loadPlayer(), d => this.modifyArgument(d));
+        methodHook(window, 'EmbedPlayer', () => this.BLOD.loadplayer(), d => this.modifyArgument(d));
         // 3.x播放器
         propertyHook(window, 'nano', this);
         // 与新版页面共用此接口容易出故障
@@ -102,30 +102,6 @@ export class Player {
             stop: { get: () => (<any>window).player?.stop },
             volume: { get: () => (<any>window).player?.volume }
         })
-    }
-    /** 加载播放器 */
-    protected async loadPlayer() {
-        try {
-            const tasks: Promise<string>[] = [];
-            if (!_UserScript_) {
-                tasks.push(
-                    this.BLOD.GM.executeScript('player/video.js', true),
-                    this.BLOD.GM.insertCSS('player/video.css', true)
-                );
-            }
-            // 检查jQuery依赖
-            if (!(<any>window).jQuery) {
-                tasks.push(<any>loadScript(URLS.JQUERY));
-            }
-            const arr = await Promise.all(tasks);
-            if (_UserScript_) {
-                return loadScript(URLS.VIDEO);
-            }
-            return await Promise.all([loadScript(arr[0]), loadStyle(arr[1])]);
-        } catch (e) {
-            this.BLOD.toast.error('播放器加载失败！', '已回滚~', e)();
-            loadScript(URLS.VIDEO);
-        }
     }
     /** 切p回调 */
     private switchVideo = async () => {

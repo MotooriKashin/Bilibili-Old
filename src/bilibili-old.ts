@@ -21,7 +21,7 @@ import { PageMedia } from "./page/media";
 import { PageHistory } from "./page/history";
 import { PageDynamic } from "./page/dynamic";
 import { UI } from "./core/ui";
-import { loadScript } from "./utils/element";
+import { addCss, addElement, loadScript, loadStyle } from "./utils/element";
 import { Automate } from "./core/automate";
 import { localStorage } from "./core/storage";
 import { PageLive } from "./page/live";
@@ -30,6 +30,7 @@ import { VideoInfo } from "./core/video-info";
 import { Download } from "./core/download";
 import { GM as GMC } from "@blod/extension/utils/gm";
 import { xhrHook } from "./utils/hook/xhr";
+import { URLS } from "./io/urls";
 
 export class BLOD {
     /** 用户数据管理 */
@@ -72,8 +73,11 @@ export class BLOD {
     ui?: UI;
     /** 是否大会员 */
     isVip = false;
+    /** 播放器哈希值 */
+    version?: string;
     /** @param GM 提权操作接口 */
     constructor(public GM: typeof GMC) {
+        this.version = this.GM.info?.script.version.slice(-40);
         // 初始化用户数据
         this.userLoadedCallback(status => {
             this.status = status;
@@ -364,6 +368,87 @@ export class BLOD {
             bpx_player_profile.media.autoplay = false;
             localStorage.setItem("bpx_player_profile", bpx_player_profile);
         } catch (e) { }
+    }
+    /** 正在更新播放器 */
+    protected updating = false;
+    /**
+     * 加载播放器
+     * @param force 强制更新
+     */
+    async loadplayer(force = false) {
+        if (!(<any>window).jQuery) await loadScript(URLS.JQUERY);
+        try {
+            if (_UserScript_) {
+                if (this.status.bilibiliplayer) {
+                    const data = await Promise.all([
+                        this.GM.getValue<string>('bilibiliplayer'),
+                        this.GM.getValue<string>('bilibiliplayerstyle')
+                    ]);
+                    if (force || !data[0] || !data[1]) {
+                        if (this.updating) throw new Error('一次只能运行一个更新实例！');
+                        this.updating = true;
+                        if (!this.version) throw new Error(`未知错误导致脚本版本异常！version：${this.version}`);
+                        const msg = [
+                            '更新播放器组件中，可能需要花费一点时间，请不要关闭页面！',
+                            '如果弹出跨域提醒，推荐【总是允许全部域名】',
+                            '如果多次更新失败，请禁用【重构播放器】功能！'
+                        ];
+                        const toast = this.toast.toast(0, 'warning', ...msg);
+                        let i = 1;
+                        await Promise.all([
+                            this.GM.fetch(`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${this.version}/extension/player/video.js`)
+                                .then(d => d.text())
+                                .then(d => {
+                                    data[0] = d;
+                                    msg.push(`加载播放器组件：${i++}/2`);
+                                    toast.data = msg;
+                                })
+                                .catch(e => {
+                                    msg.push(`获取播放器组件出错！${i++}/2`, e);
+                                    toast.data = msg;
+                                    toast.type = 'error';
+                                }),
+                            this.GM.fetch(`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${this.version}/extension/player/video.css`)
+                                .then(d => d.text())
+                                .then(d => {
+                                    data[1] = d;
+                                    msg.push(`加载播放器组件：${i++}/2`);
+                                    toast.data = msg;
+                                })
+                                .catch(e => {
+                                    msg.push(`获取播放器组件出错！${i++}/2`, e);
+                                    toast.data = msg;
+                                    toast.type = 'error';
+                                })
+                        ]);
+                        this.updating = false;
+                        toast.delay = this.status.toast.delay;
+                        if (!data[0] || !data[1]) throw new Error('获取播放器组件出错！');
+                        msg.push('-------加载成功-------');
+                        toast.data = msg;
+                        toast.type = 'success';
+                        this.GM.setValue('bilibiliplayer', data[0]);
+                        this.GM.setValue('bilibiliplayerstyle', data[1]);
+                    }
+                    new Function(data[0])();
+                    addCss(data[1], `bilibiliplayer-${this.version}`);
+                    this.GM.setValue('version', this.version);
+
+                } else {
+                    await loadScript(URLS.VIDEO);
+                }
+            } else {
+                await Promise.all([
+                    this.GM.executeScript('player/video.js', true)
+                        .then(d => loadScript(d)),
+                    this.GM.insertCSS('player/video.css', true)
+                        .then(d => loadStyle(d))
+                ]);
+            }
+        } catch (e) {
+            this.updating || this.toast.error('播放器加载失败！', '已回滚~', e)();
+            await loadScript(URLS.VIDEO);
+        }
     }
 }
 

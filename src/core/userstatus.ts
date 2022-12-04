@@ -144,5 +144,7 @@ export const userStatus = {
         silence: false
     },
     /** 点赞功能 */
-    like: false
+    like: false,
+    /** 重构播放器脚本 */
+    bilibiliplayer: true,
 }

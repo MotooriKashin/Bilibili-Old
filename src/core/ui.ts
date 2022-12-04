@@ -41,11 +41,21 @@ export class UI {
         poll(() => document.readyState === 'complete', () => {
             this.entry.type = this.BLOD.status.uiEntryType;
             document.body.appendChild(this.entry);
+            this.updateCheck();
         }, 1e3, 0);
         this.entry.addEventListener('click', e => {
             this.show();
             e.stopPropagation();
         })
+    }
+    /** 检查播放器脚本更新 */
+    protected async updateCheck() {
+        if (_UserScript_ && this.BLOD.status.bilibiliplayer) {
+            const version = await this.BLOD.GM.getValue('version');
+            if (version !== this.BLOD.version) {
+                this.BLOD.loadplayer(true);
+            }
+        }
     }
     /** 初始化菜单 */
     protected initMenu() {
@@ -142,6 +152,15 @@ export class UI {
                 new AccessKey(this.BLOD);
             }, '授权脚本使用登录鉴权', '授权', svg.warn)
         ], 2);
+        if (_UserScript_) {
+            this.menuitem.common.addSetting([
+                this.switch('bilibiliplayer', '重构播放器', '修复及增强', svg.play, v => {
+                    if (v) {
+                        this.updateCheck();
+                    }
+                }, '旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。')
+            ]);
+        }
     }
     /** 重写设置 */
     protected initSettingRewrite() {
