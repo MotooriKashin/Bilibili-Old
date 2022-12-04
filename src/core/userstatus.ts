@@ -147,4 +147,6 @@ export const userStatus = {
     like: false,
     /** 重构播放器脚本 */
     bilibiliplayer: true,
+    /** 检查播放器脚本更新 */
+    checkUpdate: false
 }
