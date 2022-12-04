@@ -219,7 +219,6 @@ export class Header {
     protected static styleFix() {
         addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", 'lt-row-fix');
         addCss(avatarAnimation, "avatarAnimation");
-        poll(() => document.readyState === 'complete', () => this.styleFix());
     }
     /** 禁用新版顶栏相关样式 */
     protected async styleClear() {
@@ -229,6 +228,7 @@ export class Header {
                 || d[i].href?.includes("laputa-header"))
                 && (d[i].disabled = true);
         }
+        Header.styleFix();
     }
     /** 顶栏动态直播回复数目接口失效，强制标记为0 */
     protected feedCount() {
