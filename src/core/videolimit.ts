@@ -1,11 +1,10 @@
 import { BLOD } from "../bilibili-old";
-import { jsonCheck } from "../io/api";
 import { apiBiliplusPlayurl } from "../io/api-biliplus-playurl";
 import { ApiGlobalOgvPlayurl } from "../io/api-global-ogv-playurl";
 import { ApiAppPgcPlayurl, IPlayurlDash } from "../io/api-playurl";
-import { getCookies } from "../utils/cookie";
+import { uid } from "../utils/conf/uid";
 import { debug } from "../utils/debug";
-import { objUrl, urlObj } from "../utils/format/url";
+import { urlObj } from "../utils/format/url";
 import { xhrHook, XMLHttpRequestOpenParams } from "../utils/hook/xhr";
 import { Toast } from "./toast";
 
@@ -48,6 +47,7 @@ export class VideoLimit {
     /** 开始监听 */
     enable() {
         if (this.listening) return;
+        // 处理限制视频请求
         const disable = xhrHook.async('/playurl?', args => {
             const obj = urlObj(args[1]);
             this.updateVaribale(obj);
@@ -56,7 +56,13 @@ export class VideoLimit {
             const response = this.BLOD.th ? await this._th(args) : await this._gat(args);
             return { response, responseType: 'json', responseText: JSON.stringify(response) }
         }, false);
-        xhrHook('/playurl?', () => !(this.BLOD.limit || this.BLOD.th), res => {
+        // 处理非限制视频请求
+        xhrHook('/playurl?', args => {
+            if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
+                args[1] += `&access_key=${this.BLOD.status.accessKey.token}`
+            }
+            return !(this.BLOD.limit || this.BLOD.th)
+        }, res => {
             try {
                 const result = res.responseType === 'json' ? JSON.stringify(res) : res.responseText!;
                 if (this.BLOD.status.uposReplace.nor !== '不替换') {

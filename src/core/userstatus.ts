@@ -148,5 +148,7 @@ export const userStatus = {
     /** 重构播放器脚本 */
     bilibiliplayer: true,
     /** 检查播放器脚本更新 */
-    checkUpdate: false
+    checkUpdate: false,
+    /** 不登录1080P支持 */
+    show1080p: false,
 }

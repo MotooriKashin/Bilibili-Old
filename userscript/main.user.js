@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.0.0-aa44074247e44c6b488c3fea73ed1d93de8cc144
+// @version      10.0.0-3df83fc4ae74cdee0039549f514f713dd2c1c6e8
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -633,7 +633,7 @@ var PushButton = class extends HTMLElement {
     this._button.textContent = v;
   }
 };
-customElements.get(`button-${"aa44074"}`) || customElements.define(`button-${"aa44074"}`, PushButton);
+customElements.get(`button-${"3df83fc"}`) || customElements.define(`button-${"3df83fc"}`, PushButton);
 
 // src/html/popupbox.html
 var popupbox_default = '<div class="box">\r\n    <div class="contain"></div>\r\n    <div class="fork"></div>\r\n</div>\r\n<style type="text/css">\r\n    .box {\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translateX(-50%) translateY(-50%);\r\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\r\n        padding: 12px;\r\n        background-color: #fff;\r\n        color: black;\r\n        border-radius: 8px;\r\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\r\n        border: 1px solid rgba(136, 136, 136, 0.13333);\r\n        box-sizing: border-box;\r\n        position: fixed;\r\n        font-size: 13px;\r\n        z-index: 11115;\r\n        line-height: 14px;\r\n    }\r\n\r\n    .contain {\r\n        display: flex;\r\n        flex-direction: column;\r\n        height: 100%;\r\n    }\r\n\r\n    .fork {\r\n        position: absolute;\r\n        transform: scale(0.8);\r\n        right: 10px;\r\n        top: 10px;\r\n        height: 20px;\r\n        width: 20px;\r\n        pointer-events: visible;\r\n    }\r\n\r\n    .fork:hover {\r\n        border-radius: 50%;\r\n        background-color: rgba(0, 0, 0, 10%);\r\n    }\r\n</style>';
@@ -777,7 +777,7 @@ var PopupBox = class extends HTMLElement {
     }
   }
 };
-customElements.get(`popupbox-${"aa44074"}`) || customElements.define(`popupbox-${"aa44074"}`, PopupBox);
+customElements.get(`popupbox-${"3df83fc"}`) || customElements.define(`popupbox-${"3df83fc"}`, PopupBox);
 
 // src/core/ui/alert.ts
 function alert(msg, title, buttons) {
@@ -932,7 +932,7 @@ var Toast = class extends HTMLDivElement {
     }
   }
 };
-customElements.get(`toast-${"aa44074"}`) || customElements.define(`toast-${"aa44074"}`, Toast, { extends: "div" });
+customElements.get(`toast-${"3df83fc"}`) || customElements.define(`toast-${"3df83fc"}`, Toast, { extends: "div" });
 var ToastContainer = class extends HTMLElement {
   container;
   static get observedAttributes() {
@@ -1036,7 +1036,7 @@ var ToastContainer = class extends HTMLElement {
     }
   }
 };
-customElements.get(`toast-container-${"aa44074"}`) || customElements.define(`toast-container-${"aa44074"}`, ToastContainer);
+customElements.get(`toast-container-${"3df83fc"}`) || customElements.define(`toast-container-${"3df83fc"}`, ToastContainer);
 
 // src/html/ui-entry.html
 var ui_entry_default = '<div class="setting">\r\n    <i></i><span>设置</span>\r\n</div>\r\n<div class="gear"></div>\r\n<style type="text/css">\r\n    .gear {\r\n        position: fixed;\r\n        right: 40px;\r\n        bottom: 60px;\r\n        height: 20px;\r\n        width: 20px;\r\n        border: 1px solid #e9eaec;\r\n        border-radius: 50%;\r\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\r\n        padding: 10px;\r\n        cursor: pointer;\r\n        animation: roll 1s ease-out;\r\n        transition: opacity 0.3s ease-out;\r\n        background: none;\r\n        z-index: 11110;\r\n    }\r\n\r\n    .setting {\r\n        box-sizing: content-box;\r\n        color: #fff;\r\n        background-color: #fff;\r\n        border-radius: 5px;\r\n        position: fixed;\r\n        bottom: 65px;\r\n        width: 56px;\r\n        height: 40px;\r\n        transition: right 0.7s;\r\n        -moz-transition: right 0.7s;\r\n        -webkit-transition: right 0.7s;\r\n        -o-transition: right 0.7s;\r\n        z-index: 11110;\r\n        padding: 4px;\r\n        right: -54px;\r\n    }\r\n\r\n    .setting:hover {\r\n        right: 0px;\r\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\r\n        border: 1px solid rgb(233, 234, 236);\r\n    }\r\n\r\n    .setting i {\r\n        background-position: -471px -982px;\r\n        display: block;\r\n        width: 20px;\r\n        height: 20px;\r\n        transition: 0.2s;\r\n        background-image: url(//static.hdslb.com/images/base/icons.png);\r\n        margin: auto;\r\n    }\r\n\r\n    .setting span {\r\n        font-size: 14px;\r\n        display: block;\r\n        width: 50%;\r\n        transition: 0.2s;\r\n        color: #000;\r\n        margin: auto;\r\n    }\r\n\r\n    @keyframes roll {\r\n\r\n        30%,\r\n        60%,\r\n        90% {\r\n            transform: scale(1) rotate(0deg);\r\n        }\r\n\r\n        10%,\r\n        40%,\r\n        70% {\r\n            transform: scale(1.11) rotate(-180deg);\r\n        }\r\n\r\n        20%,\r\n        50%,\r\n        80% {\r\n            transform: scale(0.9) rotate(-360deg);\r\n        }\r\n    }\r\n</style>';
@@ -1093,7 +1093,7 @@ var BilioldEntry = class extends HTMLElement {
     }
   }
 };
-customElements.get("biliold-entry-aa44074") || customElements.define("bilibili-entry-aa44074", BilioldEntry);
+customElements.get("biliold-entry-3df83fc") || customElements.define("bilibili-entry-3df83fc", BilioldEntry);
 
 // src/core/userstatus.ts
 var userStatus = {
@@ -1173,7 +1173,8 @@ var userStatus = {
   },
   like: false,
   bilibiliplayer: true,
-  checkUpdate: false
+  checkUpdate: false,
+  show1080p: false
 };
 
 // src/core/user.ts
@@ -3691,7 +3692,7 @@ var Like = class extends HTMLSpanElement {
         debug.error("获取点赞情况失败", e);
       });
     }
-    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", `ulike${"aa44074"}`);
+    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", `ulike${"3df83fc"}`);
   }
   get likes() {
     return this.number;
@@ -3708,7 +3709,7 @@ var Like = class extends HTMLSpanElement {
     this.innerHTML = (this.liked ? svg.like : svg.dislike) + "点赞 " + unitFormat(this.number);
   }
 };
-customElements.get(`like-${"aa44074"}`) || customElements.define(`like-${"aa44074"}`, Like, { extends: "span" });
+customElements.get(`like-${"3df83fc"}`) || customElements.define(`like-${"3df83fc"}`, Like, { extends: "span" });
 
 // src/page/bangumi.ts
 var PageBangumi = class extends Page {
@@ -12407,7 +12408,12 @@ var _VideoLimit = class {
       const response = this.BLOD.th ? await this._th(args) : await this._gat(args);
       return { response, responseType: "json", responseText: JSON.stringify(response) };
     }, false);
-    xhrHook("/playurl?", () => !(this.BLOD.limit || this.BLOD.th), (res) => {
+    xhrHook("/playurl?", (args) => {
+      if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
+        args[1] += `&access_key=${this.BLOD.status.accessKey.token}`;
+      }
+      return !(this.BLOD.limit || this.BLOD.th);
+    }, (res) => {
       try {
         const result = res.responseType === "json" ? JSON.stringify(res) : res.responseText;
         if (this.BLOD.status.uposReplace.nor !== "不替换") {
@@ -13067,7 +13073,7 @@ var Desc = class extends HTMLElement {
     }
   }
 };
-customElements.get(`desc-${"aa44074"}`) || customElements.define(`desc-${"aa44074"}`, Desc);
+customElements.get(`desc-${"3df83fc"}`) || customElements.define(`desc-${"3df83fc"}`, Desc);
 
 // src/html/ui-interface.html
 var ui_interface_default = '<div class="box">\r\n    <div class="tool">\r\n        <div title="关闭" class="icon"></div>\r\n        <header>Bilbili Old</header>\r\n    </div>\r\n    <div class="content">\r\n        <div class="contain">\r\n            <div class="menu"></div>\r\n            <div class="item"></div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<style type="text/css">\r\n    .box {\r\n        left: 50%;\r\n        top: 50%;\r\n        transform: translateX(-50%) translateY(-50%);\r\n        min-width: 600px;\r\n        min-height: 400px;\r\n        padding: 0;\r\n        border: 0;\r\n        position: fixed;\r\n        z-index: 11110;\r\n        display: none;\r\n        box-sizing: border-box;\r\n        background: #fff;\r\n        border-radius: 8px;\r\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\r\n        transition: transform 0.3s ease-in;\r\n        line-height: 14px;\r\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\r\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\r\n    }\r\n\r\n    .tool {\r\n        border-bottom-left-radius: 8px;\r\n        border-bottom-right-radius: 8px;\r\n        overflow: hidden;\r\n        width: 100%;\r\n        display: inline-flex;\r\n        z-index: 1;\r\n        align-items: center;\r\n        justify-content: flex-end;\r\n        pointer-events: none;\r\n    }\r\n\r\n    .tool header {\r\n        position: absolute;\r\n        transform: translateX(-50%);\r\n        left: 50%;\r\n        font-size: 14px;\r\n    }\r\n\r\n    .tool div {\r\n        border-radius: 50%;\r\n        padding: 10px;\r\n        transform: scale(0.8);\r\n        pointer-events: visible;\r\n        transition: opacity 0.3s ease;\r\n    }\r\n\r\n    .tool div:hover {\r\n        background-color: rgba(0, 0, 0, 10%);\r\n    }\r\n\r\n    .content {\r\n        position: relative;\r\n        border-bottom-left-radius: 8px;\r\n        border-bottom-right-radius: 8px;\r\n        overflow: hidden;\r\n        background-color: #fff;\r\n    }\r\n\r\n    .contain {\r\n        padding-bottom: 15px;\r\n        background-position: top center;\r\n        background-size: contain;\r\n        background-repeat: no-repeat;\r\n        display: flex;\r\n        align-items: flex-start;\r\n        flex: 1;\r\n        height: 360px;\r\n    }\r\n\r\n    .menu::-webkit-scrollbar,\r\n    .item::-webkit-scrollbar {\r\n        width: 0 !important;\r\n        height: 0 !important;\r\n    }\r\n\r\n    .menu {\r\n        flex: 1 1 0;\r\n        flex-basis: calc(480px * 0.2);\r\n        height: 100%;\r\n        position: sticky;\r\n        top: 0;\r\n        display: flex;\r\n        flex-direction: column;\r\n        min-width: fit-content;\r\n        overflow: auto;\r\n    }\r\n\r\n    .item {\r\n        flex: 4 4 0;\r\n        flex-basis: calc(480px * 0.8);\r\n        height: 100%;\r\n        box-sizing: border-box;\r\n        display: flex;\r\n        flex-direction: column;\r\n        margin: 0 auto;\r\n        position: relative;\r\n        overflow: auto;\r\n        background-image: linear-gradient(to top, white, white),\r\n            linear-gradient(to top, white, white),\r\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\r\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\r\n        background-position: bottom center, top center, bottom center, top center;\r\n        background-color: white;\r\n        background-repeat: no-repeat;\r\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\r\n        background-attachment: local, local, scroll, scroll;\r\n    }\r\n\r\n    .item>div {\r\n        margin-bottom: 60px;\r\n    }\r\n\r\n    .menuitem {\r\n        align-items: center;\r\n        display: flex;\r\n        font-weight: 500;\r\n        margin-inline-end: 2px;\r\n        margin-inline-start: 1px;\r\n        min-height: 20px;\r\n        padding-bottom: 10px;\r\n        padding-inline-start: 23px;\r\n        padding-top: 10px;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .menuitem:hover {\r\n        background-color: rgb(0, 0, 0, 6%);\r\n    }\r\n\r\n    .menuitem>div {\r\n        padding-inline-end: 12px;\r\n    }\r\n\r\n    .selected {\r\n        color: rgb(51, 103, 214) !important;\r\n    }\r\n\r\n    .selected>.icon {\r\n        fill: rgb(51, 103, 214) !important;\r\n    }\r\n\r\n    .contain1 {\r\n        margin-bottom: 3px;\r\n        padding-inline-start: 20px;\r\n        padding-inline-end: 20px;\r\n        display: flex;\r\n        flex-direction: column;\r\n        outline: none;\r\n        position: relative;\r\n    }\r\n\r\n    .header .title {\r\n        color: #000;\r\n        font-size: 108%;\r\n        font-weight: 400;\r\n        letter-spacing: 0.25px;\r\n        margin-bottom: 12px;\r\n        outline: none;\r\n        padding-bottom: 4px;\r\n    }\r\n\r\n    .card {\r\n        border-radius: 4px;\r\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\r\n        flex: 1;\r\n        color: #000;\r\n        line-height: 154%;\r\n        user-select: text;\r\n        margin-inline: 12px;\r\n        margin-bottom: 12px;\r\n    }\r\n\r\n    .contain2 {\r\n        align-items: center;\r\n        border-top: 1px solid rgba(0, 0, 0, 6%);\r\n        display: flex;\r\n        min-height: 24px;\r\n        padding: 0 20px;\r\n        flex-wrap: wrap;\r\n        justify-content: flex-end;\r\n        background-color: transparent !important;\r\n    }\r\n\r\n    .value {\r\n        flex: 1;\r\n        flex-basis: 1e-9px;\r\n        display: flex;\r\n    }\r\n\r\n    .value>* {\r\n        flex: 1;\r\n        flex-basis: 1e-9px;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        justify-content: flex-end;\r\n        align-items: center;\r\n        align-content: center;\r\n    }\r\n\r\n    .label {\r\n        flex: 1;\r\n        flex-basis: 1e-9px;\r\n        padding-block-end: 12px;\r\n        padding-block-start: 12px;\r\n        padding-inline-start: 12px;\r\n    }\r\n\r\n    .switch>.label,\r\n    .button>.label,\r\n    .select>.label,\r\n    .input>.label,\r\n    .slider>.label {\r\n        flex: 2;\r\n    }\r\n\r\n    .select>.value,\r\n    .input>.value,\r\n    .slider>.value {\r\n        flex: 3;\r\n    }\r\n\r\n    .sub {\r\n        color: rgb(95, 99, 104);\r\n        font-weight: 400;\r\n    }\r\n\r\n    .icon {\r\n        align-items: center;\r\n        border-radius: 50%;\r\n        display: flex;\r\n        height: 20px;\r\n        justify-content: center;\r\n        position: relative;\r\n        width: 20px;\r\n        box-sizing: content-box;\r\n        background: none;\r\n        cursor: pointer;\r\n    }\r\n</style>';
@@ -13126,7 +13132,7 @@ var SettingItem = class extends HTMLDivElement {
     this._value.appendChild(value);
   }
 };
-customElements.get(`item-${"aa44074"}`) || customElements.define(`item-${"aa44074"}`, SettingItem, { extends: "div" });
+customElements.get(`item-${"3df83fc"}`) || customElements.define(`item-${"3df83fc"}`, SettingItem, { extends: "div" });
 
 // src/core/ui/item-container.ts
 var ItemContainer = class extends HTMLDivElement {
@@ -13150,7 +13156,7 @@ var ItemContainer = class extends HTMLDivElement {
     this._card.append(...item);
   }
 };
-customElements.get(`item-container-${"aa44074"}`) || customElements.define(`item-container-${"aa44074"}`, ItemContainer, { extends: "div" });
+customElements.get(`item-container-${"3df83fc"}`) || customElements.define(`item-container-${"3df83fc"}`, ItemContainer, { extends: "div" });
 
 // src/core/ui/menu.ts
 var Menuitem = class extends HTMLDivElement {
@@ -13192,7 +13198,7 @@ var Menuitem = class extends HTMLDivElement {
     return this.container;
   }
 };
-customElements.get(`menuitem-${"aa44074"}`) || customElements.define(`menuitem-${"aa44074"}`, Menuitem, { extends: "div" });
+customElements.get(`menuitem-${"3df83fc"}`) || customElements.define(`menuitem-${"3df83fc"}`, Menuitem, { extends: "div" });
 
 // src/html/checkbox.html
 var checkbox_default = `<input type="checkbox" id="checkbox">\r
@@ -13276,7 +13282,7 @@ var CheckBox = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`checkbox-${"aa44074"}`) || customElements.define(`checkbox-${"aa44074"}`, CheckBox);
+customElements.get(`checkbox-${"3df83fc"}`) || customElements.define(`checkbox-${"3df83fc"}`, CheckBox);
 var CheckBoxs = class extends HTMLDivElement {
   $value = [];
   checkboxs = {};
@@ -13326,7 +13332,7 @@ var CheckBoxs = class extends HTMLDivElement {
     });
   }
 };
-customElements.get(`checkboxs-${"aa44074"}`) || customElements.define(`checkboxs-${"aa44074"}`, CheckBoxs, { extends: "div" });
+customElements.get(`checkboxs-${"3df83fc"}`) || customElements.define(`checkboxs-${"3df83fc"}`, CheckBoxs, { extends: "div" });
 
 // src/html/input.html
 var input_default = '<div class="input"><input>\r\n    <ul class="input-list"></ul>\r\n</div>\r\n<style type="text/css">\r\n    .input {\r\n        width: 100%;\r\n        display: inline-block;\r\n        position: relative;\r\n        border: 0;\r\n        overflow: visible;\r\n        white-space: nowrap;\r\n        height: 24px;\r\n        line-height: 24px;\r\n        cursor: pointer;\r\n        font-size: 12px;\r\n    }\r\n\r\n    .input input {\r\n        height: 24px;\r\n        line-height: 24px;\r\n        display: inline;\r\n        user-select: auto;\r\n        text-decoration: none;\r\n        outline: none;\r\n        width: calc(100% - 10px);\r\n        background: transparent;\r\n        padding: 0 5px;\r\n        border: 1px solid #ccd0d7;\r\n        border-radius: 4px;\r\n    }\r\n\r\n    .input input:focus {\r\n        border-color: #00a1d6;\r\n    }\r\n\r\n    .input-list {\r\n        display: none;\r\n        margin: 0;\r\n        width: 100%;\r\n        padding: 0;\r\n        border-radius: 0 0 4px 4px;\r\n        max-height: 120px;\r\n        background-color: #fff;\r\n        border: 1px solid #ccd0d7;\r\n        box-shadow: 0 0 2px 0 #ccd0d7;\r\n        position: absolute;\r\n        left: -1px;\r\n        right: auto;\r\n        z-index: 2;\r\n        overflow: hidden auto;\r\n        white-space: nowrap;\r\n    }\r\n\r\n    .input:hover .input-list {\r\n        display: block;\r\n    }\r\n\r\n    .input-list-row {\r\n        padding: 0 5px;\r\n        transition: background-color .3s;\r\n        line-height: 30px;\r\n        height: 30px;\r\n        font-size: 12px;\r\n        cursor: pointer;\r\n        color: #222;\r\n        position: relative;\r\n    }\r\n\r\n    .input-list-row:hover {\r\n        background-color: #f4f5f7;\r\n        color: #6d757a;\r\n    }\r\n\r\n    .cancel {\r\n        position: absolute;\r\n        right: 0;\r\n        top: 0px;\r\n        width: 38px;\r\n        height: 28px;\r\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\r\n    }\r\n\r\n    .input-list-row:hover .cancel {\r\n        background-position: -525px -530px;\r\n    }\r\n</style>\r\n<style type="text/css">\r\n    ::-webkit-scrollbar {\r\n        width: 7px;\r\n        height: 7px;\r\n    }\r\n\r\n    ::-webkit-scrollbar-track {\r\n        border-radius: 4px;\r\n        background-color: #EEE;\r\n    }\r\n\r\n    ::-webkit-scrollbar-thumb {\r\n        border-radius: 4px;\r\n        background-color: #999;\r\n    }\r\n</style>';
@@ -13395,7 +13401,7 @@ var InputArea = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`input-${"aa44074"}`) || customElements.define(`input-${"aa44074"}`, InputArea);
+customElements.get(`input-${"3df83fc"}`) || customElements.define(`input-${"3df83fc"}`, InputArea);
 
 // src/html/select.html
 var select_default = '<div class="selectmenu">\r\n    <div class="selectmenu-txt"><span></span></div>\r\n    <div class="selectmenu-arrow arrow-down"></div>\r\n    <ul class="selectmenu-list"></ul>\r\n</div>\r\n<style type="text/css">\r\n    .selectmenu {\r\n        width: 100%;\r\n        display: inline-block;\r\n        position: relative;\r\n        border: 1px solid #ccd0d7;\r\n        border-radius: 4px;\r\n        overflow: visible;\r\n        white-space: nowrap;\r\n        height: 24px;\r\n        line-height: 24px;\r\n        cursor: pointer;\r\n        font-size: 12px;\r\n    }\r\n\r\n    .selectmenu-txt {\r\n        display: inline-block;\r\n        overflow: hidden;\r\n        vertical-align: top;\r\n        text-overflow: ellipsis;\r\n        padding: 0 5px;\r\n        height: 24px;\r\n        line-height: 24px;\r\n    }\r\n\r\n    .selectmenu-arrow {\r\n        position: absolute;\r\n        background-color: transparent;\r\n        top: 0;\r\n        right: 4px;\r\n        z-index: 0;\r\n        border-radius: 4px;\r\n        width: 20px;\r\n        height: 100%;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .arrow-down:before {\r\n        margin: 0 auto;\r\n        margin-top: 8px;\r\n        width: 0;\r\n        height: 0;\r\n        display: block;\r\n        border-width: 4px 4px 0;\r\n        border-style: solid;\r\n        border-color: #99a2aa transparent transparent;\r\n        position: relative;\r\n        content: "";\r\n    }\r\n\r\n    .selectmenu-list {\r\n        display: none;\r\n        margin: 0;\r\n        width: 100%;\r\n        padding: 0;\r\n        max-height: 120px;\r\n        background-color: #fff;\r\n        border: 1px solid #ccd0d7;\r\n        box-shadow: 0 0 2px 0 #ccd0d7;\r\n        position: absolute;\r\n        left: -1px;\r\n        right: auto;\r\n        z-index: 2;\r\n        overflow: hidden auto;\r\n        white-space: nowrap;\r\n    }\r\n\r\n    .selectmenu:hover .selectmenu-list {\r\n        display: block;\r\n    }\r\n\r\n    .selectmenu-list-row {\r\n        padding: 0 5px;\r\n        transition: background-color .3s;\r\n        line-height: 30px;\r\n        height: 30px;\r\n        font-size: 12px;\r\n        cursor: pointer;\r\n        color: #222;\r\n    }\r\n\r\n    .selectmenu-list-row:hover {\r\n        background-color: #f4f5f7;\r\n        color: #6d757a;\r\n    }\r\n</style>\r\n<style type="text/css">\r\n    ::-webkit-scrollbar {\r\n        width: 7px;\r\n        height: 7px;\r\n    }\r\n\r\n    ::-webkit-scrollbar-track {\r\n        border-radius: 4px;\r\n        background-color: #EEE;\r\n    }\r\n\r\n    ::-webkit-scrollbar-thumb {\r\n        border-radius: 4px;\r\n        background-color: #999;\r\n    }\r\n</style>';
@@ -13455,7 +13461,7 @@ var SelectMenu = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`select-${"aa44074"}`) || customElements.define(`select-${"aa44074"}`, SelectMenu);
+customElements.get(`select-${"3df83fc"}`) || customElements.define(`select-${"3df83fc"}`, SelectMenu);
 
 // src/html/slider.html
 var slider_default = '<div class="block">\r\n    <div class="slider">\r\n        <div class="slider-tracker-wrp">\r\n            <div class="slider-tracker">\r\n                <div class="slider-handle">\r\n                    <div class="slider-hint"></div>\r\n                </div>\r\n                <div class="slider-progress"></div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<style type="text/css">\r\n    .block {\r\n        vertical-align: top;\r\n        display: inline-block;\r\n        width: 100%;\r\n    }\r\n\r\n    .slider {\r\n        width: 100%;\r\n        height: 13px;\r\n        clear: both;\r\n        position: relative;\r\n    }\r\n\r\n    .slider-tracker-wrp {\r\n        position: relative;\r\n        width: 100%;\r\n        height: 100%;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .slider-tracker {\r\n        position: absolute;\r\n        width: 100%;\r\n        height: 6px;\r\n        left: 0;\r\n        border-radius: 4px;\r\n        top: 50%;\r\n        margin-top: -3px;\r\n        background-color: #e5e9ef;\r\n    }\r\n\r\n    .slider-handle {\r\n        position: absolute;\r\n        top: -4px;\r\n        height: 14px;\r\n        width: 14px;\r\n        border-radius: 7px;\r\n        cursor: pointer;\r\n        z-index: 1;\r\n        margin-left: -7px;\r\n        box-shadow: 0 0 3px #017cc3;\r\n        background-color: #fff;\r\n        transition: box-shadow .3s;\r\n    }\r\n\r\n    .slider-handle:hover {\r\n        box-shadow: 0 0 5px #017cc3;\r\n    }\r\n\r\n    .slider-hint {\r\n        display: none;\r\n        position: absolute;\r\n        top: -21px;\r\n        white-space: nowrap;\r\n        border-radius: 4px;\r\n        background-color: hsla(0, 0%, 100%, .8);\r\n        padding: 0 3px;\r\n        border: 1px solid #fafafa;\r\n        z-index: 1;\r\n        transform: translateX(-25%);\r\n        user-select: none;\r\n    }\r\n\r\n    .slider-progress {\r\n        width: 0;\r\n        height: 100%;\r\n        border-radius: 4px;\r\n        background-color: #00a1d6;\r\n        position: relative;\r\n    }\r\n</style>';
@@ -13620,7 +13626,7 @@ var SliderBlock = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`slider-${"aa44074"}`) || customElements.define(`slider-${"aa44074"}`, SliderBlock);
+customElements.get(`slider-${"3df83fc"}`) || customElements.define(`slider-${"3df83fc"}`, SliderBlock);
 
 // src/html/switch.html
 var switch_default = '<div class="switch">\r\n    <span class="bar"></span>\r\n    <span class="knob">\r\n        <i class="circle"></i>\r\n    </span>\r\n</div>\r\n<style type="text/css">\r\n    .switch {\r\n        cursor: pointer;\r\n        display: block;\r\n        min-width: 34px;\r\n        outline: none;\r\n        position: relative;\r\n        width: 34px;\r\n    }\r\n\r\n    .bar {\r\n        background-color: rgb(189, 193, 198);\r\n        border-radius: 8px;\r\n        height: 12px;\r\n        left: 3px;\r\n        position: absolute;\r\n        top: 2px;\r\n        transition: background-color linear 80ms;\r\n        width: 28px;\r\n        z-index: 0;\r\n    }\r\n\r\n    .bar[checked] {\r\n        background-color: rgb(26, 115, 232);\r\n        opacity: 0.5;\r\n    }\r\n\r\n    .bar:active {\r\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\r\n    }\r\n\r\n    .knob {\r\n        background-color: #fff;\r\n        border-radius: 50%;\r\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\r\n        display: block;\r\n        height: 16px;\r\n        position: relative;\r\n        transition: transform linear 80ms, background-color linear 80ms;\r\n        width: 16px;\r\n        z-index: 1;\r\n    }\r\n\r\n    .knob[checked] {\r\n        background-color: rgb(26, 115, 232);\r\n        transform: translate3d(18px, 0, 0);\r\n    }\r\n\r\n    .knob:active {\r\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\r\n    }\r\n\r\n    .knob i {\r\n        color: rgba(128, 134, 139, 15%);\r\n        height: 40px;\r\n        left: -12px;\r\n        pointer-events: none;\r\n        top: -12px;\r\n        transition: color linear 80ms;\r\n        width: 40px;\r\n        border-radius: 50%;\r\n        bottom: 0;\r\n        display: block;\r\n        overflow: hidden;\r\n        position: absolute;\r\n        right: 0;\r\n        transform: translate3d(0, 0, 0);\r\n    }\r\n\r\n    .knob i[checked] {\r\n        color: rgb(26, 115, 232);\r\n    }\r\n\r\n    .knob i:active {\r\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\r\n    }\r\n</style>';
@@ -13666,7 +13672,7 @@ var SwitchButton = class extends HTMLElement {
     return this;
   }
 };
-customElements.get(`switch-${"aa44074"}`) || customElements.define(`switch-${"aa44074"}`, SwitchButton);
+customElements.get(`switch-${"3df83fc"}`) || customElements.define(`switch-${"3df83fc"}`, SwitchButton);
 
 // src/core/ui.ts
 var Menus = {
@@ -13788,7 +13794,7 @@ var UI = class {
     this.menuitem.common.addSetting([
       this.input("accessKey.token", "token", {
         prop: { type: "text", readonly: "readonly" }
-      }, "access_key", void 0, void 0, "鉴权。效果等同于网页端的cookie，B站服务器用以识别您的登录身份。如果启用了【解除区域限制】功能并选择自定义服务器，请务必确认代理服务器的可信度！"),
+      }, "access_key", void 0, void 0, "鉴权。效果等同于网页端的cookie，B站服务器用以识别您的登录身份。本脚本只会在您本地保存鉴权，绝对不会泄露出去，唯一的例外是如果启用了【解除区域限制】功能并选择自定义服务器，则会向代理服务器发送鉴权，我们无法保证第三方服务器如何使用您的鉴权，所以万请自行必确认代理服务器的可信度，<strong>三思而后行</strong>！"),
       this.input("accessKey.dateStr", "授权日期", {
         prop: { type: "text", readonly: "readonly" }
       }, "有效期一般为一个月", void 0, void 0, "脚本不会代为检查鉴权是否失效，请失效时自行重新授权。"),
@@ -13837,7 +13843,14 @@ var UI = class {
   initSettingRestore() {
     this.menuitem.restore.addSetting([
       this.switch("lostVideo", "失效视频", "尝试获取失效视频信息"),
-      this.switch("disableSleepChcek", "禁用直播间挂机检测", "就喜欢挂后台听个响不行吗！")
+      this.switch("disableSleepChcek", "禁用直播间挂机检测", "就喜欢挂后台听个响不行吗！"),
+      this.switch("show1080p", "不登录高画质支持", "dash模式限定", void 0, (v) => {
+        if (v && !this.BLOD.status.accessKey.token) {
+          this.BLOD.toast.warning("需要启用【账户授权】功能！");
+          alert("需要启用【账户授权】功能！是否前往？", "【账户授权】", [{ text: "前往【账户授权】", callback: () => this.show("accessKey.token") }]);
+          this.BLOD.status.show1080p = false;
+        }
+      }, "B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。")
     ]);
   }
   initSettingPlayer() {
@@ -15147,7 +15160,7 @@ var BilioldDownload = class extends HTMLElement {
     this._container.replaceChildren(this._noData);
   }
 };
-customElements.get(`download-${"aa44074"}`) || customElements.define(`download-${"aa44074"}`, BilioldDownload);
+customElements.get(`download-${"3df83fc"}`) || customElements.define(`download-${"3df83fc"}`, BilioldDownload);
 
 // src/core/download.ts
 var Download = class {

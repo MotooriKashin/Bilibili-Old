@@ -144,7 +144,7 @@ export class UI {
         this.menuitem.common.addSetting([
             this.input(<'accessKey'>'accessKey.token', 'token', {
                 prop: { type: "text", readonly: "readonly" }
-            }, 'access_key', undefined, undefined, '鉴权。效果等同于网页端的cookie，B站服务器用以识别您的登录身份。如果启用了【解除区域限制】功能并选择自定义服务器，请务必确认代理服务器的可信度！'),
+            }, 'access_key', undefined, undefined, '鉴权。效果等同于网页端的cookie，B站服务器用以识别您的登录身份。本脚本只会在您本地保存鉴权，绝对不会泄露出去，唯一的例外是如果启用了【解除区域限制】功能并选择自定义服务器，则会向代理服务器发送鉴权，我们无法保证第三方服务器如何使用您的鉴权，所以万请自行必确认代理服务器的可信度，<strong>三思而后行</strong>！'),
             this.input(<'accessKey'>'accessKey.dateStr', '授权日期', {
                 prop: { type: "text", readonly: "readonly" }
             }, '有效期一般为一个月', undefined, undefined, '脚本不会代为检查鉴权是否失效，请失效时自行重新授权。'),
@@ -196,7 +196,14 @@ export class UI {
     protected initSettingRestore() {
         this.menuitem.restore.addSetting([
             this.switch('lostVideo', '失效视频', '尝试获取失效视频信息'),
-            this.switch('disableSleepChcek', '禁用直播间挂机检测', '就喜欢挂后台听个响不行吗！')
+            this.switch('disableSleepChcek', '禁用直播间挂机检测', '就喜欢挂后台听个响不行吗！'),
+            this.switch('show1080p', '不登录高画质支持', 'dash模式限定', undefined, v => {
+                if (v && !this.BLOD.status.accessKey.token) {
+                    this.BLOD.toast.warning('需要启用【账户授权】功能！');
+                    alert('需要启用【账户授权】功能！是否前往？', '【账户授权】', [{ text: '前往【账户授权】', callback: () => this.show(<'accessKey'>'accessKey.token') }]);
+                    this.BLOD.status.show1080p = false;
+                }
+            }, 'B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。')
         ]);
     }
     /** 播放设置 */
