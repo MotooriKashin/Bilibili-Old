@@ -1172,7 +1172,7 @@ var userStatus = {
   },
   like: false,
   bilibiliplayer: true,
-  checkUpdate: false,
+  checkUpdate: true,
   show1080p: false
 };
 
