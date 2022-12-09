@@ -15326,6 +15326,18 @@ var BLOD = class {
     this.path[2] == "live.bilibili.com" && new PageLive(this);
     this.path[2] == "t.bilibili.com" && new PageDynamic(this);
   }
+  get aid() {
+    return window.aid;
+  }
+  set aid(v) {
+    window.aid = v;
+  }
+  get cid() {
+    return window.cid;
+  }
+  set cid(v) {
+    window.cid = v;
+  }
   init() {
     if (this.path[2] == "www.bilibili.com" && (!this.path[3] || (this.path[3].startsWith("?") || this.path[3].startsWith("#") || this.path[3].startsWith("index.")))) {
       this.status.index && new PageIndex(this);
