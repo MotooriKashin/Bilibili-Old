@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.0.0-b5c779c118b5fcecefa94fdbd50cef727e84eaf9
+// @version      10.0.1-b5c779c118b5fcecefa94fdbd50cef727e84eaf9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -1173,7 +1173,8 @@ var userStatus = {
   like: false,
   bilibiliplayer: true,
   checkUpdate: true,
-  show1080p: false
+  show1080p: false,
+  fullBannerCover: false
 };
 
 // src/core/user.ts
@@ -2339,6 +2340,13 @@ var message_default = "/* 修复消息页样式 */\\r\\n.container[data-v-696939
 
 // src/page/header.ts
 var _Header = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    this.oldHeader.className = "z-top-container has-menu";
+    this.hookHeadV2();
+    this.feedCount();
+    poll(() => document.readyState === "complete", () => this.styleClear());
+  }
   static resourceId() {
     if (location.href.includes("v/douga"))
       return 1576;
@@ -2476,15 +2484,9 @@ var _Header = class {
   static isMiniHead(d) {
     return location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || d?.getAttribute("type") == "all" ? false : true;
   }
-  constructor() {
-    this.oldHeader.className = "z-top-container has-menu";
-    this.hookHeadV2();
-    this.feedCount();
-    poll(() => document.readyState === "complete", () => this.styleClear());
-  }
   hookHeadV2() {
     poll(() => {
-      return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container");
+      return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container") || document.querySelector("#home_nav");
     }, (d) => {
       _Header.isMiniHead(d) && this.miniHeader();
       this.loadOldHeader(d);
@@ -2525,6 +2527,7 @@ var _Header = class {
   static styleFix() {
     addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", "lt-row-fix");
     addCss(avatar_animation_default, "avatarAnimation");
+    this.fullBannerCover && addCss(".bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}");
   }
   async styleClear() {
     const d = document.styleSheets;
@@ -2544,6 +2547,7 @@ var Header = _Header;
 __publicField(Header, "locs", [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142]);
 __publicField(Header, "record", {});
 __publicField(Header, "rid", _Header.resourceId());
+__publicField(Header, "fullBannerCover", false);
 
 // src/io/api-season-rank-list.ts
 function apiSeasonRankList(data) {
@@ -13836,7 +13840,8 @@ var UI = class {
       this.switch("history", "纯视频历史", "过滤历史记录页的非视频部分"),
       this.switch("liveRecord", "录屏动态", "允许动态页显示直播录屏"),
       this.switch("commentJumpUrlTitle", "评论超链接标题", "还原为链接或短链接", void 0, void 0, "直接显示链接标题固然方便，但有些时候还是直接显示链接合适。"),
-      this.switch("like", "添加点赞功能", "不支持一键三连")
+      this.switch("like", "添加点赞功能", "不支持一键三连"),
+      this.switch("fullBannerCover", "修正banner分辨率", "顶栏banner完整显示不裁剪", void 0, void 0, "旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。")
     ]);
   }
   initSettingRestore() {
@@ -15375,7 +15380,8 @@ var BLOD = class {
     this.toast.update(this.status.toast);
     this.status.disableReport && new ReportObserver();
     this.status.videoLimit.status && this.videoLimit.enable();
-    this.status.header && new Header();
+    this.status.fullBannerCover && (Header.fullBannerCover = true);
+    this.status.header && new Header(this);
     this.status.comment && new Comment(this);
     this.status.webRTC || WebTRC.disable();
     this.status.album && /t.bilibili.com\\/\\d+/.test(location.href) && PageSpace.album();
