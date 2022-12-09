@@ -35,7 +35,7 @@ export class PageSpace {
             case 2042149112:
                 json.data.name = Mid[this.mid];
                 json.data.official.desc = json.data.name + ' 官方帐号';
-                xhrHook("api.bilibili.com/x/space/acc/info", undefined, obj => {
+                xhrHook("acc/info?", undefined, obj => {
                     if (obj.responseText && obj.responseText.includes("-404")) {
                         obj.response = obj.responseText = JSON.stringify(json);
                         this.BLOD.toast.warning("该用户被404，已使用缓存数据恢复访问！")
