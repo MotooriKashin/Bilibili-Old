@@ -171,7 +171,8 @@ export class Header {
         poll(() => {
             return document.querySelector<HTMLElement>('#internationalHeader')
                 || document.querySelector<HTMLElement>('#biliMainHeader')
-                || document.querySelector<HTMLElement>('#bili-header-container');
+                || document.querySelector<HTMLElement>('#bili-header-container')
+                || document.querySelector<HTMLElement>('#home_nav');
         }, d => {
             Header.isMiniHead(d) && this.miniHeader();
             this.loadOldHeader(d);
