@@ -142,7 +142,8 @@ export class BLOD {
         this.toast.update(this.status.toast);
         this.status.disableReport && new ReportObserver();
         this.status.videoLimit.status && this.videoLimit.enable();
-        this.status.header && new Header();
+        this.status.fullBannerCover && (Header.fullBannerCover = true);
+        this.status.header && new Header(this);
         this.status.comment && new Comment(this);
         this.status.webRTC || WebTRC.disable();
         this.status.album && /t.bilibili.com\/\d+/.test(location.href) && PageSpace.album();

@@ -151,4 +151,6 @@ export const userStatus = {
     checkUpdate: true,
     /** 不登录1080P支持 */
     show1080p: false,
+    /** 调整顶栏banner样式 */
+    fullBannerCover: false,
 }

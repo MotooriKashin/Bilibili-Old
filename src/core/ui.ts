@@ -189,7 +189,8 @@ export class UI {
             this.switch('history', '纯视频历史', '过滤历史记录页的非视频部分'),
             this.switch('liveRecord', '录屏动态', '允许动态页显示直播录屏'),
             this.switch('commentJumpUrlTitle', '评论超链接标题', '还原为链接或短链接', undefined, undefined, '直接显示链接标题固然方便，但有些时候还是直接显示链接合适。'),
-            this.switch('like', '添加点赞功能', '不支持一键三连')
+            this.switch('like', '添加点赞功能', '不支持一键三连'),
+            this.switch('fullBannerCover', '修正banner分辨率', '顶栏banner完整显示不裁剪', undefined, undefined, '旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。')
         ]);
     }
     /** 修复设置 */

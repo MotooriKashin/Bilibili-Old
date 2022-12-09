@@ -9,6 +9,7 @@ import { xhrHook } from "../utils/hook/xhr";
 
 import avatarAnimation from '../css/avatar-animation.css';
 import message from '../css/message.css';
+import { BLOD } from "../bilibili-old";
 
 export class Header {
     /** locs列表 */
@@ -160,7 +161,7 @@ export class Header {
             || (d?.getAttribute("type") == "all")
         ) ? false : true;
     }
-    constructor() {
+    constructor(protected BLOD: BLOD) {
         this.oldHeader.className = 'z-top-container has-menu';
         this.hookHeadV2();
         this.feedCount();
@@ -216,10 +217,12 @@ export class Header {
                 addCss('.bili-footer {position: relative;}')
             })
     }
+    static fullBannerCover = false;
     /** 顶栏样式修复 */
     protected static styleFix() {
         addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", 'lt-row-fix');
         addCss(avatarAnimation, "avatarAnimation");
+        this.fullBannerCover && addCss('.bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}')
     }
     /** 禁用新版顶栏相关样式 */
     protected async styleClear() {
