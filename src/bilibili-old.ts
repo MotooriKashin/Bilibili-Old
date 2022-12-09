@@ -149,7 +149,7 @@ export class BLOD {
         this.status.album && /t.bilibili.com\/\d+/.test(location.href) && PageSpace.album();
         this.status.development && Reflect.defineProperty(window, 'BLOD', {
             value: this,
-            configurable: true
+            configurable: true,
         });
         window.top === window.self && (this.ui = new UI(this));
     }

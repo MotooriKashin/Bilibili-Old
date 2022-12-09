@@ -14,5 +14,5 @@ export function postMessage(data: any, resolve?: Function, reject: Function = ()
             }
         }, { once: true });
     }
-    window.dispatchEvent(new CustomEvent(_MUTEX_, { detail: { mutex, data } }));
+    window.dispatchEvent(new CustomEvent(_MUTEX_, { detail: JSON.parse(JSON.stringify({ mutex, data })) }));
 }
