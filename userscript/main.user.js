@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.0.0-3df83fc4ae74cdee0039549f514f713dd2c1c6e8
+// @version      10.0.0-b5c779c118b5fcecefa94fdbd50cef727e84eaf9
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -18,8 +18,7 @@
 // @license      MIT
 // ==/UserScript==
 
-const MODULES = (<><![CDATA[
-
+const MODULES = `
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -105,7 +104,7 @@ var require_crypt = __commonJS({
           return base64.join("");
         },
         base64ToBytes: function(base64) {
-          base64 = base64.replace(/[^A-Z0-9+\/]/ig, "");
+          base64 = base64.replace(/[^A-Z0-9+\\/]/ig, "");
           for (var bytes = [], i = 0, imod4 = 0; i < base64.length; imod4 = ++i % 4) {
             if (imod4 == 0)
               continue;
@@ -306,12 +305,12 @@ var group = {
   call: []
 };
 function debug(...data) {
-  group.call.push(console.log.bind(console, `%c[${timeFormat()}]`, "color: blue;", ...arguments));
+  group.call.push(console.log.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 }
 debug.assert = function(condition, ...data) {
-  group.call.push(console.assert.bind(console, `[${timeFormat()}]`, ...arguments));
+  group.call.push(console.assert.bind(console, \`[\${timeFormat()}]\`, ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
@@ -322,23 +321,23 @@ debug.clear = function() {
   return debug;
 };
 debug.debug = function(...data) {
-  group.call.push(console.debug.bind(console, `[${timeFormat()}]`, ...arguments));
+  group.call.push(console.debug.bind(console, \`[\${timeFormat()}]\`, ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
 debug.error = function(...data) {
-  group.call.push(console.error.bind(console, `[${timeFormat()}]`, ...arguments));
+  group.call.push(console.error.bind(console, \`[\${timeFormat()}]\`, ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
 debug.group = function(...data) {
   group.i++;
-  group.call.push(console.group.bind(console, `[${timeFormat()}]`, ...arguments));
+  group.call.push(console.group.bind(console, \`[\${timeFormat()}]\`, ...arguments));
   return debug;
 };
 debug.groupCollapsed = function(...data) {
   group.i++;
-  group.call.push(console.groupCollapsed.bind(console, `[${timeFormat()}]`, ...arguments));
+  group.call.push(console.groupCollapsed.bind(console, \`[\${timeFormat()}]\`, ...arguments));
   return debug;
 };
 debug.groupEnd = function() {
@@ -350,12 +349,12 @@ debug.groupEnd = function() {
   return debug;
 };
 debug.info = function(...data) {
-  group.call.push(console.info.bind(console, `%c[${timeFormat()}]`, "color: blue;", ...arguments));
+  group.call.push(console.info.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
 debug.log = function(...data) {
-  group.call.push(console.log.bind(console, `%c[${timeFormat()}]`, "color: blue;", ...arguments));
+  group.call.push(console.log.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
@@ -373,7 +372,7 @@ debug.timeEnd = function(label) {
   return debug;
 };
 debug.timeLog = function(label, ...data) {
-  console.timeLog(label, `[${timeFormat()}]`, ...data);
+  console.timeLog(label, \`[\${timeFormat()}]\`, ...data);
   return debug;
 };
 debug.trace = function(...data) {
@@ -382,7 +381,7 @@ debug.trace = function(...data) {
   return debug;
 };
 debug.warn = function(...data) {
-  group.call.push(console.warn.bind(console, `[${timeFormat()}]`, ...arguments));
+  group.call.push(console.warn.bind(console, \`[\${timeFormat()}]\`, ...arguments));
   !group.i && setTimeout(group.call.shift());
   return debug;
 };
@@ -582,7 +581,7 @@ async function addCss(txt, id, parrent) {
   parrent = parrent || document.head;
   const style = document.createElement("style");
   style.setAttribute("type", "text/css");
-  id && !parrent.querySelector(`#${id}`) && style.setAttribute("id", id);
+  id && !parrent.querySelector(\`#\${id}\`) && style.setAttribute("id", id);
   style.appendChild(document.createTextNode(txt));
   parrent.appendChild(style);
   return style;
@@ -614,7 +613,7 @@ function getTotalTop(node) {
 }
 
 // src/html/button.html
-var button_default = '<div class="button" role="button">按钮</div>\r\n<style>\r\n    .button {\r\n        width: fit-content;\r\n        cursor: pointer;\r\n        line-height: 28px;\r\n        padding-left: 10px;\r\n        padding-right: 10px;\r\n        text-align: right;\r\n        border: 1px solid #ccd0d7;\r\n        border-radius: 4px;\r\n        color: #222;\r\n        transition: border-color .2s ease, background-color .2s ease;\r\n        box-sizing: border-box;\r\n        user-select: none;\r\n    }\r\n\r\n    .button:hover {\r\n        color: #00a1d6;\r\n        border-color: #00a1d6;\r\n    }\r\n\r\n    .button:active {\r\n        background-color: #eee;\r\n    }\r\n</style>';
+var button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/utils/button.ts
 var PushButton = class extends HTMLElement {
@@ -633,10 +632,10 @@ var PushButton = class extends HTMLElement {
     this._button.textContent = v;
   }
 };
-customElements.get(`button-${"3df83fc"}`) || customElements.define(`button-${"3df83fc"}`, PushButton);
+customElements.get(\`button-\${"b5c779c"}\`) || customElements.define(\`button-\${"b5c779c"}\`, PushButton);
 
 // src/html/popupbox.html
-var popupbox_default = '<div class="box">\r\n    <div class="contain"></div>\r\n    <div class="fork"></div>\r\n</div>\r\n<style type="text/css">\r\n    .box {\r\n        top: 50%;\r\n        left: 50%;\r\n        transform: translateX(-50%) translateY(-50%);\r\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\r\n        padding: 12px;\r\n        background-color: #fff;\r\n        color: black;\r\n        border-radius: 8px;\r\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\r\n        border: 1px solid rgba(136, 136, 136, 0.13333);\r\n        box-sizing: border-box;\r\n        position: fixed;\r\n        font-size: 13px;\r\n        z-index: 11115;\r\n        line-height: 14px;\r\n    }\r\n\r\n    .contain {\r\n        display: flex;\r\n        flex-direction: column;\r\n        height: 100%;\r\n    }\r\n\r\n    .fork {\r\n        position: absolute;\r\n        transform: scale(0.8);\r\n        right: 10px;\r\n        top: 10px;\r\n        height: 20px;\r\n        width: 20px;\r\n        pointer-events: visible;\r\n    }\r\n\r\n    .fork:hover {\r\n        border-radius: 50%;\r\n        background-color: rgba(0, 0, 0, 10%);\r\n    }\r\n</style>';
+var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
 
 // src/svg/fork.svg
 var fork_default = '<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>';
@@ -727,7 +726,7 @@ var PopupBox = class extends HTMLElement {
   _contain;
   _fork;
   clickOutRemove;
-  $fork = true;
+  \$fork = true;
   constructor() {
     super();
     const root = this.attachShadow({ mode: "closed" });
@@ -765,10 +764,10 @@ var PopupBox = class extends HTMLElement {
     this._contain.innerHTML = v;
   }
   get fork() {
-    return this.$fork;
+    return this.\$fork;
   }
   set fork(v) {
-    this.$fork = v;
+    this.\$fork = v;
     this._fork.style.display = v ? "" : "none";
     if (v) {
       this.clickOutRemove.disable();
@@ -777,7 +776,7 @@ var PopupBox = class extends HTMLElement {
     }
   }
 };
-customElements.get(`popupbox-${"3df83fc"}`) || customElements.define(`popupbox-${"3df83fc"}`, PopupBox);
+customElements.get(\`popupbox-\${"b5c779c"}\`) || customElements.define(\`popupbox-\${"b5c779c"}\`, PopupBox);
 
 // src/core/ui/alert.ts
 function alert(msg, title, buttons) {
@@ -786,10 +785,10 @@ function alert(msg, title, buttons) {
   const popup = new PopupBox();
   popup.fork = false;
   popup.setAttribute("style", "max-width: 400px; max-height: 300px;line-height: 16px;");
-  popup.innerHTML = `<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
-    <span>${title || "Bilibili Old"}</span>
+  popup.innerHTML = \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
+    <span>\${title || "Bilibili Old"}</span>
 </div>
-<div><div style="padding-block: 10px;padding-inline: 15px;">${msg}</div></div>`;
+<div><div style="padding-block: 10px;padding-inline: 15px;">\${msg}</div></div>\`;
   if (buttons) {
     addElement("hr", { style: "width: 100%;opacity: .3;" }, popup);
     const div = addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, popup);
@@ -806,7 +805,7 @@ function alert(msg, title, buttons) {
 }
 
 // src/html/toast.html
-var toast_default = '<div id="toast-container"></div>\r\n<style type="text/css">\r\n    .toast-close-button>svg {\r\n        width: 12px;\r\n        height: 12px;\r\n    }\r\n\r\n    .toast {\r\n        transition: height 1s ease 0s, padding 1s ease 0s;\r\n    }\r\n\r\n    #toast-container {\r\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\r\n    }\r\n</style>\r\n<style type="text/css">\r\n    /*\r\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\r\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\r\n     * make sure you copy the url from the website since the url may change between versions.\r\n     */\r\n    .toast-title {\r\n        font-weight: bold;\r\n    }\r\n\r\n    .toast-message {\r\n        -ms-word-wrap: break-word;\r\n        word-wrap: break-word;\r\n    }\r\n\r\n    .toast-message a,\r\n    .toast-message label {\r\n        color: #FFFFFF;\r\n    }\r\n\r\n    .toast-message a:hover {\r\n        color: #CCCCCC;\r\n        text-decoration: none;\r\n    }\r\n\r\n    .toast-close-button {\r\n        position: relative;\r\n        right: -0.3em;\r\n        top: -0.3em;\r\n        float: right;\r\n        font-size: 20px;\r\n        font-weight: bold;\r\n        color: #FFFFFF;\r\n        -webkit-text-shadow: 0 1px 0 #ffffff;\r\n        text-shadow: 0 1px 0 #ffffff;\r\n        opacity: 0.8;\r\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\r\n        filter: alpha(opacity=80);\r\n        line-height: 1;\r\n    }\r\n\r\n    .toast-close-button:hover,\r\n    .toast-close-button:focus {\r\n        color: #000000;\r\n        text-decoration: none;\r\n        cursor: pointer;\r\n        opacity: 0.4;\r\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\r\n        filter: alpha(opacity=40);\r\n    }\r\n\r\n    .rtl .toast-close-button {\r\n        left: -0.3em;\r\n        float: left;\r\n        right: 0.3em;\r\n    }\r\n\r\n    /*Additional properties for button version\r\n     iOS requires the button element instead of an anchor tag.\r\n     If you want the anchor version, it requires `href="#"`.*/\r\n    button.toast-close-button {\r\n        padding: 0;\r\n        cursor: pointer;\r\n        background: transparent;\r\n        border: 0;\r\n        -webkit-appearance: none;\r\n    }\r\n\r\n    .toast-top-center {\r\n        top: 0;\r\n        right: 0;\r\n        width: 100%;\r\n    }\r\n\r\n    .toast-bottom-center {\r\n        bottom: 0;\r\n        right: 0;\r\n        width: 100%;\r\n    }\r\n\r\n    .toast-top-full-width {\r\n        top: 0;\r\n        right: 0;\r\n        width: 100%;\r\n    }\r\n\r\n    .toast-bottom-full-width {\r\n        bottom: 0;\r\n        right: 0;\r\n        width: 100%;\r\n    }\r\n\r\n    .toast-top-left {\r\n        top: 12px;\r\n        left: 12px;\r\n    }\r\n\r\n    .toast-top-right {\r\n        top: 12px;\r\n        right: 12px;\r\n    }\r\n\r\n    .toast-bottom-right {\r\n        right: 12px;\r\n        bottom: 12px;\r\n    }\r\n\r\n    .toast-bottom-left {\r\n        bottom: 12px;\r\n        left: 12px;\r\n    }\r\n\r\n    #toast-container {\r\n        position: fixed;\r\n        z-index: 999999;\r\n        pointer-events: none;\r\n        /*overrides*/\r\n    }\r\n\r\n    #toast-container * {\r\n        -moz-box-sizing: border-box;\r\n        -webkit-box-sizing: border-box;\r\n        box-sizing: border-box;\r\n    }\r\n\r\n    #toast-container>div {\r\n        position: relative;\r\n        pointer-events: auto;\r\n        overflow: hidden;\r\n        margin: 0 0 6px;\r\n        padding: 15px 15px 15px 50px;\r\n        width: 300px;\r\n        -moz-border-radius: 3px 3px 3px 3px;\r\n        -webkit-border-radius: 3px 3px 3px 3px;\r\n        border-radius: 3px 3px 3px 3px;\r\n        background-position: 15px center;\r\n        background-repeat: no-repeat;\r\n        -moz-box-shadow: 0 0 12px #999999;\r\n        -webkit-box-shadow: 0 0 12px #999999;\r\n        box-shadow: 0 0 12px #999999;\r\n        color: #FFFFFF;\r\n        opacity: 0.8;\r\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\r\n        filter: alpha(opacity=80);\r\n    }\r\n\r\n    #toast-container>div.rtl {\r\n        direction: rtl;\r\n        padding: 15px 50px 15px 15px;\r\n        background-position: right 15px center;\r\n    }\r\n\r\n    #toast-container>div:hover {\r\n        -moz-box-shadow: 0 0 12px #000000;\r\n        -webkit-box-shadow: 0 0 12px #000000;\r\n        box-shadow: 0 0 12px #000000;\r\n        opacity: 1;\r\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\r\n        filter: alpha(opacity=100);\r\n        cursor: pointer;\r\n    }\r\n\r\n    #toast-container>.toast-info {\r\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\r\n    }\r\n\r\n    #toast-container>.toast-error {\r\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\r\n    }\r\n\r\n    #toast-container>.toast-success {\r\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\r\n    }\r\n\r\n    #toast-container>.toast-warning {\r\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\r\n    }\r\n\r\n    #toast-container.toast-top-center>div,\r\n    #toast-container.toast-bottom-center>div {\r\n        width: 300px;\r\n        margin-left: auto;\r\n        margin-right: auto;\r\n    }\r\n\r\n    #toast-container.toast-top-full-width>div,\r\n    #toast-container.toast-bottom-full-width>div {\r\n        width: 96%;\r\n        margin-left: auto;\r\n        margin-right: auto;\r\n    }\r\n\r\n    .toast {\r\n        background-color: #030303;\r\n    }\r\n\r\n    .toast-success {\r\n        background-color: #51A351;\r\n    }\r\n\r\n    .toast-error {\r\n        background-color: #BD362F;\r\n    }\r\n\r\n    .toast-info {\r\n        background-color: #2F96B4;\r\n    }\r\n\r\n    .toast-warning {\r\n        background-color: #F89406;\r\n    }\r\n\r\n    .toast-progress {\r\n        position: absolute;\r\n        left: 0;\r\n        bottom: 0;\r\n        height: 4px;\r\n        background-color: #000000;\r\n        opacity: 0.4;\r\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\r\n        filter: alpha(opacity=40);\r\n    }\r\n\r\n    /*Responsive Design*/\r\n    @media all and (max-width: 240px) {\r\n        #toast-container>div {\r\n            padding: 8px 8px 8px 50px;\r\n            width: 11em;\r\n        }\r\n\r\n        #toast-container>div.rtl {\r\n            padding: 8px 50px 8px 8px;\r\n        }\r\n\r\n        #toast-container .toast-close-button {\r\n            right: -0.2em;\r\n            top: -0.2em;\r\n        }\r\n\r\n        #toast-container .rtl .toast-close-button {\r\n            left: -0.2em;\r\n            right: 0.2em;\r\n        }\r\n    }\r\n\r\n    @media all and (min-width: 241px) and (max-width: 480px) {\r\n        #toast-container>div {\r\n            padding: 8px 8px 8px 50px;\r\n            width: 18em;\r\n        }\r\n\r\n        #toast-container>div.rtl {\r\n            padding: 8px 50px 8px 8px;\r\n        }\r\n\r\n        #toast-container .toast-close-button {\r\n            right: -0.2em;\r\n            top: -0.2em;\r\n        }\r\n\r\n        #toast-container .rtl .toast-close-button {\r\n            left: -0.2em;\r\n            right: 0.2em;\r\n        }\r\n    }\r\n\r\n    @media all and (min-width: 481px) and (max-width: 768px) {\r\n        #toast-container>div {\r\n            padding: 15px 15px 15px 50px;\r\n            width: 25em;\r\n        }\r\n\r\n        #toast-container>div.rtl {\r\n            padding: 15px 50px 15px 15px;\r\n        }\r\n    }\r\n</style>';
+var toast_default = '<div id="toast-container"></div>\\r\\n<style type="text/css">\\r\\n    .toast-close-button>svg {\\r\\n        width: 12px;\\r\\n        height: 12px;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        transition: height 1s ease 0s, padding 1s ease 0s;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    /*\\r\\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\\r\\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\\r\\n     * make sure you copy the url from the website since the url may change between versions.\\r\\n     */\\r\\n    .toast-title {\\r\\n        font-weight: bold;\\r\\n    }\\r\\n\\r\\n    .toast-message {\\r\\n        -ms-word-wrap: break-word;\\r\\n        word-wrap: break-word;\\r\\n    }\\r\\n\\r\\n    .toast-message a,\\r\\n    .toast-message label {\\r\\n        color: #FFFFFF;\\r\\n    }\\r\\n\\r\\n    .toast-message a:hover {\\r\\n        color: #CCCCCC;\\r\\n        text-decoration: none;\\r\\n    }\\r\\n\\r\\n    .toast-close-button {\\r\\n        position: relative;\\r\\n        right: -0.3em;\\r\\n        top: -0.3em;\\r\\n        float: right;\\r\\n        font-size: 20px;\\r\\n        font-weight: bold;\\r\\n        color: #FFFFFF;\\r\\n        -webkit-text-shadow: 0 1px 0 #ffffff;\\r\\n        text-shadow: 0 1px 0 #ffffff;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n        line-height: 1;\\r\\n    }\\r\\n\\r\\n    .toast-close-button:hover,\\r\\n    .toast-close-button:focus {\\r\\n        color: #000000;\\r\\n        text-decoration: none;\\r\\n        cursor: pointer;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    .rtl .toast-close-button {\\r\\n        left: -0.3em;\\r\\n        float: left;\\r\\n        right: 0.3em;\\r\\n    }\\r\\n\\r\\n    /*Additional properties for button version\\r\\n     iOS requires the button element instead of an anchor tag.\\r\\n     If you want the anchor version, it requires \`href="#"\`.*/\\r\\n    button.toast-close-button {\\r\\n        padding: 0;\\r\\n        cursor: pointer;\\r\\n        background: transparent;\\r\\n        border: 0;\\r\\n        -webkit-appearance: none;\\r\\n    }\\r\\n\\r\\n    .toast-top-center {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-center {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-full-width {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-full-width {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-left {\\r\\n        top: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-top-right {\\r\\n        top: 12px;\\r\\n        right: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-right {\\r\\n        right: 12px;\\r\\n        bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-left {\\r\\n        bottom: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        pointer-events: none;\\r\\n        /*overrides*/\\r\\n    }\\r\\n\\r\\n    #toast-container * {\\r\\n        -moz-box-sizing: border-box;\\r\\n        -webkit-box-sizing: border-box;\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    #toast-container>div {\\r\\n        position: relative;\\r\\n        pointer-events: auto;\\r\\n        overflow: hidden;\\r\\n        margin: 0 0 6px;\\r\\n        padding: 15px 15px 15px 50px;\\r\\n        width: 300px;\\r\\n        -moz-border-radius: 3px 3px 3px 3px;\\r\\n        -webkit-border-radius: 3px 3px 3px 3px;\\r\\n        border-radius: 3px 3px 3px 3px;\\r\\n        background-position: 15px center;\\r\\n        background-repeat: no-repeat;\\r\\n        -moz-box-shadow: 0 0 12px #999999;\\r\\n        -webkit-box-shadow: 0 0 12px #999999;\\r\\n        box-shadow: 0 0 12px #999999;\\r\\n        color: #FFFFFF;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n    }\\r\\n\\r\\n    #toast-container>div.rtl {\\r\\n        direction: rtl;\\r\\n        padding: 15px 50px 15px 15px;\\r\\n        background-position: right 15px center;\\r\\n    }\\r\\n\\r\\n    #toast-container>div:hover {\\r\\n        -moz-box-shadow: 0 0 12px #000000;\\r\\n        -webkit-box-shadow: 0 0 12px #000000;\\r\\n        box-shadow: 0 0 12px #000000;\\r\\n        opacity: 1;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\\r\\n        filter: alpha(opacity=100);\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-info {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-error {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-success {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-warning {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-center>div,\\r\\n    #toast-container.toast-bottom-center>div {\\r\\n        width: 300px;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-full-width>div,\\r\\n    #toast-container.toast-bottom-full-width>div {\\r\\n        width: 96%;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        background-color: #030303;\\r\\n    }\\r\\n\\r\\n    .toast-success {\\r\\n        background-color: #51A351;\\r\\n    }\\r\\n\\r\\n    .toast-error {\\r\\n        background-color: #BD362F;\\r\\n    }\\r\\n\\r\\n    .toast-info {\\r\\n        background-color: #2F96B4;\\r\\n    }\\r\\n\\r\\n    .toast-warning {\\r\\n        background-color: #F89406;\\r\\n    }\\r\\n\\r\\n    .toast-progress {\\r\\n        position: absolute;\\r\\n        left: 0;\\r\\n        bottom: 0;\\r\\n        height: 4px;\\r\\n        background-color: #000000;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    /*Responsive Design*/\\r\\n    @media all and (max-width: 240px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 11em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 241px) and (max-width: 480px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 18em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 481px) and (max-width: 768px) {\\r\\n        #toast-container>div {\\r\\n            padding: 15px 15px 15px 50px;\\r\\n            width: 25em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 15px 50px 15px 15px;\\r\\n        }\\r\\n    }\\r\\n</style>';
 
 // src/utils/type.ts
 function toObject(input) {
@@ -837,7 +836,7 @@ function toObject(input) {
         } catch {
         }
         try {
-          if (/^\d+n$/.test(input))
+          if (/^\\d+n\$/.test(input))
             input = BigInt(input.slice(0, -1));
         } catch {
         }
@@ -846,7 +845,7 @@ function toObject(input) {
   }
   return input;
 }
-function toString(input, space = "\n") {
+function toString(input, space = "\\n") {
   let result;
   try {
     result = input.toString();
@@ -901,16 +900,16 @@ var Toast = class extends HTMLDivElement {
     let html = "";
     v.forEach((d, i) => {
       d = toString(d);
-      html += i ? `<br>${d}` : `<label>${d}</label>`;
+      html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
     });
     const close = this.message.contains(this.closeButton);
     this.message.innerHTML = html;
     close && (this.delay = 0);
-    this.setAttribute("style", `height: ${this.message.scrollHeight + 30}px;`);
+    this.setAttribute("style", \`height: \${this.message.scrollHeight + 30}px;\`);
   }
   set type(v) {
     this.classList.remove("toast-success", "toast-error", "toast-info", "toast-warning");
-    v && this.classList.add(`toast-${v}`);
+    v && this.classList.add(\`toast-\${v}\`);
   }
   set rtl(v) {
     v ? this.classList.add("rtl") : this.classList.remove("rtl");
@@ -932,7 +931,7 @@ var Toast = class extends HTMLDivElement {
     }
   }
 };
-customElements.get(`toast-${"3df83fc"}`) || customElements.define(`toast-${"3df83fc"}`, Toast, { extends: "div" });
+customElements.get(\`toast-\${"b5c779c"}\`) || customElements.define(\`toast-\${"b5c779c"}\`, Toast, { extends: "div" });
 var ToastContainer = class extends HTMLElement {
   container;
   static get observedAttributes() {
@@ -1017,7 +1016,7 @@ var ToastContainer = class extends HTMLElement {
       return;
     switch (name) {
       case "position":
-        newValue && (this.container.className = `toast-${newValue}`);
+        newValue && (this.container.className = \`toast-\${newValue}\`);
         break;
       case "rtl":
         this.container.querySelectorAll(".toast").forEach((d) => {
@@ -1036,10 +1035,10 @@ var ToastContainer = class extends HTMLElement {
     }
   }
 };
-customElements.get(`toast-container-${"3df83fc"}`) || customElements.define(`toast-container-${"3df83fc"}`, ToastContainer);
+customElements.get(\`toast-container-\${"b5c779c"}\`) || customElements.define(\`toast-container-\${"b5c779c"}\`, ToastContainer);
 
 // src/html/ui-entry.html
-var ui_entry_default = '<div class="setting">\r\n    <i></i><span>设置</span>\r\n</div>\r\n<div class="gear"></div>\r\n<style type="text/css">\r\n    .gear {\r\n        position: fixed;\r\n        right: 40px;\r\n        bottom: 60px;\r\n        height: 20px;\r\n        width: 20px;\r\n        border: 1px solid #e9eaec;\r\n        border-radius: 50%;\r\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\r\n        padding: 10px;\r\n        cursor: pointer;\r\n        animation: roll 1s ease-out;\r\n        transition: opacity 0.3s ease-out;\r\n        background: none;\r\n        z-index: 11110;\r\n    }\r\n\r\n    .setting {\r\n        box-sizing: content-box;\r\n        color: #fff;\r\n        background-color: #fff;\r\n        border-radius: 5px;\r\n        position: fixed;\r\n        bottom: 65px;\r\n        width: 56px;\r\n        height: 40px;\r\n        transition: right 0.7s;\r\n        -moz-transition: right 0.7s;\r\n        -webkit-transition: right 0.7s;\r\n        -o-transition: right 0.7s;\r\n        z-index: 11110;\r\n        padding: 4px;\r\n        right: -54px;\r\n    }\r\n\r\n    .setting:hover {\r\n        right: 0px;\r\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\r\n        border: 1px solid rgb(233, 234, 236);\r\n    }\r\n\r\n    .setting i {\r\n        background-position: -471px -982px;\r\n        display: block;\r\n        width: 20px;\r\n        height: 20px;\r\n        transition: 0.2s;\r\n        background-image: url(//static.hdslb.com/images/base/icons.png);\r\n        margin: auto;\r\n    }\r\n\r\n    .setting span {\r\n        font-size: 14px;\r\n        display: block;\r\n        width: 50%;\r\n        transition: 0.2s;\r\n        color: #000;\r\n        margin: auto;\r\n    }\r\n\r\n    @keyframes roll {\r\n\r\n        30%,\r\n        60%,\r\n        90% {\r\n            transform: scale(1) rotate(0deg);\r\n        }\r\n\r\n        10%,\r\n        40%,\r\n        70% {\r\n            transform: scale(1.11) rotate(-180deg);\r\n        }\r\n\r\n        20%,\r\n        50%,\r\n        80% {\r\n            transform: scale(0.9) rotate(-360deg);\r\n        }\r\n    }\r\n</style>';
+var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/entry.ts
 var UiEntryType = "new";
@@ -1093,7 +1092,7 @@ var BilioldEntry = class extends HTMLElement {
     }
   }
 };
-customElements.get("biliold-entry-3df83fc") || customElements.define("bilibili-entry-3df83fc", BilioldEntry);
+customElements.get("biliold-entry-b5c779c") || customElements.define("bilibili-entry-b5c779c", BilioldEntry);
 
 // src/core/userstatus.ts
 var userStatus = {
@@ -1227,7 +1226,7 @@ var User = class {
   }
   outputUserStatus() {
     this.BLOD.GM.getValue("userStatus", userStatus).then((d) => {
-      saveAs(JSON.stringify(d, void 0, "	"), `Bilibili-Old-${timeFormat(void 0, true).replace(/ |:/g, (d2) => "-")}`, "application/json");
+      saveAs(JSON.stringify(d, void 0, "	"), \`Bilibili-Old-\${timeFormat(void 0, true).replace(/ |:/g, (d2) => "-")}\`, "application/json");
     });
   }
   inputUserStatus() {
@@ -1235,7 +1234,7 @@ var User = class {
     const toast = this.BLOD.toast.toast(0, "warning", ...msg);
     fileRead("application/json").then((d) => {
       if (d && d[0]) {
-        msg.push(`读取文件：${d[0].name}`);
+        msg.push(\`读取文件：\${d[0].name}\`);
         toast.data = msg;
         toast.type = "info";
         return readAs(d[0]).then((d2) => {
@@ -1280,11 +1279,11 @@ var Abv = class {
       this.table[this.base58Table[i]] = i;
   }
   check(input) {
-    if (/^[aA][vV][0-9]+$/.test(String(input)) || /^\d+$/.test(String(input)))
+    if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
       return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-    if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
+    if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
       return this.bvToAv("BV" + input);
-    if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}$/.test(String(input)))
+    if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
       return this.bvToAv(String(input));
     throw input;
   }
@@ -1316,14 +1315,14 @@ var URL2 = class {
   params = {};
   get param() {
     return Object.entries(this.params).reduce((s, d) => {
-      return s += `${s ? "&" : ""}${d[0]}=${d[1]}`;
+      return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
     }, "");
   }
   constructor(url) {
     const arr1 = url.split("#");
     let str = arr1.shift();
     this.hash = arr1.join("#");
-    (this.hash || url.includes("#")) && (this.hash = `#${this.hash}`);
+    (this.hash || url.includes("#")) && (this.hash = \`#\${this.hash}\`);
     const arr2 = str.split("?");
     this.base = arr2.shift();
     str = arr2.join("?");
@@ -1351,7 +1350,7 @@ var URL2 = class {
     }, {});
   }
   toJSON() {
-    return `${this.base ? this.param ? this.base + "?" : this.base : ""}${this.param}${this.hash || ""}`;
+    return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
   }
 };
 function objUrl(url, obj) {
@@ -1495,14 +1494,14 @@ var Scanner = class {
   }
   organizeTag() {
     if (!this.quote && this.html[0] === "<") {
-      if (this.html.startsWith(`</${this.tagNames.reduce((s, d) => s = d, void 0)}`)) {
+      if (this.html.startsWith(\`</\${this.tagNames.reduce((s, d) => s = d, void 0)}\`)) {
         this.textContent();
-        this.html = this.html.replace(new RegExp(`^</${this.tagNames.reduce((s, d) => s = d, void 0)}>`), "");
+        this.html = this.html.replace(new RegExp(\`^</\${this.tagNames.reduce((s, d) => s = d, void 0)}>\`), "");
         this.popNode();
       } else {
         this.removeScanned();
         if (this.html.startsWith("!-- ")) {
-          this.html = this.html.replace(/^!--[\S\s]+?-->/, "");
+          this.html = this.html.replace(/^!--[\\S\\s]+?-->/, "");
         }
         if (/^[a-zA-Z]/.test(this.html)) {
           this.textContent();
@@ -1515,8 +1514,8 @@ var Scanner = class {
             }
             switch (this.html[this.pos]) {
               case " ":
-              case "\r":
-              case "\n":
+              case "\\r":
+              case "\\n":
                 func.push(() => this.organizeProp());
                 stop = true;
                 break;
@@ -1543,8 +1542,8 @@ var Scanner = class {
         case '"':
           !this.quote ? this.quote = '"' : this.quote === '"' && (this.quote = "");
           break;
-        case "`":
-          !this.quote ? this.quote = "`" : this.quote === "`" && (this.quote = "");
+        case "\`":
+          !this.quote ? this.quote = "\`" : this.quote === "\`" && (this.quote = "");
           break;
       }
       this.text += this.html[0];
@@ -1565,7 +1564,7 @@ var Scanner = class {
           break;
         case " ":
           if (!value) {
-            const str = this.html.substring(start, this.pos).replace(/\r|\n|"/g, "").replace(/^ +/, "");
+            const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
             const prop = str.split("=");
             const key = prop.shift();
             key && key !== "/" && (this.targets.reduce((s, d) => s = d, void 0).props[key] = prop.join("=") || key);
@@ -1575,7 +1574,7 @@ var Scanner = class {
         case ">":
           if (!value) {
             stop = true;
-            const str = this.html.substring(start, this.pos).replace(/\r|\n|"/g, "").replace(/^ +/, "");
+            const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
             const prop = str.split("=");
             const key = prop.shift();
             key && key !== "/" && (this.targets.reduce((s, d) => s = d, void 0).props[key] = prop.join("=") || key);
@@ -1624,7 +1623,7 @@ var Scanner = class {
     this.html = this.html.slice(length);
   }
   textContent() {
-    const text = this.text.replace(/\r|\n| /g, "");
+    const text = this.text.replace(/\\r|\\n| /g, "");
     if (text) {
       const tag = new Vnode("text");
       tag.text = this.text;
@@ -1783,10 +1782,10 @@ var Page = class {
 };
 
 // src/html/index.html
-var html_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <meta charset="utf-8" />\r\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords"\r\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\r\n        title="哔哩哔哩" />\r\n    <link rel="stylesheet"\r\n        href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css" />\r\n    <style type="text/css">\r\n        /* 隐藏失效节点 */\r\n        #fixed_app_download,\r\n        #app>div.report-wrap-module.elevator-module>div.ver {\r\n            display: none;\r\n        }\r\n\r\n        /* 禁用失效节点 */\r\n        .bili-tab.rank-tab,\r\n        .bili-dropdown.rank-dropdown {\r\n            pointer-events: none;\r\n        }\r\n\r\n        /* 资讯区图标 */\r\n        .icon.icon_t.icon-news {\r\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA39pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplMzNhZmQ3OS04ZTViLWQ2NDItOTYxZi0yNDM2MGQyN2JhM2YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTFEMzQ4MEJBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTFEMzQ4MEFBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjBiNzNlZjA5LTA1ZmEtNTM0MC1iMWY3LWE4MTljMjFhYmEzMiIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjI2MDJjOTk2LTBiNzQtZDQ0MC1hMzcxLTIxN2NkM2ZlOTgzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsCIXZoAAAi+SURBVHja7Fh7TJvXFT+fwTa2MX5gXjZgg3kEJvICh6YELUujNKNb10ZpWFc17aapSxcpy1YlUjctUbt0L22VMm2NlkXLsqZJWdT0sWwlaZOmCwW1gfIMCSYYDOZhDH6ADdjGvvvOhc8YY8Bru61/9EhX97vnnnvv755z7znnfgwhBD7PxIPPOcWHNxiGWdSp0Wi2eX0+uSxJVuxyOaXIk8nkk1hj2+FwlHGyCoWiMbwfaXLCNRIEsAsFAufU9LSdLxL2jw4O21cCFGlRJpzBAUzTqnX2Qdtlti8/XFir04AqK58RieVgtxinPB6XyFBRRQf19nfDtH10Cr+Rj/XIuNvnnXQJuPFCqcznc0+YgyRoCQaD/ckq1d/HbLaLMQP0zPjmtCFN7Nq45csFzxz4IeTk6ilPJBGDLjMNJAmCmM0zMu4Ci2UEek09YBs0w+jENHR13aV9nS0fTHXe6hRpdbojPT13jy0HkDK44p72QmpKyncl8uQZEiOxY2j5JLT/0E9IfFx8EC0WDQ+WJRqUihNOVz++78nzZ14KafS/QWgJnF+eKCFypWI3Z+pIDS65xTweL7vSULLsxHE8Hj2rkRdq0Rzz/VzhLSOLIEsrtzIsCGXMbobH8DJzS8qjCuMygWAwpP7lKBhhpmAUWc46ZYZy7M+PGaAgMUkb3u7r7YWrV94Bv98PZL7d3NT0mZm6pGQdhLurFQF2dfaowt0C3anbDUODg9DR1hZq28ftnxlAbbaeWi0mgLV1danRHLZAKGQBtgPr+BbxUZM1587DG6+9Bk6nk7aNXV2078b196m2kdACttFRWr98+i+s3MeRniTf+uP90phMjOBUcskinkqlArVGAw0f1Id4uCCC1uXowOv1Qf2NOhAIBHDX2E03guAGzP1UDi3g9/lpvbGsFHL0uaF5sjQptD6Vti5rVYDD/b1aTnuRx3rt+nV0gZHhEdoetVpp7Z50g1AogPGxMdBkZdG612SiG0KQKKfLyQF1pgYK1hRCR3sHCPj80LzJiiQaYXDtVQFmZOeYlzsLKampdCEEGW56BF5RWQk7H6gCuVw+dxxYEPr8PJAmSeHjxibI0mZT+fLNm0EqlcL1a+99umxmzOmJKlxqWLhsOblzZmpraYU7nbfxJtI2mtzn9YImMxMy1GrKS2U3N2QZpGdwcnISfD7vkrndnqn1q2Yzx399lNrP7bCGeLl5emo6JLFEAl9/+KGF7288SM0pSUwEuUIx5zbWroXCoiLgs2bE71y9nsoioVbTM9JDm0NiN0PQcyRKxC2rAmx/Ypdff6IGPaiQu8cikZgWjtCMHOHCXypZHHWQJw7/ngeHNR6RSJqc8jJRjnx0E0t++iLN5UYtff+zhHTaQzM0MFRs88d0Bll1m+saO0KxcqWElgt/keyFWLy0L5IwFUOyDPQOxQQwL0/f8uGNSySWbJdzR5HshVi8tC+SME+E1VLs8HxQlZKyC3O0my13FuVuASyBIC3++TKL7SCbH9PyiVJC8s29TxPMP7lIEpkPxi9RqSD+OtavvPQ8FB0/DX0WKzVjUe1lGLm/FOKS9ayb8BE2ajAkTI+xPg7T/noOhqrKwK/eACn8IH0qZKepmtN+/ofJVW8xkulun51NWs/86W+XH12z5U0hBvPUty4A+f0JMmLez1j2PAYJXh89WbJpE1imJaAWutlavOwxQOKrsyGruR54hw5Pqxu3i7oOfh9uTCXTd4xtfPxfy20o6puELp4ovpoglVfI9v5CaPBPwQWlHWzt3dOHlEoRXoDkNDkok5SQmiRaERhH+B550GaFEkkCtHtm4HmvGhqMTeB4/1VjYpK02mG3t0SbZ5EGERSmPrOB2Xo2swZJaZXQVvxVeKf1FrQ+ooNS93HR2NlzYFLIiNXu8eFkMxNOAcbSCE8g4F5x4d/fySsW8N/4DbPjnBkc7nWgvP4q4FocuJhMLMsvLSDf/lGB3J9FknfeA/iasXS+jUGMTd5K4NK+FOAfe44Z7LopnHv7OsEx7hAqkuciCfsdmovlURlpkhy89WcFWa1+hkgVILS0Anm4wKerqBHAweonXd1N9yLQ3Fw9+pxjywJMksmewTRPf98jkC2eZHrYvIDPruv0Z8OfGzuhbE8pkOpfAsyOgKbQQGuINwC5+RGQzjvAFK8BYh0G3mM7WH76fH86ndv/8iWGbNDDW7e9MDNkhfUBEPBU2ZB7tgGCY/0FfQerC/q7m4yRABf5QVS1w3jzWt/hvdA/JaXgkGZScqCm9haAZhN0GPLh/vRiYDUYWpwxbAJIl8Hsm/+gIClx4Nj6e9u2B4/WnATeE3vhSkc3O5+Bzu1nlc0qYi6iDHd78Syu6Adp5qHJUPLj+V2p9z1O9C80BAsvuMiGdwkRP11L37F6vTaIfhJL+dbt5OBT3yL1b9cQ4h+ec2xsffujK5R39IXfEk4WC8qqD5wkca+4yKYmQgu2sQ/9bzQ/uARgWBb9KxyIE+y+PUF4R7qoQ0XHah60UnAcSORvrdpNN4BtVdE9RLn7Z7Qgf3jMSUFzfARWdtlMx+PYlR7uUQHiTyPUIg7efMJEJ0QNNgy4QxGgd8JPeRzhwqh13BD+aUDZHadM7sjIgWOY94gX50QLIWhUxnIajI92tfGPFv7g8bknoO1Zg1aUkS9k2DNy3LNHOPDQ16CYTbFOmueGbjn2Lq2dxXtg16MZ8M/f1bNuyQi1bR6oa3ZKjmaOwE4yAC5RHpjaP4REYwNk1Mv4cco0UJSpGUfzAzDx+nOHAsHAGXaaiys66mjZCqo/MOXfyG6nnHu/snnKVwRPXWKqDtwLF88PUzkEp01LBLPVTUHixcoR2on5SCVwfhJ9IveHayGxCFqSlcrzozbbqZh/v60YS1nAbpf3zj6TTZgvWBjb7Vs6FvuvnfwjvH74B0aZQv5sIBAwrfaP8FMDjIuLu6ooMGz7TxNT1hkb/bP+wtXkVgT4xT/qLwD+H+jfAgwAa4KbOGyf2aUAAAAASUVORK5CYII=);\r\n            background-position: unset;\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div id="home-app"></div>\r\n    <div id="app" data-server-rendered="true"></div>\r\n    <div class="footer bili-footer report-wrap-module"></div>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\/script>\r\n    <script src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var html_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css" />\\r\\n    <style type="text/css">\\r\\n        /* 隐藏失效节点 */\\r\\n        #fixed_app_download,\\r\\n        #app>div.report-wrap-module.elevator-module>div.ver {\\r\\n            display: none;\\r\\n        }\\r\\n\\r\\n        /* 禁用失效节点 */\\r\\n        .bili-tab.rank-tab,\\r\\n        .bili-dropdown.rank-dropdown {\\r\\n            pointer-events: none;\\r\\n        }\\r\\n\\r\\n        /* 资讯区图标 */\\r\\n        .icon.icon_t.icon-news {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA39pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplMzNhZmQ3OS04ZTViLWQ2NDItOTYxZi0yNDM2MGQyN2JhM2YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTFEMzQ4MEJBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTFEMzQ4MEFBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjBiNzNlZjA5LTA1ZmEtNTM0MC1iMWY3LWE4MTljMjFhYmEzMiIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjI2MDJjOTk2LTBiNzQtZDQ0MC1hMzcxLTIxN2NkM2ZlOTgzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsCIXZoAAAi+SURBVHja7Fh7TJvXFT+fwTa2MX5gXjZgg3kEJvICh6YELUujNKNb10ZpWFc17aapSxcpy1YlUjctUbt0L22VMm2NlkXLsqZJWdT0sWwlaZOmCwW1gfIMCSYYDOZhDH6ADdjGvvvOhc8YY8Bru61/9EhX97vnnnvv755z7znnfgwhBD7PxIPPOcWHNxiGWdSp0Wi2eX0+uSxJVuxyOaXIk8nkk1hj2+FwlHGyCoWiMbwfaXLCNRIEsAsFAufU9LSdLxL2jw4O21cCFGlRJpzBAUzTqnX2Qdtlti8/XFir04AqK58RieVgtxinPB6XyFBRRQf19nfDtH10Cr+Rj/XIuNvnnXQJuPFCqcznc0+YgyRoCQaD/ckq1d/HbLaLMQP0zPjmtCFN7Nq45csFzxz4IeTk6ilPJBGDLjMNJAmCmM0zMu4Ci2UEek09YBs0w+jENHR13aV9nS0fTHXe6hRpdbojPT13jy0HkDK44p72QmpKyncl8uQZEiOxY2j5JLT/0E9IfFx8EC0WDQ+WJRqUihNOVz++78nzZ14KafS/QWgJnF+eKCFypWI3Z+pIDS65xTweL7vSULLsxHE8Hj2rkRdq0Rzz/VzhLSOLIEsrtzIsCGXMbobH8DJzS8qjCuMygWAwpP7lKBhhpmAUWc46ZYZy7M+PGaAgMUkb3u7r7YWrV94Bv98PZL7d3NT0mZm6pGQdhLurFQF2dfaowt0C3anbDUODg9DR1hZq28ftnxlAbbaeWi0mgLV1danRHLZAKGQBtgPr+BbxUZM1587DG6+9Bk6nk7aNXV2078b196m2kdACttFRWr98+i+s3MeRniTf+uP90phMjOBUcskinkqlArVGAw0f1Id4uCCC1uXowOv1Qf2NOhAIBHDX2E03guAGzP1UDi3g9/lpvbGsFHL0uaF5sjQptD6Vti5rVYDD/b1aTnuRx3rt+nV0gZHhEdoetVpp7Z50g1AogPGxMdBkZdG612SiG0KQKKfLyQF1pgYK1hRCR3sHCPj80LzJiiQaYXDtVQFmZOeYlzsLKampdCEEGW56BF5RWQk7H6gCuVw+dxxYEPr8PJAmSeHjxibI0mZT+fLNm0EqlcL1a+99umxmzOmJKlxqWLhsOblzZmpraYU7nbfxJtI2mtzn9YImMxMy1GrKS2U3N2QZpGdwcnISfD7vkrndnqn1q2Yzx399lNrP7bCGeLl5emo6JLFEAl9/+KGF7288SM0pSUwEuUIx5zbWroXCoiLgs2bE71y9nsoioVbTM9JDm0NiN0PQcyRKxC2rAmx/Ypdff6IGPaiQu8cikZgWjtCMHOHCXypZHHWQJw7/ngeHNR6RSJqc8jJRjnx0E0t++iLN5UYtff+zhHTaQzM0MFRs88d0Bll1m+saO0KxcqWElgt/keyFWLy0L5IwFUOyDPQOxQQwL0/f8uGNSySWbJdzR5HshVi8tC+SME+E1VLs8HxQlZKyC3O0my13FuVuASyBIC3++TKL7SCbH9PyiVJC8s29TxPMP7lIEpkPxi9RqSD+OtavvPQ8FB0/DX0WKzVjUe1lGLm/FOKS9ayb8BE2ajAkTI+xPg7T/noOhqrKwK/eACn8IH0qZKepmtN+/ofJVW8xkulun51NWs/86W+XH12z5U0hBvPUty4A+f0JMmLez1j2PAYJXh89WbJpE1imJaAWutlavOwxQOKrsyGruR54hw5Pqxu3i7oOfh9uTCXTd4xtfPxfy20o6puELp4ovpoglVfI9v5CaPBPwQWlHWzt3dOHlEoRXoDkNDkok5SQmiRaERhH+B550GaFEkkCtHtm4HmvGhqMTeB4/1VjYpK02mG3t0SbZ5EGERSmPrOB2Xo2swZJaZXQVvxVeKf1FrQ+ooNS93HR2NlzYFLIiNXu8eFkMxNOAcbSCE8g4F5x4d/fySsW8N/4DbPjnBkc7nWgvP4q4FocuJhMLMsvLSDf/lGB3J9FknfeA/iasXS+jUGMTd5K4NK+FOAfe44Z7LopnHv7OsEx7hAqkuciCfsdmovlURlpkhy89WcFWa1+hkgVILS0Anm4wKerqBHAweonXd1N9yLQ3Fw9+pxjywJMksmewTRPf98jkC2eZHrYvIDPruv0Z8OfGzuhbE8pkOpfAsyOgKbQQGuINwC5+RGQzjvAFK8BYh0G3mM7WH76fH86ndv/8iWGbNDDW7e9MDNkhfUBEPBU2ZB7tgGCY/0FfQerC/q7m4yRABf5QVS1w3jzWt/hvdA/JaXgkGZScqCm9haAZhN0GPLh/vRiYDUYWpwxbAJIl8Hsm/+gIClx4Nj6e9u2B4/WnATeE3vhSkc3O5+Bzu1nlc0qYi6iDHd78Syu6Adp5qHJUPLj+V2p9z1O9C80BAsvuMiGdwkRP11L37F6vTaIfhJL+dbt5OBT3yL1b9cQ4h+ec2xsffujK5R39IXfEk4WC8qqD5wkca+4yKYmQgu2sQ/9bzQ/uARgWBb9KxyIE+y+PUF4R7qoQ0XHah60UnAcSORvrdpNN4BtVdE9RLn7Z7Qgf3jMSUFzfARWdtlMx+PYlR7uUQHiTyPUIg7efMJEJ0QNNgy4QxGgd8JPeRzhwqh13BD+aUDZHadM7sjIgWOY94gX50QLIWhUxnIajI92tfGPFv7g8bknoO1Zg1aUkS9k2DNy3LNHOPDQ16CYTbFOmueGbjn2Lq2dxXtg16MZ8M/f1bNuyQi1bR6oa3ZKjmaOwE4yAC5RHpjaP4REYwNk1Mv4cco0UJSpGUfzAzDx+nOHAsHAGXaaiys66mjZCqo/MOXfyG6nnHu/snnKVwRPXWKqDtwLF88PUzkEp01LBLPVTUHixcoR2on5SCVwfhJ9IveHayGxCFqSlcrzozbbqZh/v60YS1nAbpf3zj6TTZgvWBjb7Vs6FvuvnfwjvH74B0aZQv5sIBAwrfaP8FMDjIuLu6ooMGz7TxNT1hkb/bP+wtXkVgT4xT/qLwD+H+jfAgwAa4KbOGyf2aUAAAAASUVORK5CYII=);\\r\\n            background-position: unset;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div id="home-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/html/news.html
-var news_default = '<div class="r-con">\r\n    <div class="r-con">\r\n        <header style="margin-bottom: 14px">\r\n            <h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3>\r\n        </header>\r\n        <div class="carousel-module">\r\n            <div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img\r\n                        src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp"\r\n                        width="260" height="280" /></a></div>\r\n        </div>\r\n    </div>\r\n</div>';
+var news_default = '<div class="r-con">\\r\\n    <div class="r-con">\\r\\n        <header style="margin-bottom: 14px">\\r\\n            <h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3>\\r\\n        </header>\\r\\n        <div class="carousel-module">\\r\\n            <div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img\\r\\n                        src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp"\\r\\n                        width="260" height="280" /></a></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>';
 
 // src/io/api.ts
 var import_md5 = __toESM(require_md5());
@@ -1794,7 +1793,7 @@ function jsonCheck(str) {
   const result = typeof str === "string" ? JSON.parse(str) : str;
   if (result.code === 0)
     return result;
-  throw new Error(`${result.code} ${result.message}`, { cause: result.code });
+  throw new Error(\`\${result.code} \${result.message}\`, { cause: result.code });
 }
 var APP_KEY = /* @__PURE__ */ ((APP_KEY2) => {
   APP_KEY2["1d8b6e7d45233436"] = "560c52ccd288fed045859ed18bffd973";
@@ -1847,7 +1846,7 @@ var ApiSign = class {
     const appSecret = this.appSecret;
     url.params.appkey = this.appkey;
     url.sort();
-    url.params.sign = (0, import_md5.default)((api ? `api=${decodeURIComponent(api)}` : url.param) + appSecret);
+    url.params.sign = (0, import_md5.default)((api ? \`api=\${decodeURIComponent(api)}\` : url.param) + appSecret);
     return url.toJSON();
   }
   get appSecret() {
@@ -2286,13 +2285,13 @@ function setResponseType(responseType, xhr) {
     switch (xhr.responseType) {
       case "arraybuffer":
       case "blob":
-        return "content-type: application/octet-stream\r\n";
+        return "content-type: application/octet-stream\\r\\n";
       case "document":
-        return "content-type: text/xml; charset=utf-8\r\n";
+        return "content-type: text/xml; charset=utf-8\\r\\n";
       case "json":
-        return "content-type: application/json; charset=utf-8\r\n";
+        return "content-type: application/json; charset=utf-8\\r\\n";
       default:
-        return "content-type: text/plain; charset=utf-8\r\n";
+        return "content-type: text/plain; charset=utf-8\\r\\n";
     }
   };
 }
@@ -2333,10 +2332,10 @@ function subArray(res, num = 1) {
 }
 
 // src/css/avatar-animation.css
-var avatar_animation_default = "/* 鼠标放在顶栏上的动效 */\r\n.bili-header-m .profile-info .i-face .face {\r\n    border: 0\r\n}\r\n\r\n.bili-header-m .profile-info .i-face .pendant {\r\n    transform: scale(0.5);\r\n    width: 112px;\r\n    height: 112px;\r\n    left: -41px;\r\n    bottom: -46px;\r\n    opacity: 0;\r\n    transition: opacity .1s ease-in\r\n}\r\n\r\n.bili-header-m .profile-info.on .i-face {\r\n    left: 8px !important;\r\n    top: 0 !important;\r\n    height: 32px !important;\r\n    width: 32px !important;\r\n    transform: translateY(10px) translateX(-16px) scale(2);\r\n    transform-origin: top left\r\n}\r\n\r\n.bili-header-m .profile-info.on .i-face .legalize {\r\n    transform: scale(0.5) translate(10px, 15px)\r\n}\r\n\r\n.bili-header-m .profile-info.on .i-face .pendant {\r\n    opacity: 1\r\n}\r\n\r\n.bili-header-m .profile-info.on .i-face .face {\r\n    border: 0;\r\n    box-shadow: 0 0 0 2px #fff\r\n}\r\n\r\n.bili-header-m .profile-info.on .i-face.scale-in {\r\n    transform: translateY(5px) translateX(-10px) scale(1.75)\r\n}\r\n\r\n.bili-header-m .profile-info.on .scale-in .face {\r\n    height: 32px;\r\n    width: 32px\r\n}\r\n\r\n.bili-header-m .profile-info.on .i-face.scale-in .legalize {\r\n    transform: scale(0.5) translate(38px, 48px)\r\n}";
+var avatar_animation_default = "/* 鼠标放在顶栏上的动效 */\\r\\n.bili-header-m .profile-info .i-face .face {\\r\\n    border: 0\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info .i-face .pendant {\\r\\n    transform: scale(0.5);\\r\\n    width: 112px;\\r\\n    height: 112px;\\r\\n    left: -41px;\\r\\n    bottom: -46px;\\r\\n    opacity: 0;\\r\\n    transition: opacity .1s ease-in\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face {\\r\\n    left: 8px !important;\\r\\n    top: 0 !important;\\r\\n    height: 32px !important;\\r\\n    width: 32px !important;\\r\\n    transform: translateY(10px) translateX(-16px) scale(2);\\r\\n    transform-origin: top left\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .legalize {\\r\\n    transform: scale(0.5) translate(10px, 15px)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .pendant {\\r\\n    opacity: 1\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .face {\\r\\n    border: 0;\\r\\n    box-shadow: 0 0 0 2px #fff\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in {\\r\\n    transform: translateY(5px) translateX(-10px) scale(1.75)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .scale-in .face {\\r\\n    height: 32px;\\r\\n    width: 32px\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in .legalize {\\r\\n    transform: scale(0.5) translate(38px, 48px)\\r\\n}";
 
 // src/css/message.css
-var message_default = "/* 修复消息页样式 */\r\n.container[data-v-6969394c] {\r\n    height: calc(100vh - 42px) !important;\r\n}\r\n\r\n.container[data-v-1c9150a9] {\r\n    height: calc(100vh - 42px) !important;\r\n}\r\n\r\n.im-root,\r\n.im-root .im-list-box * {\r\n    font-size: 12px;\r\n    line-height: 42px;\r\n}\r\n\r\n.im-root .im-list-box {\r\n    width: 100%;\r\n    overflow: visible;\r\n}\r\n\r\n.im-root .im-list-box .im-list {\r\n    line-height: 42px;\r\n    height: 42px;\r\n}\r\n\r\n.im-root .im-list-box .im-notify.im-number {\r\n    height: 14px;\r\n    line-height: 13px;\r\n    border-radius: 10px;\r\n    padding: 1px 3px;\r\n    font-size: 12px;\r\n    min-width: 20px;\r\n    text-align: center;\r\n    color: #fff;\r\n}\r\n\r\n.im-root .im-list-box .im-notify.im-number.im-center {\r\n    top: 14px;\r\n    left: 80px;\r\n}\r\n\r\n.im-root .im-list-box .im-notify.im-dot {\r\n    top: 11px;\r\n    right: -10px;\r\n    width: 8px;\r\n    height: 8px;\r\n    border-radius: 100%;\r\n}\r\n\r\n.im-root .im-list-box .im-notify.im-dot.im-center {\r\n    top: 16px;\r\n    right: 20px;\r\n}";
+var message_default = "/* 修复消息页样式 */\\r\\n.container[data-v-6969394c] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.container[data-v-1c9150a9] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.im-root,\\r\\n.im-root .im-list-box * {\\r\\n    font-size: 12px;\\r\\n    line-height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box {\\r\\n    width: 100%;\\r\\n    overflow: visible;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-list {\\r\\n    line-height: 42px;\\r\\n    height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number {\\r\\n    height: 14px;\\r\\n    line-height: 13px;\\r\\n    border-radius: 10px;\\r\\n    padding: 1px 3px;\\r\\n    font-size: 12px;\\r\\n    min-width: 20px;\\r\\n    text-align: center;\\r\\n    color: #fff;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number.im-center {\\r\\n    top: 14px;\\r\\n    left: 80px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot {\\r\\n    top: 11px;\\r\\n    right: -10px;\\r\\n    width: 8px;\\r\\n    height: 8px;\\r\\n    border-radius: 100%;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot.im-center {\\r\\n    top: 16px;\\r\\n    right: 20px;\\r\\n}";
 
 // src/page/header.ts
 var _Header = class {
@@ -2465,9 +2464,9 @@ var _Header = class {
   }
   static videoOffset() {
     if (uid) {
-      const offset2 = getCookies()[`bp_video_offset_${uid}`];
+      const offset2 = getCookies()[\`bp_video_offset_\${uid}\`];
       if (offset2) {
-        setCookie(`bp_t_offset_${uid}`, offset2);
+        setCookie(\`bp_t_offset_\${uid}\`, offset2);
       }
     }
   }
@@ -2712,18 +2711,18 @@ var PageIndex = class extends Page {
       }
       if (arr2) {
         apiSeasonRankList({ season_type: arr2[1] }).then((d) => {
-          let html = `<header class="rank-head"><h3>排行</h3><div class="bili-dropdown rank-dropdown"><span class="selected">三日</span><i class="icon icon-arrow-down"></i><ul class="dropdown-list"><li class="dropdown-item" style="display: none;">三日</li><li class="dropdown-item">一周</li></ul></div></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list">`;
+          let html = \`<header class="rank-head"><h3>排行</h3><div class="bili-dropdown rank-dropdown"><span class="selected">三日</span><i class="icon icon-arrow-down"></i><ul class="dropdown-list"><li class="dropdown-item" style="display: none;">三日</li><li class="dropdown-item">一周</li></ul></div></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list">\`;
           for (let i = 0; i < 8; i++) {
-            html += `<li class="rank-item${i < 3 ? " highlight" : ""}"><i class="ri-num">${i + 1}</i><a href="${d[i].url}" target="_blank" title="${d[i].title} 播放:${d[i].stat.view}" class="ri-info-wrap"><p class="ri-title">${d[i].title}</p><span class="ri-total">${d[i].new_ep.index_show}</span></a></li>`;
+            html += \`<li class="rank-item\${i < 3 ? " highlight" : ""}"><i class="ri-num">\${i + 1}</i><a href="\${d[i].url}" target="_blank" title="\${d[i].title} 播放:\${d[i].stat.view}" class="ri-info-wrap"><p class="ri-title">\${d[i].title}</p><span class="ri-total">\${d[i].new_ep.index_show}</span></a></li>\`;
           }
-          html += `</ul></div><a href="${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>`;
+          html += \`</ul></div><a href="\${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>\`;
           const vnode = htmlVnode(html);
           vnode[1].children[0].children?.forEach((t, i) => {
             let node;
             t.event = {
               "mouseover": (e) => {
                 const target = e.target;
-                const nodes = `<div class="bangumi-info-module" style="left: ${target.getBoundingClientRect().left}px; top: ${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="${d[i].title}" src="${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">${d[i].title}</p><p class="desc">${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>${unitFormat(d[i].stat.follow)}</span></div></div>`;
+                const nodes = \`<div class="bangumi-info-module" style="left: \${target.getBoundingClientRect().left}px; top: \${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="\${d[i].title}" src="\${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">\${d[i].title}</p><p class="desc">\${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>\${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>\${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>\${unitFormat(d[i].stat.follow)}</span></div></div>\`;
                 node = new VdomTool(nodes).toFragment().children[0];
                 document.body.appendChild(node);
               },
@@ -2815,7 +2814,7 @@ var Comment = class {
         }
         return function() {
           if (!loading) {
-            loadScript(`//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js`).then(() => {
+            loadScript(\`//s1.hdslb.com/bfs/seed/jinkela/commentpc/comment.min.js\`).then(() => {
               load = true;
             });
           }
@@ -2850,10 +2849,10 @@ var Comment = class {
     this.BLOD.status.commentJumpUrlTitle && this._resolveJump();
   }
   styleFix() {
-    addCss(`.bb-comment .comment-list .list-item .info .btn-hover, .comment-bilibili-fold .comment-list .list-item .info .btn-hover {
+    addCss(\`.bb-comment .comment-list .list-item .info .btn-hover, .comment-bilibili-fold .comment-list .list-item .info .btn-hover {
             line-height: 24px;
-        }`, "comment-btn-24pxH");
-    addCss(`.operation.btn-hide-re .opera-list {visibility: visible}`, "keep-operalist-visible");
+        }\`, "comment-btn-24pxH");
+    addCss(\`.operation.btn-hide-re .opera-list {visibility: visible}\`, "keep-operalist-visible");
   }
   initAbtest() {
     Feedback.prototype.initAbtest = function() {
@@ -2879,16 +2878,16 @@ var Comment = class {
         } else {
           html = '<a class="more-link" href="javascript:">查看更多评论</a>';
         }
-        this.$root.find(".bottom-page").addClass("center").html(html);
+        this.\$root.find(".bottom-page").addClass("center").html(html);
         return;
       }
       const count = Math.ceil(pageInfo.count / pageInfo.size);
       if (count > 1) {
-        this.$root.find(".header-interaction").addClass("paging-box").paging({
+        this.\$root.find(".header-interaction").addClass("paging-box").paging({
           pageCount: count,
           current: pageInfo.num,
           backFn: (p) => {
-            this.$root.trigger("replyPageChange", {
+            this.\$root.trigger("replyPageChange", {
               p,
               isBottom: true
             });
@@ -2899,13 +2898,13 @@ var Comment = class {
             this.currentPage = p;
           }
         });
-        this.$root.find(".bottom-page").paging({
+        this.\$root.find(".bottom-page").paging({
           pageCount: count,
           current: pageInfo.num,
           jump: true,
           smallSize: this.smallPager,
           backFn: (p) => {
-            this.$root.trigger("replyPageChange", {
+            this.\$root.trigger("replyPageChange", {
               p,
               isBottom: true
             });
@@ -2917,8 +2916,8 @@ var Comment = class {
           }
         });
       } else {
-        this.$root.find(".header-page").html("");
-        this.$root.find(".bottom-page").html("");
+        this.\$root.find(".header-page").html("");
+        this.\$root.find(".bottom-page").html("");
       }
     };
   }
@@ -2938,7 +2937,7 @@ var Comment = class {
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? `<span class="reply-location">${item?.reply_control?.location || ""}</span>` : "",
+        item?.reply_control?.location ? \`<span class="reply-location">\${item?.reply_control?.location || ""}</span>\` : "",
         "</span>",
         item.lottery_id ? "" : '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         item.lottery_id ? "" : '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -2979,7 +2978,7 @@ var Comment = class {
         this._createPlatformDom(item.content.plat),
         '<span class="time-location">',
         '<span class="reply-time">'.concat(this._formateTime(item.ctime), "</span>"),
-        item?.reply_control?.location ? `<span class="reply-location">${item?.reply_control?.location || ""}</span>` : "",
+        item?.reply_control?.location ? \`<span class="reply-location">\${item?.reply_control?.location || ""}</span>\` : "",
         "</span>",
         '<span class="like ' + (item.action == 1 ? "liked" : "") + '"><i></i><span>' + (item.like ? item.like : "") + "</span></span>",
         '<span class="hate ' + (item.action == 2 ? "hated" : "") + '"><i></i></span>',
@@ -2995,10 +2994,10 @@ var Comment = class {
     const _registerEvent = Feedback.prototype._registerEvent;
     Feedback.prototype._registerEvent = function(e) {
       _registerEvent.call(this, e);
-      let n = this.$root;
-      let $ = window.$;
+      let n = this.\$root;
+      let \$ = window.\$;
       if (e)
-        n = $(e);
+        n = \$(e);
       let l = this;
       n.on("click.dialog", ".dialog", function() {
         let clickTarget = this;
@@ -3006,21 +3005,21 @@ var Comment = class {
         let rootid = clickTarget.parentNode.parentNode.parentNode.parentNode.parentNode.getAttribute("data-id");
         let dialogid = clickTarget.getAttribute("dialog-id");
         let selfRpid = clickTarget.getAttribute("data-id");
-        addCss(`
+        addCss(\`
             .comment-dialog .dialog{display:none!important}
             .comment-dialog > .comment-list{transform:translateY(-13px)}
             .comment-dialog{min-height:200px;max-height:70vh;overflow-y:auto}
             .comment-dialog-container{width:600px;z-index:100000;position:fixed;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);box-shadow:0 0 20px 3px #0000005c;border-radius:10px;padding:0 18px;opacity:1;transition:opacity 0.1s}
-            .comment-dialog-container.hidden{opacity:0}`, "comment-dialog");
+            .comment-dialog-container.hidden{opacity:0}\`, "comment-dialog");
         let container = document.createElement("div");
         container.className = "comment-dialog-container hidden";
-        container.innerHTML = `
+        container.innerHTML = \`
             <div class="comment-dialog bb-comment">
             <div class="comment-list">
-            <div class="list-item" data-id="${rootid}">
+            <div class="list-item" data-id="\${rootid}">
             <div class="con" style="border:none;margin:0;padding:0;">
             <div class="reply-box">
-            </div></div></div></div></div>`;
+            </div></div></div></div></div>\`;
         document.body.appendChild(container);
         let replyBox = container.getElementsByClassName("reply-box")[0];
         setTimeout(() => {
@@ -3035,7 +3034,7 @@ var Comment = class {
           window.addEventListener("click", closeWindow);
         }, 0);
         function fetchDialog(minFloor) {
-          return $.ajax({
+          return \$.ajax({
             url: "//api.bilibili.com/x/v2/reply/dialog/cursor",
             type: "GET",
             data: {
@@ -3050,9 +3049,9 @@ var Comment = class {
           });
         }
         function fixEmojiPosition(node) {
-          node = $(node);
+          node = \$(node);
           node.find(".reply-item").each(function(_, n2) {
-            var t = $(n2).find(".reply-face"), r = $(n2).find(".user"), n2 = $(n2).find(".name");
+            var t = \$(n2).find(".reply-face"), r = \$(n2).find(".user"), n2 = \$(n2).find(".name");
             t && r && n2 && (10 < n2.offset().top - r.offset().top ? t.css("top", "32px") : t.css("top", "0"));
           });
         }
@@ -3068,10 +3067,10 @@ var Comment = class {
                 });
               } else {
                 fixEmojiPosition(replyBox);
-                replyBox.querySelector(`div[data-id="${selfRpid}"]`).style.cssText = `
+                replyBox.querySelector(\`div[data-id="\${selfRpid}"]\`).style.cssText = \`
                             background: linear-gradient(45deg, rgba(115,108,231,0.13) 0%, rgba(0,161,214,0.13) 67%, rgba(0,212,255,0.13) 100%);
                             border-radius: 15px;
-                            margin-right: 15px;`;
+                            margin-right: 15px;\`;
               }
             };
             var nextPage = nextPage2;
@@ -3087,7 +3086,7 @@ var Comment = class {
       n.on("click.operation", ".spot", function(e2) {
         let operalist = this.parentNode.getElementsByClassName("opera-list")[0];
         if (l.lastClickOperation != this || operalist && operalist.style.display == "none") {
-          $(".opera-list").hide(), $(this).siblings(".opera-list").show(), e2.stopPropagation(), $(this).hasClass("more-operation") && (e2 = +$(this).parents(".reply-wrap:eq(0)").attr("data-id"));
+          \$(".opera-list").hide(), \$(this).siblings(".opera-list").show(), e2.stopPropagation(), \$(this).hasClass("more-operation") && (e2 = +\$(this).parents(".reply-wrap:eq(0)").attr("data-id"));
           l.lastClickOperation = this;
         } else
           operalist && (operalist.style.display = "none");
@@ -3107,18 +3106,18 @@ var Comment = class {
       for (var _i = 0, _jumpUrlSortKeyList = jumpUrlSortKeyList; _i < _jumpUrlSortKeyList.length; _i++) {
         var jumpKey = _jumpUrlSortKeyList[_i];
         if (str.includes(jumpKey)) {
-          var _jumpInfo$extra;
+          var _jumpInfo\$extra;
           var jumpInfo = jumpUrl[jumpKey];
           var img = jumpInfo.prefix_icon ? '<img src="' + jumpInfo.prefix_icon + '" class="jump-img"/>' : "";
           var content = jumpKey;
-          if ((_jumpInfo$extra = jumpInfo.extra) !== null && _jumpInfo$extra !== void 0 && _jumpInfo$extra.is_word_search) {
+          if ((_jumpInfo\$extra = jumpInfo.extra) !== null && _jumpInfo\$extra !== void 0 && _jumpInfo\$extra.is_word_search) {
             continue;
           } else {
             var url = jumpInfo.pc_url ? jumpInfo.pc_url : jumpKey.indexOf("http") === 0 ? jumpKey : this._createLinkById(jumpKey);
             var res = img + (jumpInfo.state === 0 ? '<a href="' + url + '" data-report="' + this.jumpReportIndex + '" class="comment-jump-url" target="_blank">' + content + "</a>" : content);
-            var reg = new RegExp(jumpKey.replace(/\?/, "\\?"), "ig");
+            var reg = new RegExp(jumpKey.replace(/\\?/, "\\\\?"), "ig");
             try {
-              var regStr = jumpKey.replace(/\(/g, "\\(").replace(/\)/g, "\\)").replace(/\?/, "\\?");
+              var regStr = jumpKey.replace(/\\(/g, "\\\\(").replace(/\\)/g, "\\\\)").replace(/\\?/, "\\\\?");
               var reg = new RegExp(regStr, "ig");
               str = str.replace(reg, res);
             } catch (e) {
@@ -3215,7 +3214,7 @@ var _Player = class {
     propertyHook(window, "nano", this);
   }
   modifyArgument(args) {
-    const obj = urlObj(`?${args[2]}`);
+    const obj = urlObj(\`?\${args[2]}\`);
     this.BLOD.status.automate.screenWide && (obj.as_wide = 1);
     this.BLOD.status.automate.autoPlay && (obj.autoplay = 1);
     this.BLOD.status.automate.noDanmaku && (obj.danmaku = 0);
@@ -3243,7 +3242,7 @@ var _Player = class {
   }
   connect() {
     window.EmbedPlayer("player", "", objUrl("", this.initData));
-    addCss(`#bofqi .player,#bilibili-player .player{width: 100%;height: 100%;display: block;}.bilibili-player .bilibili-player-auxiliary-area{z-index: 1;}`, "nano-fix");
+    addCss(\`#bofqi .player,#bilibili-player .player{width: 100%;height: 100%;display: block;}.bilibili-player .bilibili-player-auxiliary-area{z-index: 1;}\`, "nano-fix");
     Object.defineProperties(this, {
       addEventListener: { get: () => window.player?.addEventListener },
       directiveDispatcher: { get: () => window.player?.directiveDispatcher },
@@ -3297,7 +3296,7 @@ var WebTRC = class {
 };
 
 // src/html/av.html
-var av_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <meta charset="utf-8" />\r\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords"\r\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\r\n        title="哔哩哔哩" />\r\n    <link rel="stylesheet"\r\n        href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />\r\n    <style type="text/css">\r\n        #bofqi .player {\r\n            width: 980px;\r\n            height: 620px;\r\n            display: block;\r\n        }\r\n\r\n        @media screen and (min-width:1400px) {\r\n\r\n            #bofqi .player {\r\n                width: 1160px;\r\n                height: 720px\r\n            }\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div class="z-top-container has-menu"></div>\r\n    <div id="video-page-app"></div>\r\n    <div id="app" data-server-rendered="true"></div>\r\n    <div class="footer bili-footer report-wrap-module"></div>\r\n    <script type="text/javascript">\r\n        window.getInternetExplorerVersion = function () {\r\n            var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) {\r\n                var r = navigator.userAgent;\r\n                null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.$1))\r\n            }\r\n            return e\r\n        };\r\n        function getQueryString(e) {\r\n            var r = new RegExp("(^|&)" + e + "=([^&]*)(&|$)"),\r\n                i = window.location.search.substr(1).match(r);\r\n            return null != i ? unescape(i[2]) : null\r\n        }\r\n        window.commentAgent = { seek: t => window.player && window.player.seek(t) };\r\n    <\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\r\n        crossorigin=""><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\r\n        crossorigin=""><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\r\n        crossorigin=""><\/script>\r\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var av_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="video-page-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript">\\r\\n        window.getInternetExplorerVersion = function () {\\r\\n            var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) {\\r\\n                var r = navigator.userAgent;\\r\\n                null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.\$1))\\r\\n            }\\r\\n            return e\\r\\n        };\\r\\n        function getQueryString(e) {\\r\\n            var r = new RegExp("(^|&)" + e + "=([^&]*)(&|\$)"),\\r\\n                i = window.location.search.substr(1).match(r);\\r\\n            return null != i ? unescape(i[2]) : null\\r\\n        }\\r\\n        window.commentAgent = { seek: t => window.player && window.player.seek(t) };\\r\\n    <\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/utils/hook/webpack.ts
 var arr = [];
@@ -3322,7 +3321,7 @@ var _Webpack = class {
               if (code) {
                 code = code.toString();
                 d[1].forEach((e) => code = e(code));
-                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], `(${code})(${pam[0]},${pam[1]},${pam[2]})`);
+                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
               }
             });
           }
@@ -3375,7 +3374,7 @@ function apiViewDetail(aid) {
 
 // src/utils/utils.ts
 function getUrlValue(name) {
-  const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+  const reg = new RegExp("(^|&)" + name + "=([^&]*)(&|\$)", "i");
   const r = window.location.search.substr(1).match(reg);
   if (r != null)
     return decodeURIComponent(r[2]);
@@ -3409,12 +3408,12 @@ var apiBiliplusView = class {
       result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
       result.data.Tags = data.v2_app_api.tag;
       result.data.View = data.v2_app_api;
-      xhrHook(`api.bilibili.com/x/web-interface/view?aid=${this.aid}`, void 0, (res) => {
-        const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
+      xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
+        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
         res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
       }, false);
-      xhrHook(`api.bilibili.com/x/web-interface/archive/stat?aid=${this.aid}`, void 0, (res) => {
-        const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}`;
+      xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
+        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
         res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
       }, false);
       return JSON.parse(JSON.stringify(result));
@@ -3467,12 +3466,12 @@ var apiBiliplusView = class {
       videos: data.list.length
     };
     data.bangumi && (result.data.View.season = data.bangumi);
-    xhrHook(`api.bilibili.com/x/web-interface/view?aid=${this.aid}`, void 0, (res) => {
-      const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify(result.data.View)}}`;
+    xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
+      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
       res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
     }, false);
-    xhrHook(`api.bilibili.com/x/web-interface/archive/stat?aid=${this.aid}`, void 0, (res) => {
-      const t = `{"code": 0,"message":"0","ttl":1,"data":${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}`;
+    xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
+      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
       res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
     }, false);
     return JSON.parse(JSON.stringify(result));
@@ -3480,10 +3479,10 @@ var apiBiliplusView = class {
 };
 
 // src/css/uplist.css
-var uplist_default = ".up-info-m .up-card-box {\r\n    white-space: nowrap;\r\n    overflow: auto;\r\n}\r\n\r\n.up-info-m .up-card {\r\n    display: inline-block;\r\n    margin-top: 10px;\r\n}\r\n\r\n.up-info-m .avatar img {\r\n    cursor: pointer;\r\n    width: 40px;\r\n    height: 40px;\r\n    border-radius: 50%;\r\n}\r\n\r\n.up-info-m .avatar {\r\n    position: relative;\r\n}\r\n\r\n.up-info-m .avatar .info-tag {\r\n    position: absolute;\r\n    background: #fff;\r\n    border: 1px solid #fb7299;\r\n    border-radius: 2px;\r\n    display: inline-block;\r\n    font-size: 12px;\r\n    color: #fb7299;\r\n    padding: 0 3px;\r\n    top: -10px;\r\n    right: -10px;\r\n    white-space: nowrap;\r\n}\r\n\r\n.up-info-m .avatar {\r\n    width: 60px;\r\n    height: 30px;\r\n    display: -ms-flexbox;\r\n    display: flex;\r\n    -ms-flex-pack: center;\r\n    justify-content: center;\r\n    -ms-flex-align: start;\r\n    align-items: flex-start;\r\n}\r\n\r\n.up-info-m .avatar .name-text {\r\n    font-family: PingFangSC-Regular, sans-serif;\r\n    line-height: 30px;\r\n    color: #222;\r\n    word-break: break-all;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\r\n    display: -webkit-box;\r\n    -webkit-line-clamp: 2;\r\n    -webkit-box-orient: vertical;\r\n    white-space: nowrap;\r\n}\r\n\r\n.up-info-m .avatar .name-text.is-vip,\r\n.up-info-m .avatar .name-text:hover {\r\n    color: #fb7299;\r\n}\r\n\r\n.up-info-m .title {\r\n    display: block;\r\n    font-size: 14px;\r\n    margin-right: 80px;\r\n    color: #525659;\r\n    overflow: hidden;\r\n    height: 24px;\r\n    font-weight: 400;\r\n    padding: 8px 0;\r\n}\r\n\r\n.up-card-box::-webkit-scrollbar {\r\n    width: 7px;\r\n    height: 7px;\r\n}\r\n\r\n.up-card-box::-webkit-scrollbar-track {\r\n    border-radius: 4px;\r\n    background-color: #EEE;\r\n}\r\n\r\n.up-card-box::-webkit-scrollbar-thumb {\r\n    border-radius: 4px;\r\n    background-color: #999;\r\n}";
+var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
 
 // src/html/bangumi.html
-var bangumi_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <meta charset="utf-8" />\r\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords"\r\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\r\n        title="哔哩哔哩" />\r\n    <link rel="stylesheet"\r\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\r\n    <style type="text/css">\r\n        .new-entry {\r\n            display: none;\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div class="z-top-container has-menu"></div>\r\n    <div id="app" data-server-rendered="true" class="main-container"></div>\r\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\/script>\r\n    <script>\r\n        window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\r\n    <\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\r\n        crossorigin=""><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\r\n        crossorigin=""><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var bangumi_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\\r\\n    <style type="text/css">\\r\\n        .new-entry {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="app" data-server-rendered="true" class="main-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\\/script>\\r\\n    <script>\\r\\n        window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\\r\\n    <\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/io/api-tag-info.ts
 function apiTagInfo(tag_name) {
@@ -3644,7 +3643,7 @@ async function apiLike(aid, bili_jct, like = false) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     },
-    body: `aid=${aid}&like=${like ? 1 : 2}&csrf=${bili_jct}`,
+    body: \`aid=\${aid}&like=\${like ? 1 : 2}&csrf=\${bili_jct}\`,
     credentials: "include"
   });
   const json = await response.json();
@@ -3692,7 +3691,7 @@ var Like = class extends HTMLSpanElement {
         debug.error("获取点赞情况失败", e);
       });
     }
-    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", `ulike${"3df83fc"}`);
+    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"b5c779c"}\`);
   }
   get likes() {
     return this.number;
@@ -3709,7 +3708,7 @@ var Like = class extends HTMLSpanElement {
     this.innerHTML = (this.liked ? svg.like : svg.dislike) + "点赞 " + unitFormat(this.number);
   }
 };
-customElements.get(`like-${"3df83fc"}`) || customElements.define(`like-${"3df83fc"}`, Like, { extends: "span" });
+customElements.get(\`like-\${"b5c779c"}\`) || customElements.define(\`like-\${"b5c779c"}\`, Like, { extends: "span" });
 
 // src/page/bangumi.ts
 var PageBangumi = class extends Page {
@@ -3721,8 +3720,8 @@ var PageBangumi = class extends Page {
     new Comment(BLOD2);
     window.__Iris__ = true;
     this.pgc = true;
-    location.href.replace(/[sS][sS]\d+/, (d) => this.ssid = Number(d.substring(2)));
-    location.href.replace(/[eE][pP]\d+/, (d) => this.epid = Number(d.substring(2)));
+    location.href.replace(/[sS][sS]\\d+/, (d) => this.ssid = Number(d.substring(2)));
+    location.href.replace(/[eE][pP]\\d+/, (d) => this.epid = Number(d.substring(2)));
     this.updateDom();
     this.recommend();
     this.seasonCount();
@@ -4069,7 +4068,7 @@ var PageBangumi = class extends Page {
     this.epid = t.epId;
     this.th = true;
     xhrHook("api.bilibili.com/pgc/web/season/stat", void 0, (res) => {
-      const t_1 = `{"code": 0,"message":"0","ttl":1,"result":${JSON.stringify(d.stat)}}`;
+      const t_1 = \`{"code": 0,"message":"0","ttl":1,"result":\${JSON.stringify(d.stat)}}\`;
       res.responseType === "json" ? res.response = JSON.parse(t_1) : res.response = res.responseText = t_1;
     }, false);
     this.player();
@@ -4137,7 +4136,7 @@ var toview_default = {
       cid: 41980488,
       copyright: 1,
       ctime: 1528969754,
-      desc: "bilibili moe 2018 动画角色人气大赏日本动画场宣传PV / BGM : No.1 / Editor : @暗猫の祝福  \n\n活动地址 https://www.bilibili.com/moe/2018/jp/home\n\n了解活动最新动态请关注@哔哩哔哩萌战基",
+      desc: "bilibili moe 2018 动画角色人气大赏日本动画场宣传PV / BGM : No.1 / Editor : @暗猫の祝福  \\n\\n活动地址 https://www.bilibili.com/moe/2018/jp/home\\n\\n了解活动最新动态请关注@哔哩哔哩萌战基",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -4207,7 +4206,7 @@ var toview_default = {
       cid: 50012938,
       copyright: 1,
       ctime: 1533734369,
-      desc: "因为是突然心血来潮的作品，所以也没有特意去找无字幕的片源，直接用了带字幕的。所以中间有一段我添加了部分马赛克。\n之前已经做过一次关于（Fate/Stay night 宛若天堂）这一条樱线的视频了，但是上一次毕竟是战斗画面为主，所以这一次我决定给樱做一期她为主角的剪辑视频，希望大家可以喜欢。\nBGM：River Flows in You",
+      desc: "因为是突然心血来潮的作品，所以也没有特意去找无字幕的片源，直接用了带字幕的。所以中间有一段我添加了部分马赛克。\\n之前已经做过一次关于（Fate/Stay night 宛若天堂）这一条樱线的视频了，但是上一次毕竟是战斗画面为主，所以这一次我决定给樱做一期她为主角的剪辑视频，希望大家可以喜欢。\\nBGM：River Flows in You",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -4278,7 +4277,7 @@ var toview_default = {
       cid: 50011454,
       copyright: 1,
       ctime: 1533733783,
-      desc: "尼禄殿下好可爱啊，用了前十集的素材。一共30多个唔嗯，有些不能用，用了好长时间剪素材\n动漫：Fate/EXTRA Last Encore，其实我觉得这番挺好看的，内容也是有点，可能还是和UBW有点差距吧\nBGM：Unity",
+      desc: "尼禄殿下好可爱啊，用了前十集的素材。一共30多个唔嗯，有些不能用，用了好长时间剪素材\\n动漫：Fate/EXTRA Last Encore，其实我觉得这番挺好看的，内容也是有点，可能还是和UBW有点差距吧\\nBGM：Unity",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -4349,7 +4348,7 @@ var toview_default = {
       cid: 49951942,
       copyright: 1,
       ctime: 1533733741,
-      desc: "米娜桑，大家好！这次趁着B萌赶紧做一波应援视频，希望大家喜欢！btw考虑一下投凛哟~\n使用素材: Fate/Grand Order, Fate/Stay Night UBW, Fate/Zero, Fate,/Stay Night HF, Fate/Hollow Ataraxia\n视频类型: AMV/MAD\nBGM【音乐名】: Illuminate\nBGM【音乐人】: Minami",
+      desc: "米娜桑，大家好！这次趁着B萌赶紧做一波应援视频，希望大家喜欢！btw考虑一下投凛哟~\\n使用素材: Fate/Grand Order, Fate/Stay Night UBW, Fate/Zero, Fate,/Stay Night HF, Fate/Hollow Ataraxia\\n视频类型: AMV/MAD\\nBGM【音乐名】: Illuminate\\nBGM【音乐人】: Minami",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -4491,7 +4490,7 @@ var toview_default = {
       cid: 49992801,
       copyright: 1,
       ctime: 1533723329,
-      desc: "救救孩子！！请给咔酱投上一票！！！\n【别问我为什么要用这样的应援我已经彻底放弃剪燃向了_(:з」∠)_】【无cp】\nBGM:\nだってまだまだアバンタイトル—觉得爆豪同学特别可爱的轰君和切岛君x【梶裕贵/增田俊树】",
+      desc: "救救孩子！！请给咔酱投上一票！！！\\n【别问我为什么要用这样的应援我已经彻底放弃剪燃向了_(:з」∠)_】【无cp】\\nBGM:\\nだってまだまだアバンタイトル—觉得爆豪同学特别可爱的轰君和切岛君x【梶裕贵/增田俊树】",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -4562,7 +4561,7 @@ var toview_default = {
       cid: 49986585,
       copyright: 1,
       ctime: 1533724456,
-      desc: "封面源自网络\r\n前方高渣....\r\n使用素材: 我的英雄学院\r\nBGM【音乐名】: Look At Me Now",
+      desc: "封面源自网络\\r\\n前方高渣....\\r\\n使用素材: 我的英雄学院\\r\\nBGM【音乐名】: Look At Me Now",
       dimension: {
         height: 720,
         rotate: 0,
@@ -4633,7 +4632,7 @@ var toview_default = {
       cid: 49983925,
       copyright: 1,
       ctime: 1533719916,
-      desc: "模型：ザビ男：なかむら\n场景：im8225803：SNowly\n动作：sm25937215：ゆり\n镜头：一騎当千(1人用)：うぐいす\nBGM：一騎当千（Luz）\nMME：AutoLuminous4、Diffusion7：そぼろ",
+      desc: "模型：ザビ男：なかむら\\n场景：im8225803：SNowly\\n动作：sm25937215：ゆり\\n镜头：一騎当千(1人用)：うぐいす\\nBGM：一騎当千（Luz）\\nMME：AutoLuminous4、Diffusion7：そぼろ",
       dimension: {
         height: 720,
         rotate: 0,
@@ -4704,7 +4703,7 @@ var toview_default = {
       cid: 49984131,
       copyright: 1,
       ctime: 1533721986,
-      desc: "BGM：skillet--hero\n喜欢的话点个转发，加个关注都是对我最大的支持～",
+      desc: "BGM：skillet--hero\\n喜欢的话点个转发，加个关注都是对我最大的支持～",
       dimension: {
         height: 720,
         rotate: 0,
@@ -4775,7 +4774,7 @@ var toview_default = {
       cid: 49977458,
       copyright: 1,
       ctime: 1533723558,
-      desc: "某不知名萌新up，第一次做mad/amv。做的不好请多指教\nBGM：THERE IS REASON。\n因为我的天谴之力，一共做了4次，第一次没保存重做，第二次出了致命问题重做，第三次电脑死机重做，第四次电脑卡死只保存了一半......但是游戏人生是我top1，剧场版看哭了40分钟，所以还是坚持做完了·-·\n播放量要是没超1w，可能我以后就不会做这种视频了,除非游戏人生出第二季→.→...\n求关注求硬币求推荐求收藏求打赏求转发(๑ • . • ๑)",
+      desc: "某不知名萌新up，第一次做mad/amv。做的不好请多指教\\nBGM：THERE IS REASON。\\n因为我的天谴之力，一共做了4次，第一次没保存重做，第二次出了致命问题重做，第三次电脑死机重做，第四次电脑卡死只保存了一半......但是游戏人生是我top1，剧场版看哭了40分钟，所以还是坚持做完了·-·\\n播放量要是没超1w，可能我以后就不会做这种视频了,除非游戏人生出第二季→.→...\\n求关注求硬币求推荐求收藏求打赏求转发(๑ • . • ๑)",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -4917,7 +4916,7 @@ var toview_default = {
       cid: 49973121,
       copyright: 1,
       ctime: 1533718379,
-      desc: "歌曲：魔法少女小圆OPコネクト -歌手：ClariS（网易云有）\n剪辑软件：PR\n没找到生肉，也没找到歌词字幕，，好气啊。。。。\n总之，2018萌战请多多支持小樱，拜托了！！！",
+      desc: "歌曲：魔法少女小圆OPコネクト -歌手：ClariS（网易云有）\\n剪辑软件：PR\\n没找到生肉，也没找到歌词字幕，，好气啊。。。。\\n总之，2018萌战请多多支持小樱，拜托了！！！",
       dimension: {
         height: 720,
         rotate: 0,
@@ -4988,14 +4987,14 @@ var toview_default = {
       cid: 49966396,
       copyright: 1,
       ctime: 1533715262,
-      desc: "《闪耀之海》\n演唱：染音若蔡\n作词：冰梓yuri\n作曲：甄小熊\nPV：EinsElric\n封面画师：汐洛琪SHIROKI\n\nST声迹配音组《宝石之国》中文配音原创歌。助力宝石之国B萌大人气角色，取得好成绩！\n网易云：https://music.163.com/#/album?id=71806628\n5sing：http://5sing.kugou.com/yc/3652162.html\n\n微博：@瑷珥-染音若蔡",
+      desc: "《闪耀之海》\\n演唱：染音若蔡\\n作词：冰梓yuri\\n作曲：甄小熊\\nPV：EinsElric\\n封面画师：汐洛琪SHIROKI\\n\\nST声迹配音组《宝石之国》中文配音原创歌。助力宝石之国B萌大人气角色，取得好成绩！\\n网易云：https://music.163.com/#/album?id=71806628\\n5sing：http://5sing.kugou.com/yc/3652162.html\\n\\n微博：@瑷珥-染音若蔡",
       dimension: {
         height: 720,
         rotate: 0,
         width: 1280
       },
       duration: 133,
-      dynamic: "B萌记得给宝石们投票哦~！支持请多多点赞收藏~！爱你们~！\nps:配合PV看会感觉到了不一样的东西！\n《闪耀之海》\n演唱：@瑷珥-染音若蔡\n作词：@冰梓yuri\n作曲：甄小熊\nPV：@EinsElric\n封面画师：@汐洛琪SHIROKI\n#宝石之国##染音若蔡##磷叶石##原创歌#",
+      dynamic: "B萌记得给宝石们投票哦~！支持请多多点赞收藏~！爱你们~！\\nps:配合PV看会感觉到了不一样的东西！\\n《闪耀之海》\\n演唱：@瑷珥-染音若蔡\\n作词：@冰梓yuri\\n作曲：甄小熊\\nPV：@EinsElric\\n封面画师：@汐洛琪SHIROKI\\n#宝石之国##染音若蔡##磷叶石##原创歌#",
       mission_id: 10568,
       owner: {
         face: "http://i1.hdslb.com/bfs/face/dc14daced5b61f985759fd931980f43f7605ace1.jpg",
@@ -5059,7 +5058,7 @@ var toview_default = {
       cid: 49967939,
       copyright: 1,
       ctime: 1533715661,
-      desc: "智乃应援视频第二弹终于肝出来了！！由于是两天肝出来的，有一半的镜头有重复，但看点完全是两个看点！希望大家多多支持智乃！！！emmm也希望智乃能比伊莉雅的票高!!\nbgm：光吉猛修 - 天国と地獄",
+      desc: "智乃应援视频第二弹终于肝出来了！！由于是两天肝出来的，有一半的镜头有重复，但看点完全是两个看点！希望大家多多支持智乃！！！emmm也希望智乃能比伊莉雅的票高!!\\nbgm：光吉猛修 - 天国と地獄",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -5130,7 +5129,7 @@ var toview_default = {
       cid: 49964130,
       copyright: 1,
       ctime: 1533715825,
-      desc: "新人渣作，素材和音乐等方面有很大不足，请大家多多见谅，欢迎大家的批评指教。\n封面ID64099009",
+      desc: "新人渣作，素材和音乐等方面有很大不足，请大家多多见谅，欢迎大家的批评指教。\\n封面ID64099009",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -5272,14 +5271,14 @@ var toview_default = {
       cid: 49965171,
       copyright: 1,
       ctime: 1533715229,
-      desc: "主要内容为纳萨力克大坟墓目前登场的领域守护者\nBGM：鏡音レン,mothy - 悪ノ召使\n欢迎加入UP的粉丝群：237213911",
+      desc: "主要内容为纳萨力克大坟墓目前登场的领域守护者\\nBGM：鏡音レン,mothy - 悪ノ召使\\n欢迎加入UP的粉丝群：237213911",
       dimension: {
         height: 720,
         rotate: 0,
         width: 1280
       },
       duration: 299,
-      dynamic: "#不死者之王##骨傲天##Overlord##新星计划#\n主要内容为纳萨力克大坟墓目前登场的领域守护者\nBGM：鏡音レン,mothy - 悪ノ召使\n欢迎加入UP的粉丝群：237213911",
+      dynamic: "#不死者之王##骨傲天##Overlord##新星计划#\\n主要内容为纳萨力克大坟墓目前登场的领域守护者\\nBGM：鏡音レン,mothy - 悪ノ召使\\n欢迎加入UP的粉丝群：237213911",
       mission_id: 10568,
       owner: {
         face: "http://i0.hdslb.com/bfs/face/a4cbc140157251afb969023ada66e6d7b084bf6e.jpg",
@@ -5343,7 +5342,7 @@ var toview_default = {
       cid: 49957386,
       copyright: 1,
       ctime: 1533710501,
-      desc: "·自制，2018b萌日本场贞德应援作品\n·草稿风，渣上色，轻喷……\n·BGM：自伤无色\n·无cp向，请勿ky，一起愉快的食用\n·求硬币，收藏，关注(　´・◡・｀)",
+      desc: "·自制，2018b萌日本场贞德应援作品\\n·草稿风，渣上色，轻喷……\\n·BGM：自伤无色\\n·无cp向，请勿ky，一起愉快的食用\\n·求硬币，收藏，关注(　´・◡・｀)",
       dimension: {
         height: 1072,
         rotate: 0,
@@ -5510,7 +5509,7 @@ var toview_default = {
           duration: 106,
           from: "vupload",
           page: 1,
-          part: "【木之本樱B萌应援】燃向踩点混剪，小樱今天就告诉你什么是魔法少女\\(✨∇✨)\\",
+          part: "【木之本樱B萌应援】燃向踩点混剪，小樱今天就告诉你什么是魔法少女\\\\(✨∇✨)\\\\",
           vid: "",
           weblink: ""
         }
@@ -5556,7 +5555,7 @@ var toview_default = {
       cid: 49952983,
       copyright: 1,
       ctime: 1533709292,
-      desc: "各位好我是冥香。这个不出意外可能是天草在参加本届B萌期间我会做的最后一个应援视频。\r\n这次改成适用持刀的动作费了好长时间……如果觉得效果好，也不用给我投币，请给天草投票xxxxxxxxxxx\r\n\r\n总而言之本周六天草对小太阳的32进16，希望大家支持天草！虽然我也很喜欢小太阳但内战就是这样了！！",
+      desc: "各位好我是冥香。这个不出意外可能是天草在参加本届B萌期间我会做的最后一个应援视频。\\r\\n这次改成适用持刀的动作费了好长时间……如果觉得效果好，也不用给我投币，请给天草投票xxxxxxxxxxx\\r\\n\\r\\n总而言之本周六天草对小太阳的32进16，希望大家支持天草！虽然我也很喜欢小太阳但内战就是这样了！！",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -5627,7 +5626,7 @@ var toview_default = {
       cid: 49951385,
       copyright: 1,
       ctime: 1533707868,
-      desc: "这次做了好长时间哦。\r\n素材：魔法少女伊莉雅雪下的誓言，Fate/Stay Night06版，Fate/Stay Night UBW版，Fate/Stay Night HF版\r\n音乐：Flower Dance",
+      desc: "这次做了好长时间哦。\\r\\n素材：魔法少女伊莉雅雪下的誓言，Fate/Stay Night06版，Fate/Stay Night UBW版，Fate/Stay Night HF版\\r\\n音乐：Flower Dance",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -5698,7 +5697,7 @@ var toview_default = {
       cid: 49946360,
       copyright: 1,
       ctime: 1533705696,
-      desc: "模型：衛宮士郎：ごまもりは流れゆく／遠坂凛、間桐桜、ぐだお：珠華（しゅか）／セイバー：ribbondog／ネロ・クラウディウス：あかね／玉藻の前、ザビ男：なかむら／ザビ子：1010浣／エミヤ、クーフーリン：ちょビ玉／ギルガメッシュ：ひどく泰平化されたオティー\n场景：月面ステージ、月面低軌道ステージ：Tansoku102cm-短足沼地人\n动作/镜头：Thriller：DJRocket\nBGM：Thriller（Michael Jackson）\nMME：Diffusion7：そぼろ",
+      desc: "模型：衛宮士郎：ごまもりは流れゆく／遠坂凛、間桐桜、ぐだお：珠華（しゅか）／セイバー：ribbondog／ネロ・クラウディウス：あかね／玉藻の前、ザビ男：なかむら／ザビ子：1010浣／エミヤ、クーフーリン：ちょビ玉／ギルガメッシュ：ひどく泰平化されたオティー\\n场景：月面ステージ、月面低軌道ステージ：Tansoku102cm-短足沼地人\\n动作/镜头：Thriller：DJRocket\\nBGM：Thriller（Michael Jackson）\\nMME：Diffusion7：そぼろ",
       dimension: {
         height: 720,
         rotate: 0,
@@ -5769,14 +5768,14 @@ var toview_default = {
       cid: 49945412,
       copyright: 1,
       ctime: 1533705933,
-      desc: "视频类型: 其他\n相关题材: OVERLORD；报菜名\n简介: 老骨头：我的那萨里克原来还有说相声的女仆！？\n贯口：相声中常见的表现形式，\n贯是一气呵成，一贯到底的意思。",
+      desc: "视频类型: 其他\\n相关题材: OVERLORD；报菜名\\n简介: 老骨头：我的那萨里克原来还有说相声的女仆！？\\n贯口：相声中常见的表现形式，\\n贯是一气呵成，一贯到底的意思。",
       dimension: {
         height: 1080,
         rotate: 0,
         width: 1920
       },
       duration: 147,
-      dynamic: "视频类型: 其他\n相关题材: OVERLORD；报菜名\n简介: 老骨头：我的那萨里克原来还有说相声的女仆！？\n贯口：相声中常见的表现形式，\n贯是一气呵成，一贯到底的意思。",
+      dynamic: "视频类型: 其他\\n相关题材: OVERLORD；报菜名\\n简介: 老骨头：我的那萨里克原来还有说相声的女仆！？\\n贯口：相声中常见的表现形式，\\n贯是一气呵成，一贯到底的意思。",
       mission_id: 10568,
       owner: {
         face: "http://i2.hdslb.com/bfs/face/0901945fce57e13d89b3d941330ab89a10cd9ebd.jpg",
@@ -5840,14 +5839,14 @@ var toview_default = {
       cid: 49943436,
       copyright: 1,
       ctime: 1533705782,
-      desc: "大家如果观后感觉不错，有劳点个推荐赞一下吧，小透明up主在B站生存艰难，没有推荐就没有播放量，拜托各位了，十分感谢！\n新作指路 ——→ 鬼灯不同造型帅气瞬间，av30505048 ：【踩点高燃】鬼灯：无所不能，瞬间切换！白泽：笑瘫！鬼灯百变造型帅气瞬间剪辑，求推荐哇！\n在av28147879里，白泽被鬼灯一顿狂扁，弹幕和评论中不少老中医粉纷纷表达心疼。为了活命，up主做了新的剪辑。\n这次，换白泽来折腾鬼灯！虐啊——！从头到尾，鬼灯被安排得明明白白。题目为《欲胜鬼灯，惟可用情》。“胜”改为“虐”后，情，就是",
+      desc: "大家如果观后感觉不错，有劳点个推荐赞一下吧，小透明up主在B站生存艰难，没有推荐就没有播放量，拜托各位了，十分感谢！\\n新作指路 ——→ 鬼灯不同造型帅气瞬间，av30505048 ：【踩点高燃】鬼灯：无所不能，瞬间切换！白泽：笑瘫！鬼灯百变造型帅气瞬间剪辑，求推荐哇！\\n在av28147879里，白泽被鬼灯一顿狂扁，弹幕和评论中不少老中医粉纷纷表达心疼。为了活命，up主做了新的剪辑。\\n这次，换白泽来折腾鬼灯！虐啊——！从头到尾，鬼灯被安排得明明白白。题目为《欲胜鬼灯，惟可用情》。“胜”改为“虐”后，情，就是",
       dimension: {
         height: 720,
         rotate: 0,
         width: 1280
       },
       duration: 229,
-      dynamic: "本视频主题：鬼灯可爱~（误......）\n身为一只上亿岁的老神兽，白泽反虐的方式，自然与鬼灯不同。\n鬼灯战力爆表，名贯三界，遇事属他拎得清，总能找到最适宜有效的解决方法。虽然行事和表情令人生怖，但威严下亦有对他人尊重、体恤与守护的心意。\n这样的人物，却反常且别扭地，总和非奸非恶的白泽过不去。\n可能鬼灯自己也没有发觉内心真实的情感吧。\n难以察觉的情感，即本视频主题。\n#鬼灯的冷彻# #白泽# #鬼灯# #Bilibili Moe# #日本场应援2018# #剪辑#",
+      dynamic: "本视频主题：鬼灯可爱~（误......）\\n身为一只上亿岁的老神兽，白泽反虐的方式，自然与鬼灯不同。\\n鬼灯战力爆表，名贯三界，遇事属他拎得清，总能找到最适宜有效的解决方法。虽然行事和表情令人生怖，但威严下亦有对他人尊重、体恤与守护的心意。\\n这样的人物，却反常且别扭地，总和非奸非恶的白泽过不去。\\n可能鬼灯自己也没有发觉内心真实的情感吧。\\n难以察觉的情感，即本视频主题。\\n#鬼灯的冷彻# #白泽# #鬼灯# #Bilibili Moe# #日本场应援2018# #剪辑#",
       mission_id: 10568,
       owner: {
         face: "http://i0.hdslb.com/bfs/face/86d74a90ee6c2b729392bcb9d6d6a954f7f0ae26.jpg",
@@ -5911,7 +5910,7 @@ var toview_default = {
       cid: 49943054,
       copyright: 1,
       ctime: 1533702750,
-      desc: "字幕来源／应援文：半翅雀@半翅雀\n票根来源：UP主自己\n让我们迎接各位刀回家，他们在我们心里是最棒的\n欢迎各位婶婶加入刀剑乱舞B萌应援群\n群号：773458796",
+      desc: "字幕来源／应援文：半翅雀@半翅雀\\n票根来源：UP主自己\\n让我们迎接各位刀回家，他们在我们心里是最棒的\\n欢迎各位婶婶加入刀剑乱舞B萌应援群\\n群号：773458796",
       dimension: {
         height: 720,
         rotate: 0,
@@ -5982,7 +5981,7 @@ var toview_default = {
       cid: 49922234,
       copyright: 1,
       ctime: 1533696555,
-      desc: "番名：《DARLING in the FRANXX》\nBGM:日剧产科医生鸿鸟的主题曲《あなたがここにいて抱きしめることができるなら》    from  miwa\n第二发了，做完就感觉比上次工作量大了很多，很幸运歌不算很难，对我这个萌新比较友好\n喜欢我的视频别忘了点赞，投币，收藏，关注，分享给你的朋友。b萌02加油！02赛高！让这个世界给这个女孩一丝温暖吧！\n敏娜桑！！！多谢了！！！    \n最后祝02在b萌取得好成绩",
+      desc: "番名：《DARLING in the FRANXX》\\nBGM:日剧产科医生鸿鸟的主题曲《あなたがここにいて抱きしめることができるなら》    from  miwa\\n第二发了，做完就感觉比上次工作量大了很多，很幸运歌不算很难，对我这个萌新比较友好\\n喜欢我的视频别忘了点赞，投币，收藏，关注，分享给你的朋友。b萌02加油！02赛高！让这个世界给这个女孩一丝温暖吧！\\n敏娜桑！！！多谢了！！！    \\n最后祝02在b萌取得好成绩",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -6053,7 +6052,7 @@ var toview_default = {
       cid: 49913077,
       copyright: 1,
       ctime: 1533691390,
-      desc: "第一次做amv也是费了一番心血\n从文案 剪辑 后期\n一共花了大概一个星期吧\n其中偷懒过 爆肝过\n苦想过 也欣喜过\n用自己微弱的力量给薇尔莉特应援\n薇尔莉特 冲鸭！！！！！！！！！！！！！",
+      desc: "第一次做amv也是费了一番心血\\n从文案 剪辑 后期\\n一共花了大概一个星期吧\\n其中偷懒过 爆肝过\\n苦想过 也欣喜过\\n用自己微弱的力量给薇尔莉特应援\\n薇尔莉特 冲鸭！！！！！！！！！！！！！",
       dimension: {
         height: 720,
         rotate: 0,
@@ -6195,7 +6194,7 @@ var toview_default = {
       cid: 49912292,
       copyright: 1,
       ctime: 1533687448,
-      desc: "不要收藏，不要硬币，要脸。\r\n啊……太菜了……剪了半天弄了个什么出来……留个黑历史在这儿以后拿来嘲笑一下自己。",
+      desc: "不要收藏，不要硬币，要脸。\\r\\n啊……太菜了……剪了半天弄了个什么出来……留个黑历史在这儿以后拿来嘲笑一下自己。",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -6266,7 +6265,7 @@ var toview_default = {
       cid: 49911644,
       copyright: 1,
       ctime: 1533686451,
-      desc: "8月6日，与人梭哈莓反杀，惜败\r\n素材：DARLING in the FRANXX\r\nBGM：Take me hand  - DAISHI DANCE",
+      desc: "8月6日，与人梭哈莓反杀，惜败\\r\\n素材：DARLING in the FRANXX\\r\\nBGM：Take me hand  - DAISHI DANCE",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -6479,7 +6478,7 @@ var toview_default = {
       cid: 49900181,
       copyright: 1,
       ctime: 1533678023,
-      desc: "做了16天的视频，可是食戟全员已回家，但128强仍然值得骄傲。\n素材：食戟之灵\nBGM：Black Rail\n参考了一个黑契的视频：av3219374，是一个良作",
+      desc: "做了16天的视频，可是食戟全员已回家，但128强仍然值得骄傲。\\n素材：食戟之灵\\nBGM：Black Rail\\n参考了一个黑契的视频：av3219374，是一个良作",
       dimension: {
         height: 720,
         rotate: 0,
@@ -6550,7 +6549,7 @@ var toview_default = {
       cid: 49887724,
       copyright: 1,
       ctime: 1533671812,
-      desc: "BGM:ONE OK ROCK -The beginning\n素材：fate  进击的巨人 一击男  小英雄 \n上一次做的很多小伙伴说不够好,BGM不搭什么的，这次就重新做了一遍，希望大家会喜欢",
+      desc: "BGM:ONE OK ROCK -The beginning\\n素材：fate  进击的巨人 一击男  小英雄 \\n上一次做的很多小伙伴说不够好,BGM不搭什么的，这次就重新做了一遍，希望大家会喜欢",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -6706,7 +6705,7 @@ var toview_default = {
       cid: 49893323,
       copyright: 1,
       ctime: 1533675084,
-      desc: "爆豪胜己，粗中有细\n话不多说，西内为敬\n西内！",
+      desc: "爆豪胜己，粗中有细\\n话不多说，西内为敬\\n西内！",
       dimension: {
         height: 720,
         rotate: 0,
@@ -6990,7 +6989,7 @@ var toview_default = {
       cid: 49886535,
       copyright: 1,
       ctime: 1533669770,
-      desc: "fate全员应援，外加失踪人口回归（｡ò ∀ ó｡）\nBGM：Shot In The Dark",
+      desc: "fate全员应援，外加失踪人口回归（｡ò ∀ ó｡）\\nBGM：Shot In The Dark",
       dimension: {
         height: 2160,
         rotate: 0,
@@ -7061,7 +7060,7 @@ var toview_default = {
       cid: 49883160,
       copyright: 1,
       ctime: 1533667419,
-      desc: "第一次做mad，做的不怎么好，多多包涵。\r\n素材：魔法少女伊莉雅剧场版：雪下的誓言\r\nBGM：ひび割れた世界\r\n封面：https://www.pixiv.net/member_illust.php?mode=medium&illust_id=65608478",
+      desc: "第一次做mad，做的不怎么好，多多包涵。\\r\\n素材：魔法少女伊莉雅剧场版：雪下的誓言\\r\\nBGM：ひび割れた世界\\r\\n封面：https://www.pixiv.net/member_illust.php?mode=medium&illust_id=65608478",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -7132,7 +7131,7 @@ var toview_default = {
       cid: 49900934,
       copyright: 1,
       ctime: 1533675107,
-      desc: "第一次做AMV，估计观感欠佳_(:з」∠)_\r\n算是b萌朱碧和利库的应援视频吧ww\r\n素材：NGNL0（No Game No Life Zero)\r\n           鈴木このみ - There is a reason",
+      desc: "第一次做AMV，估计观感欠佳_(:з」∠)_\\r\\n算是b萌朱碧和利库的应援视频吧ww\\r\\n素材：NGNL0（No Game No Life Zero)\\r\\n           鈴木このみ - There is a reason",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -7217,7 +7216,7 @@ var toview_default = {
       cid: 49880064,
       copyright: 1,
       ctime: 1533666205,
-      desc: "新人初投稿 请多指教\n五战骑主从真好\n\nBGM：浅川悠-《瞬时の涡》（Fate/Stay Night Rider 角色歌）\n素材来源：《Fate/Stay Night[Unlimited Blade Works]》、《Fate/Stay Night[Heaven's Feel I.presage flower]》",
+      desc: "新人初投稿 请多指教\\n五战骑主从真好\\n\\nBGM：浅川悠-《瞬时の涡》（Fate/Stay Night Rider 角色歌）\\n素材来源：《Fate/Stay Night[Unlimited Blade Works]》、《Fate/Stay Night[Heaven's Feel I.presage flower]》",
       dimension: {
         height: 720,
         rotate: 0,
@@ -7359,7 +7358,7 @@ var toview_default = {
       cid: 49876912,
       copyright: 1,
       ctime: 1533666200,
-      desc: "迦勒底加班人员的b萌应援。\n嘛，对上了大狗感觉有点恐怖,也许是在做最后的挣扎也说不定呢。。。。.。\n说起来这是我第一次正经地尝试2d向渲染，我吹爆akon太太的模型wwwww~\nBGM是れをる桑的no title，降了三个半调（降调狂魔就是我了）。\n韦伯子裙子的物理出了点问题咋改也改不好我也很烦恼，稍微忍耐下吧，别刷暂停成功什么的，小心复明失败23333。\n借物表见评论，如果没看见就是你来的太早啦我还没起床。\n另外为了应援9号当天我会发一个小彩蛋，能记住的可以来我的动态看下哦~",
+      desc: "迦勒底加班人员的b萌应援。\\n嘛，对上了大狗感觉有点恐怖,也许是在做最后的挣扎也说不定呢。。。。.。\\n说起来这是我第一次正经地尝试2d向渲染，我吹爆akon太太的模型wwwww~\\nBGM是れをる桑的no title，降了三个半调（降调狂魔就是我了）。\\n韦伯子裙子的物理出了点问题咋改也改不好我也很烦恼，稍微忍耐下吧，别刷暂停成功什么的，小心复明失败23333。\\n借物表见评论，如果没看见就是你来的太早啦我还没起床。\\n另外为了应援9号当天我会发一个小彩蛋，能记住的可以来我的动态看下哦~",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -7430,7 +7429,7 @@ var toview_default = {
       cid: 49877810,
       copyright: 1,
       ctime: 1533666183,
-      desc: "Bilibili Moe,弗兰肯斯坦应援向MMD\nBGM:from Y to Y\nModel:做成参谋\nCamera+Action:Hiramori Amu",
+      desc: "Bilibili Moe,弗兰肯斯坦应援向MMD\\nBGM:from Y to Y\\nModel:做成参谋\\nCamera+Action:Hiramori Amu",
       dimension: {
         height: 720,
         rotate: 0,
@@ -7501,7 +7500,7 @@ var toview_default = {
       cid: 49926392,
       copyright: 1,
       ctime: 1533660829,
-      desc: "BGM:田中井彩智——黄金の辉き\n=\n说到做到。上星期看到B站上架了06版的fate，打鸡血剪辑的……剪到后面遇到不少困难有点摸鱼了，甚至忘了自己最初想通过视频表达什么了，有些粗制滥造，真是对不起（飞歌语气）。\n可能赶不上士郎今天的应援了，但是我喜欢士郎的热情还是不变的（笑），也请大家多多支持士郎咯。",
+      desc: "BGM:田中井彩智——黄金の辉き\\n=\\n说到做到。上星期看到B站上架了06版的fate，打鸡血剪辑的……剪到后面遇到不少困难有点摸鱼了，甚至忘了自己最初想通过视频表达什么了，有些粗制滥造，真是对不起（飞歌语气）。\\n可能赶不上士郎今天的应援了，但是我喜欢士郎的热情还是不变的（笑），也请大家多多支持士郎咯。",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -7572,7 +7571,7 @@ var toview_default = {
       cid: 49868565,
       copyright: 1,
       ctime: 1533657496,
-      desc: "bgm：Old Memory\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n希望有一个小埋那样的妹妹",
+      desc: "bgm：Old Memory\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n\\n希望有一个小埋那样的妹妹",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -7714,7 +7713,7 @@ var toview_default = {
       cid: 49854596,
       copyright: 1,
       ctime: 1533657302,
-      desc: "第一次剪辑这种视频\n所以暂且把开头放出来当预告\n不知道大家感觉怎么样\n评论区说一下，我在正片里改改\n争取赶在十号之前给小樱应援L('ω')┘三└('ω')｣\n\n视频素材：魔卡少女樱clear篇\n音乐素材：认真卖萌么么哒--洛天依（作曲：周存JUSF）",
+      desc: "第一次剪辑这种视频\\n所以暂且把开头放出来当预告\\n不知道大家感觉怎么样\\n评论区说一下，我在正片里改改\\n争取赶在十号之前给小樱应援L('ω')┘三└('ω')｣\\n\\n视频素材：魔卡少女樱clear篇\\n音乐素材：认真卖萌么么哒--洛天依（作曲：周存JUSF）",
       dimension: {
         height: 720,
         rotate: 0,
@@ -7785,7 +7784,7 @@ var toview_default = {
       cid: 49850403,
       copyright: 1,
       ctime: 1533657307,
-      desc: "做MAD之前：这首歌好适合士樱啊，做个MAD试试吧\n为了做MAD去看了HF线生肉后：呜呜呜呜，老虫子你还我樱！qaq\n【BGM：THERE IS A REASON】\n顺便求个关注收藏推荐硬币，你们的支持是我最大的动力！",
+      desc: "做MAD之前：这首歌好适合士樱啊，做个MAD试试吧\\n为了做MAD去看了HF线生肉后：呜呜呜呜，老虫子你还我樱！qaq\\n【BGM：THERE IS A REASON】\\n顺便求个关注收藏推荐硬币，你们的支持是我最大的动力！",
       dimension: {
         height: 720,
         rotate: 0,
@@ -7941,7 +7940,7 @@ var toview_default = {
       cid: 49850685,
       copyright: 1,
       ctime: 1533651391,
-      desc: "关于胜出上学路上的小故事\n尝试做了手书，差点累死我这个手残\n果然还是回去好好学画画吧",
+      desc: "关于胜出上学路上的小故事\\n尝试做了手书，差点累死我这个手残\\n果然还是回去好好学画画吧",
       dimension: {
         height: 576,
         rotate: 0,
@@ -8012,7 +8011,7 @@ var toview_default = {
       cid: 49835843,
       copyright: 1,
       ctime: 1533650863,
-      desc: "末尾有信长三连！\n没纯踩点所以不敢用87k！\n没错我就是那个欠债的后期！\n\nbgm：handclap",
+      desc: "末尾有信长三连！\\n没纯踩点所以不敢用87k！\\n没错我就是那个欠债的后期！\\n\\nbgm：handclap",
       dimension: {
         height: 576,
         rotate: 0,
@@ -8083,14 +8082,14 @@ var toview_default = {
       cid: 49838604,
       copyright: 1,
       ctime: 1533650172,
-      desc: "■ 调教 · 混音 · 字幕：梦落遗廊P\n■ 曲：じん\n■ 編曲：Nhato\n■ 映像：しづ\n \n● 本家 → sm21720819\n● 时隔5个月的稿，鸽了这么久请诸位别把我抓去炖汤……\n● 调教了这首带感曲子来应援阳炎，海选赛只有Konoha通过了，球球你们本战投稿这位小天使一票，让他好歹撑到决赛(´；ω；`)\n● 在niconico也有投稿 → sm33640672 \n● 之前用 IA 翻调的车祸曲 → av20887402",
+      desc: "■ 调教 · 混音 · 字幕：梦落遗廊P\\n■ 曲：じん\\n■ 編曲：Nhato\\n■ 映像：しづ\\n \\n● 本家 → sm21720819\\n● 时隔5个月的稿，鸽了这么久请诸位别把我抓去炖汤……\\n● 调教了这首带感曲子来应援阳炎，海选赛只有Konoha通过了，球球你们本战投稿这位小天使一票，让他好歹撑到决赛(´；ω；\`)\\n● 在niconico也有投稿 → sm33640672 \\n● 之前用 IA 翻调的车祸曲 → av20887402",
       dimension: {
         height: 720,
         rotate: 0,
         width: 1280
       },
       duration: 217,
-      dynamic: "#じん##VOCALOID##阳炎计划#个\n翻调了界外科学，快来听一听ww",
+      dynamic: "#じん##VOCALOID##阳炎计划#个\\n翻调了界外科学，快来听一听ww",
       mission_id: 10568,
       owner: {
         face: "http://i1.hdslb.com/bfs/face/ef2b6e770837ed88f1e02a90f289af18a0f4c42e.jpg",
@@ -8225,7 +8224,7 @@ var toview_default = {
       cid: 213977771,
       copyright: 1,
       ctime: 1533648458,
-      desc: "不希望别人看这个视频啦\n所以呢就悄悄地换了源！\n不删掉视频的原因是会扣硬币w\n\n原简介：\n万恶之源：av17699810\n参考，音频：av20536168",
+      desc: "不希望别人看这个视频啦\\n所以呢就悄悄地换了源！\\n不删掉视频的原因是会扣硬币w\\n\\n原简介：\\n万恶之源：av17699810\\n参考，音频：av20536168",
       dimension: {
         height: 1280,
         rotate: 0,
@@ -8367,7 +8366,7 @@ var toview_default = {
       cid: 49826852,
       copyright: 1,
       ctime: 1533646967,
-      desc: "模型：アストルフォ：すがきれもん\n场景：im8225803：SNowly\n动作/镜头：av25782915：浪潮小汐\n表情：av25782915：閃爍P\nBGM：恋して♥ポプテピピック（牧野由依、渡部优衣）\nMME：AutoLuminous4、Diffusion7：そぼろ",
+      desc: "模型：アストルフォ：すがきれもん\\n场景：im8225803：SNowly\\n动作/镜头：av25782915：浪潮小汐\\n表情：av25782915：閃爍P\\nBGM：恋して♥ポプテピピック（牧野由依、渡部优衣）\\nMME：AutoLuminous4、Diffusion7：そぼろ",
       dimension: {
         height: 720,
         rotate: 0,
@@ -8438,7 +8437,7 @@ var toview_default = {
       cid: 49820005,
       copyright: 1,
       ctime: 1533646283,
-      desc: "话说对导演下手的“家伙”还是挺多的嘛，如：\n库洛牌：消牌、冰牌、迷牌、声牌、地牌、无牌等\n人物：柊泽艾力欧、女占卜师等\n透明牌-包围、冰雹、幻影等\n（还有个破坏知世房子的摇动没加进去）",
+      desc: "话说对导演下手的“家伙”还是挺多的嘛，如：\\n库洛牌：消牌、冰牌、迷牌、声牌、地牌、无牌等\\n人物：柊泽艾力欧、女占卜师等\\n透明牌-包围、冰雹、幻影等\\n（还有个破坏知世房子的摇动没加进去）",
       dimension: {
         height: 720,
         rotate: 0,
@@ -8523,7 +8522,7 @@ var toview_default = {
       cid: 49821087,
       copyright: 1,
       ctime: 1533646295,
-      desc: "一个短小的绿谷小天使应援视频...........\n莺莺燕燕嘤嘤\n新人UP求关注",
+      desc: "一个短小的绿谷小天使应援视频...........\\n莺莺燕燕嘤嘤\\n新人UP求关注",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -8594,7 +8593,7 @@ var toview_default = {
       cid: 49814945,
       copyright: 1,
       ctime: 1533644685,
-      desc: "迦尔纳应援视频，各位一定要去为迦尔纳投票啊，他现在的处境很不好。\n不要三连，只要你们投票。\n十分感谢。",
+      desc: "迦尔纳应援视频，各位一定要去为迦尔纳投票啊，他现在的处境很不好。\\n不要三连，只要你们投票。\\n十分感谢。",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -8665,7 +8664,7 @@ var toview_default = {
       cid: 49813835,
       copyright: 1,
       ctime: 1533643235,
-      desc: "这是在下第一次投稿希望不会出什么问题......也许吧。\n如果问题太多我就重做一次吧。",
+      desc: "这是在下第一次投稿希望不会出什么问题......也许吧。\\n如果问题太多我就重做一次吧。",
       dimension: {
         height: 576,
         rotate: 0,
@@ -8736,7 +8735,7 @@ var toview_default = {
       cid: 49858754,
       copyright: 1,
       ctime: 1533630352,
-      desc: "视频类型: 动画\r\n动漫中那些毁天灭地的炫酷大招",
+      desc: "视频类型: 动画\\r\\n动漫中那些毁天灭地的炫酷大招",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -8877,7 +8876,7 @@ var toview_default = {
       cid: 49803395,
       copyright: 1,
       ctime: 1533639596,
-      desc: "模型：天草四郎時貞：sema／カルナ：ユタカ／シェイクスピア：履物連絡用（準備中）\n背景：sm15356644：kiyo_NoN\n动作/镜头：sm24491916：にもゆに\nBGM：EVERYBODY（Backstreet Boys）\nMME：Diffusion7：そぼろ",
+      desc: "模型：天草四郎時貞：sema／カルナ：ユタカ／シェイクスピア：履物連絡用（準備中）\\n背景：sm15356644：kiyo_NoN\\n动作/镜头：sm24491916：にもゆに\\nBGM：EVERYBODY（Backstreet Boys）\\nMME：Diffusion7：そぼろ",
       dimension: {
         height: 720,
         rotate: 0,
@@ -8948,7 +8947,7 @@ var toview_default = {
       cid: 49795470,
       copyright: 1,
       ctime: 1533634290,
-      desc: "喜欢就点个赞吧 谢谢大家！\nbgm: 菅田将晖《ロングホープ・フィリア》",
+      desc: "喜欢就点个赞吧 谢谢大家！\\nbgm: 菅田将晖《ロングホープ・フィリア》",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9019,7 +9018,7 @@ var toview_default = {
       cid: 49793945,
       copyright: 1,
       ctime: 1533633433,
-      desc: "第一次尝试着做视频，对pr还不是很了解，\n但对于金木。（尽力了）\n做视频不敢有任何懈怠，大家好，新人up猪\n我来啦,希望各位大佬wu喷\nBGM：Angel    saybia\n           透明で透き通って何でも成れそうで    haku",
+      desc: "第一次尝试着做视频，对pr还不是很了解，\\n但对于金木。（尽力了）\\n做视频不敢有任何懈怠，大家好，新人up猪\\n我来啦,希望各位大佬wu喷\\nBGM：Angel    saybia\\n           透明で透き通って何でも成れそうで    haku",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9090,7 +9089,7 @@ var toview_default = {
       cid: 49793120,
       copyright: 1,
       ctime: 1533632587,
-      desc: "模型：ロビン・フッド：切な顔P\n场景：im4179284：切な顔P\n动作：sm29180863：yurie\n镜头：sm29298856：一護牛乳\nBGM：av5451565：云潇翼Seanwing\nMME：Diffusion7：そぼろ",
+      desc: "模型：ロビン・フッド：切な顔P\\n场景：im4179284：切な顔P\\n动作：sm29180863：yurie\\n镜头：sm29298856：一護牛乳\\nBGM：av5451565：云潇翼Seanwing\\nMME：Diffusion7：そぼろ",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9161,7 +9160,7 @@ var toview_default = {
       cid: 49789622,
       copyright: 1,
       ctime: 1533630391,
-      desc: "BGM：Désir——《fate/apocrypha》ED1\n新人up摸鱼出来的第二个视频\n前面一段偷懒了还望谅解（还有一小段用过两次\n喜欢的话就请关注投币推荐收藏一条龙吧=v=",
+      desc: "BGM：Désir——《fate/apocrypha》ED1\\n新人up摸鱼出来的第二个视频\\n前面一段偷懒了还望谅解（还有一小段用过两次\\n喜欢的话就请关注投币推荐收藏一条龙吧=v=",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -9232,7 +9231,7 @@ var toview_default = {
       cid: 49786602,
       copyright: 1,
       ctime: 1533629143,
-      desc: "首先，感谢网易云用户：saberycr他在网易云投稿的游戏人生mad非常棒！给了我很大的灵感，大家可以去看看。\n新人渣作，喜欢的话就点个赞也是好的，谢谢！",
+      desc: "首先，感谢网易云用户：saberycr他在网易云投稿的游戏人生mad非常棒！给了我很大的灵感，大家可以去看看。\\n新人渣作，喜欢的话就点个赞也是好的，谢谢！",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9303,7 +9302,7 @@ var toview_default = {
       cid: 49782315,
       copyright: 1,
       ctime: 1533629243,
-      desc: "大家好我死回来啦.........!\n学会了录屏和一点点简单的剪辑超开心!!!\n炫耀一下vqv。\n大家今天一定要给茶茶投票鸭!!!!!!!!!!!!!\n\nbgm:\n無邪気な冒険心——Goose house\n3/4——Goose house\n18歲——Goose house",
+      desc: "大家好我死回来啦.........!\\n学会了录屏和一点点简单的剪辑超开心!!!\\n炫耀一下vqv。\\n大家今天一定要给茶茶投票鸭!!!!!!!!!!!!!\\n\\nbgm:\\n無邪気な冒険心——Goose house\\n3/4——Goose house\\n18歲——Goose house",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9374,7 +9373,7 @@ var toview_default = {
       cid: 49783840,
       copyright: 1,
       ctime: 1533628244,
-      desc: "休息了2周 再次回来做视频了\nBGM:一刀缭乱-六花\n希望大家喜欢 也希望fate在萌战里获得好成绩 也希望大家鬼岛活动加油！",
+      desc: "休息了2周 再次回来做视频了\\nBGM:一刀缭乱-六花\\n希望大家喜欢 也希望fate在萌战里获得好成绩 也希望大家鬼岛活动加油！",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -9445,7 +9444,7 @@ var toview_default = {
       cid: 49800159,
       copyright: 1,
       ctime: 1533623268,
-      desc: "应援视频。\n对不起来晚了，如果这样就能让故事停留在P1就好了。\n（虽然我觉得P2很好）\n希望休比和助手都能拿个好名次~",
+      desc: "应援视频。\\n对不起来晚了，如果这样就能让故事停留在P1就好了。\\n（虽然我觉得P2很好）\\n希望休比和助手都能拿个好名次~",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9530,7 +9529,7 @@ var toview_default = {
       cid: 49781520,
       copyright: 1,
       ctime: 1533621539,
-      desc: "模型：エミヤ：ちょビ玉\n场景：im8147346：鯖缶359\n动作：sm24923974：遊風稜\n口型：sm32918418：しわこ\n镜头：sm26631976：足屋ｺｰﾋｰ\nMME：Diffusion7：そぼろ\nBGM：Beat It（Michael Jackson）",
+      desc: "模型：エミヤ：ちょビ玉\\n场景：im8147346：鯖缶359\\n动作：sm24923974：遊風稜\\n口型：sm32918418：しわこ\\n镜头：sm26631976：足屋ｺｰﾋｰ\\nMME：Diffusion7：そぼろ\\nBGM：Beat It（Michael Jackson）",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9601,7 +9600,7 @@ var toview_default = {
       cid: 49769513,
       copyright: 1,
       ctime: 1533622564,
-      desc: "第三期预告（水视频）\n我怀疑我们能不能继续了（失望）赞好少，感觉大家不是很喜欢我这个系列\n真的如果收藏没有达到200我们打算做其他简单的了",
+      desc: "第三期预告（水视频）\\n我怀疑我们能不能继续了（失望）赞好少，感觉大家不是很喜欢我这个系列\\n真的如果收藏没有达到200我们打算做其他简单的了",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -9672,7 +9671,7 @@ var toview_default = {
       cid: 49775961,
       copyright: 1,
       ctime: 1533620802,
-      desc: "因为第一次传失误了所以删除了...对此感到抱歉...\n明天的帮派火拼请各位务必投zero two一票\nBGM：い〜やい〜やい〜や（算了~算了~算了~）",
+      desc: "因为第一次传失误了所以删除了...对此感到抱歉...\\n明天的帮派火拼请各位务必投zero two一票\\nBGM：い〜やい〜やい〜や（算了~算了~算了~）",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -9743,7 +9742,7 @@ var toview_default = {
       cid: 49766687,
       copyright: 1,
       ctime: 1533614675,
-      desc: "bgm:彼女は旅に出る\n我的英雄学院实在是，太太太太太太太太好看了！！！！吹爆我英！！！真的具TM好看，我永远爱着绿谷小天使/咔酱/轰总/茶爷/欧叔/渡我/...(省略)，真的，我英真的很棒，b萌轰总下一场和小天使对，自己人打自己人，咔酱对闪闪，简直死亡分组）\nqaq手书里的绿毛是up我了，刚开始因为画风，然后一直没看，我朋友安利过我很多次了，后面是没东西看了，然后去看我英，然后 出不来了！！\n此生无悔入我英，祝小伙伴们食用愉快【比心】",
+      desc: "bgm:彼女は旅に出る\\n我的英雄学院实在是，太太太太太太太太好看了！！！！吹爆我英！！！真的具TM好看，我永远爱着绿谷小天使/咔酱/轰总/茶爷/欧叔/渡我/...(省略)，真的，我英真的很棒，b萌轰总下一场和小天使对，自己人打自己人，咔酱对闪闪，简直死亡分组）\\nqaq手书里的绿毛是up我了，刚开始因为画风，然后一直没看，我朋友安利过我很多次了，后面是没东西看了，然后去看我英，然后 出不来了！！\\n此生无悔入我英，祝小伙伴们食用愉快【比心】",
       dimension: {
         height: 720,
         rotate: 0,
@@ -9885,7 +9884,7 @@ var toview_default = {
       cid: 49764773,
       copyright: 1,
       ctime: 1533613174,
-      desc: "ooc警告！！！！！！！！！！\n开头声音不知道为什么爆炸了，小心啊（虽然我觉得没人看简介）\n本家手书：sm7598520\n是半成品（但是不会画完，因为懒）\n作品是闪恩向向，伊斯塔凛厨慎入",
+      desc: "ooc警告！！！！！！！！！！\\n开头声音不知道为什么爆炸了，小心啊（虽然我觉得没人看简介）\\n本家手书：sm7598520\\n是半成品（但是不会画完，因为懒）\\n作品是闪恩向向，伊斯塔凛厨慎入",
       dimension: {
         height: 704,
         rotate: 0,
@@ -9956,7 +9955,7 @@ var toview_default = {
       cid: 49763239,
       copyright: 1,
       ctime: 1533613312,
-      desc: "原图作者：@micsu3_3   \n一时兴起录的勾线视频 \n因为我就是被这张图拉入闪恩 就当给闪闪应援了\nBGM发在弹幕里   \n作者大大只在图里做了签名 但是微博p站都找不到了\n有人知道求发我一下",
+      desc: "原图作者：@micsu3_3   \\n一时兴起录的勾线视频 \\n因为我就是被这张图拉入闪恩 就当给闪闪应援了\\nBGM发在弹幕里   \\n作者大大只在图里做了签名 但是微博p站都找不到了\\n有人知道求发我一下",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10027,7 +10026,7 @@ var toview_default = {
       cid: 49760343,
       copyright: 1,
       ctime: 1533610523,
-      desc: "素材 DARLING in the FRANXX\nBGM lie 三无MarBlue\n02应援 希望大家多多支持02",
+      desc: "素材 DARLING in the FRANXX\\nBGM lie 三无MarBlue\\n02应援 希望大家多多支持02",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10098,7 +10097,7 @@ var toview_default = {
       cid: 49753999,
       copyright: 1,
       ctime: 1533609970,
-      desc: "为02和广主席疯狂打call！\n封面pixiv画师：星晓吻",
+      desc: "为02和广主席疯狂打call！\\n封面pixiv画师：星晓吻",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10240,7 +10239,7 @@ var toview_default = {
       cid: 49746204,
       copyright: 1,
       ctime: 1533603953,
-      desc: "借物表：\nmodel:Kei\nmotion:srs\ncamera:aokana\nstage:hazi，溯北，怪獣対若大将P，kotami，RedialC\nmme:角砂糖，下っ腹P，XDOF，Diffusion7，SSAO\nmusic:無情",
+      desc: "借物表：\\nmodel:Kei\\nmotion:srs\\ncamera:aokana\\nstage:hazi，溯北，怪獣対若大将P，kotami，RedialC\\nmme:角砂糖，下っ腹P，XDOF，Diffusion7，SSAO\\nmusic:無情",
       dimension: {
         height: 720,
         rotate: 0,
@@ -10311,14 +10310,14 @@ var toview_default = {
       cid: 49751276,
       copyright: 1,
       ctime: 1533606982,
-      desc: "主要内容为管家助理艾克雷亚·艾克雷尔·艾伊克雷亚\nBGM：ほぼ日P - 家に帰ると妻が必ず死んだふりをしています\n欢迎加入UP的粉丝群：237213911",
+      desc: "主要内容为管家助理艾克雷亚·艾克雷尔·艾伊克雷亚\\nBGM：ほぼ日P - 家に帰ると妻が必ず死んだふりをしています\\n欢迎加入UP的粉丝群：237213911",
       dimension: {
         height: 720,
         rotate: 0,
         width: 1280
       },
       duration: 163,
-      dynamic: "#不死者之王##骨傲天##Overlord##新星计划#\n主要内容为管家助理艾克雷亚·艾克雷尔·艾伊克雷亚\nBGM：ほぼ日P - 家に帰ると妻が必ず死んだふりをしています\n欢迎加入UP的粉丝群：237213911",
+      dynamic: "#不死者之王##骨傲天##Overlord##新星计划#\\n主要内容为管家助理艾克雷亚·艾克雷尔·艾伊克雷亚\\nBGM：ほぼ日P - 家に帰ると妻が必ず死んだふりをしています\\n欢迎加入UP的粉丝群：237213911",
       mission_id: 10568,
       owner: {
         face: "http://i0.hdslb.com/bfs/face/a4cbc140157251afb969023ada66e6d7b084bf6e.jpg",
@@ -10382,7 +10381,7 @@ var toview_default = {
       cid: 49851722,
       copyright: 1,
       ctime: 1533607036,
-      desc: "又一个积压了一个多月的视频，花了两天时间憋出来。\n（才刚用pr的新人啥也不会）\n很遗憾爱酱的B萌已经落幕了\n但他的留下反叛精神与钢铁的意志永远不会消失\n献给伟大的起义领袖，斯巴达克斯\n（中间部分已3倍速快进，需要也可跳至25:35继续食用）",
+      desc: "又一个积压了一个多月的视频，花了两天时间憋出来。\\n（才刚用pr的新人啥也不会）\\n很遗憾爱酱的B萌已经落幕了\\n但他的留下反叛精神与钢铁的意志永远不会消失\\n献给伟大的起义领袖，斯巴达克斯\\n（中间部分已3倍速快进，需要也可跳至25:35继续食用）",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10453,7 +10452,7 @@ var toview_default = {
       cid: 78023888,
       copyright: 1,
       ctime: 1533603974,
-      desc: "bgm:lemon\n稍微小改了一下,虽然感觉还有点问题,但之后也没有大改的打算了",
+      desc: "bgm:lemon\\n稍微小改了一下,虽然感觉还有点问题,但之后也没有大改的打算了",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10524,7 +10523,7 @@ var toview_default = {
       cid: 49737324,
       copyright: 1,
       ctime: 1533603986,
-      desc: "高三那年看了游戏人生zero，过了很久才释然...\n“我其实不想给任何人的...喜欢里克的心情，不想和他分开的心情，毕竟很害羞啊！从里克那得到的多到数不清的系统错误，这些都是只属于休比自己的东西，现在要把这些交给你们，这意味着什么？你们给我明白啊！笨蛋！别在那啰里啰唆！给我把这份思念继承下去啊！\n给我把应援票投给休比啊！w\n给我把关注和硬币投up主啊！（误）“\n休比，祝你终有一天能与自己重要的人重逢.\n\n封面截自BD  0：55：56\nbgm：befall（崩三女王降临印象曲）",
+      desc: "高三那年看了游戏人生zero，过了很久才释然...\\n“我其实不想给任何人的...喜欢里克的心情，不想和他分开的心情，毕竟很害羞啊！从里克那得到的多到数不清的系统错误，这些都是只属于休比自己的东西，现在要把这些交给你们，这意味着什么？你们给我明白啊！笨蛋！别在那啰里啰唆！给我把这份思念继承下去啊！\\n给我把应援票投给休比啊！w\\n给我把关注和硬币投up主啊！（误）“\\n休比，祝你终有一天能与自己重要的人重逢.\\n\\n封面截自BD  0：55：56\\nbgm：befall（崩三女王降临印象曲）",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10595,7 +10594,7 @@ var toview_default = {
       cid: 49738002,
       copyright: 1,
       ctime: 1533603990,
-      desc: "第一次剪视频，完全用爱发电爆肝赶在凛凛本战的时候做完，做得不好的地方还请大家包容啦。\n他们俩真好嘤嘤嘤，凛凛、哈鲁冲鸭！\n事先声明，里面混有玻璃渣，但结局绝对是甜的！绝对！！",
+      desc: "第一次剪视频，完全用爱发电爆肝赶在凛凛本战的时候做完，做得不好的地方还请大家包容啦。\\n他们俩真好嘤嘤嘤，凛凛、哈鲁冲鸭！\\n事先声明，里面混有玻璃渣，但结局绝对是甜的！绝对！！",
       dimension: {
         height: 720,
         rotate: 0,
@@ -10666,14 +10665,14 @@ var toview_default = {
       cid: 49732205,
       copyright: 1,
       ctime: 1533604e3,
-      desc: "永不放弃努力前行 是想抓住梦想的翅膀\n时至今日 想要传达的心愿无法按捺 在心中迸发\n动摇的心或有迷茫 即使如此也要向前\n相信会有风停雨散\n向着明天前行  得以遇见Sunshine!\n昂首便是万里晴空",
+      desc: "永不放弃努力前行 是想抓住梦想的翅膀\\n时至今日 想要传达的心愿无法按捺 在心中迸发\\n动摇的心或有迷茫 即使如此也要向前\\n相信会有风停雨散\\n向着明天前行  得以遇见Sunshine!\\n昂首便是万里晴空",
       dimension: {
         height: 1080,
         rotate: 0,
         width: 1920
       },
       duration: 282,
-      dynamic: "#日本场应援2018##MAD.AMV##MAD##Aqours##lovelive#\n永不放弃努力前行 是想抓住梦想的翅膀\n时至今日 想要传达的心愿无法按捺 在心中迸发\n动摇的心或有迷茫 即使如此也要向前\n相信会有风停雨散\n向着明天前行  得以遇见Sunshine!\n昂首便是万里晴空",
+      dynamic: "#日本场应援2018##MAD.AMV##MAD##Aqours##lovelive#\\n永不放弃努力前行 是想抓住梦想的翅膀\\n时至今日 想要传达的心愿无法按捺 在心中迸发\\n动摇的心或有迷茫 即使如此也要向前\\n相信会有风停雨散\\n向着明天前行  得以遇见Sunshine!\\n昂首便是万里晴空",
       mission_id: 10568,
       owner: {
         face: "http://i0.hdslb.com/bfs/face/0630cf1774548a15fe62fe93de01f76f91232dbb.jpg",
@@ -10808,7 +10807,7 @@ var toview_default = {
       cid: 49727323,
       copyright: 1,
       ctime: 1533604007,
-      desc: "尝试去讲一个机器人少女拥有心的故事，于是选用了镜音的这首歌曲，同时和花たん的翻唱结合做音频处理，试图从休比的个体视角，而不是故事的全局视角，去表现少女从“无心”到拥有“心”的升华过程。\n\n素材：no game no life 0（游戏人生剧场版）\nBGM：ココロ（镜音+花たん,UP主剪辑版）",
+      desc: "尝试去讲一个机器人少女拥有心的故事，于是选用了镜音的这首歌曲，同时和花たん的翻唱结合做音频处理，试图从休比的个体视角，而不是故事的全局视角，去表现少女从“无心”到拥有“心”的升华过程。\\n\\n素材：no game no life 0（游戏人生剧场版）\\nBGM：ココロ（镜音+花たん,UP主剪辑版）",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10879,7 +10878,7 @@ var toview_default = {
       cid: 49728720,
       copyright: 1,
       ctime: 1533609142,
-      desc: '青叶可真是个罪孽深重的女人，没有青叶看我要死了("▔□▔)/\n请大家为青叶投上宝贵的一票！！\nbgm：恋爱循环香菜版',
+      desc: '青叶可真是个罪孽深重的女人，没有青叶看我要死了("▔□▔)/\\n请大家为青叶投上宝贵的一票！！\\nbgm：恋爱循环香菜版',
       dimension: {
         height: 1080,
         rotate: 0,
@@ -10950,7 +10949,7 @@ var toview_default = {
       cid: 50233770,
       copyright: 1,
       ctime: 1533604016,
-      desc: "自制，借物表见视频内\n摸鱼，这次算填完一个坑，于是顺便把它当做了应援视频，虽然感觉发的时间有点微妙\n很喜欢这首歌的动作数据，感觉和波特莫名契合，很可爱",
+      desc: "自制，借物表见视频内\\n摸鱼，这次算填完一个坑，于是顺便把它当做了应援视频，虽然感觉发的时间有点微妙\\n很喜欢这首歌的动作数据，感觉和波特莫名契合，很可爱",
       dimension: {
         height: 768,
         rotate: 0,
@@ -11021,7 +11020,7 @@ var toview_default = {
       cid: 49726539,
       copyright: 1,
       ctime: 1533604019,
-      desc: "=-=想哭了，感觉莫名对不到节奏\n但总之是吧之前的遗憾略微弥补了一下（真的是略微）哭\n因为里克违背了誓约，所以他注定要失去一切（哭）\nMAD很一般，不知道是做的烂还是审美疲劳了（我觉得是做的烂）\n请审核大佬放过~呜呜呜",
+      desc: "=-=想哭了，感觉莫名对不到节奏\\n但总之是吧之前的遗憾略微弥补了一下（真的是略微）哭\\n因为里克违背了誓约，所以他注定要失去一切（哭）\\nMAD很一般，不知道是做的烂还是审美疲劳了（我觉得是做的烂）\\n请审核大佬放过~呜呜呜",
       dimension: {
         height: 1080,
         rotate: 0,
@@ -11234,7 +11233,7 @@ var toview_default = {
       cid: 49719266,
       copyright: 1,
       ctime: 1533604035,
-      desc: "原作：《孤独的巡礼/孤独な巡礼》\n出自作品：Fate/Stay Night\n作者：川井宪次\n演奏乐器：钢琴/小提琴\nSTAFF：钢琴/小提琴/COS/后期：Kino\n终于翻了自己从刚入fate坑就特别喜欢的这首歌~！\n一人全役了整首歌，有许多不足，还请各位dalao们指正~\n一人制作辛苦，如果喜欢希望能给点个赞啦~比心(๑•̀ㅁ•́ฅ)\n（原声乐器的录音好蓝瘦QWQ）\n这次试了远坂凛在Fate/Grand Order中的概念礼装元素转换的COS，凛酱赛高！我永远喜欢远坂凛.JPG \n（虽然这是Saber的",
+      desc: "原作：《孤独的巡礼/孤独な巡礼》\\n出自作品：Fate/Stay Night\\n作者：川井宪次\\n演奏乐器：钢琴/小提琴\\nSTAFF：钢琴/小提琴/COS/后期：Kino\\n终于翻了自己从刚入fate坑就特别喜欢的这首歌~！\\n一人全役了整首歌，有许多不足，还请各位dalao们指正~\\n一人制作辛苦，如果喜欢希望能给点个赞啦~比心(๑•̀ㅁ•́ฅ)\\n（原声乐器的录音好蓝瘦QWQ）\\n这次试了远坂凛在Fate/Grand Order中的概念礼装元素转换的COS，凛酱赛高！我永远喜欢远坂凛.JPG \\n（虽然这是Saber的",
       dimension: {
         height: 480,
         rotate: 0,
@@ -11348,7 +11347,7 @@ var PageAV = class extends Page {
   constructor(BLOD2) {
     super(av_default);
     this.BLOD = BLOD2;
-    location.href.replace(/av\d+/i, (d) => this.aid = d.slice(2));
+    location.href.replace(/av\\d+/i, (d) => this.aid = d.slice(2));
     new Comment(BLOD2);
     this.like = new Like(this.BLOD);
     propertyHook(window, "__INITIAL_STATE__", void 0);
@@ -11386,16 +11385,16 @@ var PageAV = class extends Page {
     webpackHook(717, 660, (code) => code.replace('tag/"+t.info.tag_id+"/?pagetype=videopage', 'topic/"+t.info.tag_id+"/?pagetype=videopage'));
   }
   menuConfig() {
-    webpackHook(717, 100, (code) => code.replace(/MenuConfig[\S\s]+?LiveMenuConfig/, `MenuConfig=${sort_default},e.LiveMenuConfig`));
+    webpackHook(717, 100, (code) => code.replace(/MenuConfig[\\S\\s]+?LiveMenuConfig/, \`MenuConfig=\${sort_default},e.LiveMenuConfig\`));
   }
   ancientHeader() {
-    webpackHook(717, 609, () => `()=>{}`);
+    webpackHook(717, 609, () => \`()=>{}\`);
   }
   hyperLink() {
-    webpackHook(717, 2, (code) => code.replace("av$1</a>')", `av$1</a>').replace(/(?!<a[^>]*>)cv([0-9]+)(?![^<]*<\\/a>)/ig, '<a href="//www.bilibili.com/read/cv$1/" target="_blank" data-view="$1">cv$1</a>').replace(/(?!<a[^>]*>)(bv1)(\\w{9})(?![^<]*<\\/a>)/ig, '<a href="//www.bilibili.com/video/bv1$2/" target="_blank">$1$2</a>')`).replace("http://acg.tv/sm", "https://www.nicovideo.jp/watch/sm"));
+    webpackHook(717, 2, (code) => code.replace("av\$1</a>')", \`av\$1</a>').replace(/(?!<a[^>]*>)cv([0-9]+)(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/read/cv\$1/" target="_blank" data-view="\$1">cv\$1</a>').replace(/(?!<a[^>]*>)(bv1)(\\\\w{9})(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/video/bv1\$2/" target="_blank">\$1\$2</a>')\`).replace("http://acg.tv/sm", "https://www.nicovideo.jp/watch/sm"));
   }
   embedPlayer() {
-    webpackHook(717, 286, (code) => code.replace('e("setVideoData",t)', `e("setVideoData",t);$("#bofqi").attr("id","__bofqi").html('<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>');new Function('EmbedPlayer',t.embedPlayer)(window.EmbedPlayer);`));
+    webpackHook(717, 286, (code) => code.replace('e("setVideoData",t)', \`e("setVideoData",t);\$("#bofqi").attr("id","__bofqi").html('<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>');new Function('EmbedPlayer',t.embedPlayer)(window.EmbedPlayer);\`));
   }
   elecShow() {
     if (this.BLOD.status.elecShow) {
@@ -11436,16 +11435,16 @@ var PageAV = class extends Page {
   }
   async getVideoInfo(callback) {
     try {
-      const data = [`av${this.aid}可能无效，尝试其他接口~`];
+      const data = [\`av\${this.aid}可能无效，尝试其他接口~\`];
       const toast = this.BLOD.toast.toast(0, "info", ...data);
       apiArticleCards({ av: this.aid }).then((d) => {
-        if (d[`av${this.aid}`]) {
-          if (d[`av${this.aid}`].redirect_url) {
-            data.push(`bangumi重定向：${d[`av${this.aid}`].redirect_url}`);
+        if (d[\`av\${this.aid}\`]) {
+          if (d[\`av\${this.aid}\`].redirect_url) {
+            data.push(\`bangumi重定向：\${d[\`av\${this.aid}\`].redirect_url}\`);
             toast.data = data;
             toast.type = "warning";
             callback(new ApiViewDetail());
-            this.BLOD.urlCleaner.updateLocation(d[`av${this.aid}`].redirect_url);
+            this.BLOD.urlCleaner.updateLocation(d[\`av\${this.aid}\`].redirect_url);
             new PageBangumi(this.BLOD);
             this.destroy = true;
             return;
@@ -11453,7 +11452,7 @@ var PageAV = class extends Page {
         }
         new apiBiliplusView(this.aid).toDetail().then((d2) => {
           if (d2?.data.View.season) {
-            data.push(`bangumi重定向：${d2.data.View.season.ogv_play_url}`);
+            data.push(\`bangumi重定向：\${d2.data.View.season.ogv_play_url}\`);
             toast.data = data;
             toast.type = "warning";
             d2.data.View.season = void 0;
@@ -11485,15 +11484,15 @@ var PageAV = class extends Page {
     poll(() => document.querySelector("#v_upinfo"), (node) => {
       let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
       fl = staff.reduce((s, d) => {
-        s = s + `<div class="up-card">
-                    <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="avatar">
-                    <img src="${d.face}@48w_48h.webp" /><!---->
-                    <span class="info-tag">${d.title}</span><!----></a>
+        s = s + \`<div class="up-card">
+                    <a href="//space.bilibili.com/\${d.mid}" data-usercard-mid="\${d.mid}" target="_blank" class="avatar">
+                    <img src="\${d.face}@48w_48h.webp" /><!---->
+                    <span class="info-tag">\${d.title}</span><!----></a>
                     <div class="avatar">
-                    <a href="//space.bilibili.com/${d.mid}" data-usercard-mid="${d.mid}" target="_blank" class="${d.vip && d.vip.status ? "name-text is-vip" : "name-text"}">${d.name}</a>
-                    </div></div>`;
+                    <a href="//space.bilibili.com/\${d.mid}" data-usercard-mid="\${d.mid}" target="_blank" class="\${d.vip && d.vip.status ? "name-text is-vip" : "name-text"}">\${d.name}</a>
+                    </div></div>\`;
         return s;
-      }, fl) + `</div>`;
+      }, fl) + \`</div>\`;
       node.innerHTML = fl;
       addCss(uplist_default, "up-list");
     });
@@ -11542,7 +11541,7 @@ var PageAV = class extends Page {
     Player.addModifyArgument((args) => {
       if (this.destroy)
         return;
-      const obj = urlObj(`?${args[2]}`);
+      const obj = urlObj(\`?\${args[2]}\`);
       obj.playlist = JSON.stringify({ code: 0, data: toview_default, message: "0", ttl: 1 });
       args[2] = objUrl("", obj);
     });
@@ -11554,16 +11553,16 @@ var PageAV = class extends Page {
       return Reflect.deleteProperty(window, "callAppointPart");
     const vue = document.querySelector("#app")?.__vue__;
     if (vue) {
-      vue.$store.state.aid = state.aid;
+      vue.\$store.state.aid = state.aid;
       apiViewDetail(state.aid).then((d) => {
         vue.setVideoData(d.View);
         document.querySelector("#recommend_report")?.__vue__.init(d.Related);
-        document.querySelector("#v_tag").__vue__.$data.tags = d.Tags;
+        document.querySelector("#v_tag").__vue__.\$data.tags = d.Tags;
         this.BLOD.videoInfo.aidDatail(d.View);
       }).catch((e) => {
         this.BLOD.toast.error("更新视频信息失败", e)();
       }).finally(() => {
-        history.pushState(history.state, "", `/video/av${state.aid}`);
+        history.pushState(history.state, "", \`/video/av\${state.aid}\`);
       });
     }
   };
@@ -11588,7 +11587,7 @@ var PageAV = class extends Page {
 };
 
 // src/html/watchlater.html
-var watchlater_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <meta charset="utf-8" />\r\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />\r\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\r\n        title="哔哩哔哩" />\r\n    <link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css" />\r\n    <link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css" />\r\n    <link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css"\r\n        rel="stylesheet" />\r\n    <style type="text/css">\r\n        #bofqi .player {\r\n            width: 980px;\r\n            height: 620px;\r\n            display: block;\r\n        }\r\n\r\n        @media screen and (min-width:1400px) {\r\n            #bofqi .player {\r\n                width: 1160px;\r\n                height: 720px\r\n            }\r\n        }\r\n\r\n        /* 修正稍后再看迷你播放器样式 */\r\n        .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {\r\n            top: 30px;\r\n            height: 240px;\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div class="z-top-container has-menu"></div>\r\n    <div id="viewlater-app">\r\n        <app></app>\r\n    </div>\r\n    <div class="footer bili-footer"></div>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var watchlater_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css" />\\r\\n    <link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n\\r\\n        /* 修正稍后再看迷你播放器样式 */\\r\\n        .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {\\r\\n            top: 30px;\\r\\n            height: 240px;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="viewlater-app">\\r\\n        <app></app>\\r\\n    </div>\\r\\n    <div class="footer bili-footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/watchalter.ts
 var PageWatchlater = class extends Page {
@@ -11633,7 +11632,7 @@ var PageWatchlater = class extends Page {
   }
   living() {
     xhrHook("api.live.bilibili.com/bili/living_v2/", void 0, (r) => {
-      r.response = r.responseText = ` ${r.response}`;
+      r.response = r.responseText = \` \${r.response}\`;
     }, false);
   }
   commentAgent() {
@@ -11642,7 +11641,7 @@ var PageWatchlater = class extends Page {
 };
 
 // src/html/playlist.html
-var playlist_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\r\n    <meta charset="utf-8" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\r\n    <meta charset="utf-8" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\r\n    <link\r\n        href="//s1.hdslb.com/bfs/static/jinkela/playlist-video/css/playlist_video.0.87292febba67b03f65d05c15d03e325d9db4f56a.css"\r\n        rel="stylesheet" />\r\n    <style type="text/css">\r\n        #bofqi .player {\r\n            width: 980px;\r\n            height: 620px;\r\n            display: block;\r\n        }\r\n\r\n        @media screen and (min-width:1400px) {\r\n            #bofqi .player {\r\n                width: 1160px;\r\n                height: 720px\r\n            }\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div id="playlist-video-app"></div>\r\n    <div class="footer bili-footer report-wrap-module"></div>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\/script>\r\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var playlist_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta charset="utf-8" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <meta charset="utf-8" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <link\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/playlist-video/css/playlist_video.0.87292febba67b03f65d05c15d03e325d9db4f56a.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div id="playlist-video-app"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/playlist-video/1.playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/playlist-video/playlist_video.87292febba67b03f65d05c15d03e325d9db4f56a.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/playlist.ts
 var PagePlaylist = class extends Page {
@@ -11668,7 +11667,7 @@ var PagePlaylist = class extends Page {
   like;
   init() {
     this.isPl = Boolean(this.BLOD.path[5].startsWith("pl"));
-    this.BLOD.path[5].replace(/\d+/, (d) => this.pl = d);
+    this.BLOD.path[5].replace(/\\d+/, (d) => this.pl = d);
     if (this.route.business) {
       switch (this.route.business) {
         case "space":
@@ -11690,12 +11689,12 @@ var PagePlaylist = class extends Page {
           this.type = 3;
       }
     }
-    this.isPl || this.BLOD.urlCleaner.updateLocation(objUrl(`https://www.bilibili.com/playlist/video/pl${this.pl}`, this.route));
+    this.isPl || this.BLOD.urlCleaner.updateLocation(objUrl(\`https://www.bilibili.com/playlist/video/pl\${this.pl}\`, this.route));
   }
   EmbedPlayer() {
     if (!this.isPl) {
       Player.addModifyArgument((args) => {
-        const obj = urlObj(`?${args[2]}`);
+        const obj = urlObj(\`?\${args[2]}\`);
         delete obj.playlist;
         obj.playlistType = this.type;
         obj.playlistId = this.pl;
@@ -11760,7 +11759,7 @@ var PagePlaylist = class extends Page {
 };
 
 // src/html/ranking.html
-var ranking_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <title>热门视频排行榜 - 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\r\n    <meta charset="utf-8" />\r\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\r\n    <meta name="renderer" content="webkit" />\r\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\r\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\r\n    <link rel="stylesheet"\r\n        href="//s1.hdslb.com/bfs/static/jinkela/rank/css/rank.0.ba58f8684a87651e0e1c576df8f918bfa10c1a90.css" />\r\n    <style type="text/css">\r\n        .gg-floor-module {\r\n            display: none;\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div class="z-top-container has-menu"></div>\r\n    <div id="rank-app"></div>\r\n    <div class="footer bili-footer report-wrap-module"></div>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js" crossorigin=""><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/rank/1.rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var ranking_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <title>热门视频排行榜 - 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta charset="utf-8" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/rank/css/rank.0.ba58f8684a87651e0e1c576df8f918bfa10c1a90.css" />\\r\\n    <style type="text/css">\\r\\n        .gg-floor-module {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="rank-app"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js" crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/rank/1.rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/ranking.ts
 var PageRanking = class extends Page {
@@ -11778,7 +11777,7 @@ var PageRanking = class extends Page {
     this.BLOD.urlCleaner.updateLocation(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
   }
   overDue() {
-    jsonpHook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], (d) => d.replace(/day=\d+/, "day=3"), void 0, false);
+    jsonpHook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], (d) => d.replace(/day=\\d+/, "day=3"), void 0, false);
   }
   initState() {
     propertyHook(window, "__INITIAL_STATE__", void 0);
@@ -11789,7 +11788,7 @@ var PageRanking = class extends Page {
 };
 
 // src/html/read.html
-var read_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">\r\n    <meta charset="UTF-8" />\r\n    <meta data-n-head="true" name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />\r\n    <meta name="theme-color" content="#de698c" />\r\n    <meta http="Cache-Control" content="no-transform" />\r\n    <meta name="format-detection" content="telephone=no" />\r\n    <meta name="applicable-device" content="pc" />\r\n    <link rel="apple-touch-icon-precomposed" href="//static.hdslb.com/mobile/img/512.png" />\r\n    <link rel="icon" type="image/vnd.microsoft.icon" href="//www.bilibili.com/favicon.ico" />\r\n    <link rel="apple-touch-icon" href="//www.bilibili.com/favicon.ico" />\r\n    <meta name="renderer" content="webkit" />\r\n    <link data-n-head="true" rel="icon" type="image/x-icon" href="//www.bilibili.com/favicon.ico" />\r\n    <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"\r\n        href="//static.hdslb.com/mobile/img/512.png" />\r\n    <title>哔哩哔哩专栏</title>\r\n    <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"\r\n        rel="stylesheet" />\r\n    <style type="text/css">\r\n        .nav-tab-bar .tab-item[data-tab-id="41"]:before {\r\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAA6lBMVEUAAAAiIiIkJCT///8jIyMiIiIiIiIiIiJVVVUjIyMjIyMlJSU0NDT9/f0iIiIoKCjz8/NCQkIjIyMjIyMrKysiIiJFRUWQkJAiIiIlJSUjIyMkJCQzMzNAQEDv7+/7+/tHR0ciIiIlJSUjIyNKSkp7e3tcXFxoaGgjIyMjIyMkJCT8/PxDQ0MnJyf39/fx8fHn5+cvLy/i4uLe3t7R0dHAwMA0NDQjIyOtra06Ojo+Pj4iIiJAQEBOTk5VVVVwcHBtbW1hYWEjIyMjIyMjIyMiIiIiIiIlJSUpKSkkJCT///95eXltbW1zc3PUVbhEAAAASnRSTlMAf4H+6NOdaAOnQRQF/asO/vTs5NnXxcO6NzMaCgT++fLv3s7GwMC/v6Fi+vr59PDn5ePh2dHOzMrKyMjGw8C/v7+1sZeVUikfHAMz54kAAAEUSURBVCjPldLXboMwFIDhQ7DNDBA2JGmTNLt7772d9v1fp5hSjEOkqP+lP/lIlg+sTVcaRV1gKXE/mLWBZWqYSEUMjfjsYv/4Hr0zxJYKlYxgItOsaMpmItHwA82TkQGgEMG2JrTITwGkRsXs80f6F/oU0b4el3YaQI585l1pm/6bgHZ/Ry7tcgYCaoetjcKaV1ZXwGSwvSi0efNsgoAvI0oXLYc9MXwyQcTBSXb83XOoPIw7AGlawQ8ks4FfPWc47fyec5yHmTHddZmJqEU57t16baghOqL0IArdVxvq6I3GvqvN2bU6JkRK+Odx5P0LFbIaicLWBKurTPX0/IEWV24WBpaJEWksRbBmlkstLaXosK4fYdYsW/LHMigAAAAASUVORK5CYII=);\r\n        }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n    <div class="z-top-container report-wrap-module"></div>\r\n    <div class="page-container"></div>\r\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\r\n    <script src="//static.hdslb.com/public/intersection-observer.js"><\/script>\r\n    <script src="//static.hdslb.com/public/timing.min.js"><\/script>\r\n    <script src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" charset="utf-8" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\/script>\r\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/biliapp/biliapp.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/jinkela/article/manifest.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/jinkela/article/vendor.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var read_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">\\r\\n    <meta charset="UTF-8" />\\r\\n    <meta data-n-head="true" name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />\\r\\n    <meta name="theme-color" content="#de698c" />\\r\\n    <meta http="Cache-Control" content="no-transform" />\\r\\n    <meta name="format-detection" content="telephone=no" />\\r\\n    <meta name="applicable-device" content="pc" />\\r\\n    <link rel="apple-touch-icon-precomposed" href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <link rel="icon" type="image/vnd.microsoft.icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link rel="apple-touch-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <link data-n-head="true" rel="icon" type="image/x-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"\\r\\n        href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <title>哔哩哔哩专栏</title>\\r\\n    <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        .nav-tab-bar .tab-item[data-tab-id="41"]:before {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAA6lBMVEUAAAAiIiIkJCT///8jIyMiIiIiIiIiIiJVVVUjIyMjIyMlJSU0NDT9/f0iIiIoKCjz8/NCQkIjIyMjIyMrKysiIiJFRUWQkJAiIiIlJSUjIyMkJCQzMzNAQEDv7+/7+/tHR0ciIiIlJSUjIyNKSkp7e3tcXFxoaGgjIyMjIyMkJCT8/PxDQ0MnJyf39/fx8fHn5+cvLy/i4uLe3t7R0dHAwMA0NDQjIyOtra06Ojo+Pj4iIiJAQEBOTk5VVVVwcHBtbW1hYWEjIyMjIyMjIyMiIiIiIiIlJSUpKSkkJCT///95eXltbW1zc3PUVbhEAAAASnRSTlMAf4H+6NOdaAOnQRQF/asO/vTs5NnXxcO6NzMaCgT++fLv3s7GwMC/v6Fi+vr59PDn5ePh2dHOzMrKyMjGw8C/v7+1sZeVUikfHAMz54kAAAEUSURBVCjPldLXboMwFIDhQ7DNDBA2JGmTNLt7772d9v1fp5hSjEOkqP+lP/lIlg+sTVcaRV1gKXE/mLWBZWqYSEUMjfjsYv/4Hr0zxJYKlYxgItOsaMpmItHwA82TkQGgEMG2JrTITwGkRsXs80f6F/oU0b4el3YaQI585l1pm/6bgHZ/Ry7tcgYCaoetjcKaV1ZXwGSwvSi0efNsgoAvI0oXLYc9MXwyQcTBSXb83XOoPIw7AGlawQ8ks4FfPWc47fyec5yHmTHddZmJqEU57t16baghOqL0IArdVxvq6I3GvqvN2bU6JkRK+Odx5P0LFbIaicLWBKurTPX0/IEWV24WBpaJEWksRbBmlkstLaXosK4fYdYsW/LHMigAAAAASUVORK5CYII=);\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container report-wrap-module"></div>\\r\\n    <div class="page-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script src="//static.hdslb.com/public/intersection-observer.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/public/timing.min.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/biliapp/biliapp.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/manifest.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/vendor.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/read.ts
 var PageRead = class extends Page {
@@ -11842,37 +11841,37 @@ var PageRead = class extends Page {
   }
   navTabBar() {
     this.readInfoStr += this.bars.reduce((s, d) => {
-      s += `<a href="//www.bilibili.com/read/${d[2]}?from=articleDetail" target="_self" class="tab-item${this.readInfo.category.parent_id == d[0] ? " on" : ""}" data-tab-id="${d[0]}"><span>${d[1]}</span></a>`;
+      s += \`<a href="//www.bilibili.com/read/\${d[2]}?from=articleDetail" target="_self" class="tab-item\${this.readInfo.category.parent_id == d[0] ? " on" : ""}" data-tab-id="\${d[0]}"><span>\${d[1]}</span></a>\`;
       return s;
     }, '<div class="nav-tab-bar"><a href="https://www.bilibili.com/read/home?from=articleDetail" target="_self" class="logo"></a>') + "</div>";
   }
   upInfoHolder() {
-    this.readInfoStr += `<div class="up-info-holder"><div class="fixed-box"><div class="up-info-block">
-        <a class="up-face-holder" href="//space.bilibili.com/${this.readInfo.author.mid}" target="_blank"><img class="up-face-image" data-face-src="${this.readInfo.author.face.replace("http:", "")}" src="//static.hdslb.com/images/member/noface.gif" /></a><div class="up-info-right-block"><div class="row">
-        <a class="up-name" href="//space.bilibili.com/${this.readInfo.author.mid}" target="_blank">${this.readInfo.author.name}</a> <span class="level"></span><div class="nameplate-holder"><i class="nameplate"></i></div></div><div class="row-2">粉丝: <span class="fans-num"></span> <span class="view">阅读:</span> <span class="view-num"></span></div></div></div><div class="follow-btn-holder"><span class="follow-btn">关注</span></div><div class="up-article-list-block hidden"><div class="block-title">推荐文章</div><ul class="article-list"></ul></div><div class="more"><div class="top-bar"><label>更多</label></div><a class="ac-link" href="//www.bilibili.com/read/apply/" target="_blank"><div class="link"><span class="icon"></span><p class="title">成为创作者</p><p class="info">申请成为专栏UP主</p></div></a> <a href="//www.bilibili.com/blackboard/help.html#%C3%A4%C2%B8%C2%93%C3%A6%C2%A0%C2%8F%C3%A7%C2%9B%C2%B8%C3%A5%C2%85%C2%B3" target="_blank"><div class="help"><span class="icon"></span><p class="title">专栏帮助</p><p class="info">查看专栏使用说明</p></div></a></div></div>
-        </div><div class="right-side-bar"><div class="to-comment"><div class="comment-num-holder"><span class="comment-num"></span></div></div><div class="to-top"></div></div>`;
+    this.readInfoStr += \`<div class="up-info-holder"><div class="fixed-box"><div class="up-info-block">
+        <a class="up-face-holder" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank"><img class="up-face-image" data-face-src="\${this.readInfo.author.face.replace("http:", "")}" src="//static.hdslb.com/images/member/noface.gif" /></a><div class="up-info-right-block"><div class="row">
+        <a class="up-name" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank">\${this.readInfo.author.name}</a> <span class="level"></span><div class="nameplate-holder"><i class="nameplate"></i></div></div><div class="row-2">粉丝: <span class="fans-num"></span> <span class="view">阅读:</span> <span class="view-num"></span></div></div></div><div class="follow-btn-holder"><span class="follow-btn">关注</span></div><div class="up-article-list-block hidden"><div class="block-title">推荐文章</div><ul class="article-list"></ul></div><div class="more"><div class="top-bar"><label>更多</label></div><a class="ac-link" href="//www.bilibili.com/read/apply/" target="_blank"><div class="link"><span class="icon"></span><p class="title">成为创作者</p><p class="info">申请成为专栏UP主</p></div></a> <a href="//www.bilibili.com/blackboard/help.html#%C3%A4%C2%B8%C2%93%C3%A6%C2%A0%C2%8F%C3%A7%C2%9B%C2%B8%C3%A5%C2%85%C2%B3" target="_blank"><div class="help"><span class="icon"></span><p class="title">专栏帮助</p><p class="info">查看专栏使用说明</p></div></a></div></div>
+        </div><div class="right-side-bar"><div class="to-comment"><div class="comment-num-holder"><span class="comment-num"></span></div></div><div class="to-top"></div></div>\`;
   }
   headContainer() {
-    this.readInfoStr += `<div class="head-container"><div class="banner-img-holder"></div><div class="bangumi-rating-container"></div><div class="argue-flag hidden"></div><div class="title-container">
-        <h1 class="title">${this.readInfo.title}</h1><div class="info">
-        <a class="category-link" href="//www.bilibili.com/read/${this.bars.find((d) => {
+    this.readInfoStr += \`<div class="head-container"><div class="banner-img-holder"></div><div class="bangumi-rating-container"></div><div class="argue-flag hidden"></div><div class="title-container">
+        <h1 class="title">\${this.readInfo.title}</h1><div class="info">
+        <a class="category-link" href="//www.bilibili.com/read/\${this.bars.find((d) => {
       if (d[0] == this.readInfo.category.parent_id)
         return d;
-    })[2]}#rid=${this.readInfo.category.id}" target="_blank"><span>${this.readInfo.category.name}</span></a> <span class="create-time" data-ts="${this.readInfo.ctime}"></span><div class="article-data"></div>
+    })[2]}#rid=\${this.readInfo.category.id}" target="_blank"><span>\${this.readInfo.category.name}</span></a> <span class="create-time" data-ts="\${this.readInfo.ctime}"></span><div class="article-data"></div>
         </div></div><div style="display:none" class="author-container">
-        <a class="author-face" href="//space.bilibili.com/${this.readInfo.author.mid}" target="_blank"><img data-face-src="${this.readInfo.author.face.replace("http:", "")}" src="${this.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/${this.readInfo.author.mid}" target="_blank">${this.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>`;
+        <a class="author-face" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank"><img data-face-src="\${this.readInfo.author.face.replace("http:", "")}" src="\${this.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank">\${this.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>\`;
   }
   articleHolder() {
-    this.readInfoStr += `<div class="article-holder">${this.readInfo.content}</div><p class="original">本文为我原创</p>`;
+    this.readInfoStr += \`<div class="article-holder">\${this.readInfo.content}</div><p class="original">本文为我原创</p>\`;
   }
   tagContainer() {
     this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {
-      o = o + `<li data-tag-id="${d.tid}" class="tag-item"><span class="tag-border"><span class="tag-border-inner"></span></span> <span class="tag-content">${d.name}</span></li>`;
+      o = o + \`<li data-tag-id="\${d.tid}" class="tag-item"><span class="tag-border"><span class="tag-border-inner"></span></span> <span class="tag-content">\${d.name}</span></li>\`;
       return o;
-    }, `<ul class="tag-container">`) + "</ul>";
+    }, \`<ul class="tag-container">\`) + "</ul>";
   }
   articleAction() {
-    this.readInfoStr += `<div class="article-action"><div class="ops"><span class="like-btn"><i class="icon-video-details_like"></i> <span>--</span></span> <span class="coin-btn"><i class="icon-video-details_throw-coin"></i> <span>--</span></span> <span class="fav-btn"><i class="icon-video-details_collection"></i> <span>--</span></span> <span class="share-container share-btn">分享到：<span></span></span></div><div class="more"><!-- <i class="icon-general_more-actions"></i> --><div class="more-ops-list"><ul><li value="0">投诉或建议</li></ul></div></div></div><div class="article-list-holder-block"></div><div class="draft-holder-block"></div><div class="b-head comment-title-block"><span class="b-head-t comment-results" style="display: inline;"></span> <span class="b-head-t">评论</span></div><div class="comment-holder"></div>`;
+    this.readInfoStr += \`<div class="article-action"><div class="ops"><span class="like-btn"><i class="icon-video-details_like"></i> <span>--</span></span> <span class="coin-btn"><i class="icon-video-details_throw-coin"></i> <span>--</span></span> <span class="fav-btn"><i class="icon-video-details_collection"></i> <span>--</span></span> <span class="share-container share-btn">分享到：<span></span></span></div><div class="more"><!-- <i class="icon-general_more-actions"></i> --><div class="more-ops-list"><ul><li value="0">投诉或建议</li></ul></div></div></div><div class="article-list-holder-block"></div><div class="draft-holder-block"></div><div class="b-head comment-title-block"><span class="b-head-t comment-results" style="display: inline;"></span> <span class="b-head-t">评论</span></div><div class="comment-holder"></div>\`;
   }
   updateDom() {
     window.original = {
@@ -11899,12 +11898,12 @@ var PageRead = class extends Page {
     title && !title.includes("404") && (document.title = title);
   }
   static rightCopyEnable() {
-    addCss(`* {
+    addCss(\`* {
             -webkit-user-select: text !important;
             -moz-user-select: text !important;
             -ms-user-select: text !important;
             user-select: text !important;
-        }`);
+        }\`);
     [].forEach.call(["contextmenu", "copy", "cut", "paste", "mouseup", "mousedown", "keyup", "keydown", "drag", "dragstart", "select", "selectstart"], function(event) {
       document.addEventListener(event, function(e) {
         e.stopPropagation();
@@ -11914,7 +11913,7 @@ var PageRead = class extends Page {
 };
 
 // src/html/search.html
-var search_default = '<!-- <!DOCTYPE html> -->\r\n<html lang="zh-CN">\r\n\r\n<head>\r\n    <title data-vue-meta="true"> _ 搜索结果_哔哩哔哩_Bilibili</title>\r\n    <meta data-vue-meta="true" charset="UTF-8">\r\n    <meta data-vue-meta="true" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">\r\n    <meta data-vue-meta="true" name="renderer" content="webkit|ie-comp|ie-stand">\r\n    <meta data-vue-meta="true" name="description"\r\n        content="点击查看更多相关视频、番剧、影视、直播、专栏、话题、用户等内容；你感兴趣的视频都在B站，bilibili是国内知名的视频弹幕网站，这里有及时的动漫新番，活跃的ACG氛围，有创意的Up主。大家可以在这里找到许多欢乐。">\r\n    <meta data-vue-meta="true" name="keywords"\r\n        content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid">\r\n    <meta data-vue-meta="true" charset="UTF-8">\r\n    <meta name="referrer" content="no-referrer-when-downgrade">\r\n    <link rel="dns-prefetch" href="//s1.hdslb.com">\r\n    <link rel="dns-prefetch" href="//i0.hdslb.com">\r\n    <link rel="dns-prefetch" href="//i1.hdslb.com">\r\n    <link rel="dns-prefetch" href="//i2.hdslb.com">\r\n    <link rel="dns-prefetch" href="//static.hdslb.com">\r\n    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico">\r\n    <link rel="stylesheet"\r\n        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.1.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css">\r\n    <link rel="stylesheet"\r\n        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.0.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css">\r\n</head>\r\n\r\n<body id="bili-search">\r\n    <div class="z-top-container"></div>\r\n    <div id="search-app"></div>\r\n    <!-- built files will be auto injected -->\r\n    <div class="footer bili-footer report-wrap-module"></div>\r\n    <script type="text/javascript"\r\n        src="//www.bilibili.com/gentleman/polyfill.js?features=Promise%2CObject.assign%2CString.prototype.includes%2CNumber.isNaN"><\/script>\r\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.7.1.min.js"><\/script>\r\n    <script type="text/javascript"\r\n        src="//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.7.1.vue.min.js"><\/script>\r\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\/script>\r\n    <script\r\n        src="//s1.hdslb.com/bfs/static/jinkela/search/1.search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js"><\/script>\r\n    <script src="//s1.hdslb.com/bfs/static/jinkela/search/search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js"><\/script>\r\n</body>\r\n\r\n</html>';
+var search_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <title data-vue-meta="true"> _ 搜索结果_哔哩哔哩_Bilibili</title>\\r\\n    <meta data-vue-meta="true" charset="UTF-8">\\r\\n    <meta data-vue-meta="true" http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">\\r\\n    <meta data-vue-meta="true" name="renderer" content="webkit|ie-comp|ie-stand">\\r\\n    <meta data-vue-meta="true" name="description"\\r\\n        content="点击查看更多相关视频、番剧、影视、直播、专栏、话题、用户等内容；你感兴趣的视频都在B站，bilibili是国内知名的视频弹幕网站，这里有及时的动漫新番，活跃的ACG氛围，有创意的Up主。大家可以在这里找到许多欢乐。">\\r\\n    <meta data-vue-meta="true" name="keywords"\\r\\n        content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid">\\r\\n    <meta data-vue-meta="true" charset="UTF-8">\\r\\n    <meta name="referrer" content="no-referrer-when-downgrade">\\r\\n    <link rel="dns-prefetch" href="//s1.hdslb.com">\\r\\n    <link rel="dns-prefetch" href="//i0.hdslb.com">\\r\\n    <link rel="dns-prefetch" href="//i1.hdslb.com">\\r\\n    <link rel="dns-prefetch" href="//i2.hdslb.com">\\r\\n    <link rel="dns-prefetch" href="//static.hdslb.com">\\r\\n    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico">\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.1.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css">\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/search/css/search.0.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.css">\\r\\n</head>\\r\\n\\r\\n<body id="bili-search">\\r\\n    <div class="z-top-container"></div>\\r\\n    <div id="search-app"></div>\\r\\n    <!-- built files will be auto injected -->\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript"\\r\\n        src="//www.bilibili.com/gentleman/polyfill.js?features=Promise%2CObject.assign%2CString.prototype.includes%2CNumber.isNaN"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.7.1.min.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/long/js/sentry/sentry-5.7.1.vue.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/search/1.search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/search/search.1dc4c70682c12d4daaa90c2114effa0a7cbca11a.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/search.ts
 var PageSearch = class extends Page {
@@ -12201,11 +12200,11 @@ var Sidx = class {
   fetch(resolve, reject) {
     fetch(this.url.replace("http:", "https:"), {
       headers: {
-        range: `bytes=${this.start}-${this.end}`
+        range: \`bytes=\${this.start}-\${this.end}\`
       }
     }).then((d) => {
       if ((d.status >= 300 || d.status < 200) && d.status !== 304)
-        throw new Error(`${d.status} ${d.statusText}`, { cause: d.status });
+        throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
       return d.arrayBuffer();
     }).then((d) => {
       const data = new Uint8Array(d);
@@ -12410,7 +12409,7 @@ var _VideoLimit = class {
     }, false);
     xhrHook("/playurl?", (args) => {
       if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
-        args[1] += `&access_key=${this.BLOD.status.accessKey.token}`;
+        args[1] += \`&access_key=\${this.BLOD.status.accessKey.token}\`;
       }
       return !(this.BLOD.limit || this.BLOD.th);
     }, (res) => {
@@ -12418,7 +12417,7 @@ var _VideoLimit = class {
         const result = res.responseType === "json" ? JSON.stringify(res) : res.responseText;
         if (this.BLOD.status.uposReplace.nor !== "不替换") {
           const nstr = _VideoLimit.uposReplace(result, this.BLOD.status.uposReplace.nor);
-          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${this.BLOD.status.uposReplace.nor}`, `UPOS：${UPOS2[this.BLOD.status.uposReplace.nor]}`);
+          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.nor}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.nor]}\`);
           if (res.responseType === "json") {
             res.response = JSON.parse(nstr);
           } else {
@@ -12438,14 +12437,14 @@ var _VideoLimit = class {
     this.data = ["泰区限制视频！"];
     this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
     const obj = urlObj(args[1]);
-    this.data.push(`aid：${this.BLOD.aid}`, `cid：${this.BLOD.cid}`);
+    this.data.push(\`aid：\${this.BLOD.aid}\`, \`cid：\${this.BLOD.cid}\`);
     this.toast.data = this.data;
     const epid = obj.ep_id || obj.episodeId || this.BLOD.epid;
     obj.access_key = this.BLOD.status.accessKey.token;
     if (!this.Backup[epid]) {
       try {
         this.BLOD.networkMock();
-        this.data.push(`代理服务器：${this.BLOD.status.videoLimit.th}`);
+        this.data.push(\`代理服务器：\${this.BLOD.status.videoLimit.th}\`);
         this.toast.data = this.data;
         this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
         this.data.push("获取代理数据成功！");
@@ -12472,7 +12471,7 @@ var _VideoLimit = class {
     this.data = ["港澳台限制视频！"];
     this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
     const obj = urlObj(args[1]);
-    this.data.push(`aid：${this.BLOD.aid}`, `cid：${this.BLOD.cid}`);
+    this.data.push(\`aid：\${this.BLOD.aid}\`, \`cid：\${this.BLOD.cid}\`);
     this.toast.data = this.data;
     const epid = obj.ep_id || obj.episodeId || this.BLOD.epid;
     obj.access_key = this.BLOD.status.accessKey.token;
@@ -12484,7 +12483,7 @@ var _VideoLimit = class {
           if (upInfo) {
             (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
           }
-          this.data.push(`代理服务器：内置`, `类型：${obj.module}`);
+          this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
           this.toast.data = this.data;
           const res = await new apiBiliplusPlayurl(obj).getData();
           this.Backup[epid] = { code: 0, message: "success", result: res };
@@ -12495,7 +12494,7 @@ var _VideoLimit = class {
         }
         if (this.BLOD.status.uposReplace.gat !== "不替换") {
           this.Backup[epid] = JSON.parse(_VideoLimit.uposReplace(JSON.stringify(this.Backup[epid]), this.BLOD.status.uposReplace.gat));
-          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${this.BLOD.status.uposReplace.gat}`, `UPOS：${UPOS2[this.BLOD.status.uposReplace.gat]}`);
+          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.gat}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.gat]}\`);
         }
         ;
         this.data.push("获取代理数据成功！");
@@ -12531,16 +12530,16 @@ var _VideoLimit = class {
   }
   async th(obj) {
     const d = await new ApiGlobalOgvPlayurl(obj, this.BLOD.status.uposReplace.th, this.BLOD.status.videoLimit.th).toPlayurl();
-    this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", `CDN：${this.BLOD.status.uposReplace.th}`, `UPOS：${UPOS2[this.BLOD.status.uposReplace.th]}`);
+    this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.th}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.th]}\`);
     return d;
   }
   area = 0;
   async gat(obj) {
     if (!this.BLOD.status.videoLimit[AREA[this.area]])
-      throw new Error(`无有效代理服务器：${AREA[this.area]}`);
+      throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
     const server = this.BLOD.status.videoLimit[AREA[this.area]];
     obj.area = AREA[this.area];
-    this.data.push(`代理服务器：${server}`);
+    this.data.push(\`代理服务器：\${server}\`);
     this.toast && (this.toast.data = this.data);
     try {
       return await new ApiAppPgcPlayurl(obj, server).getData();
@@ -12562,7 +12561,7 @@ var _VideoLimit = class {
     this.upos = true;
     clearTimeout(this.timer);
     this.timer = setTimeout(() => this.upos = false, 1e3);
-    return str.replace(/:\\?\/\\?\/[^\/]+\\?\//g, () => `://${UPOS2[uposName]}/`);
+    return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS2[uposName]}/\`);
   }
 };
 var VideoLimit = _VideoLimit;
@@ -12662,7 +12661,7 @@ var PageSpace = class {
       case 2042149112:
         mid_default.data.name = Mid[this.mid];
         mid_default.data.official.desc = mid_default.data.name + " 官方帐号";
-        xhrHook("api.bilibili.com/x/space/acc/info", void 0, (obj) => {
+        xhrHook("acc/info?", void 0, (obj) => {
           if (obj.responseText && obj.responseText.includes("-404")) {
             obj.response = obj.responseText = JSON.stringify(mid_default);
             this.BLOD.toast.warning("该用户被404，已使用缓存数据恢复访问！");
@@ -12682,8 +12681,8 @@ var PageSpace = class {
       }, []);
       setTimeout(() => {
         document.querySelectorAll(".album-card").forEach((d, i) => {
-          d.firstChild.href = `//h.bilibili.com/${data[i]}`;
-          d.children[1].href = `//h.bilibili.com/${data[i]}`;
+          d.firstChild.href = \`//h.bilibili.com/\${data[i]}\`;
+          d.children[1].href = \`//h.bilibili.com/\${data[i]}\`;
         });
       }, 1e3);
     }, false);
@@ -12693,7 +12692,7 @@ var PageSpace = class {
       const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
       if (result.code === 0) {
         if (result.data?.item.type === "DYNAMIC_TYPE_DRAW")
-          location.replace(`https://h.bilibili.com/${result.data.item.basic.rid_str}`);
+          location.replace(\`https://h.bilibili.com/\${result.data.item.basic.rid_str}\`);
       }
     }, false);
   }
@@ -12702,10 +12701,10 @@ var PageSpace = class {
       accountGetCardByMid(this.mid, this.BLOD.GM).then((d) => {
         const jointime = timeFormat(d.regtime * 1e3, true);
         const node = t.lastChild;
-        new VdomTool(`<div class="info-regtime" style="display: inline-block;word-break: break-all;">
+        new VdomTool(\`<div class="info-regtime" style="display: inline-block;word-break: break-all;">
                     <span class="info-command" style="display: inline-block;font-size: 12px;font-family: Microsoft YaHei;line-height: 16px;color: #9499a0;margin-right: 16px;">注册</span>
-                    <span class="info-value" style="color: #6d757a;font-family: Microsoft YaHei;font-size: 12px;line-height: 16px;padding-right: 15px;">${jointime}</span>
-                </div>`).appendTo(node);
+                    <span class="info-value" style="color: #6d757a;font-family: Microsoft YaHei;font-size: 12px;line-height: 16px;padding-right: 15px;">\${jointime}</span>
+                </div>\`).appendTo(node);
       });
     });
   }
@@ -12732,24 +12731,24 @@ var PageSpace = class {
                 const medias = ele.__vue__.favListDetails.medias;
                 medias?.forEach((d) => {
                   if (d.attr % 2) {
-                    data2.push(`-------- av${d.id} --------`);
+                    data2.push(\`-------- av\${d.id} --------\`);
                     if (this.aidInfo[d.id].title) {
                       resolve++;
                       d.title = this.aidInfo[d.id].title;
                       data2.push(this.aidInfo[d.id].title);
                     } else {
                       reject++;
-                      d.title = `av${d.id}`;
+                      d.title = \`av\${d.id}\`;
                       data2.push("未能获取到有效信息！");
                     }
                     this.aidInfo[d.id].cover && (d.cover = this.aidInfo[d.id].cover);
                     d.attr = 0;
                     toast.data = data2;
-                    ele.querySelector(`[data-aid=${d.bvid}]`)?.children[1]?.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
+                    ele.querySelector(\`[data-aid=\${d.bvid}]\`)?.children[1]?.setAttribute("style", "text-decoration : line-through;color : #ff0000;");
                   }
                 });
               }
-              data2.push("", `修复结束：成功 ${resolve} 失败 ${reject}`);
+              data2.push("", \`修复结束：成功 \${resolve} 失败 \${reject}\`);
               toast.data = data2;
               toast.delay = 4;
             }, 100);
@@ -12767,19 +12766,19 @@ var PageSpace = class {
         if (this.aidInfo[d])
           return;
         let title, cover;
-        await this.BLOD.GM.fetch(`//www.biliplus.com/video/av${d}`).then((d2) => d2.text()).then((d2) => {
-          if (d2.match(/\<title\>.+?\ \-\ AV/)) {
-            title = d2.match(/\<title\>.+?\ \-\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
-            cover = d2.match(/\<img style=\"display:none\"\ src=\".+?\"\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
+        await this.BLOD.GM.fetch(\`//www.biliplus.com/video/av\${d}\`).then((d2) => d2.text()).then((d2) => {
+          if (d2.match(/\\<title\\>.+?\\ \\-\\ AV/)) {
+            title = d2.match(/\\<title\\>.+?\\ \\-\\ AV/)[0].replace(/<title>/, "").replace(/ - AV/, "");
+            cover = d2.match(/\\<img style=\\"display:none\\"\\ src=\\".+?\\"\\ alt/)[0].replace(/<img style="display:none" src="/, "").replace(/" alt/, "");
           }
         }).catch((e) => {
-          debug.error(`获取失效视频av${d}信息错误`, "BILIPLUS", e);
+          debug.error(\`获取失效视频av\${d}信息错误\`, "BILIPLUS", e);
         });
         if (!title || !cover) {
-          await this.BLOD.GM.fetch(`//www.biliplus.com/all/video/av${d}`).then((d2) => d2.text()).then((d2) => {
+          await this.BLOD.GM.fetch(\`//www.biliplus.com/all/video/av\${d}\`).then((d2) => d2.text()).then((d2) => {
             if (d2.match("/api/view_all?")) {
-              const url = d2.match(/\/api\/view_all\?.+?\',cloudmoe/)[0].replace(/\',cloudmoe/, "");
-              return this.BLOD.GM.fetch(`//www.biliplus.com${url}`);
+              const url = d2.match(/\\/api\\/view_all\\?.+?\\',cloudmoe/)[0].replace(/\\',cloudmoe/, "");
+              return this.BLOD.GM.fetch(\`//www.biliplus.com\${url}\`);
             }
             throw new Error("无cid缓存");
           }).then((d2) => d2.json()).then((d2) => {
@@ -12787,17 +12786,17 @@ var PageSpace = class {
             title = title || d2.data.info.title;
             cover = cover || d2.data.info.pic;
           }).catch((e) => {
-            debug.error(`获取失效视频av${d}信息错误`, "BILIPLUSALL", e);
+            debug.error(\`获取失效视频av\${d}信息错误\`, "BILIPLUSALL", e);
           });
         }
         if (!title || !cover) {
-          await this.BLOD.GM.fetch(`//www.jijidown.com/video/av${d}`).then((d2) => d2.text()).then((d2) => {
+          await this.BLOD.GM.fetch(\`//www.jijidown.com/video/av\${d}\`).then((d2) => d2.text()).then((d2) => {
             if (d2.match("window._INIT")) {
-              title = title || d2.match(/\<title\>.+?\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
-              cover = cover || d2.match(/\"img\":\ \".+?\",/)[0].match(/http.+?\",/)[0].replace(/",/, "");
+              title = title || d2.match(/\\<title\\>.+?\\-哔哩哔哩唧唧/)[0].replace(/<title>/, "").replace(/-哔哩哔哩唧唧/, "");
+              cover = cover || d2.match(/\\"img\\":\\ \\".+?\\",/)[0].match(/http.+?\\",/)[0].replace(/",/, "");
             }
           }).catch((e) => {
-            debug.error(`获取失效视频av${d}信息错误`, "JIJIDOWN", e);
+            debug.error(\`获取失效视频av\${d}信息错误\`, "JIJIDOWN", e);
           });
         }
         cover = cover && cover.replace("http:", "");
@@ -12915,7 +12914,7 @@ var AccessKey = class {
         this.BLOD.status.accessKey.token = obj.access_key;
         this.BLOD.status.accessKey.date = date;
         this.BLOD.status.accessKey.dateStr = dateStr;
-        data.push("------- 授权成功 -------", `鉴权: ${obj.access_key}`, `日期：${dateStr}`);
+        data.push("------- 授权成功 -------", \`鉴权: \${obj.access_key}\`, \`日期：\${dateStr}\`);
         toast.data = data;
         toast.type = "success";
         toast.delay = 4;
@@ -12971,18 +12970,18 @@ var Aria2 = class {
     this.size = size;
   }
   get url() {
-    return `${this.server}:${this.port}/jsonrpc`;
+    return \`\${this.server}:\${this.port}/jsonrpc\`;
   }
   cmdlet(data) {
     const arr2 = ["aria2c"];
-    data.urls.forEach((d) => arr2.push(`"${d}"`));
-    data.out && arr2.push(`--out="${data.out}"`);
-    (data.userAgent || this.userAgent) && arr2.push(`--user-agent="${data.userAgent || this.userAgent}"`);
-    (data.referer || this.referer) && arr2.push(`--referer="${data.referer || this.referer}"`);
-    (data.dir || this.dir) && arr2.push(`--dir="${data.dir || this.dir}"`);
-    (data.split || this.split) && arr2.push(`--split="${data.split || this.split}"`, `--max-connection-per-server="${data.split || this.split}"`);
-    (data.size || this.size) && arr2.push(`--min-split-size="${data.size || this.size}M"`);
-    data.header && Object.entries(data.header).forEach((d) => arr2.push(`--header="${d[0]}: ${d[1]}"`));
+    data.urls.forEach((d) => arr2.push(\`"\${d}"\`));
+    data.out && arr2.push(\`--out="\${data.out}"\`);
+    (data.userAgent || this.userAgent) && arr2.push(\`--user-agent="\${data.userAgent || this.userAgent}"\`);
+    (data.referer || this.referer) && arr2.push(\`--referer="\${data.referer || this.referer}"\`);
+    (data.dir || this.dir) && arr2.push(\`--dir="\${data.dir || this.dir}"\`);
+    (data.split || this.split) && arr2.push(\`--split="\${data.split || this.split}"\`, \`--max-connection-per-server="\${data.split || this.split}"\`);
+    (data.size || this.size) && arr2.push(\`--min-split-size="\${data.size || this.size}M"\`);
+    data.header && Object.entries(data.header).forEach((d) => arr2.push(\`--header="\${d[0]}: \${d[1]}"\`));
     return navigator.clipboard.writeText(arr2.join(" "));
   }
   rpc(data) {
@@ -12992,7 +12991,7 @@ var Aria2 = class {
     (data.referer || this.referer) && (options.referer = data.referer || this.referer);
     (data.dir || this.dir) && (options.dir = data.dir || this.dir);
     (data.split || this.split) && (options.split = options["max-connection-per-server"] = data.split || this.split);
-    (data.size || this.size) && (options["min-split-size"] = `${data.size || this.size}M`);
+    (data.size || this.size) && (options["min-split-size"] = \`\${data.size || this.size}M\`);
     data.header && (options.header = data.header);
     return this.postMessage("aria2.addUri", data.id, [data.urls, options]);
   }
@@ -13000,7 +12999,7 @@ var Aria2 = class {
     return this.postMessage("aria2.getVersion");
   }
   postMessage(method, id = getMetux(), params = []) {
-    this.token && params.unshift(`token:${this.token}`);
+    this.token && params.unshift(\`token:\${this.token}\`);
     return new Promise((r, j) => {
       fetch(this.url, {
         method: "POST",
@@ -13026,7 +13025,7 @@ var Aria2 = class {
 };
 
 // src/css/desc.css
-var desc_default = ".container {\r\n    position: fixed;\r\n    top: 16px;\r\n    left: 100%;\r\n    background: hsla(0, 0%, 95.7%, .8);\r\n    border-radius: 2px;\r\n    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\r\n    color: #000;\r\n    width: 381px;\r\n    z-index: 1;\r\n}\r\n\r\n.title {\r\n    text-align: center;\r\n    margin-top: 16px;\r\n    margin-bottom: 3px;\r\n    font-size: 12px;\r\n}\r\n\r\n.content {\r\n    font-size: 12px;\r\n    line-height: 19px;\r\n    padding: 0 16px 16px;\r\n    text-align: justify;\r\n    white-space: pre-line;\r\n}";
+var desc_default = ".container {\\r\\n    position: fixed;\\r\\n    top: 16px;\\r\\n    left: 100%;\\r\\n    background: hsla(0, 0%, 95.7%, .8);\\r\\n    border-radius: 2px;\\r\\n    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n    color: #000;\\r\\n    width: 381px;\\r\\n    z-index: 1;\\r\\n}\\r\\n\\r\\n.title {\\r\\n    text-align: center;\\r\\n    margin-top: 16px;\\r\\n    margin-bottom: 3px;\\r\\n    font-size: 12px;\\r\\n}\\r\\n\\r\\n.content {\\r\\n    font-size: 12px;\\r\\n    line-height: 19px;\\r\\n    padding: 0 16px 16px;\\r\\n    text-align: justify;\\r\\n    white-space: pre-line;\\r\\n}";
 
 // src/core/ui/desc.ts
 var Desc = class extends HTMLElement {
@@ -13039,7 +13038,7 @@ var Desc = class extends HTMLElement {
   constructor() {
     super();
     const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = `<div class="container"><div class="title"></div><div class="content"></div></div>`;
+    root.innerHTML = \`<div class="container"><div class="title"></div><div class="content"></div></div>\`;
     addCss(desc_default, void 0, root);
     this._container = root.querySelector(".container");
     this._title = root.querySelector(".title");
@@ -13073,10 +13072,10 @@ var Desc = class extends HTMLElement {
     }
   }
 };
-customElements.get(`desc-${"3df83fc"}`) || customElements.define(`desc-${"3df83fc"}`, Desc);
+customElements.get(\`desc-\${"b5c779c"}\`) || customElements.define(\`desc-\${"b5c779c"}\`, Desc);
 
 // src/html/ui-interface.html
-var ui_interface_default = '<div class="box">\r\n    <div class="tool">\r\n        <div title="关闭" class="icon"></div>\r\n        <header>Bilbili Old</header>\r\n    </div>\r\n    <div class="content">\r\n        <div class="contain">\r\n            <div class="menu"></div>\r\n            <div class="item"></div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<style type="text/css">\r\n    .box {\r\n        left: 50%;\r\n        top: 50%;\r\n        transform: translateX(-50%) translateY(-50%);\r\n        min-width: 600px;\r\n        min-height: 400px;\r\n        padding: 0;\r\n        border: 0;\r\n        position: fixed;\r\n        z-index: 11110;\r\n        display: none;\r\n        box-sizing: border-box;\r\n        background: #fff;\r\n        border-radius: 8px;\r\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\r\n        transition: transform 0.3s ease-in;\r\n        line-height: 14px;\r\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\r\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\r\n    }\r\n\r\n    .tool {\r\n        border-bottom-left-radius: 8px;\r\n        border-bottom-right-radius: 8px;\r\n        overflow: hidden;\r\n        width: 100%;\r\n        display: inline-flex;\r\n        z-index: 1;\r\n        align-items: center;\r\n        justify-content: flex-end;\r\n        pointer-events: none;\r\n    }\r\n\r\n    .tool header {\r\n        position: absolute;\r\n        transform: translateX(-50%);\r\n        left: 50%;\r\n        font-size: 14px;\r\n    }\r\n\r\n    .tool div {\r\n        border-radius: 50%;\r\n        padding: 10px;\r\n        transform: scale(0.8);\r\n        pointer-events: visible;\r\n        transition: opacity 0.3s ease;\r\n    }\r\n\r\n    .tool div:hover {\r\n        background-color: rgba(0, 0, 0, 10%);\r\n    }\r\n\r\n    .content {\r\n        position: relative;\r\n        border-bottom-left-radius: 8px;\r\n        border-bottom-right-radius: 8px;\r\n        overflow: hidden;\r\n        background-color: #fff;\r\n    }\r\n\r\n    .contain {\r\n        padding-bottom: 15px;\r\n        background-position: top center;\r\n        background-size: contain;\r\n        background-repeat: no-repeat;\r\n        display: flex;\r\n        align-items: flex-start;\r\n        flex: 1;\r\n        height: 360px;\r\n    }\r\n\r\n    .menu::-webkit-scrollbar,\r\n    .item::-webkit-scrollbar {\r\n        width: 0 !important;\r\n        height: 0 !important;\r\n    }\r\n\r\n    .menu {\r\n        flex: 1 1 0;\r\n        flex-basis: calc(480px * 0.2);\r\n        height: 100%;\r\n        position: sticky;\r\n        top: 0;\r\n        display: flex;\r\n        flex-direction: column;\r\n        min-width: fit-content;\r\n        overflow: auto;\r\n    }\r\n\r\n    .item {\r\n        flex: 4 4 0;\r\n        flex-basis: calc(480px * 0.8);\r\n        height: 100%;\r\n        box-sizing: border-box;\r\n        display: flex;\r\n        flex-direction: column;\r\n        margin: 0 auto;\r\n        position: relative;\r\n        overflow: auto;\r\n        background-image: linear-gradient(to top, white, white),\r\n            linear-gradient(to top, white, white),\r\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\r\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\r\n        background-position: bottom center, top center, bottom center, top center;\r\n        background-color: white;\r\n        background-repeat: no-repeat;\r\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\r\n        background-attachment: local, local, scroll, scroll;\r\n    }\r\n\r\n    .item>div {\r\n        margin-bottom: 60px;\r\n    }\r\n\r\n    .menuitem {\r\n        align-items: center;\r\n        display: flex;\r\n        font-weight: 500;\r\n        margin-inline-end: 2px;\r\n        margin-inline-start: 1px;\r\n        min-height: 20px;\r\n        padding-bottom: 10px;\r\n        padding-inline-start: 23px;\r\n        padding-top: 10px;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .menuitem:hover {\r\n        background-color: rgb(0, 0, 0, 6%);\r\n    }\r\n\r\n    .menuitem>div {\r\n        padding-inline-end: 12px;\r\n    }\r\n\r\n    .selected {\r\n        color: rgb(51, 103, 214) !important;\r\n    }\r\n\r\n    .selected>.icon {\r\n        fill: rgb(51, 103, 214) !important;\r\n    }\r\n\r\n    .contain1 {\r\n        margin-bottom: 3px;\r\n        padding-inline-start: 20px;\r\n        padding-inline-end: 20px;\r\n        display: flex;\r\n        flex-direction: column;\r\n        outline: none;\r\n        position: relative;\r\n    }\r\n\r\n    .header .title {\r\n        color: #000;\r\n        font-size: 108%;\r\n        font-weight: 400;\r\n        letter-spacing: 0.25px;\r\n        margin-bottom: 12px;\r\n        outline: none;\r\n        padding-bottom: 4px;\r\n    }\r\n\r\n    .card {\r\n        border-radius: 4px;\r\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\r\n        flex: 1;\r\n        color: #000;\r\n        line-height: 154%;\r\n        user-select: text;\r\n        margin-inline: 12px;\r\n        margin-bottom: 12px;\r\n    }\r\n\r\n    .contain2 {\r\n        align-items: center;\r\n        border-top: 1px solid rgba(0, 0, 0, 6%);\r\n        display: flex;\r\n        min-height: 24px;\r\n        padding: 0 20px;\r\n        flex-wrap: wrap;\r\n        justify-content: flex-end;\r\n        background-color: transparent !important;\r\n    }\r\n\r\n    .value {\r\n        flex: 1;\r\n        flex-basis: 1e-9px;\r\n        display: flex;\r\n    }\r\n\r\n    .value>* {\r\n        flex: 1;\r\n        flex-basis: 1e-9px;\r\n        display: flex;\r\n        flex-wrap: wrap;\r\n        justify-content: flex-end;\r\n        align-items: center;\r\n        align-content: center;\r\n    }\r\n\r\n    .label {\r\n        flex: 1;\r\n        flex-basis: 1e-9px;\r\n        padding-block-end: 12px;\r\n        padding-block-start: 12px;\r\n        padding-inline-start: 12px;\r\n    }\r\n\r\n    .switch>.label,\r\n    .button>.label,\r\n    .select>.label,\r\n    .input>.label,\r\n    .slider>.label {\r\n        flex: 2;\r\n    }\r\n\r\n    .select>.value,\r\n    .input>.value,\r\n    .slider>.value {\r\n        flex: 3;\r\n    }\r\n\r\n    .sub {\r\n        color: rgb(95, 99, 104);\r\n        font-weight: 400;\r\n    }\r\n\r\n    .icon {\r\n        align-items: center;\r\n        border-radius: 50%;\r\n        display: flex;\r\n        height: 20px;\r\n        justify-content: center;\r\n        position: relative;\r\n        width: 20px;\r\n        box-sizing: content-box;\r\n        background: none;\r\n        cursor: pointer;\r\n    }\r\n</style>';
+var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/interface.ts
 var BiliOldInterface = class extends HTMLElement {
@@ -13122,9 +13121,9 @@ customElements.get("bili-old") || customElements.define("bili-old", BiliOldInter
 var SettingItem = class extends HTMLDivElement {
   _value = document.createElement("div");
   init(id, title, sub, svg2) {
-    this.innerHTML = `<div class="contain2${id ? ` ${id}` : ""}">${svg2 ? `<div class="icon">${svg2}</div>` : ""}
-    <div class="label">${title}${sub ? `<div class="sub">${sub}</div>` : ""}</div>
-</div>`;
+    this.innerHTML = \`<div class="contain2\${id ? \` \${id}\` : ""}">\${svg2 ? \`<div class="icon">\${svg2}</div>\` : ""}
+    <div class="label">\${title}\${sub ? \`<div class="sub">\${sub}</div>\` : ""}</div>
+</div>\`;
     this._value.className = "value";
     this.querySelector(".contain2")?.appendChild(this._value);
   }
@@ -13132,7 +13131,7 @@ var SettingItem = class extends HTMLDivElement {
     this._value.appendChild(value);
   }
 };
-customElements.get(`item-${"3df83fc"}`) || customElements.define(`item-${"3df83fc"}`, SettingItem, { extends: "div" });
+customElements.get(\`item-\${"b5c779c"}\`) || customElements.define(\`item-\${"b5c779c"}\`, SettingItem, { extends: "div" });
 
 // src/core/ui/item-container.ts
 var ItemContainer = class extends HTMLDivElement {
@@ -13140,12 +13139,12 @@ var ItemContainer = class extends HTMLDivElement {
   _card;
   constructor() {
     super();
-    this.innerHTML = `<div class="contain1">
+    this.innerHTML = \`<div class="contain1">
     <div class="header">
         <h2 class="title"></h2>
     </div>
 </div>
-<div class="card"></div>`;
+<div class="card"></div>\`;
     this._title = this.querySelector(".title");
     this._card = this.querySelector(".card");
   }
@@ -13156,7 +13155,7 @@ var ItemContainer = class extends HTMLDivElement {
     this._card.append(...item);
   }
 };
-customElements.get(`item-container-${"3df83fc"}`) || customElements.define(`item-container-${"3df83fc"}`, ItemContainer, { extends: "div" });
+customElements.get(\`item-container-\${"b5c779c"}\`) || customElements.define(\`item-container-\${"b5c779c"}\`, ItemContainer, { extends: "div" });
 
 // src/core/ui/menu.ts
 var Menuitem = class extends HTMLDivElement {
@@ -13171,7 +13170,7 @@ var Menuitem = class extends HTMLDivElement {
   }
   init(name, svg2) {
     this.className = "menuitem";
-    this.innerHTML = (svg2 ? `<div class="icon">${svg2}</div>` : "") + name;
+    this.innerHTML = (svg2 ? \`<div class="icon">\${svg2}</div>\` : "") + name;
     this.container[0].init(name);
     return this.container[0];
   }
@@ -13198,36 +13197,36 @@ var Menuitem = class extends HTMLDivElement {
     return this.container;
   }
 };
-customElements.get(`menuitem-${"3df83fc"}`) || customElements.define(`menuitem-${"3df83fc"}`, Menuitem, { extends: "div" });
+customElements.get(\`menuitem-\${"b5c779c"}\`) || customElements.define(\`menuitem-\${"b5c779c"}\`, Menuitem, { extends: "div" });
 
 // src/html/checkbox.html
-var checkbox_default = `<input type="checkbox" id="checkbox">\r
-<label for="checkbox"></label>\r
-<style>\r
-    input[type="checkbox"] {\r
-        display: none;\r
-    }\r
-\r
-    input~label {\r
-        cursor: pointer;\r
-    }\r
-\r
-    input:checked~label:before {\r
-        content: '\\2714';\r
-    }\r
-\r
-    input~label:before {\r
-        width: 12px;\r
-        height: 12px;\r
-        line-height: 14px;\r
-        vertical-align: text-bottom;\r
-        border-radius: 3px;\r
-        border: 1px solid #d3d3d3;\r
-        display: inline-block;\r
-        text-align: center;\r
-        content: ' ';\r
-    }\r
-</style>`;
+var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
+<label for="checkbox"></label>\\r
+<style>\\r
+    input[type="checkbox"] {\\r
+        display: none;\\r
+    }\\r
+\\r
+    input~label {\\r
+        cursor: pointer;\\r
+    }\\r
+\\r
+    input:checked~label:before {\\r
+        content: '\\\\2714';\\r
+    }\\r
+\\r
+    input~label:before {\\r
+        width: 12px;\\r
+        height: 12px;\\r
+        line-height: 14px;\\r
+        vertical-align: text-bottom;\\r
+        border-radius: 3px;\\r
+        border: 1px solid #d3d3d3;\\r
+        display: inline-block;\\r
+        text-align: center;\\r
+        content: ' ';\\r
+    }\\r
+</style>\`;
 
 // src/core/ui/utils/checkbox.ts
 var CheckBox = class extends HTMLElement {
@@ -13282,16 +13281,16 @@ var CheckBox = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`checkbox-${"3df83fc"}`) || customElements.define(`checkbox-${"3df83fc"}`, CheckBox);
+customElements.get(\`checkbox-\${"b5c779c"}\`) || customElements.define(\`checkbox-\${"b5c779c"}\`, CheckBox);
 var CheckBoxs = class extends HTMLDivElement {
-  $value = [];
+  \$value = [];
   checkboxs = {};
   get value() {
-    return this.$value;
+    return this.\$value;
   }
   set value(v) {
     v.forEach((d) => {
-      if (!this.$value.includes(d)) {
+      if (!this.\$value.includes(d)) {
         if (this.checkboxs[d]) {
           this.checkboxs[d].value = true;
         } else {
@@ -13300,10 +13299,10 @@ var CheckBoxs = class extends HTMLDivElement {
         }
       }
     });
-    this.$value.forEach((d) => {
+    this.\$value.forEach((d) => {
       v.includes(d) || (this.checkboxs[d].value = false);
     });
-    this.$value = [...v];
+    this.\$value = [...v];
   }
   update(labels) {
     labels.forEach((d) => {
@@ -13312,10 +13311,10 @@ var CheckBoxs = class extends HTMLDivElement {
         checkbox.update({ label: d });
         checkbox.addEventListener("change", () => {
           if (checkbox.value) {
-            this.$value.includes(d) || this.$value.push(d);
+            this.\$value.includes(d) || this.\$value.push(d);
           } else {
-            const i = this.$value.indexOf(d);
-            i >= 0 && this.$value.splice(i, 1);
+            const i = this.\$value.indexOf(d);
+            i >= 0 && this.\$value.splice(i, 1);
           }
           this.dispatchEvent(new Event("change"));
         });
@@ -13323,27 +13322,27 @@ var CheckBoxs = class extends HTMLDivElement {
         this.checkboxs[d] = checkbox;
       }
     });
-    this.$value.forEach((d) => {
+    this.\$value.forEach((d) => {
       if (!labels.includes(d)) {
         this.checkboxs[d]?.remove();
-        const i = this.$value.indexOf(d);
-        i >= 0 && this.$value.splice(i, 1);
+        const i = this.\$value.indexOf(d);
+        i >= 0 && this.\$value.splice(i, 1);
       }
     });
   }
 };
-customElements.get(`checkboxs-${"3df83fc"}`) || customElements.define(`checkboxs-${"3df83fc"}`, CheckBoxs, { extends: "div" });
+customElements.get(\`checkboxs-\${"b5c779c"}\`) || customElements.define(\`checkboxs-\${"b5c779c"}\`, CheckBoxs, { extends: "div" });
 
 // src/html/input.html
-var input_default = '<div class="input"><input>\r\n    <ul class="input-list"></ul>\r\n</div>\r\n<style type="text/css">\r\n    .input {\r\n        width: 100%;\r\n        display: inline-block;\r\n        position: relative;\r\n        border: 0;\r\n        overflow: visible;\r\n        white-space: nowrap;\r\n        height: 24px;\r\n        line-height: 24px;\r\n        cursor: pointer;\r\n        font-size: 12px;\r\n    }\r\n\r\n    .input input {\r\n        height: 24px;\r\n        line-height: 24px;\r\n        display: inline;\r\n        user-select: auto;\r\n        text-decoration: none;\r\n        outline: none;\r\n        width: calc(100% - 10px);\r\n        background: transparent;\r\n        padding: 0 5px;\r\n        border: 1px solid #ccd0d7;\r\n        border-radius: 4px;\r\n    }\r\n\r\n    .input input:focus {\r\n        border-color: #00a1d6;\r\n    }\r\n\r\n    .input-list {\r\n        display: none;\r\n        margin: 0;\r\n        width: 100%;\r\n        padding: 0;\r\n        border-radius: 0 0 4px 4px;\r\n        max-height: 120px;\r\n        background-color: #fff;\r\n        border: 1px solid #ccd0d7;\r\n        box-shadow: 0 0 2px 0 #ccd0d7;\r\n        position: absolute;\r\n        left: -1px;\r\n        right: auto;\r\n        z-index: 2;\r\n        overflow: hidden auto;\r\n        white-space: nowrap;\r\n    }\r\n\r\n    .input:hover .input-list {\r\n        display: block;\r\n    }\r\n\r\n    .input-list-row {\r\n        padding: 0 5px;\r\n        transition: background-color .3s;\r\n        line-height: 30px;\r\n        height: 30px;\r\n        font-size: 12px;\r\n        cursor: pointer;\r\n        color: #222;\r\n        position: relative;\r\n    }\r\n\r\n    .input-list-row:hover {\r\n        background-color: #f4f5f7;\r\n        color: #6d757a;\r\n    }\r\n\r\n    .cancel {\r\n        position: absolute;\r\n        right: 0;\r\n        top: 0px;\r\n        width: 38px;\r\n        height: 28px;\r\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\r\n    }\r\n\r\n    .input-list-row:hover .cancel {\r\n        background-position: -525px -530px;\r\n    }\r\n</style>\r\n<style type="text/css">\r\n    ::-webkit-scrollbar {\r\n        width: 7px;\r\n        height: 7px;\r\n    }\r\n\r\n    ::-webkit-scrollbar-track {\r\n        border-radius: 4px;\r\n        background-color: #EEE;\r\n    }\r\n\r\n    ::-webkit-scrollbar-thumb {\r\n        border-radius: 4px;\r\n        background-color: #999;\r\n    }\r\n</style>';
+var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/utils/input.ts
 var InputArea = class extends HTMLElement {
   _input;
   _ul;
-  $prop = {};
-  $value = "";
-  $candidate = [];
+  \$prop = {};
+  \$value = "";
+  \$candidate = [];
   constructor() {
     super();
     const root = this.attachShadow({ mode: "closed" });
@@ -13351,31 +13350,31 @@ var InputArea = class extends HTMLElement {
     this._input = root.children[0].children[0];
     this._ul = root.children[0].children[1];
     this._input.addEventListener("change", () => {
-      this.$value = this.$prop.type === "file" ? this._input.files : this._input.value;
+      this.\$value = this.\$prop.type === "file" ? this._input.files : this._input.value;
       this.dispatchEvent(new Event("change"));
     });
   }
   get prop() {
-    return this.$prop;
+    return this.\$prop;
   }
   set prop(v) {
-    this.$prop = v;
+    this.\$prop = v;
     Object.entries(v).forEach((d) => this._input.setAttribute(...d));
   }
   get value() {
-    return this.$value;
+    return this.\$value;
   }
   set value(v) {
-    if (this.$value === v)
+    if (this.\$value === v)
       return;
-    this.$value = v || "";
-    this._input.value = this.$value;
+    this.\$value = v || "";
+    this._input.value = this.\$value;
   }
   get candidate() {
-    return this.$candidate;
+    return this.\$candidate;
   }
   set candidate(v) {
-    this.$candidate = v;
+    this.\$candidate = v;
     this._ul.replaceChildren(...v.map((d, i, t) => {
       const li = document.createElement("li");
       li.className = "input-list-row";
@@ -13401,18 +13400,18 @@ var InputArea = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`input-${"3df83fc"}`) || customElements.define(`input-${"3df83fc"}`, InputArea);
+customElements.get(\`input-\${"b5c779c"}\`) || customElements.define(\`input-\${"b5c779c"}\`, InputArea);
 
 // src/html/select.html
-var select_default = '<div class="selectmenu">\r\n    <div class="selectmenu-txt"><span></span></div>\r\n    <div class="selectmenu-arrow arrow-down"></div>\r\n    <ul class="selectmenu-list"></ul>\r\n</div>\r\n<style type="text/css">\r\n    .selectmenu {\r\n        width: 100%;\r\n        display: inline-block;\r\n        position: relative;\r\n        border: 1px solid #ccd0d7;\r\n        border-radius: 4px;\r\n        overflow: visible;\r\n        white-space: nowrap;\r\n        height: 24px;\r\n        line-height: 24px;\r\n        cursor: pointer;\r\n        font-size: 12px;\r\n    }\r\n\r\n    .selectmenu-txt {\r\n        display: inline-block;\r\n        overflow: hidden;\r\n        vertical-align: top;\r\n        text-overflow: ellipsis;\r\n        padding: 0 5px;\r\n        height: 24px;\r\n        line-height: 24px;\r\n    }\r\n\r\n    .selectmenu-arrow {\r\n        position: absolute;\r\n        background-color: transparent;\r\n        top: 0;\r\n        right: 4px;\r\n        z-index: 0;\r\n        border-radius: 4px;\r\n        width: 20px;\r\n        height: 100%;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .arrow-down:before {\r\n        margin: 0 auto;\r\n        margin-top: 8px;\r\n        width: 0;\r\n        height: 0;\r\n        display: block;\r\n        border-width: 4px 4px 0;\r\n        border-style: solid;\r\n        border-color: #99a2aa transparent transparent;\r\n        position: relative;\r\n        content: "";\r\n    }\r\n\r\n    .selectmenu-list {\r\n        display: none;\r\n        margin: 0;\r\n        width: 100%;\r\n        padding: 0;\r\n        max-height: 120px;\r\n        background-color: #fff;\r\n        border: 1px solid #ccd0d7;\r\n        box-shadow: 0 0 2px 0 #ccd0d7;\r\n        position: absolute;\r\n        left: -1px;\r\n        right: auto;\r\n        z-index: 2;\r\n        overflow: hidden auto;\r\n        white-space: nowrap;\r\n    }\r\n\r\n    .selectmenu:hover .selectmenu-list {\r\n        display: block;\r\n    }\r\n\r\n    .selectmenu-list-row {\r\n        padding: 0 5px;\r\n        transition: background-color .3s;\r\n        line-height: 30px;\r\n        height: 30px;\r\n        font-size: 12px;\r\n        cursor: pointer;\r\n        color: #222;\r\n    }\r\n\r\n    .selectmenu-list-row:hover {\r\n        background-color: #f4f5f7;\r\n        color: #6d757a;\r\n    }\r\n</style>\r\n<style type="text/css">\r\n    ::-webkit-scrollbar {\r\n        width: 7px;\r\n        height: 7px;\r\n    }\r\n\r\n    ::-webkit-scrollbar-track {\r\n        border-radius: 4px;\r\n        background-color: #EEE;\r\n    }\r\n\r\n    ::-webkit-scrollbar-thumb {\r\n        border-radius: 4px;\r\n        background-color: #999;\r\n    }\r\n</style>';
+var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/utils/select.ts
 var SelectMenu = class extends HTMLElement {
   _text;
   _list;
-  $value = "";
-  $candidate = [];
-  $styles = {};
+  \$value = "";
+  \$candidate = [];
+  \$styles = {};
   constructor() {
     super();
     const root = this.attachShadow({ mode: "closed" });
@@ -13421,20 +13420,20 @@ var SelectMenu = class extends HTMLElement {
     this._list = root.children[0].children[2];
   }
   get value() {
-    return this.$value;
+    return this.\$value;
   }
   set value(v) {
-    if (this.$value === v)
+    if (this.\$value === v)
       return;
-    this.$value = v || "";
+    this.\$value = v || "";
     this._text.textContent = v || "";
-    v && this.$styles[v] && this._text.setAttribute("style", this.$styles[v]);
+    v && this.\$styles[v] && this._text.setAttribute("style", this.\$styles[v]);
   }
   get candidate() {
-    return this.$candidate;
+    return this.\$candidate;
   }
   set candidate(v) {
-    this.$candidate = v;
+    this.\$candidate = v;
     this._list.replaceChildren(...v.map((d, i, t) => {
       const li = document.createElement("li");
       li.className = "selectmenu-list-row";
@@ -13445,26 +13444,26 @@ var SelectMenu = class extends HTMLElement {
       });
       const span = document.createElement("span");
       span.textContent = d;
-      this.$styles[d] && span.setAttribute("style", this.$styles[d]);
+      this.\$styles[d] && span.setAttribute("style", this.\$styles[d]);
       li.appendChild(span);
       return li;
     }));
   }
   get styles() {
-    return this.$styles;
+    return this.\$styles;
   }
   set styles(v) {
-    this.$styles = v;
+    this.\$styles = v;
     this.candidate = this.candidate;
   }
   update(value) {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`select-${"3df83fc"}`) || customElements.define(`select-${"3df83fc"}`, SelectMenu);
+customElements.get(\`select-\${"b5c779c"}\`) || customElements.define(\`select-\${"b5c779c"}\`, SelectMenu);
 
 // src/html/slider.html
-var slider_default = '<div class="block">\r\n    <div class="slider">\r\n        <div class="slider-tracker-wrp">\r\n            <div class="slider-tracker">\r\n                <div class="slider-handle">\r\n                    <div class="slider-hint"></div>\r\n                </div>\r\n                <div class="slider-progress"></div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</div>\r\n<style type="text/css">\r\n    .block {\r\n        vertical-align: top;\r\n        display: inline-block;\r\n        width: 100%;\r\n    }\r\n\r\n    .slider {\r\n        width: 100%;\r\n        height: 13px;\r\n        clear: both;\r\n        position: relative;\r\n    }\r\n\r\n    .slider-tracker-wrp {\r\n        position: relative;\r\n        width: 100%;\r\n        height: 100%;\r\n        cursor: pointer;\r\n    }\r\n\r\n    .slider-tracker {\r\n        position: absolute;\r\n        width: 100%;\r\n        height: 6px;\r\n        left: 0;\r\n        border-radius: 4px;\r\n        top: 50%;\r\n        margin-top: -3px;\r\n        background-color: #e5e9ef;\r\n    }\r\n\r\n    .slider-handle {\r\n        position: absolute;\r\n        top: -4px;\r\n        height: 14px;\r\n        width: 14px;\r\n        border-radius: 7px;\r\n        cursor: pointer;\r\n        z-index: 1;\r\n        margin-left: -7px;\r\n        box-shadow: 0 0 3px #017cc3;\r\n        background-color: #fff;\r\n        transition: box-shadow .3s;\r\n    }\r\n\r\n    .slider-handle:hover {\r\n        box-shadow: 0 0 5px #017cc3;\r\n    }\r\n\r\n    .slider-hint {\r\n        display: none;\r\n        position: absolute;\r\n        top: -21px;\r\n        white-space: nowrap;\r\n        border-radius: 4px;\r\n        background-color: hsla(0, 0%, 100%, .8);\r\n        padding: 0 3px;\r\n        border: 1px solid #fafafa;\r\n        z-index: 1;\r\n        transform: translateX(-25%);\r\n        user-select: none;\r\n    }\r\n\r\n    .slider-progress {\r\n        width: 0;\r\n        height: 100%;\r\n        border-radius: 4px;\r\n        background-color: #00a1d6;\r\n        position: relative;\r\n    }\r\n</style>';
+var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/utils/slider.ts
 function offset(node) {
@@ -13496,13 +13495,13 @@ var SliderBlock = class extends HTMLElement {
   _progress;
   _hinter;
   _wrp;
-  $value = 0;
-  $min = 0;
-  $max = 100;
-  $precision = 100;
-  $hint = true;
-  $solid = false;
-  $vertical = false;
+  \$value = 0;
+  \$min = 0;
+  \$max = 100;
+  \$precision = 100;
+  \$hint = true;
+  \$solid = false;
+  \$vertical = false;
   showChange;
   constructor() {
     super();
@@ -13514,10 +13513,10 @@ var SliderBlock = class extends HTMLElement {
     this._wrp = root.children[0].children[0].children[0];
     const mouseLinster = (e) => {
       const { pageX, pageY } = e;
-      const offsetX = this.$vertical ? pageY - offset(this._wrp).top - 7 : pageX - offset(this._wrp).left - 7;
+      const offsetX = this.\$vertical ? pageY - offset(this._wrp).top - 7 : pageX - offset(this._wrp).left - 7;
       const allX = this._wrp.offsetWidth - 14;
       const pv = (0 > offsetX ? 0 : offsetX > allX ? allX : offsetX) / allX;
-      this.value = (this.$max - this.$min) * Math.round(pv * this.$precision) / this.$precision + this.$min;
+      this.value = (this.\$max - this.\$min) * Math.round(pv * this.\$precision) / this.\$precision + this.\$min;
       this.dispatchEvent(new Event("change"));
     };
     this.addEventListener("click", mouseLinster);
@@ -13532,14 +13531,14 @@ var SliderBlock = class extends HTMLElement {
     this._handle.addEventListener("mouseover", () => this.showChange());
     let nHint = 0;
     this.showChange = () => {
-      const pv = (this.$value - this.$min) / (this.$max - this.$min);
-      this._handle.style.cssText = `left: ${(pv * (this._wrp.offsetWidth - 14) + 7) / this._wrp.offsetWidth * 100}%;`;
-      this._progress.style.cssText = `width: ${pv * 100}%;`;
-      if (this.$hint) {
-        this._hinter.textContent = this.$value;
+      const pv = (this.\$value - this.\$min) / (this.\$max - this.\$min);
+      this._handle.style.cssText = \`left: \${(pv * (this._wrp.offsetWidth - 14) + 7) / this._wrp.offsetWidth * 100}%;\`;
+      this._progress.style.cssText = \`width: \${pv * 100}%;\`;
+      if (this.\$hint) {
+        this._hinter.textContent = this.\$value;
         if (this._hinter.style.display !== "block")
           this._hinter.style.display = "block";
-        if (this.$solid)
+        if (this.\$solid)
           return;
         clearTimeout(nHint);
         nHint = setTimeout(() => this._hinter.style.display = "", 300);
@@ -13548,72 +13547,72 @@ var SliderBlock = class extends HTMLElement {
     };
   }
   get value() {
-    return this.$value;
+    return this.\$value;
   }
   set value(v) {
-    if (this.$vertical)
-      v = this.$max - v + this.$min;
-    v = (this.$max - this.$min) * Math.round((v - this.$min) / (this.$max - this.$min) * this.$precision) / this.$precision + this.$min;
-    if (v === this.$value)
+    if (this.\$vertical)
+      v = this.\$max - v + this.\$min;
+    v = (this.\$max - this.\$min) * Math.round((v - this.\$min) / (this.\$max - this.\$min) * this.\$precision) / this.\$precision + this.\$min;
+    if (v === this.\$value)
       return;
-    this.$value = v;
+    this.\$value = v;
     this.showChange();
   }
   get min() {
-    return this.$min;
+    return this.\$min;
   }
   set min(v) {
-    if (v === this.$min || v >= this.$max)
+    if (v === this.\$min || v >= this.\$max)
       return;
-    this.$min = v;
-    if (v > this.$value)
+    this.\$min = v;
+    if (v > this.\$value)
       this.value = v;
     this.showChange();
   }
   get max() {
-    return this.$max;
+    return this.\$max;
   }
   set max(v) {
-    if (v === this.$max || v <= this.$min)
+    if (v === this.\$max || v <= this.\$min)
       return;
-    this.$max = v;
-    if (v < this.$value)
+    this.\$max = v;
+    if (v < this.\$value)
       this.value = v;
     this.showChange();
   }
   get precision() {
-    return this.$precision;
+    return this.\$precision;
   }
   set precision(v) {
-    if (v === this.$precision)
+    if (v === this.\$precision)
       return;
-    this.$precision = v;
-    this.value = this.$value;
+    this.\$precision = v;
+    this.value = this.\$value;
   }
   get hint() {
-    return this.$hint;
+    return this.\$hint;
   }
   set hint(v) {
-    if (v === this.$hint)
+    if (v === this.\$hint)
       return;
-    this.$hint = v;
+    this.\$hint = v;
   }
   get solid() {
-    return this.$solid;
+    return this.\$solid;
   }
   set solid(v) {
-    if (v === this.$solid)
+    if (v === this.\$solid)
       return;
-    this.$solid = v;
+    this.\$solid = v;
     this.showChange();
   }
   get vertical() {
-    return this.$vertical;
+    return this.\$vertical;
   }
   set vertical(v) {
-    if (v === this.$vertical)
+    if (v === this.\$vertical)
       return;
-    this.$vertical = v;
+    this.\$vertical = v;
     this.style.transform = v ? "rotate(-90deg)" : "";
   }
   connectedCallback() {
@@ -13626,17 +13625,17 @@ var SliderBlock = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(`slider-${"3df83fc"}`) || customElements.define(`slider-${"3df83fc"}`, SliderBlock);
+customElements.get(\`slider-\${"b5c779c"}\`) || customElements.define(\`slider-\${"b5c779c"}\`, SliderBlock);
 
 // src/html/switch.html
-var switch_default = '<div class="switch">\r\n    <span class="bar"></span>\r\n    <span class="knob">\r\n        <i class="circle"></i>\r\n    </span>\r\n</div>\r\n<style type="text/css">\r\n    .switch {\r\n        cursor: pointer;\r\n        display: block;\r\n        min-width: 34px;\r\n        outline: none;\r\n        position: relative;\r\n        width: 34px;\r\n    }\r\n\r\n    .bar {\r\n        background-color: rgb(189, 193, 198);\r\n        border-radius: 8px;\r\n        height: 12px;\r\n        left: 3px;\r\n        position: absolute;\r\n        top: 2px;\r\n        transition: background-color linear 80ms;\r\n        width: 28px;\r\n        z-index: 0;\r\n    }\r\n\r\n    .bar[checked] {\r\n        background-color: rgb(26, 115, 232);\r\n        opacity: 0.5;\r\n    }\r\n\r\n    .bar:active {\r\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\r\n    }\r\n\r\n    .knob {\r\n        background-color: #fff;\r\n        border-radius: 50%;\r\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\r\n        display: block;\r\n        height: 16px;\r\n        position: relative;\r\n        transition: transform linear 80ms, background-color linear 80ms;\r\n        width: 16px;\r\n        z-index: 1;\r\n    }\r\n\r\n    .knob[checked] {\r\n        background-color: rgb(26, 115, 232);\r\n        transform: translate3d(18px, 0, 0);\r\n    }\r\n\r\n    .knob:active {\r\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\r\n    }\r\n\r\n    .knob i {\r\n        color: rgba(128, 134, 139, 15%);\r\n        height: 40px;\r\n        left: -12px;\r\n        pointer-events: none;\r\n        top: -12px;\r\n        transition: color linear 80ms;\r\n        width: 40px;\r\n        border-radius: 50%;\r\n        bottom: 0;\r\n        display: block;\r\n        overflow: hidden;\r\n        position: absolute;\r\n        right: 0;\r\n        transform: translate3d(0, 0, 0);\r\n    }\r\n\r\n    .knob i[checked] {\r\n        color: rgb(26, 115, 232);\r\n    }\r\n\r\n    .knob i:active {\r\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\r\n    }\r\n</style>';
+var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/utils/switch.ts
 var SwitchButton = class extends HTMLElement {
   _bar;
   _knob;
   _circle;
-  $value = false;
+  \$value = false;
   constructor() {
     super();
     const root = this.attachShadow({ mode: "closed" });
@@ -13645,16 +13644,16 @@ var SwitchButton = class extends HTMLElement {
     this._knob = root.children[0].children[1];
     this._circle = root.children[0].children[1].children[0];
     root.children[0].addEventListener("click", (e) => {
-      this.value = !this.$value;
+      this.value = !this.\$value;
       e.stopPropagation();
       this.dispatchEvent(new Event("change"));
     });
   }
   get value() {
-    return this.$value;
+    return this.\$value;
   }
   set value(v) {
-    if (this.$value === v)
+    if (this.\$value === v)
       return;
     if (v) {
       this._bar.setAttribute("checked", "checked");
@@ -13665,14 +13664,14 @@ var SwitchButton = class extends HTMLElement {
       this._knob.removeAttribute("checked");
       this._circle.removeAttribute("checked");
     }
-    this.$value = v;
+    this.\$value = v;
   }
   update(value) {
     value === void 0 || (this.value = value);
     return this;
   }
 };
-customElements.get(`switch-${"3df83fc"}`) || customElements.define(`switch-${"3df83fc"}`, SwitchButton);
+customElements.get(\`switch-\${"b5c779c"}\`) || customElements.define(\`switch-\${"b5c779c"}\`, SwitchButton);
 
 // src/core/ui.ts
 var Menus = {
@@ -14030,7 +14029,7 @@ var UI = class {
         const toast = this.BLOD.toast.toast(0, "info", ...data);
         new Aria2().getVersion().then((d) => {
           toast.type = "success";
-          data.push(`-------aria2 v${d.version}-------`, ...d.enabledFeatures);
+          data.push(\`-------aria2 v\${d.version}-------\`, ...d.enabledFeatures);
           toast.data = data;
         }).catch((e) => {
           toast.type = "error";
@@ -14564,13 +14563,13 @@ var VideoInfo = class {
       this.cids[d.cid] = {
         album,
         artist,
-        title: d.part || `#${i + 1}`,
+        title: d.part || \`#\${i + 1}\`,
         artwork: [{ src: pic }]
       };
     }) : this.cids[data.cid] = {
       album,
       artist,
-      title: `#1`,
+      title: \`#1\`,
       artwork: [{ src: pic }]
     };
     this.stats[data.aid] = data.stat;
@@ -14584,13 +14583,13 @@ var VideoInfo = class {
       this.cids[d.id] = {
         album,
         artist,
-        title: d.title || `#${i + 1}`,
+        title: d.title || \`#\${i + 1}\`,
         artwork: [{ src: pic }]
       };
     }) : this.cids[data.id] = {
       album,
       artist,
-      title: `#1`,
+      title: \`#1\`,
       artwork: [{ src: pic }]
     };
   }
@@ -14625,7 +14624,7 @@ var VideoInfo = class {
         this.cids[d2.cid] = {
           album,
           artist,
-          title: title + `(${d2.part})`,
+          title: title + \`(\${d2.part})\`,
           artwork: [{ src: pic }, { src: cover }]
         };
       });
@@ -14766,26 +14765,26 @@ var Ef2 = class {
       Object.entries(d).forEach((d2) => {
         switch (d2[0]) {
           case "cookie":
-            arr2.push(`cookie: ${d2[1]}`);
+            arr2.push(\`cookie: \${d2[1]}\`);
             break;
           case "delay":
             break;
           case "dir":
-            d2[1] = d2[1].replace(/\//, "\\");
-            d2[1].endsWith("\\") && (d2[1] = d2[1].slice(0, -1));
-            arr2.push(`filepath: ${d2[1]}`);
+            d2[1] = d2[1].replace(/\\//, "\\\\");
+            d2[1].endsWith("\\\\") && (d2[1] = d2[1].slice(0, -1));
+            arr2.push(\`filepath: \${d2[1]}\`);
             break;
           case "out":
-            arr2.push(`filename: ${d2[1]}`);
+            arr2.push(\`filename: \${d2[1]}\`);
             break;
           case "password":
-            arr2.push(`password: ${d2[1]}`);
+            arr2.push(\`password: \${d2[1]}\`);
             break;
           case "body":
-            arr2.push(`postdata: ${d2[1]}`);
+            arr2.push(\`postdata: \${d2[1]}\`);
             break;
           case "referer":
-            arr2.push(`referer: ${d2[1]}`);
+            arr2.push(\`referer: \${d2[1]}\`);
             break;
           case "silence":
             break;
@@ -14794,10 +14793,10 @@ var Ef2 = class {
             arr2.unshift(d2[1]);
             break;
           case "userAgent":
-            arr2.push(`User-Agent: ${d2[1]}`);
+            arr2.push(\`User-Agent: \${d2[1]}\`);
             break;
           case "userName":
-            arr2.push(`username: ${d2[1]}`);
+            arr2.push(\`username: \${d2[1]}\`);
             break;
           default:
             break;
@@ -14807,7 +14806,7 @@ var Ef2 = class {
       arr2.push(">");
       result.push(...arr2);
     });
-    saveAs(result.join("\r\n"), fileName || `${data[0].out || getMetux()}.ef2`);
+    saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
   }
   static encode(data) {
     const arr2 = [];
@@ -14820,8 +14819,8 @@ var Ef2 = class {
           arr2.push("-q");
           break;
         case "dir":
-          d[1] = d[1].replace(/\//, "\\");
-          d[1].endsWith("\\") && (d[1] = d[1].slice(0, -1));
+          d[1] = d[1].replace(/\\//, "\\\\");
+          d[1].endsWith("\\\\") && (d[1] = d[1].slice(0, -1));
           arr2.push("-o", d[1]);
           break;
         case "out":
@@ -14853,7 +14852,7 @@ var Ef2 = class {
           break;
       }
     });
-    return `ef2://${Base64.encode(arr2.join(" "))}`;
+    return \`ef2://\${Base64.encode(arr2.join(" "))}\`;
   }
   static decode(ef2str) {
     ef2str = ef2str.replace("ef2://", "");
@@ -14861,7 +14860,7 @@ var Ef2 = class {
     const arr2 = ef2str.split(" ");
     const data = {};
     for (let i = 0; i < arr2.length; i++) {
-      if (/-\w/.test(arr2[i])) {
+      if (/-\\w/.test(arr2[i])) {
         switch (arr2[i]) {
           case "-c":
             data.cookie = arr2[i + 1];
@@ -15055,7 +15054,7 @@ var PlayinfoFilter = class {
           link.flv = index;
           break;
       }
-      this.fileName && (link.fileName = `${this.fileName}${qua}.${link.type}`);
+      this.fileName && (link.fileName = \`\${this.fileName}\${qua}.\${link.type}\`);
       this.record.push(link);
     });
   }
@@ -15085,7 +15084,7 @@ var PlayinfoFilter = class {
         quality: qua,
         size: sizeFormat(d.bandwidth * duration / 8),
         color: this.color[qua] || "",
-        fileName: `${this.fileName}${qua}.m4v`
+        fileName: \`\${this.fileName}\${qua}.m4v\`
       });
     });
   }
@@ -15100,7 +15099,7 @@ var PlayinfoFilter = class {
         quality: qua,
         size: sizeFormat(d.bandwidth * duration / 8),
         color: this.color[qua] || "",
-        fileName: `${this.fileName}${qua}.${fmt}`
+        fileName: \`\${this.fileName}\${qua}.\${fmt}\`
       });
     });
   }
@@ -15109,13 +15108,13 @@ var PlayinfoFilter = class {
   }
   getID(url) {
     let id = 0;
-    url.replace(/\d+\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
+    url.replace(/\\d+\\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
     return id;
   }
 };
 
 // src/html/download.html
-var download_default2 = '<div class="table"></div>\r\n<style type="text/css">\r\n    .table {\r\n        position: fixed;\r\n        z-index: 11113;\r\n        bottom: 0;\r\n        width: 100%;\r\n        min-height: 50px;\r\n        display: flex;\r\n        box-sizing: border-box;\r\n        background: #fff;\r\n        border-radius: 8px;\r\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\r\n        transition: transform 0.3s ease-in;\r\n        flex-wrap: wrap;\r\n        align-content: center;\r\n        justify-content: center;\r\n        align-items: center;\r\n    }\r\n\r\n    .cell {\r\n        background-color: #fff;\r\n        color: #000 !important;\r\n        border: #ccc 1px solid;\r\n        border-radius: 3px;\r\n        display: flex;\r\n        margin: 3px;\r\n        flex-wrap: wrap;\r\n        align-content: center;\r\n        justify-content: center;\r\n        align-items: center;\r\n        flex-direction: row;\r\n    }\r\n\r\n    .type {\r\n        color: #000 !important;\r\n        display: table-cell;\r\n        min-width: 1.5em;\r\n        text-align: center;\r\n        vertical-align: middle;\r\n        padding: 10px 3px;\r\n    }\r\n\r\n    .type.mp4 {\r\n        background-color: #e0e;\r\n    }\r\n\r\n    .type.av1 {\r\n        background-color: #feb;\r\n    }\r\n\r\n    .type.avc {\r\n        background-color: #07e;\r\n    }\r\n\r\n    .type.hev {\r\n        background-color: #7ba;\r\n    }\r\n\r\n    .type.aac {\r\n        background-color: #0d0;\r\n    }\r\n\r\n    .type.flv {\r\n        background-color: #0dd;\r\n    }\r\n\r\n    .item {\r\n        display: table-cell;\r\n        text-decoration: none;\r\n        padding: 3px;\r\n        cursor: pointer;\r\n        color: #1184B4;\r\n    }\r\n\r\n    .item:hover {\r\n        color: #FE3676;\r\n    }\r\n\r\n    .up {\r\n        color: #fff !important;\r\n        text-align: center;\r\n        padding: 1px 3px;\r\n        background-color: #777;\r\n    }\r\n\r\n    .up.yellow {\r\n        background-color: #ffe42b;\r\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\r\n    }\r\n\r\n    .up.pink {\r\n        background-color: #ffafc9;\r\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\r\n    }\r\n\r\n    .up.purple {\r\n        background-color: #c0f;\r\n        background-image: linear-gradient(to right, #c0f, #90f);\r\n    }\r\n\r\n    .up.red {\r\n        background-color: #f00;\r\n        background-image: linear-gradient(to right, #f00, #c00);\r\n    }\r\n\r\n    .up.orange {\r\n        background-color: #f90;\r\n        background-image: linear-gradient(to right, #f90, #d70);\r\n    }\r\n\r\n    .up.blue {\r\n        background-color: #00d;\r\n        background-image: linear-gradient(to right, #00d, #00b);\r\n    }\r\n\r\n    .up.green {\r\n        background-color: #0d0;\r\n        background-image: linear-gradient(to right, #0d0, #0b0);\r\n    }\r\n\r\n    .up.lv9 {\r\n        background-color: #151515;\r\n        background-image: linear-gradient(to right, #151515, #030303);\r\n    }\r\n\r\n    .up.lv8 {\r\n        background-color: #841cf9;\r\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\r\n    }\r\n\r\n    .up.lv7 {\r\n        background-color: #e52fec;\r\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\r\n    }\r\n\r\n    .up.lv6 {\r\n        background-color: #ff0000;\r\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\r\n    }\r\n\r\n    .up.lv5 {\r\n        background-color: #ff6c00;\r\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\r\n    }\r\n\r\n    .up.lv4 {\r\n        background-color: #ffb37c;\r\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\r\n    }\r\n\r\n    .up.lv3 {\r\n        background-color: #92d1e5;\r\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\r\n    }\r\n\r\n    .up.lv2 {\r\n        background-color: #95ddb2;\r\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\r\n    }\r\n\r\n    .up.lv1 {\r\n        background-color: #bfbfbf;\r\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\r\n    }\r\n\r\n    .down {\r\n        font-size: 90%;\r\n        margin-top: 2px;\r\n        text-align: center;\r\n        padding: 1px 3px;\r\n    }\r\n</style>';
+var download_default2 = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/download.ts
 var BilioldDownload = class extends HTMLElement {
@@ -15133,9 +15132,9 @@ var BilioldDownload = class extends HTMLElement {
   updateItem = (key, value) => {
     this._container.contains(this._noData) && this._noData.remove();
     this._cells[key] || (this._cells[key] = addElement("div", { class: "cell" }, this._container));
-    this._cells[key].innerHTML = `<div class="type ${key}">${key}</div>`;
+    this._cells[key].innerHTML = \`<div class="type \${key}">\${key}</div>\`;
     value ? value.forEach((d) => {
-      const a = addElement("a", { class: "item", target: "_blank" }, this._cells[key], `<div class="up${d.color ? ` ${d.color}` : ""}">${d.quality}</div><div class="down">${d.size}</div>`);
+      const a = addElement("a", { class: "item", target: "_blank" }, this._cells[key], \`<div class="up\${d.color ? \` \${d.color}\` : ""}">\${d.quality}</div><div class="down">\${d.size}</div>\`);
       d.url && (a.href = d.url[0]);
       d.fileName && (a.download = d.fileName);
       d.onClick && a.addEventListener("click", (e) => d.onClick(e));
@@ -15160,7 +15159,7 @@ var BilioldDownload = class extends HTMLElement {
     this._container.replaceChildren(this._noData);
   }
 };
-customElements.get(`download-${"3df83fc"}`) || customElements.define(`download-${"3df83fc"}`, BilioldDownload);
+customElements.get(\`download-\${"b5c779c"}\`) || customElements.define(\`download-\${"b5c779c"}\`, BilioldDownload);
 
 // src/core/download.ts
 var Download = class {
@@ -15172,7 +15171,7 @@ var Download = class {
   data = this.ui.init();
   get fileName() {
     if (this.BLOD.videoInfo.metadata) {
-      return `${this.BLOD.videoInfo.metadata.album}(${this.BLOD.videoInfo.metadata.title})`;
+      return \`\${this.BLOD.videoInfo.metadata.album}(\${this.BLOD.videoInfo.metadata.title})\`;
     }
     return "";
   }
@@ -15183,7 +15182,7 @@ var Download = class {
       this.data[d.type].push({
         url: d.url,
         fileName,
-        quality: Reflect.has(d, "flv") ? `${d.quality}*${d.flv}` : d.quality,
+        quality: Reflect.has(d, "flv") ? \`\${d.quality}*\${d.flv}\` : d.quality,
         size: d.size,
         color: d.color,
         onClick: (ev) => this.pushDownload(d, ev)
@@ -15229,7 +15228,7 @@ var Download = class {
             urls: data.url,
             out: data.fileName
           }).then((d) => {
-            this.BLOD.toast.success("aria2已经开始下载", `GUID: ${d}`);
+            this.BLOD.toast.success("aria2已经开始下载", \`GUID: \${d}\`);
           }).catch((e) => {
             this.BLOD.toast.error("aria2[RPC]错误！", e);
           });
@@ -15321,8 +15320,8 @@ var BLOD = class {
     this.bpxPlayerProfile();
     this.path[2] == "message.bilibili.com" && Header.message();
     Header.videoOffset();
-    /space\.bilibili\.com/.test(location.href) && new PageSpace(this);
-    /bangumi\/media\/md/.test(location.href) && new PageMedia(this);
+    /space\\.bilibili\\.com/.test(location.href) && new PageSpace(this);
+    /bangumi\\/media\\/md/.test(location.href) && new PageMedia(this);
     location.href.includes("www.bilibili.com/account/history") && new PageHistory(this);
     this.path[2] == "live.bilibili.com" && new PageLive(this);
     this.path[2] == "t.bilibili.com" && new PageDynamic(this);
@@ -15331,30 +15330,30 @@ var BLOD = class {
     if (this.path[2] == "www.bilibili.com" && (!this.path[3] || (this.path[3].startsWith("?") || this.path[3].startsWith("#") || this.path[3].startsWith("index.")))) {
       this.status.index && new PageIndex(this);
     }
-    if (this.status.av && /(\/s)?\/video\/[AaBb][Vv]/.test(location.href)) {
+    if (this.status.av && /(\\/s)?\\/video\\/[AaBb][Vv]/.test(location.href)) {
       this.path[3] === "s" && this.urlCleaner.updateLocation(location.href.replace("s/video", "video"));
       this.EmbedPlayer();
       new PageAV(this);
     }
-    if (this.status.player && (/\/festival\//.test(location.href) || /player\./.test(location.href) && !location.href.includes("ancient"))) {
+    if (this.status.player && (/\\/festival\\//.test(location.href) || /player\\./.test(location.href) && !location.href.includes("ancient"))) {
       this.EmbedPlayer();
     }
-    if (this.status.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) {
+    if (this.status.bangumi && /\\/bangumi\\/play\\/(ss|ep)/.test(location.href)) {
       this.EmbedPlayer();
       new PageBangumi(this);
     }
-    if (this.status.watchlater && /\/watchlater/.test(location.href)) {
+    if (this.status.watchlater && /\\/watchlater/.test(location.href)) {
       this.EmbedPlayer();
       new PageWatchlater(this);
     }
-    if (this.status.playlist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href) || /\/playlist\/video\/pl/.test(location.href)) {
+    if (this.status.playlist && /\\/medialist\\/play\\//.test(location.href) && !/watchlater/.test(location.href) || /\\/playlist\\/video\\/pl/.test(location.href)) {
       this.EmbedPlayer();
       new PagePlaylist(this);
     }
-    if (this.status.ranking && /\/v\/popular\//.test(location.href)) {
+    if (this.status.ranking && /\\/v\\/popular\\//.test(location.href)) {
       new PageRanking(this);
     }
-    if (this.status.read && /\/read\/[Cc][Vv]/.test(location.href)) {
+    if (this.status.read && /\\/read\\/[Cc][Vv]/.test(location.href)) {
       new PageRead(this);
     }
     if (this.status.search && this.path[2] == "search.bilibili.com") {
@@ -15367,7 +15366,7 @@ var BLOD = class {
     this.status.header && new Header();
     this.status.comment && new Comment(this);
     this.status.webRTC || WebTRC.disable();
-    this.status.album && /t.bilibili.com\/\d+/.test(location.href) && PageSpace.album();
+    this.status.album && /t.bilibili.com\\/\\d+/.test(location.href) && PageSpace.album();
     this.status.development && Reflect.defineProperty(window, "BLOD", {
       value: this,
       configurable: true
@@ -15586,7 +15585,7 @@ var BLOD = class {
               throw new Error("一次只能运行一个更新实例！");
             this.updating = true;
             if (!this.version)
-              throw new Error(`未知错误导致脚本版本异常！version：${this.version}`);
+              throw new Error(\`未知错误导致脚本版本异常！version：\${this.version}\`);
             const msg = [
               "更新播放器组件中，可能需要花费一点时间，请不要关闭页面！",
               "如果弹出跨域提醒，推荐【总是允许全部域名】",
@@ -15595,21 +15594,21 @@ var BLOD = class {
             const toast = this.toast.toast(0, "warning", ...msg);
             let i = 1;
             await Promise.all([
-              this.GM.fetch(`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${this.version}/extension/player/video.js`).then((d) => d.text()).then((d) => {
+              this.GM.fetch(\`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@\${this.version}/extension/player/video.js\`).then((d) => d.text()).then((d) => {
                 data[0] = d;
-                msg.push(`加载播放器组件：${i++}/2`);
+                msg.push(\`加载播放器组件：\${i++}/2\`);
                 toast.data = msg;
               }).catch((e) => {
-                msg.push(`获取播放器组件出错！${i++}/2`, e);
+                msg.push(\`获取播放器组件出错！\${i++}/2\`, e);
                 toast.data = msg;
                 toast.type = "error";
               }),
-              this.GM.fetch(`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${this.version}/extension/player/video.css`).then((d) => d.text()).then((d) => {
+              this.GM.fetch(\`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@\${this.version}/extension/player/video.css\`).then((d) => d.text()).then((d) => {
                 data[1] = d;
-                msg.push(`加载播放器组件：${i++}/2`);
+                msg.push(\`加载播放器组件：\${i++}/2\`);
                 toast.data = msg;
               }).catch((e) => {
-                msg.push(`获取播放器组件出错！${i++}/2`, e);
+                msg.push(\`获取播放器组件出错！\${i++}/2\`, e);
                 toast.data = msg;
                 toast.type = "error";
               })
@@ -15625,7 +15624,7 @@ var BLOD = class {
             this.GM.setValue("bilibiliplayerstyle", data[1]);
           }
           new Function(data[0])();
-          addCss(data[1], `bilibiliplayer-${this.version}`);
+          addCss(data[1], \`bilibiliplayer-\${this.version}\`);
           this.GM.setValue("version", this.version);
         } else {
           await loadScript(URLS.VIDEO);
@@ -15693,7 +15692,6 @@ new BLOD(GM);
  */
 // @license MIT
 
-]]></>).toString();
+`;
 
 new Function("GM", MODULES)(GM);
-
