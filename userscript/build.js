@@ -1,6 +1,7 @@
 const manifest = require('./manifest.json');
 const esbuild = require('esbuild');
 const { exec } = require("child_process");
+const fs = require('fs');
 
 /**
  * 获取文件的`commit`哈希值
@@ -27,8 +28,18 @@ getHash('./extension/player/video.js')
                 s += `// @${d[0].padEnd(13, " ")}${d[1]}\n`;
             }
             return s;
-        }, `// ==UserScript==\n`) + '// ==/UserScript==\n\nconst MODULES = (<><![CDATA[\n';
-        const footer = '\n]]></>).toString();\n\nnew Function("GM", MODULES)(GM);\n';
+        }, `// ==UserScript==\n`) + '// ==/UserScript==\n\nconst MODULES = `\n';
+        const footer = '\n`;\n\nnew Function("GM", MODULES)(GM);\n';
+        const userscriptPlugin = {
+            name: 'example',
+            setup(build) {
+                build.onEnd(result => {
+                    result.outputFiles.forEach(d => {
+                        fs.promises.writeFile(d.path, banner + d.text.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$') + footer);
+                    })
+                })
+            },
+        }
         esbuild.build({
             entryPoints: [ // 入口脚本
                 'userscript/main.ts'
@@ -46,12 +57,10 @@ getHash('./extension/player/video.js')
                 _MUTEX_: `'${hash.slice(0, 7)}'`, // 编译时生成的唯一标记
                 _UserScript_: true, // 用户脚本标记
             },
-            banner: {
-                js: banner // 页眉 此处用于脚本元素据及预处理
-            },
-            footer: {
-                js: footer // 页脚 此处用于后处理
-            },
+            plugins: [
+                userscriptPlugin
+            ],
+            write: false, // 禁用输出以进行后续处理
             outfile: 'userscript/main.user.js'
         }).catch(e => {
             console.error(`[${manifest.name}(${manifest.version})]：脚本编译出错！`, e);
