@@ -21,7 +21,7 @@ import { PageMedia } from "./page/media";
 import { PageHistory } from "./page/history";
 import { PageDynamic } from "./page/dynamic";
 import { UI } from "./core/ui";
-import { addCss, addElement, loadScript, loadStyle } from "./utils/element";
+import { addCss, loadScript, loadStyle } from "./utils/element";
 import { Automate } from "./core/automate";
 import { localStorage } from "./core/storage";
 import { PageLive } from "./page/live";
@@ -53,8 +53,18 @@ export class BLOD {
     path = location.href.split('/');
     /** bangumi标记 */
     pgc = false;
-    aid!: number;
-    cid!: number;
+    get aid() {
+        return (<any>window).aid;
+    };
+    set aid(v) {
+        (<any>window).aid = v;
+    }
+    get cid() {
+        return (<any>window).cid;
+    };
+    set cid(v) {
+        (<any>window).cid = v;
+    }
     /** bangumi ssid */
     ssid!: number;
     /** bangumi epid */
