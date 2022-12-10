@@ -2,9 +2,10 @@ import { BLOD } from "../bilibili-old";
 import { apiBiliplusPlayurl } from "../io/api-biliplus-playurl";
 import { ApiGlobalOgvPlayurl } from "../io/api-global-ogv-playurl";
 import { ApiAppPgcPlayurl, IPlayurlDash } from "../io/api-playurl";
+import { fnval } from "../io/fnval";
 import { uid } from "../utils/conf/uid";
 import { debug } from "../utils/debug";
-import { urlObj } from "../utils/format/url";
+import { objUrl, urlObj } from "../utils/format/url";
 import { xhrHook, XMLHttpRequestOpenParams } from "../utils/hook/xhr";
 import { Toast } from "./toast";
 
@@ -43,24 +44,15 @@ export class VideoLimit {
     protected listening = false;
     /** 播放数据备份 */
     __playinfo__: any;
-    constructor(protected BLOD: BLOD) { }
-    /** 开始监听 */
-    enable() {
-        if (this.listening) return;
-        // 处理限制视频请求
-        const disable = xhrHook.async('/playurl?', args => {
-            const obj = urlObj(args[1]);
-            this.updateVaribale(obj);
-            return Boolean(this.BLOD.limit || this.BLOD.th)
-        }, async (args) => {
-            const response = this.BLOD.th ? await this._th(args) : await this._gat(args);
-            return { response, responseType: 'json', responseText: JSON.stringify(response) }
-        }, false);
+    constructor(protected BLOD: BLOD) {
         // 处理非限制视频请求
         xhrHook('/playurl?', args => {
+            const param = urlObj(args[1]);
             if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
-                args[1] += `&access_key=${this.BLOD.status.accessKey.token}`
+                param.access_key = this.BLOD.status.accessKey.token; // 不登录高画质
             }
+            param.fnval && (param.fnval = fnval); // 画质提升
+            args[1] = objUrl(args[1], param);
             return !(this.BLOD.limit || this.BLOD.th)
         }, res => {
             try {
@@ -75,6 +67,19 @@ export class VideoLimit {
                     }
                 }
             } catch (e) { }
+        }, false);
+    }
+    /** 开始监听 */
+    enable() {
+        if (this.listening) return;
+        // 处理限制视频请求
+        const disable = xhrHook.async('/playurl?', args => {
+            const obj = urlObj(args[1]);
+            this.updateVaribale(obj);
+            return Boolean(this.BLOD.limit || this.BLOD.th)
+        }, async (args) => {
+            const response = this.BLOD.th ? await this._th(args) : await this._gat(args);
+            return { response, responseType: 'json', responseText: JSON.stringify(response) }
         }, false);
         this.disable = () => {
             disable();
