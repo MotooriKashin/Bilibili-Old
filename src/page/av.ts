@@ -250,7 +250,7 @@ export class PageAV extends Page {
         Player.addModifyArgument(args => {
             if (this.destroy) return;
             const obj = urlObj(`?${args[2]}`);
-            obj.playlist = JSON.stringify({ code: 0, data: toview, message: "0", ttl: 1 });
+            obj.playlist = encodeURIComponent(JSON.stringify({ code: 0, data: toview, message: "0", ttl: 1 }));
             args[2] = objUrl('', obj);
         });
         propertyHook(window, 'callAppointPart', this.callAppointPart);
