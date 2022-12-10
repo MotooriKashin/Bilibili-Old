@@ -35,7 +35,7 @@ export class AccessKey {
                 .then(async d => {
                     data.push('成功获取到授权链接~');
                     toast.data = data;
-                    return this.BLOD.GM.fetch(d.confirm_uri)
+                    return this.BLOD.GM.fetch(d.confirm_uri, { credentials: 'include' })
                 })
                 .then(d => {
                     const date = new Date().getTime();
