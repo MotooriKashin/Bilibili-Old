@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.0.2-5c29cbf1699a36aed18ef5b560b6dd328b2758fc
+// @version      10.0.3-5c29cbf1699a36aed18ef5b560b6dd328b2758fc
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -12910,7 +12910,7 @@ var AccessKey = class {
       new ApiLoginAppThird("https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png").getData().then(async (d) => {
         data.push("成功获取到授权链接~");
         toast.data = data;
-        return this.BLOD.GM.fetch(d.confirm_uri);
+        return this.BLOD.GM.fetch(d.confirm_uri, { credentials: "include" });
       }).then((d) => {
         const date = new Date().getTime();
         const dateStr = timeFormat(date, true);
