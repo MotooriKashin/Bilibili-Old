@@ -389,8 +389,8 @@ export class BLOD {
     async loadplayer(force = false) {
         if (!(<any>window).jQuery) await loadScript(URLS.JQUERY);
         try {
-            if (_UserScript_) {
-                if (this.status.bilibiliplayer) {
+            if (this.status.bilibiliplayer) {
+                if (_UserScript_) {
                     const data = await Promise.all([
                         this.GM.getValue<string>('bilibiliplayer'),
                         this.GM.getValue<string>('bilibiliplayerstyle')
@@ -446,15 +446,15 @@ export class BLOD {
                     this.GM.setValue('version', this.version);
 
                 } else {
-                    await loadScript(URLS.VIDEO);
+                    await Promise.all([
+                        this.GM.executeScript('player/video.js', true)
+                            .then(d => loadScript(d)),
+                        this.GM.insertCSS('player/video.css', true)
+                            .then(d => loadStyle(d))
+                    ]);
                 }
             } else {
-                await Promise.all([
-                    this.GM.executeScript('player/video.js', true)
-                        .then(d => loadScript(d)),
-                    this.GM.insertCSS('player/video.css', true)
-                        .then(d => loadStyle(d))
-                ]);
+                await loadScript(URLS.VIDEO);
             }
         } catch (e) {
             this.updating || this.toast.error('播放器加载失败！', '已回滚~', e)();

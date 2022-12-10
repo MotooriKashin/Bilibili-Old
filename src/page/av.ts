@@ -52,11 +52,6 @@ export class PageAV extends Page {
         this.elecShow();
         Header.primaryMenu();
         Header.banner();
-        switchVideo(this.switchVideo);
-    }
-    protected switchVideo = () => {
-        (<any>window).aid = (this.BLOD.aid = (<any>window).aid);
-        (<any>window).cid = (this.BLOD.cid = (<any>window).cid);
     }
     /**
      * 暴露UI组件
@@ -224,8 +219,7 @@ export class PageAV extends Page {
         toview.stat.reply = season.stat.reply;
         toview.stat.share = season.stat.share;
         toview.stat.view = season.stat.view;
-        toview.name = <any>undefined; // 隐藏标题
-        toview.owner = <any>undefined; // 隐藏up
+        toview.pid = -1 // 隐藏播单号
         toview.list = season.sections.reduce((s: any[], d: any) => {
             d.episodes.forEach((d: any) => {
                 s.push({
@@ -261,7 +255,7 @@ export class PageAV extends Page {
         });
         propertyHook(window, 'callAppointPart', this.callAppointPart);
         // 修正播单列表高度
-        addCss('.bilibili-player .bilibili-player-auxiliary-area .bilibili-player-playlist .bilibili-player-playlist-playlist {height: calc(100% - 45px);}');
+        addCss('.bilibili-player .bilibili-player-auxiliary-area .bilibili-player-playlist .bilibili-player-playlist-playlist {height: calc(100% - 45px);}.bilibili-player-playlist-nav-title,.bilibili-player-playlist-nav-ownername{display: none;}');
     }
     /** hook合集切p回调 */
     protected callAppointPart = (p: number, state: Record<'aid' | 'cid', number>) => {
