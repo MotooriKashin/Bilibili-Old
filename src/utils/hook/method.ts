@@ -11,73 +11,78 @@ import { isArray, isObject } from "../typeof";
  * methodHook(window,'aaa',async ()=>{ window.aaa=()=>{}});
  */
 export function methodHook(target: object, propertyKey: PropertyKey, callback: () => Promise<unknown> | void, modifyArguments?: (args: IArguments) => void) {
-    /** 方法暂存 */
-    const values: Function[] = [];
-    /** 调用参数暂存 */
-    const iArguments: IArguments[] = [];
-    /** 加载方法开始标记 */
-    let loading = false;
-    /** 加载方法完成标记 */
-    let loaded = false;
-    /** 写入方法及恢复调用 */
-    function modify() {
-        loaded = true;
-        if (values[0]) {
-            // 写入拦截后的方法
-            Reflect.defineProperty(target, propertyKey, { configurable: true, value: values[0] });
-            // 恢复暂存的调用
-            iArguments.forEach(d => values[0](...d));
-        } else {
-            // 未暂存任何方法，调用出错
-            debug.error('拦截方法出错！', '目标方法', propertyKey, '所属对象', target);
-        }
-    }
-    Reflect.defineProperty(target, propertyKey, {
-        configurable: true,
-        set: v => {
-            if (loading && !loaded) {
-                // 暂存开始及结束之间的方法，拦截后的方法一定在此区间，但页可能被页面污染，优先取靠后的。
-                values.unshift(v);
-            }
-            return true
-        },
-        get: () => {
-            if (!loading) {
-                loading = true; // 方法被读取，开启申请拦截
-                setTimeout(() => { // 此处必须异步调用
-                    const res = callback();
-                    if (res && res.finally) {
-                        res.finally(() => modify());
-                    } else {
-                        modify();
-                    }
-                })
-            }
-            // 伪装调用，修改并记录调用参数
-            return function () {
-                modifyArguments?.(arguments);
-                iArguments.push(arguments);
+    try {
+        /** 方法暂存 */
+        const values: Function[] = [];
+        /** 调用参数暂存 */
+        const iArguments: IArguments[] = [];
+        /** 加载方法开始标记 */
+        let loading = false;
+        /** 加载方法完成标记 */
+        let loaded = false;
+        /** 写入方法及恢复调用 */
+        function modify() {
+            loaded = true;
+            if (values[0]) {
+                // 写入拦截后的方法
+                Reflect.defineProperty(target, propertyKey, { configurable: true, value: values[0] });
+                // 恢复暂存的调用
+                iArguments.forEach(d => values[0](...d));
+            } else {
+                // 未暂存任何方法，调用出错
+                debug.error('拦截方法出错！', '目标方法', propertyKey, '所属对象', target);
             }
         }
-    });
+        Reflect.defineProperty(target, propertyKey, {
+            configurable: true,
+            set: v => {
+                if (loading && !loaded) {
+                    // 暂存开始及结束之间的方法，拦截后的方法一定在此区间，但页可能被页面污染，优先取靠后的。
+                    values.unshift(v);
+                }
+                return true
+            },
+            get: () => {
+                if (!loading) {
+                    loading = true; // 方法被读取，开启申请拦截
+                    setTimeout(() => { // 此处必须异步调用
+                        const res = callback();
+                        if (res && res.finally) {
+                            res.finally(() => modify());
+                        } else {
+                            modify();
+                        }
+                    })
+                }
+                // 伪装调用，修改并记录调用参数
+                return function () {
+                    modifyArguments?.(arguments);
+                    iArguments.push(arguments);
+                }
+            }
+        });
+    } catch (e) { debug.error(e) }
 }
 /**
  * 拦截对象属性。**方法除外**，拦截方法请使用`hookMethod`。
  * @param target 属性所属对象
  * @param propertyKey 属性名
  * @param propertyValue 属性值，用于覆盖原值。覆盖后的属性将无法直接赋值修改。
+ * @param configurable 是否允许重复拦截（默认允许）
  * @example
  * propertyHook(window,'aaa',1); // 覆盖window对象上的aaa值为1
  */
-export function propertyHook(target: object, propertyKey: PropertyKey, propertyValue: any) {
-    Reflect.defineProperty(target, propertyKey, {
-        configurable: true,
-        set: v => true,
-        get: () => {
-            Reflect.defineProperty(target, propertyKey, { configurable: true, value: propertyValue });
-            return propertyValue;
-        }
-    });
+export function propertyHook(target: object, propertyKey: PropertyKey, propertyValue: any, configurable = true) {
+    try {
+        Reflect.defineProperty(target, propertyKey, {
+            configurable,
+            set: v => true,
+            get: () => {
+                Reflect.defineProperty(target, propertyKey, { configurable: true, value: propertyValue });
+                return propertyValue;
+            }
+        });
+    } catch (e) { debug.error(e) }
 }
 /**
  * 拦截对象属性，在原始值基础上进行修改。
@@ -87,25 +92,27 @@ export function propertyHook(target: object, propertyKey: PropertyKey, propertyV
  * @param once 只拦截一次
  */
 propertyHook.modify = <T>(target: object, propertyKey: PropertyKey, callback: (value: T) => T, once = false) => {
-    // 属性已存在直接修改
-    let value: T = (<any>target)[propertyKey];
-    value && (value = callback(value));
-    Reflect.defineProperty(target, propertyKey, {
-        configurable: true,
-        set: v => {
-            // 修改后来写入的属性
-            value = callback(v);
-            return true;
-        },
-        get: () => {
-            if (once) {
-                // 固化属性值且不再拦截
-                Reflect.deleteProperty(target, propertyKey);
-                Reflect.set(target, propertyKey, value);
+    try {
+        // 属性已存在直接修改
+        let value: T = (<any>target)[propertyKey];
+        value && (value = callback(value));
+        Reflect.defineProperty(target, propertyKey, {
+            configurable: true,
+            set: v => {
+                // 修改后来写入的属性
+                value = callback(v);
+                return true;
+            },
+            get: () => {
+                if (once) {
+                    // 固化属性值且不再拦截
+                    Reflect.deleteProperty(target, propertyKey);
+                    Reflect.set(target, propertyKey, value);
+                }
+                return value
             }
-            return value
-        }
-    });
+        });
+    } catch (e) { debug.error(e) }
 }
 /**
  * 深层属性代理

@@ -153,4 +153,8 @@ export const userStatus = {
     show1080p: false,
     /** 调整顶栏banner样式 */
     fullBannerCover: false,
+    /** 原生播放器新版弹幕 */
+    dmproto: true,
+    /** 普权弹幕换行 */
+    dmwrap: true,
 }

@@ -60,4 +60,6 @@ export class URLS {
     static readonly PLAYURL_BANGUMI = URLS.P_AUTO + URLS.D_BANGUMI + '/player/web_api/v2/playurl';
     static readonly LIKE = URLS.P_AUTO + URLS.D_API + '/x/web-interface/archive/like';
     static readonly HAS_LIKE = URLS.P_AUTO + URLS.D_API + '/x/web-interface/archive/has/like';
+    static readonly DM_WEB_VIEW = URLS.P_AUTO + URLS.D_API + '/x/v2/dm/web/view';
+    static readonly DM_WEB_SEG_SO = URLS.P_AUTO + URLS.D_API + '/x/v2/dm/web/seg.so';
 }

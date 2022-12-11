@@ -24,7 +24,7 @@ import { UPOS } from "./videolimit";
 export const Menus = {
     common: ['通用', svg.wrench],
     rewrite: ['重写', svg.note],
-    // danmaku: ['弹幕', svg.dmset],
+    danmaku: ['弹幕', svg.dmset],
     restore: ['修复', svg.stethoscope],
     player: ['播放', svg.play],
     style: ['样式', svg.palette],
@@ -73,6 +73,7 @@ export class UI {
         this.initSettingStyle();
         this.initSettingRestore();
         this.initSettingPlayer();
+        this.initSettingDanmaku();
         this.initSettingDownload();
     }
     /** 通用设置 */
@@ -177,6 +178,12 @@ export class UI {
             this.switch('search', '搜索', '恢复旧版搜索页'),
             this.switch('album', '相簿', '恢复相簿页')
         ]);
+    }
+    protected initSettingDanmaku() {
+        this.menuitem.danmaku.addSetting([
+            this.switch('dmproto', 'proto弹幕', 'protobuf弹幕支持', undefined, undefined, '因为B站已放弃维护xml弹幕，带来一些问题，比如90分钟后无弹幕，所以此项不建议禁用。【重构播放器】默认启用且不受此项影响。'),
+            this.switch('dmwrap', '弹幕提权', '允许普权弹幕排版', undefined, undefined, '上古时代存在大量使用换行及空格等特殊字符来提权以达到高级弹幕效果的作品，在html5时代无法正常显示，启用此项将恢复普权弹幕排版效果。尽情享受弹幕艺术。【重构播放器】默认启用且不受此项影响。')
+        ])
     }
     /** 样式设置 */
     protected initSettingStyle() {

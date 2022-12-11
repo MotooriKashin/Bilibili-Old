@@ -31,20 +31,9 @@ import { Download } from "./core/download";
 import { GM as GMC } from "@blod/extension/utils/gm";
 import { xhrHook } from "./utils/hook/xhr";
 import { URLS } from "./io/urls";
+import { Danmaku } from "./core/danmaku";
 
 export class BLOD {
-    /** 用户数据管理 */
-    user = new User(this);
-    /** url净化 */
-    urlCleaner = new UrlCleaner();
-    /** toastr */
-    toast = new ToastContainer();
-    /** 解除限制 */
-    videoLimit = new VideoLimit(this);
-    /** 视频数据 */
-    videoInfo = new VideoInfo(this);
-    /** 下载 */
-    download = new Download(this);
     /** 用户数据加载回调序列 */
     userLoadedCallbacks: ((status: typeof userStatus) => void)[] = [];
     /** 用户数据。确认已异步返回才可用，否则请使用`userLoadedCallback`添加回调 */
@@ -85,6 +74,20 @@ export class BLOD {
     isVip = false;
     /** 播放器哈希值 */
     version?: string;
+    /** 用户数据管理 */
+    user = new User(this);
+    /** url净化 */
+    urlCleaner = new UrlCleaner();
+    /** toastr */
+    toast = new ToastContainer();
+    /** 解除限制 */
+    videoLimit = new VideoLimit(this);
+    /** 视频数据 */
+    videoInfo = new VideoInfo(this);
+    /** 下载 */
+    download = new Download(this);
+    /** 弹幕 */
+    danmaku = new Danmaku(this);
     /** @param GM 提权操作接口 */
     constructor(public GM: typeof GMC) {
         this.version = this.GM.info?.script.version.slice(-40);
