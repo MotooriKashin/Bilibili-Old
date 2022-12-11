@@ -458,10 +458,12 @@ export class BLOD {
                 }
             } else {
                 await loadScript(URLS.VIDEO);
+                addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
             }
         } catch (e) {
             this.updating || this.toast.error('播放器加载失败！', '已回滚~', e)();
             await loadScript(URLS.VIDEO);
+            addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
         }
     }
 }
