@@ -255,7 +255,7 @@ export class ApiDmWeb {
                 pool: d.pool || 0,
                 size: d.fontsize || 25,
                 stime: d.progress / 1000 || 0,
-                text: (d.mode != 8 && d.mode != 9) ? d.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : d.content,
+                text: (d.content && d.mode != 8 && d.mode != 9) ? d.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : d.content,
                 uhash: d.midHash || '',
                 uid: d.midHash || '',
                 weight: d.weight,
