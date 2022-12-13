@@ -157,4 +157,8 @@ export const userStatus = {
     dmproto: true,
     /** 普权弹幕换行 */
     dmwrap: true,
+    /** 弹幕格式 */
+    dmExtension: 'xml',
+    /** 合并已有弹幕 */
+    dmContact: false,
 }

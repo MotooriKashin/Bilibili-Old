@@ -182,8 +182,17 @@ export class UI {
     protected initSettingDanmaku() {
         this.menuitem.danmaku.addSetting([
             this.switch('dmproto', 'proto弹幕', 'protobuf弹幕支持', undefined, undefined, '因为B站已放弃维护xml弹幕，带来一些问题，比如90分钟后无弹幕，所以此项不建议禁用。【重构播放器】默认启用且不受此项影响。'),
-            this.switch('dmwrap', '弹幕提权', '允许普权弹幕排版', undefined, undefined, '上古时代存在大量使用换行及空格等特殊字符来提权以达到高级弹幕效果的作品，在html5时代无法正常显示，启用此项将恢复普权弹幕排版效果。尽情享受弹幕艺术。【重构播放器】默认启用且不受此项影响。')
-        ])
+            this.switch('dmwrap', '弹幕提权', '允许普权弹幕排版', undefined, undefined, '上古时代存在大量使用换行及空格等特殊字符来提权以达到高级弹幕效果的作品，在html5时代无法正常显示，启用此项将恢复普权弹幕排版效果。尽情享受弹幕艺术。【重构播放器】默认启用且不受此项影响。'),
+            this.select('dmExtension', '弹幕格式', {
+                candidate: ['xml', 'json']
+            }, '拓展名', undefined, undefined, '【下载弹幕】及【本地弹幕】使用的弹幕格式，xml是传统格式，json是protobuf弹幕实际格式，前者一般拥有更小的体积，只是可能丢失彩蛋彩蛋及部分非法字符。'),
+            this.switch('dmContact', '合并弹幕', '本地弹幕或在线弹幕', undefined, undefined, '选择【本地弹幕】或【在线弹幕】是否与播放器内已有弹幕合并。'),
+            this.button(<'dmContact'>'localDm', '本地弹幕', () => {
+                this.BLOD.status.dmExtension === 'json' ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
+            }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。'),
+            this.button(<'dmContact'>'downloadDm', '下载弹幕', () => {
+                this.BLOD.danmaku.download()
+            }, '下载当前弹幕', '下载', undefined, '下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。')])
     }
     /** 样式设置 */
     protected initSettingStyle() {

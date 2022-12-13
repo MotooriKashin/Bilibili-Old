@@ -1,5 +1,6 @@
 import { Root, Type } from "protobufjs/light";
 import dmproto from '../../json/dm-web.json';
+import { DanmakuBase } from "../../utils/danmaku";
 import { objUrl } from "../../utils/format/url";
 import { URLS } from "../urls";
 
@@ -93,7 +94,7 @@ interface DmWebViewReply {
     reportFilter: string[];
 }
 /** elems 弹幕列表 */
-interface DanmakuElem {
+export interface DanmakuElem {
     /** 弹幕id */
     id: number;
     /** 弹幕位置 */
@@ -111,15 +112,15 @@ interface DanmakuElem {
     /** 弹幕发送时间  时间戳 */
     ctime: number;
     /** 弹幕权重 越高显示优先级越高 */
-    weight: number;
+    weight?: number;
     /** 弹幕动作 */
-    action: string;
+    action?: string;
     /** 弹幕池 */
     pool: number;
     /** 弹幕id_str */
     idStr: string;
     /** 弹幕属性位 0保护弹幕 1直播弹幕 2高赞弹幕 */
-    attr: DMAttrBit;
+    attr?: DMAttrBit;
 }
 // 弹幕属性位值
 enum DMAttrBit {
@@ -133,7 +134,7 @@ enum DMAttrBit {
 interface DmSegMobileReply {
     elems: DanmakuElem[];
 }
-interface DanmakuCmd {
+export interface DanmakuCmd {
     /** 弹幕池 */
     class: DanmakuElem['pool'];
     pool: DanmakuElem['pool'];
@@ -155,11 +156,14 @@ interface DanmakuCmd {
     uhash: DanmakuElem['midHash'];
     uid: DanmakuElem['midHash'];
     /** 弹幕权重 越高显示优先级越高 */
-    weight: DanmakuElem['weight'];
+    weight?: DanmakuElem['weight'];
     /** 图片弹幕 */
     html?: DanmakuElem['action'];
     /** 弹幕属性位 0保护弹幕 1直播弹幕 2高赞弹幕 */
     attr?: DanmakuElem['attr'];
+    mid?: number;
+    rnd?: string;
+    uname?: string;
 }
 export class ApiDmWeb {
     static Root: Root;
@@ -204,14 +208,14 @@ export class ApiDmWeb {
                 )
             });
             await Promise.all(promises);
-            this.sortDmById(this.danmaku);
+            DanmakuBase.sortDmById(this.danmaku);
         }
         return this.danmaku;
     }
     /** 获取旧版弹幕 */
     async toCmd() {
         const danmaku = await this.getData();
-        return this.parseCmd(danmaku);
+        return DanmakuBase.parseCmd(danmaku);
     }
     /** 获取弹幕分包 */
     private async DmWebViewReply() {
@@ -242,51 +246,5 @@ export class ApiDmWeb {
         const arraybuffer = await response.arrayBuffer();
         const msg = ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
         return <DmSegMobileReply>ApiDmWeb.DmSegMobileReply.toObject(msg);
-    }
-    /** 重构为旧版弹幕类型 */
-    private parseCmd(dms: DanmakuElem[]) {
-        return dms.map(d => {
-            const dm: DanmakuCmd = {
-                class: d.pool || 0,
-                color: d.color || 16777215,
-                date: d.ctime || 0,
-                dmid: d.idStr || '',
-                mode: +d.mode || 1,
-                pool: d.pool || 0,
-                size: d.fontsize || 25,
-                stime: d.progress / 1000 || 0,
-                text: (d.content && d.mode != 8 && d.mode != 9) ? d.content.replace(/(\/n|\\n|\n|\r\n)/g, '\n') : d.content,
-                uhash: d.midHash || '',
-                uid: d.midHash || '',
-                weight: d.weight,
-                attr: d.attr,
-            };
-            d.action?.startsWith("picture:") && (dm.html = `<img src="${d.action.replace('http:', '')}" style="width:auto;height:56.25px;">`);
-            return dm;
-        })
-    }
-    /** 从小到大排序弹幕 */
-    private sortDmById(dms: DanmakuElem[]) {
-        dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
-    }
-    /** 比较两个弹幕ID先后 */
-    private bigInt(num1: string, num2: string) {
-        String(num1).replace(/\d+/, d => num1 = d.replace(/^0+/, ""));
-        String(num2).replace(/\d+/, d => num2 = d.replace(/^0+/, ""));
-        // 数位不同，前者大为真，否则为假
-        if (num1.length > num2.length) return true;
-        else if (num1.length < num2.length) return false;
-        else {
-            // 数位相同，逐位比较
-            for (let i = 0; i < num1.length; i++) {
-                // 任意一位前者大为真
-                if (num1[i] > num2[i]) return true;
-                // 任意一位前者小为假
-                if (num1[i] < num2[i]) return false;
-                // 仅当位相等时继续比较下一位
-            }
-            // 包括相等情况返回假
-            return false;
-        }
     }
 }
