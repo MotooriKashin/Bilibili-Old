@@ -214,7 +214,8 @@ export class Header {
             .then(() => {
                 target && (target.style.display = 'none');
                 this.styleClear();
-                addCss('.bili-footer {position: relative;}')
+                addCss('.bili-footer {position: relative;}');
+                document.getElementsByClassName('bili-header-m')[1]?.remove();
             })
     }
     static fullBannerCover = false;

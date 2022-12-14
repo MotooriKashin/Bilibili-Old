@@ -23,13 +23,6 @@ export abstract class Page {
     protected updateDom() {
         // 备份标题
         const title = document.title;
-        // 销毁已播放视频
-        const video = document.querySelector<HTMLVideoElement>('#bilibili-player video');
-        if (video) {
-            video.pause();
-            video.src = '';
-            video.load();
-        }
         // 刷新DOM
         this.vdom.replace(document.documentElement);
         // 删除PlayerAgent残留

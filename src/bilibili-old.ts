@@ -74,6 +74,8 @@ export class BLOD {
     isVip = false;
     /** 播放器哈希值 */
     version?: string;
+    /** 播放器 */
+    player = new Player();
     /** 用户数据管理 */
     user = new User(this);
     /** url净化 */
@@ -118,7 +120,7 @@ export class BLOD {
             new PageAV(this);
         }
         if (this.status.player && (/\/festival\//.test(location.href) || (/player\./.test(location.href) && !location.href.includes("ancient")))) {
-            this.EmbedPlayer();
+            this.connectPlayer();
         }
         if (this.status.bangumi && /\/bangumi\/play\/(ss|ep)/.test(location.href)) {
             this.EmbedPlayer();
@@ -141,6 +143,7 @@ export class BLOD {
         if (this.status.search && this.path[2] == "search.bilibili.com") {
             new PageSearch(this);
         }
+        this.player.nanoPermit();
         new Automate(this);
         this.toast.update(this.status.toast);
         this.status.disableReport && new ReportObserver();
@@ -156,11 +159,18 @@ export class BLOD {
         });
         window.top === window.self && (this.ui = new UI(this));
     }
-    /** 播放器引导 */
+    /** 旧版播放器引导 */
     EmbedPlayer() {
         if (!this.playLoaded) {
             this.playLoaded = true;
-            new Player(this);
+            this.player.EmbedPlayer(() => this.loadplayer());
+        }
+    }
+    /** 旧版播放器以nano形式引导 */
+    connectPlayer() {
+        if (!this.playLoaded) {
+            this.playLoaded = true;
+            this.player.connectPlayer(() => this.loadplayer());
         }
     }
     /** 用户数据回调 */

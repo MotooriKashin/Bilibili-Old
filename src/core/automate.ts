@@ -1,17 +1,18 @@
 import { BLOD } from "../bilibili-old";
+import { apiArticleCards } from "../io/api-article-cards";
+import { debug } from "../utils/debug";
+import { objUrl, urlObj } from "../utils/format/url";
 import { poll } from "../utils/poll";
 import { switchVideo } from "./observer";
+import { Player } from "./player";
 import { localStorage, sessionStorage } from "./storage";
 
 export class Automate {
     constructor(protected BLOD: BLOD) {
+        this.modifyArgument();
         this.playerSettings();
         this.danmakuFirst();
-        switchVideo(() => {
-            this.showBofqi();
-            this.webFullScreen();
-            this.videoDisableAA();
-        });
+        switchVideo(this.switchVideo);
         this.videospeed();
     }
     /** 备份播放器设置 */
@@ -67,5 +68,31 @@ export class Automate {
     /** 关闭抗锯齿 */
     protected videoDisableAA() {
         this.BLOD.status.videoDisableAA && poll(() => document.querySelector<HTMLVideoElement>("#bilibiliPlayer .bilibili-player-video video"), d => d.style.filter += "contrast(1)");
+    }
+    /** 修改播放器启动参数 */
+    private modifyArgument() {
+        Player.addModifyArgument(args => {
+            const obj = urlObj(`?${args[2]}`);
+            this.BLOD.status.automate.screenWide && (obj.as_wide = 1);
+            this.BLOD.status.automate.autoPlay && (obj.autoplay = 1);
+            this.BLOD.status.automate.noDanmaku && (obj.danmaku = 0);
+            args[2] = objUrl('', obj);
+        })
+    }
+    /** 切p回调 */
+    private switchVideo = async () => {
+        this.showBofqi();
+        this.webFullScreen();
+        this.videoDisableAA();
+        if (!this.BLOD.videoInfo.metadata && this.BLOD.aid) {
+            apiArticleCards({ av: this.BLOD.aid })
+                .then(d => {
+                    Object.values(d).forEach(d => this.BLOD.videoInfo.aidDatail(d));
+                    this.BLOD.videoInfo.mediaSession();
+                })
+                .catch((e) => { debug.error('获取aid详情出错！', e) })
+        } else {
+            this.BLOD.videoInfo.mediaSession();
+        }
     }
 }
