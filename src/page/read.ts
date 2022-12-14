@@ -61,7 +61,6 @@ export class PageRead extends Page {
         super(html);
         new Comment(BLOD);
         this.initState();
-        PageRead.rightCopyEnable();
     }
     /** 获取专栏信息 */
     protected initState() {
@@ -147,7 +146,10 @@ export class PageRead extends Page {
         const title = document.title;
         this.vdom.replace(document.documentElement);
         document.querySelector(".page-container")!.innerHTML = this.readInfoStr;
-        this.vdom.loadScript().then(() => this.loadedCallback());
+        this.vdom.loadScript().then(() => {
+            this.loadedCallback();
+            PageRead.rightCopyEnable();
+        });
         // 还原标题
         title && !title.includes("404") && (document.title = title);
     }
