@@ -57,7 +57,7 @@ export class UrlCleaner {
     /** 净化url */
     clear(str: string) {
         const url = new URL(str);
-        if (url) {
+        if (url && !str.includes('passport.bilibili.com')) {
             const params = url.params;
             // 旧版页面一般不支持bvid，转化为aid
             if (params.bvid) {
