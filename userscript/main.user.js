@@ -6823,9 +6823,10 @@ var _Player = class {
         that.nanoPlayer.connect = function() {
           if (that.isConnect) {
             debug("允许新版播放器启动！");
-            that.connect?.();
+            return that.connect?.();
           } else {
             that.isConnect = true;
+            return Promise.resolve(true);
           }
         };
         return that.nanoPlayer;
