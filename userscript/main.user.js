@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.0.8-6b79f673c9d56093e8cf35943da14b35be3e4155
+// @version      10.0.9-6b79f673c9d56093e8cf35943da14b35be3e4155
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -5074,7 +5074,7 @@ var UrlCleaner = class {
   }
   clear(str) {
     const url = new URL2(str);
-    if (url) {
+    if (url && !str.includes("passport.bilibili.com")) {
       const params = url.params;
       if (params.bvid) {
         params.aid = abv(params.bvid);
@@ -5585,6 +5585,8 @@ __publicField(URLS, "JQUERY", _URLS.P_AUTO + _URLS.D_STATIC_S + "/js/jquery.min.
 __publicField(URLS, "ARTICLE_CARDS", _URLS.P_AUTO + _URLS.D_API + "/x/article/cards");
 __publicField(URLS, "VIEW_DETAIL", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view/detail");
 __publicField(URLS, "VIEW", _URLS.P_AUTO + _URLS.D_API + "/view");
+__publicField(URLS, "X_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/view");
+__publicField(URLS, "PAGE_LIST", _URLS.P_AUTO + _URLS.D_API + "/x/player/pagelist");
 __publicField(URLS, "TAG_INFO", _URLS.P_AUTO + _URLS.D_API + "/x/tag/info");
 __publicField(URLS, "TAG_TOP", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/tag/top");
 __publicField(URLS, "BANGUMI_SEASON", _URLS.P_AUTO + _URLS.D_BANGUMI + "/view/web_api/season");
@@ -5612,28 +5614,28 @@ __publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/vi
 __publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
 
 // src/io/api-webshow-locs.ts
-function ApiWebshowLocs(data) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.WEBSHOW_LOCS, {
-      pf: 0,
-      ids: data.ids.join(",")
-    })).then((d) => d.text()).then((d) => resolve(jsonCheck(BV2avAll(d)).data)).catch((e) => reject(e));
-  });
+async function ApiWebshowLocs(data) {
+  const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
+    pf: 0,
+    ids: data.ids.join(",")
+  }));
+  const text = await response.text();
+  return jsonCheck(BV2avAll(text)).data;
 }
 
 // src/io/api-index-top-rcmd.ts
-function apiIndexTopRcmd(data) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.INDEX_TOP_RCMD, {
-      fresh_type: data?.fresh_type || 3
-    }), {
-      credentials: data?.credentials || "include"
-    }).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data.item.map((d2) => {
-      d2.author = d2.owner.name;
-      d2.play = d2.stat.view;
-      d2.aid = d2.id;
-      return d2;
-    }))).catch((e) => reject(e));
+async function apiIndexTopRcmd(data) {
+  const response = await fetch(objUrl(URLS.INDEX_TOP_RCMD, {
+    fresh_type: data?.fresh_type || 3
+  }), {
+    credentials: data?.credentials || "include"
+  });
+  const json = await response.json();
+  return jsonCheck(json).data.item.map((d) => {
+    d.author = d.owner.name;
+    d.play = d.stat.view;
+    d.aid = d.id;
+    return d;
   });
 }
 
@@ -5974,10 +5976,10 @@ function unitFormat(num = 0) {
 }
 
 // src/io/api-page-header.ts
-function apiPageHeader(data) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.PAGE_HEADER, data)).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data)).catch((e) => reject(e));
-  });
+async function apiPageHeader(data) {
+  const response = await fetch(objUrl(URLS.PAGE_HEADER, data));
+  const json = await response.json();
+  return jsonCheck(json).data;
 }
 
 // src/utils/format/subarray.ts
@@ -6212,13 +6214,13 @@ __publicField(Header, "rid", _Header.resourceId());
 __publicField(Header, "fullBannerCover", false);
 
 // src/io/api-season-rank-list.ts
-function apiSeasonRankList(data) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.SEASON_RANK_LIST, {
-      season_type: data.season_type,
-      day: 3
-    })).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data.list)).catch((e) => reject(e));
-  });
+async function apiSeasonRankList(data) {
+  const response = await fetch(objUrl(URLS.SEASON_RANK_LIST, {
+    season_type: data.season_type,
+    day: 3
+  }));
+  const json = await response.json();
+  return jsonCheck(json).data.list;
 }
 
 // src/page/index.ts
@@ -6997,20 +6999,18 @@ function webpackHook(len, pos, rpc, params = ["t", "e", "i"]) {
 var sort_default = '[{name:"首页",route:"/",tid:"",locid:23,sub:[]},{name:"动画",route:"douga",tid:1,locid:52,count:"",subMenuSize:162,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2507,leftId:2452,rightId:2453},sub:[{name:"MAD·AMV",route:"mad",tid:24,ps:15,rps:10,ad:{active:!0,dataLocId:151},desc:"具有一定制作程度的动画或静画的二次创作视频",url:"//www.bilibili.com/video/douga-mad-1.html"},{name:"MMD·3D",route:"mmd",tid:25,ps:15,rps:10,ad:{active:!0,dataLocId:152},desc:"使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频",url:"//www.bilibili.com/video/douga-mmd-1.html"},{name:"短片·手书·配音",route:"voice",tid:47,ps:15,rps:10,desc:"追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音",url:"//www.bilibili.com/video/douga-voice-1.html"},{name:"手办·模玩",route:"garage_kit",tid:210,ps:15,rps:10,desc:"手办模玩的测评、改造或其他衍生内容",url:""},{name:"特摄",route:"tokusatsu",tid:86,ps:15,rps:10,desc:"特摄相关衍生视频",url:"//www.bilibili.com/video/cinephile-tokusatsu.html"},{name:"综合",route:"other",tid:27,ps:15,rps:10,ad:{active:!0,dataLocId:153},desc:"以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容",url:"//www.bilibili.com/video/douga-else-1.html"}]},{name:"番剧",route:"anime",tid:13,url:"//www.bilibili.com/anime/",takeOvered:!0,count:"",subMenuSize:172,combination:!0,sub:[{name:"连载动画",tid:33,route:"serial",desc:"当季连载的动画番剧",url:"//www.bilibili.com/video/bangumi-two-1.html"},{name:"完结动画",tid:32,route:"finish",desc:"已完结的动画番剧合集",url:"//www.bilibili.com/video/part-twoelement-1.html"},{name:"资讯",tid:51,route:"information",desc:"动画番剧相关资讯视频",url:"//www.bilibili.com/video/douga-else-information-1.html"},{name:"官方延伸",tid:152,route:"offical",desc:"动画番剧为主题的宣传节目、采访视频，及声优相关视频",url:"//www.bilibili.com/video/bagumi_offical_1.html"},{name:"新番时间表",url:"//www.bilibili.com/anime/timeline/",desc:""},{name:"番剧索引",url:"//www.bilibili.com/anime/index/",desc:""}]},{name:"国创",tid:167,route:"guochuang",url:"//www.bilibili.com/guochuang/",takeOvered:!0,count:"",subMenuSize:214,combination:!0,sub:[{name:"国产动画",tid:153,route:"chinese",desc:"我国出品的PGC动画",url:"//www.bilibili.com/video/bangumi_chinese_1.html"},{name:"国产原创相关",tid:168,route:"original",desc:"",url:"//www.bilibili.com/video/guochuang-fanvid-1.html"},{name:"布袋戏",tid:169,route:"puppetry",desc:"",url:"//www.bilibili.com/video/glove-puppetry-1.html"},{name:"动态漫·广播剧",tid:195,route:"motioncomic",desc:"",url:""},{name:"资讯",tid:170,route:"information",desc:"",url:"//www.bilibili.com/video/guochuang-offical-1.html"},{name:"新番时间表",url:"//www.bilibili.com/guochuang/timeline/",desc:""},{name:"国产动画索引",url:"//www.bilibili.com/guochuang/index/",desc:""}]},{name:"音乐",route:"music",tid:3,locid:58,count:"",subMenuSize:268,slider:{width:620,height:220},viewTag:!0,customComponent:{name:"Energy",titleId:2511,leftId:2462,rightId:3131,rightType:"slide"},sub:[{name:"原创音乐",route:"original",tid:28,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:243},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"原创歌曲及纯音乐，包括改编、重编曲及remix",url:"//www.bilibili.com/video/music-original-1.html"},{name:"翻唱",route:"cover",tid:31,ps:15,rps:10,ad:{active:!0,dataLocId:245},viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"对曲目的人声再演绎视频",url:"//www.bilibili.com/video/music-Cover-1.html"},{name:"演奏",route:"perform",tid:59,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"乐器和非传统乐器器材的演奏作品",url:"//www.bilibili.com/video/music-perform-1.html"},{name:"VOCALOID·UTAU",route:"vocaloid",tid:30,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:247},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作",url:"//www.bilibili.com/video/music-vocaloid-1.html"},{name:"音乐现场",route:"live",tid:29,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等",url:"//www.bilibili.com/video/music-oped-1.html"},{name:"MV",route:"mv",tid:193,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV",url:"//www.bilibili.com/video/music-coordinate-1.html"},{name:"乐评盘点",route:"commentary",tid:243,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐教学",route:"tutorial",tid:244,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以音乐教学为目的的内容",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐综合",route:"other",tid:130,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"所有无法被收纳到其他音乐二级分区的音乐类视频",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音频",customZone:"Audio",route:"audio",url:"//www.bilibili.com/audio/home?musicType=music"},{name:"说唱",url:"//www.bilibili.com/v/rap"}]},{name:"舞蹈",route:"dance",tid:129,locid:64,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2513,leftId:2472,rightId:2473},sub:[{name:"宅舞",route:"otaku",tid:20,ps:15,rps:10,ad:{active:!0,dataLocId:249},desc:"与ACG相关的翻跳、原创舞蹈",url:"//www.bilibili.com/video/dance-1.html"},{name:"街舞",route:"hiphop",tid:198,ps:15,rps:10,ad:{active:!0,dataLocId:251},desc:"收录街舞相关内容，包括赛事现场、舞室作品、个人翻跳、FREESTYLE等",url:""},{name:"明星舞蹈",route:"star",tid:199,ps:15,rps:10,desc:"国内外明星发布的官方舞蹈及其翻跳内容",url:""},{name:"中国舞",route:"china",tid:200,ps:15,rps:10,ad:{active:!0,dataLocId:253},desc:"传承中国艺术文化的舞蹈内容，包括古典舞、民族民间舞、汉唐舞、古风舞等",url:""},{name:"舞蹈综合",route:"three_d",tid:154,ps:15,rps:10,desc:"收录无法定义到其他舞蹈子分区的舞蹈视频",url:""},{name:"舞蹈教程",route:"demo",tid:156,ps:10,rps:6,desc:"镜面慢速，动作分解，基础教程等具有教学意义的舞蹈视频",url:"//www.bilibili.com/video/dance-demo-1.html"}]},{name:"游戏",route:"game",tid:4,locid:70,count:"",subMenuSize:240,slider:{width:470,height:216},viewTag:!0,customComponent:{name:"Energy",titleId:3761,leftId:3765,rightId:3775,rightType:"slide"},recommendCardType:"GameGroomBox",sub:[{name:"单机游戏",route:"stand_alone",tid:17,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:255},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以所有平台（PC、主机、移动端）的单机或联机游戏为主的视频内容，包括游戏预告、CG、实况解说及相关的评测、杂谈与视频剪辑等",url:"//www.bilibili.com/video/videogame-1.html"},{name:"电子竞技",route:"esports",tid:171,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:257},desc:"具有高对抗性的电子竞技游戏项目，其相关的赛事、实况、攻略、解说、短剧等视频。",url:"//www.bilibili.com/video/esports-1.html"},{name:"手机游戏",route:"mobile",tid:172,ps:10,rps:7,rankshow:1,viewHotTag:!0,desc:"以手机及平板设备为主要平台的游戏，其相关的实况、攻略、解说、短剧、演示等视频。",url:"//www.bilibili.com/video/mobilegame-1.html"},{name:"网络游戏",route:"online",tid:65,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:259},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由网络运营商运营的多人在线游戏，以及电子竞技的相关游戏内容。包括赛事、攻略、实况、解说等相关视频",url:"//www.bilibili.com/video/onlinegame-1.html"},{name:"桌游棋牌",route:"board",tid:173,ps:5,rps:3,rankshow:1,viewHotTag:!0,desc:"桌游、棋牌、卡牌对战等及其相关电子版游戏的实况、攻略、解说、演示等视频。",url:"//www.bilibili.com/video/boardgame-1.html"},{name:"GMV",route:"gmv",tid:121,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由游戏素材制作的MV视频。以游戏内容或CG为主制作的，具有一定创作程度的MV类型的视频",url:"//www.bilibili.com/video/gmv-1.html"},{name:"音游",route:"music",tid:136,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"各个平台上，通过配合音乐与节奏而进行的音乐类游戏视频",url:"//www.bilibili.com/video/music-game-1.html"},{name:"Mugen",route:"mugen",tid:19,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以Mugen引擎为平台制作、或与Mugen相关的游戏视频",url:"//www.bilibili.com/video/game-mugen-1.html"},{name:"游戏赛事",url:"//www.bilibili.com/v/game/match/",newIcon:!0}]},{name:"知识",route:"knowledge",tid:36,locid:76,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2058,leftId:2047,rightId:2048},sub:[{name:"科学科普",route:"science",tid:201,ps:15,rps:10,ad:{active:!0,dataLocId:261},desc:"回答你的十万个为什么"},{name:"社科·法律·心理",route:"social_science",tid:124,ps:15,rps:10,ad:{active:!0,dataLocId:263},desc:"基于社会科学、法学、心理学展开或个人观点输出的知识视频"},{name:"人文历史",route:"humanity_history",tid:228,ps:15,rps:10,desc:"看看古今人物，聊聊历史过往，品品文学典籍"},{name:"财经商业",route:"business",tid:207,ps:15,rps:10,desc:"说金融市场，谈宏观经济，一起畅聊商业故事"},{name:"校园学习",route:"campus",tid:208,ps:15,rps:10,ad:{active:!0,dataLocId:265},desc:"老师很有趣，学生也有才，我们一起搞学习"},{name:"职业职场",route:"career",tid:209,ps:15,rps:10,desc:"职业分享、升级指南，一起成为最有料的职场人"},{name:"设计·创意",route:"design",tid:229,ps:15,rps:10,desc:"天马行空，创意设计，都在这里"},{name:"野生技能协会",route:"skill",tid:122,ps:15,rps:10,desc:"技能党集合，是时候展示真正的技术了"}]},{name:"科技",route:"tech",tid:188,locid:2977,count:"",subMenuSize:80,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2980,leftId:2978,rightId:2979},sub:[{name:"数码",route:"digital",tid:95,ps:15,rps:10,viewHotTag:!0,desc:"科技数码产品大全，一起来做发烧友",url:"#"},{name:"软件应用",route:"application",tid:230,ps:15,rps:10,viewHotTag:!0,desc:"超全软件应用指南",url:"#"},{name:"计算机技术",route:"computer_tech",tid:231,ps:15,rps:10,viewHotTag:!0,desc:"研究分析、教学演示、经验分享......有关计算机技术的都在这里",url:"#"},{name:"科工机械",route:"industry",tid:232,ps:15,rps:10,viewHotTag:!0,desc:"从小芯片到大工程，一起见证科工力量",url:"#"},{name:"极客DIY",route:"diy",tid:233,ps:15,rps:10,viewHotTag:!0,desc:"炫酷技能，极客文化，硬核技巧，准备好你的惊讶",url:"#"}]},{name:"运动",route:"sports",tid:234,locid:4639,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4646,rightId:4652,rightType:"slide"},sub:[{name:"篮球·足球",route:"basketballfootball",tid:235,ps:15,rps:10,ad:{active:!0,dataLocId:4656},desc:"与篮球、足球相关的视频，包括但不限于篮足球赛事、教学、评述、剪辑、剧情等相关内容",url:"#"},{name:"健身",route:"aerobics",tid:164,ps:15,rps:10,desc:"与健身相关的视频，包括但不限于瑜伽、CrossFit、健美、力量举、普拉提、街健等相关内容",url:"//www.bilibili.com/video/fashion-body-1.html"},{name:"竞技体育",route:"athletic",tid:236,ps:15,rps:10,desc:"与竞技体育相关的视频，包括但不限于乒乓、羽毛球、排球、赛车等竞技项目的赛事、评述、剪辑、剧情等相关内容",url:"#"},{name:"运动文化",route:"culture",tid:237,ps:15,rps:10,desc:"与运动文化相关的视频，包络但不限于球鞋、球衣、球星卡等运动衍生品的分享、解读，体育产业的分析、科普等相关内容",url:"#"},{name:"运动综合",route:"comprehensive",tid:238,ps:15,rps:10,desc:"与运动综合相关的视频，包括但不限于钓鱼、骑行、滑板等日常运动分享、教学、Vlog等相关内容",url:"#"}]},{name:"汽车",route:"car",tid:223,locid:4428,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4435,rightId:4441,rightType:"slide"},sub:[{name:"汽车生活",route:"life",tid:176,ps:15,rps:10,ad:{active:!0,dataLocId:4445},desc:"分享汽车及出行相关的生活体验类视频",url:"#"},{name:"汽车文化",route:"culture",tid:224,ps:15,rps:10,desc:"汽车改装、品牌历史、汽车设计、老爷车、汽车模型等",url:"#"},{name:"赛车",route:"racing",tid:245,ps:15,rps:10,desc:"F1等汽车运动相关",url:"#"},{name:"汽车极客",route:"geek",tid:225,ps:15,rps:10,desc:"汽车硬核达人聚集地，包括DIY造车、专业评测和技术知识分享",url:"#"},{name:"摩托车",route:"motorcycle",tid:240,ps:15,rps:10,desc:"骑士们集合啦",url:"#"},{name:"智能出行",route:"smart",tid:226,ps:15,rps:10,desc:"探索新能源汽车和未来智能出行的前沿阵地",url:"#"},{name:"购车攻略",route:"strategy",tid:227,ps:15,rps:10,desc:"丰富详实的购车建议和新车体验",url:"#"}]},{name:"生活",route:"life",tid:160,locid:88,count:"",subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2062,leftId:1674,rightId:1670},sub:[{name:"搞笑",route:"funny",tid:138,ps:15,rps:10,ad:{active:!0,dataLocId:273},desc:"各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频",url:"//www.bilibili.com/video/ent_funny_1.html",locid:4204,recommendId:4210,slider:{width:620,height:220},customComponent:{name:"Energy",leftId:4212,rightId:4218,rightType:"slide"}},{name:"家居房产",route:"home",tid:239,ps:15,rps:10,ad:{active:!0,dataLocId:275},desc:"与买房、装修、居家生活相关的分享",url:"#"},{name:"手工",route:"handmake",tid:161,ps:15,rps:10,desc:"手工制品的制作过程或成品展示、教程、测评类视频",url:"//www.bilibili.com/video/ent-handmake-1.html"},{name:"绘画",route:"painting",tid:162,ps:15,rps:10,desc:"绘画过程或绘画教程，以及绘画相关的所有视频",url:"//www.bilibili.com/video/ent-painting-1.html"},{name:"日常",route:"daily",tid:21,ps:15,rps:10,desc:"记录日常生活，分享生活故事",url:"//www.bilibili.com/video/ent-life-1.html"}]},{name:"美食",route:"food",tid:211,locid:4243,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4258,rightId:4264},sub:[{name:"美食制作",route:"make",tid:76,ps:15,rps:10,ad:{active:!0,dataLocId:4268},desc:"学做人间美味，展示精湛厨艺",url:"#"},{name:"美食侦探",route:"detective",tid:212,ps:15,rps:10,desc:"寻找美味餐厅，发现街头美食",url:"#"},{name:"美食测评",route:"measurement",tid:213,ps:15,rps:10,desc:"吃货世界，品尝世间美味",url:"#"},{name:"田园美食",route:"rural",tid:214,ps:15,rps:10,desc:"品味乡野美食，寻找山与海的味道",url:"#"},{name:"美食记录",route:"record",tid:215,ps:15,rps:10,desc:"记录一日三餐，给生活添一点幸福感",url:"#"}]},{name:"动物圈",route:"animal",tid:217,locid:4365,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4376,rightId:4381,rightType:"slide"},sub:[{name:"喵星人",route:"cat",tid:218,ps:15,rps:10,desc:"喵喵喵喵喵",url:"#",ad:{active:!0,dataLocId:4385}},{name:"汪星人",route:"dog",tid:219,ps:15,rps:10,desc:"汪汪汪汪汪",url:"#"},{name:"大熊猫",route:"panda",tid:220,ps:15,rps:10,desc:"芝麻汤圆营业中",url:"#"},{name:"野生动物",route:"wild_animal",tid:221,ps:15,rps:10,desc:"内有“猛兽”出没",url:"#"},{name:"爬宠",route:"reptiles",tid:222,ps:15,rps:10,desc:"鳞甲有灵",url:"#"},{name:"动物综合",route:"animal_composite",tid:75,ps:15,rps:10,desc:"收录除上述子分区外，其余动物相关视频以及非动物主体或多个动物主体的动物相关延伸内容",url:"#"}]},{name:"鬼畜",route:"kichiku",tid:119,locid:100,count:"",subMenuSize:182,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2509,leftId:2482,rightId:2483},sub:[{name:"鬼畜调教",route:"guide",tid:22,ps:15,rps:10,ad:{active:!0,dataLocId:285},desc:"使用素材在音频、画面上做一定处理，达到与BGM一定的同步感",url:"//www.bilibili.com/video/ent-Kichiku-1.html"},{name:"音MAD",route:"mad",tid:26,ps:15,rps:10,ad:{active:!0,dataLocId:287},desc:"使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件",url:"//www.bilibili.com/video/douga-kichiku-1.html"},{name:"人力VOCALOID",route:"manual_vocaloid",tid:126,ps:15,rps:10,desc:"将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术",url:"//www.bilibili.com/video/kichiku-manual_vocaloid-1.html"},{name:"鬼畜剧场",route:"theatre",tid:216,ps:15,rps:10,desc:"使用素材进行人工剪辑编排的有剧情的作品"},{name:"教程演示",route:"course",tid:127,ps:10,rps:6,rightComponent:{name:"CmImgList",id:148},ad:{active:!0,dataLocId:289},hideDropdown:!1,desc:"鬼畜相关的教程演示",url:"//www.bilibili.com/video/kichiku-course-1.html"}]},{name:"时尚",route:"fashion",tid:155,locid:94,count:"",subMenuSize:124,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2515,leftId:2492,rightId:2493},sub:[{name:"美妆护肤",route:"makeup",tid:157,ps:15,rps:10,ad:{active:!0,dataLocId:279},desc:"彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评",url:"//www.bilibili.com/video/fashion-makeup-fitness-1.html"},{name:"穿搭",route:"clothing",tid:158,ps:15,rps:10,ad:{active:!0,dataLocId:281},desc:"穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等",url:"//www.bilibili.com/video/fashion-clothing-1.html"},{name:"时尚潮流",route:"trend",tid:159,ps:15,rps:10,desc:"时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普",url:"#"}]},{name:"资讯",route:"information",tid:202,locid:4076,count:"",subMenuSize:60,slider:{width:620,height:220},viewTag:!1,sub:[{name:"热点",route:"hotspot",tid:203,ps:18,rps:10,desc:"全民关注的时政热门资讯"},{name:"环球",route:"global",tid:204,ps:18,rps:10,desc:"全球范围内发生的具有重大影响力的事件动态"},{name:"社会",route:"social",tid:205,ps:18,rps:10,desc:"日常生活的社会事件、社会问题、社会风貌的报道"},{name:"综合",route:"multiple",tid:206,ps:18,rps:10,desc:"除上述领域外其它垂直领域的综合资讯"}]},{name:"娱乐",route:"ent",tid:5,locid:82,count:"",subMenuSize:62,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2067,leftId:2065,rightId:2066},sub:[{name:"综艺",route:"variety",tid:71,ps:15,rps:10,ad:{active:!0,dataLocId:267},desc:"所有综艺相关，全部一手掌握！",url:"//www.bilibili.com/video/ent-variety-1.html"},{name:"娱乐杂谈",route:"talker",tid:241,ps:15,rps:10,ad:{active:!0,dataLocId:269},desc:"娱乐人物解读、娱乐热点点评、娱乐行业分析"},{name:"粉丝创作",route:"fans",tid:242,ps:15,rps:10,desc:"粉丝向创作视频"},{name:"明星综合",route:"celebrity",tid:137,ps:15,rps:10,desc:"娱乐圈动态、明星资讯相关"}]},{name:"影视",route:"cinephile",tid:181,locid:2211,count:"",subMenuSize:84,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2309,leftId:2307,rightId:2308},sub:[{name:"影视杂谈",route:"cinecism",tid:182,ps:15,rps:10,ad:{active:!0,dataLocId:2212},desc:"影视评论、解说、吐槽、科普等",url:"//www.bilibili.com/video/cinephile-cinecism.html"},{name:"影视剪辑",route:"montage",tid:183,ps:15,rps:10,ad:{active:!0,dataLocId:2213},desc:"对影视素材进行剪辑再创作的视频",url:"//www.bilibili.com/video/cinephile-montage.html"},{name:"短片",route:"shortfilm",tid:85,ps:15,rps:10,desc:"追求自我表达且具有特色的短片",url:"//www.bilibili.com/video/cinephile-shortfilm.html"},{name:"预告·资讯",route:"trailer_info",tid:184,ps:15,rps:10,ad:{active:!0,dataLocId:2214},desc:"影视类相关资讯，预告，花絮等视频",url:"//www.bilibili.com/video/cinephile-trailer-info.html"}]},{name:"纪录片",route:"documentary",tid:177,url:"//www.bilibili.com/documentary/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"人文·历史",tid:37,route:"history",dise:"",url:"//www.bilibili.com/video/doco-history.html"},{name:"科学·探索·自然",tid:178,route:"science",dise:"",url:"//www.bilibili.com/video/doco-science.html"},{name:"军事",tid:179,route:"military",dise:"",url:"//www.bilibili.com/video/doco-military.html"},{name:"社会·美食·旅行",tid:180,route:"travel",dise:"",url:"//www.bilibili.com/video/doco-travel.html"},{name:"纪录片索引",url:"//www.bilibili.com/documentary/index/"}]},{name:"电影",route:"movie",tid:23,url:"//www.bilibili.com/movie/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"华语电影",tid:147,route:"chinese",desc:"",url:"//www.bilibili.com/video/movie_chinese_1.html"},{name:"欧美电影",tid:145,route:"west",desc:"",url:"//www.bilibili.com/video/movie_west_1.html"},{name:"日本电影",tid:146,route:"japan",desc:"",url:"//www.bilibili.com/video/movie_japan_1.html"},{name:"其他国家",tid:83,route:"movie",desc:"",url:"//www.bilibili.com/video/movie-movie-1.html"},{name:"电影索引",url:"//www.bilibili.com/movie/index/"}]},{name:"电视剧",route:"tv",tid:11,url:"//www.bilibili.com/tv/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"国产剧",tid:185,route:"mainland",desc:"",url:"//www.bilibili.com/video/tv-mainland.html"},{name:"海外剧",tid:187,route:"overseas",desc:"",url:"//www.bilibili.com/video/tv-overseas.html"},{name:"电视剧索引",url:"//www.bilibili.com/tv/index/"}]},{name:"虚拟UP主",route:"virtual",locid:4735,count:"",isHide:!0,subMenuSize:60,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:4754,leftId:4756},sub:[{name:"游戏",route:"game",tid:4,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/game"},{name:"音乐",route:"music",tid:3,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/music"},{name:"动画",route:"douga",tid:1,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/douga"},{name:"其他",route:"other",tid:0,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/other"}]}]';
 
 // src/io/api-article-cards.ts
-function apiArticleCards(data) {
-  return new Promise((resolve, reject) => {
-    const arr2 = [];
-    Object.entries(data).forEach((d) => {
-      if (d[1]) {
-        (isArray(d[1]) ? d[1] : [d[1]]).forEach((t) => arr2.push(d[0] + t));
-      }
-    });
-    if (!arr2.length)
-      return reject();
-    fetch(objUrl(URLS.ARTICLE_CARDS, {
-      ids: arr2.join(",")
-    })).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data)).catch((e) => reject(e));
+async function apiArticleCards(data) {
+  const arr2 = [];
+  Object.entries(data).forEach((d) => {
+    if (d[1]) {
+      (isArray(d[1]) ? d[1] : [d[1]]).forEach((t) => arr2.push(d[0] + t));
+    }
   });
+  if (!arr2.length)
+    throw new Error("输入参数不能为空！");
+  const response = await fetch(objUrl(URLS.ARTICLE_CARDS, { ids: arr2.join(",") }));
+  const json = await response.json();
+  return jsonCheck(json).data;
 }
 
 // src/io/api-view-detail.ts
@@ -7031,12 +7031,43 @@ var ApiViewDetail = class {
   message = "0";
   ttl = 1;
 };
-function apiViewDetail(aid) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.VIEW_DETAIL, {
-      aid
-    })).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data)).catch((e) => reject(e));
-  });
+async function apiViewDetail(aid) {
+  const response = await fetch(objUrl(URLS.VIEW_DETAIL, {
+    aid
+  }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/io/api-bangumi-season.ts
+async function apiBangumiSeason(data) {
+  const response = await fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" });
+  const json = await response.json();
+  return jsonCheck(json).result;
+}
+
+// src/io/api-player-pagelist.ts
+async function apiPlayerPagelist(aid) {
+  const response = await fetch(objUrl(URLS.PAGE_LIST, { aid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/io/api-view.ts
+async function apiView(aid) {
+  const response = await fetch(objUrl(URLS.VIEW, {
+    appkey: "8e9fc618fbd41e28",
+    id: aid,
+    type: "json"
+  }));
+  return await response.json();
+}
+
+// src/io/api-x-view.ts
+async function apiXView(aid) {
+  const response = await fetch(objUrl(URLS.X_VIEW, { aid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
 }
 
 // src/utils/utils.ts
@@ -7046,6 +7077,85 @@ function getUrlValue(name) {
   if (r != null)
     return decodeURIComponent(r[2]);
   return null;
+}
+var catchs = { aid: {}, ssid: {}, epid: {} };
+async function urlParam(url, redirect = true) {
+  url && !url.includes("?") && (url = "?" + url);
+  const obj = urlObj(url);
+  let { aid, cid, ssid, epid, p } = obj;
+  let pgc = false;
+  !aid && (aid = obj.avid);
+  !aid && url.replace(/[aA][vV]\\d+/, (d) => aid = d.substring(2));
+  !aid && url.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/, (d) => aid = abv(d));
+  !aid && obj.bvid && (aid = abv(obj.bvid));
+  aid && !Number(aid) && (aid = abv(aid));
+  p = p || 1;
+  !ssid && (ssid = obj.seasonId);
+  !ssid && (ssid = obj.season_id);
+  !ssid && url.replace(/[sS][sS]\\d+/, (d) => ssid = d.substring(2));
+  !epid && (epid = obj.episodeId);
+  !epid && (epid = obj.ep_id);
+  !epid && url.replace(/[eE][pP]\\d+/, (d) => epid = d.substring(2));
+  if (!ssid && !epid && aid) {
+    if (catchs.aid[aid])
+      return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+    if (!cid) {
+      try {
+        let data = await apiXView(aid);
+        if (data.redirect_url)
+          return urlParam(objUrl(data.redirect_url, { aid, cid, ssid, epid, p }));
+        catchs.aid[aid] = data.pages;
+        catchs.aid[aid].forEach((d) => d.aid = aid);
+        return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+      } catch (e) {
+        debug.error("view", e);
+        try {
+          catchs.aid[aid] = await apiPlayerPagelist(aid);
+          catchs.aid[aid].forEach((d) => d.aid = aid);
+          return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+        } catch (e2) {
+          debug.error("pagelist", e2);
+          try {
+            catchs.aid[aid] = (await apiView(aid)).list;
+            catchs.aid[aid].forEach((d) => d.aid = aid);
+            return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+          } catch (e3) {
+            debug.error("appkey", e3);
+            try {
+              let data = await new apiBiliplusView(aid).getDate();
+              catchs.aid[aid] = data.list || data.v2_app_api && data.v2_app_api.pages;
+              catchs.aid[aid].forEach((d) => d.aid = aid);
+              if (redirect && data.v2_app_api && data.v2_app_api.redirect_url)
+                return urlParam(objUrl(data.v2_app_api.redirect_url, { aid, cid, ssid, epid, p }));
+              return catchs.aid[aid][p - 1] || catchs.aid[aid][0];
+            } catch (e4) {
+              debug.error("biliplus", e4);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (ssid || epid) {
+    if (ssid && catchs.ssid[ssid])
+      return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+    if (epid && catchs.epid[epid])
+      return catchs.epid[epid];
+    pgc = true;
+    let data = await apiBangumiSeason({ ep_id: epid, season_id: ssid });
+    ssid = data.season_id;
+    catchs.ssid[ssid] = [];
+    data.episodes.forEach((d) => {
+      Object.assign(d, { ssid, pgc, epid: d.ep_id });
+      catchs.aid[d.aid] = catchs.aid[d.aid] || [];
+      catchs.aid[d.aid].push(d);
+      catchs.ssid[ssid].push(catchs.epid[d.ep_id] = d);
+    });
+    if (epid)
+      return catchs.epid[epid];
+    return catchs.ssid[ssid][p - 1] || catchs.ssid[ssid][0];
+  }
+  return { aid, cid, ssid, epid, p, pgc };
 }
 
 // src/io/api-biliplus-view.ts
@@ -7057,15 +7167,13 @@ var apiBiliplusView = class {
     }));
   }
   fetch;
-  getDate() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(d)).catch((e) => reject(e));
-    });
+  async getDate() {
+    const respense = await this.fetch;
+    return await respense.json();
   }
-  toDetail() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(this.view2Detail(d))).catch((e) => reject(e));
-    });
+  async toDetail() {
+    const json = await this.getDate();
+    return this.view2Detail(json);
   }
   view2Detail(data) {
     const result = new ApiViewDetail();
@@ -7152,31 +7260,24 @@ var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r
 var bangumi_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\\r\\n    <style type="text/css">\\r\\n        .new-entry {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="app" data-server-rendered="true" class="main-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\\/script>\\r\\n    <script>\\r\\n        window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\\r\\n    <\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/io/api-tag-info.ts
-function apiTagInfo(tag_name) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.TAG_INFO, { tag_name })).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data)).catch((e) => reject(e));
-  });
+async function apiTagInfo(tag_name) {
+  const response = await fetch(objUrl(URLS.TAG_INFO, { tag_name }));
+  const json = await response.json();
+  return jsonCheck(json).data;
 }
 
 // src/io/api-tag-top.ts
-function apiTagTop(tid) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.TAG_TOP, { tid })).then((d) => d.json()).then((d) => resolve(jsonCheck(d).data)).catch((e) => reject(e));
-  });
-}
-
-// src/io/bangumi-season.ts
-function apiBangumiSeason(data) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" }).then((d) => d.json()).then((d) => resolve(jsonCheck(d).result)).catch((e) => reject(e));
-  });
+async function apiTagTop(tid) {
+  const response = await fetch(objUrl(URLS.TAG_TOP, { tid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
 }
 
 // src/io/api-season-status.ts
-function apiSeasonStatus(data) {
-  return new Promise((resolve, reject) => {
-    fetch(objUrl(URLS.SEASON_STATUS, data), { credentials: "include" }).then((d) => d.json()).then((d) => resolve(jsonCheck(d).result)).catch((e) => reject(e));
-  });
+async function apiSeasonStatus(data) {
+  const response = await fetch(objUrl(URLS.SEASON_STATUS, data), { credentials: "include" });
+  const json = await response.json();
+  return jsonCheck(json).result;
 }
 
 // src/io/api-season-section.ts
@@ -7185,26 +7286,20 @@ var ApiSeasonSection = class {
   constructor(season_id) {
     this.fetch = fetch(objUrl(URLS.SEASON_STATUS, { season_id }), { credentials: "include" });
   }
-  getDate() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(jsonCheck(d).result)).catch((e) => reject(e));
-    });
+  async getDate() {
+    const response = await this.fetch;
+    const json = await response.json();
+    return jsonCheck(json).result;
   }
-  toEpisodes() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => {
-        const res = jsonCheck(d).result;
-        resolve(
-          res.main_section.episodes.concat(...res.section.map((d2) => d2.episodes)).map((d2) => {
-            d2.ep_id = d2.id;
-            d2.episode_status = d2.status;
-            d2.index = d2.title;
-            d2.index_title = d2.long_title;
-            d2.premiere = Boolean(d2.is_premiere);
-            return d2;
-          })
-        );
-      }).catch((e) => reject(e));
+  async toEpisodes() {
+    const res = await this.getDate();
+    return res.main_section.episodes.concat(...res.section.map((d) => d.episodes)).map((d) => {
+      d.ep_id = d.id;
+      d.episode_status = d.status;
+      d.index = d.title;
+      d.index_title = d.long_title;
+      d.premiere = Boolean(d.is_premiere);
+      return d;
     });
   }
 };
@@ -7221,10 +7316,10 @@ var ApiGlobalOgvView = class extends ApiSign {
     }, data);
     this.fetch = fetch(this.sign(data));
   }
-  getDate() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(jsonCheck(d).result)).catch((e) => reject(e));
-    });
+  async getDate() {
+    const response = await this.fetch;
+    const json = await response.json();
+    return jsonCheck(json).result;
   }
 };
 
@@ -7302,6 +7397,11 @@ var PlayerResponse = class {
     vip_pay_type: 0
   };
 };
+async function apiPlayer(aid, cid) {
+  const response = await fetch(objUrl(URLS.PLAYER, { aid, cid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
 
 // src/io/api-like.ts
 async function apiLike(aid, bili_jct, like = false) {
@@ -7594,7 +7694,7 @@ var PageBangumi = class extends Page {
           delete i.bkg_cover;
         this.BLOD.status.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
         t.mediaInfo = i;
-        t.mediaInfo.bkg_cover && (t.special = true, this.BLOD.bkg_cover = t.mediaInfo.bkg_cover);
+        t.mediaInfo.bkg_cover && (t.special = true);
         t.ssId = bangumi.season_id || -1;
         t.mdId = bangumi.media_id;
         t.epInfo = this.epid && bangumi.episodes.find((d2) => d2.ep_id == this.epid) || bangumi.episodes[0] || {};
@@ -7738,7 +7838,7 @@ var PageBangumi = class extends Page {
       title: i.title,
       total_ep: i.total
     };
-    t.mediaInfo.bkg_cover && (t.special = true, this.BLOD.bkg_cover = t.mediaInfo.bkg_cover);
+    t.mediaInfo.bkg_cover && (t.special = true);
     t.ssId = i.season_id || -1;
     t.epInfo = this.epid && episodes.find((d_4) => d_4.ep_id == this.epid) || episodes[0] || {};
     t.epList = episodes;
@@ -15640,17 +15740,10 @@ var PageSearch = class extends Page {
 };
 
 // src/io/api-biliplus-playurl.ts
-var apiBiliplusPlayurl = class {
-  fetch;
-  constructor(data) {
-    this.fetch = fetch(objUrl("//www.biliplus.com/BPplayurl.php", data));
-  }
-  getData() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(d)).catch((e) => reject(e));
-    });
-  }
-};
+async function apiBiliplusPlayurl(data) {
+  const response = await fetch(objUrl("//www.biliplus.com/BPplayurl.php", data));
+  return await response.json();
+}
 
 // src/io/fnval.ts
 var qn = 127;
@@ -15881,10 +15974,10 @@ var ApiAppPgcPlayurl = class extends ApiSign {
     }, data);
     this.fetch = fetch(this.sign(data));
   }
-  getData() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(jsonCheck(d))).catch((e) => reject(e));
-    });
+  async getData() {
+    const response = await this.fetch;
+    const json = await response.json();
+    return jsonCheck(json);
   }
 };
 
@@ -15949,10 +16042,10 @@ var ApiGlobalOgvPlayurl = class extends ApiSign {
     this.fetch = fetch(this.sign(data));
   }
   fetch;
-  getDate() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.text()).then((d) => resolve(jsonCheck(VideoLimit.uposReplace(d, this.uposName)).data)).catch((e) => reject(e));
-    });
+  async getDate() {
+    const response = await this.fetch;
+    const text = await response.text();
+    return jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
   }
   toPlayurl() {
     return new Promise((resolve, reject) => {
@@ -16193,7 +16286,7 @@ var _VideoLimit = class {
           }
           this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
           this.toast.data = this.data;
-          const res = await new apiBiliplusPlayurl(obj).getData();
+          const res = await apiBiliplusPlayurl(obj);
           this.Backup[epid] = { code: 0, message: "success", result: res };
         } else {
           this.BLOD.networkMock();
@@ -16338,8 +16431,9 @@ var mid_default = {
 
 // src/io/account-getcardbymid.ts
 async function accountGetCardByMid(mid, GM2) {
-  const data = await GM2.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
-  return jsonCheck(await data.json()).card;
+  const response = await GM2.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
+  const json = await response.json();
+  return jsonCheck(json).card;
 }
 
 // src/page/space.ts
@@ -16578,10 +16672,10 @@ var ApiLoginAppThird = class extends ApiSign {
     super(URLS.LOGIN_APP_THIRD, "27eb53fc9058f8c3");
     this.fetch = fetch(this.sign({ api }, api), { credentials: "include" });
   }
-  getData() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.json()).then((d) => resolve(jsonCheck(d).data)).catch((e) => reject(e));
-    });
+  async getData() {
+    const response = await this.fetch;
+    const json = await response.json();
+    return jsonCheck(json).data;
   }
 };
 
@@ -17544,12 +17638,14 @@ var UI = class {
         candidate: ["xml", "json"]
       }, "拓展名", void 0, void 0, "【下载弹幕】及【本地弹幕】使用的弹幕格式，xml是传统格式，json是protobuf弹幕实际格式，前者一般拥有更小的体积，只是可能丢失彩蛋彩蛋及部分非法字符。"),
       this.switch("dmContact", "合并弹幕", "本地弹幕或在线弹幕", void 0, void 0, "选择【本地弹幕】或【在线弹幕】是否与播放器内已有弹幕合并。"),
+      this.inputCustom("onlineDm", "在线弹幕", {
+        prop: { placeholder: "ss3398" }
+      }, (v) => {
+        v && typeof v === "string" && this.BLOD.danmaku.onlineDm(v);
+      }, "从其他视频加载弹幕", void 0, "从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！"),
       this.button("localDm", "本地弹幕", () => {
         this.BLOD.status.dmExtension === "json" ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
-      }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。"),
-      this.button("downloadDm", "下载弹幕", () => {
-        this.BLOD.danmaku.download();
-      }, "下载当前弹幕", "下载", void 0, "下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。")
+      }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。")
     ]);
   }
   initSettingStyle() {
@@ -17658,9 +17754,15 @@ var UI = class {
   }
   initSettingDownload() {
     this.menuitem.download.addSetting([
-      this.button("download", "下载当前视频", () => {
+      this.button("download", "下载视频", () => {
         this.BLOD.download.default();
-      }, "呼出下载面板", "下载", void 0, "根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。"),
+      }, "下载当前视频", "视频", void 0, "根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。"),
+      this.button("downloadDm", "下载弹幕", () => {
+        this.BLOD.danmaku.download();
+      }, "下载当前弹幕", "弹幕", void 0, "下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。"),
+      this.button("downloadImg", "下载封面", () => {
+        this.BLOD.download.image();
+      }, "下载当前封面", "封面", void 0, "下载当前视频的封面，如果有其他特殊图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。"),
       this.chockboxs("downloadType", "请求的文件类型", ["mp4", "dash", "flv"], "视频封装格式", void 0, () => this.BLOD.download.destory(), "勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。"),
       this.switch("TVresource", "请求tv端视频源", "无水印", void 0, (e) => {
         e && alert("下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！", "403警告", [
@@ -18306,7 +18408,7 @@ var VideoInfo = class {
   aidDatail(data) {
     const album = data.title;
     const artist = data.owner.name;
-    const pic = data.pic;
+    const pic = data.pic.replace("http:", "");
     data.pages ? data.pages.forEach((d, i) => {
       this.cids[d.cid] = {
         album,
@@ -18326,7 +18428,7 @@ var VideoInfo = class {
   aidInfo(data) {
     const album = data.title;
     const artist = data.upper.name;
-    const pic = data.cover;
+    const pic = data.cover.replace("http:", "");
     data.pages ? data.pages.forEach((d, i) => {
       this.cids[d.id] = {
         album,
@@ -18344,14 +18446,14 @@ var VideoInfo = class {
   bangumiSeason(data) {
     const album = data.title || data.jp_title;
     const artist = data.actors || data.staff || data.up_info?.name;
-    const pic = data.cover;
-    const bkg_cover = data.bkg_cover;
+    const pic = data.cover.replace("http:", "");
+    const bkg_cover = data.bkg_cover?.replace("http:", "");
     this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
     this.emitChange();
   }
   bangumiEpisode(data, album, artist, pic, bkg_cover) {
     data.forEach((d) => {
-      const artwork = [{ src: d.cover }, { src: pic }];
+      const artwork = [{ src: d.cover.replace("http:", "") }, { src: pic }];
       bkg_cover && artwork.push({ src: bkg_cover });
       this.cids[d.cid] = {
         album,
@@ -18363,10 +18465,10 @@ var VideoInfo = class {
   }
   toview(data) {
     const album = data.name;
-    const pic = data.cover;
+    const pic = data.cover.replace("http:", "");
     data.list.forEach((d) => {
       const title = d.title;
-      const cover = d.pic;
+      const cover = d.pic.replace("http:", "");
       const artist = d.owner.name;
       d.pages.forEach((d2, i) => {
         this.cids[d2.cid] = {
@@ -19040,6 +19142,21 @@ var Download = class {
   interface(cid, quality = qn) {
     return new ApiPlayurlInterface({ cid, quality }, this.BLOD.pgc).getData();
   }
+  image() {
+    const src = [];
+    this.BLOD.videoInfo.metadata?.artwork?.forEach((d) => src.push(d.src));
+    if (location.host === "live.bilibili.com" && window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
+      src.push(window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
+    }
+    if (src.length) {
+      const popup = new PopupBox();
+      popup.fork = false;
+      popup.setAttribute("style", "display: flex;flex-direction: row;align-items: flex-start;;max-width: 100vw;");
+      popup.innerHTML = src.map((d) => \`<img src="\${d}" width=300>\`).join("");
+    } else {
+      this.BLOD.toast.warning("未找到封面信息！");
+    }
+  }
 };
 
 // src/io/grpc/api-dm-web.ts
@@ -19656,6 +19773,37 @@ var Danmaku = class {
     }
     return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), \`\${title}.xml\`, "application/xml");
   }
+  async onlineDm(str) {
+    if (!window.player)
+      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
+    if (!window.player?.appendDm)
+      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
+    const data = ["-------在线弹幕-------", \`目标：\${str}\`];
+    const toast = this.BLOD.toast.toast(0, "info", ...data);
+    const { aid, cid } = await urlParam(str);
+    data.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
+    toast.data = data;
+    if (!aid || !cid) {
+      data.push("查询cid信息失败，已退出！");
+      toast.data = data;
+      toast.type = "error";
+      toast.delay = this.BLOD.toast.delay;
+    } else {
+      new ApiDmWeb(aid, cid).getData().then((d) => {
+        window.player.appendDm(d, !this.BLOD.status.dmContact);
+        data.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+        toast.data = data;
+        toast.type = "success";
+      }).catch((e) => {
+        data.push(e);
+        debug.error(e);
+        toast.data = data;
+        toast.type = "error";
+      }).finally(() => {
+        toast.delay = this.BLOD.status.toast.delay;
+      });
+    }
+  }
 };
 
 // src/bilibili-old.ts
@@ -19752,6 +19900,41 @@ var BLOD = class {
       configurable: true
     });
     window.top === window.self && (this.ui = new UI(this));
+    Reflect.defineProperty(this, "API", {
+      value: {
+        accountGetCardByMid,
+        articleCards: apiArticleCards,
+        bangumiSeason: apiBangumiSeason,
+        biliplusPlayurl: apiBiliplusPlayurl,
+        biliplusView: apiBiliplusView,
+        globalOgvPlayurl: ApiGlobalOgvPlayurl,
+        globalOgvView: ApiGlobalOgvView,
+        indexTopRcmd: apiIndexTopRcmd,
+        likeHas: apiLikeHas,
+        like: apiLike,
+        loginAppThird: ApiLoginAppThird,
+        pageHeader: apiPageHeader,
+        playerPagelist: apiPlayerPagelist,
+        player: apiPlayer,
+        playurlInterface: ApiPlayurlInterface,
+        playurlIntl: ApiPlayurlIntl,
+        playurlTv: ApiPlayurlTv,
+        playurl: apiPlayurl,
+        appPgcPlayurl: ApiAppPgcPlayurl,
+        playurlProj: ApiPlayurlProj,
+        seasonRankList: apiSeasonRankList,
+        seasonSection: ApiSeasonSection,
+        seasonStatus: apiSeasonStatus,
+        tagInfo: apiTagInfo,
+        tagTop: apiTagTop,
+        viewDetail: apiViewDetail,
+        view: apiView,
+        webshowLocs: ApiWebshowLocs,
+        xView: apiXView,
+        Sign: ApiSign
+      },
+      configurable: true
+    });
   }
   EmbedPlayer() {
     if (!this.playLoaded) {
