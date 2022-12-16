@@ -37,6 +37,8 @@ export class URLS {
     static readonly ARTICLE_CARDS = URLS.P_AUTO + URLS.D_API + '/x/article/cards';
     static readonly VIEW_DETAIL = URLS.P_AUTO + URLS.D_API + '/x/web-interface/view/detail';
     static readonly VIEW = URLS.P_AUTO + URLS.D_API + '/view';
+    static readonly X_VIEW = URLS.P_AUTO + URLS.D_API + '/x/web-interface/view';
+    static readonly PAGE_LIST = URLS.P_AUTO + URLS.D_API + '/x/player/pagelist';
     static readonly TAG_INFO = URLS.P_AUTO + URLS.D_API + '/x/tag/info';
     static readonly TAG_TOP = URLS.P_AUTO + URLS.D_API + '/x/web-interface/tag/top';
     static readonly BANGUMI_SEASON = URLS.P_AUTO + URLS.D_BANGUMI + '/view/web_api/season';

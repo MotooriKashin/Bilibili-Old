@@ -141,7 +141,7 @@ export class VideoLimit {
                     }
                     this.data.push(`代理服务器：内置`, `类型：${obj.module}`);
                     this.toast.data = this.data;
-                    const res = await new apiBiliplusPlayurl(<any>obj).getData();
+                    const res = await apiBiliplusPlayurl(<any>obj);
                     this.Backup[epid] = { code: 0, message: "success", result: res };
                 } else {
                     this.BLOD.networkMock();

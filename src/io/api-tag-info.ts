@@ -21,11 +21,8 @@ interface IApiTagInfoResponse {
     tag_name: string;
     type: number;
 }
-export function apiTagInfo(tag_name: string) {
-    return new Promise((resolve: (value: IApiTagInfoResponse) => void, reject) => {
-        fetch(objUrl(URLS.TAG_INFO, { tag_name }))
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).data))
-            .catch(e => reject(e));
-    });
+export async function apiTagInfo(tag_name: string) {
+    const response = await fetch(objUrl(URLS.TAG_INFO, { tag_name }));
+    const json = await response.json();
+    return <IApiTagInfoResponse>jsonCheck(json).data;
 }

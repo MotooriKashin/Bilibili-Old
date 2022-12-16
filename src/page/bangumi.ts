@@ -7,7 +7,7 @@ import { apiTagInfo } from "../io/api-tag-info";
 import { apiTagTop } from "../io/api-tag-top";
 import { debug } from "../utils/debug";
 import { Header } from "./header";
-import { apiBangumiSeason, IBangumiEpisode, IBangumiSeasonResponse } from "../io/bangumi-season";
+import { apiBangumiSeason, IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-season";
 import { apiSeasonStatus, ISeasonStatusResponse } from "../io/api-season-status";
 import { poll } from "../utils/poll";
 import { ApiSeasonSection } from "../io/api-season-section";

@@ -82,13 +82,10 @@ export class ApiGlobalOgvPlayurl extends ApiSign {
         }, data);
         this.fetch = fetch(this.sign(<any>data));
     }
-    getDate() {
-        return new Promise((resolve: (value: IGlobalOgvPlayurlResponse) => void, reject) => {
-            this.fetch
-                .then(d => d.text())
-                .then(d => resolve(jsonCheck(VideoLimit.uposReplace(d, this.uposName)).data))
-                .catch(e => reject(e));
-        });
+    async getDate() {
+        const response = await this.fetch;
+        const text = await response.text();
+        return <IGlobalOgvPlayurlResponse>jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
     }
     toPlayurl() {
         return new Promise((resolve: (value: IPlayurlDash) => void, reject) => {

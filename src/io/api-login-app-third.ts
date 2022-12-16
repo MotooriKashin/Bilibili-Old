@@ -15,12 +15,9 @@ export class ApiLoginAppThird extends ApiSign {
         super(URLS.LOGIN_APP_THIRD, '27eb53fc9058f8c3');
         this.fetch = fetch(this.sign({ api }, api), { credentials: 'include' });
     }
-    getData() {
-        return new Promise((resolve: (value: ILoginAppThirdResponse) => void, reject) => {
-            this.fetch
-                .then(d => d.json())
-                .then(d => resolve(jsonCheck(d).data))
-                .catch(e => reject(e));
-        });
+    async getData() {
+        const response = await this.fetch;
+        const json = await response.json();
+        return <ILoginAppThirdResponse>jsonCheck(json).data;
     }
 }

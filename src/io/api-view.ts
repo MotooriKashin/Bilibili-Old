@@ -25,15 +25,11 @@ export interface IApiViewResponse {
     ver: number;
     video_review: number;
 }
-export function apiView(aid: number) {
-    return new Promise((resolve: (value: IApiViewResponse) => void, reject) => {
-        fetch(objUrl(URLS.VIEW, {
-            appkey: '8e9fc618fbd41e28',
-            id: aid,
-            type: 'json'
-        }))
-            .then(d => d.json())
-            .then(d => resolve(d))
-            .catch(e => reject(e));
-    });
+export async function apiView(aid: number | string) {
+    const response = await fetch(objUrl(URLS.VIEW, {
+        appkey: '8e9fc618fbd41e28',
+        id: aid,
+        type: 'json'
+    }));
+    return <IApiViewResponse>await response.json();
 }

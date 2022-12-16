@@ -109,11 +109,8 @@ export interface IBangumiSeasonResponse {
     up_info?: IOwner;
     pay_pack?: unknown;
 }
-export function apiBangumiSeason(data: IBangumiSeasonData) {
-    return new Promise((resolve: (value: IBangumiSeasonResponse) => void, reject) => {
-        fetch(objUrl(URLS.BANGUMI_SEASON, <any>data), { credentials: 'include' })
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).result))
-            .catch(e => reject(e));
-    });
+export async function apiBangumiSeason(data: IBangumiSeasonData) {
+    const response = await fetch(objUrl(URLS.BANGUMI_SEASON, <any>data), { credentials: 'include' });
+    const json = await response.json();
+    return <IBangumiSeasonResponse>jsonCheck(json).result;
 }

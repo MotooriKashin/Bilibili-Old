@@ -140,12 +140,9 @@ export class ApiGlobalOgvView extends ApiSign {
         }, data);
         this.fetch = fetch(this.sign(<any>data));
     }
-    getDate() {
-        return new Promise((resolve: (value: IGlobalOgvViewResponse) => void, reject) => {
-            this.fetch
-                .then(d => d.json())
-                .then(d => resolve(jsonCheck(d).result))
-                .catch(e => reject(e));
-        });
+    async getDate() {
+        const response = await this.fetch;
+        const json = await response.json();
+        return <IGlobalOgvViewResponse>jsonCheck(json).result;
     }
 }

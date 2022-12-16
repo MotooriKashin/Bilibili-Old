@@ -153,13 +153,10 @@ export class ApiViewDetail {
     message = "0";
     ttl = 1;
 }
-export function apiViewDetail(aid: number) {
-    return new Promise((resolve: (value: IApiViewDetailResponse) => void, reject) => {
-        fetch(objUrl(URLS.VIEW_DETAIL, {
-            aid
-        }))
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).data))
-            .catch(e => reject(e));
-    });
+export async function apiViewDetail(aid: number) {
+    const response = await fetch(objUrl(URLS.VIEW_DETAIL, {
+        aid
+    }));
+    const json = await response.json();
+    return <IApiViewDetailResponse>jsonCheck(json).data;
 }

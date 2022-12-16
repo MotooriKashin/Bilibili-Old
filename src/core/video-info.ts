@@ -1,6 +1,6 @@
 import { BLOD } from "../bilibili-old";
 import { IAidDatail, IAidInfo, IStat } from "../io/api";
-import { IBangumiEpisode, IBangumiSeasonResponse } from "../io/bangumi-season";
+import { IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-season";
 import toview from '../json/toview.json';
 
 

@@ -31,20 +31,17 @@ interface IApiIndexTopRcmdResponse {
     play: IApiIndexTopRcmdResponse['stat']['view'];
     aid: IApiIndexTopRcmdResponse['id'];
 }
-export function apiIndexTopRcmd(data?: IApiIndexTopRcmdData) {
-    return new Promise((resolve: (value: IApiIndexTopRcmdResponse[]) => void, reject) => {
-        fetch(objUrl(URLS.INDEX_TOP_RCMD, {
-            fresh_type: data?.fresh_type || 3
-        }), {
-            credentials: data?.credentials || 'include'
-        })
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).data.item.map((d: IApiIndexTopRcmdResponse) => {
-                d.author = d.owner.name;
-                d.play = d.stat.view;
-                d.aid = d.id;
-                return d;
-            })))
-            .catch(e => reject(e));
+export async function apiIndexTopRcmd(data?: IApiIndexTopRcmdData) {
+    const response = await fetch(objUrl(URLS.INDEX_TOP_RCMD, {
+        fresh_type: data?.fresh_type || 3
+    }), {
+        credentials: data?.credentials || 'include'
+    });
+    const json = await response.json();
+    return <IApiIndexTopRcmdResponse>jsonCheck(json).data.item.map((d: IApiIndexTopRcmdResponse) => {
+        d.author = d.owner.name;
+        d.play = d.stat.view;
+        d.aid = d.id;
+        return d;
     });
 }

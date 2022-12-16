@@ -36,11 +36,8 @@ export interface ISeasonStatusResponse {
         type: number;
     };
 }
-export function apiSeasonStatus(data: ISeasonStatusData) {
-    return new Promise((resolve: (value: ISeasonStatusResponse) => void, reject) => {
-        fetch(objUrl(URLS.SEASON_STATUS, <any>data), { credentials: 'include' })
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).result))
-            .catch(e => reject(e));
-    });
+export async function apiSeasonStatus(data: ISeasonStatusData) {
+    const response = await fetch(objUrl(URLS.SEASON_STATUS, <any>data), { credentials: 'include' });
+    const json = await response.json();
+    return <ISeasonStatusResponse>jsonCheck(json).result;
 }

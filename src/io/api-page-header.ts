@@ -14,11 +14,8 @@ interface IApiPageHeaderResponse {
     split_layer: string;
     url: string;
 }
-export function apiPageHeader(data: IApiPageHeaderDate) {
-    return new Promise((resolve: (value: IApiPageHeaderResponse) => void, reject) => {
-        fetch(objUrl(URLS.PAGE_HEADER, <any>data))
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).data))
-            .catch(e => reject(e));
-    });
+export async function apiPageHeader(data: IApiPageHeaderDate) {
+    const response = await fetch(objUrl(URLS.PAGE_HEADER, <any>data));
+    const json = await response.json();
+    return <IApiPageHeaderResponse>jsonCheck(json).data;
 }

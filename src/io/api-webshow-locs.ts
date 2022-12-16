@@ -47,14 +47,11 @@ export interface IApiWebshowLocsResponse {
     title: string;
     url: string;
 }
-export function ApiWebshowLocs(data: IApiWebshowLocsData) {
-    return new Promise((resolve: (value: IApiWebshowLocsResponse[][]) => void, reject) => {
-        fetch(objUrl(URLS.WEBSHOW_LOCS, {
-            pf: 0,
-            ids: data.ids.join(',')
-        }))
-            .then(d => d.text())
-            .then(d => resolve(jsonCheck(BV2avAll(d)).data))
-            .catch(e => reject(e));
-    });
+export async function ApiWebshowLocs(data: IApiWebshowLocsData) {
+    const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
+        pf: 0,
+        ids: data.ids.join(',')
+    }));
+    const text = await response.text();
+    return <IApiWebshowLocsResponse[][]>jsonCheck(BV2avAll(text)).data;
 }

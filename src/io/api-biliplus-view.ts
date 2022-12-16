@@ -11,25 +11,20 @@ interface IApiViewPlusResponse extends IApiViewResponse {
 }
 export class apiBiliplusView {
     protected fetch: Promise<Response>;
-    constructor(protected aid: number) {
+    constructor(protected aid: number | string) {
         this.fetch = fetch(objUrl('//www.biliplus.com/api/view', {
             id: aid
         }))
     }
-    getDate() {
-        return new Promise((resolve: (value: IApiViewPlusResponse) => void, reject) => {
-            this.fetch.then(d => d.json())
-                .then(d => resolve(d))
-                .catch(e => reject(e));
-        });
+    async getDate() {
+        const respense = await this.fetch;
+        return <IApiViewPlusResponse>await respense.json()
+
     }
     /** 转化为`apiViewDetail`格式 */
-    toDetail() {
-        return new Promise((resolve: (value: ApiViewDetail) => void, reject) => {
-            this.fetch.then(d => d.json())
-                .then(d => resolve(this.view2Detail(d)))
-                .catch(e => reject(e));
-        });
+    async toDetail() {
+        const json = await this.getDate();
+        return <ApiViewDetail>this.view2Detail(json);
     }
     protected view2Detail(data: IApiViewPlusResponse) {
         const result = new ApiViewDetail();

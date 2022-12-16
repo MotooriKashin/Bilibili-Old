@@ -82,11 +82,8 @@ export class PlayerResponse {
     };
     constructor(public aid: number, public cid: number, public has_next = false) { }
 }
-export function apiPlayer(aid: number, cid: number) {
-    return new Promise((resolve: (value: PlayerResponse) => void, reject) => {
-        fetch(objUrl(URLS.PLAYER, { aid, cid }))
-            .then(d => d.json())
-            .then(d => resolve(jsonCheck(d).data))
-            .catch(e => reject(e));
-    });
+export async function apiPlayer(aid: number, cid: number) {
+    const response = await fetch(objUrl(URLS.PLAYER, { aid, cid }));
+    const json = await response.json();
+    return <PlayerResponse>jsonCheck(json).data;
 }

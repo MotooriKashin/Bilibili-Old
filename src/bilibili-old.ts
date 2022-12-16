@@ -32,6 +32,35 @@ import { GM as GMC } from "@blod/extension/utils/gm";
 import { xhrHook } from "./utils/hook/xhr";
 import { URLS } from "./io/urls";
 import { Danmaku } from "./core/danmaku";
+import { accountGetCardByMid } from "./io/account-getcardbymid";
+import { ApiSign } from "./io/api";
+import { apiArticleCards } from "./io/api-article-cards";
+import { apiBangumiSeason } from "./io/api-bangumi-season";
+import { apiBiliplusPlayurl } from "./io/api-biliplus-playurl";
+import { apiBiliplusView } from "./io/api-biliplus-view";
+import { ApiGlobalOgvPlayurl } from "./io/api-global-ogv-playurl";
+import { ApiGlobalOgvView } from "./io/api-global-view";
+import { apiIndexTopRcmd } from "./io/api-index-top-rcmd";
+import { apiLike } from "./io/api-like";
+import { apiLikeHas } from "./io/api-like-has";
+import { ApiLoginAppThird } from "./io/api-login-app-third";
+import { apiPageHeader } from "./io/api-page-header";
+import { apiPlayer } from "./io/api-player";
+import { apiPlayerPagelist } from "./io/api-player-pagelist";
+import { apiPlayurl, ApiAppPgcPlayurl } from "./io/api-playurl";
+import { ApiPlayurlInterface } from "./io/api-playurl-interface";
+import { ApiPlayurlIntl } from "./io/api-playurl-intl";
+import { ApiPlayurlTv } from "./io/api-playurl-tv";
+import { ApiPlayurlProj } from "./io/api-playurlproj";
+import { apiSeasonRankList } from "./io/api-season-rank-list";
+import { ApiSeasonSection } from "./io/api-season-section";
+import { apiSeasonStatus } from "./io/api-season-status";
+import { apiTagInfo } from "./io/api-tag-info";
+import { apiTagTop } from "./io/api-tag-top";
+import { apiView } from "./io/api-view";
+import { apiViewDetail } from "./io/api-view-detail";
+import { ApiWebshowLocs } from "./io/api-webshow-locs";
+import { apiXView } from "./io/api-x-view";
 
 export class BLOD {
     /** 用户数据加载回调序列 */
@@ -158,6 +187,42 @@ export class BLOD {
             configurable: true,
         });
         window.top === window.self && (this.ui = new UI(this));
+        // 暴露调试接口
+        Reflect.defineProperty(this, 'API', {
+            value: {
+                accountGetCardByMid: accountGetCardByMid,
+                articleCards: apiArticleCards,
+                bangumiSeason: apiBangumiSeason,
+                biliplusPlayurl: apiBiliplusPlayurl,
+                biliplusView: apiBiliplusView,
+                globalOgvPlayurl: ApiGlobalOgvPlayurl,
+                globalOgvView: ApiGlobalOgvView,
+                indexTopRcmd: apiIndexTopRcmd,
+                likeHas: apiLikeHas,
+                like: apiLike,
+                loginAppThird: ApiLoginAppThird,
+                pageHeader: apiPageHeader,
+                playerPagelist: apiPlayerPagelist,
+                player: apiPlayer,
+                playurlInterface: ApiPlayurlInterface,
+                playurlIntl: ApiPlayurlIntl,
+                playurlTv: ApiPlayurlTv,
+                playurl: apiPlayurl,
+                appPgcPlayurl: ApiAppPgcPlayurl,
+                playurlProj: ApiPlayurlProj,
+                seasonRankList: apiSeasonRankList,
+                seasonSection: ApiSeasonSection,
+                seasonStatus: apiSeasonStatus,
+                tagInfo: apiTagInfo,
+                tagTop: apiTagTop,
+                viewDetail: apiViewDetail,
+                view: apiView,
+                webshowLocs: ApiWebshowLocs,
+                xView: apiXView,
+                Sign: ApiSign
+            },
+            configurable: true,
+        });
     }
     /** 旧版播放器引导 */
     EmbedPlayer() {

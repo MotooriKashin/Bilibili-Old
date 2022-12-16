@@ -29,6 +29,7 @@ interface IAccountCard {
     spacesta: number;
 }
 export async function accountGetCardByMid(mid: number, GM: BLOD['GM']) {
-    const data = await GM.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
-    return <IAccountCard>jsonCheck(await data.json()).card;
+    const response = await GM.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
+    const json = await response.json()
+    return <IAccountCard>jsonCheck(json).card;
 }
