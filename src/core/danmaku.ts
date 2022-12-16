@@ -7,6 +7,7 @@ import { sizeFormat } from "../utils/format/size";
 import { urlObj } from "../utils/format/url";
 import { propertyHook } from "../utils/hook/method";
 import { WorkerHook } from "../utils/hook/worker";
+import { urlParam } from "../utils/utils";
 
 export class Danmaku {
     private listSoFixed = false;
@@ -135,5 +136,38 @@ export class Danmaku {
             return saveAs(JSON.stringify(dms, undefined, '\t'), `${title}.json`, 'application/json')
         }
         return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), `${title}.xml`, 'application/xml');
+    }
+    /** 加载在线弹幕 */
+    async onlineDm(str: string) {
+        if (!(<any>window).player) return this.BLOD.toast.warning('未找到播放器实例！请在播放页面使用。');
+        if (!(<any>window).player?.appendDm) return this.BLOD.toast.warning('未启用【重构播放器】，无法载入弹幕！');
+        const data = ['-------在线弹幕-------', `目标：${str}`];
+        const toast = this.BLOD.toast.toast(0, 'info', ...data);
+        const { aid, cid } = await urlParam(str);
+        data.push(`aid：${aid}`, `cid：${cid}`);
+        toast.data = data;
+        if (!aid || !cid) {
+            data.push('查询cid信息失败，已退出！');
+            toast.data = data;
+            toast.type = 'error';
+            toast.delay = this.BLOD.toast.delay;
+        } else {
+            new ApiDmWeb(aid, cid).getData()
+                .then(d => {
+                    (<any>window).player.appendDm(d, !this.BLOD.status.dmContact);
+                    data.push(`有效弹幕数：${d.length}`, `加载模式：${this.BLOD.status.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                    toast.data = data;
+                    toast.type = 'success';
+                })
+                .catch(e => {
+                    data.push(e);
+                    debug.error(e);
+                    toast.data = data;
+                    toast.type = 'error';
+                })
+                .finally(() => {
+                    toast.delay = this.BLOD.status.toast.delay;
+                })
+        }
     }
 }

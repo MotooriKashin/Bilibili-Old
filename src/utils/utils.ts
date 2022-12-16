@@ -65,9 +65,6 @@ export async function urlParam(url: string, redirect = true): Promise<UrlParam> 
     !epid && (epid = obj.episodeId);
     !epid && (epid = obj.ep_id);
     !epid && (url.replace(/[eE][pP]\d+/, d => epid = d.substring(2)));
-    if (ssid || epid) {
-        const data = await apiBangumiSeason({ season_id: <number>ssid, ep_id: <number>epid });
-    }
     if (!ssid && !epid && aid) {
         if (catchs.aid[aid]) return catchs.aid[aid][<number>p - 1] || catchs.aid[aid][0];
         if (!cid) {
