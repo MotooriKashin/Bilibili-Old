@@ -192,7 +192,7 @@ export class UI {
                 prop: { placeholder: 'ss3398' }
             }, v => {
                 v && typeof v === 'string' && this.BLOD.danmaku.onlineDm(v);
-            }, '从其他视频加载弹幕', undefined, '从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>'),
+            }, '从其他视频加载弹幕', undefined, '从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！'),
             this.button(<'dmContact'>'localDm', '本地弹幕', () => {
                 this.BLOD.status.dmExtension === 'json' ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
             }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。')
@@ -308,12 +308,15 @@ export class UI {
     /** 下载设置 */
     protected initSettingDownload() {
         this.menuitem.download.addSetting([
-            this.button(<'aria2'>'download', '下载当前视频', () => {
+            this.button(<'aria2'>'download', '下载视频', () => {
                 this.BLOD.download.default();
-            }, '呼出下载面板', '下载', undefined, '根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。'),
-            this.button(<'dmContact'>'downloadDm', '下载弹幕', () => {
-                this.BLOD.danmaku.download()
-            }, '下载当前弹幕', '下载', undefined, '下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。'),
+            }, '下载当前视频', '视频', undefined, '根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。'),
+            this.button(<'aria2'>'downloadDm', '下载弹幕', () => {
+                this.BLOD.danmaku.download();
+            }, '下载当前弹幕', '弹幕', undefined, '下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。'),
+            this.button(<'aria2'>'downloadImg', '下载封面', () => {
+                this.BLOD.download.image();
+            }, '下载当前封面', '封面', undefined, '下载当前视频的封面，如果有其他特殊图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。'),
             this.chockboxs('downloadType', '请求的文件类型', ['mp4', 'dash', 'flv'], '视频封装格式', undefined, () => this.BLOD.download.destory(), '勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。'),
             this.switch('TVresource', '请求tv端视频源', '无水印', undefined, e => {
                 e && alert('下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！', '403警告', [

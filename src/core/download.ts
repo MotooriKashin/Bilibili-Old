@@ -5,11 +5,15 @@ import { ApiPlayurlIntl } from "../io/api-playurl-intl";
 import { ApiPlayurlTv } from "../io/api-playurl-tv";
 import { ApiPlayurlProj } from "../io/api-playurlproj";
 import { qn } from "../io/fnval";
+import { addElement } from "../utils/element";
 import { Aria2 } from "./download/aria2";
 import { Ef2 } from "./download/ef2";
 import { IDownlodDataFilter, PlayinfoFilter } from "./download/playinfo";
 import { switchVideo } from "./observer";
+import { alert } from "./ui/alert";
+import { Desc } from "./ui/desc";
 import { BilioldDownload } from "./ui/download";
+import { PopupBox } from "./ui/utils/popupbox";
 
 export class Download {
     /** 下载界面 */
@@ -156,5 +160,21 @@ export class Download {
     }
     private interface(cid: number, quality = qn) {
         return new ApiPlayurlInterface({ cid, quality }, this.BLOD.pgc).getData();
+    }
+    image() {
+        const src: string[] = [];
+        this.BLOD.videoInfo.metadata?.artwork?.forEach(d => src.push(d.src));
+        if (location.host === 'live.bilibili.com' && (<any>window).__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
+            // 直播封面
+            src.push((<any>window).__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
+        }
+        if (src.length) {
+            const popup = new PopupBox();
+            popup.fork = false;
+            popup.setAttribute('style', 'display: flex;flex-direction: row;align-items: flex-start;;max-width: 100vw;');
+            popup.innerHTML = src.map(d => `<img src="${d}" width=300>`).join('');
+        } else {
+            this.BLOD.toast.warning('未找到封面信息！')
+        }
     }
 }

@@ -62,7 +62,7 @@ export class VideoInfo {
     aidDatail(data: IAidDatail) {
         const album = data.title;
         const artist = data.owner.name;
-        const pic = data.pic;
+        const pic = data.pic.replace('http:', '');
         data.pages ? data.pages.forEach((d, i) => {
             this.cids[d.cid] = {
                 album,
@@ -83,7 +83,7 @@ export class VideoInfo {
     aidInfo(data: IAidInfo) {
         const album = data.title;
         const artist = data.upper.name;
-        const pic = data.cover;
+        const pic = data.cover.replace('http:', '');
         data.pages ? data.pages.forEach((d, i) => {
             this.cids[d.id] = {
                 album,
@@ -102,15 +102,15 @@ export class VideoInfo {
     bangumiSeason(data: IBangumiSeasonResponse) {
         const album = data.title || data.jp_title;
         const artist = data.actors || data.staff || data.up_info?.name!;
-        const pic = data.cover;
-        const bkg_cover = data.bkg_cover;
+        const pic = data.cover.replace('http:', '');
+        const bkg_cover = data.bkg_cover?.replace('http:', '');
         this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
         this.emitChange();
     }
     /** 从`IBangumiEpisode`中提取 */
     bangumiEpisode(data: IBangumiEpisode[], album: string, artist: string, pic: string, bkg_cover?: string) {
         data.forEach(d => {
-            const artwork = [{ src: d.cover }, { src: pic }];
+            const artwork = [{ src: d.cover.replace('http:', '') }, { src: pic }];
             bkg_cover && artwork.push({ src: bkg_cover });
             this.cids[d.cid] = {
                 album,
@@ -122,10 +122,10 @@ export class VideoInfo {
     }
     toview(data: typeof toview) {
         const album = data.name;
-        const pic = data.cover;
+        const pic = data.cover.replace('http:', '');
         data.list.forEach(d => {
             const title = d.title;
-            const cover = d.pic;
+            const cover = d.pic.replace('http:', '');
             const artist = d.owner.name;
             d.pages.forEach((d, i) => {
                 this.cids[d.cid] = {

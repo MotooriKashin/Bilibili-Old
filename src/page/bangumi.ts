@@ -201,7 +201,7 @@ export class PageBangumi extends Page {
                     if (this.BLOD.status.bangumiEplist) delete i.bkg_cover;
                     this.BLOD.status.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
                     t.mediaInfo = i;
-                    t.mediaInfo.bkg_cover && (t.special = !0, this.BLOD.bkg_cover = t.mediaInfo.bkg_cover);
+                    t.mediaInfo.bkg_cover && (t.special = !0);
                     t.ssId = bangumi.season_id || -1;
                     t.mdId = bangumi.media_id;
                     t.epInfo = (this.epid && bangumi.episodes.find(d => d.ep_id == this.epid)) || bangumi.episodes[0] || {};
@@ -370,7 +370,7 @@ export class PageBangumi extends Page {
             title: i.title,
             total_ep: i.total,
         };
-        t.mediaInfo.bkg_cover && (t.special = !0, this.BLOD.bkg_cover = t.mediaInfo.bkg_cover);
+        t.mediaInfo.bkg_cover && (t.special = !0);
         t.ssId = i.season_id || -1;
         t.epInfo = (this.epid && episodes.find((d_4: any) => d_4.ep_id == this.epid)) || episodes[0] || {};
         t.epList = episodes;

@@ -89,8 +89,7 @@ export class BLOD {
     epid!: number;
     /** 限制视频 */
     limit?: number;
-    /** bangumi特殊背景 */
-    bkg_cover?: string;
+
     /** 东南亚视频标记 */
     th!: boolean;
     /** 播放器已加载 */
