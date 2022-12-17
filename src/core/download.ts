@@ -112,7 +112,7 @@ export class Download {
         if (!this.BLOD.cid) return this.BLOD.toast.warning('未找到视频文件');
         this.downloading = true;
         this.ui.show();
-        this.BLOD.status.TVresource || this.decodePlayinfo(this.BLOD.videoLimit.__playinfo__);
+        this.BLOD.status.TVresource || this.gets.includes('_') || (this.decodePlayinfo(this.BLOD.videoLimit.__playinfo__), this.gets.push('_'));
         const tasks: Promise<any>[] = [];
         this.BLOD.status.downloadType.includes('mp4') && (this.data.mp4 || this.gets.includes('mp4') || tasks.push(this.mp4(this.BLOD.cid).then(d => { this.gets.push('mp4'); this.decodePlayinfo(d) })));
         this.BLOD.status.downloadType.includes('flv') && (this.data.flv || this.gets.includes('flv') || tasks.push(
