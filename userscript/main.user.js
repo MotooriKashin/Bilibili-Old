@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.0.9-6b79f673c9d56093e8cf35943da14b35be3e4155
+// @version      10.1.0-6b79f673c9d56093e8cf35943da14b35be3e4155
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -19099,7 +19099,7 @@ var Download = class {
       return this.BLOD.toast.warning("未找到视频文件");
     this.downloading = true;
     this.ui.show();
-    this.BLOD.status.TVresource || this.decodePlayinfo(this.BLOD.videoLimit.__playinfo__);
+    this.BLOD.status.TVresource || this.gets.includes("_") || (this.decodePlayinfo(this.BLOD.videoLimit.__playinfo__), this.gets.push("_"));
     const tasks = [];
     this.BLOD.status.downloadType.includes("mp4") && (this.data.mp4 || this.gets.includes("mp4") || tasks.push(this.mp4(this.BLOD.cid).then((d) => {
       this.gets.push("mp4");
