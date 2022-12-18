@@ -12,7 +12,7 @@ export class ApiLoginAppThird extends ApiSign {
     protected fetch: Promise<Response>;
     constructor(api: string) {
         api = encodeURIComponent(api);
-        super(URLS.LOGIN_APP_THIRD, '27eb53fc9058f8c3');
+        super(URLS.LOGIN_APP_THIRD, '1d8b6e7d45233436');
         this.fetch = fetch(this.sign({ api }, api), { credentials: 'include' });
     }
     async getData() {

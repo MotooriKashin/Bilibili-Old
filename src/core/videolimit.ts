@@ -1,7 +1,7 @@
 import { BLOD } from "../bilibili-old";
 import { apiBiliplusPlayurl } from "../io/api-biliplus-playurl";
 import { ApiGlobalOgvPlayurl } from "../io/api-global-ogv-playurl";
-import { ApiAppPgcPlayurl, IPlayurlDash } from "../io/api-playurl";
+import { ApiAppPgcPlayurl, apiPlayurl, IPlayurlDash } from "../io/api-playurl";
 import { fnval } from "../io/fnval";
 import { uid } from "../utils/conf/uid";
 import { debug } from "../utils/debug";
@@ -144,7 +144,7 @@ export class VideoLimit {
                     const res = await apiBiliplusPlayurl(<any>obj);
                     this.Backup[epid] = { code: 0, message: "success", result: res };
                 } else {
-                    this.BLOD.networkMock();
+                    // this.BLOD.networkMock();
                     const res = await this.gat(obj);
                     this.Backup[epid] = { code: 0, message: "success", result: res };
                 }
@@ -201,7 +201,8 @@ export class VideoLimit {
         this.data.push(`代理服务器：${server}`);
         this.toast && (this.toast.data = this.data);
         try {
-            return await new ApiAppPgcPlayurl(<any>obj, server).getData();
+            // return await new ApiAppPgcPlayurl(<any>obj, server).getData();
+            return <IPlayurlDash>await apiPlayurl(<any>obj, true, true, server);
         } catch (e) {
             this.data.push('代理服务器返回异常！', e);
             if (this.toast) {

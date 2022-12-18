@@ -308,13 +308,13 @@ interface IApiPlayurl {
     avid: number;
     cid: number;
 }
-export async function apiPlayurl(data: IApiPlayurl, dash = true, pgc = false): Promise<IPlayurlDash | IPlayurlDurl> {
+export async function apiPlayurl(data: IApiPlayurl, dash = true, pgc = false, server: string = 'api.bilibili.com'): Promise<IPlayurlDash | IPlayurlDurl> {
     data = Object.assign({
         qn,
         otype: 'json',
         fourk: 1
     }, data, dash ? { fnver, fnval } : {});
-    const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL : URLS.PLAYURL, <any>data), { credentials: 'include' });
+    const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace('api.bilibili.com', server) : URLS.PLAYURL, <any>data), { credentials: 'include' });
     const json = await response.json();
     if (pgc) {
         return jsonCheck(json).result;
