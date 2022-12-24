@@ -173,7 +173,8 @@ export class Header {
             return document.querySelector<HTMLElement>('#internationalHeader')
                 || document.querySelector<HTMLElement>('#biliMainHeader')
                 || document.querySelector<HTMLElement>('#bili-header-container')
-                || document.querySelector<HTMLElement>('#home_nav');
+                || document.querySelector<HTMLElement>('#home_nav')
+                || document.querySelector<HTMLElement>('.bili-header__bar')
         }, d => {
             Header.isMiniHead(d) && this.miniHeader();
             this.loadOldHeader(d);
