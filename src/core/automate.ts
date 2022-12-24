@@ -10,21 +10,9 @@ import { localStorage, sessionStorage } from "./storage";
 export class Automate {
     constructor(protected BLOD: BLOD) {
         this.modifyArgument();
-        this.playerSettings();
         this.danmakuFirst();
         switchVideo(this.switchVideo);
         this.videospeed();
-    }
-    /** 备份播放器设置 */
-    protected playerSettings() {
-        const local = localStorage.getItem('bilibili_player_settings');
-        if (local) {
-            this.BLOD.GM.setValue('bilibili_player_settings', local);
-        } else {
-            this.BLOD.GM.getValue('bilibili_player_settings').then(d => {
-                d && localStorage.setItem('bilibili_player_settings', d);
-            })
-        }
     }
     /** 展开弹幕列表 */
     protected danmakuFirst() {

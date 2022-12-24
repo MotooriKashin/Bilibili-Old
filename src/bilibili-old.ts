@@ -228,6 +228,7 @@ export class BLOD {
         if (!this.playLoaded) {
             this.playLoaded = true;
             this.player.EmbedPlayer(() => this.loadplayer());
+            this.playerSettings();
         }
     }
     /** 旧版播放器以nano形式引导 */
@@ -235,6 +236,7 @@ export class BLOD {
         if (!this.playLoaded) {
             this.playLoaded = true;
             this.player.connectPlayer(() => this.loadplayer());
+            this.playerSettings();
         }
     }
     /** 用户数据回调 */
@@ -538,6 +540,17 @@ export class BLOD {
             this.updating || this.toast.error('播放器加载失败！', '已回滚~', e)();
             await loadScript(URLS.VIDEO);
             addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
+        }
+    }
+    /** 备份播放器设置 */
+    protected playerSettings() {
+        const local = localStorage.getItem('bilibili_player_settings');
+        if (local) {
+            this.GM.setValue('bilibili_player_settings', local);
+        } else {
+            this.GM.getValue('bilibili_player_settings').then(d => {
+                d && localStorage.setItem('bilibili_player_settings', d);
+            })
         }
     }
 }
