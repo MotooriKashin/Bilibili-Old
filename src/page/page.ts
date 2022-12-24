@@ -17,7 +17,6 @@ export abstract class Page {
             set: () => true,
             get: () => undefined
         });
-        Reflect.deleteProperty(window, 'webpackJsonp');
     }
     /** 重写页面 */
     protected updateDom() {
@@ -27,6 +26,8 @@ export abstract class Page {
         this.vdom.replace(document.documentElement);
         // 删除PlayerAgent残留
         Reflect.deleteProperty(window, 'PlayerAgent');
+        // 删除webpackJsonp残留
+        Reflect.deleteProperty(window, 'webpackJsonp');
         // 启动原生脚本
         this.vdom.loadScript().then(() => this.loadedCallback());
         // 还原标题

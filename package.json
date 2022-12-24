@@ -2,8 +2,7 @@
   "dependencies": {
     "@blod/blod": "file:src",
     "@blod/extension": "file:extension",
-    "@blod/userscript": "file:userscript",
-    "protobufjs": "^7.1.2"
+    "@blod/userscript": "file:userscript"
   },
   "devDependencies": {
     "esbuild": "^0.15.13",

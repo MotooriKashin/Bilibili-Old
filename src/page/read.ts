@@ -6,6 +6,8 @@ import { IUserInfo } from "../io/api-view-detail";
 import { IStat } from "../io/api";
 import { addCss } from "../utils/element";
 import { Comment } from "../core/comment";
+import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html-cb';
+import { debug } from "../utils/debug";
 
 interface ReadInfo {
     act_id: number;
@@ -57,6 +59,7 @@ export class PageRead extends Page {
         [41, "笔记", "note"]
     ];
     protected readInfoStr = '';
+    private ops?: any;
     constructor(protected BLOD: BLOD) {
         super(html);
         new Comment(BLOD);
@@ -112,7 +115,39 @@ export class PageRead extends Page {
         <a class="author-face" href="//space.bilibili.com/${this.readInfo.author.mid}" target="_blank"><img data-face-src="${this.readInfo.author.face.replace("http:", "")}" src="${this.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/${this.readInfo.author.mid}" target="_blank">${this.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>`;
     }
     protected articleHolder() {
-        this.readInfoStr += `<div class="article-holder">${this.readInfo.content}</div><p class="original">本文为我原创</p>`;
+        this.readInfoStr += `<div class="article-holder">${this.delta()}</div><p class="original">本文为我原创</p>`;
+    }
+    private delta() {
+        let str = this.readInfo.content;
+        if (str?.startsWith('{"ops"')) { // 处理富文本
+            try {
+                this.ops = JSON.parse(str).ops;
+                const converter = new QuillDeltaToHtmlConverter(this.ops);
+                // customOp is your custom blot op
+                // contextOp is the block op that wraps this op, if any. 
+                // If, for example, your custom blot is located inside a list item,
+                // then contextOp would provide that op. 
+                converter.renderCustomWith(function (customOp, contextOp) {
+                    switch (customOp.insert.type) {
+                        case 'native-image':
+                            const val = customOp.insert.value;
+                            return `<img src="${val.url}@progressive.webp"${val.alt ? ` alt="${val.alt}"` : ''
+                                }${val.height ? ` data-h="${val.height}"` : ''
+                                }${val.width ? ` data-w="${val.width}"` : ''
+                                }${val.size ? ` data-size="${val.size}"` : ''
+                                }${val.status ? ` data-status="${val.status}"` : ''
+                                }${val.id ? ` data-id="${val.id}"` : ''
+                                }>`;
+                        default:
+                            return 'Unmanaged custom blot!';
+                    }
+                });
+                str = converter.convert();
+            } catch (e) {
+                debug.error(e)
+            }
+        }
+        return str;
     }
     protected tagContainer() {
         this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {
@@ -146,6 +181,7 @@ export class PageRead extends Page {
         const title = document.title;
         this.vdom.replace(document.documentElement);
         document.querySelector(".page-container")!.innerHTML = this.readInfoStr;
+        Reflect.deleteProperty(window, 'webpackJsonp');
         this.vdom.loadScript().then(() => {
             this.loadedCallback();
             PageRead.rightCopyEnable();

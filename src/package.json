@@ -7,8 +7,10 @@
   "license": "MIT",
   "dependencies": {
     "@types/md5": "^2.3.2",
+    "md5": "^2.3.0",
     "navigation-api-types": "^0.3.0",
-    "md5": "^2.3.0"
+    "protobufjs": "^7.1.2",
+    "quill-delta-to-html-cb": "^0.14.0"
   },
   "scripts": {
     "tsc": "tsc --noEmit"
