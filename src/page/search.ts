@@ -14,7 +14,7 @@ export class PageSearch extends Page {
     /** 修正URL */
     protected location() {
         // 搜索首页不应含有任何路径
-        poll(() => location.href.endsWith('all'), () => {
+        poll(() => location.href.endsWith('/all'), () => {
             this.BLOD.urlCleaner.updateLocation(location.origin);
         }, 10, 30);
     }
