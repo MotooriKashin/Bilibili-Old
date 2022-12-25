@@ -64,4 +64,5 @@ export class URLS {
     static readonly HAS_LIKE = URLS.P_AUTO + URLS.D_API + '/x/web-interface/archive/has/like';
     static readonly DM_WEB_VIEW = URLS.P_AUTO + URLS.D_API + '/x/v2/dm/web/view';
     static readonly DM_WEB_SEG_SO = URLS.P_AUTO + URLS.D_API + '/x/v2/dm/web/seg.so';
+    static readonly STAT = URLS.P_AUTO + URLS.D_API + '/x/web-interface/archive/stat';
 }

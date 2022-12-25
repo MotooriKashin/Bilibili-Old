@@ -19,6 +19,8 @@ import { ISubtitle, PlayerResponse } from "../io/api-player";
 import { urlObj } from "../utils/format/url";
 import { Like } from "../core/ui/like";
 import { switchVideo } from "../core/observer";
+import { unitFormat } from "../utils/format/unit";
+import { apiStat } from "../io/api-stat";
 
 export class PageBangumi extends Page {
     protected like: Like;
@@ -71,6 +73,7 @@ export class PageBangumi extends Page {
         this.related();
         this.initialState();
         this.enLike();
+        this.episodeData();
         Header.primaryMenu();
         Header.banner();
     }
@@ -455,6 +458,38 @@ export class PageBangumi extends Page {
             switchVideo(() => {
                 this.like.init();
             })
+        }
+    }
+    private episodeIndex = 0;
+    /** 分集数据 */
+    protected episodeData() {
+        if (this.BLOD.status.episodeData) {
+            switchVideo(() => {
+                this.episodeIndex++;
+                const views = document.querySelector<HTMLSpanElement>(".view-count > span");
+                const danmakus = document.querySelector<HTMLSpanElement>(".danmu-count > span");
+                if (views && danmakus) {
+                    if (this.episodeIndex === 1) {
+                        const [view, danmaku] = [
+                            unitFormat((<any>window).__INITIAL_STATE__.mediaInfo.stat.views),
+                            unitFormat((<any>window).__INITIAL_STATE__.mediaInfo.stat.danmakus)
+                        ];
+                        // 首p时辈分总播放数和总弹幕数
+                        views.setAttribute("title", "总播放数 " + view);
+                        danmakus.setAttribute("title", "总弹幕数 " + danmaku);
+                        debug.log("总播放数：", view, "总弹幕数", danmaku);
+                    }
+                    apiStat(this.BLOD.aid)
+                        .then(({ view, danmaku }) => {
+                            views.textContent = unitFormat(view);
+                            danmakus.textContent = unitFormat(danmaku);
+                            debug.log("总播放数：", view, "总弹幕数", danmaku);
+                        })
+                        .catch(e => {
+                            debug.error('分集数据', e)
+                        })
+                }
+            });
         }
     }
 }

@@ -161,4 +161,6 @@ export const userStatus = {
     dmExtension: 'xml',
     /** 合并已有弹幕 */
     dmContact: false,
+    /** 分集数据 */
+    episodeData: false,
 }
