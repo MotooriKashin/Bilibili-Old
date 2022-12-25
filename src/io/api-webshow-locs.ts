@@ -47,7 +47,15 @@ export interface IApiWebshowLocsResponse {
     title: string;
     url: string;
 }
-export async function ApiWebshowLocs(data: IApiWebshowLocsData) {
+export async function apiWebshowLoc(id: number) {
+    const response = await fetch(objUrl(URLS.WEBSHOW_LOCS.slice(0, -1), {
+        pf: 0,
+        id
+    }));
+    const text = await response.text();
+    return <IApiWebshowLocsResponse[]>jsonCheck(BV2avAll(text)).data;
+}
+export async function apiWebshowLocs(data: IApiWebshowLocsData) {
     const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
         pf: 0,
         ids: data.ids.join(',')

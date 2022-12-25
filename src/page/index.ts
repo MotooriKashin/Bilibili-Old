@@ -1,7 +1,7 @@
 import { Page } from "./page";
 import html from '../html/index.html';
 import news from '../html/news.html';
-import { ApiWebshowLocs, IApiWebshowLocsResponse } from "../io/api-webshow-locs";
+import { apiWebshowLocs, IApiWebshowLocsResponse } from "../io/api-webshow-locs";
 import { BLOD } from "../bilibili-old";
 import { apiIndexTopRcmd } from "../io/api-index-top-rcmd";
 import { uid } from "../utils/conf/uid";
@@ -48,7 +48,7 @@ export class PageIndex extends Page {
         Header.banner();
     }
     protected locsData() {
-        ApiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] })
+        apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] })
             .then(d => {
                 __INITIAL_STATE__.locsData[23] = this.adblock(d[4694]);
                 __INITIAL_STATE__.locsData[29] = this.adblock(d[29]);

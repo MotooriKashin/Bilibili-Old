@@ -65,4 +65,6 @@ export class URLS {
     static readonly DM_WEB_VIEW = URLS.P_AUTO + URLS.D_API + '/x/v2/dm/web/view';
     static readonly DM_WEB_SEG_SO = URLS.P_AUTO + URLS.D_API + '/x/v2/dm/web/seg.so';
     static readonly STAT = URLS.P_AUTO + URLS.D_API + '/x/web-interface/archive/stat';
+    static readonly SLIDE_SHOW = URLS.P_AUTO + URLS.D_API + '/pgc/operation/api/slideshow';
+    static readonly SEARCH_SQUARE = URLS.P_AUTO + URLS.D_API + '/x/web-interface/search/square';
 }

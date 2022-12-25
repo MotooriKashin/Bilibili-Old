@@ -59,7 +59,7 @@ import { apiTagInfo } from "./io/api-tag-info";
 import { apiTagTop } from "./io/api-tag-top";
 import { apiView } from "./io/api-view";
 import { apiViewDetail } from "./io/api-view-detail";
-import { ApiWebshowLocs } from "./io/api-webshow-locs";
+import { apiWebshowLocs } from "./io/api-webshow-locs";
 import { apiXView } from "./io/api-x-view";
 
 export class BLOD {
@@ -216,7 +216,7 @@ export class BLOD {
                 tagTop: apiTagTop,
                 viewDetail: apiViewDetail,
                 view: apiView,
-                webshowLocs: ApiWebshowLocs,
+                webshowLocs: apiWebshowLocs,
                 xView: apiXView,
                 Sign: ApiSign
             },

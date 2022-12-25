@@ -1,7 +1,13 @@
+import { apiPgcSlideShow } from "../io/api-pgc-slideshow";
+import { apiSearchSquare } from "../io/api-search-square";
+import { apiWebshowLoc } from "../io/api-webshow-locs";
 import { debug } from "../utils/debug";
 import { addCss, } from "../utils/element";
 import { objUrl } from "../utils/format/url";
 import { methodHook, propertyHook } from "../utils/hook/method";
+import { poll } from "../utils/poll";
+import { switchVideo } from "./observer";
+import { localStorage } from "./storage";
 
 interface NanoInitData {
     aid: number;
@@ -110,6 +116,7 @@ export class Player {
                 this.nanoPlayer || (this.nanoPlayer = (<any>window).player);
             } catch { }
         }
+        this.switchVideo();
     }
     /** 通过hook新版播放器来引导旧版播放器 */
     connectPlayer(loadPlayer: Function) {
@@ -161,5 +168,74 @@ export class Player {
                 this.dataInitedCallbacks.shift()?.();
             }
         }
+    }
+    private regised = false;
+    private switchVideo() {
+        if (this.regised) return;
+        this.regised = true;
+        let cache: any;
+        switchVideo(() => {
+            if ((<any>window).player.appendTopMessage) {
+                const cfg = localStorage.getItem('bilibili_player_settings');
+                poll(() => document.querySelector('.bilibili-player-video-message-panel'), () => {
+                    if (cache) {
+                        (<any>window).player.appendTopMessage(cache)
+                    } else if (cfg.message) {
+                        const message = Object.keys(cfg.message).filter(d => cfg.message[d]).sort(() => 0.5 - Math.random());
+                        if (message[0]) {
+                            switch (message[0]) {
+                                case 'system':
+                                    apiWebshowLoc(4694)
+                                        .then(d => {
+                                            (<any>window).player.appendTopMessage(cache = d.filter(d => d.name).map(d => {
+                                                return {
+                                                    url: d.url,
+                                                    type: message[0],
+                                                    name: d.name
+                                                }
+                                            }))
+                                        })
+                                        .catch(e => {
+                                            debug.error('播放器通知', e)
+                                        });
+                                    break;
+                                case 'bangumi':
+                                    apiPgcSlideShow(531)
+                                        .then(d => {
+                                            (<any>window).player.appendTopMessage(cache = d.map(d => {
+                                                return {
+                                                    url: d.blink,
+                                                    type: message[0],
+                                                    name: d.title
+                                                }
+                                            }))
+                                        })
+                                        .catch(e => {
+                                            debug.error('播放器通知', e)
+                                        });
+                                    break;
+                                case 'news':
+                                    apiSearchSquare()
+                                        .then(d => {
+                                            (<any>window).player.appendTopMessage(cache = d.map(d => {
+                                                return {
+                                                    url: d.uri || `//search.bilibili.com/all?keyword=${encodeURIComponent(d.keyword)}`,
+                                                    type: message[0],
+                                                    name: d.show_name || d.keyword
+                                                }
+                                            }))
+                                        })
+                                        .catch(e => {
+                                            debug.error('播放器通知', e)
+                                        });
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                })
+            }
+        });
     }
 }
