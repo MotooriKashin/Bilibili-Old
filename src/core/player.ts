@@ -238,4 +238,14 @@ export class Player {
             }
         });
     }
+    private playbackRateTimer?: number;
+    /** 更改播放器速率 */
+    playbackRate(playbackRate = 1) {
+        clearTimeout(this.playbackRateTimer);
+        this.playbackRateTimer = setTimeout(() => {
+            const video = document.querySelector<HTMLVideoElement>('#bilibiliPlayer video');
+            if (!video) throw new Error('未找到播放器！请在播放页面使用。');
+            video.playbackRate = Number(playbackRate)
+        }, 100);
+    }
 }

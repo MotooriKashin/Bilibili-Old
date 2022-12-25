@@ -231,6 +231,15 @@ export class UI {
     /** 播放设置 */
     protected initSettingPlayer() {
         this.menuitem.player.addSetting([
+            this.sliderCustom(<'player'>'playbackRate', '播放速率', {
+                min: 0.25,
+                max: 5,
+                precision: 95,
+                value: 1,
+                solid: true
+            }, e => {
+                this.BLOD.player.playbackRate(e);
+            }, '播放速率调整拓展', undefined, '调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：初始调整前的值不代表当前实际播放速率，这不影响调节。'),
             this.switch('webRTC', 'WebRTC', '<strong>关闭</strong>以禁用p2p共享带宽', undefined, undefined, 'B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！'),
             this.switch('elecShow', '充电鸣谢', '允许视频结尾的充电鸣谢'),
             this.switch('videoDisableAA', '禁用视频渲染抗锯齿', '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
@@ -522,6 +531,29 @@ export class UI {
         this.BLOD.bindStatusChange(<'toast'>arr.shift(), v => {
             looping || (slider.value = this.BLOD.getStatus(arr.join('.'), v));
             looping = false;
+        });
+        item.value(slider);
+        this.settingItem[id] = item;
+        desc && new Desc().value(label, desc, item);
+        return item;
+    }
+    /**
+     * 创建自定义滑动条菜单设置
+     * @param id 用来索引的字符串
+     * @param label 标题
+     * @param value 配置数据
+     * @param callback 输入回调
+     * @param sub 副标题
+     * @param svg 图标
+     * @param desc 浮动窗口
+     */
+    protected sliderCustom(id: keyof typeof userStatus, label: string, value: ISliderBlockValue, callback: (value: number) => void, sub?: string, svg?: string, desc?: string) {
+        const item = new SettingItem();
+        const slider = new SliderBlock();
+        item.init('', label, sub, svg);
+        slider.update(value);
+        slider.addEventListener('change', () => {
+            callback(slider.value);
         });
         item.value(slider);
         this.settingItem[id] = item;
