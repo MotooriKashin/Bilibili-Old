@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.1.0-6b79f673c9d56093e8cf35943da14b35be3e4155
+// @version      10.1.1-4e3d69e61f7bae0d355804cbbda8f598579f6c92
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -281,6 +281,2408 @@ var require_md5 = __commonJS({
         return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
       };
     })();
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/value-types.js
+var require_value_types = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/value-types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var NewLine = "\\n";
+    exports2.NewLine = NewLine;
+    var ListType;
+    (function(ListType2) {
+      ListType2["Ordered"] = "ordered";
+      ListType2["Bullet"] = "bullet";
+      ListType2["Checked"] = "checked";
+      ListType2["Unchecked"] = "unchecked";
+    })(ListType || (ListType = {}));
+    exports2.ListType = ListType;
+    var ScriptType;
+    (function(ScriptType2) {
+      ScriptType2["Sub"] = "sub";
+      ScriptType2["Super"] = "super";
+    })(ScriptType || (ScriptType = {}));
+    exports2.ScriptType = ScriptType;
+    var DirectionType;
+    (function(DirectionType2) {
+      DirectionType2["Rtl"] = "rtl";
+    })(DirectionType || (DirectionType = {}));
+    exports2.DirectionType = DirectionType;
+    var AlignType;
+    (function(AlignType2) {
+      AlignType2["Left"] = "left";
+      AlignType2["Center"] = "center";
+      AlignType2["Right"] = "right";
+      AlignType2["Justify"] = "justify";
+    })(AlignType || (AlignType = {}));
+    exports2.AlignType = AlignType;
+    var DataType;
+    (function(DataType2) {
+      DataType2["Image"] = "image";
+      DataType2["Video"] = "video";
+      DataType2["Formula"] = "formula";
+      DataType2["Text"] = "text";
+    })(DataType || (DataType = {}));
+    exports2.DataType = DataType;
+    var GroupType;
+    (function(GroupType2) {
+      GroupType2["Block"] = "block";
+      GroupType2["InlineGroup"] = "inline-group";
+      GroupType2["List"] = "list";
+      GroupType2["Video"] = "video";
+      GroupType2["Table"] = "table";
+    })(GroupType || (GroupType = {}));
+    exports2.GroupType = GroupType;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertData.js
+var require_InsertData = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertData.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var InsertDataQuill = function() {
+      function InsertDataQuill2(type, value) {
+        this.type = type;
+        this.value = value;
+      }
+      return InsertDataQuill2;
+    }();
+    exports2.InsertDataQuill = InsertDataQuill;
+    var InsertDataCustom = function() {
+      function InsertDataCustom2(type, value) {
+        this.type = type;
+        this.value = value;
+      }
+      return InsertDataCustom2;
+    }();
+    exports2.InsertDataCustom = InsertDataCustom;
+  }
+});
+
+// node_modules/lodash.isequal/index.js
+var require_lodash = __commonJS({
+  "node_modules/lodash.isequal/index.js"(exports2, module2) {
+    var LARGE_ARRAY_SIZE = 200;
+    var HASH_UNDEFINED = "__lodash_hash_undefined__";
+    var COMPARE_PARTIAL_FLAG = 1;
+    var COMPARE_UNORDERED_FLAG = 2;
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    var argsTag = "[object Arguments]";
+    var arrayTag = "[object Array]";
+    var asyncTag = "[object AsyncFunction]";
+    var boolTag = "[object Boolean]";
+    var dateTag = "[object Date]";
+    var errorTag = "[object Error]";
+    var funcTag = "[object Function]";
+    var genTag = "[object GeneratorFunction]";
+    var mapTag = "[object Map]";
+    var numberTag = "[object Number]";
+    var nullTag = "[object Null]";
+    var objectTag = "[object Object]";
+    var promiseTag = "[object Promise]";
+    var proxyTag = "[object Proxy]";
+    var regexpTag = "[object RegExp]";
+    var setTag = "[object Set]";
+    var stringTag = "[object String]";
+    var symbolTag = "[object Symbol]";
+    var undefinedTag = "[object Undefined]";
+    var weakMapTag = "[object WeakMap]";
+    var arrayBufferTag = "[object ArrayBuffer]";
+    var dataViewTag = "[object DataView]";
+    var float32Tag = "[object Float32Array]";
+    var float64Tag = "[object Float64Array]";
+    var int8Tag = "[object Int8Array]";
+    var int16Tag = "[object Int16Array]";
+    var int32Tag = "[object Int32Array]";
+    var uint8Tag = "[object Uint8Array]";
+    var uint8ClampedTag = "[object Uint8ClampedArray]";
+    var uint16Tag = "[object Uint16Array]";
+    var uint32Tag = "[object Uint32Array]";
+    var reRegExpChar = /[\\\\^\$.*+?()[\\]{}|]/g;
+    var reIsHostCtor = /^\\[object .+?Constructor\\]\$/;
+    var reIsUint = /^(?:0|[1-9]\\d*)\$/;
+    var typedArrayTags = {};
+    typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
+    typedArrayTags[argsTag] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root = freeGlobal || freeSelf || Function("return this")();
+    var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
+    var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+    var moduleExports = freeModule && freeModule.exports === freeExports;
+    var freeProcess = moduleExports && freeGlobal.process;
+    var nodeUtil = function() {
+      try {
+        return freeProcess && freeProcess.binding && freeProcess.binding("util");
+      } catch (e) {
+      }
+    }();
+    var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+    function arrayFilter(array, predicate) {
+      var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+      while (++index < length) {
+        var value = array[index];
+        if (predicate(value, index, array)) {
+          result[resIndex++] = value;
+        }
+      }
+      return result;
+    }
+    function arrayPush(array, values) {
+      var index = -1, length = values.length, offset2 = array.length;
+      while (++index < length) {
+        array[offset2 + index] = values[index];
+      }
+      return array;
+    }
+    function arraySome(array, predicate) {
+      var index = -1, length = array == null ? 0 : array.length;
+      while (++index < length) {
+        if (predicate(array[index], index, array)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function baseTimes(n, iteratee) {
+      var index = -1, result = Array(n);
+      while (++index < n) {
+        result[index] = iteratee(index);
+      }
+      return result;
+    }
+    function baseUnary(func) {
+      return function(value) {
+        return func(value);
+      };
+    }
+    function cacheHas(cache, key) {
+      return cache.has(key);
+    }
+    function getValue(object, key) {
+      return object == null ? void 0 : object[key];
+    }
+    function mapToArray(map) {
+      var index = -1, result = Array(map.size);
+      map.forEach(function(value, key) {
+        result[++index] = [key, value];
+      });
+      return result;
+    }
+    function overArg(func, transform) {
+      return function(arg) {
+        return func(transform(arg));
+      };
+    }
+    function setToArray(set) {
+      var index = -1, result = Array(set.size);
+      set.forEach(function(value) {
+        result[++index] = value;
+      });
+      return result;
+    }
+    var arrayProto = Array.prototype;
+    var funcProto = Function.prototype;
+    var objectProto = Object.prototype;
+    var coreJsData = root["__core-js_shared__"];
+    var funcToString = funcProto.toString;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var maskSrcKey = function() {
+      var uid2 = /[^.]+\$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+      return uid2 ? "Symbol(src)_1." + uid2 : "";
+    }();
+    var nativeObjectToString = objectProto.toString;
+    var reIsNative = RegExp(
+      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\\\\$&").replace(/hasOwnProperty|(function).*?(?=\\\\\\()| for .+?(?=\\\\\\])/g, "\$1.*?") + "\$"
+    );
+    var Buffer2 = moduleExports ? root.Buffer : void 0;
+    var Symbol2 = root.Symbol;
+    var Uint8Array2 = root.Uint8Array;
+    var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+    var splice = arrayProto.splice;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    var nativeGetSymbols = Object.getOwnPropertySymbols;
+    var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
+    var nativeKeys = overArg(Object.keys, Object);
+    var DataView = getNative(root, "DataView");
+    var Map = getNative(root, "Map");
+    var Promise2 = getNative(root, "Promise");
+    var Set2 = getNative(root, "Set");
+    var WeakMap = getNative(root, "WeakMap");
+    var nativeCreate = getNative(Object, "create");
+    var dataViewCtorString = toSource(DataView);
+    var mapCtorString = toSource(Map);
+    var promiseCtorString = toSource(Promise2);
+    var setCtorString = toSource(Set2);
+    var weakMapCtorString = toSource(WeakMap);
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
+    var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
+    function Hash(entries) {
+      var index = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    function hashClear() {
+      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+      this.size = 0;
+    }
+    function hashDelete(key) {
+      var result = this.has(key) && delete this.__data__[key];
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    function hashGet(key) {
+      var data = this.__data__;
+      if (nativeCreate) {
+        var result = data[key];
+        return result === HASH_UNDEFINED ? void 0 : result;
+      }
+      return hasOwnProperty.call(data, key) ? data[key] : void 0;
+    }
+    function hashHas(key) {
+      var data = this.__data__;
+      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
+    }
+    function hashSet(key, value) {
+      var data = this.__data__;
+      this.size += this.has(key) ? 0 : 1;
+      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
+      return this;
+    }
+    Hash.prototype.clear = hashClear;
+    Hash.prototype["delete"] = hashDelete;
+    Hash.prototype.get = hashGet;
+    Hash.prototype.has = hashHas;
+    Hash.prototype.set = hashSet;
+    function ListCache(entries) {
+      var index = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    function listCacheClear() {
+      this.__data__ = [];
+      this.size = 0;
+    }
+    function listCacheDelete(key) {
+      var data = this.__data__, index = assocIndexOf(data, key);
+      if (index < 0) {
+        return false;
+      }
+      var lastIndex = data.length - 1;
+      if (index == lastIndex) {
+        data.pop();
+      } else {
+        splice.call(data, index, 1);
+      }
+      --this.size;
+      return true;
+    }
+    function listCacheGet(key) {
+      var data = this.__data__, index = assocIndexOf(data, key);
+      return index < 0 ? void 0 : data[index][1];
+    }
+    function listCacheHas(key) {
+      return assocIndexOf(this.__data__, key) > -1;
+    }
+    function listCacheSet(key, value) {
+      var data = this.__data__, index = assocIndexOf(data, key);
+      if (index < 0) {
+        ++this.size;
+        data.push([key, value]);
+      } else {
+        data[index][1] = value;
+      }
+      return this;
+    }
+    ListCache.prototype.clear = listCacheClear;
+    ListCache.prototype["delete"] = listCacheDelete;
+    ListCache.prototype.get = listCacheGet;
+    ListCache.prototype.has = listCacheHas;
+    ListCache.prototype.set = listCacheSet;
+    function MapCache(entries) {
+      var index = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    function mapCacheClear() {
+      this.size = 0;
+      this.__data__ = {
+        "hash": new Hash(),
+        "map": new (Map || ListCache)(),
+        "string": new Hash()
+      };
+    }
+    function mapCacheDelete(key) {
+      var result = getMapData(this, key)["delete"](key);
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    function mapCacheGet(key) {
+      return getMapData(this, key).get(key);
+    }
+    function mapCacheHas(key) {
+      return getMapData(this, key).has(key);
+    }
+    function mapCacheSet(key, value) {
+      var data = getMapData(this, key), size = data.size;
+      data.set(key, value);
+      this.size += data.size == size ? 0 : 1;
+      return this;
+    }
+    MapCache.prototype.clear = mapCacheClear;
+    MapCache.prototype["delete"] = mapCacheDelete;
+    MapCache.prototype.get = mapCacheGet;
+    MapCache.prototype.has = mapCacheHas;
+    MapCache.prototype.set = mapCacheSet;
+    function SetCache(values) {
+      var index = -1, length = values == null ? 0 : values.length;
+      this.__data__ = new MapCache();
+      while (++index < length) {
+        this.add(values[index]);
+      }
+    }
+    function setCacheAdd(value) {
+      this.__data__.set(value, HASH_UNDEFINED);
+      return this;
+    }
+    function setCacheHas(value) {
+      return this.__data__.has(value);
+    }
+    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+    SetCache.prototype.has = setCacheHas;
+    function Stack(entries) {
+      var data = this.__data__ = new ListCache(entries);
+      this.size = data.size;
+    }
+    function stackClear() {
+      this.__data__ = new ListCache();
+      this.size = 0;
+    }
+    function stackDelete(key) {
+      var data = this.__data__, result = data["delete"](key);
+      this.size = data.size;
+      return result;
+    }
+    function stackGet(key) {
+      return this.__data__.get(key);
+    }
+    function stackHas(key) {
+      return this.__data__.has(key);
+    }
+    function stackSet(key, value) {
+      var data = this.__data__;
+      if (data instanceof ListCache) {
+        var pairs = data.__data__;
+        if (!Map || pairs.length < LARGE_ARRAY_SIZE - 1) {
+          pairs.push([key, value]);
+          this.size = ++data.size;
+          return this;
+        }
+        data = this.__data__ = new MapCache(pairs);
+      }
+      data.set(key, value);
+      this.size = data.size;
+      return this;
+    }
+    Stack.prototype.clear = stackClear;
+    Stack.prototype["delete"] = stackDelete;
+    Stack.prototype.get = stackGet;
+    Stack.prototype.has = stackHas;
+    Stack.prototype.set = stackSet;
+    function arrayLikeKeys(value, inherited) {
+      var isArr = isArray2(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
+      for (var key in value) {
+        if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+    function assocIndexOf(array, key) {
+      var length = array.length;
+      while (length--) {
+        if (eq(array[length][0], key)) {
+          return length;
+        }
+      }
+      return -1;
+    }
+    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+      var result = keysFunc(object);
+      return isArray2(object) ? result : arrayPush(result, symbolsFunc(object));
+    }
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === void 0 ? undefinedTag : nullTag;
+      }
+      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+    }
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag;
+    }
+    function baseIsEqual(value, other, bitmask, customizer, stack) {
+      if (value === other) {
+        return true;
+      }
+      if (value == null || other == null || !isObjectLike(value) && !isObjectLike(other)) {
+        return value !== value && other !== other;
+      }
+      return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+    }
+    function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+      var objIsArr = isArray2(object), othIsArr = isArray2(other), objTag = objIsArr ? arrayTag : getTag(object), othTag = othIsArr ? arrayTag : getTag(other);
+      objTag = objTag == argsTag ? objectTag : objTag;
+      othTag = othTag == argsTag ? objectTag : othTag;
+      var objIsObj = objTag == objectTag, othIsObj = othTag == objectTag, isSameTag = objTag == othTag;
+      if (isSameTag && isBuffer(object)) {
+        if (!isBuffer(other)) {
+          return false;
+        }
+        objIsArr = true;
+        objIsObj = false;
+      }
+      if (isSameTag && !objIsObj) {
+        stack || (stack = new Stack());
+        return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+      }
+      if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
+        var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
+        if (objIsWrapped || othIsWrapped) {
+          var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
+          stack || (stack = new Stack());
+          return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+        }
+      }
+      if (!isSameTag) {
+        return false;
+      }
+      stack || (stack = new Stack());
+      return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+    }
+    function baseIsNative(value) {
+      if (!isObject2(value) || isMasked(value)) {
+        return false;
+      }
+      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+      return pattern.test(toSource(value));
+    }
+    function baseIsTypedArray(value) {
+      return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+    }
+    function baseKeys(object) {
+      if (!isPrototype(object)) {
+        return nativeKeys(object);
+      }
+      var result = [];
+      for (var key in Object(object)) {
+        if (hasOwnProperty.call(object, key) && key != "constructor") {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+    function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array.length, othLength = other.length;
+      if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
+        return false;
+      }
+      var stacked = stack.get(array);
+      if (stacked && stack.get(other)) {
+        return stacked == other;
+      }
+      var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : void 0;
+      stack.set(array, other);
+      stack.set(other, array);
+      while (++index < arrLength) {
+        var arrValue = array[index], othValue = other[index];
+        if (customizer) {
+          var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
+        }
+        if (compared !== void 0) {
+          if (compared) {
+            continue;
+          }
+          result = false;
+          break;
+        }
+        if (seen) {
+          if (!arraySome(other, function(othValue2, othIndex) {
+            if (!cacheHas(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
+              return seen.push(othIndex);
+            }
+          })) {
+            result = false;
+            break;
+          }
+        } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+          result = false;
+          break;
+        }
+      }
+      stack["delete"](array);
+      stack["delete"](other);
+      return result;
+    }
+    function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+      switch (tag) {
+        case dataViewTag:
+          if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
+            return false;
+          }
+          object = object.buffer;
+          other = other.buffer;
+        case arrayBufferTag:
+          if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array2(object), new Uint8Array2(other))) {
+            return false;
+          }
+          return true;
+        case boolTag:
+        case dateTag:
+        case numberTag:
+          return eq(+object, +other);
+        case errorTag:
+          return object.name == other.name && object.message == other.message;
+        case regexpTag:
+        case stringTag:
+          return object == other + "";
+        case mapTag:
+          var convert = mapToArray;
+        case setTag:
+          var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+          convert || (convert = setToArray);
+          if (object.size != other.size && !isPartial) {
+            return false;
+          }
+          var stacked = stack.get(object);
+          if (stacked) {
+            return stacked == other;
+          }
+          bitmask |= COMPARE_UNORDERED_FLAG;
+          stack.set(object, other);
+          var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+          stack["delete"](object);
+          return result;
+        case symbolTag:
+          if (symbolValueOf) {
+            return symbolValueOf.call(object) == symbolValueOf.call(other);
+          }
+      }
+      return false;
+    }
+    function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG, objProps = getAllKeys(object), objLength = objProps.length, othProps = getAllKeys(other), othLength = othProps.length;
+      if (objLength != othLength && !isPartial) {
+        return false;
+      }
+      var index = objLength;
+      while (index--) {
+        var key = objProps[index];
+        if (!(isPartial ? key in other : hasOwnProperty.call(other, key))) {
+          return false;
+        }
+      }
+      var stacked = stack.get(object);
+      if (stacked && stack.get(other)) {
+        return stacked == other;
+      }
+      var result = true;
+      stack.set(object, other);
+      stack.set(other, object);
+      var skipCtor = isPartial;
+      while (++index < objLength) {
+        key = objProps[index];
+        var objValue = object[key], othValue = other[key];
+        if (customizer) {
+          var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
+        }
+        if (!(compared === void 0 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
+          result = false;
+          break;
+        }
+        skipCtor || (skipCtor = key == "constructor");
+      }
+      if (result && !skipCtor) {
+        var objCtor = object.constructor, othCtor = other.constructor;
+        if (objCtor != othCtor && ("constructor" in object && "constructor" in other) && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) {
+          result = false;
+        }
+      }
+      stack["delete"](object);
+      stack["delete"](other);
+      return result;
+    }
+    function getAllKeys(object) {
+      return baseGetAllKeys(object, keys, getSymbols);
+    }
+    function getMapData(map, key) {
+      var data = map.__data__;
+      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+    }
+    function getNative(object, key) {
+      var value = getValue(object, key);
+      return baseIsNative(value) ? value : void 0;
+    }
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+      try {
+        value[symToStringTag] = void 0;
+        var unmasked = true;
+      } catch (e) {
+      }
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+      if (object == null) {
+        return [];
+      }
+      object = Object(object);
+      return arrayFilter(nativeGetSymbols(object), function(symbol) {
+        return propertyIsEnumerable.call(object, symbol);
+      });
+    };
+    var getTag = baseGetTag;
+    if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
+      getTag = function(value) {
+        var result = baseGetTag(value), Ctor = result == objectTag ? value.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
+        if (ctorString) {
+          switch (ctorString) {
+            case dataViewCtorString:
+              return dataViewTag;
+            case mapCtorString:
+              return mapTag;
+            case promiseCtorString:
+              return promiseTag;
+            case setCtorString:
+              return setTag;
+            case weakMapCtorString:
+              return weakMapTag;
+          }
+        }
+        return result;
+      };
+    }
+    function isIndex(value, length) {
+      length = length == null ? MAX_SAFE_INTEGER : length;
+      return !!length && (typeof value == "number" || reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    }
+    function isKeyable(value) {
+      var type = typeof value;
+      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+    }
+    function isMasked(func) {
+      return !!maskSrcKey && maskSrcKey in func;
+    }
+    function isPrototype(value) {
+      var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
+      return value === proto;
+    }
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+    function toSource(func) {
+      if (func != null) {
+        try {
+          return funcToString.call(func);
+        } catch (e) {
+        }
+        try {
+          return func + "";
+        } catch (e) {
+        }
+      }
+      return "";
+    }
+    function eq(value, other) {
+      return value === other || value !== value && other !== other;
+    }
+    var isArguments = baseIsArguments(function() {
+      return arguments;
+    }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
+    };
+    var isArray2 = Array.isArray;
+    function isArrayLike(value) {
+      return value != null && isLength(value.length) && !isFunction(value);
+    }
+    var isBuffer = nativeIsBuffer || stubFalse;
+    function isEqual(value, other) {
+      return baseIsEqual(value, other);
+    }
+    function isFunction(value) {
+      if (!isObject2(value)) {
+        return false;
+      }
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+    function isLength(value) {
+      return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+    }
+    function isObject2(value) {
+      var type = typeof value;
+      return value != null && (type == "object" || type == "function");
+    }
+    function isObjectLike(value) {
+      return value != null && typeof value == "object";
+    }
+    var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+    function keys(object) {
+      return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+    }
+    function stubArray() {
+      return [];
+    }
+    function stubFalse() {
+      return false;
+    }
+    module2.exports = isEqual;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/DeltaInsertOp.js
+var require_DeltaInsertOp = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/DeltaInsertOp.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod2) {
+      return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var value_types_1 = require_value_types();
+    var InsertData_1 = require_InsertData();
+    var lodash_isequal_1 = __importDefault(require_lodash());
+    var DeltaInsertOp = function() {
+      function DeltaInsertOp2(insertVal, attrs) {
+        if (typeof insertVal === "string") {
+          insertVal = new InsertData_1.InsertDataQuill(value_types_1.DataType.Text, insertVal + "");
+        }
+        this.insert = insertVal;
+        this.attributes = attrs || {};
+      }
+      DeltaInsertOp2.createNewLineOp = function() {
+        return new DeltaInsertOp2(value_types_1.NewLine);
+      };
+      DeltaInsertOp2.prototype.isContainerBlock = function() {
+        return this.isBlockquote() || this.isList() || this.isTable() || this.isCodeBlock() || this.isHeader() || this.isBlockAttribute() || this.isCustomTextBlock();
+      };
+      DeltaInsertOp2.prototype.isBlockAttribute = function() {
+        var attrs = this.attributes;
+        return !!(attrs.align || attrs.direction || attrs.indent);
+      };
+      DeltaInsertOp2.prototype.isBlockquote = function() {
+        return !!this.attributes.blockquote;
+      };
+      DeltaInsertOp2.prototype.isHeader = function() {
+        return !!this.attributes.header;
+      };
+      DeltaInsertOp2.prototype.isTable = function() {
+        return !!this.attributes.table;
+      };
+      DeltaInsertOp2.prototype.isSameHeaderAs = function(op) {
+        return op.attributes.header === this.attributes.header && this.isHeader();
+      };
+      DeltaInsertOp2.prototype.hasSameAdiAs = function(op) {
+        return this.attributes.align === op.attributes.align && this.attributes.direction === op.attributes.direction && this.attributes.indent === op.attributes.indent;
+      };
+      DeltaInsertOp2.prototype.hasSameIndentationAs = function(op) {
+        return this.attributes.indent === op.attributes.indent;
+      };
+      DeltaInsertOp2.prototype.hasSameAttr = function(op) {
+        return lodash_isequal_1.default(this.attributes, op.attributes);
+      };
+      DeltaInsertOp2.prototype.hasHigherIndentThan = function(op) {
+        return (Number(this.attributes.indent) || 0) > (Number(op.attributes.indent) || 0);
+      };
+      DeltaInsertOp2.prototype.isInline = function() {
+        return !(this.isContainerBlock() || this.isVideo() || this.isCustomEmbedBlock());
+      };
+      DeltaInsertOp2.prototype.isCodeBlock = function() {
+        return !!this.attributes["code-block"];
+      };
+      DeltaInsertOp2.prototype.hasSameLangAs = function(op) {
+        return this.attributes["code-block"] === op.attributes["code-block"];
+      };
+      DeltaInsertOp2.prototype.isJustNewline = function() {
+        return this.insert.value === value_types_1.NewLine;
+      };
+      DeltaInsertOp2.prototype.isList = function() {
+        return this.isOrderedList() || this.isBulletList() || this.isCheckedList() || this.isUncheckedList();
+      };
+      DeltaInsertOp2.prototype.isOrderedList = function() {
+        return this.attributes.list === value_types_1.ListType.Ordered;
+      };
+      DeltaInsertOp2.prototype.isBulletList = function() {
+        return this.attributes.list === value_types_1.ListType.Bullet;
+      };
+      DeltaInsertOp2.prototype.isCheckedList = function() {
+        return this.attributes.list === value_types_1.ListType.Checked;
+      };
+      DeltaInsertOp2.prototype.isUncheckedList = function() {
+        return this.attributes.list === value_types_1.ListType.Unchecked;
+      };
+      DeltaInsertOp2.prototype.isACheckList = function() {
+        return this.attributes.list == value_types_1.ListType.Unchecked || this.attributes.list === value_types_1.ListType.Checked;
+      };
+      DeltaInsertOp2.prototype.isSameListAs = function(op) {
+        return !!op.attributes.list && (this.attributes.list === op.attributes.list || op.isACheckList() && this.isACheckList());
+      };
+      DeltaInsertOp2.prototype.isSameTableRowAs = function(op) {
+        return !!op.isTable() && this.isTable() && this.attributes.table === op.attributes.table;
+      };
+      DeltaInsertOp2.prototype.isText = function() {
+        return this.insert.type === value_types_1.DataType.Text;
+      };
+      DeltaInsertOp2.prototype.isImage = function() {
+        return this.insert.type === value_types_1.DataType.Image;
+      };
+      DeltaInsertOp2.prototype.isFormula = function() {
+        return this.insert.type === value_types_1.DataType.Formula;
+      };
+      DeltaInsertOp2.prototype.isVideo = function() {
+        return this.insert.type === value_types_1.DataType.Video;
+      };
+      DeltaInsertOp2.prototype.isLink = function() {
+        return this.isText() && !!this.attributes.link;
+      };
+      DeltaInsertOp2.prototype.isCustomEmbed = function() {
+        return this.insert instanceof InsertData_1.InsertDataCustom;
+      };
+      DeltaInsertOp2.prototype.isCustomEmbedBlock = function() {
+        return this.isCustomEmbed() && !!this.attributes.renderAsBlock;
+      };
+      DeltaInsertOp2.prototype.isCustomTextBlock = function() {
+        return this.isText() && !!this.attributes.renderAsBlock;
+      };
+      DeltaInsertOp2.prototype.isMentions = function() {
+        return this.isText() && !!this.attributes.mentions;
+      };
+      return DeltaInsertOp2;
+    }();
+    exports2.DeltaInsertOp = DeltaInsertOp;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/mentions/MentionSanitizer.js
+var require_MentionSanitizer = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/mentions/MentionSanitizer.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
+    var MentionSanitizer = function() {
+      function MentionSanitizer2() {
+      }
+      MentionSanitizer2.sanitize = function(dirtyObj, sanitizeOptions) {
+        var cleanObj = {};
+        if (!dirtyObj || typeof dirtyObj !== "object") {
+          return cleanObj;
+        }
+        if (dirtyObj.class && MentionSanitizer2.IsValidClass(dirtyObj.class)) {
+          cleanObj.class = dirtyObj.class;
+        }
+        if (dirtyObj.id && MentionSanitizer2.IsValidId(dirtyObj.id)) {
+          cleanObj.id = dirtyObj.id;
+        }
+        if (MentionSanitizer2.IsValidTarget(dirtyObj.target + "")) {
+          cleanObj.target = dirtyObj.target;
+        }
+        if (dirtyObj.avatar) {
+          cleanObj.avatar = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(dirtyObj.avatar + "", sanitizeOptions);
+        }
+        if (dirtyObj["end-point"]) {
+          cleanObj["end-point"] = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(dirtyObj["end-point"] + "", sanitizeOptions);
+        }
+        if (dirtyObj.slug) {
+          cleanObj.slug = dirtyObj.slug + "";
+        }
+        return cleanObj;
+      };
+      MentionSanitizer2.IsValidClass = function(classAttr) {
+        return !!classAttr.match(/^[a-zA-Z0-9_\\-]{1,500}\$/i);
+      };
+      MentionSanitizer2.IsValidId = function(idAttr) {
+        return !!idAttr.match(/^[a-zA-Z0-9_\\-\\:\\.]{1,500}\$/i);
+      };
+      MentionSanitizer2.IsValidTarget = function(target) {
+        return ["_self", "_blank", "_parent", "_top"].indexOf(target) > -1;
+      };
+      return MentionSanitizer2;
+    }();
+    exports2.MentionSanitizer = MentionSanitizer;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/url.js
+var require_url = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/url.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function sanitize(str) {
+      var val = str;
+      val = val.replace(/^\\s*/gm, "");
+      var whiteList = /^((https?|s?ftp|file|blob|mailto|tel):|#|\\/|data:image\\/)/;
+      if (whiteList.test(val)) {
+        return val;
+      }
+      return "unsafe:" + val;
+    }
+    exports2.sanitize = sanitize;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/funcs-html.js
+var require_funcs_html = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/funcs-html.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var EncodeTarget;
+    (function(EncodeTarget2) {
+      EncodeTarget2[EncodeTarget2["Html"] = 0] = "Html";
+      EncodeTarget2[EncodeTarget2["Url"] = 1] = "Url";
+    })(EncodeTarget || (EncodeTarget = {}));
+    function makeStartTag(tag, attrs) {
+      if (attrs === void 0) {
+        attrs = void 0;
+      }
+      if (!tag) {
+        return "";
+      }
+      var attrsStr = "";
+      if (attrs) {
+        var arrAttrs = [].concat(attrs);
+        attrsStr = arrAttrs.map(function(attr) {
+          return attr.key + (attr.value ? '="' + attr.value + '"' : "");
+        }).join(" ");
+      }
+      var closing = ">";
+      if (tag === "img" || tag === "br") {
+        closing = "/>";
+      }
+      return attrsStr ? "<" + tag + " " + attrsStr + closing : "<" + tag + closing;
+    }
+    exports2.makeStartTag = makeStartTag;
+    function makeEndTag(tag) {
+      if (tag === void 0) {
+        tag = "";
+      }
+      return tag && "</" + tag + ">" || "";
+    }
+    exports2.makeEndTag = makeEndTag;
+    function decodeHtml(str) {
+      return encodeMappings(EncodeTarget.Html).reduce(decodeMapping, str);
+    }
+    exports2.decodeHtml = decodeHtml;
+    function encodeHtml(str, preventDoubleEncoding) {
+      if (preventDoubleEncoding === void 0) {
+        preventDoubleEncoding = true;
+      }
+      if (preventDoubleEncoding) {
+        str = decodeHtml(str);
+      }
+      return encodeMappings(EncodeTarget.Html).reduce(encodeMapping, str);
+    }
+    exports2.encodeHtml = encodeHtml;
+    function encodeLink(str) {
+      var linkMaps = encodeMappings(EncodeTarget.Url);
+      var decoded = linkMaps.reduce(decodeMapping, str);
+      return linkMaps.reduce(encodeMapping, decoded);
+    }
+    exports2.encodeLink = encodeLink;
+    function encodeMappings(mtype) {
+      var maps = [
+        ["&", "&amp;"],
+        ["<", "&lt;"],
+        [">", "&gt;"],
+        ['"', "&quot;"],
+        ["'", "&#x27;"],
+        ["\\\\/", "&#x2F;"],
+        ["\\\\(", "&#40;"],
+        ["\\\\)", "&#41;"]
+      ];
+      if (mtype === EncodeTarget.Html) {
+        return maps.filter(function(_a) {
+          var v = _a[0], _ = _a[1];
+          return v.indexOf("(") === -1 && v.indexOf(")") === -1;
+        });
+      } else {
+        return maps.filter(function(_a) {
+          var v = _a[0], _ = _a[1];
+          return v.indexOf("/") === -1;
+        });
+      }
+    }
+    function encodeMapping(str, mapping) {
+      return str.replace(new RegExp(mapping[0], "g"), mapping[1]);
+    }
+    function decodeMapping(str, mapping) {
+      return str.replace(new RegExp(mapping[1], "g"), mapping[0].replace("\\\\", ""));
+    }
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/array.js
+var require_array = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/array.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function preferSecond(arr2) {
+      if (arr2.length === 0) {
+        return null;
+      }
+      return arr2.length >= 2 ? arr2[1] : arr2[0];
+    }
+    exports2.preferSecond = preferSecond;
+    function flatten(arr2) {
+      return arr2.reduce(function(pv, v) {
+        return pv.concat(Array.isArray(v) ? flatten(v) : v);
+      }, []);
+    }
+    exports2.flatten = flatten;
+    function find(arr2, predicate) {
+      if (Array.prototype.find) {
+        return Array.prototype.find.call(arr2, predicate);
+      }
+      for (var i = 0; i < arr2.length; i++) {
+        if (predicate(arr2[i]))
+          return arr2[i];
+      }
+      return void 0;
+    }
+    exports2.find = find;
+    function groupConsecutiveElementsWhile(arr2, predicate) {
+      var groups = [];
+      var currElm, currGroup;
+      for (var i = 0; i < arr2.length; i++) {
+        currElm = arr2[i];
+        if (i > 0 && predicate(currElm, arr2[i - 1])) {
+          currGroup = groups[groups.length - 1];
+          currGroup.push(currElm);
+        } else {
+          groups.push([currElm]);
+        }
+      }
+      return groups.map(function(g) {
+        return g.length === 1 ? g[0] : g;
+      });
+    }
+    exports2.groupConsecutiveElementsWhile = groupConsecutiveElementsWhile;
+    function sliceFromReverseWhile(arr2, startIndex, predicate) {
+      var result = {
+        elements: [],
+        sliceStartsAt: -1
+      };
+      for (var i = startIndex; i >= 0; i--) {
+        if (!predicate(arr2[i])) {
+          break;
+        }
+        result.sliceStartsAt = i;
+        result.elements.unshift(arr2[i]);
+      }
+      return result;
+    }
+    exports2.sliceFromReverseWhile = sliceFromReverseWhile;
+    function intersperse(arr2, item) {
+      return arr2.reduce(function(pv, v, index) {
+        pv.push(v);
+        if (index < arr2.length - 1) {
+          pv.push(item);
+        }
+        return pv;
+      }, []);
+    }
+    exports2.intersperse = intersperse;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/OpAttributeSanitizer.js
+var require_OpAttributeSanitizer = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/OpAttributeSanitizer.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var value_types_1 = require_value_types();
+    var MentionSanitizer_1 = require_MentionSanitizer();
+    var url = __importStar(require_url());
+    var funcs_html_1 = require_funcs_html();
+    var array_1 = require_array();
+    var OpAttributeSanitizer = function() {
+      function OpAttributeSanitizer2() {
+      }
+      OpAttributeSanitizer2.sanitize = function(dirtyAttrs, sanitizeOptions) {
+        var cleanAttrs = {};
+        if (!dirtyAttrs || typeof dirtyAttrs !== "object") {
+          return cleanAttrs;
+        }
+        var booleanAttrs = [
+          "bold",
+          "italic",
+          "underline",
+          "strike",
+          "code",
+          "blockquote",
+          "code-block",
+          "renderAsBlock"
+        ];
+        var colorAttrs = ["background", "color"];
+        var font = dirtyAttrs.font, size = dirtyAttrs.size, link = dirtyAttrs.link, script = dirtyAttrs.script, list = dirtyAttrs.list, header = dirtyAttrs.header, align = dirtyAttrs.align, direction = dirtyAttrs.direction, indent = dirtyAttrs.indent, mentions = dirtyAttrs.mentions, mention = dirtyAttrs.mention, width = dirtyAttrs.width, target = dirtyAttrs.target, rel = dirtyAttrs.rel;
+        var codeBlock = dirtyAttrs["code-block"];
+        var sanitizedAttrs = booleanAttrs.concat(colorAttrs, [
+          "font",
+          "size",
+          "link",
+          "script",
+          "list",
+          "header",
+          "align",
+          "direction",
+          "indent",
+          "mentions",
+          "mention",
+          "width",
+          "target",
+          "rel",
+          "code-block"
+        ]);
+        booleanAttrs.forEach(function(prop) {
+          var v = dirtyAttrs[prop];
+          if (v) {
+            cleanAttrs[prop] = !!v;
+          }
+        });
+        colorAttrs.forEach(function(prop) {
+          var val = dirtyAttrs[prop];
+          if (val && (OpAttributeSanitizer2.IsValidHexColor(val + "") || OpAttributeSanitizer2.IsValidColorLiteral(val + "") || OpAttributeSanitizer2.IsValidRGBColor(val + ""))) {
+            cleanAttrs[prop] = val;
+          }
+        });
+        if (font && OpAttributeSanitizer2.IsValidFontName(font + "")) {
+          cleanAttrs.font = font;
+        }
+        if (size && OpAttributeSanitizer2.IsValidSize(size + "")) {
+          cleanAttrs.size = size;
+        }
+        if (width && OpAttributeSanitizer2.IsValidWidth(width + "")) {
+          cleanAttrs.width = width;
+        }
+        if (link) {
+          cleanAttrs.link = OpAttributeSanitizer2.sanitizeLinkUsingOptions(link + "", sanitizeOptions);
+        }
+        if (target && OpAttributeSanitizer2.isValidTarget(target)) {
+          cleanAttrs.target = target;
+        }
+        if (rel && OpAttributeSanitizer2.IsValidRel(rel)) {
+          cleanAttrs.rel = rel;
+        }
+        if (codeBlock) {
+          if (OpAttributeSanitizer2.IsValidLang(codeBlock)) {
+            cleanAttrs["code-block"] = codeBlock;
+          } else {
+            cleanAttrs["code-block"] = !!codeBlock;
+          }
+        }
+        if (script === value_types_1.ScriptType.Sub || value_types_1.ScriptType.Super === script) {
+          cleanAttrs.script = script;
+        }
+        if (list === value_types_1.ListType.Bullet || list === value_types_1.ListType.Ordered || list === value_types_1.ListType.Checked || list === value_types_1.ListType.Unchecked) {
+          cleanAttrs.list = list;
+        }
+        if (Number(header)) {
+          cleanAttrs.header = Math.min(Number(header), 6);
+        }
+        if (array_1.find([value_types_1.AlignType.Center, value_types_1.AlignType.Right, value_types_1.AlignType.Justify, value_types_1.AlignType.Left], function(a) {
+          return a === align;
+        })) {
+          cleanAttrs.align = align;
+        }
+        if (direction === value_types_1.DirectionType.Rtl) {
+          cleanAttrs.direction = direction;
+        }
+        if (indent && Number(indent)) {
+          cleanAttrs.indent = Math.min(Number(indent), 30);
+        }
+        if (mentions && mention) {
+          var sanitizedMention = MentionSanitizer_1.MentionSanitizer.sanitize(mention, sanitizeOptions);
+          if (Object.keys(sanitizedMention).length > 0) {
+            cleanAttrs.mentions = !!mentions;
+            cleanAttrs.mention = mention;
+          }
+        }
+        return Object.keys(dirtyAttrs).reduce(function(cleaned, k) {
+          if (sanitizedAttrs.indexOf(k) === -1) {
+            cleaned[k] = dirtyAttrs[k];
+          }
+          return cleaned;
+        }, cleanAttrs);
+      };
+      OpAttributeSanitizer2.sanitizeLinkUsingOptions = function(link, options) {
+        var sanitizerFn = function() {
+          return void 0;
+        };
+        if (options && typeof options.urlSanitizer === "function") {
+          sanitizerFn = options.urlSanitizer;
+        }
+        var result = sanitizerFn(link);
+        return typeof result === "string" ? result : funcs_html_1.encodeLink(url.sanitize(link));
+      };
+      OpAttributeSanitizer2.IsValidHexColor = function(colorStr) {
+        return !!colorStr.match(/^#([0-9A-F]{6}|[0-9A-F]{3})\$/i);
+      };
+      OpAttributeSanitizer2.IsValidColorLiteral = function(colorStr) {
+        return !!colorStr.match(/^[a-z]{1,50}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidRGBColor = function(colorStr) {
+        var re = /^rgb\\(((0|25[0-5]|2[0-4]\\d|1\\d\\d|0?\\d?\\d),\\s*){2}(0|25[0-5]|2[0-4]\\d|1\\d\\d|0?\\d?\\d)\\)\$/i;
+        return !!colorStr.match(re);
+      };
+      OpAttributeSanitizer2.IsValidFontName = function(fontName) {
+        return !!fontName.match(/^[a-z\\s0-9\\- ]{1,30}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidSize = function(size) {
+        return !!size.match(/^[a-z0-9\\-]{1,20}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidWidth = function(width) {
+        return !!width.match(/^[0-9]*(px|em|%)?\$/);
+      };
+      OpAttributeSanitizer2.isValidTarget = function(target) {
+        return !!target.match(/^[_a-zA-Z0-9\\-]{1,50}\$/);
+      };
+      OpAttributeSanitizer2.IsValidRel = function(relStr) {
+        return !!relStr.match(/^[a-zA-Z\\s\\-]{1,250}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidLang = function(lang) {
+        if (typeof lang === "boolean") {
+          return true;
+        }
+        return !!lang.match(/^[a-zA-Z\\s\\-\\\\\\/\\+]{1,50}\$/i);
+      };
+      return OpAttributeSanitizer2;
+    }();
+    exports2.OpAttributeSanitizer = OpAttributeSanitizer;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/string.js
+var require_string = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/string.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function tokenizeWithNewLines(str) {
+      var NewLine = "\\n";
+      if (str === NewLine) {
+        return [str];
+      }
+      var lines = str.split(NewLine);
+      if (lines.length === 1) {
+        return lines;
+      }
+      var lastIndex = lines.length - 1;
+      return lines.reduce(function(pv, line, ind) {
+        if (ind !== lastIndex) {
+          if (line !== "") {
+            pv = pv.concat(line, NewLine);
+          } else {
+            pv.push(NewLine);
+          }
+        } else if (line !== "") {
+          pv.push(line);
+        }
+        return pv;
+      }, []);
+    }
+    exports2.tokenizeWithNewLines = tokenizeWithNewLines;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js
+var require_object = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function assign(target) {
+      var sources = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+        sources[_i - 1] = arguments[_i];
+      }
+      if (target == null) {
+        throw new TypeError("Cannot convert undefined or null to object");
+      }
+      var to = Object(target);
+      for (var index = 0; index < sources.length; index++) {
+        var nextSource = sources[index];
+        if (nextSource != null) {
+          for (var nextKey in nextSource) {
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    }
+    exports2.assign = assign;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpDenormalizer.js
+var require_InsertOpDenormalizer = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpDenormalizer.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var value_types_1 = require_value_types();
+    var str = __importStar(require_string());
+    var obj = __importStar(require_object());
+    var InsertOpDenormalizer = function() {
+      function InsertOpDenormalizer2() {
+      }
+      InsertOpDenormalizer2.denormalize = function(op) {
+        if (!op || typeof op !== "object") {
+          return [];
+        }
+        if (typeof op.insert === "object" || op.insert === value_types_1.NewLine) {
+          return [op];
+        }
+        var newlinedArray = str.tokenizeWithNewLines(op.insert + "");
+        if (newlinedArray.length === 1) {
+          return [op];
+        }
+        var nlObj = obj.assign({}, op, { insert: value_types_1.NewLine });
+        return newlinedArray.map(function(line) {
+          if (line === value_types_1.NewLine) {
+            return nlObj;
+          }
+          return obj.assign({}, op, {
+            insert: line
+          });
+        });
+      };
+      return InsertOpDenormalizer2;
+    }();
+    exports2.InsertOpDenormalizer = InsertOpDenormalizer;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpsConverter.js
+var require_InsertOpsConverter = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpsConverter.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var DeltaInsertOp_1 = require_DeltaInsertOp();
+    var value_types_1 = require_value_types();
+    var InsertData_1 = require_InsertData();
+    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
+    var InsertOpDenormalizer_1 = require_InsertOpDenormalizer();
+    var InsertOpsConverter = function() {
+      function InsertOpsConverter2() {
+      }
+      InsertOpsConverter2.convert = function(deltaOps, options) {
+        if (!Array.isArray(deltaOps)) {
+          return [];
+        }
+        var denormalizedOps = [].concat.apply([], deltaOps.map(InsertOpDenormalizer_1.InsertOpDenormalizer.denormalize));
+        var results = [];
+        var insertVal, attributes;
+        for (var _i = 0, denormalizedOps_1 = denormalizedOps; _i < denormalizedOps_1.length; _i++) {
+          var op = denormalizedOps_1[_i];
+          if (!op.insert) {
+            continue;
+          }
+          insertVal = InsertOpsConverter2.convertInsertVal(op.insert, options);
+          if (!insertVal) {
+            continue;
+          }
+          attributes = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitize(op.attributes, options);
+          results.push(new DeltaInsertOp_1.DeltaInsertOp(insertVal, attributes));
+        }
+        return results;
+      };
+      InsertOpsConverter2.convertInsertVal = function(insertPropVal, sanitizeOptions) {
+        if (typeof insertPropVal === "string") {
+          return new InsertData_1.InsertDataQuill(value_types_1.DataType.Text, insertPropVal);
+        }
+        if (!insertPropVal || typeof insertPropVal !== "object") {
+          return null;
+        }
+        var keys = Object.keys(insertPropVal);
+        if (!keys.length) {
+          return null;
+        }
+        return value_types_1.DataType.Image in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Image, OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(insertPropVal[value_types_1.DataType.Image] + "", sanitizeOptions)) : value_types_1.DataType.Video in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Video, OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(insertPropVal[value_types_1.DataType.Video] + "", sanitizeOptions)) : value_types_1.DataType.Formula in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Formula, insertPropVal[value_types_1.DataType.Formula]) : new InsertData_1.InsertDataCustom(keys[0], insertPropVal[keys[0]]);
+      };
+      return InsertOpsConverter2;
+    }();
+    exports2.InsertOpsConverter = InsertOpsConverter;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/OpToHtmlConverter.js
+var require_OpToHtmlConverter = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/OpToHtmlConverter.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var funcs_html_1 = require_funcs_html();
+    var value_types_1 = require_value_types();
+    var obj = __importStar(require_object());
+    var arr2 = __importStar(require_array());
+    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
+    var DEFAULT_INLINE_FONTS = {
+      serif: "font-family: Georgia, Times New Roman, serif",
+      monospace: "font-family: Monaco, Courier New, monospace"
+    };
+    exports2.DEFAULT_INLINE_STYLES = {
+      font: function(value) {
+        return DEFAULT_INLINE_FONTS[value] || "font-family:" + value;
+      },
+      size: {
+        small: "font-size: 0.75em",
+        large: "font-size: 1.5em",
+        huge: "font-size: 2.5em"
+      },
+      indent: function(value, op) {
+        var indentSize = parseInt(value, 10) * 3;
+        var side = op.attributes["direction"] === "rtl" ? "right" : "left";
+        return "padding-" + side + ":" + indentSize + "em";
+      },
+      direction: function(value, op) {
+        if (value === "rtl") {
+          return "direction:rtl" + (op.attributes["align"] ? "" : "; text-align:inherit");
+        } else {
+          return void 0;
+        }
+      }
+    };
+    var OpToHtmlConverter = function() {
+      function OpToHtmlConverter2(op, options) {
+        this.op = op;
+        this.options = obj.assign({}, {
+          classPrefix: "ql",
+          inlineStyles: void 0,
+          encodeHtml: true,
+          listItemTag: "li",
+          paragraphTag: "p"
+        }, options);
+      }
+      OpToHtmlConverter2.prototype.prefixClass = function(className) {
+        if (!this.options.classPrefix) {
+          return className + "";
+        }
+        return this.options.classPrefix + "-" + className;
+      };
+      OpToHtmlConverter2.prototype.getHtml = function() {
+        var parts = this.getHtmlParts();
+        return parts.openingTag + parts.content + parts.closingTag;
+      };
+      OpToHtmlConverter2.prototype.getHtmlParts = function() {
+        var _this = this;
+        if (this.op.isJustNewline() && !this.op.isContainerBlock()) {
+          return { openingTag: "", closingTag: "", content: value_types_1.NewLine };
+        }
+        var tags = this.getTags(), attrs = this.getTagAttributes();
+        if (!tags.length && attrs.length) {
+          tags.push(this.options.textTag || "span");
+        }
+        var beginTags = [], endTags = [];
+        var imgTag = "img";
+        var isImageLink = function(tag2) {
+          return tag2 === imgTag && !!_this.op.attributes.link;
+        };
+        for (var _i = 0, tags_1 = tags; _i < tags_1.length; _i++) {
+          var tag = tags_1[_i];
+          if (isImageLink(tag)) {
+            beginTags.push(funcs_html_1.makeStartTag("a", this.getLinkAttrs()));
+          }
+          beginTags.push(funcs_html_1.makeStartTag(tag, attrs));
+          endTags.push(tag === "img" ? "" : funcs_html_1.makeEndTag(tag));
+          if (isImageLink(tag)) {
+            endTags.push(funcs_html_1.makeEndTag("a"));
+          }
+          attrs = [];
+        }
+        endTags.reverse();
+        return {
+          openingTag: beginTags.join(""),
+          content: this.getContent(),
+          closingTag: endTags.join("")
+        };
+      };
+      OpToHtmlConverter2.prototype.getContent = function() {
+        if (this.op.isContainerBlock()) {
+          return "";
+        }
+        if (this.op.isMentions()) {
+          return this.op.insert.value;
+        }
+        var content = this.op.isFormula() || this.op.isText() ? this.op.insert.value : "";
+        return this.options.encodeHtml && funcs_html_1.encodeHtml(content) || content;
+      };
+      OpToHtmlConverter2.prototype.getCssClasses = function() {
+        var attrs = this.op.attributes;
+        if (this.options.inlineStyles) {
+          return [];
+        }
+        var propsArr = ["indent", "align", "direction", "font", "size"];
+        if (this.options.allowBackgroundClasses) {
+          propsArr.push("background");
+        }
+        return (this.getCustomCssClasses() || []).concat(propsArr.filter(function(prop) {
+          return !!attrs[prop];
+        }).filter(function(prop) {
+          return prop === "background" ? OpAttributeSanitizer_1.OpAttributeSanitizer.IsValidColorLiteral(attrs[prop]) : true;
+        }).map(function(prop) {
+          return prop + "-" + attrs[prop];
+        }).concat(this.op.isFormula() ? "formula" : []).concat(this.op.isVideo() ? "video" : []).concat(this.op.isImage() ? "image" : []).map(this.prefixClass.bind(this)));
+      };
+      OpToHtmlConverter2.prototype.getCssStyles = function() {
+        var _this = this;
+        var attrs = this.op.attributes;
+        var propsArr = [["color"]];
+        if (!!this.options.inlineStyles || !this.options.allowBackgroundClasses) {
+          propsArr.push(["background", "background-color"]);
+        }
+        if (this.options.inlineStyles) {
+          propsArr = propsArr.concat([
+            ["indent"],
+            ["align", "text-align"],
+            ["direction"],
+            ["font", "font-family"],
+            ["size"]
+          ]);
+        }
+        return (this.getCustomCssStyles() || []).concat(propsArr.filter(function(item) {
+          return !!attrs[item[0]];
+        }).map(function(item) {
+          var attribute = item[0];
+          var attrValue = attrs[attribute];
+          var attributeConverter = _this.options.inlineStyles && _this.options.inlineStyles[attribute] || exports2.DEFAULT_INLINE_STYLES[attribute];
+          if (typeof attributeConverter === "object") {
+            return attributeConverter[attrValue];
+          } else if (typeof attributeConverter === "function") {
+            var converterFn = attributeConverter;
+            return converterFn(attrValue, _this.op);
+          } else {
+            return arr2.preferSecond(item) + ":" + attrValue;
+          }
+        })).filter(function(item) {
+          return item !== void 0;
+        });
+      };
+      OpToHtmlConverter2.prototype.getTagAttributes = function() {
+        if (this.op.attributes.code && !this.op.isLink()) {
+          return [];
+        }
+        var makeAttr = this.makeAttr.bind(this);
+        var customTagAttributes = this.getCustomTagAttributes();
+        var customAttr = customTagAttributes ? Object.keys(this.getCustomTagAttributes()).map(function(k) {
+          return makeAttr(k, customTagAttributes[k]);
+        }) : [];
+        var classes = this.getCssClasses();
+        var tagAttrs = classes.length ? customAttr.concat([makeAttr("class", classes.join(" "))]) : customAttr;
+        if (this.op.isImage()) {
+          this.op.attributes.width && (tagAttrs = tagAttrs.concat(makeAttr("width", this.op.attributes.width)));
+          return tagAttrs.concat(makeAttr("src", this.op.insert.value));
+        }
+        if (this.op.isACheckList()) {
+          return tagAttrs.concat(makeAttr("data-checked", this.op.isCheckedList() ? "true" : "false"));
+        }
+        if (this.op.isFormula()) {
+          return tagAttrs;
+        }
+        if (this.op.isVideo()) {
+          return tagAttrs.concat(makeAttr("frameborder", "0"), makeAttr("allowfullscreen", "true"), makeAttr("src", this.op.insert.value));
+        }
+        if (this.op.isMentions()) {
+          var mention = this.op.attributes.mention;
+          if (mention.class) {
+            tagAttrs = tagAttrs.concat(makeAttr("class", mention.class));
+          }
+          if (mention["end-point"] && mention.slug) {
+            tagAttrs = tagAttrs.concat(makeAttr("href", mention["end-point"] + "/" + mention.slug));
+          } else {
+            tagAttrs = tagAttrs.concat(makeAttr("href", "about:blank"));
+          }
+          if (mention.target) {
+            tagAttrs = tagAttrs.concat(makeAttr("target", mention.target));
+          }
+          return tagAttrs;
+        }
+        var styles = this.getCssStyles();
+        if (styles.length) {
+          tagAttrs.push(makeAttr("style", styles.join(";")));
+        }
+        if (this.op.isCodeBlock() && typeof this.op.attributes["code-block"] === "string") {
+          return tagAttrs.concat(makeAttr("data-language", this.op.attributes["code-block"]));
+        }
+        if (this.op.isContainerBlock()) {
+          return tagAttrs;
+        }
+        if (this.op.isLink()) {
+          tagAttrs = tagAttrs.concat(this.getLinkAttrs());
+        }
+        return tagAttrs;
+      };
+      OpToHtmlConverter2.prototype.makeAttr = function(k, v) {
+        return { key: k, value: v };
+      };
+      OpToHtmlConverter2.prototype.getLinkAttrs = function() {
+        var tagAttrs = [];
+        var targetForAll = OpAttributeSanitizer_1.OpAttributeSanitizer.isValidTarget(this.options.linkTarget || "") ? this.options.linkTarget : void 0;
+        var relForAll = OpAttributeSanitizer_1.OpAttributeSanitizer.IsValidRel(this.options.linkRel || "") ? this.options.linkRel : void 0;
+        var target = this.op.attributes.target || targetForAll;
+        var rel = this.op.attributes.rel || relForAll;
+        return tagAttrs.concat(this.makeAttr("href", this.op.attributes.link)).concat(target ? this.makeAttr("target", target) : []).concat(rel ? this.makeAttr("rel", rel) : []);
+      };
+      OpToHtmlConverter2.prototype.getCustomTag = function(format) {
+        if (this.options.customTag && typeof this.options.customTag === "function") {
+          return this.options.customTag.apply(null, [format, this.op]);
+        }
+      };
+      OpToHtmlConverter2.prototype.getCustomTagAttributes = function() {
+        if (this.options.customTagAttributes && typeof this.options.customTagAttributes === "function") {
+          return this.options.customTagAttributes.apply(null, [this.op]);
+        }
+      };
+      OpToHtmlConverter2.prototype.getCustomCssClasses = function() {
+        if (this.options.customCssClasses && typeof this.options.customCssClasses === "function") {
+          var res = this.options.customCssClasses.apply(null, [this.op]);
+          if (res) {
+            return Array.isArray(res) ? res : [res];
+          }
+        }
+      };
+      OpToHtmlConverter2.prototype.getCustomCssStyles = function() {
+        if (this.options.customCssStyles && typeof this.options.customCssStyles === "function") {
+          var res = this.options.customCssStyles.apply(null, [this.op]);
+          if (res) {
+            return Array.isArray(res) ? res : [res];
+          }
+        }
+      };
+      OpToHtmlConverter2.prototype.getTags = function() {
+        var _this = this;
+        var attrs = this.op.attributes;
+        if (!this.op.isText()) {
+          return [
+            this.op.isVideo() ? "iframe" : this.op.isImage() ? "img" : "span"
+          ];
+        }
+        var positionTag = this.options.paragraphTag || "p";
+        var blocks = [
+          ["blockquote"],
+          ["code-block", "pre"],
+          ["list", this.options.listItemTag],
+          ["header"],
+          ["align", positionTag],
+          ["direction", positionTag],
+          ["indent", positionTag]
+        ];
+        for (var _i = 0, blocks_1 = blocks; _i < blocks_1.length; _i++) {
+          var item = blocks_1[_i];
+          var firstItem = item[0];
+          if (attrs[firstItem]) {
+            var customTag = this.getCustomTag(firstItem);
+            return customTag ? [customTag] : firstItem === "header" ? ["h" + attrs[firstItem]] : [arr2.preferSecond(item)];
+          }
+        }
+        if (this.op.isCustomTextBlock()) {
+          var customTag = this.getCustomTag("renderAsBlock");
+          return customTag ? [customTag] : [positionTag];
+        }
+        var customTagsMap = Object.keys(attrs).reduce(function(res, it) {
+          var customTag2 = _this.getCustomTag(it);
+          if (customTag2) {
+            res[it] = customTag2;
+          }
+          return res;
+        }, {});
+        var inlineTags = [
+          ["link", "a"],
+          ["mentions", "a"],
+          ["script"],
+          ["bold", "strong"],
+          ["italic", "em"],
+          ["strike", "s"],
+          ["underline", "u"],
+          ["code"]
+        ];
+        return inlineTags.filter(function(item2) {
+          return !!attrs[item2[0]];
+        }).concat(Object.keys(customTagsMap).filter(function(t) {
+          return !inlineTags.some(function(it) {
+            return it[0] == t;
+          });
+        }).map(function(t) {
+          return [t, customTagsMap[t]];
+        })).map(function(item2) {
+          return customTagsMap[item2[0]] ? customTagsMap[item2[0]] : item2[0] === "script" ? attrs[item2[0]] === value_types_1.ScriptType.Sub ? "sub" : "sup" : arr2.preferSecond(item2);
+        });
+      };
+      return OpToHtmlConverter2;
+    }();
+    exports2.OpToHtmlConverter = OpToHtmlConverter;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/group-types.js
+var require_group_types = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/group-types.js"(exports2) {
+    "use strict";
+    var __extends = exports2 && exports2.__extends || function() {
+      var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d, b) {
+        d.__proto__ = b;
+      } || function(d, b) {
+        for (var p in b)
+          if (b.hasOwnProperty(p))
+            d[p] = b[p];
+      };
+      return function(d, b) {
+        extendStatics(d, b);
+        function __() {
+          this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+      };
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var InlineGroup = function() {
+      function InlineGroup2(ops) {
+        this.ops = ops;
+      }
+      return InlineGroup2;
+    }();
+    exports2.InlineGroup = InlineGroup;
+    var SingleItem = function() {
+      function SingleItem2(op) {
+        this.op = op;
+      }
+      return SingleItem2;
+    }();
+    var VideoItem = function(_super) {
+      __extends(VideoItem2, _super);
+      function VideoItem2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+      }
+      return VideoItem2;
+    }(SingleItem);
+    exports2.VideoItem = VideoItem;
+    var BlotBlock = function(_super) {
+      __extends(BlotBlock2, _super);
+      function BlotBlock2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+      }
+      return BlotBlock2;
+    }(SingleItem);
+    exports2.BlotBlock = BlotBlock;
+    var BlockGroup = function() {
+      function BlockGroup2(op, ops) {
+        this.op = op;
+        this.ops = ops;
+      }
+      return BlockGroup2;
+    }();
+    exports2.BlockGroup = BlockGroup;
+    var ListGroup = function() {
+      function ListGroup2(items) {
+        this.items = items;
+      }
+      return ListGroup2;
+    }();
+    exports2.ListGroup = ListGroup;
+    var ListItem = function() {
+      function ListItem2(item, innerList) {
+        if (innerList === void 0) {
+          innerList = null;
+        }
+        this.item = item;
+        this.innerList = innerList;
+      }
+      return ListItem2;
+    }();
+    exports2.ListItem = ListItem;
+    var TableGroup = function() {
+      function TableGroup2(rows) {
+        this.rows = rows;
+      }
+      return TableGroup2;
+    }();
+    exports2.TableGroup = TableGroup;
+    var TableRow = function() {
+      function TableRow2(cells) {
+        this.cells = cells;
+      }
+      return TableRow2;
+    }();
+    exports2.TableRow = TableRow;
+    var TableCell = function() {
+      function TableCell2(item) {
+        this.item = item;
+      }
+      return TableCell2;
+    }();
+    exports2.TableCell = TableCell;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/Grouper.js
+var require_Grouper = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/Grouper.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var DeltaInsertOp_1 = require_DeltaInsertOp();
+    var array_1 = require_array();
+    var group_types_1 = require_group_types();
+    var Grouper = function() {
+      function Grouper2() {
+      }
+      Grouper2.pairOpsWithTheirBlock = function(ops) {
+        var result = [];
+        var canBeInBlock = function(op2) {
+          return !(op2.isJustNewline() || op2.isCustomEmbedBlock() || op2.isVideo() || op2.isContainerBlock());
+        };
+        var isInlineData = function(op2) {
+          return op2.isInline();
+        };
+        var lastInd = ops.length - 1;
+        var opsSlice;
+        for (var i = lastInd; i >= 0; i--) {
+          var op = ops[i];
+          if (op.isVideo()) {
+            result.push(new group_types_1.VideoItem(op));
+          } else if (op.isCustomEmbedBlock()) {
+            result.push(new group_types_1.BlotBlock(op));
+          } else if (op.isContainerBlock()) {
+            opsSlice = array_1.sliceFromReverseWhile(ops, i - 1, canBeInBlock);
+            result.push(new group_types_1.BlockGroup(op, opsSlice.elements));
+            i = opsSlice.sliceStartsAt > -1 ? opsSlice.sliceStartsAt : i;
+          } else {
+            opsSlice = array_1.sliceFromReverseWhile(ops, i - 1, isInlineData);
+            result.push(new group_types_1.InlineGroup(opsSlice.elements.concat(op)));
+            i = opsSlice.sliceStartsAt > -1 ? opsSlice.sliceStartsAt : i;
+          }
+        }
+        result.reverse();
+        return result;
+      };
+      Grouper2.groupConsecutiveSameStyleBlocks = function(groups, blocksOf) {
+        if (blocksOf === void 0) {
+          blocksOf = {
+            header: true,
+            codeBlocks: true,
+            blockquotes: true,
+            customBlocks: true
+          };
+        }
+        return array_1.groupConsecutiveElementsWhile(groups, function(g, gPrev) {
+          if (!(g instanceof group_types_1.BlockGroup) || !(gPrev instanceof group_types_1.BlockGroup)) {
+            return false;
+          }
+          return blocksOf.codeBlocks && Grouper2.areBothCodeblocksWithSameLang(g, gPrev) || blocksOf.blockquotes && Grouper2.areBothBlockquotesWithSameAdi(g, gPrev) || blocksOf.header && Grouper2.areBothSameHeadersWithSameAdi(g, gPrev) || blocksOf.customBlocks && Grouper2.areBothCustomBlockWithSameAttr(g, gPrev);
+        });
+      };
+      Grouper2.reduceConsecutiveSameStyleBlocksToOne = function(groups) {
+        var newLineOp = DeltaInsertOp_1.DeltaInsertOp.createNewLineOp();
+        return groups.map(function(elm) {
+          if (!Array.isArray(elm)) {
+            if (elm instanceof group_types_1.BlockGroup && !elm.ops.length) {
+              elm.ops.push(newLineOp);
+            }
+            return elm;
+          }
+          var groupsLastInd = elm.length - 1;
+          elm[0].ops = array_1.flatten(elm.map(function(g, i) {
+            if (!g.ops.length) {
+              return [newLineOp];
+            }
+            return g.ops.concat(i < groupsLastInd ? [newLineOp] : []);
+          }));
+          return elm[0];
+        });
+      };
+      Grouper2.areBothCodeblocksWithSameLang = function(g1, gOther) {
+        return g1.op.isCodeBlock() && gOther.op.isCodeBlock() && g1.op.hasSameLangAs(gOther.op);
+      };
+      Grouper2.areBothSameHeadersWithSameAdi = function(g1, gOther) {
+        return g1.op.isSameHeaderAs(gOther.op) && g1.op.hasSameAdiAs(gOther.op);
+      };
+      Grouper2.areBothBlockquotesWithSameAdi = function(g, gOther) {
+        return g.op.isBlockquote() && gOther.op.isBlockquote() && g.op.hasSameAdiAs(gOther.op);
+      };
+      Grouper2.areBothCustomBlockWithSameAttr = function(g, gOther) {
+        return g.op.isCustomTextBlock() && gOther.op.isCustomTextBlock() && g.op.hasSameAttr(gOther.op);
+      };
+      return Grouper2;
+    }();
+    exports2.Grouper = Grouper;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/ListNester.js
+var require_ListNester = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/ListNester.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var group_types_1 = require_group_types();
+    var array_1 = require_array();
+    var ListNester = function() {
+      function ListNester2() {
+      }
+      ListNester2.prototype.nest = function(groups) {
+        var _this = this;
+        var listBlocked = this.convertListBlocksToListGroups(groups);
+        var groupedByListGroups = this.groupConsecutiveListGroups(listBlocked);
+        var nested = array_1.flatten(groupedByListGroups.map(function(group2) {
+          if (!Array.isArray(group2)) {
+            return group2;
+          }
+          return _this.nestListSection(group2);
+        }));
+        var groupRootLists = array_1.groupConsecutiveElementsWhile(nested, function(curr, prev) {
+          if (!(curr instanceof group_types_1.ListGroup && prev instanceof group_types_1.ListGroup)) {
+            return false;
+          }
+          return curr.items[0].item.op.isSameListAs(prev.items[0].item.op);
+        });
+        return groupRootLists.map(function(v) {
+          if (!Array.isArray(v)) {
+            return v;
+          }
+          var litems = v.map(function(g) {
+            return g.items;
+          });
+          return new group_types_1.ListGroup(array_1.flatten(litems));
+        });
+      };
+      ListNester2.prototype.convertListBlocksToListGroups = function(items) {
+        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
+          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isList() && gPrev.op.isList() && g.op.isSameListAs(gPrev.op) && g.op.hasSameIndentationAs(gPrev.op);
+        });
+        return grouped.map(function(item) {
+          if (!Array.isArray(item)) {
+            if (item instanceof group_types_1.BlockGroup && item.op.isList()) {
+              return new group_types_1.ListGroup([new group_types_1.ListItem(item)]);
+            }
+            return item;
+          }
+          return new group_types_1.ListGroup(item.map(function(g) {
+            return new group_types_1.ListItem(g);
+          }));
+        });
+      };
+      ListNester2.prototype.groupConsecutiveListGroups = function(items) {
+        return array_1.groupConsecutiveElementsWhile(items, function(curr, prev) {
+          return curr instanceof group_types_1.ListGroup && prev instanceof group_types_1.ListGroup;
+        });
+      };
+      ListNester2.prototype.nestListSection = function(sectionItems) {
+        var _this = this;
+        var indentGroups = this.groupByIndent(sectionItems);
+        Object.keys(indentGroups).map(Number).sort().reverse().forEach(function(indent) {
+          indentGroups[indent].forEach(function(lg) {
+            var idx = sectionItems.indexOf(lg);
+            if (_this.placeUnderParent(lg, sectionItems.slice(0, idx))) {
+              sectionItems.splice(idx, 1);
+            }
+          });
+        });
+        return sectionItems;
+      };
+      ListNester2.prototype.groupByIndent = function(items) {
+        return items.reduce(function(pv, cv) {
+          var indent = cv.items[0].item.op.attributes.indent;
+          if (indent) {
+            pv[indent] = pv[indent] || [];
+            pv[indent].push(cv);
+          }
+          return pv;
+        }, {});
+      };
+      ListNester2.prototype.placeUnderParent = function(target, items) {
+        for (var i = items.length - 1; i >= 0; i--) {
+          var elm = items[i];
+          if (target.items[0].item.op.hasHigherIndentThan(elm.items[0].item.op)) {
+            var parent = elm.items[elm.items.length - 1];
+            if (parent.innerList) {
+              parent.innerList.items = parent.innerList.items.concat(target.items);
+            } else {
+              parent.innerList = target;
+            }
+            return true;
+          }
+        }
+        return false;
+      };
+      return ListNester2;
+    }();
+    exports2.ListNester = ListNester;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/TableGrouper.js
+var require_TableGrouper = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/TableGrouper.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var group_types_1 = require_group_types();
+    var array_1 = require_array();
+    var TableGrouper = function() {
+      function TableGrouper2() {
+      }
+      TableGrouper2.prototype.group = function(groups) {
+        var tableBlocked = this.convertTableBlocksToTableGroups(groups);
+        return tableBlocked;
+      };
+      TableGrouper2.prototype.convertTableBlocksToTableGroups = function(items) {
+        var _this = this;
+        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
+          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isTable() && gPrev.op.isTable();
+        });
+        return grouped.map(function(item) {
+          if (!Array.isArray(item)) {
+            if (item instanceof group_types_1.BlockGroup && item.op.isTable()) {
+              return new group_types_1.TableGroup([new group_types_1.TableRow([new group_types_1.TableCell(item)])]);
+            }
+            return item;
+          }
+          return new group_types_1.TableGroup(_this.convertTableBlocksToTableRows(item));
+        });
+      };
+      TableGrouper2.prototype.convertTableBlocksToTableRows = function(items) {
+        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
+          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isTable() && gPrev.op.isTable() && g.op.isSameTableRowAs(gPrev.op);
+        });
+        return grouped.map(function(item) {
+          return new group_types_1.TableRow(Array.isArray(item) ? item.map(function(it) {
+            return new group_types_1.TableCell(it);
+          }) : [new group_types_1.TableCell(item)]);
+        });
+      };
+      return TableGrouper2;
+    }();
+    exports2.TableGrouper = TableGrouper;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/QuillDeltaToHtmlConverter.js
+var require_QuillDeltaToHtmlConverter = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/QuillDeltaToHtmlConverter.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var InsertOpsConverter_1 = require_InsertOpsConverter();
+    var OpToHtmlConverter_1 = require_OpToHtmlConverter();
+    var Grouper_1 = require_Grouper();
+    var group_types_1 = require_group_types();
+    var ListNester_1 = require_ListNester();
+    var funcs_html_1 = require_funcs_html();
+    var obj = __importStar(require_object());
+    var value_types_1 = require_value_types();
+    var TableGrouper_1 = require_TableGrouper();
+    var BrTag = "<br/>";
+    var QuillDeltaToHtmlConverter2 = function() {
+      function QuillDeltaToHtmlConverter3(deltaOps, options) {
+        this.rawDeltaOps = [];
+        this.callbacks = {};
+        this.options = obj.assign({
+          paragraphTag: "p",
+          textTag: "span",
+          encodeHtml: true,
+          classPrefix: "ql",
+          inlineStyles: false,
+          multiLineBlockquote: true,
+          multiLineHeader: true,
+          multiLineCodeblock: true,
+          multiLineParagraph: true,
+          multiLineCustomBlock: true,
+          allowBackgroundClasses: false,
+          linkTarget: "_blank"
+        }, options, {
+          orderedListTag: "ol",
+          bulletListTag: "ul",
+          listItemTag: "li"
+        });
+        var inlineStyles;
+        if (!this.options.inlineStyles) {
+          inlineStyles = void 0;
+        } else if (typeof this.options.inlineStyles === "object") {
+          inlineStyles = this.options.inlineStyles;
+        } else {
+          inlineStyles = {};
+        }
+        this.converterOptions = {
+          encodeHtml: this.options.encodeHtml,
+          classPrefix: this.options.classPrefix,
+          inlineStyles,
+          listItemTag: this.options.listItemTag,
+          paragraphTag: this.options.paragraphTag,
+          textTag: this.options.textTag,
+          linkRel: this.options.linkRel,
+          linkTarget: this.options.linkTarget,
+          allowBackgroundClasses: this.options.allowBackgroundClasses,
+          customTag: this.options.customTag,
+          customTagAttributes: this.options.customTagAttributes,
+          customCssClasses: this.options.customCssClasses,
+          customCssStyles: this.options.customCssStyles
+        };
+        this.rawDeltaOps = deltaOps;
+      }
+      QuillDeltaToHtmlConverter3.prototype._getListTag = function(op) {
+        return op.isOrderedList() ? this.options.orderedListTag + "" : op.isBulletList() ? this.options.bulletListTag + "" : op.isCheckedList() ? this.options.bulletListTag + "" : op.isUncheckedList() ? this.options.bulletListTag + "" : "";
+      };
+      QuillDeltaToHtmlConverter3.prototype.getGroupedOps = function() {
+        var deltaOps = InsertOpsConverter_1.InsertOpsConverter.convert(this.rawDeltaOps, this.options);
+        var pairedOps = Grouper_1.Grouper.pairOpsWithTheirBlock(deltaOps);
+        var groupedSameStyleBlocks = Grouper_1.Grouper.groupConsecutiveSameStyleBlocks(pairedOps, {
+          blockquotes: !!this.options.multiLineBlockquote,
+          header: !!this.options.multiLineHeader,
+          codeBlocks: !!this.options.multiLineCodeblock,
+          customBlocks: !!this.options.multiLineCustomBlock
+        });
+        var groupedOps = Grouper_1.Grouper.reduceConsecutiveSameStyleBlocksToOne(groupedSameStyleBlocks);
+        var tableGrouper = new TableGrouper_1.TableGrouper();
+        groupedOps = tableGrouper.group(groupedOps);
+        var listNester = new ListNester_1.ListNester();
+        return listNester.nest(groupedOps);
+      };
+      QuillDeltaToHtmlConverter3.prototype.convert = function() {
+        var _this = this;
+        var groups = this.getGroupedOps();
+        return groups.map(function(group2) {
+          if (group2 instanceof group_types_1.ListGroup) {
+            return _this._renderWithCallbacks(value_types_1.GroupType.List, group2, function() {
+              return _this._renderList(group2);
+            });
+          } else if (group2 instanceof group_types_1.TableGroup) {
+            return _this._renderWithCallbacks(value_types_1.GroupType.Table, group2, function() {
+              return _this._renderTable(group2);
+            });
+          } else if (group2 instanceof group_types_1.BlockGroup) {
+            var g = group2;
+            return _this._renderWithCallbacks(value_types_1.GroupType.Block, group2, function() {
+              return _this._renderBlock(g.op, g.ops);
+            });
+          } else if (group2 instanceof group_types_1.BlotBlock) {
+            return _this._renderCustom(group2.op, null);
+          } else if (group2 instanceof group_types_1.VideoItem) {
+            return _this._renderWithCallbacks(value_types_1.GroupType.Video, group2, function() {
+              var g2 = group2;
+              var converter = new OpToHtmlConverter_1.OpToHtmlConverter(g2.op, _this.converterOptions);
+              return converter.getHtml();
+            });
+          } else {
+            return _this._renderWithCallbacks(value_types_1.GroupType.InlineGroup, group2, function() {
+              return _this._renderInlines(group2.ops, true);
+            });
+          }
+        }).join("");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderWithCallbacks = function(groupType, group2, myRenderFn) {
+        var html = "";
+        var beforeCb = this.callbacks["beforeRender_cb"];
+        html = typeof beforeCb === "function" ? beforeCb.apply(null, [groupType, group2]) : "";
+        if (!html) {
+          html = myRenderFn();
+        }
+        var afterCb = this.callbacks["afterRender_cb"];
+        html = typeof afterCb === "function" ? afterCb.apply(null, [groupType, html]) : html;
+        return html;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderList = function(list) {
+        var _this = this;
+        var firstItem = list.items[0];
+        return funcs_html_1.makeStartTag(this._getListTag(firstItem.item.op)) + list.items.map(function(li) {
+          return _this._renderListItem(li);
+        }).join("") + funcs_html_1.makeEndTag(this._getListTag(firstItem.item.op));
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderListItem = function(li) {
+        li.item.op.attributes.indent = 0;
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(li.item.op, this.converterOptions);
+        var parts = converter.getHtmlParts();
+        var liElementsHtml = this._renderInlines(li.item.ops, false);
+        return parts.openingTag + liElementsHtml + (li.innerList ? this._renderList(li.innerList) : "") + parts.closingTag;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderTable = function(table) {
+        var _this = this;
+        return funcs_html_1.makeStartTag("table") + funcs_html_1.makeStartTag("tbody") + table.rows.map(function(row) {
+          return _this._renderTableRow(row);
+        }).join("") + funcs_html_1.makeEndTag("tbody") + funcs_html_1.makeEndTag("table");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderTableRow = function(row) {
+        var _this = this;
+        return funcs_html_1.makeStartTag("tr") + row.cells.map(function(cell) {
+          return _this._renderTableCell(cell);
+        }).join("") + funcs_html_1.makeEndTag("tr");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderTableCell = function(cell) {
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(cell.item.op, this.converterOptions);
+        var parts = converter.getHtmlParts();
+        var cellElementsHtml = this._renderInlines(cell.item.ops, false);
+        return funcs_html_1.makeStartTag("td", {
+          key: "data-row",
+          value: cell.item.op.attributes.table
+        }) + parts.openingTag + cellElementsHtml + parts.closingTag + funcs_html_1.makeEndTag("td");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderBlock = function(bop, ops) {
+        var _this = this;
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(bop, this.converterOptions);
+        var htmlParts = converter.getHtmlParts();
+        if (bop.isCodeBlock()) {
+          return htmlParts.openingTag + funcs_html_1.encodeHtml(ops.map(function(iop) {
+            return iop.isCustomEmbed() ? _this._renderCustom(iop, bop) : iop.insert.value;
+          }).join("")) + htmlParts.closingTag;
+        }
+        var inlines = ops.map(function(op) {
+          return _this._renderInline(op, bop);
+        }).join("");
+        return htmlParts.openingTag + (inlines || BrTag) + htmlParts.closingTag;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderInlines = function(ops, isInlineGroup) {
+        var _this = this;
+        if (isInlineGroup === void 0) {
+          isInlineGroup = true;
+        }
+        var opsLen = ops.length - 1;
+        var html = ops.map(function(op, i) {
+          if (i > 0 && i === opsLen && op.isJustNewline()) {
+            return "";
+          }
+          return _this._renderInline(op, null);
+        }).join("");
+        if (!isInlineGroup) {
+          return html;
+        }
+        var startParaTag = funcs_html_1.makeStartTag(this.options.paragraphTag);
+        var endParaTag = funcs_html_1.makeEndTag(this.options.paragraphTag);
+        if (html === BrTag || this.options.multiLineParagraph) {
+          return startParaTag + html + endParaTag;
+        }
+        return startParaTag + html.split(BrTag).map(function(v) {
+          return v === "" ? BrTag : v;
+        }).join(endParaTag + startParaTag) + endParaTag;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderInline = function(op, contextOp) {
+        if (op.isCustomEmbed()) {
+          return this._renderCustom(op, contextOp);
+        }
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(op, this.converterOptions);
+        return converter.getHtml().replace(/\\n/g, BrTag);
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderCustom = function(op, contextOp) {
+        var renderCb = this.callbacks["renderCustomOp_cb"];
+        if (typeof renderCb === "function") {
+          return renderCb.apply(null, [op, contextOp]);
+        }
+        return "";
+      };
+      QuillDeltaToHtmlConverter3.prototype.beforeRender = function(cb) {
+        if (typeof cb === "function") {
+          this.callbacks["beforeRender_cb"] = cb;
+        }
+      };
+      QuillDeltaToHtmlConverter3.prototype.afterRender = function(cb) {
+        if (typeof cb === "function") {
+          this.callbacks["afterRender_cb"] = cb;
+        }
+      };
+      QuillDeltaToHtmlConverter3.prototype.renderCustomWith = function(cb) {
+        this.callbacks["renderCustomOp_cb"] = cb;
+      };
+      return QuillDeltaToHtmlConverter3;
+    }();
+    exports2.QuillDeltaToHtmlConverter = QuillDeltaToHtmlConverter2;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/main.js
+var require_main = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/main.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var QuillDeltaToHtmlConverter_1 = require_QuillDeltaToHtmlConverter();
+    exports2.QuillDeltaToHtmlConverter = QuillDeltaToHtmlConverter_1.QuillDeltaToHtmlConverter;
+    var OpToHtmlConverter_1 = require_OpToHtmlConverter();
+    exports2.OpToHtmlConverter = OpToHtmlConverter_1.OpToHtmlConverter;
+    var group_types_1 = require_group_types();
+    exports2.InlineGroup = group_types_1.InlineGroup;
+    exports2.VideoItem = group_types_1.VideoItem;
+    exports2.BlockGroup = group_types_1.BlockGroup;
+    exports2.ListGroup = group_types_1.ListGroup;
+    exports2.ListItem = group_types_1.ListItem;
+    exports2.BlotBlock = group_types_1.BlotBlock;
+    var DeltaInsertOp_1 = require_DeltaInsertOp();
+    exports2.DeltaInsertOp = DeltaInsertOp_1.DeltaInsertOp;
+    var InsertData_1 = require_InsertData();
+    exports2.InsertDataQuill = InsertData_1.InsertDataQuill;
+    exports2.InsertDataCustom = InsertData_1.InsertDataCustom;
+    var value_types_1 = require_value_types();
+    exports2.NewLine = value_types_1.NewLine;
+    exports2.ListType = value_types_1.ListType;
+    exports2.ScriptType = value_types_1.ScriptType;
+    exports2.DirectionType = value_types_1.DirectionType;
+    exports2.AlignType = value_types_1.AlignType;
+    exports2.DataType = value_types_1.DataType;
+    exports2.GroupType = value_types_1.GroupType;
   }
 });
 
@@ -1883,7 +4285,7 @@ var require_field = __commonJS({
   "node_modules/protobufjs/src/field.js"(exports2, module2) {
     "use strict";
     module2.exports = Field;
-    var ReflectionObject = require_object();
+    var ReflectionObject = require_object2();
     ((Field.prototype = Object.create(ReflectionObject.prototype)).constructor = Field).className = "Field";
     var Enum = require_enum();
     var types = require_types();
@@ -2029,7 +4431,7 @@ var require_oneof = __commonJS({
   "node_modules/protobufjs/src/oneof.js"(exports2, module2) {
     "use strict";
     module2.exports = OneOf;
-    var ReflectionObject = require_object();
+    var ReflectionObject = require_object2();
     ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
     var Field = require_field();
     var util = require_util();
@@ -2128,7 +4530,7 @@ var require_namespace = __commonJS({
   "node_modules/protobufjs/src/namespace.js"(exports2, module2) {
     "use strict";
     module2.exports = Namespace;
-    var ReflectionObject = require_object();
+    var ReflectionObject = require_object2();
     ((Namespace.prototype = Object.create(ReflectionObject.prototype)).constructor = Namespace).className = "Namespace";
     var Field = require_field();
     var util = require_util();
@@ -2393,7 +4795,7 @@ var require_method = __commonJS({
   "node_modules/protobufjs/src/method.js"(exports2, module2) {
     "use strict";
     module2.exports = Method;
-    var ReflectionObject = require_object();
+    var ReflectionObject = require_object2();
     ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
     var util = require_util();
     function Method(name, type, requestType, responseType, requestStream, responseStream, options, comment, parsedOptions) {
@@ -3609,7 +6011,7 @@ var require_util = __commonJS({
 });
 
 // node_modules/protobufjs/src/object.js
-var require_object = __commonJS({
+var require_object2 = __commonJS({
   "node_modules/protobufjs/src/object.js"(exports2, module2) {
     "use strict";
     module2.exports = ReflectionObject;
@@ -3732,7 +6134,7 @@ var require_enum = __commonJS({
   "node_modules/protobufjs/src/enum.js"(exports2, module2) {
     "use strict";
     module2.exports = Enum;
-    var ReflectionObject = require_object();
+    var ReflectionObject = require_object2();
     ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
     var Namespace = require_namespace();
     var util = require_util();
@@ -3897,7 +6299,7 @@ var require_index_light = __commonJS({
     protobuf.decoder = require_decoder();
     protobuf.verifier = require_verifier();
     protobuf.converter = require_converter();
-    protobuf.ReflectionObject = require_object();
+    protobuf.ReflectionObject = require_object2();
     protobuf.Namespace = require_namespace();
     protobuf.Root = require_root();
     protobuf.Enum = require_enum();
@@ -4287,7 +6689,7 @@ var PushButton = class extends HTMLElement {
     this._button.textContent = v;
   }
 };
-customElements.get(\`button-\${"6b79f67"}\`) || customElements.define(\`button-\${"6b79f67"}\`, PushButton);
+customElements.get(\`button-\${"4e3d69e"}\`) || customElements.define(\`button-\${"4e3d69e"}\`, PushButton);
 
 // src/html/popupbox.html
 var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
@@ -4431,7 +6833,7 @@ var PopupBox = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`popupbox-\${"6b79f67"}\`) || customElements.define(\`popupbox-\${"6b79f67"}\`, PopupBox);
+customElements.get(\`popupbox-\${"4e3d69e"}\`) || customElements.define(\`popupbox-\${"4e3d69e"}\`, PopupBox);
 
 // src/core/ui/alert.ts
 function alert(msg, title, buttons) {
@@ -4586,7 +6988,7 @@ var Toast = class extends HTMLDivElement {
     }
   }
 };
-customElements.get(\`toast-\${"6b79f67"}\`) || customElements.define(\`toast-\${"6b79f67"}\`, Toast, { extends: "div" });
+customElements.get(\`toast-\${"4e3d69e"}\`) || customElements.define(\`toast-\${"4e3d69e"}\`, Toast, { extends: "div" });
 var ToastContainer = class extends HTMLElement {
   container;
   static get observedAttributes() {
@@ -4690,7 +7092,7 @@ var ToastContainer = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`toast-container-\${"6b79f67"}\`) || customElements.define(\`toast-container-\${"6b79f67"}\`, ToastContainer);
+customElements.get(\`toast-container-\${"4e3d69e"}\`) || customElements.define(\`toast-container-\${"4e3d69e"}\`, ToastContainer);
 
 // src/html/ui-entry.html
 var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
@@ -4747,7 +7149,7 @@ var BilioldEntry = class extends HTMLElement {
     }
   }
 };
-customElements.get("biliold-entry-6b79f67") || customElements.define("bilibili-entry-6b79f67", BilioldEntry);
+customElements.get("biliold-entry-4e3d69e") || customElements.define("bilibili-entry-4e3d69e", BilioldEntry);
 
 // src/core/userstatus.ts
 var userStatus = {
@@ -4833,7 +7235,8 @@ var userStatus = {
   dmproto: true,
   dmwrap: true,
   dmExtension: "xml",
-  dmContact: false
+  dmContact: false,
+  episodeData: false
 };
 
 // src/core/user.ts
@@ -5424,12 +7827,12 @@ var Page = class {
       set: () => true,
       get: () => void 0
     });
-    Reflect.deleteProperty(window, "webpackJsonp");
   }
   updateDom() {
     const title = document.title;
     this.vdom.replace(document.documentElement);
     Reflect.deleteProperty(window, "PlayerAgent");
+    Reflect.deleteProperty(window, "webpackJsonp");
     this.vdom.loadScript().then(() => this.loadedCallback());
     title && !title.includes("404") && (document.title = title);
   }
@@ -5612,9 +8015,20 @@ __publicField(URLS, "LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archi
 __publicField(URLS, "HAS_LIKE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/has/like");
 __publicField(URLS, "DM_WEB_VIEW", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/view");
 __publicField(URLS, "DM_WEB_SEG_SO", _URLS.P_AUTO + _URLS.D_API + "/x/v2/dm/web/seg.so");
+__publicField(URLS, "STAT", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/archive/stat");
+__publicField(URLS, "SLIDE_SHOW", _URLS.P_AUTO + _URLS.D_API + "/pgc/operation/api/slideshow");
+__publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/search/square");
 
 // src/io/api-webshow-locs.ts
-async function ApiWebshowLocs(data) {
+async function apiWebshowLoc(id) {
+  const response = await fetch(objUrl(URLS.WEBSHOW_LOCS.slice(0, -1), {
+    pf: 0,
+    id
+  }));
+  const text = await response.text();
+  return jsonCheck(BV2avAll(text)).data;
+}
+async function apiWebshowLocs(data) {
   const response = await fetch(objUrl(URLS.WEBSHOW_LOCS, {
     pf: 0,
     ids: data.ids.join(",")
@@ -6149,7 +8563,7 @@ var _Header = class {
   }
   hookHeadV2() {
     poll(() => {
-      return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container") || document.querySelector("#home_nav");
+      return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container") || document.querySelector("#home_nav") || document.querySelector(".bili-header__bar");
     }, (d) => {
       _Header.isMiniHead(d) && this.miniHeader();
       this.loadOldHeader(d);
@@ -6253,7 +8667,7 @@ var PageIndex = class extends Page {
     Header.banner();
   }
   locsData() {
-    ApiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] }).then((d) => {
+    apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] }).then((d) => {
       __INITIAL_STATE__.locsData[23] = this.adblock(d[4694]);
       __INITIAL_STATE__.locsData[29] = this.adblock(d[29]);
       __INITIAL_STATE__.locsData[31] = this.adblock(d[31]);
@@ -6800,6 +9214,98 @@ var Comment = class {
   }
 };
 
+// src/io/api-pgc-slideshow.ts
+async function apiPgcSlideShow(position_id) {
+  const response = await fetch(objUrl(URLS.SLIDE_SHOW, { position_id }));
+  const json = await response.json();
+  return jsonCheck(json).result;
+}
+
+// src/io/api-search-square.ts
+async function apiSearchSquare(limit = 10) {
+  const response = await fetch(objUrl(URLS.SEARCH_SQUARE, { limit }));
+  const json = await response.json();
+  return jsonCheck(json).data.trending.list;
+}
+
+// src/core/observer.ts
+var nodelist = [];
+var observe = new MutationObserver(async (d) => d.forEach((d2) => {
+  d2.addedNodes[0] && nodelist.forEach((f) => {
+    try {
+      f(d2.addedNodes[0]);
+    } catch (e) {
+      debug.error("MutationObserver", e);
+    }
+  });
+}));
+observe.observe(document, { childList: true, subtree: true });
+function observerAddedNodes(callback) {
+  try {
+    if (typeof callback === "function")
+      nodelist.push(callback);
+    return nodelist.length - 1;
+  } catch (e) {
+    debug.error(e);
+  }
+}
+var switchlist = [];
+function switchVideo(callback) {
+  try {
+    if (typeof callback === "function")
+      switchlist.push(callback);
+  } catch (e) {
+    debug.error("switchVideo", e);
+  }
+}
+observerAddedNodes((node) => {
+  if (/video-state-pause/.test(node.className)) {
+    switchlist.forEach(async (d) => {
+      try {
+        d();
+      } catch (e) {
+        debug.error(d);
+      }
+    });
+  }
+});
+
+// src/core/storage.ts
+var LocalStorage = class {
+  static clear() {
+    localStorage.clear();
+  }
+  static getItem(key) {
+    return toObject(localStorage.getItem(key));
+  }
+  static keys() {
+    return Object.keys(localStorage);
+  }
+  static removeItem(key) {
+    localStorage.removeItem(key);
+  }
+  static setItem(key, value) {
+    localStorage.setItem(key, toString(value));
+  }
+};
+var SessionStorage = class {
+  static clear() {
+    sessionStorage.clear();
+  }
+  static getItem(key) {
+    return toObject(sessionStorage.getItem(key));
+  }
+  static keys() {
+    return Object.keys(sessionStorage);
+  }
+  static removeItem(key) {
+    sessionStorage.removeItem(key);
+  }
+  static setItem(key, value) {
+    sessionStorage.setItem(key, toString(value));
+  }
+};
+
 // src/core/player.ts
 var _Player = class {
   static addModifyArgument(callback) {
@@ -6882,6 +9388,7 @@ var _Player = class {
       } catch {
       }
     }
+    this.switchVideo();
   }
   connectPlayer(loadPlayer) {
     this.EmbedPlayer(loadPlayer, false);
@@ -6925,6 +9432,80 @@ var _Player = class {
         this.dataInitedCallbacks.shift()?.();
       }
     }
+  }
+  regised = false;
+  switchVideo() {
+    if (this.regised)
+      return;
+    this.regised = true;
+    let cache;
+    switchVideo(() => {
+      if (window.player.appendTopMessage) {
+        const cfg = LocalStorage.getItem("bilibili_player_settings");
+        poll(() => document.querySelector(".bilibili-player-video-message-panel"), () => {
+          if (cache) {
+            window.player.appendTopMessage(cache);
+          } else if (cfg.message) {
+            const message = Object.keys(cfg.message).filter((d) => cfg.message[d]).sort(() => 0.5 - Math.random());
+            if (message[0]) {
+              switch (message[0]) {
+                case "system":
+                  apiWebshowLoc(4694).then((d) => {
+                    window.player.appendTopMessage(cache = d.filter((d2) => d2.name).map((d2) => {
+                      return {
+                        url: d2.url,
+                        type: message[0],
+                        name: d2.name
+                      };
+                    }));
+                  }).catch((e) => {
+                    debug.error("播放器通知", e);
+                  });
+                  break;
+                case "bangumi":
+                  apiPgcSlideShow(531).then((d) => {
+                    window.player.appendTopMessage(cache = d.map((d2) => {
+                      return {
+                        url: d2.blink,
+                        type: message[0],
+                        name: d2.title
+                      };
+                    }));
+                  }).catch((e) => {
+                    debug.error("播放器通知", e);
+                  });
+                  break;
+                case "news":
+                  apiSearchSquare().then((d) => {
+                    window.player.appendTopMessage(cache = d.map((d2) => {
+                      return {
+                        url: d2.uri || \`//search.bilibili.com/all?keyword=\${encodeURIComponent(d2.keyword)}\`,
+                        type: message[0],
+                        name: d2.show_name || d2.keyword
+                      };
+                    }));
+                  }).catch((e) => {
+                    debug.error("播放器通知", e);
+                  });
+                  break;
+                default:
+                  break;
+              }
+            }
+          }
+        });
+      }
+    });
+  }
+  playbackRateTimer;
+  playbackRate(playbackRate = 1) {
+    clearTimeout(this.playbackRateTimer);
+    this.playbackRateTimer = setTimeout(() => {
+      const video = document.querySelector("#bilibiliPlayer video");
+      if (!video)
+        throw new Error("未找到播放器！请在播放页面使用。");
+      video.playbackRate = Number(playbackRate);
+    }, 100);
   }
 };
 var Player = _Player;
@@ -7459,7 +10040,7 @@ var Like = class extends HTMLSpanElement {
         debug.error("获取点赞情况失败", e);
       });
     }
-    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"6b79f67"}\`);
+    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"4e3d69e"}\`);
   }
   get likes() {
     return this.number;
@@ -7476,49 +10057,14 @@ var Like = class extends HTMLSpanElement {
     this.innerHTML = (this.liked ? svg.like : svg.dislike) + "点赞 " + unitFormat(this.number);
   }
 };
-customElements.get(\`like-\${"6b79f67"}\`) || customElements.define(\`like-\${"6b79f67"}\`, Like, { extends: "span" });
+customElements.get(\`like-\${"4e3d69e"}\`) || customElements.define(\`like-\${"4e3d69e"}\`, Like, { extends: "span" });
 
-// src/core/observer.ts
-var nodelist = [];
-var observe = new MutationObserver(async (d) => d.forEach((d2) => {
-  d2.addedNodes[0] && nodelist.forEach((f) => {
-    try {
-      f(d2.addedNodes[0]);
-    } catch (e) {
-      debug.error("MutationObserver", e);
-    }
-  });
-}));
-observe.observe(document, { childList: true, subtree: true });
-function observerAddedNodes(callback) {
-  try {
-    if (typeof callback === "function")
-      nodelist.push(callback);
-    return nodelist.length - 1;
-  } catch (e) {
-    debug.error(e);
-  }
+// src/io/api-stat.ts
+async function apiStat(aid) {
+  const response = await fetch(objUrl(URLS.STAT, { aid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
 }
-var switchlist = [];
-function switchVideo(callback) {
-  try {
-    if (typeof callback === "function")
-      switchlist.push(callback);
-  } catch (e) {
-    debug.error("switchVideo", e);
-  }
-}
-observerAddedNodes((node) => {
-  if (/video-state-pause/.test(node.className)) {
-    switchlist.forEach(async (d) => {
-      try {
-        d();
-      } catch (e) {
-        debug.error(d);
-      }
-    });
-  }
-});
 
 // src/page/bangumi.ts
 var PageBangumi = class extends Page {
@@ -7539,6 +10085,7 @@ var PageBangumi = class extends Page {
     this.related();
     this.initialState();
     this.enLike();
+    this.episodeData();
     Header.primaryMenu();
     Header.banner();
   }
@@ -7921,6 +10468,34 @@ var PageBangumi = class extends Page {
       });
       switchVideo(() => {
         this.like.init();
+      });
+    }
+  }
+  episodeIndex = 0;
+  episodeData() {
+    if (this.BLOD.status.episodeData) {
+      switchVideo(() => {
+        this.episodeIndex++;
+        const views = document.querySelector(".view-count > span");
+        const danmakus = document.querySelector(".danmu-count > span");
+        if (views && danmakus) {
+          if (this.episodeIndex === 1) {
+            const [view, danmaku] = [
+              unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.views),
+              unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.danmakus)
+            ];
+            views.setAttribute("title", "总播放数 " + view);
+            danmakus.setAttribute("title", "总弹幕数 " + danmaku);
+            debug.log("总播放数：", view, "总弹幕数", danmaku);
+          }
+          apiStat(this.BLOD.aid).then(({ view, danmaku }) => {
+            views.textContent = unitFormat(view);
+            danmakus.textContent = unitFormat(danmaku);
+            debug.log("总播放数：", view, "总弹幕数", danmaku);
+          }).catch((e) => {
+            debug.error("分集数据", e);
+          });
+        }
       });
     }
   }
@@ -15539,7 +18114,7 @@ var PagePlaylist = class extends Page {
     }
   }
   switchVideo = () => {
-    this.BLOD.urlCleaner.updateLocation(location.href.split("?")[0]);
+    this.BLOD.urlCleaner.updateLocation(this.BLOD.path.join("/"));
   };
   enLike() {
     if (this.BLOD.status.like) {
@@ -15595,6 +18170,7 @@ var PageRanking = class extends Page {
 var read_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">\\r\\n    <meta charset="UTF-8" />\\r\\n    <meta data-n-head="true" name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />\\r\\n    <meta name="theme-color" content="#de698c" />\\r\\n    <meta http="Cache-Control" content="no-transform" />\\r\\n    <meta name="format-detection" content="telephone=no" />\\r\\n    <meta name="applicable-device" content="pc" />\\r\\n    <link rel="apple-touch-icon-precomposed" href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <link rel="icon" type="image/vnd.microsoft.icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link rel="apple-touch-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <link data-n-head="true" rel="icon" type="image/x-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"\\r\\n        href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <title>哔哩哔哩专栏</title>\\r\\n    <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        .nav-tab-bar .tab-item[data-tab-id="41"]:before {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAA6lBMVEUAAAAiIiIkJCT///8jIyMiIiIiIiIiIiJVVVUjIyMjIyMlJSU0NDT9/f0iIiIoKCjz8/NCQkIjIyMjIyMrKysiIiJFRUWQkJAiIiIlJSUjIyMkJCQzMzNAQEDv7+/7+/tHR0ciIiIlJSUjIyNKSkp7e3tcXFxoaGgjIyMjIyMkJCT8/PxDQ0MnJyf39/fx8fHn5+cvLy/i4uLe3t7R0dHAwMA0NDQjIyOtra06Ojo+Pj4iIiJAQEBOTk5VVVVwcHBtbW1hYWEjIyMjIyMjIyMiIiIiIiIlJSUpKSkkJCT///95eXltbW1zc3PUVbhEAAAASnRSTlMAf4H+6NOdaAOnQRQF/asO/vTs5NnXxcO6NzMaCgT++fLv3s7GwMC/v6Fi+vr59PDn5ePh2dHOzMrKyMjGw8C/v7+1sZeVUikfHAMz54kAAAEUSURBVCjPldLXboMwFIDhQ7DNDBA2JGmTNLt7772d9v1fp5hSjEOkqP+lP/lIlg+sTVcaRV1gKXE/mLWBZWqYSEUMjfjsYv/4Hr0zxJYKlYxgItOsaMpmItHwA82TkQGgEMG2JrTITwGkRsXs80f6F/oU0b4el3YaQI585l1pm/6bgHZ/Ry7tcgYCaoetjcKaV1ZXwGSwvSi0efNsgoAvI0oXLYc9MXwyQcTBSXb83XOoPIw7AGlawQ8ks4FfPWc47fyec5yHmTHddZmJqEU57t16baghOqL0IArdVxvq6I3GvqvN2bU6JkRK+Odx5P0LFbIaicLWBKurTPX0/IEWV24WBpaJEWksRbBmlkstLaXosK4fYdYsW/LHMigAAAAASUVORK5CYII=);\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container report-wrap-module"></div>\\r\\n    <div class="page-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script src="//static.hdslb.com/public/intersection-observer.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/public/timing.min.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/biliapp/biliapp.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/manifest.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/vendor.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/read.ts
+var import_quill_delta_to_html_cb = __toESM(require_main());
 var PageRead = class extends Page {
   constructor(BLOD2) {
     super(read_default);
@@ -15616,6 +18192,7 @@ var PageRead = class extends Page {
     [41, "笔记", "note"]
   ];
   readInfoStr = "";
+  ops;
   initState() {
     this.readInfo = window.__INITIAL_STATE__?.readInfo;
     if (this.readInfo) {
@@ -15665,7 +18242,29 @@ var PageRead = class extends Page {
         <a class="author-face" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank"><img data-face-src="\${this.readInfo.author.face.replace("http:", "")}" src="\${this.readInfo.author.face.replace("http:", "")}" class="author-face-img" /></a> <a class="author-name" href="//space.bilibili.com/\${this.readInfo.author.mid}" target="_blank">\${this.readInfo.author.name}</a><div class="attention-btn slim-border">关注</div></div></div>\`;
   }
   articleHolder() {
-    this.readInfoStr += \`<div class="article-holder">\${this.readInfo.content}</div><p class="original">本文为我原创</p>\`;
+    this.readInfoStr += \`<div class="article-holder">\${this.delta()}</div><p class="original">本文为我原创</p>\`;
+  }
+  delta() {
+    let str = this.readInfo.content;
+    if (str?.startsWith('{"ops"')) {
+      try {
+        this.ops = JSON.parse(str).ops;
+        const converter = new import_quill_delta_to_html_cb.QuillDeltaToHtmlConverter(this.ops);
+        converter.renderCustomWith(function(customOp, contextOp) {
+          switch (customOp.insert.type) {
+            case "native-image":
+              const val = customOp.insert.value;
+              return \`<img src="\${val.url}@progressive.webp"\${val.alt ? \` alt="\${val.alt}"\` : ""}\${val.height ? \` data-h="\${val.height}"\` : ""}\${val.width ? \` data-w="\${val.width}"\` : ""}\${val.size ? \` data-size="\${val.size}"\` : ""}\${val.status ? \` data-status="\${val.status}"\` : ""}\${val.id ? \` data-id="\${val.id}"\` : ""}>\`;
+            default:
+              return "Unmanaged custom blot!";
+          }
+        });
+        str = converter.convert();
+      } catch (e) {
+        debug.error(e);
+      }
+    }
+    return str;
   }
   tagContainer() {
     this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {
@@ -15697,6 +18296,7 @@ var PageRead = class extends Page {
     const title = document.title;
     this.vdom.replace(document.documentElement);
     document.querySelector(".page-container").innerHTML = this.readInfoStr;
+    Reflect.deleteProperty(window, "webpackJsonp");
     this.vdom.loadScript().then(() => {
       this.loadedCallback();
       PageRead.rightCopyEnable();
@@ -15731,7 +18331,7 @@ var PageSearch = class extends Page {
     this.updateDom();
   }
   location() {
-    poll(() => location.href.endsWith("all"), () => {
+    poll(() => location.href.endsWith("/all"), () => {
       this.BLOD.urlCleaner.updateLocation(location.origin);
     }, 10, 30);
   }
@@ -15949,13 +18549,13 @@ var PlayurlDash = class {
   video_codecid = 7;
   video_project = true;
 };
-async function apiPlayurl(data, dash = true, pgc = false) {
+async function apiPlayurl(data, dash = true, pgc = false, server = "api.bilibili.com") {
   data = Object.assign({
     qn,
     otype: "json",
     fourk: 1
   }, data, dash ? { fnver, fnval } : {});
-  const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL : URLS.PLAYURL, data), { credentials: "include" });
+  const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace("api.bilibili.com", server) : URLS.PLAYURL, data), { credentials: "include" });
   const json = await response.json();
   if (pgc) {
     return jsonCheck(json).result;
@@ -16290,7 +18890,6 @@ var _VideoLimit = class {
           const res = await apiBiliplusPlayurl(obj);
           this.Backup[epid] = { code: 0, message: "success", result: res };
         } else {
-          this.BLOD.networkMock();
           const res = await this.gat(obj);
           this.Backup[epid] = { code: 0, message: "success", result: res };
         }
@@ -16344,7 +18943,7 @@ var _VideoLimit = class {
     this.data.push(\`代理服务器：\${server}\`);
     this.toast && (this.toast.data = this.data);
     try {
-      return await new ApiAppPgcPlayurl(obj, server).getData();
+      return await apiPlayurl(obj, true, true, server);
     } catch (e) {
       this.data.push("代理服务器返回异常！", e);
       if (this.toast) {
@@ -16670,7 +19269,7 @@ var ApiLoginAppThird = class extends ApiSign {
   fetch;
   constructor(api) {
     api = encodeURIComponent(api);
-    super(URLS.LOGIN_APP_THIRD, "27eb53fc9058f8c3");
+    super(URLS.LOGIN_APP_THIRD, "1d8b6e7d45233436");
     this.fetch = fetch(this.sign({ api }, api), { credentials: "include" });
   }
   async getData() {
@@ -16875,7 +19474,7 @@ var Desc = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`desc-\${"6b79f67"}\`) || customElements.define(\`desc-\${"6b79f67"}\`, Desc);
+customElements.get(\`desc-\${"4e3d69e"}\`) || customElements.define(\`desc-\${"4e3d69e"}\`, Desc);
 
 // src/html/ui-interface.html
 var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
@@ -16934,7 +19533,7 @@ var SettingItem = class extends HTMLDivElement {
     this._value.appendChild(value);
   }
 };
-customElements.get(\`item-\${"6b79f67"}\`) || customElements.define(\`item-\${"6b79f67"}\`, SettingItem, { extends: "div" });
+customElements.get(\`item-\${"4e3d69e"}\`) || customElements.define(\`item-\${"4e3d69e"}\`, SettingItem, { extends: "div" });
 
 // src/core/ui/item-container.ts
 var ItemContainer = class extends HTMLDivElement {
@@ -16958,7 +19557,7 @@ var ItemContainer = class extends HTMLDivElement {
     this._card.append(...item);
   }
 };
-customElements.get(\`item-container-\${"6b79f67"}\`) || customElements.define(\`item-container-\${"6b79f67"}\`, ItemContainer, { extends: "div" });
+customElements.get(\`item-container-\${"4e3d69e"}\`) || customElements.define(\`item-container-\${"4e3d69e"}\`, ItemContainer, { extends: "div" });
 
 // src/core/ui/menu.ts
 var Menuitem = class extends HTMLDivElement {
@@ -17000,7 +19599,7 @@ var Menuitem = class extends HTMLDivElement {
     return this.container;
   }
 };
-customElements.get(\`menuitem-\${"6b79f67"}\`) || customElements.define(\`menuitem-\${"6b79f67"}\`, Menuitem, { extends: "div" });
+customElements.get(\`menuitem-\${"4e3d69e"}\`) || customElements.define(\`menuitem-\${"4e3d69e"}\`, Menuitem, { extends: "div" });
 
 // src/html/checkbox.html
 var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
@@ -17084,7 +19683,7 @@ var CheckBox = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`checkbox-\${"6b79f67"}\`) || customElements.define(\`checkbox-\${"6b79f67"}\`, CheckBox);
+customElements.get(\`checkbox-\${"4e3d69e"}\`) || customElements.define(\`checkbox-\${"4e3d69e"}\`, CheckBox);
 var CheckBoxs = class extends HTMLDivElement {
   \$value = [];
   checkboxs = {};
@@ -17134,7 +19733,7 @@ var CheckBoxs = class extends HTMLDivElement {
     });
   }
 };
-customElements.get(\`checkboxs-\${"6b79f67"}\`) || customElements.define(\`checkboxs-\${"6b79f67"}\`, CheckBoxs, { extends: "div" });
+customElements.get(\`checkboxs-\${"4e3d69e"}\`) || customElements.define(\`checkboxs-\${"4e3d69e"}\`, CheckBoxs, { extends: "div" });
 
 // src/html/input.html
 var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -17203,7 +19802,7 @@ var InputArea = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`input-\${"6b79f67"}\`) || customElements.define(\`input-\${"6b79f67"}\`, InputArea);
+customElements.get(\`input-\${"4e3d69e"}\`) || customElements.define(\`input-\${"4e3d69e"}\`, InputArea);
 
 // src/html/select.html
 var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -17263,7 +19862,7 @@ var SelectMenu = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`select-\${"6b79f67"}\`) || customElements.define(\`select-\${"6b79f67"}\`, SelectMenu);
+customElements.get(\`select-\${"4e3d69e"}\`) || customElements.define(\`select-\${"4e3d69e"}\`, SelectMenu);
 
 // src/html/slider.html
 var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
@@ -17428,7 +20027,7 @@ var SliderBlock = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`slider-\${"6b79f67"}\`) || customElements.define(\`slider-\${"6b79f67"}\`, SliderBlock);
+customElements.get(\`slider-\${"4e3d69e"}\`) || customElements.define(\`slider-\${"4e3d69e"}\`, SliderBlock);
 
 // src/html/switch.html
 var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
@@ -17474,7 +20073,7 @@ var SwitchButton = class extends HTMLElement {
     return this;
   }
 };
-customElements.get(\`switch-\${"6b79f67"}\`) || customElements.define(\`switch-\${"6b79f67"}\`, SwitchButton);
+customElements.get(\`switch-\${"4e3d69e"}\`) || customElements.define(\`switch-\${"4e3d69e"}\`, SwitchButton);
 
 // src/core/ui.ts
 var Menus = {
@@ -17660,7 +20259,8 @@ var UI = class {
       this.switch("liveRecord", "录屏动态", "允许动态页显示直播录屏"),
       this.switch("commentJumpUrlTitle", "评论超链接标题", "还原为链接或短链接", void 0, void 0, "直接显示链接标题固然方便，但有些时候还是直接显示链接合适。"),
       this.switch("like", "添加点赞功能", "不支持一键三连"),
-      this.switch("fullBannerCover", "修正banner分辨率", "顶栏banner完整显示不裁剪", void 0, void 0, "旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。")
+      this.switch("fullBannerCover", "修正banner分辨率", "顶栏banner完整显示不裁剪", void 0, void 0, "旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。"),
+      this.switch("episodeData", "分集数据", "bangumi", void 0, void 0, "显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。")
     ]);
   }
   initSettingRestore() {
@@ -17678,6 +20278,15 @@ var UI = class {
   }
   initSettingPlayer() {
     this.menuitem.player.addSetting([
+      this.sliderCustom("playbackRate", "播放速率", {
+        min: 0.25,
+        max: 5,
+        precision: 95,
+        value: 1,
+        solid: true
+      }, (e) => {
+        this.BLOD.player.playbackRate(e);
+      }, "播放速率调整拓展", void 0, "调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：初始调整前的值不代表当前实际播放速率，这不影响调节。"),
       this.switch("webRTC", "WebRTC", "<strong>关闭</strong>以禁用p2p共享带宽", void 0, void 0, "B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！"),
       this.switch("elecShow", "充电鸣谢", "允许视频结尾的充电鸣谢"),
       this.switch("videoDisableAA", "禁用视频渲染抗锯齿", '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
@@ -17942,6 +20551,19 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  sliderCustom(id, label, value, callback, sub, svg2, desc) {
+    const item = new SettingItem();
+    const slider = new SliderBlock();
+    item.init("", label, sub, svg2);
+    slider.update(value);
+    slider.addEventListener("change", () => {
+      callback(slider.value);
+    });
+    item.value(slider);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
   inputCustom(id, label, value, callback, sub, svg2, desc) {
     const item = new SettingItem();
     const input = new InputArea();
@@ -18022,61 +20644,14 @@ var UI = class {
   }
 };
 
-// src/core/storage.ts
-var LocalStorage = class {
-  static clear() {
-    localStorage.clear();
-  }
-  static getItem(key) {
-    return toObject(localStorage.getItem(key));
-  }
-  static keys() {
-    return Object.keys(localStorage);
-  }
-  static removeItem(key) {
-    localStorage.removeItem(key);
-  }
-  static setItem(key, value) {
-    localStorage.setItem(key, toString(value));
-  }
-};
-var SessionStorage = class {
-  static clear() {
-    sessionStorage.clear();
-  }
-  static getItem(key) {
-    return toObject(sessionStorage.getItem(key));
-  }
-  static keys() {
-    return Object.keys(sessionStorage);
-  }
-  static removeItem(key) {
-    sessionStorage.removeItem(key);
-  }
-  static setItem(key, value) {
-    sessionStorage.setItem(key, toString(value));
-  }
-};
-
 // src/core/automate.ts
 var Automate = class {
   constructor(BLOD2) {
     this.BLOD = BLOD2;
     this.modifyArgument();
-    this.playerSettings();
     this.danmakuFirst();
     switchVideo(this.switchVideo);
     this.videospeed();
-  }
-  playerSettings() {
-    const local = LocalStorage.getItem("bilibili_player_settings");
-    if (local) {
-      this.BLOD.GM.setValue("bilibili_player_settings", local);
-    } else {
-      this.BLOD.GM.getValue("bilibili_player_settings").then((d) => {
-        d && LocalStorage.setItem("bilibili_player_settings", d);
-      });
-    }
   }
   danmakuFirst() {
     this.BLOD.status.automate.danmakuFirst && SessionStorage.setItem("player_last_filter_tab_info", 4);
@@ -19010,7 +21585,7 @@ var BilioldDownload = class extends HTMLElement {
     this._container.replaceChildren(this._noData);
   }
 };
-customElements.get(\`download-\${"6b79f67"}\`) || customElements.define(\`download-\${"6b79f67"}\`, BilioldDownload);
+customElements.get(\`download-\${"4e3d69e"}\`) || customElements.define(\`download-\${"4e3d69e"}\`, BilioldDownload);
 
 // src/core/download.ts
 var Download = class {
@@ -19930,7 +22505,7 @@ var BLOD = class {
         tagTop: apiTagTop,
         viewDetail: apiViewDetail,
         view: apiView,
-        webshowLocs: ApiWebshowLocs,
+        webshowLocs: apiWebshowLocs,
         xView: apiXView,
         Sign: ApiSign
       },
@@ -19941,12 +22516,14 @@ var BLOD = class {
     if (!this.playLoaded) {
       this.playLoaded = true;
       this.player.EmbedPlayer(() => this.loadplayer());
+      this.playerSettings();
     }
   }
   connectPlayer() {
     if (!this.playLoaded) {
       this.playLoaded = true;
       this.player.connectPlayer(() => this.loadplayer());
+      this.playerSettings();
     }
   }
   userLoadedCallback(callback) {
@@ -20210,6 +22787,16 @@ var BLOD = class {
       this.updating || this.toast.error("播放器加载失败！", "已回滚~", e)();
       await loadScript(URLS.VIDEO);
       addCss(".bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}", "detail-img");
+    }
+  }
+  playerSettings() {
+    const local = LocalStorage.getItem("bilibili_player_settings");
+    if (local) {
+      this.GM.setValue("bilibili_player_settings", local);
+    } else {
+      this.GM.getValue("bilibili_player_settings").then((d) => {
+        d && LocalStorage.setItem("bilibili_player_settings", d);
+      });
     }
   }
 };
