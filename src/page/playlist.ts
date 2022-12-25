@@ -106,7 +106,7 @@ export class PagePlaylist extends Page {
     }
     /** 伪造的播单页不应有识别参数 */
     protected switchVideo = () => {
-        this.BLOD.urlCleaner.updateLocation(location.href.split('?')[0])
+        this.BLOD.urlCleaner.updateLocation(this.BLOD.path.join('/'));
     }
     /** 点赞功能 */
     protected enLike() {
