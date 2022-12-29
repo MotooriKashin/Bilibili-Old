@@ -84,8 +84,8 @@ export class DanmakuBase {
     /** 编码xml弹幕 */
     static encodeXml(dms: DanmakuCmd[], cid: number) {
         return dms.reduce((s, d) => {
-            s += `<d p="${d.stime},${d.mode},${d.size},${d.color},${d.date},${d.class},${d.uid},${d.dmid}">${d.text.replace(/[<">'&]/g, (a: string) => { return <string>{ '<': '&lt;', '"': '&quot;', '>': '&gt;', "'": '&#39;', '&': '&amp;' }[a] }).replace(/(\n|\r\n)/g, "/n")}</d>\n`;
+            s += `<d p="${d.stime},${d.mode},${d.size},${d.color},${d.date},${d.class},${d.uid},${d.dmid}">${d.text.replace(/[<&]/g, (a: string) => { return <string>{ '<': '&lt;', '&': '&amp;' }[a] }).replace(/(\n|\r\n)/g, "/n")}</d>\n`;
             return s;
-        }, `<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>${cid}</chatid><mission>0</mission><maxlimit>${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>e-r</source>\n`) + '</i>';
+        }, `<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>${cid}</chatid><mission>0</mission><maxlimit>${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>\n`) + '</i>';
     }
 }
