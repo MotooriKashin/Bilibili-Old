@@ -49,6 +49,7 @@ export class VideoLimit {
         xhrHook('/playurl?', args => {
             const param = urlObj(args[1]);
             if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
+                param.appkey = "27eb53fc9058f8c3";
                 param.access_key = this.BLOD.status.accessKey.token; // 不登录高画质
             }
             param.fnval && (param.fnval = fnval); // 画质提升

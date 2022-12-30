@@ -10,7 +10,7 @@ interface ILoginAppThirdResponse {
 }
 export class ApiLoginAppThird extends ApiSign {
     constructor(private api: string) {
-        super(URLS.LOGIN_APP_THIRD, '1d8b6e7d45233436');
+        super(URLS.LOGIN_APP_THIRD, '27eb53fc9058f8c3');
         this.api = encodeURIComponent(api);
     }
     async getData() {
