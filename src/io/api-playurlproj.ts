@@ -16,10 +16,9 @@ interface IApiPlayurlProj {
     cid: number;
 }
 export class ApiPlayurlProj extends ApiSign {
-    private fetch: Promise<Response>;
-    constructor(data: IApiPlayurlProj, pgc = false) {
+    constructor(private data: IApiPlayurlProj, pgc = false) {
         super(pgc ? URLS.PGC_PLAYURL_PROJ : URLS.PLAYURL_PROJ, 'bb3101000e232e27');
-        data = Object.assign({
+        this.data = Object.assign({
             build: "2040100",
             device: "android",
             mobi_app: "android_i",
@@ -28,10 +27,9 @@ export class ApiPlayurlProj extends ApiSign {
             qn
         }, data);
         pgc && (data.module = "bangumi");
-        this.fetch = fetch(this.sign(<any>data));
     }
     async getData() {
-        const response = await this.fetch;
+        const response = await fetch(this.sign(this.data));
         return <IPlayurlDurl>await response.json();
     }
 }

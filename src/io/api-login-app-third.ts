@@ -9,14 +9,12 @@ interface ILoginAppThirdResponse {
     user_info: { face: string; mid: number; uname: string; };
 }
 export class ApiLoginAppThird extends ApiSign {
-    protected fetch: Promise<Response>;
-    constructor(api: string) {
-        api = encodeURIComponent(api);
+    constructor(private api: string) {
         super(URLS.LOGIN_APP_THIRD, '1d8b6e7d45233436');
-        this.fetch = fetch(this.sign({ api }, api), { credentials: 'include' });
+        this.api = encodeURIComponent(api);
     }
     async getData() {
-        const response = await this.fetch;
+        const response = await fetch(this.sign({ api: this.api }, this.api), { credentials: 'include' });
         const json = await response.json();
         return <ILoginAppThirdResponse>jsonCheck(json).data;
     }

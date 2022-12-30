@@ -10,20 +10,21 @@ interface IApiPlayurlInterface {
     cid: number;
 }
 export class ApiPlayurlInterface extends ApiSign {
-    protected fetch: Promise<Response>;
-    constructor(data: IApiPlayurlInterface, pgc = false) {
+    constructor(private data: IApiPlayurlInterface, pgc = false) {
         super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, 'YvirImLGlLANCLvM');
-        data = Object.assign({
+        this.data = Object.assign({
             otype: 'json',
             qn: data.quality,
             type: '',
             fnver,
             fnval
         }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
-        this.fetch = fetch(this.sign(<any>data), { credentials: 'include' });
     }
     async getData() {
-        const response = await this.fetch;
+        const response = await fetch(this.sign(this.data), { credentials: 'include' });
         return <IPlayurlDurl>await response.json();
+    }
+    toJSON() {
+        return this.sign(this.data);
     }
 }

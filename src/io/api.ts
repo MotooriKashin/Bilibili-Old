@@ -276,7 +276,7 @@ export class ApiSign {
      * @param api 授权api，**授权第三方登录专用**
      * @returns 签名后的api
      */
-    protected sign(searchParams: Record<string, string | number> = {}, api = '') {
+    protected sign(searchParams = {}, api = '') {
         const url = new URL(this.url);
         Object.assign(url.params, searchParams, { ts: this.ts });
         delete url.params.sign;

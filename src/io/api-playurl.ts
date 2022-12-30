@@ -322,20 +322,18 @@ export async function apiPlayurl(data: IApiPlayurl, dash = true, pgc = false, se
     return jsonCheck(json).data;
 }
 export class ApiAppPgcPlayurl extends ApiSign {
-    protected fetch: Promise<Response>;
-    constructor(data: IAppPgcPlayurlData, server: string = 'api.bilibili.com') {
+    constructor(private data: IAppPgcPlayurlData, server: string = 'api.bilibili.com') {
         super(URLS.APP_PGC_PLAYURL.replace('api.bilibili.com', server), '1d8b6e7d45233436');
-        data = Object.assign({
+        this.data = Object.assign({
             build: 6720300,
             device: "android",
             force_host: 2,
             mobi_app: "android",
             platform: "android"
         }, data);
-        this.fetch = fetch(this.sign(<any>data));
     }
     async getData() {
-        const response = await this.fetch;
+        const response = await fetch(this.sign(this.data));
         const json = await response.json();
         return <IPlayurlDash>jsonCheck(json);
     }
