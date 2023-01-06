@@ -3,8 +3,7 @@ name: Extension
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
+    paths:
       - 'userscript/manifest.json'
 
 jobs:
