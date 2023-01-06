@@ -118,7 +118,9 @@ export class PageRead extends Page {
         this.readInfoStr += `<div class="article-holder">${this.delta()}</div><p class="original">本文为我原创</p>`;
     }
     private delta() {
-        let str = this.readInfo.content;
+        let str = this.readInfo.content.replace(/(\&lt;)|(\&quot;)|(\&gt;)|(\&#34;)|(\&#39;)|(\&amp;)/g, d => {
+            return { "&lt;": "<", "&quot;": '"', "&gt;": ">", "&#34;": "\"", "&#39;": "'", "&amp;": "&" }[d]!;
+        });
         if (str?.startsWith('{"ops"')) { // 处理富文本
             try {
                 this.ops = JSON.parse(str).ops;
@@ -131,7 +133,7 @@ export class PageRead extends Page {
                     switch (customOp.insert.type) {
                         case 'native-image':
                             const val = customOp.insert.value;
-                            return `<img src="${val.url}@progressive.webp"${val.alt ? ` alt="${val.alt}"` : ''
+                            return `<img src="${val.url}${val.url.endsWith('.webp') ? '' : '@progressive.webp'}"${val.alt ? ` alt="${val.alt}"` : ''
                                 }${val.height ? ` data-h="${val.height}"` : ''
                                 }${val.width ? ` data-w="${val.width}"` : ''
                                 }${val.size ? ` data-size="${val.size}"` : ''
