@@ -113,6 +113,7 @@ export class Comment {
         this._createListCon();
         this._createSubReplyItem();
         this._registerEvent();
+        this._resolvePictures();
         this.BLOD.status.commentJumpUrlTitle && this._resolveJump();
     }
     /** 样式修补 */
@@ -123,6 +124,8 @@ export class Comment {
         }`, "comment-btn-24pxH");
         // 不让楼中楼操作菜单在非hover状态时消失
         addCss(`.operation.btn-hide-re .opera-list {visibility: visible}`, "keep-operalist-visible");
+        // 评论图片
+        addCss('.image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}', 'image-exhibition');
     }
     /** 退出abtest，获取翻页评论区 */
     protected initAbtest() {
@@ -208,6 +211,10 @@ export class Comment {
             //黑名单结构
             const blCon = this._parentBlacklistDom(item, i, pos); //正常结构
 
+            // 富文本笔记预处理
+            if (item.content.rich_text?.note?.summary) {
+                item.content.message = item.content.rich_text.note.summary;
+            }
 
             const con = [
                 '<div class="con ' + (pos == i ? 'no-border' : '') + '">',
@@ -216,6 +223,7 @@ export class Comment {
                 this._identity(item.mid, item.assist, item.member.fans_detail),
                 this._createNameplate(item.member.nameplate) + this._createUserSailing(item) + '</div>',
                 this._createMsgContent(item),
+                this._resolvePictures(item.content),
                 this._createPerfectReply(item),
                 '<div class="info">',
                 item.floor ? '<span class="floor">#' + item.floor + "</span>" : "",
@@ -440,5 +448,41 @@ export class Comment {
 
             return BV2avAll(str);
         };
+    }
+    /** 评论图片 */
+    protected _resolvePictures() {
+        Feedback.prototype._resolvePictures = function (content: any) {
+            const pictureList = [];
+            if (content) {
+                if (content.rich_text?.note?.images) {
+                    content.pictures || (content.pictures = []);
+                    content.rich_text.note.images.forEach((d: any) => {
+                        content.pictures.push({
+                            img_src: d,
+                            click_url: content.rich_text.note.click_url
+                        })
+                    })
+                }
+                if (content.pictures && content.pictures.length) {
+                    pictureList.push(`<div class="image-exhibition">`);
+                    content.pictures.forEach((d: any) => {
+                        const type = d.img_width >= d.img_height ? 'horizontal' : 'vertical';
+                        const extraLong = (d.img_width / d.img_height >= 3) || ((d.img_height / d.img_width >= 3))
+                        pictureList.push(
+                            '<a class="image-item-wrap ',
+                            type,
+                            `${extraLong ? 'extraLong' : ''}`,
+                            '" target="_blank"',
+                            d.click_url ? ` href="${d.click_url}"` : '',
+                            '><img src="',
+                            d.img_src,
+                            `"></a>`
+                        )
+                    })
+                    pictureList.push(`</div>`);
+                }
+            }
+            return pictureList.join('');
+        }
     }
 }
