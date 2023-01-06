@@ -18,6 +18,13 @@
 			"problemMatcher": [],
 			"label": "npm: userscript",
 			"detail": "编译用户脚本：Bilibili 旧播放页"
+		},
+		{
+			"type": "npm",
+			"script": "comment",
+			"problemMatcher": [],
+			"label": "npm: comment",
+			"detail": "编译用户脚本：Bilibili 翻页评论区"
 		}
 	]
 }
