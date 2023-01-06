@@ -1,0 +1,34 @@
+name: Extension
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - 'userscript/manifest.json'
+
+jobs:
+  build:
+    name: build extension
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+          node-version: '19'
+          
+    - name: Update npm
+      run: npm update
+      
+    - name: Build and release
+      run: npm run extension
+    
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: bilibili-old
+        path: dist/**/*
+        retention-days: 30
