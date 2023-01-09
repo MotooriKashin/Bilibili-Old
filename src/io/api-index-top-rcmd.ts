@@ -38,7 +38,7 @@ export async function apiIndexTopRcmd(data?: IApiIndexTopRcmdData) {
         credentials: data?.credentials || 'include'
     });
     const json = await response.json();
-    return <IApiIndexTopRcmdResponse>jsonCheck(json).data.item.map((d: IApiIndexTopRcmdResponse) => {
+    return <IApiIndexTopRcmdResponse[]>jsonCheck(json).data.item.map((d: IApiIndexTopRcmdResponse) => {
         d.author = d.owner.name;
         d.play = d.stat.view;
         d.aid = d.id;

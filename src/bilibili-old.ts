@@ -142,6 +142,7 @@ export class BLOD {
         if (this.status.search && this.path[2] == "search.bilibili.com") {
             new PageSearch(this);
         }
+
         this.player.nanoPermit();
         new Automate(this);
         this.toast.update(this.status.toast);

@@ -8,7 +8,7 @@ import { uid } from "../utils/conf/uid";
 import { poll } from "../utils/poll";
 import { addElement, getTotalTop } from "../utils/element";
 import { jsonpHook } from "../utils/hook/node";
-import { urlObj } from "../utils/format/url";
+import { objUrl, urlObj } from "../utils/format/url";
 import { VdomTool } from "../utils/vdomtool";
 import { xhrHook } from "../utils/hook/xhr";
 import { htmlVnode, Vdom } from "../utils/htmlvnode";
@@ -16,6 +16,10 @@ import { debug } from "../utils/debug";
 import { unitFormat } from "../utils/format/unit";
 import { Header } from "./header";
 import { apiSeasonRankList } from "../io/api-season-rank-list";
+import { apiNewlist } from "../io/api-newlist";
+import { IAidDatail } from "../io/api";
+import { apiArticleCards } from "../io/api-article-cards";
+import { integerFormat } from "../utils/format/integer";
 
 /** 初始化数据 */
 const __INITIAL_STATE__ = {
@@ -44,6 +48,7 @@ export class PageIndex extends Page {
         this.roomRecommend();
         this.newlist();
         this.region();
+        this.BLOD.status.timeLine && this.timeLine();
         Header.primaryMenu();
         Header.banner();
     }
@@ -197,5 +202,61 @@ export class PageIndex extends Page {
     }
     protected adblock(arr: IApiWebshowLocsResponse[]) {
         return arr?.filter(d => !d.is_ad && d.id);
+    }
+    /** 港澳台新番时间表 */
+    protected timeLine() {
+        apiNewlist(33)
+            .then(async d => {
+                const eps = d.reduce((s, d) => {
+                    if (d.redirect_url && d.owner.mid === 11783021) {
+                        const arr = d.redirect_url.split('/');
+                        const ep = arr.at(-1);
+                        if (ep) {
+                            ep.replace('\d+', e => (<any>d).episode_id = e);
+                            s[ep] = d;
+                        }
+                    }
+                    return s;
+                }, <Record<string, IAidDatail>>{});
+                const cards = await apiArticleCards(Object.keys(eps));
+                Object.entries(cards).forEach(d => {
+                    if (eps[d[0]]) {
+                        Object.assign(eps[d[0]], d[1]);
+                    }
+                });
+                poll(() => document.querySelector<any>("#bili_bangumi > .bangumi-module")?.__vue__, d => {
+                    const timingData: any[] = d.timingData;
+                    Object.values(eps).forEach(d => {
+                        const date = new Date(d.pubdate * 1000);
+                        for (let i = timingData.length - 1; i >= 0; i--) {
+                            if (date.getDay() + 1 === timingData[i].day_of_week) {
+                                timingData[i].episodes.push({
+                                    cover: (<any>d).cover || d.pic,
+                                    delay: 0,
+                                    delay_id: 0,
+                                    delay_index: "",
+                                    delay_reason: "",
+                                    ep_cover: (<any>d).cover || d.pic,
+                                    episode_id: (<any>d).episode_id,
+                                    follows: (<any>d).follow_count,
+                                    plays: (<any>d).play_count,
+                                    pub_index: d.desc,
+                                    pub_time: `${integerFormat(date.getHours())}:${integerFormat(date.getMinutes())}`,
+                                    pub_ts: d.pubdate,
+                                    published: 1,
+                                    season_id: (<any>d).season_id,
+                                    square_cover: (<any>d).cover || d.pic,
+                                    title: d.title
+                                })
+                                break;
+                            }
+                        }
+                    });
+                    d.timingData = timingData;
+                });
+            })
+            .catch(e => {
+                debug.error('港澳台新番时间表', e);
+            })
     }
 }

@@ -67,4 +67,6 @@ export class URLS {
     static readonly STAT = URLS.P_AUTO + URLS.D_API + '/x/web-interface/archive/stat';
     static readonly SLIDE_SHOW = URLS.P_AUTO + URLS.D_API + '/pgc/operation/api/slideshow';
     static readonly SEARCH_SQUARE = URLS.P_AUTO + URLS.D_API + '/x/web-interface/search/square';
+    static readonly SPACE_ARC = URLS.P_AUTO + URLS.D_API + '/x/space/wbi/arc/search';
+    static readonly NEWLIST = URLS.P_AUTO + URLS.D_API + '/x/web-interface/newlist';
 }

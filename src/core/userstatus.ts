@@ -163,4 +163,6 @@ export const userStatus = {
     dmContact: false,
     /** 分集数据 */
     episodeData: false,
+    /** 港澳台新番时间表 */
+    timeLine: false
 }

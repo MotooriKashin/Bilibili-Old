@@ -8,13 +8,17 @@ interface IApiArticleCardsData {
     ss?: number | number[],
     ep?: number | number[]
 };
-export async function apiArticleCards(data: IApiArticleCardsData) {
+export async function apiArticleCards(data: IApiArticleCardsData | string[]) {
     const arr: string[] = [];
-    Object.entries(data).forEach(d => {
-        if (d[1]) {
-            (isArray(d[1]) ? d[1] : [d[1]]).forEach(t => arr.push(d[0] + t));
-        }
-    });
+    if (isArray(data)) {
+        arr.push(...data);
+    } else {
+        Object.entries(data).forEach(d => {
+            if (d[1]) {
+                (isArray(d[1]) ? d[1] : [d[1]]).forEach(t => arr.push(d[0] + t));
+            }
+        });
+    }
     if (!arr.length) throw new Error('输入参数不能为空！');
     const response = await fetch(objUrl(URLS.ARTICLE_CARDS, { ids: arr.join(',') }));
     const json = await response.json();
