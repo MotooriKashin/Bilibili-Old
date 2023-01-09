@@ -133,7 +133,7 @@ export class PageRead extends Page {
                     switch (customOp.insert.type) {
                         case 'native-image':
                             const val = customOp.insert.value;
-                            return `<img src="${val.url}${val.url.endsWith('.webp') ? '' : '@progressive.webp'}"${val.alt ? ` alt="${val.alt}"` : ''
+                            return `<img src="${val.url.split('@')[0]}@progressive.webp"${val.alt ? ` alt="${val.alt}"` : ''
                                 }${val.height ? ` data-h="${val.height}"` : ''
                                 }${val.width ? ` data-w="${val.width}"` : ''
                                 }${val.size ? ` data-size="${val.size}"` : ''
