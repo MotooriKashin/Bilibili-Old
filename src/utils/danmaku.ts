@@ -30,7 +30,7 @@ export class DanmakuBase {
         return dms.map(d => {
             const dm: DanmakuCmd = {
                 class: d.pool || 0,
-                color: d.color || 16777215,
+                color: d.color || 0,
                 date: d.ctime || 0,
                 dmid: d.idStr || '',
                 mode: +d.mode || 1,
