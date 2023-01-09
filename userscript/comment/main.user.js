@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.7
+// @version      2.0.8
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -582,9 +582,6 @@ var Comment = class {
   _createListCon() {
     Feedback.prototype._createListCon = function(item, i, pos) {
       const blCon = this._parentBlacklistDom(item, i, pos);
-      if (item.content.rich_text?.note?.summary) {
-        item.content.message = item.content.rich_text.note.summary;
-      }
       const con = [
         '<div class="con ' + (pos == i ? "no-border" : "") + '">',
         '<div class="user">' + this._createNickNameDom(item),
