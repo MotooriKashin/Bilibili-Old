@@ -211,11 +211,6 @@ export class Comment {
             //黑名单结构
             const blCon = this._parentBlacklistDom(item, i, pos); //正常结构
 
-            // 富文本笔记预处理
-            if (item.content.rich_text?.note?.summary) {
-                item.content.message = item.content.rich_text.note.summary;
-            }
-
             const con = [
                 '<div class="con ' + (pos == i ? 'no-border' : '') + '">',
                 '<div class="user">' + this._createNickNameDom(item),
