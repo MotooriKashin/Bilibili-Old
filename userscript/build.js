@@ -55,7 +55,7 @@ getHash('./extension/player/video.js')
             },
             define: {
                 _MUTEX_: `'${hash.slice(0, 7)}'`, // 编译时生成的唯一标记
-                _UserScript_: true, // 用户脚本标记
+                _UserScript_: 'true', // 用户脚本标记
             },
             plugins: [
                 userscriptPlugin

@@ -16,7 +16,7 @@ import('fs-extra').then(d => {
                 ],
                 bundle: true, // 打包
                 sourcemap: true, // map文件
-                minify: true, // 压缩
+                // minify: true, // 压缩
                 outdir: 'dist', // 输出目录
                 outbase: "extension", // 基准目录
                 format: 'iife', // 输出格式
@@ -32,7 +32,7 @@ import('fs-extra').then(d => {
                 // chunkNames: 'chunks/[name]-[hash]', // 拆分块名称
                 define: {
                     _MUTEX_: `'${Math.random().toString(36).substring(2)}'`, // 编译时生成的唯一标记
-                    _UserScript_: false // 用户脚本标记
+                    _UserScript_: 'false' // 用户脚本标记
                 }
             }
         ).catch(e => {
