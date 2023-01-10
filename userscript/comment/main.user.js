@@ -481,19 +481,20 @@ var Comment = class {
     });
   }
   pageCount() {
+    let page;
     jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
       if (0 === res.code && res.data?.page) {
-        const page = res.data.page;
-        page && jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=0"], void 0, (res2) => {
-          if (0 === res2.code && res2.data?.page) {
-            page.count && (res2.data.page.count = page.count);
-            page.acount && (res2.data.page.acount = page.acount);
-          }
-          return res2;
-        }, false);
+        page = res.data.page;
       }
       return res;
-    });
+    }, false);
+    jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=0"], void 0, (res) => {
+      if (page && 0 === res.code && res.data?.page) {
+        page.count && (res.data.page.count = page.count);
+        page.acount && (res.data.page.acount = page.acount);
+      }
+      return res;
+    }, false);
   }
   bbCommentModify() {
     this.styleFix();
