@@ -91,19 +91,20 @@ export class Comment {
     }
     /** 修复按时间排序评论翻页数 */
     protected pageCount() {
+        let page: any;
         jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=2"], undefined, res => {
             if (0 === res.code && res.data?.page) {
-                const page = res.data.page;
-                page && jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=0"], undefined, res => {
-                    if (0 === res.code && res.data?.page) {
-                        page.count && (res.data.page.count = page.count);
-                        page.acount && (res.data.page.acount = page.acount);
-                    }
-                    return res;
-                }, false);
+                page = res.data.page;
             }
             return res;
-        });
+        }, false);
+        jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=0"], undefined, res => {
+            if (page && 0 === res.code && res.data?.page) {
+                page.count && (res.data.page.count = page.count);
+                page.acount && (res.data.page.acount = page.acount);
+            }
+            return res;
+        }, false);
     }
     /** 修补评论组件 */
     protected bbCommentModify() {
