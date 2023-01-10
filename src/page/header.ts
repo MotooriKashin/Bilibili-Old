@@ -194,6 +194,9 @@ export class Header {
     /** 加载旧版顶栏 */
     protected loadOldHeader(target?: HTMLElement) {
         if (target) {
+            if (target.id === '.bili-header__bar') {
+                target = target.parentElement?.parentElement!;
+            }
             target.style.display = 'none';
             target.hidden = true;
             // target.attachShadow({ mode: 'closed' });
