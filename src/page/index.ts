@@ -205,27 +205,27 @@ export class PageIndex extends Page {
     }
     /** 港澳台新番时间表 */
     protected timeLine() {
-        apiNewlist(33)
-            .then(async d => {
-                const eps = d.reduce((s, d) => {
-                    if (d.redirect_url && d.owner.mid === 11783021) {
-                        const arr = d.redirect_url.split('/');
-                        const ep = arr.at(-1);
-                        if (ep) {
-                            ep.replace('\d+', e => (<any>d).episode_id = e);
-                            s[ep] = d;
+        poll(() => document.querySelector<any>("#bili_bangumi > .bangumi-module")?.__vue__, vue => {
+            apiNewlist(33)
+                .then(async d => {
+                    const eps = d.reduce((s, d) => {
+                        if (d.redirect_url && d.owner.mid === 11783021) {
+                            const arr = d.redirect_url.split('/');
+                            const ep = arr.at(-1);
+                            if (ep) {
+                                ep.replace('\d+', e => (<any>d).episode_id = e);
+                                s[ep] = d;
+                            }
                         }
-                    }
-                    return s;
-                }, <Record<string, IAidDatail>>{});
-                const cards = await apiArticleCards(Object.keys(eps));
-                Object.entries(cards).forEach(d => {
-                    if (eps[d[0]]) {
-                        Object.assign(eps[d[0]], d[1]);
-                    }
-                });
-                poll(() => document.querySelector<any>("#bili_bangumi > .bangumi-module")?.__vue__, d => {
-                    const timingData: any[] = d.timingData;
+                        return s;
+                    }, <Record<string, IAidDatail>>{});
+                    const cards = await apiArticleCards(Object.keys(eps));
+                    Object.entries(cards).forEach(d => {
+                        if (eps[d[0]]) {
+                            Object.assign(eps[d[0]], d[1]);
+                        }
+                    });
+                    const timingData: any[] = vue.timingData;
                     Object.values(eps).forEach(d => {
                         const date = new Date(d.pubdate * 1000);
                         for (let i = timingData.length - 1; i >= 0; i--) {
@@ -252,11 +252,11 @@ export class PageIndex extends Page {
                             }
                         }
                     });
-                    d.timingData = timingData;
-                });
-            })
-            .catch(e => {
-                debug.error('港澳台新番时间表', e);
-            })
+                    vue.timingData = timingData;
+                })
+                .catch(e => {
+                    debug.error('港澳台新番时间表', e);
+                })
+        });
     }
 }
