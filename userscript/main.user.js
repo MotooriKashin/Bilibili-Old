@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.1.2-0c259293ab5da98f75a8bb0411cb9ee205b7aab8
+// @version      10.1.3-855f3686b22c5c493d7df808d348e7e511658617
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -38,6 +38,10 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toESM = (mod2, isNodeMode, target) => (target = mod2 != null ? __create(__getProtoOf(mod2)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
   isNodeMode || !mod2 || !mod2.__esModule ? __defProp(target, "default", { value: mod2, enumerable: true }) : target,
   mod2
 ));
@@ -51,12 +55,15 @@ var require_crypt = __commonJS({
   "node_modules/crypt/crypt.js"(exports2, module2) {
     (function() {
       var base64map = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", crypt = {
+        // Bit-wise rotation left
         rotl: function(n, b) {
           return n << b | n >>> 32 - b;
         },
+        // Bit-wise rotation right
         rotr: function(n, b) {
           return n << 32 - b | n >>> b;
         },
+        // Swap big-endian to little-endian and vice versa
         endian: function(n) {
           if (n.constructor == Number) {
             return crypt.rotl(n, 8) & 16711935 | crypt.rotl(n, 24) & 4278255360;
@@ -65,21 +72,25 @@ var require_crypt = __commonJS({
             n[i] = crypt.endian(n[i]);
           return n;
         },
+        // Generate an array of any length of random bytes
         randomBytes: function(n) {
           for (var bytes = []; n > 0; n--)
             bytes.push(Math.floor(Math.random() * 256));
           return bytes;
         },
+        // Convert a byte array to big-endian 32-bit words
         bytesToWords: function(bytes) {
           for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
             words[b >>> 5] |= bytes[i] << 24 - b % 32;
           return words;
         },
+        // Convert big-endian 32-bit words to a byte array
         wordsToBytes: function(words) {
           for (var bytes = [], b = 0; b < words.length * 32; b += 8)
             bytes.push(words[b >>> 5] >>> 24 - b % 32 & 255);
           return bytes;
         },
+        // Convert a byte array to a hex string
         bytesToHex: function(bytes) {
           for (var hex = [], i = 0; i < bytes.length; i++) {
             hex.push((bytes[i] >>> 4).toString(16));
@@ -87,11 +98,13 @@ var require_crypt = __commonJS({
           }
           return hex.join("");
         },
+        // Convert a hex string to a byte array
         hexToBytes: function(hex) {
           for (var bytes = [], c = 0; c < hex.length; c += 2)
             bytes.push(parseInt(hex.substr(c, 2), 16));
           return bytes;
         },
+        // Convert a byte array to a base-64 string
         bytesToBase64: function(bytes) {
           for (var base64 = [], i = 0; i < bytes.length; i += 3) {
             var triplet = bytes[i] << 16 | bytes[i + 1] << 8 | bytes[i + 2];
@@ -103,6 +116,7 @@ var require_crypt = __commonJS({
           }
           return base64.join("");
         },
+        // Convert a base-64 string to a byte array
         base64ToBytes: function(base64) {
           base64 = base64.replace(/[^A-Z0-9+\\/]/ig, "");
           for (var bytes = [], i = 0, imod4 = 0; i < base64.length; imod4 = ++i % 4) {
@@ -122,20 +136,26 @@ var require_crypt = __commonJS({
 var require_charenc = __commonJS({
   "node_modules/charenc/charenc.js"(exports2, module2) {
     var charenc = {
+      // UTF-8 encoding
       utf8: {
+        // Convert a string to a byte array
         stringToBytes: function(str) {
           return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
         },
+        // Convert a byte array to a string
         bytesToString: function(bytes) {
           return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
         }
       },
+      // Binary encoding
       bin: {
+        // Convert a string to a byte array
         stringToBytes: function(str) {
           for (var bytes = [], i = 0; i < str.length; i++)
             bytes.push(str.charCodeAt(i) & 255);
           return bytes;
         },
+        // Convert a byte array to a string
         bytesToString: function(bytes) {
           for (var str = [], i = 0; i < bytes.length; i++)
             str.push(String.fromCharCode(bytes[i]));
@@ -704,7 +724,9 @@ var require_lodash = __commonJS({
     function arrayLikeKeys(value, inherited) {
       var isArr = isArray2(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
       for (var key in value) {
-        if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) {
+        if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && // Safari 9 has enumerable \`arguments.length\` in strict mode.
+        (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || // Skip index properties.
+        isIndex(key, length)))) {
           result.push(key);
         }
       }
@@ -2917,7 +2939,13 @@ var require_float = __commonJS({
             if (sign)
               val = -val;
             if (val === 0)
-              writeUint(1 / val > 0 ? 0 : 2147483648, buf, pos);
+              writeUint(1 / val > 0 ? (
+                /* positive */
+                0
+              ) : (
+                /* negative 0 */
+                2147483648
+              ), buf, pos);
             else if (isNaN(val))
               writeUint(2143289344, buf, pos);
             else if (val > 34028234663852886e22)
@@ -2998,7 +3026,13 @@ var require_float = __commonJS({
               val = -val;
             if (val === 0) {
               writeUint(0, buf, pos + off0);
-              writeUint(1 / val > 0 ? 0 : 2147483648, buf, pos + off1);
+              writeUint(1 / val > 0 ? (
+                /* positive */
+                0
+              ) : (
+                /* negative 0 */
+                2147483648
+              ), buf, pos + off1);
             } else if (isNaN(val)) {
               writeUint(0, buf, pos + off0);
               writeUint(2146959360, buf, pos + off1);
@@ -3291,9 +3325,16 @@ var require_minimal = __commonJS({
     util.LongBits = require_longbits();
     util.isNode = Boolean(typeof global !== "undefined" && global && global.process && global.process.versions && global.process.versions.node);
     util.global = util.isNode && global || typeof window !== "undefined" && window || typeof self !== "undefined" && self || exports2;
-    util.emptyArray = Object.freeze ? Object.freeze([]) : [];
-    util.emptyObject = Object.freeze ? Object.freeze({}) : {};
-    util.isInteger = Number.isInteger || function isInteger(value) {
+    util.emptyArray = Object.freeze ? Object.freeze([]) : (
+      /* istanbul ignore next */
+      []
+    );
+    util.emptyObject = Object.freeze ? Object.freeze({}) : (
+      /* istanbul ignore next */
+      {}
+    );
+    util.isInteger = Number.isInteger || /* istanbul ignore next */
+    function isInteger(value) {
       return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     };
     util.isString = function isString(value) {
@@ -3302,7 +3343,13 @@ var require_minimal = __commonJS({
     util.isObject = function isObject2(value) {
       return value && typeof value === "object";
     };
-    util.isset = util.isSet = function isSet(obj, prop) {
+    util.isset = /**
+     * Checks if a property on a message is considered to be present.
+     * @param {Object} obj Plain object or message instance
+     * @param {string} prop Property name
+     * @returns {boolean} \`true\` if considered to be present, otherwise \`false\`
+     */
+    util.isSet = function isSet(obj, prop) {
       var value = obj[prop];
       if (value != null && obj.hasOwnProperty(prop))
         return typeof value !== "object" || (Array.isArray(value) ? value.length : Object.keys(value).length) > 0;
@@ -3311,7 +3358,10 @@ var require_minimal = __commonJS({
     util.Buffer = function() {
       try {
         var Buffer2 = util.inquire("buffer").Buffer;
-        return Buffer2.prototype.utf8Write ? Buffer2 : null;
+        return Buffer2.prototype.utf8Write ? Buffer2 : (
+          /* istanbul ignore next */
+          null
+        );
       } catch (e) {
         return null;
       }
@@ -3322,7 +3372,10 @@ var require_minimal = __commonJS({
       return typeof sizeOrArray === "number" ? util.Buffer ? util._Buffer_allocUnsafe(sizeOrArray) : new util.Array(sizeOrArray) : util.Buffer ? util._Buffer_from(sizeOrArray) : typeof Uint8Array === "undefined" ? sizeOrArray : new Uint8Array(sizeOrArray);
     };
     util.Array = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
-    util.Long = util.global.dcodeIO && util.global.dcodeIO.Long || util.global.Long || util.inquire("long");
+    util.Long = /* istanbul ignore next */
+    util.global.dcodeIO && /* istanbul ignore next */
+    util.global.dcodeIO.Long || /* istanbul ignore next */
+    util.global.Long || util.inquire("long");
     util.key2Re = /^true|false|0|1\$/;
     util.key32Re = /^-?(?:0|[1-9][0-9]*)\$/;
     util.key64Re = /^(?:[\\\\x00-\\\\xff]{8}|-?(?:0|[1-9][0-9]*))\$/;
@@ -3372,6 +3425,10 @@ var require_minimal = __commonJS({
           },
           set: void 0,
           enumerable: false,
+          // configurable: false would accurately preserve the behavior of
+          // the original, but I'm guessing that was not intentional.
+          // For an actual error subclass, this property would
+          // be configurable.
           configurable: true
         },
         toString: {
@@ -3416,10 +3473,12 @@ var require_minimal = __commonJS({
         util._Buffer_from = util._Buffer_allocUnsafe = null;
         return;
       }
-      util._Buffer_from = Buffer2.from !== Uint8Array.from && Buffer2.from || function Buffer_from(value, encoding) {
+      util._Buffer_from = Buffer2.from !== Uint8Array.from && Buffer2.from || /* istanbul ignore next */
+      function Buffer_from(value, encoding) {
         return new Buffer2(value, encoding);
       };
-      util._Buffer_allocUnsafe = Buffer2.allocUnsafe || function Buffer_allocUnsafe(size) {
+      util._Buffer_allocUnsafe = Buffer2.allocUnsafe || /* istanbul ignore next */
+      function Buffer_allocUnsafe(size) {
         return new Buffer2(size);
       };
     };
@@ -3702,7 +3761,8 @@ var require_reader = __commonJS({
       } : create_array;
     };
     Reader.create = create();
-    Reader.prototype._slice = util.Array.prototype.subarray || util.Array.prototype.slice;
+    Reader.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
+    util.Array.prototype.slice;
     Reader.prototype.uint32 = function read_uint32_setup() {
       var value = 4294967295;
       return function read_uint32() {
@@ -3866,7 +3926,10 @@ var require_reader = __commonJS({
       BufferReader = BufferReader_;
       Reader.create = create();
       BufferReader._configure();
-      var fn = util.Long ? "toLong" : "toNumber";
+      var fn = util.Long ? "toLong" : (
+        /* istanbul ignore next */
+        "toNumber"
+      );
       util.merge(Reader.prototype, {
         int64: function read_int64() {
           return readLongVarint.call(this)[fn](false);
@@ -3948,7 +4011,10 @@ var require_service = __commonJS({
               return callback(err);
             }
             if (response === null) {
-              self2.end(true);
+              self2.end(
+                /* endedByRPC */
+                true
+              );
               return void 0;
             }
             if (!(response instanceof responseCtor)) {
@@ -4141,29 +4207,43 @@ var require_path = __commonJS({
   "node_modules/@protobufjs/path/index.js"(exports2) {
     "use strict";
     var path = exports2;
-    var isAbsolute = path.isAbsolute = function isAbsolute2(path2) {
-      return /^(?:\\/|\\w+:)/.test(path2);
-    };
-    var normalize = path.normalize = function normalize2(path2) {
-      path2 = path2.replace(/\\\\/g, "/").replace(/\\/{2,}/g, "/");
-      var parts = path2.split("/"), absolute = isAbsolute(path2), prefix = "";
-      if (absolute)
-        prefix = parts.shift() + "/";
-      for (var i = 0; i < parts.length; ) {
-        if (parts[i] === "..") {
-          if (i > 0 && parts[i - 1] !== "..")
-            parts.splice(--i, 2);
-          else if (absolute)
+    var isAbsolute = (
+      /**
+       * Tests if the specified path is absolute.
+       * @param {string} path Path to test
+       * @returns {boolean} \`true\` if path is absolute
+       */
+      path.isAbsolute = function isAbsolute2(path2) {
+        return /^(?:\\/|\\w+:)/.test(path2);
+      }
+    );
+    var normalize = (
+      /**
+       * Normalizes the specified path.
+       * @param {string} path Path to normalize
+       * @returns {string} Normalized path
+       */
+      path.normalize = function normalize2(path2) {
+        path2 = path2.replace(/\\\\/g, "/").replace(/\\/{2,}/g, "/");
+        var parts = path2.split("/"), absolute = isAbsolute(path2), prefix = "";
+        if (absolute)
+          prefix = parts.shift() + "/";
+        for (var i = 0; i < parts.length; ) {
+          if (parts[i] === "..") {
+            if (i > 0 && parts[i - 1] !== "..")
+              parts.splice(--i, 2);
+            else if (absolute)
+              parts.splice(i, 1);
+            else
+              ++i;
+          } else if (parts[i] === ".")
             parts.splice(i, 1);
           else
             ++i;
-        } else if (parts[i] === ".")
-          parts.splice(i, 1);
-        else
-          ++i;
+        }
+        return prefix + parts.join("/");
       }
-      return prefix + parts.join("/");
-    };
+    );
     path.resolve = function resolve(originPath, includePath, alreadyNormalized) {
       if (!alreadyNormalized)
         includePath = normalize(includePath);
@@ -4184,20 +4264,35 @@ var require_types = __commonJS({
     var util = require_util();
     var s = [
       "double",
+      // 0
       "float",
+      // 1
       "int32",
+      // 2
       "uint32",
+      // 3
       "sint32",
+      // 4
       "fixed32",
+      // 5
       "sfixed32",
+      // 6
       "int64",
+      // 7
       "uint64",
+      // 8
       "sint64",
+      // 9
       "fixed64",
+      // 10
       "sfixed64",
+      // 11
       "bool",
+      // 12
       "string",
+      // 13
       "bytes"
+      // 14
     ];
     function bake(values, offset2) {
       var i = 0, o = {};
@@ -4207,74 +4302,135 @@ var require_types = __commonJS({
       return o;
     }
     types.basic = bake([
+      /* double   */
       1,
+      /* float    */
       5,
+      /* int32    */
       0,
+      /* uint32   */
       0,
+      /* sint32   */
       0,
+      /* fixed32  */
       5,
+      /* sfixed32 */
       5,
+      /* int64    */
       0,
+      /* uint64   */
       0,
+      /* sint64   */
       0,
+      /* fixed64  */
       1,
+      /* sfixed64 */
       1,
+      /* bool     */
       0,
+      /* string   */
       2,
+      /* bytes    */
       2
     ]);
     types.defaults = bake([
+      /* double   */
       0,
+      /* float    */
       0,
+      /* int32    */
       0,
+      /* uint32   */
       0,
+      /* sint32   */
       0,
+      /* fixed32  */
       0,
+      /* sfixed32 */
       0,
+      /* int64    */
       0,
+      /* uint64   */
       0,
+      /* sint64   */
       0,
+      /* fixed64  */
       0,
+      /* sfixed64 */
       0,
+      /* bool     */
       false,
+      /* string   */
       "",
+      /* bytes    */
       util.emptyArray,
+      /* message  */
       null
     ]);
     types.long = bake([
+      /* int64    */
       0,
+      /* uint64   */
       0,
+      /* sint64   */
       0,
+      /* fixed64  */
       1,
+      /* sfixed64 */
       1
     ], 7);
     types.mapKey = bake([
+      /* int32    */
       0,
+      /* uint32   */
       0,
+      /* sint32   */
       0,
+      /* fixed32  */
       5,
+      /* sfixed32 */
       5,
+      /* int64    */
       0,
+      /* uint64   */
       0,
+      /* sint64   */
       0,
+      /* fixed64  */
       1,
+      /* sfixed64 */
       1,
+      /* bool     */
       0,
+      /* string   */
       2
     ], 2);
     types.packed = bake([
+      /* double   */
       1,
+      /* float    */
       5,
+      /* int32    */
       0,
+      /* uint32   */
       0,
+      /* sint32   */
       0,
+      /* fixed32  */
       5,
+      /* sfixed32 */
       5,
+      /* int64    */
       0,
+      /* uint64   */
       0,
+      /* sint64   */
       0,
+      /* fixed64  */
       1,
+      /* sfixed64 */
       1,
+      /* bool     */
       0
     ]);
   }
@@ -4329,7 +4485,10 @@ var require_field = __commonJS({
       this.partOf = null;
       this.typeDefault = null;
       this.defaultValue = null;
-      this.long = util.Long ? types.long[type] !== void 0 : false;
+      this.long = util.Long ? types.long[type] !== void 0 : (
+        /* istanbul ignore next */
+        false
+      );
       this.bytes = type === "bytes";
       this.resolvedType = null;
       this.extensionField = null;
@@ -4830,7 +4989,8 @@ var require_method = __commonJS({
       var keepComments = toJSONOptions ? Boolean(toJSONOptions.keepComments) : false;
       return util.toObject([
         "type",
-        this.type !== "rpc" && this.type || void 0,
+        this.type !== "rpc" && /* istanbul ignore next */
+        this.type || void 0,
         "requestType",
         this.requestType,
         "requestStream",
@@ -4889,7 +5049,8 @@ var require_service2 = __commonJS({
         "options",
         inherited && inherited.options || void 0,
         "methods",
-        Namespace.arrayToJSON(this.methodsArray, toJSONOptions) || {},
+        Namespace.arrayToJSON(this.methodsArray, toJSONOptions) || /* istanbul ignore next */
+        {},
         "nested",
         inherited && inherited.nested || void 0,
         "comment",
@@ -4936,7 +5097,8 @@ var require_service2 = __commonJS({
     };
     Service.prototype.create = function create(rpcImpl, requestDelimited, responseDelimited) {
       var rpcService = new rpc.Service(rpcImpl, requestDelimited, responseDelimited);
-      for (var i = 0, method; i < this.methodsArray.length; ++i) {
+      for (var i = 0, method; i < /* initializes */
+      this.methodsArray.length; ++i) {
         var methodName = util.lcFirst((method = this._methodsArray[i]).resolve().name).replace(/[^\$\\w_]/g, "");
         rpcService[methodName] = util.codegen(["r", "c"], util.isReserved(methodName) ? methodName + "_" : methodName)("return this.rpcCall(m,q,s,r,c)")({
           m: method,
@@ -5009,7 +5171,8 @@ var require_decoder = __commonJS({
         gen("if((t&7)===4)")("break");
       gen("switch(t>>>3){");
       var i = 0;
-      for (; i < mtype.fieldsArray.length; ++i) {
+      for (; i < /* initializes */
+      mtype.fieldsArray.length; ++i) {
         var field = mtype._fieldsArray[i].resolve(), type = field.resolvedType instanceof Enum ? "int32" : field.type, ref = "m" + util.safeProp(field.name);
         gen("case %i: {", field.id);
         if (field.map) {
@@ -5137,7 +5300,8 @@ var require_verifier = __commonJS({
       var oneofs = mtype.oneofsArray, seenFirstField = {};
       if (oneofs.length)
         gen("var p={}");
-      for (var i = 0; i < mtype.fieldsArray.length; ++i) {
+      for (var i = 0; i < /* initializes */
+      mtype.fieldsArray.length; ++i) {
         var field = mtype._fieldsArray[i].resolve(), ref = "m" + util.safeProp(field.name);
         if (field.optional)
           gen("if(%s!=null&&m.hasOwnProperty(%j)){", ref, field.name);
@@ -5237,14 +5401,32 @@ var require_converter = __commonJS({
         var field = fields[i].resolve(), prop = util.safeProp(field.name);
         if (field.map) {
           gen("if(d%s){", prop)('if(typeof d%s!=="object")', prop)("throw TypeError(%j)", field.fullName + ": object expected")("m%s={}", prop)("for(var ks=Object.keys(d%s),i=0;i<ks.length;++i){", prop);
-          genValuePartial_fromObject(gen, field, i, prop + "[ks[i]]")("}")("}");
+          genValuePartial_fromObject(
+            gen,
+            field,
+            /* not sorted */
+            i,
+            prop + "[ks[i]]"
+          )("}")("}");
         } else if (field.repeated) {
           gen("if(d%s){", prop)("if(!Array.isArray(d%s))", prop)("throw TypeError(%j)", field.fullName + ": array expected")("m%s=[]", prop)("for(var i=0;i<d%s.length;++i){", prop);
-          genValuePartial_fromObject(gen, field, i, prop + "[i]")("}")("}");
+          genValuePartial_fromObject(
+            gen,
+            field,
+            /* not sorted */
+            i,
+            prop + "[i]"
+          )("}")("}");
         } else {
           if (!(field.resolvedType instanceof Enum))
             gen("if(d%s!=null){", prop);
-          genValuePartial_fromObject(gen, field, i, prop);
+          genValuePartial_fromObject(
+            gen,
+            field,
+            /* not sorted */
+            i,
+            prop
+          );
           if (!(field.resolvedType instanceof Enum))
             gen("}");
         }
@@ -5328,13 +5510,31 @@ var require_converter = __commonJS({
             gen("var ks2");
           }
           gen("if(m%s&&(ks2=Object.keys(m%s)).length){", prop, prop)("d%s={}", prop)("for(var j=0;j<ks2.length;++j){");
-          genValuePartial_toObject(gen, field, index, prop + "[ks2[j]]")("}");
+          genValuePartial_toObject(
+            gen,
+            field,
+            /* sorted */
+            index,
+            prop + "[ks2[j]]"
+          )("}");
         } else if (field.repeated) {
           gen("if(m%s&&m%s.length){", prop, prop)("d%s=[]", prop)("for(var j=0;j<m%s.length;++j){", prop);
-          genValuePartial_toObject(gen, field, index, prop + "[j]")("}");
+          genValuePartial_toObject(
+            gen,
+            field,
+            /* sorted */
+            index,
+            prop + "[j]"
+          )("}");
         } else {
           gen("if(m%s!=null&&m.hasOwnProperty(%j)){", prop, field.name);
-          genValuePartial_toObject(gen, field, index, prop);
+          genValuePartial_toObject(
+            gen,
+            field,
+            /* sorted */
+            index,
+            prop
+          );
           if (field.partOf)
             gen("if(o.oneofs)")("d%s=%j", util.safeProp(field.partOf.name), field.name);
         }
@@ -5430,6 +5630,12 @@ var require_type = __commonJS({
       this._ctor = null;
     }
     Object.defineProperties(Type2.prototype, {
+      /**
+       * Message fields by id.
+       * @name Type#fieldsById
+       * @type {Object.<number,Field>}
+       * @readonly
+       */
       fieldsById: {
         get: function() {
           if (this._fieldsById)
@@ -5444,16 +5650,34 @@ var require_type = __commonJS({
           return this._fieldsById;
         }
       },
+      /**
+       * Fields of this message as an array for iteration.
+       * @name Type#fieldsArray
+       * @type {Field[]}
+       * @readonly
+       */
       fieldsArray: {
         get: function() {
           return this._fieldsArray || (this._fieldsArray = util.toArray(this.fields));
         }
       },
+      /**
+       * Oneofs of this message as an array for iteration.
+       * @name Type#oneofsArray
+       * @type {OneOf[]}
+       * @readonly
+       */
       oneofsArray: {
         get: function() {
           return this._oneofsArray || (this._oneofsArray = util.toArray(this.oneofs));
         }
       },
+      /**
+       * The registered constructor, if any registered, otherwise a generic constructor.
+       * Assigning a function replaces the internal constructor. If the function does not extend {@link Message} yet, its prototype will be setup accordingly and static methods will be populated. If it already extends {@link Message}, it will just replace the internal constructor.
+       * @name Type#ctor
+       * @type {Constructor<{}>}
+       */
       ctor: {
         get: function() {
           return this._ctor || (this.ctor = Type2.generateConstructor(this)());
@@ -5468,10 +5692,12 @@ var require_type = __commonJS({
           util.merge(ctor, Message, true);
           this._ctor = ctor;
           var i = 0;
-          for (; i < this.fieldsArray.length; ++i)
+          for (; i < /* initializes */
+          this.fieldsArray.length; ++i)
             this._fieldsArray[i].resolve();
           var ctorProperties = {};
-          for (i = 0; i < this.oneofsArray.length; ++i)
+          for (i = 0; i < /* initializes */
+          this.oneofsArray.length; ++i)
             ctorProperties[this._oneofsArray[i].resolve().name] = {
               get: util.oneOfGetter(this._oneofsArray[i].oneof),
               set: util.oneOfSetter(this._oneofsArray[i].oneof)
@@ -5567,7 +5793,10 @@ var require_type = __commonJS({
       if (this.get(object.name))
         throw Error("duplicate name '" + object.name + "' in " + this);
       if (object instanceof Field && object.extend === void 0) {
-        if (this._fieldsById ? this._fieldsById[object.id] : this.fieldsById[object.id])
+        if (this._fieldsById ? (
+          /* istanbul ignore next */
+          this._fieldsById[object.id]
+        ) : this.fieldsById[object.id])
           throw Error("duplicate id " + object.id + " in " + this);
         if (this.isReservedId(object.id))
           throw Error("id " + object.id + " is reserved in " + this);
@@ -5619,7 +5848,8 @@ var require_type = __commonJS({
     };
     Type2.prototype.setup = function setup() {
       var fullName = this.fullName, types = [];
-      for (var i = 0; i < this.fieldsArray.length; ++i)
+      for (var i = 0; i < /* initializes */
+      this.fieldsArray.length; ++i)
         types.push(this._fieldsArray[i].resolve().resolvedType);
       this.encode = encoder(this)({
         Writer,
@@ -5848,7 +6078,9 @@ var require_root = __commonJS({
     }
     Root2.prototype._handleAdd = function _handleAdd(object) {
       if (object instanceof Field) {
-        if (object.extend !== void 0 && !object.extensionField) {
+        if (/* an extension field (implies not part of a oneof) */
+        object.extend !== void 0 && /* not already handled */
+        !object.extensionField) {
           if (!tryHandleExtension(this, object))
             this.deferred.push(object);
         }
@@ -5862,7 +6094,8 @@ var require_root = __commonJS({
               this.deferred.splice(i, 1);
             else
               ++i;
-        for (var j = 0; j < object.nestedArray.length; ++j)
+        for (var j = 0; j < /* initializes */
+        object.nestedArray.length; ++j)
           this._handleAdd(object._nestedArray[j]);
         if (exposeRe.test(object.name))
           object.parent[object.name] = object;
@@ -5870,8 +6103,10 @@ var require_root = __commonJS({
     };
     Root2.prototype._handleRemove = function _handleRemove(object) {
       if (object instanceof Field) {
-        if (object.extend !== void 0) {
-          if (object.extensionField) {
+        if (/* an extension field */
+        object.extend !== void 0) {
+          if (/* already handled */
+          object.extensionField) {
             object.extensionField.parent.remove(object.extensionField);
             object.extensionField = null;
           } else {
@@ -5884,7 +6119,8 @@ var require_root = __commonJS({
         if (exposeRe.test(object.name))
           delete object.parent[object.name];
       } else if (object instanceof Namespace) {
-        for (var i = 0; i < object.nestedArray.length; ++i)
+        for (var i = 0; i < /* initializes */
+        object.nestedArray.length; ++i)
           this._handleRemove(object._nestedArray[i]);
         if (exposeRe.test(object.name))
           delete object.parent[object.name];
@@ -6032,6 +6268,12 @@ var require_object2 = __commonJS({
       this.filename = null;
     }
     Object.defineProperties(ReflectionObject.prototype, {
+      /**
+       * Reference to the root namespace.
+       * @name ReflectionObject#root
+       * @type {Root}
+       * @readonly
+       */
       root: {
         get: function() {
           var ptr = this;
@@ -6040,6 +6282,12 @@ var require_object2 = __commonJS({
           return ptr;
         }
       },
+      /**
+       * Full name including leading dot.
+       * @name ReflectionObject#fullName
+       * @type {string}
+       * @readonly
+       */
       fullName: {
         get: function() {
           var path = [this.name], ptr = this.parent;
@@ -6051,7 +6299,8 @@ var require_object2 = __commonJS({
         }
       }
     });
-    ReflectionObject.prototype.toJSON = function toJSON() {
+    ReflectionObject.prototype.toJSON = /* istanbul ignore next */
+    function toJSON() {
       throw Error();
     };
     ReflectionObject.prototype.onAdd = function onAdd(parent) {
@@ -6237,7 +6486,10 @@ var require_encoder = __commonJS({
     function encoder(mtype) {
       var gen = util.codegen(["m", "w"], mtype.name + "\$encode")("if(!w)")("w=Writer.create()");
       var i, ref;
-      var fields = mtype.fieldsArray.slice().sort(util.compareFieldsById);
+      var fields = (
+        /* initializes */
+        mtype.fieldsArray.slice().sort(util.compareFieldsById)
+      );
       for (var i = 0; i < fields.length; ++i) {
         var field = fields[i].resolve(), index = mtype._fieldsArray.indexOf(field), type = field.resolvedType instanceof Enum ? "int32" : field.type, wireType = types.basic[type];
         ref = "m" + util.safeProp(field.name);
@@ -6345,7 +6597,9 @@ function timeFormat(time = new Date().getTime(), type) {
 
 // src/utils/debug.ts
 var group = {
+  /** 分组层次 */
   i: 0,
+  /** 分组栈 */
   call: []
 };
 function debug(...data) {
@@ -6689,7 +6943,7 @@ var PushButton = class extends HTMLElement {
     this._button.textContent = v;
   }
 };
-customElements.get(\`button-\${"0c25929"}\`) || customElements.define(\`button-\${"0c25929"}\`, PushButton);
+customElements.get(\`button-\${"855f368"}\`) || customElements.define(\`button-\${"855f368"}\`, PushButton);
 
 // src/html/popupbox.html
 var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
@@ -6760,10 +7014,13 @@ var ClickOutRemove = class {
     this.target = target;
     target.addEventListener("click", (e) => e.stopPropagation());
   }
+  /** 已启用监听 */
   enabled = false;
+  /** 移除节点 */
   remove = () => {
     this.target.remove();
   };
+  /** 停止监听 */
   disable = () => {
     if (this.enabled) {
       document.removeEventListener("click", this.remove);
@@ -6771,6 +7028,7 @@ var ClickOutRemove = class {
     }
     return this;
   };
+  /** 开始监听 */
   enable = () => {
     this.enabled || setTimeout(() => {
       document.addEventListener("click", this.remove, { once: true });
@@ -6820,6 +7078,7 @@ var PopupBox = class extends HTMLElement {
   set innerHTML(v) {
     this._contain.innerHTML = v;
   }
+  /** 设置是否显示关闭按钮，不显示则点击节点外部自动关闭 */
   get fork() {
     return this.\$fork;
   }
@@ -6833,7 +7092,7 @@ var PopupBox = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`popupbox-\${"0c25929"}\`) || customElements.define(\`popupbox-\${"0c25929"}\`, PopupBox);
+customElements.get(\`popupbox-\${"855f368"}\`) || customElements.define(\`popupbox-\${"855f368"}\`, PopupBox);
 
 // src/core/ui/alert.ts
 function alert(msg, title, buttons) {
@@ -6927,10 +7186,15 @@ var Toastconfig = {
   disabled: false
 };
 var Toast = class extends HTMLDivElement {
+  /** 关闭按钮 */
   closeButton = document.createElement("div");
+  /** 消息节点 */
   message = document.createElement("div");
+  /** 延时 */
   timer;
+  /** 鼠标移入 */
   hovering = false;
+  /** 延时结束 */
   timeout = false;
   constructor() {
     super();
@@ -6952,6 +7216,7 @@ var Toast = class extends HTMLDivElement {
       this.timeout && (this.delay = 1);
     });
   }
+  /** 内容 */
   set data(v) {
     isArray(v) || (v = [v]);
     let html = "";
@@ -6964,13 +7229,16 @@ var Toast = class extends HTMLDivElement {
     close && (this.delay = 0);
     this.setAttribute("style", \`height: \${this.message.scrollHeight + 30}px;\`);
   }
+  /** 类型 */
   set type(v) {
     this.classList.remove("toast-success", "toast-error", "toast-info", "toast-warning");
     v && this.classList.add(\`toast-\${v}\`);
   }
+  /** 镜像 */
   set rtl(v) {
     v ? this.classList.add("rtl") : this.classList.remove("rtl");
   }
+  /** 时长 */
   set delay(v) {
     clearTimeout(this.timer);
     v = Math.max(Math.trunc(v), 0);
@@ -6988,8 +7256,9 @@ var Toast = class extends HTMLDivElement {
     }
   }
 };
-customElements.get(\`toast-\${"0c25929"}\`) || customElements.define(\`toast-\${"0c25929"}\`, Toast, { extends: "div" });
+customElements.get(\`toast-\${"855f368"}\`) || customElements.define(\`toast-\${"855f368"}\`, Toast, { extends: "div" });
 var ToastContainer = class extends HTMLElement {
+  /** 实际根节点 */
   container;
   static get observedAttributes() {
     return [
@@ -7005,6 +7274,7 @@ var ToastContainer = class extends HTMLElement {
     root.innerHTML = toast_default;
     this.container = root.children[0];
   }
+  /** 刷新配置 */
   update(value) {
     Object.entries(value).forEach((d) => {
       this[d[0]] = d[1];
@@ -7047,24 +7317,28 @@ var ToastContainer = class extends HTMLElement {
   set position(v) {
     this.setAttribute("position", v);
   }
+  /** 位置 */
   get position() {
     return this.getAttribute("position");
   }
   set rtl(v) {
     this.setAttribute("rtl", v);
   }
+  /** 镜像 */
   get rtl() {
     return toObject(this.getAttribute("rtl"));
   }
   set delay(v) {
     this.setAttribute("delay", v);
   }
+  /** 延时 */
   get delay() {
     return toObject(this.getAttribute("delay"));
   }
   set disabled(v) {
     this.setAttribute("disabled", v);
   }
+  /** 禁用 */
   get disabled() {
     return toObject(this.getAttribute("disabled"));
   }
@@ -7092,7 +7366,7 @@ var ToastContainer = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`toast-container-\${"0c25929"}\`) || customElements.define(\`toast-container-\${"0c25929"}\`, ToastContainer);
+customElements.get(\`toast-container-\${"855f368"}\`) || customElements.define(\`toast-container-\${"855f368"}\`, ToastContainer);
 
 // src/html/ui-entry.html
 var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
@@ -7100,9 +7374,13 @@ var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span
 // src/core/ui/entry.ts
 var UiEntryType = "new";
 var BilioldEntry = class extends HTMLElement {
+  /** 旧版按钮 */
   stage;
+  /** 新版按钮 */
   gear;
+  /** 实际节点 */
   root;
+  /** 实际根节点 */
   static get observedAttributes() {
     return [
       "type"
@@ -7149,94 +7427,172 @@ var BilioldEntry = class extends HTMLElement {
     }
   }
 };
-customElements.get("biliold-entry-0c25929") || customElements.define("bilibili-entry-0c25929", BilioldEntry);
+customElements.get("biliold-entry-855f368") || customElements.define("bilibili-entry-855f368", BilioldEntry);
 
 // src/core/userstatus.ts
 var userStatus = {
+  /** 开发者模式 */
   development: true,
+  /** 主页 */
   index: true,
+  /** toastr */
   toast: Toastconfig,
+  /** 替换全局顶栏 */
   header: true,
+  /** 翻页评论区 */
   comment: true,
+  /** av */
   av: true,
+  /** 嵌入式播放器 */
   player: true,
+  /** WebRTC */
   webRTC: false,
+  /** 充电鸣谢 */
   elecShow: true,
+  /** 合作UP */
   staff: false,
+  /** bangumi */
   bangumi: true,
+  /** 解除限制 */
   videoLimit: {
+    /** 开关 */
     status: false,
+    /** 服务器类型 */
     server: "内置",
+    /** 东南亚（泰区）代理服务器 */
     th: "api.global.bilibili.com",
+    /** 台湾代理服务器 */
     tw: "",
+    /** 香港代理服务器 */
     hk: "",
+    /** 大陆代理服务器 */
     cn: ""
   },
+  /** UPOS替换 */
   uposReplace: {
+    /** 东南亚（泰区） */
     th: "ks3（金山）",
+    /** 港澳台 */
     gat: "不替换",
+    /** 一般视频 */
     nor: "不替换",
+    /** 下载 */
     download: "不替换"
   },
+  /** 强制显示bangumi分p */
   bangumiEplist: false,
+  /** 账户授权 */
   accessKey: {
+    /** access_key */
     token: "",
+    /** 授权日期 */
     date: 0,
+    /** 授权日期字符串 */
     dateStr: ""
   },
+  /** 稍后再看 */
   watchlater: true,
+  /** 播单 */
   playlist: true,
+  /** 全站排行榜 */
   ranking: true,
+  /** 专栏 */
   read: true,
+  /** 搜索 */
   search: true,
+  /** 相簿 */
   album: true,
+  /** 注册时间 */
   jointime: false,
+  /** 失效视频 */
   lostVideo: true,
+  /** 纯视频历史 */
   history: true,
+  /** 动态里的直播录屏 */
   liveRecord: false,
+  /** 设置入口样式 */
   uiEntryType: UiEntryType,
+  /** 自动化操作 */
   automate: {
+    /** 展开弹幕列表 */
     danmakuFirst: false,
+    /** 滚动到播放器 */
     showBofqi: false,
+    /** 自动宽屏 */
     screenWide: false,
+    /** 自动关弹幕 */
     noDanmaku: false,
+    /** 自动播放 */
     autoPlay: false,
+    /** 自动网页全屏 */
     webFullScreen: false,
+    /** 记忆播放速率 */
     videospeed: false
   },
+  /** 关闭抗锯齿 */
   videoDisableAA: false,
+  /** 禁用直播间挂机检测 */
   disableSleepChcek: true,
+  /** 禁止上报 */
   disableReport: true,
+  /** 禁用评论跳转标题 */
   commentJumpUrlTitle: false,
+  /** 合集 */
   ugcSection: false,
+  /** 请求的文件类型 */
   downloadType: ["mp4"],
+  /** 请求无水印源 */
   TVresource: false,
+  /** 画质 */
   downloadQn: 127,
+  /** 下载方式 */
   downloadMethod: "浏览器",
+  /** User-Agent */
   userAgent: "Bilibili Freedoooooom/MarkII",
+  /** referer */
   referer: "https://www.bilibili.com",
+  /** 下载目录 */
   filepath: "",
+  /** aria2 */
   aria2: {
+    /** 服务器 */
     server: "http://localhost",
+    /** 端口 */
     port: 6800,
+    /** 令牌 */
     token: "",
+    /** 分片数目 */
     split: 4,
+    /** 分片大小 */
     size: 20
   },
   ef2: {
+    /** 稍后下载 */
     delay: false,
+    /** 静默下载 */
     silence: false
   },
+  /** 点赞功能 */
   like: false,
+  /** 重构播放器脚本 */
   bilibiliplayer: true,
+  /** 检查播放器脚本更新 */
   checkUpdate: true,
+  /** 不登录1080P支持 */
   show1080p: false,
+  /** 调整顶栏banner样式 */
   fullBannerCover: false,
+  /** 原生播放器新版弹幕 */
   dmproto: true,
+  /** 普权弹幕换行 */
   dmwrap: true,
+  /** 弹幕格式 */
   dmExtension: "xml",
+  /** 合并已有弹幕 */
   dmContact: false,
+  /** 分集数据 */
   episodeData: false,
+  /** 港澳台新番时间表 */
   timeLine: false
 };
 
@@ -7258,11 +7614,21 @@ var User = class {
       }
     });
   }
+  /** 用户数据，不应直接使用，请使用\`addCallback\`用户数据回调代替 */
   userStatus;
+  /** 初始化标记 */
   initialized = false;
+  /** 更新CD */
   updating;
+  /** 回调栈 */
   changes = {};
   timer;
+  /**
+   * 监听设置改动
+   * @param key 设置键
+   * @param callback 设置项变动时执行的回调，新值将作为第一个参数传入
+   * @returns 用于取消监听的回调
+   */
   bindChange(key, callback) {
     this.changes[key] || (this.changes[key] = []);
     const id = this.changes[key].push(callback);
@@ -7270,11 +7636,17 @@ var User = class {
       delete this.changes[key][id - 1];
     };
   }
+  /**
+   * 推送设置改动
+   * @param key 设置键
+   * @param newValue 新值
+   */
   emitChange(key, newValue) {
     this.changes[key].forEach(async (d) => {
       d(newValue);
     });
   }
+  /** 用户数据回调 */
   addCallback(callback) {
     if (typeof callback === "function") {
       if (this.initialized) {
@@ -7284,15 +7656,18 @@ var User = class {
       }
     }
   }
+  /** 恢复默认数据 */
   restoreUserStatus() {
     this.BLOD.GM.deleteValue("userStatus");
     this.BLOD.toast.warning("已恢复默认设置数据，请<strong>刷新</strong>页面以避免数据紊乱！");
   }
+  /** 备份设置数据 */
   outputUserStatus() {
     this.BLOD.GM.getValue("userStatus", userStatus).then((d) => {
       saveAs(JSON.stringify(d, void 0, "	"), \`Bilibili-Old-\${timeFormat(void 0, true).replace(/ |:/g, (d2) => "-")}\`, "application/json");
     });
   }
+  /** 恢复备份数据 */
   inputUserStatus() {
     const msg = ["请选择一个备份的数据文件（.json）", "注意：无效的数据文件可能导致异常！"];
     const toast = this.BLOD.toast.toast(0, "warning", ...msg);
@@ -7342,6 +7717,11 @@ var Abv = class {
     for (let i = 0; i < 58; i++)
       this.table[this.base58Table[i]] = i;
   }
+  /**
+   * av/BV互转
+   * @param input av或BV，可带av/BV前缀
+   * @returns 转化结果
+   */
   check(input) {
     if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
       return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
@@ -7374,14 +7754,19 @@ function BV2avAll(str) {
 
 // src/utils/format/url.ts
 var URL2 = class {
+  /** 锚 */
   hash;
+  /** 基链 */
   base;
+  /** 参数对象。结果会格式化\`undefined\`\`null\`\`NaN\`等特殊值，但不会处理数字，以免丢失精度。 */
   params = {};
+  /** 参数链（不含\`?\`） */
   get param() {
     return Object.entries(this.params).reduce((s, d) => {
       return s += \`\${s ? "&" : ""}\${d[0]}=\${d[1]}\`;
     }, "");
   }
+  /** 提取URL参数 */
   constructor(url) {
     const arr1 = url.split("#");
     let str = arr1.shift();
@@ -7413,6 +7798,7 @@ var URL2 = class {
       return s;
     }, {});
   }
+  /** 还原url链接 */
   toJSON() {
     return \`\${this.base ? this.param ? this.base + "?" : this.base : ""}\${this.param}\${this.hash || ""}\`;
   }
@@ -7456,7 +7842,9 @@ var paramArr = Object.entries({
   from: ["search"]
 });
 var UrlCleaner = class {
+  /** 垃圾参数序列 */
   paramsSet = paramsSet;
+  /** 精准爆破序列 */
   paramArr = paramArr;
   constructor() {
     this.location();
@@ -7476,6 +7864,7 @@ var UrlCleaner = class {
       this.anchor(document.querySelectorAll("a"));
     }, { once: true });
   }
+  /** 净化url */
   clear(str) {
     const url = new URL2(str);
     if (url && !str.includes("passport.bilibili.com")) {
@@ -7502,15 +7891,18 @@ var UrlCleaner = class {
     } else
       return str;
   }
+  /** 净化URL */
   location() {
     this.updateLocation(this.clear(location.href));
   }
+  /** 更新URL而不触发重定向 */
   updateLocation(url) {
     const Url = new self.URL(url);
     if (Url.host === location.host) {
       window.history.replaceState(window.history.state, "", url);
     }
   }
+  /** 点击回调 */
   anchorClick(e) {
     var f = e.target;
     for (; f && "A" !== f.tagName; ) {
@@ -7521,6 +7913,7 @@ var UrlCleaner = class {
     }
     this.anchor([f]);
   }
+  /** 净化a标签 */
   anchor(list) {
     list.forEach((d) => {
       if (!d.href)
@@ -7541,13 +7934,24 @@ var Vnode = class {
   }
 };
 var Scanner = class {
+  /** HTML */
   html;
+  /** 当前光标 */
   pos = 0;
+  /** Vnode */
   vnode = [];
+  /** 节点名栈 */
   tagNames = [];
+  /** Vnode栈 */
   targets = [];
+  /** innerText栈 */
   text = "";
+  /** 引号栈 */
   quote = "";
+  /**
+   * 扫描html文本转化为Vnode
+   * @param html html文本
+   */
   constructor(html) {
     this.html = html;
     this.targets.push({ children: this.vnode });
@@ -7556,6 +7960,7 @@ var Scanner = class {
     }
     this.textContent();
   }
+  /** 提取节点名 */
   organizeTag() {
     if (!this.quote && this.html[0] === "<") {
       if (this.html.startsWith(\`</\${this.tagNames.reduce((s, d) => s = d, void 0)}\`)) {
@@ -7614,6 +8019,7 @@ var Scanner = class {
       this.removeScanned();
     }
   }
+  /** 提取属性 */
   organizeProp() {
     let value = false;
     let stop = false;
@@ -7654,6 +8060,7 @@ var Scanner = class {
       this.tagSingle();
     this.removeScanned(this.pos--);
   }
+  /** 出栈检查 空元素直接出栈*/
   tagSingle() {
     switch (this.tagNames.reduce((s, d) => s = d, void 0)) {
       case "area":
@@ -7678,14 +8085,17 @@ var Scanner = class {
         break;
     }
   }
+  /** 节点出栈 */
   popNode() {
     this.tagNames.splice(this.tagNames.length - 1, 1);
     this.targets.splice(this.targets.length - 1, 1);
     this.text = "";
   }
+  /** 移除已扫描字符长度 默认1位 */
   removeScanned(length = 1) {
     this.html = this.html.slice(length);
   }
+  /** 处理TextContent */
   textContent() {
     const text = this.text.replace(/\\r|\\n| /g, "");
     if (text) {
@@ -7711,6 +8121,7 @@ var VdomTool = class {
       this.vdom = html;
     }
   }
+  /** 生成 DocumentFragment（会过滤script标签，请稍后使用\`loadScript\`方法依次运行所有script） */
   toFragment() {
     const fragment = document.createDocumentFragment();
     this.vdom.forEach((d) => {
@@ -7721,6 +8132,7 @@ var VdomTool = class {
     });
     return fragment;
   }
+  /** 根据vdom生成真DOM（过滤script标签） */
   createElement(element) {
     if (element.tagName === "text") {
       return document.createTextNode(element.text);
@@ -7744,6 +8156,7 @@ var VdomTool = class {
     });
     return node;
   }
+  /** svg限定生成方法 */
   createSVG(element) {
     const node = document.createElementNS("http://www.w3.org/2000/svg", element.tagName);
     element.props && Object.entries(element.props).forEach((d) => {
@@ -7774,9 +8187,11 @@ var VdomTool = class {
     const scripts = this.script.map((d) => this.createElement(d));
     return VdomTool.loopScript(scripts);
   }
+  /** 添加为目标节点的子节点 */
   appendTo(node) {
     node.append(this.toFragment());
   }
+  /** 替换目标节点 */
   replace(node) {
     node.replaceWith(this.toFragment());
   }
@@ -7819,8 +8234,13 @@ var VdomTool = class {
 
 // src/page/page.ts
 var Page = class {
+  /** 页面框架vdom */
   vdom;
+  /** 初始化完成 */
   initilized = false;
+  /**
+   * @param html 页面框架
+   */
   constructor(html) {
     this.vdom = new VdomTool(html);
     Reflect.defineProperty(window, "_babelPolyfill", {
@@ -7829,6 +8249,7 @@ var Page = class {
       get: () => void 0
     });
   }
+  /** 重写页面 */
   updateDom() {
     const title = document.title;
     this.vdom.replace(document.documentElement);
@@ -7837,6 +8258,7 @@ var Page = class {
     this.vdom.loadScript().then(() => this.loadedCallback());
     title && !title.includes("404") && (document.title = title);
   }
+  /** 重写完成回调 */
   loadedCallback() {
     this.initilized = true;
     poll(() => document.readyState === "complete", () => {
@@ -7902,6 +8324,12 @@ var ApiSign = class {
   get ts() {
     return new Date().getTime();
   }
+  /**
+   * URL签名
+   * @param searchParams 查询参数，会覆盖url原有参数
+   * @param api 授权api，**授权第三方登录专用**
+   * @returns 签名后的api
+   */
   sign(searchParams = {}, api = "") {
     const url = new URL2(this.url);
     Object.assign(url.params, searchParams, { ts: this.ts });
@@ -7955,11 +8383,13 @@ var ApiSign = class {
 var _URLS = class {
 };
 var URLS = _URLS;
+// protocol + //
 __publicField(URLS, "P_AUTO", "//");
 __publicField(URLS, "P_HTTP", "http://");
 __publicField(URLS, "P_HTTPS", "https://");
 __publicField(URLS, "P_WS", "ws://");
 __publicField(URLS, "P_WSS", "wss://");
+// domain
 __publicField(URLS, "D_WWW", "www.bilibili.com");
 __publicField(URLS, "D_API", "api.bilibili.com");
 __publicField(URLS, "D_APP", "app.bilibili.com");
@@ -8427,6 +8857,10 @@ var _Header = class {
     this.feedCount();
     poll(() => document.readyState === "complete", () => this.styleClear());
   }
+  /**
+   * 根据页面返回resourceId
+   * @returns resourceId
+   */
   static resourceId() {
     if (location.href.includes("v/douga"))
       return 1576;
@@ -8458,6 +8892,7 @@ var _Header = class {
       return 1634;
     return 142;
   }
+  /** 顶栏分区 */
   static primaryMenu() {
     poll(() => document.querySelector("#primary_menu"), (d) => {
       const vue = d.__vue__;
@@ -8531,11 +8966,13 @@ var _Header = class {
       return loc;
     }, false);
   }
+  /** 顶栏广场 */
   static plaza() {
     jsonpHook.async("api.bilibili.com/plaza/banner", () => true, async () => {
       return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] };
     }, false);
   }
+  /** 顶栏动图 */
   static indexIcon() {
     jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", void 0, async () => {
       const data = await fetch("https://www.bilibili.com/index/index-icon.json").then((d) => d.json());
@@ -8547,9 +8984,11 @@ var _Header = class {
       };
     }, false);
   }
+  /** 消息页面样式 */
   static message() {
     addCss(message_default, "message");
   }
+  /** 顶栏动态记录参数失效，另行找补 */
   static videoOffset() {
     if (uid) {
       const offset2 = getCookies()[\`bp_video_offset_\${uid}\`];
@@ -8558,12 +8997,15 @@ var _Header = class {
       }
     }
   }
+  /** 迷你顶栏 */
   miniHeader() {
     this.oldHeader.classList.remove("has-menu");
   }
+  /** 是否mini顶栏 */
   static isMiniHead(d) {
     return location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || d?.getAttribute("type") == "all" ? false : true;
   }
+  /** 监听新版顶栏 */
   hookHeadV2() {
     poll(() => {
       return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container") || document.querySelector("#home_nav") || document.querySelector(".bili-header__bar");
@@ -8578,8 +9020,11 @@ var _Header = class {
     poll(() => document.querySelector(".international-footer"), (d) => this.loadOldFooter(d));
     poll(() => document.querySelector("#biliMainFooter"), (d) => this.loadOldFooter(d));
   }
+  /** 已加载旧版顶栏 */
   oldHeadLoaded = false;
+  /** 旧版顶栏节点 */
   oldHeader = document.createElement("div");
+  /** 加载旧版顶栏 */
   loadOldHeader(target) {
     if (target) {
       if (target.id === ".bili-header__bar") {
@@ -8608,11 +9053,13 @@ var _Header = class {
       document.getElementsByClassName("bili-header-m")[1]?.remove();
     });
   }
+  /** 顶栏样式修复 */
   static styleFix() {
     addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", "lt-row-fix");
     addCss(avatar_animation_default, "avatarAnimation");
     this.fullBannerCover && addCss(".bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}");
   }
+  /** 禁用新版顶栏相关样式 */
   async styleClear() {
     const d = document.styleSheets;
     for (let i = 0; i < d.length; i++) {
@@ -8620,6 +9067,7 @@ var _Header = class {
     }
     _Header.styleFix();
   }
+  /** 顶栏动态直播回复数目接口失效，强制标记为0 */
   feedCount() {
     xhrHook.async("api.live.bilibili.com/ajax/feed/count", void 0, async () => {
       const response = '{ "code": 0, "data": { "count": 0 }, "message": "0" }';
@@ -8628,8 +9076,11 @@ var _Header = class {
   }
 };
 var Header = _Header;
+/** locs列表 */
 __publicField(Header, "locs", [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142]);
+/** 缓存已请求内容 */
 __publicField(Header, "record", {});
+/** 资源id */
 __publicField(Header, "rid", _Header.resourceId());
 __publicField(Header, "fullBannerCover", false);
 
@@ -8758,6 +9209,7 @@ var PageIndex = class extends Page {
       this.BLOD.toast.error("recommendData Error!", e)();
     });
   }
+  /** 修复分区排行 */
   ranking() {
     poll(() => document.querySelector("#ranking_ad"), () => {
       const vue = document.querySelector("#app > div.report-wrap-module.elevator-module").__vue__;
@@ -8785,6 +9237,7 @@ var PageIndex = class extends Page {
       });
     });
   }
+  /** 修复直播推荐 */
   roomRecommend() {
     xhrHook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", (args) => {
       args[1] = args[1].includes("List") ? args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web") : args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web");
@@ -8806,9 +9259,11 @@ var PageIndex = class extends Page {
       }
     }, false);
   }
+  /** 用户热点最新投稿修复资讯区最新投稿 */
   newlist() {
     jsonpHook(["newlist", "rid=202"], (url) => url.replace("rid=202", "rid=203"), void 0, false);
   }
+  /** 修正电影/电视剧/纪录片排行 */
   region() {
     jsonpHook("api.bilibili.com/x/web-interface/ranking/region", (url) => {
       const obj = new URL(url);
@@ -8855,57 +9310,58 @@ var PageIndex = class extends Page {
   adblock(arr2) {
     return arr2?.filter((d) => !d.is_ad && d.id);
   }
+  /** 港澳台新番时间表 */
   timeLine() {
-    apiNewlist(33).then(async (d) => {
-      const eps = d.reduce((s, d2) => {
-        if (d2.redirect_url && d2.owner.mid === 11783021) {
-          const arr2 = d2.redirect_url.split("/");
-          const ep = arr2.at(-1);
-          if (ep) {
-            ep.replace("d+", (e) => d2.episode_id = e);
-            s[ep] = d2;
+    poll(() => document.querySelector("#bili_bangumi > .bangumi-module")?.__vue__, (vue) => {
+      apiNewlist(33).then(async (d) => {
+        const eps = d.reduce((s, d2) => {
+          if (d2.redirect_url && d2.owner.mid === 11783021) {
+            const arr2 = d2.redirect_url.split("/");
+            const ep = arr2.at(-1);
+            if (ep) {
+              ep.replace("d+", (e) => d2.episode_id = e);
+              s[ep] = d2;
+            }
           }
-        }
-        return s;
-      }, {});
-      const cards = await apiArticleCards(Object.keys(eps));
-      Object.entries(cards).forEach((d2) => {
-        if (eps[d2[0]]) {
-          Object.assign(eps[d2[0]], d2[1]);
-        }
-      });
-      poll(() => document.querySelector("#bili_bangumi > .bangumi-module")?.__vue__, (d2) => {
-        const timingData = d2.timingData;
-        Object.values(eps).forEach((d3) => {
-          const date = new Date(d3.pubdate * 1e3);
+          return s;
+        }, {});
+        const cards = await apiArticleCards(Object.keys(eps));
+        Object.entries(cards).forEach((d2) => {
+          if (eps[d2[0]]) {
+            Object.assign(eps[d2[0]], d2[1]);
+          }
+        });
+        const timingData = vue.timingData;
+        Object.values(eps).forEach((d2) => {
+          const date = new Date(d2.pubdate * 1e3);
           for (let i = timingData.length - 1; i >= 0; i--) {
             if (date.getDay() + 1 === timingData[i].day_of_week) {
               timingData[i].episodes.push({
-                cover: d3.cover || d3.pic,
+                cover: d2.cover || d2.pic,
                 delay: 0,
                 delay_id: 0,
                 delay_index: "",
                 delay_reason: "",
-                ep_cover: d3.cover || d3.pic,
-                episode_id: d3.episode_id,
-                follows: d3.follow_count,
-                plays: d3.play_count,
-                pub_index: d3.desc,
+                ep_cover: d2.cover || d2.pic,
+                episode_id: d2.episode_id,
+                follows: d2.follow_count,
+                plays: d2.play_count,
+                pub_index: d2.desc,
                 pub_time: \`\${integerFormat(date.getHours())}:\${integerFormat(date.getMinutes())}\`,
-                pub_ts: d3.pubdate,
+                pub_ts: d2.pubdate,
                 published: 1,
-                season_id: d3.season_id,
-                square_cover: d3.cover || d3.pic,
-                title: d3.title
+                season_id: d2.season_id,
+                square_cover: d2.cover || d2.pic,
+                title: d2.title
               });
               break;
             }
           }
         });
-        d2.timingData = timingData;
+        vue.timingData = timingData;
+      }).catch((e) => {
+        debug.error("港澳台新番时间表", e);
       });
-    }).catch((e) => {
-      debug.error("港澳台新番时间表", e);
     });
   }
 };
@@ -8926,6 +9382,7 @@ var Comment = class {
     this.initComment();
     this.pageCount();
   }
+  /** 捕获评论组件 */
   bbComment() {
     Reflect.defineProperty(window, "bbComment", {
       configurable: true,
@@ -8992,6 +9449,7 @@ var Comment = class {
       }
     });
   }
+  /** 修复按时间排序评论翻页数 */
   pageCount() {
     let page;
     jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
@@ -9008,6 +9466,7 @@ var Comment = class {
       return res;
     }, false);
   }
+  /** 修补评论组件 */
   bbCommentModify() {
     this.styleFix();
     this.initAbtest();
@@ -9018,6 +9477,7 @@ var Comment = class {
     this._resolvePictures();
     this.BLOD.status.commentJumpUrlTitle && this._resolveJump();
   }
+  /** 样式修补 */
   styleFix() {
     addCss(\`.bb-comment .comment-list .list-item .info .btn-hover, .comment-bilibili-fold .comment-list .list-item .info .btn-hover {
             line-height: 24px;
@@ -9025,6 +9485,7 @@ var Comment = class {
     addCss(\`.operation.btn-hide-re .opera-list {visibility: visible}\`, "keep-operalist-visible");
     addCss(".image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}", "image-exhibition");
   }
+  /** 退出abtest，获取翻页评论区 */
   initAbtest() {
     Feedback.prototype.initAbtest = function() {
       this.abtest = {};
@@ -9039,6 +9500,7 @@ var Comment = class {
       this.init();
     };
   }
+  /** 添加回小页码区 */
   _renderBottomPagination() {
     Feedback.prototype._renderBottomPagination = function(pageInfo) {
       if (this.noPage) {
@@ -9092,6 +9554,7 @@ var Comment = class {
       }
     };
   }
+  /** 顶层评论ip属地 */
   _createListCon() {
     Feedback.prototype._createListCon = function(item, i, pos) {
       const blCon = this._parentBlacklistDom(item, i, pos);
@@ -9129,6 +9592,7 @@ var Comment = class {
       return item.state === this.blacklistCode ? blCon : con;
     };
   }
+  /** 楼中楼评论ip属地 */
   _createSubReplyItem() {
     Feedback.prototype._createSubReplyItem = function(item, i) {
       if (item.invisible) {
@@ -9162,6 +9626,7 @@ var Comment = class {
       ].join("");
     };
   }
+  /** 楼中楼“查看对话按钮” & 让评论菜单可以通过再次点击按钮来关闭 */
   _registerEvent() {
     const _registerEvent = Feedback.prototype._registerEvent;
     Feedback.prototype._registerEvent = function(e) {
@@ -9302,6 +9767,7 @@ var Comment = class {
       return BV2avAll(str);
     };
   }
+  /** 评论图片 */
   _resolvePictures() {
     Feedback.prototype._resolvePictures = function(content) {
       const pictureList = [];
@@ -9397,35 +9863,75 @@ observerAddedNodes((node) => {
 
 // src/core/storage.ts
 var LocalStorage = class {
+  /** 清空！ */
   static clear() {
     localStorage.clear();
   }
+  /**
+   * 读取
+   * @param key 目标键名
+   * @returns 格式化后的数据
+   */
   static getItem(key) {
     return toObject(localStorage.getItem(key));
   }
+  /**
+   * 列出键名数组  
+   * 原生Storage.key只返回但索引，感觉意义不大。
+   * @returns 键名数组
+   */
   static keys() {
     return Object.keys(localStorage);
   }
+  /**
+   * 移除
+   * @param key 目标键名
+   */
   static removeItem(key) {
     localStorage.removeItem(key);
   }
+  /**
+   * 添加/修改
+   * @param key 
+   * @param value 
+   */
   static setItem(key, value) {
     localStorage.setItem(key, toString(value));
   }
 };
 var SessionStorage = class {
+  /** 清空！ */
   static clear() {
     sessionStorage.clear();
   }
+  /**
+   * 读取
+   * @param key 目标键名
+   * @returns 格式化后的数据
+   */
   static getItem(key) {
     return toObject(sessionStorage.getItem(key));
   }
+  /**
+   * 列出键名数组  
+   * 原生Storage.key只返回但索引，感觉意义不大。
+   * @returns 键名数组
+   */
   static keys() {
     return Object.keys(sessionStorage);
   }
+  /**
+   * 移除
+   * @param key 目标键名
+   */
   static removeItem(key) {
     sessionStorage.removeItem(key);
   }
+  /**
+   * 添加/修改
+   * @param key 
+   * @param value 
+   */
   static setItem(key, value) {
     sessionStorage.setItem(key, toString(value));
   }
@@ -9433,9 +9939,11 @@ var SessionStorage = class {
 
 // src/core/player.ts
 var _Player = class {
+  /** 添加播放器启动参数修改命令 */
   static addModifyArgument(callback) {
     this.modifyArgumentCallback.push(callback);
   }
+  /** 捕获的新版播放器 */
   nanoPlayer;
   connect;
   isConnect = false;
@@ -9474,6 +9982,7 @@ var _Player = class {
       return v;
     });
   }
+  /** 修改播放器启动参数 */
   modifyArgument(args) {
     while (_Player.modifyArgumentCallback.length) {
       _Player.modifyArgumentCallback.shift()?.(args);
@@ -9499,7 +10008,11 @@ var _Player = class {
     this.initData.as_wide = true;
     this.dataInitedCallback();
   }
+  /** 脚本初始化中 */
+  // private loading = true;
+  /** 旧版播放器已启用 */
   isEmbedPlayer = false;
+  /** 旧版播放器正常引导 */
   EmbedPlayer(loadPlayer, isEmbedPlayer = true) {
     this.nanoPermit = () => {
     };
@@ -9515,6 +10028,7 @@ var _Player = class {
     }
     this.switchVideo();
   }
+  /** 通过hook新版播放器来引导旧版播放器 */
   connectPlayer(loadPlayer) {
     this.EmbedPlayer(loadPlayer, false);
     this.dataInitedCallback(() => {
@@ -9541,6 +10055,7 @@ var _Player = class {
     });
     addCss(\`#bofqi .player,#bilibili-player .player{width: 100%;height: 100%;display: block;}.bilibili-player .bilibili-player-auxiliary-area{z-index: 1;}\`, "nano-fix");
   }
+  /** 不启用旧版播放器允许新版播放器启动 */
   nanoPermit() {
     if (this.isConnect) {
       debug("允许新版播放器启动！");
@@ -9549,7 +10064,9 @@ var _Player = class {
       this.isConnect = true;
     }
   }
+  /** 播放器启动栈 */
   dataInitedCallbacks = [];
+  /** 捕获启动数据后启动播放器 */
   dataInitedCallback(callback) {
     callback && this.dataInitedCallbacks.push(callback);
     if (this.dataInited) {
@@ -9623,6 +10140,7 @@ var _Player = class {
     });
   }
   playbackRateTimer;
+  /** 更改播放器速率 */
   playbackRate(playbackRate = 1) {
     clearTimeout(this.playbackRateTimer);
     this.playbackRateTimer = setTimeout(() => {
@@ -9634,6 +10152,7 @@ var _Player = class {
   }
 };
 var Player = _Player;
+/** 播放器启动参数修改回调栈 */
 __publicField(Player, "modifyArgumentCallback", []);
 
 // src/core/webrtc.ts
@@ -9863,6 +10382,7 @@ var apiBiliplusView = class {
     const respense = await this.fetch;
     return await respense.json();
   }
+  /** 转化为\`apiViewDetail\`格式 */
   async toDetail() {
     const json = await this.getDate();
     return this.view2Detail(json);
@@ -10136,6 +10656,7 @@ var Like = class extends HTMLSpanElement {
   }
   liked = false;
   number = 0;
+  /** 初始化节点 */
   init() {
     if (uid) {
       apiLikeHas(this.BLOD.aid).then((d) => {
@@ -10145,8 +10666,9 @@ var Like = class extends HTMLSpanElement {
         debug.error("获取点赞情况失败", e);
       });
     }
-    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"0c25929"}\`);
+    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"855f368"}\`);
   }
+  /** 更新点赞数 */
   get likes() {
     return this.number;
   }
@@ -10162,7 +10684,7 @@ var Like = class extends HTMLSpanElement {
     this.innerHTML = (this.liked ? svg.like : svg.dislike) + "点赞 " + unitFormat(this.number);
   }
 };
-customElements.get(\`like-\${"0c25929"}\`) || customElements.define(\`like-\${"0c25929"}\`, Like, { extends: "span" });
+customElements.get(\`like-\${"855f368"}\`) || customElements.define(\`like-\${"855f368"}\`, Like, { extends: "span" });
 
 // src/io/api-stat.ts
 async function apiStat(aid) {
@@ -10225,7 +10747,9 @@ var PageBangumi = class extends Page {
   set pgc(v) {
     this.BLOD.pgc = v;
   }
+  /** 字幕暂存 */
   subtitles = [];
+  /** 修复：末尾番剧推荐 */
   recommend() {
     xhrHook("api.bilibili.com/pgc/web/recommend/related/recommend", (args) => {
       args[1] = args[1].replace("web/recommend", "season/web");
@@ -10243,6 +10767,7 @@ var PageBangumi = class extends Page {
       }
     });
   }
+  /** 修复追番数据 */
   seasonCount() {
     xhrHook("bangumi.bilibili.com/ext/web_api/season_count", (args) => {
       args[1] = args[1].replace("bangumi.bilibili.com/ext/web_api/season_count", "api.bilibili.com/pgc/web/season/stat");
@@ -10255,6 +10780,7 @@ var PageBangumi = class extends Page {
       }
     }, true);
   }
+  /** 解除区域限制（重定向模式） */
   videoLimit() {
     xhrHook("bangumi.bilibili.com/view/web_api/season/user/status", void 0, (res) => {
       try {
@@ -10266,6 +10792,7 @@ var PageBangumi = class extends Page {
       }
     }, false);
   }
+  /** 修复相关视频推荐 接口来自md页面 */
   related() {
     const related = {};
     xhrHook.async("x/web-interface/archive/related", () => window.__INITIAL_STATE__?.mediaInfo?.title, async () => {
@@ -10284,6 +10811,7 @@ var PageBangumi = class extends Page {
       return { response, responseType: "json", responseText: JSON.stringify(response) };
     }, false);
   }
+  /** 初始化\`__INITIAL_STATE__\` */
   initialState() {
     const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
     Promise.allSettled([apiBangumiSeason(data), apiSeasonStatus(data), new Promise((r) => poll(() => this.initilized, r))]).then((d) => d.map((d2) => d2.status === "fulfilled" && d2.value)).then(async (d) => {
@@ -10366,7 +10894,9 @@ var PageBangumi = class extends Page {
         t.epId = Number(this.epid || t.epInfo.ep_id);
         this.ssid = t.ssId;
         this.epid = t.epId;
-        if (t.upInfo.mid == 677043260 || t.upInfo.mid == 688418886) {
+        if (t.upInfo.mid == /** Classic_Anime */
+        677043260 || t.upInfo.mid == /** Anime_Ongoing */
+        688418886) {
           this.th = true;
         }
         const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), true);
@@ -10385,6 +10915,7 @@ var PageBangumi = class extends Page {
         addCss(".header-info > .count-wrapper {height: 18px !important;}");
     });
   }
+  /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
   setEpStat(status, pay, payPackPaid, loginInfo) {
     var s = 0, o = false, a = (1 === loginInfo.vipType || 2 === loginInfo.vipType) && 1 === loginInfo.vipStatus, r = "number" == typeof payPackPaid ? payPackPaid : -1;
     return 1 === pay ? s = 0 : 6 === status || 7 === status ? s = loginInfo.isLogin ? a ? 0 : 1 : 2 : 8 === status || 9 === status ? (s = loginInfo.isLogin ? 1 : 2, o = true) : 12 === status ? s = loginInfo.isLogin ? 1 === r ? 0 : 1 : 2 : 13 === status && (s = loginInfo.isLogin ? a ? 0 : 1 : 2), {
@@ -10395,6 +10926,7 @@ var PageBangumi = class extends Page {
       payPack: r
     };
   }
+  /** 更新标题 */
   setTitle(t, e, i, n) {
     var s = !(arguments.length > 4 && void 0 !== arguments[4]) || arguments[4], o = "";
     if (i = void 0 === i ? "番剧" : i, e && i)
@@ -10427,6 +10959,7 @@ var PageBangumi = class extends Page {
     var i = Number(t), n = 1 === e || 4 === e || "番剧" === e || "国创" === e ? "话" : "集";
     return isNaN(i) ? t : "第".concat(i).concat(n);
   }
+  /** 尝试东南亚接口 */
   async initGlobal() {
     const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
     Object.assign(data, { access_key: this.BLOD.status.accessKey.token });
@@ -10546,6 +11079,7 @@ var PageBangumi = class extends Page {
     loopTitle();
     this.BLOD.videoInfo.bangumiEpisode(episodes, i.title, i.actor?.info, i.cover, t.mediaInfo.bkg_cover);
   }
+  /** 修复泰区player接口 */
   player() {
     xhrHook.async("api.bilibili.com/x/player/v2?", void 0, async (args) => {
       const obj = urlObj(args[1]);
@@ -10558,6 +11092,7 @@ var PageBangumi = class extends Page {
       return { response, responseType: "json", responseText: JSON.stringify(response) };
     }, false);
   }
+  /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
       poll(() => document.querySelector("[report-id*=coin]"), (d) => {
@@ -10577,6 +11112,7 @@ var PageBangumi = class extends Page {
     }
   }
   episodeIndex = 0;
+  /** 分集数据 */
   episodeData() {
     if (this.BLOD.status.episodeData) {
       switchVideo(() => {
@@ -17855,6 +18391,7 @@ var PageAV = class extends Page {
     Header.primaryMenu();
     Header.banner();
   }
+  /** 销毁标记，当前已不是av页，部分回调禁止生效 */
   destroy = false;
   like;
   get aid() {
@@ -17863,24 +18400,52 @@ var PageAV = class extends Page {
   set aid(v) {
     this.BLOD.aid = v;
   }
+  /**
+   * 暴露UI组件
+   * 717 -> video.b1b7706abd590dd295794f540f7669a5d8d978b3.js
+   * .onCoinSuccess(n)   页面变为已投币n枚的状态
+   * .onFollow()         变为已关注状态
+   * .favSubmit(bool)    设置收藏状态，参数bool: true -> “已收藏”状态 false -> 未收藏状态
+   */
+  // protected biliUIcomponents() {
+  //     webpackHook(717, 274, (code: string) => code.replace("init:function(){", "init:function(){window.biliUIcomponents=this;").replace("this.getAdData()", "this.getAdData"));
+  // }
+  /**
+   * 修复：收藏视频时，在“添加到收藏夹”弹窗中，如果将视频从收藏夹A删除，并同时添加到收藏夹B，点击确定后窗口不消失的问题
+   * @example
+   * // 报错原因示意：
+   * jQuery.when(deferredA,deferredB).done((resultA,resultB) => {
+   *      let codeA = resultA[0].code; // Cannot read property 'code' of undefined
+   *      let codeA = resultA.code;    // 本应该写成这样
+   * })
+   */
   favCode() {
     webpackHook(717, 251, (code) => code.replace("e[0].code", "e.code").replace("i[0].code", "i.code"));
   }
+  /** 修复：视频标签链接（tag -> topic） */
   tagTopic() {
     webpackHook(717, 660, (code) => code.replace('tag/"+t.info.tag_id+"/?pagetype=videopage', 'topic/"+t.info.tag_id+"/?pagetype=videopage'));
   }
+  /** 修复：视频分区 */
   menuConfig() {
     webpackHook(717, 100, (code) => code.replace(/MenuConfig[\\S\\s]+?LiveMenuConfig/, \`MenuConfig=\${sort_default},e.LiveMenuConfig\`));
   }
+  /** 移除上古顶栏 */
   ancientHeader() {
     webpackHook(717, 609, () => \`()=>{}\`);
   }
+  /** 修复：超链接跳转 */
   hyperLink() {
     webpackHook(717, 2, (code) => code.replace("av\$1</a>')", \`av\$1</a>').replace(/(?!<a[^>]*>)cv([0-9]+)(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/read/cv\$1/" target="_blank" data-view="\$1">cv\$1</a>').replace(/(?!<a[^>]*>)(bv1)(\\\\w{9})(?![^<]*<\\\\/a>)/ig, '<a href="//www.bilibili.com/video/bv1\$2/" target="_blank">\$1\$2</a>')\`).replace("http://acg.tv/sm", "https://www.nicovideo.jp/watch/sm"));
   }
+  /**
+   * 添加：播放器启动代码
+   * 无\`__INITIAL_STATE__\`启动
+   */
   embedPlayer() {
     webpackHook(717, 286, (code) => code.replace('e("setVideoData",t)', \`e("setVideoData",t);\$("#bofqi").attr("id","__bofqi").html('<div class="bili-wrapper" id="bofqi"><div id="player_placeholder"></div></div>');new Function('EmbedPlayer',t.embedPlayer)(window.EmbedPlayer);\`));
   }
+  /** 跳过充电鸣谢 */
   elecShow() {
     if (this.BLOD.status.elecShow) {
       jsonpHook("api.bilibili.com/x/web-interface/elec/show", void 0, (res) => {
@@ -17896,6 +18461,7 @@ var PageAV = class extends Page {
       }, false);
     }
   }
+  /** 检查页面是否失效及bangumi跳转 */
   aidLostCheck() {
     jsonpHook("api.bilibili.com/x/web-interface/view/detail", void 0, (res, r, call) => {
       if (0 !== res.code) {
@@ -17918,6 +18484,7 @@ var PageAV = class extends Page {
       }
     }, false);
   }
+  /** 通过其他接口获取aid数据 */
   async getVideoInfo(callback) {
     try {
       const data = [\`av\${this.aid}可能无效，尝试其他接口~\`];
@@ -17965,6 +18532,7 @@ var PageAV = class extends Page {
       debug.error(e);
     }
   }
+  /** 合作UP */
   staff(staff) {
     poll(() => document.querySelector("#v_upinfo"), (node) => {
       let fl = '<span class="title">UP主列表</span><div class="up-card-box">';
@@ -17982,6 +18550,7 @@ var PageAV = class extends Page {
       addCss(uplist_default, "up-list");
     });
   }
+  /** 合集（使用播单模拟） */
   ugcSection(season, owner) {
     toview_default.cover = season.cover;
     toview_default.count = season.ep_count;
@@ -18032,6 +18601,7 @@ var PageAV = class extends Page {
     propertyHook(window, "callAppointPart", this.callAppointPart);
     addCss(".bilibili-player .bilibili-player-auxiliary-area .bilibili-player-playlist .bilibili-player-playlist-playlist {height: calc(100% - 45px);}.bilibili-player-playlist-nav-title,.bilibili-player-playlist-nav-ownername{display: none;}");
   }
+  /** hook合集切p回调 */
   callAppointPart = (p, state) => {
     if (this.destroy)
       return Reflect.deleteProperty(window, "callAppointPart");
@@ -18050,6 +18620,7 @@ var PageAV = class extends Page {
       });
     }
   };
+  /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
       poll(() => document.querySelector("[report-id*=coin]"), (d) => {
@@ -18089,6 +18660,7 @@ var PageWatchlater = class extends Page {
     Header.banner();
   }
   like;
+  /** 记录视频数据 */
   toview() {
     jsonpHook("history/toview/web?", void 0, (d) => {
       setTimeout(() => {
@@ -18097,6 +18669,7 @@ var PageWatchlater = class extends Page {
       return d;
     });
   }
+  /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
       poll(() => document.querySelector(".u.coin"), (d) => {
@@ -18114,11 +18687,13 @@ var PageWatchlater = class extends Page {
       }, false);
     }
   }
+  /** 修正直播错误 */
   living() {
     xhrHook("api.live.bilibili.com/bili/living_v2/", void 0, (r) => {
       r.response = r.responseText = \` \${r.response}\`;
     }, false);
   }
+  /** 修复评论播放跳转 */
   commentAgent() {
     window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
   }
@@ -18144,11 +18719,16 @@ var PagePlaylist = class extends Page {
     Header.banner();
     this.isPl || switchVideo(this.switchVideo);
   }
+  /** 查询参数 */
   route = urlObj(location.href);
+  /** 播单类型 */
   type = 3;
+  /** 播单号 */
   pl = -1;
+  /** 是否播单 */
   isPl = false;
   like;
+  /** 初始化 */
   init() {
     this.isPl = Boolean(this.BLOD.path[5].startsWith("pl"));
     this.BLOD.path[5].replace(/\\d+/, (d) => this.pl = d);
@@ -18175,6 +18755,7 @@ var PagePlaylist = class extends Page {
     }
     this.isPl || this.BLOD.urlCleaner.updateLocation(objUrl(\`https://www.bilibili.com/playlist/video/pl\${this.pl}\`, this.route));
   }
+  /** 过滤播放启动参数 */
   EmbedPlayer() {
     if (!this.isPl) {
       Player.addModifyArgument((args) => {
@@ -18196,6 +18777,7 @@ var PagePlaylist = class extends Page {
       });
     }
   }
+  /** 拦截并修改页面初始化请求 */
   toviewHook() {
     jsonpHook.async("toview", void 0, async () => {
       this.BLOD.urlCleaner.updateLocation(this.BLOD.path.join("/"));
@@ -18203,6 +18785,7 @@ var PagePlaylist = class extends Page {
     });
     this.BLOD.videoInfo.toview(toview_default);
   }
+  /** 跳过充电鸣谢 */
   elecShow() {
     if (this.BLOD.status.elecShow) {
       jsonpHook("api.bilibili.com/x/web-interface/elec/show", void 0, (res) => {
@@ -18218,9 +18801,11 @@ var PagePlaylist = class extends Page {
       }, false);
     }
   }
+  /** 伪造的播单页不应有识别参数 */
   switchVideo = () => {
     this.BLOD.urlCleaner.updateLocation(this.BLOD.path.join("/"));
   };
+  /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
       poll(() => document.querySelector(".u.coin"), (d) => {
@@ -18257,15 +18842,19 @@ var PageRanking = class extends Page {
     Header.primaryMenu();
     Header.banner();
   }
+  /** 还原正确的排行地址否则页面无法正常初始化 */
   location() {
     this.BLOD.urlCleaner.updateLocation(/ranking/.test(document.referrer) ? document.referrer : "https://www.bilibili.com/ranking");
   }
+  /** 三日以外的数据全部过期 */
   overDue() {
     jsonpHook(["api.bilibili.com/x/web-interface/ranking", "arc_type=0"], (d) => d.replace(/day=\\d+/, "day=3"), void 0, false);
   }
+  /** 禁用错误的__INITIAL_STATE__ */
   initState() {
     propertyHook(window, "__INITIAL_STATE__", void 0);
   }
+  /** 优化高分辨率支持 */
   style() {
     addCss("@media screen and (min-width: 1400px){.main-inner {width: 1160px !important;}}");
   }
@@ -18298,6 +18887,7 @@ var PageRead = class extends Page {
   ];
   readInfoStr = "";
   ops;
+  /** 获取专栏信息 */
   initState() {
     this.readInfo = window.__INITIAL_STATE__?.readInfo;
     if (this.readInfo) {
@@ -18315,6 +18905,7 @@ var PageRead = class extends Page {
       });
     }
   }
+  /** 构造专栏节点 */
   buildReadInfo() {
     this.navTabBar();
     this.upInfoHolder();
@@ -18410,6 +19001,7 @@ var PageRead = class extends Page {
     });
     title && !title.includes("404") && (document.title = title);
   }
+  /** 解锁右键菜单及复制 */
   static rightCopyEnable() {
     addCss(\`* {
             -webkit-user-select: text !important;
@@ -18437,11 +19029,13 @@ var PageSearch = class extends Page {
     this.initState();
     this.updateDom();
   }
+  /** 修正URL */
   location() {
     poll(() => location.href.endsWith("/all"), () => {
       this.BLOD.urlCleaner.updateLocation(location.origin);
     }, 10, 30);
   }
+  /** 新版__INITIAL_STATE__可能损坏页面 */
   initState() {
     propertyHook(window, "__INITIAL_STATE__", void 0);
   }
@@ -18521,47 +19115,87 @@ var PlayurlCodecs = {
   30120: "avc1.64003C",
   120: "avc1.64003C",
   30112: "avc1.640028",
+  // 1080P+
   112: "avc1.640028",
+  // 1080P+
   30102: "hev1.1.6.L120.90",
+  // HEVC 1080P+
   102: "hev1.1.6.L120.90",
+  // HEVC 1080P+
   30080: "avc1.640028",
+  // 1080P
   80: "avc1.640028",
+  // 1080P
   30077: "hev1.1.6.L120.90",
+  // HEVC 1080P
   77: "hev1.1.6.L120.90",
+  // HEVC 1080P
   30064: "avc1.64001F",
+  // 720P
   64: "avc1.64001F",
+  // 720P
   30066: "hev1.1.6.L120.90",
+  // HEVC 720P
   66: "hev1.1.6.L120.90",
+  // HEVC 720P
   30032: "avc1.64001E",
+  // 480P
   32: "avc1.64001E",
+  // 480P
   30033: "hev1.1.6.L120.90",
+  // HEVC 480P
   33: "hev1.1.6.L120.90",
+  // HEVC 480P
   30011: "hev1.1.6.L120.90",
+  // HEVC 360P
   11: "hev1.1.6.L120.90",
+  // HEVC 360P
   30016: "avc1.64001E",
+  // 360P
   16: "avc1.64001E",
+  // 360P
   30006: "avc1.64001E",
+  //240P
   6: "avc1.64001E",
+  // 240P
   30005: "avc1.64001E",
+  // 144P
   5: "avc1.64001E",
+  // 144P
   30251: "fLaC",
+  // Hires
   30250: "ec-3",
+  // Dolby
   30280: "mp4a.40.2",
+  // 高码音频
   30232: "mp4a.40.2",
+  // 中码音频
   30216: "mp4a.40.2"
+  // 低码音频
 };
 var PlayurlCodecsAPP = {
   30016: "avc1.64001E",
+  // APP源 360P
   16: "avc1.64001E",
+  // APP源 360P
   30032: "avc1.64001F",
+  // APP源 480P
   32: "avc1.64001F",
+  // APP源 480P
   30064: "avc1.640028",
+  // APP源 720P
   64: "avc1.640028",
+  // APP源 720P
   30080: "avc1.640032",
+  // APP源 1080P
   80: "avc1.640032",
+  // APP源 1080P
   30216: "mp4a.40.2",
+  // APP源 低码音频
   30232: "mp4a.40.2",
+  // APP源 中码音频
   30280: "mp4a.40.2"
+  // APP源 高码音频 
 };
 var PlayurlFrameRate = {
   30121: "16000/672",
@@ -18599,29 +19233,53 @@ var PlayurlResolution = {
   30120: [3840, 2160],
   120: [3840, 2160],
   30112: [1920, 1080],
+  // 1080P+
   112: [1920, 1080],
+  // 1080P+
   30102: [1920, 1080],
+  // HEVC 1080P+
   102: [1920, 1080],
+  // HEVC 1080P+
   30080: [1920, 1080],
+  // 1080P
   80: [1920, 1080],
+  // 1080P
   30077: [1920, 1080],
+  // HEVC 1080P
   77: [1920, 1080],
+  // HEVC 1080P
   30064: [1280, 720],
+  // 720P
   64: [1280, 720],
+  // 720P
   30066: [1280, 720],
+  // HEVC 720P
   66: [1280, 720],
+  // HEVC 720P
   30032: [852, 480],
+  // 480P
   32: [852, 480],
+  // 480P
   30033: [852, 480],
+  // HEVC 480P
   33: [852, 480],
+  // HEVC 480P
   30011: [640, 360],
+  // HEVC 360P
   11: [640, 360],
+  // HEVC 360P
   30016: [640, 360],
+  // 360P
   16: [640, 360],
+  // 360P
   30006: [426, 240],
+  // 240P
   6: [426, 240],
+  // 240P
   30005: [256, 144],
+  // 144P
   5: [256, 144]
+  // 144P
 };
 var PlayurlDash = class {
   accept_description = [];
@@ -18672,18 +19330,26 @@ async function apiPlayurl(data, dash = true, pgc = false, server = "api.bilibili
 
 // src/io/sidx.ts
 var Sidx = class {
+  /**
+   * @param url 目标url
+   * @param size 最大索引范围（不宜过大），默认6万字节
+   */
   constructor(url, size = 6e4) {
     this.url = url;
     this.size = size;
   }
+  /** range索引结束点 */
   end = 5999;
+  /** range索引开始点 */
   start = 0;
+  /** 结果hex字符串 */
   hex_data = "";
   getData() {
     return new Promise((resolve, reject) => {
       this.fetch(resolve, reject);
     });
   }
+  /** 请求片段 */
   fetch(resolve, reject) {
     fetch(this.url.replace("http:", "https:"), {
       headers: {
@@ -18716,6 +19382,10 @@ var Sidx = class {
 
 // src/io/api-global-ogv-playurl.ts
 var ApiGlobalOgvPlayurl = class extends ApiSign {
+  /**
+   * @param data 查询参数
+   * @param server 东南亚（泰区）代理服务器
+   */
   constructor(data, uposName, server = "api.global.bilibili.com") {
     super(URLS.GLOBAL_OGV_PLAYURL.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
     this.uposName = uposName;
@@ -18902,11 +19572,17 @@ var _VideoLimit = class {
       }
     }, false);
   }
+  /** 数据备份 */
   Backup = {};
+  /** 通知组件 */
   toast;
+  /** 通知信息 */
   data = [];
+  /** 监听中 */
   listening = false;
+  /** 播放数据备份 */
   __playinfo__;
+  /** 开始监听 */
   enable() {
     if (this.listening)
       return;
@@ -18924,6 +19600,7 @@ var _VideoLimit = class {
     };
     this.listening = true;
   }
+  /** 处理泰区 */
   async _th(args) {
     this.data = ["泰区限制视频！"];
     this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
@@ -18958,6 +19635,7 @@ var _VideoLimit = class {
     this.data = [];
     return this.__playinfo__ = this.Backup[epid];
   }
+  /** 处理港澳台 */
   async _gat(args) {
     this.data = ["港澳台限制视频！"];
     this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
@@ -19007,9 +19685,11 @@ var _VideoLimit = class {
     this.data = [];
     return this.__playinfo__ = this.Backup[epid];
   }
+  /** 停止监听 */
   disable() {
     this.listening = false;
   }
+  /** 更新全局变量 */
   updateVaribale(obj) {
     obj.seasonId && (this.BLOD.ssid = obj.seasonId);
     obj.episodeId && (this.BLOD.epid = obj.episodeId);
@@ -19018,12 +19698,15 @@ var _VideoLimit = class {
     obj.avid && (this.BLOD.aid = Number(obj.avid)) && (this.BLOD.aid = obj.avid);
     obj.cid && (this.BLOD.cid = Number(obj.cid)) && (this.BLOD.cid = obj.cid);
   }
+  /** 访问泰区代理 */
   async th(obj) {
     const d = await new ApiGlobalOgvPlayurl(obj, this.BLOD.status.uposReplace.th, this.BLOD.status.videoLimit.th).toPlayurl();
     this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.th}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.th]}\`);
     return d;
   }
+  /** 代理服务器序号 */
   area = 0;
+  /** 访问港澳台代理 */
   async gat(obj) {
     if (!this.BLOD.status.videoLimit[AREA[this.area]])
       throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
@@ -19045,6 +19728,11 @@ var _VideoLimit = class {
       return await this.gat(obj);
     }
   }
+  /**
+   * 替换upos服务器
+   * @param str playurl或包含视频URL的字符串
+   * @param uposName 替换的代理服务器名 keyof typeof {@link UPOS}
+   */
   static uposReplace(str, uposName) {
     if (uposName === "不替换")
       return str;
@@ -19055,7 +19743,9 @@ var _VideoLimit = class {
   }
 };
 var VideoLimit = _VideoLimit;
+/** 用于过滤upos提示 */
 __publicField(VideoLimit, "upos", false);
+/** 用于取消过滤upos提示 */
 __publicField(VideoLimit, "timer");
 
 // src/json/mid.json
@@ -19143,8 +19833,10 @@ var PageSpace = class {
     });
   }
   mid;
+  /** 失效视频aid */
   aids = [];
   aidInfo = [];
+  /** 修复限制访问up空间 */
   midInfo() {
     switch (this.mid) {
       case 11783021:
@@ -19163,6 +19855,7 @@ var PageSpace = class {
         break;
     }
   }
+  /** 还原相簿 */
   album() {
     xhrHook("api.bilibili.com/x/dynamic/feed/draw/doc_list", void 0, (obj) => {
       const response = JSON.parse(obj.responseText);
@@ -19178,6 +19871,7 @@ var PageSpace = class {
       }, 1e3);
     }, false);
   }
+  /** 动态重定向回相簿 */
   static album() {
     xhrHook(["x/polymer/web-dynamic", "detail?"], void 0, (res) => {
       const result = res.responseType === "json" ? res.response : JSON.parse(res.response);
@@ -19187,6 +19881,7 @@ var PageSpace = class {
       }
     }, false);
   }
+  /** 注册时间 */
   jointime() {
     poll(() => document.querySelector(".section.user-info"), (t) => {
       accountGetCardByMid(this.mid, this.BLOD.GM).then((d) => {
@@ -19199,6 +19894,7 @@ var PageSpace = class {
       });
     });
   }
+  /** 失效视频 */
   lostVideo() {
     xhrHook("x/v3/fav/resource/list", void 0, async (res) => {
       try {
@@ -19304,6 +20000,7 @@ var PageMedia = class {
     this.BLOD = BLOD2;
     this.limit();
   }
+  /** 解除限制 */
   limit() {
     xhrHook("user/status", void 0, (res) => {
       try {
@@ -19325,6 +20022,7 @@ var PageHistory = class {
       status.history && this.archive();
     });
   }
+  /** 纯视频历史记录 */
   archive() {
     xhrHook(["api.bilibili.com/x/web-interface/history/cursor", "business"], function(args) {
       let obj = new URL(args[1]), max = obj.searchParams.get("max") || "", view_at = obj.searchParams.get("view_at") || "";
@@ -19430,11 +20128,21 @@ var AccessKey = class {
 
 // src/utils/base64.ts
 var Base64 = class {
+  /**
+   * Base64编码
+   * @param str 原始字符串
+   * @returns 编码结果
+   */
   static encode(str) {
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
       return String.fromCharCode("0x" + p1);
     }));
   }
+  /**
+   * Base64解码
+   * @param str 原始字符串
+   * @returns 解码结果
+   */
   static decode(str) {
     return decodeURIComponent(atob(str).split("").map(function(c) {
       return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
@@ -19462,6 +20170,7 @@ var Aria2 = class {
   get url() {
     return \`\${this.server}:\${this.port}/jsonrpc\`;
   }
+  /** 命令行 */
   cmdlet(data) {
     const arr2 = ["aria2c"];
     data.urls.forEach((d) => arr2.push(\`"\${d}"\`));
@@ -19474,6 +20183,7 @@ var Aria2 = class {
     data.header && Object.entries(data.header).forEach((d) => arr2.push(\`--header="\${d[0]}: \${d[1]}"\`));
     return navigator.clipboard.writeText(arr2.join(" "));
   }
+  /** RPC */
   rpc(data) {
     const options = {};
     data.out && (options.out = data.out);
@@ -19485,6 +20195,7 @@ var Aria2 = class {
     data.header && (options.header = data.header);
     return this.postMessage("aria2.addUri", data.id, [data.urls, options]);
   }
+  /** 获取aria2配置信息 */
   getVersion() {
     return this.postMessage("aria2.getVersion");
   }
@@ -19535,6 +20246,12 @@ var Desc = class extends HTMLElement {
     this._content = root.querySelector(".content");
     this.toggle(false);
   }
+  /**
+   * 更新浮窗
+   * @param title 标题
+   * @param content 内容
+   * @param appendTo 父节点
+   */
   value(title, content, appendTo) {
     this._title.innerHTML = title;
     this._content.innerHTML = content;
@@ -19562,18 +20279,24 @@ var Desc = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`desc-\${"0c25929"}\`) || customElements.define(\`desc-\${"0c25929"}\`, Desc);
+customElements.get(\`desc-\${"855f368"}\`) || customElements.define(\`desc-\${"855f368"}\`, Desc);
 
 // src/html/ui-interface.html
 var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/interface.ts
 var BiliOldInterface = class extends HTMLElement {
+  /** 跟节点 */
   _box;
+  /** 标题栏 */
   _tool;
+  /** 关闭按钮 */
   _close;
+  /** 菜单栏 */
   _menu;
+  /** 项目栏 */
   _item;
+  /** 显示设置 */
   showing = false;
   constructor() {
     super();
@@ -19610,6 +20333,13 @@ customElements.get("bili-old") || customElements.define("bili-old", BiliOldInter
 // src/core/ui/item.ts
 var SettingItem = class extends HTMLDivElement {
   _value = document.createElement("div");
+  /**
+   * 新建设置项
+   * @param id keyof typeof {@link userStatus}
+   * @param title 标题
+   * @param sub 副标题
+   * @param svg 图标
+   */
   init(id, title, sub, svg2) {
     this.innerHTML = \`<div class="contain2\${id ? \` \${id}\` : ""}">\${svg2 ? \`<div class="icon">\${svg2}</div>\` : ""}
     <div class="label">\${title}\${sub ? \`<div class="sub">\${sub}</div>\` : ""}</div>
@@ -19617,15 +20347,17 @@ var SettingItem = class extends HTMLDivElement {
     this._value.className = "value";
     this.querySelector(".contain2")?.appendChild(this._value);
   }
+  /** 添加值 */
   value(value) {
     this._value.appendChild(value);
   }
 };
-customElements.get(\`item-\${"0c25929"}\`) || customElements.define(\`item-\${"0c25929"}\`, SettingItem, { extends: "div" });
+customElements.get(\`item-\${"855f368"}\`) || customElements.define(\`item-\${"855f368"}\`, SettingItem, { extends: "div" });
 
 // src/core/ui/item-container.ts
 var ItemContainer = class extends HTMLDivElement {
   _title;
+  /** 设置项容器 */
   _card;
   constructor() {
     super();
@@ -19638,14 +20370,19 @@ var ItemContainer = class extends HTMLDivElement {
     this._title = this.querySelector(".title");
     this._card = this.querySelector(".card");
   }
+  /** 初始化设置项容器 */
   init(title) {
     this._title.textContent = title;
   }
+  /**
+   * 添加设置
+   * @param item 设置项
+   */
   addSetting(item) {
     this._card.append(...item);
   }
 };
-customElements.get(\`item-container-\${"0c25929"}\`) || customElements.define(\`item-container-\${"0c25929"}\`, ItemContainer, { extends: "div" });
+customElements.get(\`item-container-\${"855f368"}\`) || customElements.define(\`item-container-\${"855f368"}\`, ItemContainer, { extends: "div" });
 
 // src/core/ui/menu.ts
 var Menuitem = class extends HTMLDivElement {
@@ -19658,18 +20395,34 @@ var Menuitem = class extends HTMLDivElement {
       this.show();
     });
   }
+  /**
+   * 初始化菜单项
+   * @param name 标题
+   * @param svg 图标
+   * @returns 默认设置项容器
+   */
   init(name, svg2) {
     this.className = "menuitem";
     this.innerHTML = (svg2 ? \`<div class="icon">\${svg2}</div>\` : "") + name;
     this.container[0].init(name);
     return this.container[0];
   }
+  /**
+   * 添加设置分组
+   * @param name 分组名称
+   * @returns 分组设置项容器
+   */
   addCard(name) {
     const con = new ItemContainer();
     con.init(name);
     this.container.push(con);
     return con;
   }
+  /**
+   * 添加设置项到容器
+   * @param item 设置项
+   * @param i 容器序号
+   */
   addSetting(item, i = 0) {
     isArray(item) || (item = [item]);
     item.forEach((d) => {
@@ -19683,11 +20436,12 @@ var Menuitem = class extends HTMLDivElement {
     i = Math.min(this.container.length - 1, i);
     this.container[i].addSetting(item);
   }
+  /** 显示容器中的设置 */
   show() {
     return this.container;
   }
 };
-customElements.get(\`menuitem-\${"0c25929"}\`) || customElements.define(\`menuitem-\${"0c25929"}\`, Menuitem, { extends: "div" });
+customElements.get(\`menuitem-\${"855f368"}\`) || customElements.define(\`menuitem-\${"855f368"}\`, Menuitem, { extends: "div" });
 
 // src/html/checkbox.html
 var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
@@ -19739,6 +20493,7 @@ var CheckBox = class extends HTMLElement {
       this.dispatchEvent(new Event("change"));
     });
   }
+  /** 是否选中 */
   get value() {
     return this.getAttribute("value") === "true" ? true : false;
   }
@@ -19746,6 +20501,7 @@ var CheckBox = class extends HTMLElement {
     v || (v = false);
     this.setAttribute("value", v);
   }
+  /** 标签 */
   get label() {
     return this.getAttribute("label");
   }
@@ -19767,11 +20523,12 @@ var CheckBox = class extends HTMLElement {
         break;
     }
   }
+  /** 刷新值 */
   update(value) {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`checkbox-\${"0c25929"}\`) || customElements.define(\`checkbox-\${"0c25929"}\`, CheckBox);
+customElements.get(\`checkbox-\${"855f368"}\`) || customElements.define(\`checkbox-\${"855f368"}\`, CheckBox);
 var CheckBoxs = class extends HTMLDivElement {
   \$value = [];
   checkboxs = {};
@@ -19821,7 +20578,7 @@ var CheckBoxs = class extends HTMLDivElement {
     });
   }
 };
-customElements.get(\`checkboxs-\${"0c25929"}\`) || customElements.define(\`checkboxs-\${"0c25929"}\`, CheckBoxs, { extends: "div" });
+customElements.get(\`checkboxs-\${"855f368"}\`) || customElements.define(\`checkboxs-\${"855f368"}\`, CheckBoxs, { extends: "div" });
 
 // src/html/input.html
 var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -19844,6 +20601,7 @@ var InputArea = class extends HTMLElement {
       this.dispatchEvent(new Event("change"));
     });
   }
+  /** input标签属性 */
   get prop() {
     return this.\$prop;
   }
@@ -19851,6 +20609,7 @@ var InputArea = class extends HTMLElement {
     this.\$prop = v;
     Object.entries(v).forEach((d) => this._input.setAttribute(...d));
   }
+  /** 输入框值 */
   get value() {
     return this.\$value;
   }
@@ -19860,6 +20619,7 @@ var InputArea = class extends HTMLElement {
     this.\$value = v || "";
     this._input.value = this.\$value;
   }
+  /** 候选值 */
   get candidate() {
     return this.\$candidate;
   }
@@ -19886,11 +20646,12 @@ var InputArea = class extends HTMLElement {
       return li;
     }));
   }
+  /** 刷新值 */
   update(value) {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`input-\${"0c25929"}\`) || customElements.define(\`input-\${"0c25929"}\`, InputArea);
+customElements.get(\`input-\${"855f368"}\`) || customElements.define(\`input-\${"855f368"}\`, InputArea);
 
 // src/html/select.html
 var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -19909,6 +20670,7 @@ var SelectMenu = class extends HTMLElement {
     this._text = root.children[0].children[0].children[0];
     this._list = root.children[0].children[2];
   }
+  /** 当前值 */
   get value() {
     return this.\$value;
   }
@@ -19919,6 +20681,7 @@ var SelectMenu = class extends HTMLElement {
     this._text.textContent = v || "";
     v && this.\$styles[v] && this._text.setAttribute("style", this.\$styles[v]);
   }
+  /** 候选值 */
   get candidate() {
     return this.\$candidate;
   }
@@ -19939,6 +20702,7 @@ var SelectMenu = class extends HTMLElement {
       return li;
     }));
   }
+  /** 候选值对应的行内应该 格式 => 候选值: 样式 */
   get styles() {
     return this.\$styles;
   }
@@ -19946,11 +20710,12 @@ var SelectMenu = class extends HTMLElement {
     this.\$styles = v;
     this.candidate = this.candidate;
   }
+  /** 刷新值 */
   update(value) {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`select-\${"0c25929"}\`) || customElements.define(\`select-\${"0c25929"}\`, SelectMenu);
+customElements.get(\`select-\${"855f368"}\`) || customElements.define(\`select-\${"855f368"}\`, SelectMenu);
 
 // src/html/slider.html
 var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
@@ -20036,6 +20801,7 @@ var SliderBlock = class extends HTMLElement {
       ;
     };
   }
+  /** 默认值 */
   get value() {
     return this.\$value;
   }
@@ -20048,6 +20814,7 @@ var SliderBlock = class extends HTMLElement {
     this.\$value = v;
     this.showChange();
   }
+  /** 最小值 */
   get min() {
     return this.\$min;
   }
@@ -20059,6 +20826,7 @@ var SliderBlock = class extends HTMLElement {
       this.value = v;
     this.showChange();
   }
+  /** 最大值 */
   get max() {
     return this.\$max;
   }
@@ -20070,6 +20838,7 @@ var SliderBlock = class extends HTMLElement {
       this.value = v;
     this.showChange();
   }
+  /** 刻度数 */
   get precision() {
     return this.\$precision;
   }
@@ -20079,6 +20848,7 @@ var SliderBlock = class extends HTMLElement {
     this.\$precision = v;
     this.value = this.\$value;
   }
+  /** 提示信息 */
   get hint() {
     return this.\$hint;
   }
@@ -20087,6 +20857,7 @@ var SliderBlock = class extends HTMLElement {
       return;
     this.\$hint = v;
   }
+  /** 固化提示 */
   get solid() {
     return this.\$solid;
   }
@@ -20096,6 +20867,7 @@ var SliderBlock = class extends HTMLElement {
     this.\$solid = v;
     this.showChange();
   }
+  /** 垂直 */
   get vertical() {
     return this.\$vertical;
   }
@@ -20111,11 +20883,12 @@ var SliderBlock = class extends HTMLElement {
   adoptedCallback() {
     this.showChange();
   }
+  /** 刷新值 */
   update(value) {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`slider-\${"0c25929"}\`) || customElements.define(\`slider-\${"0c25929"}\`, SliderBlock);
+customElements.get(\`slider-\${"855f368"}\`) || customElements.define(\`slider-\${"855f368"}\`, SliderBlock);
 
 // src/html/switch.html
 var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
@@ -20156,12 +20929,13 @@ var SwitchButton = class extends HTMLElement {
     }
     this.\$value = v;
   }
+  /** 刷新值 */
   update(value) {
     value === void 0 || (this.value = value);
     return this;
   }
 };
-customElements.get(\`switch-\${"0c25929"}\`) || customElements.define(\`switch-\${"0c25929"}\`, SwitchButton);
+customElements.get(\`switch-\${"855f368"}\`) || customElements.define(\`switch-\${"855f368"}\`, SwitchButton);
 
 // src/core/ui.ts
 var Menus = {
@@ -20192,6 +20966,7 @@ var UI = class {
   interface = new BiliOldInterface();
   menuitem = {};
   settingItem = {};
+  /** 检查播放器脚本更新 */
   async updateCheck() {
     if (this.BLOD.status.bilibiliplayer && this.BLOD.status.checkUpdate) {
       const version = await this.BLOD.GM.getValue("version");
@@ -20200,6 +20975,7 @@ var UI = class {
       }
     }
   }
+  /** 初始化菜单 */
   initMenu() {
     Object.entries(Menus).forEach((d) => {
       const menu = new Menuitem();
@@ -20208,6 +20984,7 @@ var UI = class {
       this.interface.addMenu(menu);
     });
   }
+  /** 初始化设置项 */
   initSettings() {
     this.initSettingCommon();
     this.initSettingRewrite();
@@ -20217,6 +20994,7 @@ var UI = class {
     this.initSettingDanmaku();
     this.initSettingDownload();
   }
+  /** 通用设置 */
   initSettingCommon() {
     this.menuitem.common.addSetting([
       this.switch("development", "开发者模式", "暴露调试接口到控制台", svg.warn, (v) => {
@@ -20304,6 +21082,7 @@ var UI = class {
       ]);
     }
   }
+  /** 重写设置 */
   initSettingRewrite() {
     this.menuitem.rewrite.addSetting([
       this.switch("av", "av/BV", "恢复旧版av页"),
@@ -20318,6 +21097,7 @@ var UI = class {
       this.switch("album", "相簿", "恢复相簿页")
     ]);
   }
+  /** 弹幕设置 */
   initSettingDanmaku() {
     this.menuitem.danmaku.addSetting([
       this.switch("dmproto", "proto弹幕", "protobuf弹幕支持", void 0, void 0, "因为B站已放弃维护xml弹幕，带来一些问题，比如90分钟后无弹幕，所以此项不建议禁用。【重构播放器】默认启用且不受此项影响。"),
@@ -20336,6 +21116,7 @@ var UI = class {
       }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。")
     ]);
   }
+  /** 样式设置 */
   initSettingStyle() {
     this.menuitem.style.addSetting([
       this.switch("header", "恢复旧版顶栏", "替换所有B站页面中的顶栏为旧版"),
@@ -20351,6 +21132,7 @@ var UI = class {
       this.switch("episodeData", "分集数据", "bangumi", void 0, void 0, "显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。")
     ]);
   }
+  /** 修复设置 */
   initSettingRestore() {
     this.menuitem.restore.addSetting([
       this.switch("lostVideo", "失效视频", "尝试获取失效视频信息"),
@@ -20365,6 +21147,7 @@ var UI = class {
       this.switch("timeLine", "港澳台新番时间表", "填充首页番剧板块", void 0, void 0, "在首页番剧板块中填充港澳台最新番剧更新信息。")
     ]);
   }
+  /** 播放设置 */
   initSettingPlayer() {
     this.menuitem.player.addSetting([
       this.sliderCustom("playbackRate", "播放速率", {
@@ -20451,6 +21234,7 @@ var UI = class {
       }, "针对下载功能", void 0, void 0, "一般视频不需要替换，除非屡屡下载403。若还是403请关闭或者换一个。")
     ], 3);
   }
+  /** 下载设置 */
   initSettingDownload() {
     this.menuitem.download.addSetting([
       this.button("download", "下载视频", () => {
@@ -20575,6 +21359,15 @@ var UI = class {
       this.switch("ef2.silence", "静默下载", "跳过IDM确认对话框", void 0, void 0, "默认情况下IDM会弹窗询问是否确认下载，在该确认框中可以调整保存目录和文件名等操作。启用本项以跳过该确认框。")
     ], 2);
   }
+  /**
+   * 新建开关设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
   switch(id, label, sub, svg2, callback, desc) {
     const item = new SettingItem();
     const button = new SwitchButton();
@@ -20596,6 +21389,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 新建下拉菜单设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param value 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
   select(id, label, value, sub, svg2, callback, desc) {
     const item = new SettingItem();
     const select = new SelectMenu();
@@ -20618,6 +21421,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 创建滑动条菜单设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param value 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
   slider(id, label, value, sub, svg2, callback, desc) {
     const item = new SettingItem();
     const slider = new SliderBlock();
@@ -20640,6 +21453,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 创建自定义滑动条菜单设置
+   * @param id 用来索引的字符串
+   * @param label 标题
+   * @param value 配置数据
+   * @param callback 输入回调
+   * @param sub 副标题
+   * @param svg 图标
+   * @param desc 浮动窗口
+   */
   sliderCustom(id, label, value, callback, sub, svg2, desc) {
     const item = new SettingItem();
     const slider = new SliderBlock();
@@ -20653,6 +21476,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 创建自定义输入框设置
+   * @param id 用来索引的字符串
+   * @param label 标题
+   * @param value 配置数据
+   * @param callback 输入回调
+   * @param sub 副标题
+   * @param svg 图标
+   * @param desc 浮动窗口
+   */
   inputCustom(id, label, value, callback, sub, svg2, desc) {
     const item = new SettingItem();
     const input = new InputArea();
@@ -20666,6 +21499,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 创建输入框设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param value 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 输入回调
+   * @param desc 浮动窗口
+   */
   input(id, label, value, sub, svg2, callback, desc) {
     const item = new SettingItem();
     const input = new InputArea();
@@ -20688,6 +21531,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 创建按钮设置
+   * @param id 用来索引的字符串
+   * @param label 标题
+   * @param callback 按钮点击回调
+   * @param sub 副标题
+   * @param text 按钮文字
+   * @param svg 图标
+   * @param desc 浮动窗口
+   */
   button(id, label, callback, sub, text, svg2, desc) {
     const item = new SettingItem();
     const button = new PushButton();
@@ -20701,6 +21554,16 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 新建复选框设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param values 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
   chockboxs(id, label, values, sub, svg2, callback, desc) {
     const item = new SettingItem();
     const checkboxs = new CheckBoxs();
@@ -20723,6 +21586,13 @@ var UI = class {
     desc && new Desc().value(label, desc, item);
     return item;
   }
+  /**
+   * 显示设置面板
+   * @param id 设置项注册id，id不在可选项时可以使用强制断言
+   * @example
+   * this.show('accessKey.token') // 显示设置面板并滚动到【账户授权】那一项
+   * this.show(<'accessKey'>'accessKey.token') // TypeScript 强制断言
+   */
   show(id) {
     this.interface.show();
     if (id && this.settingItem[id]) {
@@ -20742,9 +21612,11 @@ var Automate = class {
     switchVideo(this.switchVideo);
     this.videospeed();
   }
+  /** 展开弹幕列表 */
   danmakuFirst() {
     this.BLOD.status.automate.danmakuFirst && SessionStorage.setItem("player_last_filter_tab_info", 4);
   }
+  /** 滚动到播放器 */
   showBofqi() {
     const str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
     this.BLOD.status.automate.showBofqi && setTimeout(() => {
@@ -20755,9 +21627,11 @@ var Automate = class {
       node && node.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 500);
   }
+  /** 自动网页全屏 */
   webFullScreen() {
     this.BLOD.status.automate.webFullScreen && poll(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => document.querySelector(".bilibili-player-video-web-fullscreen").click());
   }
+  /** 记忆播放速率 */
   videospeed() {
     if (this.BLOD.status.automate.videospeed) {
       this.BLOD.GM.getValue("videospeed").then((videospeed) => {
@@ -20776,9 +21650,11 @@ var Automate = class {
       });
     }
   }
+  /** 关闭抗锯齿 */
   videoDisableAA() {
     this.BLOD.status.videoDisableAA && poll(() => document.querySelector("#bilibiliPlayer .bilibili-player-video video"), (d) => d.style.filter += "contrast(1)");
   }
+  /** 修改播放器启动参数 */
   modifyArgument() {
     Player.addModifyArgument((args) => {
       const obj = urlObj(\`?\${args[2]}\`);
@@ -20788,6 +21664,7 @@ var Automate = class {
       args[2] = objUrl("", obj);
     });
   }
+  /** 切p回调 */
   switchVideo = async () => {
     this.showBofqi();
     this.webFullScreen();
@@ -21012,10 +21889,12 @@ var PageLive = class {
     this.urlClean();
   }
   sleep = false;
+  /** 添加url清理参数 */
   urlClean() {
     this.BLOD.urlCleaner.paramsSet.add("broadcast_type");
     this.BLOD.urlCleaner.paramsSet.add("is_room_feed");
   }
+  /** 禁止挂机检测 */
   disAbleSleepCheck() {
     const setInterval2 = self.setInterval;
     self.setInterval = (...args) => {
@@ -21058,7 +21937,13 @@ var VideoInfo = class {
     const aid = this.BLOD.aid;
     return aid ? this.stats[aid] : void 0;
   }
+  /** 数据变动回调栈 */
   callbacks = [];
+  /**
+   * 数据变动回调
+   * @param callback 数据变动时执行的回调函数
+   * @returns 撤销监听的函数
+   */
   bindChange(callback) {
     const id = this.callbacks.push(callback);
     return () => {
@@ -21066,10 +21951,12 @@ var VideoInfo = class {
     };
   }
   timer;
+  /** 推送数据变动 */
   emitChange() {
     clearTimeout(this.timer);
     this.timer = setTimeout(() => this.callbacks.forEach((d) => d(this)), 100);
   }
+  /** 从\`IAidDatail\`中提取 */
   aidDatail(data) {
     const album = data.title;
     const artist = data.owner.name;
@@ -21090,6 +21977,7 @@ var VideoInfo = class {
     this.stats[data.aid] = data.stat;
     this.emitChange();
   }
+  /** 从\`IAidInfo\`中提取 */
   aidInfo(data) {
     const album = data.title;
     const artist = data.upper.name;
@@ -21108,6 +21996,7 @@ var VideoInfo = class {
       artwork: [{ src: pic }]
     };
   }
+  /** 从\`IBangumiSeasonResponse\`中提取 */
   bangumiSeason(data) {
     const album = data.title || data.jp_title;
     const artist = data.actors || data.staff || data.up_info?.name;
@@ -21116,6 +22005,7 @@ var VideoInfo = class {
     this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
     this.emitChange();
   }
+  /** 从\`IBangumiEpisode\`中提取 */
   bangumiEpisode(data, album, artist, pic, bkg_cover) {
     data.forEach((d) => {
       const artwork = [{ src: d.cover.replace("http:", "") }, { src: pic }];
@@ -21146,6 +22036,7 @@ var VideoInfo = class {
     });
     this.emitChange();
   }
+  /** 设置浏览器媒体信息 */
   mediaSession() {
     if (this.metadata) {
       navigator.mediaSession.metadata = new MediaMetadata({ ...this.metadata });
@@ -21254,6 +22145,7 @@ var Ef2 = class {
     this.delay = delay;
     this.silence = silence;
   }
+  /** 拉起IDM */
   sendLinkToIDM(data) {
     this.rebuildData(data);
     const ef2str = Ef2.encode(data);
@@ -21262,10 +22154,12 @@ var Ef2 = class {
     a.click();
     return ef2str;
   }
+  /** 生成ef2文件 */
   file(data, fileName) {
     this.rebuildData(data);
     return Ef2.file([data], fileName);
   }
+  /** 补全数据 */
   rebuildData(data) {
     this.userAgent && !data.userAgent && (data.userAgent = this.userAgent);
     this.referer && !data.referer && (data.referer = this.referer);
@@ -21273,6 +22167,7 @@ var Ef2 = class {
     this.delay && !data.delay && (data.delay = this.delay);
     this.silence && !data.silence && (data.silence = this.silence);
   }
+  /** 生成ef2文件 */
   static file(data, fileName) {
     const result = [];
     data.forEach((d) => {
@@ -21323,6 +22218,7 @@ var Ef2 = class {
     });
     saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
   }
+  /** 生成ef2协议 */
   static encode(data) {
     const arr2 = [];
     Object.entries(data).forEach((d) => {
@@ -21369,6 +22265,7 @@ var Ef2 = class {
     });
     return \`ef2://\${Base64.encode(arr2.join(" "))}\`;
   }
+  /** 解码ef2协议 */
   static decode(ef2str) {
     ef2str = ef2str.replace("ef2://", "");
     ef2str = Base64.decode(ef2str);
@@ -21448,7 +22345,9 @@ var PlayinfoFilter = class {
   constructor(fileName) {
     this.fileName = fileName;
   }
+  /** 数据 */
   record = [];
+  /** id => 质量 */
   quality = {
     100032: "8K",
     100029: "4K",
@@ -21512,11 +22411,13 @@ var PlayinfoFilter = class {
     6: "240P",
     5: "144P"
   };
+  /** id => 类型（备用方案） */
   codec = {
     hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
     avc: [30120, 30112, 30080, 30064, 30032, 30016],
     av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
   };
+  /** 颜色表 */
   color = {
     "8K": "yellow",
     "Dolby": "pink",
@@ -21536,6 +22437,10 @@ var PlayinfoFilter = class {
     "128Kbps": "blue",
     "64Kbps": "green"
   };
+  /**
+   * 解码playurl的下载数据
+   * @param playinfo playurl返回值(json)
+   */
   filter(playinfo) {
     typeof playinfo === "string" && (playinfo = toObject(playinfo));
     if (playinfo) {
@@ -21546,6 +22451,10 @@ var PlayinfoFilter = class {
     }
     return this.record;
   }
+  /**
+   * 整理durl部分
+   * @param durl durl信息
+   */
   durl(durl) {
     let index = 0;
     durl.forEach((d) => {
@@ -21573,12 +22482,21 @@ var PlayinfoFilter = class {
       this.record.push(link);
     });
   }
+  /**
+   * 整理dash部分
+   * @param dash dash信息
+   */
   dash(dash) {
     dash.video && this.dashVideo(dash.video, dash.duration);
     dash.audio && this.dashAudio(dash.audio, dash.duration);
     dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration);
     dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac");
   }
+  /**
+   * 整理dash视频部分
+   * @param video dash视频信息
+   * @param duration duration信息，配合bandwidth能计算出文件大小
+   */
   dashVideo(video, duration) {
     video.forEach((d) => {
       const url = d.backupUrl || d.backup_url || [];
@@ -21603,6 +22521,12 @@ var PlayinfoFilter = class {
       });
     });
   }
+  /**
+   * 整理dash音频部分
+   * @param audio dash音频信息
+   * @param duration duration信息，配合bandwidth能计算出文件大小
+   * @param fmt 音频拓展名，默认\`.m4a\`
+   */
   dashAudio(audio, duration, fmt = ".m4a") {
     audio.forEach((d) => {
       const url = d.backupUrl || d.backup_url || [];
@@ -21618,9 +22542,20 @@ var PlayinfoFilter = class {
       });
     });
   }
+  /**
+   * 根据url确定画质/音质信息  
+   * 需要维护quality表
+   * @param url 多媒体url
+   * @param id 媒体流id
+   * @returns 画质/音质信息
+   */
   getQuality(url, id) {
     return this.quality[this.getID(url)] || id && this.quality[id] || "N/A";
   }
+  /**
+   * 从url中提取可能的id
+   * @param url 多媒体url
+   */
   getID(url) {
     let id = 0;
     url.replace(/\\d+\\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
@@ -21674,7 +22609,7 @@ var BilioldDownload = class extends HTMLElement {
     this._container.replaceChildren(this._noData);
   }
 };
-customElements.get(\`download-\${"0c25929"}\`) || customElements.define(\`download-\${"0c25929"}\`, BilioldDownload);
+customElements.get(\`download-\${"855f368"}\`) || customElements.define(\`download-\${"855f368"}\`, BilioldDownload);
 
 // src/core/download.ts
 var Download = class {
@@ -21682,7 +22617,9 @@ var Download = class {
     this.BLOD = BLOD2;
     switchVideo(() => this.destory());
   }
+  /** 下载界面 */
   ui = new BilioldDownload();
+  /** 数据缓存 */
   data = this.ui.init();
   get fileName() {
     if (this.BLOD.videoInfo.metadata) {
@@ -21690,6 +22627,7 @@ var Download = class {
     }
     return "";
   }
+  /** 解码playinfo */
   decodePlayinfo(playinfo, fileName = this.fileName) {
     const data = new PlayinfoFilter(fileName).filter(playinfo);
     data.forEach((d) => {
@@ -21704,6 +22642,7 @@ var Download = class {
       });
     });
   }
+  /** 分发数据 */
   pushDownload(data, ev) {
     if (data.onClick) {
       data.onClick(ev);
@@ -21754,8 +22693,11 @@ var Download = class {
       }
     }
   }
+  /** 请求中 */
   downloading = false;
+  /** 已请求 */
   gets = [];
+  /** 下载当前视频 */
   default() {
     if (this.downloading)
       return;
@@ -21785,6 +22727,7 @@ var Download = class {
       this.downloading = false;
     });
   }
+  /** 清空数据 */
   destory() {
     this.ui.remove();
     this.data = this.ui.init();
@@ -21795,6 +22738,9 @@ var Download = class {
   mp4(cid) {
     return new ApiPlayurlProj({ cid, access_key: this.BLOD.status.accessKey.token }, this.BLOD.pgc).getData();
   }
+  // private flv(avid: number, cid: number) {
+  //     return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, this.BLOD.pgc);
+  // }
   dash(avid, cid) {
     return apiPlayurl({ avid, cid }, true, this.BLOD.pgc);
   }
@@ -22127,9 +23073,11 @@ var dm_web_default = {
 
 // src/utils/danmaku.ts
 var DanmakuBase = class {
+  /** 从小到大排序弹幕 */
   static sortDmById(dms) {
     dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
   }
+  /** 比较两个弹幕ID先后 */
   static bigInt(num1, num2) {
     String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
     String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
@@ -22147,6 +23095,7 @@ var DanmakuBase = class {
       return false;
     }
   }
+  /** 重构为旧版弹幕类型 */
   static parseCmd(dms) {
     return dms.map((d) => {
       const dm = {
@@ -22168,6 +23117,7 @@ var DanmakuBase = class {
       return dm;
     });
   }
+  /** 解析解码xml弹幕 */
   static decodeXml(xml) {
     if (typeof xml === "string") {
       xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
@@ -22196,6 +23146,7 @@ var DanmakuBase = class {
     });
     return dms;
   }
+  /** 编码xml弹幕 */
   static encodeXml(dms, cid) {
     return dms.reduce((s, d) => {
       s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<&]/g, (a) => {
@@ -22221,6 +23172,7 @@ var _ApiDmWeb = class {
     this.DmSegMobileReply = this.Root.lookupType("DmSegMobileReply");
   }
   danmaku = [];
+  /** 获取新版弹幕 */
   async getData() {
     if (!this.danmaku.length) {
       const dmWebView = await this.DmWebViewReply();
@@ -22250,10 +23202,12 @@ var _ApiDmWeb = class {
     }
     return this.danmaku;
   }
+  /** 获取旧版弹幕 */
   async toCmd() {
     const danmaku = await this.getData();
     return DanmakuBase.parseCmd(danmaku);
   }
+  /** 获取弹幕分包 */
   async DmWebViewReply() {
     const response = await fetch(objUrl(URLS.DM_WEB_VIEW, {
       type: 1,
@@ -22264,6 +23218,7 @@ var _ApiDmWeb = class {
     const msg = _ApiDmWeb.DmWebViewReply.decode(new Uint8Array(arraybuffer));
     return _ApiDmWeb.DmWebViewReply.toObject(msg);
   }
+  /** 获取弹幕分包 */
   async DmSegMobileReply(segment_index = 1) {
     const response = await fetch(objUrl(URLS.DM_WEB_SEG_SO, {
       type: 1,
@@ -22275,6 +23230,7 @@ var _ApiDmWeb = class {
     const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
     return _ApiDmWeb.DmSegMobileReply.toObject(msg);
   }
+  /** 获取高级弹幕 */
   async specialDm(url) {
     const response = await fetch(url);
     const arraybuffer = await response.arrayBuffer();
@@ -22289,6 +23245,7 @@ __publicField(ApiDmWeb, "DmSegMobileReply");
 
 // src/utils/hook/worker.ts
 var _WorkerHook = class {
+  /** Worker.prototype.postMessage hook init. */
   static postMessageHook() {
     this.postMessage = Worker.prototype.postMessage;
     Worker.prototype.postMessage = function(message, transfer) {
@@ -22302,6 +23259,11 @@ var _WorkerHook = class {
   constructor() {
     _WorkerHook.postMessage || _WorkerHook.postMessageHook();
   }
+  /**
+   * Worker.prototype.postMessage hook.
+   * @param callback 检查并处理\`Worker.prototype.postMessage\`的回调函数，继承原传参，返回 **true** 时拦截该实例。
+   * @returns 取消该hook的方法，执行后不再hook。
+   */
   postMessage(callback) {
     const id = _WorkerHook.postMessageCallback.push(callback);
     return () => {
@@ -22310,6 +23272,7 @@ var _WorkerHook = class {
   }
 };
 var WorkerHook = _WorkerHook;
+/** Worker.prototype.postMessage backup. */
 __publicField(WorkerHook, "postMessage");
 __publicField(WorkerHook, "postMessageCallback", []);
 
@@ -22324,6 +23287,7 @@ var Danmaku = class {
     });
   }
   listSoFixed = false;
+  /** 原生旧版播放器使用protobuf弹幕 */
   listSoFix() {
     if (this.listSoFixed)
       return;
@@ -22357,6 +23321,7 @@ var Danmaku = class {
       return false;
     });
   }
+  /** 允许普权弹幕排版 */
   trim() {
     propertyHook(String.prototype, "trim", function() {
       return String(this);
@@ -22367,6 +23332,7 @@ var Danmaku = class {
       throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
     return new ApiDmWeb(aid, cid).toCmd();
   }
+  /** 加载本地xml弹幕 */
   localDmXml() {
     if (!window.player)
       return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
@@ -22397,6 +23363,7 @@ var Danmaku = class {
       toast.delay = this.BLOD.status.toast.delay;
     });
   }
+  /** 加载本地json弹幕 */
   localDmJson() {
     if (!window.player)
       return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
@@ -22427,6 +23394,7 @@ var Danmaku = class {
       toast.delay = this.BLOD.status.toast.delay;
     });
   }
+  /** 下载弹幕 */
   async download(aid = this.BLOD.aid, cid = this.BLOD.cid) {
     if (!cid)
       return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
@@ -22438,6 +23406,7 @@ var Danmaku = class {
     }
     return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), \`\${title}.xml\`, "application/xml");
   }
+  /** 加载在线弹幕 */
   async onlineDm(str) {
     if (!window.player)
       return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
@@ -22473,23 +23442,40 @@ var Danmaku = class {
 
 // src/bilibili-old.ts
 var BLOD = class {
+  /** @param GM 提权操作接口 */
   constructor(GM2) {
     this.GM = GM2;
+    /** 用户数据加载回调序列 */
     this.userLoadedCallbacks = [];
+    /** 用户数据。确认已异步返回才可用，否则请使用\`userLoadedCallback\`添加回调 */
     this.status = userStatus;
+    /** 路径拆分 */
     this.path = location.href.split("/");
+    /** bangumi标记 */
     this.pgc = false;
+    /** 播放器已加载 */
     this.playLoaded = false;
+    /** 已模拟APP端取流 */
     this.networkMocked = false;
+    /** 是否大会员 */
     this.isVip = false;
+    /** 播放器 */
     this.player = new Player();
+    /** 用户数据管理 */
     this.user = new User(this);
+    /** url净化 */
     this.urlCleaner = new UrlCleaner();
+    /** toastr */
     this.toast = new ToastContainer();
+    /** 解除限制 */
     this.videoLimit = new VideoLimit(this);
+    /** 视频数据 */
     this.videoInfo = new VideoInfo(this);
+    /** 下载 */
     this.download = new Download(this);
+    /** 弹幕 */
     this.danmaku = new Danmaku(this);
+    /** 正在更新播放器 */
     this.updating = false;
     this.version = this.GM.info?.script.version.slice(-40);
     this.userLoadedCallback((status) => {
@@ -22517,6 +23503,7 @@ var BLOD = class {
   set cid(v) {
     window.cid = v;
   }
+  /** 需要用户数据的模块 */
   init() {
     if (this.path[2] == "www.bilibili.com" && (!this.path[3] || (this.path[3].startsWith("?") || this.path[3].startsWith("#") || this.path[3].startsWith("index.")))) {
       this.status.index && new PageIndex(this);
@@ -22566,6 +23553,7 @@ var BLOD = class {
     });
     window.top === window.self && (this.ui = new UI(this));
   }
+  /** 旧版播放器引导 */
   EmbedPlayer() {
     if (!this.playLoaded) {
       this.playLoaded = true;
@@ -22573,6 +23561,7 @@ var BLOD = class {
       this.playerSettings();
     }
   }
+  /** 旧版播放器以nano形式引导 */
   connectPlayer() {
     if (!this.playLoaded) {
       this.playLoaded = true;
@@ -22580,6 +23569,7 @@ var BLOD = class {
       this.playerSettings();
     }
   }
+  /** 用户数据回调 */
   userLoadedCallback(callback) {
     if (this.user) {
       this.user.addCallback(callback);
@@ -22587,6 +23577,12 @@ var BLOD = class {
       this.userLoadedCallbacks.push(callback);
     }
   }
+  /**
+   * 修改xhr响应
+   * @param target 目标XMLHttpRequest
+   * @param res GM.xmlHttpRequest响应
+   * @param v 目标XMLHttpRequest对应的回调
+   */
   defineRes(target, res, v) {
     Object.defineProperties(target, {
       status: {
@@ -22622,6 +23618,7 @@ var BLOD = class {
     });
     v();
   }
+  /** 模拟APP端取流 */
   networkMock() {
     if (!this.networkMocked) {
       this.networkMocked = true;
@@ -22735,9 +23732,23 @@ var BLOD = class {
       }
     }
   }
+  /**
+   * 监听设置改动
+   * @param key 设置键
+   * @param callback 设置项变动时执行的回调，新值将作为第一个参数传入
+   * @returns 用于取消监听的回调
+   */
   bindStatusChange(key, callback) {
     return this.user.bindChange(key, callback);
   }
+  /**
+   * 链式获取目标对象的值
+   * @param key 链式字符串
+   * @param obj 目标对象（默认为用户数据）
+   * @returns 用户数据
+   * @example
+   * getStatus('toast.disabled') // userStatus.toast.disabled
+   */
   getStatus(key, obj = this.status) {
     const arr2 = key.split(".");
     let status = obj;
@@ -22747,6 +23758,14 @@ var BLOD = class {
     }
     return status;
   }
+  /**
+   * 链式设置目标对象的值
+   * @param key 链式字符串
+   * @param value 用户数据
+   * @param obj 目标对象（默认为用户数据）
+   * @example
+   * setStatus('toast.disabled', false) // userStatus.toast.disabled
+   */
   setStatus(key, value, obj = this.status) {
     try {
       const arr2 = key.split(".");
@@ -22760,9 +23779,11 @@ var BLOD = class {
     } catch {
     }
   }
+  /** Bilibili快捷登录 */
   biliQuickLogin() {
     window.biliQuickLogin ? window.biliQuickLogin() : loadScript("//static.hdslb.com/account/bili_quick_login.js", () => this.biliQuickLogin());
   }
+  /** 禁止bpx-player自动播放 */
   bpxPlayerProfile() {
     try {
       const bpx_player_profile = LocalStorage.getItem("bpx_player_profile") || { media: { autoplay: false } };
@@ -22771,6 +23792,10 @@ var BLOD = class {
     } catch (e) {
     }
   }
+  /**
+   * 加载播放器
+   * @param force 强制更新
+   */
   async loadplayer(force = false) {
     if (!window.jQuery)
       await loadScript(URLS.JQUERY);
@@ -22843,6 +23868,7 @@ var BLOD = class {
       addCss(".bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}", "detail-img");
     }
   }
+  /** 备份播放器设置 */
   playerSettings() {
     const local = LocalStorage.getItem("bilibili_player_settings");
     if (local) {
@@ -22897,13 +23923,17 @@ if (typeof Element.prototype.replaceChildren === "undefined") {
 
 // userscript/main.ts
 new BLOD(GM);
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
 // @license MIT
+/*! Bundled license information:
+
+is-buffer/index.js:
+  (*!
+   * Determine if an object is a Buffer
+   *
+   * @author   Feross Aboukhadijeh <https://feross.org>
+   * @license  MIT
+   *)
+*/
 
 `;
 
