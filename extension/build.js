@@ -15,7 +15,7 @@ import('fs-extra').then(d => {
                     'extension/main.ts',
                 ],
                 bundle: true, // 打包
-                sourcemap: true, // map文件
+                // sourcemap: true, // map文件
                 minify: true, // 压缩
                 outdir: 'dist', // 输出目录
                 outbase: "extension", // 基准目录
