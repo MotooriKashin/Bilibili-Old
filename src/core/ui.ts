@@ -201,9 +201,9 @@ export class UI {
     /** 样式设置 */
     protected initSettingStyle() {
         this.menuitem.style.addSetting([
-            this.switch('header', '恢复旧版顶栏', '替换所有B站页面中的顶栏为旧版'),
-            this.switch('comment', '恢复评论翻页', '替换瀑布流评论区'),
-            this.switch('staff', '合作UP主', '联合投稿显示合作UP主'),
+            this.switch('header', '恢复旧版顶栏', '替换所有B站页面中的顶栏为旧版', undefined, undefined, '除非替换后实在不和谐，一般都会进行替换。'),
+            this.switch('comment', '恢复评论翻页', '替换瀑布流评论区', undefined, undefined, '评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。'),
+            this.switch('staff', '合作UP主', '联合投稿显示合作UP主', undefined, undefined, '在原av页up主信息处列出所有合作up主。'),
             this.switch('bangumiEplist', '保留bangumi分P', '牺牲特殊背景图', undefined, undefined, '旧版bangumi遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。'),
             this.switch('jointime', '注册时间', '个人空间显示账户注册时间'),
             this.switch('history', '纯视频历史', '过滤历史记录页的非视频部分'),
@@ -217,7 +217,7 @@ export class UI {
     /** 修复设置 */
     protected initSettingRestore() {
         this.menuitem.restore.addSetting([
-            this.switch('lostVideo', '失效视频', '尝试获取失效视频信息'),
+            this.switch('lostVideo', '失效视频', '尝试获取失效视频信息', undefined, undefined, '修复收藏的失效视频的封面和标题信息，并以红色删除线标记。使用缓存数据恢复的页面重构av页默认开启且不受此项影响，其中部分上古失效视频甚至还保留了评论区。'),
             this.switch('disableSleepChcek', '禁用直播间挂机检测', '就喜欢挂后台听个响不行吗！'),
             this.switch('show1080p', '不登录高画质支持', 'dash模式限定', undefined, v => {
                 if (v && !this.BLOD.status.accessKey.token) {
@@ -226,7 +226,7 @@ export class UI {
                     this.BLOD.status.show1080p = false;
                 }
             }, 'B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。若<strong>非常抱歉</strong>报错请关闭本选项！'),
-            this.switch('timeLine', '港澳台新番时间表', '填充首页番剧板块', undefined, undefined, '在首页番剧板块中填充港澳台最新番剧更新信息。')
+            this.switch('timeLine', '港澳台新番时间表', '填充首页番剧板块', undefined, undefined, '在首页番剧板块中填充港澳台最新番剧更新信息。只提取了最新的30条番剧信息，所以数据中可能不会包含过于久远的更新。本功能只能显示已更新的番剧信息，而不能作为即将更新番剧的预测。')
         ]);
     }
     /** 播放设置 */
@@ -240,25 +240,25 @@ export class UI {
                 solid: true
             }, e => {
                 this.BLOD.player.playbackRate(e);
-            }, '播放速率调整拓展', undefined, '调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：初始调整前的值不代表当前实际播放速率，这不影响调节。'),
+            }, '播放速率调整拓展', undefined, '调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：未调整前的当前速率默认为1。'),
             this.switch('webRTC', 'WebRTC', '<strong>关闭</strong>以禁用p2p共享带宽', undefined, undefined, 'B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！'),
             this.switch('elecShow', '充电鸣谢', '允许视频结尾的充电鸣谢'),
             this.switch('videoDisableAA', '禁用视频渲染抗锯齿', '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
-            this.switch('ugcSection', '视频合集', '以播单形式呈现')
+            this.switch('ugcSection', '视频合集', '以播单形式呈现', undefined, undefined, '视频合集在旧版页面时代本不存在，但其实质类似于上古的播单，所以直接使用播单页面进行模拟。值得一提的是真正的播单页面相关接口已完全被404，如果有幸访问到脚本会直接替换为缓存的播单号769——因为只缓存了这一项数据。另外播单详情页面还是404状态，以后可能也会用缓存数据修复，让后人能一窥范例。')
         ]);
         this.menuitem.player.addCard('自动化操作');
         this.menuitem.player.addSetting([
-            this.switch(<'automate'>'automate.danmakuFirst', '展开弹幕列表', '而不是推荐视频'),
-            this.switch(<'automate'>'automate.showBofqi', '滚动到播放器', '载入视频时'),
-            this.switch(<'automate'>'automate.screenWide', '宽屏模式', '隐藏播放器右侧面板', undefined, v => v && (this.BLOD.status.automate.webFullScreen = false)),
-            this.switch(<'automate'>'automate.noDanmaku', '无弹幕模式', '默认关闭弹幕'),
-            this.switch(<'automate'>'automate.autoPlay', '自动播放', '播放器初始化完成时'),
-            this.switch(<'automate'>'automate.webFullScreen', '网页全屏模式', '载入视频时', undefined, v => v && (this.BLOD.status.automate.screenWide = false)),
+            this.switch(<'automate'>'automate.danmakuFirst', '展开弹幕列表', '而不是推荐视频', undefined, undefined, '载入播放器时右侧面板默认切换到弹幕列表。'),
+            this.switch(<'automate'>'automate.showBofqi', '滚动到播放器', '载入视频时', undefined, undefined, '载入播放器时自动滚动到播放器。'),
+            this.switch(<'automate'>'automate.screenWide', '宽屏模式', '隐藏播放器右侧面板', undefined, v => v && (this.BLOD.status.automate.webFullScreen = false), '载入播放器时自动启用宽屏模式。（与网页全屏二选一）'),
+            this.switch(<'automate'>'automate.noDanmaku', '无弹幕模式', '默认关闭弹幕', undefined, undefined, '载入播放器时默认关闭弹幕。'),
+            this.switch(<'automate'>'automate.autoPlay', '自动播放', '播放器初始化完成时', undefined, undefined, '播放器加载完成自动播放。'),
+            this.switch(<'automate'>'automate.webFullScreen', '网页全屏模式', '载入视频时', undefined, v => v && (this.BLOD.status.automate.screenWide = false), '载入播放器时自动网页全屏。（与宽屏模式二选一）'),
             this.switch(<'automate'>'automate.videospeed', '记忆播放速率', '永久继承播放速率设定', undefined, undefined, '默认的记忆播放速率记忆仅同一个网页标签页有效，开启后将代为记忆固定下来。'),
         ], 1);
         this.menuitem.player.addCard('限制视频');
         this.menuitem.player.addSetting([
-            this.switch(<'videoLimit'>'videoLimit.status', '解除播放限制', '解除区域/APP限制'),
+            this.switch(<'videoLimit'>'videoLimit.status', '解除播放限制', '解除区域/APP限制', undefined, undefined, '内置服务器只能获取到360P，有条件请在下面自定义服务器。'),
             this.select(<'videoLimit'>'videoLimit.server', '代理服务器模式', {
                 candidate: ['内置', '自定义']
             }, '<strong>自定义</strong>模式须要填写下面的服务器', undefined, v => {
@@ -288,16 +288,16 @@ export class UI {
             }, '大部分新视频【内置】服务器只能获取到360P，实在不堪入目，有条件的话还是【自定义】服务器吧。对于大陆用户而言，【自定义】服务器一般填一个台湾就行，或者加上一个泰区。'),
             this.input(<'videoLimit'>'videoLimit.th', '泰区', {
                 prop: { type: "url", placeholder: "www.example.com" }
-            }, '泰国（东南亚）限定视频反代服务器'),
+            }, '泰国（东南亚）限定视频反代服务器', undefined, undefined, '解析泰国（东南亚）限定视频所用的代理服务器。东南亚视频暂时无弹幕和评论，有也是其他视频乱入的。'),
             this.input(<'videoLimit'>'videoLimit.tw', '台湾', {
                 prop: { type: "url", placeholder: "www.example.com" }
-            }, '台湾限定视频反代服务器'),
+            }, '台湾限定视频反代服务器', undefined, undefined, '解析【仅限台湾地区】视频所用的代理服务器。港澳台限定视频的首选。'),
             this.input(<'videoLimit'>'videoLimit.hk', '港澳', {
                 prop: { type: "url", placeholder: "www.example.com" }
-            }, '香港澳门限定视频反代服务器'),
+            }, '香港澳门限定视频反代服务器', undefined, undefined, '解析【仅限香港澳门地区】视频所用的代理服务器。与台湾不同，香港澳门基本上是绑定在一起的。'),
             this.input(<'videoLimit'>'videoLimit.cn', '大陆', {
                 prop: { type: "url", placeholder: "www.example.com" }
-            }, '大陆限定视频反代服务器'),
+            }, '大陆限定视频反代服务器', undefined, undefined, '解析大陆（一般）视频所用的代理服务器。此项一般是留给海外用户用的。'),
         ], 2);
         this.menuitem.player.addCard('替换 UPOS 服务器');
         const upos = Object.keys(UPOS);
@@ -313,7 +313,7 @@ export class UI {
             }, '针对其他视频', undefined, undefined, '一般视频不需要替换，除非分配给您的视频服务器实在不行，请按需酌情切换。若卡加载请关闭或者换一个。'),
             this.select(<'uposReplace'>'uposReplace.download', '下载', {
                 candidate: ['不替换'].concat(upos)
-            }, '针对下载功能', undefined, undefined, '一般视频不需要替换，除非屡屡下载403。若还是403请关闭或者换一个。'),
+            }, '针对下载功能', undefined, undefined, '一般不需要替换，除非屡屡下载403。若还是403请关闭或者换一个。'),
         ], 3);
     }
     /** 下载设置 */
@@ -328,7 +328,7 @@ export class UI {
             this.button(<'aria2'>'downloadImg', '下载封面', () => {
                 this.BLOD.download.image();
             }, '下载当前封面', '封面', undefined, '下载当前视频的封面，如果有其他特殊图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。'),
-            this.chockboxs('downloadType', '请求的文件类型', ['mp4', 'dash', 'flv'], '视频封装格式', undefined, () => this.BLOD.download.destory(), '勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。'),
+            this.chockboxs('downloadType', '请求的文件类型', ['mp4', 'dash', 'flv'], '视频封装格式', undefined, () => this.BLOD.download.destory(), '勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。'),
             this.switch('TVresource', '请求tv端视频源', '无水印', undefined, e => {
                 e && alert('下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！', '403警告', [
                     {
