@@ -1,34 +1,20 @@
 import { debug } from "../debug";
 import { urlObj } from "../format/url";
 
-const appendChildHead = HTMLHeadElement.prototype.appendChild;
-const appendChildBody = HTMLBodyElement.prototype.appendChild;
-const insertBeforeHead = HTMLHeadElement.prototype.insertBefore;
-const insertBeforeBody = HTMLBodyElement.prototype.insertBefore;
+const appendChild = Element.prototype.appendChild;
+const insertBefore = Element.prototype.insertBefore;
 const jsonp: [string[], Function][] = [];
-HTMLHeadElement.prototype.appendChild = function <T extends Node>(newChild: T): T {
+Element.prototype.appendChild = function <T extends Node>(newChild: T): T {
     newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
         d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
     }));
-    return <T>appendChildHead.call(this, newChild);
+    return <T>appendChild.call(this, newChild);
 };
-HTMLBodyElement.prototype.appendChild = function <T extends Node>(newChild: T): T {
+Element.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
     newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
         d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
     }));
-    return <T>appendChildBody.call(this, newChild);
-};
-HTMLHeadElement.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
-    newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
-        d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
-    }));
-    return <T>insertBeforeHead.call(this, newChild, refChild);
-}
-HTMLBodyElement.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
-    newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
-        d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
-    }));
-    return <T>insertBeforeBody.call(this, newChild, refChild);
+    return <T>insertBefore.call(this, newChild, refChild);
 }
 /**
  * 注册拦截修改jsonp请求，本方法必须传入同步返回的回调函数，要使用异步回调请考虑方法`async`。
