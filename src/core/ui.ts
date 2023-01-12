@@ -211,7 +211,8 @@ export class UI {
             this.switch('commentJumpUrlTitle', '评论超链接标题', '还原为链接或短链接', undefined, undefined, '直接显示链接标题固然方便，但有些时候还是直接显示链接合适。'),
             this.switch('like', '添加点赞功能', '不支持一键三连'),
             this.switch('fullBannerCover', '修正banner分辨率', '顶栏banner完整显示不裁剪', undefined, undefined, '旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。'),
-            this.switch('episodeData', '分集数据', 'bangumi', undefined, undefined, '显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。')
+            this.switch('episodeData', '分集数据', 'bangumi', undefined, undefined, '显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。'),
+            this.switch('simpleChinese', '繁 -> 简', '将繁体字幕翻译为简体', undefined, undefined, '识别并替换CC字幕繁体并转化为简体，使用内置的简繁对照表机械翻译。')
         ]);
     }
     /** 修复设置 */

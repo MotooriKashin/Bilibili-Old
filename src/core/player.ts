@@ -1,10 +1,14 @@
+import { BLOD } from "../bilibili-old";
+import { jsonCheck } from "../io/api";
 import { apiPgcSlideShow } from "../io/api-pgc-slideshow";
 import { apiSearchSquare } from "../io/api-search-square";
 import { apiWebshowLoc } from "../io/api-webshow-locs";
 import { debug } from "../utils/debug";
 import { addCss } from "../utils/element";
+import { cht2chs } from "../utils/format/cht2chs";
 import { objUrl } from "../utils/format/url";
 import { methodHook, propertyHook } from "../utils/hook/method";
+import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 import { switchVideo } from "./observer";
 import { localStorage } from "./storage";
@@ -37,7 +41,7 @@ export class Player {
     protected nanoPlayer: any;
     protected connect: any;
     protected isConnect: boolean = false;
-    constructor() {
+    constructor(private BLOD: BLOD) {
         // 3.x播放器
         propertyHook.modify(window, 'nano', (v: any) => {
             debug('捕获新版播放器！')
@@ -117,6 +121,7 @@ export class Player {
             } catch { }
         }
         this.switchVideo();
+        this.simpleChinese();
     }
     /** 通过hook新版播放器来引导旧版播放器 */
     connectPlayer(loadPlayer: Function) {
@@ -244,8 +249,46 @@ export class Player {
         clearTimeout(this.playbackRateTimer);
         this.playbackRateTimer = setTimeout(() => {
             const video = document.querySelector<HTMLVideoElement>('#bilibiliPlayer video');
-            if (!video) throw new Error('未找到播放器！请在播放页面使用。');
+            if (!video) return this.BLOD.toast.warning('未找到播放器！请在播放页面使用。');
             video.playbackRate = Number(playbackRate)
         }, 100);
+    }
+    /** 繁体字幕转简体 */
+    private simpleChinese() {
+        if (this.BLOD.status.simpleChinese) {
+            xhrHook('x/player/v2?', undefined, res => {
+                try {
+                    const response = jsonCheck(res.response);
+                    if (response?.data?.subtitle?.subtitles?.length) {
+                        response.data.subtitle.subtitles.forEach((d: any) => {
+                            if (typeof d.subtitle_url === 'string') {
+                                switch (d.lan) {
+                                    case 'zh-Hant':
+                                        xhrHook(d.subtitle_url, undefined, res => {
+                                            try {
+                                                let response = res.responseType === 'json' ? JSON.stringify(res.response) : res.responseText;
+                                                if (response) {
+                                                    response = cht2chs(response);
+                                                    if (res.responseType === 'json') {
+                                                        res.response = JSON.parse(response)
+                                                    } else {
+                                                        res.response = res.responseText = response;
+                                                    }
+                                                    this.BLOD.toast.warning('字幕：繁 -> 简', `原始语言：${d.lan_doc}`)
+                                                }
+                                            } catch (e) {
+                                                debug.error('繁 -> 简', e);
+                                            }
+                                        })
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        })
+                    }
+                } catch { }
+            }, false);
+        }
     }
 }

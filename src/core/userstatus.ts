@@ -164,5 +164,7 @@ export const userStatus = {
     /** 分集数据 */
     episodeData: false,
     /** 港澳台新番时间表 */
-    timeLine: false
+    timeLine: false,
+    /** 字幕：繁 -> 简 */
+    simpleChinese: true
 }

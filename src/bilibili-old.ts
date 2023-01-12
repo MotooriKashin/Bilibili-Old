@@ -74,7 +74,7 @@ export class BLOD {
     /** 播放器哈希值 */
     version?: string;
     /** 播放器 */
-    player = new Player();
+    player = new Player(this);
     /** 用户数据管理 */
     user = new User(this);
     /** url净化 */
