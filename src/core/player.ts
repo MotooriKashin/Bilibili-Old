@@ -2,7 +2,7 @@ import { apiPgcSlideShow } from "../io/api-pgc-slideshow";
 import { apiSearchSquare } from "../io/api-search-square";
 import { apiWebshowLoc } from "../io/api-webshow-locs";
 import { debug } from "../utils/debug";
-import { addCss, } from "../utils/element";
+import { addCss } from "../utils/element";
 import { objUrl } from "../utils/format/url";
 import { methodHook, propertyHook } from "../utils/hook/method";
 import { poll } from "../utils/poll";

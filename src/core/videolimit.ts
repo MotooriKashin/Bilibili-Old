@@ -1,7 +1,7 @@
 import { BLOD } from "../bilibili-old";
 import { apiBiliplusPlayurl } from "../io/api-biliplus-playurl";
 import { ApiGlobalOgvPlayurl } from "../io/api-global-ogv-playurl";
-import { ApiAppPgcPlayurl, apiPlayurl, IPlayurlDash } from "../io/api-playurl";
+import { apiPlayurl, IPlayurlDash } from "../io/api-playurl";
 import { fnval } from "../io/fnval";
 import { uid } from "../utils/conf/uid";
 import { debug } from "../utils/debug";

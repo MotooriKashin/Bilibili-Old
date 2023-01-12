@@ -1,10 +1,10 @@
 import { BLOD } from "../bilibili-old";
-import { Page } from "./page";
 import html from '../html/ranking.html';
-import { jsonpHook } from "../utils/hook/node";
-import { propertyHook } from "../utils/hook/method";
 import { addCss } from "../utils/element";
+import { propertyHook } from "../utils/hook/method";
+import { jsonpHook } from "../utils/hook/node";
 import { Header } from "./header";
+import { Page } from "./page";
 
 export class PageRanking extends Page {
     constructor(protected BLOD: BLOD) {

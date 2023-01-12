@@ -1,18 +1,18 @@
 import { BLOD } from "../bilibili-old";
-import { Page } from "./page";
+import { Comment } from "../core/comment";
+import { switchVideo } from "../core/observer";
+import { Player } from "../core/player";
+import { Like } from "../core/ui/like";
 import html from '../html/playlist.html';
+import { IAidDatail, IAidInfo, jsonCheck } from "../io/api";
+import toview from '../json/toview.json';
+import { addCss } from "../utils/element";
 import { objUrl, urlObj } from "../utils/format/url";
 import { jsonpHook } from "../utils/hook/node";
-import toview from '../json/toview.json';
-import { Header } from "./header";
-import { Comment } from "../core/comment";
-import { Player } from "../core/player";
 import { xhrHook } from "../utils/hook/xhr";
-import { IAidDatail, IAidInfo, jsonCheck } from "../io/api";
-import { switchVideo } from "../core/observer";
-import { Like } from "../core/ui/like";
-import { addCss } from "../utils/element";
 import { poll } from "../utils/poll";
+import { Header } from "./header";
+import { Page } from "./page";
 
 export class PagePlaylist extends Page {
     /** 查询参数 */

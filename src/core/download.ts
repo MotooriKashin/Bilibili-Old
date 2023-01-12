@@ -5,13 +5,10 @@ import { ApiPlayurlIntl } from "../io/api-playurl-intl";
 import { ApiPlayurlTv } from "../io/api-playurl-tv";
 import { ApiPlayurlProj } from "../io/api-playurlproj";
 import { qn } from "../io/fnval";
-import { addElement } from "../utils/element";
 import { Aria2 } from "./download/aria2";
 import { Ef2 } from "./download/ef2";
 import { IDownlodDataFilter, PlayinfoFilter } from "./download/playinfo";
 import { switchVideo } from "./observer";
-import { alert } from "./ui/alert";
-import { Desc } from "./ui/desc";
 import { BilioldDownload } from "./ui/download";
 import { PopupBox } from "./ui/utils/popupbox";
 

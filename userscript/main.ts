@@ -1,7 +1,7 @@
 import { BLOD } from "@blod/blod";
+import { GM as GMC } from "@blod/extension/utils/gm";
 import './gm';
 import './polyfill/polyfill';
-import { GM as GMC } from "@blod/extension/utils/gm";
 
 new BLOD(GM);
 

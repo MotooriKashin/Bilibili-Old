@@ -1,26 +1,25 @@
 import { BLOD } from "../bilibili-old";
-import { Page } from "./page";
-import html from '../html/av.html';
-import { webpackHook } from "../utils/hook/webpack";
-import menuConfig from '../json/sort.txt';
-import { jsonpHook } from "../utils/hook/node";
-import { propertyHook } from "../utils/hook/method";
-import { Header } from "./header";
-import { objUrl, urlObj } from "../utils/format/url";
-import { debug } from "../utils/debug";
-import { apiArticleCards } from "../io/api-article-cards";
-import { apiViewDetail, ApiViewDetail } from "../io/api-view-detail";
-import { apiBiliplusView } from "../io/api-biliplus-view";
-import { poll } from "../utils/poll";
-import { IStaf } from "../io/api";
-import uplist from '../css/uplist.css';
-import { addCss } from "../utils/element";
-import { PageBangumi } from "./bangumi";
 import { Comment } from "../core/comment";
-import toview from '../json/toview.json';
 import { Player } from "../core/player";
-import { switchVideo } from "../core/observer";
 import { Like } from "../core/ui/like";
+import uplist from '../css/uplist.css';
+import html from '../html/av.html';
+import { IStaf } from "../io/api";
+import { apiArticleCards } from "../io/api-article-cards";
+import { apiBiliplusView } from "../io/api-biliplus-view";
+import { apiViewDetail, ApiViewDetail } from "../io/api-view-detail";
+import menuConfig from '../json/sort.txt';
+import toview from '../json/toview.json';
+import { debug } from "../utils/debug";
+import { addCss } from "../utils/element";
+import { objUrl, urlObj } from "../utils/format/url";
+import { propertyHook } from "../utils/hook/method";
+import { jsonpHook } from "../utils/hook/node";
+import { webpackHook } from "../utils/hook/webpack";
+import { poll } from "../utils/poll";
+import { PageBangumi } from "./bangumi";
+import { Header } from "./header";
+import { Page } from "./page";
 
 export class PageAV extends Page {
     /** 销毁标记，当前已不是av页，部分回调禁止生效 */

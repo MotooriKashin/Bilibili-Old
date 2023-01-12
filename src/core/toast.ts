@@ -1,9 +1,9 @@
-import { CustomElementsInterface } from "../utils/customelement";
 import html from "../html/toast.html";
-import { isArray } from "../utils/typeof";
-import { svg } from "../utils/svg";
+import { CustomElementsInterface } from "../utils/customelement";
 import { debug } from "../utils/debug";
+import { svg } from "../utils/svg";
 import { toObject, toString } from "../utils/type";
+import { isArray } from "../utils/typeof";
 
 /** toast配置 */
 export const Toastconfig = {

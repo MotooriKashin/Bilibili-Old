@@ -5,7 +5,7 @@ import { objUrl, urlObj } from "../utils/format/url";
 import { poll } from "../utils/poll";
 import { switchVideo } from "./observer";
 import { Player } from "./player";
-import { localStorage, sessionStorage } from "./storage";
+import { sessionStorage } from "./storage";
 
 export class Automate {
     constructor(protected BLOD: BLOD) {

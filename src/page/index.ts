@@ -1,25 +1,25 @@
-import { Page } from "./page";
+import { BLOD } from "../bilibili-old";
 import html from '../html/index.html';
 import news from '../html/news.html';
-import { apiWebshowLocs, IApiWebshowLocsResponse } from "../io/api-webshow-locs";
-import { BLOD } from "../bilibili-old";
-import { apiIndexTopRcmd } from "../io/api-index-top-rcmd";
-import { uid } from "../utils/conf/uid";
-import { poll } from "../utils/poll";
-import { addElement, getTotalTop } from "../utils/element";
-import { jsonpHook } from "../utils/hook/node";
-import { objUrl, urlObj } from "../utils/format/url";
-import { VdomTool } from "../utils/vdomtool";
-import { xhrHook } from "../utils/hook/xhr";
-import { htmlVnode, Vdom } from "../utils/htmlvnode";
-import { debug } from "../utils/debug";
-import { unitFormat } from "../utils/format/unit";
-import { Header } from "./header";
-import { apiSeasonRankList } from "../io/api-season-rank-list";
-import { apiNewlist } from "../io/api-newlist";
 import { IAidDatail } from "../io/api";
 import { apiArticleCards } from "../io/api-article-cards";
+import { apiIndexTopRcmd } from "../io/api-index-top-rcmd";
+import { apiNewlist } from "../io/api-newlist";
+import { apiSeasonRankList } from "../io/api-season-rank-list";
+import { apiWebshowLocs, IApiWebshowLocsResponse } from "../io/api-webshow-locs";
+import { uid } from "../utils/conf/uid";
+import { debug } from "../utils/debug";
+import { addElement, getTotalTop } from "../utils/element";
 import { integerFormat } from "../utils/format/integer";
+import { unitFormat } from "../utils/format/unit";
+import { urlObj } from "../utils/format/url";
+import { jsonpHook } from "../utils/hook/node";
+import { xhrHook } from "../utils/hook/xhr";
+import { htmlVnode, Vdom } from "../utils/htmlvnode";
+import { poll } from "../utils/poll";
+import { VdomTool } from "../utils/vdomtool";
+import { Header } from "./header";
+import { Page } from "./page";
 
 /** 初始化数据 */
 const __INITIAL_STATE__ = {

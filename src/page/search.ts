@@ -1,8 +1,8 @@
 import { BLOD } from "../bilibili-old";
-import { Page } from "./page";
 import html from '../html/search.html';
-import { poll } from "../utils/poll";
 import { propertyHook } from "../utils/hook/method";
+import { poll } from "../utils/poll";
+import { Page } from "./page";
 
 export class PageSearch extends Page {
     constructor(protected BLOD: BLOD) {

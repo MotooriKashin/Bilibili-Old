@@ -4,12 +4,12 @@ import { getCookies, setCookie } from "../utils/cookie";
 import { addCss, addElement, loadScript } from "../utils/element";
 import { subArray } from "../utils/format/subarray";
 import { jsonpHook } from "../utils/hook/node";
-import { poll } from "../utils/poll";
 import { xhrHook } from "../utils/hook/xhr";
+import { poll } from "../utils/poll";
 
+import { BLOD } from "../bilibili-old";
 import avatarAnimation from '../css/avatar-animation.css';
 import message from '../css/message.css';
-import { BLOD } from "../bilibili-old";
 
 export class Header {
     /** locs列表 */

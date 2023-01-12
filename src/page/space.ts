@@ -1,12 +1,12 @@
 import { BLOD } from "../bilibili-old";
-import { xhrHook } from "../utils/hook/xhr";
-import json from '../json/mid.json';
-import { poll } from "../utils/poll";
 import { accountGetCardByMid } from "../io/account-getcardbymid";
-import { timeFormat } from "../utils/format/time";
-import { VdomTool } from "../utils/vdomtool";
 import { jsonCheck } from "../io/api";
+import json from '../json/mid.json';
 import { debug } from "../utils/debug";
+import { timeFormat } from "../utils/format/time";
+import { xhrHook } from "../utils/hook/xhr";
+import { poll } from "../utils/poll";
+import { VdomTool } from "../utils/vdomtool";
 
 const Mid = {
     11783021: '哔哩哔哩番剧出差',

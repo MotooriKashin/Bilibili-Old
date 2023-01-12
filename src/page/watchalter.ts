@@ -1,14 +1,14 @@
 import { BLOD } from "../bilibili-old";
-import { Page } from "./page";
-import html from '../html/watchlater.html';
-import { xhrHook } from "../utils/hook/xhr";
-import { Header } from "./header";
 import { Comment } from "../core/comment";
-import { jsonpHook } from "../utils/hook/node";
-import { IAidDatail, jsonCheck } from "../io/api";
-import { poll } from "../utils/poll";
 import { Like } from "../core/ui/like";
+import html from '../html/watchlater.html';
+import { IAidDatail, jsonCheck } from "../io/api";
 import { addCss } from "../utils/element";
+import { jsonpHook } from "../utils/hook/node";
+import { xhrHook } from "../utils/hook/xhr";
+import { poll } from "../utils/poll";
+import { Header } from "./header";
+import { Page } from "./page";
 
 export class PageWatchlater extends Page {
     protected like: Like;

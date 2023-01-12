@@ -1,13 +1,13 @@
-import { BLOD } from "../bilibili-old";
-import { Page } from "./page";
-import html from '../html/read.html';
-import { propertyHook } from "../utils/hook/method";
-import { IUserInfo } from "../io/api-view-detail";
-import { IStat } from "../io/api";
-import { addCss } from "../utils/element";
-import { Comment } from "../core/comment";
 import { QuillDeltaToHtmlConverter } from 'quill-delta-to-html-cb';
+import { BLOD } from "../bilibili-old";
+import { Comment } from "../core/comment";
+import html from '../html/read.html';
+import { IStat } from "../io/api";
+import { IUserInfo } from "../io/api-view-detail";
 import { debug } from "../utils/debug";
+import { addCss } from "../utils/element";
+import { propertyHook } from "../utils/hook/method";
+import { Page } from "./page";
 
 interface ReadInfo {
     act_id: number;
