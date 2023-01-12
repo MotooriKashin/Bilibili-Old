@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.1.3-855f3686b22c5c493d7df808d348e7e511658617
+// @version      10.1.4-855f3686b22c5c493d7df808d348e7e511658617
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -301,2410 +301,6 @@ var require_md5 = __commonJS({
         return options && options.asBytes ? digestbytes : options && options.asString ? bin.bytesToString(digestbytes) : crypt.bytesToHex(digestbytes);
       };
     })();
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/value-types.js
-var require_value_types = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/value-types.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var NewLine = "\\n";
-    exports2.NewLine = NewLine;
-    var ListType;
-    (function(ListType2) {
-      ListType2["Ordered"] = "ordered";
-      ListType2["Bullet"] = "bullet";
-      ListType2["Checked"] = "checked";
-      ListType2["Unchecked"] = "unchecked";
-    })(ListType || (ListType = {}));
-    exports2.ListType = ListType;
-    var ScriptType;
-    (function(ScriptType2) {
-      ScriptType2["Sub"] = "sub";
-      ScriptType2["Super"] = "super";
-    })(ScriptType || (ScriptType = {}));
-    exports2.ScriptType = ScriptType;
-    var DirectionType;
-    (function(DirectionType2) {
-      DirectionType2["Rtl"] = "rtl";
-    })(DirectionType || (DirectionType = {}));
-    exports2.DirectionType = DirectionType;
-    var AlignType;
-    (function(AlignType2) {
-      AlignType2["Left"] = "left";
-      AlignType2["Center"] = "center";
-      AlignType2["Right"] = "right";
-      AlignType2["Justify"] = "justify";
-    })(AlignType || (AlignType = {}));
-    exports2.AlignType = AlignType;
-    var DataType;
-    (function(DataType2) {
-      DataType2["Image"] = "image";
-      DataType2["Video"] = "video";
-      DataType2["Formula"] = "formula";
-      DataType2["Text"] = "text";
-    })(DataType || (DataType = {}));
-    exports2.DataType = DataType;
-    var GroupType;
-    (function(GroupType2) {
-      GroupType2["Block"] = "block";
-      GroupType2["InlineGroup"] = "inline-group";
-      GroupType2["List"] = "list";
-      GroupType2["Video"] = "video";
-      GroupType2["Table"] = "table";
-    })(GroupType || (GroupType = {}));
-    exports2.GroupType = GroupType;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertData.js
-var require_InsertData = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertData.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var InsertDataQuill = function() {
-      function InsertDataQuill2(type, value) {
-        this.type = type;
-        this.value = value;
-      }
-      return InsertDataQuill2;
-    }();
-    exports2.InsertDataQuill = InsertDataQuill;
-    var InsertDataCustom = function() {
-      function InsertDataCustom2(type, value) {
-        this.type = type;
-        this.value = value;
-      }
-      return InsertDataCustom2;
-    }();
-    exports2.InsertDataCustom = InsertDataCustom;
-  }
-});
-
-// node_modules/lodash.isequal/index.js
-var require_lodash = __commonJS({
-  "node_modules/lodash.isequal/index.js"(exports2, module2) {
-    var LARGE_ARRAY_SIZE = 200;
-    var HASH_UNDEFINED = "__lodash_hash_undefined__";
-    var COMPARE_PARTIAL_FLAG = 1;
-    var COMPARE_UNORDERED_FLAG = 2;
-    var MAX_SAFE_INTEGER = 9007199254740991;
-    var argsTag = "[object Arguments]";
-    var arrayTag = "[object Array]";
-    var asyncTag = "[object AsyncFunction]";
-    var boolTag = "[object Boolean]";
-    var dateTag = "[object Date]";
-    var errorTag = "[object Error]";
-    var funcTag = "[object Function]";
-    var genTag = "[object GeneratorFunction]";
-    var mapTag = "[object Map]";
-    var numberTag = "[object Number]";
-    var nullTag = "[object Null]";
-    var objectTag = "[object Object]";
-    var promiseTag = "[object Promise]";
-    var proxyTag = "[object Proxy]";
-    var regexpTag = "[object RegExp]";
-    var setTag = "[object Set]";
-    var stringTag = "[object String]";
-    var symbolTag = "[object Symbol]";
-    var undefinedTag = "[object Undefined]";
-    var weakMapTag = "[object WeakMap]";
-    var arrayBufferTag = "[object ArrayBuffer]";
-    var dataViewTag = "[object DataView]";
-    var float32Tag = "[object Float32Array]";
-    var float64Tag = "[object Float64Array]";
-    var int8Tag = "[object Int8Array]";
-    var int16Tag = "[object Int16Array]";
-    var int32Tag = "[object Int32Array]";
-    var uint8Tag = "[object Uint8Array]";
-    var uint8ClampedTag = "[object Uint8ClampedArray]";
-    var uint16Tag = "[object Uint16Array]";
-    var uint32Tag = "[object Uint32Array]";
-    var reRegExpChar = /[\\\\^\$.*+?()[\\]{}|]/g;
-    var reIsHostCtor = /^\\[object .+?Constructor\\]\$/;
-    var reIsUint = /^(?:0|[1-9]\\d*)\$/;
-    var typedArrayTags = {};
-    typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
-    typedArrayTags[argsTag] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
-    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
-    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-    var root = freeGlobal || freeSelf || Function("return this")();
-    var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
-    var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
-    var moduleExports = freeModule && freeModule.exports === freeExports;
-    var freeProcess = moduleExports && freeGlobal.process;
-    var nodeUtil = function() {
-      try {
-        return freeProcess && freeProcess.binding && freeProcess.binding("util");
-      } catch (e) {
-      }
-    }();
-    var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
-    function arrayFilter(array, predicate) {
-      var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
-      while (++index < length) {
-        var value = array[index];
-        if (predicate(value, index, array)) {
-          result[resIndex++] = value;
-        }
-      }
-      return result;
-    }
-    function arrayPush(array, values) {
-      var index = -1, length = values.length, offset2 = array.length;
-      while (++index < length) {
-        array[offset2 + index] = values[index];
-      }
-      return array;
-    }
-    function arraySome(array, predicate) {
-      var index = -1, length = array == null ? 0 : array.length;
-      while (++index < length) {
-        if (predicate(array[index], index, array)) {
-          return true;
-        }
-      }
-      return false;
-    }
-    function baseTimes(n, iteratee) {
-      var index = -1, result = Array(n);
-      while (++index < n) {
-        result[index] = iteratee(index);
-      }
-      return result;
-    }
-    function baseUnary(func) {
-      return function(value) {
-        return func(value);
-      };
-    }
-    function cacheHas(cache, key) {
-      return cache.has(key);
-    }
-    function getValue(object, key) {
-      return object == null ? void 0 : object[key];
-    }
-    function mapToArray(map) {
-      var index = -1, result = Array(map.size);
-      map.forEach(function(value, key) {
-        result[++index] = [key, value];
-      });
-      return result;
-    }
-    function overArg(func, transform) {
-      return function(arg) {
-        return func(transform(arg));
-      };
-    }
-    function setToArray(set) {
-      var index = -1, result = Array(set.size);
-      set.forEach(function(value) {
-        result[++index] = value;
-      });
-      return result;
-    }
-    var arrayProto = Array.prototype;
-    var funcProto = Function.prototype;
-    var objectProto = Object.prototype;
-    var coreJsData = root["__core-js_shared__"];
-    var funcToString = funcProto.toString;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    var maskSrcKey = function() {
-      var uid2 = /[^.]+\$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
-      return uid2 ? "Symbol(src)_1." + uid2 : "";
-    }();
-    var nativeObjectToString = objectProto.toString;
-    var reIsNative = RegExp(
-      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\\\\$&").replace(/hasOwnProperty|(function).*?(?=\\\\\\()| for .+?(?=\\\\\\])/g, "\$1.*?") + "\$"
-    );
-    var Buffer2 = moduleExports ? root.Buffer : void 0;
-    var Symbol2 = root.Symbol;
-    var Uint8Array2 = root.Uint8Array;
-    var propertyIsEnumerable = objectProto.propertyIsEnumerable;
-    var splice = arrayProto.splice;
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    var nativeGetSymbols = Object.getOwnPropertySymbols;
-    var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
-    var nativeKeys = overArg(Object.keys, Object);
-    var DataView = getNative(root, "DataView");
-    var Map = getNative(root, "Map");
-    var Promise2 = getNative(root, "Promise");
-    var Set2 = getNative(root, "Set");
-    var WeakMap = getNative(root, "WeakMap");
-    var nativeCreate = getNative(Object, "create");
-    var dataViewCtorString = toSource(DataView);
-    var mapCtorString = toSource(Map);
-    var promiseCtorString = toSource(Promise2);
-    var setCtorString = toSource(Set2);
-    var weakMapCtorString = toSource(WeakMap);
-    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
-    var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
-    function Hash(entries) {
-      var index = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index < length) {
-        var entry = entries[index];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    function hashClear() {
-      this.__data__ = nativeCreate ? nativeCreate(null) : {};
-      this.size = 0;
-    }
-    function hashDelete(key) {
-      var result = this.has(key) && delete this.__data__[key];
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-    function hashGet(key) {
-      var data = this.__data__;
-      if (nativeCreate) {
-        var result = data[key];
-        return result === HASH_UNDEFINED ? void 0 : result;
-      }
-      return hasOwnProperty.call(data, key) ? data[key] : void 0;
-    }
-    function hashHas(key) {
-      var data = this.__data__;
-      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
-    }
-    function hashSet(key, value) {
-      var data = this.__data__;
-      this.size += this.has(key) ? 0 : 1;
-      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
-      return this;
-    }
-    Hash.prototype.clear = hashClear;
-    Hash.prototype["delete"] = hashDelete;
-    Hash.prototype.get = hashGet;
-    Hash.prototype.has = hashHas;
-    Hash.prototype.set = hashSet;
-    function ListCache(entries) {
-      var index = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index < length) {
-        var entry = entries[index];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    function listCacheClear() {
-      this.__data__ = [];
-      this.size = 0;
-    }
-    function listCacheDelete(key) {
-      var data = this.__data__, index = assocIndexOf(data, key);
-      if (index < 0) {
-        return false;
-      }
-      var lastIndex = data.length - 1;
-      if (index == lastIndex) {
-        data.pop();
-      } else {
-        splice.call(data, index, 1);
-      }
-      --this.size;
-      return true;
-    }
-    function listCacheGet(key) {
-      var data = this.__data__, index = assocIndexOf(data, key);
-      return index < 0 ? void 0 : data[index][1];
-    }
-    function listCacheHas(key) {
-      return assocIndexOf(this.__data__, key) > -1;
-    }
-    function listCacheSet(key, value) {
-      var data = this.__data__, index = assocIndexOf(data, key);
-      if (index < 0) {
-        ++this.size;
-        data.push([key, value]);
-      } else {
-        data[index][1] = value;
-      }
-      return this;
-    }
-    ListCache.prototype.clear = listCacheClear;
-    ListCache.prototype["delete"] = listCacheDelete;
-    ListCache.prototype.get = listCacheGet;
-    ListCache.prototype.has = listCacheHas;
-    ListCache.prototype.set = listCacheSet;
-    function MapCache(entries) {
-      var index = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index < length) {
-        var entry = entries[index];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    function mapCacheClear() {
-      this.size = 0;
-      this.__data__ = {
-        "hash": new Hash(),
-        "map": new (Map || ListCache)(),
-        "string": new Hash()
-      };
-    }
-    function mapCacheDelete(key) {
-      var result = getMapData(this, key)["delete"](key);
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-    function mapCacheGet(key) {
-      return getMapData(this, key).get(key);
-    }
-    function mapCacheHas(key) {
-      return getMapData(this, key).has(key);
-    }
-    function mapCacheSet(key, value) {
-      var data = getMapData(this, key), size = data.size;
-      data.set(key, value);
-      this.size += data.size == size ? 0 : 1;
-      return this;
-    }
-    MapCache.prototype.clear = mapCacheClear;
-    MapCache.prototype["delete"] = mapCacheDelete;
-    MapCache.prototype.get = mapCacheGet;
-    MapCache.prototype.has = mapCacheHas;
-    MapCache.prototype.set = mapCacheSet;
-    function SetCache(values) {
-      var index = -1, length = values == null ? 0 : values.length;
-      this.__data__ = new MapCache();
-      while (++index < length) {
-        this.add(values[index]);
-      }
-    }
-    function setCacheAdd(value) {
-      this.__data__.set(value, HASH_UNDEFINED);
-      return this;
-    }
-    function setCacheHas(value) {
-      return this.__data__.has(value);
-    }
-    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
-    SetCache.prototype.has = setCacheHas;
-    function Stack(entries) {
-      var data = this.__data__ = new ListCache(entries);
-      this.size = data.size;
-    }
-    function stackClear() {
-      this.__data__ = new ListCache();
-      this.size = 0;
-    }
-    function stackDelete(key) {
-      var data = this.__data__, result = data["delete"](key);
-      this.size = data.size;
-      return result;
-    }
-    function stackGet(key) {
-      return this.__data__.get(key);
-    }
-    function stackHas(key) {
-      return this.__data__.has(key);
-    }
-    function stackSet(key, value) {
-      var data = this.__data__;
-      if (data instanceof ListCache) {
-        var pairs = data.__data__;
-        if (!Map || pairs.length < LARGE_ARRAY_SIZE - 1) {
-          pairs.push([key, value]);
-          this.size = ++data.size;
-          return this;
-        }
-        data = this.__data__ = new MapCache(pairs);
-      }
-      data.set(key, value);
-      this.size = data.size;
-      return this;
-    }
-    Stack.prototype.clear = stackClear;
-    Stack.prototype["delete"] = stackDelete;
-    Stack.prototype.get = stackGet;
-    Stack.prototype.has = stackHas;
-    Stack.prototype.set = stackSet;
-    function arrayLikeKeys(value, inherited) {
-      var isArr = isArray2(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
-      for (var key in value) {
-        if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && // Safari 9 has enumerable \`arguments.length\` in strict mode.
-        (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || // Skip index properties.
-        isIndex(key, length)))) {
-          result.push(key);
-        }
-      }
-      return result;
-    }
-    function assocIndexOf(array, key) {
-      var length = array.length;
-      while (length--) {
-        if (eq(array[length][0], key)) {
-          return length;
-        }
-      }
-      return -1;
-    }
-    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
-      var result = keysFunc(object);
-      return isArray2(object) ? result : arrayPush(result, symbolsFunc(object));
-    }
-    function baseGetTag(value) {
-      if (value == null) {
-        return value === void 0 ? undefinedTag : nullTag;
-      }
-      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-    }
-    function baseIsArguments(value) {
-      return isObjectLike(value) && baseGetTag(value) == argsTag;
-    }
-    function baseIsEqual(value, other, bitmask, customizer, stack) {
-      if (value === other) {
-        return true;
-      }
-      if (value == null || other == null || !isObjectLike(value) && !isObjectLike(other)) {
-        return value !== value && other !== other;
-      }
-      return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
-    }
-    function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
-      var objIsArr = isArray2(object), othIsArr = isArray2(other), objTag = objIsArr ? arrayTag : getTag(object), othTag = othIsArr ? arrayTag : getTag(other);
-      objTag = objTag == argsTag ? objectTag : objTag;
-      othTag = othTag == argsTag ? objectTag : othTag;
-      var objIsObj = objTag == objectTag, othIsObj = othTag == objectTag, isSameTag = objTag == othTag;
-      if (isSameTag && isBuffer(object)) {
-        if (!isBuffer(other)) {
-          return false;
-        }
-        objIsArr = true;
-        objIsObj = false;
-      }
-      if (isSameTag && !objIsObj) {
-        stack || (stack = new Stack());
-        return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
-      }
-      if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
-        var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
-        if (objIsWrapped || othIsWrapped) {
-          var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
-          stack || (stack = new Stack());
-          return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
-        }
-      }
-      if (!isSameTag) {
-        return false;
-      }
-      stack || (stack = new Stack());
-      return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
-    }
-    function baseIsNative(value) {
-      if (!isObject2(value) || isMasked(value)) {
-        return false;
-      }
-      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
-      return pattern.test(toSource(value));
-    }
-    function baseIsTypedArray(value) {
-      return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
-    }
-    function baseKeys(object) {
-      if (!isPrototype(object)) {
-        return nativeKeys(object);
-      }
-      var result = [];
-      for (var key in Object(object)) {
-        if (hasOwnProperty.call(object, key) && key != "constructor") {
-          result.push(key);
-        }
-      }
-      return result;
-    }
-    function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
-      var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array.length, othLength = other.length;
-      if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
-        return false;
-      }
-      var stacked = stack.get(array);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
-      }
-      var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : void 0;
-      stack.set(array, other);
-      stack.set(other, array);
-      while (++index < arrLength) {
-        var arrValue = array[index], othValue = other[index];
-        if (customizer) {
-          var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
-        }
-        if (compared !== void 0) {
-          if (compared) {
-            continue;
-          }
-          result = false;
-          break;
-        }
-        if (seen) {
-          if (!arraySome(other, function(othValue2, othIndex) {
-            if (!cacheHas(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
-              return seen.push(othIndex);
-            }
-          })) {
-            result = false;
-            break;
-          }
-        } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
-          result = false;
-          break;
-        }
-      }
-      stack["delete"](array);
-      stack["delete"](other);
-      return result;
-    }
-    function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
-      switch (tag) {
-        case dataViewTag:
-          if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
-            return false;
-          }
-          object = object.buffer;
-          other = other.buffer;
-        case arrayBufferTag:
-          if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array2(object), new Uint8Array2(other))) {
-            return false;
-          }
-          return true;
-        case boolTag:
-        case dateTag:
-        case numberTag:
-          return eq(+object, +other);
-        case errorTag:
-          return object.name == other.name && object.message == other.message;
-        case regexpTag:
-        case stringTag:
-          return object == other + "";
-        case mapTag:
-          var convert = mapToArray;
-        case setTag:
-          var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
-          convert || (convert = setToArray);
-          if (object.size != other.size && !isPartial) {
-            return false;
-          }
-          var stacked = stack.get(object);
-          if (stacked) {
-            return stacked == other;
-          }
-          bitmask |= COMPARE_UNORDERED_FLAG;
-          stack.set(object, other);
-          var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
-          stack["delete"](object);
-          return result;
-        case symbolTag:
-          if (symbolValueOf) {
-            return symbolValueOf.call(object) == symbolValueOf.call(other);
-          }
-      }
-      return false;
-    }
-    function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
-      var isPartial = bitmask & COMPARE_PARTIAL_FLAG, objProps = getAllKeys(object), objLength = objProps.length, othProps = getAllKeys(other), othLength = othProps.length;
-      if (objLength != othLength && !isPartial) {
-        return false;
-      }
-      var index = objLength;
-      while (index--) {
-        var key = objProps[index];
-        if (!(isPartial ? key in other : hasOwnProperty.call(other, key))) {
-          return false;
-        }
-      }
-      var stacked = stack.get(object);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
-      }
-      var result = true;
-      stack.set(object, other);
-      stack.set(other, object);
-      var skipCtor = isPartial;
-      while (++index < objLength) {
-        key = objProps[index];
-        var objValue = object[key], othValue = other[key];
-        if (customizer) {
-          var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
-        }
-        if (!(compared === void 0 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
-          result = false;
-          break;
-        }
-        skipCtor || (skipCtor = key == "constructor");
-      }
-      if (result && !skipCtor) {
-        var objCtor = object.constructor, othCtor = other.constructor;
-        if (objCtor != othCtor && ("constructor" in object && "constructor" in other) && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) {
-          result = false;
-        }
-      }
-      stack["delete"](object);
-      stack["delete"](other);
-      return result;
-    }
-    function getAllKeys(object) {
-      return baseGetAllKeys(object, keys, getSymbols);
-    }
-    function getMapData(map, key) {
-      var data = map.__data__;
-      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
-    }
-    function getNative(object, key) {
-      var value = getValue(object, key);
-      return baseIsNative(value) ? value : void 0;
-    }
-    function getRawTag(value) {
-      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-      try {
-        value[symToStringTag] = void 0;
-        var unmasked = true;
-      } catch (e) {
-      }
-      var result = nativeObjectToString.call(value);
-      if (unmasked) {
-        if (isOwn) {
-          value[symToStringTag] = tag;
-        } else {
-          delete value[symToStringTag];
-        }
-      }
-      return result;
-    }
-    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
-      if (object == null) {
-        return [];
-      }
-      object = Object(object);
-      return arrayFilter(nativeGetSymbols(object), function(symbol) {
-        return propertyIsEnumerable.call(object, symbol);
-      });
-    };
-    var getTag = baseGetTag;
-    if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
-      getTag = function(value) {
-        var result = baseGetTag(value), Ctor = result == objectTag ? value.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
-        if (ctorString) {
-          switch (ctorString) {
-            case dataViewCtorString:
-              return dataViewTag;
-            case mapCtorString:
-              return mapTag;
-            case promiseCtorString:
-              return promiseTag;
-            case setCtorString:
-              return setTag;
-            case weakMapCtorString:
-              return weakMapTag;
-          }
-        }
-        return result;
-      };
-    }
-    function isIndex(value, length) {
-      length = length == null ? MAX_SAFE_INTEGER : length;
-      return !!length && (typeof value == "number" || reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
-    }
-    function isKeyable(value) {
-      var type = typeof value;
-      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
-    }
-    function isMasked(func) {
-      return !!maskSrcKey && maskSrcKey in func;
-    }
-    function isPrototype(value) {
-      var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
-      return value === proto;
-    }
-    function objectToString(value) {
-      return nativeObjectToString.call(value);
-    }
-    function toSource(func) {
-      if (func != null) {
-        try {
-          return funcToString.call(func);
-        } catch (e) {
-        }
-        try {
-          return func + "";
-        } catch (e) {
-        }
-      }
-      return "";
-    }
-    function eq(value, other) {
-      return value === other || value !== value && other !== other;
-    }
-    var isArguments = baseIsArguments(function() {
-      return arguments;
-    }()) ? baseIsArguments : function(value) {
-      return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
-    };
-    var isArray2 = Array.isArray;
-    function isArrayLike(value) {
-      return value != null && isLength(value.length) && !isFunction(value);
-    }
-    var isBuffer = nativeIsBuffer || stubFalse;
-    function isEqual(value, other) {
-      return baseIsEqual(value, other);
-    }
-    function isFunction(value) {
-      if (!isObject2(value)) {
-        return false;
-      }
-      var tag = baseGetTag(value);
-      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
-    }
-    function isLength(value) {
-      return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
-    }
-    function isObject2(value) {
-      var type = typeof value;
-      return value != null && (type == "object" || type == "function");
-    }
-    function isObjectLike(value) {
-      return value != null && typeof value == "object";
-    }
-    var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
-    function keys(object) {
-      return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
-    }
-    function stubArray() {
-      return [];
-    }
-    function stubFalse() {
-      return false;
-    }
-    module2.exports = isEqual;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/DeltaInsertOp.js
-var require_DeltaInsertOp = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/DeltaInsertOp.js"(exports2) {
-    "use strict";
-    var __importDefault = exports2 && exports2.__importDefault || function(mod2) {
-      return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
-    };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var value_types_1 = require_value_types();
-    var InsertData_1 = require_InsertData();
-    var lodash_isequal_1 = __importDefault(require_lodash());
-    var DeltaInsertOp = function() {
-      function DeltaInsertOp2(insertVal, attrs) {
-        if (typeof insertVal === "string") {
-          insertVal = new InsertData_1.InsertDataQuill(value_types_1.DataType.Text, insertVal + "");
-        }
-        this.insert = insertVal;
-        this.attributes = attrs || {};
-      }
-      DeltaInsertOp2.createNewLineOp = function() {
-        return new DeltaInsertOp2(value_types_1.NewLine);
-      };
-      DeltaInsertOp2.prototype.isContainerBlock = function() {
-        return this.isBlockquote() || this.isList() || this.isTable() || this.isCodeBlock() || this.isHeader() || this.isBlockAttribute() || this.isCustomTextBlock();
-      };
-      DeltaInsertOp2.prototype.isBlockAttribute = function() {
-        var attrs = this.attributes;
-        return !!(attrs.align || attrs.direction || attrs.indent);
-      };
-      DeltaInsertOp2.prototype.isBlockquote = function() {
-        return !!this.attributes.blockquote;
-      };
-      DeltaInsertOp2.prototype.isHeader = function() {
-        return !!this.attributes.header;
-      };
-      DeltaInsertOp2.prototype.isTable = function() {
-        return !!this.attributes.table;
-      };
-      DeltaInsertOp2.prototype.isSameHeaderAs = function(op) {
-        return op.attributes.header === this.attributes.header && this.isHeader();
-      };
-      DeltaInsertOp2.prototype.hasSameAdiAs = function(op) {
-        return this.attributes.align === op.attributes.align && this.attributes.direction === op.attributes.direction && this.attributes.indent === op.attributes.indent;
-      };
-      DeltaInsertOp2.prototype.hasSameIndentationAs = function(op) {
-        return this.attributes.indent === op.attributes.indent;
-      };
-      DeltaInsertOp2.prototype.hasSameAttr = function(op) {
-        return lodash_isequal_1.default(this.attributes, op.attributes);
-      };
-      DeltaInsertOp2.prototype.hasHigherIndentThan = function(op) {
-        return (Number(this.attributes.indent) || 0) > (Number(op.attributes.indent) || 0);
-      };
-      DeltaInsertOp2.prototype.isInline = function() {
-        return !(this.isContainerBlock() || this.isVideo() || this.isCustomEmbedBlock());
-      };
-      DeltaInsertOp2.prototype.isCodeBlock = function() {
-        return !!this.attributes["code-block"];
-      };
-      DeltaInsertOp2.prototype.hasSameLangAs = function(op) {
-        return this.attributes["code-block"] === op.attributes["code-block"];
-      };
-      DeltaInsertOp2.prototype.isJustNewline = function() {
-        return this.insert.value === value_types_1.NewLine;
-      };
-      DeltaInsertOp2.prototype.isList = function() {
-        return this.isOrderedList() || this.isBulletList() || this.isCheckedList() || this.isUncheckedList();
-      };
-      DeltaInsertOp2.prototype.isOrderedList = function() {
-        return this.attributes.list === value_types_1.ListType.Ordered;
-      };
-      DeltaInsertOp2.prototype.isBulletList = function() {
-        return this.attributes.list === value_types_1.ListType.Bullet;
-      };
-      DeltaInsertOp2.prototype.isCheckedList = function() {
-        return this.attributes.list === value_types_1.ListType.Checked;
-      };
-      DeltaInsertOp2.prototype.isUncheckedList = function() {
-        return this.attributes.list === value_types_1.ListType.Unchecked;
-      };
-      DeltaInsertOp2.prototype.isACheckList = function() {
-        return this.attributes.list == value_types_1.ListType.Unchecked || this.attributes.list === value_types_1.ListType.Checked;
-      };
-      DeltaInsertOp2.prototype.isSameListAs = function(op) {
-        return !!op.attributes.list && (this.attributes.list === op.attributes.list || op.isACheckList() && this.isACheckList());
-      };
-      DeltaInsertOp2.prototype.isSameTableRowAs = function(op) {
-        return !!op.isTable() && this.isTable() && this.attributes.table === op.attributes.table;
-      };
-      DeltaInsertOp2.prototype.isText = function() {
-        return this.insert.type === value_types_1.DataType.Text;
-      };
-      DeltaInsertOp2.prototype.isImage = function() {
-        return this.insert.type === value_types_1.DataType.Image;
-      };
-      DeltaInsertOp2.prototype.isFormula = function() {
-        return this.insert.type === value_types_1.DataType.Formula;
-      };
-      DeltaInsertOp2.prototype.isVideo = function() {
-        return this.insert.type === value_types_1.DataType.Video;
-      };
-      DeltaInsertOp2.prototype.isLink = function() {
-        return this.isText() && !!this.attributes.link;
-      };
-      DeltaInsertOp2.prototype.isCustomEmbed = function() {
-        return this.insert instanceof InsertData_1.InsertDataCustom;
-      };
-      DeltaInsertOp2.prototype.isCustomEmbedBlock = function() {
-        return this.isCustomEmbed() && !!this.attributes.renderAsBlock;
-      };
-      DeltaInsertOp2.prototype.isCustomTextBlock = function() {
-        return this.isText() && !!this.attributes.renderAsBlock;
-      };
-      DeltaInsertOp2.prototype.isMentions = function() {
-        return this.isText() && !!this.attributes.mentions;
-      };
-      return DeltaInsertOp2;
-    }();
-    exports2.DeltaInsertOp = DeltaInsertOp;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/mentions/MentionSanitizer.js
-var require_MentionSanitizer = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/mentions/MentionSanitizer.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
-    var MentionSanitizer = function() {
-      function MentionSanitizer2() {
-      }
-      MentionSanitizer2.sanitize = function(dirtyObj, sanitizeOptions) {
-        var cleanObj = {};
-        if (!dirtyObj || typeof dirtyObj !== "object") {
-          return cleanObj;
-        }
-        if (dirtyObj.class && MentionSanitizer2.IsValidClass(dirtyObj.class)) {
-          cleanObj.class = dirtyObj.class;
-        }
-        if (dirtyObj.id && MentionSanitizer2.IsValidId(dirtyObj.id)) {
-          cleanObj.id = dirtyObj.id;
-        }
-        if (MentionSanitizer2.IsValidTarget(dirtyObj.target + "")) {
-          cleanObj.target = dirtyObj.target;
-        }
-        if (dirtyObj.avatar) {
-          cleanObj.avatar = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(dirtyObj.avatar + "", sanitizeOptions);
-        }
-        if (dirtyObj["end-point"]) {
-          cleanObj["end-point"] = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(dirtyObj["end-point"] + "", sanitizeOptions);
-        }
-        if (dirtyObj.slug) {
-          cleanObj.slug = dirtyObj.slug + "";
-        }
-        return cleanObj;
-      };
-      MentionSanitizer2.IsValidClass = function(classAttr) {
-        return !!classAttr.match(/^[a-zA-Z0-9_\\-]{1,500}\$/i);
-      };
-      MentionSanitizer2.IsValidId = function(idAttr) {
-        return !!idAttr.match(/^[a-zA-Z0-9_\\-\\:\\.]{1,500}\$/i);
-      };
-      MentionSanitizer2.IsValidTarget = function(target) {
-        return ["_self", "_blank", "_parent", "_top"].indexOf(target) > -1;
-      };
-      return MentionSanitizer2;
-    }();
-    exports2.MentionSanitizer = MentionSanitizer;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/url.js
-var require_url = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/url.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    function sanitize(str) {
-      var val = str;
-      val = val.replace(/^\\s*/gm, "");
-      var whiteList = /^((https?|s?ftp|file|blob|mailto|tel):|#|\\/|data:image\\/)/;
-      if (whiteList.test(val)) {
-        return val;
-      }
-      return "unsafe:" + val;
-    }
-    exports2.sanitize = sanitize;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/funcs-html.js
-var require_funcs_html = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/funcs-html.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var EncodeTarget;
-    (function(EncodeTarget2) {
-      EncodeTarget2[EncodeTarget2["Html"] = 0] = "Html";
-      EncodeTarget2[EncodeTarget2["Url"] = 1] = "Url";
-    })(EncodeTarget || (EncodeTarget = {}));
-    function makeStartTag(tag, attrs) {
-      if (attrs === void 0) {
-        attrs = void 0;
-      }
-      if (!tag) {
-        return "";
-      }
-      var attrsStr = "";
-      if (attrs) {
-        var arrAttrs = [].concat(attrs);
-        attrsStr = arrAttrs.map(function(attr) {
-          return attr.key + (attr.value ? '="' + attr.value + '"' : "");
-        }).join(" ");
-      }
-      var closing = ">";
-      if (tag === "img" || tag === "br") {
-        closing = "/>";
-      }
-      return attrsStr ? "<" + tag + " " + attrsStr + closing : "<" + tag + closing;
-    }
-    exports2.makeStartTag = makeStartTag;
-    function makeEndTag(tag) {
-      if (tag === void 0) {
-        tag = "";
-      }
-      return tag && "</" + tag + ">" || "";
-    }
-    exports2.makeEndTag = makeEndTag;
-    function decodeHtml(str) {
-      return encodeMappings(EncodeTarget.Html).reduce(decodeMapping, str);
-    }
-    exports2.decodeHtml = decodeHtml;
-    function encodeHtml(str, preventDoubleEncoding) {
-      if (preventDoubleEncoding === void 0) {
-        preventDoubleEncoding = true;
-      }
-      if (preventDoubleEncoding) {
-        str = decodeHtml(str);
-      }
-      return encodeMappings(EncodeTarget.Html).reduce(encodeMapping, str);
-    }
-    exports2.encodeHtml = encodeHtml;
-    function encodeLink(str) {
-      var linkMaps = encodeMappings(EncodeTarget.Url);
-      var decoded = linkMaps.reduce(decodeMapping, str);
-      return linkMaps.reduce(encodeMapping, decoded);
-    }
-    exports2.encodeLink = encodeLink;
-    function encodeMappings(mtype) {
-      var maps = [
-        ["&", "&amp;"],
-        ["<", "&lt;"],
-        [">", "&gt;"],
-        ['"', "&quot;"],
-        ["'", "&#x27;"],
-        ["\\\\/", "&#x2F;"],
-        ["\\\\(", "&#40;"],
-        ["\\\\)", "&#41;"]
-      ];
-      if (mtype === EncodeTarget.Html) {
-        return maps.filter(function(_a) {
-          var v = _a[0], _ = _a[1];
-          return v.indexOf("(") === -1 && v.indexOf(")") === -1;
-        });
-      } else {
-        return maps.filter(function(_a) {
-          var v = _a[0], _ = _a[1];
-          return v.indexOf("/") === -1;
-        });
-      }
-    }
-    function encodeMapping(str, mapping) {
-      return str.replace(new RegExp(mapping[0], "g"), mapping[1]);
-    }
-    function decodeMapping(str, mapping) {
-      return str.replace(new RegExp(mapping[1], "g"), mapping[0].replace("\\\\", ""));
-    }
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/array.js
-var require_array = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/array.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    function preferSecond(arr2) {
-      if (arr2.length === 0) {
-        return null;
-      }
-      return arr2.length >= 2 ? arr2[1] : arr2[0];
-    }
-    exports2.preferSecond = preferSecond;
-    function flatten(arr2) {
-      return arr2.reduce(function(pv, v) {
-        return pv.concat(Array.isArray(v) ? flatten(v) : v);
-      }, []);
-    }
-    exports2.flatten = flatten;
-    function find(arr2, predicate) {
-      if (Array.prototype.find) {
-        return Array.prototype.find.call(arr2, predicate);
-      }
-      for (var i = 0; i < arr2.length; i++) {
-        if (predicate(arr2[i]))
-          return arr2[i];
-      }
-      return void 0;
-    }
-    exports2.find = find;
-    function groupConsecutiveElementsWhile(arr2, predicate) {
-      var groups = [];
-      var currElm, currGroup;
-      for (var i = 0; i < arr2.length; i++) {
-        currElm = arr2[i];
-        if (i > 0 && predicate(currElm, arr2[i - 1])) {
-          currGroup = groups[groups.length - 1];
-          currGroup.push(currElm);
-        } else {
-          groups.push([currElm]);
-        }
-      }
-      return groups.map(function(g) {
-        return g.length === 1 ? g[0] : g;
-      });
-    }
-    exports2.groupConsecutiveElementsWhile = groupConsecutiveElementsWhile;
-    function sliceFromReverseWhile(arr2, startIndex, predicate) {
-      var result = {
-        elements: [],
-        sliceStartsAt: -1
-      };
-      for (var i = startIndex; i >= 0; i--) {
-        if (!predicate(arr2[i])) {
-          break;
-        }
-        result.sliceStartsAt = i;
-        result.elements.unshift(arr2[i]);
-      }
-      return result;
-    }
-    exports2.sliceFromReverseWhile = sliceFromReverseWhile;
-    function intersperse(arr2, item) {
-      return arr2.reduce(function(pv, v, index) {
-        pv.push(v);
-        if (index < arr2.length - 1) {
-          pv.push(item);
-        }
-        return pv;
-      }, []);
-    }
-    exports2.intersperse = intersperse;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/OpAttributeSanitizer.js
-var require_OpAttributeSanitizer = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/OpAttributeSanitizer.js"(exports2) {
-    "use strict";
-    var __importStar = exports2 && exports2.__importStar || function(mod2) {
-      if (mod2 && mod2.__esModule)
-        return mod2;
-      var result = {};
-      if (mod2 != null) {
-        for (var k in mod2)
-          if (Object.hasOwnProperty.call(mod2, k))
-            result[k] = mod2[k];
-      }
-      result["default"] = mod2;
-      return result;
-    };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var value_types_1 = require_value_types();
-    var MentionSanitizer_1 = require_MentionSanitizer();
-    var url = __importStar(require_url());
-    var funcs_html_1 = require_funcs_html();
-    var array_1 = require_array();
-    var OpAttributeSanitizer = function() {
-      function OpAttributeSanitizer2() {
-      }
-      OpAttributeSanitizer2.sanitize = function(dirtyAttrs, sanitizeOptions) {
-        var cleanAttrs = {};
-        if (!dirtyAttrs || typeof dirtyAttrs !== "object") {
-          return cleanAttrs;
-        }
-        var booleanAttrs = [
-          "bold",
-          "italic",
-          "underline",
-          "strike",
-          "code",
-          "blockquote",
-          "code-block",
-          "renderAsBlock"
-        ];
-        var colorAttrs = ["background", "color"];
-        var font = dirtyAttrs.font, size = dirtyAttrs.size, link = dirtyAttrs.link, script = dirtyAttrs.script, list = dirtyAttrs.list, header = dirtyAttrs.header, align = dirtyAttrs.align, direction = dirtyAttrs.direction, indent = dirtyAttrs.indent, mentions = dirtyAttrs.mentions, mention = dirtyAttrs.mention, width = dirtyAttrs.width, target = dirtyAttrs.target, rel = dirtyAttrs.rel;
-        var codeBlock = dirtyAttrs["code-block"];
-        var sanitizedAttrs = booleanAttrs.concat(colorAttrs, [
-          "font",
-          "size",
-          "link",
-          "script",
-          "list",
-          "header",
-          "align",
-          "direction",
-          "indent",
-          "mentions",
-          "mention",
-          "width",
-          "target",
-          "rel",
-          "code-block"
-        ]);
-        booleanAttrs.forEach(function(prop) {
-          var v = dirtyAttrs[prop];
-          if (v) {
-            cleanAttrs[prop] = !!v;
-          }
-        });
-        colorAttrs.forEach(function(prop) {
-          var val = dirtyAttrs[prop];
-          if (val && (OpAttributeSanitizer2.IsValidHexColor(val + "") || OpAttributeSanitizer2.IsValidColorLiteral(val + "") || OpAttributeSanitizer2.IsValidRGBColor(val + ""))) {
-            cleanAttrs[prop] = val;
-          }
-        });
-        if (font && OpAttributeSanitizer2.IsValidFontName(font + "")) {
-          cleanAttrs.font = font;
-        }
-        if (size && OpAttributeSanitizer2.IsValidSize(size + "")) {
-          cleanAttrs.size = size;
-        }
-        if (width && OpAttributeSanitizer2.IsValidWidth(width + "")) {
-          cleanAttrs.width = width;
-        }
-        if (link) {
-          cleanAttrs.link = OpAttributeSanitizer2.sanitizeLinkUsingOptions(link + "", sanitizeOptions);
-        }
-        if (target && OpAttributeSanitizer2.isValidTarget(target)) {
-          cleanAttrs.target = target;
-        }
-        if (rel && OpAttributeSanitizer2.IsValidRel(rel)) {
-          cleanAttrs.rel = rel;
-        }
-        if (codeBlock) {
-          if (OpAttributeSanitizer2.IsValidLang(codeBlock)) {
-            cleanAttrs["code-block"] = codeBlock;
-          } else {
-            cleanAttrs["code-block"] = !!codeBlock;
-          }
-        }
-        if (script === value_types_1.ScriptType.Sub || value_types_1.ScriptType.Super === script) {
-          cleanAttrs.script = script;
-        }
-        if (list === value_types_1.ListType.Bullet || list === value_types_1.ListType.Ordered || list === value_types_1.ListType.Checked || list === value_types_1.ListType.Unchecked) {
-          cleanAttrs.list = list;
-        }
-        if (Number(header)) {
-          cleanAttrs.header = Math.min(Number(header), 6);
-        }
-        if (array_1.find([value_types_1.AlignType.Center, value_types_1.AlignType.Right, value_types_1.AlignType.Justify, value_types_1.AlignType.Left], function(a) {
-          return a === align;
-        })) {
-          cleanAttrs.align = align;
-        }
-        if (direction === value_types_1.DirectionType.Rtl) {
-          cleanAttrs.direction = direction;
-        }
-        if (indent && Number(indent)) {
-          cleanAttrs.indent = Math.min(Number(indent), 30);
-        }
-        if (mentions && mention) {
-          var sanitizedMention = MentionSanitizer_1.MentionSanitizer.sanitize(mention, sanitizeOptions);
-          if (Object.keys(sanitizedMention).length > 0) {
-            cleanAttrs.mentions = !!mentions;
-            cleanAttrs.mention = mention;
-          }
-        }
-        return Object.keys(dirtyAttrs).reduce(function(cleaned, k) {
-          if (sanitizedAttrs.indexOf(k) === -1) {
-            cleaned[k] = dirtyAttrs[k];
-          }
-          return cleaned;
-        }, cleanAttrs);
-      };
-      OpAttributeSanitizer2.sanitizeLinkUsingOptions = function(link, options) {
-        var sanitizerFn = function() {
-          return void 0;
-        };
-        if (options && typeof options.urlSanitizer === "function") {
-          sanitizerFn = options.urlSanitizer;
-        }
-        var result = sanitizerFn(link);
-        return typeof result === "string" ? result : funcs_html_1.encodeLink(url.sanitize(link));
-      };
-      OpAttributeSanitizer2.IsValidHexColor = function(colorStr) {
-        return !!colorStr.match(/^#([0-9A-F]{6}|[0-9A-F]{3})\$/i);
-      };
-      OpAttributeSanitizer2.IsValidColorLiteral = function(colorStr) {
-        return !!colorStr.match(/^[a-z]{1,50}\$/i);
-      };
-      OpAttributeSanitizer2.IsValidRGBColor = function(colorStr) {
-        var re = /^rgb\\(((0|25[0-5]|2[0-4]\\d|1\\d\\d|0?\\d?\\d),\\s*){2}(0|25[0-5]|2[0-4]\\d|1\\d\\d|0?\\d?\\d)\\)\$/i;
-        return !!colorStr.match(re);
-      };
-      OpAttributeSanitizer2.IsValidFontName = function(fontName) {
-        return !!fontName.match(/^[a-z\\s0-9\\- ]{1,30}\$/i);
-      };
-      OpAttributeSanitizer2.IsValidSize = function(size) {
-        return !!size.match(/^[a-z0-9\\-]{1,20}\$/i);
-      };
-      OpAttributeSanitizer2.IsValidWidth = function(width) {
-        return !!width.match(/^[0-9]*(px|em|%)?\$/);
-      };
-      OpAttributeSanitizer2.isValidTarget = function(target) {
-        return !!target.match(/^[_a-zA-Z0-9\\-]{1,50}\$/);
-      };
-      OpAttributeSanitizer2.IsValidRel = function(relStr) {
-        return !!relStr.match(/^[a-zA-Z\\s\\-]{1,250}\$/i);
-      };
-      OpAttributeSanitizer2.IsValidLang = function(lang) {
-        if (typeof lang === "boolean") {
-          return true;
-        }
-        return !!lang.match(/^[a-zA-Z\\s\\-\\\\\\/\\+]{1,50}\$/i);
-      };
-      return OpAttributeSanitizer2;
-    }();
-    exports2.OpAttributeSanitizer = OpAttributeSanitizer;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/string.js
-var require_string = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/string.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    function tokenizeWithNewLines(str) {
-      var NewLine = "\\n";
-      if (str === NewLine) {
-        return [str];
-      }
-      var lines = str.split(NewLine);
-      if (lines.length === 1) {
-        return lines;
-      }
-      var lastIndex = lines.length - 1;
-      return lines.reduce(function(pv, line, ind) {
-        if (ind !== lastIndex) {
-          if (line !== "") {
-            pv = pv.concat(line, NewLine);
-          } else {
-            pv.push(NewLine);
-          }
-        } else if (line !== "") {
-          pv.push(line);
-        }
-        return pv;
-      }, []);
-    }
-    exports2.tokenizeWithNewLines = tokenizeWithNewLines;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js
-var require_object = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    function assign(target) {
-      var sources = [];
-      for (var _i = 1; _i < arguments.length; _i++) {
-        sources[_i - 1] = arguments[_i];
-      }
-      if (target == null) {
-        throw new TypeError("Cannot convert undefined or null to object");
-      }
-      var to = Object(target);
-      for (var index = 0; index < sources.length; index++) {
-        var nextSource = sources[index];
-        if (nextSource != null) {
-          for (var nextKey in nextSource) {
-            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
-              to[nextKey] = nextSource[nextKey];
-            }
-          }
-        }
-      }
-      return to;
-    }
-    exports2.assign = assign;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpDenormalizer.js
-var require_InsertOpDenormalizer = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpDenormalizer.js"(exports2) {
-    "use strict";
-    var __importStar = exports2 && exports2.__importStar || function(mod2) {
-      if (mod2 && mod2.__esModule)
-        return mod2;
-      var result = {};
-      if (mod2 != null) {
-        for (var k in mod2)
-          if (Object.hasOwnProperty.call(mod2, k))
-            result[k] = mod2[k];
-      }
-      result["default"] = mod2;
-      return result;
-    };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var value_types_1 = require_value_types();
-    var str = __importStar(require_string());
-    var obj = __importStar(require_object());
-    var InsertOpDenormalizer = function() {
-      function InsertOpDenormalizer2() {
-      }
-      InsertOpDenormalizer2.denormalize = function(op) {
-        if (!op || typeof op !== "object") {
-          return [];
-        }
-        if (typeof op.insert === "object" || op.insert === value_types_1.NewLine) {
-          return [op];
-        }
-        var newlinedArray = str.tokenizeWithNewLines(op.insert + "");
-        if (newlinedArray.length === 1) {
-          return [op];
-        }
-        var nlObj = obj.assign({}, op, { insert: value_types_1.NewLine });
-        return newlinedArray.map(function(line) {
-          if (line === value_types_1.NewLine) {
-            return nlObj;
-          }
-          return obj.assign({}, op, {
-            insert: line
-          });
-        });
-      };
-      return InsertOpDenormalizer2;
-    }();
-    exports2.InsertOpDenormalizer = InsertOpDenormalizer;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpsConverter.js
-var require_InsertOpsConverter = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpsConverter.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var DeltaInsertOp_1 = require_DeltaInsertOp();
-    var value_types_1 = require_value_types();
-    var InsertData_1 = require_InsertData();
-    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
-    var InsertOpDenormalizer_1 = require_InsertOpDenormalizer();
-    var InsertOpsConverter = function() {
-      function InsertOpsConverter2() {
-      }
-      InsertOpsConverter2.convert = function(deltaOps, options) {
-        if (!Array.isArray(deltaOps)) {
-          return [];
-        }
-        var denormalizedOps = [].concat.apply([], deltaOps.map(InsertOpDenormalizer_1.InsertOpDenormalizer.denormalize));
-        var results = [];
-        var insertVal, attributes;
-        for (var _i = 0, denormalizedOps_1 = denormalizedOps; _i < denormalizedOps_1.length; _i++) {
-          var op = denormalizedOps_1[_i];
-          if (!op.insert) {
-            continue;
-          }
-          insertVal = InsertOpsConverter2.convertInsertVal(op.insert, options);
-          if (!insertVal) {
-            continue;
-          }
-          attributes = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitize(op.attributes, options);
-          results.push(new DeltaInsertOp_1.DeltaInsertOp(insertVal, attributes));
-        }
-        return results;
-      };
-      InsertOpsConverter2.convertInsertVal = function(insertPropVal, sanitizeOptions) {
-        if (typeof insertPropVal === "string") {
-          return new InsertData_1.InsertDataQuill(value_types_1.DataType.Text, insertPropVal);
-        }
-        if (!insertPropVal || typeof insertPropVal !== "object") {
-          return null;
-        }
-        var keys = Object.keys(insertPropVal);
-        if (!keys.length) {
-          return null;
-        }
-        return value_types_1.DataType.Image in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Image, OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(insertPropVal[value_types_1.DataType.Image] + "", sanitizeOptions)) : value_types_1.DataType.Video in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Video, OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(insertPropVal[value_types_1.DataType.Video] + "", sanitizeOptions)) : value_types_1.DataType.Formula in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Formula, insertPropVal[value_types_1.DataType.Formula]) : new InsertData_1.InsertDataCustom(keys[0], insertPropVal[keys[0]]);
-      };
-      return InsertOpsConverter2;
-    }();
-    exports2.InsertOpsConverter = InsertOpsConverter;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/OpToHtmlConverter.js
-var require_OpToHtmlConverter = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/OpToHtmlConverter.js"(exports2) {
-    "use strict";
-    var __importStar = exports2 && exports2.__importStar || function(mod2) {
-      if (mod2 && mod2.__esModule)
-        return mod2;
-      var result = {};
-      if (mod2 != null) {
-        for (var k in mod2)
-          if (Object.hasOwnProperty.call(mod2, k))
-            result[k] = mod2[k];
-      }
-      result["default"] = mod2;
-      return result;
-    };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var funcs_html_1 = require_funcs_html();
-    var value_types_1 = require_value_types();
-    var obj = __importStar(require_object());
-    var arr2 = __importStar(require_array());
-    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
-    var DEFAULT_INLINE_FONTS = {
-      serif: "font-family: Georgia, Times New Roman, serif",
-      monospace: "font-family: Monaco, Courier New, monospace"
-    };
-    exports2.DEFAULT_INLINE_STYLES = {
-      font: function(value) {
-        return DEFAULT_INLINE_FONTS[value] || "font-family:" + value;
-      },
-      size: {
-        small: "font-size: 0.75em",
-        large: "font-size: 1.5em",
-        huge: "font-size: 2.5em"
-      },
-      indent: function(value, op) {
-        var indentSize = parseInt(value, 10) * 3;
-        var side = op.attributes["direction"] === "rtl" ? "right" : "left";
-        return "padding-" + side + ":" + indentSize + "em";
-      },
-      direction: function(value, op) {
-        if (value === "rtl") {
-          return "direction:rtl" + (op.attributes["align"] ? "" : "; text-align:inherit");
-        } else {
-          return void 0;
-        }
-      }
-    };
-    var OpToHtmlConverter = function() {
-      function OpToHtmlConverter2(op, options) {
-        this.op = op;
-        this.options = obj.assign({}, {
-          classPrefix: "ql",
-          inlineStyles: void 0,
-          encodeHtml: true,
-          listItemTag: "li",
-          paragraphTag: "p"
-        }, options);
-      }
-      OpToHtmlConverter2.prototype.prefixClass = function(className) {
-        if (!this.options.classPrefix) {
-          return className + "";
-        }
-        return this.options.classPrefix + "-" + className;
-      };
-      OpToHtmlConverter2.prototype.getHtml = function() {
-        var parts = this.getHtmlParts();
-        return parts.openingTag + parts.content + parts.closingTag;
-      };
-      OpToHtmlConverter2.prototype.getHtmlParts = function() {
-        var _this = this;
-        if (this.op.isJustNewline() && !this.op.isContainerBlock()) {
-          return { openingTag: "", closingTag: "", content: value_types_1.NewLine };
-        }
-        var tags = this.getTags(), attrs = this.getTagAttributes();
-        if (!tags.length && attrs.length) {
-          tags.push(this.options.textTag || "span");
-        }
-        var beginTags = [], endTags = [];
-        var imgTag = "img";
-        var isImageLink = function(tag2) {
-          return tag2 === imgTag && !!_this.op.attributes.link;
-        };
-        for (var _i = 0, tags_1 = tags; _i < tags_1.length; _i++) {
-          var tag = tags_1[_i];
-          if (isImageLink(tag)) {
-            beginTags.push(funcs_html_1.makeStartTag("a", this.getLinkAttrs()));
-          }
-          beginTags.push(funcs_html_1.makeStartTag(tag, attrs));
-          endTags.push(tag === "img" ? "" : funcs_html_1.makeEndTag(tag));
-          if (isImageLink(tag)) {
-            endTags.push(funcs_html_1.makeEndTag("a"));
-          }
-          attrs = [];
-        }
-        endTags.reverse();
-        return {
-          openingTag: beginTags.join(""),
-          content: this.getContent(),
-          closingTag: endTags.join("")
-        };
-      };
-      OpToHtmlConverter2.prototype.getContent = function() {
-        if (this.op.isContainerBlock()) {
-          return "";
-        }
-        if (this.op.isMentions()) {
-          return this.op.insert.value;
-        }
-        var content = this.op.isFormula() || this.op.isText() ? this.op.insert.value : "";
-        return this.options.encodeHtml && funcs_html_1.encodeHtml(content) || content;
-      };
-      OpToHtmlConverter2.prototype.getCssClasses = function() {
-        var attrs = this.op.attributes;
-        if (this.options.inlineStyles) {
-          return [];
-        }
-        var propsArr = ["indent", "align", "direction", "font", "size"];
-        if (this.options.allowBackgroundClasses) {
-          propsArr.push("background");
-        }
-        return (this.getCustomCssClasses() || []).concat(propsArr.filter(function(prop) {
-          return !!attrs[prop];
-        }).filter(function(prop) {
-          return prop === "background" ? OpAttributeSanitizer_1.OpAttributeSanitizer.IsValidColorLiteral(attrs[prop]) : true;
-        }).map(function(prop) {
-          return prop + "-" + attrs[prop];
-        }).concat(this.op.isFormula() ? "formula" : []).concat(this.op.isVideo() ? "video" : []).concat(this.op.isImage() ? "image" : []).map(this.prefixClass.bind(this)));
-      };
-      OpToHtmlConverter2.prototype.getCssStyles = function() {
-        var _this = this;
-        var attrs = this.op.attributes;
-        var propsArr = [["color"]];
-        if (!!this.options.inlineStyles || !this.options.allowBackgroundClasses) {
-          propsArr.push(["background", "background-color"]);
-        }
-        if (this.options.inlineStyles) {
-          propsArr = propsArr.concat([
-            ["indent"],
-            ["align", "text-align"],
-            ["direction"],
-            ["font", "font-family"],
-            ["size"]
-          ]);
-        }
-        return (this.getCustomCssStyles() || []).concat(propsArr.filter(function(item) {
-          return !!attrs[item[0]];
-        }).map(function(item) {
-          var attribute = item[0];
-          var attrValue = attrs[attribute];
-          var attributeConverter = _this.options.inlineStyles && _this.options.inlineStyles[attribute] || exports2.DEFAULT_INLINE_STYLES[attribute];
-          if (typeof attributeConverter === "object") {
-            return attributeConverter[attrValue];
-          } else if (typeof attributeConverter === "function") {
-            var converterFn = attributeConverter;
-            return converterFn(attrValue, _this.op);
-          } else {
-            return arr2.preferSecond(item) + ":" + attrValue;
-          }
-        })).filter(function(item) {
-          return item !== void 0;
-        });
-      };
-      OpToHtmlConverter2.prototype.getTagAttributes = function() {
-        if (this.op.attributes.code && !this.op.isLink()) {
-          return [];
-        }
-        var makeAttr = this.makeAttr.bind(this);
-        var customTagAttributes = this.getCustomTagAttributes();
-        var customAttr = customTagAttributes ? Object.keys(this.getCustomTagAttributes()).map(function(k) {
-          return makeAttr(k, customTagAttributes[k]);
-        }) : [];
-        var classes = this.getCssClasses();
-        var tagAttrs = classes.length ? customAttr.concat([makeAttr("class", classes.join(" "))]) : customAttr;
-        if (this.op.isImage()) {
-          this.op.attributes.width && (tagAttrs = tagAttrs.concat(makeAttr("width", this.op.attributes.width)));
-          return tagAttrs.concat(makeAttr("src", this.op.insert.value));
-        }
-        if (this.op.isACheckList()) {
-          return tagAttrs.concat(makeAttr("data-checked", this.op.isCheckedList() ? "true" : "false"));
-        }
-        if (this.op.isFormula()) {
-          return tagAttrs;
-        }
-        if (this.op.isVideo()) {
-          return tagAttrs.concat(makeAttr("frameborder", "0"), makeAttr("allowfullscreen", "true"), makeAttr("src", this.op.insert.value));
-        }
-        if (this.op.isMentions()) {
-          var mention = this.op.attributes.mention;
-          if (mention.class) {
-            tagAttrs = tagAttrs.concat(makeAttr("class", mention.class));
-          }
-          if (mention["end-point"] && mention.slug) {
-            tagAttrs = tagAttrs.concat(makeAttr("href", mention["end-point"] + "/" + mention.slug));
-          } else {
-            tagAttrs = tagAttrs.concat(makeAttr("href", "about:blank"));
-          }
-          if (mention.target) {
-            tagAttrs = tagAttrs.concat(makeAttr("target", mention.target));
-          }
-          return tagAttrs;
-        }
-        var styles = this.getCssStyles();
-        if (styles.length) {
-          tagAttrs.push(makeAttr("style", styles.join(";")));
-        }
-        if (this.op.isCodeBlock() && typeof this.op.attributes["code-block"] === "string") {
-          return tagAttrs.concat(makeAttr("data-language", this.op.attributes["code-block"]));
-        }
-        if (this.op.isContainerBlock()) {
-          return tagAttrs;
-        }
-        if (this.op.isLink()) {
-          tagAttrs = tagAttrs.concat(this.getLinkAttrs());
-        }
-        return tagAttrs;
-      };
-      OpToHtmlConverter2.prototype.makeAttr = function(k, v) {
-        return { key: k, value: v };
-      };
-      OpToHtmlConverter2.prototype.getLinkAttrs = function() {
-        var tagAttrs = [];
-        var targetForAll = OpAttributeSanitizer_1.OpAttributeSanitizer.isValidTarget(this.options.linkTarget || "") ? this.options.linkTarget : void 0;
-        var relForAll = OpAttributeSanitizer_1.OpAttributeSanitizer.IsValidRel(this.options.linkRel || "") ? this.options.linkRel : void 0;
-        var target = this.op.attributes.target || targetForAll;
-        var rel = this.op.attributes.rel || relForAll;
-        return tagAttrs.concat(this.makeAttr("href", this.op.attributes.link)).concat(target ? this.makeAttr("target", target) : []).concat(rel ? this.makeAttr("rel", rel) : []);
-      };
-      OpToHtmlConverter2.prototype.getCustomTag = function(format) {
-        if (this.options.customTag && typeof this.options.customTag === "function") {
-          return this.options.customTag.apply(null, [format, this.op]);
-        }
-      };
-      OpToHtmlConverter2.prototype.getCustomTagAttributes = function() {
-        if (this.options.customTagAttributes && typeof this.options.customTagAttributes === "function") {
-          return this.options.customTagAttributes.apply(null, [this.op]);
-        }
-      };
-      OpToHtmlConverter2.prototype.getCustomCssClasses = function() {
-        if (this.options.customCssClasses && typeof this.options.customCssClasses === "function") {
-          var res = this.options.customCssClasses.apply(null, [this.op]);
-          if (res) {
-            return Array.isArray(res) ? res : [res];
-          }
-        }
-      };
-      OpToHtmlConverter2.prototype.getCustomCssStyles = function() {
-        if (this.options.customCssStyles && typeof this.options.customCssStyles === "function") {
-          var res = this.options.customCssStyles.apply(null, [this.op]);
-          if (res) {
-            return Array.isArray(res) ? res : [res];
-          }
-        }
-      };
-      OpToHtmlConverter2.prototype.getTags = function() {
-        var _this = this;
-        var attrs = this.op.attributes;
-        if (!this.op.isText()) {
-          return [
-            this.op.isVideo() ? "iframe" : this.op.isImage() ? "img" : "span"
-          ];
-        }
-        var positionTag = this.options.paragraphTag || "p";
-        var blocks = [
-          ["blockquote"],
-          ["code-block", "pre"],
-          ["list", this.options.listItemTag],
-          ["header"],
-          ["align", positionTag],
-          ["direction", positionTag],
-          ["indent", positionTag]
-        ];
-        for (var _i = 0, blocks_1 = blocks; _i < blocks_1.length; _i++) {
-          var item = blocks_1[_i];
-          var firstItem = item[0];
-          if (attrs[firstItem]) {
-            var customTag = this.getCustomTag(firstItem);
-            return customTag ? [customTag] : firstItem === "header" ? ["h" + attrs[firstItem]] : [arr2.preferSecond(item)];
-          }
-        }
-        if (this.op.isCustomTextBlock()) {
-          var customTag = this.getCustomTag("renderAsBlock");
-          return customTag ? [customTag] : [positionTag];
-        }
-        var customTagsMap = Object.keys(attrs).reduce(function(res, it) {
-          var customTag2 = _this.getCustomTag(it);
-          if (customTag2) {
-            res[it] = customTag2;
-          }
-          return res;
-        }, {});
-        var inlineTags = [
-          ["link", "a"],
-          ["mentions", "a"],
-          ["script"],
-          ["bold", "strong"],
-          ["italic", "em"],
-          ["strike", "s"],
-          ["underline", "u"],
-          ["code"]
-        ];
-        return inlineTags.filter(function(item2) {
-          return !!attrs[item2[0]];
-        }).concat(Object.keys(customTagsMap).filter(function(t) {
-          return !inlineTags.some(function(it) {
-            return it[0] == t;
-          });
-        }).map(function(t) {
-          return [t, customTagsMap[t]];
-        })).map(function(item2) {
-          return customTagsMap[item2[0]] ? customTagsMap[item2[0]] : item2[0] === "script" ? attrs[item2[0]] === value_types_1.ScriptType.Sub ? "sub" : "sup" : arr2.preferSecond(item2);
-        });
-      };
-      return OpToHtmlConverter2;
-    }();
-    exports2.OpToHtmlConverter = OpToHtmlConverter;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/group-types.js
-var require_group_types = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/group-types.js"(exports2) {
-    "use strict";
-    var __extends = exports2 && exports2.__extends || function() {
-      var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d, b) {
-        d.__proto__ = b;
-      } || function(d, b) {
-        for (var p in b)
-          if (b.hasOwnProperty(p))
-            d[p] = b[p];
-      };
-      return function(d, b) {
-        extendStatics(d, b);
-        function __() {
-          this.constructor = d;
-        }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-      };
-    }();
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var InlineGroup = function() {
-      function InlineGroup2(ops) {
-        this.ops = ops;
-      }
-      return InlineGroup2;
-    }();
-    exports2.InlineGroup = InlineGroup;
-    var SingleItem = function() {
-      function SingleItem2(op) {
-        this.op = op;
-      }
-      return SingleItem2;
-    }();
-    var VideoItem = function(_super) {
-      __extends(VideoItem2, _super);
-      function VideoItem2() {
-        return _super !== null && _super.apply(this, arguments) || this;
-      }
-      return VideoItem2;
-    }(SingleItem);
-    exports2.VideoItem = VideoItem;
-    var BlotBlock = function(_super) {
-      __extends(BlotBlock2, _super);
-      function BlotBlock2() {
-        return _super !== null && _super.apply(this, arguments) || this;
-      }
-      return BlotBlock2;
-    }(SingleItem);
-    exports2.BlotBlock = BlotBlock;
-    var BlockGroup = function() {
-      function BlockGroup2(op, ops) {
-        this.op = op;
-        this.ops = ops;
-      }
-      return BlockGroup2;
-    }();
-    exports2.BlockGroup = BlockGroup;
-    var ListGroup = function() {
-      function ListGroup2(items) {
-        this.items = items;
-      }
-      return ListGroup2;
-    }();
-    exports2.ListGroup = ListGroup;
-    var ListItem = function() {
-      function ListItem2(item, innerList) {
-        if (innerList === void 0) {
-          innerList = null;
-        }
-        this.item = item;
-        this.innerList = innerList;
-      }
-      return ListItem2;
-    }();
-    exports2.ListItem = ListItem;
-    var TableGroup = function() {
-      function TableGroup2(rows) {
-        this.rows = rows;
-      }
-      return TableGroup2;
-    }();
-    exports2.TableGroup = TableGroup;
-    var TableRow = function() {
-      function TableRow2(cells) {
-        this.cells = cells;
-      }
-      return TableRow2;
-    }();
-    exports2.TableRow = TableRow;
-    var TableCell = function() {
-      function TableCell2(item) {
-        this.item = item;
-      }
-      return TableCell2;
-    }();
-    exports2.TableCell = TableCell;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/Grouper.js
-var require_Grouper = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/Grouper.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var DeltaInsertOp_1 = require_DeltaInsertOp();
-    var array_1 = require_array();
-    var group_types_1 = require_group_types();
-    var Grouper = function() {
-      function Grouper2() {
-      }
-      Grouper2.pairOpsWithTheirBlock = function(ops) {
-        var result = [];
-        var canBeInBlock = function(op2) {
-          return !(op2.isJustNewline() || op2.isCustomEmbedBlock() || op2.isVideo() || op2.isContainerBlock());
-        };
-        var isInlineData = function(op2) {
-          return op2.isInline();
-        };
-        var lastInd = ops.length - 1;
-        var opsSlice;
-        for (var i = lastInd; i >= 0; i--) {
-          var op = ops[i];
-          if (op.isVideo()) {
-            result.push(new group_types_1.VideoItem(op));
-          } else if (op.isCustomEmbedBlock()) {
-            result.push(new group_types_1.BlotBlock(op));
-          } else if (op.isContainerBlock()) {
-            opsSlice = array_1.sliceFromReverseWhile(ops, i - 1, canBeInBlock);
-            result.push(new group_types_1.BlockGroup(op, opsSlice.elements));
-            i = opsSlice.sliceStartsAt > -1 ? opsSlice.sliceStartsAt : i;
-          } else {
-            opsSlice = array_1.sliceFromReverseWhile(ops, i - 1, isInlineData);
-            result.push(new group_types_1.InlineGroup(opsSlice.elements.concat(op)));
-            i = opsSlice.sliceStartsAt > -1 ? opsSlice.sliceStartsAt : i;
-          }
-        }
-        result.reverse();
-        return result;
-      };
-      Grouper2.groupConsecutiveSameStyleBlocks = function(groups, blocksOf) {
-        if (blocksOf === void 0) {
-          blocksOf = {
-            header: true,
-            codeBlocks: true,
-            blockquotes: true,
-            customBlocks: true
-          };
-        }
-        return array_1.groupConsecutiveElementsWhile(groups, function(g, gPrev) {
-          if (!(g instanceof group_types_1.BlockGroup) || !(gPrev instanceof group_types_1.BlockGroup)) {
-            return false;
-          }
-          return blocksOf.codeBlocks && Grouper2.areBothCodeblocksWithSameLang(g, gPrev) || blocksOf.blockquotes && Grouper2.areBothBlockquotesWithSameAdi(g, gPrev) || blocksOf.header && Grouper2.areBothSameHeadersWithSameAdi(g, gPrev) || blocksOf.customBlocks && Grouper2.areBothCustomBlockWithSameAttr(g, gPrev);
-        });
-      };
-      Grouper2.reduceConsecutiveSameStyleBlocksToOne = function(groups) {
-        var newLineOp = DeltaInsertOp_1.DeltaInsertOp.createNewLineOp();
-        return groups.map(function(elm) {
-          if (!Array.isArray(elm)) {
-            if (elm instanceof group_types_1.BlockGroup && !elm.ops.length) {
-              elm.ops.push(newLineOp);
-            }
-            return elm;
-          }
-          var groupsLastInd = elm.length - 1;
-          elm[0].ops = array_1.flatten(elm.map(function(g, i) {
-            if (!g.ops.length) {
-              return [newLineOp];
-            }
-            return g.ops.concat(i < groupsLastInd ? [newLineOp] : []);
-          }));
-          return elm[0];
-        });
-      };
-      Grouper2.areBothCodeblocksWithSameLang = function(g1, gOther) {
-        return g1.op.isCodeBlock() && gOther.op.isCodeBlock() && g1.op.hasSameLangAs(gOther.op);
-      };
-      Grouper2.areBothSameHeadersWithSameAdi = function(g1, gOther) {
-        return g1.op.isSameHeaderAs(gOther.op) && g1.op.hasSameAdiAs(gOther.op);
-      };
-      Grouper2.areBothBlockquotesWithSameAdi = function(g, gOther) {
-        return g.op.isBlockquote() && gOther.op.isBlockquote() && g.op.hasSameAdiAs(gOther.op);
-      };
-      Grouper2.areBothCustomBlockWithSameAttr = function(g, gOther) {
-        return g.op.isCustomTextBlock() && gOther.op.isCustomTextBlock() && g.op.hasSameAttr(gOther.op);
-      };
-      return Grouper2;
-    }();
-    exports2.Grouper = Grouper;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/ListNester.js
-var require_ListNester = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/ListNester.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var group_types_1 = require_group_types();
-    var array_1 = require_array();
-    var ListNester = function() {
-      function ListNester2() {
-      }
-      ListNester2.prototype.nest = function(groups) {
-        var _this = this;
-        var listBlocked = this.convertListBlocksToListGroups(groups);
-        var groupedByListGroups = this.groupConsecutiveListGroups(listBlocked);
-        var nested = array_1.flatten(groupedByListGroups.map(function(group2) {
-          if (!Array.isArray(group2)) {
-            return group2;
-          }
-          return _this.nestListSection(group2);
-        }));
-        var groupRootLists = array_1.groupConsecutiveElementsWhile(nested, function(curr, prev) {
-          if (!(curr instanceof group_types_1.ListGroup && prev instanceof group_types_1.ListGroup)) {
-            return false;
-          }
-          return curr.items[0].item.op.isSameListAs(prev.items[0].item.op);
-        });
-        return groupRootLists.map(function(v) {
-          if (!Array.isArray(v)) {
-            return v;
-          }
-          var litems = v.map(function(g) {
-            return g.items;
-          });
-          return new group_types_1.ListGroup(array_1.flatten(litems));
-        });
-      };
-      ListNester2.prototype.convertListBlocksToListGroups = function(items) {
-        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
-          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isList() && gPrev.op.isList() && g.op.isSameListAs(gPrev.op) && g.op.hasSameIndentationAs(gPrev.op);
-        });
-        return grouped.map(function(item) {
-          if (!Array.isArray(item)) {
-            if (item instanceof group_types_1.BlockGroup && item.op.isList()) {
-              return new group_types_1.ListGroup([new group_types_1.ListItem(item)]);
-            }
-            return item;
-          }
-          return new group_types_1.ListGroup(item.map(function(g) {
-            return new group_types_1.ListItem(g);
-          }));
-        });
-      };
-      ListNester2.prototype.groupConsecutiveListGroups = function(items) {
-        return array_1.groupConsecutiveElementsWhile(items, function(curr, prev) {
-          return curr instanceof group_types_1.ListGroup && prev instanceof group_types_1.ListGroup;
-        });
-      };
-      ListNester2.prototype.nestListSection = function(sectionItems) {
-        var _this = this;
-        var indentGroups = this.groupByIndent(sectionItems);
-        Object.keys(indentGroups).map(Number).sort().reverse().forEach(function(indent) {
-          indentGroups[indent].forEach(function(lg) {
-            var idx = sectionItems.indexOf(lg);
-            if (_this.placeUnderParent(lg, sectionItems.slice(0, idx))) {
-              sectionItems.splice(idx, 1);
-            }
-          });
-        });
-        return sectionItems;
-      };
-      ListNester2.prototype.groupByIndent = function(items) {
-        return items.reduce(function(pv, cv) {
-          var indent = cv.items[0].item.op.attributes.indent;
-          if (indent) {
-            pv[indent] = pv[indent] || [];
-            pv[indent].push(cv);
-          }
-          return pv;
-        }, {});
-      };
-      ListNester2.prototype.placeUnderParent = function(target, items) {
-        for (var i = items.length - 1; i >= 0; i--) {
-          var elm = items[i];
-          if (target.items[0].item.op.hasHigherIndentThan(elm.items[0].item.op)) {
-            var parent = elm.items[elm.items.length - 1];
-            if (parent.innerList) {
-              parent.innerList.items = parent.innerList.items.concat(target.items);
-            } else {
-              parent.innerList = target;
-            }
-            return true;
-          }
-        }
-        return false;
-      };
-      return ListNester2;
-    }();
-    exports2.ListNester = ListNester;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/TableGrouper.js
-var require_TableGrouper = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/TableGrouper.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var group_types_1 = require_group_types();
-    var array_1 = require_array();
-    var TableGrouper = function() {
-      function TableGrouper2() {
-      }
-      TableGrouper2.prototype.group = function(groups) {
-        var tableBlocked = this.convertTableBlocksToTableGroups(groups);
-        return tableBlocked;
-      };
-      TableGrouper2.prototype.convertTableBlocksToTableGroups = function(items) {
-        var _this = this;
-        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
-          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isTable() && gPrev.op.isTable();
-        });
-        return grouped.map(function(item) {
-          if (!Array.isArray(item)) {
-            if (item instanceof group_types_1.BlockGroup && item.op.isTable()) {
-              return new group_types_1.TableGroup([new group_types_1.TableRow([new group_types_1.TableCell(item)])]);
-            }
-            return item;
-          }
-          return new group_types_1.TableGroup(_this.convertTableBlocksToTableRows(item));
-        });
-      };
-      TableGrouper2.prototype.convertTableBlocksToTableRows = function(items) {
-        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
-          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isTable() && gPrev.op.isTable() && g.op.isSameTableRowAs(gPrev.op);
-        });
-        return grouped.map(function(item) {
-          return new group_types_1.TableRow(Array.isArray(item) ? item.map(function(it) {
-            return new group_types_1.TableCell(it);
-          }) : [new group_types_1.TableCell(item)]);
-        });
-      };
-      return TableGrouper2;
-    }();
-    exports2.TableGrouper = TableGrouper;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/QuillDeltaToHtmlConverter.js
-var require_QuillDeltaToHtmlConverter = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/QuillDeltaToHtmlConverter.js"(exports2) {
-    "use strict";
-    var __importStar = exports2 && exports2.__importStar || function(mod2) {
-      if (mod2 && mod2.__esModule)
-        return mod2;
-      var result = {};
-      if (mod2 != null) {
-        for (var k in mod2)
-          if (Object.hasOwnProperty.call(mod2, k))
-            result[k] = mod2[k];
-      }
-      result["default"] = mod2;
-      return result;
-    };
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var InsertOpsConverter_1 = require_InsertOpsConverter();
-    var OpToHtmlConverter_1 = require_OpToHtmlConverter();
-    var Grouper_1 = require_Grouper();
-    var group_types_1 = require_group_types();
-    var ListNester_1 = require_ListNester();
-    var funcs_html_1 = require_funcs_html();
-    var obj = __importStar(require_object());
-    var value_types_1 = require_value_types();
-    var TableGrouper_1 = require_TableGrouper();
-    var BrTag = "<br/>";
-    var QuillDeltaToHtmlConverter2 = function() {
-      function QuillDeltaToHtmlConverter3(deltaOps, options) {
-        this.rawDeltaOps = [];
-        this.callbacks = {};
-        this.options = obj.assign({
-          paragraphTag: "p",
-          textTag: "span",
-          encodeHtml: true,
-          classPrefix: "ql",
-          inlineStyles: false,
-          multiLineBlockquote: true,
-          multiLineHeader: true,
-          multiLineCodeblock: true,
-          multiLineParagraph: true,
-          multiLineCustomBlock: true,
-          allowBackgroundClasses: false,
-          linkTarget: "_blank"
-        }, options, {
-          orderedListTag: "ol",
-          bulletListTag: "ul",
-          listItemTag: "li"
-        });
-        var inlineStyles;
-        if (!this.options.inlineStyles) {
-          inlineStyles = void 0;
-        } else if (typeof this.options.inlineStyles === "object") {
-          inlineStyles = this.options.inlineStyles;
-        } else {
-          inlineStyles = {};
-        }
-        this.converterOptions = {
-          encodeHtml: this.options.encodeHtml,
-          classPrefix: this.options.classPrefix,
-          inlineStyles,
-          listItemTag: this.options.listItemTag,
-          paragraphTag: this.options.paragraphTag,
-          textTag: this.options.textTag,
-          linkRel: this.options.linkRel,
-          linkTarget: this.options.linkTarget,
-          allowBackgroundClasses: this.options.allowBackgroundClasses,
-          customTag: this.options.customTag,
-          customTagAttributes: this.options.customTagAttributes,
-          customCssClasses: this.options.customCssClasses,
-          customCssStyles: this.options.customCssStyles
-        };
-        this.rawDeltaOps = deltaOps;
-      }
-      QuillDeltaToHtmlConverter3.prototype._getListTag = function(op) {
-        return op.isOrderedList() ? this.options.orderedListTag + "" : op.isBulletList() ? this.options.bulletListTag + "" : op.isCheckedList() ? this.options.bulletListTag + "" : op.isUncheckedList() ? this.options.bulletListTag + "" : "";
-      };
-      QuillDeltaToHtmlConverter3.prototype.getGroupedOps = function() {
-        var deltaOps = InsertOpsConverter_1.InsertOpsConverter.convert(this.rawDeltaOps, this.options);
-        var pairedOps = Grouper_1.Grouper.pairOpsWithTheirBlock(deltaOps);
-        var groupedSameStyleBlocks = Grouper_1.Grouper.groupConsecutiveSameStyleBlocks(pairedOps, {
-          blockquotes: !!this.options.multiLineBlockquote,
-          header: !!this.options.multiLineHeader,
-          codeBlocks: !!this.options.multiLineCodeblock,
-          customBlocks: !!this.options.multiLineCustomBlock
-        });
-        var groupedOps = Grouper_1.Grouper.reduceConsecutiveSameStyleBlocksToOne(groupedSameStyleBlocks);
-        var tableGrouper = new TableGrouper_1.TableGrouper();
-        groupedOps = tableGrouper.group(groupedOps);
-        var listNester = new ListNester_1.ListNester();
-        return listNester.nest(groupedOps);
-      };
-      QuillDeltaToHtmlConverter3.prototype.convert = function() {
-        var _this = this;
-        var groups = this.getGroupedOps();
-        return groups.map(function(group2) {
-          if (group2 instanceof group_types_1.ListGroup) {
-            return _this._renderWithCallbacks(value_types_1.GroupType.List, group2, function() {
-              return _this._renderList(group2);
-            });
-          } else if (group2 instanceof group_types_1.TableGroup) {
-            return _this._renderWithCallbacks(value_types_1.GroupType.Table, group2, function() {
-              return _this._renderTable(group2);
-            });
-          } else if (group2 instanceof group_types_1.BlockGroup) {
-            var g = group2;
-            return _this._renderWithCallbacks(value_types_1.GroupType.Block, group2, function() {
-              return _this._renderBlock(g.op, g.ops);
-            });
-          } else if (group2 instanceof group_types_1.BlotBlock) {
-            return _this._renderCustom(group2.op, null);
-          } else if (group2 instanceof group_types_1.VideoItem) {
-            return _this._renderWithCallbacks(value_types_1.GroupType.Video, group2, function() {
-              var g2 = group2;
-              var converter = new OpToHtmlConverter_1.OpToHtmlConverter(g2.op, _this.converterOptions);
-              return converter.getHtml();
-            });
-          } else {
-            return _this._renderWithCallbacks(value_types_1.GroupType.InlineGroup, group2, function() {
-              return _this._renderInlines(group2.ops, true);
-            });
-          }
-        }).join("");
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderWithCallbacks = function(groupType, group2, myRenderFn) {
-        var html = "";
-        var beforeCb = this.callbacks["beforeRender_cb"];
-        html = typeof beforeCb === "function" ? beforeCb.apply(null, [groupType, group2]) : "";
-        if (!html) {
-          html = myRenderFn();
-        }
-        var afterCb = this.callbacks["afterRender_cb"];
-        html = typeof afterCb === "function" ? afterCb.apply(null, [groupType, html]) : html;
-        return html;
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderList = function(list) {
-        var _this = this;
-        var firstItem = list.items[0];
-        return funcs_html_1.makeStartTag(this._getListTag(firstItem.item.op)) + list.items.map(function(li) {
-          return _this._renderListItem(li);
-        }).join("") + funcs_html_1.makeEndTag(this._getListTag(firstItem.item.op));
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderListItem = function(li) {
-        li.item.op.attributes.indent = 0;
-        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(li.item.op, this.converterOptions);
-        var parts = converter.getHtmlParts();
-        var liElementsHtml = this._renderInlines(li.item.ops, false);
-        return parts.openingTag + liElementsHtml + (li.innerList ? this._renderList(li.innerList) : "") + parts.closingTag;
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderTable = function(table) {
-        var _this = this;
-        return funcs_html_1.makeStartTag("table") + funcs_html_1.makeStartTag("tbody") + table.rows.map(function(row) {
-          return _this._renderTableRow(row);
-        }).join("") + funcs_html_1.makeEndTag("tbody") + funcs_html_1.makeEndTag("table");
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderTableRow = function(row) {
-        var _this = this;
-        return funcs_html_1.makeStartTag("tr") + row.cells.map(function(cell) {
-          return _this._renderTableCell(cell);
-        }).join("") + funcs_html_1.makeEndTag("tr");
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderTableCell = function(cell) {
-        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(cell.item.op, this.converterOptions);
-        var parts = converter.getHtmlParts();
-        var cellElementsHtml = this._renderInlines(cell.item.ops, false);
-        return funcs_html_1.makeStartTag("td", {
-          key: "data-row",
-          value: cell.item.op.attributes.table
-        }) + parts.openingTag + cellElementsHtml + parts.closingTag + funcs_html_1.makeEndTag("td");
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderBlock = function(bop, ops) {
-        var _this = this;
-        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(bop, this.converterOptions);
-        var htmlParts = converter.getHtmlParts();
-        if (bop.isCodeBlock()) {
-          return htmlParts.openingTag + funcs_html_1.encodeHtml(ops.map(function(iop) {
-            return iop.isCustomEmbed() ? _this._renderCustom(iop, bop) : iop.insert.value;
-          }).join("")) + htmlParts.closingTag;
-        }
-        var inlines = ops.map(function(op) {
-          return _this._renderInline(op, bop);
-        }).join("");
-        return htmlParts.openingTag + (inlines || BrTag) + htmlParts.closingTag;
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderInlines = function(ops, isInlineGroup) {
-        var _this = this;
-        if (isInlineGroup === void 0) {
-          isInlineGroup = true;
-        }
-        var opsLen = ops.length - 1;
-        var html = ops.map(function(op, i) {
-          if (i > 0 && i === opsLen && op.isJustNewline()) {
-            return "";
-          }
-          return _this._renderInline(op, null);
-        }).join("");
-        if (!isInlineGroup) {
-          return html;
-        }
-        var startParaTag = funcs_html_1.makeStartTag(this.options.paragraphTag);
-        var endParaTag = funcs_html_1.makeEndTag(this.options.paragraphTag);
-        if (html === BrTag || this.options.multiLineParagraph) {
-          return startParaTag + html + endParaTag;
-        }
-        return startParaTag + html.split(BrTag).map(function(v) {
-          return v === "" ? BrTag : v;
-        }).join(endParaTag + startParaTag) + endParaTag;
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderInline = function(op, contextOp) {
-        if (op.isCustomEmbed()) {
-          return this._renderCustom(op, contextOp);
-        }
-        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(op, this.converterOptions);
-        return converter.getHtml().replace(/\\n/g, BrTag);
-      };
-      QuillDeltaToHtmlConverter3.prototype._renderCustom = function(op, contextOp) {
-        var renderCb = this.callbacks["renderCustomOp_cb"];
-        if (typeof renderCb === "function") {
-          return renderCb.apply(null, [op, contextOp]);
-        }
-        return "";
-      };
-      QuillDeltaToHtmlConverter3.prototype.beforeRender = function(cb) {
-        if (typeof cb === "function") {
-          this.callbacks["beforeRender_cb"] = cb;
-        }
-      };
-      QuillDeltaToHtmlConverter3.prototype.afterRender = function(cb) {
-        if (typeof cb === "function") {
-          this.callbacks["afterRender_cb"] = cb;
-        }
-      };
-      QuillDeltaToHtmlConverter3.prototype.renderCustomWith = function(cb) {
-        this.callbacks["renderCustomOp_cb"] = cb;
-      };
-      return QuillDeltaToHtmlConverter3;
-    }();
-    exports2.QuillDeltaToHtmlConverter = QuillDeltaToHtmlConverter2;
-  }
-});
-
-// node_modules/quill-delta-to-html-cb/dist/commonjs/main.js
-var require_main = __commonJS({
-  "node_modules/quill-delta-to-html-cb/dist/commonjs/main.js"(exports2) {
-    "use strict";
-    Object.defineProperty(exports2, "__esModule", { value: true });
-    var QuillDeltaToHtmlConverter_1 = require_QuillDeltaToHtmlConverter();
-    exports2.QuillDeltaToHtmlConverter = QuillDeltaToHtmlConverter_1.QuillDeltaToHtmlConverter;
-    var OpToHtmlConverter_1 = require_OpToHtmlConverter();
-    exports2.OpToHtmlConverter = OpToHtmlConverter_1.OpToHtmlConverter;
-    var group_types_1 = require_group_types();
-    exports2.InlineGroup = group_types_1.InlineGroup;
-    exports2.VideoItem = group_types_1.VideoItem;
-    exports2.BlockGroup = group_types_1.BlockGroup;
-    exports2.ListGroup = group_types_1.ListGroup;
-    exports2.ListItem = group_types_1.ListItem;
-    exports2.BlotBlock = group_types_1.BlotBlock;
-    var DeltaInsertOp_1 = require_DeltaInsertOp();
-    exports2.DeltaInsertOp = DeltaInsertOp_1.DeltaInsertOp;
-    var InsertData_1 = require_InsertData();
-    exports2.InsertDataQuill = InsertData_1.InsertDataQuill;
-    exports2.InsertDataCustom = InsertData_1.InsertDataCustom;
-    var value_types_1 = require_value_types();
-    exports2.NewLine = value_types_1.NewLine;
-    exports2.ListType = value_types_1.ListType;
-    exports2.ScriptType = value_types_1.ScriptType;
-    exports2.DirectionType = value_types_1.DirectionType;
-    exports2.AlignType = value_types_1.AlignType;
-    exports2.DataType = value_types_1.DataType;
-    exports2.GroupType = value_types_1.GroupType;
   }
 });
 
@@ -4441,7 +2037,7 @@ var require_field = __commonJS({
   "node_modules/protobufjs/src/field.js"(exports2, module2) {
     "use strict";
     module2.exports = Field;
-    var ReflectionObject = require_object2();
+    var ReflectionObject = require_object();
     ((Field.prototype = Object.create(ReflectionObject.prototype)).constructor = Field).className = "Field";
     var Enum = require_enum();
     var types = require_types();
@@ -4590,7 +2186,7 @@ var require_oneof = __commonJS({
   "node_modules/protobufjs/src/oneof.js"(exports2, module2) {
     "use strict";
     module2.exports = OneOf;
-    var ReflectionObject = require_object2();
+    var ReflectionObject = require_object();
     ((OneOf.prototype = Object.create(ReflectionObject.prototype)).constructor = OneOf).className = "OneOf";
     var Field = require_field();
     var util = require_util();
@@ -4689,7 +2285,7 @@ var require_namespace = __commonJS({
   "node_modules/protobufjs/src/namespace.js"(exports2, module2) {
     "use strict";
     module2.exports = Namespace;
-    var ReflectionObject = require_object2();
+    var ReflectionObject = require_object();
     ((Namespace.prototype = Object.create(ReflectionObject.prototype)).constructor = Namespace).className = "Namespace";
     var Field = require_field();
     var util = require_util();
@@ -4753,6 +2349,7 @@ var require_namespace = __commonJS({
         for (var names = Object.keys(nestedJson), i = 0, nested; i < names.length; ++i) {
           nested = nestedJson[names[i]];
           ns.add(
+            // most to least likely
             (nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : nested.id !== void 0 ? Field.fromJSON : Namespace.fromJSON)(names[i], nested)
           );
         }
@@ -4954,7 +2551,7 @@ var require_method = __commonJS({
   "node_modules/protobufjs/src/method.js"(exports2, module2) {
     "use strict";
     module2.exports = Method;
-    var ReflectionObject = require_object2();
+    var ReflectionObject = require_object();
     ((Method.prototype = Object.create(ReflectionObject.prototype)).constructor = Method).className = "Method";
     var util = require_util();
     function Method(name, type, requestType, responseType, requestStream, responseStream, options, comment, parsedOptions) {
@@ -5739,6 +3336,7 @@ var require_type = __commonJS({
         for (names = Object.keys(json.nested), i = 0; i < names.length; ++i) {
           var nested = json.nested[names[i]];
           type.add(
+            // most to least likely
             (nested.id !== void 0 ? Field.fromJSON : nested.fields !== void 0 ? Type2.fromJSON : nested.values !== void 0 ? Enum.fromJSON : nested.methods !== void 0 ? Service.fromJSON : Namespace.fromJSON)(names[i], nested)
           );
         }
@@ -6078,9 +3676,11 @@ var require_root = __commonJS({
     }
     Root2.prototype._handleAdd = function _handleAdd(object) {
       if (object instanceof Field) {
-        if (/* an extension field (implies not part of a oneof) */
-        object.extend !== void 0 && /* not already handled */
-        !object.extensionField) {
+        if (
+          /* an extension field (implies not part of a oneof) */
+          object.extend !== void 0 && /* not already handled */
+          !object.extensionField
+        ) {
           if (!tryHandleExtension(this, object))
             this.deferred.push(object);
         }
@@ -6103,10 +3703,14 @@ var require_root = __commonJS({
     };
     Root2.prototype._handleRemove = function _handleRemove(object) {
       if (object instanceof Field) {
-        if (/* an extension field */
-        object.extend !== void 0) {
-          if (/* already handled */
-          object.extensionField) {
+        if (
+          /* an extension field */
+          object.extend !== void 0
+        ) {
+          if (
+            /* already handled */
+            object.extensionField
+          ) {
             object.extensionField.parent.remove(object.extensionField);
             object.extensionField = null;
           } else {
@@ -6247,7 +3851,7 @@ var require_util = __commonJS({
 });
 
 // node_modules/protobufjs/src/object.js
-var require_object2 = __commonJS({
+var require_object = __commonJS({
   "node_modules/protobufjs/src/object.js"(exports2, module2) {
     "use strict";
     module2.exports = ReflectionObject;
@@ -6383,7 +3987,7 @@ var require_enum = __commonJS({
   "node_modules/protobufjs/src/enum.js"(exports2, module2) {
     "use strict";
     module2.exports = Enum;
-    var ReflectionObject = require_object2();
+    var ReflectionObject = require_object();
     ((Enum.prototype = Object.create(ReflectionObject.prototype)).constructor = Enum).className = "Enum";
     var Namespace = require_namespace();
     var util = require_util();
@@ -6551,7 +4155,7 @@ var require_index_light = __commonJS({
     protobuf.decoder = require_decoder();
     protobuf.verifier = require_verifier();
     protobuf.converter = require_converter();
-    protobuf.ReflectionObject = require_object2();
+    protobuf.ReflectionObject = require_object();
     protobuf.Namespace = require_namespace();
     protobuf.Root = require_root();
     protobuf.Enum = require_enum();
@@ -6580,1177 +4184,2416 @@ var require_light = __commonJS({
   }
 });
 
-// src/utils/format/integer.ts
-function integerFormat(num, byte = 2) {
-  return num < 10 ** byte ? (Array(byte).join("0") + num).slice(-1 * byte) : num;
-}
-
-// src/utils/format/time.ts
-function timeFormat(time = new Date().getTime(), type) {
-  const date = new Date(time);
-  const arr2 = date.toLocaleString().split(" ");
-  const day = arr2[0].split("/");
-  day[1] = integerFormat(day[1], 2);
-  day[2] = integerFormat(day[2], 2);
-  return type ? day.join("-") + " " + arr2[1] : arr2[1];
-}
-
-// src/utils/debug.ts
-var group = {
-  /** 分组层次 */
-  i: 0,
-  /** 分组栈 */
-  call: []
-};
-function debug(...data) {
-  group.call.push(console.log.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-}
-debug.assert = function(condition, ...data) {
-  group.call.push(console.assert.bind(console, \`[\${timeFormat()}]\`, ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.clear = function() {
-  group.i = 0;
-  group.call = [];
-  setTimeout(console.clear.bind(console));
-  return debug;
-};
-debug.debug = function(...data) {
-  group.call.push(console.debug.bind(console, \`[\${timeFormat()}]\`, ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.error = function(...data) {
-  group.call.push(console.error.bind(console, \`[\${timeFormat()}]\`, ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.group = function(...data) {
-  group.i++;
-  group.call.push(console.group.bind(console, \`[\${timeFormat()}]\`, ...arguments));
-  return debug;
-};
-debug.groupCollapsed = function(...data) {
-  group.i++;
-  group.call.push(console.groupCollapsed.bind(console, \`[\${timeFormat()}]\`, ...arguments));
-  return debug;
-};
-debug.groupEnd = function() {
-  if (group.i) {
-    group.i--;
-    group.call.push(console.groupEnd.bind(console));
-    !group.i && (group.call.push(() => group.call = []), group.call.forEach((d) => setTimeout(d)));
+// node_modules/quill-delta-to-html-cb/dist/commonjs/value-types.js
+var require_value_types = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/value-types.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var NewLine = "\\n";
+    exports2.NewLine = NewLine;
+    var ListType;
+    (function(ListType2) {
+      ListType2["Ordered"] = "ordered";
+      ListType2["Bullet"] = "bullet";
+      ListType2["Checked"] = "checked";
+      ListType2["Unchecked"] = "unchecked";
+    })(ListType || (ListType = {}));
+    exports2.ListType = ListType;
+    var ScriptType;
+    (function(ScriptType2) {
+      ScriptType2["Sub"] = "sub";
+      ScriptType2["Super"] = "super";
+    })(ScriptType || (ScriptType = {}));
+    exports2.ScriptType = ScriptType;
+    var DirectionType;
+    (function(DirectionType2) {
+      DirectionType2["Rtl"] = "rtl";
+    })(DirectionType || (DirectionType = {}));
+    exports2.DirectionType = DirectionType;
+    var AlignType;
+    (function(AlignType2) {
+      AlignType2["Left"] = "left";
+      AlignType2["Center"] = "center";
+      AlignType2["Right"] = "right";
+      AlignType2["Justify"] = "justify";
+    })(AlignType || (AlignType = {}));
+    exports2.AlignType = AlignType;
+    var DataType;
+    (function(DataType2) {
+      DataType2["Image"] = "image";
+      DataType2["Video"] = "video";
+      DataType2["Formula"] = "formula";
+      DataType2["Text"] = "text";
+    })(DataType || (DataType = {}));
+    exports2.DataType = DataType;
+    var GroupType;
+    (function(GroupType2) {
+      GroupType2["Block"] = "block";
+      GroupType2["InlineGroup"] = "inline-group";
+      GroupType2["List"] = "list";
+      GroupType2["Video"] = "video";
+      GroupType2["Table"] = "table";
+    })(GroupType || (GroupType = {}));
+    exports2.GroupType = GroupType;
   }
-  return debug;
-};
-debug.info = function(...data) {
-  group.call.push(console.info.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.log = function(...data) {
-  group.call.push(console.log.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.table = function(tabularData, properties) {
-  group.call.push(console.table.bind(console, ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.time = function(label) {
-  console.time(label);
-  return debug;
-};
-debug.timeEnd = function(label) {
-  console.timeEnd(label);
-  return debug;
-};
-debug.timeLog = function(label, ...data) {
-  console.timeLog(label, \`[\${timeFormat()}]\`, ...data);
-  return debug;
-};
-debug.trace = function(...data) {
-  group.call.push(console.trace.bind(console, ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
-debug.warn = function(...data) {
-  group.call.push(console.warn.bind(console, \`[\${timeFormat()}]\`, ...arguments));
-  !group.i && setTimeout(group.call.shift());
-  return debug;
-};
+});
 
-// src/utils/file.ts
-function readAs(file, type = "string", encoding = "utf-8") {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    switch (type) {
-      case "ArrayBuffer":
-        reader.readAsArrayBuffer(file);
-        break;
-      case "DataURL":
-        reader.readAsDataURL(file);
-        break;
-      case "string":
-        reader.readAsText(file, encoding);
-        break;
+// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertData.js
+var require_InsertData = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertData.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var InsertDataQuill = function() {
+      function InsertDataQuill2(type, value) {
+        this.type = type;
+        this.value = value;
+      }
+      return InsertDataQuill2;
+    }();
+    exports2.InsertDataQuill = InsertDataQuill;
+    var InsertDataCustom = function() {
+      function InsertDataCustom2(type, value) {
+        this.type = type;
+        this.value = value;
+      }
+      return InsertDataCustom2;
+    }();
+    exports2.InsertDataCustom = InsertDataCustom;
+  }
+});
+
+// node_modules/lodash.isequal/index.js
+var require_lodash = __commonJS({
+  "node_modules/lodash.isequal/index.js"(exports2, module2) {
+    var LARGE_ARRAY_SIZE = 200;
+    var HASH_UNDEFINED = "__lodash_hash_undefined__";
+    var COMPARE_PARTIAL_FLAG = 1;
+    var COMPARE_UNORDERED_FLAG = 2;
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    var argsTag = "[object Arguments]";
+    var arrayTag = "[object Array]";
+    var asyncTag = "[object AsyncFunction]";
+    var boolTag = "[object Boolean]";
+    var dateTag = "[object Date]";
+    var errorTag = "[object Error]";
+    var funcTag = "[object Function]";
+    var genTag = "[object GeneratorFunction]";
+    var mapTag = "[object Map]";
+    var numberTag = "[object Number]";
+    var nullTag = "[object Null]";
+    var objectTag = "[object Object]";
+    var promiseTag = "[object Promise]";
+    var proxyTag = "[object Proxy]";
+    var regexpTag = "[object RegExp]";
+    var setTag = "[object Set]";
+    var stringTag = "[object String]";
+    var symbolTag = "[object Symbol]";
+    var undefinedTag = "[object Undefined]";
+    var weakMapTag = "[object WeakMap]";
+    var arrayBufferTag = "[object ArrayBuffer]";
+    var dataViewTag = "[object DataView]";
+    var float32Tag = "[object Float32Array]";
+    var float64Tag = "[object Float64Array]";
+    var int8Tag = "[object Int8Array]";
+    var int16Tag = "[object Int16Array]";
+    var int32Tag = "[object Int32Array]";
+    var uint8Tag = "[object Uint8Array]";
+    var uint8ClampedTag = "[object Uint8ClampedArray]";
+    var uint16Tag = "[object Uint16Array]";
+    var uint32Tag = "[object Uint32Array]";
+    var reRegExpChar = /[\\\\^\$.*+?()[\\]{}|]/g;
+    var reIsHostCtor = /^\\[object .+?Constructor\\]\$/;
+    var reIsUint = /^(?:0|[1-9]\\d*)\$/;
+    var typedArrayTags = {};
+    typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
+    typedArrayTags[argsTag] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root = freeGlobal || freeSelf || Function("return this")();
+    var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
+    var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+    var moduleExports = freeModule && freeModule.exports === freeExports;
+    var freeProcess = moduleExports && freeGlobal.process;
+    var nodeUtil = function() {
+      try {
+        return freeProcess && freeProcess.binding && freeProcess.binding("util");
+      } catch (e) {
+      }
+    }();
+    var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+    function arrayFilter(array, predicate) {
+      var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+      while (++index < length) {
+        var value = array[index];
+        if (predicate(value, index, array)) {
+          result[resIndex++] = value;
+        }
+      }
+      return result;
     }
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (e) => reject(e);
-  });
-}
-async function saveAs(content, fileName, contentType = "text/plain") {
-  const a = document.createElement("a");
-  const file = new Blob([content], { type: contentType });
-  a.href = URL.createObjectURL(file);
-  a.download = fileName;
-  a.addEventListener("load", () => URL.revokeObjectURL(a.href));
-  a.click();
-}
-function fileRead(accept, multiple) {
-  return new Promise((resolve, reject) => {
-    const input = document.createElement("input");
-    let selected = false;
-    input.type = "file";
-    accept && (input.accept = accept);
-    multiple && (input.multiple = multiple);
-    input.style.opacity = "0";
-    input.addEventListener("change", () => {
-      selected = true;
-      resolve(input.files);
-    });
-    document.body.appendChild(input);
-    input.click();
-    window.addEventListener("focus", () => {
-      setTimeout(() => {
-        selected || reject("取消选择~");
-      }, 100);
-    }, { once: true });
-  });
-}
+    function arrayPush(array, values) {
+      var index = -1, length = values.length, offset2 = array.length;
+      while (++index < length) {
+        array[offset2 + index] = values[index];
+      }
+      return array;
+    }
+    function arraySome(array, predicate) {
+      var index = -1, length = array == null ? 0 : array.length;
+      while (++index < length) {
+        if (predicate(array[index], index, array)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    function baseTimes(n, iteratee) {
+      var index = -1, result = Array(n);
+      while (++index < n) {
+        result[index] = iteratee(index);
+      }
+      return result;
+    }
+    function baseUnary(func) {
+      return function(value) {
+        return func(value);
+      };
+    }
+    function cacheHas(cache, key) {
+      return cache.has(key);
+    }
+    function getValue(object, key) {
+      return object == null ? void 0 : object[key];
+    }
+    function mapToArray(map) {
+      var index = -1, result = Array(map.size);
+      map.forEach(function(value, key) {
+        result[++index] = [key, value];
+      });
+      return result;
+    }
+    function overArg(func, transform) {
+      return function(arg) {
+        return func(transform(arg));
+      };
+    }
+    function setToArray(set) {
+      var index = -1, result = Array(set.size);
+      set.forEach(function(value) {
+        result[++index] = value;
+      });
+      return result;
+    }
+    var arrayProto = Array.prototype;
+    var funcProto = Function.prototype;
+    var objectProto = Object.prototype;
+    var coreJsData = root["__core-js_shared__"];
+    var funcToString = funcProto.toString;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var maskSrcKey = function() {
+      var uid2 = /[^.]+\$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+      return uid2 ? "Symbol(src)_1." + uid2 : "";
+    }();
+    var nativeObjectToString = objectProto.toString;
+    var reIsNative = RegExp(
+      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\\\\$&").replace(/hasOwnProperty|(function).*?(?=\\\\\\()| for .+?(?=\\\\\\])/g, "\$1.*?") + "\$"
+    );
+    var Buffer2 = moduleExports ? root.Buffer : void 0;
+    var Symbol2 = root.Symbol;
+    var Uint8Array2 = root.Uint8Array;
+    var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+    var splice = arrayProto.splice;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    var nativeGetSymbols = Object.getOwnPropertySymbols;
+    var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
+    var nativeKeys = overArg(Object.keys, Object);
+    var DataView = getNative(root, "DataView");
+    var Map = getNative(root, "Map");
+    var Promise2 = getNative(root, "Promise");
+    var Set2 = getNative(root, "Set");
+    var WeakMap = getNative(root, "WeakMap");
+    var nativeCreate = getNative(Object, "create");
+    var dataViewCtorString = toSource(DataView);
+    var mapCtorString = toSource(Map);
+    var promiseCtorString = toSource(Promise2);
+    var setCtorString = toSource(Set2);
+    var weakMapCtorString = toSource(WeakMap);
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
+    var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
+    function Hash(entries) {
+      var index = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    function hashClear() {
+      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+      this.size = 0;
+    }
+    function hashDelete(key) {
+      var result = this.has(key) && delete this.__data__[key];
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    function hashGet(key) {
+      var data = this.__data__;
+      if (nativeCreate) {
+        var result = data[key];
+        return result === HASH_UNDEFINED ? void 0 : result;
+      }
+      return hasOwnProperty.call(data, key) ? data[key] : void 0;
+    }
+    function hashHas(key) {
+      var data = this.__data__;
+      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
+    }
+    function hashSet(key, value) {
+      var data = this.__data__;
+      this.size += this.has(key) ? 0 : 1;
+      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
+      return this;
+    }
+    Hash.prototype.clear = hashClear;
+    Hash.prototype["delete"] = hashDelete;
+    Hash.prototype.get = hashGet;
+    Hash.prototype.has = hashHas;
+    Hash.prototype.set = hashSet;
+    function ListCache(entries) {
+      var index = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    function listCacheClear() {
+      this.__data__ = [];
+      this.size = 0;
+    }
+    function listCacheDelete(key) {
+      var data = this.__data__, index = assocIndexOf(data, key);
+      if (index < 0) {
+        return false;
+      }
+      var lastIndex = data.length - 1;
+      if (index == lastIndex) {
+        data.pop();
+      } else {
+        splice.call(data, index, 1);
+      }
+      --this.size;
+      return true;
+    }
+    function listCacheGet(key) {
+      var data = this.__data__, index = assocIndexOf(data, key);
+      return index < 0 ? void 0 : data[index][1];
+    }
+    function listCacheHas(key) {
+      return assocIndexOf(this.__data__, key) > -1;
+    }
+    function listCacheSet(key, value) {
+      var data = this.__data__, index = assocIndexOf(data, key);
+      if (index < 0) {
+        ++this.size;
+        data.push([key, value]);
+      } else {
+        data[index][1] = value;
+      }
+      return this;
+    }
+    ListCache.prototype.clear = listCacheClear;
+    ListCache.prototype["delete"] = listCacheDelete;
+    ListCache.prototype.get = listCacheGet;
+    ListCache.prototype.has = listCacheHas;
+    ListCache.prototype.set = listCacheSet;
+    function MapCache(entries) {
+      var index = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index < length) {
+        var entry = entries[index];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    function mapCacheClear() {
+      this.size = 0;
+      this.__data__ = {
+        "hash": new Hash(),
+        "map": new (Map || ListCache)(),
+        "string": new Hash()
+      };
+    }
+    function mapCacheDelete(key) {
+      var result = getMapData(this, key)["delete"](key);
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    function mapCacheGet(key) {
+      return getMapData(this, key).get(key);
+    }
+    function mapCacheHas(key) {
+      return getMapData(this, key).has(key);
+    }
+    function mapCacheSet(key, value) {
+      var data = getMapData(this, key), size = data.size;
+      data.set(key, value);
+      this.size += data.size == size ? 0 : 1;
+      return this;
+    }
+    MapCache.prototype.clear = mapCacheClear;
+    MapCache.prototype["delete"] = mapCacheDelete;
+    MapCache.prototype.get = mapCacheGet;
+    MapCache.prototype.has = mapCacheHas;
+    MapCache.prototype.set = mapCacheSet;
+    function SetCache(values) {
+      var index = -1, length = values == null ? 0 : values.length;
+      this.__data__ = new MapCache();
+      while (++index < length) {
+        this.add(values[index]);
+      }
+    }
+    function setCacheAdd(value) {
+      this.__data__.set(value, HASH_UNDEFINED);
+      return this;
+    }
+    function setCacheHas(value) {
+      return this.__data__.has(value);
+    }
+    SetCache.prototype.add = SetCache.prototype.push = setCacheAdd;
+    SetCache.prototype.has = setCacheHas;
+    function Stack(entries) {
+      var data = this.__data__ = new ListCache(entries);
+      this.size = data.size;
+    }
+    function stackClear() {
+      this.__data__ = new ListCache();
+      this.size = 0;
+    }
+    function stackDelete(key) {
+      var data = this.__data__, result = data["delete"](key);
+      this.size = data.size;
+      return result;
+    }
+    function stackGet(key) {
+      return this.__data__.get(key);
+    }
+    function stackHas(key) {
+      return this.__data__.has(key);
+    }
+    function stackSet(key, value) {
+      var data = this.__data__;
+      if (data instanceof ListCache) {
+        var pairs = data.__data__;
+        if (!Map || pairs.length < LARGE_ARRAY_SIZE - 1) {
+          pairs.push([key, value]);
+          this.size = ++data.size;
+          return this;
+        }
+        data = this.__data__ = new MapCache(pairs);
+      }
+      data.set(key, value);
+      this.size = data.size;
+      return this;
+    }
+    Stack.prototype.clear = stackClear;
+    Stack.prototype["delete"] = stackDelete;
+    Stack.prototype.get = stackGet;
+    Stack.prototype.has = stackHas;
+    Stack.prototype.set = stackSet;
+    function arrayLikeKeys(value, inherited) {
+      var isArr = isArray2(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
+      for (var key in value) {
+        if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && // Safari 9 has enumerable \`arguments.length\` in strict mode.
+        (key == "length" || // Node.js 0.10 has enumerable non-index properties on buffers.
+        isBuff && (key == "offset" || key == "parent") || // PhantomJS 2 has enumerable non-index properties on typed arrays.
+        isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || // Skip index properties.
+        isIndex(key, length)))) {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+    function assocIndexOf(array, key) {
+      var length = array.length;
+      while (length--) {
+        if (eq(array[length][0], key)) {
+          return length;
+        }
+      }
+      return -1;
+    }
+    function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+      var result = keysFunc(object);
+      return isArray2(object) ? result : arrayPush(result, symbolsFunc(object));
+    }
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === void 0 ? undefinedTag : nullTag;
+      }
+      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+    }
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag;
+    }
+    function baseIsEqual(value, other, bitmask, customizer, stack) {
+      if (value === other) {
+        return true;
+      }
+      if (value == null || other == null || !isObjectLike(value) && !isObjectLike(other)) {
+        return value !== value && other !== other;
+      }
+      return baseIsEqualDeep(value, other, bitmask, customizer, baseIsEqual, stack);
+    }
+    function baseIsEqualDeep(object, other, bitmask, customizer, equalFunc, stack) {
+      var objIsArr = isArray2(object), othIsArr = isArray2(other), objTag = objIsArr ? arrayTag : getTag(object), othTag = othIsArr ? arrayTag : getTag(other);
+      objTag = objTag == argsTag ? objectTag : objTag;
+      othTag = othTag == argsTag ? objectTag : othTag;
+      var objIsObj = objTag == objectTag, othIsObj = othTag == objectTag, isSameTag = objTag == othTag;
+      if (isSameTag && isBuffer(object)) {
+        if (!isBuffer(other)) {
+          return false;
+        }
+        objIsArr = true;
+        objIsObj = false;
+      }
+      if (isSameTag && !objIsObj) {
+        stack || (stack = new Stack());
+        return objIsArr || isTypedArray(object) ? equalArrays(object, other, bitmask, customizer, equalFunc, stack) : equalByTag(object, other, objTag, bitmask, customizer, equalFunc, stack);
+      }
+      if (!(bitmask & COMPARE_PARTIAL_FLAG)) {
+        var objIsWrapped = objIsObj && hasOwnProperty.call(object, "__wrapped__"), othIsWrapped = othIsObj && hasOwnProperty.call(other, "__wrapped__");
+        if (objIsWrapped || othIsWrapped) {
+          var objUnwrapped = objIsWrapped ? object.value() : object, othUnwrapped = othIsWrapped ? other.value() : other;
+          stack || (stack = new Stack());
+          return equalFunc(objUnwrapped, othUnwrapped, bitmask, customizer, stack);
+        }
+      }
+      if (!isSameTag) {
+        return false;
+      }
+      stack || (stack = new Stack());
+      return equalObjects(object, other, bitmask, customizer, equalFunc, stack);
+    }
+    function baseIsNative(value) {
+      if (!isObject2(value) || isMasked(value)) {
+        return false;
+      }
+      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+      return pattern.test(toSource(value));
+    }
+    function baseIsTypedArray(value) {
+      return isObjectLike(value) && isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
+    }
+    function baseKeys(object) {
+      if (!isPrototype(object)) {
+        return nativeKeys(object);
+      }
+      var result = [];
+      for (var key in Object(object)) {
+        if (hasOwnProperty.call(object, key) && key != "constructor") {
+          result.push(key);
+        }
+      }
+      return result;
+    }
+    function equalArrays(array, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG, arrLength = array.length, othLength = other.length;
+      if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
+        return false;
+      }
+      var stacked = stack.get(array);
+      if (stacked && stack.get(other)) {
+        return stacked == other;
+      }
+      var index = -1, result = true, seen = bitmask & COMPARE_UNORDERED_FLAG ? new SetCache() : void 0;
+      stack.set(array, other);
+      stack.set(other, array);
+      while (++index < arrLength) {
+        var arrValue = array[index], othValue = other[index];
+        if (customizer) {
+          var compared = isPartial ? customizer(othValue, arrValue, index, other, array, stack) : customizer(arrValue, othValue, index, array, other, stack);
+        }
+        if (compared !== void 0) {
+          if (compared) {
+            continue;
+          }
+          result = false;
+          break;
+        }
+        if (seen) {
+          if (!arraySome(other, function(othValue2, othIndex) {
+            if (!cacheHas(seen, othIndex) && (arrValue === othValue2 || equalFunc(arrValue, othValue2, bitmask, customizer, stack))) {
+              return seen.push(othIndex);
+            }
+          })) {
+            result = false;
+            break;
+          }
+        } else if (!(arrValue === othValue || equalFunc(arrValue, othValue, bitmask, customizer, stack))) {
+          result = false;
+          break;
+        }
+      }
+      stack["delete"](array);
+      stack["delete"](other);
+      return result;
+    }
+    function equalByTag(object, other, tag, bitmask, customizer, equalFunc, stack) {
+      switch (tag) {
+        case dataViewTag:
+          if (object.byteLength != other.byteLength || object.byteOffset != other.byteOffset) {
+            return false;
+          }
+          object = object.buffer;
+          other = other.buffer;
+        case arrayBufferTag:
+          if (object.byteLength != other.byteLength || !equalFunc(new Uint8Array2(object), new Uint8Array2(other))) {
+            return false;
+          }
+          return true;
+        case boolTag:
+        case dateTag:
+        case numberTag:
+          return eq(+object, +other);
+        case errorTag:
+          return object.name == other.name && object.message == other.message;
+        case regexpTag:
+        case stringTag:
+          return object == other + "";
+        case mapTag:
+          var convert = mapToArray;
+        case setTag:
+          var isPartial = bitmask & COMPARE_PARTIAL_FLAG;
+          convert || (convert = setToArray);
+          if (object.size != other.size && !isPartial) {
+            return false;
+          }
+          var stacked = stack.get(object);
+          if (stacked) {
+            return stacked == other;
+          }
+          bitmask |= COMPARE_UNORDERED_FLAG;
+          stack.set(object, other);
+          var result = equalArrays(convert(object), convert(other), bitmask, customizer, equalFunc, stack);
+          stack["delete"](object);
+          return result;
+        case symbolTag:
+          if (symbolValueOf) {
+            return symbolValueOf.call(object) == symbolValueOf.call(other);
+          }
+      }
+      return false;
+    }
+    function equalObjects(object, other, bitmask, customizer, equalFunc, stack) {
+      var isPartial = bitmask & COMPARE_PARTIAL_FLAG, objProps = getAllKeys(object), objLength = objProps.length, othProps = getAllKeys(other), othLength = othProps.length;
+      if (objLength != othLength && !isPartial) {
+        return false;
+      }
+      var index = objLength;
+      while (index--) {
+        var key = objProps[index];
+        if (!(isPartial ? key in other : hasOwnProperty.call(other, key))) {
+          return false;
+        }
+      }
+      var stacked = stack.get(object);
+      if (stacked && stack.get(other)) {
+        return stacked == other;
+      }
+      var result = true;
+      stack.set(object, other);
+      stack.set(other, object);
+      var skipCtor = isPartial;
+      while (++index < objLength) {
+        key = objProps[index];
+        var objValue = object[key], othValue = other[key];
+        if (customizer) {
+          var compared = isPartial ? customizer(othValue, objValue, key, other, object, stack) : customizer(objValue, othValue, key, object, other, stack);
+        }
+        if (!(compared === void 0 ? objValue === othValue || equalFunc(objValue, othValue, bitmask, customizer, stack) : compared)) {
+          result = false;
+          break;
+        }
+        skipCtor || (skipCtor = key == "constructor");
+      }
+      if (result && !skipCtor) {
+        var objCtor = object.constructor, othCtor = other.constructor;
+        if (objCtor != othCtor && ("constructor" in object && "constructor" in other) && !(typeof objCtor == "function" && objCtor instanceof objCtor && typeof othCtor == "function" && othCtor instanceof othCtor)) {
+          result = false;
+        }
+      }
+      stack["delete"](object);
+      stack["delete"](other);
+      return result;
+    }
+    function getAllKeys(object) {
+      return baseGetAllKeys(object, keys, getSymbols);
+    }
+    function getMapData(map, key) {
+      var data = map.__data__;
+      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+    }
+    function getNative(object, key) {
+      var value = getValue(object, key);
+      return baseIsNative(value) ? value : void 0;
+    }
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+      try {
+        value[symToStringTag] = void 0;
+        var unmasked = true;
+      } catch (e) {
+      }
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+    var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+      if (object == null) {
+        return [];
+      }
+      object = Object(object);
+      return arrayFilter(nativeGetSymbols(object), function(symbol) {
+        return propertyIsEnumerable.call(object, symbol);
+      });
+    };
+    var getTag = baseGetTag;
+    if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
+      getTag = function(value) {
+        var result = baseGetTag(value), Ctor = result == objectTag ? value.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
+        if (ctorString) {
+          switch (ctorString) {
+            case dataViewCtorString:
+              return dataViewTag;
+            case mapCtorString:
+              return mapTag;
+            case promiseCtorString:
+              return promiseTag;
+            case setCtorString:
+              return setTag;
+            case weakMapCtorString:
+              return weakMapTag;
+          }
+        }
+        return result;
+      };
+    }
+    function isIndex(value, length) {
+      length = length == null ? MAX_SAFE_INTEGER : length;
+      return !!length && (typeof value == "number" || reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    }
+    function isKeyable(value) {
+      var type = typeof value;
+      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+    }
+    function isMasked(func) {
+      return !!maskSrcKey && maskSrcKey in func;
+    }
+    function isPrototype(value) {
+      var Ctor = value && value.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
+      return value === proto;
+    }
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+    function toSource(func) {
+      if (func != null) {
+        try {
+          return funcToString.call(func);
+        } catch (e) {
+        }
+        try {
+          return func + "";
+        } catch (e) {
+        }
+      }
+      return "";
+    }
+    function eq(value, other) {
+      return value === other || value !== value && other !== other;
+    }
+    var isArguments = baseIsArguments(function() {
+      return arguments;
+    }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
+    };
+    var isArray2 = Array.isArray;
+    function isArrayLike(value) {
+      return value != null && isLength(value.length) && !isFunction(value);
+    }
+    var isBuffer = nativeIsBuffer || stubFalse;
+    function isEqual(value, other) {
+      return baseIsEqual(value, other);
+    }
+    function isFunction(value) {
+      if (!isObject2(value)) {
+        return false;
+      }
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+    function isLength(value) {
+      return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+    }
+    function isObject2(value) {
+      var type = typeof value;
+      return value != null && (type == "object" || type == "function");
+    }
+    function isObjectLike(value) {
+      return value != null && typeof value == "object";
+    }
+    var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+    function keys(object) {
+      return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+    }
+    function stubArray() {
+      return [];
+    }
+    function stubFalse() {
+      return false;
+    }
+    module2.exports = isEqual;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/DeltaInsertOp.js
+var require_DeltaInsertOp = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/DeltaInsertOp.js"(exports2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod2) {
+      return mod2 && mod2.__esModule ? mod2 : { "default": mod2 };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var value_types_1 = require_value_types();
+    var InsertData_1 = require_InsertData();
+    var lodash_isequal_1 = __importDefault(require_lodash());
+    var DeltaInsertOp = function() {
+      function DeltaInsertOp2(insertVal, attrs) {
+        if (typeof insertVal === "string") {
+          insertVal = new InsertData_1.InsertDataQuill(value_types_1.DataType.Text, insertVal + "");
+        }
+        this.insert = insertVal;
+        this.attributes = attrs || {};
+      }
+      DeltaInsertOp2.createNewLineOp = function() {
+        return new DeltaInsertOp2(value_types_1.NewLine);
+      };
+      DeltaInsertOp2.prototype.isContainerBlock = function() {
+        return this.isBlockquote() || this.isList() || this.isTable() || this.isCodeBlock() || this.isHeader() || this.isBlockAttribute() || this.isCustomTextBlock();
+      };
+      DeltaInsertOp2.prototype.isBlockAttribute = function() {
+        var attrs = this.attributes;
+        return !!(attrs.align || attrs.direction || attrs.indent);
+      };
+      DeltaInsertOp2.prototype.isBlockquote = function() {
+        return !!this.attributes.blockquote;
+      };
+      DeltaInsertOp2.prototype.isHeader = function() {
+        return !!this.attributes.header;
+      };
+      DeltaInsertOp2.prototype.isTable = function() {
+        return !!this.attributes.table;
+      };
+      DeltaInsertOp2.prototype.isSameHeaderAs = function(op) {
+        return op.attributes.header === this.attributes.header && this.isHeader();
+      };
+      DeltaInsertOp2.prototype.hasSameAdiAs = function(op) {
+        return this.attributes.align === op.attributes.align && this.attributes.direction === op.attributes.direction && this.attributes.indent === op.attributes.indent;
+      };
+      DeltaInsertOp2.prototype.hasSameIndentationAs = function(op) {
+        return this.attributes.indent === op.attributes.indent;
+      };
+      DeltaInsertOp2.prototype.hasSameAttr = function(op) {
+        return lodash_isequal_1.default(this.attributes, op.attributes);
+      };
+      DeltaInsertOp2.prototype.hasHigherIndentThan = function(op) {
+        return (Number(this.attributes.indent) || 0) > (Number(op.attributes.indent) || 0);
+      };
+      DeltaInsertOp2.prototype.isInline = function() {
+        return !(this.isContainerBlock() || this.isVideo() || this.isCustomEmbedBlock());
+      };
+      DeltaInsertOp2.prototype.isCodeBlock = function() {
+        return !!this.attributes["code-block"];
+      };
+      DeltaInsertOp2.prototype.hasSameLangAs = function(op) {
+        return this.attributes["code-block"] === op.attributes["code-block"];
+      };
+      DeltaInsertOp2.prototype.isJustNewline = function() {
+        return this.insert.value === value_types_1.NewLine;
+      };
+      DeltaInsertOp2.prototype.isList = function() {
+        return this.isOrderedList() || this.isBulletList() || this.isCheckedList() || this.isUncheckedList();
+      };
+      DeltaInsertOp2.prototype.isOrderedList = function() {
+        return this.attributes.list === value_types_1.ListType.Ordered;
+      };
+      DeltaInsertOp2.prototype.isBulletList = function() {
+        return this.attributes.list === value_types_1.ListType.Bullet;
+      };
+      DeltaInsertOp2.prototype.isCheckedList = function() {
+        return this.attributes.list === value_types_1.ListType.Checked;
+      };
+      DeltaInsertOp2.prototype.isUncheckedList = function() {
+        return this.attributes.list === value_types_1.ListType.Unchecked;
+      };
+      DeltaInsertOp2.prototype.isACheckList = function() {
+        return this.attributes.list == value_types_1.ListType.Unchecked || this.attributes.list === value_types_1.ListType.Checked;
+      };
+      DeltaInsertOp2.prototype.isSameListAs = function(op) {
+        return !!op.attributes.list && (this.attributes.list === op.attributes.list || op.isACheckList() && this.isACheckList());
+      };
+      DeltaInsertOp2.prototype.isSameTableRowAs = function(op) {
+        return !!op.isTable() && this.isTable() && this.attributes.table === op.attributes.table;
+      };
+      DeltaInsertOp2.prototype.isText = function() {
+        return this.insert.type === value_types_1.DataType.Text;
+      };
+      DeltaInsertOp2.prototype.isImage = function() {
+        return this.insert.type === value_types_1.DataType.Image;
+      };
+      DeltaInsertOp2.prototype.isFormula = function() {
+        return this.insert.type === value_types_1.DataType.Formula;
+      };
+      DeltaInsertOp2.prototype.isVideo = function() {
+        return this.insert.type === value_types_1.DataType.Video;
+      };
+      DeltaInsertOp2.prototype.isLink = function() {
+        return this.isText() && !!this.attributes.link;
+      };
+      DeltaInsertOp2.prototype.isCustomEmbed = function() {
+        return this.insert instanceof InsertData_1.InsertDataCustom;
+      };
+      DeltaInsertOp2.prototype.isCustomEmbedBlock = function() {
+        return this.isCustomEmbed() && !!this.attributes.renderAsBlock;
+      };
+      DeltaInsertOp2.prototype.isCustomTextBlock = function() {
+        return this.isText() && !!this.attributes.renderAsBlock;
+      };
+      DeltaInsertOp2.prototype.isMentions = function() {
+        return this.isText() && !!this.attributes.mentions;
+      };
+      return DeltaInsertOp2;
+    }();
+    exports2.DeltaInsertOp = DeltaInsertOp;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/mentions/MentionSanitizer.js
+var require_MentionSanitizer = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/mentions/MentionSanitizer.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
+    var MentionSanitizer = function() {
+      function MentionSanitizer2() {
+      }
+      MentionSanitizer2.sanitize = function(dirtyObj, sanitizeOptions) {
+        var cleanObj = {};
+        if (!dirtyObj || typeof dirtyObj !== "object") {
+          return cleanObj;
+        }
+        if (dirtyObj.class && MentionSanitizer2.IsValidClass(dirtyObj.class)) {
+          cleanObj.class = dirtyObj.class;
+        }
+        if (dirtyObj.id && MentionSanitizer2.IsValidId(dirtyObj.id)) {
+          cleanObj.id = dirtyObj.id;
+        }
+        if (MentionSanitizer2.IsValidTarget(dirtyObj.target + "")) {
+          cleanObj.target = dirtyObj.target;
+        }
+        if (dirtyObj.avatar) {
+          cleanObj.avatar = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(dirtyObj.avatar + "", sanitizeOptions);
+        }
+        if (dirtyObj["end-point"]) {
+          cleanObj["end-point"] = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(dirtyObj["end-point"] + "", sanitizeOptions);
+        }
+        if (dirtyObj.slug) {
+          cleanObj.slug = dirtyObj.slug + "";
+        }
+        return cleanObj;
+      };
+      MentionSanitizer2.IsValidClass = function(classAttr) {
+        return !!classAttr.match(/^[a-zA-Z0-9_\\-]{1,500}\$/i);
+      };
+      MentionSanitizer2.IsValidId = function(idAttr) {
+        return !!idAttr.match(/^[a-zA-Z0-9_\\-\\:\\.]{1,500}\$/i);
+      };
+      MentionSanitizer2.IsValidTarget = function(target) {
+        return ["_self", "_blank", "_parent", "_top"].indexOf(target) > -1;
+      };
+      return MentionSanitizer2;
+    }();
+    exports2.MentionSanitizer = MentionSanitizer;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/url.js
+var require_url = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/url.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function sanitize(str) {
+      var val = str;
+      val = val.replace(/^\\s*/gm, "");
+      var whiteList = /^((https?|s?ftp|file|blob|mailto|tel):|#|\\/|data:image\\/)/;
+      if (whiteList.test(val)) {
+        return val;
+      }
+      return "unsafe:" + val;
+    }
+    exports2.sanitize = sanitize;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/funcs-html.js
+var require_funcs_html = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/funcs-html.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var EncodeTarget;
+    (function(EncodeTarget2) {
+      EncodeTarget2[EncodeTarget2["Html"] = 0] = "Html";
+      EncodeTarget2[EncodeTarget2["Url"] = 1] = "Url";
+    })(EncodeTarget || (EncodeTarget = {}));
+    function makeStartTag(tag, attrs) {
+      if (attrs === void 0) {
+        attrs = void 0;
+      }
+      if (!tag) {
+        return "";
+      }
+      var attrsStr = "";
+      if (attrs) {
+        var arrAttrs = [].concat(attrs);
+        attrsStr = arrAttrs.map(function(attr) {
+          return attr.key + (attr.value ? '="' + attr.value + '"' : "");
+        }).join(" ");
+      }
+      var closing = ">";
+      if (tag === "img" || tag === "br") {
+        closing = "/>";
+      }
+      return attrsStr ? "<" + tag + " " + attrsStr + closing : "<" + tag + closing;
+    }
+    exports2.makeStartTag = makeStartTag;
+    function makeEndTag(tag) {
+      if (tag === void 0) {
+        tag = "";
+      }
+      return tag && "</" + tag + ">" || "";
+    }
+    exports2.makeEndTag = makeEndTag;
+    function decodeHtml(str) {
+      return encodeMappings(EncodeTarget.Html).reduce(decodeMapping, str);
+    }
+    exports2.decodeHtml = decodeHtml;
+    function encodeHtml(str, preventDoubleEncoding) {
+      if (preventDoubleEncoding === void 0) {
+        preventDoubleEncoding = true;
+      }
+      if (preventDoubleEncoding) {
+        str = decodeHtml(str);
+      }
+      return encodeMappings(EncodeTarget.Html).reduce(encodeMapping, str);
+    }
+    exports2.encodeHtml = encodeHtml;
+    function encodeLink(str) {
+      var linkMaps = encodeMappings(EncodeTarget.Url);
+      var decoded = linkMaps.reduce(decodeMapping, str);
+      return linkMaps.reduce(encodeMapping, decoded);
+    }
+    exports2.encodeLink = encodeLink;
+    function encodeMappings(mtype) {
+      var maps = [
+        ["&", "&amp;"],
+        ["<", "&lt;"],
+        [">", "&gt;"],
+        ['"', "&quot;"],
+        ["'", "&#x27;"],
+        ["\\\\/", "&#x2F;"],
+        ["\\\\(", "&#40;"],
+        ["\\\\)", "&#41;"]
+      ];
+      if (mtype === EncodeTarget.Html) {
+        return maps.filter(function(_a) {
+          var v = _a[0], _ = _a[1];
+          return v.indexOf("(") === -1 && v.indexOf(")") === -1;
+        });
+      } else {
+        return maps.filter(function(_a) {
+          var v = _a[0], _ = _a[1];
+          return v.indexOf("/") === -1;
+        });
+      }
+    }
+    function encodeMapping(str, mapping) {
+      return str.replace(new RegExp(mapping[0], "g"), mapping[1]);
+    }
+    function decodeMapping(str, mapping) {
+      return str.replace(new RegExp(mapping[1], "g"), mapping[0].replace("\\\\", ""));
+    }
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/array.js
+var require_array = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/array.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function preferSecond(arr2) {
+      if (arr2.length === 0) {
+        return null;
+      }
+      return arr2.length >= 2 ? arr2[1] : arr2[0];
+    }
+    exports2.preferSecond = preferSecond;
+    function flatten(arr2) {
+      return arr2.reduce(function(pv, v) {
+        return pv.concat(Array.isArray(v) ? flatten(v) : v);
+      }, []);
+    }
+    exports2.flatten = flatten;
+    function find(arr2, predicate) {
+      if (Array.prototype.find) {
+        return Array.prototype.find.call(arr2, predicate);
+      }
+      for (var i = 0; i < arr2.length; i++) {
+        if (predicate(arr2[i]))
+          return arr2[i];
+      }
+      return void 0;
+    }
+    exports2.find = find;
+    function groupConsecutiveElementsWhile(arr2, predicate) {
+      var groups = [];
+      var currElm, currGroup;
+      for (var i = 0; i < arr2.length; i++) {
+        currElm = arr2[i];
+        if (i > 0 && predicate(currElm, arr2[i - 1])) {
+          currGroup = groups[groups.length - 1];
+          currGroup.push(currElm);
+        } else {
+          groups.push([currElm]);
+        }
+      }
+      return groups.map(function(g) {
+        return g.length === 1 ? g[0] : g;
+      });
+    }
+    exports2.groupConsecutiveElementsWhile = groupConsecutiveElementsWhile;
+    function sliceFromReverseWhile(arr2, startIndex, predicate) {
+      var result = {
+        elements: [],
+        sliceStartsAt: -1
+      };
+      for (var i = startIndex; i >= 0; i--) {
+        if (!predicate(arr2[i])) {
+          break;
+        }
+        result.sliceStartsAt = i;
+        result.elements.unshift(arr2[i]);
+      }
+      return result;
+    }
+    exports2.sliceFromReverseWhile = sliceFromReverseWhile;
+    function intersperse(arr2, item) {
+      return arr2.reduce(function(pv, v, index) {
+        pv.push(v);
+        if (index < arr2.length - 1) {
+          pv.push(item);
+        }
+        return pv;
+      }, []);
+    }
+    exports2.intersperse = intersperse;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/OpAttributeSanitizer.js
+var require_OpAttributeSanitizer = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/OpAttributeSanitizer.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var value_types_1 = require_value_types();
+    var MentionSanitizer_1 = require_MentionSanitizer();
+    var url = __importStar(require_url());
+    var funcs_html_1 = require_funcs_html();
+    var array_1 = require_array();
+    var OpAttributeSanitizer = function() {
+      function OpAttributeSanitizer2() {
+      }
+      OpAttributeSanitizer2.sanitize = function(dirtyAttrs, sanitizeOptions) {
+        var cleanAttrs = {};
+        if (!dirtyAttrs || typeof dirtyAttrs !== "object") {
+          return cleanAttrs;
+        }
+        var booleanAttrs = [
+          "bold",
+          "italic",
+          "underline",
+          "strike",
+          "code",
+          "blockquote",
+          "code-block",
+          "renderAsBlock"
+        ];
+        var colorAttrs = ["background", "color"];
+        var font = dirtyAttrs.font, size = dirtyAttrs.size, link = dirtyAttrs.link, script = dirtyAttrs.script, list = dirtyAttrs.list, header = dirtyAttrs.header, align = dirtyAttrs.align, direction = dirtyAttrs.direction, indent = dirtyAttrs.indent, mentions = dirtyAttrs.mentions, mention = dirtyAttrs.mention, width = dirtyAttrs.width, target = dirtyAttrs.target, rel = dirtyAttrs.rel;
+        var codeBlock = dirtyAttrs["code-block"];
+        var sanitizedAttrs = booleanAttrs.concat(colorAttrs, [
+          "font",
+          "size",
+          "link",
+          "script",
+          "list",
+          "header",
+          "align",
+          "direction",
+          "indent",
+          "mentions",
+          "mention",
+          "width",
+          "target",
+          "rel",
+          "code-block"
+        ]);
+        booleanAttrs.forEach(function(prop) {
+          var v = dirtyAttrs[prop];
+          if (v) {
+            cleanAttrs[prop] = !!v;
+          }
+        });
+        colorAttrs.forEach(function(prop) {
+          var val = dirtyAttrs[prop];
+          if (val && (OpAttributeSanitizer2.IsValidHexColor(val + "") || OpAttributeSanitizer2.IsValidColorLiteral(val + "") || OpAttributeSanitizer2.IsValidRGBColor(val + ""))) {
+            cleanAttrs[prop] = val;
+          }
+        });
+        if (font && OpAttributeSanitizer2.IsValidFontName(font + "")) {
+          cleanAttrs.font = font;
+        }
+        if (size && OpAttributeSanitizer2.IsValidSize(size + "")) {
+          cleanAttrs.size = size;
+        }
+        if (width && OpAttributeSanitizer2.IsValidWidth(width + "")) {
+          cleanAttrs.width = width;
+        }
+        if (link) {
+          cleanAttrs.link = OpAttributeSanitizer2.sanitizeLinkUsingOptions(link + "", sanitizeOptions);
+        }
+        if (target && OpAttributeSanitizer2.isValidTarget(target)) {
+          cleanAttrs.target = target;
+        }
+        if (rel && OpAttributeSanitizer2.IsValidRel(rel)) {
+          cleanAttrs.rel = rel;
+        }
+        if (codeBlock) {
+          if (OpAttributeSanitizer2.IsValidLang(codeBlock)) {
+            cleanAttrs["code-block"] = codeBlock;
+          } else {
+            cleanAttrs["code-block"] = !!codeBlock;
+          }
+        }
+        if (script === value_types_1.ScriptType.Sub || value_types_1.ScriptType.Super === script) {
+          cleanAttrs.script = script;
+        }
+        if (list === value_types_1.ListType.Bullet || list === value_types_1.ListType.Ordered || list === value_types_1.ListType.Checked || list === value_types_1.ListType.Unchecked) {
+          cleanAttrs.list = list;
+        }
+        if (Number(header)) {
+          cleanAttrs.header = Math.min(Number(header), 6);
+        }
+        if (array_1.find([value_types_1.AlignType.Center, value_types_1.AlignType.Right, value_types_1.AlignType.Justify, value_types_1.AlignType.Left], function(a) {
+          return a === align;
+        })) {
+          cleanAttrs.align = align;
+        }
+        if (direction === value_types_1.DirectionType.Rtl) {
+          cleanAttrs.direction = direction;
+        }
+        if (indent && Number(indent)) {
+          cleanAttrs.indent = Math.min(Number(indent), 30);
+        }
+        if (mentions && mention) {
+          var sanitizedMention = MentionSanitizer_1.MentionSanitizer.sanitize(mention, sanitizeOptions);
+          if (Object.keys(sanitizedMention).length > 0) {
+            cleanAttrs.mentions = !!mentions;
+            cleanAttrs.mention = mention;
+          }
+        }
+        return Object.keys(dirtyAttrs).reduce(function(cleaned, k) {
+          if (sanitizedAttrs.indexOf(k) === -1) {
+            cleaned[k] = dirtyAttrs[k];
+          }
+          return cleaned;
+        }, cleanAttrs);
+      };
+      OpAttributeSanitizer2.sanitizeLinkUsingOptions = function(link, options) {
+        var sanitizerFn = function() {
+          return void 0;
+        };
+        if (options && typeof options.urlSanitizer === "function") {
+          sanitizerFn = options.urlSanitizer;
+        }
+        var result = sanitizerFn(link);
+        return typeof result === "string" ? result : funcs_html_1.encodeLink(url.sanitize(link));
+      };
+      OpAttributeSanitizer2.IsValidHexColor = function(colorStr) {
+        return !!colorStr.match(/^#([0-9A-F]{6}|[0-9A-F]{3})\$/i);
+      };
+      OpAttributeSanitizer2.IsValidColorLiteral = function(colorStr) {
+        return !!colorStr.match(/^[a-z]{1,50}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidRGBColor = function(colorStr) {
+        var re = /^rgb\\(((0|25[0-5]|2[0-4]\\d|1\\d\\d|0?\\d?\\d),\\s*){2}(0|25[0-5]|2[0-4]\\d|1\\d\\d|0?\\d?\\d)\\)\$/i;
+        return !!colorStr.match(re);
+      };
+      OpAttributeSanitizer2.IsValidFontName = function(fontName) {
+        return !!fontName.match(/^[a-z\\s0-9\\- ]{1,30}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidSize = function(size) {
+        return !!size.match(/^[a-z0-9\\-]{1,20}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidWidth = function(width) {
+        return !!width.match(/^[0-9]*(px|em|%)?\$/);
+      };
+      OpAttributeSanitizer2.isValidTarget = function(target) {
+        return !!target.match(/^[_a-zA-Z0-9\\-]{1,50}\$/);
+      };
+      OpAttributeSanitizer2.IsValidRel = function(relStr) {
+        return !!relStr.match(/^[a-zA-Z\\s\\-]{1,250}\$/i);
+      };
+      OpAttributeSanitizer2.IsValidLang = function(lang) {
+        if (typeof lang === "boolean") {
+          return true;
+        }
+        return !!lang.match(/^[a-zA-Z\\s\\-\\\\\\/\\+]{1,50}\$/i);
+      };
+      return OpAttributeSanitizer2;
+    }();
+    exports2.OpAttributeSanitizer = OpAttributeSanitizer;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/string.js
+var require_string = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/string.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function tokenizeWithNewLines(str) {
+      var NewLine = "\\n";
+      if (str === NewLine) {
+        return [str];
+      }
+      var lines = str.split(NewLine);
+      if (lines.length === 1) {
+        return lines;
+      }
+      var lastIndex = lines.length - 1;
+      return lines.reduce(function(pv, line, ind) {
+        if (ind !== lastIndex) {
+          if (line !== "") {
+            pv = pv.concat(line, NewLine);
+          } else {
+            pv.push(NewLine);
+          }
+        } else if (line !== "") {
+          pv.push(line);
+        }
+        return pv;
+      }, []);
+    }
+    exports2.tokenizeWithNewLines = tokenizeWithNewLines;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js
+var require_object2 = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/helpers/object.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    function assign(target) {
+      var sources = [];
+      for (var _i = 1; _i < arguments.length; _i++) {
+        sources[_i - 1] = arguments[_i];
+      }
+      if (target == null) {
+        throw new TypeError("Cannot convert undefined or null to object");
+      }
+      var to = Object(target);
+      for (var index = 0; index < sources.length; index++) {
+        var nextSource = sources[index];
+        if (nextSource != null) {
+          for (var nextKey in nextSource) {
+            if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+              to[nextKey] = nextSource[nextKey];
+            }
+          }
+        }
+      }
+      return to;
+    }
+    exports2.assign = assign;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpDenormalizer.js
+var require_InsertOpDenormalizer = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpDenormalizer.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var value_types_1 = require_value_types();
+    var str = __importStar(require_string());
+    var obj = __importStar(require_object2());
+    var InsertOpDenormalizer = function() {
+      function InsertOpDenormalizer2() {
+      }
+      InsertOpDenormalizer2.denormalize = function(op) {
+        if (!op || typeof op !== "object") {
+          return [];
+        }
+        if (typeof op.insert === "object" || op.insert === value_types_1.NewLine) {
+          return [op];
+        }
+        var newlinedArray = str.tokenizeWithNewLines(op.insert + "");
+        if (newlinedArray.length === 1) {
+          return [op];
+        }
+        var nlObj = obj.assign({}, op, { insert: value_types_1.NewLine });
+        return newlinedArray.map(function(line) {
+          if (line === value_types_1.NewLine) {
+            return nlObj;
+          }
+          return obj.assign({}, op, {
+            insert: line
+          });
+        });
+      };
+      return InsertOpDenormalizer2;
+    }();
+    exports2.InsertOpDenormalizer = InsertOpDenormalizer;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpsConverter.js
+var require_InsertOpsConverter = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/InsertOpsConverter.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var DeltaInsertOp_1 = require_DeltaInsertOp();
+    var value_types_1 = require_value_types();
+    var InsertData_1 = require_InsertData();
+    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
+    var InsertOpDenormalizer_1 = require_InsertOpDenormalizer();
+    var InsertOpsConverter = function() {
+      function InsertOpsConverter2() {
+      }
+      InsertOpsConverter2.convert = function(deltaOps, options) {
+        if (!Array.isArray(deltaOps)) {
+          return [];
+        }
+        var denormalizedOps = [].concat.apply([], deltaOps.map(InsertOpDenormalizer_1.InsertOpDenormalizer.denormalize));
+        var results = [];
+        var insertVal, attributes;
+        for (var _i = 0, denormalizedOps_1 = denormalizedOps; _i < denormalizedOps_1.length; _i++) {
+          var op = denormalizedOps_1[_i];
+          if (!op.insert) {
+            continue;
+          }
+          insertVal = InsertOpsConverter2.convertInsertVal(op.insert, options);
+          if (!insertVal) {
+            continue;
+          }
+          attributes = OpAttributeSanitizer_1.OpAttributeSanitizer.sanitize(op.attributes, options);
+          results.push(new DeltaInsertOp_1.DeltaInsertOp(insertVal, attributes));
+        }
+        return results;
+      };
+      InsertOpsConverter2.convertInsertVal = function(insertPropVal, sanitizeOptions) {
+        if (typeof insertPropVal === "string") {
+          return new InsertData_1.InsertDataQuill(value_types_1.DataType.Text, insertPropVal);
+        }
+        if (!insertPropVal || typeof insertPropVal !== "object") {
+          return null;
+        }
+        var keys = Object.keys(insertPropVal);
+        if (!keys.length) {
+          return null;
+        }
+        return value_types_1.DataType.Image in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Image, OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(insertPropVal[value_types_1.DataType.Image] + "", sanitizeOptions)) : value_types_1.DataType.Video in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Video, OpAttributeSanitizer_1.OpAttributeSanitizer.sanitizeLinkUsingOptions(insertPropVal[value_types_1.DataType.Video] + "", sanitizeOptions)) : value_types_1.DataType.Formula in insertPropVal ? new InsertData_1.InsertDataQuill(value_types_1.DataType.Formula, insertPropVal[value_types_1.DataType.Formula]) : new InsertData_1.InsertDataCustom(keys[0], insertPropVal[keys[0]]);
+      };
+      return InsertOpsConverter2;
+    }();
+    exports2.InsertOpsConverter = InsertOpsConverter;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/OpToHtmlConverter.js
+var require_OpToHtmlConverter = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/OpToHtmlConverter.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var funcs_html_1 = require_funcs_html();
+    var value_types_1 = require_value_types();
+    var obj = __importStar(require_object2());
+    var arr2 = __importStar(require_array());
+    var OpAttributeSanitizer_1 = require_OpAttributeSanitizer();
+    var DEFAULT_INLINE_FONTS = {
+      serif: "font-family: Georgia, Times New Roman, serif",
+      monospace: "font-family: Monaco, Courier New, monospace"
+    };
+    exports2.DEFAULT_INLINE_STYLES = {
+      font: function(value) {
+        return DEFAULT_INLINE_FONTS[value] || "font-family:" + value;
+      },
+      size: {
+        small: "font-size: 0.75em",
+        large: "font-size: 1.5em",
+        huge: "font-size: 2.5em"
+      },
+      indent: function(value, op) {
+        var indentSize = parseInt(value, 10) * 3;
+        var side = op.attributes["direction"] === "rtl" ? "right" : "left";
+        return "padding-" + side + ":" + indentSize + "em";
+      },
+      direction: function(value, op) {
+        if (value === "rtl") {
+          return "direction:rtl" + (op.attributes["align"] ? "" : "; text-align:inherit");
+        } else {
+          return void 0;
+        }
+      }
+    };
+    var OpToHtmlConverter = function() {
+      function OpToHtmlConverter2(op, options) {
+        this.op = op;
+        this.options = obj.assign({}, {
+          classPrefix: "ql",
+          inlineStyles: void 0,
+          encodeHtml: true,
+          listItemTag: "li",
+          paragraphTag: "p"
+        }, options);
+      }
+      OpToHtmlConverter2.prototype.prefixClass = function(className) {
+        if (!this.options.classPrefix) {
+          return className + "";
+        }
+        return this.options.classPrefix + "-" + className;
+      };
+      OpToHtmlConverter2.prototype.getHtml = function() {
+        var parts = this.getHtmlParts();
+        return parts.openingTag + parts.content + parts.closingTag;
+      };
+      OpToHtmlConverter2.prototype.getHtmlParts = function() {
+        var _this = this;
+        if (this.op.isJustNewline() && !this.op.isContainerBlock()) {
+          return { openingTag: "", closingTag: "", content: value_types_1.NewLine };
+        }
+        var tags = this.getTags(), attrs = this.getTagAttributes();
+        if (!tags.length && attrs.length) {
+          tags.push(this.options.textTag || "span");
+        }
+        var beginTags = [], endTags = [];
+        var imgTag = "img";
+        var isImageLink = function(tag2) {
+          return tag2 === imgTag && !!_this.op.attributes.link;
+        };
+        for (var _i = 0, tags_1 = tags; _i < tags_1.length; _i++) {
+          var tag = tags_1[_i];
+          if (isImageLink(tag)) {
+            beginTags.push(funcs_html_1.makeStartTag("a", this.getLinkAttrs()));
+          }
+          beginTags.push(funcs_html_1.makeStartTag(tag, attrs));
+          endTags.push(tag === "img" ? "" : funcs_html_1.makeEndTag(tag));
+          if (isImageLink(tag)) {
+            endTags.push(funcs_html_1.makeEndTag("a"));
+          }
+          attrs = [];
+        }
+        endTags.reverse();
+        return {
+          openingTag: beginTags.join(""),
+          content: this.getContent(),
+          closingTag: endTags.join("")
+        };
+      };
+      OpToHtmlConverter2.prototype.getContent = function() {
+        if (this.op.isContainerBlock()) {
+          return "";
+        }
+        if (this.op.isMentions()) {
+          return this.op.insert.value;
+        }
+        var content = this.op.isFormula() || this.op.isText() ? this.op.insert.value : "";
+        return this.options.encodeHtml && funcs_html_1.encodeHtml(content) || content;
+      };
+      OpToHtmlConverter2.prototype.getCssClasses = function() {
+        var attrs = this.op.attributes;
+        if (this.options.inlineStyles) {
+          return [];
+        }
+        var propsArr = ["indent", "align", "direction", "font", "size"];
+        if (this.options.allowBackgroundClasses) {
+          propsArr.push("background");
+        }
+        return (this.getCustomCssClasses() || []).concat(propsArr.filter(function(prop) {
+          return !!attrs[prop];
+        }).filter(function(prop) {
+          return prop === "background" ? OpAttributeSanitizer_1.OpAttributeSanitizer.IsValidColorLiteral(attrs[prop]) : true;
+        }).map(function(prop) {
+          return prop + "-" + attrs[prop];
+        }).concat(this.op.isFormula() ? "formula" : []).concat(this.op.isVideo() ? "video" : []).concat(this.op.isImage() ? "image" : []).map(this.prefixClass.bind(this)));
+      };
+      OpToHtmlConverter2.prototype.getCssStyles = function() {
+        var _this = this;
+        var attrs = this.op.attributes;
+        var propsArr = [["color"]];
+        if (!!this.options.inlineStyles || !this.options.allowBackgroundClasses) {
+          propsArr.push(["background", "background-color"]);
+        }
+        if (this.options.inlineStyles) {
+          propsArr = propsArr.concat([
+            ["indent"],
+            ["align", "text-align"],
+            ["direction"],
+            ["font", "font-family"],
+            ["size"]
+          ]);
+        }
+        return (this.getCustomCssStyles() || []).concat(propsArr.filter(function(item) {
+          return !!attrs[item[0]];
+        }).map(function(item) {
+          var attribute = item[0];
+          var attrValue = attrs[attribute];
+          var attributeConverter = _this.options.inlineStyles && _this.options.inlineStyles[attribute] || exports2.DEFAULT_INLINE_STYLES[attribute];
+          if (typeof attributeConverter === "object") {
+            return attributeConverter[attrValue];
+          } else if (typeof attributeConverter === "function") {
+            var converterFn = attributeConverter;
+            return converterFn(attrValue, _this.op);
+          } else {
+            return arr2.preferSecond(item) + ":" + attrValue;
+          }
+        })).filter(function(item) {
+          return item !== void 0;
+        });
+      };
+      OpToHtmlConverter2.prototype.getTagAttributes = function() {
+        if (this.op.attributes.code && !this.op.isLink()) {
+          return [];
+        }
+        var makeAttr = this.makeAttr.bind(this);
+        var customTagAttributes = this.getCustomTagAttributes();
+        var customAttr = customTagAttributes ? Object.keys(this.getCustomTagAttributes()).map(function(k) {
+          return makeAttr(k, customTagAttributes[k]);
+        }) : [];
+        var classes = this.getCssClasses();
+        var tagAttrs = classes.length ? customAttr.concat([makeAttr("class", classes.join(" "))]) : customAttr;
+        if (this.op.isImage()) {
+          this.op.attributes.width && (tagAttrs = tagAttrs.concat(makeAttr("width", this.op.attributes.width)));
+          return tagAttrs.concat(makeAttr("src", this.op.insert.value));
+        }
+        if (this.op.isACheckList()) {
+          return tagAttrs.concat(makeAttr("data-checked", this.op.isCheckedList() ? "true" : "false"));
+        }
+        if (this.op.isFormula()) {
+          return tagAttrs;
+        }
+        if (this.op.isVideo()) {
+          return tagAttrs.concat(makeAttr("frameborder", "0"), makeAttr("allowfullscreen", "true"), makeAttr("src", this.op.insert.value));
+        }
+        if (this.op.isMentions()) {
+          var mention = this.op.attributes.mention;
+          if (mention.class) {
+            tagAttrs = tagAttrs.concat(makeAttr("class", mention.class));
+          }
+          if (mention["end-point"] && mention.slug) {
+            tagAttrs = tagAttrs.concat(makeAttr("href", mention["end-point"] + "/" + mention.slug));
+          } else {
+            tagAttrs = tagAttrs.concat(makeAttr("href", "about:blank"));
+          }
+          if (mention.target) {
+            tagAttrs = tagAttrs.concat(makeAttr("target", mention.target));
+          }
+          return tagAttrs;
+        }
+        var styles = this.getCssStyles();
+        if (styles.length) {
+          tagAttrs.push(makeAttr("style", styles.join(";")));
+        }
+        if (this.op.isCodeBlock() && typeof this.op.attributes["code-block"] === "string") {
+          return tagAttrs.concat(makeAttr("data-language", this.op.attributes["code-block"]));
+        }
+        if (this.op.isContainerBlock()) {
+          return tagAttrs;
+        }
+        if (this.op.isLink()) {
+          tagAttrs = tagAttrs.concat(this.getLinkAttrs());
+        }
+        return tagAttrs;
+      };
+      OpToHtmlConverter2.prototype.makeAttr = function(k, v) {
+        return { key: k, value: v };
+      };
+      OpToHtmlConverter2.prototype.getLinkAttrs = function() {
+        var tagAttrs = [];
+        var targetForAll = OpAttributeSanitizer_1.OpAttributeSanitizer.isValidTarget(this.options.linkTarget || "") ? this.options.linkTarget : void 0;
+        var relForAll = OpAttributeSanitizer_1.OpAttributeSanitizer.IsValidRel(this.options.linkRel || "") ? this.options.linkRel : void 0;
+        var target = this.op.attributes.target || targetForAll;
+        var rel = this.op.attributes.rel || relForAll;
+        return tagAttrs.concat(this.makeAttr("href", this.op.attributes.link)).concat(target ? this.makeAttr("target", target) : []).concat(rel ? this.makeAttr("rel", rel) : []);
+      };
+      OpToHtmlConverter2.prototype.getCustomTag = function(format) {
+        if (this.options.customTag && typeof this.options.customTag === "function") {
+          return this.options.customTag.apply(null, [format, this.op]);
+        }
+      };
+      OpToHtmlConverter2.prototype.getCustomTagAttributes = function() {
+        if (this.options.customTagAttributes && typeof this.options.customTagAttributes === "function") {
+          return this.options.customTagAttributes.apply(null, [this.op]);
+        }
+      };
+      OpToHtmlConverter2.prototype.getCustomCssClasses = function() {
+        if (this.options.customCssClasses && typeof this.options.customCssClasses === "function") {
+          var res = this.options.customCssClasses.apply(null, [this.op]);
+          if (res) {
+            return Array.isArray(res) ? res : [res];
+          }
+        }
+      };
+      OpToHtmlConverter2.prototype.getCustomCssStyles = function() {
+        if (this.options.customCssStyles && typeof this.options.customCssStyles === "function") {
+          var res = this.options.customCssStyles.apply(null, [this.op]);
+          if (res) {
+            return Array.isArray(res) ? res : [res];
+          }
+        }
+      };
+      OpToHtmlConverter2.prototype.getTags = function() {
+        var _this = this;
+        var attrs = this.op.attributes;
+        if (!this.op.isText()) {
+          return [
+            this.op.isVideo() ? "iframe" : this.op.isImage() ? "img" : "span"
+          ];
+        }
+        var positionTag = this.options.paragraphTag || "p";
+        var blocks = [
+          ["blockquote"],
+          ["code-block", "pre"],
+          ["list", this.options.listItemTag],
+          ["header"],
+          ["align", positionTag],
+          ["direction", positionTag],
+          ["indent", positionTag]
+        ];
+        for (var _i = 0, blocks_1 = blocks; _i < blocks_1.length; _i++) {
+          var item = blocks_1[_i];
+          var firstItem = item[0];
+          if (attrs[firstItem]) {
+            var customTag = this.getCustomTag(firstItem);
+            return customTag ? [customTag] : firstItem === "header" ? ["h" + attrs[firstItem]] : [arr2.preferSecond(item)];
+          }
+        }
+        if (this.op.isCustomTextBlock()) {
+          var customTag = this.getCustomTag("renderAsBlock");
+          return customTag ? [customTag] : [positionTag];
+        }
+        var customTagsMap = Object.keys(attrs).reduce(function(res, it) {
+          var customTag2 = _this.getCustomTag(it);
+          if (customTag2) {
+            res[it] = customTag2;
+          }
+          return res;
+        }, {});
+        var inlineTags = [
+          ["link", "a"],
+          ["mentions", "a"],
+          ["script"],
+          ["bold", "strong"],
+          ["italic", "em"],
+          ["strike", "s"],
+          ["underline", "u"],
+          ["code"]
+        ];
+        return inlineTags.filter(function(item2) {
+          return !!attrs[item2[0]];
+        }).concat(Object.keys(customTagsMap).filter(function(t) {
+          return !inlineTags.some(function(it) {
+            return it[0] == t;
+          });
+        }).map(function(t) {
+          return [t, customTagsMap[t]];
+        })).map(function(item2) {
+          return customTagsMap[item2[0]] ? customTagsMap[item2[0]] : item2[0] === "script" ? attrs[item2[0]] === value_types_1.ScriptType.Sub ? "sub" : "sup" : arr2.preferSecond(item2);
+        });
+      };
+      return OpToHtmlConverter2;
+    }();
+    exports2.OpToHtmlConverter = OpToHtmlConverter;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/group-types.js
+var require_group_types = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/group-types.js"(exports2) {
+    "use strict";
+    var __extends = exports2 && exports2.__extends || function() {
+      var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function(d, b) {
+        d.__proto__ = b;
+      } || function(d, b) {
+        for (var p in b)
+          if (b.hasOwnProperty(p))
+            d[p] = b[p];
+      };
+      return function(d, b) {
+        extendStatics(d, b);
+        function __() {
+          this.constructor = d;
+        }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+      };
+    }();
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var InlineGroup = function() {
+      function InlineGroup2(ops) {
+        this.ops = ops;
+      }
+      return InlineGroup2;
+    }();
+    exports2.InlineGroup = InlineGroup;
+    var SingleItem = function() {
+      function SingleItem2(op) {
+        this.op = op;
+      }
+      return SingleItem2;
+    }();
+    var VideoItem = function(_super) {
+      __extends(VideoItem2, _super);
+      function VideoItem2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+      }
+      return VideoItem2;
+    }(SingleItem);
+    exports2.VideoItem = VideoItem;
+    var BlotBlock = function(_super) {
+      __extends(BlotBlock2, _super);
+      function BlotBlock2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+      }
+      return BlotBlock2;
+    }(SingleItem);
+    exports2.BlotBlock = BlotBlock;
+    var BlockGroup = function() {
+      function BlockGroup2(op, ops) {
+        this.op = op;
+        this.ops = ops;
+      }
+      return BlockGroup2;
+    }();
+    exports2.BlockGroup = BlockGroup;
+    var ListGroup = function() {
+      function ListGroup2(items) {
+        this.items = items;
+      }
+      return ListGroup2;
+    }();
+    exports2.ListGroup = ListGroup;
+    var ListItem = function() {
+      function ListItem2(item, innerList) {
+        if (innerList === void 0) {
+          innerList = null;
+        }
+        this.item = item;
+        this.innerList = innerList;
+      }
+      return ListItem2;
+    }();
+    exports2.ListItem = ListItem;
+    var TableGroup = function() {
+      function TableGroup2(rows) {
+        this.rows = rows;
+      }
+      return TableGroup2;
+    }();
+    exports2.TableGroup = TableGroup;
+    var TableRow = function() {
+      function TableRow2(cells) {
+        this.cells = cells;
+      }
+      return TableRow2;
+    }();
+    exports2.TableRow = TableRow;
+    var TableCell = function() {
+      function TableCell2(item) {
+        this.item = item;
+      }
+      return TableCell2;
+    }();
+    exports2.TableCell = TableCell;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/Grouper.js
+var require_Grouper = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/Grouper.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var DeltaInsertOp_1 = require_DeltaInsertOp();
+    var array_1 = require_array();
+    var group_types_1 = require_group_types();
+    var Grouper = function() {
+      function Grouper2() {
+      }
+      Grouper2.pairOpsWithTheirBlock = function(ops) {
+        var result = [];
+        var canBeInBlock = function(op2) {
+          return !(op2.isJustNewline() || op2.isCustomEmbedBlock() || op2.isVideo() || op2.isContainerBlock());
+        };
+        var isInlineData = function(op2) {
+          return op2.isInline();
+        };
+        var lastInd = ops.length - 1;
+        var opsSlice;
+        for (var i = lastInd; i >= 0; i--) {
+          var op = ops[i];
+          if (op.isVideo()) {
+            result.push(new group_types_1.VideoItem(op));
+          } else if (op.isCustomEmbedBlock()) {
+            result.push(new group_types_1.BlotBlock(op));
+          } else if (op.isContainerBlock()) {
+            opsSlice = array_1.sliceFromReverseWhile(ops, i - 1, canBeInBlock);
+            result.push(new group_types_1.BlockGroup(op, opsSlice.elements));
+            i = opsSlice.sliceStartsAt > -1 ? opsSlice.sliceStartsAt : i;
+          } else {
+            opsSlice = array_1.sliceFromReverseWhile(ops, i - 1, isInlineData);
+            result.push(new group_types_1.InlineGroup(opsSlice.elements.concat(op)));
+            i = opsSlice.sliceStartsAt > -1 ? opsSlice.sliceStartsAt : i;
+          }
+        }
+        result.reverse();
+        return result;
+      };
+      Grouper2.groupConsecutiveSameStyleBlocks = function(groups, blocksOf) {
+        if (blocksOf === void 0) {
+          blocksOf = {
+            header: true,
+            codeBlocks: true,
+            blockquotes: true,
+            customBlocks: true
+          };
+        }
+        return array_1.groupConsecutiveElementsWhile(groups, function(g, gPrev) {
+          if (!(g instanceof group_types_1.BlockGroup) || !(gPrev instanceof group_types_1.BlockGroup)) {
+            return false;
+          }
+          return blocksOf.codeBlocks && Grouper2.areBothCodeblocksWithSameLang(g, gPrev) || blocksOf.blockquotes && Grouper2.areBothBlockquotesWithSameAdi(g, gPrev) || blocksOf.header && Grouper2.areBothSameHeadersWithSameAdi(g, gPrev) || blocksOf.customBlocks && Grouper2.areBothCustomBlockWithSameAttr(g, gPrev);
+        });
+      };
+      Grouper2.reduceConsecutiveSameStyleBlocksToOne = function(groups) {
+        var newLineOp = DeltaInsertOp_1.DeltaInsertOp.createNewLineOp();
+        return groups.map(function(elm) {
+          if (!Array.isArray(elm)) {
+            if (elm instanceof group_types_1.BlockGroup && !elm.ops.length) {
+              elm.ops.push(newLineOp);
+            }
+            return elm;
+          }
+          var groupsLastInd = elm.length - 1;
+          elm[0].ops = array_1.flatten(elm.map(function(g, i) {
+            if (!g.ops.length) {
+              return [newLineOp];
+            }
+            return g.ops.concat(i < groupsLastInd ? [newLineOp] : []);
+          }));
+          return elm[0];
+        });
+      };
+      Grouper2.areBothCodeblocksWithSameLang = function(g1, gOther) {
+        return g1.op.isCodeBlock() && gOther.op.isCodeBlock() && g1.op.hasSameLangAs(gOther.op);
+      };
+      Grouper2.areBothSameHeadersWithSameAdi = function(g1, gOther) {
+        return g1.op.isSameHeaderAs(gOther.op) && g1.op.hasSameAdiAs(gOther.op);
+      };
+      Grouper2.areBothBlockquotesWithSameAdi = function(g, gOther) {
+        return g.op.isBlockquote() && gOther.op.isBlockquote() && g.op.hasSameAdiAs(gOther.op);
+      };
+      Grouper2.areBothCustomBlockWithSameAttr = function(g, gOther) {
+        return g.op.isCustomTextBlock() && gOther.op.isCustomTextBlock() && g.op.hasSameAttr(gOther.op);
+      };
+      return Grouper2;
+    }();
+    exports2.Grouper = Grouper;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/ListNester.js
+var require_ListNester = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/ListNester.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var group_types_1 = require_group_types();
+    var array_1 = require_array();
+    var ListNester = function() {
+      function ListNester2() {
+      }
+      ListNester2.prototype.nest = function(groups) {
+        var _this = this;
+        var listBlocked = this.convertListBlocksToListGroups(groups);
+        var groupedByListGroups = this.groupConsecutiveListGroups(listBlocked);
+        var nested = array_1.flatten(groupedByListGroups.map(function(group2) {
+          if (!Array.isArray(group2)) {
+            return group2;
+          }
+          return _this.nestListSection(group2);
+        }));
+        var groupRootLists = array_1.groupConsecutiveElementsWhile(nested, function(curr, prev) {
+          if (!(curr instanceof group_types_1.ListGroup && prev instanceof group_types_1.ListGroup)) {
+            return false;
+          }
+          return curr.items[0].item.op.isSameListAs(prev.items[0].item.op);
+        });
+        return groupRootLists.map(function(v) {
+          if (!Array.isArray(v)) {
+            return v;
+          }
+          var litems = v.map(function(g) {
+            return g.items;
+          });
+          return new group_types_1.ListGroup(array_1.flatten(litems));
+        });
+      };
+      ListNester2.prototype.convertListBlocksToListGroups = function(items) {
+        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
+          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isList() && gPrev.op.isList() && g.op.isSameListAs(gPrev.op) && g.op.hasSameIndentationAs(gPrev.op);
+        });
+        return grouped.map(function(item) {
+          if (!Array.isArray(item)) {
+            if (item instanceof group_types_1.BlockGroup && item.op.isList()) {
+              return new group_types_1.ListGroup([new group_types_1.ListItem(item)]);
+            }
+            return item;
+          }
+          return new group_types_1.ListGroup(item.map(function(g) {
+            return new group_types_1.ListItem(g);
+          }));
+        });
+      };
+      ListNester2.prototype.groupConsecutiveListGroups = function(items) {
+        return array_1.groupConsecutiveElementsWhile(items, function(curr, prev) {
+          return curr instanceof group_types_1.ListGroup && prev instanceof group_types_1.ListGroup;
+        });
+      };
+      ListNester2.prototype.nestListSection = function(sectionItems) {
+        var _this = this;
+        var indentGroups = this.groupByIndent(sectionItems);
+        Object.keys(indentGroups).map(Number).sort().reverse().forEach(function(indent) {
+          indentGroups[indent].forEach(function(lg) {
+            var idx = sectionItems.indexOf(lg);
+            if (_this.placeUnderParent(lg, sectionItems.slice(0, idx))) {
+              sectionItems.splice(idx, 1);
+            }
+          });
+        });
+        return sectionItems;
+      };
+      ListNester2.prototype.groupByIndent = function(items) {
+        return items.reduce(function(pv, cv) {
+          var indent = cv.items[0].item.op.attributes.indent;
+          if (indent) {
+            pv[indent] = pv[indent] || [];
+            pv[indent].push(cv);
+          }
+          return pv;
+        }, {});
+      };
+      ListNester2.prototype.placeUnderParent = function(target, items) {
+        for (var i = items.length - 1; i >= 0; i--) {
+          var elm = items[i];
+          if (target.items[0].item.op.hasHigherIndentThan(elm.items[0].item.op)) {
+            var parent = elm.items[elm.items.length - 1];
+            if (parent.innerList) {
+              parent.innerList.items = parent.innerList.items.concat(target.items);
+            } else {
+              parent.innerList = target;
+            }
+            return true;
+          }
+        }
+        return false;
+      };
+      return ListNester2;
+    }();
+    exports2.ListNester = ListNester;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/TableGrouper.js
+var require_TableGrouper = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/grouper/TableGrouper.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var group_types_1 = require_group_types();
+    var array_1 = require_array();
+    var TableGrouper = function() {
+      function TableGrouper2() {
+      }
+      TableGrouper2.prototype.group = function(groups) {
+        var tableBlocked = this.convertTableBlocksToTableGroups(groups);
+        return tableBlocked;
+      };
+      TableGrouper2.prototype.convertTableBlocksToTableGroups = function(items) {
+        var _this = this;
+        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
+          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isTable() && gPrev.op.isTable();
+        });
+        return grouped.map(function(item) {
+          if (!Array.isArray(item)) {
+            if (item instanceof group_types_1.BlockGroup && item.op.isTable()) {
+              return new group_types_1.TableGroup([new group_types_1.TableRow([new group_types_1.TableCell(item)])]);
+            }
+            return item;
+          }
+          return new group_types_1.TableGroup(_this.convertTableBlocksToTableRows(item));
+        });
+      };
+      TableGrouper2.prototype.convertTableBlocksToTableRows = function(items) {
+        var grouped = array_1.groupConsecutiveElementsWhile(items, function(g, gPrev) {
+          return g instanceof group_types_1.BlockGroup && gPrev instanceof group_types_1.BlockGroup && g.op.isTable() && gPrev.op.isTable() && g.op.isSameTableRowAs(gPrev.op);
+        });
+        return grouped.map(function(item) {
+          return new group_types_1.TableRow(Array.isArray(item) ? item.map(function(it) {
+            return new group_types_1.TableCell(it);
+          }) : [new group_types_1.TableCell(item)]);
+        });
+      };
+      return TableGrouper2;
+    }();
+    exports2.TableGrouper = TableGrouper;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/QuillDeltaToHtmlConverter.js
+var require_QuillDeltaToHtmlConverter = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/QuillDeltaToHtmlConverter.js"(exports2) {
+    "use strict";
+    var __importStar = exports2 && exports2.__importStar || function(mod2) {
+      if (mod2 && mod2.__esModule)
+        return mod2;
+      var result = {};
+      if (mod2 != null) {
+        for (var k in mod2)
+          if (Object.hasOwnProperty.call(mod2, k))
+            result[k] = mod2[k];
+      }
+      result["default"] = mod2;
+      return result;
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var InsertOpsConverter_1 = require_InsertOpsConverter();
+    var OpToHtmlConverter_1 = require_OpToHtmlConverter();
+    var Grouper_1 = require_Grouper();
+    var group_types_1 = require_group_types();
+    var ListNester_1 = require_ListNester();
+    var funcs_html_1 = require_funcs_html();
+    var obj = __importStar(require_object2());
+    var value_types_1 = require_value_types();
+    var TableGrouper_1 = require_TableGrouper();
+    var BrTag = "<br/>";
+    var QuillDeltaToHtmlConverter2 = function() {
+      function QuillDeltaToHtmlConverter3(deltaOps, options) {
+        this.rawDeltaOps = [];
+        this.callbacks = {};
+        this.options = obj.assign({
+          paragraphTag: "p",
+          textTag: "span",
+          encodeHtml: true,
+          classPrefix: "ql",
+          inlineStyles: false,
+          multiLineBlockquote: true,
+          multiLineHeader: true,
+          multiLineCodeblock: true,
+          multiLineParagraph: true,
+          multiLineCustomBlock: true,
+          allowBackgroundClasses: false,
+          linkTarget: "_blank"
+        }, options, {
+          orderedListTag: "ol",
+          bulletListTag: "ul",
+          listItemTag: "li"
+        });
+        var inlineStyles;
+        if (!this.options.inlineStyles) {
+          inlineStyles = void 0;
+        } else if (typeof this.options.inlineStyles === "object") {
+          inlineStyles = this.options.inlineStyles;
+        } else {
+          inlineStyles = {};
+        }
+        this.converterOptions = {
+          encodeHtml: this.options.encodeHtml,
+          classPrefix: this.options.classPrefix,
+          inlineStyles,
+          listItemTag: this.options.listItemTag,
+          paragraphTag: this.options.paragraphTag,
+          textTag: this.options.textTag,
+          linkRel: this.options.linkRel,
+          linkTarget: this.options.linkTarget,
+          allowBackgroundClasses: this.options.allowBackgroundClasses,
+          customTag: this.options.customTag,
+          customTagAttributes: this.options.customTagAttributes,
+          customCssClasses: this.options.customCssClasses,
+          customCssStyles: this.options.customCssStyles
+        };
+        this.rawDeltaOps = deltaOps;
+      }
+      QuillDeltaToHtmlConverter3.prototype._getListTag = function(op) {
+        return op.isOrderedList() ? this.options.orderedListTag + "" : op.isBulletList() ? this.options.bulletListTag + "" : op.isCheckedList() ? this.options.bulletListTag + "" : op.isUncheckedList() ? this.options.bulletListTag + "" : "";
+      };
+      QuillDeltaToHtmlConverter3.prototype.getGroupedOps = function() {
+        var deltaOps = InsertOpsConverter_1.InsertOpsConverter.convert(this.rawDeltaOps, this.options);
+        var pairedOps = Grouper_1.Grouper.pairOpsWithTheirBlock(deltaOps);
+        var groupedSameStyleBlocks = Grouper_1.Grouper.groupConsecutiveSameStyleBlocks(pairedOps, {
+          blockquotes: !!this.options.multiLineBlockquote,
+          header: !!this.options.multiLineHeader,
+          codeBlocks: !!this.options.multiLineCodeblock,
+          customBlocks: !!this.options.multiLineCustomBlock
+        });
+        var groupedOps = Grouper_1.Grouper.reduceConsecutiveSameStyleBlocksToOne(groupedSameStyleBlocks);
+        var tableGrouper = new TableGrouper_1.TableGrouper();
+        groupedOps = tableGrouper.group(groupedOps);
+        var listNester = new ListNester_1.ListNester();
+        return listNester.nest(groupedOps);
+      };
+      QuillDeltaToHtmlConverter3.prototype.convert = function() {
+        var _this = this;
+        var groups = this.getGroupedOps();
+        return groups.map(function(group2) {
+          if (group2 instanceof group_types_1.ListGroup) {
+            return _this._renderWithCallbacks(value_types_1.GroupType.List, group2, function() {
+              return _this._renderList(group2);
+            });
+          } else if (group2 instanceof group_types_1.TableGroup) {
+            return _this._renderWithCallbacks(value_types_1.GroupType.Table, group2, function() {
+              return _this._renderTable(group2);
+            });
+          } else if (group2 instanceof group_types_1.BlockGroup) {
+            var g = group2;
+            return _this._renderWithCallbacks(value_types_1.GroupType.Block, group2, function() {
+              return _this._renderBlock(g.op, g.ops);
+            });
+          } else if (group2 instanceof group_types_1.BlotBlock) {
+            return _this._renderCustom(group2.op, null);
+          } else if (group2 instanceof group_types_1.VideoItem) {
+            return _this._renderWithCallbacks(value_types_1.GroupType.Video, group2, function() {
+              var g2 = group2;
+              var converter = new OpToHtmlConverter_1.OpToHtmlConverter(g2.op, _this.converterOptions);
+              return converter.getHtml();
+            });
+          } else {
+            return _this._renderWithCallbacks(value_types_1.GroupType.InlineGroup, group2, function() {
+              return _this._renderInlines(group2.ops, true);
+            });
+          }
+        }).join("");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderWithCallbacks = function(groupType, group2, myRenderFn) {
+        var html = "";
+        var beforeCb = this.callbacks["beforeRender_cb"];
+        html = typeof beforeCb === "function" ? beforeCb.apply(null, [groupType, group2]) : "";
+        if (!html) {
+          html = myRenderFn();
+        }
+        var afterCb = this.callbacks["afterRender_cb"];
+        html = typeof afterCb === "function" ? afterCb.apply(null, [groupType, html]) : html;
+        return html;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderList = function(list) {
+        var _this = this;
+        var firstItem = list.items[0];
+        return funcs_html_1.makeStartTag(this._getListTag(firstItem.item.op)) + list.items.map(function(li) {
+          return _this._renderListItem(li);
+        }).join("") + funcs_html_1.makeEndTag(this._getListTag(firstItem.item.op));
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderListItem = function(li) {
+        li.item.op.attributes.indent = 0;
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(li.item.op, this.converterOptions);
+        var parts = converter.getHtmlParts();
+        var liElementsHtml = this._renderInlines(li.item.ops, false);
+        return parts.openingTag + liElementsHtml + (li.innerList ? this._renderList(li.innerList) : "") + parts.closingTag;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderTable = function(table) {
+        var _this = this;
+        return funcs_html_1.makeStartTag("table") + funcs_html_1.makeStartTag("tbody") + table.rows.map(function(row) {
+          return _this._renderTableRow(row);
+        }).join("") + funcs_html_1.makeEndTag("tbody") + funcs_html_1.makeEndTag("table");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderTableRow = function(row) {
+        var _this = this;
+        return funcs_html_1.makeStartTag("tr") + row.cells.map(function(cell) {
+          return _this._renderTableCell(cell);
+        }).join("") + funcs_html_1.makeEndTag("tr");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderTableCell = function(cell) {
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(cell.item.op, this.converterOptions);
+        var parts = converter.getHtmlParts();
+        var cellElementsHtml = this._renderInlines(cell.item.ops, false);
+        return funcs_html_1.makeStartTag("td", {
+          key: "data-row",
+          value: cell.item.op.attributes.table
+        }) + parts.openingTag + cellElementsHtml + parts.closingTag + funcs_html_1.makeEndTag("td");
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderBlock = function(bop, ops) {
+        var _this = this;
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(bop, this.converterOptions);
+        var htmlParts = converter.getHtmlParts();
+        if (bop.isCodeBlock()) {
+          return htmlParts.openingTag + funcs_html_1.encodeHtml(ops.map(function(iop) {
+            return iop.isCustomEmbed() ? _this._renderCustom(iop, bop) : iop.insert.value;
+          }).join("")) + htmlParts.closingTag;
+        }
+        var inlines = ops.map(function(op) {
+          return _this._renderInline(op, bop);
+        }).join("");
+        return htmlParts.openingTag + (inlines || BrTag) + htmlParts.closingTag;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderInlines = function(ops, isInlineGroup) {
+        var _this = this;
+        if (isInlineGroup === void 0) {
+          isInlineGroup = true;
+        }
+        var opsLen = ops.length - 1;
+        var html = ops.map(function(op, i) {
+          if (i > 0 && i === opsLen && op.isJustNewline()) {
+            return "";
+          }
+          return _this._renderInline(op, null);
+        }).join("");
+        if (!isInlineGroup) {
+          return html;
+        }
+        var startParaTag = funcs_html_1.makeStartTag(this.options.paragraphTag);
+        var endParaTag = funcs_html_1.makeEndTag(this.options.paragraphTag);
+        if (html === BrTag || this.options.multiLineParagraph) {
+          return startParaTag + html + endParaTag;
+        }
+        return startParaTag + html.split(BrTag).map(function(v) {
+          return v === "" ? BrTag : v;
+        }).join(endParaTag + startParaTag) + endParaTag;
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderInline = function(op, contextOp) {
+        if (op.isCustomEmbed()) {
+          return this._renderCustom(op, contextOp);
+        }
+        var converter = new OpToHtmlConverter_1.OpToHtmlConverter(op, this.converterOptions);
+        return converter.getHtml().replace(/\\n/g, BrTag);
+      };
+      QuillDeltaToHtmlConverter3.prototype._renderCustom = function(op, contextOp) {
+        var renderCb = this.callbacks["renderCustomOp_cb"];
+        if (typeof renderCb === "function") {
+          return renderCb.apply(null, [op, contextOp]);
+        }
+        return "";
+      };
+      QuillDeltaToHtmlConverter3.prototype.beforeRender = function(cb) {
+        if (typeof cb === "function") {
+          this.callbacks["beforeRender_cb"] = cb;
+        }
+      };
+      QuillDeltaToHtmlConverter3.prototype.afterRender = function(cb) {
+        if (typeof cb === "function") {
+          this.callbacks["afterRender_cb"] = cb;
+        }
+      };
+      QuillDeltaToHtmlConverter3.prototype.renderCustomWith = function(cb) {
+        this.callbacks["renderCustomOp_cb"] = cb;
+      };
+      return QuillDeltaToHtmlConverter3;
+    }();
+    exports2.QuillDeltaToHtmlConverter = QuillDeltaToHtmlConverter2;
+  }
+});
+
+// node_modules/quill-delta-to-html-cb/dist/commonjs/main.js
+var require_main = __commonJS({
+  "node_modules/quill-delta-to-html-cb/dist/commonjs/main.js"(exports2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var QuillDeltaToHtmlConverter_1 = require_QuillDeltaToHtmlConverter();
+    exports2.QuillDeltaToHtmlConverter = QuillDeltaToHtmlConverter_1.QuillDeltaToHtmlConverter;
+    var OpToHtmlConverter_1 = require_OpToHtmlConverter();
+    exports2.OpToHtmlConverter = OpToHtmlConverter_1.OpToHtmlConverter;
+    var group_types_1 = require_group_types();
+    exports2.InlineGroup = group_types_1.InlineGroup;
+    exports2.VideoItem = group_types_1.VideoItem;
+    exports2.BlockGroup = group_types_1.BlockGroup;
+    exports2.ListGroup = group_types_1.ListGroup;
+    exports2.ListItem = group_types_1.ListItem;
+    exports2.BlotBlock = group_types_1.BlotBlock;
+    var DeltaInsertOp_1 = require_DeltaInsertOp();
+    exports2.DeltaInsertOp = DeltaInsertOp_1.DeltaInsertOp;
+    var InsertData_1 = require_InsertData();
+    exports2.InsertDataQuill = InsertData_1.InsertDataQuill;
+    exports2.InsertDataCustom = InsertData_1.InsertDataCustom;
+    var value_types_1 = require_value_types();
+    exports2.NewLine = value_types_1.NewLine;
+    exports2.ListType = value_types_1.ListType;
+    exports2.ScriptType = value_types_1.ScriptType;
+    exports2.DirectionType = value_types_1.DirectionType;
+    exports2.AlignType = value_types_1.AlignType;
+    exports2.DataType = value_types_1.DataType;
+    exports2.GroupType = value_types_1.GroupType;
+  }
+});
 
 // src/utils/typeof.ts
 var isArray = Array.isArray;
 var isObject = (val) => val !== null && typeof val === "object";
 var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
-
-// src/utils/hook/method.ts
-function methodHook(target, propertyKey, callback, modifyArguments) {
-  try {
-    let modify2 = function() {
-      loaded = true;
-      if (values[0]) {
-        Reflect.defineProperty(target, propertyKey, { configurable: true, value: values[0] });
-        iArguments.forEach((d) => values[0](...d));
-      } else {
-        debug.error("拦截方法出错！", "目标方法", propertyKey, "所属对象", target);
-      }
-    };
-    var modify = modify2;
-    const values = [];
-    const iArguments = [];
-    let loading2 = false;
-    let loaded = false;
-    Reflect.defineProperty(target, propertyKey, {
-      configurable: true,
-      set: (v) => {
-        if (loading2 && !loaded) {
-          values.unshift(v);
-        }
-        return true;
-      },
-      get: () => {
-        if (!loading2) {
-          loading2 = true;
-          setTimeout(() => {
-            const res = callback();
-            if (res && res.finally) {
-              res.finally(() => modify2());
-            } else {
-              modify2();
-            }
-          });
-        }
-        return function() {
-          modifyArguments?.(arguments);
-          iArguments.push(arguments);
-        };
-      }
-    });
-  } catch (e) {
-    debug.error(e);
-  }
-}
-function propertyHook(target, propertyKey, propertyValue, configurable = true) {
-  try {
-    Reflect.defineProperty(target, propertyKey, {
-      configurable,
-      set: (v) => true,
-      get: () => {
-        Reflect.defineProperty(target, propertyKey, { configurable: true, value: propertyValue });
-        return propertyValue;
-      }
-    });
-  } catch (e) {
-    debug.error(e);
-  }
-}
-propertyHook.modify = (target, propertyKey, callback, once = false) => {
-  try {
-    let value = target[propertyKey];
-    value && (value = callback(value));
-    Reflect.defineProperty(target, propertyKey, {
-      configurable: true,
-      set: (v) => {
-        value = callback(v);
-        return true;
-      },
-      get: () => {
-        if (once) {
-          Reflect.deleteProperty(target, propertyKey);
-          Reflect.set(target, propertyKey, value);
-        }
-        return value;
-      }
-    });
-  } catch (e) {
-    debug.error(e);
-  }
-};
-function ProxyHandler(target, parrent, key) {
-  return new Proxy(target, {
-    deleteProperty(target2, p) {
-      const res = Reflect.deleteProperty(target2, p);
-      parrent[key] = target2;
-      return res;
-    },
-    set(target2, p, newValue, receiver) {
-      const res = Reflect.set(target2, p, newValue, receiver);
-      parrent[key] = target2;
-      return res;
-    },
-    get(target2, p, receiver) {
-      const res = Reflect.get(target2, p, receiver);
-      if (isArray(res) || isObject(res)) {
-        return ProxyHandler(res, receiver, p);
-      }
-      return res;
-    }
-  });
-}
-function propertryChangeHook(target, callback) {
-  return new Proxy(target, {
-    deleteProperty(target2, p) {
-      const res = Reflect.deleteProperty(target2, p);
-      callback(p, void 0);
-      return res;
-    },
-    set(target2, p, newValue, receiver) {
-      const res = Reflect.set(target2, p, newValue, receiver);
-      callback(p, newValue);
-      return res;
-    },
-    get(target2, p, receiver) {
-      const res = Reflect.get(target2, p, receiver);
-      if (isArray(res) || isObject(res)) {
-        return ProxyHandler(res, receiver, p);
-      }
-      return res;
-    }
-  });
-}
-
-// src/utils/poll.ts
-function poll(check, callback, delay = 100, stop = 180) {
-  let timer = setInterval(() => {
-    const d = check();
-    if (d) {
-      clearInterval(timer);
-      callback(d);
-    }
-  }, delay);
-  stop && setTimeout(() => clearInterval(timer), stop * 1e3);
-}
-
-// src/utils/element.ts
-function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
-  let element = document.createElement(tag);
-  attribute && Object.entries(attribute).forEach((d) => element.setAttribute(d[0], d[1]));
-  parrent = parrent || document.body;
-  innerHTML && (element.innerHTML = innerHTML);
-  replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
-  return element;
-}
-async function addCss(txt, id, parrent) {
-  if (!parrent && !document.head) {
-    await new Promise((r) => poll(() => document.body, r));
-  }
-  parrent = parrent || document.head;
-  const style = document.createElement("style");
-  style.setAttribute("type", "text/css");
-  id && !parrent.querySelector(\`#\${id}\`) && style.setAttribute("id", id);
-  style.appendChild(document.createTextNode(txt));
-  parrent.appendChild(style);
-  return style;
-}
-function loadScript(src, onload) {
-  return new Promise((r, j) => {
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = src;
-    script.addEventListener("load", () => {
-      script.remove();
-      onload && onload();
-      r(true);
-    });
-    script.addEventListener("error", () => {
-      script.remove();
-      j();
-    });
-    (document.body || document.head || document.documentElement || document).appendChild(script);
-  });
-}
-function getTotalTop(node) {
-  var sum = 0;
-  do {
-    sum += node.offsetTop;
-    node = node.offsetParent;
-  } while (node);
-  return sum;
-}
-
-// src/html/button.html
-var button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/utils/button.ts
-var PushButton = class extends HTMLElement {
-  _button;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = button_default;
-    this._button = root.querySelector(".button");
-    this._button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.dispatchEvent(new Event("change"));
-    });
-  }
-  set text(v) {
-    this._button.textContent = v;
-  }
-};
-customElements.get(\`button-\${"855f368"}\`) || customElements.define(\`button-\${"855f368"}\`, PushButton);
-
-// src/html/popupbox.html
-var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
-
-// src/svg/fork.svg
-var fork_default = '<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>';
-
-// src/svg/gear.svg
-var gear_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>';
-
-// src/svg/wrench.svg
-var wrench_default = '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>';
-
-// src/svg/note.svg
-var note_default = '<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>';
-
-// src/svg/dmset.svg
-var dmset_default = '<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>';
-
-// src/svg/stethoscope.svg
-var stethoscope_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>';
-
-// src/svg/play.svg
-var play_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>';
-
-// src/svg/palette.svg
-var palette_default = '<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>';
-
-// src/svg/download.svg
-var download_default = '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>';
-
-// src/svg/warn.svg
-var warn_default = '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>';
-
-// src/svg/linechart.svg
-var linechart_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>';
-
-// src/svg/blind.svg
-var blind_default = '<svg viewBox="0 0 24 24"><g><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></g></svg>';
-
-// src/svg/like.svg
-var like_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M12.06,35.27V10.43h-.15l6.7-8.37A3.83,3.83,0,0,1,25.25,5L25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86Zm-2.5,0h-4a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h4Z" transform="translate(-0.56 -0.82)" /></g></svg>';
-
-// src/svg/dislike.svg
-var dislike_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M10.28,32.77h2.5V13.19h-2.5ZM25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86H5.56a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h6.25l6.8-8.49A3.83,3.83,0,0,1,25.25,5Zm10.14,2.51H22.22l.28-2.92L22.92,5a1.26,1.26,0,0,0-.18-1,1.28,1.28,0,0,0-.82-.56,1.11,1.11,0,0,0-1.25.42l-6.36,8.2-.83,1.11H5.14a2,2,0,0,0-.83.28,2.28,2.28,0,0,0-1.25,2.08V30.41a2,2,0,0,0,.42,1.25,2,2,0,0,0,2.08,1.11H28.89a2.38,2.38,0,0,0,1.39-.41,3.61,3.61,0,0,0,2.08-2.78L36.8,15l2.5.56L36.8,15a2.45,2.45,0,0,0-.14-1.39,2.89,2.89,0,0,0-1.52-.54l.28-2.5Z" transform="translate(-0.56 -0.82)" /></g></svg>';
-
-// src/utils/svg.ts
-var svg = {
-  fork: fork_default,
-  gear: gear_default,
-  wrench: wrench_default,
-  note: note_default,
-  dmset: dmset_default,
-  stethoscope: stethoscope_default,
-  play: play_default,
-  palette: palette_default,
-  download: download_default,
-  warn: warn_default,
-  linechart: linechart_default,
-  blind: blind_default,
-  like: like_default,
-  dislike: dislike_default
-};
-
-// src/core/ui/utils/popupbox.ts
-var ClickOutRemove = class {
-  constructor(target) {
-    this.target = target;
-    target.addEventListener("click", (e) => e.stopPropagation());
-  }
-  /** 已启用监听 */
-  enabled = false;
-  /** 移除节点 */
-  remove = () => {
-    this.target.remove();
-  };
-  /** 停止监听 */
-  disable = () => {
-    if (this.enabled) {
-      document.removeEventListener("click", this.remove);
-      this.enabled = false;
-    }
-    return this;
-  };
-  /** 开始监听 */
-  enable = () => {
-    this.enabled || setTimeout(() => {
-      document.addEventListener("click", this.remove, { once: true });
-      this.enabled = true;
-    }, 100);
-    return this;
-  };
-};
-var PopupBox = class extends HTMLElement {
-  _contain;
-  _fork;
-  clickOutRemove;
-  \$fork = true;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = popupbox_default;
-    this._contain = root.children[0].children[0];
-    this._fork = root.children[0].children[1];
-    this._fork.innerHTML = svg.fork;
-    this._fork.addEventListener("click", () => this.remove());
-    this.clickOutRemove = new ClickOutRemove(this);
-    document.body.appendChild(this);
-  }
-  append(...nodes) {
-    this._contain.append(...nodes);
-  }
-  appendChild(node) {
-    this._contain.appendChild(node);
-    return node;
-  }
-  replaceChildren(...nodes) {
-    this._contain.replaceChildren(...nodes);
-  }
-  setAttribute(qualifiedName, value) {
-    this._contain.setAttribute(qualifiedName, value);
-  }
-  getAttribute(qualifiedName) {
-    return this._contain.getAttribute(qualifiedName);
-  }
-  get style() {
-    return this._contain.style;
-  }
-  get innerHTML() {
-    return this._contain.innerHTML;
-  }
-  set innerHTML(v) {
-    this._contain.innerHTML = v;
-  }
-  /** 设置是否显示关闭按钮，不显示则点击节点外部自动关闭 */
-  get fork() {
-    return this.\$fork;
-  }
-  set fork(v) {
-    this.\$fork = v;
-    this._fork.style.display = v ? "" : "none";
-    if (v) {
-      this.clickOutRemove.disable();
-    } else {
-      this.clickOutRemove.enable();
-    }
-  }
-};
-customElements.get(\`popupbox-\${"855f368"}\`) || customElements.define(\`popupbox-\${"855f368"}\`, PopupBox);
-
-// src/core/ui/alert.ts
-function alert(msg, title, buttons) {
-  isArray(msg) || (msg = [msg]);
-  msg = msg.join("</br>");
-  const popup = new PopupBox();
-  popup.fork = false;
-  popup.setAttribute("style", "max-width: 400px; max-height: 300px;line-height: 16px;");
-  popup.innerHTML = \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
-    <span>\${title || "Bilibili Old"}</span>
-</div>
-<div><div style="padding-block: 10px;padding-inline: 15px;">\${msg}</div></div>\`;
-  if (buttons) {
-    addElement("hr", { style: "width: 100%;opacity: .3;" }, popup);
-    const div = addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, popup);
-    buttons.forEach((d) => {
-      const button = new PushButton();
-      button.text = d.text;
-      button.addEventListener("change", () => {
-        d.callback?.();
-        popup.remove();
-      });
-      div.appendChild(button);
-    });
-  }
-}
-
-// src/html/toast.html
-var toast_default = '<div id="toast-container"></div>\\r\\n<style type="text/css">\\r\\n    .toast-close-button>svg {\\r\\n        width: 12px;\\r\\n        height: 12px;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        transition: height 1s ease 0s, padding 1s ease 0s;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    /*\\r\\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\\r\\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\\r\\n     * make sure you copy the url from the website since the url may change between versions.\\r\\n     */\\r\\n    .toast-title {\\r\\n        font-weight: bold;\\r\\n    }\\r\\n\\r\\n    .toast-message {\\r\\n        -ms-word-wrap: break-word;\\r\\n        word-wrap: break-word;\\r\\n    }\\r\\n\\r\\n    .toast-message a,\\r\\n    .toast-message label {\\r\\n        color: #FFFFFF;\\r\\n    }\\r\\n\\r\\n    .toast-message a:hover {\\r\\n        color: #CCCCCC;\\r\\n        text-decoration: none;\\r\\n    }\\r\\n\\r\\n    .toast-close-button {\\r\\n        position: relative;\\r\\n        right: -0.3em;\\r\\n        top: -0.3em;\\r\\n        float: right;\\r\\n        font-size: 20px;\\r\\n        font-weight: bold;\\r\\n        color: #FFFFFF;\\r\\n        -webkit-text-shadow: 0 1px 0 #ffffff;\\r\\n        text-shadow: 0 1px 0 #ffffff;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n        line-height: 1;\\r\\n    }\\r\\n\\r\\n    .toast-close-button:hover,\\r\\n    .toast-close-button:focus {\\r\\n        color: #000000;\\r\\n        text-decoration: none;\\r\\n        cursor: pointer;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    .rtl .toast-close-button {\\r\\n        left: -0.3em;\\r\\n        float: left;\\r\\n        right: 0.3em;\\r\\n    }\\r\\n\\r\\n    /*Additional properties for button version\\r\\n     iOS requires the button element instead of an anchor tag.\\r\\n     If you want the anchor version, it requires \`href="#"\`.*/\\r\\n    button.toast-close-button {\\r\\n        padding: 0;\\r\\n        cursor: pointer;\\r\\n        background: transparent;\\r\\n        border: 0;\\r\\n        -webkit-appearance: none;\\r\\n    }\\r\\n\\r\\n    .toast-top-center {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-center {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-full-width {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-full-width {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-left {\\r\\n        top: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-top-right {\\r\\n        top: 12px;\\r\\n        right: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-right {\\r\\n        right: 12px;\\r\\n        bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-left {\\r\\n        bottom: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        pointer-events: none;\\r\\n        /*overrides*/\\r\\n    }\\r\\n\\r\\n    #toast-container * {\\r\\n        -moz-box-sizing: border-box;\\r\\n        -webkit-box-sizing: border-box;\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    #toast-container>div {\\r\\n        position: relative;\\r\\n        pointer-events: auto;\\r\\n        overflow: hidden;\\r\\n        margin: 0 0 6px;\\r\\n        padding: 15px 15px 15px 50px;\\r\\n        width: 300px;\\r\\n        -moz-border-radius: 3px 3px 3px 3px;\\r\\n        -webkit-border-radius: 3px 3px 3px 3px;\\r\\n        border-radius: 3px 3px 3px 3px;\\r\\n        background-position: 15px center;\\r\\n        background-repeat: no-repeat;\\r\\n        -moz-box-shadow: 0 0 12px #999999;\\r\\n        -webkit-box-shadow: 0 0 12px #999999;\\r\\n        box-shadow: 0 0 12px #999999;\\r\\n        color: #FFFFFF;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n    }\\r\\n\\r\\n    #toast-container>div.rtl {\\r\\n        direction: rtl;\\r\\n        padding: 15px 50px 15px 15px;\\r\\n        background-position: right 15px center;\\r\\n    }\\r\\n\\r\\n    #toast-container>div:hover {\\r\\n        -moz-box-shadow: 0 0 12px #000000;\\r\\n        -webkit-box-shadow: 0 0 12px #000000;\\r\\n        box-shadow: 0 0 12px #000000;\\r\\n        opacity: 1;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\\r\\n        filter: alpha(opacity=100);\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-info {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-error {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-success {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-warning {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-center>div,\\r\\n    #toast-container.toast-bottom-center>div {\\r\\n        width: 300px;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-full-width>div,\\r\\n    #toast-container.toast-bottom-full-width>div {\\r\\n        width: 96%;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        background-color: #030303;\\r\\n    }\\r\\n\\r\\n    .toast-success {\\r\\n        background-color: #51A351;\\r\\n    }\\r\\n\\r\\n    .toast-error {\\r\\n        background-color: #BD362F;\\r\\n    }\\r\\n\\r\\n    .toast-info {\\r\\n        background-color: #2F96B4;\\r\\n    }\\r\\n\\r\\n    .toast-warning {\\r\\n        background-color: #F89406;\\r\\n    }\\r\\n\\r\\n    .toast-progress {\\r\\n        position: absolute;\\r\\n        left: 0;\\r\\n        bottom: 0;\\r\\n        height: 4px;\\r\\n        background-color: #000000;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    /*Responsive Design*/\\r\\n    @media all and (max-width: 240px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 11em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 241px) and (max-width: 480px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 18em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 481px) and (max-width: 768px) {\\r\\n        #toast-container>div {\\r\\n            padding: 15px 15px 15px 50px;\\r\\n            width: 25em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 15px 50px 15px 15px;\\r\\n        }\\r\\n    }\\r\\n</style>';
-
-// src/utils/type.ts
-function toObject(input) {
-  switch (input) {
-    case "undefined":
-      input = void 0;
-      break;
-    case "null":
-      input = null;
-      break;
-    case "NaN":
-      input = NaN;
-      break;
-    default:
-      if (!input)
-        break;
-      try {
-        const temp = JSON.parse(input);
-        if (typeof temp !== "number" || input === String(temp)) {
-          input = temp;
-        }
-      } catch {
-        try {
-          const temp = Number(input);
-          if (String(temp) !== "NaN" && !input.startsWith("0")) {
-            input = temp;
-          }
-        } catch {
-        }
-        try {
-          if (/^\\d+n\$/.test(input))
-            input = BigInt(input.slice(0, -1));
-        } catch {
-        }
-      }
-      break;
-  }
-  return input;
-}
-function toString(input, space = "\\n") {
-  let result;
-  try {
-    result = input.toString();
-  } catch {
-    result = String(input);
-  }
-  if (result.startsWith("[object") && result.endsWith("]")) {
-    try {
-      const str = JSON.stringify(input, void 0, space);
-      str === "{}" || (result = str);
-    } catch {
-    }
-  }
-  return result;
-}
-
-// src/core/toast.ts
-var Toastconfig = {
-  position: "top-right",
-  rtl: false,
-  delay: 4,
-  disabled: false
-};
-var Toast = class extends HTMLDivElement {
-  /** 关闭按钮 */
-  closeButton = document.createElement("div");
-  /** 消息节点 */
-  message = document.createElement("div");
-  /** 延时 */
-  timer;
-  /** 鼠标移入 */
-  hovering = false;
-  /** 延时结束 */
-  timeout = false;
-  constructor() {
-    super();
-    this.classList.add("toast");
-    this.setAttribute("aria-live", "assertive");
-    this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
-    this.appendChild(this.message);
-    this.message.className = "toast-message";
-    this.closeButton.className = "toast-close-button";
-    this.closeButton.innerHTML = svg.fork;
-    this.closeButton.addEventListener("click", (e) => {
-      this.timeout = true;
-      this.delay = 1;
-      e.stopPropagation();
-    });
-    this.addEventListener("mouseover", () => this.hovering = true);
-    this.addEventListener("mouseout", () => {
-      this.hovering = false;
-      this.timeout && (this.delay = 1);
-    });
-  }
-  /** 内容 */
-  set data(v) {
-    isArray(v) || (v = [v]);
-    let html = "";
-    v.forEach((d, i) => {
-      d = toString(d);
-      html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
-    });
-    const close = this.message.contains(this.closeButton);
-    this.message.innerHTML = html;
-    close && (this.delay = 0);
-    this.setAttribute("style", \`height: \${this.message.scrollHeight + 30}px;\`);
-  }
-  /** 类型 */
-  set type(v) {
-    this.classList.remove("toast-success", "toast-error", "toast-info", "toast-warning");
-    v && this.classList.add(\`toast-\${v}\`);
-  }
-  /** 镜像 */
-  set rtl(v) {
-    v ? this.classList.add("rtl") : this.classList.remove("rtl");
-  }
-  /** 时长 */
-  set delay(v) {
-    clearTimeout(this.timer);
-    v = Math.max(Math.trunc(v), 0);
-    v ? this.message.contains(this.closeButton) && this.closeButton.remove() : this.message.contains(this.closeButton) || this.message.insertBefore(this.closeButton, this.message.firstChild);
-    if (v === 1) {
-      if (!this.hovering) {
-        this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
-        setTimeout(() => this.remove(), 1e3);
-      }
-    } else if (v !== 0) {
-      this.timer = setTimeout(() => {
-        this.timeout = true;
-        this.delay = 1;
-      }, v * 1e3);
-    }
-  }
-};
-customElements.get(\`toast-\${"855f368"}\`) || customElements.define(\`toast-\${"855f368"}\`, Toast, { extends: "div" });
-var ToastContainer = class extends HTMLElement {
-  /** 实际根节点 */
-  container;
-  static get observedAttributes() {
-    return [
-      "position",
-      "rtl",
-      "delay",
-      "disabled"
-    ];
-  }
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = toast_default;
-    this.container = root.children[0];
-  }
-  /** 刷新配置 */
-  update(value) {
-    Object.entries(value).forEach((d) => {
-      this[d[0]] = d[1];
-    });
-  }
-  toast(delay, type = "info", ...data) {
-    document.body.contains(this) || document.body.appendChild(this);
-    const toast = new Toast();
-    toast.type = type;
-    toast.rtl = this.rtl;
-    this.container.insertBefore(toast, this.container.firstChild);
-    toast.data = data;
-    toast.delay = delay;
-    return toast;
-  }
-  success(...data) {
-    this.toast(this.delay, "success", ...data);
-    return () => {
-      debug(...data);
-    };
-  }
-  error(...data) {
-    this.toast(this.delay, "error", ...data);
-    return () => {
-      debug.error(...data);
-    };
-  }
-  info(...data) {
-    this.toast(this.delay, "info", ...data);
-    return () => {
-      debug.debug(...data);
-    };
-  }
-  warning(...data) {
-    this.toast(this.delay, "warning", ...data);
-    return () => {
-      debug.warn(...data);
-    };
-  }
-  set position(v) {
-    this.setAttribute("position", v);
-  }
-  /** 位置 */
-  get position() {
-    return this.getAttribute("position");
-  }
-  set rtl(v) {
-    this.setAttribute("rtl", v);
-  }
-  /** 镜像 */
-  get rtl() {
-    return toObject(this.getAttribute("rtl"));
-  }
-  set delay(v) {
-    this.setAttribute("delay", v);
-  }
-  /** 延时 */
-  get delay() {
-    return toObject(this.getAttribute("delay"));
-  }
-  set disabled(v) {
-    this.setAttribute("disabled", v);
-  }
-  /** 禁用 */
-  get disabled() {
-    return toObject(this.getAttribute("disabled"));
-  }
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue)
-      return;
-    switch (name) {
-      case "position":
-        newValue && (this.container.className = \`toast-\${newValue}\`);
-        break;
-      case "rtl":
-        this.container.querySelectorAll(".toast").forEach((d) => {
-          d.rtl = toObject(newValue);
-        });
-        break;
-      case "delay":
-        this.container.querySelectorAll(".toast").forEach((d) => {
-          d.delay = toObject(newValue);
-        });
-        break;
-      case "disabled":
-        this.container.style.display = toObject(newValue) ? "none" : "";
-      default:
-        break;
-    }
-  }
-};
-customElements.get(\`toast-container-\${"855f368"}\`) || customElements.define(\`toast-container-\${"855f368"}\`, ToastContainer);
-
-// src/html/ui-entry.html
-var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/entry.ts
-var UiEntryType = "new";
-var BilioldEntry = class extends HTMLElement {
-  /** 旧版按钮 */
-  stage;
-  /** 新版按钮 */
-  gear;
-  /** 实际节点 */
-  root;
-  /** 实际根节点 */
-  static get observedAttributes() {
-    return [
-      "type"
-    ];
-  }
-  constructor() {
-    super();
-    this.root = this.attachShadow({ mode: "closed" });
-    this.root.innerHTML = ui_entry_default;
-    this.stage = this.root.children[0];
-    this.gear = this.root.children[1];
-    this.gear.innerHTML = svg.gear;
-    this.stage.remove();
-    this.gear.remove();
-    this.gear.addEventListener("mouseover", () => this.gear.style.opacity = "0.8");
-    this.gear.addEventListener("mouseout", () => this.gear.style.opacity = "0");
-  }
-  get type() {
-    return this.getAttribute("type");
-  }
-  set type(v) {
-    this.setAttribute("type", v);
-  }
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue)
-      return;
-    switch (name) {
-      case "type":
-        if (newValue === "old") {
-          this.root.contains(this.gear) && this.gear.remove();
-          this.root.contains(this.stage) || this.root.appendChild(this.stage);
-        } else {
-          this.root.contains(this.stage) && this.stage.remove();
-          if (!this.root.contains(this.gear)) {
-            this.root.appendChild(this.gear);
-            setTimeout(() => {
-              this.gear.style.opacity = "0";
-            }, 2e3);
-          }
-        }
-        break;
-      default:
-        break;
-    }
-  }
-};
-customElements.get("biliold-entry-855f368") || customElements.define("bilibili-entry-855f368", BilioldEntry);
-
-// src/core/userstatus.ts
-var userStatus = {
-  /** 开发者模式 */
-  development: true,
-  /** 主页 */
-  index: true,
-  /** toastr */
-  toast: Toastconfig,
-  /** 替换全局顶栏 */
-  header: true,
-  /** 翻页评论区 */
-  comment: true,
-  /** av */
-  av: true,
-  /** 嵌入式播放器 */
-  player: true,
-  /** WebRTC */
-  webRTC: false,
-  /** 充电鸣谢 */
-  elecShow: true,
-  /** 合作UP */
-  staff: false,
-  /** bangumi */
-  bangumi: true,
-  /** 解除限制 */
-  videoLimit: {
-    /** 开关 */
-    status: false,
-    /** 服务器类型 */
-    server: "内置",
-    /** 东南亚（泰区）代理服务器 */
-    th: "api.global.bilibili.com",
-    /** 台湾代理服务器 */
-    tw: "",
-    /** 香港代理服务器 */
-    hk: "",
-    /** 大陆代理服务器 */
-    cn: ""
-  },
-  /** UPOS替换 */
-  uposReplace: {
-    /** 东南亚（泰区） */
-    th: "ks3（金山）",
-    /** 港澳台 */
-    gat: "不替换",
-    /** 一般视频 */
-    nor: "不替换",
-    /** 下载 */
-    download: "不替换"
-  },
-  /** 强制显示bangumi分p */
-  bangumiEplist: false,
-  /** 账户授权 */
-  accessKey: {
-    /** access_key */
-    token: "",
-    /** 授权日期 */
-    date: 0,
-    /** 授权日期字符串 */
-    dateStr: ""
-  },
-  /** 稍后再看 */
-  watchlater: true,
-  /** 播单 */
-  playlist: true,
-  /** 全站排行榜 */
-  ranking: true,
-  /** 专栏 */
-  read: true,
-  /** 搜索 */
-  search: true,
-  /** 相簿 */
-  album: true,
-  /** 注册时间 */
-  jointime: false,
-  /** 失效视频 */
-  lostVideo: true,
-  /** 纯视频历史 */
-  history: true,
-  /** 动态里的直播录屏 */
-  liveRecord: false,
-  /** 设置入口样式 */
-  uiEntryType: UiEntryType,
-  /** 自动化操作 */
-  automate: {
-    /** 展开弹幕列表 */
-    danmakuFirst: false,
-    /** 滚动到播放器 */
-    showBofqi: false,
-    /** 自动宽屏 */
-    screenWide: false,
-    /** 自动关弹幕 */
-    noDanmaku: false,
-    /** 自动播放 */
-    autoPlay: false,
-    /** 自动网页全屏 */
-    webFullScreen: false,
-    /** 记忆播放速率 */
-    videospeed: false
-  },
-  /** 关闭抗锯齿 */
-  videoDisableAA: false,
-  /** 禁用直播间挂机检测 */
-  disableSleepChcek: true,
-  /** 禁止上报 */
-  disableReport: true,
-  /** 禁用评论跳转标题 */
-  commentJumpUrlTitle: false,
-  /** 合集 */
-  ugcSection: false,
-  /** 请求的文件类型 */
-  downloadType: ["mp4"],
-  /** 请求无水印源 */
-  TVresource: false,
-  /** 画质 */
-  downloadQn: 127,
-  /** 下载方式 */
-  downloadMethod: "浏览器",
-  /** User-Agent */
-  userAgent: "Bilibili Freedoooooom/MarkII",
-  /** referer */
-  referer: "https://www.bilibili.com",
-  /** 下载目录 */
-  filepath: "",
-  /** aria2 */
-  aria2: {
-    /** 服务器 */
-    server: "http://localhost",
-    /** 端口 */
-    port: 6800,
-    /** 令牌 */
-    token: "",
-    /** 分片数目 */
-    split: 4,
-    /** 分片大小 */
-    size: 20
-  },
-  ef2: {
-    /** 稍后下载 */
-    delay: false,
-    /** 静默下载 */
-    silence: false
-  },
-  /** 点赞功能 */
-  like: false,
-  /** 重构播放器脚本 */
-  bilibiliplayer: true,
-  /** 检查播放器脚本更新 */
-  checkUpdate: true,
-  /** 不登录1080P支持 */
-  show1080p: false,
-  /** 调整顶栏banner样式 */
-  fullBannerCover: false,
-  /** 原生播放器新版弹幕 */
-  dmproto: true,
-  /** 普权弹幕换行 */
-  dmwrap: true,
-  /** 弹幕格式 */
-  dmExtension: "xml",
-  /** 合并已有弹幕 */
-  dmContact: false,
-  /** 分集数据 */
-  episodeData: false,
-  /** 港澳台新番时间表 */
-  timeLine: false
-};
-
-// src/core/user.ts
-var User = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    this.BLOD.GM.getValue("userStatus", userStatus).then((status) => {
-      status = Object.assign(userStatus, status);
-      const proxy = propertryChangeHook(status, (key, value) => {
-        clearTimeout(this.timer);
-        this.timer = setTimeout(() => this.BLOD.GM.setValue("userStatus", status));
-        this.emitChange(key, value);
-      });
-      this.userStatus = proxy;
-      this.initialized = true;
-      while (this.BLOD.userLoadedCallbacks.length) {
-        this.BLOD.userLoadedCallbacks.shift()?.(this.userStatus);
-      }
-    });
-  }
-  /** 用户数据，不应直接使用，请使用\`addCallback\`用户数据回调代替 */
-  userStatus;
-  /** 初始化标记 */
-  initialized = false;
-  /** 更新CD */
-  updating;
-  /** 回调栈 */
-  changes = {};
-  timer;
-  /**
-   * 监听设置改动
-   * @param key 设置键
-   * @param callback 设置项变动时执行的回调，新值将作为第一个参数传入
-   * @returns 用于取消监听的回调
-   */
-  bindChange(key, callback) {
-    this.changes[key] || (this.changes[key] = []);
-    const id = this.changes[key].push(callback);
-    return () => {
-      delete this.changes[key][id - 1];
-    };
-  }
-  /**
-   * 推送设置改动
-   * @param key 设置键
-   * @param newValue 新值
-   */
-  emitChange(key, newValue) {
-    this.changes[key].forEach(async (d) => {
-      d(newValue);
-    });
-  }
-  /** 用户数据回调 */
-  addCallback(callback) {
-    if (typeof callback === "function") {
-      if (this.initialized) {
-        callback(this.userStatus);
-      } else {
-        this.BLOD.userLoadedCallbacks.push(callback);
-      }
-    }
-  }
-  /** 恢复默认数据 */
-  restoreUserStatus() {
-    this.BLOD.GM.deleteValue("userStatus");
-    this.BLOD.toast.warning("已恢复默认设置数据，请<strong>刷新</strong>页面以避免数据紊乱！");
-  }
-  /** 备份设置数据 */
-  outputUserStatus() {
-    this.BLOD.GM.getValue("userStatus", userStatus).then((d) => {
-      saveAs(JSON.stringify(d, void 0, "	"), \`Bilibili-Old-\${timeFormat(void 0, true).replace(/ |:/g, (d2) => "-")}\`, "application/json");
-    });
-  }
-  /** 恢复备份数据 */
-  inputUserStatus() {
-    const msg = ["请选择一个备份的数据文件（.json）", "注意：无效的数据文件可能导致异常！"];
-    const toast = this.BLOD.toast.toast(0, "warning", ...msg);
-    fileRead("application/json").then((d) => {
-      if (d && d[0]) {
-        msg.push(\`读取文件：\${d[0].name}\`);
-        toast.data = msg;
-        toast.type = "info";
-        return readAs(d[0]).then((d2) => {
-          const data = JSON.parse(d2);
-          if (typeof data === "object") {
-            this.BLOD.GM.setValue("userStatus", data);
-            const text = "已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！";
-            msg.push(text);
-            toast.data = msg;
-            toast.type = "success";
-            return alert(text, "刷新页面", [{
-              text: "刷新",
-              callback: () => location.reload()
-            }]);
-          }
-        }).catch((e) => {
-          msg.push("读取文件出错！", e);
-          toast.data = msg;
-          toast.type = "error";
-          debug.error("恢复设置数据", e);
-        });
-      }
-    }).catch((e) => {
-      msg.push(e);
-      toast.data = msg;
-    }).finally(() => {
-      toast.delay = 4;
-    });
-  }
-};
-
-// src/utils/abv.ts
-var Abv = class {
-  base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
-  digitMap = [11, 10, 3, 8, 4, 6];
-  xor = 177451812;
-  add = 8728348608;
-  bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
-  table = {};
-  constructor() {
-    for (let i = 0; i < 58; i++)
-      this.table[this.base58Table[i]] = i;
-  }
-  /**
-   * av/BV互转
-   * @param input av或BV，可带av/BV前缀
-   * @returns 转化结果
-   */
-  check(input) {
-    if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
-      return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
-    if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-      return this.bvToAv("BV" + input);
-    if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
-      return this.bvToAv(String(input));
-    throw input;
-  }
-  bvToAv(BV) {
-    let r = 0;
-    for (let i = 0; i < 6; i++)
-      r += this.table[BV[this.digitMap[i]]] * 58 ** i;
-    return r - this.add ^ this.xor;
-  }
-  avToBv(av) {
-    let bv = Array.from(this.bvidTemplate);
-    av = (av ^ this.xor) + this.add;
-    for (let i = 0; i < 6; i++)
-      bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
-    return bv.join("");
-  }
-};
-function abv(input) {
-  return new Abv().check(input);
-}
-function BV2avAll(str) {
-  return str.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
-}
 
 // src/utils/format/url.ts
 var URL2 = class {
@@ -7816,462 +6659,6 @@ function urlObj(url) {
   const res = new URL2(url);
   return res.params;
 }
-
-// src/core/url.ts
-var paramsSet = /* @__PURE__ */ new Set([
-  "spm_id_from",
-  "from_source",
-  "msource",
-  "bsource",
-  "seid",
-  "source",
-  "session_id",
-  "visit_id",
-  "sourceFrom",
-  "from_spmid",
-  "share_source",
-  "share_medium",
-  "share_plat",
-  "share_session_id",
-  "share_tag",
-  "unique_k",
-  "vd_source",
-  "csource"
-]);
-var paramArr = Object.entries({
-  from: ["search"]
-});
-var UrlCleaner = class {
-  /** 垃圾参数序列 */
-  paramsSet = paramsSet;
-  /** 精准爆破序列 */
-  paramArr = paramArr;
-  constructor() {
-    this.location();
-    window.navigation?.addEventListener("navigate", (e) => {
-      const newURL = this.clear(e.destination.url);
-      if (e.destination.url != newURL) {
-        e.preventDefault();
-        if (newURL == window.location.href)
-          return;
-        this.updateLocation(newURL);
-      }
-    });
-    window.addEventListener("click", (e) => this.anchorClick(e));
-    window.addEventListener("contextmenu", (e) => this.anchorClick(e));
-    document.addEventListener("DOMContentLoaded", () => {
-      this.location();
-      this.anchor(document.querySelectorAll("a"));
-    }, { once: true });
-  }
-  /** 净化url */
-  clear(str) {
-    const url = new URL2(str);
-    if (url && !str.includes("passport.bilibili.com")) {
-      const params = url.params;
-      if (params.bvid) {
-        params.aid = abv(params.bvid);
-      }
-      if (params.aid && !Number(params.aid)) {
-        params.aid = abv(params.aid);
-      }
-      paramsSet.forEach((d) => {
-        delete params[d];
-      });
-      paramArr.forEach((d) => {
-        if (params[d[0]]) {
-          if (d[1].includes(params[d[0]])) {
-            delete params[d[0]];
-          }
-        }
-      });
-      url.base = BV2avAll(url.base);
-      url.hash && (url.hash = BV2avAll(url.hash));
-      return url.toJSON();
-    } else
-      return str;
-  }
-  /** 净化URL */
-  location() {
-    this.updateLocation(this.clear(location.href));
-  }
-  /** 更新URL而不触发重定向 */
-  updateLocation(url) {
-    const Url = new self.URL(url);
-    if (Url.host === location.host) {
-      window.history.replaceState(window.history.state, "", url);
-    }
-  }
-  /** 点击回调 */
-  anchorClick(e) {
-    var f = e.target;
-    for (; f && "A" !== f.tagName; ) {
-      f = f.parentNode;
-    }
-    if ("A" !== f?.tagName) {
-      return;
-    }
-    this.anchor([f]);
-  }
-  /** 净化a标签 */
-  anchor(list) {
-    list.forEach((d) => {
-      if (!d.href)
-        return;
-      d.href = this.clear(d.href);
-    });
-  }
-};
-
-// src/utils/htmlvnode.ts
-var Vnode = class {
-  tagName;
-  props = {};
-  children = [];
-  text;
-  constructor(tagName) {
-    this.tagName = tagName;
-  }
-};
-var Scanner = class {
-  /** HTML */
-  html;
-  /** 当前光标 */
-  pos = 0;
-  /** Vnode */
-  vnode = [];
-  /** 节点名栈 */
-  tagNames = [];
-  /** Vnode栈 */
-  targets = [];
-  /** innerText栈 */
-  text = "";
-  /** 引号栈 */
-  quote = "";
-  /**
-   * 扫描html文本转化为Vnode
-   * @param html html文本
-   */
-  constructor(html) {
-    this.html = html;
-    this.targets.push({ children: this.vnode });
-    while (this.html) {
-      this.organizeTag();
-    }
-    this.textContent();
-  }
-  /** 提取节点名 */
-  organizeTag() {
-    if (!this.quote && this.html[0] === "<") {
-      if (this.html.startsWith(\`</\${this.tagNames.reduce((s, d) => s = d, void 0)}\`)) {
-        this.textContent();
-        this.html = this.html.replace(new RegExp(\`^</\${this.tagNames.reduce((s, d) => s = d, void 0)}>\`), "");
-        this.popNode();
-      } else {
-        this.removeScanned();
-        if (this.html.startsWith("!-- ")) {
-          this.html = this.html.replace(/^!--[\\S\\s]+?-->/, "");
-        }
-        if (/^[a-zA-Z]/.test(this.html)) {
-          this.textContent();
-          const func = [];
-          let stop = false;
-          for (this.pos = 0; this.pos < this.html.length; this.pos++) {
-            if (stop) {
-              this.pos--;
-              break;
-            }
-            switch (this.html[this.pos]) {
-              case " ":
-              case "\\r":
-              case "\\n":
-                func.push(() => this.organizeProp());
-                stop = true;
-                break;
-              case ">":
-                this.html[this.pos - 1] === "/" ? func.push(() => this.popNode()) : func.push(() => this.tagSingle());
-                stop = true;
-                break;
-            }
-          }
-          const tagName = this.html.substring(0, this.pos);
-          const tag = new Vnode(tagName);
-          this.tagNames.push(tagName);
-          this.targets.reduce((s, d) => s = d, void 0).children.push(tag);
-          this.targets.push(tag);
-          this.removeScanned(this.pos + 1);
-          func.forEach((d) => d());
-        }
-      }
-    } else {
-      switch (this.html[0]) {
-        case "'":
-          !this.quote ? this.quote = "'" : this.quote === "'" && (this.quote = "");
-          break;
-        case '"':
-          !this.quote ? this.quote = '"' : this.quote === '"' && (this.quote = "");
-          break;
-        case "\`":
-          !this.quote ? this.quote = "\`" : this.quote === "\`" && (this.quote = "");
-          break;
-      }
-      this.text += this.html[0];
-      this.removeScanned();
-    }
-  }
-  /** 提取属性 */
-  organizeProp() {
-    let value = false;
-    let stop = false;
-    let start = 0;
-    let popd = false;
-    for (this.pos = 0; this.pos < this.html.length; this.pos++) {
-      if (stop)
-        break;
-      switch (this.html[this.pos]) {
-        case '"':
-          value = !value;
-          break;
-        case " ":
-          if (!value) {
-            const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
-            const prop = str.split("=");
-            const key = prop.shift();
-            key && key !== "/" && (this.targets.reduce((s, d) => s = d, void 0).props[key] = prop.join("=") || key);
-            start = this.pos;
-          }
-          break;
-        case ">":
-          if (!value) {
-            stop = true;
-            const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
-            const prop = str.split("=");
-            const key = prop.shift();
-            key && key !== "/" && (this.targets.reduce((s, d) => s = d, void 0).props[key] = prop.join("=") || key);
-            if (this.html[this.pos - 1] === "/") {
-              this.popNode();
-              popd = true;
-            }
-          }
-          break;
-      }
-    }
-    if (!popd)
-      this.tagSingle();
-    this.removeScanned(this.pos--);
-  }
-  /** 出栈检查 空元素直接出栈*/
-  tagSingle() {
-    switch (this.tagNames.reduce((s, d) => s = d, void 0)) {
-      case "area":
-      case "base":
-      case "br":
-      case "col":
-      case "colgroup":
-      case "command":
-      case "embed":
-      case "hr":
-      case "img":
-      case "input":
-      case "keygen":
-      case "link":
-      case "meta":
-      case "param":
-      case "path":
-      case "source":
-      case "track":
-      case "wbr":
-        this.popNode();
-        break;
-    }
-  }
-  /** 节点出栈 */
-  popNode() {
-    this.tagNames.splice(this.tagNames.length - 1, 1);
-    this.targets.splice(this.targets.length - 1, 1);
-    this.text = "";
-  }
-  /** 移除已扫描字符长度 默认1位 */
-  removeScanned(length = 1) {
-    this.html = this.html.slice(length);
-  }
-  /** 处理TextContent */
-  textContent() {
-    const text = this.text.replace(/\\r|\\n| /g, "");
-    if (text) {
-      const tag = new Vnode("text");
-      tag.text = this.text;
-      this.targets.reduce((s, d) => s = d, void 0).children.push(tag);
-    }
-    this.text = "";
-  }
-};
-function htmlVnode(html) {
-  return new Scanner(html).vnode;
-}
-
-// src/utils/vdomtool.ts
-var VdomTool = class {
-  vdom;
-  script = [];
-  constructor(html) {
-    if (typeof html === "string") {
-      this.vdom = htmlVnode(html);
-    } else {
-      this.vdom = html;
-    }
-  }
-  /** 生成 DocumentFragment（会过滤script标签，请稍后使用\`loadScript\`方法依次运行所有script） */
-  toFragment() {
-    const fragment = document.createDocumentFragment();
-    this.vdom.forEach((d) => {
-      if (d.tagName === "script") {
-        this.script.push(d);
-      } else
-        fragment.appendChild(this.createElement(d));
-    });
-    return fragment;
-  }
-  /** 根据vdom生成真DOM（过滤script标签） */
-  createElement(element) {
-    if (element.tagName === "text") {
-      return document.createTextNode(element.text);
-    }
-    if (element.tagName === "svg") {
-      return this.createSVG(element);
-    }
-    const node = document.createElement(element.tagName);
-    element.props && Object.entries(element.props).forEach((d) => {
-      node.setAttribute(d[0], d[1]);
-    });
-    element.text && node.appendChild(document.createTextNode(element.text));
-    element.event && Object.entries(element.event).forEach((d) => {
-      node.addEventListener(...d);
-    });
-    element.children && element.children.forEach((d) => {
-      if (d.tagName === "script") {
-        this.script.push(d);
-      } else
-        node.appendChild(this.createElement(d));
-    });
-    return node;
-  }
-  /** svg限定生成方法 */
-  createSVG(element) {
-    const node = document.createElementNS("http://www.w3.org/2000/svg", element.tagName);
-    element.props && Object.entries(element.props).forEach((d) => {
-      node.setAttribute(d[0], d[1]);
-    });
-    element.children && element.children.forEach((d) => {
-      node.appendChild(this.createSVG(d));
-    });
-    return node;
-  }
-  static loopScript(scripts) {
-    return new Promise((r, j) => {
-      const prev = scripts.shift();
-      if (prev) {
-        if (prev.src) {
-          prev.addEventListener("load", () => r(this.loopScript(scripts)));
-          prev.addEventListener("abort", () => r(this.loopScript(scripts)));
-          prev.addEventListener("error", () => r(this.loopScript(scripts)));
-          return document.body.appendChild(prev);
-        }
-        document.body.appendChild(prev);
-        r(this.loopScript(scripts));
-      } else
-        r();
-    });
-  }
-  loadScript() {
-    const scripts = this.script.map((d) => this.createElement(d));
-    return VdomTool.loopScript(scripts);
-  }
-  /** 添加为目标节点的子节点 */
-  appendTo(node) {
-    node.append(this.toFragment());
-  }
-  /** 替换目标节点 */
-  replace(node) {
-    node.replaceWith(this.toFragment());
-  }
-  addEventListener(target, type, listener) {
-    try {
-      const arr2 = target.split("");
-      let dom = this.vdom;
-      let ele;
-      while (dom && arr2.length) {
-        const i = Number(arr2.shift());
-        if (i) {
-          ele = dom[i];
-          dom = ele.children;
-        }
-      }
-      ele.event || (ele.event = {});
-      ele.event[type] = listener;
-    } catch (e) {
-      debug.error(e);
-    }
-  }
-  removeEventListener(target, type) {
-    try {
-      const arr2 = target.split("");
-      let dom = this.vdom;
-      let ele;
-      while (dom && arr2.length) {
-        const i = Number(arr2.shift());
-        if (i) {
-          ele = dom[i];
-          dom = ele.children;
-        }
-      }
-      delete ele.event?.[type];
-    } catch (e) {
-      debug.error(e);
-    }
-  }
-};
-
-// src/page/page.ts
-var Page = class {
-  /** 页面框架vdom */
-  vdom;
-  /** 初始化完成 */
-  initilized = false;
-  /**
-   * @param html 页面框架
-   */
-  constructor(html) {
-    this.vdom = new VdomTool(html);
-    Reflect.defineProperty(window, "_babelPolyfill", {
-      configurable: true,
-      set: () => true,
-      get: () => void 0
-    });
-  }
-  /** 重写页面 */
-  updateDom() {
-    const title = document.title;
-    this.vdom.replace(document.documentElement);
-    Reflect.deleteProperty(window, "PlayerAgent");
-    Reflect.deleteProperty(window, "webpackJsonp");
-    this.vdom.loadScript().then(() => this.loadedCallback());
-    title && !title.includes("404") && (document.title = title);
-  }
-  /** 重写完成回调 */
-  loadedCallback() {
-    this.initilized = true;
-    poll(() => document.readyState === "complete", () => {
-      document.querySelector("#jvs-cert") || window.dispatchEvent(new ProgressEvent("load"));
-    });
-  }
-};
-
-// src/html/index.html
-var html_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css" />\\r\\n    <style type="text/css">\\r\\n        /* 隐藏失效节点 */\\r\\n        #fixed_app_download,\\r\\n        #app>div.report-wrap-module.elevator-module>div.ver {\\r\\n            display: none;\\r\\n        }\\r\\n\\r\\n        /* 禁用失效节点 */\\r\\n        .bili-tab.rank-tab,\\r\\n        .bili-dropdown.rank-dropdown {\\r\\n            pointer-events: none;\\r\\n        }\\r\\n\\r\\n        /* 资讯区图标 */\\r\\n        .icon.icon_t.icon-news {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA39pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplMzNhZmQ3OS04ZTViLWQ2NDItOTYxZi0yNDM2MGQyN2JhM2YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTFEMzQ4MEJBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTFEMzQ4MEFBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjBiNzNlZjA5LTA1ZmEtNTM0MC1iMWY3LWE4MTljMjFhYmEzMiIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjI2MDJjOTk2LTBiNzQtZDQ0MC1hMzcxLTIxN2NkM2ZlOTgzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsCIXZoAAAi+SURBVHja7Fh7TJvXFT+fwTa2MX5gXjZgg3kEJvICh6YELUujNKNb10ZpWFc17aapSxcpy1YlUjctUbt0L22VMm2NlkXLsqZJWdT0sWwlaZOmCwW1gfIMCSYYDOZhDH6ADdjGvvvOhc8YY8Bru61/9EhX97vnnnvv755z7znnfgwhBD7PxIPPOcWHNxiGWdSp0Wi2eX0+uSxJVuxyOaXIk8nkk1hj2+FwlHGyCoWiMbwfaXLCNRIEsAsFAufU9LSdLxL2jw4O21cCFGlRJpzBAUzTqnX2Qdtlti8/XFir04AqK58RieVgtxinPB6XyFBRRQf19nfDtH10Cr+Rj/XIuNvnnXQJuPFCqcznc0+YgyRoCQaD/ckq1d/HbLaLMQP0zPjmtCFN7Nq45csFzxz4IeTk6ilPJBGDLjMNJAmCmM0zMu4Ci2UEek09YBs0w+jENHR13aV9nS0fTHXe6hRpdbojPT13jy0HkDK44p72QmpKyncl8uQZEiOxY2j5JLT/0E9IfFx8EC0WDQ+WJRqUihNOVz++78nzZ14KafS/QWgJnF+eKCFypWI3Z+pIDS65xTweL7vSULLsxHE8Hj2rkRdq0Rzz/VzhLSOLIEsrtzIsCGXMbobH8DJzS8qjCuMygWAwpP7lKBhhpmAUWc46ZYZy7M+PGaAgMUkb3u7r7YWrV94Bv98PZL7d3NT0mZm6pGQdhLurFQF2dfaowt0C3anbDUODg9DR1hZq28ftnxlAbbaeWi0mgLV1danRHLZAKGQBtgPr+BbxUZM1587DG6+9Bk6nk7aNXV2078b196m2kdACttFRWr98+i+s3MeRniTf+uP90phMjOBUcskinkqlArVGAw0f1Id4uCCC1uXowOv1Qf2NOhAIBHDX2E03guAGzP1UDi3g9/lpvbGsFHL0uaF5sjQptD6Vti5rVYDD/b1aTnuRx3rt+nV0gZHhEdoetVpp7Z50g1AogPGxMdBkZdG612SiG0KQKKfLyQF1pgYK1hRCR3sHCPj80LzJiiQaYXDtVQFmZOeYlzsLKampdCEEGW56BF5RWQk7H6gCuVw+dxxYEPr8PJAmSeHjxibI0mZT+fLNm0EqlcL1a+99umxmzOmJKlxqWLhsOblzZmpraYU7nbfxJtI2mtzn9YImMxMy1GrKS2U3N2QZpGdwcnISfD7vkrndnqn1q2Yzx399lNrP7bCGeLl5emo6JLFEAl9/+KGF7288SM0pSUwEuUIx5zbWroXCoiLgs2bE71y9nsoioVbTM9JDm0NiN0PQcyRKxC2rAmx/Ypdff6IGPaiQu8cikZgWjtCMHOHCXypZHHWQJw7/ngeHNR6RSJqc8jJRjnx0E0t++iLN5UYtff+zhHTaQzM0MFRs88d0Bll1m+saO0KxcqWElgt/keyFWLy0L5IwFUOyDPQOxQQwL0/f8uGNSySWbJdzR5HshVi8tC+SME+E1VLs8HxQlZKyC3O0my13FuVuASyBIC3++TKL7SCbH9PyiVJC8s29TxPMP7lIEpkPxi9RqSD+OtavvPQ8FB0/DX0WKzVjUe1lGLm/FOKS9ayb8BE2ajAkTI+xPg7T/noOhqrKwK/eACn8IH0qZKepmtN+/ofJVW8xkulun51NWs/86W+XH12z5U0hBvPUty4A+f0JMmLez1j2PAYJXh89WbJpE1imJaAWutlavOwxQOKrsyGruR54hw5Pqxu3i7oOfh9uTCXTd4xtfPxfy20o6puELp4ovpoglVfI9v5CaPBPwQWlHWzt3dOHlEoRXoDkNDkok5SQmiRaERhH+B550GaFEkkCtHtm4HmvGhqMTeB4/1VjYpK02mG3t0SbZ5EGERSmPrOB2Xo2swZJaZXQVvxVeKf1FrQ+ooNS93HR2NlzYFLIiNXu8eFkMxNOAcbSCE8g4F5x4d/fySsW8N/4DbPjnBkc7nWgvP4q4FocuJhMLMsvLSDf/lGB3J9FknfeA/iasXS+jUGMTd5K4NK+FOAfe44Z7LopnHv7OsEx7hAqkuciCfsdmovlURlpkhy89WcFWa1+hkgVILS0Anm4wKerqBHAweonXd1N9yLQ3Fw9+pxjywJMksmewTRPf98jkC2eZHrYvIDPruv0Z8OfGzuhbE8pkOpfAsyOgKbQQGuINwC5+RGQzjvAFK8BYh0G3mM7WH76fH86ndv/8iWGbNDDW7e9MDNkhfUBEPBU2ZB7tgGCY/0FfQerC/q7m4yRABf5QVS1w3jzWt/hvdA/JaXgkGZScqCm9haAZhN0GPLh/vRiYDUYWpwxbAJIl8Hsm/+gIClx4Nj6e9u2B4/WnATeE3vhSkc3O5+Bzu1nlc0qYi6iDHd78Syu6Adp5qHJUPLj+V2p9z1O9C80BAsvuMiGdwkRP11L37F6vTaIfhJL+dbt5OBT3yL1b9cQ4h+ec2xsffujK5R39IXfEk4WC8qqD5wkca+4yKYmQgu2sQ/9bzQ/uARgWBb9KxyIE+y+PUF4R7qoQ0XHah60UnAcSORvrdpNN4BtVdE9RLn7Z7Qgf3jMSUFzfARWdtlMx+PYlR7uUQHiTyPUIg7efMJEJ0QNNgy4QxGgd8JPeRzhwqh13BD+aUDZHadM7sjIgWOY94gX50QLIWhUxnIajI92tfGPFv7g8bknoO1Zg1aUkS9k2DNy3LNHOPDQ16CYTbFOmueGbjn2Lq2dxXtg16MZ8M/f1bNuyQi1bR6oa3ZKjmaOwE4yAC5RHpjaP4REYwNk1Mv4cco0UJSpGUfzAzDx+nOHAsHAGXaaiys66mjZCqo/MOXfyG6nnHu/snnKVwRPXWKqDtwLF88PUzkEp01LBLPVTUHixcoR2on5SCVwfhJ9IveHayGxCFqSlcrzozbbqZh/v60YS1nAbpf3zj6TTZgvWBjb7Vs6FvuvnfwjvH74B0aZQv5sIBAwrfaP8FMDjIuLu6ooMGz7TxNT1hkb/bP+wtXkVgT4xT/qLwD+H+jfAgwAa4KbOGyf2aUAAAAASUVORK5CYII=);\\r\\n            background-position: unset;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div id="home-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
-
-// src/html/news.html
-var news_default = '<div class="r-con">\\r\\n    <div class="r-con">\\r\\n        <header style="margin-bottom: 14px">\\r\\n            <h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3>\\r\\n        </header>\\r\\n        <div class="carousel-module">\\r\\n            <div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img\\r\\n                        src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp"\\r\\n                        width="260" height="280" /></a></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>';
 
 // src/io/api.ts
 var import_md5 = __toESM(require_md5());
@@ -8452,6 +6839,244 @@ __publicField(URLS, "SEARCH_SQUARE", _URLS.P_AUTO + _URLS.D_API + "/x/web-interf
 __publicField(URLS, "SPACE_ARC", _URLS.P_AUTO + _URLS.D_API + "/x/space/wbi/arc/search");
 __publicField(URLS, "NEWLIST", _URLS.P_AUTO + _URLS.D_API + "/x/web-interface/newlist");
 
+// src/io/api-article-cards.ts
+async function apiArticleCards(data) {
+  const arr2 = [];
+  if (isArray(data)) {
+    arr2.push(...data);
+  } else {
+    Object.entries(data).forEach((d) => {
+      if (d[1]) {
+        (isArray(d[1]) ? d[1] : [d[1]]).forEach((t) => arr2.push(d[0] + t));
+      }
+    });
+  }
+  if (!arr2.length)
+    throw new Error("输入参数不能为空！");
+  const response = await fetch(objUrl(URLS.ARTICLE_CARDS, { ids: arr2.join(",") }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/utils/format/integer.ts
+function integerFormat(num, byte = 2) {
+  return num < 10 ** byte ? (Array(byte).join("0") + num).slice(-1 * byte) : num;
+}
+
+// src/utils/format/time.ts
+function timeFormat(time = new Date().getTime(), type) {
+  const date = new Date(time);
+  const arr2 = date.toLocaleString().split(" ");
+  const day = arr2[0].split("/");
+  day[1] = integerFormat(day[1], 2);
+  day[2] = integerFormat(day[2], 2);
+  return type ? day.join("-") + " " + arr2[1] : arr2[1];
+}
+
+// src/utils/debug.ts
+var group = {
+  /** 分组层次 */
+  i: 0,
+  /** 分组栈 */
+  call: []
+};
+function debug(...data) {
+  group.call.push(console.log.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+}
+debug.assert = function(condition, ...data) {
+  group.call.push(console.assert.bind(console, \`[\${timeFormat()}]\`, ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.clear = function() {
+  group.i = 0;
+  group.call = [];
+  setTimeout(console.clear.bind(console));
+  return debug;
+};
+debug.debug = function(...data) {
+  group.call.push(console.debug.bind(console, \`[\${timeFormat()}]\`, ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.error = function(...data) {
+  group.call.push(console.error.bind(console, \`[\${timeFormat()}]\`, ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.group = function(...data) {
+  group.i++;
+  group.call.push(console.group.bind(console, \`[\${timeFormat()}]\`, ...arguments));
+  return debug;
+};
+debug.groupCollapsed = function(...data) {
+  group.i++;
+  group.call.push(console.groupCollapsed.bind(console, \`[\${timeFormat()}]\`, ...arguments));
+  return debug;
+};
+debug.groupEnd = function() {
+  if (group.i) {
+    group.i--;
+    group.call.push(console.groupEnd.bind(console));
+    !group.i && (group.call.push(() => group.call = []), group.call.forEach((d) => setTimeout(d)));
+  }
+  return debug;
+};
+debug.info = function(...data) {
+  group.call.push(console.info.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.log = function(...data) {
+  group.call.push(console.log.bind(console, \`%c[\${timeFormat()}]\`, "color: blue;", ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.table = function(tabularData, properties) {
+  group.call.push(console.table.bind(console, ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.time = function(label) {
+  console.time(label);
+  return debug;
+};
+debug.timeEnd = function(label) {
+  console.timeEnd(label);
+  return debug;
+};
+debug.timeLog = function(label, ...data) {
+  console.timeLog(label, \`[\${timeFormat()}]\`, ...data);
+  return debug;
+};
+debug.trace = function(...data) {
+  group.call.push(console.trace.bind(console, ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+debug.warn = function(...data) {
+  group.call.push(console.warn.bind(console, \`[\${timeFormat()}]\`, ...arguments));
+  !group.i && setTimeout(group.call.shift());
+  return debug;
+};
+
+// src/utils/poll.ts
+function poll(check, callback, delay = 100, stop = 180) {
+  let timer = setInterval(() => {
+    const d = check();
+    if (d) {
+      clearInterval(timer);
+      callback(d);
+    }
+  }, delay);
+  stop && setTimeout(() => clearInterval(timer), stop * 1e3);
+}
+
+// src/core/observer.ts
+var nodelist = [];
+var observe = new MutationObserver(async (d) => d.forEach((d2) => {
+  d2.addedNodes[0] && nodelist.forEach((f) => {
+    try {
+      f(d2.addedNodes[0]);
+    } catch (e) {
+      debug.error("MutationObserver", e);
+    }
+  });
+}));
+observe.observe(document, { childList: true, subtree: true });
+function observerAddedNodes(callback) {
+  try {
+    if (typeof callback === "function")
+      nodelist.push(callback);
+    return nodelist.length - 1;
+  } catch (e) {
+    debug.error(e);
+  }
+}
+var switchlist = [];
+function switchVideo(callback) {
+  try {
+    if (typeof callback === "function")
+      switchlist.push(callback);
+  } catch (e) {
+    debug.error("switchVideo", e);
+  }
+}
+observerAddedNodes((node) => {
+  if (/video-state-pause/.test(node.className)) {
+    switchlist.forEach(async (d) => {
+      try {
+        d();
+      } catch (e) {
+        debug.error(d);
+      }
+    });
+  }
+});
+
+// src/io/api-pgc-slideshow.ts
+async function apiPgcSlideShow(position_id) {
+  const response = await fetch(objUrl(URLS.SLIDE_SHOW, { position_id }));
+  const json = await response.json();
+  return jsonCheck(json).result;
+}
+
+// src/io/api-search-square.ts
+async function apiSearchSquare(limit = 10) {
+  const response = await fetch(objUrl(URLS.SEARCH_SQUARE, { limit }));
+  const json = await response.json();
+  return jsonCheck(json).data.trending.list;
+}
+
+// src/utils/abv.ts
+var Abv = class {
+  base58Table = "fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF";
+  digitMap = [11, 10, 3, 8, 4, 6];
+  xor = 177451812;
+  add = 8728348608;
+  bvidTemplate = ["B", "V", 1, "", "", 4, "", 1, "", 7, "", ""];
+  table = {};
+  constructor() {
+    for (let i = 0; i < 58; i++)
+      this.table[this.base58Table[i]] = i;
+  }
+  /**
+   * av/BV互转
+   * @param input av或BV，可带av/BV前缀
+   * @returns 转化结果
+   */
+  check(input) {
+    if (/^[aA][vV][0-9]+\$/.test(String(input)) || /^\\d+\$/.test(String(input)))
+      return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
+    if (/^1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
+      return this.bvToAv("BV" + input);
+    if (/^[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}\$/.test(String(input)))
+      return this.bvToAv(String(input));
+    throw input;
+  }
+  bvToAv(BV) {
+    let r = 0;
+    for (let i = 0; i < 6; i++)
+      r += this.table[BV[this.digitMap[i]]] * 58 ** i;
+    return r - this.add ^ this.xor;
+  }
+  avToBv(av) {
+    let bv = Array.from(this.bvidTemplate);
+    av = (av ^ this.xor) + this.add;
+    for (let i = 0; i < 6; i++)
+      bv[this.digitMap[i]] = this.base58Table[parseInt(String(av / 58 ** i)) % 58];
+    return bv.join("");
+  }
+};
+function abv(input) {
+  return new Abv().check(input);
+}
+function BV2avAll(str) {
+  return str.replace(/[bB][vV]1[fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF]{9}/g, (s) => "av" + abv(s));
+}
+
 // src/io/api-webshow-locs.ts
 async function apiWebshowLoc(id) {
   const response = await fetch(objUrl(URLS.WEBSHOW_LOCS.slice(0, -1), {
@@ -8470,180 +7095,3352 @@ async function apiWebshowLocs(data) {
   return jsonCheck(BV2avAll(text)).data;
 }
 
-// src/io/api-index-top-rcmd.ts
-async function apiIndexTopRcmd(data) {
-  const response = await fetch(objUrl(URLS.INDEX_TOP_RCMD, {
-    fresh_type: data?.fresh_type || 3
-  }), {
-    credentials: data?.credentials || "include"
-  });
-  const json = await response.json();
-  return jsonCheck(json).data.item.map((d) => {
-    d.author = d.owner.name;
-    d.play = d.stat.view;
-    d.aid = d.id;
-    return d;
+// src/utils/element.ts
+function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
+  let element = document.createElement(tag);
+  attribute && Object.entries(attribute).forEach((d) => element.setAttribute(d[0], d[1]));
+  parrent = parrent || document.body;
+  innerHTML && (element.innerHTML = innerHTML);
+  replaced ? replaced.replaceWith(element) : top ? parrent.insertBefore(element, parrent.firstChild) : parrent.appendChild(element);
+  return element;
+}
+async function addCss(txt, id, parrent) {
+  if (!parrent && !document.head) {
+    await new Promise((r) => poll(() => document.body, r));
+  }
+  parrent = parrent || document.head;
+  const style = document.createElement("style");
+  style.setAttribute("type", "text/css");
+  id && !parrent.querySelector(\`#\${id}\`) && style.setAttribute("id", id);
+  style.appendChild(document.createTextNode(txt));
+  parrent.appendChild(style);
+  return style;
+}
+function loadScript(src, onload) {
+  return new Promise((r, j) => {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = src;
+    script.addEventListener("load", () => {
+      script.remove();
+      onload && onload();
+      r(true);
+    });
+    script.addEventListener("error", () => {
+      script.remove();
+      j();
+    });
+    (document.body || document.head || document.documentElement || document).appendChild(script);
   });
 }
-
-// src/utils/cookie.ts
-function getCookies() {
-  return document.cookie.split("; ").reduce((s, d) => {
-    let key = d.split("=")[0];
-    let val = d.split("=")[1];
-    s[key] = unescape(val);
-    return s;
-  }, {});
-}
-function setCookie(name, value, days = 365) {
-  const exp = new Date();
-  exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1e3);
-  document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + "; path=/; domain=.bilibili.com";
+function getTotalTop(node) {
+  var sum = 0;
+  do {
+    sum += node.offsetTop;
+    node = node.offsetParent;
+  } while (node);
+  return sum;
 }
 
-// src/utils/conf/uid.ts
-var uid = Number(getCookies().DedeUserID);
+// src/utils/format/cht2chs.ts
+var aTC2SC = {
+  "以功覆過": "以功复过",
+  "侔德覆載": "侔德复载",
+  "傷亡枕藉": "伤亡枕借",
+  "出醜狼藉": "出丑狼借",
+  "反反覆覆": "反反复复",
+  "名覆金甌": "名复金瓯",
+  "情有獨鍾": "情有独锺",
+  "文錦覆阱": "文锦复阱",
+  "於呼哀哉": "於呼哀哉",
+  "旋乾轉坤": "旋乾转坤",
+  "朝乾夕惕": "朝乾夕惕",
+  "狐藉虎威": "狐借虎威",
+  "瞭若指掌": "了若指掌",
+  "老態龍鍾": "老态龙锺",
+  "藉箸代籌": "借箸代筹",
+  "藉草枕塊": "借草枕块",
+  "藉藉无名": "藉藉无名",
+  "衹見樹木": "只见树木",
+  "覆蕉尋鹿": "复蕉寻鹿",
+  "覆鹿尋蕉": "复鹿寻蕉",
+  "覆鹿遺蕉": "复鹿遗蕉",
+  "買臣覆水": "买臣复水",
+  "踅門瞭戶": "踅门了户",
+  "雁杳魚沈": "雁杳鱼沉",
+  "顛乾倒坤": "颠乾倒坤",
+  "乾清宮": "乾清宫",
+  "乾盛世": "乾盛世",
+  "八濛山": "八濛山",
+  "千鍾粟": "千锺粟",
+  "尼乾陀": "尼乾陀",
+  "張法乾": "张法乾",
+  "於世成": "於世成",
+  "於仲完": "於仲完",
+  "於其一": "於其一",
+  "於勇明": "於勇明",
+  "於崇文": "於崇文",
+  "於忠祥": "於忠祥",
+  "於惟一": "於惟一",
+  "於梨華": "於梨华",
+  "於清言": "於清言",
+  "於竹屋": "於竹屋",
+  "於陵子": "於陵子",
+  "李乾德": "李乾德",
+  "李澤鉅": "李泽钜",
+  "李鍊福": "李链福",
+  "李鍾郁": "李锺郁",
+  "樊於期": "樊於期",
+  "藉寇兵": "借寇兵",
+  "覆醬瓿": "复酱瓿",
+  "角徵羽": "角徵羽",
+  "貂覆額": "貂复额",
+  "郭子乾": "郭子乾",
+  "錢鍾書": "钱锺书",
+  "鍾萬梅": "锺万梅",
+  "鍾重發": "锺重发",
+  "麼些族": "麽些族",
+  "黄鍾公": "黄锺公",
+  "上鍊": "上链",
+  "么麼": "幺麽",
+  "么麽": "幺麽",
+  "乾元": "乾元",
+  "乾卦": "乾卦",
+  "乾嘉": "乾嘉",
+  "乾圖": "乾图",
+  "乾坤": "乾坤",
+  "乾宅": "乾宅",
+  "乾斷": "乾断",
+  "乾旦": "乾旦",
+  "乾曜": "乾曜",
+  "乾紅": "乾红",
+  "乾綱": "乾纲",
+  "乾縣": "乾县",
+  "乾象": "乾象",
+  "乾造": "乾造",
+  "乾道": "乾道",
+  "乾陵": "乾陵",
+  "乾隆": "乾隆",
+  "家俱": "家具",
+  "傢具": "家具",
+  "傢俱": "家具",
+  "凌藉": "凌借",
+  "函覆": "函复",
+  "反覆": "反复",
+  "哪吒": "哪吒",
+  "哪咤": "哪吒",
+  "回覆": "回复",
+  "射覆": "射复",
+  "幺麼": "幺麽",
+  "康乾": "康乾",
+  "彷彿": "仿佛",
+  "徵弦": "徵弦",
+  "徵絃": "徵弦",
+  "徵聲": "徵声",
+  "徵調": "徵调",
+  "徵音": "徵音",
+  "憑藉": "凭借",
+  "手鍊": "手链",
+  "拉鍊": "拉链",
+  "拜覆": "拜复",
+  "於乎": "於乎",
+  "於倫": "於伦",
+  "於則": "於则",
+  "於單": "於单",
+  "於坦": "於坦",
+  "於戲": "於戏",
+  "於敖": "於敖",
+  "於琳": "於琳",
+  "於穆": "於穆",
+  "於菟": "於菟",
+  "於邑": "於邑",
+  "明瞭": "明了",
+  "明覆": "明复",
+  "木吒": "木吒",
+  "木咤": "木吒",
+  "沈沒": "沉没",
+  "沈積": "沉积",
+  "沈船": "沉船",
+  "沈默": "沉默",
+  "流徵": "流徵",
+  "滑藉": "滑借",
+  "牴牾": "抵牾",
+  "牴觸": "抵触",
+  "甚鉅": "甚钜",
+  "申覆": "申复",
+  "畢昇": "毕昇",
+  "發覆": "发复",
+  "瞭如": "了如",
+  "瞭然": "了然",
+  "瞭解": "了解",
+  "示覆": "示复",
+  "禀覆": "禀复",
+  "答覆": "答复",
+  "篤麼": "笃麽",
+  "籌畫": "筹划",
+  "素藉": "素借",
+  "茵藉": "茵借",
+  "萬鍾": "万锺",
+  "蒜薹": "蒜薹",
+  "蕓薹": "芸薹",
+  "蕩覆": "荡复",
+  "蕭乾": "萧乾",
+  "藉代": "借代",
+  "藉以": "借以",
+  "藉助": "借助",
+  "藉卉": "借卉",
+  "藉口": "借口",
+  "藉喻": "借喻",
+  "藉手": "借手",
+  "藉據": "借据",
+  "藉故": "借故",
+  "藉方": "借方",
+  "藉條": "借条",
+  "藉槁": "借槁",
+  "藉機": "借机",
+  "藉此": "借此",
+  "藉甚": "借甚",
+  "藉由": "借由",
+  "藉著": "借着",
+  "藉端": "借端",
+  "藉藉": "借借",
+  "藉詞": "借词",
+  "藉讀": "借读",
+  "藉資": "借资",
+  "衹得": "只得",
+  "覆上": "复上",
+  "覆住": "复住",
+  "覆信": "复信",
+  "覆冒": "复冒",
+  "覆呈": "复呈",
+  "覆命": "复命",
+  "覆墓": "复墓",
+  "覆宗": "复宗",
+  "覆帳": "复帐",
+  "覆幬": "复帱",
+  "覆成": "复成",
+  "覆按": "复按",
+  "覆文": "复文",
+  "覆杯": "复杯",
+  "覆校": "复校",
+  "覆瓿": "复瓿",
+  "覆盂": "复盂",
+  "覆育": "复育",
+  "覆逆": "复逆",
+  "覆醢": "复醢",
+  "覆電": "复电",
+  "覆露": "复露",
+  "覆鼎": "复鼎",
+  "見覆": "见复",
+  "角徵": "角徵",
+  "計畫": "计划",
+  "變徵": "变徵",
+  "躪藉": "躏借",
+  "酝藉": "酝借",
+  "重覆": "重复",
+  "金吒": "金吒",
+  "金咤": "金吒",
+  "金鍊": "金链",
+  "鈕釦": "纽扣",
+  "鈞覆": "钧复",
+  "鉅子": "钜子",
+  "鉅萬": "钜万",
+  "鉅防": "钜防",
+  "鉸鍊": "铰链",
+  "銀鍊": "银链",
+  "鍊墜": "链坠",
+  "鍊子": "链子",
+  "鍊形": "链形",
+  "鍊條": "链条",
+  "鍊錘": "链锤",
+  "鍊鎖": "链锁",
+  "鍛鍾": "锻锺",
+  "鍾鍛": "锺锻",
+  "鍾馗": "锺馗",
+  "鎖鍊": "锁链",
+  "鐵鍊": "铁链",
+  "電覆": "电复",
+  "露覆": "露复",
+  "項鍊": "项链",
+  "頗覆": "颇复",
+  "頸鍊": "颈链",
+  "顧藉": "顾借",
+  "煞車": "刹车",
+  "著": "着",
+  "乾": "干",
+  "儘": "尽",
+  "劃": "划",
+  "徵": "征",
+  "於": "于",
+  "瀋": "沈",
+  "瀰": "弥",
+  "畫": "画",
+  "睪": "睾",
+  "綵": "彩",
+  "線": "线",
+  "薹": "苔",
+  "蘋": "苹",
+  "襬": "摆",
+  "託": "托",
+  "諮": "咨",
+  "鈕": "钮",
+  "鉅": "巨",
+  "鍾": "钟",
+  "钁": "镢",
+  "靦": "腼",
+  "餘": "余",
+  "麪": "面",
+  "麴": "曲",
+  "麵": "面",
+  "麼": "么",
+  "麽": "么",
+  "開": "开",
+  "噹": "当",
+  "崙": "仑",
+  "擣": "捣",
+  "牴": "抵",
+  "衹": "只",
+  "諫": "谏",
+  "譾": "谫",
+  "買": "买",
+  "閒": "闲",
+  "願": "愿",
+  "餬": "糊",
+  "餱": "糇",
+  "餵": "喂",
+  "驄": "骢",
+  "鵰": "雕",
+  "齧": "啮",
+  "鍊": "炼",
+  "㑯": "㑔",
+  "㑳": "㑇",
+  "㑶": "㐹",
+  "㓨": "刾",
+  "㘚": "㘎",
+  "㜄": "㚯",
+  "㜏": "㛣",
+  "㠏": "㟆",
+  "㥮": "㤘",
+  "㩜": "㨫",
+  "㩳": "㧐",
+  "䁻": "䀥",
+  "䊷": "䌶",
+  "䋙": "䌺",
+  "䋚": "䌻",
+  "䋹": "䌿",
+  "䋻": "䌾",
+  "䎱": "䎬",
+  "䙡": "䙌",
+  "䜀": "䜧",
+  "䝼": "䞍",
+  "䥇": "䦂",
+  "䥱": "䥾",
+  "䦛": "䦶",
+  "䦟": "䦷",
+  "䯀": "䯅",
+  "䰾": "鲃",
+  "䱷": "䲣",
+  "䱽": "䲝",
+  "䲁": "鳚",
+  "䲘": "鳤",
+  "䴉": "鹮",
+  "丟": "丢",
+  "並": "并",
+  "亂": "乱",
+  "亙": "亘",
+  "亞": "亚",
+  "佇": "伫",
+  "佈": "布",
+  "佔": "占",
+  "併": "并",
+  "來": "来",
+  "侖": "仑",
+  "侶": "侣",
+  "侷": "局",
+  "俁": "俣",
+  "係": "系",
+  "俔": "伣",
+  "俠": "侠",
+  "俥": "伡",
+  "俬": "私",
+  "倀": "伥",
+  "倆": "俩",
+  "倈": "俫",
+  "倉": "仓",
+  "個": "个",
+  "們": "们",
+  "倖": "幸",
+  "倫": "伦",
+  "倲": "㑈",
+  "偉": "伟",
+  "偑": "㐽",
+  "側": "侧",
+  "偵": "侦",
+  "偽": "伪",
+  "傌": "㐷",
+  "傑": "杰",
+  "傖": "伧",
+  "傘": "伞",
+  "備": "备",
+  "傢": "家",
+  "傭": "佣",
+  "傯": "偬",
+  "傳": "传",
+  "傴": "伛",
+  "債": "债",
+  "傷": "伤",
+  "傾": "倾",
+  "僂": "偻",
+  "僅": "仅",
+  "僉": "佥",
+  "僑": "侨",
+  "僕": "仆",
+  "僞": "伪",
+  "僥": "侥",
+  "僨": "偾",
+  "僱": "雇",
+  "價": "价",
+  "儀": "仪",
+  "儁": "俊",
+  "儂": "侬",
+  "億": "亿",
+  "儈": "侩",
+  "儉": "俭",
+  "儐": "傧",
+  "儔": "俦",
+  "儕": "侪",
+  "償": "偿",
+  "優": "优",
+  "儲": "储",
+  "儷": "俪",
+  "儸": "㑩",
+  "儺": "傩",
+  "儻": "傥",
+  "儼": "俨",
+  "兇": "凶",
+  "兌": "兑",
+  "兒": "儿",
+  "兗": "兖",
+  "內": "内",
+  "兩": "两",
+  "冊": "册",
+  "冑": "胄",
+  "冪": "幂",
+  "凈": "净",
+  "凍": "冻",
+  "凜": "凛",
+  "凱": "凯",
+  "別": "别",
+  "刪": "删",
+  "剄": "刭",
+  "則": "则",
+  "剋": "克",
+  "剎": "刹",
+  "剗": "刬",
+  "剛": "刚",
+  "剝": "剥",
+  "剮": "剐",
+  "剴": "剀",
+  "創": "创",
+  "剷": "铲",
+  "劇": "剧",
+  "劉": "刘",
+  "劊": "刽",
+  "劌": "刿",
+  "劍": "剑",
+  "劏": "㓥",
+  "劑": "剂",
+  "劚": "㔉",
+  "勁": "劲",
+  "動": "动",
+  "務": "务",
+  "勛": "勋",
+  "勝": "胜",
+  "勞": "劳",
+  "勢": "势",
+  "勩": "勚",
+  "勱": "劢",
+  "勳": "勋",
+  "勵": "励",
+  "勸": "劝",
+  "勻": "匀",
+  "匭": "匦",
+  "匯": "汇",
+  "匱": "匮",
+  "區": "区",
+  "協": "协",
+  "卹": "恤",
+  "卻": "却",
+  "卽": "即",
+  "厙": "厍",
+  "厠": "厕",
+  "厤": "历",
+  "厭": "厌",
+  "厲": "厉",
+  "厴": "厣",
+  "參": "参",
+  "叄": "叁",
+  "叢": "丛",
+  "吒": "咤",
+  "吳": "吴",
+  "吶": "呐",
+  "呂": "吕",
+  "咼": "呙",
+  "員": "员",
+  "唄": "呗",
+  "唚": "吣",
+  "唸": "念",
+  "問": "问",
+  "啓": "启",
+  "啞": "哑",
+  "啟": "启",
+  "啢": "唡",
+  "喎": "㖞",
+  "喚": "唤",
+  "喪": "丧",
+  "喫": "吃",
+  "喬": "乔",
+  "單": "单",
+  "喲": "哟",
+  "嗆": "呛",
+  "嗇": "啬",
+  "嗊": "唝",
+  "嗎": "吗",
+  "嗚": "呜",
+  "嗩": "唢",
+  "嗶": "哔",
+  "嘆": "叹",
+  "嘍": "喽",
+  "嘓": "啯",
+  "嘔": "呕",
+  "嘖": "啧",
+  "嘗": "尝",
+  "嘜": "唛",
+  "嘩": "哗",
+  "嘮": "唠",
+  "嘯": "啸",
+  "嘰": "叽",
+  "嘵": "哓",
+  "嘸": "呒",
+  "嘽": "啴",
+  "噁": "恶",
+  "噓": "嘘",
+  "噚": "㖊",
+  "噝": "咝",
+  "噠": "哒",
+  "噥": "哝",
+  "噦": "哕",
+  "噯": "嗳",
+  "噲": "哙",
+  "噴": "喷",
+  "噸": "吨",
+  "嚀": "咛",
+  "嚇": "吓",
+  "嚌": "哜",
+  "嚐": "尝",
+  "嚕": "噜",
+  "嚙": "啮",
+  "嚥": "咽",
+  "嚦": "呖",
+  "嚨": "咙",
+  "嚮": "向",
+  "嚲": "亸",
+  "嚳": "喾",
+  "嚴": "严",
+  "嚶": "嘤",
+  "囀": "啭",
+  "囁": "嗫",
+  "囂": "嚣",
+  "囅": "冁",
+  "囈": "呓",
+  "囉": "啰",
+  "囌": "苏",
+  "囑": "嘱",
+  "囪": "囱",
+  "圇": "囵",
+  "國": "国",
+  "圍": "围",
+  "園": "园",
+  "圓": "圆",
+  "圖": "图",
+  "團": "团",
+  "垵": "埯",
+  "埡": "垭",
+  "埰": "采",
+  "執": "执",
+  "堅": "坚",
+  "堊": "垩",
+  "堖": "垴",
+  "堝": "埚",
+  "堯": "尧",
+  "報": "报",
+  "場": "场",
+  "塊": "块",
+  "塋": "茔",
+  "塏": "垲",
+  "塒": "埘",
+  "塗": "涂",
+  "塚": "冢",
+  "塢": "坞",
+  "塤": "埙",
+  "塵": "尘",
+  "塹": "堑",
+  "墊": "垫",
+  "墜": "坠",
+  "墮": "堕",
+  "墰": "坛",
+  "墳": "坟",
+  "墶": "垯",
+  "墻": "墙",
+  "墾": "垦",
+  "壇": "坛",
+  "壋": "垱",
+  "壎": "埙",
+  "壓": "压",
+  "壘": "垒",
+  "壙": "圹",
+  "壚": "垆",
+  "壜": "坛",
+  "壞": "坏",
+  "壟": "垄",
+  "壠": "垅",
+  "壢": "坜",
+  "壩": "坝",
+  "壯": "壮",
+  "壺": "壶",
+  "壼": "壸",
+  "壽": "寿",
+  "夠": "够",
+  "夢": "梦",
+  "夥": "伙",
+  "夾": "夹",
+  "奐": "奂",
+  "奧": "奥",
+  "奩": "奁",
+  "奪": "夺",
+  "奬": "奖",
+  "奮": "奋",
+  "奼": "姹",
+  "妝": "妆",
+  "姍": "姗",
+  "姦": "奸",
+  "娛": "娱",
+  "婁": "娄",
+  "婦": "妇",
+  "婭": "娅",
+  "媧": "娲",
+  "媯": "妫",
+  "媰": "㛀",
+  "媼": "媪",
+  "媽": "妈",
+  "嫋": "袅",
+  "嫗": "妪",
+  "嫵": "妩",
+  "嫺": "娴",
+  "嫻": "娴",
+  "嫿": "婳",
+  "嬀": "妫",
+  "嬃": "媭",
+  "嬈": "娆",
+  "嬋": "婵",
+  "嬌": "娇",
+  "嬙": "嫱",
+  "嬡": "嫒",
+  "嬤": "嬷",
+  "嬪": "嫔",
+  "嬰": "婴",
+  "嬸": "婶",
+  "孃": "娘",
+  "孋": "㛤",
+  "孌": "娈",
+  "孫": "孙",
+  "學": "学",
+  "孿": "孪",
+  "宮": "宫",
+  "寀": "采",
+  "寢": "寝",
+  "實": "实",
+  "寧": "宁",
+  "審": "审",
+  "寫": "写",
+  "寬": "宽",
+  "寵": "宠",
+  "寶": "宝",
+  "將": "将",
+  "專": "专",
+  "尋": "寻",
+  "對": "对",
+  "導": "导",
+  "尷": "尴",
+  "屆": "届",
+  "屍": "尸",
+  "屓": "屃",
+  "屜": "屉",
+  "屢": "屡",
+  "層": "层",
+  "屨": "屦",
+  "屬": "属",
+  "岡": "冈",
+  "峯": "峰",
+  "峴": "岘",
+  "島": "岛",
+  "峽": "峡",
+  "崍": "崃",
+  "崑": "昆",
+  "崗": "岗",
+  "崢": "峥",
+  "崬": "岽",
+  "嵐": "岚",
+  "嵗": "岁",
+  "嶁": "嵝",
+  "嶄": "崭",
+  "嶇": "岖",
+  "嶔": "嵚",
+  "嶗": "崂",
+  "嶠": "峤",
+  "嶢": "峣",
+  "嶧": "峄",
+  "嶨": "峃",
+  "嶮": "崄",
+  "嶴": "岙",
+  "嶸": "嵘",
+  "嶺": "岭",
+  "嶼": "屿",
+  "嶽": "岳",
+  "巋": "岿",
+  "巒": "峦",
+  "巔": "巅",
+  "巖": "岩",
+  "巰": "巯",
+  "巹": "卺",
+  "帥": "帅",
+  "師": "师",
+  "帳": "帐",
+  "帶": "带",
+  "幀": "帧",
+  "幃": "帏",
+  "幗": "帼",
+  "幘": "帻",
+  "幟": "帜",
+  "幣": "币",
+  "幫": "帮",
+  "幬": "帱",
+  "幹": "干",
+  "幾": "几",
+  "庫": "库",
+  "廁": "厕",
+  "廂": "厢",
+  "廄": "厩",
+  "廈": "厦",
+  "廎": "庼",
+  "廕": "荫",
+  "廚": "厨",
+  "廝": "厮",
+  "廟": "庙",
+  "廠": "厂",
+  "廡": "庑",
+  "廢": "废",
+  "廣": "广",
+  "廩": "廪",
+  "廬": "庐",
+  "廳": "厅",
+  "弒": "弑",
+  "弔": "吊",
+  "弳": "弪",
+  "張": "张",
+  "強": "强",
+  "彆": "别",
+  "彈": "弹",
+  "彌": "弥",
+  "彎": "弯",
+  "彔": "录",
+  "彙": "汇",
+  "彞": "彝",
+  "彠": "彟",
+  "彥": "彦",
+  "彫": "雕",
+  "彲": "彨",
+  "彿": "佛",
+  "後": "后",
+  "徑": "径",
+  "從": "从",
+  "徠": "徕",
+  "復": "复",
+  "徹": "彻",
+  "恆": "恒",
+  "恥": "耻",
+  "悅": "悦",
+  "悞": "悮",
+  "悵": "怅",
+  "悶": "闷",
+  "悽": "凄",
+  "惡": "恶",
+  "惱": "恼",
+  "惲": "恽",
+  "惻": "恻",
+  "愛": "爱",
+  "愜": "惬",
+  "愨": "悫",
+  "愴": "怆",
+  "愷": "恺",
+  "愾": "忾",
+  "慄": "栗",
+  "態": "态",
+  "慍": "愠",
+  "慘": "惨",
+  "慚": "惭",
+  "慟": "恸",
+  "慣": "惯",
+  "慤": "悫",
+  "慪": "怄",
+  "慫": "怂",
+  "慮": "虑",
+  "慳": "悭",
+  "慶": "庆",
+  "慼": "戚",
+  "慾": "欲",
+  "憂": "忧",
+  "憊": "惫",
+  "憐": "怜",
+  "憑": "凭",
+  "憒": "愦",
+  "憚": "惮",
+  "憤": "愤",
+  "憫": "悯",
+  "憮": "怃",
+  "憲": "宪",
+  "憶": "忆",
+  "懇": "恳",
+  "應": "应",
+  "懌": "怿",
+  "懍": "懔",
+  "懞": "蒙",
+  "懟": "怼",
+  "懣": "懑",
+  "懨": "恹",
+  "懲": "惩",
+  "懶": "懒",
+  "懷": "怀",
+  "懸": "悬",
+  "懺": "忏",
+  "懼": "惧",
+  "懾": "慑",
+  "戀": "恋",
+  "戇": "戆",
+  "戔": "戋",
+  "戧": "戗",
+  "戩": "戬",
+  "戰": "战",
+  "戱": "戯",
+  "戲": "戏",
+  "戶": "户",
+  "拋": "抛",
+  "挩": "捝",
+  "挱": "挲",
+  "挾": "挟",
+  "捨": "舍",
+  "捫": "扪",
+  "捱": "挨",
+  "捲": "卷",
+  "掃": "扫",
+  "掄": "抡",
+  "掆": "㧏",
+  "掗": "挜",
+  "掙": "挣",
+  "掛": "挂",
+  "採": "采",
+  "揀": "拣",
+  "揚": "扬",
+  "換": "换",
+  "揮": "挥",
+  "損": "损",
+  "搖": "摇",
+  "搗": "捣",
+  "搵": "揾",
+  "搶": "抢",
+  "摑": "掴",
+  "摜": "掼",
+  "摟": "搂",
+  "摯": "挚",
+  "摳": "抠",
+  "摶": "抟",
+  "摺": "折",
+  "摻": "掺",
+  "撈": "捞",
+  "撏": "挦",
+  "撐": "撑",
+  "撓": "挠",
+  "撝": "㧑",
+  "撟": "挢",
+  "撣": "掸",
+  "撥": "拨",
+  "撫": "抚",
+  "撲": "扑",
+  "撳": "揿",
+  "撻": "挞",
+  "撾": "挝",
+  "撿": "捡",
+  "擁": "拥",
+  "擄": "掳",
+  "擇": "择",
+  "擊": "击",
+  "擋": "挡",
+  "擓": "㧟",
+  "擔": "担",
+  "據": "据",
+  "擠": "挤",
+  "擡": "抬",
+  "擬": "拟",
+  "擯": "摈",
+  "擰": "拧",
+  "擱": "搁",
+  "擲": "掷",
+  "擴": "扩",
+  "擷": "撷",
+  "擺": "摆",
+  "擻": "擞",
+  "擼": "撸",
+  "擽": "㧰",
+  "擾": "扰",
+  "攄": "摅",
+  "攆": "撵",
+  "攏": "拢",
+  "攔": "拦",
+  "攖": "撄",
+  "攙": "搀",
+  "攛": "撺",
+  "攜": "携",
+  "攝": "摄",
+  "攢": "攒",
+  "攣": "挛",
+  "攤": "摊",
+  "攪": "搅",
+  "攬": "揽",
+  "敎": "教",
+  "敓": "敚",
+  "敗": "败",
+  "敘": "叙",
+  "敵": "敌",
+  "數": "数",
+  "斂": "敛",
+  "斃": "毙",
+  "斆": "敩",
+  "斕": "斓",
+  "斬": "斩",
+  "斷": "断",
+  "旂": "旗",
+  "旣": "既",
+  "昇": "升",
+  "時": "时",
+  "晉": "晋",
+  "晝": "昼",
+  "暈": "晕",
+  "暉": "晖",
+  "暘": "旸",
+  "暢": "畅",
+  "暫": "暂",
+  "曄": "晔",
+  "曆": "历",
+  "曇": "昙",
+  "曉": "晓",
+  "曏": "向",
+  "曖": "暧",
+  "曠": "旷",
+  "曨": "昽",
+  "曬": "晒",
+  "書": "书",
+  "會": "会",
+  "朧": "胧",
+  "朮": "术",
+  "東": "东",
+  "杴": "锨",
+  "枴": "拐",
+  "柵": "栅",
+  "柺": "拐",
+  "査": "查",
+  "桿": "杆",
+  "梔": "栀",
+  "梘": "枧",
+  "條": "条",
+  "梟": "枭",
+  "梲": "棁",
+  "棄": "弃",
+  "棊": "棋",
+  "棖": "枨",
+  "棗": "枣",
+  "棟": "栋",
+  "棡": "㭎",
+  "棧": "栈",
+  "棲": "栖",
+  "棶": "梾",
+  "椏": "桠",
+  "椲": "㭏",
+  "楊": "杨",
+  "楓": "枫",
+  "楨": "桢",
+  "業": "业",
+  "極": "极",
+  "榘": "矩",
+  "榦": "干",
+  "榪": "杩",
+  "榮": "荣",
+  "榲": "榅",
+  "榿": "桤",
+  "構": "构",
+  "槍": "枪",
+  "槓": "杠",
+  "槤": "梿",
+  "槧": "椠",
+  "槨": "椁",
+  "槮": "椮",
+  "槳": "桨",
+  "槶": "椢",
+  "槼": "椝",
+  "樁": "桩",
+  "樂": "乐",
+  "樅": "枞",
+  "樑": "梁",
+  "樓": "楼",
+  "標": "标",
+  "樞": "枢",
+  "樢": "㭤",
+  "樣": "样",
+  "樫": "㭴",
+  "樳": "桪",
+  "樸": "朴",
+  "樹": "树",
+  "樺": "桦",
+  "樿": "椫",
+  "橈": "桡",
+  "橋": "桥",
+  "機": "机",
+  "橢": "椭",
+  "橫": "横",
+  "檁": "檩",
+  "檉": "柽",
+  "檔": "档",
+  "檜": "桧",
+  "檟": "槚",
+  "檢": "检",
+  "檣": "樯",
+  "檮": "梼",
+  "檯": "台",
+  "檳": "槟",
+  "檸": "柠",
+  "檻": "槛",
+  "櫃": "柜",
+  "櫓": "橹",
+  "櫚": "榈",
+  "櫛": "栉",
+  "櫝": "椟",
+  "櫞": "橼",
+  "櫟": "栎",
+  "櫥": "橱",
+  "櫧": "槠",
+  "櫨": "栌",
+  "櫪": "枥",
+  "櫫": "橥",
+  "櫬": "榇",
+  "櫱": "蘖",
+  "櫳": "栊",
+  "櫸": "榉",
+  "櫺": "棂",
+  "櫻": "樱",
+  "欄": "栏",
+  "欅": "榉",
+  "權": "权",
+  "欏": "椤",
+  "欒": "栾",
+  "欖": "榄",
+  "欞": "棂",
+  "欽": "钦",
+  "歎": "叹",
+  "歐": "欧",
+  "歟": "欤",
+  "歡": "欢",
+  "歲": "岁",
+  "歷": "历",
+  "歸": "归",
+  "歿": "殁",
+  "殘": "残",
+  "殞": "殒",
+  "殤": "殇",
+  "殨": "㱮",
+  "殫": "殚",
+  "殭": "僵",
+  "殮": "殓",
+  "殯": "殡",
+  "殰": "㱩",
+  "殲": "歼",
+  "殺": "杀",
+  "殻": "壳",
+  "殼": "壳",
+  "毀": "毁",
+  "毆": "殴",
+  "毿": "毵",
+  "氂": "牦",
+  "氈": "毡",
+  "氌": "氇",
+  "氣": "气",
+  "氫": "氢",
+  "氬": "氩",
+  "氳": "氲",
+  "氾": "泛",
+  "汎": "泛",
+  "汙": "污",
+  "決": "决",
+  "沒": "没",
+  "沖": "冲",
+  "況": "况",
+  "泝": "溯",
+  "洩": "泄",
+  "洶": "汹",
+  "浹": "浃",
+  "涇": "泾",
+  "涗": "涚",
+  "涼": "凉",
+  "淒": "凄",
+  "淚": "泪",
+  "淥": "渌",
+  "淨": "净",
+  "淩": "凌",
+  "淪": "沦",
+  "淵": "渊",
+  "淶": "涞",
+  "淺": "浅",
+  "渙": "涣",
+  "減": "减",
+  "渢": "沨",
+  "渦": "涡",
+  "測": "测",
+  "渾": "浑",
+  "湊": "凑",
+  "湞": "浈",
+  "湧": "涌",
+  "湯": "汤",
+  "溈": "沩",
+  "準": "准",
+  "溝": "沟",
+  "溫": "温",
+  "溮": "浉",
+  "溳": "涢",
+  "溼": "湿",
+  "滄": "沧",
+  "滅": "灭",
+  "滌": "涤",
+  "滎": "荥",
+  "滙": "汇",
+  "滬": "沪",
+  "滯": "滞",
+  "滲": "渗",
+  "滷": "卤",
+  "滸": "浒",
+  "滻": "浐",
+  "滾": "滚",
+  "滿": "满",
+  "漁": "渔",
+  "漊": "溇",
+  "漚": "沤",
+  "漢": "汉",
+  "漣": "涟",
+  "漬": "渍",
+  "漲": "涨",
+  "漵": "溆",
+  "漸": "渐",
+  "漿": "浆",
+  "潁": "颍",
+  "潑": "泼",
+  "潔": "洁",
+  "潙": "沩",
+  "潛": "潜",
+  "潤": "润",
+  "潯": "浔",
+  "潰": "溃",
+  "潷": "滗",
+  "潿": "涠",
+  "澀": "涩",
+  "澆": "浇",
+  "澇": "涝",
+  "澐": "沄",
+  "澗": "涧",
+  "澠": "渑",
+  "澤": "泽",
+  "澦": "滪",
+  "澩": "泶",
+  "澮": "浍",
+  "澱": "淀",
+  "澾": "㳠",
+  "濁": "浊",
+  "濃": "浓",
+  "濄": "㳡",
+  "濕": "湿",
+  "濘": "泞",
+  "濛": "蒙",
+  "濜": "浕",
+  "濟": "济",
+  "濤": "涛",
+  "濧": "㳔",
+  "濫": "滥",
+  "濰": "潍",
+  "濱": "滨",
+  "濺": "溅",
+  "濼": "泺",
+  "濾": "滤",
+  "瀂": "澛",
+  "瀅": "滢",
+  "瀆": "渎",
+  "瀇": "㲿",
+  "瀉": "泻",
+  "瀏": "浏",
+  "瀕": "濒",
+  "瀘": "泸",
+  "瀝": "沥",
+  "瀟": "潇",
+  "瀠": "潆",
+  "瀦": "潴",
+  "瀧": "泷",
+  "瀨": "濑",
+  "瀲": "潋",
+  "瀾": "澜",
+  "灃": "沣",
+  "灄": "滠",
+  "灑": "洒",
+  "灕": "漓",
+  "灘": "滩",
+  "灝": "灏",
+  "灠": "漤",
+  "灡": "㳕",
+  "灣": "湾",
+  "灤": "滦",
+  "灧": "滟",
+  "灩": "滟",
+  "災": "灾",
+  "為": "为",
+  "烏": "乌",
+  "烴": "烃",
+  "無": "无",
+  "煉": "炼",
+  "煒": "炜",
+  "煙": "烟",
+  "煢": "茕",
+  "煥": "焕",
+  "煩": "烦",
+  "煬": "炀",
+  "煱": "㶽",
+  "熅": "煴",
+  "熒": "荧",
+  "熗": "炝",
+  "熱": "热",
+  "熲": "颎",
+  "熾": "炽",
+  "燁": "烨",
+  "燈": "灯",
+  "燉": "炖",
+  "燒": "烧",
+  "燙": "烫",
+  "燜": "焖",
+  "營": "营",
+  "燦": "灿",
+  "燬": "毁",
+  "燭": "烛",
+  "燴": "烩",
+  "燶": "㶶",
+  "燻": "熏",
+  "燼": "烬",
+  "燾": "焘",
+  "爍": "烁",
+  "爐": "炉",
+  "爛": "烂",
+  "爭": "争",
+  "爲": "为",
+  "爺": "爷",
+  "爾": "尔",
+  "牀": "床",
+  "牆": "墙",
+  "牘": "牍",
+  "牽": "牵",
+  "犖": "荦",
+  "犛": "牦",
+  "犢": "犊",
+  "犧": "牺",
+  "狀": "状",
+  "狹": "狭",
+  "狽": "狈",
+  "猙": "狰",
+  "猶": "犹",
+  "猻": "狲",
+  "獁": "犸",
+  "獃": "呆",
+  "獄": "狱",
+  "獅": "狮",
+  "獎": "奖",
+  "獨": "独",
+  "獪": "狯",
+  "獫": "猃",
+  "獮": "狝",
+  "獰": "狞",
+  "獱": "㺍",
+  "獲": "获",
+  "獵": "猎",
+  "獷": "犷",
+  "獸": "兽",
+  "獺": "獭",
+  "獻": "献",
+  "獼": "猕",
+  "玀": "猡",
+  "現": "现",
+  "琱": "雕",
+  "琺": "珐",
+  "琿": "珲",
+  "瑋": "玮",
+  "瑒": "玚",
+  "瑣": "琐",
+  "瑤": "瑶",
+  "瑩": "莹",
+  "瑪": "玛",
+  "瑲": "玱",
+  "璉": "琏",
+  "璡": "琎",
+  "璣": "玑",
+  "璦": "瑷",
+  "璫": "珰",
+  "璯": "㻅",
+  "環": "环",
+  "璵": "玙",
+  "璸": "瑸",
+  "璽": "玺",
+  "瓊": "琼",
+  "瓏": "珑",
+  "瓔": "璎",
+  "瓚": "瓒",
+  "甌": "瓯",
+  "甕": "瓮",
+  "產": "产",
+  "産": "产",
+  "甦": "苏",
+  "甯": "宁",
+  "畝": "亩",
+  "畢": "毕",
+  "異": "异",
+  "畵": "画",
+  "當": "当",
+  "疇": "畴",
+  "疊": "叠",
+  "痙": "痉",
+  "痠": "酸",
+  "痾": "疴",
+  "瘂": "痖",
+  "瘋": "疯",
+  "瘍": "疡",
+  "瘓": "痪",
+  "瘞": "瘗",
+  "瘡": "疮",
+  "瘧": "疟",
+  "瘮": "瘆",
+  "瘲": "疭",
+  "瘺": "瘘",
+  "瘻": "瘘",
+  "療": "疗",
+  "癆": "痨",
+  "癇": "痫",
+  "癉": "瘅",
+  "癒": "愈",
+  "癘": "疠",
+  "癟": "瘪",
+  "癡": "痴",
+  "癢": "痒",
+  "癤": "疖",
+  "癥": "症",
+  "癧": "疬",
+  "癩": "癞",
+  "癬": "癣",
+  "癭": "瘿",
+  "癮": "瘾",
+  "癰": "痈",
+  "癱": "瘫",
+  "癲": "癫",
+  "發": "发",
+  "皁": "皂",
+  "皚": "皑",
+  "皰": "疱",
+  "皸": "皲",
+  "皺": "皱",
+  "盃": "杯",
+  "盜": "盗",
+  "盞": "盏",
+  "盡": "尽",
+  "監": "监",
+  "盤": "盘",
+  "盧": "卢",
+  "盪": "荡",
+  "眞": "真",
+  "眥": "眦",
+  "眾": "众",
+  "睏": "困",
+  "睜": "睁",
+  "睞": "睐",
+  "瞘": "眍",
+  "瞜": "䁖",
+  "瞞": "瞒",
+  "瞶": "瞆",
+  "瞼": "睑",
+  "矇": "蒙",
+  "矓": "眬",
+  "矚": "瞩",
+  "矯": "矫",
+  "硃": "朱",
+  "硜": "硁",
+  "硤": "硖",
+  "硨": "砗",
+  "硯": "砚",
+  "碕": "埼",
+  "碩": "硕",
+  "碭": "砀",
+  "碸": "砜",
+  "確": "确",
+  "碼": "码",
+  "碽": "䂵",
+  "磑": "硙",
+  "磚": "砖",
+  "磠": "硵",
+  "磣": "碜",
+  "磧": "碛",
+  "磯": "矶",
+  "磽": "硗",
+  "礄": "硚",
+  "礆": "硷",
+  "礎": "础",
+  "礙": "碍",
+  "礦": "矿",
+  "礪": "砺",
+  "礫": "砾",
+  "礬": "矾",
+  "礱": "砻",
+  "祕": "秘",
+  "祿": "禄",
+  "禍": "祸",
+  "禎": "祯",
+  "禕": "祎",
+  "禡": "祃",
+  "禦": "御",
+  "禪": "禅",
+  "禮": "礼",
+  "禰": "祢",
+  "禱": "祷",
+  "禿": "秃",
+  "秈": "籼",
+  "稅": "税",
+  "稈": "秆",
+  "稏": "䅉",
+  "稜": "棱",
+  "稟": "禀",
+  "種": "种",
+  "稱": "称",
+  "穀": "谷",
+  "穇": "䅟",
+  "穌": "稣",
+  "積": "积",
+  "穎": "颖",
+  "穠": "秾",
+  "穡": "穑",
+  "穢": "秽",
+  "穩": "稳",
+  "穫": "获",
+  "穭": "稆",
+  "窩": "窝",
+  "窪": "洼",
+  "窮": "穷",
+  "窯": "窑",
+  "窵": "窎",
+  "窶": "窭",
+  "窺": "窥",
+  "竄": "窜",
+  "竅": "窍",
+  "竇": "窦",
+  "竈": "灶",
+  "竊": "窃",
+  "竪": "竖",
+  "競": "竞",
+  "筆": "笔",
+  "筍": "笋",
+  "筧": "笕",
+  "筴": "䇲",
+  "箇": "个",
+  "箋": "笺",
+  "箏": "筝",
+  "節": "节",
+  "範": "范",
+  "築": "筑",
+  "篋": "箧",
+  "篔": "筼",
+  "篤": "笃",
+  "篩": "筛",
+  "篳": "筚",
+  "簀": "箦",
+  "簍": "篓",
+  "簑": "蓑",
+  "簞": "箪",
+  "簡": "简",
+  "簣": "篑",
+  "簫": "箫",
+  "簹": "筜",
+  "簽": "签",
+  "簾": "帘",
+  "籃": "篮",
+  "籌": "筹",
+  "籔": "䉤",
+  "籙": "箓",
+  "籛": "篯",
+  "籜": "箨",
+  "籟": "籁",
+  "籠": "笼",
+  "籤": "签",
+  "籩": "笾",
+  "籪": "簖",
+  "籬": "篱",
+  "籮": "箩",
+  "籲": "吁",
+  "粵": "粤",
+  "糉": "粽",
+  "糝": "糁",
+  "糞": "粪",
+  "糧": "粮",
+  "糰": "团",
+  "糲": "粝",
+  "糴": "籴",
+  "糶": "粜",
+  "糹": "纟",
+  "糾": "纠",
+  "紀": "纪",
+  "紂": "纣",
+  "約": "约",
+  "紅": "红",
+  "紆": "纡",
+  "紇": "纥",
+  "紈": "纨",
+  "紉": "纫",
+  "紋": "纹",
+  "納": "纳",
+  "紐": "纽",
+  "紓": "纾",
+  "純": "纯",
+  "紕": "纰",
+  "紖": "纼",
+  "紗": "纱",
+  "紘": "纮",
+  "紙": "纸",
+  "級": "级",
+  "紛": "纷",
+  "紜": "纭",
+  "紝": "纴",
+  "紡": "纺",
+  "紬": "䌷",
+  "紮": "扎",
+  "細": "细",
+  "紱": "绂",
+  "紲": "绁",
+  "紳": "绅",
+  "紵": "纻",
+  "紹": "绍",
+  "紺": "绀",
+  "紼": "绋",
+  "紿": "绐",
+  "絀": "绌",
+  "終": "终",
+  "絃": "弦",
+  "組": "组",
+  "絅": "䌹",
+  "絆": "绊",
+  "絎": "绗",
+  "結": "结",
+  "絕": "绝",
+  "絛": "绦",
+  "絝": "绔",
+  "絞": "绞",
+  "絡": "络",
+  "絢": "绚",
+  "給": "给",
+  "絨": "绒",
+  "絰": "绖",
+  "統": "统",
+  "絲": "丝",
+  "絳": "绛",
+  "絶": "绝",
+  "絹": "绢",
+  "綁": "绑",
+  "綃": "绡",
+  "綆": "绠",
+  "綈": "绨",
+  "綉": "绣",
+  "綌": "绤",
+  "綏": "绥",
+  "綐": "䌼",
+  "綑": "捆",
+  "經": "经",
+  "綜": "综",
+  "綞": "缍",
+  "綠": "绿",
+  "綢": "绸",
+  "綣": "绻",
+  "綫": "线",
+  "綬": "绶",
+  "維": "维",
+  "綯": "绹",
+  "綰": "绾",
+  "綱": "纲",
+  "網": "网",
+  "綳": "绷",
+  "綴": "缀",
+  "綸": "纶",
+  "綹": "绺",
+  "綺": "绮",
+  "綻": "绽",
+  "綽": "绰",
+  "綾": "绫",
+  "綿": "绵",
+  "緄": "绲",
+  "緇": "缁",
+  "緊": "紧",
+  "緋": "绯",
+  "緑": "绿",
+  "緒": "绪",
+  "緓": "绬",
+  "緔": "绱",
+  "緗": "缃",
+  "緘": "缄",
+  "緙": "缂",
+  "緝": "缉",
+  "緞": "缎",
+  "締": "缔",
+  "緡": "缗",
+  "緣": "缘",
+  "緦": "缌",
+  "編": "编",
+  "緩": "缓",
+  "緬": "缅",
+  "緯": "纬",
+  "緱": "缑",
+  "緲": "缈",
+  "練": "练",
+  "緶": "缏",
+  "緹": "缇",
+  "緻": "致",
+  "緼": "缊",
+  "縈": "萦",
+  "縉": "缙",
+  "縊": "缢",
+  "縋": "缒",
+  "縐": "绉",
+  "縑": "缣",
+  "縕": "缊",
+  "縗": "缞",
+  "縛": "缚",
+  "縝": "缜",
+  "縞": "缟",
+  "縟": "缛",
+  "縣": "县",
+  "縧": "绦",
+  "縫": "缝",
+  "縭": "缡",
+  "縮": "缩",
+  "縱": "纵",
+  "縲": "缧",
+  "縳": "䌸",
+  "縴": "纤",
+  "縵": "缦",
+  "縶": "絷",
+  "縷": "缕",
+  "縹": "缥",
+  "總": "总",
+  "績": "绩",
+  "繃": "绷",
+  "繅": "缫",
+  "繆": "缪",
+  "繐": "穗",
+  "繒": "缯",
+  "織": "织",
+  "繕": "缮",
+  "繚": "缭",
+  "繞": "绕",
+  "繡": "绣",
+  "繢": "缋",
+  "繩": "绳",
+  "繪": "绘",
+  "繫": "系",
+  "繭": "茧",
+  "繮": "缰",
+  "繯": "缳",
+  "繰": "缲",
+  "繳": "缴",
+  "繸": "䍁",
+  "繹": "绎",
+  "繼": "继",
+  "繽": "缤",
+  "繾": "缱",
+  "繿": "䍀",
+  "纇": "颣",
+  "纈": "缬",
+  "纊": "纩",
+  "續": "续",
+  "纍": "累",
+  "纏": "缠",
+  "纓": "缨",
+  "纔": "才",
+  "纖": "纤",
+  "纘": "缵",
+  "纜": "缆",
+  "缽": "钵",
+  "罈": "坛",
+  "罌": "罂",
+  "罎": "坛",
+  "罰": "罚",
+  "罵": "骂",
+  "罷": "罢",
+  "羅": "罗",
+  "羆": "罴",
+  "羈": "羁",
+  "羋": "芈",
+  "羣": "群",
+  "羥": "羟",
+  "羨": "羡",
+  "義": "义",
+  "羶": "膻",
+  "習": "习",
+  "翬": "翚",
+  "翹": "翘",
+  "翽": "翙",
+  "耬": "耧",
+  "耮": "耢",
+  "聖": "圣",
+  "聞": "闻",
+  "聯": "联",
+  "聰": "聪",
+  "聲": "声",
+  "聳": "耸",
+  "聵": "聩",
+  "聶": "聂",
+  "職": "职",
+  "聹": "聍",
+  "聽": "听",
+  "聾": "聋",
+  "肅": "肃",
+  "脅": "胁",
+  "脈": "脉",
+  "脛": "胫",
+  "脣": "唇",
+  "脩": "修",
+  "脫": "脱",
+  "脹": "胀",
+  "腎": "肾",
+  "腖": "胨",
+  "腡": "脶",
+  "腦": "脑",
+  "腫": "肿",
+  "腳": "脚",
+  "腸": "肠",
+  "膃": "腽",
+  "膕": "腘",
+  "膚": "肤",
+  "膞": "䏝",
+  "膠": "胶",
+  "膩": "腻",
+  "膽": "胆",
+  "膾": "脍",
+  "膿": "脓",
+  "臉": "脸",
+  "臍": "脐",
+  "臏": "膑",
+  "臘": "腊",
+  "臚": "胪",
+  "臟": "脏",
+  "臠": "脔",
+  "臢": "臜",
+  "臥": "卧",
+  "臨": "临",
+  "臺": "台",
+  "與": "与",
+  "興": "兴",
+  "舉": "举",
+  "舊": "旧",
+  "舘": "馆",
+  "艙": "舱",
+  "艤": "舣",
+  "艦": "舰",
+  "艫": "舻",
+  "艱": "艰",
+  "艷": "艳",
+  "芻": "刍",
+  "苧": "苎",
+  "茲": "兹",
+  "荊": "荆",
+  "莊": "庄",
+  "莖": "茎",
+  "莢": "荚",
+  "莧": "苋",
+  "華": "华",
+  "菴": "庵",
+  "菸": "烟",
+  "萇": "苌",
+  "萊": "莱",
+  "萬": "万",
+  "萴": "荝",
+  "萵": "莴",
+  "葉": "叶",
+  "葒": "荭",
+  "葤": "荮",
+  "葦": "苇",
+  "葯": "药",
+  "葷": "荤",
+  "蒐": "搜",
+  "蒓": "莼",
+  "蒔": "莳",
+  "蒕": "蒀",
+  "蒞": "莅",
+  "蒼": "苍",
+  "蓀": "荪",
+  "蓆": "席",
+  "蓋": "盖",
+  "蓮": "莲",
+  "蓯": "苁",
+  "蓴": "莼",
+  "蓽": "荜",
+  "蔔": "卜",
+  "蔘": "参",
+  "蔞": "蒌",
+  "蔣": "蒋",
+  "蔥": "葱",
+  "蔦": "茑",
+  "蔭": "荫",
+  "蕁": "荨",
+  "蕆": "蒇",
+  "蕎": "荞",
+  "蕒": "荬",
+  "蕓": "芸",
+  "蕕": "莸",
+  "蕘": "荛",
+  "蕢": "蒉",
+  "蕩": "荡",
+  "蕪": "芜",
+  "蕭": "萧",
+  "蕷": "蓣",
+  "薀": "蕰",
+  "薈": "荟",
+  "薊": "蓟",
+  "薌": "芗",
+  "薑": "姜",
+  "薔": "蔷",
+  "薘": "荙",
+  "薟": "莶",
+  "薦": "荐",
+  "薩": "萨",
+  "薳": "䓕",
+  "薴": "苧",
+  "薺": "荠",
+  "藍": "蓝",
+  "藎": "荩",
+  "藝": "艺",
+  "藥": "药",
+  "藪": "薮",
+  "藭": "䓖",
+  "藴": "蕴",
+  "藶": "苈",
+  "藹": "蔼",
+  "藺": "蔺",
+  "蘀": "萚",
+  "蘄": "蕲",
+  "蘆": "芦",
+  "蘇": "苏",
+  "蘊": "蕴",
+  "蘚": "藓",
+  "蘞": "蔹",
+  "蘢": "茏",
+  "蘭": "兰",
+  "蘺": "蓠",
+  "蘿": "萝",
+  "虆": "蔂",
+  "處": "处",
+  "虛": "虚",
+  "虜": "虏",
+  "號": "号",
+  "虧": "亏",
+  "虯": "虬",
+  "蛺": "蛱",
+  "蛻": "蜕",
+  "蜆": "蚬",
+  "蝕": "蚀",
+  "蝟": "猬",
+  "蝦": "虾",
+  "蝨": "虱",
+  "蝸": "蜗",
+  "螄": "蛳",
+  "螞": "蚂",
+  "螢": "萤",
+  "螮": "䗖",
+  "螻": "蝼",
+  "螿": "螀",
+  "蟄": "蛰",
+  "蟈": "蝈",
+  "蟎": "螨",
+  "蟣": "虮",
+  "蟬": "蝉",
+  "蟯": "蛲",
+  "蟲": "虫",
+  "蟶": "蛏",
+  "蟻": "蚁",
+  "蠁": "蚃",
+  "蠅": "蝇",
+  "蠆": "虿",
+  "蠍": "蝎",
+  "蠐": "蛴",
+  "蠑": "蝾",
+  "蠔": "蚝",
+  "蠟": "蜡",
+  "蠣": "蛎",
+  "蠨": "蟏",
+  "蠱": "蛊",
+  "蠶": "蚕",
+  "蠻": "蛮",
+  "衆": "众",
+  "衊": "蔑",
+  "術": "术",
+  "衕": "同",
+  "衚": "胡",
+  "衛": "卫",
+  "衝": "冲",
+  "袞": "衮",
+  "裊": "袅",
+  "裏": "里",
+  "補": "补",
+  "裝": "装",
+  "裡": "里",
+  "製": "制",
+  "複": "复",
+  "褌": "裈",
+  "褘": "袆",
+  "褲": "裤",
+  "褳": "裢",
+  "褸": "褛",
+  "褻": "亵",
+  "襆": "幞",
+  "襇": "裥",
+  "襉": "裥",
+  "襏": "袯",
+  "襖": "袄",
+  "襝": "裣",
+  "襠": "裆",
+  "襤": "褴",
+  "襪": "袜",
+  "襯": "衬",
+  "襲": "袭",
+  "襴": "襕",
+  "覈": "核",
+  "見": "见",
+  "覎": "觃",
+  "規": "规",
+  "覓": "觅",
+  "視": "视",
+  "覘": "觇",
+  "覡": "觋",
+  "覥": "觍",
+  "覦": "觎",
+  "親": "亲",
+  "覬": "觊",
+  "覯": "觏",
+  "覲": "觐",
+  "覷": "觑",
+  "覺": "觉",
+  "覽": "览",
+  "覿": "觌",
+  "觀": "观",
+  "觴": "觞",
+  "觶": "觯",
+  "觸": "触",
+  "訁": "讠",
+  "訂": "订",
+  "訃": "讣",
+  "計": "计",
+  "訊": "讯",
+  "訌": "讧",
+  "討": "讨",
+  "訐": "讦",
+  "訒": "讱",
+  "訓": "训",
+  "訕": "讪",
+  "訖": "讫",
+  "記": "记",
+  "訛": "讹",
+  "訝": "讶",
+  "訟": "讼",
+  "訢": "䜣",
+  "訣": "诀",
+  "訥": "讷",
+  "訩": "讻",
+  "訪": "访",
+  "設": "设",
+  "許": "许",
+  "訴": "诉",
+  "訶": "诃",
+  "診": "诊",
+  "註": "注",
+  "証": "证",
+  "詁": "诂",
+  "詆": "诋",
+  "詎": "讵",
+  "詐": "诈",
+  "詒": "诒",
+  "詔": "诏",
+  "評": "评",
+  "詖": "诐",
+  "詗": "诇",
+  "詘": "诎",
+  "詛": "诅",
+  "詞": "词",
+  "詠": "咏",
+  "詡": "诩",
+  "詢": "询",
+  "詣": "诣",
+  "試": "试",
+  "詩": "诗",
+  "詫": "诧",
+  "詬": "诟",
+  "詭": "诡",
+  "詮": "诠",
+  "詰": "诘",
+  "話": "话",
+  "該": "该",
+  "詳": "详",
+  "詵": "诜",
+  "詼": "诙",
+  "詿": "诖",
+  "誄": "诔",
+  "誅": "诛",
+  "誆": "诓",
+  "誇": "夸",
+  "誌": "志",
+  "認": "认",
+  "誑": "诳",
+  "誒": "诶",
+  "誕": "诞",
+  "誘": "诱",
+  "誚": "诮",
+  "語": "语",
+  "誠": "诚",
+  "誡": "诫",
+  "誣": "诬",
+  "誤": "误",
+  "誥": "诰",
+  "誦": "诵",
+  "誨": "诲",
+  "說": "说",
+  "説": "说",
+  "誰": "谁",
+  "課": "课",
+  "誶": "谇",
+  "誹": "诽",
+  "誼": "谊",
+  "誾": "訚",
+  "調": "调",
+  "諂": "谄",
+  "諄": "谆",
+  "談": "谈",
+  "諉": "诿",
+  "請": "请",
+  "諍": "诤",
+  "諏": "诹",
+  "諑": "诼",
+  "諒": "谅",
+  "論": "论",
+  "諗": "谂",
+  "諛": "谀",
+  "諜": "谍",
+  "諝": "谞",
+  "諞": "谝",
+  "諡": "谥",
+  "諢": "诨",
+  "諤": "谔",
+  "諦": "谛",
+  "諧": "谐",
+  "諭": "谕",
+  "諱": "讳",
+  "諳": "谙",
+  "諶": "谌",
+  "諷": "讽",
+  "諸": "诸",
+  "諺": "谚",
+  "諼": "谖",
+  "諾": "诺",
+  "謀": "谋",
+  "謁": "谒",
+  "謂": "谓",
+  "謄": "誊",
+  "謅": "诌",
+  "謊": "谎",
+  "謎": "谜",
+  "謐": "谧",
+  "謔": "谑",
+  "謖": "谡",
+  "謗": "谤",
+  "謙": "谦",
+  "謚": "谥",
+  "講": "讲",
+  "謝": "谢",
+  "謠": "谣",
+  "謡": "谣",
+  "謨": "谟",
+  "謫": "谪",
+  "謬": "谬",
+  "謭": "谫",
+  "謳": "讴",
+  "謹": "谨",
+  "謾": "谩",
+  "譁": "哗",
+  "譅": "䜧",
+  "證": "证",
+  "譎": "谲",
+  "譏": "讥",
+  "譖": "谮",
+  "識": "识",
+  "譙": "谯",
+  "譚": "谭",
+  "譜": "谱",
+  "譟": "噪",
+  "譫": "谵",
+  "譭": "毁",
+  "譯": "译",
+  "議": "议",
+  "譴": "谴",
+  "護": "护",
+  "譸": "诪",
+  "譽": "誉",
+  "讀": "读",
+  "讅": "谉",
+  "變": "变",
+  "讋": "詟",
+  "讌": "䜩",
+  "讎": "雠",
+  "讒": "谗",
+  "讓": "让",
+  "讕": "谰",
+  "讖": "谶",
+  "讚": "赞",
+  "讜": "谠",
+  "讞": "谳",
+  "豈": "岂",
+  "豎": "竖",
+  "豐": "丰",
+  "豔": "艳",
+  "豬": "猪",
+  "豶": "豮",
+  "貓": "猫",
+  "貙": "䝙",
+  "貝": "贝",
+  "貞": "贞",
+  "貟": "贠",
+  "負": "负",
+  "財": "财",
+  "貢": "贡",
+  "貧": "贫",
+  "貨": "货",
+  "販": "贩",
+  "貪": "贪",
+  "貫": "贯",
+  "責": "责",
+  "貯": "贮",
+  "貰": "贳",
+  "貲": "赀",
+  "貳": "贰",
+  "貴": "贵",
+  "貶": "贬",
+  "貸": "贷",
+  "貺": "贶",
+  "費": "费",
+  "貼": "贴",
+  "貽": "贻",
+  "貿": "贸",
+  "賀": "贺",
+  "賁": "贲",
+  "賂": "赂",
+  "賃": "赁",
+  "賄": "贿",
+  "賅": "赅",
+  "資": "资",
+  "賈": "贾",
+  "賊": "贼",
+  "賑": "赈",
+  "賒": "赊",
+  "賓": "宾",
+  "賕": "赇",
+  "賙": "赒",
+  "賚": "赉",
+  "賜": "赐",
+  "賞": "赏",
+  "賠": "赔",
+  "賡": "赓",
+  "賢": "贤",
+  "賣": "卖",
+  "賤": "贱",
+  "賦": "赋",
+  "賧": "赕",
+  "質": "质",
+  "賫": "赍",
+  "賬": "账",
+  "賭": "赌",
+  "賰": "䞐",
+  "賴": "赖",
+  "賵": "赗",
+  "賺": "赚",
+  "賻": "赙",
+  "購": "购",
+  "賽": "赛",
+  "賾": "赜",
+  "贄": "贽",
+  "贅": "赘",
+  "贇": "赟",
+  "贈": "赠",
+  "贊": "赞",
+  "贋": "赝",
+  "贍": "赡",
+  "贏": "赢",
+  "贐": "赆",
+  "贓": "赃",
+  "贔": "赑",
+  "贖": "赎",
+  "贗": "赝",
+  "贛": "赣",
+  "贜": "赃",
+  "赬": "赪",
+  "趕": "赶",
+  "趙": "赵",
+  "趨": "趋",
+  "趲": "趱",
+  "跡": "迹",
+  "踐": "践",
+  "踰": "逾",
+  "踴": "踊",
+  "蹌": "跄",
+  "蹕": "跸",
+  "蹟": "迹",
+  "蹣": "蹒",
+  "蹤": "踪",
+  "蹺": "跷",
+  "躂": "跶",
+  "躉": "趸",
+  "躊": "踌",
+  "躋": "跻",
+  "躍": "跃",
+  "躎": "䟢",
+  "躑": "踯",
+  "躒": "跞",
+  "躓": "踬",
+  "躕": "蹰",
+  "躚": "跹",
+  "躡": "蹑",
+  "躥": "蹿",
+  "躦": "躜",
+  "躪": "躏",
+  "軀": "躯",
+  "車": "车",
+  "軋": "轧",
+  "軌": "轨",
+  "軍": "军",
+  "軑": "轪",
+  "軒": "轩",
+  "軔": "轫",
+  "軛": "轭",
+  "軟": "软",
+  "軤": "轷",
+  "軫": "轸",
+  "軲": "轱",
+  "軸": "轴",
+  "軹": "轵",
+  "軺": "轺",
+  "軻": "轲",
+  "軼": "轶",
+  "軾": "轼",
+  "較": "较",
+  "輅": "辂",
+  "輇": "辁",
+  "輈": "辀",
+  "載": "载",
+  "輊": "轾",
+  "輒": "辄",
+  "輓": "挽",
+  "輔": "辅",
+  "輕": "轻",
+  "輛": "辆",
+  "輜": "辎",
+  "輝": "辉",
+  "輞": "辋",
+  "輟": "辍",
+  "輥": "辊",
+  "輦": "辇",
+  "輩": "辈",
+  "輪": "轮",
+  "輬": "辌",
+  "輯": "辑",
+  "輳": "辏",
+  "輸": "输",
+  "輻": "辐",
+  "輼": "辒",
+  "輾": "辗",
+  "輿": "舆",
+  "轀": "辒",
+  "轂": "毂",
+  "轄": "辖",
+  "轅": "辕",
+  "轆": "辘",
+  "轉": "转",
+  "轍": "辙",
+  "轎": "轿",
+  "轔": "辚",
+  "轟": "轰",
+  "轡": "辔",
+  "轢": "轹",
+  "轤": "轳",
+  "辦": "办",
+  "辭": "辞",
+  "辮": "辫",
+  "辯": "辩",
+  "農": "农",
+  "迴": "回",
+  "逕": "迳",
+  "這": "这",
+  "連": "连",
+  "週": "周",
+  "進": "进",
+  "遊": "游",
+  "運": "运",
+  "過": "过",
+  "達": "达",
+  "違": "违",
+  "遙": "遥",
+  "遜": "逊",
+  "遞": "递",
+  "遠": "远",
+  "遡": "溯",
+  "適": "适",
+  "遲": "迟",
+  "遷": "迁",
+  "選": "选",
+  "遺": "遗",
+  "遼": "辽",
+  "邁": "迈",
+  "還": "还",
+  "邇": "迩",
+  "邊": "边",
+  "邏": "逻",
+  "邐": "逦",
+  "郟": "郏",
+  "郵": "邮",
+  "鄆": "郓",
+  "鄉": "乡",
+  "鄒": "邹",
+  "鄔": "邬",
+  "鄖": "郧",
+  "鄧": "邓",
+  "鄭": "郑",
+  "鄰": "邻",
+  "鄲": "郸",
+  "鄴": "邺",
+  "鄶": "郐",
+  "鄺": "邝",
+  "酇": "酂",
+  "酈": "郦",
+  "醃": "腌",
+  "醖": "酝",
+  "醜": "丑",
+  "醞": "酝",
+  "醣": "糖",
+  "醫": "医",
+  "醬": "酱",
+  "醱": "酦",
+  "釀": "酿",
+  "釁": "衅",
+  "釃": "酾",
+  "釅": "酽",
+  "釋": "释",
+  "釐": "厘",
+  "釒": "钅",
+  "釓": "钆",
+  "釔": "钇",
+  "釕": "钌",
+  "釗": "钊",
+  "釘": "钉",
+  "釙": "钋",
+  "針": "针",
+  "釣": "钓",
+  "釤": "钐",
+  "釦": "扣",
+  "釧": "钏",
+  "釩": "钒",
+  "釵": "钗",
+  "釷": "钍",
+  "釹": "钕",
+  "釺": "钎",
+  "釾": "䥺",
+  "鈀": "钯",
+  "鈁": "钫",
+  "鈃": "钘",
+  "鈄": "钭",
+  "鈅": "钥",
+  "鈈": "钚",
+  "鈉": "钠",
+  "鈍": "钝",
+  "鈎": "钩",
+  "鈐": "钤",
+  "鈑": "钣",
+  "鈒": "钑",
+  "鈔": "钞",
+  "鈞": "钧",
+  "鈡": "钟",
+  "鈣": "钙",
+  "鈥": "钬",
+  "鈦": "钛",
+  "鈧": "钪",
+  "鈮": "铌",
+  "鈰": "铈",
+  "鈳": "钶",
+  "鈴": "铃",
+  "鈷": "钴",
+  "鈸": "钹",
+  "鈹": "铍",
+  "鈺": "钰",
+  "鈽": "钸",
+  "鈾": "铀",
+  "鈿": "钿",
+  "鉀": "钾",
+  "鉆": "钻",
+  "鉈": "铊",
+  "鉉": "铉",
+  "鉋": "铇",
+  "鉍": "铋",
+  "鉑": "铂",
+  "鉕": "钷",
+  "鉗": "钳",
+  "鉚": "铆",
+  "鉛": "铅",
+  "鉞": "钺",
+  "鉢": "钵",
+  "鉤": "钩",
+  "鉦": "钲",
+  "鉬": "钼",
+  "鉭": "钽",
+  "鉶": "铏",
+  "鉸": "铰",
+  "鉺": "铒",
+  "鉻": "铬",
+  "鉿": "铪",
+  "銀": "银",
+  "銃": "铳",
+  "銅": "铜",
+  "銍": "铚",
+  "銑": "铣",
+  "銓": "铨",
+  "銖": "铢",
+  "銘": "铭",
+  "銚": "铫",
+  "銛": "铦",
+  "銜": "衔",
+  "銠": "铑",
+  "銣": "铷",
+  "銥": "铱",
+  "銦": "铟",
+  "銨": "铵",
+  "銩": "铥",
+  "銪": "铕",
+  "銫": "铯",
+  "銬": "铐",
+  "銱": "铞",
+  "銳": "锐",
+  "銷": "销",
+  "銹": "锈",
+  "銻": "锑",
+  "銼": "锉",
+  "鋁": "铝",
+  "鋃": "锒",
+  "鋅": "锌",
+  "鋇": "钡",
+  "鋌": "铤",
+  "鋏": "铗",
+  "鋒": "锋",
+  "鋙": "铻",
+  "鋝": "锊",
+  "鋟": "锓",
+  "鋣": "铘",
+  "鋤": "锄",
+  "鋥": "锃",
+  "鋦": "锔",
+  "鋨": "锇",
+  "鋩": "铓",
+  "鋪": "铺",
+  "鋭": "锐",
+  "鋮": "铖",
+  "鋯": "锆",
+  "鋰": "锂",
+  "鋱": "铽",
+  "鋶": "锍",
+  "鋸": "锯",
+  "鋼": "钢",
+  "錁": "锞",
+  "錄": "录",
+  "錆": "锖",
+  "錇": "锫",
+  "錈": "锩",
+  "錏": "铔",
+  "錐": "锥",
+  "錒": "锕",
+  "錕": "锟",
+  "錘": "锤",
+  "錙": "锱",
+  "錚": "铮",
+  "錛": "锛",
+  "錟": "锬",
+  "錠": "锭",
+  "錡": "锜",
+  "錢": "钱",
+  "錦": "锦",
+  "錨": "锚",
+  "錩": "锠",
+  "錫": "锡",
+  "錮": "锢",
+  "錯": "错",
+  "録": "录",
+  "錳": "锰",
+  "錶": "表",
+  "錸": "铼",
+  "鍀": "锝",
+  "鍁": "锨",
+  "鍃": "锪",
+  "鍆": "钔",
+  "鍇": "锴",
+  "鍈": "锳",
+  "鍋": "锅",
+  "鍍": "镀",
+  "鍔": "锷",
+  "鍘": "铡",
+  "鍚": "钖",
+  "鍛": "锻",
+  "鍠": "锽",
+  "鍤": "锸",
+  "鍥": "锲",
+  "鍩": "锘",
+  "鍬": "锹",
+  "鍰": "锾",
+  "鍵": "键",
+  "鍶": "锶",
+  "鍺": "锗",
+  "鍼": "针",
+  "鎂": "镁",
+  "鎄": "锿",
+  "鎇": "镅",
+  "鎊": "镑",
+  "鎌": "镰",
+  "鎔": "镕",
+  "鎖": "锁",
+  "鎘": "镉",
+  "鎚": "锤",
+  "鎛": "镈",
+  "鎡": "镃",
+  "鎢": "钨",
+  "鎣": "蓥",
+  "鎦": "镏",
+  "鎧": "铠",
+  "鎩": "铩",
+  "鎪": "锼",
+  "鎬": "镐",
+  "鎭": "镇",
+  "鎮": "镇",
+  "鎰": "镒",
+  "鎲": "镋",
+  "鎳": "镍",
+  "鎵": "镓",
+  "鎸": "镌",
+  "鎿": "镎",
+  "鏃": "镞",
+  "鏇": "镟",
+  "鏈": "链",
+  "鏌": "镆",
+  "鏍": "镙",
+  "鏐": "镠",
+  "鏑": "镝",
+  "鏗": "铿",
+  "鏘": "锵",
+  "鏚": "戚",
+  "鏜": "镗",
+  "鏝": "镘",
+  "鏞": "镛",
+  "鏟": "铲",
+  "鏡": "镜",
+  "鏢": "镖",
+  "鏤": "镂",
+  "鏨": "錾",
+  "鏰": "镚",
+  "鏵": "铧",
+  "鏷": "镤",
+  "鏹": "镪",
+  "鏺": "䥽",
+  "鏽": "锈",
+  "鐃": "铙",
+  "鐋": "铴",
+  "鐐": "镣",
+  "鐒": "铹",
+  "鐓": "镦",
+  "鐔": "镡",
+  "鐗": "锏",
+  "鐘": "钟",
+  "鐙": "镫",
+  "鐝": "镢",
+  "鐠": "镨",
+  "鐥": "䦅",
+  "鐦": "锎",
+  "鐧": "锏",
+  "鐨": "镄",
+  "鐫": "镌",
+  "鐮": "镰",
+  "鐯": "䦃",
+  "鐲": "镯",
+  "鐳": "镭",
+  "鐵": "铁",
+  "鐶": "镮",
+  "鐸": "铎",
+  "鐺": "铛",
+  "鐿": "镱",
+  "鑄": "铸",
+  "鑊": "镬",
+  "鑌": "镔",
+  "鑑": "鉴",
+  "鑒": "鉴",
+  "鑔": "镲",
+  "鑕": "锧",
+  "鑞": "镴",
+  "鑠": "铄",
+  "鑣": "镳",
+  "鑥": "镥",
+  "鑭": "镧",
+  "鑰": "钥",
+  "鑱": "镵",
+  "鑲": "镶",
+  "鑷": "镊",
+  "鑹": "镩",
+  "鑼": "锣",
+  "鑽": "钻",
+  "鑾": "銮",
+  "鑿": "凿",
+  "钂": "镋",
+  "镟": "旋",
+  "長": "长",
+  "門": "门",
+  "閂": "闩",
+  "閃": "闪",
+  "閆": "闫",
+  "閈": "闬",
+  "閉": "闭",
+  "閌": "闶",
+  "閎": "闳",
+  "閏": "闰",
+  "閑": "闲",
+  "間": "间",
+  "閔": "闵",
+  "閘": "闸",
+  "閡": "阂",
+  "閣": "阁",
+  "閤": "合",
+  "閥": "阀",
+  "閨": "闺",
+  "閩": "闽",
+  "閫": "阃",
+  "閬": "阆",
+  "閭": "闾",
+  "閱": "阅",
+  "閲": "阅",
+  "閶": "阊",
+  "閹": "阉",
+  "閻": "阎",
+  "閼": "阏",
+  "閽": "阍",
+  "閾": "阈",
+  "閿": "阌",
+  "闃": "阒",
+  "闆": "板",
+  "闇": "暗",
+  "闈": "闱",
+  "闊": "阔",
+  "闋": "阕",
+  "闌": "阑",
+  "闍": "阇",
+  "闐": "阗",
+  "闒": "阘",
+  "闓": "闿",
+  "闔": "阖",
+  "闕": "阙",
+  "闖": "闯",
+  "關": "关",
+  "闞": "阚",
+  "闠": "阓",
+  "闡": "阐",
+  "闢": "辟",
+  "闤": "阛",
+  "闥": "闼",
+  "陘": "陉",
+  "陝": "陕",
+  "陞": "升",
+  "陣": "阵",
+  "陰": "阴",
+  "陳": "陈",
+  "陸": "陆",
+  "陽": "阳",
+  "隉": "陧",
+  "隊": "队",
+  "階": "阶",
+  "隕": "陨",
+  "際": "际",
+  "隨": "随",
+  "險": "险",
+  "隱": "隐",
+  "隴": "陇",
+  "隸": "隶",
+  "隻": "只",
+  "雋": "隽",
+  "雖": "虽",
+  "雙": "双",
+  "雛": "雏",
+  "雜": "杂",
+  "雞": "鸡",
+  "離": "离",
+  "難": "难",
+  "雲": "云",
+  "電": "电",
+  "霢": "霡",
+  "霧": "雾",
+  "霽": "霁",
+  "靂": "雳",
+  "靄": "霭",
+  "靆": "叇",
+  "靈": "灵",
+  "靉": "叆",
+  "靚": "靓",
+  "靜": "静",
+  "靨": "靥",
+  "鞀": "鼗",
+  "鞏": "巩",
+  "鞝": "绱",
+  "鞦": "秋",
+  "鞽": "鞒",
+  "韁": "缰",
+  "韃": "鞑",
+  "韆": "千",
+  "韉": "鞯",
+  "韋": "韦",
+  "韌": "韧",
+  "韍": "韨",
+  "韓": "韩",
+  "韙": "韪",
+  "韜": "韬",
+  "韞": "韫",
+  "韻": "韵",
+  "響": "响",
+  "頁": "页",
+  "頂": "顶",
+  "頃": "顷",
+  "項": "项",
+  "順": "顺",
+  "頇": "顸",
+  "須": "须",
+  "頊": "顼",
+  "頌": "颂",
+  "頎": "颀",
+  "頏": "颃",
+  "預": "预",
+  "頑": "顽",
+  "頒": "颁",
+  "頓": "顿",
+  "頗": "颇",
+  "領": "领",
+  "頜": "颌",
+  "頡": "颉",
+  "頤": "颐",
+  "頦": "颏",
+  "頭": "头",
+  "頮": "颒",
+  "頰": "颊",
+  "頲": "颋",
+  "頴": "颕",
+  "頷": "颔",
+  "頸": "颈",
+  "頹": "颓",
+  "頻": "频",
+  "頽": "颓",
+  "顆": "颗",
+  "題": "题",
+  "額": "额",
+  "顎": "颚",
+  "顏": "颜",
+  "顒": "颙",
+  "顓": "颛",
+  "顔": "颜",
+  "顙": "颡",
+  "顛": "颠",
+  "類": "类",
+  "顢": "颟",
+  "顥": "颢",
+  "顧": "顾",
+  "顫": "颤",
+  "顬": "颥",
+  "顯": "显",
+  "顰": "颦",
+  "顱": "颅",
+  "顳": "颞",
+  "顴": "颧",
+  "風": "风",
+  "颭": "飐",
+  "颮": "飑",
+  "颯": "飒",
+  "颱": "台",
+  "颳": "刮",
+  "颶": "飓",
+  "颸": "飔",
+  "颺": "飏",
+  "颻": "飖",
+  "颼": "飕",
+  "飀": "飗",
+  "飄": "飘",
+  "飆": "飙",
+  "飈": "飚",
+  "飛": "飞",
+  "飠": "饣",
+  "飢": "饥",
+  "飣": "饤",
+  "飥": "饦",
+  "飩": "饨",
+  "飪": "饪",
+  "飫": "饫",
+  "飭": "饬",
+  "飯": "饭",
+  "飱": "飧",
+  "飲": "饮",
+  "飴": "饴",
+  "飼": "饲",
+  "飽": "饱",
+  "飾": "饰",
+  "飿": "饳",
+  "餃": "饺",
+  "餄": "饸",
+  "餅": "饼",
+  "餉": "饷",
+  "養": "养",
+  "餌": "饵",
+  "餎": "饹",
+  "餏": "饻",
+  "餑": "饽",
+  "餒": "馁",
+  "餓": "饿",
+  "餕": "馂",
+  "餖": "饾",
+  "餚": "肴",
+  "餛": "馄",
+  "餜": "馃",
+  "餞": "饯",
+  "餡": "馅",
+  "館": "馆",
+  "餳": "饧",
+  "餶": "馉",
+  "餷": "馇",
+  "餺": "馎",
+  "餼": "饩",
+  "餾": "馏",
+  "餿": "馊",
+  "饁": "馌",
+  "饃": "馍",
+  "饅": "馒",
+  "饈": "馐",
+  "饉": "馑",
+  "饊": "馓",
+  "饋": "馈",
+  "饌": "馔",
+  "饑": "饥",
+  "饒": "饶",
+  "饗": "飨",
+  "饜": "餍",
+  "饞": "馋",
+  "饢": "馕",
+  "馬": "马",
+  "馭": "驭",
+  "馮": "冯",
+  "馱": "驮",
+  "馳": "驰",
+  "馴": "驯",
+  "馹": "驲",
+  "駁": "驳",
+  "駐": "驻",
+  "駑": "驽",
+  "駒": "驹",
+  "駔": "驵",
+  "駕": "驾",
+  "駘": "骀",
+  "駙": "驸",
+  "駛": "驶",
+  "駝": "驼",
+  "駟": "驷",
+  "駡": "骂",
+  "駢": "骈",
+  "駭": "骇",
+  "駰": "骃",
+  "駱": "骆",
+  "駸": "骎",
+  "駿": "骏",
+  "騁": "骋",
+  "騂": "骍",
+  "騅": "骓",
+  "騌": "骔",
+  "騍": "骒",
+  "騎": "骑",
+  "騏": "骐",
+  "騖": "骛",
+  "騙": "骗",
+  "騤": "骙",
+  "騧": "䯄",
+  "騫": "骞",
+  "騭": "骘",
+  "騮": "骝",
+  "騰": "腾",
+  "騶": "驺",
+  "騷": "骚",
+  "騸": "骟",
+  "騾": "骡",
+  "驀": "蓦",
+  "驁": "骜",
+  "驂": "骖",
+  "驃": "骠",
+  "驅": "驱",
+  "驊": "骅",
+  "驌": "骕",
+  "驍": "骁",
+  "驏": "骣",
+  "驕": "骄",
+  "驗": "验",
+  "驚": "惊",
+  "驛": "驿",
+  "驟": "骤",
+  "驢": "驴",
+  "驤": "骧",
+  "驥": "骥",
+  "驦": "骦",
+  "驪": "骊",
+  "驫": "骉",
+  "骯": "肮",
+  "髏": "髅",
+  "髒": "脏",
+  "體": "体",
+  "髕": "髌",
+  "髖": "髋",
+  "髮": "发",
+  "鬆": "松",
+  "鬍": "胡",
+  "鬚": "须",
+  "鬢": "鬓",
+  "鬥": "斗",
+  "鬧": "闹",
+  "鬨": "哄",
+  "鬩": "阋",
+  "鬮": "阄",
+  "鬱": "郁",
+  "鬹": "鬶",
+  "魎": "魉",
+  "魘": "魇",
+  "魚": "鱼",
+  "魛": "鱽",
+  "魢": "鱾",
+  "魨": "鲀",
+  "魯": "鲁",
+  "魴": "鲂",
+  "魷": "鱿",
+  "魺": "鲄",
+  "鮁": "鲅",
+  "鮃": "鲆",
+  "鮊": "鲌",
+  "鮋": "鲉",
+  "鮍": "鲏",
+  "鮎": "鲇",
+  "鮐": "鲐",
+  "鮑": "鲍",
+  "鮒": "鲋",
+  "鮓": "鲊",
+  "鮚": "鲒",
+  "鮜": "鲘",
+  "鮝": "鲞",
+  "鮞": "鲕",
+  "鮣": "䲟",
+  "鮦": "鲖",
+  "鮪": "鲔",
+  "鮫": "鲛",
+  "鮭": "鲑",
+  "鮮": "鲜",
+  "鮳": "鲓",
+  "鮶": "鲪",
+  "鮺": "鲝",
+  "鯀": "鲧",
+  "鯁": "鲠",
+  "鯇": "鲩",
+  "鯉": "鲤",
+  "鯊": "鲨",
+  "鯒": "鲬",
+  "鯔": "鲻",
+  "鯕": "鲯",
+  "鯖": "鲭",
+  "鯗": "鲞",
+  "鯛": "鲷",
+  "鯝": "鲴",
+  "鯡": "鲱",
+  "鯢": "鲵",
+  "鯤": "鲲",
+  "鯧": "鲳",
+  "鯨": "鲸",
+  "鯪": "鲮",
+  "鯫": "鲰",
+  "鯰": "鲶",
+  "鯴": "鲺",
+  "鯷": "鳀",
+  "鯽": "鲫",
+  "鯿": "鳊",
+  "鰁": "鳈",
+  "鰂": "鲗",
+  "鰃": "鳂",
+  "鰆": "䲠",
+  "鰈": "鲽",
+  "鰉": "鳇",
+  "鰌": "䲡",
+  "鰍": "鳅",
+  "鰏": "鲾",
+  "鰐": "鳄",
+  "鰒": "鳆",
+  "鰓": "鳃",
+  "鰛": "鳁",
+  "鰜": "鳒",
+  "鰟": "鳑",
+  "鰠": "鳋",
+  "鰣": "鲥",
+  "鰥": "鳏",
+  "鰧": "䲢",
+  "鰨": "鳎",
+  "鰩": "鳐",
+  "鰭": "鳍",
+  "鰮": "鳁",
+  "鰱": "鲢",
+  "鰲": "鳌",
+  "鰳": "鳓",
+  "鰵": "鳘",
+  "鰷": "鲦",
+  "鰹": "鲣",
+  "鰺": "鲹",
+  "鰻": "鳗",
+  "鰼": "鳛",
+  "鰾": "鳔",
+  "鱂": "鳉",
+  "鱅": "鳙",
+  "鱈": "鳕",
+  "鱉": "鳖",
+  "鱒": "鳟",
+  "鱔": "鳝",
+  "鱖": "鳜",
+  "鱗": "鳞",
+  "鱘": "鲟",
+  "鱝": "鲼",
+  "鱟": "鲎",
+  "鱠": "鲙",
+  "鱣": "鳣",
+  "鱤": "鳡",
+  "鱧": "鳢",
+  "鱨": "鲿",
+  "鱭": "鲚",
+  "鱯": "鳠",
+  "鱷": "鳄",
+  "鱸": "鲈",
+  "鱺": "鲡",
+  "鳥": "鸟",
+  "鳧": "凫",
+  "鳩": "鸠",
+  "鳬": "凫",
+  "鳲": "鸤",
+  "鳳": "凤",
+  "鳴": "鸣",
+  "鳶": "鸢",
+  "鳾": "䴓",
+  "鴆": "鸩",
+  "鴇": "鸨",
+  "鴉": "鸦",
+  "鴒": "鸰",
+  "鴕": "鸵",
+  "鴛": "鸳",
+  "鴝": "鸲",
+  "鴞": "鸮",
+  "鴟": "鸱",
+  "鴣": "鸪",
+  "鴦": "鸯",
+  "鴨": "鸭",
+  "鴯": "鸸",
+  "鴰": "鸹",
+  "鴴": "鸻",
+  "鴷": "䴕",
+  "鴻": "鸿",
+  "鴿": "鸽",
+  "鵁": "䴔",
+  "鵂": "鸺",
+  "鵃": "鸼",
+  "鵐": "鹀",
+  "鵑": "鹃",
+  "鵒": "鹆",
+  "鵓": "鹁",
+  "鵜": "鹈",
+  "鵝": "鹅",
+  "鵠": "鹄",
+  "鵡": "鹉",
+  "鵪": "鹌",
+  "鵬": "鹏",
+  "鵮": "鹐",
+  "鵯": "鹎",
+  "鵲": "鹊",
+  "鵷": "鹓",
+  "鵾": "鹍",
+  "鶄": "䴖",
+  "鶇": "鸫",
+  "鶉": "鹑",
+  "鶊": "鹒",
+  "鶓": "鹋",
+  "鶖": "鹙",
+  "鶘": "鹕",
+  "鶚": "鹗",
+  "鶡": "鹖",
+  "鶥": "鹛",
+  "鶩": "鹜",
+  "鶪": "䴗",
+  "鶬": "鸧",
+  "鶯": "莺",
+  "鶲": "鹟",
+  "鶴": "鹤",
+  "鶹": "鹠",
+  "鶺": "鹡",
+  "鶻": "鹘",
+  "鶼": "鹣",
+  "鶿": "鹚",
+  "鷀": "鹚",
+  "鷁": "鹢",
+  "鷂": "鹞",
+  "鷄": "鸡",
+  "鷈": "䴘",
+  "鷉": "䴘",
+  "鷊": "鹝",
+  "鷓": "鹧",
+  "鷖": "鹥",
+  "鷗": "鸥",
+  "鷙": "鸷",
+  "鷚": "鹨",
+  "鷥": "鸶",
+  "鷦": "鹪",
+  "鷫": "鹔",
+  "鷯": "鹩",
+  "鷲": "鹫",
+  "鷳": "鹇",
+  "鷴": "鹇",
+  "鷸": "鹬",
+  "鷹": "鹰",
+  "鷺": "鹭",
+  "鷽": "鸴",
+  "鷿": "䴙",
+  "鸂": "㶉",
+  "鸇": "鹯",
+  "鸊": "䴙",
+  "鸌": "鹱",
+  "鸏": "鹲",
+  "鸕": "鸬",
+  "鸘": "鹴",
+  "鸚": "鹦",
+  "鸛": "鹳",
+  "鸝": "鹂",
+  "鸞": "鸾",
+  "鹵": "卤",
+  "鹹": "咸",
+  "鹺": "鹾",
+  "鹼": "碱",
+  "鹽": "盐",
+  "麗": "丽",
+  "麥": "麦",
+  "麩": "麸",
+  "麫": "面",
+  "麯": "曲",
+  "黃": "黄",
+  "黌": "黉",
+  "點": "点",
+  "黨": "党",
+  "黲": "黪",
+  "黴": "霉",
+  "黶": "黡",
+  "黷": "黩",
+  "黽": "黾",
+  "黿": "鼋",
+  "鼉": "鼍",
+  "鼕": "冬",
+  "鼴": "鼹",
+  "齇": "齄",
+  "齊": "齐",
+  "齋": "斋",
+  "齎": "赍",
+  "齏": "齑",
+  "齒": "齿",
+  "齔": "龀",
+  "齕": "龁",
+  "齗": "龂",
+  "齙": "龅",
+  "齜": "龇",
+  "齟": "龃",
+  "齠": "龆",
+  "齡": "龄",
+  "齣": "出",
+  "齦": "龈",
+  "齪": "龊",
+  "齬": "龉",
+  "齲": "龋",
+  "齶": "腭",
+  "齷": "龌",
+  "龍": "龙",
+  "龎": "厐",
+  "龐": "庞",
+  "龑": "䶮",
+  "龔": "龚",
+  "龕": "龛",
+  "龜": "龟",
+  "鿁": "䜤",
+  "妳": "你"
+};
+var regexp;
+function cht2chs(text) {
+  regexp || (regexp = new RegExp(Object.keys(aTC2SC).join("|"), "g"));
+  return text.replace(regexp, (d) => aTC2SC[d]);
+}
 
-// src/utils/hook/node.ts
-var appendChildHead = HTMLHeadElement.prototype.appendChild;
-var appendChildBody = HTMLBodyElement.prototype.appendChild;
-var insertBeforeHead = HTMLHeadElement.prototype.insertBefore;
-var insertBeforeBody = HTMLBodyElement.prototype.insertBefore;
-var jsonp = [];
-HTMLHeadElement.prototype.appendChild = function(newChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
-    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
-  });
-  return appendChildHead.call(this, newChild);
-};
-HTMLBodyElement.prototype.appendChild = function(newChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
-    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
-  });
-  return appendChildBody.call(this, newChild);
-};
-HTMLHeadElement.prototype.insertBefore = function(newChild, refChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
-    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
-  });
-  return insertBeforeHead.call(this, newChild, refChild);
-};
-HTMLBodyElement.prototype.insertBefore = function(newChild, refChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
-    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
-  });
-  return insertBeforeBody.call(this, newChild, refChild);
-};
-function jsonpHook(url, redirect, modifyResponse, once = true) {
-  let id;
-  const one = Array.isArray(url) ? url : [url];
-  const two = function() {
-    once && id && delete jsonp[id - 1];
-    if (redirect)
-      try {
-        this.src = redirect(this.src) || this.src;
-      } catch (e) {
-        debug.error("redirect of jsonphook", one, e);
+// src/utils/hook/method.ts
+function methodHook(target, propertyKey, callback, modifyArguments) {
+  try {
+    let modify2 = function() {
+      loaded = true;
+      if (values[0]) {
+        Reflect.defineProperty(target, propertyKey, { configurable: true, value: values[0] });
+        iArguments.forEach((d) => values[0](...d));
+      } else {
+        debug.error("拦截方法出错！", "目标方法", propertyKey, "所属对象", target);
       }
-    if (modifyResponse) {
-      const obj = urlObj(this.src);
-      if (obj) {
-        const callback = obj.callback;
-        const call = window[callback];
-        const url2 = this.src;
-        if (call) {
-          window[callback] = function(v) {
-            try {
-              v = modifyResponse(v, url2, call) || v;
-            } catch (e) {
-              debug.error("modifyResponse of jsonphook", one, e);
+    };
+    var modify = modify2;
+    const values = [];
+    const iArguments = [];
+    let loading2 = false;
+    let loaded = false;
+    Reflect.defineProperty(target, propertyKey, {
+      configurable: true,
+      set: (v) => {
+        if (loading2 && !loaded) {
+          values.unshift(v);
+        }
+        return true;
+      },
+      get: () => {
+        if (!loading2) {
+          loading2 = true;
+          setTimeout(() => {
+            const res = callback();
+            if (res && res.finally) {
+              res.finally(() => modify2());
+            } else {
+              modify2();
             }
-            return v !== true && call(v);
-          };
+          });
         }
+        return function() {
+          modifyArguments?.(arguments);
+          iArguments.push(arguments);
+        };
       }
-    }
-  };
-  const iid = jsonp.push([one, two]);
-  return () => {
-    removeJsonphook(iid);
-  };
+    });
+  } catch (e) {
+    debug.error(e);
+  }
 }
-jsonpHook.async = (url, condition, modifyResponse, once = true) => {
-  let id;
-  const one = Array.isArray(url) ? url : [url];
-  const two = function() {
-    try {
-      once && id && delete jsonp[id - 1];
-      if (!condition || condition(this.src)) {
-        const obj = urlObj(this.src);
-        if (obj) {
-          const callback = obj.callback;
-          const call = window[callback];
-          if (call) {
-            modifyResponse && modifyResponse(this.src).then((d) => {
-              window[callback](d);
-              this.dispatchEvent(new ProgressEvent("load"));
-            }).catch((e) => {
-              this.dispatchEvent(new ProgressEvent("error"));
-              debug.error("modifyResponse of xhrhookasync", one, e);
-            });
-          }
-          this.removeAttribute("src");
-        }
+function propertyHook(target, propertyKey, propertyValue, configurable = true) {
+  try {
+    Reflect.defineProperty(target, propertyKey, {
+      configurable,
+      set: (v) => true,
+      get: () => {
+        Reflect.defineProperty(target, propertyKey, { configurable: true, value: propertyValue });
+        return propertyValue;
       }
-    } catch (e) {
-      debug.error("jsonphook", one, e);
-    }
-  };
-  const iid = jsonp.push([one, two]);
-  return () => {
-    removeJsonphook(iid);
-  };
-};
-jsonpHook.scriptBlock = (url) => {
-  const one = Array.isArray(url) ? url : [url];
-  const two = function() {
-    try {
-      this.removeAttribute("src");
-      setTimeout(() => {
-        this.dispatchEvent(new ProgressEvent("load"));
-        try {
-          this.remove();
-        } catch (e) {
+    });
+  } catch (e) {
+    debug.error(e);
+  }
+}
+propertyHook.modify = (target, propertyKey, callback, once = false) => {
+  try {
+    let value = target[propertyKey];
+    value && (value = callback(value));
+    Reflect.defineProperty(target, propertyKey, {
+      configurable: true,
+      set: (v) => {
+        value = callback(v);
+        return true;
+      },
+      get: () => {
+        if (once) {
+          Reflect.deleteProperty(target, propertyKey);
+          Reflect.set(target, propertyKey, value);
         }
-      }, 100);
-    } catch (e) {
-      debug.error("脚本拦截失败！", one, e);
-    }
-  };
-  jsonp.push([one, two]);
-};
-jsonpHook.scriptIntercept = (url, redirect, text) => {
-  const one = Array.isArray(url) ? url : [url];
-  const two = function() {
-    try {
-      if (text) {
-        this.text = text(this.src);
-        this.removeAttribute("src");
-        setTimeout(() => {
-          this.dispatchEvent(new ProgressEvent("load"));
-          this?.remove();
-        }, 100);
-      } else if (redirect) {
-        this.src = redirect(this.src);
+        return value;
       }
-    } catch (e) {
-      debug.error("scriptIntercept", one, e);
-    }
-  };
-  const iid = jsonp.push([one, two]);
-  return () => {
-    removeJsonphook(iid);
-  };
+    });
+  } catch (e) {
+    debug.error(e);
+  }
 };
-function removeJsonphook(id) {
-  id >= 0 && delete jsonp[id - 1];
+function ProxyHandler(target, parrent, key) {
+  return new Proxy(target, {
+    deleteProperty(target2, p) {
+      const res = Reflect.deleteProperty(target2, p);
+      parrent[key] = target2;
+      return res;
+    },
+    set(target2, p, newValue, receiver) {
+      const res = Reflect.set(target2, p, newValue, receiver);
+      parrent[key] = target2;
+      return res;
+    },
+    get(target2, p, receiver) {
+      const res = Reflect.get(target2, p, receiver);
+      if (isArray(res) || isObject(res)) {
+        return ProxyHandler(res, receiver, p);
+      }
+      return res;
+    }
+  });
+}
+function propertryChangeHook(target, callback) {
+  return new Proxy(target, {
+    deleteProperty(target2, p) {
+      const res = Reflect.deleteProperty(target2, p);
+      callback(p, void 0);
+      return res;
+    },
+    set(target2, p, newValue, receiver) {
+      const res = Reflect.set(target2, p, newValue, receiver);
+      callback(p, newValue);
+      return res;
+    },
+    get(target2, p, receiver) {
+      const res = Reflect.get(target2, p, receiver);
+      if (isArray(res) || isObject(res)) {
+        return ProxyHandler(res, receiver, p);
+      }
+      return res;
+    }
+  });
 }
 
 // src/utils/hook/xhr.ts
@@ -8807,564 +10604,602 @@ function setResponseType(responseType, xhr) {
   };
 }
 
-// src/utils/format/unit.ts
-function unitFormat(num = 0) {
-  num = 1 * num || 0;
-  let unit = ["", "万", "亿"], i = unit.length - 1, dex = 1e4 ** i;
-  while (dex > 1) {
-    if (num >= dex) {
-      num = Number((num / dex).toFixed(1));
+// src/utils/type.ts
+function toObject(input) {
+  switch (input) {
+    case "undefined":
+      input = void 0;
       break;
+    case "null":
+      input = null;
+      break;
+    case "NaN":
+      input = NaN;
+      break;
+    default:
+      if (!input)
+        break;
+      try {
+        const temp = JSON.parse(input);
+        if (typeof temp !== "number" || input === String(temp)) {
+          input = temp;
+        }
+      } catch {
+        try {
+          const temp = Number(input);
+          if (String(temp) !== "NaN" && !input.startsWith("0")) {
+            input = temp;
+          }
+        } catch {
+        }
+        try {
+          if (/^\\d+n\$/.test(input))
+            input = BigInt(input.slice(0, -1));
+        } catch {
+        }
+      }
+      break;
+  }
+  return input;
+}
+function toString(input, space = "\\n") {
+  let result;
+  try {
+    result = input.toString();
+  } catch {
+    result = String(input);
+  }
+  if (result.startsWith("[object") && result.endsWith("]")) {
+    try {
+      const str = JSON.stringify(input, void 0, space);
+      str === "{}" || (result = str);
+    } catch {
     }
-    dex = dex / 1e4;
-    i--;
   }
-  return num + unit[i];
+  return result;
 }
 
-// src/io/api-page-header.ts
-async function apiPageHeader(data) {
-  const response = await fetch(objUrl(URLS.PAGE_HEADER, data));
-  const json = await response.json();
-  return jsonCheck(json).data;
-}
-
-// src/utils/format/subarray.ts
-function subArray(res, num = 1) {
-  const arr2 = [...res];
-  const out = [];
-  num = num || 1;
-  num = num < arr2.length ? num : arr2.length;
-  while (out.length < num) {
-    var temp = Math.random() * arr2.length >> 0;
-    out.push(arr2.splice(temp, 1)[0]);
-  }
-  return num === 1 ? out[0] : out;
-}
-
-// src/css/avatar-animation.css
-var avatar_animation_default = "/* 鼠标放在顶栏上的动效 */\\r\\n.bili-header-m .profile-info .i-face .face {\\r\\n    border: 0\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info .i-face .pendant {\\r\\n    transform: scale(0.5);\\r\\n    width: 112px;\\r\\n    height: 112px;\\r\\n    left: -41px;\\r\\n    bottom: -46px;\\r\\n    opacity: 0;\\r\\n    transition: opacity .1s ease-in\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face {\\r\\n    left: 8px !important;\\r\\n    top: 0 !important;\\r\\n    height: 32px !important;\\r\\n    width: 32px !important;\\r\\n    transform: translateY(10px) translateX(-16px) scale(2);\\r\\n    transform-origin: top left\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .legalize {\\r\\n    transform: scale(0.5) translate(10px, 15px)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .pendant {\\r\\n    opacity: 1\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .face {\\r\\n    border: 0;\\r\\n    box-shadow: 0 0 0 2px #fff\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in {\\r\\n    transform: translateY(5px) translateX(-10px) scale(1.75)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .scale-in .face {\\r\\n    height: 32px;\\r\\n    width: 32px\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in .legalize {\\r\\n    transform: scale(0.5) translate(38px, 48px)\\r\\n}";
-
-// src/css/message.css
-var message_default = "/* 修复消息页样式 */\\r\\n.container[data-v-6969394c] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.container[data-v-1c9150a9] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.im-root,\\r\\n.im-root .im-list-box * {\\r\\n    font-size: 12px;\\r\\n    line-height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box {\\r\\n    width: 100%;\\r\\n    overflow: visible;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-list {\\r\\n    line-height: 42px;\\r\\n    height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number {\\r\\n    height: 14px;\\r\\n    line-height: 13px;\\r\\n    border-radius: 10px;\\r\\n    padding: 1px 3px;\\r\\n    font-size: 12px;\\r\\n    min-width: 20px;\\r\\n    text-align: center;\\r\\n    color: #fff;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number.im-center {\\r\\n    top: 14px;\\r\\n    left: 80px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot {\\r\\n    top: 11px;\\r\\n    right: -10px;\\r\\n    width: 8px;\\r\\n    height: 8px;\\r\\n    border-radius: 100%;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot.im-center {\\r\\n    top: 16px;\\r\\n    right: 20px;\\r\\n}";
-
-// src/page/header.ts
-var _Header = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    this.oldHeader.className = "z-top-container has-menu";
-    this.hookHeadV2();
-    this.feedCount();
-    poll(() => document.readyState === "complete", () => this.styleClear());
+// src/core/storage.ts
+var LocalStorage = class {
+  /** 清空！ */
+  static clear() {
+    localStorage.clear();
   }
   /**
-   * 根据页面返回resourceId
-   * @returns resourceId
+   * 读取
+   * @param key 目标键名
+   * @returns 格式化后的数据
    */
-  static resourceId() {
-    if (location.href.includes("v/douga"))
-      return 1576;
-    if (location.href.includes("/anime"))
-      return 1612;
-    if (location.href.includes("v/music"))
-      return 1580;
-    if (location.href.includes("/guochuang"))
-      return 1920;
-    if (location.href.includes("v/dance"))
-      return 1584;
-    if (location.href.includes("v/game"))
-      return 1588;
-    if (location.href.includes("v/knowledge"))
-      return 1592;
-    if (location.href.includes("v/tech"))
-      return 3129;
-    if (location.href.includes("v/life"))
-      return 1600;
-    if (location.href.includes("v/kichiku"))
-      return 1608;
-    if (location.href.includes("v/fashion"))
-      return 1604;
-    if (location.href.includes("v/ent"))
-      return 1596;
-    if (location.href.includes("v/cinephile"))
-      return 2210;
-    if (location.href.includes("/cinema"))
-      return 1634;
-    return 142;
+  static getItem(key) {
+    return toObject(localStorage.getItem(key));
   }
-  /** 顶栏分区 */
-  static primaryMenu() {
-    poll(() => document.querySelector("#primary_menu"), (d) => {
-      const vue = d.__vue__;
-      vue.menuList.forEach((d2, i, s) => {
-        switch (d2.name) {
-          case "动画":
-            s[i].sub = [{ "name": "MAD·AMV", "route": "mad", "tid": 24, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 151 }, "desc": "具有一定制作程度的动画或静画的二次创作视频", "url": "//www.bilibili.com/video/douga-mad-1.html" }, { "name": "MMD·3D", "route": "mmd", "tid": 25, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 152 }, "desc": "使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频", "url": "//www.bilibili.com/video/douga-mmd-1.html" }, { "name": "短片·手书·配音", "route": "voice", "tid": 47, "ps": 15, "rps": 10, "desc": "追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音", "url": "//www.bilibili.com/video/douga-voice-1.html" }, { "name": "手办·模玩", "route": "garage_kit", "tid": 210, "ps": 15, "rps": 10, "desc": "手办模玩的测评、改造或其他衍生内容", "url": "" }, { "name": "特摄", "route": "tokusatsu", "tid": 86, "ps": 15, "rps": 10, "desc": "特摄相关衍生视频", "url": "//www.bilibili.com/video/cinephile-tokusatsu.html" }, { "name": "综合", "route": "other", "tid": 27, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 153 }, "desc": "以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容", "url": "//www.bilibili.com/video/douga-else-1.html" }];
-            break;
-          case "音乐":
-            s[i].sub = [{ "name": "原创音乐", "route": "original", "tid": 28, "ps": 15, "rps": 10, "viewHotTag": true, "ad": { "active": true, "dataLocId": 243 }, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "原创歌曲及纯音乐，包括改编、重编曲及remix", "url": "//www.bilibili.com/video/music-original-1.html" }, { "name": "翻唱", "route": "cover", "tid": 31, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 245 }, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "对曲目的人声再演绎视频", "url": "//www.bilibili.com/video/music-Cover-1.html" }, { "name": "演奏", "route": "perform", "tid": 59, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "乐器和非传统乐器器材的演奏作品", "url": "//www.bilibili.com/video/music-perform-1.html" }, { "name": "VOCALOID·UTAU", "route": "vocaloid", "tid": 30, "ps": 15, "rps": 10, "viewHotTag": true, "ad": { "active": true, "dataLocId": 247 }, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作", "url": "//www.bilibili.com/video/music-vocaloid-1.html" }, { "name": "音乐现场", "route": "live", "tid": 29, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等", "url": "//www.bilibili.com/video/music-oped-1.html" }, { "name": "MV", "route": "mv", "tid": 193, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV", "url": "//www.bilibili.com/video/music-coordinate-1.html" }, { "name": "乐评盘点", "route": "commentary", "tid": 243, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等", "url": "//www.bilibili.com/video/music-collection-1.html" }, { "name": "音乐教学", "route": "tutorial", "tid": 244, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "以音乐教学为目的的内容", "url": "//www.bilibili.com/video/music-collection-1.html" }, { "name": "音乐综合", "route": "other", "tid": 130, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "所有无法被收纳到其他音乐二级分区的音乐类视频", "url": "//www.bilibili.com/video/music-collection-1.html" }, { "name": "音频", "customZone": "Audio", "route": "audio", "url": "//www.bilibili.com/audio/home?musicType=music" }, { "name": "说唱", "url": "//www.bilibili.com/v/rap" }];
-            break;
-          case "科技":
-            s[i].name = "知识";
-            s[i].route = "knowledge";
-            s[i].sub = [{ "name": "科学科普", "route": "science", "tid": 201, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 261 }, "desc": "回答你的十万个为什么" }, { "name": "社科·法律·心理", "route": "social_science", "tid": 124, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 263 }, "desc": "基于社会科学、法学、心理学展开或个人观点输出的知识视频" }, { "name": "人文历史", "route": "humanity_history", "tid": 228, "ps": 15, "rps": 10, "desc": "看看古今人物，聊聊历史过往，品品文学典籍" }, { "name": "财经商业", "route": "business", "tid": 207, "ps": 15, "rps": 10, "desc": "说金融市场，谈宏观经济，一起畅聊商业故事" }, { "name": "校园学习", "route": "campus", "tid": 208, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 265 }, "desc": "老师很有趣，学生也有才，我们一起搞学习" }, { "name": "职业职场", "route": "career", "tid": 209, "ps": 15, "rps": 10, "desc": "职业分享、升级指南，一起成为最有料的职场人" }, { "name": "设计·创意", "route": "design", "tid": 229, "ps": 15, "rps": 10, "desc": "天马行空，创意设计，都在这里" }, { "name": "野生技能协会", "route": "skill", "tid": 122, "ps": 15, "rps": 10, "desc": "技能党集合，是时候展示真正的技术了" }];
-            break;
-          case "数码":
-            s[i].name = "科技";
-            s[i].route = "tech";
-            s[i].sub = [{ "name": "数码", "route": "digital", "tid": 95, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "科技数码产品大全，一起来做发烧友", "url": "#" }, { "name": "软件应用", "route": "application", "tid": 230, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "超全软件应用指南", "url": "#" }, { "name": "计算机技术", "route": "computer_tech", "tid": 231, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "研究分析、教学演示、经验分享......有关计算机技术的都在这里", "url": "#" }, { "name": "科工机械", "route": "industry", "tid": 232, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "从小芯片到大工程，一起见证科工力量", "url": "#" }, { "name": "极客DIY", "route": "diy", "tid": 233, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "炫酷技能，极客文化，硬核技巧，准备好你的惊讶", "url": "#" }];
-            break;
-          case "生活":
-            s[i].sub = [{ "name": "搞笑", "route": "funny", "tid": 138, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 273 }, "desc": "各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频", "url": "//www.bilibili.com/video/ent_funny_1.html", "locid": 4204, "recommendId": 4210, "slider": { "width": 620, "height": 220 }, "customComponent": { "name": "Energy", "leftId": 4212, "rightId": 4218, "rightType": "slide" } }, { "name": "家居房产", "route": "home", "tid": 239, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 275 }, "desc": "与买房、装修、居家生活相关的分享", "url": "#" }, { "name": "手工", "route": "handmake", "tid": 161, "ps": 15, "rps": 10, "desc": "手工制品的制作过程或成品展示、教程、测评类视频", "url": "//www.bilibili.com/video/ent-handmake-1.html" }, { "name": "绘画", "route": "painting", "tid": 162, "ps": 15, "rps": 10, "desc": "绘画过程或绘画教程，以及绘画相关的所有视频", "url": "//www.bilibili.com/video/ent-painting-1.html" }, { "name": "日常", "route": "daily", "tid": 21, "ps": 15, "rps": 10, "desc": "记录日常生活，分享生活故事", "url": "//www.bilibili.com/video/ent-life-1.html" }];
-            break;
-          case "鬼畜":
-            s[i].sub = [{ "name": "鬼畜调教", "route": "guide", "tid": 22, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 285 }, "desc": "使用素材在音频、画面上做一定处理，达到与BGM一定的同步感", "url": "//www.bilibili.com/video/ent-Kichiku-1.html" }, { "name": "音MAD", "route": "mad", "tid": 26, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 287 }, "desc": "使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件", "url": "//www.bilibili.com/video/douga-kichiku-1.html" }, { "name": "人力VOCALOID", "route": "manual_vocaloid", "tid": 126, "ps": 15, "rps": 10, "desc": "将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术", "url": "//www.bilibili.com/video/kichiku-manual_vocaloid-1.html" }, { "name": "鬼畜剧场", "route": "theatre", "tid": 216, "ps": 15, "rps": 10, "desc": "使用素材进行人工剪辑编排的有剧情的作品" }, { "name": "教程演示", "route": "course", "tid": 127, "ps": 10, "rps": 6, "rightComponent": { "name": "CmImgList", "id": 148 }, "ad": { "active": true, "dataLocId": 289 }, "hideDropdown": false, "desc": "鬼畜相关的教程演示", "url": "//www.bilibili.com/video/kichiku-course-1.html" }];
-            break;
-          case "时尚":
-            s[i].sub = [{ "name": "美妆护肤", "route": "makeup", "tid": 157, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 279 }, "desc": "彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评", "url": "//www.bilibili.com/video/fashion-makeup-fitness-1.html" }, { "name": "穿搭", "route": "clothing", "tid": 158, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 281 }, "desc": "穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等", "url": "//www.bilibili.com/video/fashion-clothing-1.html" }, { "name": "时尚潮流", "route": "trend", "tid": 159, "ps": 15, "rps": 10, "desc": "时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普", "url": "#" }];
-            break;
-          case "广告":
-            s[i].name = "资讯";
-            s[i].route = "information";
-            s[i].tid = 202;
-            s[i].sub = [{ "name": "热点", "route": "hotspot", "tid": 203, "ps": 18, "rps": 10, "desc": "全民关注的时政热门资讯" }, { "name": "环球", "route": "global", "tid": 204, "ps": 18, "rps": 10, "desc": "全球范围内发生的具有重大影响力的事件动态" }, { "name": "社会", "route": "social", "tid": 205, "ps": 18, "rps": 10, "desc": "日常生活的社会事件、社会问题、社会风貌的报道" }, { "name": "综合", "route": "multiple", "tid": 206, "ps": 18, "rps": 10, "desc": "除上述领域外其它垂直领域的综合资讯" }];
-            break;
-          case "娱乐":
-            s[i].sub = [{ "name": "综艺", "route": "variety", "tid": 71, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 267 }, "desc": "所有综艺相关，全部一手掌握！", "url": "//www.bilibili.com/video/ent-variety-1.html" }, { "name": "娱乐杂谈", "route": "talker", "tid": 241, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 269 }, "desc": "娱乐人物解读、娱乐热点点评、娱乐行业分析" }, { "name": "粉丝创作", "route": "fans", "tid": 242, "ps": 15, "rps": 10, "desc": "粉丝向创作视频" }, { "name": "明星综合", "route": "celebrity", "tid": 137, "ps": 15, "rps": 10, "desc": "娱乐圈动态、明星资讯相关" }];
-            break;
-        }
-      });
-    });
-    this.plaza();
-    this.indexIcon();
-    this.styleFix();
+  /**
+   * 列出键名数组  
+   * 原生Storage.key只返回但索引，感觉意义不大。
+   * @returns 键名数组
+   */
+  static keys() {
+    return Object.keys(localStorage);
   }
-  static banner() {
-    jsonpHook.async("api.bilibili.com/x/web-show/res/loc", void 0, async (url) => {
-      const obj = new URL(url);
-      obj.searchParams.delete("callback");
-      let loc = this.record[url];
-      let header = this.record[this.rid];
-      let rqs;
-      if (!loc || !header) {
-        rqs = await Promise.all([
-          fetch(obj.toJSON()).then((d) => d.json()),
-          apiPageHeader({ resource_id: this.rid })
-        ]);
-        loc = this.record[url] = rqs[0];
-        header = this.record[this.rid] = rqs[1];
-      }
-      loc.data && this.locs.forEach((d) => {
-        loc.data[d] && (loc.data[d][0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png", loc.data[d][0].litpic = header && header.litpic, loc.data[d][0].url = header && header.url || "", loc.data[d][0].title = header && header.name || "");
-        if (url.includes("loc?") && obj.searchParams.get("id") == String(d)) {
-          loc.data[0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
-          loc.data[0].litpic = header && header.litpic || "";
-          loc.data[0].url = header && header.url || "";
-          loc.data[0].title = header && header.name || "";
-        }
-      });
-      return loc;
-    }, false);
+  /**
+   * 移除
+   * @param key 目标键名
+   */
+  static removeItem(key) {
+    localStorage.removeItem(key);
   }
-  /** 顶栏广场 */
-  static plaza() {
-    jsonpHook.async("api.bilibili.com/plaza/banner", () => true, async () => {
-      return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] };
-    }, false);
-  }
-  /** 顶栏动图 */
-  static indexIcon() {
-    jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", void 0, async () => {
-      const data = await fetch("https://www.bilibili.com/index/index-icon.json").then((d) => d.json());
-      return {
-        code: 0,
-        data: subArray(data.fix),
-        message: "0",
-        ttl: 1
-      };
-    }, false);
-  }
-  /** 消息页面样式 */
-  static message() {
-    addCss(message_default, "message");
-  }
-  /** 顶栏动态记录参数失效，另行找补 */
-  static videoOffset() {
-    if (uid) {
-      const offset2 = getCookies()[\`bp_video_offset_\${uid}\`];
-      if (offset2) {
-        setCookie(\`bp_t_offset_\${uid}\`, offset2);
-      }
-    }
-  }
-  /** 迷你顶栏 */
-  miniHeader() {
-    this.oldHeader.classList.remove("has-menu");
-  }
-  /** 是否mini顶栏 */
-  static isMiniHead(d) {
-    return location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || d?.getAttribute("type") == "all" ? false : true;
-  }
-  /** 监听新版顶栏 */
-  hookHeadV2() {
-    poll(() => {
-      return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container") || document.querySelector("#home_nav") || document.querySelector(".bili-header__bar");
-    }, (d) => {
-      _Header.isMiniHead(d) && this.miniHeader();
-      this.loadOldHeader(d);
-    });
-    poll(() => document.querySelector(".z_top_container"), (d) => {
-      this.loadOldHeader(d);
-      document.querySelector(".header").style.display = "none";
-    });
-    poll(() => document.querySelector(".international-footer"), (d) => this.loadOldFooter(d));
-    poll(() => document.querySelector("#biliMainFooter"), (d) => this.loadOldFooter(d));
-  }
-  /** 已加载旧版顶栏 */
-  oldHeadLoaded = false;
-  /** 旧版顶栏节点 */
-  oldHeader = document.createElement("div");
-  /** 加载旧版顶栏 */
-  loadOldHeader(target) {
-    if (target) {
-      if (target.id === ".bili-header__bar") {
-        target = target.parentElement?.parentElement;
-      }
-      target.style.display = "none";
-      target.hidden = true;
-    }
-    if (this.oldHeadLoaded)
-      return;
-    this.oldHeadLoaded = true;
-    addCss("#internationalHeader,#biliMainHeader,#bili-header-container{display: none;}");
-    document.body.insertBefore(this.oldHeader, document.body.firstChild);
-    (window.jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js")).then(() => loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js")).then(() => {
-      _Header.styleFix();
-    });
-    _Header.primaryMenu();
-    _Header.banner();
-  }
-  loadOldFooter(target) {
-    addElement("div", { class: "footer bili-footer report-wrap-module" }, void 0, void 0, void 0, target);
-    (window.jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js")).then(() => loadScript("//static.hdslb.com/common/js/footer.js")).then(() => {
-      target && (target.style.display = "none");
-      this.styleClear();
-      addCss(".bili-footer {position: relative;}");
-      document.getElementsByClassName("bili-header-m")[1]?.remove();
-    });
-  }
-  /** 顶栏样式修复 */
-  static styleFix() {
-    addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", "lt-row-fix");
-    addCss(avatar_animation_default, "avatarAnimation");
-    this.fullBannerCover && addCss(".bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}");
-  }
-  /** 禁用新版顶栏相关样式 */
-  async styleClear() {
-    const d = document.styleSheets;
-    for (let i = 0; i < d.length; i++) {
-      (d[i].href?.includes("laputa-footer") || d[i].href?.includes("laputa-header")) && (d[i].disabled = true);
-    }
-    _Header.styleFix();
-  }
-  /** 顶栏动态直播回复数目接口失效，强制标记为0 */
-  feedCount() {
-    xhrHook.async("api.live.bilibili.com/ajax/feed/count", void 0, async () => {
-      const response = '{ "code": 0, "data": { "count": 0 }, "message": "0" }';
-      return { response, responseText: response };
-    }, false);
+  /**
+   * 添加/修改
+   * @param key 
+   * @param value 
+   */
+  static setItem(key, value) {
+    localStorage.setItem(key, toString(value));
   }
 };
-var Header = _Header;
-/** locs列表 */
-__publicField(Header, "locs", [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142]);
-/** 缓存已请求内容 */
-__publicField(Header, "record", {});
-/** 资源id */
-__publicField(Header, "rid", _Header.resourceId());
-__publicField(Header, "fullBannerCover", false);
-
-// src/io/api-season-rank-list.ts
-async function apiSeasonRankList(data) {
-  const response = await fetch(objUrl(URLS.SEASON_RANK_LIST, {
-    season_type: data.season_type,
-    day: 3
-  }));
-  const json = await response.json();
-  return jsonCheck(json).data.list;
-}
-
-// src/io/api-newlist.ts
-async function apiNewlist(rid, ps = 30, pn = 1, type = 0) {
-  const response = await fetch(objUrl(URLS.NEWLIST, { rid, type, pn, ps }));
-  const json = await response.json();
-  return jsonCheck(json).data.archives;
-}
-
-// src/io/api-article-cards.ts
-async function apiArticleCards(data) {
-  const arr2 = [];
-  if (isArray(data)) {
-    arr2.push(...data);
-  } else {
-    Object.entries(data).forEach((d) => {
-      if (d[1]) {
-        (isArray(d[1]) ? d[1] : [d[1]]).forEach((t) => arr2.push(d[0] + t));
-      }
-    });
+var SessionStorage = class {
+  /** 清空！ */
+  static clear() {
+    sessionStorage.clear();
   }
-  if (!arr2.length)
-    throw new Error("输入参数不能为空！");
-  const response = await fetch(objUrl(URLS.ARTICLE_CARDS, { ids: arr2.join(",") }));
-  const json = await response.json();
-  return jsonCheck(json).data;
-}
-
-// src/page/index.ts
-var __INITIAL_STATE__ = {
-  locsData: {
-    23: null,
-    29: null,
-    31: null,
-    34: null,
-    40: null,
-    42: null,
-    44: null,
-    142: null
-  },
-  recommendData: null
+  /**
+   * 读取
+   * @param key 目标键名
+   * @returns 格式化后的数据
+   */
+  static getItem(key) {
+    return toObject(sessionStorage.getItem(key));
+  }
+  /**
+   * 列出键名数组  
+   * 原生Storage.key只返回但索引，感觉意义不大。
+   * @returns 键名数组
+   */
+  static keys() {
+    return Object.keys(sessionStorage);
+  }
+  /**
+   * 移除
+   * @param key 目标键名
+   */
+  static removeItem(key) {
+    sessionStorage.removeItem(key);
+  }
+  /**
+   * 添加/修改
+   * @param key 
+   * @param value 
+   */
+  static setItem(key, value) {
+    sessionStorage.setItem(key, toString(value));
+  }
 };
-var PageIndex = class extends Page {
+
+// src/core/player.ts
+var _Player = class {
   constructor(BLOD2) {
-    super(html_default);
     this.BLOD = BLOD2;
-    window.__INITIAL_STATE__ = __INITIAL_STATE__;
-    this.updateDom();
-    this.locsData();
-    this.recommendData();
-    this.ranking();
-    this.roomRecommend();
-    this.newlist();
-    this.region();
-    this.BLOD.status.timeLine && this.timeLine();
-    Header.primaryMenu();
-    Header.banner();
-  }
-  locsData() {
-    apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] }).then((d) => {
-      __INITIAL_STATE__.locsData[23] = this.adblock(d[4694]);
-      __INITIAL_STATE__.locsData[29] = this.adblock(d[29]);
-      __INITIAL_STATE__.locsData[31] = this.adblock(d[31]);
-      __INITIAL_STATE__.locsData[34] = this.adblock(d[34]);
-      __INITIAL_STATE__.locsData[40] = this.adblock(d[40]);
-      __INITIAL_STATE__.locsData[42] = this.adblock(d[42]);
-      __INITIAL_STATE__.locsData[44] = this.adblock(d[44]);
-    }).catch((e) => {
-      this.BLOD.toast.error("locsData Error!", e)();
-    });
-  }
-  recommendData() {
-    apiIndexTopRcmd().then((d) => {
-      if (uid) {
-        __INITIAL_STATE__.recommendData = d;
-        poll(() => document.querySelector(".rec-btn.prev"), () => {
-          addElement(
-            "span",
-            { class: "rec-btn prev" },
-            void 0,
-            "刷新",
-            void 0,
-            document.querySelector(".rec-btn.prev")
-          ).addEventListener("click", () => {
-            apiIndexTopRcmd().then((d2) => __INITIAL_STATE__.recommendData = d2);
-          });
-          addElement(
-            "span",
-            { class: "rec-btn next" },
-            void 0,
-            "刷新",
-            void 0,
-            document.querySelector(".rec-btn.next")
-          ).addEventListener("click", () => {
-            apiIndexTopRcmd().then((d2) => __INITIAL_STATE__.recommendData = d2);
-          });
-        });
-      } else {
-        const one = d.splice(0, 10);
-        const two = d.splice(0, 10);
-        __INITIAL_STATE__.recommendData = [...one];
-        jsonpHook.async("api.bilibili.com/x/web-interface/ranking/index", void 0, async (str) => {
-          const obj = urlObj(str);
-          if (obj) {
-            if (obj.day == "7") {
-              return { code: 0, data: two, message: "0", ttl: 1 };
-            } else if (obj.day == "1") {
-              return { code: 0, data: d, message: "0", ttl: 1 };
-            }
-            return { code: 0, data: one, message: "0", ttl: 1 };
+    propertyHook.modify(window, "nano", (v) => {
+      debug("捕获新版播放器！");
+      const createPlayer = v.createPlayer;
+      const that = this;
+      propertyHook(v, "createPlayer", function() {
+        debug("新版播放器试图启动！");
+        if (that.isEmbedPlayer)
+          throw new Error("爆破新版播放器！");
+        that.nanoPlayer = createPlayer.call(v, ...arguments);
+        that.createPlayer(...arguments);
+        that.connect = that.nanoPlayer.connect;
+        that.nanoPlayer.connect = function() {
+          if (that.isConnect) {
+            debug("允许新版播放器启动！");
+            return that.connect?.();
+          } else {
+            that.isConnect = true;
+            return Promise.resolve(true);
           }
-        }, false);
-      }
-    }).catch((e) => {
-      this.BLOD.toast.error("recommendData Error!", e)();
-    });
-  }
-  /** 修复分区排行 */
-  ranking() {
-    poll(() => document.querySelector("#ranking_ad"), () => {
-      const vue = document.querySelector("#app > div.report-wrap-module.elevator-module").__vue__;
-      const ranking_ad = document.querySelector("#ranking_ad").__vue__;
-      const ranking_technology = document.querySelector("#ranking_technology").__vue__;
-      const ranking_digital = document.querySelector("#ranking_digital").__vue__;
-      vue.config[13].morelink = "/v/information/";
-      vue.config[13].name = "资讯";
-      vue.config[13].tid = 202;
-      vue.config[13].type = "news";
-      vue.config[8].morelink = "/v/knowledge/";
-      vue.config[8].name = "知识";
-      vue.config[9].morelink = "/v/tech/";
-      vue.config[9].name = "科技";
-      ranking_ad.config.morelink = "/v/information/";
-      ranking_ad.config.name = "资讯";
-      ranking_ad.config.tid = 202;
-      ranking_ad.config.type = "news";
-      ranking_technology.config.morelink = "/v/knowledge/";
-      ranking_technology.config.name = "知识";
-      ranking_digital.config.morelink = "/v/tech/";
-      ranking_digital.config.name = "科技";
-      poll(() => document.querySelector("#ranking_news"), (d) => {
-        new VdomTool(news_default).replace(d);
+        };
+        return that.nanoPlayer;
       });
-    });
-  }
-  /** 修复直播推荐 */
-  roomRecommend() {
-    xhrHook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", (args) => {
-      args[1] = args[1].includes("List") ? args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web") : args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web");
-    }, (obj) => {
-      let response = obj.responseText?.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
-      if (response) {
-        response = JSON.parse(response);
-        response.data.text_link = { text: "233秒居然能做这些！", link: "//vc.bilibili.com" };
-        if (response.data.recommend) {
-          for (let i = 0; i < response.data.recommend.length; i++) {
-            response.data.recommend[i].pic = response.data.recommend[i].cover;
-            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
-          }
+      if (window.player) {
+        try {
+          const manifest = window.player?.getManifest();
+          debug("播放器实例已存在，可能脚本注入过慢！", manifest);
+          manifest && this.createPlayer(manifest);
+        } catch (e) {
+          debug("读取播放器启动参数失败！", e);
         }
-        if (response.data.preview)
-          for (let i = 0; i < response.data.preview.length; i++)
-            response.data.preview[i].url = response.data.preview[i].link;
-        obj.response = obj.responseText = JSON.stringify(response);
       }
-    }, false);
-  }
-  /** 用户热点最新投稿修复资讯区最新投稿 */
-  newlist() {
-    jsonpHook(["newlist", "rid=202"], (url) => url.replace("rid=202", "rid=203"), void 0, false);
-  }
-  /** 修正电影/电视剧/纪录片排行 */
-  region() {
-    jsonpHook("api.bilibili.com/x/web-interface/ranking/region", (url) => {
-      const obj = new URL(url);
-      let arr2 = void 0;
-      switch (obj.searchParams.get("rid")) {
-        case "23":
-          arr2 = [document.querySelector("#ranking_movie"), 2, "/ranking/cinema/23/0/3"];
-          break;
-        case "11":
-          arr2 = [document.querySelector("#ranking_teleplay"), 5, "/ranking/cinema/11/0/3"];
-          break;
-        case "177":
-          arr2 = [document.querySelector("#ranking_documentary"), 3, "/ranking/cinema/177/0/3"];
-          break;
-      }
-      if (arr2) {
-        apiSeasonRankList({ season_type: arr2[1] }).then((d) => {
-          let html = \`<header class="rank-head"><h3>排行</h3><div class="bili-dropdown rank-dropdown"><span class="selected">三日</span><i class="icon icon-arrow-down"></i><ul class="dropdown-list"><li class="dropdown-item" style="display: none;">三日</li><li class="dropdown-item">一周</li></ul></div></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list">\`;
-          for (let i = 0; i < 8; i++) {
-            html += \`<li class="rank-item\${i < 3 ? " highlight" : ""}"><i class="ri-num">\${i + 1}</i><a href="\${d[i].url}" target="_blank" title="\${d[i].title} 播放:\${d[i].stat.view}" class="ri-info-wrap"><p class="ri-title">\${d[i].title}</p><span class="ri-total">\${d[i].new_ep.index_show}</span></a></li>\`;
-          }
-          html += \`</ul></div><a href="\${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>\`;
-          const vnode = htmlVnode(html);
-          vnode[1].children[0].children?.forEach((t, i) => {
-            let node;
-            t.event = {
-              "mouseover": (e) => {
-                const target = e.target;
-                const nodes = \`<div class="bangumi-info-module" style="left: \${target.getBoundingClientRect().left}px; top: \${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="\${d[i].title}" src="\${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">\${d[i].title}</p><p class="desc">\${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>\${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>\${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>\${unitFormat(d[i].stat.follow)}</span></div></div>\`;
-                node = new VdomTool(nodes).toFragment().children[0];
-                document.body.appendChild(node);
-              },
-              "mouseout": () => node.remove()
-            };
-          });
-          arr2[0].replaceChildren(new VdomTool(vnode).toFragment());
-        }).catch((e) => {
-          debug.error(arr2[0], e);
-        });
-      }
-      return url;
-    }, void 0, false);
-  }
-  adblock(arr2) {
-    return arr2?.filter((d) => !d.is_ad && d.id);
-  }
-  /** 港澳台新番时间表 */
-  timeLine() {
-    poll(() => document.querySelector("#bili_bangumi > .bangumi-module")?.__vue__, (vue) => {
-      apiNewlist(33).then(async (d) => {
-        const eps = d.reduce((s, d2) => {
-          if (d2.redirect_url && d2.owner.mid === 11783021) {
-            const arr2 = d2.redirect_url.split("/");
-            const ep = arr2.at(-1);
-            if (ep) {
-              ep.replace("d+", (e) => d2.episode_id = e);
-              s[ep] = d2;
-            }
-          }
-          return s;
-        }, {});
-        const cards = await apiArticleCards(Object.keys(eps));
-        Object.entries(cards).forEach((d2) => {
-          if (eps[d2[0]]) {
-            Object.assign(eps[d2[0]], d2[1]);
-          }
-        });
-        const timingData = vue.timingData;
-        Object.values(eps).forEach((d2) => {
-          const date = new Date(d2.pubdate * 1e3);
-          for (let i = timingData.length - 1; i >= 0; i--) {
-            if (date.getDay() + 1 === timingData[i].day_of_week) {
-              timingData[i].episodes.push({
-                cover: d2.cover || d2.pic,
-                delay: 0,
-                delay_id: 0,
-                delay_index: "",
-                delay_reason: "",
-                ep_cover: d2.cover || d2.pic,
-                episode_id: d2.episode_id,
-                follows: d2.follow_count,
-                plays: d2.play_count,
-                pub_index: d2.desc,
-                pub_time: \`\${integerFormat(date.getHours())}:\${integerFormat(date.getMinutes())}\`,
-                pub_ts: d2.pubdate,
-                published: 1,
-                season_id: d2.season_id,
-                square_cover: d2.cover || d2.pic,
-                title: d2.title
-              });
-              break;
-            }
-          }
-        });
-        vue.timingData = timingData;
-      }).catch((e) => {
-        debug.error("港澳台新番时间表", e);
-      });
+      return v;
     });
+  }
+  /** 添加播放器启动参数修改命令 */
+  static addModifyArgument(callback) {
+    this.modifyArgumentCallback.push(callback);
+  }
+  /** 捕获的新版播放器 */
+  nanoPlayer;
+  connect;
+  isConnect = false;
+  /** 修改播放器启动参数 */
+  modifyArgument(args) {
+    while (_Player.modifyArgumentCallback.length) {
+      _Player.modifyArgumentCallback.shift()?.(args);
+    }
+  }
+  initData = {};
+  dataInited = false;
+  createPlayer(initData, theme) {
+    this.dataInited = true;
+    Object.entries(initData).forEach((d) => {
+      switch (typeof d[1]) {
+        case "bigint":
+        case "boolean":
+        case "number":
+        case "string":
+        case "undefined":
+          this.initData[d[0]] = d[1];
+          break;
+        default:
+          break;
+      }
+    });
+    this.initData.as_wide = true;
+    this.dataInitedCallback();
+  }
+  /** 脚本初始化中 */
+  // private loading = true;
+  /** 旧版播放器已启用 */
+  isEmbedPlayer = false;
+  /** 旧版播放器正常引导 */
+  EmbedPlayer(loadPlayer, isEmbedPlayer = true) {
+    this.nanoPermit = () => {
+    };
+    this.isEmbedPlayer = isEmbedPlayer;
+    methodHook(window, "EmbedPlayer", () => loadPlayer(), (d) => this.modifyArgument(d));
+    if (window.player?.disconnect) {
+      try {
+        debug("爆破新版播放器!");
+        window.player.disconnect();
+        this.nanoPlayer || (this.nanoPlayer = window.player);
+      } catch {
+      }
+    }
+    this.switchVideo();
+    this.simpleChinese();
+  }
+  /** 通过hook新版播放器来引导旧版播放器 */
+  connectPlayer(loadPlayer) {
+    this.EmbedPlayer(loadPlayer, false);
+    this.dataInitedCallback(() => {
+      window.EmbedPlayer("player", "", objUrl("", this.initData));
+      if (this.nanoPlayer) {
+        Object.defineProperties(this.nanoPlayer, {
+          addEventListener: { get: () => window.player?.addEventListener },
+          directiveDispatcher: { get: () => window.player?.directiveDispatcher },
+          editorCenter: { get: () => window.player?.editorCenter },
+          exitFullScreen: { get: () => window.player?.exitFullScreen },
+          getCurrentTime: { get: () => window.player?.getCurrentTime },
+          getDuration: { get: () => window.player?.getDuration },
+          next: { get: () => window.player?.next },
+          ogvUpdate: { get: () => window.player?.ogvUpdate },
+          pause: { get: () => window.player?.pause },
+          play: { get: () => window.player?.play },
+          prev: { get: () => window.player?.prev },
+          reload: { get: () => window.player?.reload },
+          seek: { get: () => window.player?.seek },
+          stop: { get: () => window.player?.stop },
+          volume: { get: () => window.player?.volume }
+        });
+      }
+    });
+    addCss(\`#bofqi .player,#bilibili-player .player{width: 100%;height: 100%;display: block;}.bilibili-player .bilibili-player-auxiliary-area{z-index: 1;}\`, "nano-fix");
+  }
+  /** 不启用旧版播放器允许新版播放器启动 */
+  nanoPermit() {
+    if (this.isConnect) {
+      debug("允许新版播放器启动！");
+      this.connect?.();
+    } else {
+      this.isConnect = true;
+    }
+  }
+  /** 播放器启动栈 */
+  dataInitedCallbacks = [];
+  /** 捕获启动数据后启动播放器 */
+  dataInitedCallback(callback) {
+    callback && this.dataInitedCallbacks.push(callback);
+    if (this.dataInited) {
+      while (this.dataInitedCallbacks.length) {
+        this.dataInitedCallbacks.shift()?.();
+      }
+    }
+  }
+  regised = false;
+  switchVideo() {
+    if (this.regised)
+      return;
+    this.regised = true;
+    let cache;
+    switchVideo(() => {
+      if (window.player.appendTopMessage) {
+        const cfg = LocalStorage.getItem("bilibili_player_settings");
+        poll(() => document.querySelector(".bilibili-player-video-message-panel"), () => {
+          if (cache) {
+            window.player.appendTopMessage(cache);
+          } else if (cfg.message) {
+            const message = Object.keys(cfg.message).filter((d) => cfg.message[d]).sort(() => 0.5 - Math.random());
+            if (message[0]) {
+              switch (message[0]) {
+                case "system":
+                  apiWebshowLoc(4694).then((d) => {
+                    window.player.appendTopMessage(cache = d.filter((d2) => d2.name).map((d2) => {
+                      return {
+                        url: d2.url,
+                        type: message[0],
+                        name: d2.name
+                      };
+                    }));
+                  }).catch((e) => {
+                    debug.error("播放器通知", e);
+                  });
+                  break;
+                case "bangumi":
+                  apiPgcSlideShow(531).then((d) => {
+                    window.player.appendTopMessage(cache = d.map((d2) => {
+                      return {
+                        url: d2.blink,
+                        type: message[0],
+                        name: d2.title
+                      };
+                    }));
+                  }).catch((e) => {
+                    debug.error("播放器通知", e);
+                  });
+                  break;
+                case "news":
+                  apiSearchSquare().then((d) => {
+                    window.player.appendTopMessage(cache = d.map((d2) => {
+                      return {
+                        url: d2.uri || \`//search.bilibili.com/all?keyword=\${encodeURIComponent(d2.keyword)}\`,
+                        type: message[0],
+                        name: d2.show_name || d2.keyword
+                      };
+                    }));
+                  }).catch((e) => {
+                    debug.error("播放器通知", e);
+                  });
+                  break;
+                default:
+                  break;
+              }
+            }
+          }
+        });
+      }
+    });
+  }
+  playbackRateTimer;
+  /** 更改播放器速率 */
+  playbackRate(playbackRate = 1) {
+    clearTimeout(this.playbackRateTimer);
+    this.playbackRateTimer = setTimeout(() => {
+      const video = document.querySelector("#bilibiliPlayer video");
+      if (!video)
+        return this.BLOD.toast.warning("未找到播放器！请在播放页面使用。");
+      video.playbackRate = Number(playbackRate);
+    }, 100);
+  }
+  /** 繁体字幕转简体 */
+  simpleChinese() {
+    if (this.BLOD.status.simpleChinese) {
+      xhrHook("x/player/v2?", void 0, (res) => {
+        try {
+          const response = jsonCheck(res.response);
+          if (response?.data?.subtitle?.subtitles?.length) {
+            response.data.subtitle.subtitles.forEach((d) => {
+              if (typeof d.subtitle_url === "string") {
+                switch (d.lan) {
+                  case "zh-Hant":
+                    xhrHook(d.subtitle_url, void 0, (res2) => {
+                      try {
+                        let response2 = res2.responseType === "json" ? JSON.stringify(res2.response) : res2.responseText;
+                        if (response2) {
+                          response2 = cht2chs(response2);
+                          if (res2.responseType === "json") {
+                            res2.response = JSON.parse(response2);
+                          } else {
+                            res2.response = res2.responseText = response2;
+                          }
+                          this.BLOD.toast.warning("字幕：繁 -> 简", \`原始语言：\${d.lan_doc}\`);
+                        }
+                      } catch (e) {
+                        debug.error("繁 -> 简", e);
+                      }
+                    });
+                    break;
+                  default:
+                    break;
+                }
+              }
+            });
+          }
+        } catch {
+        }
+      }, false);
+    }
   }
 };
+var Player = _Player;
+/** 播放器启动参数修改回调栈 */
+__publicField(Player, "modifyArgumentCallback", []);
+
+// src/core/automate.ts
+var Automate = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    this.modifyArgument();
+    this.danmakuFirst();
+    switchVideo(this.switchVideo);
+    this.videospeed();
+  }
+  /** 展开弹幕列表 */
+  danmakuFirst() {
+    this.BLOD.status.automate.danmakuFirst && SessionStorage.setItem("player_last_filter_tab_info", 4);
+  }
+  /** 滚动到播放器 */
+  showBofqi() {
+    const str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
+    this.BLOD.status.automate.showBofqi && setTimeout(() => {
+      const node = str.reduce((s, d) => {
+        s = s || document.querySelector(d);
+        return s;
+      }, document.querySelector("#__bofqi"));
+      node && node.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 500);
+  }
+  /** 自动网页全屏 */
+  webFullScreen() {
+    this.BLOD.status.automate.webFullScreen && poll(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => document.querySelector(".bilibili-player-video-web-fullscreen").click());
+  }
+  /** 记忆播放速率 */
+  videospeed() {
+    if (this.BLOD.status.automate.videospeed) {
+      this.BLOD.GM.getValue("videospeed").then((videospeed) => {
+        if (videospeed) {
+          let setting = SessionStorage.getItem("bilibili_player_settings");
+          setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
+          SessionStorage.setItem("bilibili_player_settings", setting);
+        }
+      });
+      switchVideo(() => {
+        poll(() => document.querySelector("#bofqi")?.querySelector("video"), (d) => {
+          d.addEventListener("ratechange", (e) => {
+            this.BLOD.GM.setValue("videospeed", e.target.playbackRate || 1);
+          });
+        });
+      });
+    }
+  }
+  /** 关闭抗锯齿 */
+  videoDisableAA() {
+    this.BLOD.status.videoDisableAA && poll(() => document.querySelector("#bilibiliPlayer .bilibili-player-video video"), (d) => d.style.filter += "contrast(1)");
+  }
+  /** 修改播放器启动参数 */
+  modifyArgument() {
+    Player.addModifyArgument((args) => {
+      const obj = urlObj(\`?\${args[2]}\`);
+      this.BLOD.status.automate.screenWide && (obj.as_wide = 1);
+      this.BLOD.status.automate.autoPlay && (obj.autoplay = 1);
+      this.BLOD.status.automate.noDanmaku && (obj.danmaku = 0);
+      args[2] = objUrl("", obj);
+    });
+  }
+  /** 切p回调 */
+  switchVideo = async () => {
+    this.showBofqi();
+    this.webFullScreen();
+    this.videoDisableAA();
+    if (!this.BLOD.videoInfo.metadata && this.BLOD.aid) {
+      apiArticleCards({ av: this.BLOD.aid }).then((d) => {
+        Object.values(d).forEach((d2) => this.BLOD.videoInfo.aidDatail(d2));
+        this.BLOD.videoInfo.mediaSession();
+      }).catch((e) => {
+        debug.error("获取aid详情出错！", e);
+      });
+    } else {
+      this.BLOD.videoInfo.mediaSession();
+    }
+  };
+};
+
+// src/utils/hook/node.ts
+var appendChild = Element.prototype.appendChild;
+var insertBefore = Element.prototype.insertBefore;
+var jsonp = [];
+Element.prototype.appendChild = function(newChild) {
+  this.parentElement === document.documentElement && newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
+  });
+  return appendChild.call(this, newChild);
+};
+Element.prototype.insertBefore = function(newChild, refChild) {
+  this.parentElement === document.documentElement && newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
+  });
+  return insertBefore.call(this, newChild, refChild);
+};
+function jsonpHook(url, redirect, modifyResponse, once = true) {
+  let id;
+  const one = Array.isArray(url) ? url : [url];
+  const two = function() {
+    once && id && delete jsonp[id - 1];
+    if (redirect)
+      try {
+        this.src = redirect(this.src) || this.src;
+      } catch (e) {
+        debug.error("redirect of jsonphook", one, e);
+      }
+    if (modifyResponse) {
+      const obj = urlObj(this.src);
+      if (obj) {
+        const callback = obj.callback;
+        const call = window[callback];
+        const url2 = this.src;
+        if (call) {
+          window[callback] = function(v) {
+            try {
+              v = modifyResponse(v, url2, call) || v;
+            } catch (e) {
+              debug.error("modifyResponse of jsonphook", one, e);
+            }
+            return v !== true && call(v);
+          };
+        }
+      }
+    }
+  };
+  const iid = jsonp.push([one, two]);
+  return () => {
+    removeJsonphook(iid);
+  };
+}
+jsonpHook.async = (url, condition, modifyResponse, once = true) => {
+  let id;
+  const one = Array.isArray(url) ? url : [url];
+  const two = function() {
+    try {
+      once && id && delete jsonp[id - 1];
+      if (!condition || condition(this.src)) {
+        const obj = urlObj(this.src);
+        if (obj) {
+          const callback = obj.callback;
+          const call = window[callback];
+          if (call) {
+            modifyResponse && modifyResponse(this.src).then((d) => {
+              window[callback](d);
+              this.dispatchEvent(new ProgressEvent("load"));
+            }).catch((e) => {
+              this.dispatchEvent(new ProgressEvent("error"));
+              debug.error("modifyResponse of xhrhookasync", one, e);
+            });
+          }
+          this.removeAttribute("src");
+        }
+      }
+    } catch (e) {
+      debug.error("jsonphook", one, e);
+    }
+  };
+  const iid = jsonp.push([one, two]);
+  return () => {
+    removeJsonphook(iid);
+  };
+};
+jsonpHook.scriptBlock = (url) => {
+  const one = Array.isArray(url) ? url : [url];
+  const two = function() {
+    try {
+      this.removeAttribute("src");
+      setTimeout(() => {
+        this.dispatchEvent(new ProgressEvent("load"));
+        try {
+          this.remove();
+        } catch (e) {
+        }
+      }, 100);
+    } catch (e) {
+      debug.error("脚本拦截失败！", one, e);
+    }
+  };
+  jsonp.push([one, two]);
+};
+jsonpHook.scriptIntercept = (url, redirect, text) => {
+  const one = Array.isArray(url) ? url : [url];
+  const two = function() {
+    try {
+      if (text) {
+        this.text = text(this.src);
+        this.removeAttribute("src");
+        setTimeout(() => {
+          this.dispatchEvent(new ProgressEvent("load"));
+          this?.remove();
+        }, 100);
+      } else if (redirect) {
+        this.src = redirect(this.src);
+      }
+    } catch (e) {
+      debug.error("scriptIntercept", one, e);
+    }
+  };
+  const iid = jsonp.push([one, two]);
+  return () => {
+    removeJsonphook(iid);
+  };
+};
+function removeJsonphook(id) {
+  id >= 0 && delete jsonp[id - 1];
+}
 
 // src/core/comment.ts
 var Feedback;
@@ -9805,424 +11640,582 @@ var Comment = class {
   }
 };
 
-// src/io/api-pgc-slideshow.ts
-async function apiPgcSlideShow(position_id) {
-  const response = await fetch(objUrl(URLS.SLIDE_SHOW, { position_id }));
-  const json = await response.json();
-  return jsonCheck(json).result;
-}
+// src/io/grpc/api-dm-web.ts
+var import_light = __toESM(require_light());
 
-// src/io/api-search-square.ts
-async function apiSearchSquare(limit = 10) {
-  const response = await fetch(objUrl(URLS.SEARCH_SQUARE, { limit }));
-  const json = await response.json();
-  return jsonCheck(json).data.trending.list;
-}
-
-// src/core/observer.ts
-var nodelist = [];
-var observe = new MutationObserver(async (d) => d.forEach((d2) => {
-  d2.addedNodes[0] && nodelist.forEach((f) => {
-    try {
-      f(d2.addedNodes[0]);
-    } catch (e) {
-      debug.error("MutationObserver", e);
-    }
-  });
-}));
-observe.observe(document, { childList: true, subtree: true });
-function observerAddedNodes(callback) {
-  try {
-    if (typeof callback === "function")
-      nodelist.push(callback);
-    return nodelist.length - 1;
-  } catch (e) {
-    debug.error(e);
-  }
-}
-var switchlist = [];
-function switchVideo(callback) {
-  try {
-    if (typeof callback === "function")
-      switchlist.push(callback);
-  } catch (e) {
-    debug.error("switchVideo", e);
-  }
-}
-observerAddedNodes((node) => {
-  if (/video-state-pause/.test(node.className)) {
-    switchlist.forEach(async (d) => {
-      try {
-        d();
-      } catch (e) {
-        debug.error(d);
-      }
-    });
-  }
-});
-
-// src/core/storage.ts
-var LocalStorage = class {
-  /** 清空！ */
-  static clear() {
-    localStorage.clear();
-  }
-  /**
-   * 读取
-   * @param key 目标键名
-   * @returns 格式化后的数据
-   */
-  static getItem(key) {
-    return toObject(localStorage.getItem(key));
-  }
-  /**
-   * 列出键名数组  
-   * 原生Storage.key只返回但索引，感觉意义不大。
-   * @returns 键名数组
-   */
-  static keys() {
-    return Object.keys(localStorage);
-  }
-  /**
-   * 移除
-   * @param key 目标键名
-   */
-  static removeItem(key) {
-    localStorage.removeItem(key);
-  }
-  /**
-   * 添加/修改
-   * @param key 
-   * @param value 
-   */
-  static setItem(key, value) {
-    localStorage.setItem(key, toString(value));
-  }
-};
-var SessionStorage = class {
-  /** 清空！ */
-  static clear() {
-    sessionStorage.clear();
-  }
-  /**
-   * 读取
-   * @param key 目标键名
-   * @returns 格式化后的数据
-   */
-  static getItem(key) {
-    return toObject(sessionStorage.getItem(key));
-  }
-  /**
-   * 列出键名数组  
-   * 原生Storage.key只返回但索引，感觉意义不大。
-   * @returns 键名数组
-   */
-  static keys() {
-    return Object.keys(sessionStorage);
-  }
-  /**
-   * 移除
-   * @param key 目标键名
-   */
-  static removeItem(key) {
-    sessionStorage.removeItem(key);
-  }
-  /**
-   * 添加/修改
-   * @param key 
-   * @param value 
-   */
-  static setItem(key, value) {
-    sessionStorage.setItem(key, toString(value));
-  }
-};
-
-// src/core/player.ts
-var _Player = class {
-  /** 添加播放器启动参数修改命令 */
-  static addModifyArgument(callback) {
-    this.modifyArgumentCallback.push(callback);
-  }
-  /** 捕获的新版播放器 */
-  nanoPlayer;
-  connect;
-  isConnect = false;
-  constructor() {
-    propertyHook.modify(window, "nano", (v) => {
-      debug("捕获新版播放器！");
-      const createPlayer = v.createPlayer;
-      const that = this;
-      propertyHook(v, "createPlayer", function() {
-        debug("新版播放器试图启动！");
-        if (that.isEmbedPlayer)
-          throw new Error("爆破新版播放器！");
-        that.nanoPlayer = createPlayer.call(v, ...arguments);
-        that.createPlayer(...arguments);
-        that.connect = that.nanoPlayer.connect;
-        that.nanoPlayer.connect = function() {
-          if (that.isConnect) {
-            debug("允许新版播放器启动！");
-            return that.connect?.();
-          } else {
-            that.isConnect = true;
-            return Promise.resolve(true);
-          }
-        };
-        return that.nanoPlayer;
-      });
-      if (window.player) {
-        try {
-          const manifest = window.player?.getManifest();
-          debug("播放器实例已存在，可能脚本注入过慢！", manifest);
-          manifest && this.createPlayer(manifest);
-        } catch (e) {
-          debug("读取播放器启动参数失败！", e);
-        }
-      }
-      return v;
-    });
-  }
-  /** 修改播放器启动参数 */
-  modifyArgument(args) {
-    while (_Player.modifyArgumentCallback.length) {
-      _Player.modifyArgumentCallback.shift()?.(args);
-    }
-  }
-  initData = {};
-  dataInited = false;
-  createPlayer(initData, theme) {
-    this.dataInited = true;
-    Object.entries(initData).forEach((d) => {
-      switch (typeof d[1]) {
-        case "bigint":
-        case "boolean":
-        case "number":
-        case "string":
-        case "undefined":
-          this.initData[d[0]] = d[1];
-          break;
-        default:
-          break;
-      }
-    });
-    this.initData.as_wide = true;
-    this.dataInitedCallback();
-  }
-  /** 脚本初始化中 */
-  // private loading = true;
-  /** 旧版播放器已启用 */
-  isEmbedPlayer = false;
-  /** 旧版播放器正常引导 */
-  EmbedPlayer(loadPlayer, isEmbedPlayer = true) {
-    this.nanoPermit = () => {
-    };
-    this.isEmbedPlayer = isEmbedPlayer;
-    methodHook(window, "EmbedPlayer", () => loadPlayer(), (d) => this.modifyArgument(d));
-    if (window.player?.disconnect) {
-      try {
-        debug("爆破新版播放器!");
-        window.player.disconnect();
-        this.nanoPlayer || (this.nanoPlayer = window.player);
-      } catch {
-      }
-    }
-    this.switchVideo();
-  }
-  /** 通过hook新版播放器来引导旧版播放器 */
-  connectPlayer(loadPlayer) {
-    this.EmbedPlayer(loadPlayer, false);
-    this.dataInitedCallback(() => {
-      window.EmbedPlayer("player", "", objUrl("", this.initData));
-      if (this.nanoPlayer) {
-        Object.defineProperties(this.nanoPlayer, {
-          addEventListener: { get: () => window.player?.addEventListener },
-          directiveDispatcher: { get: () => window.player?.directiveDispatcher },
-          editorCenter: { get: () => window.player?.editorCenter },
-          exitFullScreen: { get: () => window.player?.exitFullScreen },
-          getCurrentTime: { get: () => window.player?.getCurrentTime },
-          getDuration: { get: () => window.player?.getDuration },
-          next: { get: () => window.player?.next },
-          ogvUpdate: { get: () => window.player?.ogvUpdate },
-          pause: { get: () => window.player?.pause },
-          play: { get: () => window.player?.play },
-          prev: { get: () => window.player?.prev },
-          reload: { get: () => window.player?.reload },
-          seek: { get: () => window.player?.seek },
-          stop: { get: () => window.player?.stop },
-          volume: { get: () => window.player?.volume }
-        });
-      }
-    });
-    addCss(\`#bofqi .player,#bilibili-player .player{width: 100%;height: 100%;display: block;}.bilibili-player .bilibili-player-auxiliary-area{z-index: 1;}\`, "nano-fix");
-  }
-  /** 不启用旧版播放器允许新版播放器启动 */
-  nanoPermit() {
-    if (this.isConnect) {
-      debug("允许新版播放器启动！");
-      this.connect?.();
-    } else {
-      this.isConnect = true;
-    }
-  }
-  /** 播放器启动栈 */
-  dataInitedCallbacks = [];
-  /** 捕获启动数据后启动播放器 */
-  dataInitedCallback(callback) {
-    callback && this.dataInitedCallbacks.push(callback);
-    if (this.dataInited) {
-      while (this.dataInitedCallbacks.length) {
-        this.dataInitedCallbacks.shift()?.();
-      }
-    }
-  }
-  regised = false;
-  switchVideo() {
-    if (this.regised)
-      return;
-    this.regised = true;
-    let cache;
-    switchVideo(() => {
-      if (window.player.appendTopMessage) {
-        const cfg = LocalStorage.getItem("bilibili_player_settings");
-        poll(() => document.querySelector(".bilibili-player-video-message-panel"), () => {
-          if (cache) {
-            window.player.appendTopMessage(cache);
-          } else if (cfg.message) {
-            const message = Object.keys(cfg.message).filter((d) => cfg.message[d]).sort(() => 0.5 - Math.random());
-            if (message[0]) {
-              switch (message[0]) {
-                case "system":
-                  apiWebshowLoc(4694).then((d) => {
-                    window.player.appendTopMessage(cache = d.filter((d2) => d2.name).map((d2) => {
-                      return {
-                        url: d2.url,
-                        type: message[0],
-                        name: d2.name
-                      };
-                    }));
-                  }).catch((e) => {
-                    debug.error("播放器通知", e);
-                  });
-                  break;
-                case "bangumi":
-                  apiPgcSlideShow(531).then((d) => {
-                    window.player.appendTopMessage(cache = d.map((d2) => {
-                      return {
-                        url: d2.blink,
-                        type: message[0],
-                        name: d2.title
-                      };
-                    }));
-                  }).catch((e) => {
-                    debug.error("播放器通知", e);
-                  });
-                  break;
-                case "news":
-                  apiSearchSquare().then((d) => {
-                    window.player.appendTopMessage(cache = d.map((d2) => {
-                      return {
-                        url: d2.uri || \`//search.bilibili.com/all?keyword=\${encodeURIComponent(d2.keyword)}\`,
-                        type: message[0],
-                        name: d2.show_name || d2.keyword
-                      };
-                    }));
-                  }).catch((e) => {
-                    debug.error("播放器通知", e);
-                  });
-                  break;
-                default:
-                  break;
+// src/json/dm-web.json
+var dm_web_default = {
+  nested: {
+    bilibili: {
+      nested: {
+        community: {
+          nested: {
+            service: {
+              nested: {
+                dm: {
+                  nested: {
+                    v1: {
+                      nested: {
+                        DmWebViewReply: {
+                          fields: {
+                            state: {
+                              type: "int32",
+                              id: 1
+                            },
+                            text: {
+                              type: "string",
+                              id: 2
+                            },
+                            textSide: {
+                              type: "string",
+                              id: 3
+                            },
+                            dmSge: {
+                              type: "DmSegConfig",
+                              id: 4
+                            },
+                            flag: {
+                              type: "DanmakuFlagConfig",
+                              id: 5
+                            },
+                            specialDms: {
+                              rule: "repeated",
+                              type: "string",
+                              id: 6
+                            },
+                            checkBox: {
+                              type: "bool",
+                              id: 7
+                            },
+                            count: {
+                              type: "int64",
+                              id: 8
+                            },
+                            commandDms: {
+                              rule: "repeated",
+                              type: "CommandDm",
+                              id: 9
+                            },
+                            dmSetting: {
+                              type: "DanmuWebPlayerConfig",
+                              id: 10
+                            },
+                            reportFilter: {
+                              rule: "repeated",
+                              type: "string",
+                              id: 11
+                            }
+                          }
+                        },
+                        CommandDm: {
+                          fields: {
+                            id: {
+                              type: "int64",
+                              id: 1
+                            },
+                            oid: {
+                              type: "int64",
+                              id: 2
+                            },
+                            mid: {
+                              type: "int64",
+                              id: 3
+                            },
+                            command: {
+                              type: "string",
+                              id: 4
+                            },
+                            content: {
+                              type: "string",
+                              id: 5
+                            },
+                            progress: {
+                              type: "int32",
+                              id: 6
+                            },
+                            ctime: {
+                              type: "string",
+                              id: 7
+                            },
+                            mtime: {
+                              type: "string",
+                              id: 8
+                            },
+                            extra: {
+                              type: "string",
+                              id: 9
+                            },
+                            idStr: {
+                              type: "string",
+                              id: 10
+                            }
+                          }
+                        },
+                        DmSegConfig: {
+                          fields: {
+                            pageSize: {
+                              type: "int64",
+                              id: 1
+                            },
+                            total: {
+                              type: "int64",
+                              id: 2
+                            }
+                          }
+                        },
+                        DanmakuFlagConfig: {
+                          fields: {
+                            recFlag: {
+                              type: "int32",
+                              id: 1
+                            },
+                            recText: {
+                              type: "string",
+                              id: 2
+                            },
+                            recSwitch: {
+                              type: "int32",
+                              id: 3
+                            }
+                          }
+                        },
+                        DmSegMobileReply: {
+                          fields: {
+                            elems: {
+                              rule: "repeated",
+                              type: "DanmakuElem",
+                              id: 1
+                            }
+                          }
+                        },
+                        DanmakuElem: {
+                          fields: {
+                            id: {
+                              type: "int64",
+                              id: 1
+                            },
+                            progress: {
+                              type: "int32",
+                              id: 2
+                            },
+                            mode: {
+                              type: "int32",
+                              id: 3
+                            },
+                            fontsize: {
+                              type: "int32",
+                              id: 4
+                            },
+                            color: {
+                              type: "uint32",
+                              id: 5
+                            },
+                            midHash: {
+                              type: "string",
+                              id: 6
+                            },
+                            content: {
+                              type: "string",
+                              id: 7
+                            },
+                            ctime: {
+                              type: "int64",
+                              id: 8
+                            },
+                            weight: {
+                              type: "int32",
+                              id: 9
+                            },
+                            action: {
+                              type: "string",
+                              id: 10
+                            },
+                            pool: {
+                              type: "int32",
+                              id: 11
+                            },
+                            idStr: {
+                              type: "string",
+                              id: 12
+                            },
+                            attr: {
+                              type: "int32",
+                              id: 13
+                            }
+                          }
+                        },
+                        DanmuWebPlayerConfig: {
+                          fields: {
+                            dmSwitch: {
+                              type: "bool",
+                              id: 1
+                            },
+                            aiSwitch: {
+                              type: "bool",
+                              id: 2
+                            },
+                            aiLevel: {
+                              type: "int32",
+                              id: 3
+                            },
+                            blocktop: {
+                              type: "bool",
+                              id: 4
+                            },
+                            blockscroll: {
+                              type: "bool",
+                              id: 5
+                            },
+                            blockbottom: {
+                              type: "bool",
+                              id: 6
+                            },
+                            blockcolor: {
+                              type: "bool",
+                              id: 7
+                            },
+                            blockspecial: {
+                              type: "bool",
+                              id: 8
+                            },
+                            preventshade: {
+                              type: "bool",
+                              id: 9
+                            },
+                            dmask: {
+                              type: "bool",
+                              id: 10
+                            },
+                            opacity: {
+                              type: "float",
+                              id: 11
+                            },
+                            dmarea: {
+                              type: "int32",
+                              id: 12
+                            },
+                            speedplus: {
+                              type: "float",
+                              id: 13
+                            },
+                            fontsize: {
+                              type: "float",
+                              id: 14
+                            },
+                            screensync: {
+                              type: "bool",
+                              id: 15
+                            },
+                            speedsync: {
+                              type: "bool",
+                              id: 16
+                            },
+                            fontfamily: {
+                              type: "string",
+                              id: 17
+                            },
+                            bold: {
+                              type: "bool",
+                              id: 18
+                            },
+                            fontborder: {
+                              type: "int32",
+                              id: 19
+                            },
+                            drawType: {
+                              type: "string",
+                              id: 20
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
-        });
+        }
       }
+    }
+  }
+};
+
+// src/utils/danmaku.ts
+var DanmakuBase = class {
+  /** 从小到大排序弹幕 */
+  static sortDmById(dms) {
+    dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
+  }
+  /** 比较两个弹幕ID先后 */
+  static bigInt(num1, num2) {
+    String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
+    String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
+    if (num1.length > num2.length)
+      return true;
+    else if (num1.length < num2.length)
+      return false;
+    else {
+      for (let i = 0; i < num1.length; i++) {
+        if (num1[i] > num2[i])
+          return true;
+        if (num1[i] < num2[i])
+          return false;
+      }
+      return false;
+    }
+  }
+  /** 重构为旧版弹幕类型 */
+  static parseCmd(dms) {
+    return dms.map((d) => {
+      const dm = {
+        class: d.pool || 0,
+        color: d.color || 0,
+        date: d.ctime || 0,
+        dmid: d.idStr || "",
+        mode: +d.mode || 1,
+        pool: d.pool || 0,
+        size: d.fontsize || 25,
+        stime: d.progress / 1e3 || 0,
+        text: d.content && d.mode != 8 && d.mode != 9 ? d.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, "\\n") : d.content,
+        uhash: d.midHash || "",
+        uid: d.midHash || "",
+        weight: d.weight,
+        attr: d.attr
+      };
+      d.action?.startsWith("picture:") && (dm.html = \`<img src="\${d.action.replace("http:", "")}" style="width:auto;height:56.25px;">\`);
+      return dm;
     });
   }
-  playbackRateTimer;
-  /** 更改播放器速率 */
-  playbackRate(playbackRate = 1) {
-    clearTimeout(this.playbackRateTimer);
-    this.playbackRateTimer = setTimeout(() => {
-      const video = document.querySelector("#bilibiliPlayer video");
-      if (!video)
-        throw new Error("未找到播放器！请在播放页面使用。");
-      video.playbackRate = Number(playbackRate);
-    }, 100);
-  }
-};
-var Player = _Player;
-/** 播放器启动参数修改回调栈 */
-__publicField(Player, "modifyArgumentCallback", []);
-
-// src/core/webrtc.ts
-var WebTRC = class {
-  static disable() {
-    navigator.getUserMedia = void 0;
-    window.MediaStreamTrack = void 0;
-    window.RTCPeerConnection = void 0;
-    window.RTCSessionDescription = void 0;
-    navigator.mozGetUserMedia = void 0;
-    window.mozMediaStreamTrack = void 0;
-    window.mozRTCPeerConnection = void 0;
-    window.mozRTCSessionDescription = void 0;
-    navigator.webkitGetUserMedia = void 0;
-    window.webkitMediaStreamTrack = void 0;
-    window.webkitRTCPeerConnection = void 0;
-    window.webkitRTCSessionDescription = void 0;
-  }
-};
-
-// src/html/av.html
-var av_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="video-page-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript">\\r\\n        window.getInternetExplorerVersion = function () {\\r\\n            var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) {\\r\\n                var r = navigator.userAgent;\\r\\n                null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.\$1))\\r\\n            }\\r\\n            return e\\r\\n        };\\r\\n        function getQueryString(e) {\\r\\n            var r = new RegExp("(^|&)" + e + "=([^&]*)(&|\$)"),\\r\\n                i = window.location.search.substr(1).match(r);\\r\\n            return null != i ? unescape(i[2]) : null\\r\\n        }\\r\\n        window.commentAgent = { seek: t => window.player && window.player.seek(t) };\\r\\n    <\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
-
-// src/utils/hook/webpack.ts
-var arr = [];
-var param = [];
-var _Webpack = class {
-  backup = window.webpackJsonp;
-  constructor() {
-    _Webpack.load = true;
-    Reflect.defineProperty(window, "webpackJsonp", {
-      configurable: true,
-      set: (v) => {
-        typeof v === "function" && (this.backup = v);
-        return true;
-      },
-      get: () => {
-        return this.backup && ((chunkIds, moreModules, executeModules) => {
-          if (arr[moreModules.length]) {
-            const obj = arr[moreModules.length];
-            const pam = param[moreModules.length];
-            Object.entries(obj).forEach((d) => {
-              let code = moreModules[d[0]];
-              if (code) {
-                code = code.toString();
-                d[1].forEach((e) => code = e(code));
-                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
-              }
-            });
-          }
-          return this.backup(chunkIds, moreModules, executeModules);
-        });
+  /** 解析解码xml弹幕 */
+  static decodeXml(xml) {
+    if (typeof xml === "string") {
+      xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
+      xml = new DOMParser().parseFromString(xml, "application/xml");
+    }
+    const items = xml.querySelectorAll("d");
+    const dms = [];
+    items.forEach((d) => {
+      const json = d.getAttribute("p").split(",");
+      const text = d.textContent || d.text;
+      if (text) {
+        const dm = {
+          pool: Number(json[5]),
+          color: Number(json[3]),
+          ctime: Number(json[4]),
+          id: Number(json[7]),
+          idStr: String(json[7]),
+          mode: Number(json[1]),
+          fontsize: Number(json[2]),
+          progress: Number(json[0]) * 1e3,
+          content: String(text),
+          midHash: json[6]
+        };
+        dms.push(dm);
       }
     });
+    return dms;
+  }
+  /** 编码xml弹幕 */
+  static encodeXml(dms, cid) {
+    return dms.reduce((s, d) => {
+      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<&]/g, (a) => {
+        return { "<": "&lt;", "&": "&amp;" }[a];
+      }).replace(/(\\n|\\r\\n)/g, "/n")}</d>
+\`;
+      return s;
+    }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
+\`) + "</i>";
   }
 };
-var Webpack = _Webpack;
-__publicField(Webpack, "load", false);
-function webpackHook(len, pos, rpc, params = ["t", "e", "i"]) {
-  Webpack.load || new Webpack();
-  if (!arr[len]) {
-    arr[len] = {};
-    param[len] = params;
+
+// src/io/grpc/api-dm-web.ts
+var _ApiDmWeb = class {
+  constructor(aid, cid) {
+    this.aid = aid;
+    this.cid = cid;
+    _ApiDmWeb.Root || _ApiDmWeb.RootInit();
   }
-  arr[len][pos] = arr[len][pos] || [];
-  arr[len][pos].push((code) => rpc(code));
+  static RootInit() {
+    this.Root = import_light.Root.fromJSON(dm_web_default);
+    this.DmWebViewReply = this.Root.lookupType("DmWebViewReply");
+    this.DmSegMobileReply = this.Root.lookupType("DmSegMobileReply");
+  }
+  danmaku = [];
+  /** 获取新版弹幕 */
+  async getData() {
+    if (!this.danmaku.length) {
+      const dmWebView = await this.DmWebViewReply();
+      const pageSize = dmWebView.dmSge.pageSize ? dmWebView.dmSge.pageSize / 1e3 : 360;
+      const total = this.aid == window.aid && window.player?.getDuration?.() / pageSize + 1 || dmWebView.dmSge.total;
+      const promises = [];
+      for (let i = 1; i <= total; i++) {
+        promises.push(
+          this.DmSegMobileReply(i).then((d) => {
+            d.elems && (this.danmaku = this.danmaku.concat(d.elems));
+          }).catch((e) => {
+            console.warn("弹幕丢包：", \`segment_index=\${i}\`, e);
+          })
+        );
+      }
+      dmWebView.specialDms && dmWebView.specialDms.forEach((d) => {
+        promises.push(
+          this.specialDm(d.replace("http:", "")).then((d2) => {
+            d2.elems && (this.danmaku = this.danmaku.concat(d2.elems));
+          }).catch((e) => {
+            console.warn("高级弹幕丢包：", d, e);
+          })
+        );
+      });
+      await Promise.all(promises);
+      DanmakuBase.sortDmById(this.danmaku);
+    }
+    return this.danmaku;
+  }
+  /** 获取旧版弹幕 */
+  async toCmd() {
+    const danmaku = await this.getData();
+    return DanmakuBase.parseCmd(danmaku);
+  }
+  /** 获取弹幕分包 */
+  async DmWebViewReply() {
+    const response = await fetch(objUrl(URLS.DM_WEB_VIEW, {
+      type: 1,
+      oid: this.cid,
+      pid: this.aid
+    }), { credentials: "include", cache: "force-cache" });
+    const arraybuffer = await response.arrayBuffer();
+    const msg = _ApiDmWeb.DmWebViewReply.decode(new Uint8Array(arraybuffer));
+    return _ApiDmWeb.DmWebViewReply.toObject(msg);
+  }
+  /** 获取弹幕分包 */
+  async DmSegMobileReply(segment_index = 1) {
+    const response = await fetch(objUrl(URLS.DM_WEB_SEG_SO, {
+      type: 1,
+      oid: this.cid,
+      pid: this.aid,
+      segment_index
+    }), { credentials: "include" });
+    const arraybuffer = await response.arrayBuffer();
+    const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
+    return _ApiDmWeb.DmSegMobileReply.toObject(msg);
+  }
+  /** 获取高级弹幕 */
+  async specialDm(url) {
+    const response = await fetch(url);
+    const arraybuffer = await response.arrayBuffer();
+    const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
+    return _ApiDmWeb.DmSegMobileReply.toObject(msg);
+  }
+};
+var ApiDmWeb = _ApiDmWeb;
+__publicField(ApiDmWeb, "Root");
+__publicField(ApiDmWeb, "DmWebViewReply");
+__publicField(ApiDmWeb, "DmSegMobileReply");
+
+// src/utils/file.ts
+function readAs(file, type = "string", encoding = "utf-8") {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    switch (type) {
+      case "ArrayBuffer":
+        reader.readAsArrayBuffer(file);
+        break;
+      case "DataURL":
+        reader.readAsDataURL(file);
+        break;
+      case "string":
+        reader.readAsText(file, encoding);
+        break;
+    }
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (e) => reject(e);
+  });
+}
+async function saveAs(content, fileName, contentType = "text/plain") {
+  const a = document.createElement("a");
+  const file = new Blob([content], { type: contentType });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.addEventListener("load", () => URL.revokeObjectURL(a.href));
+  a.click();
+}
+function fileRead(accept, multiple) {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement("input");
+    let selected = false;
+    input.type = "file";
+    accept && (input.accept = accept);
+    multiple && (input.multiple = multiple);
+    input.style.opacity = "0";
+    input.addEventListener("change", () => {
+      selected = true;
+      resolve(input.files);
+    });
+    document.body.appendChild(input);
+    input.click();
+    window.addEventListener("focus", () => {
+      setTimeout(() => {
+        selected || reject("取消选择~");
+      }, 100);
+    }, { once: true });
+  });
 }
 
-// src/json/sort.txt
-var sort_default = '[{name:"首页",route:"/",tid:"",locid:23,sub:[]},{name:"动画",route:"douga",tid:1,locid:52,count:"",subMenuSize:162,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2507,leftId:2452,rightId:2453},sub:[{name:"MAD·AMV",route:"mad",tid:24,ps:15,rps:10,ad:{active:!0,dataLocId:151},desc:"具有一定制作程度的动画或静画的二次创作视频",url:"//www.bilibili.com/video/douga-mad-1.html"},{name:"MMD·3D",route:"mmd",tid:25,ps:15,rps:10,ad:{active:!0,dataLocId:152},desc:"使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频",url:"//www.bilibili.com/video/douga-mmd-1.html"},{name:"短片·手书·配音",route:"voice",tid:47,ps:15,rps:10,desc:"追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音",url:"//www.bilibili.com/video/douga-voice-1.html"},{name:"手办·模玩",route:"garage_kit",tid:210,ps:15,rps:10,desc:"手办模玩的测评、改造或其他衍生内容",url:""},{name:"特摄",route:"tokusatsu",tid:86,ps:15,rps:10,desc:"特摄相关衍生视频",url:"//www.bilibili.com/video/cinephile-tokusatsu.html"},{name:"综合",route:"other",tid:27,ps:15,rps:10,ad:{active:!0,dataLocId:153},desc:"以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容",url:"//www.bilibili.com/video/douga-else-1.html"}]},{name:"番剧",route:"anime",tid:13,url:"//www.bilibili.com/anime/",takeOvered:!0,count:"",subMenuSize:172,combination:!0,sub:[{name:"连载动画",tid:33,route:"serial",desc:"当季连载的动画番剧",url:"//www.bilibili.com/video/bangumi-two-1.html"},{name:"完结动画",tid:32,route:"finish",desc:"已完结的动画番剧合集",url:"//www.bilibili.com/video/part-twoelement-1.html"},{name:"资讯",tid:51,route:"information",desc:"动画番剧相关资讯视频",url:"//www.bilibili.com/video/douga-else-information-1.html"},{name:"官方延伸",tid:152,route:"offical",desc:"动画番剧为主题的宣传节目、采访视频，及声优相关视频",url:"//www.bilibili.com/video/bagumi_offical_1.html"},{name:"新番时间表",url:"//www.bilibili.com/anime/timeline/",desc:""},{name:"番剧索引",url:"//www.bilibili.com/anime/index/",desc:""}]},{name:"国创",tid:167,route:"guochuang",url:"//www.bilibili.com/guochuang/",takeOvered:!0,count:"",subMenuSize:214,combination:!0,sub:[{name:"国产动画",tid:153,route:"chinese",desc:"我国出品的PGC动画",url:"//www.bilibili.com/video/bangumi_chinese_1.html"},{name:"国产原创相关",tid:168,route:"original",desc:"",url:"//www.bilibili.com/video/guochuang-fanvid-1.html"},{name:"布袋戏",tid:169,route:"puppetry",desc:"",url:"//www.bilibili.com/video/glove-puppetry-1.html"},{name:"动态漫·广播剧",tid:195,route:"motioncomic",desc:"",url:""},{name:"资讯",tid:170,route:"information",desc:"",url:"//www.bilibili.com/video/guochuang-offical-1.html"},{name:"新番时间表",url:"//www.bilibili.com/guochuang/timeline/",desc:""},{name:"国产动画索引",url:"//www.bilibili.com/guochuang/index/",desc:""}]},{name:"音乐",route:"music",tid:3,locid:58,count:"",subMenuSize:268,slider:{width:620,height:220},viewTag:!0,customComponent:{name:"Energy",titleId:2511,leftId:2462,rightId:3131,rightType:"slide"},sub:[{name:"原创音乐",route:"original",tid:28,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:243},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"原创歌曲及纯音乐，包括改编、重编曲及remix",url:"//www.bilibili.com/video/music-original-1.html"},{name:"翻唱",route:"cover",tid:31,ps:15,rps:10,ad:{active:!0,dataLocId:245},viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"对曲目的人声再演绎视频",url:"//www.bilibili.com/video/music-Cover-1.html"},{name:"演奏",route:"perform",tid:59,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"乐器和非传统乐器器材的演奏作品",url:"//www.bilibili.com/video/music-perform-1.html"},{name:"VOCALOID·UTAU",route:"vocaloid",tid:30,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:247},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作",url:"//www.bilibili.com/video/music-vocaloid-1.html"},{name:"音乐现场",route:"live",tid:29,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等",url:"//www.bilibili.com/video/music-oped-1.html"},{name:"MV",route:"mv",tid:193,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV",url:"//www.bilibili.com/video/music-coordinate-1.html"},{name:"乐评盘点",route:"commentary",tid:243,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐教学",route:"tutorial",tid:244,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以音乐教学为目的的内容",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐综合",route:"other",tid:130,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"所有无法被收纳到其他音乐二级分区的音乐类视频",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音频",customZone:"Audio",route:"audio",url:"//www.bilibili.com/audio/home?musicType=music"},{name:"说唱",url:"//www.bilibili.com/v/rap"}]},{name:"舞蹈",route:"dance",tid:129,locid:64,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2513,leftId:2472,rightId:2473},sub:[{name:"宅舞",route:"otaku",tid:20,ps:15,rps:10,ad:{active:!0,dataLocId:249},desc:"与ACG相关的翻跳、原创舞蹈",url:"//www.bilibili.com/video/dance-1.html"},{name:"街舞",route:"hiphop",tid:198,ps:15,rps:10,ad:{active:!0,dataLocId:251},desc:"收录街舞相关内容，包括赛事现场、舞室作品、个人翻跳、FREESTYLE等",url:""},{name:"明星舞蹈",route:"star",tid:199,ps:15,rps:10,desc:"国内外明星发布的官方舞蹈及其翻跳内容",url:""},{name:"中国舞",route:"china",tid:200,ps:15,rps:10,ad:{active:!0,dataLocId:253},desc:"传承中国艺术文化的舞蹈内容，包括古典舞、民族民间舞、汉唐舞、古风舞等",url:""},{name:"舞蹈综合",route:"three_d",tid:154,ps:15,rps:10,desc:"收录无法定义到其他舞蹈子分区的舞蹈视频",url:""},{name:"舞蹈教程",route:"demo",tid:156,ps:10,rps:6,desc:"镜面慢速，动作分解，基础教程等具有教学意义的舞蹈视频",url:"//www.bilibili.com/video/dance-demo-1.html"}]},{name:"游戏",route:"game",tid:4,locid:70,count:"",subMenuSize:240,slider:{width:470,height:216},viewTag:!0,customComponent:{name:"Energy",titleId:3761,leftId:3765,rightId:3775,rightType:"slide"},recommendCardType:"GameGroomBox",sub:[{name:"单机游戏",route:"stand_alone",tid:17,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:255},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以所有平台（PC、主机、移动端）的单机或联机游戏为主的视频内容，包括游戏预告、CG、实况解说及相关的评测、杂谈与视频剪辑等",url:"//www.bilibili.com/video/videogame-1.html"},{name:"电子竞技",route:"esports",tid:171,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:257},desc:"具有高对抗性的电子竞技游戏项目，其相关的赛事、实况、攻略、解说、短剧等视频。",url:"//www.bilibili.com/video/esports-1.html"},{name:"手机游戏",route:"mobile",tid:172,ps:10,rps:7,rankshow:1,viewHotTag:!0,desc:"以手机及平板设备为主要平台的游戏，其相关的实况、攻略、解说、短剧、演示等视频。",url:"//www.bilibili.com/video/mobilegame-1.html"},{name:"网络游戏",route:"online",tid:65,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:259},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由网络运营商运营的多人在线游戏，以及电子竞技的相关游戏内容。包括赛事、攻略、实况、解说等相关视频",url:"//www.bilibili.com/video/onlinegame-1.html"},{name:"桌游棋牌",route:"board",tid:173,ps:5,rps:3,rankshow:1,viewHotTag:!0,desc:"桌游、棋牌、卡牌对战等及其相关电子版游戏的实况、攻略、解说、演示等视频。",url:"//www.bilibili.com/video/boardgame-1.html"},{name:"GMV",route:"gmv",tid:121,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由游戏素材制作的MV视频。以游戏内容或CG为主制作的，具有一定创作程度的MV类型的视频",url:"//www.bilibili.com/video/gmv-1.html"},{name:"音游",route:"music",tid:136,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"各个平台上，通过配合音乐与节奏而进行的音乐类游戏视频",url:"//www.bilibili.com/video/music-game-1.html"},{name:"Mugen",route:"mugen",tid:19,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以Mugen引擎为平台制作、或与Mugen相关的游戏视频",url:"//www.bilibili.com/video/game-mugen-1.html"},{name:"游戏赛事",url:"//www.bilibili.com/v/game/match/",newIcon:!0}]},{name:"知识",route:"knowledge",tid:36,locid:76,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2058,leftId:2047,rightId:2048},sub:[{name:"科学科普",route:"science",tid:201,ps:15,rps:10,ad:{active:!0,dataLocId:261},desc:"回答你的十万个为什么"},{name:"社科·法律·心理",route:"social_science",tid:124,ps:15,rps:10,ad:{active:!0,dataLocId:263},desc:"基于社会科学、法学、心理学展开或个人观点输出的知识视频"},{name:"人文历史",route:"humanity_history",tid:228,ps:15,rps:10,desc:"看看古今人物，聊聊历史过往，品品文学典籍"},{name:"财经商业",route:"business",tid:207,ps:15,rps:10,desc:"说金融市场，谈宏观经济，一起畅聊商业故事"},{name:"校园学习",route:"campus",tid:208,ps:15,rps:10,ad:{active:!0,dataLocId:265},desc:"老师很有趣，学生也有才，我们一起搞学习"},{name:"职业职场",route:"career",tid:209,ps:15,rps:10,desc:"职业分享、升级指南，一起成为最有料的职场人"},{name:"设计·创意",route:"design",tid:229,ps:15,rps:10,desc:"天马行空，创意设计，都在这里"},{name:"野生技能协会",route:"skill",tid:122,ps:15,rps:10,desc:"技能党集合，是时候展示真正的技术了"}]},{name:"科技",route:"tech",tid:188,locid:2977,count:"",subMenuSize:80,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2980,leftId:2978,rightId:2979},sub:[{name:"数码",route:"digital",tid:95,ps:15,rps:10,viewHotTag:!0,desc:"科技数码产品大全，一起来做发烧友",url:"#"},{name:"软件应用",route:"application",tid:230,ps:15,rps:10,viewHotTag:!0,desc:"超全软件应用指南",url:"#"},{name:"计算机技术",route:"computer_tech",tid:231,ps:15,rps:10,viewHotTag:!0,desc:"研究分析、教学演示、经验分享......有关计算机技术的都在这里",url:"#"},{name:"科工机械",route:"industry",tid:232,ps:15,rps:10,viewHotTag:!0,desc:"从小芯片到大工程，一起见证科工力量",url:"#"},{name:"极客DIY",route:"diy",tid:233,ps:15,rps:10,viewHotTag:!0,desc:"炫酷技能，极客文化，硬核技巧，准备好你的惊讶",url:"#"}]},{name:"运动",route:"sports",tid:234,locid:4639,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4646,rightId:4652,rightType:"slide"},sub:[{name:"篮球·足球",route:"basketballfootball",tid:235,ps:15,rps:10,ad:{active:!0,dataLocId:4656},desc:"与篮球、足球相关的视频，包括但不限于篮足球赛事、教学、评述、剪辑、剧情等相关内容",url:"#"},{name:"健身",route:"aerobics",tid:164,ps:15,rps:10,desc:"与健身相关的视频，包括但不限于瑜伽、CrossFit、健美、力量举、普拉提、街健等相关内容",url:"//www.bilibili.com/video/fashion-body-1.html"},{name:"竞技体育",route:"athletic",tid:236,ps:15,rps:10,desc:"与竞技体育相关的视频，包括但不限于乒乓、羽毛球、排球、赛车等竞技项目的赛事、评述、剪辑、剧情等相关内容",url:"#"},{name:"运动文化",route:"culture",tid:237,ps:15,rps:10,desc:"与运动文化相关的视频，包络但不限于球鞋、球衣、球星卡等运动衍生品的分享、解读，体育产业的分析、科普等相关内容",url:"#"},{name:"运动综合",route:"comprehensive",tid:238,ps:15,rps:10,desc:"与运动综合相关的视频，包括但不限于钓鱼、骑行、滑板等日常运动分享、教学、Vlog等相关内容",url:"#"}]},{name:"汽车",route:"car",tid:223,locid:4428,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4435,rightId:4441,rightType:"slide"},sub:[{name:"汽车生活",route:"life",tid:176,ps:15,rps:10,ad:{active:!0,dataLocId:4445},desc:"分享汽车及出行相关的生活体验类视频",url:"#"},{name:"汽车文化",route:"culture",tid:224,ps:15,rps:10,desc:"汽车改装、品牌历史、汽车设计、老爷车、汽车模型等",url:"#"},{name:"赛车",route:"racing",tid:245,ps:15,rps:10,desc:"F1等汽车运动相关",url:"#"},{name:"汽车极客",route:"geek",tid:225,ps:15,rps:10,desc:"汽车硬核达人聚集地，包括DIY造车、专业评测和技术知识分享",url:"#"},{name:"摩托车",route:"motorcycle",tid:240,ps:15,rps:10,desc:"骑士们集合啦",url:"#"},{name:"智能出行",route:"smart",tid:226,ps:15,rps:10,desc:"探索新能源汽车和未来智能出行的前沿阵地",url:"#"},{name:"购车攻略",route:"strategy",tid:227,ps:15,rps:10,desc:"丰富详实的购车建议和新车体验",url:"#"}]},{name:"生活",route:"life",tid:160,locid:88,count:"",subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2062,leftId:1674,rightId:1670},sub:[{name:"搞笑",route:"funny",tid:138,ps:15,rps:10,ad:{active:!0,dataLocId:273},desc:"各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频",url:"//www.bilibili.com/video/ent_funny_1.html",locid:4204,recommendId:4210,slider:{width:620,height:220},customComponent:{name:"Energy",leftId:4212,rightId:4218,rightType:"slide"}},{name:"家居房产",route:"home",tid:239,ps:15,rps:10,ad:{active:!0,dataLocId:275},desc:"与买房、装修、居家生活相关的分享",url:"#"},{name:"手工",route:"handmake",tid:161,ps:15,rps:10,desc:"手工制品的制作过程或成品展示、教程、测评类视频",url:"//www.bilibili.com/video/ent-handmake-1.html"},{name:"绘画",route:"painting",tid:162,ps:15,rps:10,desc:"绘画过程或绘画教程，以及绘画相关的所有视频",url:"//www.bilibili.com/video/ent-painting-1.html"},{name:"日常",route:"daily",tid:21,ps:15,rps:10,desc:"记录日常生活，分享生活故事",url:"//www.bilibili.com/video/ent-life-1.html"}]},{name:"美食",route:"food",tid:211,locid:4243,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4258,rightId:4264},sub:[{name:"美食制作",route:"make",tid:76,ps:15,rps:10,ad:{active:!0,dataLocId:4268},desc:"学做人间美味，展示精湛厨艺",url:"#"},{name:"美食侦探",route:"detective",tid:212,ps:15,rps:10,desc:"寻找美味餐厅，发现街头美食",url:"#"},{name:"美食测评",route:"measurement",tid:213,ps:15,rps:10,desc:"吃货世界，品尝世间美味",url:"#"},{name:"田园美食",route:"rural",tid:214,ps:15,rps:10,desc:"品味乡野美食，寻找山与海的味道",url:"#"},{name:"美食记录",route:"record",tid:215,ps:15,rps:10,desc:"记录一日三餐，给生活添一点幸福感",url:"#"}]},{name:"动物圈",route:"animal",tid:217,locid:4365,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4376,rightId:4381,rightType:"slide"},sub:[{name:"喵星人",route:"cat",tid:218,ps:15,rps:10,desc:"喵喵喵喵喵",url:"#",ad:{active:!0,dataLocId:4385}},{name:"汪星人",route:"dog",tid:219,ps:15,rps:10,desc:"汪汪汪汪汪",url:"#"},{name:"大熊猫",route:"panda",tid:220,ps:15,rps:10,desc:"芝麻汤圆营业中",url:"#"},{name:"野生动物",route:"wild_animal",tid:221,ps:15,rps:10,desc:"内有“猛兽”出没",url:"#"},{name:"爬宠",route:"reptiles",tid:222,ps:15,rps:10,desc:"鳞甲有灵",url:"#"},{name:"动物综合",route:"animal_composite",tid:75,ps:15,rps:10,desc:"收录除上述子分区外，其余动物相关视频以及非动物主体或多个动物主体的动物相关延伸内容",url:"#"}]},{name:"鬼畜",route:"kichiku",tid:119,locid:100,count:"",subMenuSize:182,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2509,leftId:2482,rightId:2483},sub:[{name:"鬼畜调教",route:"guide",tid:22,ps:15,rps:10,ad:{active:!0,dataLocId:285},desc:"使用素材在音频、画面上做一定处理，达到与BGM一定的同步感",url:"//www.bilibili.com/video/ent-Kichiku-1.html"},{name:"音MAD",route:"mad",tid:26,ps:15,rps:10,ad:{active:!0,dataLocId:287},desc:"使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件",url:"//www.bilibili.com/video/douga-kichiku-1.html"},{name:"人力VOCALOID",route:"manual_vocaloid",tid:126,ps:15,rps:10,desc:"将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术",url:"//www.bilibili.com/video/kichiku-manual_vocaloid-1.html"},{name:"鬼畜剧场",route:"theatre",tid:216,ps:15,rps:10,desc:"使用素材进行人工剪辑编排的有剧情的作品"},{name:"教程演示",route:"course",tid:127,ps:10,rps:6,rightComponent:{name:"CmImgList",id:148},ad:{active:!0,dataLocId:289},hideDropdown:!1,desc:"鬼畜相关的教程演示",url:"//www.bilibili.com/video/kichiku-course-1.html"}]},{name:"时尚",route:"fashion",tid:155,locid:94,count:"",subMenuSize:124,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2515,leftId:2492,rightId:2493},sub:[{name:"美妆护肤",route:"makeup",tid:157,ps:15,rps:10,ad:{active:!0,dataLocId:279},desc:"彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评",url:"//www.bilibili.com/video/fashion-makeup-fitness-1.html"},{name:"穿搭",route:"clothing",tid:158,ps:15,rps:10,ad:{active:!0,dataLocId:281},desc:"穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等",url:"//www.bilibili.com/video/fashion-clothing-1.html"},{name:"时尚潮流",route:"trend",tid:159,ps:15,rps:10,desc:"时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普",url:"#"}]},{name:"资讯",route:"information",tid:202,locid:4076,count:"",subMenuSize:60,slider:{width:620,height:220},viewTag:!1,sub:[{name:"热点",route:"hotspot",tid:203,ps:18,rps:10,desc:"全民关注的时政热门资讯"},{name:"环球",route:"global",tid:204,ps:18,rps:10,desc:"全球范围内发生的具有重大影响力的事件动态"},{name:"社会",route:"social",tid:205,ps:18,rps:10,desc:"日常生活的社会事件、社会问题、社会风貌的报道"},{name:"综合",route:"multiple",tid:206,ps:18,rps:10,desc:"除上述领域外其它垂直领域的综合资讯"}]},{name:"娱乐",route:"ent",tid:5,locid:82,count:"",subMenuSize:62,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2067,leftId:2065,rightId:2066},sub:[{name:"综艺",route:"variety",tid:71,ps:15,rps:10,ad:{active:!0,dataLocId:267},desc:"所有综艺相关，全部一手掌握！",url:"//www.bilibili.com/video/ent-variety-1.html"},{name:"娱乐杂谈",route:"talker",tid:241,ps:15,rps:10,ad:{active:!0,dataLocId:269},desc:"娱乐人物解读、娱乐热点点评、娱乐行业分析"},{name:"粉丝创作",route:"fans",tid:242,ps:15,rps:10,desc:"粉丝向创作视频"},{name:"明星综合",route:"celebrity",tid:137,ps:15,rps:10,desc:"娱乐圈动态、明星资讯相关"}]},{name:"影视",route:"cinephile",tid:181,locid:2211,count:"",subMenuSize:84,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2309,leftId:2307,rightId:2308},sub:[{name:"影视杂谈",route:"cinecism",tid:182,ps:15,rps:10,ad:{active:!0,dataLocId:2212},desc:"影视评论、解说、吐槽、科普等",url:"//www.bilibili.com/video/cinephile-cinecism.html"},{name:"影视剪辑",route:"montage",tid:183,ps:15,rps:10,ad:{active:!0,dataLocId:2213},desc:"对影视素材进行剪辑再创作的视频",url:"//www.bilibili.com/video/cinephile-montage.html"},{name:"短片",route:"shortfilm",tid:85,ps:15,rps:10,desc:"追求自我表达且具有特色的短片",url:"//www.bilibili.com/video/cinephile-shortfilm.html"},{name:"预告·资讯",route:"trailer_info",tid:184,ps:15,rps:10,ad:{active:!0,dataLocId:2214},desc:"影视类相关资讯，预告，花絮等视频",url:"//www.bilibili.com/video/cinephile-trailer-info.html"}]},{name:"纪录片",route:"documentary",tid:177,url:"//www.bilibili.com/documentary/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"人文·历史",tid:37,route:"history",dise:"",url:"//www.bilibili.com/video/doco-history.html"},{name:"科学·探索·自然",tid:178,route:"science",dise:"",url:"//www.bilibili.com/video/doco-science.html"},{name:"军事",tid:179,route:"military",dise:"",url:"//www.bilibili.com/video/doco-military.html"},{name:"社会·美食·旅行",tid:180,route:"travel",dise:"",url:"//www.bilibili.com/video/doco-travel.html"},{name:"纪录片索引",url:"//www.bilibili.com/documentary/index/"}]},{name:"电影",route:"movie",tid:23,url:"//www.bilibili.com/movie/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"华语电影",tid:147,route:"chinese",desc:"",url:"//www.bilibili.com/video/movie_chinese_1.html"},{name:"欧美电影",tid:145,route:"west",desc:"",url:"//www.bilibili.com/video/movie_west_1.html"},{name:"日本电影",tid:146,route:"japan",desc:"",url:"//www.bilibili.com/video/movie_japan_1.html"},{name:"其他国家",tid:83,route:"movie",desc:"",url:"//www.bilibili.com/video/movie-movie-1.html"},{name:"电影索引",url:"//www.bilibili.com/movie/index/"}]},{name:"电视剧",route:"tv",tid:11,url:"//www.bilibili.com/tv/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"国产剧",tid:185,route:"mainland",desc:"",url:"//www.bilibili.com/video/tv-mainland.html"},{name:"海外剧",tid:187,route:"overseas",desc:"",url:"//www.bilibili.com/video/tv-overseas.html"},{name:"电视剧索引",url:"//www.bilibili.com/tv/index/"}]},{name:"虚拟UP主",route:"virtual",locid:4735,count:"",isHide:!0,subMenuSize:60,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:4754,leftId:4756},sub:[{name:"游戏",route:"game",tid:4,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/game"},{name:"音乐",route:"music",tid:3,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/music"},{name:"动画",route:"douga",tid:1,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/douga"},{name:"其他",route:"other",tid:0,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/other"}]}]';
+// src/utils/format/size.ts
+function sizeFormat(size = 0) {
+  let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1e3 ** i;
+  while (dex > 1) {
+    if (size >= vor) {
+      size = Number((size / dex).toFixed(2));
+      break;
+    }
+    dex = dex / 1024;
+    vor = vor / 1e3;
+    i--;
+  }
+  return size ? size + unit[i] : "N/A";
+}
+
+// src/utils/hook/worker.ts
+var _WorkerHook = class {
+  /** Worker.prototype.postMessage hook init. */
+  static postMessageHook() {
+    this.postMessage = Worker.prototype.postMessage;
+    Worker.prototype.postMessage = function(message, transfer) {
+      let ishook = false;
+      _WorkerHook.postMessageCallback.forEach((d) => {
+        d.call(this, message, transfer) && (ishook = true);
+      });
+      ishook || _WorkerHook.postMessage.call(this, message, transfer);
+    };
+  }
+  constructor() {
+    _WorkerHook.postMessage || _WorkerHook.postMessageHook();
+  }
+  /**
+   * Worker.prototype.postMessage hook.
+   * @param callback 检查并处理\`Worker.prototype.postMessage\`的回调函数，继承原传参，返回 **true** 时拦截该实例。
+   * @returns 取消该hook的方法，执行后不再hook。
+   */
+  postMessage(callback) {
+    const id = _WorkerHook.postMessageCallback.push(callback);
+    return () => {
+      id >= 0 && delete _WorkerHook.postMessageCallback[id - 1];
+    };
+  }
+};
+var WorkerHook = _WorkerHook;
+/** Worker.prototype.postMessage backup. */
+__publicField(WorkerHook, "postMessage");
+__publicField(WorkerHook, "postMessageCallback", []);
+
+// src/io/api-bangumi-season.ts
+async function apiBangumiSeason(data) {
+  const response = await fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" });
+  const json = await response.json();
+  return jsonCheck(json).result;
+}
 
 // src/io/api-view-detail.ts
 var ApiViewDetail = class {
@@ -10250,12 +12243,101 @@ async function apiViewDetail(aid) {
   return jsonCheck(json).data;
 }
 
-// src/io/api-bangumi-season.ts
-async function apiBangumiSeason(data) {
-  const response = await fetch(objUrl(URLS.BANGUMI_SEASON, data), { credentials: "include" });
-  const json = await response.json();
-  return jsonCheck(json).result;
-}
+// src/io/api-biliplus-view.ts
+var apiBiliplusView = class {
+  constructor(aid) {
+    this.aid = aid;
+    this.fetch = fetch(objUrl("//www.biliplus.com/api/view", {
+      id: aid
+    }));
+  }
+  fetch;
+  async getDate() {
+    const respense = await this.fetch;
+    return await respense.json();
+  }
+  /** 转化为\`apiViewDetail\`格式 */
+  async toDetail() {
+    const json = await this.getDate();
+    return this.view2Detail(json);
+  }
+  view2Detail(data) {
+    const result = new ApiViewDetail();
+    if (data.v2_app_api) {
+      delete data.v2_app_api.redirect_url;
+      result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
+      result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
+      result.data.Tags = data.v2_app_api.tag;
+      result.data.View = data.v2_app_api;
+      xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
+        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+      }, false);
+      xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
+        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
+        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+      }, false);
+      return JSON.parse(JSON.stringify(result));
+    } else
+      return this.view2Detail_v1(data);
+  }
+  view2Detail_v1(data) {
+    const result = new ApiViewDetail();
+    const p = Number(getUrlValue("p"));
+    result.data.Card.card = {
+      face: "//static.hdslb.com/images/akari.jpg",
+      mid: data.mid,
+      name: data.author,
+      vip: {}
+    };
+    result.data.View = {
+      aid: data.aid || data.id || this.aid,
+      cid: data.list[p ? p - 1 : 0].cid,
+      copyright: 1,
+      ctime: data.created,
+      dimension: { width: 1920, height: 1080, rotate: 0 },
+      duration: -1,
+      owner: result.data.Card.card,
+      pages: data.list.map((d) => {
+        d.dimension = { width: 1920, height: 1080, rotate: 0 };
+        return d;
+      }),
+      pic: data.pic,
+      pubdate: data.lastupdatets,
+      rights: {},
+      stat: {
+        aid: data.aid || data.id || this.aid,
+        coin: data.coins,
+        danmaku: data.video_review,
+        dislike: 0,
+        evaluation: "",
+        favorite: data.favorites,
+        his_rank: 0,
+        like: -1,
+        now_rank: 0,
+        reply: -1,
+        share: -1,
+        view: data.play
+      },
+      state: 0,
+      subtitle: { allow_submit: false, list: [] },
+      tid: data.tid,
+      title: data.title,
+      tname: data.typename,
+      videos: data.list.length
+    };
+    data.bangumi && (result.data.View.season = data.bangumi);
+    xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
+      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
+      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+    }, false);
+    xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
+      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
+      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
+    }, false);
+    return JSON.parse(JSON.stringify(result));
+  }
+};
 
 // src/io/api-player-pagelist.ts
 async function apiPlayerPagelist(aid) {
@@ -10369,245 +12451,5246 @@ async function urlParam(url, redirect = true) {
   return { aid, cid, ssid, epid, p, pgc };
 }
 
-// src/io/api-biliplus-view.ts
-var apiBiliplusView = class {
-  constructor(aid) {
-    this.aid = aid;
-    this.fetch = fetch(objUrl("//www.biliplus.com/api/view", {
-      id: aid
-    }));
+// src/core/danmaku.ts
+var Danmaku = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    BLOD2.userLoadedCallback((status) => {
+      if (!status.bilibiliplayer) {
+        this.listSoFix();
+      }
+    });
   }
-  fetch;
-  async getDate() {
-    const respense = await this.fetch;
-    return await respense.json();
+  listSoFixed = false;
+  /** 原生旧版播放器使用protobuf弹幕 */
+  listSoFix() {
+    if (this.listSoFixed)
+      return;
+    this.listSoFixed = true;
+    const that = this;
+    new WorkerHook().postMessage(function(message) {
+      if (message.url && message.url.includes("list.so")) {
+        that.BLOD.status.dmwrap && that.trim();
+        if (!that.BLOD.status.dmproto)
+          return false;
+        const params = urlObj(message.url);
+        const startTime = new Date().getTime();
+        that.getSegDanmaku(void 0, params.oid).then((d) => {
+          this.dispatchEvent(new MessageEvent("message", {
+            data: {
+              code: 0,
+              danmakuArray: d,
+              loadTime: new Date().getTime() - startTime,
+              parseTime: Math.random(),
+              sendTip: "",
+              state: 0,
+              textSide: "",
+              total: d.length.toString()
+            }
+          }));
+        }).catch((e) => {
+          console.error("protobuf 弹幕获取失败", e);
+        });
+        return true;
+      }
+      return false;
+    });
   }
-  /** 转化为\`apiViewDetail\`格式 */
-  async toDetail() {
-    const json = await this.getDate();
-    return this.view2Detail(json);
+  /** 允许普权弹幕排版 */
+  trim() {
+    propertyHook(String.prototype, "trim", function() {
+      return String(this);
+    });
   }
-  view2Detail(data) {
-    const result = new ApiViewDetail();
-    if (data.v2_app_api) {
-      delete data.v2_app_api.redirect_url;
-      result.data.Card.follower = data.v2_app_api.owner_ext?.fans;
-      result.data.Card.card = { ...data.v2_app_api.owner, ...data.v2_app_api.owner_ext };
-      result.data.Tags = data.v2_app_api.tag;
-      result.data.View = data.v2_app_api;
-      xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
-        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
-        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-      }, false);
-      xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
-        const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
-        res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-      }, false);
-      return JSON.parse(JSON.stringify(result));
-    } else
-      return this.view2Detail_v1(data);
+  async getSegDanmaku(aid = this.BLOD.aid, cid = this.BLOD.cid) {
+    if (!cid)
+      throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
+    return new ApiDmWeb(aid, cid).toCmd();
   }
-  view2Detail_v1(data) {
-    const result = new ApiViewDetail();
-    const p = Number(getUrlValue("p"));
-    result.data.Card.card = {
-      face: "//static.hdslb.com/images/akari.jpg",
-      mid: data.mid,
-      name: data.author,
-      vip: {}
-    };
-    result.data.View = {
-      aid: data.aid || data.id || this.aid,
-      cid: data.list[p ? p - 1 : 0].cid,
-      copyright: 1,
-      ctime: data.created,
-      dimension: { width: 1920, height: 1080, rotate: 0 },
-      duration: -1,
-      owner: result.data.Card.card,
-      pages: data.list.map((d) => {
-        d.dimension = { width: 1920, height: 1080, rotate: 0 };
-        return d;
-      }),
-      pic: data.pic,
-      pubdate: data.lastupdatets,
-      rights: {},
-      stat: {
-        aid: data.aid || data.id || this.aid,
-        coin: data.coins,
-        danmaku: data.video_review,
-        dislike: 0,
-        evaluation: "",
-        favorite: data.favorites,
-        his_rank: 0,
-        like: -1,
-        now_rank: 0,
-        reply: -1,
-        share: -1,
-        view: data.play
-      },
-      state: 0,
-      subtitle: { allow_submit: false, list: [] },
-      tid: data.tid,
-      title: data.title,
-      tname: data.typename,
-      videos: data.list.length
-    };
-    data.bangumi && (result.data.View.season = data.bangumi);
-    xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
-      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify(result.data.View)}}\`;
-      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-    }, false);
-    xhrHook(\`api.bilibili.com/x/web-interface/archive/stat?aid=\${this.aid}\`, void 0, (res) => {
-      const t = \`{"code": 0,"message":"0","ttl":1,"data":\${JSON.stringify({ ...result.data.View.stat, aid: this.aid })}}\`;
-      res.responseType === "json" ? res.response = JSON.parse(t) : res.response = res.responseText = t;
-    }, false);
-    return JSON.parse(JSON.stringify(result));
+  /** 加载本地xml弹幕 */
+  localDmXml() {
+    if (!window.player)
+      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
+    if (!window.player?.appendDm)
+      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
+    const data = ["请选择一个弹幕文件，拓展名：.xml，编码：utf-8"];
+    const toast = this.BLOD.toast.toast(0, "info", ...data);
+    fileRead(".xml", false).then((d) => {
+      if (d && d[0]) {
+        data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
+        toast.data = data;
+        toast.type = "warning";
+        return readAs(d[0]);
+      }
+      throw new Error(data[0]);
+    }).then((d) => {
+      const dm = DanmakuBase.decodeXml(d);
+      window.player.appendDm(dm, !this.BLOD.status.dmContact);
+      data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+      toast.data = data;
+      toast.type = "success";
+    }).catch((e) => {
+      data.push(e);
+      debug.error(e);
+      toast.data = data;
+      toast.type = "error";
+    }).finally(() => {
+      toast.delay = this.BLOD.status.toast.delay;
+    });
+  }
+  /** 加载本地json弹幕 */
+  localDmJson() {
+    if (!window.player)
+      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
+    if (!window.player?.appendDm)
+      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
+    const data = ["请选择一个弹幕文件，拓展名：.json，编码：utf-8"];
+    const toast = this.BLOD.toast.toast(0, "info", ...data);
+    fileRead(".json", false).then((d) => {
+      if (d && d[0]) {
+        data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
+        toast.data = data;
+        toast.type = "warning";
+        return readAs(d[0]);
+      }
+      throw new Error(data[0]);
+    }).then((d) => {
+      const dm = JSON.parse(d);
+      window.player.appendDm(dm, !this.BLOD.status.dmContact);
+      data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+      toast.data = data;
+      toast.type = "success";
+    }).catch((e) => {
+      data.push(e);
+      debug.error(e);
+      toast.data = data;
+      toast.type = "error";
+    }).finally(() => {
+      toast.delay = this.BLOD.status.toast.delay;
+    });
+  }
+  /** 下载弹幕 */
+  async download(aid = this.BLOD.aid, cid = this.BLOD.cid) {
+    if (!cid)
+      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
+    const dms = window.player?.getDanmaku ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
+    const metadata = this.BLOD.videoInfo.metadata;
+    const title = metadata ? \`\${metadata.album}(\${metadata.title})\` : \`\${aid}.\${cid}\`;
+    if (this.BLOD.status.dmExtension === "json") {
+      return saveAs(JSON.stringify(dms, void 0, "	"), \`\${title}.json\`, "application/json");
+    }
+    return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), \`\${title}.xml\`, "application/xml");
+  }
+  /** 加载在线弹幕 */
+  async onlineDm(str) {
+    if (!window.player)
+      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
+    if (!window.player?.appendDm)
+      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
+    const data = ["-------在线弹幕-------", \`目标：\${str}\`];
+    const toast = this.BLOD.toast.toast(0, "info", ...data);
+    const { aid, cid } = await urlParam(str);
+    data.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
+    toast.data = data;
+    if (!aid || !cid) {
+      data.push("查询cid信息失败，已退出！");
+      toast.data = data;
+      toast.type = "error";
+      toast.delay = this.BLOD.toast.delay;
+    } else {
+      new ApiDmWeb(aid, cid).getData().then((d) => {
+        window.player.appendDm(d, !this.BLOD.status.dmContact);
+        data.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+        toast.data = data;
+        toast.type = "success";
+      }).catch((e) => {
+        data.push(e);
+        debug.error(e);
+        toast.data = data;
+        toast.type = "error";
+      }).finally(() => {
+        toast.delay = this.BLOD.status.toast.delay;
+      });
+    }
   }
 };
 
-// src/css/uplist.css
-var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
+// src/io/fnval.ts
+var qn = 127;
+var fnver = 0;
+var fnval = 0 /* FLV */ + 16 /* DASH_H265 */ + 64 /* HDR */ + 128 /* DASH_4K */ + 256 /* DOLBYAUDIO */ + 512 /* DOLBYVIDEO */ + 1024 /* DASH_8K */ + 2048 /* DASH_AV1 */;
 
-// src/html/bangumi.html
-var bangumi_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\\r\\n    <style type="text/css">\\r\\n        .new-entry {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="app" data-server-rendered="true" class="main-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\\/script>\\r\\n    <script>\\r\\n        window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\\r\\n    <\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
-
-// src/io/api-tag-info.ts
-async function apiTagInfo(tag_name) {
-  const response = await fetch(objUrl(URLS.TAG_INFO, { tag_name }));
+// src/io/api-playurl.ts
+var PlayurlDescriptionMap = {
+  127: "超高清 8K",
+  126: "杜比视界",
+  125: "HDR",
+  121: "超清 4K",
+  120: "超清 4K",
+  116: "高清 1080P60",
+  112: "高清 1080P+",
+  80: "高清 1080P",
+  74: "高清 720P60",
+  64: "高清 720P",
+  48: "高清 720P",
+  32: "清晰 480P",
+  16: "流畅 360P",
+  15: "流畅 360P",
+  6: "流畅 240P",
+  5: "流畅 144P"
+};
+var PlayurlFormatMap = {
+  127: "hdflv2",
+  126: "hdflv2",
+  125: "hdflv2",
+  121: "hdflv2",
+  120: "hdflv2",
+  116: "flv_p60",
+  112: "hdflv2",
+  80: "flv",
+  74: "flv720_p60",
+  64: "flv720",
+  48: "flv720",
+  32: "flv480",
+  16: "mp4",
+  15: "mp4",
+  6: "mp4",
+  5: "mp4"
+};
+var PlayurlQualityMap = {
+  127: "8K",
+  126: "Dolby",
+  125: "HDR",
+  121: "4K",
+  120: "4K",
+  116: "1080P60",
+  112: "1080P+",
+  80: "1080P",
+  74: "720P60",
+  64: "720P",
+  48: "720P",
+  32: "480P",
+  16: "360P",
+  15: "360P",
+  6: "240P",
+  5: "144P"
+};
+var PlayurlCodecs = {
+  30126: "hvc1.2.4.L153.90",
+  126: "hvc1.2.4.L153.90",
+  30121: "hev1.1.6.L156.90",
+  121: "hev1.1.6.L156.90",
+  30120: "avc1.64003C",
+  120: "avc1.64003C",
+  30112: "avc1.640028",
+  // 1080P+
+  112: "avc1.640028",
+  // 1080P+
+  30102: "hev1.1.6.L120.90",
+  // HEVC 1080P+
+  102: "hev1.1.6.L120.90",
+  // HEVC 1080P+
+  30080: "avc1.640028",
+  // 1080P
+  80: "avc1.640028",
+  // 1080P
+  30077: "hev1.1.6.L120.90",
+  // HEVC 1080P
+  77: "hev1.1.6.L120.90",
+  // HEVC 1080P
+  30064: "avc1.64001F",
+  // 720P
+  64: "avc1.64001F",
+  // 720P
+  30066: "hev1.1.6.L120.90",
+  // HEVC 720P
+  66: "hev1.1.6.L120.90",
+  // HEVC 720P
+  30032: "avc1.64001E",
+  // 480P
+  32: "avc1.64001E",
+  // 480P
+  30033: "hev1.1.6.L120.90",
+  // HEVC 480P
+  33: "hev1.1.6.L120.90",
+  // HEVC 480P
+  30011: "hev1.1.6.L120.90",
+  // HEVC 360P
+  11: "hev1.1.6.L120.90",
+  // HEVC 360P
+  30016: "avc1.64001E",
+  // 360P
+  16: "avc1.64001E",
+  // 360P
+  30006: "avc1.64001E",
+  //240P
+  6: "avc1.64001E",
+  // 240P
+  30005: "avc1.64001E",
+  // 144P
+  5: "avc1.64001E",
+  // 144P
+  30251: "fLaC",
+  // Hires
+  30250: "ec-3",
+  // Dolby
+  30280: "mp4a.40.2",
+  // 高码音频
+  30232: "mp4a.40.2",
+  // 中码音频
+  30216: "mp4a.40.2"
+  // 低码音频
+};
+var PlayurlCodecsAPP = {
+  30016: "avc1.64001E",
+  // APP源 360P
+  16: "avc1.64001E",
+  // APP源 360P
+  30032: "avc1.64001F",
+  // APP源 480P
+  32: "avc1.64001F",
+  // APP源 480P
+  30064: "avc1.640028",
+  // APP源 720P
+  64: "avc1.640028",
+  // APP源 720P
+  30080: "avc1.640032",
+  // APP源 1080P
+  80: "avc1.640032",
+  // APP源 1080P
+  30216: "mp4a.40.2",
+  // APP源 低码音频
+  30232: "mp4a.40.2",
+  // APP源 中码音频
+  30280: "mp4a.40.2"
+  // APP源 高码音频 
+};
+var PlayurlFrameRate = {
+  30121: "16000/672",
+  121: "16000/672",
+  30120: "16000/672",
+  120: "16000/672",
+  30112: "16000/672",
+  112: "16000/672",
+  30102: "16000/672",
+  102: "16000/672",
+  30080: "16000/672",
+  80: "16000/672",
+  30077: "16000/656",
+  77: "16000/656",
+  30064: "16000/672",
+  64: "16000/672",
+  30066: "16000/656",
+  66: "16000/656",
+  30032: "16000/672",
+  32: "16000/672",
+  30033: "16000/656",
+  33: "16000/656",
+  30011: "16000/656",
+  11: "16000/656",
+  30016: "16000/672",
+  16: "16000/672",
+  30006: "16000/672",
+  6: "16000/672",
+  30005: "16000/672",
+  5: "16000/672"
+};
+var PlayurlResolution = {
+  30121: [3840, 2160],
+  121: [3840, 2160],
+  30120: [3840, 2160],
+  120: [3840, 2160],
+  30112: [1920, 1080],
+  // 1080P+
+  112: [1920, 1080],
+  // 1080P+
+  30102: [1920, 1080],
+  // HEVC 1080P+
+  102: [1920, 1080],
+  // HEVC 1080P+
+  30080: [1920, 1080],
+  // 1080P
+  80: [1920, 1080],
+  // 1080P
+  30077: [1920, 1080],
+  // HEVC 1080P
+  77: [1920, 1080],
+  // HEVC 1080P
+  30064: [1280, 720],
+  // 720P
+  64: [1280, 720],
+  // 720P
+  30066: [1280, 720],
+  // HEVC 720P
+  66: [1280, 720],
+  // HEVC 720P
+  30032: [852, 480],
+  // 480P
+  32: [852, 480],
+  // 480P
+  30033: [852, 480],
+  // HEVC 480P
+  33: [852, 480],
+  // HEVC 480P
+  30011: [640, 360],
+  // HEVC 360P
+  11: [640, 360],
+  // HEVC 360P
+  30016: [640, 360],
+  // 360P
+  16: [640, 360],
+  // 360P
+  30006: [426, 240],
+  // 240P
+  6: [426, 240],
+  // 240P
+  30005: [256, 144],
+  // 144P
+  5: [256, 144]
+  // 144P
+};
+var PlayurlDash = class {
+  accept_description = [];
+  accept_format = "";
+  accept_quality = [];
+  bp = 0;
+  code = 0;
+  dash = {
+    audio: [],
+    dolby: { audio: [], type: 0 },
+    duration: 0,
+    min_buffer_time: 1.5,
+    minBufferTime: 1.5,
+    video: []
+  };
+  fnval = 4048;
+  fnver = 0;
+  format = "flv";
+  from = "local";
+  has_paid = true;
+  is_preview = 0;
+  message = "";
+  no_rexcode = 1;
+  quality = 80;
+  result = "suee";
+  seek_param = "start";
+  seek_type = "offset";
+  status = 2;
+  support_formats = [];
+  timelength = 0;
+  type = "DASH";
+  video_codecid = 7;
+  video_project = true;
+};
+async function apiPlayurl(data, dash = true, pgc = false, server = "api.bilibili.com") {
+  data = Object.assign({
+    qn,
+    otype: "json",
+    fourk: 1
+  }, data, dash ? { fnver, fnval } : {});
+  const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace("api.bilibili.com", server) : URLS.PLAYURL, data), { credentials: "include" });
   const json = await response.json();
-  return jsonCheck(json).data;
-}
-
-// src/io/api-tag-top.ts
-async function apiTagTop(tid) {
-  const response = await fetch(objUrl(URLS.TAG_TOP, { tid }));
-  const json = await response.json();
-  return jsonCheck(json).data;
-}
-
-// src/io/api-season-status.ts
-async function apiSeasonStatus(data) {
-  const response = await fetch(objUrl(URLS.SEASON_STATUS, data), { credentials: "include" });
-  const json = await response.json();
-  return jsonCheck(json).result;
-}
-
-// src/io/api-season-section.ts
-var ApiSeasonSection = class {
-  fetch;
-  constructor(season_id) {
-    this.fetch = fetch(objUrl(URLS.SEASON_STATUS, { season_id }), { credentials: "include" });
-  }
-  async getDate() {
-    const response = await this.fetch;
-    const json = await response.json();
+  if (pgc) {
     return jsonCheck(json).result;
   }
-  async toEpisodes() {
-    const res = await this.getDate();
-    return res.main_section.episodes.concat(...res.section.map((d) => d.episodes)).map((d) => {
-      d.ep_id = d.id;
-      d.episode_status = d.status;
-      d.index = d.title;
-      d.index_title = d.long_title;
-      d.premiere = Boolean(d.is_premiere);
-      return d;
+  return jsonCheck(json).data;
+}
+
+// src/io/api-playurl-interface.ts
+var ApiPlayurlInterface = class extends ApiSign {
+  constructor(data, pgc = false) {
+    super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, "YvirImLGlLANCLvM");
+    this.data = data;
+    this.data = Object.assign({
+      otype: "json",
+      qn: data.quality,
+      type: "",
+      fnver,
+      fnval
+    }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
+  }
+  async getData() {
+    const response = await fetch(this.sign(this.data), { credentials: "include" });
+    return await response.json();
+  }
+  toJSON() {
+    return this.sign(this.data);
+  }
+};
+
+// src/io/api-playurl-intl.ts
+var ApiPlayurlIntl = class extends ApiSign {
+  constructor(data, fetch2 = self.fetch, dash = true, pgc = false) {
+    super(pgc ? URLS.INTL_OGV_PLAYURL : URLS.INTL_PLAYURL, "bb3101000e232e27");
+    this.data = data;
+    this.fetch = fetch2;
+    this.pgc = pgc;
+    this.data = Object.assign({
+      device: "android",
+      force_host: 1,
+      mobi_app: "android_i",
+      qn,
+      platform: "android_i",
+      fourk: 1,
+      build: 2100110,
+      otype: "json"
+    }, data, dash ? { fnval, fnver } : {});
+  }
+  async getData() {
+    const response = await this.fetch(this.sign(this.data));
+    const json = await response.json();
+    if (this.pgc) {
+      return jsonCheck(json);
+    }
+    return jsonCheck(json).data;
+  }
+};
+
+// src/io/api-playurl-tv.ts
+var ApiPlayurlTv = class extends ApiSign {
+  constructor(data, dash = true, pgc = false) {
+    super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, "4409e2ce8ffd12b8");
+    this.data = data;
+    this.data = Object.assign({
+      qn,
+      fourk: 1,
+      otype: "json",
+      platform: "android",
+      mobi_app: "android_tv_yst",
+      build: 102801
+    }, data, dash ? { fnval, fnver } : {});
+  }
+  async getData() {
+    const response = await fetch(this.sign(this.data));
+    const json = await response.json();
+    return jsonCheck(json);
+  }
+};
+
+// src/io/api-playurlproj.ts
+var ApiPlayurlProj = class extends ApiSign {
+  constructor(data, pgc = false) {
+    super(pgc ? URLS.PGC_PLAYURL_PROJ : URLS.PLAYURL_PROJ, "bb3101000e232e27");
+    this.data = data;
+    this.data = Object.assign({
+      build: "2040100",
+      device: "android",
+      mobi_app: "android_i",
+      otype: "json",
+      platform: "android_i",
+      qn
+    }, data);
+    pgc && (data.module = "bangumi");
+  }
+  async getData() {
+    const response = await fetch(this.sign(this.data));
+    return await response.json();
+  }
+};
+
+// src/utils/base64.ts
+var Base64 = class {
+  /**
+   * Base64编码
+   * @param str 原始字符串
+   * @returns 编码结果
+   */
+  static encode(str) {
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+      return String.fromCharCode("0x" + p1);
+    }));
+  }
+  /**
+   * Base64解码
+   * @param str 原始字符串
+   * @returns 解码结果
+   */
+  static decode(str) {
+    return decodeURIComponent(atob(str).split("").map(function(c) {
+      return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(""));
+  }
+};
+
+// src/utils/mutex.ts
+function getMetux() {
+  return Math.random().toString(36).substring(2);
+}
+
+// src/core/download/aria2.ts
+var Aria2 = class {
+  constructor(userAgent, referer, dir, server = "http://localhost", port = 6800, token, split, size) {
+    this.userAgent = userAgent;
+    this.referer = referer;
+    this.dir = dir;
+    this.server = server;
+    this.port = port;
+    this.token = token;
+    this.split = split;
+    this.size = size;
+  }
+  get url() {
+    return \`\${this.server}:\${this.port}/jsonrpc\`;
+  }
+  /** 命令行 */
+  cmdlet(data) {
+    const arr2 = ["aria2c"];
+    data.urls.forEach((d) => arr2.push(\`"\${d}"\`));
+    data.out && arr2.push(\`--out="\${data.out}"\`);
+    (data.userAgent || this.userAgent) && arr2.push(\`--user-agent="\${data.userAgent || this.userAgent}"\`);
+    (data.referer || this.referer) && arr2.push(\`--referer="\${data.referer || this.referer}"\`);
+    (data.dir || this.dir) && arr2.push(\`--dir="\${data.dir || this.dir}"\`);
+    (data.split || this.split) && arr2.push(\`--split="\${data.split || this.split}"\`, \`--max-connection-per-server="\${data.split || this.split}"\`);
+    (data.size || this.size) && arr2.push(\`--min-split-size="\${data.size || this.size}M"\`);
+    data.header && Object.entries(data.header).forEach((d) => arr2.push(\`--header="\${d[0]}: \${d[1]}"\`));
+    return navigator.clipboard.writeText(arr2.join(" "));
+  }
+  /** RPC */
+  rpc(data) {
+    const options = {};
+    data.out && (options.out = data.out);
+    (data.userAgent || this.userAgent) && (options["user-agent"] = data.userAgent || this.userAgent);
+    (data.referer || this.referer) && (options.referer = data.referer || this.referer);
+    (data.dir || this.dir) && (options.dir = data.dir || this.dir);
+    (data.split || this.split) && (options.split = options["max-connection-per-server"] = data.split || this.split);
+    (data.size || this.size) && (options["min-split-size"] = \`\${data.size || this.size}M\`);
+    data.header && (options.header = data.header);
+    return this.postMessage("aria2.addUri", data.id, [data.urls, options]);
+  }
+  /** 获取aria2配置信息 */
+  getVersion() {
+    return this.postMessage("aria2.getVersion");
+  }
+  postMessage(method, id = getMetux(), params = []) {
+    this.token && params.unshift(\`token:\${this.token}\`);
+    return new Promise((r, j) => {
+      fetch(this.url, {
+        method: "POST",
+        body: JSON.stringify({ method, id, params }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then((d) => d.json()).then((d) => {
+        d.error && j(d.error);
+        d.result && r(d.result);
+      }).catch((e) => {
+        debug.error("RPC<POST>", e);
+        fetch(objUrl(this.url, { method, id, params: Base64.encode(JSON.stringify(params)) })).then((d) => d.json()).then((d) => {
+          d.error && j(d.error);
+          d.result && r(d.result);
+        }).catch((e2) => {
+          debug.error("RPC<GET>", e2);
+          j(e2);
+        });
+      });
     });
   }
 };
 
-// src/io/api-global-view.ts
-var ApiGlobalOgvView = class extends ApiSign {
-  fetch;
-  constructor(data, server = "api.global.bilibili.com") {
-    super(URLS.GLOBAL_OGV_VIEW.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
-    data = Object.assign({
-      build: 108003,
-      mobi_app: "bstar_a",
-      s_locale: "zh_SG"
-    }, data);
-    this.fetch = fetch(this.sign(data));
+// src/core/download/ef2.ts
+var Ef2 = class {
+  constructor(userAgent, referer, dir, delay = false, silence = false) {
+    this.userAgent = userAgent;
+    this.referer = referer;
+    this.dir = dir;
+    this.delay = delay;
+    this.silence = silence;
   }
-  async getDate() {
-    const response = await this.fetch;
-    const json = await response.json();
-    return jsonCheck(json).result;
+  /** 拉起IDM */
+  sendLinkToIDM(data) {
+    this.rebuildData(data);
+    const ef2str = Ef2.encode(data);
+    const a = document.createElement("a");
+    a.href = ef2str;
+    a.click();
+    return ef2str;
+  }
+  /** 生成ef2文件 */
+  file(data, fileName) {
+    this.rebuildData(data);
+    return Ef2.file([data], fileName);
+  }
+  /** 补全数据 */
+  rebuildData(data) {
+    this.userAgent && !data.userAgent && (data.userAgent = this.userAgent);
+    this.referer && !data.referer && (data.referer = this.referer);
+    this.dir && !data.dir && (data.dir = this.dir);
+    this.delay && !data.delay && (data.delay = this.delay);
+    this.silence && !data.silence && (data.silence = this.silence);
+  }
+  /** 生成ef2文件 */
+  static file(data, fileName) {
+    const result = [];
+    data.forEach((d) => {
+      const arr2 = [];
+      Object.entries(d).forEach((d2) => {
+        switch (d2[0]) {
+          case "cookie":
+            arr2.push(\`cookie: \${d2[1]}\`);
+            break;
+          case "delay":
+            break;
+          case "dir":
+            d2[1] = d2[1].replace(/\\//, "\\\\");
+            d2[1].endsWith("\\\\") && (d2[1] = d2[1].slice(0, -1));
+            arr2.push(\`filepath: \${d2[1]}\`);
+            break;
+          case "out":
+            arr2.push(\`filename: \${d2[1]}\`);
+            break;
+          case "password":
+            arr2.push(\`password: \${d2[1]}\`);
+            break;
+          case "body":
+            arr2.push(\`postdata: \${d2[1]}\`);
+            break;
+          case "referer":
+            arr2.push(\`referer: \${d2[1]}\`);
+            break;
+          case "silence":
+            break;
+          case "url":
+            d2[1].startsWith("//") && (d2[1] = "https:" + d2[1]);
+            arr2.unshift(d2[1]);
+            break;
+          case "userAgent":
+            arr2.push(\`User-Agent: \${d2[1]}\`);
+            break;
+          case "userName":
+            arr2.push(\`username: \${d2[1]}\`);
+            break;
+          default:
+            break;
+        }
+      });
+      arr2.unshift("<");
+      arr2.push(">");
+      result.push(...arr2);
+    });
+    saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
+  }
+  /** 生成ef2协议 */
+  static encode(data) {
+    const arr2 = [];
+    Object.entries(data).forEach((d) => {
+      switch (d[0]) {
+        case "cookie":
+          arr2.push("-c", d[1]);
+          break;
+        case "delay":
+          arr2.push("-q");
+          break;
+        case "dir":
+          d[1] = d[1].replace(/\\//, "\\\\");
+          d[1].endsWith("\\\\") && (d[1] = d[1].slice(0, -1));
+          arr2.push("-o", d[1]);
+          break;
+        case "out":
+          arr2.push("-s", d[1]);
+          break;
+        case "password":
+          arr2.push("-P", d[1]);
+          break;
+        case "body":
+          arr2.push("-d", d[1]);
+          break;
+        case "referer":
+          arr2.push("-r", d[1]);
+          break;
+        case "silence":
+          arr2.push("-f");
+          break;
+        case "url":
+          d[1].startsWith("//") && (d[1] = "https:" + d[1]);
+          arr2.push("-u", d[1]);
+          break;
+        case "userAgent":
+          arr2.push("-a", d[1]);
+          break;
+        case "userName":
+          arr2.push("-U", d[1]);
+          break;
+        default:
+          break;
+      }
+    });
+    return \`ef2://\${Base64.encode(arr2.join(" "))}\`;
+  }
+  /** 解码ef2协议 */
+  static decode(ef2str) {
+    ef2str = ef2str.replace("ef2://", "");
+    ef2str = Base64.decode(ef2str);
+    const arr2 = ef2str.split(" ");
+    const data = {};
+    for (let i = 0; i < arr2.length; i++) {
+      if (/-\\w/.test(arr2[i])) {
+        switch (arr2[i]) {
+          case "-c":
+            data.cookie = arr2[i + 1];
+            i++;
+            break;
+          case "-q":
+            data.delay = true;
+            break;
+          case "-o":
+            data.dir = arr2[i + 1];
+            i++;
+            break;
+          case "-s":
+            data.out = arr2[i + 1];
+            i++;
+            break;
+          case "-P":
+            data.password = arr2[i + 1];
+            i++;
+            break;
+          case "-d":
+            data.body = arr2[i + 1];
+            i++;
+            break;
+          case "-r":
+            data.referer = arr2[i + 1];
+            i++;
+            break;
+          case "-f":
+            data.silence = true;
+            break;
+          case "-u":
+            data.url = arr2[i + 1];
+            i++;
+            break;
+          case "-a":
+            data.userAgent = arr2[i + 1];
+            i++;
+            break;
+          case "-U":
+            data.userName = arr2[i + 1];
+            i++;
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    return data;
   }
 };
 
-// src/io/api-player.ts
-var PlayerResponse = class {
-  constructor(aid, cid, has_next = false) {
-    this.aid = aid;
-    this.cid = cid;
-    this.has_next = has_next;
+// src/core/download/playinfo.ts
+var PlayinfoFilter = class {
+  constructor(fileName) {
+    this.fileName = fileName;
   }
-  allow_bp = false;
-  answer_status = 0;
-  bgm_info;
-  block_time = 0;
-  fawkes = { config_version: 18964, ff_version: 21289 };
-  guide_attention = [];
-  ip_info = { city: "", country: "中国", ip: "", province: "", zone_id: 0, zone_ip: "" };
-  is_owner = false;
-  is_ugc_pay_preview = false;
-  jump_card = [];
-  last_play_cid = 0;
-  last_play_time = 0;
-  level_info = { current_level: 0, current_min: 0, current_exp: 0, next_exp: 0, level_up: 0 };
-  login_mid = 0;
-  login_mid_hash = "";
-  max_limit = 1e3;
-  name = "";
-  no_share = false;
-  now_time = new Date().getTime() / 1e3;
-  online_count = 1;
-  online_switch = { enable_gray_dash_playback: "500", new_broadcast: "1", realtime_dm: "1", subtitle_submit_switch: "1" };
-  operation_card = [];
-  options = { is_360: false, without_vip: false };
-  page_no = 1;
-  pcdn_loader = {
-    dash: {
-      labels: { pcdn_video_type: "dash", pcdn_stage: "release", pcdn_group: "nil", pcdn_version: "nil", pcdn_vendor: "nil" }
-    },
-    flv: {
-      labels: { pcdn_video_type: "flv", pcdn_stage: "release", pcdn_group: "nil", pcdn_version: "nil", pcdn_vendor: "nil" }
+  /** 数据 */
+  record = [];
+  /** id => 质量 */
+  quality = {
+    100032: "8K",
+    100029: "4K",
+    100028: "1080P60",
+    100027: "1080P+",
+    100026: "1080P",
+    100024: "720P",
+    100023: "480P",
+    100022: "360P",
+    30280: "320Kbps",
+    30260: "320Kbps",
+    30259: "128Kbps",
+    30257: "64Kbps",
+    30255: "AUDIO",
+    30251: "FLAC",
+    30250: "ATMOS",
+    30232: "128Kbps",
+    30216: "64Kbps",
+    30127: "8K",
+    30126: "Dolby",
+    30125: "HDR",
+    30121: "4K",
+    30120: "4K",
+    30116: "1080P60",
+    30112: "1080P+",
+    30106: "1080P60",
+    30102: "1080P+",
+    30080: "1080P",
+    30077: "1080P",
+    30076: "720P",
+    30074: "720P",
+    30066: "720P",
+    30064: "720P",
+    30048: "720P",
+    30033: "480P",
+    30032: "480P",
+    30016: "360P",
+    30015: "360P",
+    30011: "360P",
+    464: "预览",
+    336: "1080P",
+    320: "720P",
+    288: "480P",
+    272: "360P",
+    208: "1080P",
+    192: "720P",
+    160: "480P",
+    127: "8K",
+    126: "Dolby",
+    125: "HDR",
+    120: "4K",
+    116: "1080P60",
+    112: "1080P+",
+    80: "1080P",
+    74: "720P60",
+    64: "720P",
+    48: "720P",
+    32: "480P",
+    16: "360P",
+    15: "360P",
+    6: "240P",
+    5: "144P"
+  };
+  /** id => 类型（备用方案） */
+  codec = {
+    hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
+    avc: [30120, 30112, 30080, 30064, 30032, 30016],
+    av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
+  };
+  /** 颜色表 */
+  color = {
+    "8K": "yellow",
+    "Dolby": "pink",
+    "FLAC": "pink",
+    "ATMOS": "pink",
+    "AUDIO": "pink",
+    "HDR": "purple",
+    "4K": "purple",
+    "1080P60": "red",
+    "1080P+": "red",
+    "1080P": "red",
+    "720P60": "orange",
+    "720P": "orange",
+    "480P": "blue",
+    "360P": "green",
+    "320Kbps": "red",
+    "128Kbps": "blue",
+    "64Kbps": "green"
+  };
+  /**
+   * 解码playurl的下载数据
+   * @param playinfo playurl返回值(json)
+   */
+  filter(playinfo) {
+    typeof playinfo === "string" && (playinfo = toObject(playinfo));
+    if (playinfo) {
+      playinfo.data && this.filter(playinfo.data);
+      playinfo.result && this.filter(playinfo.result);
+      playinfo.durl && this.durl(playinfo.durl);
+      playinfo.dash && this.dash(playinfo.dash);
     }
+    return this.record;
+  }
+  /**
+   * 整理durl部分
+   * @param durl durl信息
+   */
+  durl(durl) {
+    let index = 0;
+    durl.forEach((d) => {
+      const url = d.backupUrl || d.backup_url || [];
+      url.unshift(d.url);
+      const qua = this.getQuality(url[0], d.id);
+      const link = {
+        type: "",
+        url,
+        quality: qua,
+        size: sizeFormat(d.size),
+        color: this.color[qua] || ""
+      };
+      switch (d.url.includes("mp4?")) {
+        case true:
+          link.type = "mp4";
+          break;
+        case false:
+          link.type = "flv";
+          index++;
+          link.flv = index;
+          break;
+      }
+      this.fileName && (link.fileName = \`\${this.fileName}\${qua}.\${link.type}\`);
+      this.record.push(link);
+    });
+  }
+  /**
+   * 整理dash部分
+   * @param dash dash信息
+   */
+  dash(dash) {
+    dash.video && this.dashVideo(dash.video, dash.duration);
+    dash.audio && this.dashAudio(dash.audio, dash.duration);
+    dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration);
+    dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac");
+  }
+  /**
+   * 整理dash视频部分
+   * @param video dash视频信息
+   * @param duration duration信息，配合bandwidth能计算出文件大小
+   */
+  dashVideo(video, duration) {
+    video.forEach((d) => {
+      const url = d.backupUrl || d.backup_url || [];
+      (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
+      if (!url.length)
+        return;
+      let type = "";
+      if (d.codecs) {
+        type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
+      } else {
+        const id = this.getID(url[0]);
+        type = this.codec.hev.find((d2) => d2 === id) ? "hev" : "avc";
+      }
+      const qua = this.getQuality(url[0], d.id);
+      this.record.push({
+        type,
+        url,
+        quality: qua,
+        size: sizeFormat(d.bandwidth * duration / 8),
+        color: this.color[qua] || "",
+        fileName: \`\${this.fileName}\${qua}.m4v\`
+      });
+    });
+  }
+  /**
+   * 整理dash音频部分
+   * @param audio dash音频信息
+   * @param duration duration信息，配合bandwidth能计算出文件大小
+   * @param fmt 音频拓展名，默认\`.m4a\`
+   */
+  dashAudio(audio, duration, fmt = ".m4a") {
+    audio.forEach((d) => {
+      const url = d.backupUrl || d.backup_url || [];
+      (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
+      const qua = this.getQuality(url[0], d.id);
+      url.length && this.record.push({
+        type: "aac",
+        url,
+        quality: qua,
+        size: sizeFormat(d.bandwidth * duration / 8),
+        color: this.color[qua] || "",
+        fileName: \`\${this.fileName}\${qua}.\${fmt}\`
+      });
+    });
+  }
+  /**
+   * 根据url确定画质/音质信息  
+   * 需要维护quality表
+   * @param url 多媒体url
+   * @param id 媒体流id
+   * @returns 画质/音质信息
+   */
+  getQuality(url, id) {
+    return this.quality[this.getID(url)] || id && this.quality[id] || "N/A";
+  }
+  /**
+   * 从url中提取可能的id
+   * @param url 多媒体url
+   */
+  getID(url) {
+    let id = 0;
+    url.replace(/\\d+\\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
+    return id;
+  }
+};
+
+// src/html/download.html
+var download_default = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/download.ts
+var BilioldDownload = class extends HTMLElement {
+  _container;
+  _cells = {};
+  _noData;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = download_default;
+    this._container = root.children[0];
+    this.addEventListener("click", (e) => e.stopPropagation());
+    this._noData = addElement("div", void 0, this._container, "正在获取下载数据~");
+  }
+  updateItem = (key, value) => {
+    this._container.contains(this._noData) && this._noData.remove();
+    this._cells[key] || (this._cells[key] = addElement("div", { class: "cell" }, this._container));
+    this._cells[key].innerHTML = \`<div class="type \${key}">\${key}</div>\`;
+    value ? value.forEach((d) => {
+      const a = addElement("a", { class: "item", target: "_blank" }, this._cells[key], \`<div class="up\${d.color ? \` \${d.color}\` : ""}">\${d.quality}</div><div class="down">\${d.size}</div>\`);
+      d.url && (a.href = d.url[0]);
+      d.fileName && (a.download = d.fileName);
+      d.onClick && a.addEventListener("click", (e) => d.onClick(e));
+    }) : this._cells[key]?.remove();
+    this._container.firstChild || this._container.replaceChildren(this._noData);
   };
-  permission = 0;
-  preview_toast = "为创作付费，购买观看完整视频|购买观看";
-  role = "";
-  show_switch = { long_progress: false };
-  subtitle = { allow_submit: false, lan: "", lan_doc: "", subtitles: [] };
-  toast_block = false;
-  view_points = [];
-  vip = {
-    avatar_subscript: 0,
-    avatar_subscript_url: "",
-    due_date: 0,
-    label: {
-      bg_color: "",
-      bg_style: 0,
-      border_color: "",
-      img_label_uri_hans: "",
-      img_label_uri_hans_static: "",
-      img_label_uri_hant: "",
-      img_label_uri_hant_static: "",
-      label_theme: "",
-      path: "",
-      text: "",
-      text_color: "",
-      use_img_label: false
-    },
-    nickname_color: "",
-    role: 0,
-    status: 0,
-    theme_type: 0,
-    tv_vip_pay_type: 0,
-    tv_vip_status: 0,
-    type: 0,
-    vip_pay_type: 0
+  show() {
+    document.contains(this) || document.body.appendChild(this);
+    this.style.display = "";
+    window.addEventListener("click", () => {
+      this.style.display = "none";
+    }, { once: true });
+  }
+  init() {
+    return propertryChangeHook({}, this.updateItem);
+  }
+  disconnectedCallback() {
+    this.destory();
+  }
+  destory() {
+    this._cells = {};
+    this._container.replaceChildren(this._noData);
+  }
+};
+customElements.get(\`download-\${"855f368"}\`) || customElements.define(\`download-\${"855f368"}\`, BilioldDownload);
+
+// src/html/popupbox.html
+var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
+
+// src/svg/fork.svg
+var fork_default = '<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>';
+
+// src/svg/gear.svg
+var gear_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>';
+
+// src/svg/wrench.svg
+var wrench_default = '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>';
+
+// src/svg/note.svg
+var note_default = '<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>';
+
+// src/svg/dmset.svg
+var dmset_default = '<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>';
+
+// src/svg/stethoscope.svg
+var stethoscope_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>';
+
+// src/svg/play.svg
+var play_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>';
+
+// src/svg/palette.svg
+var palette_default = '<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>';
+
+// src/svg/download.svg
+var download_default2 = '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>';
+
+// src/svg/warn.svg
+var warn_default = '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>';
+
+// src/svg/linechart.svg
+var linechart_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>';
+
+// src/svg/blind.svg
+var blind_default = '<svg viewBox="0 0 24 24"><g><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></g></svg>';
+
+// src/svg/like.svg
+var like_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M12.06,35.27V10.43h-.15l6.7-8.37A3.83,3.83,0,0,1,25.25,5L25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86Zm-2.5,0h-4a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h4Z" transform="translate(-0.56 -0.82)" /></g></svg>';
+
+// src/svg/dislike.svg
+var dislike_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M10.28,32.77h2.5V13.19h-2.5ZM25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86H5.56a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h6.25l6.8-8.49A3.83,3.83,0,0,1,25.25,5Zm10.14,2.51H22.22l.28-2.92L22.92,5a1.26,1.26,0,0,0-.18-1,1.28,1.28,0,0,0-.82-.56,1.11,1.11,0,0,0-1.25.42l-6.36,8.2-.83,1.11H5.14a2,2,0,0,0-.83.28,2.28,2.28,0,0,0-1.25,2.08V30.41a2,2,0,0,0,.42,1.25,2,2,0,0,0,2.08,1.11H28.89a2.38,2.38,0,0,0,1.39-.41,3.61,3.61,0,0,0,2.08-2.78L36.8,15l2.5.56L36.8,15a2.45,2.45,0,0,0-.14-1.39,2.89,2.89,0,0,0-1.52-.54l.28-2.5Z" transform="translate(-0.56 -0.82)" /></g></svg>';
+
+// src/utils/svg.ts
+var svg = {
+  fork: fork_default,
+  gear: gear_default,
+  wrench: wrench_default,
+  note: note_default,
+  dmset: dmset_default,
+  stethoscope: stethoscope_default,
+  play: play_default,
+  palette: palette_default,
+  download: download_default2,
+  warn: warn_default,
+  linechart: linechart_default,
+  blind: blind_default,
+  like: like_default,
+  dislike: dislike_default
+};
+
+// src/core/ui/utils/popupbox.ts
+var ClickOutRemove = class {
+  constructor(target) {
+    this.target = target;
+    target.addEventListener("click", (e) => e.stopPropagation());
+  }
+  /** 已启用监听 */
+  enabled = false;
+  /** 移除节点 */
+  remove = () => {
+    this.target.remove();
   };
+  /** 停止监听 */
+  disable = () => {
+    if (this.enabled) {
+      document.removeEventListener("click", this.remove);
+      this.enabled = false;
+    }
+    return this;
+  };
+  /** 开始监听 */
+  enable = () => {
+    this.enabled || setTimeout(() => {
+      document.addEventListener("click", this.remove, { once: true });
+      this.enabled = true;
+    }, 100);
+    return this;
+  };
+};
+var PopupBox = class extends HTMLElement {
+  _contain;
+  _fork;
+  clickOutRemove;
+  \$fork = true;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = popupbox_default;
+    this._contain = root.children[0].children[0];
+    this._fork = root.children[0].children[1];
+    this._fork.innerHTML = svg.fork;
+    this._fork.addEventListener("click", () => this.remove());
+    this.clickOutRemove = new ClickOutRemove(this);
+    document.body.appendChild(this);
+  }
+  append(...nodes) {
+    this._contain.append(...nodes);
+  }
+  appendChild(node) {
+    this._contain.appendChild(node);
+    return node;
+  }
+  replaceChildren(...nodes) {
+    this._contain.replaceChildren(...nodes);
+  }
+  setAttribute(qualifiedName, value) {
+    this._contain.setAttribute(qualifiedName, value);
+  }
+  getAttribute(qualifiedName) {
+    return this._contain.getAttribute(qualifiedName);
+  }
+  get style() {
+    return this._contain.style;
+  }
+  get innerHTML() {
+    return this._contain.innerHTML;
+  }
+  set innerHTML(v) {
+    this._contain.innerHTML = v;
+  }
+  /** 设置是否显示关闭按钮，不显示则点击节点外部自动关闭 */
+  get fork() {
+    return this.\$fork;
+  }
+  set fork(v) {
+    this.\$fork = v;
+    this._fork.style.display = v ? "" : "none";
+    if (v) {
+      this.clickOutRemove.disable();
+    } else {
+      this.clickOutRemove.enable();
+    }
+  }
+};
+customElements.get(\`popupbox-\${"855f368"}\`) || customElements.define(\`popupbox-\${"855f368"}\`, PopupBox);
+
+// src/core/download.ts
+var Download = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    switchVideo(() => this.destory());
+  }
+  /** 下载界面 */
+  ui = new BilioldDownload();
+  /** 数据缓存 */
+  data = this.ui.init();
+  get fileName() {
+    if (this.BLOD.videoInfo.metadata) {
+      return \`\${this.BLOD.videoInfo.metadata.album}(\${this.BLOD.videoInfo.metadata.title})\`;
+    }
+    return "";
+  }
+  /** 解码playinfo */
+  decodePlayinfo(playinfo, fileName = this.fileName) {
+    const data = new PlayinfoFilter(fileName).filter(playinfo);
+    data.forEach((d) => {
+      this.data[d.type] || (this.data[d.type] = []);
+      this.data[d.type].push({
+        url: d.url,
+        fileName,
+        quality: Reflect.has(d, "flv") ? \`\${d.quality}*\${d.flv}\` : d.quality,
+        size: d.size,
+        color: d.color,
+        onClick: (ev) => this.pushDownload(d, ev)
+      });
+    });
+  }
+  /** 分发数据 */
+  pushDownload(data, ev) {
+    if (data.onClick) {
+      data.onClick(ev);
+    } else if (data.url) {
+      switch (this.BLOD.status.downloadMethod) {
+        case "IDM":
+          ev.preventDefault();
+          new Ef2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.ef2.delay, this.BLOD.status.ef2.silence).file({
+            url: data.url[0],
+            out: data.fileName
+          });
+          this.BLOD.toast.success('保存IDM导出文件后，打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入即可下载');
+          break;
+        case "ef2":
+          ev.preventDefault();
+          new Ef2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.ef2.delay, this.BLOD.status.ef2.silence).sendLinkToIDM({
+            url: data.url[0],
+            out: data.fileName
+          });
+          this.BLOD.toast.warning("允许浏览器打开【IDM EF2辅助工具】即可开始下载", "如果浏览器和IDM都没有任何反应，那些请先安装ef2辅助工具。");
+          break;
+        case "aria2":
+          ev.preventDefault();
+          const cmdLine = new Aria2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.aria2.server, this.BLOD.status.aria2.port, this.BLOD.status.aria2.token, this.BLOD.status.aria2.split, this.BLOD.status.aria2.size).cmdlet({
+            urls: data.url,
+            out: data.fileName
+          });
+          this.BLOD.toast.success(
+            "已复制下载命令到剪切板，粘贴到终端里回车即可开始下载。当然前提是您的设备已配置好了aria2。",
+            "--------------",
+            cmdLine
+          );
+          break;
+        case "aria2rpc":
+          ev.preventDefault();
+          new Aria2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.aria2.server, this.BLOD.status.aria2.port, this.BLOD.status.aria2.token, this.BLOD.status.aria2.split, this.BLOD.status.aria2.size).rpc({
+            urls: data.url,
+            out: data.fileName
+          }).then((d) => {
+            this.BLOD.toast.success("aria2已经开始下载", \`GUID: \${d}\`);
+          }).catch((e) => {
+            this.BLOD.toast.error("aria2[RPC]错误！", e);
+          });
+          break;
+        default:
+          this.BLOD.toast.warning("当前下载方式设定为浏览器（默认），受限于浏览器安全策略，可能并未触发下载而是打开了一个标签页，所以更良好的习惯是右键要下载的链接【另存为】。另外如果下载失败（403无权访问），请尝试在设置里修改下载方式及其他下载相关选项。");
+          break;
+      }
+    }
+  }
+  /** 请求中 */
+  downloading = false;
+  /** 已请求 */
+  gets = [];
+  /** 下载当前视频 */
+  default() {
+    if (this.downloading)
+      return;
+    if (!this.BLOD.cid)
+      return this.BLOD.toast.warning("未找到视频文件");
+    this.downloading = true;
+    this.ui.show();
+    this.BLOD.status.TVresource || this.gets.includes("_") || (this.decodePlayinfo(this.BLOD.videoLimit.__playinfo__), this.gets.push("_"));
+    const tasks = [];
+    this.BLOD.status.downloadType.includes("mp4") && (this.data.mp4 || this.gets.includes("mp4") || tasks.push(this.mp4(this.BLOD.cid).then((d) => {
+      this.gets.push("mp4");
+      this.decodePlayinfo(d);
+    })));
+    this.BLOD.status.downloadType.includes("flv") && (this.data.flv || this.gets.includes("flv") || tasks.push(
+      (this.BLOD.status.TVresource ? this.tv(this.BLOD.aid, this.BLOD.cid, false, this.BLOD.status.downloadQn) : this.interface(this.BLOD.cid, this.BLOD.status.downloadQn)).then((d) => {
+        this.gets.push("flv");
+        this.decodePlayinfo(d);
+      })
+    ));
+    this.BLOD.status.downloadType.includes("dash") && (this.data.aac || this.gets.includes("dash") || this.data.hev || this.data.av1 || tasks.push(
+      (this.BLOD.status.TVresource ? this.tv(this.BLOD.aid, this.BLOD.cid) : this.dash(this.BLOD.aid, this.BLOD.cid)).then((d) => {
+        this.gets.push("dash");
+        this.decodePlayinfo(d);
+      })
+    ));
+    Promise.allSettled(tasks).finally(() => {
+      this.downloading = false;
+    });
+  }
+  /** 清空数据 */
+  destory() {
+    this.ui.remove();
+    this.data = this.ui.init();
+    this.downloading = false;
+    this.gets = [];
+    this.BLOD.videoLimit.__playinfo__ = void 0;
+  }
+  mp4(cid) {
+    return new ApiPlayurlProj({ cid, access_key: this.BLOD.status.accessKey.token }, this.BLOD.pgc).getData();
+  }
+  // private flv(avid: number, cid: number) {
+  //     return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, this.BLOD.pgc);
+  // }
+  dash(avid, cid) {
+    return apiPlayurl({ avid, cid }, true, this.BLOD.pgc);
+  }
+  tv(avid, cid, dash = true, quality = qn) {
+    return new ApiPlayurlTv({ avid, cid, access_key: this.BLOD.status.accessKey.token, qn: quality }, dash, this.BLOD.pgc).getData();
+  }
+  intl(aid, cid, dash = true) {
+    return new ApiPlayurlIntl({ aid, cid, access_key: this.BLOD.status.accessKey.token }, this.BLOD.GM.fetch, dash, this.BLOD.pgc).getData();
+  }
+  interface(cid, quality = qn) {
+    return new ApiPlayurlInterface({ cid, quality }, this.BLOD.pgc).getData();
+  }
+  image() {
+    const src = [];
+    this.BLOD.videoInfo.metadata?.artwork?.forEach((d) => src.push(d.src));
+    if (location.host === "live.bilibili.com" && window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
+      src.push(window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
+    }
+    if (src.length) {
+      const popup = new PopupBox();
+      popup.fork = false;
+      popup.setAttribute("style", "display: flex;flex-direction: row;align-items: flex-start;;max-width: 100vw;");
+      popup.innerHTML = src.map((d) => \`<img src="\${d}" width=300>\`).join("");
+    } else {
+      this.BLOD.toast.warning("未找到封面信息！");
+    }
+  }
+};
+
+// src/core/report.ts
+var Cache = class {
+  fpriskMsg = {};
+};
+var EventTracker = class {
+  extMsgs = {};
+  legalContainer = "report-wrap-module";
+  bindEvent() {
+  }
+  bindHeatMapEvent() {
+  }
+  checkContainer() {
+  }
+  eventCB() {
+  }
+  handleSelfDefReport() {
+  }
+  todo() {
+  }
+};
+var LoadTracker = class {
+  msg = {};
+  showRawPerformance() {
+  }
+  todo() {
+  }
+};
+var PvTracker = class {
+  extMsgs = {};
+  _uuid = "";
+  sendPV() {
+  }
+  todo() {
+  }
+};
+var ScrollTracker = class {
+  extMsgs = {};
+  ignoreHidden = true;
+  reportedIds = [];
+  scrollDivClass = "";
+  scrollLintenerFns = [];
+  scrollMsg = {};
+  scrollReportOffset = 200;
+  scrollSubDivClass = "";
+  addScrollListenNode() {
+  }
+  checkScroll() {
+  }
+  customReport() {
+  }
+  getOffset() {
+  }
+  inView() {
+  }
+  judgeAppear() {
+  }
+  judgeCustom() {
+  }
+  judgeHidden() {
+  }
+  judgeSubAppear() {
+  }
+  removeScrollListenNode() {
+  }
+  subInView() {
+  }
+  todo() {
+  }
+  todoCustom() {
+  }
+};
+var reportConfig = { msgObjects: "spmReportData", sample: -1, scrollTracker: false };
+var reportMsgObj = {};
+var ReportObserver = class {
+  constructor() {
+    propertyHook(window, "reportObserver", this);
+    propertyHook(window, "reportConfig", reportConfig);
+  }
+  cache = new Cache();
+  eventTracker = new EventTracker();
+  loadTracker = new LoadTracker();
+  pvTracker = new PvTracker();
+  scrollTracker = new ScrollTracker();
+  forceCommit() {
+  }
+  importTracker() {
+  }
+  init() {
+  }
+  initBsource() {
+  }
+  initTracker() {
+  }
+  reportCustomData() {
+  }
+  reportWithAdditionalParam() {
+  }
+  reportWithSpmPrefix() {
+  }
+  sendPV() {
+  }
+  sendPerformance() {
+  }
+  setSPM_id() {
+  }
+  setSpeicalMsg() {
+  }
+  updateConfig() {
+  }
+};
+var statisObserverConfig = {
+  blackEvents: [],
+  clickConfig: { logId: "", isDoubleWrite: false },
+  loadPerform: false,
+  loadSpecial: false,
+  performConfig: { isWrite: false },
+  pvConfig: { isDoubleWrite: false, logId: "", selfDefMsg: {} },
+  selfConfig: { logId: "", isDoubleWrite: false, isSelfDefWrite: false, isDefaultWrite: false },
+  spmId: ""
+};
+var StatisObserver = class {
+  __bufferFuns = [];
+  __initConfig = {};
+  __loadedFlag = { baidu: false, error: false, event: false, perform: false, pv: false, special: false };
+  __visitId = "";
+  constructor() {
+    propertyHook(window, "__statisObserver", this);
+    propertyHook(window, "reportMsgObj", reportMsgObj);
+    propertyHook(window, "__statisObserverConfig", statisObserverConfig);
+  }
+  addClickTracker() {
+  }
+  addLegalContainer() {
+  }
+  addSelfDefineMsg() {
+  }
+  forceCommit() {
+  }
+  getPvid() {
+  }
+  removeLegalContainer() {
+  }
+  removeSelfDefineMsg() {
+  }
+  sendBaidu() {
+  }
+  sendClickEvent() {
+  }
+  sendCustomMetrics() {
+  }
+  sendError() {
+  }
+  sendPV() {
+  }
+  sendPerform() {
+  }
+  sendSpecial() {
+  }
+  setAttrName() {
+  }
+  setBaseUrl() {
+  }
+  setErrorInterval() {
+  }
+  setErrorLogId() {
+  }
+  setEventLogId() {
+  }
+  setEventSendStatus() {
+  }
+  setPVLogId() {
+  }
+  setPVSendStatus() {
+  }
+  setPerformLogId() {
+  }
+  setPvid() {
+  }
+  setSpecialFirstLoop() {
+  }
+  setSpecialInterval() {
+  }
+  setSpecialLogId() {
+  }
+  setSpmId() {
+  }
+  startPoolListen() {
+  }
+  startSpecialLoop() {
+  }
+  stopPoolListen() {
+  }
+  stopSpecialLoop() {
+  }
+};
+
+// src/html/toast.html
+var toast_default = '<div id="toast-container"></div>\\r\\n<style type="text/css">\\r\\n    .toast-close-button>svg {\\r\\n        width: 12px;\\r\\n        height: 12px;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        transition: height 1s ease 0s, padding 1s ease 0s;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB, Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    /*\\r\\n     * Note that this is toastr v2.1.3, the "latest" version in url has no more maintenance,\\r\\n     * please go to https://cdnjs.com/libraries/toastr.js and pick a certain version you want to use,\\r\\n     * make sure you copy the url from the website since the url may change between versions.\\r\\n     */\\r\\n    .toast-title {\\r\\n        font-weight: bold;\\r\\n    }\\r\\n\\r\\n    .toast-message {\\r\\n        -ms-word-wrap: break-word;\\r\\n        word-wrap: break-word;\\r\\n    }\\r\\n\\r\\n    .toast-message a,\\r\\n    .toast-message label {\\r\\n        color: #FFFFFF;\\r\\n    }\\r\\n\\r\\n    .toast-message a:hover {\\r\\n        color: #CCCCCC;\\r\\n        text-decoration: none;\\r\\n    }\\r\\n\\r\\n    .toast-close-button {\\r\\n        position: relative;\\r\\n        right: -0.3em;\\r\\n        top: -0.3em;\\r\\n        float: right;\\r\\n        font-size: 20px;\\r\\n        font-weight: bold;\\r\\n        color: #FFFFFF;\\r\\n        -webkit-text-shadow: 0 1px 0 #ffffff;\\r\\n        text-shadow: 0 1px 0 #ffffff;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n        line-height: 1;\\r\\n    }\\r\\n\\r\\n    .toast-close-button:hover,\\r\\n    .toast-close-button:focus {\\r\\n        color: #000000;\\r\\n        text-decoration: none;\\r\\n        cursor: pointer;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    .rtl .toast-close-button {\\r\\n        left: -0.3em;\\r\\n        float: left;\\r\\n        right: 0.3em;\\r\\n    }\\r\\n\\r\\n    /*Additional properties for button version\\r\\n     iOS requires the button element instead of an anchor tag.\\r\\n     If you want the anchor version, it requires \`href="#"\`.*/\\r\\n    button.toast-close-button {\\r\\n        padding: 0;\\r\\n        cursor: pointer;\\r\\n        background: transparent;\\r\\n        border: 0;\\r\\n        -webkit-appearance: none;\\r\\n    }\\r\\n\\r\\n    .toast-top-center {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-center {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-full-width {\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-full-width {\\r\\n        bottom: 0;\\r\\n        right: 0;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .toast-top-left {\\r\\n        top: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-top-right {\\r\\n        top: 12px;\\r\\n        right: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-right {\\r\\n        right: 12px;\\r\\n        bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .toast-bottom-left {\\r\\n        bottom: 12px;\\r\\n        left: 12px;\\r\\n    }\\r\\n\\r\\n    #toast-container {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        pointer-events: none;\\r\\n        /*overrides*/\\r\\n    }\\r\\n\\r\\n    #toast-container * {\\r\\n        -moz-box-sizing: border-box;\\r\\n        -webkit-box-sizing: border-box;\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    #toast-container>div {\\r\\n        position: relative;\\r\\n        pointer-events: auto;\\r\\n        overflow: hidden;\\r\\n        margin: 0 0 6px;\\r\\n        padding: 15px 15px 15px 50px;\\r\\n        width: 300px;\\r\\n        -moz-border-radius: 3px 3px 3px 3px;\\r\\n        -webkit-border-radius: 3px 3px 3px 3px;\\r\\n        border-radius: 3px 3px 3px 3px;\\r\\n        background-position: 15px center;\\r\\n        background-repeat: no-repeat;\\r\\n        -moz-box-shadow: 0 0 12px #999999;\\r\\n        -webkit-box-shadow: 0 0 12px #999999;\\r\\n        box-shadow: 0 0 12px #999999;\\r\\n        color: #FFFFFF;\\r\\n        opacity: 0.8;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);\\r\\n        filter: alpha(opacity=80);\\r\\n    }\\r\\n\\r\\n    #toast-container>div.rtl {\\r\\n        direction: rtl;\\r\\n        padding: 15px 50px 15px 15px;\\r\\n        background-position: right 15px center;\\r\\n    }\\r\\n\\r\\n    #toast-container>div:hover {\\r\\n        -moz-box-shadow: 0 0 12px #000000;\\r\\n        -webkit-box-shadow: 0 0 12px #000000;\\r\\n        box-shadow: 0 0 12px #000000;\\r\\n        opacity: 1;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);\\r\\n        filter: alpha(opacity=100);\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-info {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-error {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-success {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container>.toast-warning {\\r\\n        background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=") !important;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-center>div,\\r\\n    #toast-container.toast-bottom-center>div {\\r\\n        width: 300px;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    #toast-container.toast-top-full-width>div,\\r\\n    #toast-container.toast-bottom-full-width>div {\\r\\n        width: 96%;\\r\\n        margin-left: auto;\\r\\n        margin-right: auto;\\r\\n    }\\r\\n\\r\\n    .toast {\\r\\n        background-color: #030303;\\r\\n    }\\r\\n\\r\\n    .toast-success {\\r\\n        background-color: #51A351;\\r\\n    }\\r\\n\\r\\n    .toast-error {\\r\\n        background-color: #BD362F;\\r\\n    }\\r\\n\\r\\n    .toast-info {\\r\\n        background-color: #2F96B4;\\r\\n    }\\r\\n\\r\\n    .toast-warning {\\r\\n        background-color: #F89406;\\r\\n    }\\r\\n\\r\\n    .toast-progress {\\r\\n        position: absolute;\\r\\n        left: 0;\\r\\n        bottom: 0;\\r\\n        height: 4px;\\r\\n        background-color: #000000;\\r\\n        opacity: 0.4;\\r\\n        -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);\\r\\n        filter: alpha(opacity=40);\\r\\n    }\\r\\n\\r\\n    /*Responsive Design*/\\r\\n    @media all and (max-width: 240px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 11em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 241px) and (max-width: 480px) {\\r\\n        #toast-container>div {\\r\\n            padding: 8px 8px 8px 50px;\\r\\n            width: 18em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 8px 50px 8px 8px;\\r\\n        }\\r\\n\\r\\n        #toast-container .toast-close-button {\\r\\n            right: -0.2em;\\r\\n            top: -0.2em;\\r\\n        }\\r\\n\\r\\n        #toast-container .rtl .toast-close-button {\\r\\n            left: -0.2em;\\r\\n            right: 0.2em;\\r\\n        }\\r\\n    }\\r\\n\\r\\n    @media all and (min-width: 481px) and (max-width: 768px) {\\r\\n        #toast-container>div {\\r\\n            padding: 15px 15px 15px 50px;\\r\\n            width: 25em;\\r\\n        }\\r\\n\\r\\n        #toast-container>div.rtl {\\r\\n            padding: 15px 50px 15px 15px;\\r\\n        }\\r\\n    }\\r\\n</style>';
+
+// src/core/toast.ts
+var Toastconfig = {
+  position: "top-right",
+  rtl: false,
+  delay: 4,
+  disabled: false
+};
+var Toast = class extends HTMLDivElement {
+  /** 关闭按钮 */
+  closeButton = document.createElement("div");
+  /** 消息节点 */
+  message = document.createElement("div");
+  /** 延时 */
+  timer;
+  /** 鼠标移入 */
+  hovering = false;
+  /** 延时结束 */
+  timeout = false;
+  constructor() {
+    super();
+    this.classList.add("toast");
+    this.setAttribute("aria-live", "assertive");
+    this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
+    this.appendChild(this.message);
+    this.message.className = "toast-message";
+    this.closeButton.className = "toast-close-button";
+    this.closeButton.innerHTML = svg.fork;
+    this.closeButton.addEventListener("click", (e) => {
+      this.timeout = true;
+      this.delay = 1;
+      e.stopPropagation();
+    });
+    this.addEventListener("mouseover", () => this.hovering = true);
+    this.addEventListener("mouseout", () => {
+      this.hovering = false;
+      this.timeout && (this.delay = 1);
+    });
+  }
+  /** 内容 */
+  set data(v) {
+    isArray(v) || (v = [v]);
+    let html = "";
+    v.forEach((d, i) => {
+      d = toString(d);
+      html += i ? \`<br>\${d}\` : \`<label>\${d}</label>\`;
+    });
+    const close = this.message.contains(this.closeButton);
+    this.message.innerHTML = html;
+    close && (this.delay = 0);
+    this.setAttribute("style", \`height: \${this.message.scrollHeight + 30}px;\`);
+  }
+  /** 类型 */
+  set type(v) {
+    this.classList.remove("toast-success", "toast-error", "toast-info", "toast-warning");
+    v && this.classList.add(\`toast-\${v}\`);
+  }
+  /** 镜像 */
+  set rtl(v) {
+    v ? this.classList.add("rtl") : this.classList.remove("rtl");
+  }
+  /** 时长 */
+  set delay(v) {
+    clearTimeout(this.timer);
+    v = Math.max(Math.trunc(v), 0);
+    v ? this.message.contains(this.closeButton) && this.closeButton.remove() : this.message.contains(this.closeButton) || this.message.insertBefore(this.closeButton, this.message.firstChild);
+    if (v === 1) {
+      if (!this.hovering) {
+        this.setAttribute("style", "padding-top: 0px;padding-bottom: 0px;height: 0px;");
+        setTimeout(() => this.remove(), 1e3);
+      }
+    } else if (v !== 0) {
+      this.timer = setTimeout(() => {
+        this.timeout = true;
+        this.delay = 1;
+      }, v * 1e3);
+    }
+  }
+};
+customElements.get(\`toast-\${"855f368"}\`) || customElements.define(\`toast-\${"855f368"}\`, Toast, { extends: "div" });
+var ToastContainer = class extends HTMLElement {
+  /** 实际根节点 */
+  container;
+  static get observedAttributes() {
+    return [
+      "position",
+      "rtl",
+      "delay",
+      "disabled"
+    ];
+  }
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = toast_default;
+    this.container = root.children[0];
+  }
+  /** 刷新配置 */
+  update(value) {
+    Object.entries(value).forEach((d) => {
+      this[d[0]] = d[1];
+    });
+  }
+  toast(delay, type = "info", ...data) {
+    document.body.contains(this) || document.body.appendChild(this);
+    const toast = new Toast();
+    toast.type = type;
+    toast.rtl = this.rtl;
+    this.container.insertBefore(toast, this.container.firstChild);
+    toast.data = data;
+    toast.delay = delay;
+    return toast;
+  }
+  success(...data) {
+    this.toast(this.delay, "success", ...data);
+    return () => {
+      debug(...data);
+    };
+  }
+  error(...data) {
+    this.toast(this.delay, "error", ...data);
+    return () => {
+      debug.error(...data);
+    };
+  }
+  info(...data) {
+    this.toast(this.delay, "info", ...data);
+    return () => {
+      debug.debug(...data);
+    };
+  }
+  warning(...data) {
+    this.toast(this.delay, "warning", ...data);
+    return () => {
+      debug.warn(...data);
+    };
+  }
+  set position(v) {
+    this.setAttribute("position", v);
+  }
+  /** 位置 */
+  get position() {
+    return this.getAttribute("position");
+  }
+  set rtl(v) {
+    this.setAttribute("rtl", v);
+  }
+  /** 镜像 */
+  get rtl() {
+    return toObject(this.getAttribute("rtl"));
+  }
+  set delay(v) {
+    this.setAttribute("delay", v);
+  }
+  /** 延时 */
+  get delay() {
+    return toObject(this.getAttribute("delay"));
+  }
+  set disabled(v) {
+    this.setAttribute("disabled", v);
+  }
+  /** 禁用 */
+  get disabled() {
+    return toObject(this.getAttribute("disabled"));
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue)
+      return;
+    switch (name) {
+      case "position":
+        newValue && (this.container.className = \`toast-\${newValue}\`);
+        break;
+      case "rtl":
+        this.container.querySelectorAll(".toast").forEach((d) => {
+          d.rtl = toObject(newValue);
+        });
+        break;
+      case "delay":
+        this.container.querySelectorAll(".toast").forEach((d) => {
+          d.delay = toObject(newValue);
+        });
+        break;
+      case "disabled":
+        this.container.style.display = toObject(newValue) ? "none" : "";
+      default:
+        break;
+    }
+  }
+};
+customElements.get(\`toast-container-\${"855f368"}\`) || customElements.define(\`toast-container-\${"855f368"}\`, ToastContainer);
+
+// src/io/api-login-app-third.ts
+var ApiLoginAppThird = class extends ApiSign {
+  constructor(api) {
+    super(URLS.LOGIN_APP_THIRD, "27eb53fc9058f8c3");
+    this.api = api;
+    this.api = encodeURIComponent(api);
+  }
+  async getData() {
+    const response = await fetch(this.sign({ api: this.api }, this.api), { credentials: "include" });
+    const json = await response.json();
+    return jsonCheck(json).data;
+  }
+};
+
+// src/utils/cookie.ts
+function getCookies() {
+  return document.cookie.split("; ").reduce((s, d) => {
+    let key = d.split("=")[0];
+    let val = d.split("=")[1];
+    s[key] = unescape(val);
+    return s;
+  }, {});
+}
+function setCookie(name, value, days = 365) {
+  const exp = new Date();
+  exp.setTime(exp.getTime() + days * 24 * 60 * 60 * 1e3);
+  document.cookie = name + "=" + escape(value) + ";expires=" + exp.toUTCString() + "; path=/; domain=.bilibili.com";
+}
+
+// src/utils/conf/uid.ts
+var uid = Number(getCookies().DedeUserID);
+
+// src/html/button.html
+var button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/utils/button.ts
+var PushButton = class extends HTMLElement {
+  _button;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = button_default;
+    this._button = root.querySelector(".button");
+    this._button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.dispatchEvent(new Event("change"));
+    });
+  }
+  set text(v) {
+    this._button.textContent = v;
+  }
+};
+customElements.get(\`button-\${"855f368"}\`) || customElements.define(\`button-\${"855f368"}\`, PushButton);
+
+// src/core/ui/alert.ts
+function alert(msg, title, buttons) {
+  isArray(msg) || (msg = [msg]);
+  msg = msg.join("</br>");
+  const popup = new PopupBox();
+  popup.fork = false;
+  popup.setAttribute("style", "max-width: 400px; max-height: 300px;line-height: 16px;");
+  popup.innerHTML = \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
+    <span>\${title || "Bilibili Old"}</span>
+</div>
+<div><div style="padding-block: 10px;padding-inline: 15px;">\${msg}</div></div>\`;
+  if (buttons) {
+    addElement("hr", { style: "width: 100%;opacity: .3;" }, popup);
+    const div = addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, popup);
+    buttons.forEach((d) => {
+      const button = new PushButton();
+      button.text = d.text;
+      button.addEventListener("change", () => {
+        d.callback?.();
+        popup.remove();
+      });
+      div.appendChild(button);
+    });
+  }
+}
+
+// src/core/accesskey.ts
+var AccessKey = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    const button = [{
+      text: "开始授权",
+      callback: () => this.get()
+    }];
+    if (this.BLOD.status.accessKey.token) {
+      button[0].text = "刷新授权";
+      button.push({
+        text: "取消授权",
+        callback: () => this.remove()
+      });
+    }
+    alert([
+      "【账户授权】将授权脚本获取您的登录鉴权，允许脚本访问一些网页端无权访问的B站接口，以实现【解除播放限制】等功能。",
+      "警告：如果您启用了脚本的【解除播放限制】功能，并且选择使用【自定义】服务器，请务必自行确认服务器的可信度！",
+      "第三方服务器获得授权等于您在上面登录了B站，好比在网吧登录又忘了退出，第三方能用您的账户实现任何登录状态能进行的操作！",
+      "个中风险请务必知悉！<strong>如无必要，切莫授权！</strong>"
+    ], "授权确认", button);
+  }
+  get() {
+    if (uid) {
+      const data = ["正在申请账户授权~"];
+      const toast = this.BLOD.toast.toast(0, "info", ...data);
+      new ApiLoginAppThird("https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png").getData().then(async (d) => {
+        data.push("成功获取到授权链接~");
+        toast.data = data;
+        return this.BLOD.GM.fetch(d.confirm_uri, { credentials: "include" });
+      }).then((d) => {
+        const date = new Date().getTime();
+        const dateStr = timeFormat(date, true);
+        const obj = urlObj(d.url);
+        this.BLOD.status.accessKey.token = obj.access_key;
+        this.BLOD.status.accessKey.date = date;
+        this.BLOD.status.accessKey.dateStr = dateStr;
+        data.push("------- 授权成功 -------", \`鉴权: \${obj.access_key}\`, \`日期：\${dateStr}\`);
+        toast.data = data;
+        toast.type = "success";
+        toast.delay = 4;
+      }).catch((e) => {
+        debug.error("授权出错！", e);
+        data.push("授权出错！", e);
+        toast.data = data;
+        toast.type = "error";
+        toast.delay = 4;
+      });
+    } else {
+      this.BLOD.toast.warning("请先登录B站账户！");
+      this.BLOD.biliQuickLogin();
+    }
+  }
+  remove() {
+    this.BLOD.status.accessKey.token = void 0;
+    this.BLOD.status.accessKey.date = 0;
+    this.BLOD.status.accessKey.dateStr = "";
+    this.BLOD.toast.warning("已清除账户鉴权", "如果您在【解除播放限制】功能中选择【自定义】服务器，那么第三方服务器中很可能依然有鉴权。", "为求保险，您可以修改一次密码，这会强制所有鉴权失效。")();
+  }
+};
+
+// src/css/desc.css
+var desc_default = ".container {\\r\\n    position: fixed;\\r\\n    top: 16px;\\r\\n    left: 100%;\\r\\n    background: hsla(0, 0%, 95.7%, .8);\\r\\n    border-radius: 2px;\\r\\n    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n    color: #000;\\r\\n    width: 381px;\\r\\n    z-index: 1;\\r\\n}\\r\\n\\r\\n.title {\\r\\n    text-align: center;\\r\\n    margin-top: 16px;\\r\\n    margin-bottom: 3px;\\r\\n    font-size: 12px;\\r\\n}\\r\\n\\r\\n.content {\\r\\n    font-size: 12px;\\r\\n    line-height: 19px;\\r\\n    padding: 0 16px 16px;\\r\\n    text-align: justify;\\r\\n    white-space: pre-line;\\r\\n}";
+
+// src/core/ui/desc.ts
+var Desc = class extends HTMLElement {
+  _title;
+  _content;
+  show = true;
+  timer;
+  _container;
+  _parrent;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = \`<div class="container"><div class="title"></div><div class="content"></div></div>\`;
+    addCss(desc_default, void 0, root);
+    this._container = root.querySelector(".container");
+    this._title = root.querySelector(".title");
+    this._content = root.querySelector(".content");
+    this.toggle(false);
+  }
+  /**
+   * 更新浮窗
+   * @param title 标题
+   * @param content 内容
+   * @param appendTo 父节点
+   */
+  value(title, content, appendTo) {
+    this._title.innerHTML = title;
+    this._content.innerHTML = content;
+    this._parrent = appendTo;
+    appendTo.appendChild(this);
+    appendTo.addEventListener("mouseover", () => {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.toggle(true);
+      }, 300);
+    });
+    appendTo.addEventListener("mouseout", () => {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => {
+        this.toggle(false);
+      }, 300);
+    });
+  }
+  toggle(show) {
+    this.show = show === void 0 ? !this.show : show;
+    this.style.display = this.show ? "" : "none";
+    if (this._parrent) {
+      const rect = this._parrent.getBoundingClientRect();
+      this._container.style.top = rect.top - rect.height * 2 + "px";
+    }
+  }
+};
+customElements.get(\`desc-\${"855f368"}\`) || customElements.define(\`desc-\${"855f368"}\`, Desc);
+
+// src/html/ui-entry.html
+var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/entry.ts
+var UiEntryType = "new";
+var BilioldEntry = class extends HTMLElement {
+  /** 旧版按钮 */
+  stage;
+  /** 新版按钮 */
+  gear;
+  /** 实际节点 */
+  root;
+  /** 实际根节点 */
+  static get observedAttributes() {
+    return [
+      "type"
+    ];
+  }
+  constructor() {
+    super();
+    this.root = this.attachShadow({ mode: "closed" });
+    this.root.innerHTML = ui_entry_default;
+    this.stage = this.root.children[0];
+    this.gear = this.root.children[1];
+    this.gear.innerHTML = svg.gear;
+    this.stage.remove();
+    this.gear.remove();
+    this.gear.addEventListener("mouseover", () => this.gear.style.opacity = "0.8");
+    this.gear.addEventListener("mouseout", () => this.gear.style.opacity = "0");
+  }
+  get type() {
+    return this.getAttribute("type");
+  }
+  set type(v) {
+    this.setAttribute("type", v);
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue)
+      return;
+    switch (name) {
+      case "type":
+        if (newValue === "old") {
+          this.root.contains(this.gear) && this.gear.remove();
+          this.root.contains(this.stage) || this.root.appendChild(this.stage);
+        } else {
+          this.root.contains(this.stage) && this.stage.remove();
+          if (!this.root.contains(this.gear)) {
+            this.root.appendChild(this.gear);
+            setTimeout(() => {
+              this.gear.style.opacity = "0";
+            }, 2e3);
+          }
+        }
+        break;
+      default:
+        break;
+    }
+  }
+};
+customElements.get("biliold-entry-855f368") || customElements.define("bilibili-entry-855f368", BilioldEntry);
+
+// src/html/ui-interface.html
+var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/interface.ts
+var BiliOldInterface = class extends HTMLElement {
+  /** 跟节点 */
+  _box;
+  /** 标题栏 */
+  _tool;
+  /** 关闭按钮 */
+  _close;
+  /** 菜单栏 */
+  _menu;
+  /** 项目栏 */
+  _item;
+  /** 显示设置 */
+  showing = false;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = ui_interface_default;
+    this._box = root.children[0];
+    this._tool = root.children[0].children[0];
+    this._close = root.children[0].children[0].children[0];
+    this._menu = root.children[0].children[1].children[0].children[0];
+    this._item = root.children[0].children[1].children[0].children[1];
+    this._close.innerHTML = svg.fork;
+    this._close.addEventListener("click", () => this.hide());
+  }
+  show() {
+    document.body.contains(this) || document.body.appendChild(this);
+    this._box.style.display = "block";
+    this.showing = true;
+  }
+  hide() {
+    this._box.style.display = "";
+    this.showing = false;
+  }
+  addMenu(menu) {
+    this._menu.appendChild(menu);
+    const sets = menu.show();
+    menu.show = () => {
+      this._item.replaceChildren(...sets);
+      return sets;
+    };
+  }
+};
+customElements.get("bili-old") || customElements.define("bili-old", BiliOldInterface);
+
+// src/core/ui/item.ts
+var SettingItem = class extends HTMLDivElement {
+  _value = document.createElement("div");
+  /**
+   * 新建设置项
+   * @param id keyof typeof {@link userStatus}
+   * @param title 标题
+   * @param sub 副标题
+   * @param svg 图标
+   */
+  init(id, title, sub, svg2) {
+    this.innerHTML = \`<div class="contain2\${id ? \` \${id}\` : ""}">\${svg2 ? \`<div class="icon">\${svg2}</div>\` : ""}
+    <div class="label">\${title}\${sub ? \`<div class="sub">\${sub}</div>\` : ""}</div>
+</div>\`;
+    this._value.className = "value";
+    this.querySelector(".contain2")?.appendChild(this._value);
+  }
+  /** 添加值 */
+  value(value) {
+    this._value.appendChild(value);
+  }
+};
+customElements.get(\`item-\${"855f368"}\`) || customElements.define(\`item-\${"855f368"}\`, SettingItem, { extends: "div" });
+
+// src/core/ui/item-container.ts
+var ItemContainer = class extends HTMLDivElement {
+  _title;
+  /** 设置项容器 */
+  _card;
+  constructor() {
+    super();
+    this.innerHTML = \`<div class="contain1">
+    <div class="header">
+        <h2 class="title"></h2>
+    </div>
+</div>
+<div class="card"></div>\`;
+    this._title = this.querySelector(".title");
+    this._card = this.querySelector(".card");
+  }
+  /** 初始化设置项容器 */
+  init(title) {
+    this._title.textContent = title;
+  }
+  /**
+   * 添加设置
+   * @param item 设置项
+   */
+  addSetting(item) {
+    this._card.append(...item);
+  }
+};
+customElements.get(\`item-container-\${"855f368"}\`) || customElements.define(\`item-container-\${"855f368"}\`, ItemContainer, { extends: "div" });
+
+// src/core/ui/menu.ts
+var Menuitem = class extends HTMLDivElement {
+  container = [new ItemContainer()];
+  constructor() {
+    super();
+    this.addEventListener("click", () => {
+      this.parentElement?.querySelector(".selected")?.classList.remove("selected");
+      this.classList.add("selected");
+      this.show();
+    });
+  }
+  /**
+   * 初始化菜单项
+   * @param name 标题
+   * @param svg 图标
+   * @returns 默认设置项容器
+   */
+  init(name, svg2) {
+    this.className = "menuitem";
+    this.innerHTML = (svg2 ? \`<div class="icon">\${svg2}</div>\` : "") + name;
+    this.container[0].init(name);
+    return this.container[0];
+  }
+  /**
+   * 添加设置分组
+   * @param name 分组名称
+   * @returns 分组设置项容器
+   */
+  addCard(name) {
+    const con = new ItemContainer();
+    con.init(name);
+    this.container.push(con);
+    return con;
+  }
+  /**
+   * 添加设置项到容器
+   * @param item 设置项
+   * @param i 容器序号
+   */
+  addSetting(item, i = 0) {
+    isArray(item) || (item = [item]);
+    item.forEach((d) => {
+      d.addEventListener("show", (e) => {
+        Promise.resolve(this.click()).then(() => {
+          d.scrollIntoView({ behavior: "smooth", block: "start" });
+          e.stopPropagation();
+        });
+      });
+    });
+    i = Math.min(this.container.length - 1, i);
+    this.container[i].addSetting(item);
+  }
+  /** 显示容器中的设置 */
+  show() {
+    return this.container;
+  }
+};
+customElements.get(\`menuitem-\${"855f368"}\`) || customElements.define(\`menuitem-\${"855f368"}\`, Menuitem, { extends: "div" });
+
+// src/html/checkbox.html
+var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
+<label for="checkbox"></label>\\r
+<style>\\r
+    input[type="checkbox"] {\\r
+        display: none;\\r
+    }\\r
+\\r
+    input~label {\\r
+        cursor: pointer;\\r
+    }\\r
+\\r
+    input:checked~label:before {\\r
+        content: '\\\\2714';\\r
+    }\\r
+\\r
+    input~label:before {\\r
+        width: 12px;\\r
+        height: 12px;\\r
+        line-height: 14px;\\r
+        vertical-align: text-bottom;\\r
+        border-radius: 3px;\\r
+        border: 1px solid #d3d3d3;\\r
+        display: inline-block;\\r
+        text-align: center;\\r
+        content: ' ';\\r
+    }\\r
+</style>\`;
+
+// src/core/ui/utils/checkbox.ts
+var CheckBox = class extends HTMLElement {
+  _input;
+  _text;
+  static get observedAttributes() {
+    return [
+      "label",
+      "value"
+    ];
+  }
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = checkbox_default;
+    this._input = root.children[0];
+    this._text = root.children[1];
+    this._input.addEventListener("change", () => {
+      this.setAttribute("value", this._input.checked);
+      this.dispatchEvent(new Event("change"));
+    });
+  }
+  /** 是否选中 */
+  get value() {
+    return this.getAttribute("value") === "true" ? true : false;
+  }
+  set value(v) {
+    v || (v = false);
+    this.setAttribute("value", v);
+  }
+  /** 标签 */
+  get label() {
+    return this.getAttribute("label");
+  }
+  set label(v) {
+    v || (v = "");
+    this.setAttribute("label", v);
+  }
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue)
+      return;
+    switch (name) {
+      case "label":
+        this._text.textContent = newValue;
+        break;
+      case "value":
+        this._input.checked = newValue === "false" ? false : true;
+        break;
+      default:
+        break;
+    }
+  }
+  /** 刷新值 */
+  update(value) {
+    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
+  }
+};
+customElements.get(\`checkbox-\${"855f368"}\`) || customElements.define(\`checkbox-\${"855f368"}\`, CheckBox);
+var CheckBoxs = class extends HTMLDivElement {
+  \$value = [];
+  checkboxs = {};
+  get value() {
+    return this.\$value;
+  }
+  set value(v) {
+    v.forEach((d) => {
+      if (!this.\$value.includes(d)) {
+        if (this.checkboxs[d]) {
+          this.checkboxs[d].value = true;
+        } else {
+          this.update(Object.keys(this.checkboxs).concat(d));
+          this.checkboxs[d].value = true;
+        }
+      }
+    });
+    this.\$value.forEach((d) => {
+      v.includes(d) || (this.checkboxs[d].value = false);
+    });
+    this.\$value = [...v];
+  }
+  update(labels) {
+    labels.forEach((d) => {
+      if (!this.checkboxs[d]) {
+        const checkbox = new CheckBox();
+        checkbox.update({ label: d });
+        checkbox.addEventListener("change", () => {
+          if (checkbox.value) {
+            this.\$value.includes(d) || this.\$value.push(d);
+          } else {
+            const i = this.\$value.indexOf(d);
+            i >= 0 && this.\$value.splice(i, 1);
+          }
+          this.dispatchEvent(new Event("change"));
+        });
+        this.appendChild(checkbox);
+        this.checkboxs[d] = checkbox;
+      }
+    });
+    this.\$value.forEach((d) => {
+      if (!labels.includes(d)) {
+        this.checkboxs[d]?.remove();
+        const i = this.\$value.indexOf(d);
+        i >= 0 && this.\$value.splice(i, 1);
+      }
+    });
+  }
+};
+customElements.get(\`checkboxs-\${"855f368"}\`) || customElements.define(\`checkboxs-\${"855f368"}\`, CheckBoxs, { extends: "div" });
+
+// src/html/input.html
+var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/utils/input.ts
+var InputArea = class extends HTMLElement {
+  _input;
+  _ul;
+  \$prop = {};
+  \$value = "";
+  \$candidate = [];
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = input_default;
+    this._input = root.children[0].children[0];
+    this._ul = root.children[0].children[1];
+    this._input.addEventListener("change", () => {
+      this.\$value = this.\$prop.type === "file" ? this._input.files : this._input.value;
+      this.dispatchEvent(new Event("change"));
+    });
+  }
+  /** input标签属性 */
+  get prop() {
+    return this.\$prop;
+  }
+  set prop(v) {
+    this.\$prop = v;
+    Object.entries(v).forEach((d) => this._input.setAttribute(...d));
+  }
+  /** 输入框值 */
+  get value() {
+    return this.\$value;
+  }
+  set value(v) {
+    if (this.\$value === v)
+      return;
+    this.\$value = v || "";
+    this._input.value = this.\$value;
+  }
+  /** 候选值 */
+  get candidate() {
+    return this.\$candidate;
+  }
+  set candidate(v) {
+    this.\$candidate = v;
+    this._ul.replaceChildren(...v.map((d, i, t) => {
+      const li = document.createElement("li");
+      li.className = "input-list-row";
+      li.addEventListener("click", (e) => {
+        this.value = d;
+        e.stopPropagation();
+        this.dispatchEvent(new Event("change"));
+      });
+      const span = document.createElement("span");
+      span.textContent = d;
+      const div = document.createElement("div");
+      div.className = "cancel";
+      div.addEventListener("click", (e) => {
+        t.splice(i, 1);
+        li.remove();
+        e.stopPropagation();
+      });
+      li.append(span, div);
+      return li;
+    }));
+  }
+  /** 刷新值 */
+  update(value) {
+    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
+  }
+};
+customElements.get(\`input-\${"855f368"}\`) || customElements.define(\`input-\${"855f368"}\`, InputArea);
+
+// src/html/select.html
+var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/utils/select.ts
+var SelectMenu = class extends HTMLElement {
+  _text;
+  _list;
+  \$value = "";
+  \$candidate = [];
+  \$styles = {};
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = select_default;
+    this._text = root.children[0].children[0].children[0];
+    this._list = root.children[0].children[2];
+  }
+  /** 当前值 */
+  get value() {
+    return this.\$value;
+  }
+  set value(v) {
+    if (this.\$value === v)
+      return;
+    this.\$value = v || "";
+    this._text.textContent = v || "";
+    v && this.\$styles[v] && this._text.setAttribute("style", this.\$styles[v]);
+  }
+  /** 候选值 */
+  get candidate() {
+    return this.\$candidate;
+  }
+  set candidate(v) {
+    this.\$candidate = v;
+    this._list.replaceChildren(...v.map((d, i, t) => {
+      const li = document.createElement("li");
+      li.className = "selectmenu-list-row";
+      li.addEventListener("click", (e) => {
+        this.value = d;
+        this.dispatchEvent(new Event("change"));
+        e.stopPropagation();
+      });
+      const span = document.createElement("span");
+      span.textContent = d;
+      this.\$styles[d] && span.setAttribute("style", this.\$styles[d]);
+      li.appendChild(span);
+      return li;
+    }));
+  }
+  /** 候选值对应的行内应该 格式 => 候选值: 样式 */
+  get styles() {
+    return this.\$styles;
+  }
+  set styles(v) {
+    this.\$styles = v;
+    this.candidate = this.candidate;
+  }
+  /** 刷新值 */
+  update(value) {
+    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
+  }
+};
+customElements.get(\`select-\${"855f368"}\`) || customElements.define(\`select-\${"855f368"}\`, SelectMenu);
+
+// src/html/slider.html
+var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/utils/slider.ts
+function offset(node) {
+  const result = {
+    top: 0,
+    left: 0
+  };
+  const onwer = node.ownerDocument;
+  if (node === onwer.body) {
+    result.top = node.offsetTop;
+    result.left = node.offsetLeft;
+  } else {
+    let rect = void 0;
+    try {
+      rect = node.getBoundingClientRect();
+    } catch {
+    }
+    if (!rect || !onwer.documentElement.contains(node)) {
+      rect && (result.top = rect.top, result.left = rect.left);
+      return result;
+    }
+    result.top = rect.top + onwer.body.scrollTop - onwer.documentElement.clientTop;
+    result.left = rect.left + onwer.body.scrollLeft - onwer.documentElement.clientLeft;
+  }
+  return result;
+}
+var SliderBlock = class extends HTMLElement {
+  _handle;
+  _progress;
+  _hinter;
+  _wrp;
+  \$value = 0;
+  \$min = 0;
+  \$max = 100;
+  \$precision = 100;
+  \$hint = true;
+  \$solid = false;
+  \$vertical = false;
+  showChange;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = slider_default;
+    this._handle = root.children[0].children[0].children[0].children[0].children[0];
+    this._progress = root.children[0].children[0].children[0].children[0].children[1];
+    this._hinter = root.children[0].children[0].children[0].children[0].children[0].children[0];
+    this._wrp = root.children[0].children[0].children[0];
+    const mouseLinster = (e) => {
+      const { pageX, pageY } = e;
+      const offsetX = this.\$vertical ? pageY - offset(this._wrp).top - 7 : pageX - offset(this._wrp).left - 7;
+      const allX = this._wrp.offsetWidth - 14;
+      const pv = (0 > offsetX ? 0 : offsetX > allX ? allX : offsetX) / allX;
+      this.value = (this.\$max - this.\$min) * Math.round(pv * this.\$precision) / this.\$precision + this.\$min;
+      this.dispatchEvent(new Event("change"));
+    };
+    this.addEventListener("click", mouseLinster);
+    const mouseClear = () => {
+      window.removeEventListener("mousemove", mouseLinster);
+      window.removeEventListener("mouseup", mouseClear);
+    };
+    this._handle.addEventListener("mousedown", () => {
+      window.addEventListener("mousemove", mouseLinster);
+      window.addEventListener("mouseup", mouseClear);
+    });
+    this._handle.addEventListener("mouseover", () => this.showChange());
+    let nHint = 0;
+    this.showChange = () => {
+      const pv = (this.\$value - this.\$min) / (this.\$max - this.\$min);
+      this._handle.style.cssText = \`left: \${(pv * (this._wrp.offsetWidth - 14) + 7) / this._wrp.offsetWidth * 100}%;\`;
+      this._progress.style.cssText = \`width: \${pv * 100}%;\`;
+      if (this.\$hint) {
+        this._hinter.textContent = this.\$value;
+        if (this._hinter.style.display !== "block")
+          this._hinter.style.display = "block";
+        if (this.\$solid)
+          return;
+        clearTimeout(nHint);
+        nHint = setTimeout(() => this._hinter.style.display = "", 300);
+      }
+      ;
+    };
+  }
+  /** 默认值 */
+  get value() {
+    return this.\$value;
+  }
+  set value(v) {
+    if (this.\$vertical)
+      v = this.\$max - v + this.\$min;
+    v = (this.\$max - this.\$min) * Math.round((v - this.\$min) / (this.\$max - this.\$min) * this.\$precision) / this.\$precision + this.\$min;
+    if (v === this.\$value)
+      return;
+    this.\$value = v;
+    this.showChange();
+  }
+  /** 最小值 */
+  get min() {
+    return this.\$min;
+  }
+  set min(v) {
+    if (v === this.\$min || v >= this.\$max)
+      return;
+    this.\$min = v;
+    if (v > this.\$value)
+      this.value = v;
+    this.showChange();
+  }
+  /** 最大值 */
+  get max() {
+    return this.\$max;
+  }
+  set max(v) {
+    if (v === this.\$max || v <= this.\$min)
+      return;
+    this.\$max = v;
+    if (v < this.\$value)
+      this.value = v;
+    this.showChange();
+  }
+  /** 刻度数 */
+  get precision() {
+    return this.\$precision;
+  }
+  set precision(v) {
+    if (v === this.\$precision)
+      return;
+    this.\$precision = v;
+    this.value = this.\$value;
+  }
+  /** 提示信息 */
+  get hint() {
+    return this.\$hint;
+  }
+  set hint(v) {
+    if (v === this.\$hint)
+      return;
+    this.\$hint = v;
+  }
+  /** 固化提示 */
+  get solid() {
+    return this.\$solid;
+  }
+  set solid(v) {
+    if (v === this.\$solid)
+      return;
+    this.\$solid = v;
+    this.showChange();
+  }
+  /** 垂直 */
+  get vertical() {
+    return this.\$vertical;
+  }
+  set vertical(v) {
+    if (v === this.\$vertical)
+      return;
+    this.\$vertical = v;
+    this.style.transform = v ? "rotate(-90deg)" : "";
+  }
+  connectedCallback() {
+    this.showChange();
+  }
+  adoptedCallback() {
+    this.showChange();
+  }
+  /** 刷新值 */
+  update(value) {
+    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
+  }
+};
+customElements.get(\`slider-\${"855f368"}\`) || customElements.define(\`slider-\${"855f368"}\`, SliderBlock);
+
+// src/html/switch.html
+var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/utils/switch.ts
+var SwitchButton = class extends HTMLElement {
+  _bar;
+  _knob;
+  _circle;
+  \$value = false;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = switch_default;
+    this._bar = root.children[0].children[0];
+    this._knob = root.children[0].children[1];
+    this._circle = root.children[0].children[1].children[0];
+    root.children[0].addEventListener("click", (e) => {
+      this.value = !this.\$value;
+      e.stopPropagation();
+      this.dispatchEvent(new Event("change"));
+    });
+  }
+  get value() {
+    return this.\$value;
+  }
+  set value(v) {
+    if (this.\$value === v)
+      return;
+    if (v) {
+      this._bar.setAttribute("checked", "checked");
+      this._knob.setAttribute("checked", "checked");
+      this._circle.setAttribute("checked", "checked");
+    } else {
+      this._bar.removeAttribute("checked");
+      this._knob.removeAttribute("checked");
+      this._circle.removeAttribute("checked");
+    }
+    this.\$value = v;
+  }
+  /** 刷新值 */
+  update(value) {
+    value === void 0 || (this.value = value);
+    return this;
+  }
+};
+customElements.get(\`switch-\${"855f368"}\`) || customElements.define(\`switch-\${"855f368"}\`, SwitchButton);
+
+// src/io/api-biliplus-playurl.ts
+async function apiBiliplusPlayurl(data) {
+  const response = await fetch(objUrl("//www.biliplus.com/BPplayurl.php", data));
+  return await response.json();
+}
+
+// src/io/sidx.ts
+var Sidx = class {
+  /**
+   * @param url 目标url
+   * @param size 最大索引范围（不宜过大），默认6万字节
+   */
+  constructor(url, size = 6e4) {
+    this.url = url;
+    this.size = size;
+  }
+  /** range索引结束点 */
+  end = 5999;
+  /** range索引开始点 */
+  start = 0;
+  /** 结果hex字符串 */
+  hex_data = "";
+  getData() {
+    return new Promise((resolve, reject) => {
+      this.fetch(resolve, reject);
+    });
+  }
+  /** 请求片段 */
+  fetch(resolve, reject) {
+    fetch(this.url.replace("http:", "https:"), {
+      headers: {
+        range: \`bytes=\${this.start}-\${this.end}\`
+      }
+    }).then((d) => {
+      if ((d.status >= 300 || d.status < 200) && d.status !== 304)
+        throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
+      return d.arrayBuffer();
+    }).then((d) => {
+      const data = new Uint8Array(d);
+      this.hex_data += Array.prototype.map.call(data, (x) => ("00" + x.toString(16)).slice(-2)).join("");
+      if (this.hex_data.indexOf("73696478") > -1 && this.hex_data.indexOf("6d6f6f66") > -1) {
+        const indexRangeStart = this.hex_data.indexOf("73696478") / 2 - 4;
+        const indexRagneEnd = this.hex_data.indexOf("6d6f6f66") / 2 - 5;
+        resolve(["0-" + String(indexRangeStart - 1), String(indexRangeStart) + "-" + String(indexRagneEnd)]);
+      } else {
+        this.start = this.end + 1;
+        if (this.size && this.start > this.size) {
+          reject("未能获取到sidx");
+        } else {
+          this.end += 6e3;
+          this.size && (this.end = Math.min(this.end, this.size));
+          this.fetch(resolve, reject);
+        }
+      }
+    }).catch((e) => reject(e));
+  }
+};
+
+// src/io/api-global-ogv-playurl.ts
+var ApiGlobalOgvPlayurl = class extends ApiSign {
+  /**
+   * @param data 查询参数
+   * @param server 东南亚（泰区）代理服务器
+   */
+  constructor(data, uposName, server = "api.global.bilibili.com") {
+    super(URLS.GLOBAL_OGV_PLAYURL.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
+    this.uposName = uposName;
+    data = Object.assign({
+      area: "th",
+      build: 1001310,
+      device: "android",
+      force_host: 2,
+      download: 1,
+      mobi_app: "bstar_a",
+      platform: "android"
+    }, data);
+    this.fetch = fetch(this.sign(data));
+  }
+  fetch;
+  async getDate() {
+    const response = await this.fetch;
+    const text = await response.text();
+    return jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
+  }
+  toPlayurl() {
+    return new Promise((resolve, reject) => {
+      this.fetch.then((d) => d.text()).then((d) => jsonCheck(VideoLimit.uposReplace(d, this.uposName)).data).then((d) => {
+        const playurl = new PlayurlDash();
+        const set = [];
+        playurl.quality = d.video_info.stream_list[0].stream_info.quality || d.video_info.quality;
+        playurl.format = PlayurlFormatMap[playurl.quality];
+        playurl.timelength = d.video_info.timelength;
+        playurl.dash.duration = Math.ceil(playurl.timelength / 1e3);
+        playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
+        Promise.all([
+          ...d.video_info.stream_list.map((d2) => (async () => {
+            if (d2.dash_video && d2.dash_video.base_url) {
+              const id = d2.stream_info.quality;
+              playurl.accept_description.push(PlayurlDescriptionMap[id]);
+              set.push(PlayurlFormatMap[id]);
+              playurl.accept_quality.push(id);
+              playurl.support_formats.push({
+                description: PlayurlDescriptionMap[id],
+                display_desc: PlayurlQualityMap[id],
+                format: PlayurlFormatMap[id],
+                new_description: PlayurlDescriptionMap[id],
+                quality: id,
+                superscript: "",
+                codecs: [PlayurlCodecs[id]]
+              });
+              const sidx = await new Sidx(d2.dash_video.base_url, d2.dash_video.size).getData();
+              playurl.dash.video.push({
+                SegmentBase: {
+                  Initialization: sidx[0],
+                  indexRange: sidx[1]
+                },
+                segment_base: {
+                  initialization: sidx[0],
+                  index_range: sidx[1]
+                },
+                backupUrl: [],
+                backup_url: [],
+                bandwidth: d2.dash_video.bandwidth,
+                baseUrl: d2.dash_video.base_url,
+                base_url: d2.dash_video.base_url,
+                codecid: d2.dash_video.codecid,
+                codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
+                frameRate: PlayurlFrameRate[id],
+                frame_rate: PlayurlFrameRate[id],
+                height: PlayurlResolution[id]?.[1],
+                id: d2.stream_info.quality,
+                mimeType: "video/mp4",
+                mime_type: "video/mp4",
+                sar: "1:1",
+                startWithSap: 1,
+                start_with_sap: 1,
+                width: PlayurlResolution[id]?.[0]
+              });
+            }
+          })()),
+          ...d.video_info.dash_audio.map((d2) => (async () => {
+            const id = d2.id;
+            const sidx = await new Sidx(d2.base_url, d2.size).getData();
+            playurl.dash.audio.push({
+              SegmentBase: {
+                Initialization: sidx[0],
+                indexRange: sidx[1]
+              },
+              segment_base: {
+                initialization: sidx[0],
+                index_range: sidx[1]
+              },
+              backupUrl: [],
+              backup_url: [],
+              bandwidth: d2.bandwidth,
+              baseUrl: d2.base_url,
+              base_url: d2.base_url,
+              codecid: d2.codecid,
+              codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
+              frameRate: "",
+              frame_rate: "",
+              height: 0,
+              id,
+              mimeType: "audio/mp4",
+              mime_type: "audio/mp4",
+              sar: "",
+              startWithSap: 0,
+              start_with_sap: 0,
+              width: 0
+            });
+          })())
+        ]).then(() => {
+          const avc = [], hev = [], video = [];
+          playurl.dash.video.forEach((d2) => {
+            if (d2.codecid == 7)
+              avc.push(d2);
+            else
+              hev.push(d2);
+          });
+          let length = avc.length > hev.length ? avc.length : hev.length;
+          for (let i = length - 1; i >= 0; i--) {
+            if (avc[i])
+              video.push(avc[i]);
+            if (hev[i])
+              video.push(hev[i]);
+          }
+          playurl.dash.video = video;
+          playurl.accept_format = set.join(",");
+          playurl.quality > 80 && (playurl.quality = 80);
+          resolve(playurl);
+        }).catch((e) => reject(e));
+      }).catch((e) => reject(e));
+    });
+  }
+};
+
+// src/core/videolimit.ts
+var UPOS2 = {
+  "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
+  "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
+  "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
+  "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
+  "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
+  "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
+  "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
+  "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
+  "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
+  "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
+  "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
+  "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
+  "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
+  "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
+  "js（华为）": "upos-tf-all-js.bilivideo.com",
+  "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
+  "akamai（海外）": "upos-hz-mirrorakam.akamaized.net"
+};
+var AREA = /* @__PURE__ */ ((AREA2) => {
+  AREA2[AREA2["tw"] = 0] = "tw";
+  AREA2[AREA2["hk"] = 1] = "hk";
+  AREA2[AREA2["cn"] = 2] = "cn";
+  return AREA2;
+})(AREA || {});
+var _VideoLimit = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    xhrHook("/playurl?", (args) => {
+      const param2 = urlObj(args[1]);
+      if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
+        param2.appkey = "27eb53fc9058f8c3";
+        param2.access_key = this.BLOD.status.accessKey.token;
+      }
+      param2.fnval && (param2.fnval = fnval);
+      args[1] = objUrl(args[1], param2);
+      return !(this.BLOD.limit || this.BLOD.th);
+    }, (res) => {
+      try {
+        const result = res.responseType === "json" ? JSON.stringify(res) : res.responseText;
+        if (this.BLOD.status.uposReplace.nor !== "不替换") {
+          const nstr = _VideoLimit.uposReplace(result, this.BLOD.status.uposReplace.nor);
+          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.nor}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.nor]}\`);
+          if (res.responseType === "json") {
+            res.response = JSON.parse(nstr);
+          } else {
+            res.response = res.responseText = nstr;
+          }
+        }
+      } catch (e) {
+      }
+    }, false);
+  }
+  /** 数据备份 */
+  Backup = {};
+  /** 通知组件 */
+  toast;
+  /** 通知信息 */
+  data = [];
+  /** 监听中 */
+  listening = false;
+  /** 播放数据备份 */
+  __playinfo__;
+  /** 开始监听 */
+  enable() {
+    if (this.listening)
+      return;
+    const disable = xhrHook.async("/playurl?", (args) => {
+      const obj = urlObj(args[1]);
+      this.updateVaribale(obj);
+      return Boolean(this.BLOD.limit || this.BLOD.th);
+    }, async (args) => {
+      const response = this.BLOD.th ? await this._th(args) : await this._gat(args);
+      return { response, responseType: "json", responseText: JSON.stringify(response) };
+    }, false);
+    this.disable = () => {
+      disable();
+      this.listening = false;
+    };
+    this.listening = true;
+  }
+  /** 处理泰区 */
+  async _th(args) {
+    this.data = ["泰区限制视频！"];
+    this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
+    const obj = urlObj(args[1]);
+    this.data.push(\`aid：\${this.BLOD.aid}\`, \`cid：\${this.BLOD.cid}\`);
+    this.toast.data = this.data;
+    const epid = obj.ep_id || obj.episodeId || this.BLOD.epid;
+    obj.access_key = this.BLOD.status.accessKey.token;
+    if (!this.Backup[epid]) {
+      try {
+        this.BLOD.networkMock();
+        this.data.push(\`代理服务器：\${this.BLOD.status.videoLimit.th}\`);
+        this.toast.data = this.data;
+        this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
+        this.data.push("获取代理数据成功！");
+        this.toast.data = this.data;
+        this.toast.type = "success";
+      } catch (e) {
+        this.data.push("代理出错！", e);
+        !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
+        this.toast.data = this.data;
+        this.toast.type = "error";
+        debug.error(...this.data);
+        this.toast.delay = 4;
+        delete this.toast;
+        this.data = [];
+        return { code: -404, message: e, data: null };
+      }
+    }
+    this.toast.delay = 4;
+    delete this.toast;
+    this.data = [];
+    return this.__playinfo__ = this.Backup[epid];
+  }
+  /** 处理港澳台 */
+  async _gat(args) {
+    this.data = ["港澳台限制视频！"];
+    this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
+    const obj = urlObj(args[1]);
+    this.data.push(\`aid：\${this.BLOD.aid}\`, \`cid：\${this.BLOD.cid}\`);
+    this.toast.data = this.data;
+    const epid = obj.ep_id || obj.episodeId || this.BLOD.epid;
+    obj.access_key = this.BLOD.status.accessKey.token;
+    if (!this.Backup[epid]) {
+      try {
+        if (this.BLOD.status.videoLimit.server === "内置") {
+          obj.module = "bangumi";
+          const upInfo = window.__INITIAL_STATE__?.upInfo;
+          if (upInfo) {
+            (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
+          }
+          this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
+          this.toast.data = this.data;
+          const res = await apiBiliplusPlayurl(obj);
+          this.Backup[epid] = { code: 0, message: "success", result: res };
+        } else {
+          const res = await this.gat(obj);
+          this.Backup[epid] = { code: 0, message: "success", result: res };
+        }
+        if (this.BLOD.status.uposReplace.gat !== "不替换") {
+          this.Backup[epid] = JSON.parse(_VideoLimit.uposReplace(JSON.stringify(this.Backup[epid]), this.BLOD.status.uposReplace.gat));
+          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.gat}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.gat]}\`);
+        }
+        ;
+        this.data.push("获取代理数据成功！");
+        this.toast.data = this.data;
+        this.toast.type = "success";
+      } catch (e) {
+        this.data.push("代理出错！", e);
+        !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
+        this.toast.data = this.data;
+        this.toast.type = "error";
+        debug.error(...this.data);
+        this.toast.delay = 4;
+        delete this.toast;
+        this.data = [];
+        return { code: -404, message: e, data: null };
+      }
+    }
+    this.toast.delay = 4;
+    delete this.toast;
+    this.data = [];
+    return this.__playinfo__ = this.Backup[epid];
+  }
+  /** 停止监听 */
+  disable() {
+    this.listening = false;
+  }
+  /** 更新全局变量 */
+  updateVaribale(obj) {
+    obj.seasonId && (this.BLOD.ssid = obj.seasonId);
+    obj.episodeId && (this.BLOD.epid = obj.episodeId);
+    obj.ep_id && (this.BLOD.epid = obj.ep_id);
+    obj.aid && (this.BLOD.aid = Number(obj.aid)) && (this.BLOD.aid = obj.aid);
+    obj.avid && (this.BLOD.aid = Number(obj.avid)) && (this.BLOD.aid = obj.avid);
+    obj.cid && (this.BLOD.cid = Number(obj.cid)) && (this.BLOD.cid = obj.cid);
+  }
+  /** 访问泰区代理 */
+  async th(obj) {
+    const d = await new ApiGlobalOgvPlayurl(obj, this.BLOD.status.uposReplace.th, this.BLOD.status.videoLimit.th).toPlayurl();
+    this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.th}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.th]}\`);
+    return d;
+  }
+  /** 代理服务器序号 */
+  area = 0;
+  /** 访问港澳台代理 */
+  async gat(obj) {
+    if (!this.BLOD.status.videoLimit[AREA[this.area]])
+      throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
+    const server = this.BLOD.status.videoLimit[AREA[this.area]];
+    obj.area = AREA[this.area];
+    this.data.push(\`代理服务器：\${server}\`);
+    this.toast && (this.toast.data = this.data);
+    try {
+      return await apiPlayurl(obj, true, true, server);
+    } catch (e) {
+      this.data.push("代理服务器返回异常！", e);
+      if (this.toast) {
+        this.toast.data = this.data;
+        this.toast.type = "warning";
+      }
+      this.area++;
+      if (this.area > 2)
+        throw new Error("代理服务器不可用！");
+      return await this.gat(obj);
+    }
+  }
+  /**
+   * 替换upos服务器
+   * @param str playurl或包含视频URL的字符串
+   * @param uposName 替换的代理服务器名 keyof typeof {@link UPOS}
+   */
+  static uposReplace(str, uposName) {
+    if (uposName === "不替换")
+      return str;
+    this.upos = true;
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.upos = false, 1e3);
+    return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS2[uposName]}/\`);
+  }
+};
+var VideoLimit = _VideoLimit;
+/** 用于过滤upos提示 */
+__publicField(VideoLimit, "upos", false);
+/** 用于取消过滤upos提示 */
+__publicField(VideoLimit, "timer");
+
+// src/core/ui.ts
+var Menus = {
+  common: ["通用", svg.wrench],
+  rewrite: ["重写", svg.note],
+  danmaku: ["弹幕", svg.dmset],
+  restore: ["修复", svg.stethoscope],
+  player: ["播放", svg.play],
+  style: ["样式", svg.palette],
+  download: ["下载", svg.download]
+};
+var UI = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    this.initMenu();
+    this.initSettings();
+    poll(() => document.readyState === "complete", () => {
+      this.entry.type = this.BLOD.status.uiEntryType;
+      document.body.appendChild(this.entry);
+      this.updateCheck();
+    }, 1e3, 0);
+    this.entry.addEventListener("click", (e) => {
+      this.show();
+      e.stopPropagation();
+    });
+  }
+  entry = new BilioldEntry();
+  interface = new BiliOldInterface();
+  menuitem = {};
+  settingItem = {};
+  /** 检查播放器脚本更新 */
+  async updateCheck() {
+    if (this.BLOD.status.bilibiliplayer && this.BLOD.status.checkUpdate) {
+      const version = await this.BLOD.GM.getValue("version");
+      if (version !== this.BLOD.version) {
+        this.BLOD.loadplayer(true);
+      }
+    }
+  }
+  /** 初始化菜单 */
+  initMenu() {
+    Object.entries(Menus).forEach((d) => {
+      const menu = new Menuitem();
+      this.menuitem[d[0]] = menu;
+      menu.init(d[1][0], d[1][1]);
+      this.interface.addMenu(menu);
+    });
+  }
+  /** 初始化设置项 */
+  initSettings() {
+    this.initSettingCommon();
+    this.initSettingRewrite();
+    this.initSettingStyle();
+    this.initSettingRestore();
+    this.initSettingPlayer();
+    this.initSettingDanmaku();
+    this.initSettingDownload();
+  }
+  /** 通用设置 */
+  initSettingCommon() {
+    this.menuitem.common.addSetting([
+      this.switch("development", "开发者模式", "暴露调试接口到控制台", svg.warn, (v) => {
+        if (v) {
+          propertyHook(window, "BLOD", this.BLOD);
+        } else {
+          Reflect.deleteProperty(window, "BLOD");
+        }
+      }, "暴露一个名为【BLOD】的对象到全局，你可以在浏览器控制台里使用内部的属性及方法进行调试。"),
+      this.switch("disableReport", "数据上报", "禁止网页跟踪上报", svg.linechart),
+      this.select("uiEntryType", "设置入口样式", {
+        candidate: ["old", "new"]
+      }, "浮动齿轮或者贴边隐藏", svg.gear, (v) => this.entry.type = v, "【old】入口更具隐蔽性，鼠标移动到贴边位置才会浮现。【new】入口每次网页加载完成都会滚动浮现，隐藏会鼠标移动到对应位置便会浮现。"),
+      this.button("userStatus", "管理设置数据", () => {
+        alert([
+          "备份脚本设置或者恢复已备份的数据。",
+          "当调整的选项过多时，备份一下是一个良好的主意，以免因为意外重复第二次操作。"
+        ], "备份还原", [
+          {
+            text: "默认",
+            callback: () => this.BLOD.user.restoreUserStatus()
+          },
+          {
+            text: "导出",
+            callback: () => this.BLOD.user.outputUserStatus()
+          },
+          {
+            text: "导入",
+            callback: () => this.BLOD.user.inputUserStatus()
+          }
+        ]);
+      }, "备份/恢复", "管理", svg.blind),
+      this.switch("bilibiliplayer", "重构播放器", "修复及增强", svg.play, (v) => {
+        if (v) {
+          this.updateCheck();
+        }
+      }, "旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。")
+    ]);
+    this.menuitem.common.addCard("toastr");
+    this.menuitem.common.addSetting([
+      this.switch("toast.disabled", "禁用", '<a href="https://github.com/CodeSeven/toastr" target="_blank">toastr</a>', void 0, (v) => this.BLOD.toast.disabled = v),
+      this.switch("toast.rtl", "镜像", "左右翻转", void 0, (v) => this.BLOD.toast.rtl = v),
+      this.select("toast.position", "位置", {
+        candidate: ["top-left", "top-center", "top-right", "top-full-width", "bottom-left", "bottom-right", "bottom-center", "bottom-full-width"]
+      }, "相对屏幕", void 0, (v) => this.BLOD.toast.position = v),
+      this.slider("toast.delay", "时长", {
+        min: 2,
+        max: 60,
+        precision: 58
+      }, "单位：/秒", void 0, (v) => this.BLOD.toast.delay = v),
+      this.select("toast.type", "类型", {
+        candidate: ["info", "success", "warning", "error"],
+        styles: {
+          info: "color: #2F96B4",
+          success: "color: #51A351",
+          warning: "color: #F89406",
+          error: "color: #BD362F"
+        }
+      }, "测试限定"),
+      this.inputCustom("toast.test", "测试", {
+        candidate: ["Hello World!"]
+      }, (v) => {
+        try {
+          this.BLOD.toast.toast(this.BLOD.status.toast.delay, this.BLOD.status.toast.type, v);
+        } catch (e) {
+          this.BLOD.toast.error("非常抱歉！发生了错误", e);
+        }
+      }, "请输入一句话~")
+    ], 1);
+    this.menuitem.common.addCard("账户授权");
+    this.menuitem.common.addSetting([
+      this.input("accessKey.token", "token", {
+        prop: { type: "text", readonly: "readonly" }
+      }, "access_key", void 0, void 0, "鉴权。效果等同于网页端的cookie，B站服务器用以识别您的登录身份。本脚本只会在您本地保存鉴权，绝对不会泄露出去，唯一的例外是如果启用了【解除区域限制】功能并选择自定义服务器，则会向代理服务器发送鉴权，我们无法保证第三方服务器如何使用您的鉴权，所以万请自行必确认代理服务器的可信度，<strong>三思而后行</strong>！"),
+      this.input("accessKey.dateStr", "授权日期", {
+        prop: { type: "text", readonly: "readonly" }
+      }, "有效期一般为一个月", void 0, void 0, "脚本不会代为检查鉴权是否失效，请失效时自行重新授权。"),
+      this.button("accessKey.action", "进行授权", () => {
+        new AccessKey(this.BLOD);
+      }, "授权脚本使用登录鉴权", "授权", svg.warn)
+    ], 2);
+    if (true) {
+      this.menuitem.common.addSetting([
+        this.switch("checkUpdate", "检查更新", "自动更新播放器", svg.download, void 0, "启用【重构播放器】后，脚本会自动检查并更新播放器组件，但可能因为网络原因更新失败，出现反复更新->反复失败的问题。您可以禁用此功能，以继续使用【重构播放器】，等待网络环境改善后再尝试启用。")
+      ]);
+    }
+  }
+  /** 重写设置 */
+  initSettingRewrite() {
+    this.menuitem.rewrite.addSetting([
+      this.switch("av", "av/BV", "恢复旧版av页"),
+      this.switch("bangumi", "bangumi", "恢复旧版bangumi页"),
+      this.switch("watchlater", "稍后再看", "恢复旧版稍后再看"),
+      this.switch("playlist", "播单", "恢复旧版播单页"),
+      this.switch("index", "主页", "恢复旧版Bilibili主页"),
+      this.switch("player", "播放器", "替换其他未重写页面的播放器"),
+      this.switch("read", "专栏", "恢复旧版专栏"),
+      this.switch("ranking", "排行榜", "恢复旧版全站排行榜页"),
+      this.switch("search", "搜索", "恢复旧版搜索页"),
+      this.switch("album", "相簿", "恢复相簿页")
+    ]);
+  }
+  /** 弹幕设置 */
+  initSettingDanmaku() {
+    this.menuitem.danmaku.addSetting([
+      this.switch("dmproto", "proto弹幕", "protobuf弹幕支持", void 0, void 0, "因为B站已放弃维护xml弹幕，带来一些问题，比如90分钟后无弹幕，所以此项不建议禁用。【重构播放器】默认启用且不受此项影响。"),
+      this.switch("dmwrap", "弹幕提权", "允许普权弹幕排版", void 0, void 0, "上古时代存在大量使用换行及空格等特殊字符来提权以达到高级弹幕效果的作品，在html5时代无法正常显示，启用此项将恢复普权弹幕排版效果。尽情享受弹幕艺术。【重构播放器】默认启用且不受此项影响。"),
+      this.select("dmExtension", "弹幕格式", {
+        candidate: ["xml", "json"]
+      }, "拓展名", void 0, void 0, "【下载弹幕】及【本地弹幕】使用的弹幕格式，xml是传统格式，json是protobuf弹幕实际格式，前者一般拥有更小的体积，只是可能丢失彩蛋彩蛋及部分非法字符。"),
+      this.switch("dmContact", "合并弹幕", "本地弹幕或在线弹幕", void 0, void 0, "选择【本地弹幕】或【在线弹幕】是否与播放器内已有弹幕合并。"),
+      this.inputCustom("onlineDm", "在线弹幕", {
+        prop: { placeholder: "ss3398" }
+      }, (v) => {
+        v && typeof v === "string" && this.BLOD.danmaku.onlineDm(v);
+      }, "从其他视频加载弹幕", void 0, "从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！"),
+      this.button("localDm", "本地弹幕", () => {
+        this.BLOD.status.dmExtension === "json" ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
+      }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。")
+    ]);
+  }
+  /** 样式设置 */
+  initSettingStyle() {
+    this.menuitem.style.addSetting([
+      this.switch("header", "恢复旧版顶栏", "替换所有B站页面中的顶栏为旧版", void 0, void 0, "除非替换后实在不和谐，一般都会进行替换。"),
+      this.switch("comment", "恢复评论翻页", "替换瀑布流评论区", void 0, void 0, "评论区版本将被固定，可能享受不到B站后续为评论区推出的新功能。本功能有专门独立为一个脚本，不要重复安装。"),
+      this.switch("staff", "合作UP主", "联合投稿显示合作UP主", void 0, void 0, "在原av页up主信息处列出所有合作up主。"),
+      this.switch("bangumiEplist", "保留bangumi分P", "牺牲特殊背景图", void 0, void 0, "旧版bangumi遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。"),
+      this.switch("jointime", "注册时间", "个人空间显示账户注册时间"),
+      this.switch("history", "纯视频历史", "过滤历史记录页的非视频部分"),
+      this.switch("liveRecord", "录屏动态", "允许动态页显示直播录屏"),
+      this.switch("commentJumpUrlTitle", "评论超链接标题", "还原为链接或短链接", void 0, void 0, "直接显示链接标题固然方便，但有些时候还是直接显示链接合适。"),
+      this.switch("like", "添加点赞功能", "不支持一键三连"),
+      this.switch("fullBannerCover", "修正banner分辨率", "顶栏banner完整显示不裁剪", void 0, void 0, "旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。"),
+      this.switch("episodeData", "分集数据", "bangumi", void 0, void 0, "显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。"),
+      this.switch("simpleChinese", "繁 -> 简", "将繁体字幕翻译为简体", void 0, void 0, "识别并替换CC字幕繁体并转化为简体，使用内置的简繁对照表机械翻译。")
+    ]);
+  }
+  /** 修复设置 */
+  initSettingRestore() {
+    this.menuitem.restore.addSetting([
+      this.switch("lostVideo", "失效视频", "尝试获取失效视频信息", void 0, void 0, "修复收藏的失效视频的封面和标题信息，并以红色删除线标记。使用缓存数据恢复的页面重构av页默认开启且不受此项影响，其中部分上古失效视频甚至还保留了评论区。"),
+      this.switch("disableSleepChcek", "禁用直播间挂机检测", "就喜欢挂后台听个响不行吗！"),
+      this.switch("show1080p", "不登录高画质支持", "dash模式限定", void 0, (v) => {
+        if (v && !this.BLOD.status.accessKey.token) {
+          this.BLOD.toast.warning("需要启用【账户授权】功能！");
+          alert("需要启用【账户授权】功能！是否前往？", "【账户授权】", [{ text: "前往【账户授权】", callback: () => this.show("accessKey.token") }]);
+          this.BLOD.status.show1080p = false;
+        }
+      }, "B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。若<strong>非常抱歉</strong>报错请关闭本选项！"),
+      this.switch("timeLine", "港澳台新番时间表", "填充首页番剧板块", void 0, void 0, "在首页番剧板块中填充港澳台最新番剧更新信息。只提取了最新的30条番剧信息，所以数据中可能不会包含过于久远的更新。本功能只能显示已更新的番剧信息，而不能作为即将更新番剧的预测。")
+    ]);
+  }
+  /** 播放设置 */
+  initSettingPlayer() {
+    this.menuitem.player.addSetting([
+      this.sliderCustom("playbackRate", "播放速率", {
+        min: 0.25,
+        max: 5,
+        precision: 95,
+        value: 1,
+        solid: true
+      }, (e) => {
+        this.BLOD.player.playbackRate(e);
+      }, "播放速率调整拓展", void 0, "调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：未调整前的当前速率默认为1。"),
+      this.switch("webRTC", "WebRTC", "<strong>关闭</strong>以禁用p2p共享带宽", void 0, void 0, "B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！"),
+      this.switch("elecShow", "充电鸣谢", "允许视频结尾的充电鸣谢"),
+      this.switch("videoDisableAA", "禁用视频渲染抗锯齿", '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
+      this.switch("ugcSection", "视频合集", "以播单形式呈现", void 0, void 0, "视频合集在旧版页面时代本不存在，但其实质类似于上古的播单，所以直接使用播单页面进行模拟。值得一提的是真正的播单页面相关接口已完全被404，如果有幸访问到脚本会直接替换为缓存的播单号769——因为只缓存了这一项数据。另外播单详情页面还是404状态，以后可能也会用缓存数据修复，让后人能一窥范例。")
+    ]);
+    this.menuitem.player.addCard("自动化操作");
+    this.menuitem.player.addSetting([
+      this.switch("automate.danmakuFirst", "展开弹幕列表", "而不是推荐视频", void 0, void 0, "载入播放器时右侧面板默认切换到弹幕列表。"),
+      this.switch("automate.showBofqi", "滚动到播放器", "载入视频时", void 0, void 0, "载入播放器时自动滚动到播放器。"),
+      this.switch("automate.screenWide", "宽屏模式", "隐藏播放器右侧面板", void 0, (v) => v && (this.BLOD.status.automate.webFullScreen = false), "载入播放器时自动启用宽屏模式。（与网页全屏二选一）"),
+      this.switch("automate.noDanmaku", "无弹幕模式", "默认关闭弹幕", void 0, void 0, "载入播放器时默认关闭弹幕。"),
+      this.switch("automate.autoPlay", "自动播放", "播放器初始化完成时", void 0, void 0, "播放器加载完成自动播放。"),
+      this.switch("automate.webFullScreen", "网页全屏模式", "载入视频时", void 0, (v) => v && (this.BLOD.status.automate.screenWide = false), "载入播放器时自动网页全屏。（与宽屏模式二选一）"),
+      this.switch("automate.videospeed", "记忆播放速率", "永久继承播放速率设定", void 0, void 0, "默认的记忆播放速率记忆仅同一个网页标签页有效，开启后将代为记忆固定下来。")
+    ], 1);
+    this.menuitem.player.addCard("限制视频");
+    this.menuitem.player.addSetting([
+      this.switch("videoLimit.status", "解除播放限制", "解除区域/APP限制", void 0, void 0, "内置服务器只能获取到360P，有条件请在下面自定义服务器。"),
+      this.select("videoLimit.server", "代理服务器模式", {
+        candidate: ["内置", "自定义"]
+      }, "<strong>自定义</strong>模式须要填写下面的服务器", void 0, (v) => {
+        if (v === "自定义") {
+          if (!this.BLOD.status.videoLimit.cn && !this.BLOD.status.videoLimit.hk && !this.BLOD.status.videoLimit.tw) {
+            this.BLOD.toast.warning("请至少填选以下代理服务器中的一下再选择！", "服务器请自行搭建或参考【公共反代服务器】");
+            this.BLOD.status.videoLimit.server = "内置";
+            alert('<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">https://github.com/yujincheng08/BiliRoaming/</a>', "公共反代服务器");
+          } else if (!this.BLOD.status.accessKey.token) {
+            alert([
+              "【公共反代服务器】一般都要求识别您的登录身份才能正常登录",
+              "点击【授权】将跳转到账户授权页面，点击【取消】或其他区域返回",
+              "<strong>【账户授权】是高风险操作，请仔细阅读相关说明后三思而后操作！</strong>"
+            ], void 0, [
+              {
+                text: "授权",
+                callback: () => {
+                  this.show("accessKey.token");
+                }
+              },
+              {
+                text: "取消"
+              }
+            ]);
+          }
+        }
+      }, "大部分新视频【内置】服务器只能获取到360P，实在不堪入目，有条件的话还是【自定义】服务器吧。对于大陆用户而言，【自定义】服务器一般填一个台湾就行，或者加上一个泰区。"),
+      this.input("videoLimit.th", "泰区", {
+        prop: { type: "url", placeholder: "www.example.com" }
+      }, "泰国（东南亚）限定视频反代服务器", void 0, void 0, "解析泰国（东南亚）限定视频所用的代理服务器。东南亚视频暂时无弹幕和评论，有也是其他视频乱入的。"),
+      this.input("videoLimit.tw", "台湾", {
+        prop: { type: "url", placeholder: "www.example.com" }
+      }, "台湾限定视频反代服务器", void 0, void 0, "解析【仅限台湾地区】视频所用的代理服务器。港澳台限定视频的首选。"),
+      this.input("videoLimit.hk", "港澳", {
+        prop: { type: "url", placeholder: "www.example.com" }
+      }, "香港澳门限定视频反代服务器", void 0, void 0, "解析【仅限香港澳门地区】视频所用的代理服务器。与台湾不同，香港澳门基本上是绑定在一起的。"),
+      this.input("videoLimit.cn", "大陆", {
+        prop: { type: "url", placeholder: "www.example.com" }
+      }, "大陆限定视频反代服务器", void 0, void 0, "解析大陆（一般）视频所用的代理服务器。此项一般是留给海外用户用的。")
+    ], 2);
+    this.menuitem.player.addCard("替换 UPOS 服务器");
+    const upos = Object.keys(UPOS2);
+    this.menuitem.player.addSetting([
+      this.select("uposReplace.th", "泰区", {
+        candidate: upos
+      }, "针对泰国（东南亚）限制视频", void 0, void 0, "泰区服务器ban了大陆ip，所以必须选一个进行替换。卡加载时请酌情切换。"),
+      this.select("uposReplace.gat", "港澳台", {
+        candidate: ["不替换"].concat(upos)
+      }, "针对港澳台限制视频", void 0, void 0, "港澳台视频服务器一般为大陆外的Akamai，大陆用户有可能访问不畅，请按需酌情切换。若卡加载请关闭或者换一个。"),
+      this.select("uposReplace.nor", "一般视频", {
+        candidate: ["不替换"].concat(upos)
+      }, "针对其他视频", void 0, void 0, "一般视频不需要替换，除非分配给您的视频服务器实在不行，请按需酌情切换。若卡加载请关闭或者换一个。"),
+      this.select("uposReplace.download", "下载", {
+        candidate: ["不替换"].concat(upos)
+      }, "针对下载功能", void 0, void 0, "一般不需要替换，除非屡屡下载403。若还是403请关闭或者换一个。")
+    ], 3);
+  }
+  /** 下载设置 */
+  initSettingDownload() {
+    this.menuitem.download.addSetting([
+      this.button("download", "下载视频", () => {
+        this.BLOD.download.default();
+      }, "下载当前视频", "视频", void 0, "根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。"),
+      this.button("downloadDm", "下载弹幕", () => {
+        this.BLOD.danmaku.download();
+      }, "下载当前弹幕", "弹幕", void 0, "下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。"),
+      this.button("downloadImg", "下载封面", () => {
+        this.BLOD.download.image();
+      }, "下载当前封面", "封面", void 0, "下载当前视频的封面，如果有其他特殊图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。"),
+      this.chockboxs("downloadType", "请求的文件类型", ["mp4", "dash", "flv"], "视频封装格式", void 0, () => this.BLOD.download.destory(), "勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。"),
+      this.switch("TVresource", "请求tv端视频源", "无水印", void 0, (e) => {
+        e && alert("下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！", "403警告", [
+          {
+            text: "置空referer",
+            callback: () => this.BLOD.status.referer = ""
+          }
+        ]);
+        this.BLOD.download.destory();
+      }, "请求TV端下载源，唯一的优势是可能无Bilibili水印。注意：①B站tv端大会员不通用，所以可能无法获取到大会员视频或画质。②需要进行【账户授权】，否则只能以游客身份获取下载数据。③TV源要求特定的UA且不能发送referer，基本无法通过浏览器直接下载（403无权访问），请选择其他下载工具。④mp4封装的并非tv源。"),
+      this.select("downloadQn", "画质", {
+        candidate: ["0", "15", "16", "32", "48", "64", "74", "80", "112", "116", "120", "125", "126", "127"]
+      }, "flv限定", void 0, () => this.BLOD.download.destory(), "画质参数，只针对flv封装。mp4封装没得选，dash则由于特性会一次性提供所有画质选项。"),
+      this.select("downloadMethod", "下载方式", {
+        candidate: ["浏览器", "IDM", "ef2", "aria2", "aria2rpc"]
+      }, "浏览器或第三方工具", void 0, (e) => {
+        switch (e) {
+          case "浏览器":
+            alert("由于浏览器安全限制，直接鼠标左键点击很难触发下载功能，更良好的习惯是右键要下载的文件选择【另存为】（不同浏览器可能命名不同）", "浏览器下载");
+            break;
+          case "IDM":
+            alert('<a href="https://www.internetdownloadmanager.com/" target="_blank">IDM（Internet Download Manager）</a>是Windows端著名的的下载工具，本方式将下载数据生成IDM导出文件，您可以在打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入开始下载。虽然有点麻烦，但是IDM支持配置UA和referer，并且下载速度的确不是浏览器能比的。', "IDM导出文件");
+            break;
+          case "ef2":
+            alert('<a href="https://github.com/MotooriKashin/ef2" target="_blank">ef2</a>是本脚本作者开发的一款开源的IDM辅助工具，支持直接从浏览器里拉起IDM进行下载，免去使用IDM导出文件的繁琐，同时解放你的鼠标左键。', "ef2辅助下载");
+            break;
+          case "aria2":
+            alert('<a href="https://github.com/aria2/aria2" target="_blank">aria2</a>是著名的开源命令行下载工具，本方式将下载命令复制到剪切板。命令行不是一般人能使用的工具，没有相应知识储备和使用习惯不推荐选择。', "aria2");
+            break;
+          case "aria2rpc":
+            alert("aria2支持rpc方式进行下载，正确配置后方便程度不亚于ef2方式，唯一的问题是配置起来有亿点麻烦。</br>是否跳转到rpc相关设置？", "aria2 rpc", [
+              {
+                text: "RPC配置",
+                callback: () => this.show("aria2.server")
+              },
+              {
+                text: "不必了"
+              }
+            ]);
+            break;
+          default:
+            break;
+        }
+      }, "使用浏览器下载请右键另存为而不是左键点击！其他选项需要使用对应工具，详见对应选项弹窗说明。"),
+      this.input("userAgent", "User-Agent", {
+        candidate: [
+          "Bilibili Freedoooooom/MarkII",
+          "Mozilla/5.0 BiliDroid/7.0.0 (bbcallen@gmail.com)",
+          navigator.userAgent
+        ]
+      }, "鉴权参数", void 0, void 0, "下载工具发送给服务器的身份标志，鉴权关键参数之一，无效的User-Agent将导致403无权访问。<strong>除非你知道自己在修改什么，否则请不要轻易调整此项。</strong>此项只在使用第三方下载方式时有效。"),
+      this.input("referer", "referer", {
+        candidate: [location.origin]
+      }, "鉴权参数", void 0, (v) => {
+        v && alert("您勾选了下载TV源，根据经验必须将referer置空，不然会触发403（无权访问）！是否撤销输入将referer置空？还是取消勾选tv源？", "设置冲突", [
+          {
+            text: "置空referer",
+            callback: () => this.BLOD.status.referer = ""
+          },
+          {
+            text: "取消勾选tv源",
+            callback: () => this.BLOD.status.TVresource = false
+          }
+        ]);
+      }, "下载时发送给服务器的标志之一，鉴权关键参数之一，无效的User-Agent将导致403无权访问。此项在网页端必须存在，而且一般为主站域名，但是<strong>TV、APP等源此项必须为空！</strong>"),
+      this.input("filepath", "下载目录", {}, "保存下载文件的本地磁盘目录", void 0, void 0, "ef2、aria2和aria2rpc方式限定。Windows平台请注意使用反斜杠哦。")
+    ]);
+    this.menuitem.download.addCard("aria2 相关");
+    this.menuitem.download.addSetting([
+      this.input("aria2.server", "RPC服务器", {
+        prop: { type: "url", placeholder: "http://localhost" },
+        candidate: ["http://localhost"]
+      }, "本地或远程链接", void 0, void 0, "端口号请另外输入。建议使用下方按钮测试RPC连接可用性。"),
+      this.input("aria2.port", "端口", {
+        prop: { type: "number", placeholder: "6800" },
+        candidate: ["6800"]
+      }, "本地或远程端口", void 0, void 0, "服务器链接另外输入。建议使用下方按钮测试RPC连接可用性。"),
+      this.input("aria2.token", "token", {
+        prop: { type: "password" }
+      }, "鉴权", void 0, void 0, "如果RPC服务器启用了token鉴权的话。"),
+      this.slider("aria2.split", "分段数目", {
+        min: 1,
+        max: 16,
+        precision: 15
+      }, "分段并发下载", void 0, void 0, "对于支持断点续传的文件，启用多线程同时并发下载通常是一种非常有效的提高下载速度的方法。如果需要请自行调整一个合适的并发数，1表示不并发下载。值得注意的是，部分服务器会限制并发连接数目，并发连接过多有触发风控甚至被临时封禁的风险，所以并不是并发数越多越好。"),
+      this.slider("aria2.size", "分段大小", {
+        min: 1,
+        max: 20,
+        precision: 19
+      }, "单位：/MB", void 0, void 0, "如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。"),
+      this.button("aria2.test", "测试RPC连接", () => {
+        const data = ["正在测试RPC连接~"];
+        const toast = this.BLOD.toast.toast(0, "info", ...data);
+        new Aria2().getVersion().then((d) => {
+          toast.type = "success";
+          data.push(\`-------aria2 v\${d.version}-------\`, ...d.enabledFeatures);
+          toast.data = data;
+        }).catch((e) => {
+          toast.type = "error";
+          data.push("RPC链接失败 ಥ_ಥ", e);
+          debug.error("RPC链接失败 ಥ_ಥ", e);
+          toast.data = data;
+        }).finally(() => {
+          toast.delay = 4;
+        });
+      }, "获取aria2信息", "ping", void 0, "请确定正确配置并启用了aria2的RPC服务器。")
+    ], 1);
+    this.menuitem.download.addCard("ef2 相关");
+    this.menuitem.download.addSetting([
+      this.switch("ef2.delay", "稍后下载", "添加到IDM下载队列但不开始", void 0, void 0, "要开始时请手动到IDM队列里点击开始。本项可以用来批量下载而不弹出多个窗口。注意：B站视频源使用的是临时链接，过期后无法访问，请及时下载或清理。"),
+      this.switch("ef2.silence", "静默下载", "跳过IDM确认对话框", void 0, void 0, "默认情况下IDM会弹窗询问是否确认下载，在该确认框中可以调整保存目录和文件名等操作。启用本项以跳过该确认框。")
+    ], 2);
+  }
+  /**
+   * 新建开关设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
+  switch(id, label, sub, svg2, callback, desc) {
+    const item = new SettingItem();
+    const button = new SwitchButton();
+    const arr2 = id.split(".");
+    let looping = false;
+    item.init(arr2.join(""), label, sub, svg2);
+    button.update(this.BLOD.getStatus(id));
+    button.addEventListener("change", () => {
+      looping = true;
+      this.BLOD.setStatus(id, button.value);
+      callback && callback(button.value);
+    });
+    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
+      looping || button.update(this.BLOD.getStatus(arr2.join("."), v));
+      looping = false;
+    });
+    item.value(button);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 新建下拉菜单设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param value 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
+  select(id, label, value, sub, svg2, callback, desc) {
+    const item = new SettingItem();
+    const select = new SelectMenu();
+    const arr2 = id.split(".");
+    let looping = false;
+    item.init(arr2.join(""), label, sub, svg2);
+    value.value = this.BLOD.getStatus(id);
+    select.update(value);
+    select.addEventListener("change", () => {
+      looping = true;
+      this.BLOD.setStatus(id, select.value);
+      callback && callback(select.value);
+    });
+    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
+      looping || (select.value = this.BLOD.getStatus(arr2.join("."), v));
+      looping = false;
+    });
+    item.value(select);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 创建滑动条菜单设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param value 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
+  slider(id, label, value, sub, svg2, callback, desc) {
+    const item = new SettingItem();
+    const slider = new SliderBlock();
+    const arr2 = id.split(".");
+    let looping = false;
+    item.init(arr2.join(""), label, sub, svg2);
+    value.value = this.BLOD.getStatus(id);
+    slider.update(value);
+    slider.addEventListener("change", () => {
+      looping = true;
+      this.BLOD.setStatus(id, slider.value);
+      callback && callback(slider.value);
+    });
+    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
+      looping || (slider.value = this.BLOD.getStatus(arr2.join("."), v));
+      looping = false;
+    });
+    item.value(slider);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 创建自定义滑动条菜单设置
+   * @param id 用来索引的字符串
+   * @param label 标题
+   * @param value 配置数据
+   * @param callback 输入回调
+   * @param sub 副标题
+   * @param svg 图标
+   * @param desc 浮动窗口
+   */
+  sliderCustom(id, label, value, callback, sub, svg2, desc) {
+    const item = new SettingItem();
+    const slider = new SliderBlock();
+    item.init("", label, sub, svg2);
+    slider.update(value);
+    slider.addEventListener("change", () => {
+      callback(slider.value);
+    });
+    item.value(slider);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 创建自定义输入框设置
+   * @param id 用来索引的字符串
+   * @param label 标题
+   * @param value 配置数据
+   * @param callback 输入回调
+   * @param sub 副标题
+   * @param svg 图标
+   * @param desc 浮动窗口
+   */
+  inputCustom(id, label, value, callback, sub, svg2, desc) {
+    const item = new SettingItem();
+    const input = new InputArea();
+    item.init("", label, sub, svg2);
+    input.update(value);
+    input.addEventListener("change", () => {
+      callback(input.value);
+    });
+    item.value(input);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 创建输入框设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param value 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 输入回调
+   * @param desc 浮动窗口
+   */
+  input(id, label, value, sub, svg2, callback, desc) {
+    const item = new SettingItem();
+    const input = new InputArea();
+    const arr2 = id.split(".");
+    let looping = false;
+    item.init(arr2.join(""), label, sub, svg2);
+    value.value = this.BLOD.getStatus(id);
+    input.update(value);
+    input.addEventListener("change", () => {
+      looping = true;
+      this.BLOD.setStatus(id, input.value);
+      callback && callback(input.value);
+    });
+    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
+      looping || (input.value = this.BLOD.getStatus(arr2.join("."), v));
+      looping = false;
+    });
+    item.value(input);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 创建按钮设置
+   * @param id 用来索引的字符串
+   * @param label 标题
+   * @param callback 按钮点击回调
+   * @param sub 副标题
+   * @param text 按钮文字
+   * @param svg 图标
+   * @param desc 浮动窗口
+   */
+  button(id, label, callback, sub, text, svg2, desc) {
+    const item = new SettingItem();
+    const button = new PushButton();
+    item.init("", label, sub, svg2);
+    text && (button.text = text);
+    button.addEventListener("change", (ev) => {
+      callback();
+    });
+    item.value(button);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 新建复选框设置
+   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
+   * @param label 标题
+   * @param values 配置数据
+   * @param sub 副标题
+   * @param svg 图标
+   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
+   * @param desc 浮动窗口
+   */
+  chockboxs(id, label, values, sub, svg2, callback, desc) {
+    const item = new SettingItem();
+    const checkboxs = new CheckBoxs();
+    const arr2 = id.split(".");
+    let looping = false;
+    item.init(arr2.join(""), label, sub, svg2);
+    checkboxs.update(values);
+    checkboxs.value = Array.from(this.BLOD.getStatus(id));
+    checkboxs.addEventListener("change", () => {
+      looping = true;
+      this.BLOD.setStatus(id, checkboxs.value);
+      callback && callback(checkboxs.value);
+    });
+    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
+      looping || (checkboxs.value = this.BLOD.getStatus(arr2.join("."), v));
+      looping = false;
+    });
+    item.value(checkboxs);
+    this.settingItem[id] = item;
+    desc && new Desc().value(label, desc, item);
+    return item;
+  }
+  /**
+   * 显示设置面板
+   * @param id 设置项注册id，id不在可选项时可以使用强制断言
+   * @example
+   * this.show('accessKey.token') // 显示设置面板并滚动到【账户授权】那一项
+   * this.show(<'accessKey'>'accessKey.token') // TypeScript 强制断言
+   */
+  show(id) {
+    this.interface.show();
+    if (id && this.settingItem[id]) {
+      this.settingItem[id].dispatchEvent(new Event("show"));
+    } else {
+      this.menuitem.common.click();
+    }
+  }
+};
+
+// src/core/url.ts
+var paramsSet = /* @__PURE__ */ new Set([
+  "spm_id_from",
+  "from_source",
+  "msource",
+  "bsource",
+  "seid",
+  "source",
+  "session_id",
+  "visit_id",
+  "sourceFrom",
+  "from_spmid",
+  "share_source",
+  "share_medium",
+  "share_plat",
+  "share_session_id",
+  "share_tag",
+  "unique_k",
+  "vd_source",
+  "csource"
+]);
+var paramArr = Object.entries({
+  from: ["search"]
+});
+var UrlCleaner = class {
+  /** 垃圾参数序列 */
+  paramsSet = paramsSet;
+  /** 精准爆破序列 */
+  paramArr = paramArr;
+  constructor() {
+    this.location();
+    window.navigation?.addEventListener("navigate", (e) => {
+      const newURL = this.clear(e.destination.url);
+      if (e.destination.url != newURL) {
+        e.preventDefault();
+        if (newURL == window.location.href)
+          return;
+        this.updateLocation(newURL);
+      }
+    });
+    window.addEventListener("click", (e) => this.anchorClick(e));
+    window.addEventListener("contextmenu", (e) => this.anchorClick(e));
+    document.addEventListener("DOMContentLoaded", () => {
+      this.location();
+      this.anchor(document.querySelectorAll("a"));
+    }, { once: true });
+  }
+  /** 净化url */
+  clear(str) {
+    const url = new URL2(str);
+    if (url && !str.includes("passport.bilibili.com")) {
+      const params = url.params;
+      if (params.bvid) {
+        params.aid = abv(params.bvid);
+      }
+      if (params.aid && !Number(params.aid)) {
+        params.aid = abv(params.aid);
+      }
+      paramsSet.forEach((d) => {
+        delete params[d];
+      });
+      paramArr.forEach((d) => {
+        if (params[d[0]]) {
+          if (d[1].includes(params[d[0]])) {
+            delete params[d[0]];
+          }
+        }
+      });
+      url.base = BV2avAll(url.base);
+      url.hash && (url.hash = BV2avAll(url.hash));
+      return url.toJSON();
+    } else
+      return str;
+  }
+  /** 净化URL */
+  location() {
+    this.updateLocation(this.clear(location.href));
+  }
+  /** 更新URL而不触发重定向 */
+  updateLocation(url) {
+    const Url = new self.URL(url);
+    if (Url.host === location.host) {
+      window.history.replaceState(window.history.state, "", url);
+    }
+  }
+  /** 点击回调 */
+  anchorClick(e) {
+    var f = e.target;
+    for (; f && "A" !== f.tagName; ) {
+      f = f.parentNode;
+    }
+    if ("A" !== f?.tagName) {
+      return;
+    }
+    this.anchor([f]);
+  }
+  /** 净化a标签 */
+  anchor(list) {
+    list.forEach((d) => {
+      if (!d.href)
+        return;
+      d.href = this.clear(d.href);
+    });
+  }
+};
+
+// src/core/userstatus.ts
+var userStatus = {
+  /** 开发者模式 */
+  development: true,
+  /** 主页 */
+  index: true,
+  /** toastr */
+  toast: Toastconfig,
+  /** 替换全局顶栏 */
+  header: true,
+  /** 翻页评论区 */
+  comment: true,
+  /** av */
+  av: true,
+  /** 嵌入式播放器 */
+  player: true,
+  /** WebRTC */
+  webRTC: false,
+  /** 充电鸣谢 */
+  elecShow: true,
+  /** 合作UP */
+  staff: false,
+  /** bangumi */
+  bangumi: true,
+  /** 解除限制 */
+  videoLimit: {
+    /** 开关 */
+    status: false,
+    /** 服务器类型 */
+    server: "内置",
+    /** 东南亚（泰区）代理服务器 */
+    th: "api.global.bilibili.com",
+    /** 台湾代理服务器 */
+    tw: "",
+    /** 香港代理服务器 */
+    hk: "",
+    /** 大陆代理服务器 */
+    cn: ""
+  },
+  /** UPOS替换 */
+  uposReplace: {
+    /** 东南亚（泰区） */
+    th: "ks3（金山）",
+    /** 港澳台 */
+    gat: "不替换",
+    /** 一般视频 */
+    nor: "不替换",
+    /** 下载 */
+    download: "不替换"
+  },
+  /** 强制显示bangumi分p */
+  bangumiEplist: false,
+  /** 账户授权 */
+  accessKey: {
+    /** access_key */
+    token: void 0,
+    /** 授权日期 */
+    date: 0,
+    /** 授权日期字符串 */
+    dateStr: ""
+  },
+  /** 稍后再看 */
+  watchlater: true,
+  /** 播单 */
+  playlist: true,
+  /** 全站排行榜 */
+  ranking: true,
+  /** 专栏 */
+  read: true,
+  /** 搜索 */
+  search: true,
+  /** 相簿 */
+  album: true,
+  /** 注册时间 */
+  jointime: false,
+  /** 失效视频 */
+  lostVideo: true,
+  /** 纯视频历史 */
+  history: true,
+  /** 动态里的直播录屏 */
+  liveRecord: false,
+  /** 设置入口样式 */
+  uiEntryType: UiEntryType,
+  /** 自动化操作 */
+  automate: {
+    /** 展开弹幕列表 */
+    danmakuFirst: false,
+    /** 滚动到播放器 */
+    showBofqi: false,
+    /** 自动宽屏 */
+    screenWide: false,
+    /** 自动关弹幕 */
+    noDanmaku: false,
+    /** 自动播放 */
+    autoPlay: false,
+    /** 自动网页全屏 */
+    webFullScreen: false,
+    /** 记忆播放速率 */
+    videospeed: false
+  },
+  /** 关闭抗锯齿 */
+  videoDisableAA: false,
+  /** 禁用直播间挂机检测 */
+  disableSleepChcek: true,
+  /** 禁止上报 */
+  disableReport: true,
+  /** 禁用评论跳转标题 */
+  commentJumpUrlTitle: false,
+  /** 合集 */
+  ugcSection: false,
+  /** 请求的文件类型 */
+  downloadType: ["mp4"],
+  /** 请求无水印源 */
+  TVresource: false,
+  /** 画质 */
+  downloadQn: 127,
+  /** 下载方式 */
+  downloadMethod: "浏览器",
+  /** User-Agent */
+  userAgent: "Bilibili Freedoooooom/MarkII",
+  /** referer */
+  referer: "https://www.bilibili.com",
+  /** 下载目录 */
+  filepath: "",
+  /** aria2 */
+  aria2: {
+    /** 服务器 */
+    server: "http://localhost",
+    /** 端口 */
+    port: 6800,
+    /** 令牌 */
+    token: "",
+    /** 分片数目 */
+    split: 4,
+    /** 分片大小 */
+    size: 20
+  },
+  ef2: {
+    /** 稍后下载 */
+    delay: false,
+    /** 静默下载 */
+    silence: false
+  },
+  /** 点赞功能 */
+  like: false,
+  /** 重构播放器脚本 */
+  bilibiliplayer: true,
+  /** 检查播放器脚本更新 */
+  checkUpdate: true,
+  /** 不登录1080P支持 */
+  show1080p: false,
+  /** 调整顶栏banner样式 */
+  fullBannerCover: false,
+  /** 原生播放器新版弹幕 */
+  dmproto: true,
+  /** 普权弹幕换行 */
+  dmwrap: true,
+  /** 弹幕格式 */
+  dmExtension: "xml",
+  /** 合并已有弹幕 */
+  dmContact: false,
+  /** 分集数据 */
+  episodeData: false,
+  /** 港澳台新番时间表 */
+  timeLine: false,
+  /** 字幕：繁 -> 简 */
+  simpleChinese: true
+};
+
+// src/core/user.ts
+var User = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    this.BLOD.GM.getValue("userStatus", userStatus).then((status) => {
+      status = Object.assign(userStatus, status);
+      const proxy = propertryChangeHook(status, (key, value) => {
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => this.BLOD.GM.setValue("userStatus", status));
+        this.emitChange(key, value);
+      });
+      this.userStatus = proxy;
+      this.initialized = true;
+      while (this.BLOD.userLoadedCallbacks.length) {
+        this.BLOD.userLoadedCallbacks.shift()?.(this.userStatus);
+      }
+    });
+  }
+  /** 用户数据，不应直接使用，请使用\`addCallback\`用户数据回调代替 */
+  userStatus;
+  /** 初始化标记 */
+  initialized = false;
+  /** 更新CD */
+  updating;
+  /** 回调栈 */
+  changes = {};
+  timer;
+  /**
+   * 监听设置改动
+   * @param key 设置键
+   * @param callback 设置项变动时执行的回调，新值将作为第一个参数传入
+   * @returns 用于取消监听的回调
+   */
+  bindChange(key, callback) {
+    this.changes[key] || (this.changes[key] = []);
+    const id = this.changes[key].push(callback);
+    return () => {
+      delete this.changes[key][id - 1];
+    };
+  }
+  /**
+   * 推送设置改动
+   * @param key 设置键
+   * @param newValue 新值
+   */
+  emitChange(key, newValue) {
+    this.changes[key].forEach(async (d) => {
+      d(newValue);
+    });
+  }
+  /** 用户数据回调 */
+  addCallback(callback) {
+    if (typeof callback === "function") {
+      if (this.initialized) {
+        callback(this.userStatus);
+      } else {
+        this.BLOD.userLoadedCallbacks.push(callback);
+      }
+    }
+  }
+  /** 恢复默认数据 */
+  restoreUserStatus() {
+    this.BLOD.GM.deleteValue("userStatus");
+    this.BLOD.toast.warning("已恢复默认设置数据，请<strong>刷新</strong>页面以避免数据紊乱！");
+  }
+  /** 备份设置数据 */
+  outputUserStatus() {
+    this.BLOD.GM.getValue("userStatus", userStatus).then((d) => {
+      saveAs(JSON.stringify(d, void 0, "	"), \`Bilibili-Old-\${timeFormat(void 0, true).replace(/ |:/g, (d2) => "-")}\`, "application/json");
+    });
+  }
+  /** 恢复备份数据 */
+  inputUserStatus() {
+    const msg = ["请选择一个备份的数据文件（.json）", "注意：无效的数据文件可能导致异常！"];
+    const toast = this.BLOD.toast.toast(0, "warning", ...msg);
+    fileRead("application/json").then((d) => {
+      if (d && d[0]) {
+        msg.push(\`读取文件：\${d[0].name}\`);
+        toast.data = msg;
+        toast.type = "info";
+        return readAs(d[0]).then((d2) => {
+          const data = JSON.parse(d2);
+          if (typeof data === "object") {
+            this.BLOD.GM.setValue("userStatus", data);
+            const text = "已恢复设置数据，请<strong>刷新</strong>页面以避免数据紊乱！";
+            msg.push(text);
+            toast.data = msg;
+            toast.type = "success";
+            return alert(text, "刷新页面", [{
+              text: "刷新",
+              callback: () => location.reload()
+            }]);
+          }
+        }).catch((e) => {
+          msg.push("读取文件出错！", e);
+          toast.data = msg;
+          toast.type = "error";
+          debug.error("恢复设置数据", e);
+        });
+      }
+    }).catch((e) => {
+      msg.push(e);
+      toast.data = msg;
+    }).finally(() => {
+      toast.delay = 4;
+    });
+  }
+};
+
+// src/core/video-info.ts
+var VideoInfo = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+  }
+  cids = {};
+  stats = {};
+  get metadata() {
+    const cid = this.BLOD.cid;
+    return cid ? this.cids[cid] : void 0;
+  }
+  get album() {
+    return this.metadata?.album || this.title;
+  }
+  get artist() {
+    return this.metadata?.artist;
+  }
+  get title() {
+    return this.metadata?.title || document.title.slice(0, -26);
+  }
+  get artwork() {
+    return this.metadata?.artwork;
+  }
+  get stat() {
+    const aid = this.BLOD.aid;
+    return aid ? this.stats[aid] : void 0;
+  }
+  /** 数据变动回调栈 */
+  callbacks = [];
+  /**
+   * 数据变动回调
+   * @param callback 数据变动时执行的回调函数
+   * @returns 撤销监听的函数
+   */
+  bindChange(callback) {
+    const id = this.callbacks.push(callback);
+    return () => {
+      delete this.callbacks[id - 1];
+    };
+  }
+  timer;
+  /** 推送数据变动 */
+  emitChange() {
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.callbacks.forEach((d) => d(this)), 100);
+  }
+  /** 从\`IAidDatail\`中提取 */
+  aidDatail(data) {
+    const album = data.title;
+    const artist = data.owner.name;
+    const pic = data.pic.replace("http:", "");
+    data.pages ? data.pages.forEach((d, i) => {
+      this.cids[d.cid] = {
+        album,
+        artist,
+        title: d.part || \`#\${i + 1}\`,
+        artwork: [{ src: pic }]
+      };
+    }) : this.cids[data.cid] = {
+      album,
+      artist,
+      title: \`#1\`,
+      artwork: [{ src: pic }]
+    };
+    this.stats[data.aid] = data.stat;
+    this.emitChange();
+  }
+  /** 从\`IAidInfo\`中提取 */
+  aidInfo(data) {
+    const album = data.title;
+    const artist = data.upper.name;
+    const pic = data.cover.replace("http:", "");
+    data.pages ? data.pages.forEach((d, i) => {
+      this.cids[d.id] = {
+        album,
+        artist,
+        title: d.title || \`#\${i + 1}\`,
+        artwork: [{ src: pic }]
+      };
+    }) : this.cids[data.id] = {
+      album,
+      artist,
+      title: \`#1\`,
+      artwork: [{ src: pic }]
+    };
+  }
+  /** 从\`IBangumiSeasonResponse\`中提取 */
+  bangumiSeason(data) {
+    const album = data.title || data.jp_title;
+    const artist = data.actors || data.staff || data.up_info?.name;
+    const pic = data.cover.replace("http:", "");
+    const bkg_cover = data.bkg_cover?.replace("http:", "");
+    this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
+    this.emitChange();
+  }
+  /** 从\`IBangumiEpisode\`中提取 */
+  bangumiEpisode(data, album, artist, pic, bkg_cover) {
+    data.forEach((d) => {
+      const artwork = [{ src: d.cover.replace("http:", "") }, { src: pic }];
+      bkg_cover && artwork.push({ src: bkg_cover });
+      this.cids[d.cid] = {
+        album,
+        artist,
+        title: d.index_title,
+        artwork
+      };
+    });
+  }
+  toview(data) {
+    const album = data.name;
+    const pic = data.cover.replace("http:", "");
+    data.list.forEach((d) => {
+      const title = d.title;
+      const cover = d.pic.replace("http:", "");
+      const artist = d.owner.name;
+      d.pages.forEach((d2, i) => {
+        this.cids[d2.cid] = {
+          album,
+          artist,
+          title: title + \`(\${d2.part})\`,
+          artwork: [{ src: pic }, { src: cover }]
+        };
+      });
+    });
+    this.emitChange();
+  }
+  /** 设置浏览器媒体信息 */
+  mediaSession() {
+    if (this.metadata) {
+      navigator.mediaSession.metadata = new MediaMetadata({ ...this.metadata });
+    }
+  }
+};
+
+// src/core/webrtc.ts
+var WebTRC = class {
+  static disable() {
+    navigator.getUserMedia = void 0;
+    window.MediaStreamTrack = void 0;
+    window.RTCPeerConnection = void 0;
+    window.RTCSessionDescription = void 0;
+    navigator.mozGetUserMedia = void 0;
+    window.mozMediaStreamTrack = void 0;
+    window.mozRTCPeerConnection = void 0;
+    window.mozRTCSessionDescription = void 0;
+    navigator.webkitGetUserMedia = void 0;
+    window.webkitMediaStreamTrack = void 0;
+    window.webkitRTCPeerConnection = void 0;
+    window.webkitRTCSessionDescription = void 0;
+  }
+};
+
+// src/html/index.html
+var html_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/home/css/home.0.4eadf4209b1762230047120e0a9945a9f3b56fd1.css" />\\r\\n    <style type="text/css">\\r\\n        /* 隐藏失效节点 */\\r\\n        #fixed_app_download,\\r\\n        #app>div.report-wrap-module.elevator-module>div.ver {\\r\\n            display: none;\\r\\n        }\\r\\n\\r\\n        /* 禁用失效节点 */\\r\\n        .bili-tab.rank-tab,\\r\\n        .bili-dropdown.rank-dropdown {\\r\\n            pointer-events: none;\\r\\n        }\\r\\n\\r\\n        /* 资讯区图标 */\\r\\n        .icon.icon_t.icon-news {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA39pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDE0IDc5LjE1MTQ4MSwgMjAxMy8wMy8xMy0xMjowOToxNSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDplMzNhZmQ3OS04ZTViLWQ2NDItOTYxZi0yNDM2MGQyN2JhM2YiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTFEMzQ4MEJBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTFEMzQ4MEFBNUM1MTFFQ0FGQTk5NEVFMjgwODg3M0UiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjBiNzNlZjA5LTA1ZmEtNTM0MC1iMWY3LWE4MTljMjFhYmEzMiIgc3RSZWY6ZG9jdW1lbnRJRD0iYWRvYmU6ZG9jaWQ6cGhvdG9zaG9wOjI2MDJjOTk2LTBiNzQtZDQ0MC1hMzcxLTIxN2NkM2ZlOTgzMyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PsCIXZoAAAi+SURBVHja7Fh7TJvXFT+fwTa2MX5gXjZgg3kEJvICh6YELUujNKNb10ZpWFc17aapSxcpy1YlUjctUbt0L22VMm2NlkXLsqZJWdT0sWwlaZOmCwW1gfIMCSYYDOZhDH6ADdjGvvvOhc8YY8Bru61/9EhX97vnnnvv755z7znnfgwhBD7PxIPPOcWHNxiGWdSp0Wi2eX0+uSxJVuxyOaXIk8nkk1hj2+FwlHGyCoWiMbwfaXLCNRIEsAsFAufU9LSdLxL2jw4O21cCFGlRJpzBAUzTqnX2Qdtlti8/XFir04AqK58RieVgtxinPB6XyFBRRQf19nfDtH10Cr+Rj/XIuNvnnXQJuPFCqcznc0+YgyRoCQaD/ckq1d/HbLaLMQP0zPjmtCFN7Nq45csFzxz4IeTk6ilPJBGDLjMNJAmCmM0zMu4Ci2UEek09YBs0w+jENHR13aV9nS0fTHXe6hRpdbojPT13jy0HkDK44p72QmpKyncl8uQZEiOxY2j5JLT/0E9IfFx8EC0WDQ+WJRqUihNOVz++78nzZ14KafS/QWgJnF+eKCFypWI3Z+pIDS65xTweL7vSULLsxHE8Hj2rkRdq0Rzz/VzhLSOLIEsrtzIsCGXMbobH8DJzS8qjCuMygWAwpP7lKBhhpmAUWc46ZYZy7M+PGaAgMUkb3u7r7YWrV94Bv98PZL7d3NT0mZm6pGQdhLurFQF2dfaowt0C3anbDUODg9DR1hZq28ftnxlAbbaeWi0mgLV1danRHLZAKGQBtgPr+BbxUZM1587DG6+9Bk6nk7aNXV2078b196m2kdACttFRWr98+i+s3MeRniTf+uP90phMjOBUcskinkqlArVGAw0f1Id4uCCC1uXowOv1Qf2NOhAIBHDX2E03guAGzP1UDi3g9/lpvbGsFHL0uaF5sjQptD6Vti5rVYDD/b1aTnuRx3rt+nV0gZHhEdoetVpp7Z50g1AogPGxMdBkZdG612SiG0KQKKfLyQF1pgYK1hRCR3sHCPj80LzJiiQaYXDtVQFmZOeYlzsLKampdCEEGW56BF5RWQk7H6gCuVw+dxxYEPr8PJAmSeHjxibI0mZT+fLNm0EqlcL1a+99umxmzOmJKlxqWLhsOblzZmpraYU7nbfxJtI2mtzn9YImMxMy1GrKS2U3N2QZpGdwcnISfD7vkrndnqn1q2Yzx399lNrP7bCGeLl5emo6JLFEAl9/+KGF7288SM0pSUwEuUIx5zbWroXCoiLgs2bE71y9nsoioVbTM9JDm0NiN0PQcyRKxC2rAmx/Ypdff6IGPaiQu8cikZgWjtCMHOHCXypZHHWQJw7/ngeHNR6RSJqc8jJRjnx0E0t++iLN5UYtff+zhHTaQzM0MFRs88d0Bll1m+saO0KxcqWElgt/keyFWLy0L5IwFUOyDPQOxQQwL0/f8uGNSySWbJdzR5HshVi8tC+SME+E1VLs8HxQlZKyC3O0my13FuVuASyBIC3++TKL7SCbH9PyiVJC8s29TxPMP7lIEpkPxi9RqSD+OtavvPQ8FB0/DX0WKzVjUe1lGLm/FOKS9ayb8BE2ajAkTI+xPg7T/noOhqrKwK/eACn8IH0qZKepmtN+/ofJVW8xkulun51NWs/86W+XH12z5U0hBvPUty4A+f0JMmLez1j2PAYJXh89WbJpE1imJaAWutlavOwxQOKrsyGruR54hw5Pqxu3i7oOfh9uTCXTd4xtfPxfy20o6puELp4ovpoglVfI9v5CaPBPwQWlHWzt3dOHlEoRXoDkNDkok5SQmiRaERhH+B550GaFEkkCtHtm4HmvGhqMTeB4/1VjYpK02mG3t0SbZ5EGERSmPrOB2Xo2swZJaZXQVvxVeKf1FrQ+ooNS93HR2NlzYFLIiNXu8eFkMxNOAcbSCE8g4F5x4d/fySsW8N/4DbPjnBkc7nWgvP4q4FocuJhMLMsvLSDf/lGB3J9FknfeA/iasXS+jUGMTd5K4NK+FOAfe44Z7LopnHv7OsEx7hAqkuciCfsdmovlURlpkhy89WcFWa1+hkgVILS0Anm4wKerqBHAweonXd1N9yLQ3Fw9+pxjywJMksmewTRPf98jkC2eZHrYvIDPruv0Z8OfGzuhbE8pkOpfAsyOgKbQQGuINwC5+RGQzjvAFK8BYh0G3mM7WH76fH86ndv/8iWGbNDDW7e9MDNkhfUBEPBU2ZB7tgGCY/0FfQerC/q7m4yRABf5QVS1w3jzWt/hvdA/JaXgkGZScqCm9haAZhN0GPLh/vRiYDUYWpwxbAJIl8Hsm/+gIClx4Nj6e9u2B4/WnATeE3vhSkc3O5+Bzu1nlc0qYi6iDHd78Syu6Adp5qHJUPLj+V2p9z1O9C80BAsvuMiGdwkRP11L37F6vTaIfhJL+dbt5OBT3yL1b9cQ4h+ec2xsffujK5R39IXfEk4WC8qqD5wkca+4yKYmQgu2sQ/9bzQ/uARgWBb9KxyIE+y+PUF4R7qoQ0XHah60UnAcSORvrdpNN4BtVdE9RLn7Z7Qgf3jMSUFzfARWdtlMx+PYlR7uUQHiTyPUIg7efMJEJ0QNNgy4QxGgd8JPeRzhwqh13BD+aUDZHadM7sjIgWOY94gX50QLIWhUxnIajI92tfGPFv7g8bknoO1Zg1aUkS9k2DNy3LNHOPDQ16CYTbFOmueGbjn2Lq2dxXtg16MZ8M/f1bNuyQi1bR6oa3ZKjmaOwE4yAC5RHpjaP4REYwNk1Mv4cco0UJSpGUfzAzDx+nOHAsHAGXaaiys66mjZCqo/MOXfyG6nnHu/snnKVwRPXWKqDtwLF88PUzkEp01LBLPVTUHixcoR2on5SCVwfhJ9IveHayGxCFqSlcrzozbbqZh/v60YS1nAbpf3zj6TTZgvWBjb7Vs6FvuvnfwjvH74B0aZQv5sIBAwrfaP8FMDjIuLu6ooMGz7TxNT1hkb/bP+wtXkVgT4xT/qLwD+H+jfAgwAa4KbOGyf2aUAAAAASUVORK5CYII=);\\r\\n            background-position: unset;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div id="home-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/1.home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/home/home.4eadf4209b1762230047120e0a9945a9f3b56fd1.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
+
+// src/html/news.html
+var news_default = '<div class="r-con">\\r\\n    <div class="r-con">\\r\\n        <header style="margin-bottom: 14px">\\r\\n            <h3 style="font-size: 18px;font-weight: 400;">资讯分区正式上线啦！</h3>\\r\\n        </header>\\r\\n        <div class="carousel-module">\\r\\n            <div class="panel"><a href="https://www.bilibili.com/v/information" target="_blank"><img\\r\\n                        src="//i0.hdslb.com/bfs/archive/0747d26dbbc3bbf087d47cff49e598a326b0030c.jpg@320w_330h_1c.webp"\\r\\n                        width="260" height="280" /></a></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>';
+
+// src/io/api-index-top-rcmd.ts
+async function apiIndexTopRcmd(data) {
+  const response = await fetch(objUrl(URLS.INDEX_TOP_RCMD, {
+    fresh_type: data?.fresh_type || 3
+  }), {
+    credentials: data?.credentials || "include"
+  });
+  const json = await response.json();
+  return jsonCheck(json).data.item.map((d) => {
+    d.author = d.owner.name;
+    d.play = d.stat.view;
+    d.aid = d.id;
+    return d;
+  });
+}
+
+// src/io/api-newlist.ts
+async function apiNewlist(rid, ps = 30, pn = 1, type = 0) {
+  const response = await fetch(objUrl(URLS.NEWLIST, { rid, type, pn, ps }));
+  const json = await response.json();
+  return jsonCheck(json).data.archives;
+}
+
+// src/io/api-season-rank-list.ts
+async function apiSeasonRankList(data) {
+  const response = await fetch(objUrl(URLS.SEASON_RANK_LIST, {
+    season_type: data.season_type,
+    day: 3
+  }));
+  const json = await response.json();
+  return jsonCheck(json).data.list;
+}
+
+// src/utils/format/unit.ts
+function unitFormat(num = 0) {
+  num = 1 * num || 0;
+  let unit = ["", "万", "亿"], i = unit.length - 1, dex = 1e4 ** i;
+  while (dex > 1) {
+    if (num >= dex) {
+      num = Number((num / dex).toFixed(1));
+      break;
+    }
+    dex = dex / 1e4;
+    i--;
+  }
+  return num + unit[i];
+}
+
+// src/utils/htmlvnode.ts
+var Vnode = class {
+  tagName;
+  props = {};
+  children = [];
+  text;
+  constructor(tagName) {
+    this.tagName = tagName;
+  }
+};
+var Scanner = class {
+  /** HTML */
+  html;
+  /** 当前光标 */
+  pos = 0;
+  /** Vnode */
+  vnode = [];
+  /** 节点名栈 */
+  tagNames = [];
+  /** Vnode栈 */
+  targets = [];
+  /** innerText栈 */
+  text = "";
+  /** 引号栈 */
+  quote = "";
+  /**
+   * 扫描html文本转化为Vnode
+   * @param html html文本
+   */
+  constructor(html) {
+    this.html = html;
+    this.targets.push({ children: this.vnode });
+    while (this.html) {
+      this.organizeTag();
+    }
+    this.textContent();
+  }
+  /** 提取节点名 */
+  organizeTag() {
+    if (!this.quote && this.html[0] === "<") {
+      if (this.html.startsWith(\`</\${this.tagNames.reduce((s, d) => s = d, void 0)}\`)) {
+        this.textContent();
+        this.html = this.html.replace(new RegExp(\`^</\${this.tagNames.reduce((s, d) => s = d, void 0)}>\`), "");
+        this.popNode();
+      } else {
+        this.removeScanned();
+        if (this.html.startsWith("!-- ")) {
+          this.html = this.html.replace(/^!--[\\S\\s]+?-->/, "");
+        }
+        if (/^[a-zA-Z]/.test(this.html)) {
+          this.textContent();
+          const func = [];
+          let stop = false;
+          for (this.pos = 0; this.pos < this.html.length; this.pos++) {
+            if (stop) {
+              this.pos--;
+              break;
+            }
+            switch (this.html[this.pos]) {
+              case " ":
+              case "\\r":
+              case "\\n":
+                func.push(() => this.organizeProp());
+                stop = true;
+                break;
+              case ">":
+                this.html[this.pos - 1] === "/" ? func.push(() => this.popNode()) : func.push(() => this.tagSingle());
+                stop = true;
+                break;
+            }
+          }
+          const tagName = this.html.substring(0, this.pos);
+          const tag = new Vnode(tagName);
+          this.tagNames.push(tagName);
+          this.targets.reduce((s, d) => s = d, void 0).children.push(tag);
+          this.targets.push(tag);
+          this.removeScanned(this.pos + 1);
+          func.forEach((d) => d());
+        }
+      }
+    } else {
+      switch (this.html[0]) {
+        case "'":
+          !this.quote ? this.quote = "'" : this.quote === "'" && (this.quote = "");
+          break;
+        case '"':
+          !this.quote ? this.quote = '"' : this.quote === '"' && (this.quote = "");
+          break;
+        case "\`":
+          !this.quote ? this.quote = "\`" : this.quote === "\`" && (this.quote = "");
+          break;
+      }
+      this.text += this.html[0];
+      this.removeScanned();
+    }
+  }
+  /** 提取属性 */
+  organizeProp() {
+    let value = false;
+    let stop = false;
+    let start = 0;
+    let popd = false;
+    for (this.pos = 0; this.pos < this.html.length; this.pos++) {
+      if (stop)
+        break;
+      switch (this.html[this.pos]) {
+        case '"':
+          value = !value;
+          break;
+        case " ":
+          if (!value) {
+            const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
+            const prop = str.split("=");
+            const key = prop.shift();
+            key && key !== "/" && (this.targets.reduce((s, d) => s = d, void 0).props[key] = prop.join("=") || key);
+            start = this.pos;
+          }
+          break;
+        case ">":
+          if (!value) {
+            stop = true;
+            const str = this.html.substring(start, this.pos).replace(/\\r|\\n|"/g, "").replace(/^ +/, "");
+            const prop = str.split("=");
+            const key = prop.shift();
+            key && key !== "/" && (this.targets.reduce((s, d) => s = d, void 0).props[key] = prop.join("=") || key);
+            if (this.html[this.pos - 1] === "/") {
+              this.popNode();
+              popd = true;
+            }
+          }
+          break;
+      }
+    }
+    if (!popd)
+      this.tagSingle();
+    this.removeScanned(this.pos--);
+  }
+  /** 出栈检查 空元素直接出栈*/
+  tagSingle() {
+    switch (this.tagNames.reduce((s, d) => s = d, void 0)) {
+      case "area":
+      case "base":
+      case "br":
+      case "col":
+      case "colgroup":
+      case "command":
+      case "embed":
+      case "hr":
+      case "img":
+      case "input":
+      case "keygen":
+      case "link":
+      case "meta":
+      case "param":
+      case "path":
+      case "source":
+      case "track":
+      case "wbr":
+        this.popNode();
+        break;
+    }
+  }
+  /** 节点出栈 */
+  popNode() {
+    this.tagNames.splice(this.tagNames.length - 1, 1);
+    this.targets.splice(this.targets.length - 1, 1);
+    this.text = "";
+  }
+  /** 移除已扫描字符长度 默认1位 */
+  removeScanned(length = 1) {
+    this.html = this.html.slice(length);
+  }
+  /** 处理TextContent */
+  textContent() {
+    const text = this.text.replace(/\\r|\\n| /g, "");
+    if (text) {
+      const tag = new Vnode("text");
+      tag.text = this.text;
+      this.targets.reduce((s, d) => s = d, void 0).children.push(tag);
+    }
+    this.text = "";
+  }
+};
+function htmlVnode(html) {
+  return new Scanner(html).vnode;
+}
+
+// src/utils/vdomtool.ts
+var VdomTool = class {
+  vdom;
+  script = [];
+  constructor(html) {
+    if (typeof html === "string") {
+      this.vdom = htmlVnode(html);
+    } else {
+      this.vdom = html;
+    }
+  }
+  /** 生成 DocumentFragment（会过滤script标签，请稍后使用\`loadScript\`方法依次运行所有script） */
+  toFragment() {
+    const fragment = document.createDocumentFragment();
+    this.vdom.forEach((d) => {
+      if (d.tagName === "script") {
+        this.script.push(d);
+      } else
+        fragment.appendChild(this.createElement(d));
+    });
+    return fragment;
+  }
+  /** 根据vdom生成真DOM（过滤script标签） */
+  createElement(element) {
+    if (element.tagName === "text") {
+      return document.createTextNode(element.text);
+    }
+    if (element.tagName === "svg") {
+      return this.createSVG(element);
+    }
+    const node = document.createElement(element.tagName);
+    element.props && Object.entries(element.props).forEach((d) => {
+      node.setAttribute(d[0], d[1]);
+    });
+    element.text && node.appendChild(document.createTextNode(element.text));
+    element.event && Object.entries(element.event).forEach((d) => {
+      node.addEventListener(...d);
+    });
+    element.children && element.children.forEach((d) => {
+      if (d.tagName === "script") {
+        this.script.push(d);
+      } else
+        node.appendChild(this.createElement(d));
+    });
+    return node;
+  }
+  /** svg限定生成方法 */
+  createSVG(element) {
+    const node = document.createElementNS("http://www.w3.org/2000/svg", element.tagName);
+    element.props && Object.entries(element.props).forEach((d) => {
+      node.setAttribute(d[0], d[1]);
+    });
+    element.children && element.children.forEach((d) => {
+      node.appendChild(this.createSVG(d));
+    });
+    return node;
+  }
+  static loopScript(scripts) {
+    return new Promise((r, j) => {
+      const prev = scripts.shift();
+      if (prev) {
+        if (prev.src) {
+          prev.addEventListener("load", () => r(this.loopScript(scripts)));
+          prev.addEventListener("abort", () => r(this.loopScript(scripts)));
+          prev.addEventListener("error", () => r(this.loopScript(scripts)));
+          return document.body.appendChild(prev);
+        }
+        document.body.appendChild(prev);
+        r(this.loopScript(scripts));
+      } else
+        r();
+    });
+  }
+  loadScript() {
+    const scripts = this.script.map((d) => this.createElement(d));
+    return VdomTool.loopScript(scripts);
+  }
+  /** 添加为目标节点的子节点 */
+  appendTo(node) {
+    node.append(this.toFragment());
+  }
+  /** 替换目标节点 */
+  replace(node) {
+    node.replaceWith(this.toFragment());
+  }
+  addEventListener(target, type, listener) {
+    try {
+      const arr2 = target.split("");
+      let dom = this.vdom;
+      let ele;
+      while (dom && arr2.length) {
+        const i = Number(arr2.shift());
+        if (i) {
+          ele = dom[i];
+          dom = ele.children;
+        }
+      }
+      ele.event || (ele.event = {});
+      ele.event[type] = listener;
+    } catch (e) {
+      debug.error(e);
+    }
+  }
+  removeEventListener(target, type) {
+    try {
+      const arr2 = target.split("");
+      let dom = this.vdom;
+      let ele;
+      while (dom && arr2.length) {
+        const i = Number(arr2.shift());
+        if (i) {
+          ele = dom[i];
+          dom = ele.children;
+        }
+      }
+      delete ele.event?.[type];
+    } catch (e) {
+      debug.error(e);
+    }
+  }
+};
+
+// src/io/api-page-header.ts
+async function apiPageHeader(data) {
+  const response = await fetch(objUrl(URLS.PAGE_HEADER, data));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/utils/format/subarray.ts
+function subArray(res, num = 1) {
+  const arr2 = [...res];
+  const out = [];
+  num = num || 1;
+  num = num < arr2.length ? num : arr2.length;
+  while (out.length < num) {
+    var temp = Math.random() * arr2.length >> 0;
+    out.push(arr2.splice(temp, 1)[0]);
+  }
+  return num === 1 ? out[0] : out;
+}
+
+// src/css/avatar-animation.css
+var avatar_animation_default = "/* 鼠标放在顶栏上的动效 */\\r\\n.bili-header-m .profile-info .i-face .face {\\r\\n    border: 0\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info .i-face .pendant {\\r\\n    transform: scale(0.5);\\r\\n    width: 112px;\\r\\n    height: 112px;\\r\\n    left: -41px;\\r\\n    bottom: -46px;\\r\\n    opacity: 0;\\r\\n    transition: opacity .1s ease-in\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face {\\r\\n    left: 8px !important;\\r\\n    top: 0 !important;\\r\\n    height: 32px !important;\\r\\n    width: 32px !important;\\r\\n    transform: translateY(10px) translateX(-16px) scale(2);\\r\\n    transform-origin: top left\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .legalize {\\r\\n    transform: scale(0.5) translate(10px, 15px)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .pendant {\\r\\n    opacity: 1\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face .face {\\r\\n    border: 0;\\r\\n    box-shadow: 0 0 0 2px #fff\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in {\\r\\n    transform: translateY(5px) translateX(-10px) scale(1.75)\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .scale-in .face {\\r\\n    height: 32px;\\r\\n    width: 32px\\r\\n}\\r\\n\\r\\n.bili-header-m .profile-info.on .i-face.scale-in .legalize {\\r\\n    transform: scale(0.5) translate(38px, 48px)\\r\\n}";
+
+// src/css/message.css
+var message_default = "/* 修复消息页样式 */\\r\\n.container[data-v-6969394c] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.container[data-v-1c9150a9] {\\r\\n    height: calc(100vh - 42px) !important;\\r\\n}\\r\\n\\r\\n.im-root,\\r\\n.im-root .im-list-box * {\\r\\n    font-size: 12px;\\r\\n    line-height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box {\\r\\n    width: 100%;\\r\\n    overflow: visible;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-list {\\r\\n    line-height: 42px;\\r\\n    height: 42px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number {\\r\\n    height: 14px;\\r\\n    line-height: 13px;\\r\\n    border-radius: 10px;\\r\\n    padding: 1px 3px;\\r\\n    font-size: 12px;\\r\\n    min-width: 20px;\\r\\n    text-align: center;\\r\\n    color: #fff;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-number.im-center {\\r\\n    top: 14px;\\r\\n    left: 80px;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot {\\r\\n    top: 11px;\\r\\n    right: -10px;\\r\\n    width: 8px;\\r\\n    height: 8px;\\r\\n    border-radius: 100%;\\r\\n}\\r\\n\\r\\n.im-root .im-list-box .im-notify.im-dot.im-center {\\r\\n    top: 16px;\\r\\n    right: 20px;\\r\\n}";
+
+// src/page/header.ts
+var _Header = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    this.oldHeader.className = "z-top-container has-menu";
+    this.hookHeadV2();
+    this.feedCount();
+    poll(() => document.readyState === "complete", () => this.styleClear());
+  }
+  /**
+   * 根据页面返回resourceId
+   * @returns resourceId
+   */
+  static resourceId() {
+    if (location.href.includes("v/douga"))
+      return 1576;
+    if (location.href.includes("/anime"))
+      return 1612;
+    if (location.href.includes("v/music"))
+      return 1580;
+    if (location.href.includes("/guochuang"))
+      return 1920;
+    if (location.href.includes("v/dance"))
+      return 1584;
+    if (location.href.includes("v/game"))
+      return 1588;
+    if (location.href.includes("v/knowledge"))
+      return 1592;
+    if (location.href.includes("v/tech"))
+      return 3129;
+    if (location.href.includes("v/life"))
+      return 1600;
+    if (location.href.includes("v/kichiku"))
+      return 1608;
+    if (location.href.includes("v/fashion"))
+      return 1604;
+    if (location.href.includes("v/ent"))
+      return 1596;
+    if (location.href.includes("v/cinephile"))
+      return 2210;
+    if (location.href.includes("/cinema"))
+      return 1634;
+    return 142;
+  }
+  /** 顶栏分区 */
+  static primaryMenu() {
+    poll(() => document.querySelector("#primary_menu"), (d) => {
+      const vue = d.__vue__;
+      vue.menuList.forEach((d2, i, s) => {
+        switch (d2.name) {
+          case "动画":
+            s[i].sub = [{ "name": "MAD·AMV", "route": "mad", "tid": 24, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 151 }, "desc": "具有一定制作程度的动画或静画的二次创作视频", "url": "//www.bilibili.com/video/douga-mad-1.html" }, { "name": "MMD·3D", "route": "mmd", "tid": 25, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 152 }, "desc": "使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频", "url": "//www.bilibili.com/video/douga-mmd-1.html" }, { "name": "短片·手书·配音", "route": "voice", "tid": 47, "ps": 15, "rps": 10, "desc": "追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音", "url": "//www.bilibili.com/video/douga-voice-1.html" }, { "name": "手办·模玩", "route": "garage_kit", "tid": 210, "ps": 15, "rps": 10, "desc": "手办模玩的测评、改造或其他衍生内容", "url": "" }, { "name": "特摄", "route": "tokusatsu", "tid": 86, "ps": 15, "rps": 10, "desc": "特摄相关衍生视频", "url": "//www.bilibili.com/video/cinephile-tokusatsu.html" }, { "name": "综合", "route": "other", "tid": 27, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 153 }, "desc": "以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容", "url": "//www.bilibili.com/video/douga-else-1.html" }];
+            break;
+          case "音乐":
+            s[i].sub = [{ "name": "原创音乐", "route": "original", "tid": 28, "ps": 15, "rps": 10, "viewHotTag": true, "ad": { "active": true, "dataLocId": 243 }, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "原创歌曲及纯音乐，包括改编、重编曲及remix", "url": "//www.bilibili.com/video/music-original-1.html" }, { "name": "翻唱", "route": "cover", "tid": 31, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 245 }, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "对曲目的人声再演绎视频", "url": "//www.bilibili.com/video/music-Cover-1.html" }, { "name": "演奏", "route": "perform", "tid": 59, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "乐器和非传统乐器器材的演奏作品", "url": "//www.bilibili.com/video/music-perform-1.html" }, { "name": "VOCALOID·UTAU", "route": "vocaloid", "tid": 30, "ps": 15, "rps": 10, "viewHotTag": true, "ad": { "active": true, "dataLocId": 247 }, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作", "url": "//www.bilibili.com/video/music-vocaloid-1.html" }, { "name": "音乐现场", "route": "live", "tid": 29, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等", "url": "//www.bilibili.com/video/music-oped-1.html" }, { "name": "MV", "route": "mv", "tid": 193, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV", "url": "//www.bilibili.com/video/music-coordinate-1.html" }, { "name": "乐评盘点", "route": "commentary", "tid": 243, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等", "url": "//www.bilibili.com/video/music-collection-1.html" }, { "name": "音乐教学", "route": "tutorial", "tid": 244, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "以音乐教学为目的的内容", "url": "//www.bilibili.com/video/music-collection-1.html" }, { "name": "音乐综合", "route": "other", "tid": 130, "ps": 15, "rps": 10, "viewHotTag": true, "dpConfig": [{ "name": "一日", "value": 1 }, { "name": "三日", "value": 3 }], "desc": "所有无法被收纳到其他音乐二级分区的音乐类视频", "url": "//www.bilibili.com/video/music-collection-1.html" }, { "name": "音频", "customZone": "Audio", "route": "audio", "url": "//www.bilibili.com/audio/home?musicType=music" }, { "name": "说唱", "url": "//www.bilibili.com/v/rap" }];
+            break;
+          case "科技":
+            s[i].name = "知识";
+            s[i].route = "knowledge";
+            s[i].sub = [{ "name": "科学科普", "route": "science", "tid": 201, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 261 }, "desc": "回答你的十万个为什么" }, { "name": "社科·法律·心理", "route": "social_science", "tid": 124, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 263 }, "desc": "基于社会科学、法学、心理学展开或个人观点输出的知识视频" }, { "name": "人文历史", "route": "humanity_history", "tid": 228, "ps": 15, "rps": 10, "desc": "看看古今人物，聊聊历史过往，品品文学典籍" }, { "name": "财经商业", "route": "business", "tid": 207, "ps": 15, "rps": 10, "desc": "说金融市场，谈宏观经济，一起畅聊商业故事" }, { "name": "校园学习", "route": "campus", "tid": 208, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 265 }, "desc": "老师很有趣，学生也有才，我们一起搞学习" }, { "name": "职业职场", "route": "career", "tid": 209, "ps": 15, "rps": 10, "desc": "职业分享、升级指南，一起成为最有料的职场人" }, { "name": "设计·创意", "route": "design", "tid": 229, "ps": 15, "rps": 10, "desc": "天马行空，创意设计，都在这里" }, { "name": "野生技能协会", "route": "skill", "tid": 122, "ps": 15, "rps": 10, "desc": "技能党集合，是时候展示真正的技术了" }];
+            break;
+          case "数码":
+            s[i].name = "科技";
+            s[i].route = "tech";
+            s[i].sub = [{ "name": "数码", "route": "digital", "tid": 95, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "科技数码产品大全，一起来做发烧友", "url": "#" }, { "name": "软件应用", "route": "application", "tid": 230, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "超全软件应用指南", "url": "#" }, { "name": "计算机技术", "route": "computer_tech", "tid": 231, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "研究分析、教学演示、经验分享......有关计算机技术的都在这里", "url": "#" }, { "name": "科工机械", "route": "industry", "tid": 232, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "从小芯片到大工程，一起见证科工力量", "url": "#" }, { "name": "极客DIY", "route": "diy", "tid": 233, "ps": 15, "rps": 10, "viewHotTag": true, "desc": "炫酷技能，极客文化，硬核技巧，准备好你的惊讶", "url": "#" }];
+            break;
+          case "生活":
+            s[i].sub = [{ "name": "搞笑", "route": "funny", "tid": 138, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 273 }, "desc": "各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频", "url": "//www.bilibili.com/video/ent_funny_1.html", "locid": 4204, "recommendId": 4210, "slider": { "width": 620, "height": 220 }, "customComponent": { "name": "Energy", "leftId": 4212, "rightId": 4218, "rightType": "slide" } }, { "name": "家居房产", "route": "home", "tid": 239, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 275 }, "desc": "与买房、装修、居家生活相关的分享", "url": "#" }, { "name": "手工", "route": "handmake", "tid": 161, "ps": 15, "rps": 10, "desc": "手工制品的制作过程或成品展示、教程、测评类视频", "url": "//www.bilibili.com/video/ent-handmake-1.html" }, { "name": "绘画", "route": "painting", "tid": 162, "ps": 15, "rps": 10, "desc": "绘画过程或绘画教程，以及绘画相关的所有视频", "url": "//www.bilibili.com/video/ent-painting-1.html" }, { "name": "日常", "route": "daily", "tid": 21, "ps": 15, "rps": 10, "desc": "记录日常生活，分享生活故事", "url": "//www.bilibili.com/video/ent-life-1.html" }];
+            break;
+          case "鬼畜":
+            s[i].sub = [{ "name": "鬼畜调教", "route": "guide", "tid": 22, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 285 }, "desc": "使用素材在音频、画面上做一定处理，达到与BGM一定的同步感", "url": "//www.bilibili.com/video/ent-Kichiku-1.html" }, { "name": "音MAD", "route": "mad", "tid": 26, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 287 }, "desc": "使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件", "url": "//www.bilibili.com/video/douga-kichiku-1.html" }, { "name": "人力VOCALOID", "route": "manual_vocaloid", "tid": 126, "ps": 15, "rps": 10, "desc": "将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术", "url": "//www.bilibili.com/video/kichiku-manual_vocaloid-1.html" }, { "name": "鬼畜剧场", "route": "theatre", "tid": 216, "ps": 15, "rps": 10, "desc": "使用素材进行人工剪辑编排的有剧情的作品" }, { "name": "教程演示", "route": "course", "tid": 127, "ps": 10, "rps": 6, "rightComponent": { "name": "CmImgList", "id": 148 }, "ad": { "active": true, "dataLocId": 289 }, "hideDropdown": false, "desc": "鬼畜相关的教程演示", "url": "//www.bilibili.com/video/kichiku-course-1.html" }];
+            break;
+          case "时尚":
+            s[i].sub = [{ "name": "美妆护肤", "route": "makeup", "tid": 157, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 279 }, "desc": "彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评", "url": "//www.bilibili.com/video/fashion-makeup-fitness-1.html" }, { "name": "穿搭", "route": "clothing", "tid": 158, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 281 }, "desc": "穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等", "url": "//www.bilibili.com/video/fashion-clothing-1.html" }, { "name": "时尚潮流", "route": "trend", "tid": 159, "ps": 15, "rps": 10, "desc": "时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普", "url": "#" }];
+            break;
+          case "广告":
+            s[i].name = "资讯";
+            s[i].route = "information";
+            s[i].tid = 202;
+            s[i].sub = [{ "name": "热点", "route": "hotspot", "tid": 203, "ps": 18, "rps": 10, "desc": "全民关注的时政热门资讯" }, { "name": "环球", "route": "global", "tid": 204, "ps": 18, "rps": 10, "desc": "全球范围内发生的具有重大影响力的事件动态" }, { "name": "社会", "route": "social", "tid": 205, "ps": 18, "rps": 10, "desc": "日常生活的社会事件、社会问题、社会风貌的报道" }, { "name": "综合", "route": "multiple", "tid": 206, "ps": 18, "rps": 10, "desc": "除上述领域外其它垂直领域的综合资讯" }];
+            break;
+          case "娱乐":
+            s[i].sub = [{ "name": "综艺", "route": "variety", "tid": 71, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 267 }, "desc": "所有综艺相关，全部一手掌握！", "url": "//www.bilibili.com/video/ent-variety-1.html" }, { "name": "娱乐杂谈", "route": "talker", "tid": 241, "ps": 15, "rps": 10, "ad": { "active": true, "dataLocId": 269 }, "desc": "娱乐人物解读、娱乐热点点评、娱乐行业分析" }, { "name": "粉丝创作", "route": "fans", "tid": 242, "ps": 15, "rps": 10, "desc": "粉丝向创作视频" }, { "name": "明星综合", "route": "celebrity", "tid": 137, "ps": 15, "rps": 10, "desc": "娱乐圈动态、明星资讯相关" }];
+            break;
+        }
+      });
+    });
+    this.plaza();
+    this.indexIcon();
+    this.styleFix();
+  }
+  static banner() {
+    jsonpHook.async("api.bilibili.com/x/web-show/res/loc", void 0, async (url) => {
+      const obj = new URL(url);
+      obj.searchParams.delete("callback");
+      let loc = this.record[url];
+      let header = this.record[this.rid];
+      let rqs;
+      if (!loc || !header) {
+        rqs = await Promise.all([
+          fetch(obj.toJSON()).then((d) => d.json()),
+          apiPageHeader({ resource_id: this.rid })
+        ]);
+        loc = this.record[url] = rqs[0];
+        header = this.record[this.rid] = rqs[1];
+      }
+      loc.data && this.locs.forEach((d) => {
+        loc.data[d] && (loc.data[d][0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png", loc.data[d][0].litpic = header && header.litpic, loc.data[d][0].url = header && header.url || "", loc.data[d][0].title = header && header.name || "");
+        if (url.includes("loc?") && obj.searchParams.get("id") == String(d)) {
+          loc.data[0].pic = header && header.pic || "//i0.hdslb.com/bfs/activity-plat/static/20171220/68a052f664e8414bb594f9b00b176599/images/90w1lpp6ry.png";
+          loc.data[0].litpic = header && header.litpic || "";
+          loc.data[0].url = header && header.url || "";
+          loc.data[0].title = header && header.name || "";
+        }
+      });
+      return loc;
+    }, false);
+  }
+  /** 顶栏广场 */
+  static plaza() {
+    jsonpHook.async("api.bilibili.com/plaza/banner", () => true, async () => {
+      return { "code": 0, "result": [{ "link": "https://www.bilibili.com/blackboard/x/act_list", "end": 1640966407, "begin": 1456709887, "title": "bilibili 活动", "cover": "http://i0.hdslb.com/bfs/square/6830d0e479eee8cc9a42c3e375ca99a5147390cd.jpg", "id": 9, "created_ts": 1491386053 }, { "link": "http://www.bilibili.com/blackboard/topic_list.html", "end": 1640966418, "begin": 1544258598, "title": "话题列表", "cover": "http://i0.hdslb.com/bfs/square/b1b00a0c3ce8570b48277ae07a2e55603a4a4ddf.jpg", "id": 17, "created_ts": 1491386030 }] };
+    }, false);
+  }
+  /** 顶栏动图 */
+  static indexIcon() {
+    jsonpHook.async("api.bilibili.com/x/web-interface/index/icon", void 0, async () => {
+      const data = await fetch("https://www.bilibili.com/index/index-icon.json").then((d) => d.json());
+      return {
+        code: 0,
+        data: subArray(data.fix),
+        message: "0",
+        ttl: 1
+      };
+    }, false);
+  }
+  /** 消息页面样式 */
+  static message() {
+    addCss(message_default, "message");
+  }
+  /** 顶栏动态记录参数失效，另行找补 */
+  static videoOffset() {
+    if (uid) {
+      const offset2 = getCookies()[\`bp_video_offset_\${uid}\`];
+      if (offset2) {
+        setCookie(\`bp_t_offset_\${uid}\`, offset2);
+      }
+    }
+  }
+  /** 迷你顶栏 */
+  miniHeader() {
+    this.oldHeader.classList.remove("has-menu");
+  }
+  /** 是否mini顶栏 */
+  static isMiniHead(d) {
+    return location.href.includes("blackboard/topic_list") || location.href.includes("blackboard/x/act_list") || document.querySelector(".large-header") || document.querySelector(".bili-banner") || d?.getAttribute("type") == "all" ? false : true;
+  }
+  /** 监听新版顶栏 */
+  hookHeadV2() {
+    poll(() => {
+      return document.querySelector("#internationalHeader") || document.querySelector("#biliMainHeader") || document.querySelector("#bili-header-container") || document.querySelector("#home_nav") || document.querySelector(".bili-header__bar");
+    }, (d) => {
+      _Header.isMiniHead(d) && this.miniHeader();
+      this.loadOldHeader(d);
+    });
+    poll(() => document.querySelector(".z_top_container"), (d) => {
+      this.loadOldHeader(d);
+      document.querySelector(".header").style.display = "none";
+    });
+    poll(() => document.querySelector(".international-footer"), (d) => this.loadOldFooter(d));
+    poll(() => document.querySelector("#biliMainFooter"), (d) => this.loadOldFooter(d));
+  }
+  /** 已加载旧版顶栏 */
+  oldHeadLoaded = false;
+  /** 旧版顶栏节点 */
+  oldHeader = document.createElement("div");
+  /** 加载旧版顶栏 */
+  loadOldHeader(target) {
+    if (target) {
+      if (target.id === ".bili-header__bar") {
+        target = target.parentElement?.parentElement;
+      }
+      target.style.display = "none";
+      target.hidden = true;
+    }
+    if (this.oldHeadLoaded)
+      return;
+    this.oldHeadLoaded = true;
+    addCss("#internationalHeader,#biliMainHeader,#bili-header-container{display: none;}");
+    document.body.insertBefore(this.oldHeader, document.body.firstChild);
+    (window.jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js")).then(() => loadScript("//s1.hdslb.com/bfs/seed/jinkela/header/header.js")).then(() => {
+      _Header.styleFix();
+    });
+    _Header.primaryMenu();
+    _Header.banner();
+  }
+  loadOldFooter(target) {
+    addElement("div", { class: "footer bili-footer report-wrap-module" }, void 0, void 0, void 0, target);
+    (window.jQuery ? Promise.resolve() : loadScript("//static.hdslb.com/js/jquery.min.js")).then(() => loadScript("//static.hdslb.com/common/js/footer.js")).then(() => {
+      target && (target.style.display = "none");
+      this.styleClear();
+      addCss(".bili-footer {position: relative;}");
+      document.getElementsByClassName("bili-header-m")[1]?.remove();
+    });
+  }
+  /** 顶栏样式修复 */
+  static styleFix() {
+    addCss(".nav-item.live {width: auto;}.lt-row {display: none !important;} .bili-header-m #banner_link{background-size: cover;background-position: center !important;}", "lt-row-fix");
+    addCss(avatar_animation_default, "avatarAnimation");
+    this.fullBannerCover && addCss(".bili-header-m #banner_link{height: 9.375vw !important;min-width: 1000px;min-height: 155px;max-height: 240px;}");
+  }
+  /** 禁用新版顶栏相关样式 */
+  async styleClear() {
+    const d = document.styleSheets;
+    for (let i = 0; i < d.length; i++) {
+      (d[i].href?.includes("laputa-footer") || d[i].href?.includes("laputa-header")) && (d[i].disabled = true);
+    }
+    _Header.styleFix();
+  }
+  /** 顶栏动态直播回复数目接口失效，强制标记为0 */
+  feedCount() {
+    xhrHook.async("api.live.bilibili.com/ajax/feed/count", void 0, async () => {
+      const response = '{ "code": 0, "data": { "count": 0 }, "message": "0" }';
+      return { response, responseText: response };
+    }, false);
+  }
+};
+var Header = _Header;
+/** locs列表 */
+__publicField(Header, "locs", [1576, 1612, 1580, 1920, 1584, 1588, 1592, 3129, 1600, 1608, 1604, 1596, 2210, 1634, 142]);
+/** 缓存已请求内容 */
+__publicField(Header, "record", {});
+/** 资源id */
+__publicField(Header, "rid", _Header.resourceId());
+__publicField(Header, "fullBannerCover", false);
+
+// src/page/page.ts
+var Page = class {
+  /** 页面框架vdom */
+  vdom;
+  /** 初始化完成 */
+  initilized = false;
+  /**
+   * @param html 页面框架
+   */
+  constructor(html) {
+    this.vdom = new VdomTool(html);
+    Reflect.defineProperty(window, "_babelPolyfill", {
+      configurable: true,
+      set: () => true,
+      get: () => void 0
+    });
+  }
+  /** 重写页面 */
+  updateDom() {
+    const title = document.title;
+    this.vdom.replace(document.documentElement);
+    Reflect.deleteProperty(window, "PlayerAgent");
+    Reflect.deleteProperty(window, "webpackJsonp");
+    this.vdom.loadScript().then(() => this.loadedCallback());
+    title && !title.includes("404") && (document.title = title);
+  }
+  /** 重写完成回调 */
+  loadedCallback() {
+    this.initilized = true;
+    poll(() => document.readyState === "complete", () => {
+      document.querySelector("#jvs-cert") || window.dispatchEvent(new ProgressEvent("load"));
+    });
+  }
+};
+
+// src/page/index.ts
+var __INITIAL_STATE__ = {
+  locsData: {
+    23: null,
+    29: null,
+    31: null,
+    34: null,
+    40: null,
+    42: null,
+    44: null,
+    142: null
+  },
+  recommendData: null
+};
+var PageIndex = class extends Page {
+  constructor(BLOD2) {
+    super(html_default);
+    this.BLOD = BLOD2;
+    window.__INITIAL_STATE__ = __INITIAL_STATE__;
+    this.updateDom();
+    this.locsData();
+    this.recommendData();
+    this.ranking();
+    this.roomRecommend();
+    this.newlist();
+    this.region();
+    this.BLOD.status.timeLine && this.timeLine();
+    Header.primaryMenu();
+    Header.banner();
+  }
+  locsData() {
+    apiWebshowLocs({ ids: [4694, 29, 31, 34, 40, 42, 44] }).then((d) => {
+      __INITIAL_STATE__.locsData[23] = this.adblock(d[4694]);
+      __INITIAL_STATE__.locsData[29] = this.adblock(d[29]);
+      __INITIAL_STATE__.locsData[31] = this.adblock(d[31]);
+      __INITIAL_STATE__.locsData[34] = this.adblock(d[34]);
+      __INITIAL_STATE__.locsData[40] = this.adblock(d[40]);
+      __INITIAL_STATE__.locsData[42] = this.adblock(d[42]);
+      __INITIAL_STATE__.locsData[44] = this.adblock(d[44]);
+    }).catch((e) => {
+      this.BLOD.toast.error("locsData Error!", e)();
+    });
+  }
+  recommendData() {
+    apiIndexTopRcmd().then((d) => {
+      if (uid) {
+        __INITIAL_STATE__.recommendData = d;
+        poll(() => document.querySelector(".rec-btn.prev"), () => {
+          addElement(
+            "span",
+            { class: "rec-btn prev" },
+            void 0,
+            "刷新",
+            void 0,
+            document.querySelector(".rec-btn.prev")
+          ).addEventListener("click", () => {
+            apiIndexTopRcmd().then((d2) => __INITIAL_STATE__.recommendData = d2);
+          });
+          addElement(
+            "span",
+            { class: "rec-btn next" },
+            void 0,
+            "刷新",
+            void 0,
+            document.querySelector(".rec-btn.next")
+          ).addEventListener("click", () => {
+            apiIndexTopRcmd().then((d2) => __INITIAL_STATE__.recommendData = d2);
+          });
+        });
+      } else {
+        const one = d.splice(0, 10);
+        const two = d.splice(0, 10);
+        __INITIAL_STATE__.recommendData = [...one];
+        jsonpHook.async("api.bilibili.com/x/web-interface/ranking/index", void 0, async (str) => {
+          const obj = urlObj(str);
+          if (obj) {
+            if (obj.day == "7") {
+              return { code: 0, data: two, message: "0", ttl: 1 };
+            } else if (obj.day == "1") {
+              return { code: 0, data: d, message: "0", ttl: 1 };
+            }
+            return { code: 0, data: one, message: "0", ttl: 1 };
+          }
+        }, false);
+      }
+    }).catch((e) => {
+      this.BLOD.toast.error("recommendData Error!", e)();
+    });
+  }
+  /** 修复分区排行 */
+  ranking() {
+    poll(() => document.querySelector("#ranking_ad"), () => {
+      const vue = document.querySelector("#app > div.report-wrap-module.elevator-module").__vue__;
+      const ranking_ad = document.querySelector("#ranking_ad").__vue__;
+      const ranking_technology = document.querySelector("#ranking_technology").__vue__;
+      const ranking_digital = document.querySelector("#ranking_digital").__vue__;
+      vue.config[13].morelink = "/v/information/";
+      vue.config[13].name = "资讯";
+      vue.config[13].tid = 202;
+      vue.config[13].type = "news";
+      vue.config[8].morelink = "/v/knowledge/";
+      vue.config[8].name = "知识";
+      vue.config[9].morelink = "/v/tech/";
+      vue.config[9].name = "科技";
+      ranking_ad.config.morelink = "/v/information/";
+      ranking_ad.config.name = "资讯";
+      ranking_ad.config.tid = 202;
+      ranking_ad.config.type = "news";
+      ranking_technology.config.morelink = "/v/knowledge/";
+      ranking_technology.config.name = "知识";
+      ranking_digital.config.morelink = "/v/tech/";
+      ranking_digital.config.name = "科技";
+      poll(() => document.querySelector("#ranking_news"), (d) => {
+        new VdomTool(news_default).replace(d);
+      });
+    });
+  }
+  /** 修复直播推荐 */
+  roomRecommend() {
+    xhrHook("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRec", (args) => {
+      args[1] = args[1].includes("List") ? args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecList", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getList?platform=web") : args[1].replace("api.live.bilibili.com/room/v1/RoomRecommend/biliIndexRecMore", "api.live.bilibili.com/xlive/web-interface/v1/webMain/getMoreRecList?platform=web");
+    }, (obj) => {
+      let response = obj.responseText?.replace(/preview_banner_list/, "preview").replace(/ranking_list/, "ranking").replace(/recommend_room_list/, "recommend");
+      if (response) {
+        response = JSON.parse(response);
+        response.data.text_link = { text: "233秒居然能做这些！", link: "//vc.bilibili.com" };
+        if (response.data.recommend) {
+          for (let i = 0; i < response.data.recommend.length; i++) {
+            response.data.recommend[i].pic = response.data.recommend[i].cover;
+            response.data.recommend[i].link = "//live.bilibili.com" + response.data.recommend[i].link;
+          }
+        }
+        if (response.data.preview)
+          for (let i = 0; i < response.data.preview.length; i++)
+            response.data.preview[i].url = response.data.preview[i].link;
+        obj.response = obj.responseText = JSON.stringify(response);
+      }
+    }, false);
+  }
+  /** 用户热点最新投稿修复资讯区最新投稿 */
+  newlist() {
+    jsonpHook(["newlist", "rid=202"], (url) => url.replace("rid=202", "rid=203"), void 0, false);
+  }
+  /** 修正电影/电视剧/纪录片排行 */
+  region() {
+    jsonpHook("api.bilibili.com/x/web-interface/ranking/region", (url) => {
+      const obj = new URL(url);
+      let arr2 = void 0;
+      switch (obj.searchParams.get("rid")) {
+        case "23":
+          arr2 = [document.querySelector("#ranking_movie"), 2, "/ranking/cinema/23/0/3"];
+          break;
+        case "11":
+          arr2 = [document.querySelector("#ranking_teleplay"), 5, "/ranking/cinema/11/0/3"];
+          break;
+        case "177":
+          arr2 = [document.querySelector("#ranking_documentary"), 3, "/ranking/cinema/177/0/3"];
+          break;
+      }
+      if (arr2) {
+        apiSeasonRankList({ season_type: arr2[1] }).then((d) => {
+          let html = \`<header class="rank-head"><h3>排行</h3><div class="bili-dropdown rank-dropdown"><span class="selected">三日</span><i class="icon icon-arrow-down"></i><ul class="dropdown-list"><li class="dropdown-item" style="display: none;">三日</li><li class="dropdown-item">一周</li></ul></div></header><div class="rank-list-wrap"><ul class="bangumi-rank-list rank-list">\`;
+          for (let i = 0; i < 8; i++) {
+            html += \`<li class="rank-item\${i < 3 ? " highlight" : ""}"><i class="ri-num">\${i + 1}</i><a href="\${d[i].url}" target="_blank" title="\${d[i].title} 播放:\${d[i].stat.view}" class="ri-info-wrap"><p class="ri-title">\${d[i].title}</p><span class="ri-total">\${d[i].new_ep.index_show}</span></a></li>\`;
+          }
+          html += \`</ul></div><a href="\${arr2[2]}" target="_blank" class="more-link">查看更多<i class="icon icon-arrow-r"></i></a>\`;
+          const vnode = htmlVnode(html);
+          vnode[1].children[0].children?.forEach((t, i) => {
+            let node;
+            t.event = {
+              "mouseover": (e) => {
+                const target = e.target;
+                const nodes = \`<div class="bangumi-info-module" style="left: \${target.getBoundingClientRect().left}px; top: \${getTotalTop(target) - 150}px;"><div class="v-preview clearfix"><div class="lazy-img cover"><img alt="\${d[i].title}" src="\${d[i].cover.replace("http:", "")}@72w_72h.webp" /></div><div><p class="title">\${d[i].title}</p><p class="desc">\${d[i].new_ep.index_show}</p></div></div><div class="v-data"><span class="play"><i class="icon"></i>\${unitFormat(d[i].stat.view)}</span><span class="danmu"><i class="icon"></i>\${unitFormat(d[i].stat.danmaku)}</span><span class="fav"><i class="icon"></i>\${unitFormat(d[i].stat.follow)}</span></div></div>\`;
+                node = new VdomTool(nodes).toFragment().children[0];
+                document.body.appendChild(node);
+              },
+              "mouseout": () => node.remove()
+            };
+          });
+          arr2[0].replaceChildren(new VdomTool(vnode).toFragment());
+        }).catch((e) => {
+          debug.error(arr2[0], e);
+        });
+      }
+      return url;
+    }, void 0, false);
+  }
+  adblock(arr2) {
+    return arr2?.filter((d) => !d.is_ad && d.id);
+  }
+  /** 港澳台新番时间表 */
+  timeLine() {
+    poll(() => document.querySelector("#bili_bangumi > .bangumi-module")?.__vue__, (vue) => {
+      apiNewlist(33).then(async (d) => {
+        const eps = d.reduce((s, d2) => {
+          if (d2.redirect_url && d2.owner.mid === 11783021) {
+            const arr2 = d2.redirect_url.split("/");
+            const ep = arr2.at(-1);
+            if (ep) {
+              ep.replace("d+", (e) => d2.episode_id = e);
+              s[ep] = d2;
+            }
+          }
+          return s;
+        }, {});
+        const cards = await apiArticleCards(Object.keys(eps));
+        Object.entries(cards).forEach((d2) => {
+          if (eps[d2[0]]) {
+            Object.assign(eps[d2[0]], d2[1]);
+          }
+        });
+        const timingData = vue.timingData;
+        Object.values(eps).forEach((d2) => {
+          const date = new Date(d2.pubdate * 1e3);
+          for (let i = timingData.length - 1; i >= 0; i--) {
+            if (date.getDay() + 1 === timingData[i].day_of_week) {
+              timingData[i].episodes.push({
+                cover: d2.cover || d2.pic,
+                delay: 0,
+                delay_id: 0,
+                delay_index: "",
+                delay_reason: "",
+                ep_cover: d2.cover || d2.pic,
+                episode_id: d2.episode_id,
+                follows: d2.follow_count,
+                plays: d2.play_count,
+                pub_index: d2.desc,
+                pub_time: \`\${integerFormat(date.getHours())}:\${integerFormat(date.getMinutes())}\`,
+                pub_ts: d2.pubdate,
+                published: 1,
+                season_id: d2.season_id,
+                square_cover: d2.cover || d2.pic,
+                title: d2.title
+              });
+              break;
+            }
+          }
+        });
+        vue.timingData = timingData;
+      }).catch((e) => {
+        debug.error("港澳台新番时间表", e);
+      });
+    });
+  }
 };
 
 // src/io/api-like.ts
@@ -10686,461 +17769,14 @@ var Like = class extends HTMLSpanElement {
 };
 customElements.get(\`like-\${"855f368"}\`) || customElements.define(\`like-\${"855f368"}\`, Like, { extends: "span" });
 
-// src/io/api-stat.ts
-async function apiStat(aid) {
-  const response = await fetch(objUrl(URLS.STAT, { aid }));
-  const json = await response.json();
-  return jsonCheck(json).data;
-}
+// src/css/uplist.css
+var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
 
-// src/page/bangumi.ts
-var PageBangumi = class extends Page {
-  constructor(BLOD2) {
-    super(bangumi_default);
-    this.BLOD = BLOD2;
-    Reflect.deleteProperty(window, "__INITIAL_STATE__");
-    this.like = new Like(this.BLOD);
-    new Comment(BLOD2);
-    window.__Iris__ = true;
-    this.pgc = true;
-    location.href.replace(/[sS][sS]\\d+/, (d) => this.ssid = Number(d.substring(2)));
-    location.href.replace(/[eE][pP]\\d+/, (d) => this.epid = Number(d.substring(2)));
-    this.updateDom();
-    this.recommend();
-    this.seasonCount();
-    BLOD2.status.videoLimit?.status && this.videoLimit();
-    this.related();
-    this.initialState();
-    this.enLike();
-    this.episodeData();
-    Header.primaryMenu();
-    Header.banner();
-  }
-  like;
-  get ssid() {
-    return this.BLOD.ssid;
-  }
-  set ssid(v) {
-    this.BLOD.ssid = v;
-  }
-  get epid() {
-    return this.BLOD.epid;
-  }
-  set epid(v) {
-    this.BLOD.epid = v;
-  }
-  get th() {
-    return this.BLOD.th;
-  }
-  set th(v) {
-    this.BLOD.th = v;
-  }
-  get limit() {
-    return this.BLOD.limit;
-  }
-  set limit(v) {
-    this.BLOD.limit = v;
-  }
-  get pgc() {
-    return this.BLOD.pgc;
-  }
-  set pgc(v) {
-    this.BLOD.pgc = v;
-  }
-  /** 字幕暂存 */
-  subtitles = [];
-  /** 修复：末尾番剧推荐 */
-  recommend() {
-    xhrHook("api.bilibili.com/pgc/web/recommend/related/recommend", (args) => {
-      args[1] = args[1].replace("web/recommend", "season/web");
-    }, (r) => {
-      try {
-        const result = jsonCheck(r.response);
-        result.result = result.data.season;
-        r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
-        propertyHook.modify(window, "getPlayerExtraParams", (d) => {
-          const res = d();
-          res.recommend = result.result;
-          return () => res;
-        });
-      } catch (e) {
-      }
-    });
-  }
-  /** 修复追番数据 */
-  seasonCount() {
-    xhrHook("bangumi.bilibili.com/ext/web_api/season_count", (args) => {
-      args[1] = args[1].replace("bangumi.bilibili.com/ext/web_api/season_count", "api.bilibili.com/pgc/web/season/stat");
-    }, (r) => {
-      try {
-        const result = jsonCheck(r.response);
-        result.result.favorites = result.result.follow;
-        r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
-      } catch (e) {
-      }
-    }, true);
-  }
-  /** 解除区域限制（重定向模式） */
-  videoLimit() {
-    xhrHook("bangumi.bilibili.com/view/web_api/season/user/status", void 0, (res) => {
-      try {
-        const data = res.responseType === "json" ? res.response : JSON.parse(res.response);
-        data.result.area_limit = 0;
-        data.result.ban_area_show = 0;
-        res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
-      } catch (e) {
-      }
-    }, false);
-  }
-  /** 修复相关视频推荐 接口来自md页面 */
-  related() {
-    const related = {};
-    xhrHook.async("x/web-interface/archive/related", () => window.__INITIAL_STATE__?.mediaInfo?.title, async () => {
-      let response = { code: 0, data: [], message: "0" };
-      if (related[window.__INITIAL_STATE__?.mediaInfo?.title]) {
-        response.data = related[window.__INITIAL_STATE__.mediaInfo.title];
-      } else {
-        await apiTagInfo(window.__INITIAL_STATE__.mediaInfo.title).then((d) => {
-          return apiTagTop(d.tag_id);
-        }).then((d) => {
-          response.data = related[window.__INITIAL_STATE__.mediaInfo.title] = d;
-        }).catch((e) => {
-          debug.error("相关视频推荐", e);
-        });
-      }
-      return { response, responseType: "json", responseText: JSON.stringify(response) };
-    }, false);
-  }
-  /** 初始化\`__INITIAL_STATE__\` */
-  initialState() {
-    const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
-    Promise.allSettled([apiBangumiSeason(data), apiSeasonStatus(data), new Promise((r) => poll(() => this.initilized, r))]).then((d) => d.map((d2) => d2.status === "fulfilled" && d2.value)).then(async (d) => {
-      const t = window.__INITIAL_STATE__;
-      const bangumi = d[0];
-      const status = d[1];
-      if (status) {
-        const i = status.progress ? status.progress.last_ep_id : -1, n = status.progress ? status.progress.last_ep_index : "", s = status.progress ? status.progress.last_time : 0, o = status.vip_info || {};
-        !this.epid && i > 0 && (this.epid = i);
-        t.userStat = {
-          loaded: true,
-          error: void 0 === status.pay,
-          follow: status.follow || 0,
-          pay: status.pay || 0,
-          payPackPaid: status.pay_pack_paid || 0,
-          sponsor: status.sponsor || 0,
-          watchProgress: {
-            lastEpId: 0 === i ? -1 : i,
-            lastEpIndex: n,
-            lastTime: s
-          },
-          vipInfo: {
-            due_date: o.due_date || 0,
-            status: o.status || 0,
-            type: o.type || 0
-          }
-        };
-        status.paster && (t.paster = status.paster || {});
-        this.limit = status.area_limit || 0;
-        this.BLOD.status.videoLimit.status || (t.area = this.limit);
-        t.seasonFollowed = 1 === status.follow;
-      }
-      if (bangumi) {
-        let loopTitle2 = function() {
-          poll(() => document.title != title, () => {
-            document.title = title;
-            if (document.title != title)
-              loopTitle2();
-          });
-        };
-        var loopTitle = loopTitle2;
-        if (bangumi.season_id && bangumi.total_ep && !bangumi.episodes?.[0]) {
-          await new ApiSeasonSection(bangumi.season_id).toEpisodes().then((d2) => {
-            bangumi.episodes = d2;
-          }).catch((e) => {
-            debug.warn("episodes数据获取出错", e);
-          });
-        }
-        const i = JSON.parse(JSON.stringify(bangumi));
-        delete i.episodes;
-        delete i.seasons;
-        delete i.up_info;
-        delete i.rights;
-        delete i.publish;
-        delete i.newest_ep;
-        delete i.rating;
-        delete i.pay_pack;
-        delete i.payment;
-        delete i.activity;
-        if (this.BLOD.status.bangumiEplist)
-          delete i.bkg_cover;
-        this.BLOD.status.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
-        t.mediaInfo = i;
-        t.mediaInfo.bkg_cover && (t.special = true);
-        t.ssId = bangumi.season_id || -1;
-        t.mdId = bangumi.media_id;
-        t.epInfo = this.epid && bangumi.episodes.find((d2) => d2.ep_id == this.epid) || bangumi.episodes[0] || {};
-        t.epList = bangumi.episodes || [];
-        t.seasonList = bangumi.seasons || [];
-        t.upInfo = bangumi.up_info || {};
-        t.rightsInfo = bangumi.rights || {};
-        t.app = 1 === t.rightsInfo.watch_platform;
-        t.pubInfo = bangumi.publish || {};
-        t.newestEp = bangumi.newest_ep || {};
-        t.mediaRating = bangumi.rating || {};
-        t.payPack = bangumi.pay_pack || {};
-        t.payMent = bangumi.payment || {};
-        t.activity = bangumi.activity || {};
-        t.epStat = this.setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-        t.epId = Number(this.epid || t.epInfo.ep_id);
-        this.ssid = t.ssId;
-        this.epid = t.epId;
-        if (t.upInfo.mid == /** Classic_Anime */
-        677043260 || t.upInfo.mid == /** Anime_Ongoing */
-        688418886) {
-          this.th = true;
-        }
-        const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), true);
-        loopTitle2();
-        this.BLOD.videoInfo.bangumiSeason(bangumi);
-      } else {
-        return this.initGlobal();
-      }
-    }).catch((e) => {
-      this.BLOD.toast.error("初始化bangumi数据出错！", e)();
-    }).finally(() => {
-      if (window.__INITIAL_STATE__.special) {
-        addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
-      }
-      if (document.compatMode === "BackCompat")
-        addCss(".header-info > .count-wrapper {height: 18px !important;}");
-    });
-  }
-  /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
-  setEpStat(status, pay, payPackPaid, loginInfo) {
-    var s = 0, o = false, a = (1 === loginInfo.vipType || 2 === loginInfo.vipType) && 1 === loginInfo.vipStatus, r = "number" == typeof payPackPaid ? payPackPaid : -1;
-    return 1 === pay ? s = 0 : 6 === status || 7 === status ? s = loginInfo.isLogin ? a ? 0 : 1 : 2 : 8 === status || 9 === status ? (s = loginInfo.isLogin ? 1 : 2, o = true) : 12 === status ? s = loginInfo.isLogin ? 1 === r ? 0 : 1 : 2 : 13 === status && (s = loginInfo.isLogin ? a ? 0 : 1 : 2), {
-      status: s,
-      isPay: 6 === status || 7 === status || 8 === status || 9 === status || 12 === status || 13 === status,
-      isVip: a,
-      vipNeedPay: o,
-      payPack: r
-    };
-  }
-  /** 更新标题 */
-  setTitle(t, e, i, n) {
-    var s = !(arguments.length > 4 && void 0 !== arguments[4]) || arguments[4], o = "";
-    if (i = void 0 === i ? "番剧" : i, e && i)
-      if (s && t) {
-        var a = this.V(t, i);
-        o = "".concat(e, "：").concat(a, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
-      } else
-        o = "".concat(e, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
-    else
-      o = "番剧".concat(n ? "_bilibili" : "", "_哔哩哔哩");
-    if ("undefined" != typeof window) {
-      var r = window.document.createElement("div");
-      r.innerHTML = o, o = r.innerText || r.textContent, r = null;
-    }
-    return o;
-  }
-  Q(t, e) {
-    var i = {
-      1: "番剧",
-      2: "电影",
-      3: "纪录片",
-      4: "国创",
-      5: "电视剧",
-      7: "综艺",
-      music: "音乐"
-    };
-    return [26484, 26481].indexOf(e) > -1 ? i.music : i[t] || "番剧";
-  }
-  V(t, e) {
-    var i = Number(t), n = 1 === e || 4 === e || "番剧" === e || "国创" === e ? "话" : "集";
-    return isNaN(i) ? t : "第".concat(i).concat(n);
-  }
-  /** 尝试东南亚接口 */
-  async initGlobal() {
-    const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
-    Object.assign(data, { access_key: this.BLOD.status.accessKey.token });
-    const d = await new ApiGlobalOgvView(data, this.BLOD.status.videoLimit.th).getDate();
-    this.BLOD.networkMock();
-    await new Promise((r) => poll(() => window.__INITIAL_STATE__, r));
-    const t = window.__INITIAL_STATE__;
-    const i = JSON.parse(JSON.stringify(d));
-    const episodes = d.modules.reduce((s, d_1) => {
-      d_1.data.episodes.forEach((d_2) => {
-        s.push({
-          aid: d_2.aid,
-          cid: d_2.id,
-          cover: d_2.cover,
-          ep_id: d_2.id,
-          episode_status: d_2.status,
-          from: d_2.from,
-          index: d_2.title,
-          index_title: d_2.title_display,
-          subtitles: d_2.subtitles
-        });
-        if (d_2.subtitles) {
-          this.subtitles[d_2.id] = [];
-          d_2.subtitles.forEach((d2) => {
-            this.subtitles[d_2.id].push({
-              ai_status: 2,
-              ai_type: Number(d2.is_machine),
-              id: d2.id,
-              id_str: String(d2.id),
-              is_lock: false,
-              lan: d2.key,
-              lan_doc: d2.title,
-              subtitle_url: d2.url,
-              type: 1
-            });
-          });
-        }
-      });
-      return s;
-    }, []);
-    t.mediaInfo = {
-      actors: i.actor?.info,
-      alias: i.alias,
-      areas: i.areas,
-      cover: i.cover,
-      evaluate: i.evaluate,
-      is_paster_ads: 0,
-      jp_title: i.origin_name,
-      link: i.link,
-      media_id: -1,
-      mode: i.mode,
-      paster_text: "",
-      season_id: i.season_id,
-      season_status: i.status,
-      season_title: i.season_title,
-      season_type: i.type,
-      series_title: i.title,
-      square_cover: i.square_cover,
-      staff: i.actor?.info,
-      stat: i.stat,
-      style: i.styles?.map((d_3) => d_3.name),
-      title: i.title,
-      total_ep: i.total
-    };
-    t.mediaInfo.bkg_cover && (t.special = true);
-    t.ssId = i.season_id || -1;
-    t.epInfo = this.epid && episodes.find((d_4) => d_4.ep_id == this.epid) || episodes[0] || {};
-    t.epList = episodes;
-    t.seasonList = d.series?.seasons?.map((d_5) => {
-      return {
-        badge: "独家",
-        badge_type: 1,
-        cover: "",
-        media_id: -1,
-        new_ep: {},
-        season_id: d_5.season_id,
-        season_title: d_5.quarter_title,
-        season_type: 1,
-        stat: {},
-        title: d_5.quarter_title
-      };
-    }) || [];
-    t.upInfo = d.up_info || {};
-    t.rightsInfo = d.rights || {};
-    t.app = 1 === t.rightsInfo.watch_platform;
-    d.publish.is_started = 1;
-    d.publish?.time_length_show === "已完结" && (d.publish.is_finish = 1);
-    t.pubInfo = d.publish || {};
-    if (d.new_ep) {
-      d.new_ep.desc = d.new_ep.new_ep_display;
-      d.new_ep.index = d.new_ep.title;
-    }
-    t.newestEp = d.new_ep || {};
-    t.mediaRating = d.rating || {};
-    t.payPack = d.pay_pack || {};
-    t.payMent = d.payment || {};
-    t.activity = d.activity_dialog || {};
-    t.epStat = this.setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
-    t.epId = Number(this.epid || t.epInfo.ep_id);
-    this.ssid = t.ssId;
-    this.epid = t.epId;
-    this.th = true;
-    xhrHook("api.bilibili.com/pgc/web/season/stat", void 0, (res) => {
-      const t_1 = \`{"code": 0,"message":"0","ttl":1,"result":\${JSON.stringify(d.stat)}}\`;
-      res.responseType === "json" ? res.response = JSON.parse(t_1) : res.response = res.responseText = t_1;
-    }, false);
-    this.player();
-    this.BLOD.toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
-    const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), true);
-    function loopTitle() {
-      poll(() => document.title != title, () => {
-        document.title = title;
-        if (document.title != title)
-          loopTitle();
-      });
-    }
-    loopTitle();
-    this.BLOD.videoInfo.bangumiEpisode(episodes, i.title, i.actor?.info, i.cover, t.mediaInfo.bkg_cover);
-  }
-  /** 修复泰区player接口 */
-  player() {
-    xhrHook.async("api.bilibili.com/x/player/v2?", void 0, async (args) => {
-      const obj = urlObj(args[1]);
-      const aid = obj.aid;
-      const cid = obj.cid;
-      const response = { code: 0, message: "0", data: new PlayerResponse(aid, cid) };
-      if (this.subtitles[cid]) {
-        response.data.subtitle.subtitles = this.subtitles[cid];
-      }
-      return { response, responseType: "json", responseText: JSON.stringify(response) };
-    }, false);
-  }
-  /** 点赞功能 */
-  enLike() {
-    if (this.BLOD.status.like) {
-      poll(() => document.querySelector("[report-id*=coin]"), (d) => {
-        d.parentElement?.insertBefore(this.like, d);
-        addCss(".ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}", "ulike-bangumi");
-      });
-      xhrHook("pgc/web/season/stat?", void 0, async (res) => {
-        try {
-          const result = typeof res.response === "string" ? jsonCheck(res.response) : res.response;
-          this.like.likes = result.result.likes;
-        } catch {
-        }
-      });
-      switchVideo(() => {
-        this.like.init();
-      });
-    }
-  }
-  episodeIndex = 0;
-  /** 分集数据 */
-  episodeData() {
-    if (this.BLOD.status.episodeData) {
-      switchVideo(() => {
-        this.episodeIndex++;
-        const views = document.querySelector(".view-count > span");
-        const danmakus = document.querySelector(".danmu-count > span");
-        if (views && danmakus) {
-          if (this.episodeIndex === 1) {
-            const [view, danmaku] = [
-              unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.views),
-              unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.danmakus)
-            ];
-            views.setAttribute("title", "总播放数 " + view);
-            danmakus.setAttribute("title", "总弹幕数 " + danmaku);
-            debug.log("总播放数：", view, "总弹幕数", danmaku);
-          }
-          apiStat(this.BLOD.aid).then(({ view, danmaku }) => {
-            views.textContent = unitFormat(view);
-            danmakus.textContent = unitFormat(danmaku);
-            debug.log("总播放数：", view, "总弹幕数", danmaku);
-          }).catch((e) => {
-            debug.error("分集数据", e);
-          });
-        }
-      });
-    }
-  }
-};
+// src/html/av.html
+var av_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/videoplay/css/video.0.406cee7878545872b8dfbe73071d665dfb287c67.css" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="video-page-app"></div>\\r\\n    <div id="app" data-server-rendered="true"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript">\\r\\n        window.getInternetExplorerVersion = function () {\\r\\n            var e = -1; if ("Microsoft Internet Explorer" == navigator.appName) {\\r\\n                var r = navigator.userAgent;\\r\\n                null != new RegExp("MSIE ([0-9]{1,}[.0-9]{0,})").exec(r) && (e = parseFloat(RegExp.\$1))\\r\\n            }\\r\\n            return e\\r\\n        };\\r\\n        function getQueryString(e) {\\r\\n            var r = new RegExp("(^|&)" + e + "=([^&]*)(&|\$)"),\\r\\n                i = window.location.search.substr(1).match(r);\\r\\n            return null != i ? unescape(i[2]) : null\\r\\n        }\\r\\n        window.commentAgent = { seek: t => window.player && window.player.seek(t) };\\r\\n    <\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/manifest.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/vendor.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/videoplay/video.b1b7706abd590dd295794f540f7669a5d8d978b3.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
+
+// src/json/sort.txt
+var sort_default = '[{name:"首页",route:"/",tid:"",locid:23,sub:[]},{name:"动画",route:"douga",tid:1,locid:52,count:"",subMenuSize:162,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2507,leftId:2452,rightId:2453},sub:[{name:"MAD·AMV",route:"mad",tid:24,ps:15,rps:10,ad:{active:!0,dataLocId:151},desc:"具有一定制作程度的动画或静画的二次创作视频",url:"//www.bilibili.com/video/douga-mad-1.html"},{name:"MMD·3D",route:"mmd",tid:25,ps:15,rps:10,ad:{active:!0,dataLocId:152},desc:"使用MMD（MikuMikuDance）和其他3D建模类软件制作的视频",url:"//www.bilibili.com/video/douga-mmd-1.html"},{name:"短片·手书·配音",route:"voice",tid:47,ps:15,rps:10,desc:"追求创新并具有强烈特色的短片、手书（绘）及ACG相关配音",url:"//www.bilibili.com/video/douga-voice-1.html"},{name:"手办·模玩",route:"garage_kit",tid:210,ps:15,rps:10,desc:"手办模玩的测评、改造或其他衍生内容",url:""},{name:"特摄",route:"tokusatsu",tid:86,ps:15,rps:10,desc:"特摄相关衍生视频",url:"//www.bilibili.com/video/cinephile-tokusatsu.html"},{name:"综合",route:"other",tid:27,ps:15,rps:10,ad:{active:!0,dataLocId:153},desc:"以动画及动画相关内容为素材，包括但不仅限于音频替换、杂谈、排行榜等内容",url:"//www.bilibili.com/video/douga-else-1.html"}]},{name:"番剧",route:"anime",tid:13,url:"//www.bilibili.com/anime/",takeOvered:!0,count:"",subMenuSize:172,combination:!0,sub:[{name:"连载动画",tid:33,route:"serial",desc:"当季连载的动画番剧",url:"//www.bilibili.com/video/bangumi-two-1.html"},{name:"完结动画",tid:32,route:"finish",desc:"已完结的动画番剧合集",url:"//www.bilibili.com/video/part-twoelement-1.html"},{name:"资讯",tid:51,route:"information",desc:"动画番剧相关资讯视频",url:"//www.bilibili.com/video/douga-else-information-1.html"},{name:"官方延伸",tid:152,route:"offical",desc:"动画番剧为主题的宣传节目、采访视频，及声优相关视频",url:"//www.bilibili.com/video/bagumi_offical_1.html"},{name:"新番时间表",url:"//www.bilibili.com/anime/timeline/",desc:""},{name:"番剧索引",url:"//www.bilibili.com/anime/index/",desc:""}]},{name:"国创",tid:167,route:"guochuang",url:"//www.bilibili.com/guochuang/",takeOvered:!0,count:"",subMenuSize:214,combination:!0,sub:[{name:"国产动画",tid:153,route:"chinese",desc:"我国出品的PGC动画",url:"//www.bilibili.com/video/bangumi_chinese_1.html"},{name:"国产原创相关",tid:168,route:"original",desc:"",url:"//www.bilibili.com/video/guochuang-fanvid-1.html"},{name:"布袋戏",tid:169,route:"puppetry",desc:"",url:"//www.bilibili.com/video/glove-puppetry-1.html"},{name:"动态漫·广播剧",tid:195,route:"motioncomic",desc:"",url:""},{name:"资讯",tid:170,route:"information",desc:"",url:"//www.bilibili.com/video/guochuang-offical-1.html"},{name:"新番时间表",url:"//www.bilibili.com/guochuang/timeline/",desc:""},{name:"国产动画索引",url:"//www.bilibili.com/guochuang/index/",desc:""}]},{name:"音乐",route:"music",tid:3,locid:58,count:"",subMenuSize:268,slider:{width:620,height:220},viewTag:!0,customComponent:{name:"Energy",titleId:2511,leftId:2462,rightId:3131,rightType:"slide"},sub:[{name:"原创音乐",route:"original",tid:28,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:243},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"原创歌曲及纯音乐，包括改编、重编曲及remix",url:"//www.bilibili.com/video/music-original-1.html"},{name:"翻唱",route:"cover",tid:31,ps:15,rps:10,ad:{active:!0,dataLocId:245},viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"对曲目的人声再演绎视频",url:"//www.bilibili.com/video/music-Cover-1.html"},{name:"演奏",route:"perform",tid:59,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"乐器和非传统乐器器材的演奏作品",url:"//www.bilibili.com/video/music-perform-1.html"},{name:"VOCALOID·UTAU",route:"vocaloid",tid:30,ps:15,rps:10,viewHotTag:!0,ad:{active:!0,dataLocId:247},dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以VOCALOID等歌声合成引擎为基础，运用各类音源进行的创作",url:"//www.bilibili.com/video/music-vocaloid-1.html"},{name:"音乐现场",route:"live",tid:29,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐表演的实况视频，包括官方/个人拍摄的综艺节目、音乐剧、音乐节、演唱会等",url:"//www.bilibili.com/video/music-oped-1.html"},{name:"MV",route:"mv",tid:193,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"为音乐作品配合拍摄或制作的音乐录影带（Music Video），以及自制拍摄、剪辑、翻拍MV",url:"//www.bilibili.com/video/music-coordinate-1.html"},{name:"乐评盘点",route:"commentary",tid:243,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"音乐类新闻、盘点、点评、reaction、榜单、采访、幕后故事、唱片开箱等",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐教学",route:"tutorial",tid:244,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"以音乐教学为目的的内容",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音乐综合",route:"other",tid:130,ps:15,rps:10,viewHotTag:!0,dpConfig:[{name:"一日",value:1},{name:"三日",value:3}],desc:"所有无法被收纳到其他音乐二级分区的音乐类视频",url:"//www.bilibili.com/video/music-collection-1.html"},{name:"音频",customZone:"Audio",route:"audio",url:"//www.bilibili.com/audio/home?musicType=music"},{name:"说唱",url:"//www.bilibili.com/v/rap"}]},{name:"舞蹈",route:"dance",tid:129,locid:64,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2513,leftId:2472,rightId:2473},sub:[{name:"宅舞",route:"otaku",tid:20,ps:15,rps:10,ad:{active:!0,dataLocId:249},desc:"与ACG相关的翻跳、原创舞蹈",url:"//www.bilibili.com/video/dance-1.html"},{name:"街舞",route:"hiphop",tid:198,ps:15,rps:10,ad:{active:!0,dataLocId:251},desc:"收录街舞相关内容，包括赛事现场、舞室作品、个人翻跳、FREESTYLE等",url:""},{name:"明星舞蹈",route:"star",tid:199,ps:15,rps:10,desc:"国内外明星发布的官方舞蹈及其翻跳内容",url:""},{name:"中国舞",route:"china",tid:200,ps:15,rps:10,ad:{active:!0,dataLocId:253},desc:"传承中国艺术文化的舞蹈内容，包括古典舞、民族民间舞、汉唐舞、古风舞等",url:""},{name:"舞蹈综合",route:"three_d",tid:154,ps:15,rps:10,desc:"收录无法定义到其他舞蹈子分区的舞蹈视频",url:""},{name:"舞蹈教程",route:"demo",tid:156,ps:10,rps:6,desc:"镜面慢速，动作分解，基础教程等具有教学意义的舞蹈视频",url:"//www.bilibili.com/video/dance-demo-1.html"}]},{name:"游戏",route:"game",tid:4,locid:70,count:"",subMenuSize:240,slider:{width:470,height:216},viewTag:!0,customComponent:{name:"Energy",titleId:3761,leftId:3765,rightId:3775,rightType:"slide"},recommendCardType:"GameGroomBox",sub:[{name:"单机游戏",route:"stand_alone",tid:17,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:255},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以所有平台（PC、主机、移动端）的单机或联机游戏为主的视频内容，包括游戏预告、CG、实况解说及相关的评测、杂谈与视频剪辑等",url:"//www.bilibili.com/video/videogame-1.html"},{name:"电子竞技",route:"esports",tid:171,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:257},desc:"具有高对抗性的电子竞技游戏项目，其相关的赛事、实况、攻略、解说、短剧等视频。",url:"//www.bilibili.com/video/esports-1.html"},{name:"手机游戏",route:"mobile",tid:172,ps:10,rps:7,rankshow:1,viewHotTag:!0,desc:"以手机及平板设备为主要平台的游戏，其相关的实况、攻略、解说、短剧、演示等视频。",url:"//www.bilibili.com/video/mobilegame-1.html"},{name:"网络游戏",route:"online",tid:65,ps:10,rps:7,rankshow:1,viewHotTag:!0,ad:{active:!0,dataLocId:259},dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由网络运营商运营的多人在线游戏，以及电子竞技的相关游戏内容。包括赛事、攻略、实况、解说等相关视频",url:"//www.bilibili.com/video/onlinegame-1.html"},{name:"桌游棋牌",route:"board",tid:173,ps:5,rps:3,rankshow:1,viewHotTag:!0,desc:"桌游、棋牌、卡牌对战等及其相关电子版游戏的实况、攻略、解说、演示等视频。",url:"//www.bilibili.com/video/boardgame-1.html"},{name:"GMV",route:"gmv",tid:121,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"由游戏素材制作的MV视频。以游戏内容或CG为主制作的，具有一定创作程度的MV类型的视频",url:"//www.bilibili.com/video/gmv-1.html"},{name:"音游",route:"music",tid:136,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"各个平台上，通过配合音乐与节奏而进行的音乐类游戏视频",url:"//www.bilibili.com/video/music-game-1.html"},{name:"Mugen",route:"mugen",tid:19,ps:5,rps:3,rankshow:1,viewHotTag:!0,dpConfig:[{name:"三日",value:3},{name:"一日",value:1},{name:"一周",value:7}],desc:"以Mugen引擎为平台制作、或与Mugen相关的游戏视频",url:"//www.bilibili.com/video/game-mugen-1.html"},{name:"游戏赛事",url:"//www.bilibili.com/v/game/match/",newIcon:!0}]},{name:"知识",route:"knowledge",tid:36,locid:76,count:"",subMenuSize:172,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2058,leftId:2047,rightId:2048},sub:[{name:"科学科普",route:"science",tid:201,ps:15,rps:10,ad:{active:!0,dataLocId:261},desc:"回答你的十万个为什么"},{name:"社科·法律·心理",route:"social_science",tid:124,ps:15,rps:10,ad:{active:!0,dataLocId:263},desc:"基于社会科学、法学、心理学展开或个人观点输出的知识视频"},{name:"人文历史",route:"humanity_history",tid:228,ps:15,rps:10,desc:"看看古今人物，聊聊历史过往，品品文学典籍"},{name:"财经商业",route:"business",tid:207,ps:15,rps:10,desc:"说金融市场，谈宏观经济，一起畅聊商业故事"},{name:"校园学习",route:"campus",tid:208,ps:15,rps:10,ad:{active:!0,dataLocId:265},desc:"老师很有趣，学生也有才，我们一起搞学习"},{name:"职业职场",route:"career",tid:209,ps:15,rps:10,desc:"职业分享、升级指南，一起成为最有料的职场人"},{name:"设计·创意",route:"design",tid:229,ps:15,rps:10,desc:"天马行空，创意设计，都在这里"},{name:"野生技能协会",route:"skill",tid:122,ps:15,rps:10,desc:"技能党集合，是时候展示真正的技术了"}]},{name:"科技",route:"tech",tid:188,locid:2977,count:"",subMenuSize:80,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2980,leftId:2978,rightId:2979},sub:[{name:"数码",route:"digital",tid:95,ps:15,rps:10,viewHotTag:!0,desc:"科技数码产品大全，一起来做发烧友",url:"#"},{name:"软件应用",route:"application",tid:230,ps:15,rps:10,viewHotTag:!0,desc:"超全软件应用指南",url:"#"},{name:"计算机技术",route:"computer_tech",tid:231,ps:15,rps:10,viewHotTag:!0,desc:"研究分析、教学演示、经验分享......有关计算机技术的都在这里",url:"#"},{name:"科工机械",route:"industry",tid:232,ps:15,rps:10,viewHotTag:!0,desc:"从小芯片到大工程，一起见证科工力量",url:"#"},{name:"极客DIY",route:"diy",tid:233,ps:15,rps:10,viewHotTag:!0,desc:"炫酷技能，极客文化，硬核技巧，准备好你的惊讶",url:"#"}]},{name:"运动",route:"sports",tid:234,locid:4639,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4646,rightId:4652,rightType:"slide"},sub:[{name:"篮球·足球",route:"basketballfootball",tid:235,ps:15,rps:10,ad:{active:!0,dataLocId:4656},desc:"与篮球、足球相关的视频，包括但不限于篮足球赛事、教学、评述、剪辑、剧情等相关内容",url:"#"},{name:"健身",route:"aerobics",tid:164,ps:15,rps:10,desc:"与健身相关的视频，包括但不限于瑜伽、CrossFit、健美、力量举、普拉提、街健等相关内容",url:"//www.bilibili.com/video/fashion-body-1.html"},{name:"竞技体育",route:"athletic",tid:236,ps:15,rps:10,desc:"与竞技体育相关的视频，包括但不限于乒乓、羽毛球、排球、赛车等竞技项目的赛事、评述、剪辑、剧情等相关内容",url:"#"},{name:"运动文化",route:"culture",tid:237,ps:15,rps:10,desc:"与运动文化相关的视频，包络但不限于球鞋、球衣、球星卡等运动衍生品的分享、解读，体育产业的分析、科普等相关内容",url:"#"},{name:"运动综合",route:"comprehensive",tid:238,ps:15,rps:10,desc:"与运动综合相关的视频，包括但不限于钓鱼、骑行、滑板等日常运动分享、教学、Vlog等相关内容",url:"#"}]},{name:"汽车",route:"car",tid:223,locid:4428,isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4435,rightId:4441,rightType:"slide"},sub:[{name:"汽车生活",route:"life",tid:176,ps:15,rps:10,ad:{active:!0,dataLocId:4445},desc:"分享汽车及出行相关的生活体验类视频",url:"#"},{name:"汽车文化",route:"culture",tid:224,ps:15,rps:10,desc:"汽车改装、品牌历史、汽车设计、老爷车、汽车模型等",url:"#"},{name:"赛车",route:"racing",tid:245,ps:15,rps:10,desc:"F1等汽车运动相关",url:"#"},{name:"汽车极客",route:"geek",tid:225,ps:15,rps:10,desc:"汽车硬核达人聚集地，包括DIY造车、专业评测和技术知识分享",url:"#"},{name:"摩托车",route:"motorcycle",tid:240,ps:15,rps:10,desc:"骑士们集合啦",url:"#"},{name:"智能出行",route:"smart",tid:226,ps:15,rps:10,desc:"探索新能源汽车和未来智能出行的前沿阵地",url:"#"},{name:"购车攻略",route:"strategy",tid:227,ps:15,rps:10,desc:"丰富详实的购车建议和新车体验",url:"#"}]},{name:"生活",route:"life",tid:160,locid:88,count:"",subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2062,leftId:1674,rightId:1670},sub:[{name:"搞笑",route:"funny",tid:138,ps:15,rps:10,ad:{active:!0,dataLocId:273},desc:"各种沙雕有趣的搞笑剪辑，挑战，表演，配音等视频",url:"//www.bilibili.com/video/ent_funny_1.html",locid:4204,recommendId:4210,slider:{width:620,height:220},customComponent:{name:"Energy",leftId:4212,rightId:4218,rightType:"slide"}},{name:"家居房产",route:"home",tid:239,ps:15,rps:10,ad:{active:!0,dataLocId:275},desc:"与买房、装修、居家生活相关的分享",url:"#"},{name:"手工",route:"handmake",tid:161,ps:15,rps:10,desc:"手工制品的制作过程或成品展示、教程、测评类视频",url:"//www.bilibili.com/video/ent-handmake-1.html"},{name:"绘画",route:"painting",tid:162,ps:15,rps:10,desc:"绘画过程或绘画教程，以及绘画相关的所有视频",url:"//www.bilibili.com/video/ent-painting-1.html"},{name:"日常",route:"daily",tid:21,ps:15,rps:10,desc:"记录日常生活，分享生活故事",url:"//www.bilibili.com/video/ent-life-1.html"}]},{name:"美食",route:"food",tid:211,locid:4243,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4258,rightId:4264},sub:[{name:"美食制作",route:"make",tid:76,ps:15,rps:10,ad:{active:!0,dataLocId:4268},desc:"学做人间美味，展示精湛厨艺",url:"#"},{name:"美食侦探",route:"detective",tid:212,ps:15,rps:10,desc:"寻找美味餐厅，发现街头美食",url:"#"},{name:"美食测评",route:"measurement",tid:213,ps:15,rps:10,desc:"吃货世界，品尝世间美味",url:"#"},{name:"田园美食",route:"rural",tid:214,ps:15,rps:10,desc:"品味乡野美食，寻找山与海的味道",url:"#"},{name:"美食记录",route:"record",tid:215,ps:15,rps:10,desc:"记录一日三餐，给生活添一点幸福感",url:"#"}]},{name:"动物圈",route:"animal",tid:217,locid:4365,count:"",isHide:!0,subMenuSize:164,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",leftId:4376,rightId:4381,rightType:"slide"},sub:[{name:"喵星人",route:"cat",tid:218,ps:15,rps:10,desc:"喵喵喵喵喵",url:"#",ad:{active:!0,dataLocId:4385}},{name:"汪星人",route:"dog",tid:219,ps:15,rps:10,desc:"汪汪汪汪汪",url:"#"},{name:"大熊猫",route:"panda",tid:220,ps:15,rps:10,desc:"芝麻汤圆营业中",url:"#"},{name:"野生动物",route:"wild_animal",tid:221,ps:15,rps:10,desc:"内有“猛兽”出没",url:"#"},{name:"爬宠",route:"reptiles",tid:222,ps:15,rps:10,desc:"鳞甲有灵",url:"#"},{name:"动物综合",route:"animal_composite",tid:75,ps:15,rps:10,desc:"收录除上述子分区外，其余动物相关视频以及非动物主体或多个动物主体的动物相关延伸内容",url:"#"}]},{name:"鬼畜",route:"kichiku",tid:119,locid:100,count:"",subMenuSize:182,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2509,leftId:2482,rightId:2483},sub:[{name:"鬼畜调教",route:"guide",tid:22,ps:15,rps:10,ad:{active:!0,dataLocId:285},desc:"使用素材在音频、画面上做一定处理，达到与BGM一定的同步感",url:"//www.bilibili.com/video/ent-Kichiku-1.html"},{name:"音MAD",route:"mad",tid:26,ps:15,rps:10,ad:{active:!0,dataLocId:287},desc:"使用素材音频进行一定的二次创作来达到还原原曲的非商业性质稿件",url:"//www.bilibili.com/video/douga-kichiku-1.html"},{name:"人力VOCALOID",route:"manual_vocaloid",tid:126,ps:15,rps:10,desc:"将人物或者角色的无伴奏素材进行人工调音，使其就像VOCALOID一样歌唱的技术",url:"//www.bilibili.com/video/kichiku-manual_vocaloid-1.html"},{name:"鬼畜剧场",route:"theatre",tid:216,ps:15,rps:10,desc:"使用素材进行人工剪辑编排的有剧情的作品"},{name:"教程演示",route:"course",tid:127,ps:10,rps:6,rightComponent:{name:"CmImgList",id:148},ad:{active:!0,dataLocId:289},hideDropdown:!1,desc:"鬼畜相关的教程演示",url:"//www.bilibili.com/video/kichiku-course-1.html"}]},{name:"时尚",route:"fashion",tid:155,locid:94,count:"",subMenuSize:124,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2515,leftId:2492,rightId:2493},sub:[{name:"美妆护肤",route:"makeup",tid:157,ps:15,rps:10,ad:{active:!0,dataLocId:279},desc:"彩妆护肤、美甲美发、仿妆、医美相关内容分享或产品测评",url:"//www.bilibili.com/video/fashion-makeup-fitness-1.html"},{name:"穿搭",route:"clothing",tid:158,ps:15,rps:10,ad:{active:!0,dataLocId:281},desc:"穿搭风格、穿搭技巧的展示分享，涵盖衣服、鞋靴、箱包配件、配饰（帽子、钟表、珠宝首饰）等",url:"//www.bilibili.com/video/fashion-clothing-1.html"},{name:"时尚潮流",route:"trend",tid:159,ps:15,rps:10,desc:"时尚街拍、时装周、时尚大片，时尚品牌、潮流等行业相关记录及知识科普",url:"#"}]},{name:"资讯",route:"information",tid:202,locid:4076,count:"",subMenuSize:60,slider:{width:620,height:220},viewTag:!1,sub:[{name:"热点",route:"hotspot",tid:203,ps:18,rps:10,desc:"全民关注的时政热门资讯"},{name:"环球",route:"global",tid:204,ps:18,rps:10,desc:"全球范围内发生的具有重大影响力的事件动态"},{name:"社会",route:"social",tid:205,ps:18,rps:10,desc:"日常生活的社会事件、社会问题、社会风貌的报道"},{name:"综合",route:"multiple",tid:206,ps:18,rps:10,desc:"除上述领域外其它垂直领域的综合资讯"}]},{name:"娱乐",route:"ent",tid:5,locid:82,count:"",subMenuSize:62,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2067,leftId:2065,rightId:2066},sub:[{name:"综艺",route:"variety",tid:71,ps:15,rps:10,ad:{active:!0,dataLocId:267},desc:"所有综艺相关，全部一手掌握！",url:"//www.bilibili.com/video/ent-variety-1.html"},{name:"娱乐杂谈",route:"talker",tid:241,ps:15,rps:10,ad:{active:!0,dataLocId:269},desc:"娱乐人物解读、娱乐热点点评、娱乐行业分析"},{name:"粉丝创作",route:"fans",tid:242,ps:15,rps:10,desc:"粉丝向创作视频"},{name:"明星综合",route:"celebrity",tid:137,ps:15,rps:10,desc:"娱乐圈动态、明星资讯相关"}]},{name:"影视",route:"cinephile",tid:181,locid:2211,count:"",subMenuSize:84,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:2309,leftId:2307,rightId:2308},sub:[{name:"影视杂谈",route:"cinecism",tid:182,ps:15,rps:10,ad:{active:!0,dataLocId:2212},desc:"影视评论、解说、吐槽、科普等",url:"//www.bilibili.com/video/cinephile-cinecism.html"},{name:"影视剪辑",route:"montage",tid:183,ps:15,rps:10,ad:{active:!0,dataLocId:2213},desc:"对影视素材进行剪辑再创作的视频",url:"//www.bilibili.com/video/cinephile-montage.html"},{name:"短片",route:"shortfilm",tid:85,ps:15,rps:10,desc:"追求自我表达且具有特色的短片",url:"//www.bilibili.com/video/cinephile-shortfilm.html"},{name:"预告·资讯",route:"trailer_info",tid:184,ps:15,rps:10,ad:{active:!0,dataLocId:2214},desc:"影视类相关资讯，预告，花絮等视频",url:"//www.bilibili.com/video/cinephile-trailer-info.html"}]},{name:"纪录片",route:"documentary",tid:177,url:"//www.bilibili.com/documentary/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"人文·历史",tid:37,route:"history",dise:"",url:"//www.bilibili.com/video/doco-history.html"},{name:"科学·探索·自然",tid:178,route:"science",dise:"",url:"//www.bilibili.com/video/doco-science.html"},{name:"军事",tid:179,route:"military",dise:"",url:"//www.bilibili.com/video/doco-military.html"},{name:"社会·美食·旅行",tid:180,route:"travel",dise:"",url:"//www.bilibili.com/video/doco-travel.html"},{name:"纪录片索引",url:"//www.bilibili.com/documentary/index/"}]},{name:"电影",route:"movie",tid:23,url:"//www.bilibili.com/movie/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"华语电影",tid:147,route:"chinese",desc:"",url:"//www.bilibili.com/video/movie_chinese_1.html"},{name:"欧美电影",tid:145,route:"west",desc:"",url:"//www.bilibili.com/video/movie_west_1.html"},{name:"日本电影",tid:146,route:"japan",desc:"",url:"//www.bilibili.com/video/movie_japan_1.html"},{name:"其他国家",tid:83,route:"movie",desc:"",url:"//www.bilibili.com/video/movie-movie-1.html"},{name:"电影索引",url:"//www.bilibili.com/movie/index/"}]},{name:"电视剧",route:"tv",tid:11,url:"//www.bilibili.com/tv/",count:"",takeOvered:!0,hasParent:!0,combination:!0,sub:[{name:"国产剧",tid:185,route:"mainland",desc:"",url:"//www.bilibili.com/video/tv-mainland.html"},{name:"海外剧",tid:187,route:"overseas",desc:"",url:"//www.bilibili.com/video/tv-overseas.html"},{name:"电视剧索引",url:"//www.bilibili.com/tv/index/"}]},{name:"虚拟UP主",route:"virtual",locid:4735,count:"",isHide:!0,subMenuSize:60,slider:{width:620,height:220},viewTag:!1,customComponent:{name:"Energy",titleId:4754,leftId:4756},sub:[{name:"游戏",route:"game",tid:4,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/game"},{name:"音乐",route:"music",tid:3,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/music"},{name:"动画",route:"douga",tid:1,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/douga"},{name:"其他",route:"other",tid:0,ps:18,rps:10,url:"//www.bilibili.com/v/virtual/other"}]}]';
 
 // src/json/toview.json
 var toview_default = {
@@ -18368,6 +25004,649 @@ var toview_default = {
   type: 2
 };
 
+// src/utils/hook/webpack.ts
+var arr = [];
+var param = [];
+var _Webpack = class {
+  backup = window.webpackJsonp;
+  constructor() {
+    _Webpack.load = true;
+    Reflect.defineProperty(window, "webpackJsonp", {
+      configurable: true,
+      set: (v) => {
+        typeof v === "function" && (this.backup = v);
+        return true;
+      },
+      get: () => {
+        return this.backup && ((chunkIds, moreModules, executeModules) => {
+          if (arr[moreModules.length]) {
+            const obj = arr[moreModules.length];
+            const pam = param[moreModules.length];
+            Object.entries(obj).forEach((d) => {
+              let code = moreModules[d[0]];
+              if (code) {
+                code = code.toString();
+                d[1].forEach((e) => code = e(code));
+                moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
+              }
+            });
+          }
+          return this.backup(chunkIds, moreModules, executeModules);
+        });
+      }
+    });
+  }
+};
+var Webpack = _Webpack;
+__publicField(Webpack, "load", false);
+function webpackHook(len, pos, rpc, params = ["t", "e", "i"]) {
+  Webpack.load || new Webpack();
+  if (!arr[len]) {
+    arr[len] = {};
+    param[len] = params;
+  }
+  arr[len][pos] = arr[len][pos] || [];
+  arr[len][pos].push((code) => rpc(code));
+}
+
+// src/html/bangumi.html
+var bangumi_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords"\\r\\n        content="Bilibili,哔哩哔哩,哔哩哔哩动画,哔哩哔哩弹幕网,弹幕视频,B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,二次元,游戏视频,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid,日本动漫,国产动漫,手机游戏,网络游戏,电子竞技,ACG燃曲,ACG神曲,追新番,新番动漫,新番吐槽,巡音,镜音双子,千本樱,初音MIKU,舞蹈MMD,MIKUMIKUDANCE,洛天依原创曲,洛天依翻唱曲,洛天依投食歌,洛天依MMD,vocaloid家族,OST,BGM,动漫歌曲,日本动漫音乐,宫崎骏动漫音乐,动漫音乐推荐,燃系mad,治愈系mad,MAD MOVIE,MAD高燃" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/bangumi/play/css/bangumi-play.0.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.css" />\\r\\n    <style type="text/css">\\r\\n        .new-entry {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="app" data-server-rendered="true" class="main-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/vip/dist/js/vipPlugin.v2.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/promise.auto.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/plugin/vip/BilAccountThaw.js"><\\/script>\\r\\n    <script>\\r\\n        window.__INITIAL_STATE__ = { activity: {}, app: false, area: 0, canReview: false, epId: -1, epInfo: {}, epList: [], epStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, isPlayerTrigger: false, loginInfo: { isLogin: false }, mdId: -1, mediaInfo: {}, mediaRating: {}, miniOn: 0, newestEp: {}, paster: {}, payMent: {}, payPack: {}, playerRecomList: [], pubInfo: {}, recomList: [], rightsInfo: {}, seasonFollowed: false, seasonList: [], seasonStat: { coins: 0, danmakus: 0, favorites: 0, views: 0 }, special: false, spending: 0, sponsorTotal: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, sponsorTotalCount: 0, sponsorWeek: { code: 0, result: { ep_bp: 0, list: [], mine: {}, users: 0 } }, ssId: -1, ssStat: { isPay: false, isVip: false, payPack: 0, status: 0, vipNeedPay: false }, upInfo: {}, userCoined: false, userLongReview: {}, userScore: 0, userShortReview: {}, userStat: { error: true, follow: 0, loaded: true, pay: 0, payPackPaid: 0, sponsor: 0, vipInfo: { due_date: 0, status: 0, type: 0 }, watchProgress: { lastEpId: -1, lastEpIndex: "", lastTime: 0 } }, ver: {} }; (function () { Reflect.deleteProperty(window, "webpackJsonp"); Reflect.deleteProperty(window, "_babelPolyfill"); var s; (s = document.currentScript || document.scripts[document.scripts.length - 1]).parentNode.removeChild(s); }());\\r\\n    <\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/1.bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/bangumi/play/bangumi-play.809bd6f6d1fba866255d2e6c5dc06dabba9ce8b4.js"\\r\\n        crossorigin=""><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
+
+// src/io/api-global-view.ts
+var ApiGlobalOgvView = class extends ApiSign {
+  fetch;
+  constructor(data, server = "api.global.bilibili.com") {
+    super(URLS.GLOBAL_OGV_VIEW.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
+    data = Object.assign({
+      build: 108003,
+      mobi_app: "bstar_a",
+      s_locale: "zh_SG"
+    }, data);
+    this.fetch = fetch(this.sign(data));
+  }
+  async getDate() {
+    const response = await this.fetch;
+    const json = await response.json();
+    return jsonCheck(json).result;
+  }
+};
+
+// src/io/api-player.ts
+var PlayerResponse = class {
+  constructor(aid, cid, has_next = false) {
+    this.aid = aid;
+    this.cid = cid;
+    this.has_next = has_next;
+  }
+  allow_bp = false;
+  answer_status = 0;
+  bgm_info;
+  block_time = 0;
+  fawkes = { config_version: 18964, ff_version: 21289 };
+  guide_attention = [];
+  ip_info = { city: "", country: "中国", ip: "", province: "", zone_id: 0, zone_ip: "" };
+  is_owner = false;
+  is_ugc_pay_preview = false;
+  jump_card = [];
+  last_play_cid = 0;
+  last_play_time = 0;
+  level_info = { current_level: 0, current_min: 0, current_exp: 0, next_exp: 0, level_up: 0 };
+  login_mid = 0;
+  login_mid_hash = "";
+  max_limit = 1e3;
+  name = "";
+  no_share = false;
+  now_time = new Date().getTime() / 1e3;
+  online_count = 1;
+  online_switch = { enable_gray_dash_playback: "500", new_broadcast: "1", realtime_dm: "1", subtitle_submit_switch: "1" };
+  operation_card = [];
+  options = { is_360: false, without_vip: false };
+  page_no = 1;
+  pcdn_loader = {
+    dash: {
+      labels: { pcdn_video_type: "dash", pcdn_stage: "release", pcdn_group: "nil", pcdn_version: "nil", pcdn_vendor: "nil" }
+    },
+    flv: {
+      labels: { pcdn_video_type: "flv", pcdn_stage: "release", pcdn_group: "nil", pcdn_version: "nil", pcdn_vendor: "nil" }
+    }
+  };
+  permission = 0;
+  preview_toast = "为创作付费，购买观看完整视频|购买观看";
+  role = "";
+  show_switch = { long_progress: false };
+  subtitle = { allow_submit: false, lan: "", lan_doc: "", subtitles: [] };
+  toast_block = false;
+  view_points = [];
+  vip = {
+    avatar_subscript: 0,
+    avatar_subscript_url: "",
+    due_date: 0,
+    label: {
+      bg_color: "",
+      bg_style: 0,
+      border_color: "",
+      img_label_uri_hans: "",
+      img_label_uri_hans_static: "",
+      img_label_uri_hant: "",
+      img_label_uri_hant_static: "",
+      label_theme: "",
+      path: "",
+      text: "",
+      text_color: "",
+      use_img_label: false
+    },
+    nickname_color: "",
+    role: 0,
+    status: 0,
+    theme_type: 0,
+    tv_vip_pay_type: 0,
+    tv_vip_status: 0,
+    type: 0,
+    vip_pay_type: 0
+  };
+};
+
+// src/io/api-season-section.ts
+var ApiSeasonSection = class {
+  fetch;
+  constructor(season_id) {
+    this.fetch = fetch(objUrl(URLS.SEASON_STATUS, { season_id }), { credentials: "include" });
+  }
+  async getDate() {
+    const response = await this.fetch;
+    const json = await response.json();
+    return jsonCheck(json).result;
+  }
+  async toEpisodes() {
+    const res = await this.getDate();
+    return res.main_section.episodes.concat(...res.section.map((d) => d.episodes)).map((d) => {
+      d.ep_id = d.id;
+      d.episode_status = d.status;
+      d.index = d.title;
+      d.index_title = d.long_title;
+      d.premiere = Boolean(d.is_premiere);
+      return d;
+    });
+  }
+};
+
+// src/io/api-season-status.ts
+async function apiSeasonStatus(data) {
+  const response = await fetch(objUrl(URLS.SEASON_STATUS, data), { credentials: "include" });
+  const json = await response.json();
+  return jsonCheck(json).result;
+}
+
+// src/io/api-stat.ts
+async function apiStat(aid) {
+  const response = await fetch(objUrl(URLS.STAT, { aid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/io/api-tag-info.ts
+async function apiTagInfo(tag_name) {
+  const response = await fetch(objUrl(URLS.TAG_INFO, { tag_name }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/io/api-tag-top.ts
+async function apiTagTop(tid) {
+  const response = await fetch(objUrl(URLS.TAG_TOP, { tid }));
+  const json = await response.json();
+  return jsonCheck(json).data;
+}
+
+// src/page/bangumi.ts
+var PageBangumi = class extends Page {
+  constructor(BLOD2) {
+    super(bangumi_default);
+    this.BLOD = BLOD2;
+    Reflect.deleteProperty(window, "__INITIAL_STATE__");
+    this.like = new Like(this.BLOD);
+    new Comment(BLOD2);
+    window.__Iris__ = true;
+    this.pgc = true;
+    location.href.replace(/[sS][sS]\\d+/, (d) => this.ssid = Number(d.substring(2)));
+    location.href.replace(/[eE][pP]\\d+/, (d) => this.epid = Number(d.substring(2)));
+    this.updateDom();
+    this.recommend();
+    this.seasonCount();
+    BLOD2.status.videoLimit?.status && this.videoLimit();
+    this.related();
+    this.initialState();
+    this.enLike();
+    this.episodeData();
+    Header.primaryMenu();
+    Header.banner();
+  }
+  like;
+  get ssid() {
+    return this.BLOD.ssid;
+  }
+  set ssid(v) {
+    this.BLOD.ssid = v;
+  }
+  get epid() {
+    return this.BLOD.epid;
+  }
+  set epid(v) {
+    this.BLOD.epid = v;
+  }
+  get th() {
+    return this.BLOD.th;
+  }
+  set th(v) {
+    this.BLOD.th = v;
+  }
+  get limit() {
+    return this.BLOD.limit;
+  }
+  set limit(v) {
+    this.BLOD.limit = v;
+  }
+  get pgc() {
+    return this.BLOD.pgc;
+  }
+  set pgc(v) {
+    this.BLOD.pgc = v;
+  }
+  /** 字幕暂存 */
+  subtitles = [];
+  /** 修复：末尾番剧推荐 */
+  recommend() {
+    xhrHook("api.bilibili.com/pgc/web/recommend/related/recommend", (args) => {
+      args[1] = args[1].replace("web/recommend", "season/web");
+    }, (r) => {
+      try {
+        const result = jsonCheck(r.response);
+        result.result = result.data.season;
+        r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+        propertyHook.modify(window, "getPlayerExtraParams", (d) => {
+          const res = d();
+          res.recommend = result.result;
+          return () => res;
+        });
+      } catch (e) {
+      }
+    });
+  }
+  /** 修复追番数据 */
+  seasonCount() {
+    xhrHook("bangumi.bilibili.com/ext/web_api/season_count", (args) => {
+      args[1] = args[1].replace("bangumi.bilibili.com/ext/web_api/season_count", "api.bilibili.com/pgc/web/season/stat");
+    }, (r) => {
+      try {
+        const result = jsonCheck(r.response);
+        result.result.favorites = result.result.follow;
+        r.responseType === "json" ? r.response = result : r.response = r.responseText = JSON.stringify(result);
+      } catch (e) {
+      }
+    }, true);
+  }
+  /** 解除区域限制（重定向模式） */
+  videoLimit() {
+    xhrHook("bangumi.bilibili.com/view/web_api/season/user/status", void 0, (res) => {
+      try {
+        const data = res.responseType === "json" ? res.response : JSON.parse(res.response);
+        data.result.area_limit = 0;
+        data.result.ban_area_show = 0;
+        res.responseType === "json" || (res.response = res.responseText = JSON.stringify(data));
+      } catch (e) {
+      }
+    }, false);
+  }
+  /** 修复相关视频推荐 接口来自md页面 */
+  related() {
+    const related = {};
+    xhrHook.async("x/web-interface/archive/related", () => window.__INITIAL_STATE__?.mediaInfo?.title, async () => {
+      let response = { code: 0, data: [], message: "0" };
+      if (related[window.__INITIAL_STATE__?.mediaInfo?.title]) {
+        response.data = related[window.__INITIAL_STATE__.mediaInfo.title];
+      } else {
+        await apiTagInfo(window.__INITIAL_STATE__.mediaInfo.title).then((d) => {
+          return apiTagTop(d.tag_id);
+        }).then((d) => {
+          response.data = related[window.__INITIAL_STATE__.mediaInfo.title] = d;
+        }).catch((e) => {
+          debug.error("相关视频推荐", e);
+        });
+      }
+      return { response, responseType: "json", responseText: JSON.stringify(response) };
+    }, false);
+  }
+  /** 初始化\`__INITIAL_STATE__\` */
+  initialState() {
+    const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
+    Promise.allSettled([apiBangumiSeason(data), apiSeasonStatus(data), new Promise((r) => poll(() => this.initilized, r))]).then((d) => d.map((d2) => d2.status === "fulfilled" && d2.value)).then(async (d) => {
+      const t = window.__INITIAL_STATE__;
+      const bangumi = d[0];
+      const status = d[1];
+      if (status) {
+        const i = status.progress ? status.progress.last_ep_id : -1, n = status.progress ? status.progress.last_ep_index : "", s = status.progress ? status.progress.last_time : 0, o = status.vip_info || {};
+        !this.epid && i > 0 && (this.epid = i);
+        t.userStat = {
+          loaded: true,
+          error: void 0 === status.pay,
+          follow: status.follow || 0,
+          pay: status.pay || 0,
+          payPackPaid: status.pay_pack_paid || 0,
+          sponsor: status.sponsor || 0,
+          watchProgress: {
+            lastEpId: 0 === i ? -1 : i,
+            lastEpIndex: n,
+            lastTime: s
+          },
+          vipInfo: {
+            due_date: o.due_date || 0,
+            status: o.status || 0,
+            type: o.type || 0
+          }
+        };
+        status.paster && (t.paster = status.paster || {});
+        this.limit = status.area_limit || 0;
+        this.BLOD.status.videoLimit.status || (t.area = this.limit);
+        t.seasonFollowed = 1 === status.follow;
+      }
+      if (bangumi) {
+        let loopTitle2 = function() {
+          poll(() => document.title != title, () => {
+            document.title = title;
+            if (document.title != title)
+              loopTitle2();
+          });
+        };
+        var loopTitle = loopTitle2;
+        if (bangumi.season_id && bangumi.total_ep && !bangumi.episodes?.[0]) {
+          await new ApiSeasonSection(bangumi.season_id).toEpisodes().then((d2) => {
+            bangumi.episodes = d2;
+          }).catch((e) => {
+            debug.warn("episodes数据获取出错", e);
+          });
+        }
+        const i = JSON.parse(JSON.stringify(bangumi));
+        delete i.episodes;
+        delete i.seasons;
+        delete i.up_info;
+        delete i.rights;
+        delete i.publish;
+        delete i.newest_ep;
+        delete i.rating;
+        delete i.pay_pack;
+        delete i.payment;
+        delete i.activity;
+        if (this.BLOD.status.bangumiEplist)
+          delete i.bkg_cover;
+        this.BLOD.status.videoLimit.status && bangumi.rights && (bangumi.rights.watch_platform = 0);
+        t.mediaInfo = i;
+        t.mediaInfo.bkg_cover && (t.special = true);
+        t.ssId = bangumi.season_id || -1;
+        t.mdId = bangumi.media_id;
+        t.epInfo = this.epid && bangumi.episodes.find((d2) => d2.ep_id == this.epid) || bangumi.episodes[0] || {};
+        t.epList = bangumi.episodes || [];
+        t.seasonList = bangumi.seasons || [];
+        t.upInfo = bangumi.up_info || {};
+        t.rightsInfo = bangumi.rights || {};
+        t.app = 1 === t.rightsInfo.watch_platform;
+        t.pubInfo = bangumi.publish || {};
+        t.newestEp = bangumi.newest_ep || {};
+        t.mediaRating = bangumi.rating || {};
+        t.payPack = bangumi.pay_pack || {};
+        t.payMent = bangumi.payment || {};
+        t.activity = bangumi.activity || {};
+        t.epStat = this.setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+        t.epId = Number(this.epid || t.epInfo.ep_id);
+        this.ssid = t.ssId;
+        this.epid = t.epId;
+        if (t.upInfo.mid == /** Classic_Anime */
+        677043260 || t.upInfo.mid == /** Anime_Ongoing */
+        688418886) {
+          this.th = true;
+        }
+        const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), true);
+        loopTitle2();
+        this.BLOD.videoInfo.bangumiSeason(bangumi);
+      } else {
+        return this.initGlobal();
+      }
+    }).catch((e) => {
+      this.BLOD.toast.error("初始化bangumi数据出错！", e)();
+    }).finally(() => {
+      if (window.__INITIAL_STATE__.special) {
+        addCss("#bili-header-m > #banner_link,#bili-header-m > .bili-wrapper{ display: none; }");
+      }
+      if (document.compatMode === "BackCompat")
+        addCss(".header-info > .count-wrapper {height: 18px !important;}");
+    });
+  }
+  /** epStat，用于判定ep状态。同样由于原生缺陷，ep_id初始化时不会更新本信息，需要主动更新 */
+  setEpStat(status, pay, payPackPaid, loginInfo) {
+    var s = 0, o = false, a = (1 === loginInfo.vipType || 2 === loginInfo.vipType) && 1 === loginInfo.vipStatus, r = "number" == typeof payPackPaid ? payPackPaid : -1;
+    return 1 === pay ? s = 0 : 6 === status || 7 === status ? s = loginInfo.isLogin ? a ? 0 : 1 : 2 : 8 === status || 9 === status ? (s = loginInfo.isLogin ? 1 : 2, o = true) : 12 === status ? s = loginInfo.isLogin ? 1 === r ? 0 : 1 : 2 : 13 === status && (s = loginInfo.isLogin ? a ? 0 : 1 : 2), {
+      status: s,
+      isPay: 6 === status || 7 === status || 8 === status || 9 === status || 12 === status || 13 === status,
+      isVip: a,
+      vipNeedPay: o,
+      payPack: r
+    };
+  }
+  /** 更新标题 */
+  setTitle(t, e, i, n) {
+    var s = !(arguments.length > 4 && void 0 !== arguments[4]) || arguments[4], o = "";
+    if (i = void 0 === i ? "番剧" : i, e && i)
+      if (s && t) {
+        var a = this.V(t, i);
+        o = "".concat(e, "：").concat(a, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+      } else
+        o = "".concat(e, "_").concat(i).concat(n ? "_bilibili" : "", "_哔哩哔哩");
+    else
+      o = "番剧".concat(n ? "_bilibili" : "", "_哔哩哔哩");
+    if ("undefined" != typeof window) {
+      var r = window.document.createElement("div");
+      r.innerHTML = o, o = r.innerText || r.textContent, r = null;
+    }
+    return o;
+  }
+  Q(t, e) {
+    var i = {
+      1: "番剧",
+      2: "电影",
+      3: "纪录片",
+      4: "国创",
+      5: "电视剧",
+      7: "综艺",
+      music: "音乐"
+    };
+    return [26484, 26481].indexOf(e) > -1 ? i.music : i[t] || "番剧";
+  }
+  V(t, e) {
+    var i = Number(t), n = 1 === e || 4 === e || "番剧" === e || "国创" === e ? "话" : "集";
+    return isNaN(i) ? t : "第".concat(i).concat(n);
+  }
+  /** 尝试东南亚接口 */
+  async initGlobal() {
+    const data = this.epid ? { ep_id: this.epid } : { season_id: this.ssid };
+    Object.assign(data, { access_key: this.BLOD.status.accessKey.token });
+    const d = await new ApiGlobalOgvView(data, this.BLOD.status.videoLimit.th).getDate();
+    this.BLOD.networkMock();
+    await new Promise((r) => poll(() => window.__INITIAL_STATE__, r));
+    const t = window.__INITIAL_STATE__;
+    const i = JSON.parse(JSON.stringify(d));
+    const episodes = d.modules.reduce((s, d_1) => {
+      d_1.data.episodes.forEach((d_2) => {
+        s.push({
+          aid: d_2.aid,
+          cid: d_2.id,
+          cover: d_2.cover,
+          ep_id: d_2.id,
+          episode_status: d_2.status,
+          from: d_2.from,
+          index: d_2.title,
+          index_title: d_2.title_display,
+          subtitles: d_2.subtitles
+        });
+        if (d_2.subtitles) {
+          this.subtitles[d_2.id] = [];
+          d_2.subtitles.forEach((d2) => {
+            this.subtitles[d_2.id].push({
+              ai_status: 2,
+              ai_type: Number(d2.is_machine),
+              id: d2.id,
+              id_str: String(d2.id),
+              is_lock: false,
+              lan: d2.key,
+              lan_doc: d2.title,
+              subtitle_url: d2.url,
+              type: 1
+            });
+          });
+        }
+      });
+      return s;
+    }, []);
+    t.mediaInfo = {
+      actors: i.actor?.info,
+      alias: i.alias,
+      areas: i.areas,
+      cover: i.cover,
+      evaluate: i.evaluate,
+      is_paster_ads: 0,
+      jp_title: i.origin_name,
+      link: i.link,
+      media_id: -1,
+      mode: i.mode,
+      paster_text: "",
+      season_id: i.season_id,
+      season_status: i.status,
+      season_title: i.season_title,
+      season_type: i.type,
+      series_title: i.title,
+      square_cover: i.square_cover,
+      staff: i.actor?.info,
+      stat: i.stat,
+      style: i.styles?.map((d_3) => d_3.name),
+      title: i.title,
+      total_ep: i.total
+    };
+    t.mediaInfo.bkg_cover && (t.special = true);
+    t.ssId = i.season_id || -1;
+    t.epInfo = this.epid && episodes.find((d_4) => d_4.ep_id == this.epid) || episodes[0] || {};
+    t.epList = episodes;
+    t.seasonList = d.series?.seasons?.map((d_5) => {
+      return {
+        badge: "独家",
+        badge_type: 1,
+        cover: "",
+        media_id: -1,
+        new_ep: {},
+        season_id: d_5.season_id,
+        season_title: d_5.quarter_title,
+        season_type: 1,
+        stat: {},
+        title: d_5.quarter_title
+      };
+    }) || [];
+    t.upInfo = d.up_info || {};
+    t.rightsInfo = d.rights || {};
+    t.app = 1 === t.rightsInfo.watch_platform;
+    d.publish.is_started = 1;
+    d.publish?.time_length_show === "已完结" && (d.publish.is_finish = 1);
+    t.pubInfo = d.publish || {};
+    if (d.new_ep) {
+      d.new_ep.desc = d.new_ep.new_ep_display;
+      d.new_ep.index = d.new_ep.title;
+    }
+    t.newestEp = d.new_ep || {};
+    t.mediaRating = d.rating || {};
+    t.payPack = d.pay_pack || {};
+    t.payMent = d.payment || {};
+    t.activity = d.activity_dialog || {};
+    t.epStat = this.setEpStat(t.epInfo.episode_status || t.mediaInfo.season_status, t.userStat.pay, t.userStat.payPackPaid, t.loginInfo);
+    t.epId = Number(this.epid || t.epInfo.ep_id);
+    this.ssid = t.ssId;
+    this.epid = t.epId;
+    this.th = true;
+    xhrHook("api.bilibili.com/pgc/web/season/stat", void 0, (res) => {
+      const t_1 = \`{"code": 0,"message":"0","ttl":1,"result":\${JSON.stringify(d.stat)}}\`;
+      res.responseType === "json" ? res.response = JSON.parse(t_1) : res.response = res.responseText = t_1;
+    }, false);
+    this.player();
+    this.BLOD.toast.warning("这大概是一个泰区专属Bangumi，可能没有弹幕和评论区，可以使用【在线弹幕】【播放本地文件】等功能载入弹幕~", "另外：播放泰区番剧还可能导致历史记录错乱，请多担待🤣");
+    const title = this.setTitle(t.epInfo.index, t.mediaInfo.title, this.Q(t.mediaInfo.season_type), true);
+    function loopTitle() {
+      poll(() => document.title != title, () => {
+        document.title = title;
+        if (document.title != title)
+          loopTitle();
+      });
+    }
+    loopTitle();
+    this.BLOD.videoInfo.bangumiEpisode(episodes, i.title, i.actor?.info, i.cover, t.mediaInfo.bkg_cover);
+  }
+  /** 修复泰区player接口 */
+  player() {
+    xhrHook.async("api.bilibili.com/x/player/v2?", void 0, async (args) => {
+      const obj = urlObj(args[1]);
+      const aid = obj.aid;
+      const cid = obj.cid;
+      const response = { code: 0, message: "0", data: new PlayerResponse(aid, cid) };
+      if (this.subtitles[cid]) {
+        response.data.subtitle.subtitles = this.subtitles[cid];
+      }
+      return { response, responseType: "json", responseText: JSON.stringify(response) };
+    }, false);
+  }
+  /** 点赞功能 */
+  enLike() {
+    if (this.BLOD.status.like) {
+      poll(() => document.querySelector("[report-id*=coin]"), (d) => {
+        d.parentElement?.insertBefore(this.like, d);
+        addCss(".ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}", "ulike-bangumi");
+      });
+      xhrHook("pgc/web/season/stat?", void 0, async (res) => {
+        try {
+          const result = typeof res.response === "string" ? jsonCheck(res.response) : res.response;
+          this.like.likes = result.result.likes;
+        } catch {
+        }
+      });
+      switchVideo(() => {
+        this.like.init();
+      });
+    }
+  }
+  episodeIndex = 0;
+  /** 分集数据 */
+  episodeData() {
+    if (this.BLOD.status.episodeData) {
+      switchVideo(() => {
+        this.episodeIndex++;
+        const views = document.querySelector(".view-count > span");
+        const danmakus = document.querySelector(".danmu-count > span");
+        if (views && danmakus) {
+          if (this.episodeIndex === 1) {
+            const [view, danmaku] = [
+              unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.views),
+              unitFormat(window.__INITIAL_STATE__.mediaInfo.stat.danmakus)
+            ];
+            views.setAttribute("title", "总播放数 " + view);
+            danmakus.setAttribute("title", "总弹幕数 " + danmaku);
+            debug.log("总播放数：", view, "总弹幕数", danmaku);
+          }
+          apiStat(this.BLOD.aid).then(({ view, danmaku }) => {
+            views.textContent = unitFormat(view);
+            danmakus.textContent = unitFormat(danmaku);
+            debug.log("总播放数：", view, "总弹幕数", danmaku);
+          }).catch((e) => {
+            debug.error("分集数据", e);
+          });
+        }
+      });
+    }
+  }
+};
+
 // src/page/av.ts
 var PageAV = class extends Page {
   constructor(BLOD2) {
@@ -18641,61 +25920,92 @@ var PageAV = class extends Page {
   }
 };
 
-// src/html/watchlater.html
-var watchlater_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css" />\\r\\n    <link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n\\r\\n        /* 修正稍后再看迷你播放器样式 */\\r\\n        .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {\\r\\n            top: 30px;\\r\\n            height: 240px;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="viewlater-app">\\r\\n        <app></app>\\r\\n    </div>\\r\\n    <div class="footer bili-footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
-
-// src/page/watchalter.ts
-var PageWatchlater = class extends Page {
+// src/page/dynamic.ts
+var PageDynamic = class {
   constructor(BLOD2) {
-    super(watchlater_default);
     this.BLOD = BLOD2;
-    this.like = new Like(this.BLOD);
-    new Comment(BLOD2);
-    this.enLike();
-    this.toview();
-    this.updateDom();
-    this.living();
-    this.commentAgent();
-    Header.primaryMenu();
-    Header.banner();
-  }
-  like;
-  /** 记录视频数据 */
-  toview() {
-    jsonpHook("history/toview/web?", void 0, (d) => {
-      setTimeout(() => {
-        d.data.list.forEach((d2) => this.BLOD.videoInfo.aidDatail(d2));
-      });
-      return d;
+    this.BLOD.userLoadedCallback((status) => {
+      status.liveRecord || this.liveRecord();
     });
   }
-  /** 点赞功能 */
-  enLike() {
-    if (this.BLOD.status.like) {
-      poll(() => document.querySelector(".u.coin"), (d) => {
-        d.parentElement?.insertBefore(this.like, d);
-        addCss(".video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-watchlater");
-      }, void 0, 0);
-      jsonpHook("x/web-interface/view?", void 0, (d) => {
-        setTimeout(() => {
-          const data = jsonCheck(d).data;
-          this.BLOD.aid = data.aid;
-          this.like.likes = data.stat.like;
-          this.like.init();
-        });
-        return d;
-      }, false);
-    }
-  }
-  /** 修正直播错误 */
-  living() {
-    xhrHook("api.live.bilibili.com/bili/living_v2/", void 0, (r) => {
-      r.response = r.responseText = \` \${r.response}\`;
+  liveRecord() {
+    xhrHook("api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", void 0, (r) => {
+      try {
+        const response = jsonCheck(r.response);
+        response.data.items = response.data.items.filter((d) => d.modules?.module_dynamic?.major?.archive?.badge?.text != "直播回放");
+        r.responseType === "json" ? r.response = response : r.response = r.responseText = JSON.stringify(response);
+      } catch (e) {
+      }
     }, false);
   }
-  /** 修复评论播放跳转 */
-  commentAgent() {
-    window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
+};
+
+// src/page/history.ts
+var PageHistory = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    BLOD2.userLoadedCallback((status) => {
+      status.history && this.archive();
+    });
+  }
+  /** 纯视频历史记录 */
+  archive() {
+    xhrHook(["api.bilibili.com/x/web-interface/history/cursor", "business"], function(args) {
+      let obj = new URL(args[1]), max = obj.searchParams.get("max") || "", view_at = obj.searchParams.get("view_at") || "";
+      args[1] = objUrl("//api.bilibili.com/x/web-interface/history/cursor", { max, view_at, type: "archive", ps: "20" });
+    }, void 0, false);
+  }
+};
+
+// src/page/live.ts
+var PageLive = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    BLOD2.userLoadedCallback((status) => {
+      status.disableSleepChcek && this.disAbleSleepCheck();
+      status.disableReport && new StatisObserver();
+    });
+    this.urlClean();
+  }
+  sleep = false;
+  /** 添加url清理参数 */
+  urlClean() {
+    this.BLOD.urlCleaner.paramsSet.add("broadcast_type");
+    this.BLOD.urlCleaner.paramsSet.add("is_room_feed");
+  }
+  /** 禁止挂机检测 */
+  disAbleSleepCheck() {
+    const setInterval2 = self.setInterval;
+    self.setInterval = (...args) => {
+      if (args[0].toString().includes("triggerSleepCallback")) {
+        if (!this.sleep) {
+          this.sleep = true;
+          this.BLOD.toast.warning("成功阻止直播间挂机检测！");
+        }
+        return Number.MIN_VALUE;
+      }
+      return setInterval2.call(self, ...args);
+    };
+  }
+};
+
+// src/page/media.ts
+var PageMedia = class {
+  constructor(BLOD2) {
+    this.BLOD = BLOD2;
+    this.limit();
+  }
+  /** 解除限制 */
+  limit() {
+    xhrHook("user/status", void 0, (res) => {
+      try {
+        const result = jsonCheck(res.response);
+        result.result.area_limit = 0;
+        result.result.ban_area_show = 0;
+        res.responseType === "json" ? res.response = result : res.response = res.responseText = JSON.stringify(result);
+      } catch (e) {
+      }
+    }, false);
   }
 };
 
@@ -18860,15 +26170,18 @@ var PageRanking = class extends Page {
   }
 };
 
+// src/page/read.ts
+var import_quill_delta_to_html_cb = __toESM(require_main());
+
 // src/html/read.html
 var read_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head itemprop="Article" itemscope="itemscope" itemtype="http://schema.org/Article">\\r\\n    <meta charset="UTF-8" />\\r\\n    <meta data-n-head="true" name="viewport" content="width=device-width,initial-scale=1,user-scalable=0" />\\r\\n    <meta name="theme-color" content="#de698c" />\\r\\n    <meta http="Cache-Control" content="no-transform" />\\r\\n    <meta name="format-detection" content="telephone=no" />\\r\\n    <meta name="applicable-device" content="pc" />\\r\\n    <link rel="apple-touch-icon-precomposed" href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <link rel="icon" type="image/vnd.microsoft.icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link rel="apple-touch-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <link data-n-head="true" rel="icon" type="image/x-icon" href="//www.bilibili.com/favicon.ico" />\\r\\n    <link data-n-head="true" rel="apple-touch-icon-precomposed" type="image/x-icon"\\r\\n        href="//static.hdslb.com/mobile/img/512.png" />\\r\\n    <title>哔哩哔哩专栏</title>\\r\\n    <link href="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        .nav-tab-bar .tab-item[data-tab-id="41"]:before {\\r\\n            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAA6lBMVEUAAAAiIiIkJCT///8jIyMiIiIiIiIiIiJVVVUjIyMjIyMlJSU0NDT9/f0iIiIoKCjz8/NCQkIjIyMjIyMrKysiIiJFRUWQkJAiIiIlJSUjIyMkJCQzMzNAQEDv7+/7+/tHR0ciIiIlJSUjIyNKSkp7e3tcXFxoaGgjIyMjIyMkJCT8/PxDQ0MnJyf39/fx8fHn5+cvLy/i4uLe3t7R0dHAwMA0NDQjIyOtra06Ojo+Pj4iIiJAQEBOTk5VVVVwcHBtbW1hYWEjIyMjIyMjIyMiIiIiIiIlJSUpKSkkJCT///95eXltbW1zc3PUVbhEAAAASnRSTlMAf4H+6NOdaAOnQRQF/asO/vTs5NnXxcO6NzMaCgT++fLv3s7GwMC/v6Fi+vr59PDn5ePh2dHOzMrKyMjGw8C/v7+1sZeVUikfHAMz54kAAAEUSURBVCjPldLXboMwFIDhQ7DNDBA2JGmTNLt7772d9v1fp5hSjEOkqP+lP/lIlg+sTVcaRV1gKXE/mLWBZWqYSEUMjfjsYv/4Hr0zxJYKlYxgItOsaMpmItHwA82TkQGgEMG2JrTITwGkRsXs80f6F/oU0b4el3YaQI585l1pm/6bgHZ/Ry7tcgYCaoetjcKaV1ZXwGSwvSi0efNsgoAvI0oXLYc9MXwyQcTBSXb83XOoPIw7AGlawQ8ks4FfPWc47fyec5yHmTHddZmJqEU57t16baghOqL0IArdVxvq6I3GvqvN2bU6JkRK+Odx5P0LFbIaicLWBKurTPX0/IEWV24WBpaJEWksRbBmlkstLaXosK4fYdYsW/LHMigAAAAASUVORK5CYII=);\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container report-wrap-module"></div>\\r\\n    <div class="page-container"></div>\\r\\n    <div class="footer bili-footer report-wrap-module" id="home_footer"></div>\\r\\n    <script src="//static.hdslb.com/public/intersection-observer.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/public/timing.min.js"><\\/script>\\r\\n    <script src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/biliapp/biliapp.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/manifest.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/vendor.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/article/pcDetail.e5d43b1ea4f5a12408d8cd222049b34cfacd107c.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
 // src/page/read.ts
-var import_quill_delta_to_html_cb = __toESM(require_main());
 var PageRead = class extends Page {
   constructor(BLOD2) {
     super(read_default);
     this.BLOD = BLOD2;
+    this.webpackjsonp();
     new Comment(BLOD2);
     this.initState();
   }
@@ -18887,6 +26200,20 @@ var PageRead = class extends Page {
   ];
   readInfoStr = "";
   ops;
+  /** 处理webpackJsonp污染 */
+  webpackjsonp() {
+    propertyHook.modify(window, "webpackJsonp", (v) => {
+      if (typeof v === "function") {
+        setTimeout(() => {
+          Reflect.deleteProperty(window, "webpackJsonp");
+          Reflect.set(window, "webpackJsonp", v);
+        });
+        return v;
+      } else {
+        return;
+      }
+    });
+  }
   /** 获取专栏信息 */
   initState() {
     this.readInfo = window.__INITIAL_STATE__?.readInfo;
@@ -18994,7 +26321,6 @@ var PageRead = class extends Page {
     const title = document.title;
     this.vdom.replace(document.documentElement);
     document.querySelector(".page-container").innerHTML = this.readInfoStr;
-    Reflect.deleteProperty(window, "webpackJsonp");
     this.vdom.loadScript().then(() => {
       this.loadedCallback();
       PageRead.rightCopyEnable();
@@ -19041,712 +26367,12 @@ var PageSearch = class extends Page {
   }
 };
 
-// src/io/api-biliplus-playurl.ts
-async function apiBiliplusPlayurl(data) {
-  const response = await fetch(objUrl("//www.biliplus.com/BPplayurl.php", data));
-  return await response.json();
-}
-
-// src/io/fnval.ts
-var qn = 127;
-var fnver = 0;
-var fnval = 0 /* FLV */ + 16 /* DASH_H265 */ + 64 /* HDR */ + 128 /* DASH_4K */ + 256 /* DOLBYAUDIO */ + 512 /* DOLBYVIDEO */ + 1024 /* DASH_8K */ + 2048 /* DASH_AV1 */;
-
-// src/io/api-playurl.ts
-var PlayurlDescriptionMap = {
-  127: "超高清 8K",
-  126: "杜比视界",
-  125: "HDR",
-  121: "超清 4K",
-  120: "超清 4K",
-  116: "高清 1080P60",
-  112: "高清 1080P+",
-  80: "高清 1080P",
-  74: "高清 720P60",
-  64: "高清 720P",
-  48: "高清 720P",
-  32: "清晰 480P",
-  16: "流畅 360P",
-  15: "流畅 360P",
-  6: "流畅 240P",
-  5: "流畅 144P"
-};
-var PlayurlFormatMap = {
-  127: "hdflv2",
-  126: "hdflv2",
-  125: "hdflv2",
-  121: "hdflv2",
-  120: "hdflv2",
-  116: "flv_p60",
-  112: "hdflv2",
-  80: "flv",
-  74: "flv720_p60",
-  64: "flv720",
-  48: "flv720",
-  32: "flv480",
-  16: "mp4",
-  15: "mp4",
-  6: "mp4",
-  5: "mp4"
-};
-var PlayurlQualityMap = {
-  127: "8K",
-  126: "Dolby",
-  125: "HDR",
-  121: "4K",
-  120: "4K",
-  116: "1080P60",
-  112: "1080P+",
-  80: "1080P",
-  74: "720P60",
-  64: "720P",
-  48: "720P",
-  32: "480P",
-  16: "360P",
-  15: "360P",
-  6: "240P",
-  5: "144P"
-};
-var PlayurlCodecs = {
-  30126: "hvc1.2.4.L153.90",
-  126: "hvc1.2.4.L153.90",
-  30121: "hev1.1.6.L156.90",
-  121: "hev1.1.6.L156.90",
-  30120: "avc1.64003C",
-  120: "avc1.64003C",
-  30112: "avc1.640028",
-  // 1080P+
-  112: "avc1.640028",
-  // 1080P+
-  30102: "hev1.1.6.L120.90",
-  // HEVC 1080P+
-  102: "hev1.1.6.L120.90",
-  // HEVC 1080P+
-  30080: "avc1.640028",
-  // 1080P
-  80: "avc1.640028",
-  // 1080P
-  30077: "hev1.1.6.L120.90",
-  // HEVC 1080P
-  77: "hev1.1.6.L120.90",
-  // HEVC 1080P
-  30064: "avc1.64001F",
-  // 720P
-  64: "avc1.64001F",
-  // 720P
-  30066: "hev1.1.6.L120.90",
-  // HEVC 720P
-  66: "hev1.1.6.L120.90",
-  // HEVC 720P
-  30032: "avc1.64001E",
-  // 480P
-  32: "avc1.64001E",
-  // 480P
-  30033: "hev1.1.6.L120.90",
-  // HEVC 480P
-  33: "hev1.1.6.L120.90",
-  // HEVC 480P
-  30011: "hev1.1.6.L120.90",
-  // HEVC 360P
-  11: "hev1.1.6.L120.90",
-  // HEVC 360P
-  30016: "avc1.64001E",
-  // 360P
-  16: "avc1.64001E",
-  // 360P
-  30006: "avc1.64001E",
-  //240P
-  6: "avc1.64001E",
-  // 240P
-  30005: "avc1.64001E",
-  // 144P
-  5: "avc1.64001E",
-  // 144P
-  30251: "fLaC",
-  // Hires
-  30250: "ec-3",
-  // Dolby
-  30280: "mp4a.40.2",
-  // 高码音频
-  30232: "mp4a.40.2",
-  // 中码音频
-  30216: "mp4a.40.2"
-  // 低码音频
-};
-var PlayurlCodecsAPP = {
-  30016: "avc1.64001E",
-  // APP源 360P
-  16: "avc1.64001E",
-  // APP源 360P
-  30032: "avc1.64001F",
-  // APP源 480P
-  32: "avc1.64001F",
-  // APP源 480P
-  30064: "avc1.640028",
-  // APP源 720P
-  64: "avc1.640028",
-  // APP源 720P
-  30080: "avc1.640032",
-  // APP源 1080P
-  80: "avc1.640032",
-  // APP源 1080P
-  30216: "mp4a.40.2",
-  // APP源 低码音频
-  30232: "mp4a.40.2",
-  // APP源 中码音频
-  30280: "mp4a.40.2"
-  // APP源 高码音频 
-};
-var PlayurlFrameRate = {
-  30121: "16000/672",
-  121: "16000/672",
-  30120: "16000/672",
-  120: "16000/672",
-  30112: "16000/672",
-  112: "16000/672",
-  30102: "16000/672",
-  102: "16000/672",
-  30080: "16000/672",
-  80: "16000/672",
-  30077: "16000/656",
-  77: "16000/656",
-  30064: "16000/672",
-  64: "16000/672",
-  30066: "16000/656",
-  66: "16000/656",
-  30032: "16000/672",
-  32: "16000/672",
-  30033: "16000/656",
-  33: "16000/656",
-  30011: "16000/656",
-  11: "16000/656",
-  30016: "16000/672",
-  16: "16000/672",
-  30006: "16000/672",
-  6: "16000/672",
-  30005: "16000/672",
-  5: "16000/672"
-};
-var PlayurlResolution = {
-  30121: [3840, 2160],
-  121: [3840, 2160],
-  30120: [3840, 2160],
-  120: [3840, 2160],
-  30112: [1920, 1080],
-  // 1080P+
-  112: [1920, 1080],
-  // 1080P+
-  30102: [1920, 1080],
-  // HEVC 1080P+
-  102: [1920, 1080],
-  // HEVC 1080P+
-  30080: [1920, 1080],
-  // 1080P
-  80: [1920, 1080],
-  // 1080P
-  30077: [1920, 1080],
-  // HEVC 1080P
-  77: [1920, 1080],
-  // HEVC 1080P
-  30064: [1280, 720],
-  // 720P
-  64: [1280, 720],
-  // 720P
-  30066: [1280, 720],
-  // HEVC 720P
-  66: [1280, 720],
-  // HEVC 720P
-  30032: [852, 480],
-  // 480P
-  32: [852, 480],
-  // 480P
-  30033: [852, 480],
-  // HEVC 480P
-  33: [852, 480],
-  // HEVC 480P
-  30011: [640, 360],
-  // HEVC 360P
-  11: [640, 360],
-  // HEVC 360P
-  30016: [640, 360],
-  // 360P
-  16: [640, 360],
-  // 360P
-  30006: [426, 240],
-  // 240P
-  6: [426, 240],
-  // 240P
-  30005: [256, 144],
-  // 144P
-  5: [256, 144]
-  // 144P
-};
-var PlayurlDash = class {
-  accept_description = [];
-  accept_format = "";
-  accept_quality = [];
-  bp = 0;
-  code = 0;
-  dash = {
-    audio: [],
-    dolby: { audio: [], type: 0 },
-    duration: 0,
-    min_buffer_time: 1.5,
-    minBufferTime: 1.5,
-    video: []
-  };
-  fnval = 4048;
-  fnver = 0;
-  format = "flv";
-  from = "local";
-  has_paid = true;
-  is_preview = 0;
-  message = "";
-  no_rexcode = 1;
-  quality = 80;
-  result = "suee";
-  seek_param = "start";
-  seek_type = "offset";
-  status = 2;
-  support_formats = [];
-  timelength = 0;
-  type = "DASH";
-  video_codecid = 7;
-  video_project = true;
-};
-async function apiPlayurl(data, dash = true, pgc = false, server = "api.bilibili.com") {
-  data = Object.assign({
-    qn,
-    otype: "json",
-    fourk: 1
-  }, data, dash ? { fnver, fnval } : {});
-  const response = await fetch(objUrl(pgc ? URLS.PGC_PLAYURL.replace("api.bilibili.com", server) : URLS.PLAYURL, data), { credentials: "include" });
+// src/io/account-getcardbymid.ts
+async function accountGetCardByMid(mid, GM2) {
+  const response = await GM2.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
   const json = await response.json();
-  if (pgc) {
-    return jsonCheck(json).result;
-  }
-  return jsonCheck(json).data;
+  return jsonCheck(json).card;
 }
-
-// src/io/sidx.ts
-var Sidx = class {
-  /**
-   * @param url 目标url
-   * @param size 最大索引范围（不宜过大），默认6万字节
-   */
-  constructor(url, size = 6e4) {
-    this.url = url;
-    this.size = size;
-  }
-  /** range索引结束点 */
-  end = 5999;
-  /** range索引开始点 */
-  start = 0;
-  /** 结果hex字符串 */
-  hex_data = "";
-  getData() {
-    return new Promise((resolve, reject) => {
-      this.fetch(resolve, reject);
-    });
-  }
-  /** 请求片段 */
-  fetch(resolve, reject) {
-    fetch(this.url.replace("http:", "https:"), {
-      headers: {
-        range: \`bytes=\${this.start}-\${this.end}\`
-      }
-    }).then((d) => {
-      if ((d.status >= 300 || d.status < 200) && d.status !== 304)
-        throw new Error(\`\${d.status} \${d.statusText}\`, { cause: d.status });
-      return d.arrayBuffer();
-    }).then((d) => {
-      const data = new Uint8Array(d);
-      this.hex_data += Array.prototype.map.call(data, (x) => ("00" + x.toString(16)).slice(-2)).join("");
-      if (this.hex_data.indexOf("73696478") > -1 && this.hex_data.indexOf("6d6f6f66") > -1) {
-        const indexRangeStart = this.hex_data.indexOf("73696478") / 2 - 4;
-        const indexRagneEnd = this.hex_data.indexOf("6d6f6f66") / 2 - 5;
-        resolve(["0-" + String(indexRangeStart - 1), String(indexRangeStart) + "-" + String(indexRagneEnd)]);
-      } else {
-        this.start = this.end + 1;
-        if (this.size && this.start > this.size) {
-          reject("未能获取到sidx");
-        } else {
-          this.end += 6e3;
-          this.size && (this.end = Math.min(this.end, this.size));
-          this.fetch(resolve, reject);
-        }
-      }
-    }).catch((e) => reject(e));
-  }
-};
-
-// src/io/api-global-ogv-playurl.ts
-var ApiGlobalOgvPlayurl = class extends ApiSign {
-  /**
-   * @param data 查询参数
-   * @param server 东南亚（泰区）代理服务器
-   */
-  constructor(data, uposName, server = "api.global.bilibili.com") {
-    super(URLS.GLOBAL_OGV_PLAYURL.replace("api.global.bilibili.com", server), "7d089525d3611b1c");
-    this.uposName = uposName;
-    data = Object.assign({
-      area: "th",
-      build: 1001310,
-      device: "android",
-      force_host: 2,
-      download: 1,
-      mobi_app: "bstar_a",
-      platform: "android"
-    }, data);
-    this.fetch = fetch(this.sign(data));
-  }
-  fetch;
-  async getDate() {
-    const response = await this.fetch;
-    const text = await response.text();
-    return jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
-  }
-  toPlayurl() {
-    return new Promise((resolve, reject) => {
-      this.fetch.then((d) => d.text()).then((d) => jsonCheck(VideoLimit.uposReplace(d, this.uposName)).data).then((d) => {
-        const playurl = new PlayurlDash();
-        const set = [];
-        playurl.quality = d.video_info.stream_list[0].stream_info.quality || d.video_info.quality;
-        playurl.format = PlayurlFormatMap[playurl.quality];
-        playurl.timelength = d.video_info.timelength;
-        playurl.dash.duration = Math.ceil(playurl.timelength / 1e3);
-        playurl.dash.minBufferTime = playurl.dash.min_buffer_time = 1.5;
-        Promise.all([
-          ...d.video_info.stream_list.map((d2) => (async () => {
-            if (d2.dash_video && d2.dash_video.base_url) {
-              const id = d2.stream_info.quality;
-              playurl.accept_description.push(PlayurlDescriptionMap[id]);
-              set.push(PlayurlFormatMap[id]);
-              playurl.accept_quality.push(id);
-              playurl.support_formats.push({
-                description: PlayurlDescriptionMap[id],
-                display_desc: PlayurlQualityMap[id],
-                format: PlayurlFormatMap[id],
-                new_description: PlayurlDescriptionMap[id],
-                quality: id,
-                superscript: "",
-                codecs: [PlayurlCodecs[id]]
-              });
-              const sidx = await new Sidx(d2.dash_video.base_url, d2.dash_video.size).getData();
-              playurl.dash.video.push({
-                SegmentBase: {
-                  Initialization: sidx[0],
-                  indexRange: sidx[1]
-                },
-                segment_base: {
-                  initialization: sidx[0],
-                  index_range: sidx[1]
-                },
-                backupUrl: [],
-                backup_url: [],
-                bandwidth: d2.dash_video.bandwidth,
-                baseUrl: d2.dash_video.base_url,
-                base_url: d2.dash_video.base_url,
-                codecid: d2.dash_video.codecid,
-                codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
-                frameRate: PlayurlFrameRate[id],
-                frame_rate: PlayurlFrameRate[id],
-                height: PlayurlResolution[id]?.[1],
-                id: d2.stream_info.quality,
-                mimeType: "video/mp4",
-                mime_type: "video/mp4",
-                sar: "1:1",
-                startWithSap: 1,
-                start_with_sap: 1,
-                width: PlayurlResolution[id]?.[0]
-              });
-            }
-          })()),
-          ...d.video_info.dash_audio.map((d2) => (async () => {
-            const id = d2.id;
-            const sidx = await new Sidx(d2.base_url, d2.size).getData();
-            playurl.dash.audio.push({
-              SegmentBase: {
-                Initialization: sidx[0],
-                indexRange: sidx[1]
-              },
-              segment_base: {
-                initialization: sidx[0],
-                index_range: sidx[1]
-              },
-              backupUrl: [],
-              backup_url: [],
-              bandwidth: d2.bandwidth,
-              baseUrl: d2.base_url,
-              base_url: d2.base_url,
-              codecid: d2.codecid,
-              codecs: PlayurlCodecsAPP[id] || PlayurlCodecs[id],
-              frameRate: "",
-              frame_rate: "",
-              height: 0,
-              id,
-              mimeType: "audio/mp4",
-              mime_type: "audio/mp4",
-              sar: "",
-              startWithSap: 0,
-              start_with_sap: 0,
-              width: 0
-            });
-          })())
-        ]).then(() => {
-          const avc = [], hev = [], video = [];
-          playurl.dash.video.forEach((d2) => {
-            if (d2.codecid == 7)
-              avc.push(d2);
-            else
-              hev.push(d2);
-          });
-          let length = avc.length > hev.length ? avc.length : hev.length;
-          for (let i = length - 1; i >= 0; i--) {
-            if (avc[i])
-              video.push(avc[i]);
-            if (hev[i])
-              video.push(hev[i]);
-          }
-          playurl.dash.video = video;
-          playurl.accept_format = set.join(",");
-          playurl.quality > 80 && (playurl.quality = 80);
-          resolve(playurl);
-        }).catch((e) => reject(e));
-      }).catch((e) => reject(e));
-    });
-  }
-};
-
-// src/core/videolimit.ts
-var UPOS2 = {
-  "ks3（金山）": "upos-sz-mirrorks3.bilivideo.com",
-  "ks3b（金山）": "upos-sz-mirrorks3b.bilivideo.com",
-  "ks3c（金山）": "upos-sz-mirrorks3c.bilivideo.com",
-  "ks32（金山）": "upos-sz-mirrorks32.bilivideo.com",
-  "kodo（七牛）": "upos-sz-mirrorkodo.bilivideo.com",
-  "kodob（七牛）": "upos-sz-mirrorkodob.bilivideo.com",
-  "cos（腾讯）": "upos-sz-mirrorcos.bilivideo.com",
-  "cosb（腾讯）": "upos-sz-mirrorcosb.bilivideo.com",
-  "coso1（腾讯）": "upos-sz-mirrorcoso1.bilivideo.com",
-  "coso2（腾讯）": "upos-sz-mirrorcoso2.bilivideo.com",
-  "bos（腾讯）": "upos-sz-mirrorbos.bilivideo.com",
-  "hw（华为）": "upos-sz-mirrorhw.bilivideo.com",
-  "hwb（华为）": "upos-sz-mirrorhwb.bilivideo.com",
-  "uphw（华为）": "upos-sz-upcdnhw.bilivideo.com",
-  "js（华为）": "upos-tf-all-js.bilivideo.com",
-  "hk（香港）": "cn-hk-eq-bcache-01.bilivideo.com",
-  "akamai（海外）": "upos-hz-mirrorakam.akamaized.net"
-};
-var AREA = /* @__PURE__ */ ((AREA2) => {
-  AREA2[AREA2["tw"] = 0] = "tw";
-  AREA2[AREA2["hk"] = 1] = "hk";
-  AREA2[AREA2["cn"] = 2] = "cn";
-  return AREA2;
-})(AREA || {});
-var _VideoLimit = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    xhrHook("/playurl?", (args) => {
-      const param2 = urlObj(args[1]);
-      if (!uid && this.BLOD.status.show1080p && this.BLOD.status.accessKey.token) {
-        param2.appkey = "27eb53fc9058f8c3";
-        param2.access_key = this.BLOD.status.accessKey.token;
-      }
-      param2.fnval && (param2.fnval = fnval);
-      args[1] = objUrl(args[1], param2);
-      return !(this.BLOD.limit || this.BLOD.th);
-    }, (res) => {
-      try {
-        const result = res.responseType === "json" ? JSON.stringify(res) : res.responseText;
-        if (this.BLOD.status.uposReplace.nor !== "不替换") {
-          const nstr = _VideoLimit.uposReplace(result, this.BLOD.status.uposReplace.nor);
-          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.nor}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.nor]}\`);
-          if (res.responseType === "json") {
-            res.response = JSON.parse(nstr);
-          } else {
-            res.response = res.responseText = nstr;
-          }
-        }
-      } catch (e) {
-      }
-    }, false);
-  }
-  /** 数据备份 */
-  Backup = {};
-  /** 通知组件 */
-  toast;
-  /** 通知信息 */
-  data = [];
-  /** 监听中 */
-  listening = false;
-  /** 播放数据备份 */
-  __playinfo__;
-  /** 开始监听 */
-  enable() {
-    if (this.listening)
-      return;
-    const disable = xhrHook.async("/playurl?", (args) => {
-      const obj = urlObj(args[1]);
-      this.updateVaribale(obj);
-      return Boolean(this.BLOD.limit || this.BLOD.th);
-    }, async (args) => {
-      const response = this.BLOD.th ? await this._th(args) : await this._gat(args);
-      return { response, responseType: "json", responseText: JSON.stringify(response) };
-    }, false);
-    this.disable = () => {
-      disable();
-      this.listening = false;
-    };
-    this.listening = true;
-  }
-  /** 处理泰区 */
-  async _th(args) {
-    this.data = ["泰区限制视频！"];
-    this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
-    const obj = urlObj(args[1]);
-    this.data.push(\`aid：\${this.BLOD.aid}\`, \`cid：\${this.BLOD.cid}\`);
-    this.toast.data = this.data;
-    const epid = obj.ep_id || obj.episodeId || this.BLOD.epid;
-    obj.access_key = this.BLOD.status.accessKey.token;
-    if (!this.Backup[epid]) {
-      try {
-        this.BLOD.networkMock();
-        this.data.push(\`代理服务器：\${this.BLOD.status.videoLimit.th}\`);
-        this.toast.data = this.data;
-        this.Backup[epid] = { code: 0, message: "success", result: await this.th(obj) };
-        this.data.push("获取代理数据成功！");
-        this.toast.data = this.data;
-        this.toast.type = "success";
-      } catch (e) {
-        this.data.push("代理出错！", e);
-        !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
-        this.toast.data = this.data;
-        this.toast.type = "error";
-        debug.error(...this.data);
-        this.toast.delay = 4;
-        delete this.toast;
-        this.data = [];
-        return { code: -404, message: e, data: null };
-      }
-    }
-    this.toast.delay = 4;
-    delete this.toast;
-    this.data = [];
-    return this.__playinfo__ = this.Backup[epid];
-  }
-  /** 处理港澳台 */
-  async _gat(args) {
-    this.data = ["港澳台限制视频！"];
-    this.toast = this.BLOD.toast.toast(0, "info", ...this.data);
-    const obj = urlObj(args[1]);
-    this.data.push(\`aid：\${this.BLOD.aid}\`, \`cid：\${this.BLOD.cid}\`);
-    this.toast.data = this.data;
-    const epid = obj.ep_id || obj.episodeId || this.BLOD.epid;
-    obj.access_key = this.BLOD.status.accessKey.token;
-    if (!this.Backup[epid]) {
-      try {
-        if (this.BLOD.status.videoLimit.server === "内置") {
-          obj.module = "bangumi";
-          const upInfo = window.__INITIAL_STATE__?.upInfo;
-          if (upInfo) {
-            (upInfo.mid == 1988098633 || upInfo.mid == 2042149112) && (obj.module = "movie");
-          }
-          this.data.push(\`代理服务器：内置\`, \`类型：\${obj.module}\`);
-          this.toast.data = this.data;
-          const res = await apiBiliplusPlayurl(obj);
-          this.Backup[epid] = { code: 0, message: "success", result: res };
-        } else {
-          const res = await this.gat(obj);
-          this.Backup[epid] = { code: 0, message: "success", result: res };
-        }
-        if (this.BLOD.status.uposReplace.gat !== "不替换") {
-          this.Backup[epid] = JSON.parse(_VideoLimit.uposReplace(JSON.stringify(this.Backup[epid]), this.BLOD.status.uposReplace.gat));
-          this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.gat}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.gat]}\`);
-        }
-        ;
-        this.data.push("获取代理数据成功！");
-        this.toast.data = this.data;
-        this.toast.type = "success";
-      } catch (e) {
-        this.data.push("代理出错！", e);
-        !obj.access_key && this.data.push("代理服务器要求【账户授权】才能进一步操作！");
-        this.toast.data = this.data;
-        this.toast.type = "error";
-        debug.error(...this.data);
-        this.toast.delay = 4;
-        delete this.toast;
-        this.data = [];
-        return { code: -404, message: e, data: null };
-      }
-    }
-    this.toast.delay = 4;
-    delete this.toast;
-    this.data = [];
-    return this.__playinfo__ = this.Backup[epid];
-  }
-  /** 停止监听 */
-  disable() {
-    this.listening = false;
-  }
-  /** 更新全局变量 */
-  updateVaribale(obj) {
-    obj.seasonId && (this.BLOD.ssid = obj.seasonId);
-    obj.episodeId && (this.BLOD.epid = obj.episodeId);
-    obj.ep_id && (this.BLOD.epid = obj.ep_id);
-    obj.aid && (this.BLOD.aid = Number(obj.aid)) && (this.BLOD.aid = obj.aid);
-    obj.avid && (this.BLOD.aid = Number(obj.avid)) && (this.BLOD.aid = obj.avid);
-    obj.cid && (this.BLOD.cid = Number(obj.cid)) && (this.BLOD.cid = obj.cid);
-  }
-  /** 访问泰区代理 */
-  async th(obj) {
-    const d = await new ApiGlobalOgvPlayurl(obj, this.BLOD.status.uposReplace.th, this.BLOD.status.videoLimit.th).toPlayurl();
-    this.BLOD.toast.warning("已替换UPOS服务器，卡加载时请到设置中更换服务器或者禁用！", \`CDN：\${this.BLOD.status.uposReplace.th}\`, \`UPOS：\${UPOS2[this.BLOD.status.uposReplace.th]}\`);
-    return d;
-  }
-  /** 代理服务器序号 */
-  area = 0;
-  /** 访问港澳台代理 */
-  async gat(obj) {
-    if (!this.BLOD.status.videoLimit[AREA[this.area]])
-      throw new Error(\`无有效代理服务器：\${AREA[this.area]}\`);
-    const server = this.BLOD.status.videoLimit[AREA[this.area]];
-    obj.area = AREA[this.area];
-    this.data.push(\`代理服务器：\${server}\`);
-    this.toast && (this.toast.data = this.data);
-    try {
-      return await apiPlayurl(obj, true, true, server);
-    } catch (e) {
-      this.data.push("代理服务器返回异常！", e);
-      if (this.toast) {
-        this.toast.data = this.data;
-        this.toast.type = "warning";
-      }
-      this.area++;
-      if (this.area > 2)
-        throw new Error("代理服务器不可用！");
-      return await this.gat(obj);
-    }
-  }
-  /**
-   * 替换upos服务器
-   * @param str playurl或包含视频URL的字符串
-   * @param uposName 替换的代理服务器名 keyof typeof {@link UPOS}
-   */
-  static uposReplace(str, uposName) {
-    if (uposName === "不替换")
-      return str;
-    this.upos = true;
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.upos = false, 1e3);
-    return str.replace(/:\\\\?\\/\\\\?\\/[^\\/]+\\\\?\\//g, () => \`://\${UPOS2[uposName]}/\`);
-  }
-};
-var VideoLimit = _VideoLimit;
-/** 用于过滤upos提示 */
-__publicField(VideoLimit, "upos", false);
-/** 用于取消过滤upos提示 */
-__publicField(VideoLimit, "timer");
 
 // src/json/mid.json
 var mid_default = {
@@ -19807,13 +26433,6 @@ var mid_default = {
   message: "0",
   ttl: 1
 };
-
-// src/io/account-getcardbymid.ts
-async function accountGetCardByMid(mid, GM2) {
-  const response = await GM2.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
-  const json = await response.json();
-  return jsonCheck(json).card;
-}
 
 // src/page/space.ts
 var Mid = {
@@ -19994,3449 +26613,61 @@ var PageSpace = class {
   }
 };
 
-// src/page/media.ts
-var PageMedia = class {
+// src/html/watchlater.html
+var watchlater_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <meta charset="utf-8" />\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <link rel="shortcut icon" href="//static.hdslb.com/images/favicon.ico" />\\r\\n    <link rel="search" type="application/opensearchdescription+xml" href="//static.hdslb.com/opensearch.xml"\\r\\n        title="哔哩哔哩" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/elec_2/dist/css/later_elec.css" type="text/css" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/tag/css/tag-index2.0.css" type="text/css" />\\r\\n    <link href="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/css/main.d9641d2f4dc42228ea8c2650e1b98b0b.css"\\r\\n        rel="stylesheet" />\\r\\n    <style type="text/css">\\r\\n        #bofqi .player {\\r\\n            width: 980px;\\r\\n            height: 620px;\\r\\n            display: block;\\r\\n        }\\r\\n\\r\\n        @media screen and (min-width:1400px) {\\r\\n            #bofqi .player {\\r\\n                width: 1160px;\\r\\n                height: 720px\\r\\n            }\\r\\n        }\\r\\n\\r\\n        /* 修正稍后再看迷你播放器样式 */\\r\\n        .bilibili-player .bilibili-player-area .bilibili-player-video-wrap.mini-player .bilibili-player-video-danmaku {\\r\\n            top: 30px;\\r\\n            height: 240px;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="viewlater-app">\\r\\n        <app></app>\\r\\n    </div>\\r\\n    <div class="footer bili-footer"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.qrcode.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/swfobject.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/account/bili_quick_login.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/moxie.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/mstation/js/upload/plupload.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/elec_2/dist/js/later_elec.js"><\\/script>\\r\\n    <script type="text/javascript"\\r\\n        src="//s1.hdslb.com/bfs/static/phoenix/viewlater/static/js/main.2111469a1bbc20e2e885.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
+
+// src/page/watchalter.ts
+var PageWatchlater = class extends Page {
   constructor(BLOD2) {
+    super(watchlater_default);
     this.BLOD = BLOD2;
-    this.limit();
+    this.like = new Like(this.BLOD);
+    new Comment(BLOD2);
+    this.enLike();
+    this.toview();
+    this.updateDom();
+    this.living();
+    this.commentAgent();
+    Header.primaryMenu();
+    Header.banner();
   }
-  /** 解除限制 */
-  limit() {
-    xhrHook("user/status", void 0, (res) => {
-      try {
-        const result = jsonCheck(res.response);
-        result.result.area_limit = 0;
-        result.result.ban_area_show = 0;
-        res.responseType === "json" ? res.response = result : res.response = res.responseText = JSON.stringify(result);
-      } catch (e) {
-      }
+  like;
+  /** 记录视频数据 */
+  toview() {
+    jsonpHook("history/toview/web?", void 0, (d) => {
+      setTimeout(() => {
+        d.data.list.forEach((d2) => this.BLOD.videoInfo.aidDatail(d2));
+      });
+      return d;
+    });
+  }
+  /** 点赞功能 */
+  enLike() {
+    if (this.BLOD.status.like) {
+      poll(() => document.querySelector(".u.coin"), (d) => {
+        d.parentElement?.insertBefore(this.like, d);
+        addCss(".video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-watchlater");
+      }, void 0, 0);
+      jsonpHook("x/web-interface/view?", void 0, (d) => {
+        setTimeout(() => {
+          const data = jsonCheck(d).data;
+          this.BLOD.aid = data.aid;
+          this.like.likes = data.stat.like;
+          this.like.init();
+        });
+        return d;
+      }, false);
+    }
+  }
+  /** 修正直播错误 */
+  living() {
+    xhrHook("api.live.bilibili.com/bili/living_v2/", void 0, (r) => {
+      r.response = r.responseText = \` \${r.response}\`;
     }, false);
   }
-};
-
-// src/page/history.ts
-var PageHistory = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    BLOD2.userLoadedCallback((status) => {
-      status.history && this.archive();
-    });
-  }
-  /** 纯视频历史记录 */
-  archive() {
-    xhrHook(["api.bilibili.com/x/web-interface/history/cursor", "business"], function(args) {
-      let obj = new URL(args[1]), max = obj.searchParams.get("max") || "", view_at = obj.searchParams.get("view_at") || "";
-      args[1] = objUrl("//api.bilibili.com/x/web-interface/history/cursor", { max, view_at, type: "archive", ps: "20" });
-    }, void 0, false);
-  }
-};
-
-// src/page/dynamic.ts
-var PageDynamic = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    this.BLOD.userLoadedCallback((status) => {
-      status.liveRecord || this.liveRecord();
-    });
-  }
-  liveRecord() {
-    xhrHook("api.bilibili.com/x/polymer/web-dynamic/v1/feed/all", void 0, (r) => {
-      try {
-        const response = jsonCheck(r.response);
-        response.data.items = response.data.items.filter((d) => d.modules?.module_dynamic?.major?.archive?.badge?.text != "直播回放");
-        r.responseType === "json" ? r.response = response : r.response = r.responseText = JSON.stringify(response);
-      } catch (e) {
-      }
-    }, false);
-  }
-};
-
-// src/io/api-login-app-third.ts
-var ApiLoginAppThird = class extends ApiSign {
-  constructor(api) {
-    super(URLS.LOGIN_APP_THIRD, "27eb53fc9058f8c3");
-    this.api = api;
-    this.api = encodeURIComponent(api);
-  }
-  async getData() {
-    const response = await fetch(this.sign({ api: this.api }, this.api), { credentials: "include" });
-    const json = await response.json();
-    return jsonCheck(json).data;
-  }
-};
-
-// src/core/accesskey.ts
-var AccessKey = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    const button = [{
-      text: "开始授权",
-      callback: () => this.get()
-    }];
-    if (this.BLOD.status.accessKey.token) {
-      button[0].text = "刷新授权";
-      button.push({
-        text: "取消授权",
-        callback: () => this.remove()
-      });
-    }
-    alert([
-      "【账户授权】将授权脚本获取您的登录鉴权，允许脚本访问一些网页端无权访问的B站接口，以实现【解除播放限制】等功能。",
-      "警告：如果您启用了脚本的【解除播放限制】功能，并且选择使用【自定义】服务器，请务必自行确认服务器的可信度！",
-      "第三方服务器获得授权等于您在上面登录了B站，好比在网吧登录又忘了退出，第三方能用您的账户实现任何登录状态能进行的操作！",
-      "个中风险请务必知悉！<strong>如无必要，切莫授权！</strong>"
-    ], "授权确认", button);
-  }
-  get() {
-    if (uid) {
-      const data = ["正在申请账户授权~"];
-      const toast = this.BLOD.toast.toast(0, "info", ...data);
-      new ApiLoginAppThird("https://www.mcbbs.net/template/mcbbs/image/special_photo_bg.png").getData().then(async (d) => {
-        data.push("成功获取到授权链接~");
-        toast.data = data;
-        return this.BLOD.GM.fetch(d.confirm_uri, { credentials: "include" });
-      }).then((d) => {
-        const date = new Date().getTime();
-        const dateStr = timeFormat(date, true);
-        const obj = urlObj(d.url);
-        this.BLOD.status.accessKey.token = obj.access_key;
-        this.BLOD.status.accessKey.date = date;
-        this.BLOD.status.accessKey.dateStr = dateStr;
-        data.push("------- 授权成功 -------", \`鉴权: \${obj.access_key}\`, \`日期：\${dateStr}\`);
-        toast.data = data;
-        toast.type = "success";
-        toast.delay = 4;
-      }).catch((e) => {
-        debug.error("授权出错！", e);
-        data.push("授权出错！", e);
-        toast.data = data;
-        toast.type = "error";
-        toast.delay = 4;
-      });
-    } else {
-      this.BLOD.toast.warning("请先登录B站账户！");
-      this.BLOD.biliQuickLogin();
-    }
-  }
-  remove() {
-    this.BLOD.status.accessKey.token = "";
-    this.BLOD.status.accessKey.date = 0;
-    this.BLOD.status.accessKey.dateStr = "";
-    this.BLOD.toast.warning("已清除账户鉴权", "如果您在【解除播放限制】功能中选择【自定义】服务器，那么第三方服务器中很可能依然有鉴权。", "为求保险，您可以修改一次密码，这会强制所有鉴权失效。")();
-  }
-};
-
-// src/utils/base64.ts
-var Base64 = class {
-  /**
-   * Base64编码
-   * @param str 原始字符串
-   * @returns 编码结果
-   */
-  static encode(str) {
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
-      return String.fromCharCode("0x" + p1);
-    }));
-  }
-  /**
-   * Base64解码
-   * @param str 原始字符串
-   * @returns 解码结果
-   */
-  static decode(str) {
-    return decodeURIComponent(atob(str).split("").map(function(c) {
-      return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(""));
-  }
-};
-
-// src/utils/mutex.ts
-function getMetux() {
-  return Math.random().toString(36).substring(2);
-}
-
-// src/core/download/aria2.ts
-var Aria2 = class {
-  constructor(userAgent, referer, dir, server = "http://localhost", port = 6800, token, split, size) {
-    this.userAgent = userAgent;
-    this.referer = referer;
-    this.dir = dir;
-    this.server = server;
-    this.port = port;
-    this.token = token;
-    this.split = split;
-    this.size = size;
-  }
-  get url() {
-    return \`\${this.server}:\${this.port}/jsonrpc\`;
-  }
-  /** 命令行 */
-  cmdlet(data) {
-    const arr2 = ["aria2c"];
-    data.urls.forEach((d) => arr2.push(\`"\${d}"\`));
-    data.out && arr2.push(\`--out="\${data.out}"\`);
-    (data.userAgent || this.userAgent) && arr2.push(\`--user-agent="\${data.userAgent || this.userAgent}"\`);
-    (data.referer || this.referer) && arr2.push(\`--referer="\${data.referer || this.referer}"\`);
-    (data.dir || this.dir) && arr2.push(\`--dir="\${data.dir || this.dir}"\`);
-    (data.split || this.split) && arr2.push(\`--split="\${data.split || this.split}"\`, \`--max-connection-per-server="\${data.split || this.split}"\`);
-    (data.size || this.size) && arr2.push(\`--min-split-size="\${data.size || this.size}M"\`);
-    data.header && Object.entries(data.header).forEach((d) => arr2.push(\`--header="\${d[0]}: \${d[1]}"\`));
-    return navigator.clipboard.writeText(arr2.join(" "));
-  }
-  /** RPC */
-  rpc(data) {
-    const options = {};
-    data.out && (options.out = data.out);
-    (data.userAgent || this.userAgent) && (options["user-agent"] = data.userAgent || this.userAgent);
-    (data.referer || this.referer) && (options.referer = data.referer || this.referer);
-    (data.dir || this.dir) && (options.dir = data.dir || this.dir);
-    (data.split || this.split) && (options.split = options["max-connection-per-server"] = data.split || this.split);
-    (data.size || this.size) && (options["min-split-size"] = \`\${data.size || this.size}M\`);
-    data.header && (options.header = data.header);
-    return this.postMessage("aria2.addUri", data.id, [data.urls, options]);
-  }
-  /** 获取aria2配置信息 */
-  getVersion() {
-    return this.postMessage("aria2.getVersion");
-  }
-  postMessage(method, id = getMetux(), params = []) {
-    this.token && params.unshift(\`token:\${this.token}\`);
-    return new Promise((r, j) => {
-      fetch(this.url, {
-        method: "POST",
-        body: JSON.stringify({ method, id, params }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then((d) => d.json()).then((d) => {
-        d.error && j(d.error);
-        d.result && r(d.result);
-      }).catch((e) => {
-        debug.error("RPC<POST>", e);
-        fetch(objUrl(this.url, { method, id, params: Base64.encode(JSON.stringify(params)) })).then((d) => d.json()).then((d) => {
-          d.error && j(d.error);
-          d.result && r(d.result);
-        }).catch((e2) => {
-          debug.error("RPC<GET>", e2);
-          j(e2);
-        });
-      });
-    });
-  }
-};
-
-// src/css/desc.css
-var desc_default = ".container {\\r\\n    position: fixed;\\r\\n    top: 16px;\\r\\n    left: 100%;\\r\\n    background: hsla(0, 0%, 95.7%, .8);\\r\\n    border-radius: 2px;\\r\\n    box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n    color: #000;\\r\\n    width: 381px;\\r\\n    z-index: 1;\\r\\n}\\r\\n\\r\\n.title {\\r\\n    text-align: center;\\r\\n    margin-top: 16px;\\r\\n    margin-bottom: 3px;\\r\\n    font-size: 12px;\\r\\n}\\r\\n\\r\\n.content {\\r\\n    font-size: 12px;\\r\\n    line-height: 19px;\\r\\n    padding: 0 16px 16px;\\r\\n    text-align: justify;\\r\\n    white-space: pre-line;\\r\\n}";
-
-// src/core/ui/desc.ts
-var Desc = class extends HTMLElement {
-  _title;
-  _content;
-  show = true;
-  timer;
-  _container;
-  _parrent;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = \`<div class="container"><div class="title"></div><div class="content"></div></div>\`;
-    addCss(desc_default, void 0, root);
-    this._container = root.querySelector(".container");
-    this._title = root.querySelector(".title");
-    this._content = root.querySelector(".content");
-    this.toggle(false);
-  }
-  /**
-   * 更新浮窗
-   * @param title 标题
-   * @param content 内容
-   * @param appendTo 父节点
-   */
-  value(title, content, appendTo) {
-    this._title.innerHTML = title;
-    this._content.innerHTML = content;
-    this._parrent = appendTo;
-    appendTo.appendChild(this);
-    appendTo.addEventListener("mouseover", () => {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        this.toggle(true);
-      }, 300);
-    });
-    appendTo.addEventListener("mouseout", () => {
-      clearTimeout(this.timer);
-      this.timer = setTimeout(() => {
-        this.toggle(false);
-      }, 300);
-    });
-  }
-  toggle(show) {
-    this.show = show === void 0 ? !this.show : show;
-    this.style.display = this.show ? "" : "none";
-    if (this._parrent) {
-      const rect = this._parrent.getBoundingClientRect();
-      this._container.style.top = rect.top - rect.height * 2 + "px";
-    }
-  }
-};
-customElements.get(\`desc-\${"855f368"}\`) || customElements.define(\`desc-\${"855f368"}\`, Desc);
-
-// src/html/ui-interface.html
-var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/interface.ts
-var BiliOldInterface = class extends HTMLElement {
-  /** 跟节点 */
-  _box;
-  /** 标题栏 */
-  _tool;
-  /** 关闭按钮 */
-  _close;
-  /** 菜单栏 */
-  _menu;
-  /** 项目栏 */
-  _item;
-  /** 显示设置 */
-  showing = false;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = ui_interface_default;
-    this._box = root.children[0];
-    this._tool = root.children[0].children[0];
-    this._close = root.children[0].children[0].children[0];
-    this._menu = root.children[0].children[1].children[0].children[0];
-    this._item = root.children[0].children[1].children[0].children[1];
-    this._close.innerHTML = svg.fork;
-    this._close.addEventListener("click", () => this.hide());
-  }
-  show() {
-    document.body.contains(this) || document.body.appendChild(this);
-    this._box.style.display = "block";
-    this.showing = true;
-  }
-  hide() {
-    this._box.style.display = "";
-    this.showing = false;
-  }
-  addMenu(menu) {
-    this._menu.appendChild(menu);
-    const sets = menu.show();
-    menu.show = () => {
-      this._item.replaceChildren(...sets);
-      return sets;
-    };
-  }
-};
-customElements.get("bili-old") || customElements.define("bili-old", BiliOldInterface);
-
-// src/core/ui/item.ts
-var SettingItem = class extends HTMLDivElement {
-  _value = document.createElement("div");
-  /**
-   * 新建设置项
-   * @param id keyof typeof {@link userStatus}
-   * @param title 标题
-   * @param sub 副标题
-   * @param svg 图标
-   */
-  init(id, title, sub, svg2) {
-    this.innerHTML = \`<div class="contain2\${id ? \` \${id}\` : ""}">\${svg2 ? \`<div class="icon">\${svg2}</div>\` : ""}
-    <div class="label">\${title}\${sub ? \`<div class="sub">\${sub}</div>\` : ""}</div>
-</div>\`;
-    this._value.className = "value";
-    this.querySelector(".contain2")?.appendChild(this._value);
-  }
-  /** 添加值 */
-  value(value) {
-    this._value.appendChild(value);
-  }
-};
-customElements.get(\`item-\${"855f368"}\`) || customElements.define(\`item-\${"855f368"}\`, SettingItem, { extends: "div" });
-
-// src/core/ui/item-container.ts
-var ItemContainer = class extends HTMLDivElement {
-  _title;
-  /** 设置项容器 */
-  _card;
-  constructor() {
-    super();
-    this.innerHTML = \`<div class="contain1">
-    <div class="header">
-        <h2 class="title"></h2>
-    </div>
-</div>
-<div class="card"></div>\`;
-    this._title = this.querySelector(".title");
-    this._card = this.querySelector(".card");
-  }
-  /** 初始化设置项容器 */
-  init(title) {
-    this._title.textContent = title;
-  }
-  /**
-   * 添加设置
-   * @param item 设置项
-   */
-  addSetting(item) {
-    this._card.append(...item);
-  }
-};
-customElements.get(\`item-container-\${"855f368"}\`) || customElements.define(\`item-container-\${"855f368"}\`, ItemContainer, { extends: "div" });
-
-// src/core/ui/menu.ts
-var Menuitem = class extends HTMLDivElement {
-  container = [new ItemContainer()];
-  constructor() {
-    super();
-    this.addEventListener("click", () => {
-      this.parentElement?.querySelector(".selected")?.classList.remove("selected");
-      this.classList.add("selected");
-      this.show();
-    });
-  }
-  /**
-   * 初始化菜单项
-   * @param name 标题
-   * @param svg 图标
-   * @returns 默认设置项容器
-   */
-  init(name, svg2) {
-    this.className = "menuitem";
-    this.innerHTML = (svg2 ? \`<div class="icon">\${svg2}</div>\` : "") + name;
-    this.container[0].init(name);
-    return this.container[0];
-  }
-  /**
-   * 添加设置分组
-   * @param name 分组名称
-   * @returns 分组设置项容器
-   */
-  addCard(name) {
-    const con = new ItemContainer();
-    con.init(name);
-    this.container.push(con);
-    return con;
-  }
-  /**
-   * 添加设置项到容器
-   * @param item 设置项
-   * @param i 容器序号
-   */
-  addSetting(item, i = 0) {
-    isArray(item) || (item = [item]);
-    item.forEach((d) => {
-      d.addEventListener("show", (e) => {
-        Promise.resolve(this.click()).then(() => {
-          d.scrollIntoView({ behavior: "smooth", block: "start" });
-          e.stopPropagation();
-        });
-      });
-    });
-    i = Math.min(this.container.length - 1, i);
-    this.container[i].addSetting(item);
-  }
-  /** 显示容器中的设置 */
-  show() {
-    return this.container;
-  }
-};
-customElements.get(\`menuitem-\${"855f368"}\`) || customElements.define(\`menuitem-\${"855f368"}\`, Menuitem, { extends: "div" });
-
-// src/html/checkbox.html
-var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
-<label for="checkbox"></label>\\r
-<style>\\r
-    input[type="checkbox"] {\\r
-        display: none;\\r
-    }\\r
-\\r
-    input~label {\\r
-        cursor: pointer;\\r
-    }\\r
-\\r
-    input:checked~label:before {\\r
-        content: '\\\\2714';\\r
-    }\\r
-\\r
-    input~label:before {\\r
-        width: 12px;\\r
-        height: 12px;\\r
-        line-height: 14px;\\r
-        vertical-align: text-bottom;\\r
-        border-radius: 3px;\\r
-        border: 1px solid #d3d3d3;\\r
-        display: inline-block;\\r
-        text-align: center;\\r
-        content: ' ';\\r
-    }\\r
-</style>\`;
-
-// src/core/ui/utils/checkbox.ts
-var CheckBox = class extends HTMLElement {
-  _input;
-  _text;
-  static get observedAttributes() {
-    return [
-      "label",
-      "value"
-    ];
-  }
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = checkbox_default;
-    this._input = root.children[0];
-    this._text = root.children[1];
-    this._input.addEventListener("change", () => {
-      this.setAttribute("value", this._input.checked);
-      this.dispatchEvent(new Event("change"));
-    });
-  }
-  /** 是否选中 */
-  get value() {
-    return this.getAttribute("value") === "true" ? true : false;
-  }
-  set value(v) {
-    v || (v = false);
-    this.setAttribute("value", v);
-  }
-  /** 标签 */
-  get label() {
-    return this.getAttribute("label");
-  }
-  set label(v) {
-    v || (v = "");
-    this.setAttribute("label", v);
-  }
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue)
-      return;
-    switch (name) {
-      case "label":
-        this._text.textContent = newValue;
-        break;
-      case "value":
-        this._input.checked = newValue === "false" ? false : true;
-        break;
-      default:
-        break;
-    }
-  }
-  /** 刷新值 */
-  update(value) {
-    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
-  }
-};
-customElements.get(\`checkbox-\${"855f368"}\`) || customElements.define(\`checkbox-\${"855f368"}\`, CheckBox);
-var CheckBoxs = class extends HTMLDivElement {
-  \$value = [];
-  checkboxs = {};
-  get value() {
-    return this.\$value;
-  }
-  set value(v) {
-    v.forEach((d) => {
-      if (!this.\$value.includes(d)) {
-        if (this.checkboxs[d]) {
-          this.checkboxs[d].value = true;
-        } else {
-          this.update(Object.keys(this.checkboxs).concat(d));
-          this.checkboxs[d].value = true;
-        }
-      }
-    });
-    this.\$value.forEach((d) => {
-      v.includes(d) || (this.checkboxs[d].value = false);
-    });
-    this.\$value = [...v];
-  }
-  update(labels) {
-    labels.forEach((d) => {
-      if (!this.checkboxs[d]) {
-        const checkbox = new CheckBox();
-        checkbox.update({ label: d });
-        checkbox.addEventListener("change", () => {
-          if (checkbox.value) {
-            this.\$value.includes(d) || this.\$value.push(d);
-          } else {
-            const i = this.\$value.indexOf(d);
-            i >= 0 && this.\$value.splice(i, 1);
-          }
-          this.dispatchEvent(new Event("change"));
-        });
-        this.appendChild(checkbox);
-        this.checkboxs[d] = checkbox;
-      }
-    });
-    this.\$value.forEach((d) => {
-      if (!labels.includes(d)) {
-        this.checkboxs[d]?.remove();
-        const i = this.\$value.indexOf(d);
-        i >= 0 && this.\$value.splice(i, 1);
-      }
-    });
-  }
-};
-customElements.get(\`checkboxs-\${"855f368"}\`) || customElements.define(\`checkboxs-\${"855f368"}\`, CheckBoxs, { extends: "div" });
-
-// src/html/input.html
-var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/utils/input.ts
-var InputArea = class extends HTMLElement {
-  _input;
-  _ul;
-  \$prop = {};
-  \$value = "";
-  \$candidate = [];
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = input_default;
-    this._input = root.children[0].children[0];
-    this._ul = root.children[0].children[1];
-    this._input.addEventListener("change", () => {
-      this.\$value = this.\$prop.type === "file" ? this._input.files : this._input.value;
-      this.dispatchEvent(new Event("change"));
-    });
-  }
-  /** input标签属性 */
-  get prop() {
-    return this.\$prop;
-  }
-  set prop(v) {
-    this.\$prop = v;
-    Object.entries(v).forEach((d) => this._input.setAttribute(...d));
-  }
-  /** 输入框值 */
-  get value() {
-    return this.\$value;
-  }
-  set value(v) {
-    if (this.\$value === v)
-      return;
-    this.\$value = v || "";
-    this._input.value = this.\$value;
-  }
-  /** 候选值 */
-  get candidate() {
-    return this.\$candidate;
-  }
-  set candidate(v) {
-    this.\$candidate = v;
-    this._ul.replaceChildren(...v.map((d, i, t) => {
-      const li = document.createElement("li");
-      li.className = "input-list-row";
-      li.addEventListener("click", (e) => {
-        this.value = d;
-        e.stopPropagation();
-        this.dispatchEvent(new Event("change"));
-      });
-      const span = document.createElement("span");
-      span.textContent = d;
-      const div = document.createElement("div");
-      div.className = "cancel";
-      div.addEventListener("click", (e) => {
-        t.splice(i, 1);
-        li.remove();
-        e.stopPropagation();
-      });
-      li.append(span, div);
-      return li;
-    }));
-  }
-  /** 刷新值 */
-  update(value) {
-    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
-  }
-};
-customElements.get(\`input-\${"855f368"}\`) || customElements.define(\`input-\${"855f368"}\`, InputArea);
-
-// src/html/select.html
-var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/utils/select.ts
-var SelectMenu = class extends HTMLElement {
-  _text;
-  _list;
-  \$value = "";
-  \$candidate = [];
-  \$styles = {};
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = select_default;
-    this._text = root.children[0].children[0].children[0];
-    this._list = root.children[0].children[2];
-  }
-  /** 当前值 */
-  get value() {
-    return this.\$value;
-  }
-  set value(v) {
-    if (this.\$value === v)
-      return;
-    this.\$value = v || "";
-    this._text.textContent = v || "";
-    v && this.\$styles[v] && this._text.setAttribute("style", this.\$styles[v]);
-  }
-  /** 候选值 */
-  get candidate() {
-    return this.\$candidate;
-  }
-  set candidate(v) {
-    this.\$candidate = v;
-    this._list.replaceChildren(...v.map((d, i, t) => {
-      const li = document.createElement("li");
-      li.className = "selectmenu-list-row";
-      li.addEventListener("click", (e) => {
-        this.value = d;
-        this.dispatchEvent(new Event("change"));
-        e.stopPropagation();
-      });
-      const span = document.createElement("span");
-      span.textContent = d;
-      this.\$styles[d] && span.setAttribute("style", this.\$styles[d]);
-      li.appendChild(span);
-      return li;
-    }));
-  }
-  /** 候选值对应的行内应该 格式 => 候选值: 样式 */
-  get styles() {
-    return this.\$styles;
-  }
-  set styles(v) {
-    this.\$styles = v;
-    this.candidate = this.candidate;
-  }
-  /** 刷新值 */
-  update(value) {
-    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
-  }
-};
-customElements.get(\`select-\${"855f368"}\`) || customElements.define(\`select-\${"855f368"}\`, SelectMenu);
-
-// src/html/slider.html
-var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/utils/slider.ts
-function offset(node) {
-  const result = {
-    top: 0,
-    left: 0
-  };
-  const onwer = node.ownerDocument;
-  if (node === onwer.body) {
-    result.top = node.offsetTop;
-    result.left = node.offsetLeft;
-  } else {
-    let rect = void 0;
-    try {
-      rect = node.getBoundingClientRect();
-    } catch {
-    }
-    if (!rect || !onwer.documentElement.contains(node)) {
-      rect && (result.top = rect.top, result.left = rect.left);
-      return result;
-    }
-    result.top = rect.top + onwer.body.scrollTop - onwer.documentElement.clientTop;
-    result.left = rect.left + onwer.body.scrollLeft - onwer.documentElement.clientLeft;
-  }
-  return result;
-}
-var SliderBlock = class extends HTMLElement {
-  _handle;
-  _progress;
-  _hinter;
-  _wrp;
-  \$value = 0;
-  \$min = 0;
-  \$max = 100;
-  \$precision = 100;
-  \$hint = true;
-  \$solid = false;
-  \$vertical = false;
-  showChange;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = slider_default;
-    this._handle = root.children[0].children[0].children[0].children[0].children[0];
-    this._progress = root.children[0].children[0].children[0].children[0].children[1];
-    this._hinter = root.children[0].children[0].children[0].children[0].children[0].children[0];
-    this._wrp = root.children[0].children[0].children[0];
-    const mouseLinster = (e) => {
-      const { pageX, pageY } = e;
-      const offsetX = this.\$vertical ? pageY - offset(this._wrp).top - 7 : pageX - offset(this._wrp).left - 7;
-      const allX = this._wrp.offsetWidth - 14;
-      const pv = (0 > offsetX ? 0 : offsetX > allX ? allX : offsetX) / allX;
-      this.value = (this.\$max - this.\$min) * Math.round(pv * this.\$precision) / this.\$precision + this.\$min;
-      this.dispatchEvent(new Event("change"));
-    };
-    this.addEventListener("click", mouseLinster);
-    const mouseClear = () => {
-      window.removeEventListener("mousemove", mouseLinster);
-      window.removeEventListener("mouseup", mouseClear);
-    };
-    this._handle.addEventListener("mousedown", () => {
-      window.addEventListener("mousemove", mouseLinster);
-      window.addEventListener("mouseup", mouseClear);
-    });
-    this._handle.addEventListener("mouseover", () => this.showChange());
-    let nHint = 0;
-    this.showChange = () => {
-      const pv = (this.\$value - this.\$min) / (this.\$max - this.\$min);
-      this._handle.style.cssText = \`left: \${(pv * (this._wrp.offsetWidth - 14) + 7) / this._wrp.offsetWidth * 100}%;\`;
-      this._progress.style.cssText = \`width: \${pv * 100}%;\`;
-      if (this.\$hint) {
-        this._hinter.textContent = this.\$value;
-        if (this._hinter.style.display !== "block")
-          this._hinter.style.display = "block";
-        if (this.\$solid)
-          return;
-        clearTimeout(nHint);
-        nHint = setTimeout(() => this._hinter.style.display = "", 300);
-      }
-      ;
-    };
-  }
-  /** 默认值 */
-  get value() {
-    return this.\$value;
-  }
-  set value(v) {
-    if (this.\$vertical)
-      v = this.\$max - v + this.\$min;
-    v = (this.\$max - this.\$min) * Math.round((v - this.\$min) / (this.\$max - this.\$min) * this.\$precision) / this.\$precision + this.\$min;
-    if (v === this.\$value)
-      return;
-    this.\$value = v;
-    this.showChange();
-  }
-  /** 最小值 */
-  get min() {
-    return this.\$min;
-  }
-  set min(v) {
-    if (v === this.\$min || v >= this.\$max)
-      return;
-    this.\$min = v;
-    if (v > this.\$value)
-      this.value = v;
-    this.showChange();
-  }
-  /** 最大值 */
-  get max() {
-    return this.\$max;
-  }
-  set max(v) {
-    if (v === this.\$max || v <= this.\$min)
-      return;
-    this.\$max = v;
-    if (v < this.\$value)
-      this.value = v;
-    this.showChange();
-  }
-  /** 刻度数 */
-  get precision() {
-    return this.\$precision;
-  }
-  set precision(v) {
-    if (v === this.\$precision)
-      return;
-    this.\$precision = v;
-    this.value = this.\$value;
-  }
-  /** 提示信息 */
-  get hint() {
-    return this.\$hint;
-  }
-  set hint(v) {
-    if (v === this.\$hint)
-      return;
-    this.\$hint = v;
-  }
-  /** 固化提示 */
-  get solid() {
-    return this.\$solid;
-  }
-  set solid(v) {
-    if (v === this.\$solid)
-      return;
-    this.\$solid = v;
-    this.showChange();
-  }
-  /** 垂直 */
-  get vertical() {
-    return this.\$vertical;
-  }
-  set vertical(v) {
-    if (v === this.\$vertical)
-      return;
-    this.\$vertical = v;
-    this.style.transform = v ? "rotate(-90deg)" : "";
-  }
-  connectedCallback() {
-    this.showChange();
-  }
-  adoptedCallback() {
-    this.showChange();
-  }
-  /** 刷新值 */
-  update(value) {
-    Object.entries(value).forEach((d) => this[d[0]] = d[1]);
-  }
-};
-customElements.get(\`slider-\${"855f368"}\`) || customElements.define(\`slider-\${"855f368"}\`, SliderBlock);
-
-// src/html/switch.html
-var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/utils/switch.ts
-var SwitchButton = class extends HTMLElement {
-  _bar;
-  _knob;
-  _circle;
-  \$value = false;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = switch_default;
-    this._bar = root.children[0].children[0];
-    this._knob = root.children[0].children[1];
-    this._circle = root.children[0].children[1].children[0];
-    root.children[0].addEventListener("click", (e) => {
-      this.value = !this.\$value;
-      e.stopPropagation();
-      this.dispatchEvent(new Event("change"));
-    });
-  }
-  get value() {
-    return this.\$value;
-  }
-  set value(v) {
-    if (this.\$value === v)
-      return;
-    if (v) {
-      this._bar.setAttribute("checked", "checked");
-      this._knob.setAttribute("checked", "checked");
-      this._circle.setAttribute("checked", "checked");
-    } else {
-      this._bar.removeAttribute("checked");
-      this._knob.removeAttribute("checked");
-      this._circle.removeAttribute("checked");
-    }
-    this.\$value = v;
-  }
-  /** 刷新值 */
-  update(value) {
-    value === void 0 || (this.value = value);
-    return this;
-  }
-};
-customElements.get(\`switch-\${"855f368"}\`) || customElements.define(\`switch-\${"855f368"}\`, SwitchButton);
-
-// src/core/ui.ts
-var Menus = {
-  common: ["通用", svg.wrench],
-  rewrite: ["重写", svg.note],
-  danmaku: ["弹幕", svg.dmset],
-  restore: ["修复", svg.stethoscope],
-  player: ["播放", svg.play],
-  style: ["样式", svg.palette],
-  download: ["下载", svg.download]
-};
-var UI = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    this.initMenu();
-    this.initSettings();
-    poll(() => document.readyState === "complete", () => {
-      this.entry.type = this.BLOD.status.uiEntryType;
-      document.body.appendChild(this.entry);
-      this.updateCheck();
-    }, 1e3, 0);
-    this.entry.addEventListener("click", (e) => {
-      this.show();
-      e.stopPropagation();
-    });
-  }
-  entry = new BilioldEntry();
-  interface = new BiliOldInterface();
-  menuitem = {};
-  settingItem = {};
-  /** 检查播放器脚本更新 */
-  async updateCheck() {
-    if (this.BLOD.status.bilibiliplayer && this.BLOD.status.checkUpdate) {
-      const version = await this.BLOD.GM.getValue("version");
-      if (version !== this.BLOD.version) {
-        this.BLOD.loadplayer(true);
-      }
-    }
-  }
-  /** 初始化菜单 */
-  initMenu() {
-    Object.entries(Menus).forEach((d) => {
-      const menu = new Menuitem();
-      this.menuitem[d[0]] = menu;
-      menu.init(d[1][0], d[1][1]);
-      this.interface.addMenu(menu);
-    });
-  }
-  /** 初始化设置项 */
-  initSettings() {
-    this.initSettingCommon();
-    this.initSettingRewrite();
-    this.initSettingStyle();
-    this.initSettingRestore();
-    this.initSettingPlayer();
-    this.initSettingDanmaku();
-    this.initSettingDownload();
-  }
-  /** 通用设置 */
-  initSettingCommon() {
-    this.menuitem.common.addSetting([
-      this.switch("development", "开发者模式", "暴露调试接口到控制台", svg.warn, (v) => {
-        if (v) {
-          propertyHook(window, "BLOD", this.BLOD);
-        } else {
-          Reflect.deleteProperty(window, "BLOD");
-        }
-      }, "暴露一个名为【BLOD】的对象到全局，你可以在浏览器控制台里使用内部的属性及方法进行调试。"),
-      this.switch("disableReport", "数据上报", "禁止网页跟踪上报", svg.linechart),
-      this.select("uiEntryType", "设置入口样式", {
-        candidate: ["old", "new"]
-      }, "浮动齿轮或者贴边隐藏", svg.gear, (v) => this.entry.type = v, "【old】入口更具隐蔽性，鼠标移动到贴边位置才会浮现。【new】入口每次网页加载完成都会滚动浮现，隐藏会鼠标移动到对应位置便会浮现。"),
-      this.button("userStatus", "管理设置数据", () => {
-        alert([
-          "备份脚本设置或者恢复已备份的数据。",
-          "当调整的选项过多时，备份一下是一个良好的主意，以免因为意外重复第二次操作。"
-        ], "备份还原", [
-          {
-            text: "默认",
-            callback: () => this.BLOD.user.restoreUserStatus()
-          },
-          {
-            text: "导出",
-            callback: () => this.BLOD.user.outputUserStatus()
-          },
-          {
-            text: "导入",
-            callback: () => this.BLOD.user.inputUserStatus()
-          }
-        ]);
-      }, "备份/恢复", "管理", svg.blind),
-      this.switch("bilibiliplayer", "重构播放器", "修复及增强", svg.play, (v) => {
-        if (v) {
-          this.updateCheck();
-        }
-      }, "旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。")
-    ]);
-    this.menuitem.common.addCard("toastr");
-    this.menuitem.common.addSetting([
-      this.switch("toast.disabled", "禁用", '<a href="https://github.com/CodeSeven/toastr" target="_blank">toastr</a>', void 0, (v) => this.BLOD.toast.disabled = v),
-      this.switch("toast.rtl", "镜像", "左右翻转", void 0, (v) => this.BLOD.toast.rtl = v),
-      this.select("toast.position", "位置", {
-        candidate: ["top-left", "top-center", "top-right", "top-full-width", "bottom-left", "bottom-right", "bottom-center", "bottom-full-width"]
-      }, "相对屏幕", void 0, (v) => this.BLOD.toast.position = v),
-      this.slider("toast.delay", "时长", {
-        min: 2,
-        max: 60,
-        precision: 58
-      }, "单位：/秒", void 0, (v) => this.BLOD.toast.delay = v),
-      this.select("toast.type", "类型", {
-        candidate: ["info", "success", "warning", "error"],
-        styles: {
-          info: "color: #2F96B4",
-          success: "color: #51A351",
-          warning: "color: #F89406",
-          error: "color: #BD362F"
-        }
-      }, "测试限定"),
-      this.inputCustom("toast.test", "测试", {
-        candidate: ["Hello World!"]
-      }, (v) => {
-        try {
-          this.BLOD.toast.toast(this.BLOD.status.toast.delay, this.BLOD.status.toast.type, v);
-        } catch (e) {
-          this.BLOD.toast.error("非常抱歉！发生了错误", e);
-        }
-      }, "请输入一句话~")
-    ], 1);
-    this.menuitem.common.addCard("账户授权");
-    this.menuitem.common.addSetting([
-      this.input("accessKey.token", "token", {
-        prop: { type: "text", readonly: "readonly" }
-      }, "access_key", void 0, void 0, "鉴权。效果等同于网页端的cookie，B站服务器用以识别您的登录身份。本脚本只会在您本地保存鉴权，绝对不会泄露出去，唯一的例外是如果启用了【解除区域限制】功能并选择自定义服务器，则会向代理服务器发送鉴权，我们无法保证第三方服务器如何使用您的鉴权，所以万请自行必确认代理服务器的可信度，<strong>三思而后行</strong>！"),
-      this.input("accessKey.dateStr", "授权日期", {
-        prop: { type: "text", readonly: "readonly" }
-      }, "有效期一般为一个月", void 0, void 0, "脚本不会代为检查鉴权是否失效，请失效时自行重新授权。"),
-      this.button("accessKey.action", "进行授权", () => {
-        new AccessKey(this.BLOD);
-      }, "授权脚本使用登录鉴权", "授权", svg.warn)
-    ], 2);
-    if (true) {
-      this.menuitem.common.addSetting([
-        this.switch("checkUpdate", "检查更新", "自动更新播放器", svg.download, void 0, "启用【重构播放器】后，脚本会自动检查并更新播放器组件，但可能因为网络原因更新失败，出现反复更新->反复失败的问题。您可以禁用此功能，以继续使用【重构播放器】，等待网络环境改善后再尝试启用。")
-      ]);
-    }
-  }
-  /** 重写设置 */
-  initSettingRewrite() {
-    this.menuitem.rewrite.addSetting([
-      this.switch("av", "av/BV", "恢复旧版av页"),
-      this.switch("bangumi", "bangumi", "恢复旧版bangumi页"),
-      this.switch("watchlater", "稍后再看", "恢复旧版稍后再看"),
-      this.switch("playlist", "播单", "恢复旧版播单页"),
-      this.switch("index", "主页", "恢复旧版Bilibili主页"),
-      this.switch("player", "播放器", "替换其他未重写页面的播放器"),
-      this.switch("read", "专栏", "恢复旧版专栏"),
-      this.switch("ranking", "排行榜", "恢复旧版全站排行榜页"),
-      this.switch("search", "搜索", "恢复旧版搜索页"),
-      this.switch("album", "相簿", "恢复相簿页")
-    ]);
-  }
-  /** 弹幕设置 */
-  initSettingDanmaku() {
-    this.menuitem.danmaku.addSetting([
-      this.switch("dmproto", "proto弹幕", "protobuf弹幕支持", void 0, void 0, "因为B站已放弃维护xml弹幕，带来一些问题，比如90分钟后无弹幕，所以此项不建议禁用。【重构播放器】默认启用且不受此项影响。"),
-      this.switch("dmwrap", "弹幕提权", "允许普权弹幕排版", void 0, void 0, "上古时代存在大量使用换行及空格等特殊字符来提权以达到高级弹幕效果的作品，在html5时代无法正常显示，启用此项将恢复普权弹幕排版效果。尽情享受弹幕艺术。【重构播放器】默认启用且不受此项影响。"),
-      this.select("dmExtension", "弹幕格式", {
-        candidate: ["xml", "json"]
-      }, "拓展名", void 0, void 0, "【下载弹幕】及【本地弹幕】使用的弹幕格式，xml是传统格式，json是protobuf弹幕实际格式，前者一般拥有更小的体积，只是可能丢失彩蛋彩蛋及部分非法字符。"),
-      this.switch("dmContact", "合并弹幕", "本地弹幕或在线弹幕", void 0, void 0, "选择【本地弹幕】或【在线弹幕】是否与播放器内已有弹幕合并。"),
-      this.inputCustom("onlineDm", "在线弹幕", {
-        prop: { placeholder: "ss3398" }
-      }, (v) => {
-        v && typeof v === "string" && this.BLOD.danmaku.onlineDm(v);
-      }, "从其他视频加载弹幕", void 0, "从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！"),
-      this.button("localDm", "本地弹幕", () => {
-        this.BLOD.status.dmExtension === "json" ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
-      }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。")
-    ]);
-  }
-  /** 样式设置 */
-  initSettingStyle() {
-    this.menuitem.style.addSetting([
-      this.switch("header", "恢复旧版顶栏", "替换所有B站页面中的顶栏为旧版"),
-      this.switch("comment", "恢复评论翻页", "替换瀑布流评论区"),
-      this.switch("staff", "合作UP主", "联合投稿显示合作UP主"),
-      this.switch("bangumiEplist", "保留bangumi分P", "牺牲特殊背景图", void 0, void 0, "旧版bangumi遇到有特殊背景图的视频时，会隐藏播放器下方的分集选择界面，二者不可得兼。"),
-      this.switch("jointime", "注册时间", "个人空间显示账户注册时间"),
-      this.switch("history", "纯视频历史", "过滤历史记录页的非视频部分"),
-      this.switch("liveRecord", "录屏动态", "允许动态页显示直播录屏"),
-      this.switch("commentJumpUrlTitle", "评论超链接标题", "还原为链接或短链接", void 0, void 0, "直接显示链接标题固然方便，但有些时候还是直接显示链接合适。"),
-      this.switch("like", "添加点赞功能", "不支持一键三连"),
-      this.switch("fullBannerCover", "修正banner分辨率", "顶栏banner完整显示不裁剪", void 0, void 0, "旧版顶栏banner接口已不再更新，脚本使用新版banner接口进行修复，但二者图片分辨率不一致。脚本默认不会去动页面样式以尽可能原汁原味还原旧版页面，导致顶栏banner被裁剪显示不全，启用本项将调整顶栏分辨率以完整显示图片。"),
-      this.switch("episodeData", "分集数据", "bangumi", void 0, void 0, "显示bangumi分集播放和弹幕数，原始合计数据移动到鼠标浮动提示中。")
-    ]);
-  }
-  /** 修复设置 */
-  initSettingRestore() {
-    this.menuitem.restore.addSetting([
-      this.switch("lostVideo", "失效视频", "尝试获取失效视频信息"),
-      this.switch("disableSleepChcek", "禁用直播间挂机检测", "就喜欢挂后台听个响不行吗！"),
-      this.switch("show1080p", "不登录高画质支持", "dash模式限定", void 0, (v) => {
-        if (v && !this.BLOD.status.accessKey.token) {
-          this.BLOD.toast.warning("需要启用【账户授权】功能！");
-          alert("需要启用【账户授权】功能！是否前往？", "【账户授权】", [{ text: "前往【账户授权】", callback: () => this.show("accessKey.token") }]);
-          this.BLOD.status.show1080p = false;
-        }
-      }, "B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。若<strong>非常抱歉</strong>报错请关闭本选项！"),
-      this.switch("timeLine", "港澳台新番时间表", "填充首页番剧板块", void 0, void 0, "在首页番剧板块中填充港澳台最新番剧更新信息。")
-    ]);
-  }
-  /** 播放设置 */
-  initSettingPlayer() {
-    this.menuitem.player.addSetting([
-      this.sliderCustom("playbackRate", "播放速率", {
-        min: 0.25,
-        max: 5,
-        precision: 95,
-        value: 1,
-        solid: true
-      }, (e) => {
-        this.BLOD.player.playbackRate(e);
-      }, "播放速率调整拓展", void 0, "调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：初始调整前的值不代表当前实际播放速率，这不影响调节。"),
-      this.switch("webRTC", "WebRTC", "<strong>关闭</strong>以禁用p2p共享带宽", void 0, void 0, "B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！"),
-      this.switch("elecShow", "充电鸣谢", "允许视频结尾的充电鸣谢"),
-      this.switch("videoDisableAA", "禁用视频渲染抗锯齿", '详见<a href="https://github.com/MotooriKashin/Bilibili-Old/issues/292" target="_blank">#292</a>说明'),
-      this.switch("ugcSection", "视频合集", "以播单形式呈现")
-    ]);
-    this.menuitem.player.addCard("自动化操作");
-    this.menuitem.player.addSetting([
-      this.switch("automate.danmakuFirst", "展开弹幕列表", "而不是推荐视频"),
-      this.switch("automate.showBofqi", "滚动到播放器", "载入视频时"),
-      this.switch("automate.screenWide", "宽屏模式", "隐藏播放器右侧面板", void 0, (v) => v && (this.BLOD.status.automate.webFullScreen = false)),
-      this.switch("automate.noDanmaku", "无弹幕模式", "默认关闭弹幕"),
-      this.switch("automate.autoPlay", "自动播放", "播放器初始化完成时"),
-      this.switch("automate.webFullScreen", "网页全屏模式", "载入视频时", void 0, (v) => v && (this.BLOD.status.automate.screenWide = false)),
-      this.switch("automate.videospeed", "记忆播放速率", "永久继承播放速率设定", void 0, void 0, "默认的记忆播放速率记忆仅同一个网页标签页有效，开启后将代为记忆固定下来。")
-    ], 1);
-    this.menuitem.player.addCard("限制视频");
-    this.menuitem.player.addSetting([
-      this.switch("videoLimit.status", "解除播放限制", "解除区域/APP限制"),
-      this.select("videoLimit.server", "代理服务器模式", {
-        candidate: ["内置", "自定义"]
-      }, "<strong>自定义</strong>模式须要填写下面的服务器", void 0, (v) => {
-        if (v === "自定义") {
-          if (!this.BLOD.status.videoLimit.cn && !this.BLOD.status.videoLimit.hk && !this.BLOD.status.videoLimit.tw) {
-            this.BLOD.toast.warning("请至少填选以下代理服务器中的一下再选择！", "服务器请自行搭建或参考【公共反代服务器】");
-            this.BLOD.status.videoLimit.server = "内置";
-            alert('<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">https://github.com/yujincheng08/BiliRoaming/</a>', "公共反代服务器");
-          } else if (!this.BLOD.status.accessKey.token) {
-            alert([
-              "【公共反代服务器】一般都要求识别您的登录身份才能正常登录",
-              "点击【授权】将跳转到账户授权页面，点击【取消】或其他区域返回",
-              "<strong>【账户授权】是高风险操作，请仔细阅读相关说明后三思而后操作！</strong>"
-            ], void 0, [
-              {
-                text: "授权",
-                callback: () => {
-                  this.show("accessKey.token");
-                }
-              },
-              {
-                text: "取消"
-              }
-            ]);
-          }
-        }
-      }, "大部分新视频【内置】服务器只能获取到360P，实在不堪入目，有条件的话还是【自定义】服务器吧。对于大陆用户而言，【自定义】服务器一般填一个台湾就行，或者加上一个泰区。"),
-      this.input("videoLimit.th", "泰区", {
-        prop: { type: "url", placeholder: "www.example.com" }
-      }, "泰国（东南亚）限定视频反代服务器"),
-      this.input("videoLimit.tw", "台湾", {
-        prop: { type: "url", placeholder: "www.example.com" }
-      }, "台湾限定视频反代服务器"),
-      this.input("videoLimit.hk", "港澳", {
-        prop: { type: "url", placeholder: "www.example.com" }
-      }, "香港澳门限定视频反代服务器"),
-      this.input("videoLimit.cn", "大陆", {
-        prop: { type: "url", placeholder: "www.example.com" }
-      }, "大陆限定视频反代服务器")
-    ], 2);
-    this.menuitem.player.addCard("替换 UPOS 服务器");
-    const upos = Object.keys(UPOS2);
-    this.menuitem.player.addSetting([
-      this.select("uposReplace.th", "泰区", {
-        candidate: upos
-      }, "针对泰国（东南亚）限制视频", void 0, void 0, "泰区服务器ban了大陆ip，所以必须选一个进行替换。卡加载时请酌情切换。"),
-      this.select("uposReplace.gat", "港澳台", {
-        candidate: ["不替换"].concat(upos)
-      }, "针对港澳台限制视频", void 0, void 0, "港澳台视频服务器一般为大陆外的Akamai，大陆用户有可能访问不畅，请按需酌情切换。若卡加载请关闭或者换一个。"),
-      this.select("uposReplace.nor", "一般视频", {
-        candidate: ["不替换"].concat(upos)
-      }, "针对其他视频", void 0, void 0, "一般视频不需要替换，除非分配给您的视频服务器实在不行，请按需酌情切换。若卡加载请关闭或者换一个。"),
-      this.select("uposReplace.download", "下载", {
-        candidate: ["不替换"].concat(upos)
-      }, "针对下载功能", void 0, void 0, "一般视频不需要替换，除非屡屡下载403。若还是403请关闭或者换一个。")
-    ], 3);
-  }
-  /** 下载设置 */
-  initSettingDownload() {
-    this.menuitem.download.addSetting([
-      this.button("download", "下载视频", () => {
-        this.BLOD.download.default();
-      }, "下载当前视频", "视频", void 0, "根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。"),
-      this.button("downloadDm", "下载弹幕", () => {
-        this.BLOD.danmaku.download();
-      }, "下载当前弹幕", "弹幕", void 0, "下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。"),
-      this.button("downloadImg", "下载封面", () => {
-        this.BLOD.download.image();
-      }, "下载当前封面", "封面", void 0, "下载当前视频的封面，如果有其他特殊图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。"),
-      this.chockboxs("downloadType", "请求的文件类型", ["mp4", "dash", "flv"], "视频封装格式", void 0, () => this.BLOD.download.destory(), "勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。"),
-      this.switch("TVresource", "请求tv端视频源", "无水印", void 0, (e) => {
-        e && alert("下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！", "403警告", [
-          {
-            text: "置空referer",
-            callback: () => this.BLOD.status.referer = ""
-          }
-        ]);
-        this.BLOD.download.destory();
-      }, "请求TV端下载源，唯一的优势是可能无Bilibili水印。注意：①B站tv端大会员不通用，所以可能无法获取到大会员视频或画质。②需要进行【账户授权】，否则只能以游客身份获取下载数据。③TV源要求特定的UA且不能发送referer，基本无法通过浏览器直接下载（403无权访问），请选择其他下载工具。④mp4封装的并非tv源。"),
-      this.select("downloadQn", "画质", {
-        candidate: ["0", "15", "16", "32", "48", "64", "74", "80", "112", "116", "120", "125", "126", "127"]
-      }, "flv限定", void 0, () => this.BLOD.download.destory(), "画质参数，只针对flv封装。mp4封装没得选，dash则由于特性会一次性提供所有画质选项。"),
-      this.select("downloadMethod", "下载方式", {
-        candidate: ["浏览器", "IDM", "ef2", "aria2", "aria2rpc"]
-      }, "浏览器或第三方工具", void 0, (e) => {
-        switch (e) {
-          case "浏览器":
-            alert("由于浏览器安全限制，直接鼠标左键点击很难触发下载功能，更良好的习惯是右键要下载的文件选择【另存为】（不同浏览器可能命名不同）", "浏览器下载");
-            break;
-          case "IDM":
-            alert('<a href="https://www.internetdownloadmanager.com/" target="_blank">IDM（Internet Download Manager）</a>是Windows端著名的的下载工具，本方式将下载数据生成IDM导出文件，您可以在打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入开始下载。虽然有点麻烦，但是IDM支持配置UA和referer，并且下载速度的确不是浏览器能比的。', "IDM导出文件");
-            break;
-          case "ef2":
-            alert('<a href="https://github.com/MotooriKashin/ef2" target="_blank">ef2</a>是本脚本作者开发的一款开源的IDM辅助工具，支持直接从浏览器里拉起IDM进行下载，免去使用IDM导出文件的繁琐，同时解放你的鼠标左键。', "ef2辅助下载");
-            break;
-          case "aria2":
-            alert('<a href="https://github.com/aria2/aria2" target="_blank">aria2</a>是著名的开源命令行下载工具，本方式将下载命令复制到剪切板。命令行不是一般人能使用的工具，没有相应知识储备和使用习惯不推荐选择。', "aria2");
-            break;
-          case "aria2rpc":
-            alert("aria2支持rpc方式进行下载，正确配置后方便程度不亚于ef2方式，唯一的问题是配置起来有亿点麻烦。</br>是否跳转到rpc相关设置？", "aria2 rpc", [
-              {
-                text: "RPC配置",
-                callback: () => this.show("aria2.server")
-              },
-              {
-                text: "不必了"
-              }
-            ]);
-            break;
-          default:
-            break;
-        }
-      }, "使用浏览器下载请右键另存为而不是左键点击！其他选项需要使用对应工具，详见对应选项弹窗说明。"),
-      this.input("userAgent", "User-Agent", {
-        candidate: [
-          "Bilibili Freedoooooom/MarkII",
-          "Mozilla/5.0 BiliDroid/7.0.0 (bbcallen@gmail.com)",
-          navigator.userAgent
-        ]
-      }, "鉴权参数", void 0, void 0, "下载工具发送给服务器的身份标志，鉴权关键参数之一，无效的User-Agent将导致403无权访问。<strong>除非你知道自己在修改什么，否则请不要轻易调整此项。</strong>此项只在使用第三方下载方式时有效。"),
-      this.input("referer", "referer", {
-        candidate: [location.origin]
-      }, "鉴权参数", void 0, (v) => {
-        v && alert("您勾选了下载TV源，根据经验必须将referer置空，不然会触发403（无权访问）！是否撤销输入将referer置空？还是取消勾选tv源？", "设置冲突", [
-          {
-            text: "置空referer",
-            callback: () => this.BLOD.status.referer = ""
-          },
-          {
-            text: "取消勾选tv源",
-            callback: () => this.BLOD.status.TVresource = false
-          }
-        ]);
-      }, "下载时发送给服务器的标志之一，鉴权关键参数之一，无效的User-Agent将导致403无权访问。此项在网页端必须存在，而且一般为主站域名，但是<strong>TV、APP等源此项必须为空！</strong>"),
-      this.input("filepath", "下载目录", {}, "保存下载文件的本地磁盘目录", void 0, void 0, "ef2、aria2和aria2rpc方式限定。Windows平台请注意使用反斜杠哦。")
-    ]);
-    this.menuitem.download.addCard("aria2 相关");
-    this.menuitem.download.addSetting([
-      this.input("aria2.server", "RPC服务器", {
-        prop: { type: "url", placeholder: "http://localhost" },
-        candidate: ["http://localhost"]
-      }, "本地或远程链接", void 0, void 0, "端口号请另外输入。建议使用下方按钮测试RPC连接可用性。"),
-      this.input("aria2.port", "端口", {
-        prop: { type: "number", placeholder: "6800" },
-        candidate: ["6800"]
-      }, "本地或远程端口", void 0, void 0, "服务器链接另外输入。建议使用下方按钮测试RPC连接可用性。"),
-      this.input("aria2.token", "token", {
-        prop: { type: "password" }
-      }, "鉴权", void 0, void 0, "如果RPC服务器启用了token鉴权的话。"),
-      this.slider("aria2.split", "分段数目", {
-        min: 1,
-        max: 16,
-        precision: 15
-      }, "分段并发下载", void 0, void 0, "对于支持断点续传的文件，启用多线程同时并发下载通常是一种非常有效的提高下载速度的方法。如果需要请自行调整一个合适的并发数，1表示不并发下载。值得注意的是，部分服务器会限制并发连接数目，并发连接过多有触发风控甚至被临时封禁的风险，所以并不是并发数越多越好。"),
-      this.slider("aria2.size", "分段大小", {
-        min: 1,
-        max: 20,
-        precision: 19
-      }, "单位：/MB", void 0, void 0, "如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。"),
-      this.button("aria2.test", "测试RPC连接", () => {
-        const data = ["正在测试RPC连接~"];
-        const toast = this.BLOD.toast.toast(0, "info", ...data);
-        new Aria2().getVersion().then((d) => {
-          toast.type = "success";
-          data.push(\`-------aria2 v\${d.version}-------\`, ...d.enabledFeatures);
-          toast.data = data;
-        }).catch((e) => {
-          toast.type = "error";
-          data.push("RPC链接失败 ಥ_ಥ", e);
-          debug.error("RPC链接失败 ಥ_ಥ", e);
-          toast.data = data;
-        }).finally(() => {
-          toast.delay = 4;
-        });
-      }, "获取aria2信息", "ping", void 0, "请确定正确配置并启用了aria2的RPC服务器。")
-    ], 1);
-    this.menuitem.download.addCard("ef2 相关");
-    this.menuitem.download.addSetting([
-      this.switch("ef2.delay", "稍后下载", "添加到IDM下载队列但不开始", void 0, void 0, "要开始时请手动到IDM队列里点击开始。本项可以用来批量下载而不弹出多个窗口。注意：B站视频源使用的是临时链接，过期后无法访问，请及时下载或清理。"),
-      this.switch("ef2.silence", "静默下载", "跳过IDM确认对话框", void 0, void 0, "默认情况下IDM会弹窗询问是否确认下载，在该确认框中可以调整保存目录和文件名等操作。启用本项以跳过该确认框。")
-    ], 2);
-  }
-  /**
-   * 新建开关设置
-   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
-   * @param label 标题
-   * @param sub 副标题
-   * @param svg 图标
-   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
-   * @param desc 浮动窗口
-   */
-  switch(id, label, sub, svg2, callback, desc) {
-    const item = new SettingItem();
-    const button = new SwitchButton();
-    const arr2 = id.split(".");
-    let looping = false;
-    item.init(arr2.join(""), label, sub, svg2);
-    button.update(this.BLOD.getStatus(id));
-    button.addEventListener("change", () => {
-      looping = true;
-      this.BLOD.setStatus(id, button.value);
-      callback && callback(button.value);
-    });
-    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
-      looping || button.update(this.BLOD.getStatus(arr2.join("."), v));
-      looping = false;
-    });
-    item.value(button);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 新建下拉菜单设置
-   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
-   * @param label 标题
-   * @param value 配置数据
-   * @param sub 副标题
-   * @param svg 图标
-   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
-   * @param desc 浮动窗口
-   */
-  select(id, label, value, sub, svg2, callback, desc) {
-    const item = new SettingItem();
-    const select = new SelectMenu();
-    const arr2 = id.split(".");
-    let looping = false;
-    item.init(arr2.join(""), label, sub, svg2);
-    value.value = this.BLOD.getStatus(id);
-    select.update(value);
-    select.addEventListener("change", () => {
-      looping = true;
-      this.BLOD.setStatus(id, select.value);
-      callback && callback(select.value);
-    });
-    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
-      looping || (select.value = this.BLOD.getStatus(arr2.join("."), v));
-      looping = false;
-    });
-    item.value(select);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 创建滑动条菜单设置
-   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
-   * @param label 标题
-   * @param value 配置数据
-   * @param sub 副标题
-   * @param svg 图标
-   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
-   * @param desc 浮动窗口
-   */
-  slider(id, label, value, sub, svg2, callback, desc) {
-    const item = new SettingItem();
-    const slider = new SliderBlock();
-    const arr2 = id.split(".");
-    let looping = false;
-    item.init(arr2.join(""), label, sub, svg2);
-    value.value = this.BLOD.getStatus(id);
-    slider.update(value);
-    slider.addEventListener("change", () => {
-      looping = true;
-      this.BLOD.setStatus(id, slider.value);
-      callback && callback(slider.value);
-    });
-    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
-      looping || (slider.value = this.BLOD.getStatus(arr2.join("."), v));
-      looping = false;
-    });
-    item.value(slider);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 创建自定义滑动条菜单设置
-   * @param id 用来索引的字符串
-   * @param label 标题
-   * @param value 配置数据
-   * @param callback 输入回调
-   * @param sub 副标题
-   * @param svg 图标
-   * @param desc 浮动窗口
-   */
-  sliderCustom(id, label, value, callback, sub, svg2, desc) {
-    const item = new SettingItem();
-    const slider = new SliderBlock();
-    item.init("", label, sub, svg2);
-    slider.update(value);
-    slider.addEventListener("change", () => {
-      callback(slider.value);
-    });
-    item.value(slider);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 创建自定义输入框设置
-   * @param id 用来索引的字符串
-   * @param label 标题
-   * @param value 配置数据
-   * @param callback 输入回调
-   * @param sub 副标题
-   * @param svg 图标
-   * @param desc 浮动窗口
-   */
-  inputCustom(id, label, value, callback, sub, svg2, desc) {
-    const item = new SettingItem();
-    const input = new InputArea();
-    item.init("", label, sub, svg2);
-    input.update(value);
-    input.addEventListener("change", () => {
-      callback(input.value);
-    });
-    item.value(input);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 创建输入框设置
-   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
-   * @param label 标题
-   * @param value 配置数据
-   * @param sub 副标题
-   * @param svg 图标
-   * @param callback 输入回调
-   * @param desc 浮动窗口
-   */
-  input(id, label, value, sub, svg2, callback, desc) {
-    const item = new SettingItem();
-    const input = new InputArea();
-    const arr2 = id.split(".");
-    let looping = false;
-    item.init(arr2.join(""), label, sub, svg2);
-    value.value = this.BLOD.getStatus(id);
-    input.update(value);
-    input.addEventListener("change", () => {
-      looping = true;
-      this.BLOD.setStatus(id, input.value);
-      callback && callback(input.value);
-    });
-    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
-      looping || (input.value = this.BLOD.getStatus(arr2.join("."), v));
-      looping = false;
-    });
-    item.value(input);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 创建按钮设置
-   * @param id 用来索引的字符串
-   * @param label 标题
-   * @param callback 按钮点击回调
-   * @param sub 副标题
-   * @param text 按钮文字
-   * @param svg 图标
-   * @param desc 浮动窗口
-   */
-  button(id, label, callback, sub, text, svg2, desc) {
-    const item = new SettingItem();
-    const button = new PushButton();
-    item.init("", label, sub, svg2);
-    text && (button.text = text);
-    button.addEventListener("change", (ev) => {
-      callback();
-    });
-    item.value(button);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 新建复选框设置
-   * @param id 用户数据键或链式字符串，链式字符串用来提取深层数据
-   * @param label 标题
-   * @param values 配置数据
-   * @param sub 副标题
-   * @param svg 图标
-   * @param callback 用户调整设置的回调，将新值作为第一个参数传入
-   * @param desc 浮动窗口
-   */
-  chockboxs(id, label, values, sub, svg2, callback, desc) {
-    const item = new SettingItem();
-    const checkboxs = new CheckBoxs();
-    const arr2 = id.split(".");
-    let looping = false;
-    item.init(arr2.join(""), label, sub, svg2);
-    checkboxs.update(values);
-    checkboxs.value = Array.from(this.BLOD.getStatus(id));
-    checkboxs.addEventListener("change", () => {
-      looping = true;
-      this.BLOD.setStatus(id, checkboxs.value);
-      callback && callback(checkboxs.value);
-    });
-    this.BLOD.bindStatusChange(arr2.shift(), (v) => {
-      looping || (checkboxs.value = this.BLOD.getStatus(arr2.join("."), v));
-      looping = false;
-    });
-    item.value(checkboxs);
-    this.settingItem[id] = item;
-    desc && new Desc().value(label, desc, item);
-    return item;
-  }
-  /**
-   * 显示设置面板
-   * @param id 设置项注册id，id不在可选项时可以使用强制断言
-   * @example
-   * this.show('accessKey.token') // 显示设置面板并滚动到【账户授权】那一项
-   * this.show(<'accessKey'>'accessKey.token') // TypeScript 强制断言
-   */
-  show(id) {
-    this.interface.show();
-    if (id && this.settingItem[id]) {
-      this.settingItem[id].dispatchEvent(new Event("show"));
-    } else {
-      this.menuitem.common.click();
-    }
-  }
-};
-
-// src/core/automate.ts
-var Automate = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    this.modifyArgument();
-    this.danmakuFirst();
-    switchVideo(this.switchVideo);
-    this.videospeed();
-  }
-  /** 展开弹幕列表 */
-  danmakuFirst() {
-    this.BLOD.status.automate.danmakuFirst && SessionStorage.setItem("player_last_filter_tab_info", 4);
-  }
-  /** 滚动到播放器 */
-  showBofqi() {
-    const str = [".bangumi_player", "#bofqi", "#bilibiliPlayer"];
-    this.BLOD.status.automate.showBofqi && setTimeout(() => {
-      const node = str.reduce((s, d) => {
-        s = s || document.querySelector(d);
-        return s;
-      }, document.querySelector("#__bofqi"));
-      node && node.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 500);
-  }
-  /** 自动网页全屏 */
-  webFullScreen() {
-    this.BLOD.status.automate.webFullScreen && poll(() => document.querySelector(".bilibili-player-iconfont.bilibili-player-iconfont-web-fullscreen.icon-24webfull.player-tooltips-trigger"), () => document.querySelector(".bilibili-player-video-web-fullscreen").click());
-  }
-  /** 记忆播放速率 */
-  videospeed() {
-    if (this.BLOD.status.automate.videospeed) {
-      this.BLOD.GM.getValue("videospeed").then((videospeed) => {
-        if (videospeed) {
-          let setting = SessionStorage.getItem("bilibili_player_settings");
-          setting ? setting.video_status ? setting.video_status.videospeed = videospeed : setting.video_status = { videospeed } : setting = { video_status: { videospeed } };
-          SessionStorage.setItem("bilibili_player_settings", setting);
-        }
-      });
-      switchVideo(() => {
-        poll(() => document.querySelector("#bofqi")?.querySelector("video"), (d) => {
-          d.addEventListener("ratechange", (e) => {
-            this.BLOD.GM.setValue("videospeed", e.target.playbackRate || 1);
-          });
-        });
-      });
-    }
-  }
-  /** 关闭抗锯齿 */
-  videoDisableAA() {
-    this.BLOD.status.videoDisableAA && poll(() => document.querySelector("#bilibiliPlayer .bilibili-player-video video"), (d) => d.style.filter += "contrast(1)");
-  }
-  /** 修改播放器启动参数 */
-  modifyArgument() {
-    Player.addModifyArgument((args) => {
-      const obj = urlObj(\`?\${args[2]}\`);
-      this.BLOD.status.automate.screenWide && (obj.as_wide = 1);
-      this.BLOD.status.automate.autoPlay && (obj.autoplay = 1);
-      this.BLOD.status.automate.noDanmaku && (obj.danmaku = 0);
-      args[2] = objUrl("", obj);
-    });
-  }
-  /** 切p回调 */
-  switchVideo = async () => {
-    this.showBofqi();
-    this.webFullScreen();
-    this.videoDisableAA();
-    if (!this.BLOD.videoInfo.metadata && this.BLOD.aid) {
-      apiArticleCards({ av: this.BLOD.aid }).then((d) => {
-        Object.values(d).forEach((d2) => this.BLOD.videoInfo.aidDatail(d2));
-        this.BLOD.videoInfo.mediaSession();
-      }).catch((e) => {
-        debug.error("获取aid详情出错！", e);
-      });
-    } else {
-      this.BLOD.videoInfo.mediaSession();
-    }
-  };
-};
-
-// src/core/report.ts
-var Cache = class {
-  fpriskMsg = {};
-};
-var EventTracker = class {
-  extMsgs = {};
-  legalContainer = "report-wrap-module";
-  bindEvent() {
-  }
-  bindHeatMapEvent() {
-  }
-  checkContainer() {
-  }
-  eventCB() {
-  }
-  handleSelfDefReport() {
-  }
-  todo() {
-  }
-};
-var LoadTracker = class {
-  msg = {};
-  showRawPerformance() {
-  }
-  todo() {
-  }
-};
-var PvTracker = class {
-  extMsgs = {};
-  _uuid = "";
-  sendPV() {
-  }
-  todo() {
-  }
-};
-var ScrollTracker = class {
-  extMsgs = {};
-  ignoreHidden = true;
-  reportedIds = [];
-  scrollDivClass = "";
-  scrollLintenerFns = [];
-  scrollMsg = {};
-  scrollReportOffset = 200;
-  scrollSubDivClass = "";
-  addScrollListenNode() {
-  }
-  checkScroll() {
-  }
-  customReport() {
-  }
-  getOffset() {
-  }
-  inView() {
-  }
-  judgeAppear() {
-  }
-  judgeCustom() {
-  }
-  judgeHidden() {
-  }
-  judgeSubAppear() {
-  }
-  removeScrollListenNode() {
-  }
-  subInView() {
-  }
-  todo() {
-  }
-  todoCustom() {
-  }
-};
-var reportConfig = { msgObjects: "spmReportData", sample: -1, scrollTracker: false };
-var reportMsgObj = {};
-var ReportObserver = class {
-  constructor() {
-    propertyHook(window, "reportObserver", this);
-    propertyHook(window, "reportConfig", reportConfig);
-  }
-  cache = new Cache();
-  eventTracker = new EventTracker();
-  loadTracker = new LoadTracker();
-  pvTracker = new PvTracker();
-  scrollTracker = new ScrollTracker();
-  forceCommit() {
-  }
-  importTracker() {
-  }
-  init() {
-  }
-  initBsource() {
-  }
-  initTracker() {
-  }
-  reportCustomData() {
-  }
-  reportWithAdditionalParam() {
-  }
-  reportWithSpmPrefix() {
-  }
-  sendPV() {
-  }
-  sendPerformance() {
-  }
-  setSPM_id() {
-  }
-  setSpeicalMsg() {
-  }
-  updateConfig() {
-  }
-};
-var statisObserverConfig = {
-  blackEvents: [],
-  clickConfig: { logId: "", isDoubleWrite: false },
-  loadPerform: false,
-  loadSpecial: false,
-  performConfig: { isWrite: false },
-  pvConfig: { isDoubleWrite: false, logId: "", selfDefMsg: {} },
-  selfConfig: { logId: "", isDoubleWrite: false, isSelfDefWrite: false, isDefaultWrite: false },
-  spmId: ""
-};
-var StatisObserver = class {
-  __bufferFuns = [];
-  __initConfig = {};
-  __loadedFlag = { baidu: false, error: false, event: false, perform: false, pv: false, special: false };
-  __visitId = "";
-  constructor() {
-    propertyHook(window, "__statisObserver", this);
-    propertyHook(window, "reportMsgObj", reportMsgObj);
-    propertyHook(window, "__statisObserverConfig", statisObserverConfig);
-  }
-  addClickTracker() {
-  }
-  addLegalContainer() {
-  }
-  addSelfDefineMsg() {
-  }
-  forceCommit() {
-  }
-  getPvid() {
-  }
-  removeLegalContainer() {
-  }
-  removeSelfDefineMsg() {
-  }
-  sendBaidu() {
-  }
-  sendClickEvent() {
-  }
-  sendCustomMetrics() {
-  }
-  sendError() {
-  }
-  sendPV() {
-  }
-  sendPerform() {
-  }
-  sendSpecial() {
-  }
-  setAttrName() {
-  }
-  setBaseUrl() {
-  }
-  setErrorInterval() {
-  }
-  setErrorLogId() {
-  }
-  setEventLogId() {
-  }
-  setEventSendStatus() {
-  }
-  setPVLogId() {
-  }
-  setPVSendStatus() {
-  }
-  setPerformLogId() {
-  }
-  setPvid() {
-  }
-  setSpecialFirstLoop() {
-  }
-  setSpecialInterval() {
-  }
-  setSpecialLogId() {
-  }
-  setSpmId() {
-  }
-  startPoolListen() {
-  }
-  startSpecialLoop() {
-  }
-  stopPoolListen() {
-  }
-  stopSpecialLoop() {
-  }
-};
-
-// src/page/live.ts
-var PageLive = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    BLOD2.userLoadedCallback((status) => {
-      status.disableSleepChcek && this.disAbleSleepCheck();
-      status.disableReport && new StatisObserver();
-    });
-    this.urlClean();
-  }
-  sleep = false;
-  /** 添加url清理参数 */
-  urlClean() {
-    this.BLOD.urlCleaner.paramsSet.add("broadcast_type");
-    this.BLOD.urlCleaner.paramsSet.add("is_room_feed");
-  }
-  /** 禁止挂机检测 */
-  disAbleSleepCheck() {
-    const setInterval2 = self.setInterval;
-    self.setInterval = (...args) => {
-      if (args[0].toString().includes("triggerSleepCallback")) {
-        if (!this.sleep) {
-          this.sleep = true;
-          this.BLOD.toast.warning("成功阻止直播间挂机检测！");
-        }
-        return Number.MIN_VALUE;
-      }
-      return setInterval2.call(self, ...args);
-    };
-  }
-};
-
-// src/core/video-info.ts
-var VideoInfo = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-  }
-  cids = {};
-  stats = {};
-  get metadata() {
-    const cid = this.BLOD.cid;
-    return cid ? this.cids[cid] : void 0;
-  }
-  get album() {
-    return this.metadata?.album || this.title;
-  }
-  get artist() {
-    return this.metadata?.artist;
-  }
-  get title() {
-    return this.metadata?.title || document.title.slice(0, -26);
-  }
-  get artwork() {
-    return this.metadata?.artwork;
-  }
-  get stat() {
-    const aid = this.BLOD.aid;
-    return aid ? this.stats[aid] : void 0;
-  }
-  /** 数据变动回调栈 */
-  callbacks = [];
-  /**
-   * 数据变动回调
-   * @param callback 数据变动时执行的回调函数
-   * @returns 撤销监听的函数
-   */
-  bindChange(callback) {
-    const id = this.callbacks.push(callback);
-    return () => {
-      delete this.callbacks[id - 1];
-    };
-  }
-  timer;
-  /** 推送数据变动 */
-  emitChange() {
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.callbacks.forEach((d) => d(this)), 100);
-  }
-  /** 从\`IAidDatail\`中提取 */
-  aidDatail(data) {
-    const album = data.title;
-    const artist = data.owner.name;
-    const pic = data.pic.replace("http:", "");
-    data.pages ? data.pages.forEach((d, i) => {
-      this.cids[d.cid] = {
-        album,
-        artist,
-        title: d.part || \`#\${i + 1}\`,
-        artwork: [{ src: pic }]
-      };
-    }) : this.cids[data.cid] = {
-      album,
-      artist,
-      title: \`#1\`,
-      artwork: [{ src: pic }]
-    };
-    this.stats[data.aid] = data.stat;
-    this.emitChange();
-  }
-  /** 从\`IAidInfo\`中提取 */
-  aidInfo(data) {
-    const album = data.title;
-    const artist = data.upper.name;
-    const pic = data.cover.replace("http:", "");
-    data.pages ? data.pages.forEach((d, i) => {
-      this.cids[d.id] = {
-        album,
-        artist,
-        title: d.title || \`#\${i + 1}\`,
-        artwork: [{ src: pic }]
-      };
-    }) : this.cids[data.id] = {
-      album,
-      artist,
-      title: \`#1\`,
-      artwork: [{ src: pic }]
-    };
-  }
-  /** 从\`IBangumiSeasonResponse\`中提取 */
-  bangumiSeason(data) {
-    const album = data.title || data.jp_title;
-    const artist = data.actors || data.staff || data.up_info?.name;
-    const pic = data.cover.replace("http:", "");
-    const bkg_cover = data.bkg_cover?.replace("http:", "");
-    this.bangumiEpisode(data.episodes, album, artist, pic, bkg_cover);
-    this.emitChange();
-  }
-  /** 从\`IBangumiEpisode\`中提取 */
-  bangumiEpisode(data, album, artist, pic, bkg_cover) {
-    data.forEach((d) => {
-      const artwork = [{ src: d.cover.replace("http:", "") }, { src: pic }];
-      bkg_cover && artwork.push({ src: bkg_cover });
-      this.cids[d.cid] = {
-        album,
-        artist,
-        title: d.index_title,
-        artwork
-      };
-    });
-  }
-  toview(data) {
-    const album = data.name;
-    const pic = data.cover.replace("http:", "");
-    data.list.forEach((d) => {
-      const title = d.title;
-      const cover = d.pic.replace("http:", "");
-      const artist = d.owner.name;
-      d.pages.forEach((d2, i) => {
-        this.cids[d2.cid] = {
-          album,
-          artist,
-          title: title + \`(\${d2.part})\`,
-          artwork: [{ src: pic }, { src: cover }]
-        };
-      });
-    });
-    this.emitChange();
-  }
-  /** 设置浏览器媒体信息 */
-  mediaSession() {
-    if (this.metadata) {
-      navigator.mediaSession.metadata = new MediaMetadata({ ...this.metadata });
-    }
-  }
-};
-
-// src/io/api-playurl-interface.ts
-var ApiPlayurlInterface = class extends ApiSign {
-  constructor(data, pgc = false) {
-    super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, "YvirImLGlLANCLvM");
-    this.data = data;
-    this.data = Object.assign({
-      otype: "json",
-      qn: data.quality,
-      type: "",
-      fnver,
-      fnval
-    }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
-  }
-  async getData() {
-    const response = await fetch(this.sign(this.data), { credentials: "include" });
-    return await response.json();
-  }
-  toJSON() {
-    return this.sign(this.data);
-  }
-};
-
-// src/io/api-playurl-intl.ts
-var ApiPlayurlIntl = class extends ApiSign {
-  constructor(data, fetch2 = self.fetch, dash = true, pgc = false) {
-    super(pgc ? URLS.INTL_OGV_PLAYURL : URLS.INTL_PLAYURL, "bb3101000e232e27");
-    this.data = data;
-    this.fetch = fetch2;
-    this.pgc = pgc;
-    this.data = Object.assign({
-      device: "android",
-      force_host: 1,
-      mobi_app: "android_i",
-      qn,
-      platform: "android_i",
-      fourk: 1,
-      build: 2100110,
-      otype: "json"
-    }, data, dash ? { fnval, fnver } : {});
-  }
-  async getData() {
-    const response = await this.fetch(this.sign(this.data));
-    const json = await response.json();
-    if (this.pgc) {
-      return jsonCheck(json);
-    }
-    return jsonCheck(json).data;
-  }
-};
-
-// src/io/api-playurl-tv.ts
-var ApiPlayurlTv = class extends ApiSign {
-  constructor(data, dash = true, pgc = false) {
-    super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, "4409e2ce8ffd12b8");
-    this.data = data;
-    this.data = Object.assign({
-      qn,
-      fourk: 1,
-      otype: "json",
-      platform: "android",
-      mobi_app: "android_tv_yst",
-      build: 102801
-    }, data, dash ? { fnval, fnver } : {});
-  }
-  async getData() {
-    const response = await fetch(this.sign(this.data));
-    const json = await response.json();
-    return jsonCheck(json);
-  }
-};
-
-// src/io/api-playurlproj.ts
-var ApiPlayurlProj = class extends ApiSign {
-  constructor(data, pgc = false) {
-    super(pgc ? URLS.PGC_PLAYURL_PROJ : URLS.PLAYURL_PROJ, "bb3101000e232e27");
-    this.data = data;
-    this.data = Object.assign({
-      build: "2040100",
-      device: "android",
-      mobi_app: "android_i",
-      otype: "json",
-      platform: "android_i",
-      qn
-    }, data);
-    pgc && (data.module = "bangumi");
-  }
-  async getData() {
-    const response = await fetch(this.sign(this.data));
-    return await response.json();
-  }
-};
-
-// src/core/download/ef2.ts
-var Ef2 = class {
-  constructor(userAgent, referer, dir, delay = false, silence = false) {
-    this.userAgent = userAgent;
-    this.referer = referer;
-    this.dir = dir;
-    this.delay = delay;
-    this.silence = silence;
-  }
-  /** 拉起IDM */
-  sendLinkToIDM(data) {
-    this.rebuildData(data);
-    const ef2str = Ef2.encode(data);
-    const a = document.createElement("a");
-    a.href = ef2str;
-    a.click();
-    return ef2str;
-  }
-  /** 生成ef2文件 */
-  file(data, fileName) {
-    this.rebuildData(data);
-    return Ef2.file([data], fileName);
-  }
-  /** 补全数据 */
-  rebuildData(data) {
-    this.userAgent && !data.userAgent && (data.userAgent = this.userAgent);
-    this.referer && !data.referer && (data.referer = this.referer);
-    this.dir && !data.dir && (data.dir = this.dir);
-    this.delay && !data.delay && (data.delay = this.delay);
-    this.silence && !data.silence && (data.silence = this.silence);
-  }
-  /** 生成ef2文件 */
-  static file(data, fileName) {
-    const result = [];
-    data.forEach((d) => {
-      const arr2 = [];
-      Object.entries(d).forEach((d2) => {
-        switch (d2[0]) {
-          case "cookie":
-            arr2.push(\`cookie: \${d2[1]}\`);
-            break;
-          case "delay":
-            break;
-          case "dir":
-            d2[1] = d2[1].replace(/\\//, "\\\\");
-            d2[1].endsWith("\\\\") && (d2[1] = d2[1].slice(0, -1));
-            arr2.push(\`filepath: \${d2[1]}\`);
-            break;
-          case "out":
-            arr2.push(\`filename: \${d2[1]}\`);
-            break;
-          case "password":
-            arr2.push(\`password: \${d2[1]}\`);
-            break;
-          case "body":
-            arr2.push(\`postdata: \${d2[1]}\`);
-            break;
-          case "referer":
-            arr2.push(\`referer: \${d2[1]}\`);
-            break;
-          case "silence":
-            break;
-          case "url":
-            d2[1].startsWith("//") && (d2[1] = "https:" + d2[1]);
-            arr2.unshift(d2[1]);
-            break;
-          case "userAgent":
-            arr2.push(\`User-Agent: \${d2[1]}\`);
-            break;
-          case "userName":
-            arr2.push(\`username: \${d2[1]}\`);
-            break;
-          default:
-            break;
-        }
-      });
-      arr2.unshift("<");
-      arr2.push(">");
-      result.push(...arr2);
-    });
-    saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
-  }
-  /** 生成ef2协议 */
-  static encode(data) {
-    const arr2 = [];
-    Object.entries(data).forEach((d) => {
-      switch (d[0]) {
-        case "cookie":
-          arr2.push("-c", d[1]);
-          break;
-        case "delay":
-          arr2.push("-q");
-          break;
-        case "dir":
-          d[1] = d[1].replace(/\\//, "\\\\");
-          d[1].endsWith("\\\\") && (d[1] = d[1].slice(0, -1));
-          arr2.push("-o", d[1]);
-          break;
-        case "out":
-          arr2.push("-s", d[1]);
-          break;
-        case "password":
-          arr2.push("-P", d[1]);
-          break;
-        case "body":
-          arr2.push("-d", d[1]);
-          break;
-        case "referer":
-          arr2.push("-r", d[1]);
-          break;
-        case "silence":
-          arr2.push("-f");
-          break;
-        case "url":
-          d[1].startsWith("//") && (d[1] = "https:" + d[1]);
-          arr2.push("-u", d[1]);
-          break;
-        case "userAgent":
-          arr2.push("-a", d[1]);
-          break;
-        case "userName":
-          arr2.push("-U", d[1]);
-          break;
-        default:
-          break;
-      }
-    });
-    return \`ef2://\${Base64.encode(arr2.join(" "))}\`;
-  }
-  /** 解码ef2协议 */
-  static decode(ef2str) {
-    ef2str = ef2str.replace("ef2://", "");
-    ef2str = Base64.decode(ef2str);
-    const arr2 = ef2str.split(" ");
-    const data = {};
-    for (let i = 0; i < arr2.length; i++) {
-      if (/-\\w/.test(arr2[i])) {
-        switch (arr2[i]) {
-          case "-c":
-            data.cookie = arr2[i + 1];
-            i++;
-            break;
-          case "-q":
-            data.delay = true;
-            break;
-          case "-o":
-            data.dir = arr2[i + 1];
-            i++;
-            break;
-          case "-s":
-            data.out = arr2[i + 1];
-            i++;
-            break;
-          case "-P":
-            data.password = arr2[i + 1];
-            i++;
-            break;
-          case "-d":
-            data.body = arr2[i + 1];
-            i++;
-            break;
-          case "-r":
-            data.referer = arr2[i + 1];
-            i++;
-            break;
-          case "-f":
-            data.silence = true;
-            break;
-          case "-u":
-            data.url = arr2[i + 1];
-            i++;
-            break;
-          case "-a":
-            data.userAgent = arr2[i + 1];
-            i++;
-            break;
-          case "-U":
-            data.userName = arr2[i + 1];
-            i++;
-            break;
-          default:
-            break;
-        }
-      }
-    }
-    return data;
-  }
-};
-
-// src/utils/format/size.ts
-function sizeFormat(size = 0) {
-  let unit = ["B", "K", "M", "G"], i = unit.length - 1, dex = 1024 ** i, vor = 1e3 ** i;
-  while (dex > 1) {
-    if (size >= vor) {
-      size = Number((size / dex).toFixed(2));
-      break;
-    }
-    dex = dex / 1024;
-    vor = vor / 1e3;
-    i--;
-  }
-  return size ? size + unit[i] : "N/A";
-}
-
-// src/core/download/playinfo.ts
-var PlayinfoFilter = class {
-  constructor(fileName) {
-    this.fileName = fileName;
-  }
-  /** 数据 */
-  record = [];
-  /** id => 质量 */
-  quality = {
-    100032: "8K",
-    100029: "4K",
-    100028: "1080P60",
-    100027: "1080P+",
-    100026: "1080P",
-    100024: "720P",
-    100023: "480P",
-    100022: "360P",
-    30280: "320Kbps",
-    30260: "320Kbps",
-    30259: "128Kbps",
-    30257: "64Kbps",
-    30255: "AUDIO",
-    30251: "FLAC",
-    30250: "ATMOS",
-    30232: "128Kbps",
-    30216: "64Kbps",
-    30127: "8K",
-    30126: "Dolby",
-    30125: "HDR",
-    30121: "4K",
-    30120: "4K",
-    30116: "1080P60",
-    30112: "1080P+",
-    30106: "1080P60",
-    30102: "1080P+",
-    30080: "1080P",
-    30077: "1080P",
-    30076: "720P",
-    30074: "720P",
-    30066: "720P",
-    30064: "720P",
-    30048: "720P",
-    30033: "480P",
-    30032: "480P",
-    30016: "360P",
-    30015: "360P",
-    30011: "360P",
-    464: "预览",
-    336: "1080P",
-    320: "720P",
-    288: "480P",
-    272: "360P",
-    208: "1080P",
-    192: "720P",
-    160: "480P",
-    127: "8K",
-    126: "Dolby",
-    125: "HDR",
-    120: "4K",
-    116: "1080P60",
-    112: "1080P+",
-    80: "1080P",
-    74: "720P60",
-    64: "720P",
-    48: "720P",
-    32: "480P",
-    16: "360P",
-    15: "360P",
-    6: "240P",
-    5: "144P"
-  };
-  /** id => 类型（备用方案） */
-  codec = {
-    hev: [30127, 30126, 30125, 30121, 30106, 30102, 30077, 30066, 30033, 30011],
-    avc: [30120, 30112, 30080, 30064, 30032, 30016],
-    av1: [100029, 100028, 100027, 100026, 100024, 100023, 100022]
-  };
-  /** 颜色表 */
-  color = {
-    "8K": "yellow",
-    "Dolby": "pink",
-    "FLAC": "pink",
-    "ATMOS": "pink",
-    "AUDIO": "pink",
-    "HDR": "purple",
-    "4K": "purple",
-    "1080P60": "red",
-    "1080P+": "red",
-    "1080P": "red",
-    "720P60": "orange",
-    "720P": "orange",
-    "480P": "blue",
-    "360P": "green",
-    "320Kbps": "red",
-    "128Kbps": "blue",
-    "64Kbps": "green"
-  };
-  /**
-   * 解码playurl的下载数据
-   * @param playinfo playurl返回值(json)
-   */
-  filter(playinfo) {
-    typeof playinfo === "string" && (playinfo = toObject(playinfo));
-    if (playinfo) {
-      playinfo.data && this.filter(playinfo.data);
-      playinfo.result && this.filter(playinfo.result);
-      playinfo.durl && this.durl(playinfo.durl);
-      playinfo.dash && this.dash(playinfo.dash);
-    }
-    return this.record;
-  }
-  /**
-   * 整理durl部分
-   * @param durl durl信息
-   */
-  durl(durl) {
-    let index = 0;
-    durl.forEach((d) => {
-      const url = d.backupUrl || d.backup_url || [];
-      url.unshift(d.url);
-      const qua = this.getQuality(url[0], d.id);
-      const link = {
-        type: "",
-        url,
-        quality: qua,
-        size: sizeFormat(d.size),
-        color: this.color[qua] || ""
-      };
-      switch (d.url.includes("mp4?")) {
-        case true:
-          link.type = "mp4";
-          break;
-        case false:
-          link.type = "flv";
-          index++;
-          link.flv = index;
-          break;
-      }
-      this.fileName && (link.fileName = \`\${this.fileName}\${qua}.\${link.type}\`);
-      this.record.push(link);
-    });
-  }
-  /**
-   * 整理dash部分
-   * @param dash dash信息
-   */
-  dash(dash) {
-    dash.video && this.dashVideo(dash.video, dash.duration);
-    dash.audio && this.dashAudio(dash.audio, dash.duration);
-    dash.dolby && dash.dolby.audio && Array.isArray(dash.dolby.audio) && this.dashAudio(dash.dolby.audio, dash.duration);
-    dash.flac && dash.flac.audio && this.dashAudio([dash.flac.audio], dash.duration, ".flac");
-  }
-  /**
-   * 整理dash视频部分
-   * @param video dash视频信息
-   * @param duration duration信息，配合bandwidth能计算出文件大小
-   */
-  dashVideo(video, duration) {
-    video.forEach((d) => {
-      const url = d.backupUrl || d.backup_url || [];
-      (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
-      if (!url.length)
-        return;
-      let type = "";
-      if (d.codecs) {
-        type = d.codecs.includes("avc") ? "avc" : d.codecs.includes("av01") ? "av1" : "hev";
-      } else {
-        const id = this.getID(url[0]);
-        type = this.codec.hev.find((d2) => d2 === id) ? "hev" : "avc";
-      }
-      const qua = this.getQuality(url[0], d.id);
-      this.record.push({
-        type,
-        url,
-        quality: qua,
-        size: sizeFormat(d.bandwidth * duration / 8),
-        color: this.color[qua] || "",
-        fileName: \`\${this.fileName}\${qua}.m4v\`
-      });
-    });
-  }
-  /**
-   * 整理dash音频部分
-   * @param audio dash音频信息
-   * @param duration duration信息，配合bandwidth能计算出文件大小
-   * @param fmt 音频拓展名，默认\`.m4a\`
-   */
-  dashAudio(audio, duration, fmt = ".m4a") {
-    audio.forEach((d) => {
-      const url = d.backupUrl || d.backup_url || [];
-      (d.baseUrl || d.base_url) && url.unshift(d.baseUrl || d.base_url);
-      const qua = this.getQuality(url[0], d.id);
-      url.length && this.record.push({
-        type: "aac",
-        url,
-        quality: qua,
-        size: sizeFormat(d.bandwidth * duration / 8),
-        color: this.color[qua] || "",
-        fileName: \`\${this.fileName}\${qua}.\${fmt}\`
-      });
-    });
-  }
-  /**
-   * 根据url确定画质/音质信息  
-   * 需要维护quality表
-   * @param url 多媒体url
-   * @param id 媒体流id
-   * @returns 画质/音质信息
-   */
-  getQuality(url, id) {
-    return this.quality[this.getID(url)] || id && this.quality[id] || "N/A";
-  }
-  /**
-   * 从url中提取可能的id
-   * @param url 多媒体url
-   */
-  getID(url) {
-    let id = 0;
-    url.replace(/\\d+\\.((flv)|(mp4)|(m4s))/, (d) => id = Number(d.split(".")[0]));
-    return id;
-  }
-};
-
-// src/html/download.html
-var download_default2 = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/download.ts
-var BilioldDownload = class extends HTMLElement {
-  _container;
-  _cells = {};
-  _noData;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = download_default2;
-    this._container = root.children[0];
-    this.addEventListener("click", (e) => e.stopPropagation());
-    this._noData = addElement("div", void 0, this._container, "正在获取下载数据~");
-  }
-  updateItem = (key, value) => {
-    this._container.contains(this._noData) && this._noData.remove();
-    this._cells[key] || (this._cells[key] = addElement("div", { class: "cell" }, this._container));
-    this._cells[key].innerHTML = \`<div class="type \${key}">\${key}</div>\`;
-    value ? value.forEach((d) => {
-      const a = addElement("a", { class: "item", target: "_blank" }, this._cells[key], \`<div class="up\${d.color ? \` \${d.color}\` : ""}">\${d.quality}</div><div class="down">\${d.size}</div>\`);
-      d.url && (a.href = d.url[0]);
-      d.fileName && (a.download = d.fileName);
-      d.onClick && a.addEventListener("click", (e) => d.onClick(e));
-    }) : this._cells[key]?.remove();
-    this._container.firstChild || this._container.replaceChildren(this._noData);
-  };
-  show() {
-    document.contains(this) || document.body.appendChild(this);
-    this.style.display = "";
-    window.addEventListener("click", () => {
-      this.style.display = "none";
-    }, { once: true });
-  }
-  init() {
-    return propertryChangeHook({}, this.updateItem);
-  }
-  disconnectedCallback() {
-    this.destory();
-  }
-  destory() {
-    this._cells = {};
-    this._container.replaceChildren(this._noData);
-  }
-};
-customElements.get(\`download-\${"855f368"}\`) || customElements.define(\`download-\${"855f368"}\`, BilioldDownload);
-
-// src/core/download.ts
-var Download = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    switchVideo(() => this.destory());
-  }
-  /** 下载界面 */
-  ui = new BilioldDownload();
-  /** 数据缓存 */
-  data = this.ui.init();
-  get fileName() {
-    if (this.BLOD.videoInfo.metadata) {
-      return \`\${this.BLOD.videoInfo.metadata.album}(\${this.BLOD.videoInfo.metadata.title})\`;
-    }
-    return "";
-  }
-  /** 解码playinfo */
-  decodePlayinfo(playinfo, fileName = this.fileName) {
-    const data = new PlayinfoFilter(fileName).filter(playinfo);
-    data.forEach((d) => {
-      this.data[d.type] || (this.data[d.type] = []);
-      this.data[d.type].push({
-        url: d.url,
-        fileName,
-        quality: Reflect.has(d, "flv") ? \`\${d.quality}*\${d.flv}\` : d.quality,
-        size: d.size,
-        color: d.color,
-        onClick: (ev) => this.pushDownload(d, ev)
-      });
-    });
-  }
-  /** 分发数据 */
-  pushDownload(data, ev) {
-    if (data.onClick) {
-      data.onClick(ev);
-    } else if (data.url) {
-      switch (this.BLOD.status.downloadMethod) {
-        case "IDM":
-          ev.preventDefault();
-          new Ef2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.ef2.delay, this.BLOD.status.ef2.silence).file({
-            url: data.url[0],
-            out: data.fileName
-          });
-          this.BLOD.toast.success('保存IDM导出文件后，打开IDM -> 任务 -> 导入 -> 从"IDM导出文件"导入即可下载');
-          break;
-        case "ef2":
-          ev.preventDefault();
-          new Ef2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.ef2.delay, this.BLOD.status.ef2.silence).sendLinkToIDM({
-            url: data.url[0],
-            out: data.fileName
-          });
-          this.BLOD.toast.warning("允许浏览器打开【IDM EF2辅助工具】即可开始下载", "如果浏览器和IDM都没有任何反应，那些请先安装ef2辅助工具。");
-          break;
-        case "aria2":
-          ev.preventDefault();
-          const cmdLine = new Aria2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.aria2.server, this.BLOD.status.aria2.port, this.BLOD.status.aria2.token, this.BLOD.status.aria2.split, this.BLOD.status.aria2.size).cmdlet({
-            urls: data.url,
-            out: data.fileName
-          });
-          this.BLOD.toast.success(
-            "已复制下载命令到剪切板，粘贴到终端里回车即可开始下载。当然前提是您的设备已配置好了aria2。",
-            "--------------",
-            cmdLine
-          );
-          break;
-        case "aria2rpc":
-          ev.preventDefault();
-          new Aria2(this.BLOD.status.userAgent, this.BLOD.status.referer, this.BLOD.status.filepath, this.BLOD.status.aria2.server, this.BLOD.status.aria2.port, this.BLOD.status.aria2.token, this.BLOD.status.aria2.split, this.BLOD.status.aria2.size).rpc({
-            urls: data.url,
-            out: data.fileName
-          }).then((d) => {
-            this.BLOD.toast.success("aria2已经开始下载", \`GUID: \${d}\`);
-          }).catch((e) => {
-            this.BLOD.toast.error("aria2[RPC]错误！", e);
-          });
-          break;
-        default:
-          this.BLOD.toast.warning("当前下载方式设定为浏览器（默认），受限于浏览器安全策略，可能并未触发下载而是打开了一个标签页，所以更良好的习惯是右键要下载的链接【另存为】。另外如果下载失败（403无权访问），请尝试在设置里修改下载方式及其他下载相关选项。");
-          break;
-      }
-    }
-  }
-  /** 请求中 */
-  downloading = false;
-  /** 已请求 */
-  gets = [];
-  /** 下载当前视频 */
-  default() {
-    if (this.downloading)
-      return;
-    if (!this.BLOD.cid)
-      return this.BLOD.toast.warning("未找到视频文件");
-    this.downloading = true;
-    this.ui.show();
-    this.BLOD.status.TVresource || this.gets.includes("_") || (this.decodePlayinfo(this.BLOD.videoLimit.__playinfo__), this.gets.push("_"));
-    const tasks = [];
-    this.BLOD.status.downloadType.includes("mp4") && (this.data.mp4 || this.gets.includes("mp4") || tasks.push(this.mp4(this.BLOD.cid).then((d) => {
-      this.gets.push("mp4");
-      this.decodePlayinfo(d);
-    })));
-    this.BLOD.status.downloadType.includes("flv") && (this.data.flv || this.gets.includes("flv") || tasks.push(
-      (this.BLOD.status.TVresource ? this.tv(this.BLOD.aid, this.BLOD.cid, false, this.BLOD.status.downloadQn) : this.interface(this.BLOD.cid, this.BLOD.status.downloadQn)).then((d) => {
-        this.gets.push("flv");
-        this.decodePlayinfo(d);
-      })
-    ));
-    this.BLOD.status.downloadType.includes("dash") && (this.data.aac || this.gets.includes("dash") || this.data.hev || this.data.av1 || tasks.push(
-      (this.BLOD.status.TVresource ? this.tv(this.BLOD.aid, this.BLOD.cid) : this.dash(this.BLOD.aid, this.BLOD.cid)).then((d) => {
-        this.gets.push("dash");
-        this.decodePlayinfo(d);
-      })
-    ));
-    Promise.allSettled(tasks).finally(() => {
-      this.downloading = false;
-    });
-  }
-  /** 清空数据 */
-  destory() {
-    this.ui.remove();
-    this.data = this.ui.init();
-    this.downloading = false;
-    this.gets = [];
-    this.BLOD.videoLimit.__playinfo__ = void 0;
-  }
-  mp4(cid) {
-    return new ApiPlayurlProj({ cid, access_key: this.BLOD.status.accessKey.token }, this.BLOD.pgc).getData();
-  }
-  // private flv(avid: number, cid: number) {
-  //     return <Promise<IPlayurlDurl>>apiPlayurl({ avid, cid }, false, this.BLOD.pgc);
-  // }
-  dash(avid, cid) {
-    return apiPlayurl({ avid, cid }, true, this.BLOD.pgc);
-  }
-  tv(avid, cid, dash = true, quality = qn) {
-    return new ApiPlayurlTv({ avid, cid, access_key: this.BLOD.status.accessKey.token, qn: quality }, dash, this.BLOD.pgc).getData();
-  }
-  intl(aid, cid, dash = true) {
-    return new ApiPlayurlIntl({ aid, cid, access_key: this.BLOD.status.accessKey.token }, this.BLOD.GM.fetch, dash, this.BLOD.pgc).getData();
-  }
-  interface(cid, quality = qn) {
-    return new ApiPlayurlInterface({ cid, quality }, this.BLOD.pgc).getData();
-  }
-  image() {
-    const src = [];
-    this.BLOD.videoInfo.metadata?.artwork?.forEach((d) => src.push(d.src));
-    if (location.host === "live.bilibili.com" && window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
-      src.push(window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
-    }
-    if (src.length) {
-      const popup = new PopupBox();
-      popup.fork = false;
-      popup.setAttribute("style", "display: flex;flex-direction: row;align-items: flex-start;;max-width: 100vw;");
-      popup.innerHTML = src.map((d) => \`<img src="\${d}" width=300>\`).join("");
-    } else {
-      this.BLOD.toast.warning("未找到封面信息！");
-    }
-  }
-};
-
-// src/io/grpc/api-dm-web.ts
-var import_light = __toESM(require_light());
-
-// src/json/dm-web.json
-var dm_web_default = {
-  nested: {
-    bilibili: {
-      nested: {
-        community: {
-          nested: {
-            service: {
-              nested: {
-                dm: {
-                  nested: {
-                    v1: {
-                      nested: {
-                        DmWebViewReply: {
-                          fields: {
-                            state: {
-                              type: "int32",
-                              id: 1
-                            },
-                            text: {
-                              type: "string",
-                              id: 2
-                            },
-                            textSide: {
-                              type: "string",
-                              id: 3
-                            },
-                            dmSge: {
-                              type: "DmSegConfig",
-                              id: 4
-                            },
-                            flag: {
-                              type: "DanmakuFlagConfig",
-                              id: 5
-                            },
-                            specialDms: {
-                              rule: "repeated",
-                              type: "string",
-                              id: 6
-                            },
-                            checkBox: {
-                              type: "bool",
-                              id: 7
-                            },
-                            count: {
-                              type: "int64",
-                              id: 8
-                            },
-                            commandDms: {
-                              rule: "repeated",
-                              type: "CommandDm",
-                              id: 9
-                            },
-                            dmSetting: {
-                              type: "DanmuWebPlayerConfig",
-                              id: 10
-                            },
-                            reportFilter: {
-                              rule: "repeated",
-                              type: "string",
-                              id: 11
-                            }
-                          }
-                        },
-                        CommandDm: {
-                          fields: {
-                            id: {
-                              type: "int64",
-                              id: 1
-                            },
-                            oid: {
-                              type: "int64",
-                              id: 2
-                            },
-                            mid: {
-                              type: "int64",
-                              id: 3
-                            },
-                            command: {
-                              type: "string",
-                              id: 4
-                            },
-                            content: {
-                              type: "string",
-                              id: 5
-                            },
-                            progress: {
-                              type: "int32",
-                              id: 6
-                            },
-                            ctime: {
-                              type: "string",
-                              id: 7
-                            },
-                            mtime: {
-                              type: "string",
-                              id: 8
-                            },
-                            extra: {
-                              type: "string",
-                              id: 9
-                            },
-                            idStr: {
-                              type: "string",
-                              id: 10
-                            }
-                          }
-                        },
-                        DmSegConfig: {
-                          fields: {
-                            pageSize: {
-                              type: "int64",
-                              id: 1
-                            },
-                            total: {
-                              type: "int64",
-                              id: 2
-                            }
-                          }
-                        },
-                        DanmakuFlagConfig: {
-                          fields: {
-                            recFlag: {
-                              type: "int32",
-                              id: 1
-                            },
-                            recText: {
-                              type: "string",
-                              id: 2
-                            },
-                            recSwitch: {
-                              type: "int32",
-                              id: 3
-                            }
-                          }
-                        },
-                        DmSegMobileReply: {
-                          fields: {
-                            elems: {
-                              rule: "repeated",
-                              type: "DanmakuElem",
-                              id: 1
-                            }
-                          }
-                        },
-                        DanmakuElem: {
-                          fields: {
-                            id: {
-                              type: "int64",
-                              id: 1
-                            },
-                            progress: {
-                              type: "int32",
-                              id: 2
-                            },
-                            mode: {
-                              type: "int32",
-                              id: 3
-                            },
-                            fontsize: {
-                              type: "int32",
-                              id: 4
-                            },
-                            color: {
-                              type: "uint32",
-                              id: 5
-                            },
-                            midHash: {
-                              type: "string",
-                              id: 6
-                            },
-                            content: {
-                              type: "string",
-                              id: 7
-                            },
-                            ctime: {
-                              type: "int64",
-                              id: 8
-                            },
-                            weight: {
-                              type: "int32",
-                              id: 9
-                            },
-                            action: {
-                              type: "string",
-                              id: 10
-                            },
-                            pool: {
-                              type: "int32",
-                              id: 11
-                            },
-                            idStr: {
-                              type: "string",
-                              id: 12
-                            },
-                            attr: {
-                              type: "int32",
-                              id: 13
-                            }
-                          }
-                        },
-                        DanmuWebPlayerConfig: {
-                          fields: {
-                            dmSwitch: {
-                              type: "bool",
-                              id: 1
-                            },
-                            aiSwitch: {
-                              type: "bool",
-                              id: 2
-                            },
-                            aiLevel: {
-                              type: "int32",
-                              id: 3
-                            },
-                            blocktop: {
-                              type: "bool",
-                              id: 4
-                            },
-                            blockscroll: {
-                              type: "bool",
-                              id: 5
-                            },
-                            blockbottom: {
-                              type: "bool",
-                              id: 6
-                            },
-                            blockcolor: {
-                              type: "bool",
-                              id: 7
-                            },
-                            blockspecial: {
-                              type: "bool",
-                              id: 8
-                            },
-                            preventshade: {
-                              type: "bool",
-                              id: 9
-                            },
-                            dmask: {
-                              type: "bool",
-                              id: 10
-                            },
-                            opacity: {
-                              type: "float",
-                              id: 11
-                            },
-                            dmarea: {
-                              type: "int32",
-                              id: 12
-                            },
-                            speedplus: {
-                              type: "float",
-                              id: 13
-                            },
-                            fontsize: {
-                              type: "float",
-                              id: 14
-                            },
-                            screensync: {
-                              type: "bool",
-                              id: 15
-                            },
-                            speedsync: {
-                              type: "bool",
-                              id: 16
-                            },
-                            fontfamily: {
-                              type: "string",
-                              id: 17
-                            },
-                            bold: {
-                              type: "bool",
-                              id: 18
-                            },
-                            fontborder: {
-                              type: "int32",
-                              id: 19
-                            },
-                            drawType: {
-                              type: "string",
-                              id: 20
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-};
-
-// src/utils/danmaku.ts
-var DanmakuBase = class {
-  /** 从小到大排序弹幕 */
-  static sortDmById(dms) {
-    dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
-  }
-  /** 比较两个弹幕ID先后 */
-  static bigInt(num1, num2) {
-    String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
-    String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
-    if (num1.length > num2.length)
-      return true;
-    else if (num1.length < num2.length)
-      return false;
-    else {
-      for (let i = 0; i < num1.length; i++) {
-        if (num1[i] > num2[i])
-          return true;
-        if (num1[i] < num2[i])
-          return false;
-      }
-      return false;
-    }
-  }
-  /** 重构为旧版弹幕类型 */
-  static parseCmd(dms) {
-    return dms.map((d) => {
-      const dm = {
-        class: d.pool || 0,
-        color: d.color || 0,
-        date: d.ctime || 0,
-        dmid: d.idStr || "",
-        mode: +d.mode || 1,
-        pool: d.pool || 0,
-        size: d.fontsize || 25,
-        stime: d.progress / 1e3 || 0,
-        text: d.content && d.mode != 8 && d.mode != 9 ? d.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, "\\n") : d.content,
-        uhash: d.midHash || "",
-        uid: d.midHash || "",
-        weight: d.weight,
-        attr: d.attr
-      };
-      d.action?.startsWith("picture:") && (dm.html = \`<img src="\${d.action.replace("http:", "")}" style="width:auto;height:56.25px;">\`);
-      return dm;
-    });
-  }
-  /** 解析解码xml弹幕 */
-  static decodeXml(xml) {
-    if (typeof xml === "string") {
-      xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
-      xml = new DOMParser().parseFromString(xml, "application/xml");
-    }
-    const items = xml.querySelectorAll("d");
-    const dms = [];
-    items.forEach((d) => {
-      const json = d.getAttribute("p").split(",");
-      const text = d.textContent || d.text;
-      if (text) {
-        const dm = {
-          pool: Number(json[5]),
-          color: Number(json[3]),
-          ctime: Number(json[4]),
-          id: Number(json[7]),
-          idStr: String(json[7]),
-          mode: Number(json[1]),
-          fontsize: Number(json[2]),
-          progress: Number(json[0]) * 1e3,
-          content: String(text),
-          midHash: json[6]
-        };
-        dms.push(dm);
-      }
-    });
-    return dms;
-  }
-  /** 编码xml弹幕 */
-  static encodeXml(dms, cid) {
-    return dms.reduce((s, d) => {
-      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<&]/g, (a) => {
-        return { "<": "&lt;", "&": "&amp;" }[a];
-      }).replace(/(\\n|\\r\\n)/g, "/n")}</d>
-\`;
-      return s;
-    }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
-\`) + "</i>";
-  }
-};
-
-// src/io/grpc/api-dm-web.ts
-var _ApiDmWeb = class {
-  constructor(aid, cid) {
-    this.aid = aid;
-    this.cid = cid;
-    _ApiDmWeb.Root || _ApiDmWeb.RootInit();
-  }
-  static RootInit() {
-    this.Root = import_light.Root.fromJSON(dm_web_default);
-    this.DmWebViewReply = this.Root.lookupType("DmWebViewReply");
-    this.DmSegMobileReply = this.Root.lookupType("DmSegMobileReply");
-  }
-  danmaku = [];
-  /** 获取新版弹幕 */
-  async getData() {
-    if (!this.danmaku.length) {
-      const dmWebView = await this.DmWebViewReply();
-      const pageSize = dmWebView.dmSge.pageSize ? dmWebView.dmSge.pageSize / 1e3 : 360;
-      const total = this.aid == window.aid && window.player?.getDuration?.() / pageSize + 1 || dmWebView.dmSge.total;
-      const promises = [];
-      for (let i = 1; i <= total; i++) {
-        promises.push(
-          this.DmSegMobileReply(i).then((d) => {
-            d.elems && (this.danmaku = this.danmaku.concat(d.elems));
-          }).catch((e) => {
-            console.warn("弹幕丢包：", \`segment_index=\${i}\`, e);
-          })
-        );
-      }
-      dmWebView.specialDms && dmWebView.specialDms.forEach((d) => {
-        promises.push(
-          this.specialDm(d.replace("http:", "")).then((d2) => {
-            d2.elems && (this.danmaku = this.danmaku.concat(d2.elems));
-          }).catch((e) => {
-            console.warn("高级弹幕丢包：", d, e);
-          })
-        );
-      });
-      await Promise.all(promises);
-      DanmakuBase.sortDmById(this.danmaku);
-    }
-    return this.danmaku;
-  }
-  /** 获取旧版弹幕 */
-  async toCmd() {
-    const danmaku = await this.getData();
-    return DanmakuBase.parseCmd(danmaku);
-  }
-  /** 获取弹幕分包 */
-  async DmWebViewReply() {
-    const response = await fetch(objUrl(URLS.DM_WEB_VIEW, {
-      type: 1,
-      oid: this.cid,
-      pid: this.aid
-    }), { credentials: "include", cache: "force-cache" });
-    const arraybuffer = await response.arrayBuffer();
-    const msg = _ApiDmWeb.DmWebViewReply.decode(new Uint8Array(arraybuffer));
-    return _ApiDmWeb.DmWebViewReply.toObject(msg);
-  }
-  /** 获取弹幕分包 */
-  async DmSegMobileReply(segment_index = 1) {
-    const response = await fetch(objUrl(URLS.DM_WEB_SEG_SO, {
-      type: 1,
-      oid: this.cid,
-      pid: this.aid,
-      segment_index
-    }), { credentials: "include" });
-    const arraybuffer = await response.arrayBuffer();
-    const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
-    return _ApiDmWeb.DmSegMobileReply.toObject(msg);
-  }
-  /** 获取高级弹幕 */
-  async specialDm(url) {
-    const response = await fetch(url);
-    const arraybuffer = await response.arrayBuffer();
-    const msg = _ApiDmWeb.DmSegMobileReply.decode(new Uint8Array(arraybuffer));
-    return _ApiDmWeb.DmSegMobileReply.toObject(msg);
-  }
-};
-var ApiDmWeb = _ApiDmWeb;
-__publicField(ApiDmWeb, "Root");
-__publicField(ApiDmWeb, "DmWebViewReply");
-__publicField(ApiDmWeb, "DmSegMobileReply");
-
-// src/utils/hook/worker.ts
-var _WorkerHook = class {
-  /** Worker.prototype.postMessage hook init. */
-  static postMessageHook() {
-    this.postMessage = Worker.prototype.postMessage;
-    Worker.prototype.postMessage = function(message, transfer) {
-      let ishook = false;
-      _WorkerHook.postMessageCallback.forEach((d) => {
-        d.call(this, message, transfer) && (ishook = true);
-      });
-      ishook || _WorkerHook.postMessage.call(this, message, transfer);
-    };
-  }
-  constructor() {
-    _WorkerHook.postMessage || _WorkerHook.postMessageHook();
-  }
-  /**
-   * Worker.prototype.postMessage hook.
-   * @param callback 检查并处理\`Worker.prototype.postMessage\`的回调函数，继承原传参，返回 **true** 时拦截该实例。
-   * @returns 取消该hook的方法，执行后不再hook。
-   */
-  postMessage(callback) {
-    const id = _WorkerHook.postMessageCallback.push(callback);
-    return () => {
-      id >= 0 && delete _WorkerHook.postMessageCallback[id - 1];
-    };
-  }
-};
-var WorkerHook = _WorkerHook;
-/** Worker.prototype.postMessage backup. */
-__publicField(WorkerHook, "postMessage");
-__publicField(WorkerHook, "postMessageCallback", []);
-
-// src/core/danmaku.ts
-var Danmaku = class {
-  constructor(BLOD2) {
-    this.BLOD = BLOD2;
-    BLOD2.userLoadedCallback((status) => {
-      if (!status.bilibiliplayer) {
-        this.listSoFix();
-      }
-    });
-  }
-  listSoFixed = false;
-  /** 原生旧版播放器使用protobuf弹幕 */
-  listSoFix() {
-    if (this.listSoFixed)
-      return;
-    this.listSoFixed = true;
-    const that = this;
-    new WorkerHook().postMessage(function(message) {
-      if (message.url && message.url.includes("list.so")) {
-        that.BLOD.status.dmwrap && that.trim();
-        if (!that.BLOD.status.dmproto)
-          return false;
-        const params = urlObj(message.url);
-        const startTime = new Date().getTime();
-        that.getSegDanmaku(void 0, params.oid).then((d) => {
-          this.dispatchEvent(new MessageEvent("message", {
-            data: {
-              code: 0,
-              danmakuArray: d,
-              loadTime: new Date().getTime() - startTime,
-              parseTime: Math.random(),
-              sendTip: "",
-              state: 0,
-              textSide: "",
-              total: d.length.toString()
-            }
-          }));
-        }).catch((e) => {
-          console.error("protobuf 弹幕获取失败", e);
-        });
-        return true;
-      }
-      return false;
-    });
-  }
-  /** 允许普权弹幕排版 */
-  trim() {
-    propertyHook(String.prototype, "trim", function() {
-      return String(this);
-    });
-  }
-  async getSegDanmaku(aid = this.BLOD.aid, cid = this.BLOD.cid) {
-    if (!cid)
-      throw new Error(\`无法获取弹幕 aid：\${aid} cid：\${cid}\`);
-    return new ApiDmWeb(aid, cid).toCmd();
-  }
-  /** 加载本地xml弹幕 */
-  localDmXml() {
-    if (!window.player)
-      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
-    if (!window.player?.appendDm)
-      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
-    const data = ["请选择一个弹幕文件，拓展名：.xml，编码：utf-8"];
-    const toast = this.BLOD.toast.toast(0, "info", ...data);
-    fileRead(".xml", false).then((d) => {
-      if (d && d[0]) {
-        data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
-        toast.data = data;
-        toast.type = "warning";
-        return readAs(d[0]);
-      }
-      throw new Error(data[0]);
-    }).then((d) => {
-      const dm = DanmakuBase.decodeXml(d);
-      window.player.appendDm(dm, !this.BLOD.status.dmContact);
-      data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-      toast.data = data;
-      toast.type = "success";
-    }).catch((e) => {
-      data.push(e);
-      debug.error(e);
-      toast.data = data;
-      toast.type = "error";
-    }).finally(() => {
-      toast.delay = this.BLOD.status.toast.delay;
-    });
-  }
-  /** 加载本地json弹幕 */
-  localDmJson() {
-    if (!window.player)
-      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
-    if (!window.player?.appendDm)
-      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
-    const data = ["请选择一个弹幕文件，拓展名：.json，编码：utf-8"];
-    const toast = this.BLOD.toast.toast(0, "info", ...data);
-    fileRead(".json", false).then((d) => {
-      if (d && d[0]) {
-        data.push("-------loading-------", \`弹幕：\${d[0].name}\`, \`类型：\${d[0].type}\`, \`大小：\${sizeFormat(d[0].size)}\`);
-        toast.data = data;
-        toast.type = "warning";
-        return readAs(d[0]);
-      }
-      throw new Error(data[0]);
-    }).then((d) => {
-      const dm = JSON.parse(d);
-      window.player.appendDm(dm, !this.BLOD.status.dmContact);
-      data.push("-------decoding-------", \`有效弹幕数：\${dm.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-      toast.data = data;
-      toast.type = "success";
-    }).catch((e) => {
-      data.push(e);
-      debug.error(e);
-      toast.data = data;
-      toast.type = "error";
-    }).finally(() => {
-      toast.delay = this.BLOD.status.toast.delay;
-    });
-  }
-  /** 下载弹幕 */
-  async download(aid = this.BLOD.aid, cid = this.BLOD.cid) {
-    if (!cid)
-      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
-    const dms = window.player?.getDanmaku ? window.player.getDanmaku() : await new ApiDmWeb(aid, cid).getData();
-    const metadata = this.BLOD.videoInfo.metadata;
-    const title = metadata ? \`\${metadata.album}(\${metadata.title})\` : \`\${aid}.\${cid}\`;
-    if (this.BLOD.status.dmExtension === "json") {
-      return saveAs(JSON.stringify(dms, void 0, "	"), \`\${title}.json\`, "application/json");
-    }
-    return saveAs(DanmakuBase.encodeXml(DanmakuBase.parseCmd(dms), cid), \`\${title}.xml\`, "application/xml");
-  }
-  /** 加载在线弹幕 */
-  async onlineDm(str) {
-    if (!window.player)
-      return this.BLOD.toast.warning("未找到播放器实例！请在播放页面使用。");
-    if (!window.player?.appendDm)
-      return this.BLOD.toast.warning("未启用【重构播放器】，无法载入弹幕！");
-    const data = ["-------在线弹幕-------", \`目标：\${str}\`];
-    const toast = this.BLOD.toast.toast(0, "info", ...data);
-    const { aid, cid } = await urlParam(str);
-    data.push(\`aid：\${aid}\`, \`cid：\${cid}\`);
-    toast.data = data;
-    if (!aid || !cid) {
-      data.push("查询cid信息失败，已退出！");
-      toast.data = data;
-      toast.type = "error";
-      toast.delay = this.BLOD.toast.delay;
-    } else {
-      new ApiDmWeb(aid, cid).getData().then((d) => {
-        window.player.appendDm(d, !this.BLOD.status.dmContact);
-        data.push(\`有效弹幕数：\${d.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
-        toast.data = data;
-        toast.type = "success";
-      }).catch((e) => {
-        data.push(e);
-        debug.error(e);
-        toast.data = data;
-        toast.type = "error";
-      }).finally(() => {
-        toast.delay = this.BLOD.status.toast.delay;
-      });
-    }
+  /** 修复评论播放跳转 */
+  commentAgent() {
+    window.commentAgent = { seek: (t) => window.player && window.player.seek(t) };
   }
 };
 
@@ -23460,7 +26691,7 @@ var BLOD = class {
     /** 是否大会员 */
     this.isVip = false;
     /** 播放器 */
-    this.player = new Player();
+    this.player = new Player(this);
     /** 用户数据管理 */
     this.user = new User(this);
     /** url净化 */
