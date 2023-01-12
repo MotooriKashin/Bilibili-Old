@@ -55,7 +55,7 @@ export const userStatus = {
     /** 账户授权 */
     accessKey: {
         /** access_key */
-        token: '',
+        token: <string><unknown>undefined,
         /** 授权日期 */
         date: 0,
         /** 授权日期字符串 */

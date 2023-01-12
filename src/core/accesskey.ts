@@ -62,7 +62,7 @@ export class AccessKey {
         }
     }
     remove() {
-        this.BLOD.status.accessKey.token = '';
+        this.BLOD.status.accessKey.token = <any>undefined;
         this.BLOD.status.accessKey.date = 0;
         this.BLOD.status.accessKey.dateStr = '';
         this.BLOD.toast.warning('已清除账户鉴权', '如果您在【解除播放限制】功能中选择【自定义】服务器，那么第三方服务器中很可能依然有鉴权。', '为求保险，您可以修改一次密码，这会强制所有鉴权失效。')();
