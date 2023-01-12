@@ -62,8 +62,23 @@ export class PageRead extends Page {
     private ops?: any;
     constructor(protected BLOD: BLOD) {
         super(html);
+        this.webpackjsonp();
         new Comment(BLOD);
         this.initState();
+    }
+    /** 处理webpackJsonp污染 */
+    protected webpackjsonp() {
+        propertyHook.modify(window, 'webpackJsonp', v => {
+            if (typeof v === 'function') {
+                setTimeout(() => {
+                    Reflect.deleteProperty(window, 'webpackJsonp');
+                    Reflect.set(window, 'webpackJsonp', v);
+                });
+                return v;
+            } else {
+                return;
+            }
+        })
     }
     /** 获取专栏信息 */
     protected initState() {
@@ -183,7 +198,6 @@ export class PageRead extends Page {
         const title = document.title;
         this.vdom.replace(document.documentElement);
         document.querySelector(".page-container")!.innerHTML = this.readInfoStr;
-        Reflect.deleteProperty(window, 'webpackJsonp');
         this.vdom.loadScript().then(() => {
             this.loadedCallback();
             PageRead.rightCopyEnable();
