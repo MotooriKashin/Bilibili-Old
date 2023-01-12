@@ -5,13 +5,13 @@ const appendChild = Element.prototype.appendChild;
 const insertBefore = Element.prototype.insertBefore;
 const jsonp: [string[], Function][] = [];
 Element.prototype.appendChild = function <T extends Node>(newChild: T): T {
-    newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
+    this.parentElement === document.documentElement && newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
         d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
     }));
     return <T>appendChild.call(this, newChild);
 };
 Element.prototype.insertBefore = function <T extends Node>(newChild: T, refChild: Node | null): T {
-    newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
+    this.parentElement === document.documentElement && newChild.nodeName == 'SCRIPT' && (<any>newChild).src && (jsonp.forEach(d => {
         d[0].every(d => (<any>newChild).src.includes(d)) && d[1].call(newChild);
     }));
     return <T>insertBefore.call(this, newChild, refChild);
