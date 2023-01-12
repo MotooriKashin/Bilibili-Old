@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 翻页评论区
 // @namespace    MotooriKashin
-// @version      2.0.8
+// @version      2.0.9
 // @description  恢复评论区翻页功能。
 // @author       MotooriKashin
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -28,6 +28,11 @@ var Abv = class {
     for (let i = 0; i < 58; i++)
       this.table[this.base58Table[i]] = i;
   }
+  /**
+   * av/BV互转
+   * @param input av或BV，可带av/BV前缀
+   * @returns 转化结果
+   */
   check(input) {
     if (/^[aA][vV][0-9]+$/.test(String(input)) || /^\d+$/.test(String(input)))
       return this.avToBv(Number(/[0-9]+/.exec(String(input))[0]));
@@ -118,7 +123,9 @@ function timeFormat(time = new Date().getTime(), type) {
 
 // src/utils/debug.ts
 var group = {
+  /** 分组层次 */
   i: 0,
+  /** 分组栈 */
   call: []
 };
 function debug(...data) {
@@ -209,14 +216,19 @@ var isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
 
 // src/utils/format/url.ts
 var URL = class {
+  /** 锚 */
   hash;
+  /** 基链 */
   base;
+  /** 参数对象。结果会格式化`undefined``null``NaN`等特殊值，但不会处理数字，以免丢失精度。 */
   params = {};
+  /** 参数链（不含`?`） */
   get param() {
     return Object.entries(this.params).reduce((s, d) => {
       return s += `${s ? "&" : ""}${d[0]}=${d[1]}`;
     }, "");
   }
+  /** 提取URL参数 */
   constructor(url) {
     const arr1 = url.split("#");
     let str = arr1.shift();
@@ -248,6 +260,7 @@ var URL = class {
       return s;
     }, {});
   }
+  /** 还原url链接 */
   toJSON() {
     return `${this.base ? this.param ? this.base + "?" : this.base : ""}${this.param}${this.hash || ""}`;
   }
@@ -258,34 +271,20 @@ function urlObj(url) {
 }
 
 // src/utils/hook/node.ts
-var appendChildHead = HTMLHeadElement.prototype.appendChild;
-var appendChildBody = HTMLBodyElement.prototype.appendChild;
-var insertBeforeHead = HTMLHeadElement.prototype.insertBefore;
-var insertBeforeBody = HTMLBodyElement.prototype.insertBefore;
+var appendChild = Element.prototype.appendChild;
+var insertBefore = Element.prototype.insertBefore;
 var jsonp = [];
-HTMLHeadElement.prototype.appendChild = function(newChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+Element.prototype.appendChild = function(newChild) {
+  this.parentElement === document.documentElement && newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
     d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
   });
-  return appendChildHead.call(this, newChild);
+  return appendChild.call(this, newChild);
 };
-HTMLBodyElement.prototype.appendChild = function(newChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
+Element.prototype.insertBefore = function(newChild, refChild) {
+  this.parentElement === document.documentElement && newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
     d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
   });
-  return appendChildBody.call(this, newChild);
-};
-HTMLHeadElement.prototype.insertBefore = function(newChild, refChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
-    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
-  });
-  return insertBeforeHead.call(this, newChild, refChild);
-};
-HTMLBodyElement.prototype.insertBefore = function(newChild, refChild) {
-  newChild.nodeName == "SCRIPT" && newChild.src && jsonp.forEach((d) => {
-    d[0].every((d2) => newChild.src.includes(d2)) && d[1].call(newChild);
-  });
-  return insertBeforeBody.call(this, newChild, refChild);
+  return insertBefore.call(this, newChild, refChild);
 };
 function jsonpHook(url, redirect, modifyResponse, once = true) {
   let id;
@@ -415,6 +414,7 @@ var Comment = class {
     this.initComment();
     this.pageCount();
   }
+  /** 捕获评论组件 */
   bbComment() {
     Reflect.defineProperty(window, "bbComment", {
       configurable: true,
@@ -480,6 +480,7 @@ var Comment = class {
       }
     });
   }
+  /** 修复按时间排序评论翻页数 */
   pageCount() {
     let page;
     jsonpHook(["api.bilibili.com/x/v2/reply?", "sort=2"], void 0, (res) => {
@@ -496,6 +497,7 @@ var Comment = class {
       return res;
     }, false);
   }
+  /** 修补评论组件 */
   bbCommentModify() {
     this.styleFix();
     this.initAbtest();
@@ -506,6 +508,7 @@ var Comment = class {
     this._resolvePictures();
     this.BLOD.status.commentJumpUrlTitle && this._resolveJump();
   }
+  /** 样式修补 */
   styleFix() {
     addCss(`.bb-comment .comment-list .list-item .info .btn-hover, .comment-bilibili-fold .comment-list .list-item .info .btn-hover {
             line-height: 24px;
@@ -513,6 +516,7 @@ var Comment = class {
     addCss(`.operation.btn-hide-re .opera-list {visibility: visible}`, "keep-operalist-visible");
     addCss(".image-exhibition {margin-top: 8px;user-select: none;} .image-exhibition .image-item-wrap {max-width: 240px;display: flex;justify-content: center;position: relative;border-radius: 4px;overflow: hidden;cursor: zoom-in;} .image-exhibition .image-item-wrap.vertical {flex-direction: column} .image-exhibition .image-item-wrap.extra-long {justify-content: start;} .image-exhibition .image-item-wrap img {width: 100%;}", "image-exhibition");
   }
+  /** 退出abtest，获取翻页评论区 */
   initAbtest() {
     Feedback.prototype.initAbtest = function() {
       this.abtest = {};
@@ -527,6 +531,7 @@ var Comment = class {
       this.init();
     };
   }
+  /** 添加回小页码区 */
   _renderBottomPagination() {
     Feedback.prototype._renderBottomPagination = function(pageInfo) {
       if (this.noPage) {
@@ -580,6 +585,7 @@ var Comment = class {
       }
     };
   }
+  /** 顶层评论ip属地 */
   _createListCon() {
     Feedback.prototype._createListCon = function(item, i, pos) {
       const blCon = this._parentBlacklistDom(item, i, pos);
@@ -617,6 +623,7 @@ var Comment = class {
       return item.state === this.blacklistCode ? blCon : con;
     };
   }
+  /** 楼中楼评论ip属地 */
   _createSubReplyItem() {
     Feedback.prototype._createSubReplyItem = function(item, i) {
       if (item.invisible) {
@@ -650,6 +657,7 @@ var Comment = class {
       ].join("");
     };
   }
+  /** 楼中楼“查看对话按钮” & 让评论菜单可以通过再次点击按钮来关闭 */
   _registerEvent() {
     const _registerEvent = Feedback.prototype._registerEvent;
     Feedback.prototype._registerEvent = function(e) {
@@ -789,6 +797,7 @@ var Comment = class {
       return BV2avAll(str);
     };
   }
+  /** 评论图片 */
   _resolvePictures() {
     Feedback.prototype._resolvePictures = function(content) {
       const pictureList = [];
