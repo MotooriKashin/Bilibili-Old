@@ -184,8 +184,8 @@ export class Header {
             this.loadOldHeader(d);
             document.querySelector<HTMLElement>('.header')!.style.display = 'none';
         })
-        poll(() => document.querySelector<HTMLElement>('.international-footer'), d => this.loadOldFooter(d));
-        poll(() => document.querySelector<HTMLElement>('#biliMainFooter'), d => this.loadOldFooter(d));
+        // poll(() => document.querySelector<HTMLElement>('.international-footer'), d => this.loadOldFooter(d));
+        // poll(() => document.querySelector<HTMLElement>('#biliMainFooter'), d => this.loadOldFooter(d));
     }
     /** 已加载旧版顶栏 */
     protected oldHeadLoaded = false;
@@ -194,9 +194,10 @@ export class Header {
     /** 加载旧版顶栏 */
     protected loadOldHeader(target?: HTMLElement) {
         if (target) {
-            if (target.id === '.bili-header__bar') {
-                target = target.parentElement?.parentElement!;
+            if (target.className === 'bili-header__bar') {
+                addCss('.bili-header.large-header,.header-channel,.z-top-container.has-menu[type="all"] {display: none;}');
             }
+            document.body.classList.remove('header-v3');
             target.style.display = 'none';
             target.hidden = true;
             // target.attachShadow({ mode: 'closed' });
@@ -233,9 +234,7 @@ export class Header {
     protected async styleClear() {
         const d = document.styleSheets;
         for (let i = 0; i < d.length; i++) {
-            (d[i].href?.includes("laputa-footer")
-                || d[i].href?.includes("laputa-header"))
-                && (d[i].disabled = true);
+            d[i].href?.includes("laputa-header") && (d[i].disabled = true);
         }
         Header.styleFix();
     }
