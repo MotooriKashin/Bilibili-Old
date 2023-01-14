@@ -21,6 +21,14 @@ esbuild.build({
     treeShaking: true, // 清除无效代码
     charset: 'utf8', // 文件编码
     outfile: 'userscript/comment/main.user.js',
+    loader: { // 文件对应的解析方式
+        '.html': 'text',
+        '.svg': 'text',
+        ".css": 'text'
+    },
+    define: {
+        _MUTEX_: `'${Math.random().toString(36).substring(2)}'`, // 编译时生成的唯一标记
+    },
     banner: {
         js: banner
     },
