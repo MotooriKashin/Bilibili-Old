@@ -20,16 +20,16 @@ export class PreviewImage extends HTMLElement implements CustomElementsInterface
         this._image = root.querySelector<HTMLElement>('.show-image-wrap')!;
         this._list = root.querySelector<HTMLElement>('.preview-list')!;
 
-        close.addEventListener('click', e => {
+        close.parentElement!.addEventListener('click', e => {
             this.remove();
             document.body.style.overflow = '';
             e.stopPropagation();
         });
-        left.addEventListener('click', e => {
+        left.parentElement!.addEventListener('click', e => {
             this.togger(e, false);
             e.stopPropagation();
         });
-        right.addEventListener('click', e => {
+        right.parentElement!.addEventListener('click', e => {
             this.togger(e);
             e.stopPropagation();
         });
