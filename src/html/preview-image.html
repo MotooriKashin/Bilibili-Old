@@ -1,0 +1,179 @@
+<div class="reply-view-image">
+    <!-- 操作区 -->
+    <div class="operation-btn">
+        <div class="operation-btn-icon close-container">
+            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>
+        </div>
+        <div class="operation-btn-icon last-image">
+            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>
+        </div>
+        <div class="operation-btn-icon next-image">
+            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>
+        </div>
+    </div>
+    <!-- 图片内容 -->
+    <div class="show-image-wrap"></div>
+    <!-- 小图预览栏 -->
+    <div class="preview-list"></div>
+</div>
+<style>
+    .reply-view-image {
+        position: fixed;
+        z-index: 999999;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(24, 25, 28, 0.85);
+        transform: scale(1);
+        user-select: none;
+    }
+
+    .reply-view-image,
+    .reply-view-image * {
+        box-sizing: border-box;
+    }
+
+    .reply-view-image .operation-btn .operation-btn-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        z-index: 2;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        color: white;
+        background: rgba(0, 0, 0, 0.58);
+        transition: 0.2s;
+        cursor: pointer;
+    }
+
+    .reply-view-image .operation-btn .operation-btn-icon:hover {
+        color: #FF6699;
+    }
+
+    .reply-view-image .operation-btn .operation-btn-icon.close-container {
+        top: 16px;
+        right: 16px;
+    }
+
+    .reply-view-image .operation-btn .operation-btn-icon.last-image {
+        top: 50%;
+        left: 16px;
+        transform: translateY(-50%);
+    }
+
+    .reply-view-image .operation-btn .operation-btn-icon.next-image {
+        top: 50%;
+        right: 16px;
+        transform: translateY(-50%);
+    }
+
+    .reply-view-image .show-image-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        padding: 0 100px;
+        overflow: auto;
+    }
+
+    .reply-view-image .show-image-wrap .loading-svga {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 42px;
+        height: 42px;
+    }
+
+    .reply-view-image .show-image-wrap.vertical {
+        flex-direction: column;
+        justify-content: start;
+    }
+
+    .reply-view-image .show-image-wrap .image-content {
+        max-width: 100%;
+    }
+
+    .reply-view-image .preview-list {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 50%;
+        bottom: 30px;
+        z-index: 2;
+        padding: 6px 10px;
+        border-radius: 8px;
+        background: rgba(24, 25, 28, 0.8);
+        backdrop-filter: blur(20px);
+        transform: translateX(-50%);
+    }
+
+    .reply-view-image .preview-list .preview-item-box {
+        padding: 1px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .reply-view-image .preview-list .preview-item-box.active {
+        border-color: #FF6699;
+    }
+
+    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {
+        display: flex;
+        justify-content: center;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+    }
+
+    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {
+        flex-direction: column;
+    }
+
+    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {
+        justify-content: start;
+    }
+
+    .svg-icon {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .svg-icon svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .svg-icon.use-color svg path {
+        fill: currentColor;
+        color: inherit;
+    }
+</style>
+<style type="text/css">
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 4px;
+        background-color: #EEE;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: #999;
+    }
+</style>

@@ -2,6 +2,7 @@ import { BLOD } from "../bilibili-old";
 import { BV2avAll } from "../utils/abv";
 import { addCss, loadScript } from "../utils/element";
 import { jsonpHook } from "../utils/hook/node";
+import { PreviewImage } from "./ui/preview-image";
 
 /** 评论组件暂存 */
 let Feedback: any;
@@ -281,6 +282,7 @@ export class Comment {
     /** 楼中楼“查看对话按钮” & 让评论菜单可以通过再次点击按钮来关闭 */
     protected _registerEvent() {
         const _registerEvent: Function = Feedback.prototype._registerEvent;
+        let previewImage: PreviewImage;
         Feedback.prototype._registerEvent = function (e: any) {
             _registerEvent.call(this, e);
             let n = this.$root;
@@ -398,7 +400,18 @@ export class Comment {
                     l.lastClickOperation = this;
                 } else
                     operalist && (operalist.style.display = "none");
-            })
+            });
+            // 显示图片预览
+            n.on('click.image-exhibition', '.image-item-img', function (this: HTMLImageElement, e: MouseEvent) {
+                const src = this.src;
+                const srcs: string[] = [];
+                this.parentElement?.parentElement?.querySelectorAll('img').forEach(d => {
+                    srcs.push(d.src);
+                });
+                srcs.length || (srcs.push(src));
+                previewImage || (previewImage = new PreviewImage());
+                previewImage.value(srcs, this.parentElement?.classList.contains('vertical'), srcs.indexOf(src));
+            });
         }
     }
     protected _resolveJump() {
@@ -465,14 +478,12 @@ export class Comment {
                         const type = d.img_width >= d.img_height ? 'horizontal' : 'vertical';
                         const extraLong = (d.img_width / d.img_height >= 3) || ((d.img_height / d.img_width >= 3))
                         pictureList.push(
-                            '<a class="image-item-wrap ',
+                            '<div class="image-item-wrap ',
                             type,
                             `${extraLong ? 'extraLong' : ''}`,
-                            '" target="_blank"',
-                            d.click_url ? ` href="${d.click_url}"` : '',
-                            '><img src="',
-                            d.img_src,
-                            `"></a>`
+                            '"><img class="image-item-img" src="',
+                            d.img_src + '@.webp',
+                            `"></div>`
                         )
                     })
                     pictureList.push(`</div>`);

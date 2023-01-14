@@ -12,6 +12,8 @@ import linechart from '../svg/linechart.svg';
 import blind from '../svg/blind.svg';
 import like from '../svg/like.svg';
 import dislike from '../svg/dislike.svg';
+import left from '../svg/left.svg';
+import right from '../svg/right.svg';
 
 export const svg = {
     fork,
@@ -27,5 +29,7 @@ export const svg = {
     linechart,
     blind,
     like,
-    dislike
+    dislike,
+    left,
+    right
 }
