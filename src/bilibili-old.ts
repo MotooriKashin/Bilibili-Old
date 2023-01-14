@@ -25,6 +25,7 @@ import { PageHistory } from "./page/history";
 import { PageLive } from "./page/live";
 import { PageMedia } from "./page/media";
 import { PagePlaylist } from "./page/playlist";
+import { PagePlaylistDetail } from "./page/playlist-detail";
 import { PageRanking } from "./page/ranking";
 import { PageRead } from "./page/read";
 import { PageSearch } from "./page/search";
@@ -136,6 +137,9 @@ export class BLOD {
         if ((this.status.playlist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) {
             this.EmbedPlayer();
             new PagePlaylist(this);
+        }
+        if (/\/playlist\/detail\/pl/.test(location.href)) {
+            new PagePlaylistDetail(this);
         }
         if (this.status.ranking && /\/v\/popular\//.test(location.href)) {
             new PageRanking(this);
