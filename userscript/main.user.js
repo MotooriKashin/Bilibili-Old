@@ -26300,6 +26300,52 @@ var PagePlaylist = class extends Page {
   }
 };
 
+// src/html/playlist-detail.html
+var playlist_detail_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <title>哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta charset="utf-8" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <link rel="stylesheet" href="//static.hdslb.com/phoenix/dist/css/comment.min.css" type="text/css" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/playlist-detail/css/playlist_detail.1.dc2f20722afb93b15bbf7a30436f70ff31fb0a05.css" />\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container"></div>\\r\\n    <div id="playlist-detail-app"></div>\\r\\n    <div id="app" data-server-rendered="true" class="pl-app"></div>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/playlist-detail/manifest.dc2f20722afb93b15bbf7a30436f70ff31fb0a05.js"\\r\\n        defer="defer"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/playlist-detail/vendor.dc2f20722afb93b15bbf7a30436f70ff31fb0a05.js"\\r\\n        defer="defer"><\\/script>\\r\\n    <script\\r\\n        src="//s1.hdslb.com/bfs/static/jinkela/playlist-detail/playlist_detail.dc2f20722afb93b15bbf7a30436f70ff31fb0a05.js"\\r\\n        defer="defer"><\\/script>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" charset="utf-8" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
+
+// src/page/playlist-detail.ts
+var PagePlaylistDetail = class extends Page {
+  constructor(BLOD2) {
+    super(playlist_detail_default);
+    this.BLOD = BLOD2;
+    this.__INITIAL_STATE__();
+    this.updateDom();
+    this.ancientHeader();
+  }
+  /** 移除上古顶栏 */
+  ancientHeader() {
+    webpackHook(499, 446, () => \`()=>{}\`);
+  }
+  __INITIAL_STATE__() {
+    this.BLOD.urlCleaner.updateLocation("https://www.bilibili.com/playlist/detail/pl769");
+    window.__INITIAL_STATE__ = {
+      mid: toview_default.mid,
+      pid: toview_default.pid,
+      plinfoData: {
+        attr: toview_default.attr,
+        count: toview_default.count,
+        cover: toview_default.cover,
+        ctime: toview_default.ctime,
+        description: toview_default.description,
+        favored: toview_default.favored,
+        id: toview_default.id,
+        is_favorite: toview_default.is_favorite,
+        mid: toview_default.mid,
+        mtime: toview_default.mtime,
+        owner: toview_default.owner,
+        pid: toview_default.pid,
+        stat: toview_default.stat,
+        state: toview_default.state,
+        type: toview_default.type
+      },
+      pllistData: toview_default.list
+    };
+    window.addEventListener("load", () => {
+      this.BLOD.toast.warning("播单详情页面已不存在，这里显示的是缓存的播单 769 的数据。");
+    }, { once: true });
+  }
+};
+
 // src/html/ranking.html
 var ranking_default = '<!-- <!DOCTYPE html> -->\\r\\n<html lang="zh-CN">\\r\\n\\r\\n<head>\\r\\n    <title>热门视频排行榜 - 哔哩哔哩 (゜-゜)つロ 干杯~-bilibili</title>\\r\\n    <meta charset="utf-8" />\\r\\n    <meta http-equiv="X-UA-Compatible" content="IE=edge" />\\r\\n    <meta name="renderer" content="webkit" />\\r\\n    <meta name="description" content="bilibili是国内知名的视频弹幕网站，这里有最及时的动漫新番，最棒的ACG氛围，最有创意的Up主。大家可以在这里找到许多欢乐。" />\\r\\n    <meta name="keywords" content="B站,弹幕,字幕,AMV,MAD,MTV,ANIME,动漫,动漫音乐,游戏,游戏解说,ACG,galgame,动画,番组,新番,初音,洛天依,vocaloid" />\\r\\n    <link rel="stylesheet"\\r\\n        href="//s1.hdslb.com/bfs/static/jinkela/rank/css/rank.0.ba58f8684a87651e0e1c576df8f918bfa10c1a90.css" />\\r\\n    <style type="text/css">\\r\\n        .gg-floor-module {\\r\\n            display: none;\\r\\n        }\\r\\n    </style>\\r\\n</head>\\r\\n\\r\\n<body>\\r\\n    <div class="z-top-container has-menu"></div>\\r\\n    <div id="rank-app"></div>\\r\\n    <div class="footer bili-footer report-wrap-module"></div>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/js/jquery.min.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/seed/jinkela/header/header.js"><\\/script>\\r\\n    <script type="text/javascript" src="//s1.hdslb.com/bfs/cm/st/bundle.js" crossorigin=""><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/rank/1.rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js"><\\/script>\\r\\n    <script src="//s1.hdslb.com/bfs/static/jinkela/rank/rank.ba58f8684a87651e0e1c576df8f918bfa10c1a90.js"><\\/script>\\r\\n    <script type="text/javascript" src="//static.hdslb.com/common/js/footer.js"><\\/script>\\r\\n</body>\\r\\n\\r\\n</html>';
 
@@ -26958,6 +27004,9 @@ var BLOD = class {
     if (this.status.playlist && /\\/medialist\\/play\\//.test(location.href) && !/watchlater/.test(location.href) || /\\/playlist\\/video\\/pl/.test(location.href)) {
       this.EmbedPlayer();
       new PagePlaylist(this);
+    }
+    if (/\\/playlist\\/detail\\/pl/.test(location.href)) {
+      new PagePlaylistDetail(this);
     }
     if (this.status.ranking && /\\/v\\/popular\\//.test(location.href)) {
       new PageRanking(this);
