@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.1.4-855f3686b22c5c493d7df808d348e7e511658617
+// @version      10.1.5-855f3686b22c5c493d7df808d348e7e511658617
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -7095,6 +7095,94 @@ async function apiWebshowLocs(data) {
   return jsonCheck(BV2avAll(text)).data;
 }
 
+// src/utils/danmaku.ts
+var DanmakuBase = class {
+  /** 从小到大排序弹幕 */
+  static sortDmById(dms) {
+    dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
+  }
+  /** 比较两个弹幕ID先后 */
+  static bigInt(num1, num2) {
+    String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
+    String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
+    if (num1.length > num2.length)
+      return true;
+    else if (num1.length < num2.length)
+      return false;
+    else {
+      for (let i = 0; i < num1.length; i++) {
+        if (num1[i] > num2[i])
+          return true;
+        if (num1[i] < num2[i])
+          return false;
+      }
+      return false;
+    }
+  }
+  /** 重构为旧版弹幕类型 */
+  static parseCmd(dms) {
+    return dms.map((d) => {
+      const dm = {
+        class: d.pool || 0,
+        color: d.color || 0,
+        date: d.ctime || 0,
+        dmid: d.idStr || "",
+        mode: +d.mode || 1,
+        pool: d.pool || 0,
+        size: d.fontsize || 25,
+        stime: d.progress / 1e3 || 0,
+        text: d.content && d.mode != 8 && d.mode != 9 ? d.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, "\\n") : d.content,
+        uhash: d.midHash || "",
+        uid: d.midHash || "",
+        weight: d.weight,
+        attr: d.attr
+      };
+      d.action?.startsWith("picture:") && (dm.html = \`<img src="\${d.action.replace("http:", "")}" style="width:auto;height:56.25px;">\`);
+      return dm;
+    });
+  }
+  /** 解析解码xml弹幕 */
+  static decodeXml(xml) {
+    if (typeof xml === "string") {
+      xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
+      xml = new DOMParser().parseFromString(xml, "application/xml");
+    }
+    const items = xml.querySelectorAll("d");
+    const dms = [];
+    items.forEach((d) => {
+      const json = d.getAttribute("p").split(",");
+      const text = d.textContent || d.text;
+      if (text) {
+        const dm = {
+          pool: Number(json[5]),
+          color: Number(json[3]),
+          ctime: Number(json[4]),
+          id: Number(json[7]),
+          idStr: String(json[7]),
+          mode: Number(json[1]),
+          fontsize: Number(json[2]),
+          progress: Number(json[0]) * 1e3,
+          content: String(text),
+          midHash: json[6]
+        };
+        dms.push(dm);
+      }
+    });
+    return dms;
+  }
+  /** 编码xml弹幕 */
+  static encodeXml(dms, cid) {
+    return dms.reduce((s, d) => {
+      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<&]/g, (a) => {
+        return { "<": "&lt;", "&": "&amp;" }[a];
+      }).replace(/(\\n|\\r\\n)/g, "/n")}</d>
+\`;
+      return s;
+    }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
+\`) + "</i>";
+  }
+};
+
 // src/utils/element.ts
 function addElement(tag, attribute, parrent, innerHTML, top, replaced) {
   let element = document.createElement(tag);
@@ -10735,7 +10823,222 @@ var SessionStorage = class {
   }
 };
 
+// src/html/button.html
+var button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/utils/button.ts
+var PushButton = class extends HTMLElement {
+  _button;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = button_default;
+    this._button = root.querySelector(".button");
+    this._button.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.dispatchEvent(new Event("change"));
+    });
+  }
+  set text(v) {
+    this._button.textContent = v;
+  }
+};
+customElements.get(\`button-\${"855f368"}\`) || customElements.define(\`button-\${"855f368"}\`, PushButton);
+
+// src/html/popupbox.html
+var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
+
+// src/svg/fork.svg
+var fork_default = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M0.284996 0.286944C0.480258 0.091682 0.796841 0.0916819 0.992103 0.286944L4.99893 4.29377L9.00684 0.285851C9.20211 0.0905889 9.51869 0.0905886 9.71395 0.285851C9.90921 0.481113 9.90921 0.797696 9.71395 0.992958L5.70603 5.00088L9.71309 9.00793C9.90835 9.20319 9.90835 9.51978 9.71309 9.71504C9.51783 9.9103 9.20124 9.9103 9.00598 9.71504L4.99893 5.70798L0.992966 9.71394C0.797704 9.90921 0.481122 9.90921 0.28586 9.71394C0.0905973 9.51868 0.0905975 9.2021 0.28586 9.00684L4.29182 5.00088L0.284996 0.994051C0.0897343 0.798789 0.0897342 0.482206 0.284996 0.286944Z" fill="#E19C2C"></path></svg>';
+
+// src/svg/gear.svg
+var gear_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>';
+
+// src/svg/wrench.svg
+var wrench_default = '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>';
+
+// src/svg/note.svg
+var note_default = '<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>';
+
+// src/svg/dmset.svg
+var dmset_default = '<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>';
+
+// src/svg/stethoscope.svg
+var stethoscope_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>';
+
+// src/svg/play.svg
+var play_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>';
+
+// src/svg/palette.svg
+var palette_default = '<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>';
+
+// src/svg/download.svg
+var download_default = '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>';
+
+// src/svg/warn.svg
+var warn_default = '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>';
+
+// src/svg/linechart.svg
+var linechart_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>';
+
+// src/svg/blind.svg
+var blind_default = '<svg viewBox="0 0 24 24"><g><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></g></svg>';
+
+// src/svg/like.svg
+var like_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M12.06,35.27V10.43h-.15l6.7-8.37A3.83,3.83,0,0,1,25.25,5L25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86Zm-2.5,0h-4a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h4Z" transform="translate(-0.56 -0.82)" /></g></svg>';
+
+// src/svg/dislike.svg
+var dislike_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M10.28,32.77h2.5V13.19h-2.5ZM25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86H5.56a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h6.25l6.8-8.49A3.83,3.83,0,0,1,25.25,5Zm10.14,2.51H22.22l.28-2.92L22.92,5a1.26,1.26,0,0,0-.18-1,1.28,1.28,0,0,0-.82-.56,1.11,1.11,0,0,0-1.25.42l-6.36,8.2-.83,1.11H5.14a2,2,0,0,0-.83.28,2.28,2.28,0,0,0-1.25,2.08V30.41a2,2,0,0,0,.42,1.25,2,2,0,0,0,2.08,1.11H28.89a2.38,2.38,0,0,0,1.39-.41,3.61,3.61,0,0,0,2.08-2.78L36.8,15l2.5.56L36.8,15a2.45,2.45,0,0,0-.14-1.39,2.89,2.89,0,0,0-1.52-.54l.28-2.5Z" transform="translate(-0.56 -0.82)" /></g></svg>';
+
+// src/svg/left.svg
+var left_default = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.67413 1.57564C7.90844 1.80995 7.90844 2.18985 7.67413 2.42417L4.09839 5.9999L7.67413 9.57564C7.90844 9.80995 7.90844 10.1899 7.67413 10.4242C7.43981 10.6585 7.05992 10.6585 6.8256 10.4242L3.00238 6.60094C2.67043 6.269 2.67043 5.73081 3.00238 5.39886L6.8256 1.57564C7.05992 1.34132 7.43981 1.34132 7.67413 1.57564Z" fill="#A2A7AE"></path></svg>';
+
+// src/svg/right.svg
+var right_default = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.82576 2.07564C5.59145 2.30995 5.59145 2.68985 5.82576 2.92417L10.9015 7.9999L5.82576 13.0756C5.59145 13.31 5.59145 13.6899 5.82576 13.9242C6.06008 14.1585 6.43997 14.1585 6.67429 13.9242L11.9386 8.65987C12.3031 8.29538 12.3031 7.70443 11.9386 7.33994L6.67429 2.07564C6.43997 1.84132 6.06008 1.84132 5.82576 2.07564Z" fill="#E19C2C"></path></svg>';
+
+// src/svg/net.svg
+var net_default = '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"><g><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"></path></g></svg>';
+
+// src/utils/svg.ts
+var svg = {
+  fork: fork_default,
+  gear: gear_default,
+  wrench: wrench_default,
+  note: note_default,
+  dmset: dmset_default,
+  stethoscope: stethoscope_default,
+  play: play_default,
+  palette: palette_default,
+  download: download_default,
+  warn: warn_default,
+  linechart: linechart_default,
+  blind: blind_default,
+  like: like_default,
+  dislike: dislike_default,
+  left: left_default,
+  right: right_default,
+  net: net_default
+};
+
+// src/core/ui/utils/popupbox.ts
+var ClickOutRemove = class {
+  constructor(target) {
+    this.target = target;
+    target.addEventListener("click", (e) => e.stopPropagation());
+  }
+  /** 已启用监听 */
+  enabled = false;
+  /** 移除节点 */
+  remove = () => {
+    this.target.remove();
+  };
+  /** 停止监听 */
+  disable = () => {
+    if (this.enabled) {
+      document.removeEventListener("click", this.remove);
+      this.enabled = false;
+    }
+    return this;
+  };
+  /** 开始监听 */
+  enable = () => {
+    this.enabled || setTimeout(() => {
+      document.addEventListener("click", this.remove, { once: true });
+      this.enabled = true;
+    }, 100);
+    return this;
+  };
+};
+var PopupBox = class extends HTMLElement {
+  _contain;
+  _fork;
+  clickOutRemove;
+  \$fork = true;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = popupbox_default;
+    this._contain = root.children[0].children[0];
+    this._fork = root.children[0].children[1];
+    this._fork.innerHTML = svg.fork;
+    this._fork.addEventListener("click", () => this.remove());
+    this.clickOutRemove = new ClickOutRemove(this);
+    document.body.appendChild(this);
+  }
+  append(...nodes) {
+    this._contain.append(...nodes);
+  }
+  appendChild(node) {
+    this._contain.appendChild(node);
+    return node;
+  }
+  replaceChildren(...nodes) {
+    this._contain.replaceChildren(...nodes);
+  }
+  setAttribute(qualifiedName, value) {
+    this._contain.setAttribute(qualifiedName, value);
+  }
+  getAttribute(qualifiedName) {
+    return this._contain.getAttribute(qualifiedName);
+  }
+  get style() {
+    return this._contain.style;
+  }
+  get innerHTML() {
+    return this._contain.innerHTML;
+  }
+  set innerHTML(v) {
+    this._contain.innerHTML = v;
+  }
+  /** 设置是否显示关闭按钮，不显示则点击节点外部自动关闭 */
+  get fork() {
+    return this.\$fork;
+  }
+  set fork(v) {
+    this.\$fork = v;
+    this._fork.style.display = v ? "" : "none";
+    if (v) {
+      this.clickOutRemove.disable();
+    } else {
+      this.clickOutRemove.enable();
+    }
+  }
+};
+customElements.get(\`popupbox-\${"855f368"}\`) || customElements.define(\`popupbox-\${"855f368"}\`, PopupBox);
+
+// src/core/ui/alert.ts
+function alert(msg, title, buttons, fork = false) {
+  isArray(msg) || (msg = [msg]);
+  msg = msg.join("</br>");
+  const popup = new PopupBox();
+  popup.fork = fork;
+  popup.setAttribute("style", "max-width: 400px; max-height: 300px;line-height: 16px;");
+  popup.innerHTML = \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
+    <span>\${title || "Bilibili Old"}</span>
+</div>
+<div><div style="padding-block: 10px;padding-inline: 15px;">\${msg}</div></div>\`;
+  if (buttons) {
+    addElement("hr", { style: "width: 100%;opacity: .3;" }, popup);
+    const div = addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, popup);
+    buttons.forEach((d) => {
+      const button = new PushButton();
+      button.text = d.text;
+      button.addEventListener("change", () => {
+        d.callback?.();
+        popup.remove();
+      });
+      div.appendChild(button);
+    });
+  }
+}
+
 // src/core/player.ts
+var danmakuProtect = [
+  469970,
+  // 【黑屏弹幕】美丽之物【Soundhorizon】
+  384460933
+  // 【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix
+];
 var _Player = class {
   constructor(BLOD2) {
     this.BLOD = BLOD2;
@@ -10937,6 +11240,7 @@ var _Player = class {
           }
         });
       }
+      this.BLOD.status.danmakuProtect && this.danmakuProtect();
     });
   }
   playbackRateTimer;
@@ -10987,6 +11291,43 @@ var _Player = class {
         } catch {
         }
       }, false);
+    }
+  }
+  danmakuProtect() {
+    if (!window.player?.appendDm)
+      return;
+    const cid = Number(this.BLOD.cid);
+    if (cid && danmakuProtect.includes(cid)) {
+      alert("此视频高级弹幕部分丢失，点击确认加载备份弹幕。<br>※ 请在原弹幕加载完后再点确定，以免备份弹幕被覆盖。", "弹幕保护计划", [
+        {
+          text: "确定",
+          callback: () => {
+            const data = ["弹幕保护计划 >>>"];
+            const toast = this.BLOD.toast.toast(0, "info", ...data);
+            this.BLOD.GM.fetch(this.BLOD.cdn.encode(\`/danmaku/\${cid}.xml\`, ""), { cache: "force-cache" }).then((d) => {
+              data.push(\`获取存档：\${cid}.xml\`);
+              toast.data = data;
+              toast.type = "success";
+              return d.text();
+            }).then((d) => {
+              const dm = DanmakuBase.decodeXml(d);
+              window.player.appendDm(dm, !this.BLOD.status.dmContact);
+              data.push(\`有效弹幕数：\${dm.length}\`, \`加载模式：\${this.BLOD.status.dmContact ? "与已有弹幕合并" : "清空已有弹幕"}\`);
+              toast.data = data;
+            }).catch((e) => {
+              data.push(e);
+              debug.error("弹幕保护计划", e);
+              toast.data = data;
+              toast.type = "error";
+            }).finally(() => {
+              toast.delay = this.BLOD.status.toast.delay;
+            });
+          }
+        },
+        {
+          text: "取消"
+        }
+      ], true);
     }
   }
 };
@@ -11200,6 +11541,93 @@ jsonpHook.scriptIntercept = (url, redirect, text) => {
 function removeJsonphook(id) {
   id >= 0 && delete jsonp[id - 1];
 }
+
+// src/html/preview-image.html
+var preview_image_default = '<div class="reply-view-image">\\r\\n    <!-- 操作区 -->\\r\\n    <div class="operation-btn">\\r\\n        <div class="operation-btn-icon close-container">\\r\\n            <i class="svg-icon close use-color" style="width: 14px; height: 14px;"></i>\\r\\n        </div>\\r\\n        <div class="operation-btn-icon last-image">\\r\\n            <i class="svg-icon left-arrow use-color" style="width: 22px; height: 22px;"></i>\\r\\n        </div>\\r\\n        <div class="operation-btn-icon next-image">\\r\\n            <i class="svg-icon right-arrow use-color" style="width: 22px; height: 22px;"></i>\\r\\n        </div>\\r\\n    </div>\\r\\n    <!-- 图片内容 -->\\r\\n    <div class="show-image-wrap"></div>\\r\\n    <!-- 小图预览栏 -->\\r\\n    <div class="preview-list"></div>\\r\\n</div>\\r\\n<style>\\r\\n    .reply-view-image {\\r\\n        position: fixed;\\r\\n        z-index: 999999;\\r\\n        top: 0;\\r\\n        right: 0;\\r\\n        bottom: 0;\\r\\n        left: 0;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        background: rgba(24, 25, 28, 0.85);\\r\\n        transform: scale(1);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .reply-view-image,\\r\\n    .reply-view-image * {\\r\\n        box-sizing: border-box;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        justify-content: center;\\r\\n        position: absolute;\\r\\n        z-index: 2;\\r\\n        width: 42px;\\r\\n        height: 42px;\\r\\n        border-radius: 50%;\\r\\n        color: white;\\r\\n        background: rgba(0, 0, 0, 0.58);\\r\\n        transition: 0.2s;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon:hover {\\r\\n        color: #FF6699;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.close-container {\\r\\n        top: 16px;\\r\\n        right: 16px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.last-image {\\r\\n        top: 50%;\\r\\n        left: 16px;\\r\\n        transform: translateY(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .operation-btn .operation-btn-icon.next-image {\\r\\n        top: 50%;\\r\\n        right: 16px;\\r\\n        transform: translateY(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        justify-content: center;\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        max-height: 100%;\\r\\n        padding: 0 100px;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap .loading-svga {\\r\\n        position: absolute;\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translate(-50%, -50%);\\r\\n        width: 42px;\\r\\n        height: 42px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap.vertical {\\r\\n        flex-direction: column;\\r\\n        justify-content: start;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .show-image-wrap .image-content {\\r\\n        max-width: 100%;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list {\\r\\n        display: flex;\\r\\n        align-items: center;\\r\\n        position: absolute;\\r\\n        left: 50%;\\r\\n        bottom: 30px;\\r\\n        z-index: 2;\\r\\n        padding: 6px 10px;\\r\\n        border-radius: 8px;\\r\\n        background: rgba(24, 25, 28, 0.8);\\r\\n        backdrop-filter: blur(20px);\\r\\n        transform: translateX(-50%);\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box {\\r\\n        padding: 1px;\\r\\n        border: 2px solid transparent;\\r\\n        border-radius: 8px;\\r\\n        transition: 0.3s;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box.active {\\r\\n        border-color: #FF6699;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap {\\r\\n        display: flex;\\r\\n        justify-content: center;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        border-radius: 6px;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.vertical {\\r\\n        flex-direction: column;\\r\\n    }\\r\\n\\r\\n    .reply-view-image .preview-list .preview-item-box .preview-item-wrap.extra-long {\\r\\n        justify-content: start;\\r\\n    }\\r\\n\\r\\n    .svg-icon {\\r\\n        display: inline-flex;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .svg-icon svg {\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .svg-icon.use-color svg path {\\r\\n        fill: currentColor;\\r\\n        color: inherit;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
+
+// src/core/ui/preview-image.ts
+var PreviewImage = class extends HTMLElement {
+  _image;
+  _list;
+  constructor() {
+    super();
+    const root = this.attachShadow({ mode: "closed" });
+    root.innerHTML = preview_image_default;
+    const close = root.querySelector(".svg-icon.close.use-color");
+    const left = root.querySelector(".svg-icon.left-arrow.use-color");
+    const right = root.querySelector(".svg-icon.right-arrow.use-color");
+    close.innerHTML = svg.fork;
+    left.innerHTML = svg.left;
+    right.innerHTML = svg.right;
+    this._image = root.querySelector(".show-image-wrap");
+    this._list = root.querySelector(".preview-list");
+    close.parentElement.addEventListener("click", (e) => {
+      this.remove();
+      document.body.style.overflow = "";
+      e.stopPropagation();
+    });
+    left.parentElement.addEventListener("click", (e) => {
+      this.togger(e, false);
+      e.stopPropagation();
+    });
+    right.parentElement.addEventListener("click", (e) => {
+      this.togger(e);
+      e.stopPropagation();
+    });
+  }
+  togger(e, right = true) {
+    const list = this._list.querySelectorAll(".preview-item-box");
+    if (list.length) {
+      let i = 0;
+      list.forEach((d, j) => {
+        if (d.classList.contains("active")) {
+          d.classList.remove("active");
+          if (right) {
+            i = j + 1;
+            i < list.length || (i = 0);
+          } else {
+            i = j - 1;
+            i < 0 && (i = list.length - 1);
+          }
+        }
+      });
+      list[i].classList.add("active");
+      const img = list[i].querySelector("img");
+      if (img) {
+        this._image.innerHTML = \`<img class="image-content" src="\${img.src}">\`;
+      }
+    }
+    e.stopPropagation();
+  }
+  /**
+   * 初始化
+   * @param imgs 图片链接（组）
+   * @param vertical 是否垂直
+   * @param active 显示第几张图片
+   */
+  value(imgs, vertical = false, active = 0) {
+    imgs = isArray(imgs) ? imgs : [imgs];
+    active < imgs.length || (active = 0);
+    this._image.innerHTML = \`<img class="image-content" src="\${imgs[active]}">\`;
+    vertical ? this.classList.add("vertical") : this.classList.remove("vertical");
+    this._list.innerHTML = "";
+    imgs.forEach((d, i) => {
+      const item = addElement("div", {
+        class: \`preview-item-box\${i === active ? " active" : ""}\`,
+        style: "min-width: 54px; max-width: 54px; height: 54px;"
+      }, this._list, \`<div class="preview-item-wrap\${vertical ? " vertical" : ""}"><img src="\${d}"></div>\`);
+      item.addEventListener("click", (e) => {
+        this._list.querySelector(".preview-item-box.active")?.classList.remove("active");
+        item.classList.add("active");
+        this._image.innerHTML = \`<img class="image-content" src="\${d}">\`;
+        e.stopPropagation();
+      });
+    });
+    document.body.contains(this) || document.body.appendChild(this);
+    document.body.style.overflow = "hidden";
+  }
+};
+customElements.get(\`preview-image-\${"855f368"}\`) || customElements.define(\`preview-image-\${"855f368"}\`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -11464,6 +11892,7 @@ var Comment = class {
   /** 楼中楼“查看对话按钮” & 让评论菜单可以通过再次点击按钮来关闭 */
   _registerEvent() {
     const _registerEvent = Feedback.prototype._registerEvent;
+    let previewImage;
     Feedback.prototype._registerEvent = function(e) {
       _registerEvent.call(this, e);
       let n = this.\$root;
@@ -11563,6 +11992,16 @@ var Comment = class {
         } else
           operalist && (operalist.style.display = "none");
       });
+      n.on("click.image-exhibition", ".image-item-img", function(e2) {
+        const src = this.src;
+        const srcs = [];
+        this.parentElement?.parentElement?.querySelectorAll("img").forEach((d) => {
+          srcs.push(d.src);
+        });
+        srcs.length || srcs.push(src);
+        previewImage || (previewImage = new PreviewImage());
+        previewImage.value(srcs, this.parentElement?.classList.contains("vertical"), srcs.indexOf(src));
+      });
     };
   }
   _resolveJump() {
@@ -11622,14 +12061,12 @@ var Comment = class {
             const type = d.img_width >= d.img_height ? "horizontal" : "vertical";
             const extraLong = d.img_width / d.img_height >= 3 || d.img_height / d.img_width >= 3;
             pictureList.push(
-              '<a class="image-item-wrap ',
+              '<div class="image-item-wrap ',
               type,
               \`\${extraLong ? "extraLong" : ""}\`,
-              '" target="_blank"',
-              d.click_url ? \` href="\${d.click_url}"\` : "",
-              '><img src="',
-              d.img_src,
-              \`"></a>\`
+              '"><img class="image-item-img" src="',
+              d.img_src + "@.webp",
+              \`"></div>\`
             );
           });
           pictureList.push(\`</div>\`);
@@ -11938,94 +12375,6 @@ var dm_web_default = {
         }
       }
     }
-  }
-};
-
-// src/utils/danmaku.ts
-var DanmakuBase = class {
-  /** 从小到大排序弹幕 */
-  static sortDmById(dms) {
-    dms.sort((a, b) => this.bigInt(a.idStr, b.idStr) ? 1 : -1);
-  }
-  /** 比较两个弹幕ID先后 */
-  static bigInt(num1, num2) {
-    String(num1).replace(/\\d+/, (d) => num1 = d.replace(/^0+/, ""));
-    String(num2).replace(/\\d+/, (d) => num2 = d.replace(/^0+/, ""));
-    if (num1.length > num2.length)
-      return true;
-    else if (num1.length < num2.length)
-      return false;
-    else {
-      for (let i = 0; i < num1.length; i++) {
-        if (num1[i] > num2[i])
-          return true;
-        if (num1[i] < num2[i])
-          return false;
-      }
-      return false;
-    }
-  }
-  /** 重构为旧版弹幕类型 */
-  static parseCmd(dms) {
-    return dms.map((d) => {
-      const dm = {
-        class: d.pool || 0,
-        color: d.color || 0,
-        date: d.ctime || 0,
-        dmid: d.idStr || "",
-        mode: +d.mode || 1,
-        pool: d.pool || 0,
-        size: d.fontsize || 25,
-        stime: d.progress / 1e3 || 0,
-        text: d.content && d.mode != 8 && d.mode != 9 ? d.content.replace(/(\\/n|\\\\n|\\n|\\r\\n)/g, "\\n") : d.content,
-        uhash: d.midHash || "",
-        uid: d.midHash || "",
-        weight: d.weight,
-        attr: d.attr
-      };
-      d.action?.startsWith("picture:") && (dm.html = \`<img src="\${d.action.replace("http:", "")}" style="width:auto;height:56.25px;">\`);
-      return dm;
-    });
-  }
-  /** 解析解码xml弹幕 */
-  static decodeXml(xml) {
-    if (typeof xml === "string") {
-      xml = xml.replace(/((?:[\\0-\\x08\\x0B\\f\\x0E-\\x1F\\uFFFD\\uFFFE\\uFFFF]|[\\uD800-\\uDBFF](?![\\uDC00-\\uDFFF])|(?:[^\\uD800-\\uDBFF]|^)[\\uDC00-\\uDFFF]))/g, "");
-      xml = new DOMParser().parseFromString(xml, "application/xml");
-    }
-    const items = xml.querySelectorAll("d");
-    const dms = [];
-    items.forEach((d) => {
-      const json = d.getAttribute("p").split(",");
-      const text = d.textContent || d.text;
-      if (text) {
-        const dm = {
-          pool: Number(json[5]),
-          color: Number(json[3]),
-          ctime: Number(json[4]),
-          id: Number(json[7]),
-          idStr: String(json[7]),
-          mode: Number(json[1]),
-          fontsize: Number(json[2]),
-          progress: Number(json[0]) * 1e3,
-          content: String(text),
-          midHash: json[6]
-        };
-        dms.push(dm);
-      }
-    });
-    return dms;
-  }
-  /** 编码xml弹幕 */
-  static encodeXml(dms, cid) {
-    return dms.reduce((s, d) => {
-      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<&]/g, (a) => {
-        return { "<": "&lt;", "&": "&amp;" }[a];
-      }).replace(/(\\n|\\r\\n)/g, "/n")}</d>
-\`;
-      return s;
-    }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
-\`) + "</i>";
   }
 };
 
@@ -13500,7 +13849,7 @@ var PlayinfoFilter = class {
 };
 
 // src/html/download.html
-var download_default = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
+var download_default2 = '<div class="table"></div>\\r\\n<style type="text/css">\\r\\n    .table {\\r\\n        position: fixed;\\r\\n        z-index: 11113;\\r\\n        bottom: 0;\\r\\n        width: 100%;\\r\\n        min-height: 50px;\\r\\n        display: flex;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n    }\\r\\n\\r\\n    .cell {\\r\\n        background-color: #fff;\\r\\n        color: #000 !important;\\r\\n        border: #ccc 1px solid;\\r\\n        border-radius: 3px;\\r\\n        display: flex;\\r\\n        margin: 3px;\\r\\n        flex-wrap: wrap;\\r\\n        align-content: center;\\r\\n        justify-content: center;\\r\\n        align-items: center;\\r\\n        flex-direction: row;\\r\\n    }\\r\\n\\r\\n    .type {\\r\\n        color: #000 !important;\\r\\n        display: table-cell;\\r\\n        min-width: 1.5em;\\r\\n        text-align: center;\\r\\n        vertical-align: middle;\\r\\n        padding: 10px 3px;\\r\\n    }\\r\\n\\r\\n    .type.mp4 {\\r\\n        background-color: #e0e;\\r\\n    }\\r\\n\\r\\n    .type.av1 {\\r\\n        background-color: #feb;\\r\\n    }\\r\\n\\r\\n    .type.avc {\\r\\n        background-color: #07e;\\r\\n    }\\r\\n\\r\\n    .type.hev {\\r\\n        background-color: #7ba;\\r\\n    }\\r\\n\\r\\n    .type.aac {\\r\\n        background-color: #0d0;\\r\\n    }\\r\\n\\r\\n    .type.flv {\\r\\n        background-color: #0dd;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        display: table-cell;\\r\\n        text-decoration: none;\\r\\n        padding: 3px;\\r\\n        cursor: pointer;\\r\\n        color: #1184B4;\\r\\n    }\\r\\n\\r\\n    .item:hover {\\r\\n        color: #FE3676;\\r\\n    }\\r\\n\\r\\n    .up {\\r\\n        color: #fff !important;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n        background-color: #777;\\r\\n    }\\r\\n\\r\\n    .up.yellow {\\r\\n        background-color: #ffe42b;\\r\\n        background-image: linear-gradient(to right, #ffe42b, #dfb200);\\r\\n    }\\r\\n\\r\\n    .up.pink {\\r\\n        background-color: #ffafc9;\\r\\n        background-image: linear-gradient(to right, #ffafc9, #dfada7);\\r\\n    }\\r\\n\\r\\n    .up.purple {\\r\\n        background-color: #c0f;\\r\\n        background-image: linear-gradient(to right, #c0f, #90f);\\r\\n    }\\r\\n\\r\\n    .up.red {\\r\\n        background-color: #f00;\\r\\n        background-image: linear-gradient(to right, #f00, #c00);\\r\\n    }\\r\\n\\r\\n    .up.orange {\\r\\n        background-color: #f90;\\r\\n        background-image: linear-gradient(to right, #f90, #d70);\\r\\n    }\\r\\n\\r\\n    .up.blue {\\r\\n        background-color: #00d;\\r\\n        background-image: linear-gradient(to right, #00d, #00b);\\r\\n    }\\r\\n\\r\\n    .up.green {\\r\\n        background-color: #0d0;\\r\\n        background-image: linear-gradient(to right, #0d0, #0b0);\\r\\n    }\\r\\n\\r\\n    .up.lv9 {\\r\\n        background-color: #151515;\\r\\n        background-image: linear-gradient(to right, #151515, #030303);\\r\\n    }\\r\\n\\r\\n    .up.lv8 {\\r\\n        background-color: #841cf9;\\r\\n        background-image: linear-gradient(to right, #841cf9, #620ad7);\\r\\n    }\\r\\n\\r\\n    .up.lv7 {\\r\\n        background-color: #e52fec;\\r\\n        background-image: linear-gradient(to right, #e52fec, #c30dca);\\r\\n    }\\r\\n\\r\\n    .up.lv6 {\\r\\n        background-color: #ff0000;\\r\\n        background-image: linear-gradient(to right, #ff0000, #dd0000);\\r\\n    }\\r\\n\\r\\n    .up.lv5 {\\r\\n        background-color: #ff6c00;\\r\\n        background-image: linear-gradient(to right, #ff6c00, #dd4a00);\\r\\n    }\\r\\n\\r\\n    .up.lv4 {\\r\\n        background-color: #ffb37c;\\r\\n        background-image: linear-gradient(to right, #ffb37c, #dd915a);\\r\\n    }\\r\\n\\r\\n    .up.lv3 {\\r\\n        background-color: #92d1e5;\\r\\n        background-image: linear-gradient(to right, #92d1e5, #70b0c3);\\r\\n    }\\r\\n\\r\\n    .up.lv2 {\\r\\n        background-color: #95ddb2;\\r\\n        background-image: linear-gradient(to right, #95ddb2, #73bb90);\\r\\n    }\\r\\n\\r\\n    .up.lv1 {\\r\\n        background-color: #bfbfbf;\\r\\n        background-image: linear-gradient(to right, #bfbfbf, #9d9d9d);\\r\\n    }\\r\\n\\r\\n    .down {\\r\\n        font-size: 90%;\\r\\n        margin-top: 2px;\\r\\n        text-align: center;\\r\\n        padding: 1px 3px;\\r\\n    }\\r\\n</style>';
 
 // src/core/ui/download.ts
 var BilioldDownload = class extends HTMLElement {
@@ -13510,7 +13859,7 @@ var BilioldDownload = class extends HTMLElement {
   constructor() {
     super();
     const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = download_default;
+    root.innerHTML = download_default2;
     this._container = root.children[0];
     this.addEventListener("click", (e) => e.stopPropagation());
     this._noData = addElement("div", void 0, this._container, "正在获取下载数据~");
@@ -13547,155 +13896,6 @@ var BilioldDownload = class extends HTMLElement {
 };
 customElements.get(\`download-\${"855f368"}\`) || customElements.define(\`download-\${"855f368"}\`, BilioldDownload);
 
-// src/html/popupbox.html
-var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
-
-// src/svg/fork.svg
-var fork_default = '<svg viewBox="0 0 100 100"><path d="M2 2 L98 98 M 98 2 L2 98Z" stroke-width="10px" stroke="#212121" stroke-linecap="round"></path></svg>';
-
-// src/svg/gear.svg
-var gear_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.429 1.525a6.593 6.593 0 011.142 0c.036.003.108.036.137.146l.289 1.105c.147.56.55.967.997 1.189.174.086.341.183.501.29.417.278.97.423 1.53.27l1.102-.303c.11-.03.175.016.195.046.219.31.41.641.573.989.014.031.022.11-.059.19l-.815.806c-.411.406-.562.957-.53 1.456a4.588 4.588 0 010 .582c-.032.499.119 1.05.53 1.456l.815.806c.08.08.073.159.059.19a6.494 6.494 0 01-.573.99c-.02.029-.086.074-.195.045l-1.103-.303c-.559-.153-1.112-.008-1.529.27-.16.107-.327.204-.5.29-.449.222-.851.628-.998 1.189l-.289 1.105c-.029.11-.101.143-.137.146a6.613 6.613 0 01-1.142 0c-.036-.003-.108-.037-.137-.146l-.289-1.105c-.147-.56-.55-.967-.997-1.189a4.502 4.502 0 01-.501-.29c-.417-.278-.97-.423-1.53-.27l-1.102.303c-.11.03-.175-.016-.195-.046a6.492 6.492 0 01-.573-.989c-.014-.031-.022-.11.059-.19l.815-.806c.411-.406.562-.957.53-1.456a4.587 4.587 0 010-.582c.032-.499-.119-1.05-.53-1.456l-.815-.806c-.08-.08-.073-.159-.059-.19a6.44 6.44 0 01.573-.99c.02-.029.086-.075.195-.045l1.103.303c.559.153 1.112.008 1.529-.27.16-.107.327-.204.5-.29.449-.222.851-.628.998-1.189l.289-1.105c.029-.11.101-.143.137-.146zM8 0c-.236 0-.47.01-.701.03-.743.065-1.29.615-1.458 1.261l-.29 1.106c-.017.066-.078.158-.211.224a5.994 5.994 0 00-.668.386c-.123.082-.233.09-.3.071L3.27 2.776c-.644-.177-1.392.02-1.82.63a7.977 7.977 0 00-.704 1.217c-.315.675-.111 1.422.363 1.891l.815.806c.05.048.098.147.088.294a6.084 6.084 0 000 .772c.01.147-.038.246-.088.294l-.815.806c-.474.469-.678 1.216-.363 1.891.2.428.436.835.704 1.218.428.609 1.176.806 1.82.63l1.103-.303c.066-.019.176-.011.299.071.213.143.436.272.668.386.133.066.194.158.212.224l.289 1.106c.169.646.715 1.196 1.458 1.26a8.094 8.094 0 001.402 0c.743-.064 1.29-.614 1.458-1.26l.29-1.106c.017-.066.078-.158.211-.224a5.98 5.98 0 00.668-.386c.123-.082.233-.09.3-.071l1.102.302c.644.177 1.392-.02 1.82-.63.268-.382.505-.789.704-1.217.315-.675.111-1.422-.364-1.891l-.814-.806c-.05-.048-.098-.147-.088-.294a6.1 6.1 0 000-.772c-.01-.147.039-.246.088-.294l.814-.806c.475-.469.679-1.216.364-1.891a7.992 7.992 0 00-.704-1.218c-.428-.609-1.176-.806-1.82-.63l-1.103.303c-.066.019-.176.011-.299-.071a5.991 5.991 0 00-.668-.386c-.133-.066-.194-.158-.212-.224L10.16 1.29C9.99.645 9.444.095 8.701.031A8.094 8.094 0 008 0zm1.5 8a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM11 8a3 3 0 11-6 0 3 3 0 016 0z"></svg>';
-
-// src/svg/wrench.svg
-var wrench_default = '<svg viewBox="0 0 24 24"><g><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"></path></g></svg>';
-
-// src/svg/note.svg
-var note_default = '<svg viewBox="0 0 24 24"><g><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"></path></g></svg>';
-
-// src/svg/dmset.svg
-var dmset_default = '<svg viewBox="0 0 22 22"><path d="M16.5 8c1.289 0 2.49.375 3.5 1.022V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h7.022A6.5 6.5 0 0116.5 8zM7 13H5a1 1 0 010-2h2a1 1 0 010 2zm2-4H5a1 1 0 010-2h4a1 1 0 010 2z"></path><path d="M20.587 13.696l-.787-.131a3.503 3.503 0 00-.593-1.051l.301-.804a.46.46 0 00-.21-.56l-1.005-.581a.52.52 0 00-.656.113l-.499.607a3.53 3.53 0 00-1.276 0l-.499-.607a.52.52 0 00-.656-.113l-1.005.581a.46.46 0 00-.21.56l.301.804c-.254.31-.456.665-.593 1.051l-.787.131a.48.48 0 00-.413.465v1.209a.48.48 0 00.413.465l.811.135c.144.382.353.733.614 1.038l-.292.78a.46.46 0 00.21.56l1.005.581a.52.52 0 00.656-.113l.515-.626a3.549 3.549 0 001.136 0l.515.626a.52.52 0 00.656.113l1.005-.581a.46.46 0 00.21-.56l-.292-.78c.261-.305.47-.656.614-1.038l.811-.135A.48.48 0 0021 15.37v-1.209a.48.48 0 00-.413-.465zM16.5 16.057a1.29 1.29 0 11.002-2.582 1.29 1.29 0 01-.002 2.582z"></path></svg>';
-
-// src/svg/stethoscope.svg
-var stethoscope_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5 3.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm0 2.122a2.25 2.25 0 10-1.5 0v.878A2.25 2.25 0 005.75 8.5h1.5v2.128a2.251 2.251 0 101.5 0V8.5h1.5a2.25 2.25 0 002.25-2.25v-.878a2.25 2.25 0 10-1.5 0v.878a.75.75 0 01-.75.75h-4.5A.75.75 0 015 6.25v-.878zm3.75 7.378a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm3-8.75a.75.75 0 100-1.5.75.75 0 000 1.5z"></path></svg>';
-
-// src/svg/play.svg
-var play_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 1113 0 6.5 6.5 0 01-13 0zM8 0a8 8 0 100 16A8 8 0 008 0zM6.379 5.227A.25.25 0 006 5.442v5.117a.25.25 0 00.379.214l4.264-2.559a.25.25 0 000-.428L6.379 5.227z"></path></svg>';
-
-// src/svg/palette.svg
-var palette_default = '<svg viewBox="0 0 24 24"><g><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"></path></g></svg>';
-
-// src/svg/download.svg
-var download_default2 = '<svg viewBox="0 0 24 24"><g><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></g></svg>';
-
-// src/svg/warn.svg
-var warn_default = '<svg viewBox="0 0 24 24"><g><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"></path></g></svg>';
-
-// src/svg/linechart.svg
-var linechart_default = '<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.5 1.75a.75.75 0 00-1.5 0v12.5c0 .414.336.75.75.75h14.5a.75.75 0 000-1.5H1.5V1.75zm14.28 2.53a.75.75 0 00-1.06-1.06L10 7.94 7.53 5.47a.75.75 0 00-1.06 0L3.22 8.72a.75.75 0 001.06 1.06L7 7.06l2.47 2.47a.75.75 0 001.06 0l5.25-5.25z"></path></svg>';
-
-// src/svg/blind.svg
-var blind_default = '<svg viewBox="0 0 24 24"><g><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"></path></g></svg>';
-
-// src/svg/like.svg
-var like_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M12.06,35.27V10.43h-.15l6.7-8.37A3.83,3.83,0,0,1,25.25,5L25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86Zm-2.5,0h-4a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h4Z" transform="translate(-0.56 -0.82)" /></g></svg>';
-
-// src/svg/dislike.svg
-var dislike_default = '<svg viewBox="0 0 38.89 34.47" width="22px"><defs><style>.cls-1 {fill: #f36392;}</style></defs><g><path class="cls-1" d="M10.28,32.77h2.5V13.19h-2.5ZM25,10.55H35.42a4.15,4.15,0,0,1,3.33,1.67,4.38,4.38,0,0,1,.56,3.47L34.86,30.41a6.37,6.37,0,0,1-6,4.86H5.56a4.52,4.52,0,0,1-4.31-2.36,5.61,5.61,0,0,1-.69-2.5V15.55a4.93,4.93,0,0,1,2.5-4.31,8.38,8.38,0,0,1,2.5-.69h6.25l6.8-8.49A3.83,3.83,0,0,1,25.25,5Zm10.14,2.51H22.22l.28-2.92L22.92,5a1.26,1.26,0,0,0-.18-1,1.28,1.28,0,0,0-.82-.56,1.11,1.11,0,0,0-1.25.42l-6.36,8.2-.83,1.11H5.14a2,2,0,0,0-.83.28,2.28,2.28,0,0,0-1.25,2.08V30.41a2,2,0,0,0,.42,1.25,2,2,0,0,0,2.08,1.11H28.89a2.38,2.38,0,0,0,1.39-.41,3.61,3.61,0,0,0,2.08-2.78L36.8,15l2.5.56L36.8,15a2.45,2.45,0,0,0-.14-1.39,2.89,2.89,0,0,0-1.52-.54l.28-2.5Z" transform="translate(-0.56 -0.82)" /></g></svg>';
-
-// src/utils/svg.ts
-var svg = {
-  fork: fork_default,
-  gear: gear_default,
-  wrench: wrench_default,
-  note: note_default,
-  dmset: dmset_default,
-  stethoscope: stethoscope_default,
-  play: play_default,
-  palette: palette_default,
-  download: download_default2,
-  warn: warn_default,
-  linechart: linechart_default,
-  blind: blind_default,
-  like: like_default,
-  dislike: dislike_default
-};
-
-// src/core/ui/utils/popupbox.ts
-var ClickOutRemove = class {
-  constructor(target) {
-    this.target = target;
-    target.addEventListener("click", (e) => e.stopPropagation());
-  }
-  /** 已启用监听 */
-  enabled = false;
-  /** 移除节点 */
-  remove = () => {
-    this.target.remove();
-  };
-  /** 停止监听 */
-  disable = () => {
-    if (this.enabled) {
-      document.removeEventListener("click", this.remove);
-      this.enabled = false;
-    }
-    return this;
-  };
-  /** 开始监听 */
-  enable = () => {
-    this.enabled || setTimeout(() => {
-      document.addEventListener("click", this.remove, { once: true });
-      this.enabled = true;
-    }, 100);
-    return this;
-  };
-};
-var PopupBox = class extends HTMLElement {
-  _contain;
-  _fork;
-  clickOutRemove;
-  \$fork = true;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = popupbox_default;
-    this._contain = root.children[0].children[0];
-    this._fork = root.children[0].children[1];
-    this._fork.innerHTML = svg.fork;
-    this._fork.addEventListener("click", () => this.remove());
-    this.clickOutRemove = new ClickOutRemove(this);
-    document.body.appendChild(this);
-  }
-  append(...nodes) {
-    this._contain.append(...nodes);
-  }
-  appendChild(node) {
-    this._contain.appendChild(node);
-    return node;
-  }
-  replaceChildren(...nodes) {
-    this._contain.replaceChildren(...nodes);
-  }
-  setAttribute(qualifiedName, value) {
-    this._contain.setAttribute(qualifiedName, value);
-  }
-  getAttribute(qualifiedName) {
-    return this._contain.getAttribute(qualifiedName);
-  }
-  get style() {
-    return this._contain.style;
-  }
-  get innerHTML() {
-    return this._contain.innerHTML;
-  }
-  set innerHTML(v) {
-    this._contain.innerHTML = v;
-  }
-  /** 设置是否显示关闭按钮，不显示则点击节点外部自动关闭 */
-  get fork() {
-    return this.\$fork;
-  }
-  set fork(v) {
-    this.\$fork = v;
-    this._fork.style.display = v ? "" : "none";
-    if (v) {
-      this.clickOutRemove.disable();
-    } else {
-      this.clickOutRemove.enable();
-    }
-  }
-};
-customElements.get(\`popupbox-\${"855f368"}\`) || customElements.define(\`popupbox-\${"855f368"}\`, PopupBox);
-
 // src/core/download.ts
 var Download = class {
   constructor(BLOD2) {
@@ -13706,6 +13906,7 @@ var Download = class {
   ui = new BilioldDownload();
   /** 数据缓存 */
   data = this.ui.init();
+  previewImage;
   get fileName() {
     if (this.BLOD.videoInfo.metadata) {
       return \`\${this.BLOD.videoInfo.metadata.album}(\${this.BLOD.videoInfo.metadata.title})\`;
@@ -13844,11 +14045,14 @@ var Download = class {
     if (location.host === "live.bilibili.com" && window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover) {
       src.push(window.__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
     }
+    if (/\\/read\\/[Cc][Vv]/.test(location.href)) {
+      document.querySelectorAll(".article-holder img").forEach((d) => {
+        d.src && src.push(d.src);
+      });
+    }
     if (src.length) {
-      const popup = new PopupBox();
-      popup.fork = false;
-      popup.setAttribute("style", "display: flex;flex-direction: row;align-items: flex-start;;max-width: 100vw;");
-      popup.innerHTML = src.map((d) => \`<img src="\${d}" width=300>\`).join("");
+      this.previewImage || (this.previewImage = new PreviewImage());
+      this.previewImage.value(src);
     } else {
       this.BLOD.toast.warning("未找到封面信息！");
     }
@@ -14275,54 +14479,6 @@ function setCookie(name, value, days = 365) {
 
 // src/utils/conf/uid.ts
 var uid = Number(getCookies().DedeUserID);
-
-// src/html/button.html
-var button_default = '<div class="button" role="button">按钮</div>\\r\\n<style>\\r\\n    .button {\\r\\n        width: fit-content;\\r\\n        cursor: pointer;\\r\\n        line-height: 28px;\\r\\n        padding-left: 10px;\\r\\n        padding-right: 10px;\\r\\n        text-align: right;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        color: #222;\\r\\n        transition: border-color .2s ease, background-color .2s ease;\\r\\n        box-sizing: border-box;\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .button:hover {\\r\\n        color: #00a1d6;\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .button:active {\\r\\n        background-color: #eee;\\r\\n    }\\r\\n</style>';
-
-// src/core/ui/utils/button.ts
-var PushButton = class extends HTMLElement {
-  _button;
-  constructor() {
-    super();
-    const root = this.attachShadow({ mode: "closed" });
-    root.innerHTML = button_default;
-    this._button = root.querySelector(".button");
-    this._button.addEventListener("click", (e) => {
-      e.stopPropagation();
-      this.dispatchEvent(new Event("change"));
-    });
-  }
-  set text(v) {
-    this._button.textContent = v;
-  }
-};
-customElements.get(\`button-\${"855f368"}\`) || customElements.define(\`button-\${"855f368"}\`, PushButton);
-
-// src/core/ui/alert.ts
-function alert(msg, title, buttons) {
-  isArray(msg) || (msg = [msg]);
-  msg = msg.join("</br>");
-  const popup = new PopupBox();
-  popup.fork = false;
-  popup.setAttribute("style", "max-width: 400px; max-height: 300px;line-height: 16px;");
-  popup.innerHTML = \`<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
-    <span>\${title || "Bilibili Old"}</span>
-</div>
-<div><div style="padding-block: 10px;padding-inline: 15px;">\${msg}</div></div>\`;
-  if (buttons) {
-    addElement("hr", { style: "width: 100%;opacity: .3;" }, popup);
-    const div = addElement("div", { style: "display: flex;align-items: center;justify-content: space-around;" }, popup);
-    buttons.forEach((d) => {
-      const button = new PushButton();
-      button.text = d.text;
-      button.addEventListener("change", () => {
-        d.callback?.();
-        popup.remove();
-      });
-      div.appendChild(button);
-    });
-  }
-}
 
 // src/core/accesskey.ts
 var AccessKey = class {
@@ -15678,7 +15834,10 @@ var UI = class {
         if (v) {
           this.updateCheck();
         }
-      }, "旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。")
+      }, "旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。"),
+      this.select("cdn", "CDN", {
+        candidate: ["Github", "jsdelivr"]
+      }, "更新外部资源", svg.net, void 0, "用于加载外部资源的CDN，一般而言jsdelivr比GitHub好些，然而部分网路环境可能二者都无法访问。")
     ]);
     this.menuitem.common.addCard("toastr");
     this.menuitem.common.addSetting([
@@ -15760,7 +15919,8 @@ var UI = class {
       }, "从其他视频加载弹幕", void 0, "从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！"),
       this.button("localDm", "本地弹幕", () => {
         this.BLOD.status.dmExtension === "json" ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
-      }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。")
+      }, "加载本地磁盘上的弹幕", "打开", void 0, "从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。"),
+      this.switch("danmakuProtect", "弹幕保护计划", '<a href="https://github.com/MotooriKashin/Bilibili-Old/blob/master/danmaku/README.md" target="_blank">查看目录</a>', void 0, void 0, "上古弹幕作品很多高级弹幕都丢失了，幸好本项目备份了一些。启用本功能将自动识别对应作品并使用【在线弹幕】功能加载备份的弹幕，找回曾经的感动。<br>※部分4:3视频请以播放器原始形态观看获取最佳体验，不推荐全屏。")
     ]);
   }
   /** 样式设置 */
@@ -15887,13 +16047,13 @@ var UI = class {
     this.menuitem.download.addSetting([
       this.button("download", "下载视频", () => {
         this.BLOD.download.default();
-      }, "下载当前视频", "视频", void 0, "根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。"),
+      }, "当前视频", "视频", void 0, "根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。"),
       this.button("downloadDm", "下载弹幕", () => {
         this.BLOD.danmaku.download();
-      }, "下载当前弹幕", "弹幕", void 0, "下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。"),
-      this.button("downloadImg", "下载封面", () => {
+      }, "当前弹幕", "弹幕", void 0, "下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。"),
+      this.button("downloadImg", "下载图片", () => {
         this.BLOD.download.image();
-      }, "下载当前封面", "封面", void 0, "下载当前视频的封面，如果有其他特殊图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。"),
+      }, "当前封面", "图片", void 0, "下载当前封面，如果有其他特殊图片，如专栏正文图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。"),
       this.chockboxs("downloadType", "请求的文件类型", ["mp4", "dash", "flv"], "视频封装格式", void 0, () => this.BLOD.download.destory(), "勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。"),
       this.switch("TVresource", "请求tv端视频源", "无水印", void 0, (e) => {
         e && alert("下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！", "403警告", [
@@ -16523,7 +16683,11 @@ var userStatus = {
   /** 港澳台新番时间表 */
   timeLine: false,
   /** 字幕：繁 -> 简 */
-  simpleChinese: true
+  simpleChinese: true,
+  /** 资源cdn */
+  cdn: "jsdelivr",
+  /** 弹幕保护计划 */
+  danmakuProtect: false
 };
 
 // src/core/user.ts
@@ -17345,8 +17509,6 @@ var _Header = class {
       this.loadOldHeader(d);
       document.querySelector(".header").style.display = "none";
     });
-    poll(() => document.querySelector(".international-footer"), (d) => this.loadOldFooter(d));
-    poll(() => document.querySelector("#biliMainFooter"), (d) => this.loadOldFooter(d));
   }
   /** 已加载旧版顶栏 */
   oldHeadLoaded = false;
@@ -17355,9 +17517,10 @@ var _Header = class {
   /** 加载旧版顶栏 */
   loadOldHeader(target) {
     if (target) {
-      if (target.id === ".bili-header__bar") {
-        target = target.parentElement?.parentElement;
+      if (target.className === "bili-header__bar") {
+        addCss('.bili-header.large-header,.header-channel,.z-top-container.has-menu[type="all"] {display: none;}');
       }
+      document.body.classList.remove("header-v3");
       target.style.display = "none";
       target.hidden = true;
     }
@@ -17391,7 +17554,7 @@ var _Header = class {
   async styleClear() {
     const d = document.styleSheets;
     for (let i = 0; i < d.length; i++) {
-      (d[i].href?.includes("laputa-footer") || d[i].href?.includes("laputa-header")) && (d[i].disabled = true);
+      d[i].href?.includes("laputa-header") && (d[i].disabled = true);
     }
     _Header.styleFix();
   }
@@ -26671,6 +26834,40 @@ var PageWatchlater = class extends Page {
   }
 };
 
+// src/utils/cdn.ts
+var Cdn = class {
+  /**
+   * 
+   * @param host CDN名
+   * @param hash 默认文件版本哈希值
+   * @param protocol url协议
+   */
+  constructor(host = "Github", hash, protocol = "https") {
+    this.host = host;
+    this.hash = hash;
+    this.protocol = protocol;
+  }
+  /**
+   * 获取cdn链接
+   * @param path 文件相对路径
+   * @param hash 文件版本哈希值
+   */
+  encode(path, hash = this.hash) {
+    switch (this.host) {
+      case "jsdelivr":
+        return \`\${this.protocol}://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old\${hash ? \`@\${hash}\` : ""}\${path}\`;
+      default:
+        return \`\${this.protocol}://github.com/MotooriKashin/Bilibili-Old/raw/\${hash || "master"}\${path}\`;
+    }
+  }
+  /** 更新默认值 */
+  update(host, hash, protocol) {
+    this.host = host;
+    hash && (this.hash = hash);
+    protocol && (this.protocol = protocol);
+  }
+};
+
 // src/bilibili-old.ts
 var BLOD = class {
   /** @param GM 提权操作接口 */
@@ -26706,11 +26903,14 @@ var BLOD = class {
     this.download = new Download(this);
     /** 弹幕 */
     this.danmaku = new Danmaku(this);
+    /** cdn */
+    this.cdn = new Cdn();
     /** 正在更新播放器 */
     this.updating = false;
     this.version = this.GM.info?.script.version.slice(-40);
     this.userLoadedCallback((status) => {
       this.status = status;
+      this.cdn.update(this.status.cdn, this.version);
       this.init();
     });
     this.bpxPlayerProfile();
@@ -27051,7 +27251,7 @@ var BLOD = class {
             const toast = this.toast.toast(0, "warning", ...msg);
             let i = 1;
             await Promise.all([
-              this.GM.fetch(\`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@\${this.version}/extension/player/video.js\`).then((d) => d.text()).then((d) => {
+              this.GM.fetch(this.cdn.encode("/extension/player/video.js")).then((d) => d.text()).then((d) => {
                 data[0] = d;
                 msg.push(\`加载播放器组件：\${i++}/2\`);
                 toast.data = msg;
@@ -27060,7 +27260,7 @@ var BLOD = class {
                 toast.data = msg;
                 toast.type = "error";
               }),
-              this.GM.fetch(\`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@\${this.version}/extension/player/video.css\`).then((d) => d.text()).then((d) => {
+              this.GM.fetch(this.cdn.encode("/extension/player/video.css")).then((d) => d.text()).then((d) => {
                 data[1] = d;
                 msg.push(\`加载播放器组件：\${i++}/2\`);
                 toast.data = msg;
