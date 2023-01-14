@@ -30,6 +30,7 @@ import { PageRead } from "./page/read";
 import { PageSearch } from "./page/search";
 import { PageSpace } from "./page/space";
 import { PageWatchlater } from "./page/watchalter";
+import { Cdn } from "./utils/cdn";
 import { addCss, loadScript, loadStyle } from "./utils/element";
 import { xhrHook } from "./utils/hook/xhr";
 
@@ -89,12 +90,15 @@ export class BLOD {
     download = new Download(this);
     /** 弹幕 */
     danmaku = new Danmaku(this);
+    /** cdn */
+    cdn = new Cdn();
     /** @param GM 提权操作接口 */
     constructor(public GM: typeof GMC) {
         this.version = this.GM.info?.script.version.slice(-40);
         // 初始化用户数据
         this.userLoadedCallback(status => {
             this.status = status;
+            this.cdn.update(this.status.cdn, this.version);
             this.init();
         });
         // 无需用户数据模块
@@ -422,7 +426,7 @@ export class BLOD {
                         const toast = this.toast.toast(0, 'warning', ...msg);
                         let i = 1;
                         await Promise.all([
-                            this.GM.fetch(`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${this.version}/extension/player/video.js`)
+                            this.GM.fetch(this.cdn.encode('/extension/player/video.js'))
                                 .then(d => d.text())
                                 .then(d => {
                                     data[0] = d;
@@ -434,7 +438,7 @@ export class BLOD {
                                     toast.data = msg;
                                     toast.type = 'error';
                                 }),
-                            this.GM.fetch(`https://fastly.jsdelivr.net/gh/MotooriKashin/Bilibili-Old@${this.version}/extension/player/video.css`)
+                            this.GM.fetch(this.cdn.encode('/extension/player/video.css'))
                                 .then(d => d.text())
                                 .then(d => {
                                     data[1] = d;

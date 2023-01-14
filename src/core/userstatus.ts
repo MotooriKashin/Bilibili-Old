@@ -166,5 +166,9 @@ export const userStatus = {
     /** 港澳台新番时间表 */
     timeLine: false,
     /** 字幕：繁 -> 简 */
-    simpleChinese: true
+    simpleChinese: true,
+    /** 资源cdn */
+    cdn: 'jsdelivr',
+    /** 弹幕保护计划 */
+    danmakuProtect: false
 }

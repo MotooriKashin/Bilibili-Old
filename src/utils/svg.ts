@@ -14,6 +14,7 @@ import like from '../svg/like.svg';
 import dislike from '../svg/dislike.svg';
 import left from '../svg/left.svg';
 import right from '../svg/right.svg';
+import net from '../svg/net.svg'
 
 export const svg = {
     fork,
@@ -31,5 +32,6 @@ export const svg = {
     like,
     dislike,
     left,
-    right
+    right,
+    net
 }

@@ -113,7 +113,10 @@ export class UI {
                 if (v) {
                     this.updateCheck();
                 }
-            }, '旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。')
+            }, '旧版播放器已于 2019-10-31T07:38:36.004Z 失去官方维护，为了旧版播放器长期可持续维护，我们使用typescript完全重构了旧版播放器。修复了旧版播放器出现异常或失效的功能（如无法获取90分钟以后的弹幕问题），移植了一些B站后续推出的功能（如互动视频、全景视频、杜比视界、杜比全景声、AV1编码支持和DRM支持等）。能力有限无法做到100%复刻，如果您想体验原生的旧版播放器，可以禁用本功能。同时由于项目托管于Github，国内部分网络环境可能访问不畅，初次启动播放器可能耗时较久，加载失败后也会回滚原生播放器。如果您的网络环境始终无法正常加载，也请禁用本功能或者前往反馈。'),
+            this.select('cdn', 'CDN', {
+                candidate: ['Github', 'jsdelivr']
+            }, '更新外部资源', svg.net, undefined, '用于加载外部资源的CDN，一般而言jsdelivr比GitHub好些，然而部分网路环境可能二者都无法访问。')
         ]);
         this.menuitem.common.addCard('toastr');
         this.menuitem.common.addSetting([
@@ -195,7 +198,8 @@ export class UI {
             }, '从其他视频加载弹幕', undefined, '从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！'),
             this.button(<'dmContact'>'localDm', '本地弹幕', () => {
                 this.BLOD.status.dmExtension === 'json' ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
-            }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。')
+            }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。'),
+            this.switch('danmakuProtect', '弹幕保护计划', '<a href="https://github.com/MotooriKashin/Bilibili-Old/blob/master/danmaku/README.md" target="_blank">查看目录</a>', undefined, undefined, '上古弹幕作品很多高级弹幕都丢失了，幸好本项目备份了一些。启用本功能将自动识别对应作品并使用【在线弹幕】功能加载备份的弹幕，找回曾经的感动。<br>※部分4:3视频请以播放器原始形态观看获取最佳体验，不推荐全屏。')
         ])
     }
     /** 样式设置 */

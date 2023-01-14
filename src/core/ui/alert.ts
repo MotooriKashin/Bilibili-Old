@@ -12,12 +12,13 @@ interface IButton {
  * @param msg 通知内容
  * @param title 通知标题
  * @param buttons 显示在通知下方的按钮
+ * @param fork 是否显示关闭按钮
  */
-export function alert(msg: string | string[], title?: string, buttons?: IButton[]) {
+export function alert(msg: string | string[], title?: string, buttons?: IButton[], fork = false) {
     isArray(msg) || (msg = [msg]);
     msg = msg.join('</br>');
     const popup = new PopupBox();
-    popup.fork = false;
+    popup.fork = fork;
     popup.setAttribute('style', 'max-width: 400px; max-height: 300px;line-height: 16px;');
     popup.innerHTML = `<div style="text-align: center;font-size: 16px;font-weight: bold;margin-bottom: 10px;">
     <span>${title || "Bilibili Old"}</span>

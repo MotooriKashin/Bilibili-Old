@@ -3,6 +3,7 @@ import { jsonCheck } from "../io/api";
 import { apiPgcSlideShow } from "../io/api-pgc-slideshow";
 import { apiSearchSquare } from "../io/api-search-square";
 import { apiWebshowLoc } from "../io/api-webshow-locs";
+import { DanmakuBase } from "../utils/danmaku";
 import { debug } from "../utils/debug";
 import { addCss } from "../utils/element";
 import { cht2chs } from "../utils/format/cht2chs";
@@ -12,22 +13,12 @@ import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
 import { switchVideo } from "./observer";
 import { localStorage } from "./storage";
+import { alert } from "./ui/alert";
 
-interface NanoInitData {
-    aid: number;
-    cid: number;
-    bvid: string;
-    revision: number
-    featureList: Set<string>,
-    enableAV1: boolean;
-    enableWMP: boolean;
-    enableHEVC: boolean;
-    hideBoxShadow: boolean;
-    t: number;
-    kind: number;
-    element: HTMLDivElement;
-    auxiliary: HTMLDivElement;
-}
+const danmakuProtect = [
+    469970, // 【黑屏弹幕】美丽之物【Soundhorizon】
+    384460933 // 【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix
+];
 
 /** 播放器引导 */
 export class Player {
@@ -241,6 +232,7 @@ export class Player {
                     }
                 })
             }
+            this.BLOD.status.danmakuProtect && this.danmakuProtect();
         });
     }
     private playbackRateTimer?: number;
@@ -291,4 +283,60 @@ export class Player {
             }, false);
         }
     }
+    private danmakuProtect() {
+        if (!(<any>window).player?.appendDm) return;
+        const cid = Number(this.BLOD.cid);
+        if (cid && danmakuProtect.includes(cid)) {
+            alert('此视频高级弹幕部分丢失，点击确认加载备份弹幕。<br>※ 请在原弹幕加载完后再点确定，以免备份弹幕被覆盖。', '弹幕保护计划', [
+                {
+                    text: '确定',
+                    callback: () => {
+                        const data = ['弹幕保护计划 >>>'];
+                        const toast = this.BLOD.toast.toast(0, 'info', ...data);
+                        this.BLOD.GM.fetch(this.BLOD.cdn.encode(`/danmaku/${cid}.xml`, ''), { cache: 'force-cache' })
+                            .then(d => {
+                                data.push(`获取存档：${cid}.xml`);
+                                toast.data = data;
+                                toast.type = 'success';
+                                return d.text();
+                            })
+                            .then(d => {
+                                const dm = DanmakuBase.decodeXml(d);
+                                (<any>window).player.appendDm(dm, !this.BLOD.status.dmContact);
+                                data.push(`有效弹幕数：${dm.length}`, `加载模式：${this.BLOD.status.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                                toast.data = data;
+                            })
+                            .catch(e => {
+                                data.push(e);
+                                debug.error('弹幕保护计划', e);
+                                toast.data = data;
+                                toast.type = 'error';
+                            })
+                            .finally(() => {
+                                toast.delay = this.BLOD.status.toast.delay;
+                            })
+                    }
+                },
+                {
+                    text: '取消'
+                }
+            ], true)
+        }
+    }
+}
+
+interface NanoInitData {
+    aid: number;
+    cid: number;
+    bvid: string;
+    revision: number
+    featureList: Set<string>,
+    enableAV1: boolean;
+    enableWMP: boolean;
+    enableHEVC: boolean;
+    hideBoxShadow: boolean;
+    t: number;
+    kind: number;
+    element: HTMLDivElement;
+    auxiliary: HTMLDivElement;
 }
