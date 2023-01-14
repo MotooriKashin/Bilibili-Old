@@ -493,16 +493,16 @@ var PreviewImage = class extends HTMLElement {
     right.innerHTML = svg.right;
     this._image = root.querySelector(".show-image-wrap");
     this._list = root.querySelector(".preview-list");
-    close.addEventListener("click", (e) => {
+    close.parentElement.addEventListener("click", (e) => {
       this.remove();
       document.body.style.overflow = "";
       e.stopPropagation();
     });
-    left.addEventListener("click", (e) => {
+    left.parentElement.addEventListener("click", (e) => {
       this.togger(e, false);
       e.stopPropagation();
     });
-    right.addEventListener("click", (e) => {
+    right.parentElement.addEventListener("click", (e) => {
       this.togger(e);
       e.stopPropagation();
     });
@@ -559,7 +559,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"wsvs0a85lp"}`) || customElements.define(`preview-image-${"wsvs0a85lp"}`, PreviewImage);
+customElements.get(`preview-image-${"jv3dprq095f"}`) || customElements.define(`preview-image-${"jv3dprq095f"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
