@@ -10,13 +10,14 @@ import { Ef2 } from "./download/ef2";
 import { IDownlodDataFilter, PlayinfoFilter } from "./download/playinfo";
 import { switchVideo } from "./observer";
 import { BilioldDownload } from "./ui/download";
-import { PopupBox } from "./ui/utils/popupbox";
+import { PreviewImage } from "./ui/preview-image";
 
 export class Download {
     /** 下载界面 */
     private ui = new BilioldDownload();
     /** 数据缓存 */
     private data = this.ui.init();
+    private previewImage?: PreviewImage;
     private get fileName() {
         if (this.BLOD.videoInfo.metadata) {
             return `${this.BLOD.videoInfo.metadata.album}(${this.BLOD.videoInfo.metadata.title})`;
@@ -165,11 +166,12 @@ export class Download {
             // 直播封面
             src.push((<any>window).__NEPTUNE_IS_MY_WAIFU__?.roomInfoRes?.data?.room_info?.cover);
         }
+        if (/\/read\/[Cc][Vv]/.test(location.href)) {
+            document.querySelectorAll<HTMLImageElement>(".article-holder img").forEach(d => { d.src && src.push(d.src) })
+        }
         if (src.length) {
-            const popup = new PopupBox();
-            popup.fork = false;
-            popup.setAttribute('style', 'display: flex;flex-direction: row;align-items: flex-start;;max-width: 100vw;');
-            popup.innerHTML = src.map(d => `<img src="${d}" width=300>`).join('');
+            this.previewImage || (this.previewImage = new PreviewImage());
+            this.previewImage.value(src);
         } else {
             this.BLOD.toast.warning('未找到封面信息！')
         }
