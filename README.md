@@ -38,10 +38,10 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
       - 播放全部（使用播单模拟）
    - 弹幕
       - protobuf弹幕支持
-      - ~~反查弹幕发送者~~
+      - 反查弹幕发送者
       - 互动弹幕支持
       - ~~全弹幕装填~~
-      - ~~在线弹幕加载~~
+      - 在线弹幕加载
       - ~~本地弹幕加载~~
    - 播放器
       - AVC、HEVC或AV1编码切换支持
@@ -58,7 +58,7 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
       - 动态banner支持
       - bangumi分集数据
       - 主页个性化推荐
-      - ~~港澳台新番时间表~~
+      - 港澳台新番时间表
       - 访问受限UP主空间
       - 账户注册时间显示
       - 相簿地址还原
@@ -71,7 +71,7 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
       - 禁止P2P上传
       - 禁止挂机检测
       - 过滤动态中的直播回放
-   - 下载视频~~、封面、弹幕和字幕~~
+   - 下载视频、封面、弹幕和字幕
 
 ---
 ### 已知问题
@@ -134,11 +134,12 @@ Manifest V3扩展和Tampermonkey用户脚本，恢复B站旧版网页，包括�
 - [Bilibilijj](https://www.jijidown.com/)：第三方接口
 - [如何看待 2020 年 3 月 23 日哔哩哔哩将稿件的「av 号」变更为「BV 号」？ - mcfx的回答 - 知乎](https://www.zhihu.com/question/381784377/answer/1099438784)：av/BV互转算法
 - [YouTube Links](https://greasyfork.org/zh-CN/scripts/5566)：下载面板参考
-- [js-md5](https://github.com/emn178/js-md5)：MD5哈希算法参考
 - [用crc彩虹表反向B站弹幕“匿名”？我不想浪费内存，但是要和彩虹表一样快！](https://moepus.oicp.net/2016/11/27/crccrack/)：crc逆向原理
 - [BiliBili_crc2mid](https://github.com/esterTion/BiliBili_crc2mid)：crc逆向算法来源
 - [解除 B 站区域限制](https://greasyfork.org/scripts/25718)：解除视频限制功能参考
+- [esbuild](https://esbuild.github.io/)：项目打包工具
 
+*其他npm依赖参见对应的`package.json`文件，本项目离不开开源社区的无私奉献，在此一并致谢！*
 
 --- 
 ### 开源许可

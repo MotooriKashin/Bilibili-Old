@@ -43,7 +43,7 @@ VSCode里的typescript项目，使用esbuild编译打包为对应chrome扩展和
 1. 后台脚本background.ts。运行于扩展后台的server-worker，负责处理主模块的提权请求。
 2. 内容脚本content.ts。运行与页面独立的上下文，负责引导主模块，并担任主模块与后台脚本通信的中间人。
 3. 主模块脚本main.ts。运行于页面上下文。实际业务本体。 
-4. player目录下是另一个项目(bilibiliplayer)[https://github.com/MotooriKashin/bilibiliplayer]生成的播放器脚本。
+4. player目录下是另一个项目[bilibiliplayer](https://github.com/MotooriKashin/bilibiliplayer)生成的播放器脚本。
 
 测试：VSCode里运行扩展对应的编译任务（已设为默认任务）会将未打包的扩展程序释放到dist目录，使用chrome开发者模式的【加载已解压的扩展程序】加载该目录就可以进行测试。
 
