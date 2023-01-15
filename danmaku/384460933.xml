@@ -3517,7 +3517,7 @@
 <d p="334.30500,7,10,16711680,1538549391,1,aebeb268,5980666696040452">[0,470,"1-1",10,"                                       :BMNOMMMMOqkNqZ0ZXSZGNEqPSkSPSSkZ0E0ZkPFkkEO@@BF: ,r,                                                          \n",0,0,0,470,1000,0,1,"SimHei",true]</d>
 <d p="334.30500,7,10,16711680,1538549425,1,aebeb268,5980684546998276">[0,480,"1-1",10,"                                      :B80Oi .:BqjZqqEZ0kFG0Z0Z0PSPkXSZEZ0ZNPSPSXFXqOO@BM,                                                            \n",0,0,0,480,1000,0,1,"SimHei",true]</d>
 <d p="334.30500,7,10,16711680,1538549586,1,aebeb268,5980769211121664">[0,490,"1-1",10,"                                      BMu:8urM; L.LPSqNE2XENPNq0FkSXFX0NqNNS5XFXSkSFq0N8B@                                                            ",0,0,0,490,300,0,1,"SimHei",true]</d>
-<d p="1.87000,9,36,16777215,1538449877,2,d2b8a56b,5928492804866050">def text c {
+<d p="1.87000,9,36,16777215,1538449877,2,d2b8a56b,5928492804866050">def text c1 {
     content = "我之中的我 我之中的我"
     color = 0xFF0000
     fontSize =3%
@@ -3531,7 +3531,7 @@
      fontFamily = "宋体"
 
 } 
-def text c {
+def text c2 {
     content = "私の中の私が 私の中の私が"
     color = 0xFF0000
     fontSize =3%
@@ -3544,7 +3544,7 @@ def text c {
      duration = 3s
      fontFamily = "宋体"
 }</d>
-<d p="5.13800,9,36,16777215,1538450089,2,d2b8a56b,5928603883143168">def text c {
+<d p="5.13800,9,36,16777215,1538450089,2,d2b8a56b,5928603883143168">def text c1 {
     content = "重复着一个单语"
     color = 0xFF0000
     fontSize =3%
@@ -3559,7 +3559,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "ひとつの単语を"
     color = 0xFF0000
     fontSize =3%
@@ -3574,7 +3574,7 @@ def text c {
 
 } 
 </d>
-<d p="6.77200,9,36,16777215,1538450233,2,d2b8a56b,5928679439335424">def text c {
+<d p="6.77200,9,36,16777215,1538450233,2,d2b8a56b,5928679439335424">def text c1 {
     content = "多少遍 多少遍 多少遍"
     color = 0xFF0000
     fontSize =3%
@@ -3589,7 +3589,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "何度も 何度も 何度も"
     color = 0xFF0000
     fontSize =3%
@@ -3604,7 +3604,7 @@ def text c {
 
 } 
 </d>
-<d p="8.34600,9,36,16777215,1538450439,2,d2b8a56b,5928787310542848">def text c {
+<d p="8.34600,9,36,16777215,1538450439,2,d2b8a56b,5928787310542848">def text c1 {
     content = "不断重复"
     color = 0xFF0000
     fontSize =3%
@@ -3619,7 +3619,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "无尽蔵に"
     color = 0xFF0000
     fontSize =3%
@@ -3634,7 +3634,7 @@ def text c {
 
 } 
 </d>
-<d p="9.32500,9,36,16777215,1538450586,2,d2b8a56b,5928864440647682">def text c {
+<d p="9.32500,9,36,16777215,1538450586,2,d2b8a56b,5928864440647682">def text c1 {
     content = "重复着 重复着 重复着 重复着"
     color = 0xFF0000
     fontSize =3%
@@ -3649,7 +3649,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "缲り返し 缲り返し 缲り返し 缲り返し"
     color = 0xFF0000
     fontSize =3%
@@ -3664,7 +3664,7 @@ def text c {
 
 } 
 </d>
-<d p="14.04100,9,36,16777215,1538450711,2,d2b8a56b,5928930140225536">def text c {
+<d p="14.04100,9,36,16777215,1538450711,2,d2b8a56b,5928930140225536">def text c1 {
     content = "歌唱"
     color = 0xFF0000
     fontSize =3%
@@ -3679,7 +3679,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "歌う"
     color = 0xFF0000
     fontSize =3%
@@ -3694,7 +3694,7 @@ def text c {
 
 } 
 </d>
-<d p="15.49000,9,36,16777215,1538450902,2,d2b8a56b,5929029899649024">def text c {
+<d p="15.49000,9,36,16777215,1538450902,2,d2b8a56b,5929029899649024">def text c1 {
     content = "紧握的左手异常甜蜜 挥舞的右手无比甘甜"
     color = 0xFF0000
     fontSize =3%
@@ -3709,7 +3709,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "掴む左手が甘くて 震える右手が甘くて"
     color = 0xFF0000
     fontSize =3%
@@ -3724,7 +3724,7 @@ def text c {
 
 } 
 </d>
-<d p="18.55600,9,36,16777215,1538451183,2,d2b8a56b,5929177599967232">def text c {
+<d p="18.55600,9,36,16777215,1538451183,2,d2b8a56b,5929177599967232">def text c1 {
     content = "好甜 好甜"
     color = 0xFF0000
     fontSize =3%
@@ -3739,7 +3739,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘くて 甘くて "
     color = 0xFF0000
     fontSize =3%
@@ -3754,7 +3754,7 @@ def text c {
 
 } 
 </d>
-<d p="19.43300,9,36,16777215,1538453847,2,d2b8a56b,5930574458388480">def text c {
+<d p="19.43300,9,36,16777215,1538453847,2,d2b8a56b,5930574458388480">def text c1 {
     content = "笑着的嘴巴已然开裂 随后便给予你杀戮"
     color = 0xFF0000
     fontSize =3%
@@ -3769,7 +3769,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "笑う口が裂けても それがあなたを杀し"
     color = 0xFF0000
     fontSize =3%
@@ -3784,7 +3784,7 @@ def text c {
 
 } 
 </d>
-<d p="21.20800,9,36,16777215,1538454108,2,d2b8a56b,5930711063724036">def text c {
+<d p="21.20800,9,36,16777215,1538454108,2,d2b8a56b,5930711063724036">def text c1 {
     content = "好快乐 好快乐"
     color = 0xFF0000
     fontSize =3%
@@ -3799,7 +3799,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "楽しくて 楽しくて "
     color = 0xFF0000
     fontSize =3%
@@ -3814,7 +3814,7 @@ def text c {
 
 } 
 </d>
-<d p="22.13100,9,36,16777215,1538461550,2,d2b8a56b,5934612522467328">def text c {
+<d p="22.13100,9,36,16777215,1538461550,2,d2b8a56b,5934612522467328">def text c1 {
     content = "要刻入脑髓"
     color = 0xFF0000
     fontSize =3%
@@ -3829,7 +3829,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "脳髄を烧くように"
     color = 0xFF0000
     fontSize =3%
@@ -3844,7 +3844,7 @@ def text c {
 
 } 
 </d>
-<d p="22.90300,9,36,16777215,1538461597,2,d2b8a56b,5934637601259520">def text c {
+<d p="22.90300,9,36,16777215,1538461597,2,d2b8a56b,5934637601259520">def text c1 {
     content = "好快乐 好快乐"
     color = 0xFF0000
     fontSize =3%
@@ -3859,7 +3859,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "楽しくて 楽しくて"
     color = 0xFF0000
     fontSize =3%
@@ -3874,7 +3874,7 @@ def text c {
 
 } 
 </d>
-<d p="24.05100,9,36,16777215,1538461653,2,d2b8a56b,5934666495295488">def text c {
+<d p="24.05100,9,36,16777215,1538461653,2,d2b8a56b,5934666495295488">def text c1 {
     content = "快乐到颤抖"
     color = 0xFF0000
     fontSize =3%
@@ -3889,7 +3889,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "震えて"
     color = 0xFF0000
     fontSize =3%
@@ -3904,7 +3904,7 @@ def text c {
 
 } 
 </d>
-<d p="24.87200,9,36,16777215,1538461774,2,d2b8a56b,5934729953542146">def text c {
+<d p="24.87200,9,36,16777215,1538461774,2,d2b8a56b,5934729953542146">def text c1 {
     content = "好快乐"
     color = 0xFF0000
     fontSize =3%
@@ -3919,7 +3919,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "楽しくて"
     color = 0xFF0000
     fontSize =3%
@@ -3934,7 +3934,7 @@ def text c {
 
 } 
 </d>
-<d p="27.60300,9,36,16777215,1538461888,2,d2b8a56b,5934789833523200">def text c {
+<d p="27.60300,9,36,16777215,1538461888,2,d2b8a56b,5934789833523200">def text c1 {
     content = "好红 好红 好红 好红"
     color = 0xFF0000
     fontSize =3%
@@ -3949,7 +3949,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "赤い 赤い 赤い 赤い"
     color = 0xFF0000
     fontSize =3%
@@ -3964,7 +3964,7 @@ def text c {
 
 } 
 </d>
-<d p="29.79400,9,36,16777215,1538462047,2,d2b8a56b,5934873087836164">def text c {
+<d p="29.79400,9,36,16777215,1538462047,2,d2b8a56b,5934873087836164">def text c1 {
     content = "好甜 好甜 好甜 好甜"
     color = 0xFF0000
     fontSize =3%
@@ -3979,7 +3979,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘い 甘い 甘い 甘い "
     color = 0xFF0000
     fontSize =3%
@@ -3994,7 +3994,7 @@ def text c {
 
 } 
 </d>
-<d p="33.87400,9,36,16777215,1538462215,2,d2b8a56b,5934961402576896">def text c {
+<d p="33.87400,9,36,16777215,1538462215,2,d2b8a56b,5934961402576896">def text c1 {
     content = "好红 好甜 好红 好甜"
     color = 0xFF0000
     fontSize =3%
@@ -4009,7 +4009,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "赤い 甘い 赤い 甘い  "
     color = 0xFF0000
     fontSize =3%
@@ -4024,7 +4024,7 @@ def text c {
 
 } 
 </d>
-<d p="40.06200,9,36,16777215,1538462338,2,d2b8a56b,5935025895243776">def text c {
+<d p="40.06200,9,36,16777215,1538462338,2,d2b8a56b,5935025895243776">def text c1 {
     content = "你…"
     color = 0xFF0000
     fontSize =3%
@@ -4039,7 +4039,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "あなた…"
     color = 0xFF0000
     fontSize =3%
@@ -4054,7 +4054,7 @@ def text c {
 
 } 
 </d>
-<d p="40.82400,9,36,16777215,1538462510,2,d2b8a56b,5935116204376064">def text c {
+<d p="40.82400,9,36,16777215,1538462510,2,d2b8a56b,5935116204376064">def text c1 {
     content = "好甜…"
     color = 0xFF0000
     fontSize =3%
@@ -4069,7 +4069,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘い…"
     color = 0xFF0000
     fontSize =3%
@@ -4083,7 +4083,7 @@ def text c {
      fontFamily = "宋体"
 
 } </d>
-<d p="43.94900,9,36,16777215,1538462593,2,d2b8a56b,5935159699832832">def text c {
+<d p="43.94900,9,36,16777215,1538462593,2,d2b8a56b,5935159699832832">def text c1 {
     content = "好红…"
     color = 0xFF0000
     fontSize =3%
@@ -4098,7 +4098,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "赤い…"
     color = 0xFF0000
     fontSize =3%
@@ -4112,7 +4112,7 @@ def text c {
      fontFamily = "宋体"
 
 } </d>
-<d p="51.43100,9,36,16777215,1538462667,2,d2b8a56b,5935198460968964">def text c {
+<d p="51.43100,9,36,16777215,1538462667,2,d2b8a56b,5935198460968964">def text c1 {
     content = "「让我杀了你!」"
     color = 0xFF0000
     fontSize =3%
@@ -4127,7 +4127,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "『杀してあげる』"
     color = 0xFF0000
     fontSize =3%
@@ -4141,7 +4141,7 @@ def text c {
      fontFamily = "宋体"
 
 } </d>
-<d p="78.73800,9,36,16777215,1538466960,2,d2b8a56b,5937449100378114">def text c {
+<d p="78.73800,9,36,16777215,1538466960,2,d2b8a56b,5937449100378114">def text c1 {
     content = "湿润的深红眼眸 鲜艳的裙摆摇荡"
     color = 0xFF0000
     fontSize =3%
@@ -4156,7 +4156,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "深く朱き润む瞳 甘い色のスカート揺らす"
     color = 0xFF0000
     fontSize =3%
@@ -4171,7 +4171,7 @@ def text c {
 
 } 
 </d>
-<d p="85.00200,9,36,16777215,1538467070,2,d2b8a56b,5937506719629312">def text c {
+<d p="85.00200,9,36,16777215,1538467070,2,d2b8a56b,5937506719629312">def text c1 {
     content = "幼小的脸颊浸染朱红 疼痛令双腿都不自由"
     color = 0xFF0000
     fontSize =3%
@@ -4186,7 +4186,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "幼き頬 朱を渗ませ 疼きに足を崩される"
     color = 0xFF0000
     fontSize =3%
@@ -4201,8 +4201,7 @@ def text c {
 
 } 
 </d>
-<d p="91.74300,9,36,16777215,1538467221,2,d2b8a56b,5937586093162498">
-def text c {
+<d p="91.74300,9,36,16777215,1538467221,2,d2b8a56b,5937586093162498">def text c1 {
     content = "被甜美的幻视支配 伸展五指弹奏的旋律"
     color = 0xFF0000
     fontSize =3%
@@ -4217,7 +4216,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘い幻视に支配され 奏でては咲く五指の调べ"
     color = 0xFF0000
     fontSize =3%
@@ -4232,7 +4231,7 @@ def text c {
 
 } 
 </d>
-<d p="97.85000,9,36,16777215,1538467302,2,d2b8a56b,5937628403204096">def text c {
+<d p="97.85000,9,36,16777215,1538467302,2,d2b8a56b,5937628403204096">def text c1 {
     content = "赤色的红茶滴落的声音 玩弄着的是深深的痛苦"
     color = 0xFF0000
     fontSize =3%
@@ -4247,7 +4246,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "赤い红茶 滴る音 弄んでは 深く抉る"
     color = 0xFF0000
     fontSize =3%
@@ -4262,7 +4261,7 @@ def text c {
 
 } 
 </d>
-<d p="104.54700,9,36,16777215,1538467356,2,d2b8a56b,5937656869945344">def text c {
+<d p="104.54700,9,36,16777215,1538467356,2,d2b8a56b,5937656869945344">def text c1 {
     content = "「这份思念无法传达吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4277,7 +4276,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「この想い届かないのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4292,7 +4291,7 @@ def text c {
 
 } 
 </d>
-<d p="110.66300,9,36,16777215,1538467391,2,d2b8a56b,5937674944249858">def text c {
+<d p="110.66300,9,36,16777215,1538467391,2,d2b8a56b,5937674944249858">def text c1 {
     content = "「那双眼眸映出的是谁?」"
     color = 0xFF0000
     fontSize =3%
@@ -4307,7 +4306,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「その瞳には谁が映るのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4322,7 +4321,7 @@ def text c {
 
 } 
 </d>
-<d p="116.89600,9,36,16777215,1538467449,2,d2b8a56b,5937705609330690">def text c {
+<d p="116.89600,9,36,16777215,1538467449,2,d2b8a56b,5937705609330690">def text c1 {
     content = "「心已经被弄坏了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4337,7 +4336,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「心壊れているのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4352,7 +4351,7 @@ def text c {
 
 } 
 </d>
-<d p="120.20800,9,36,16777215,1538467505,2,d2b8a56b,5937734763413504">def text c {
+<d p="120.20800,9,36,16777215,1538467505,2,d2b8a56b,5937734763413504">def text c1 {
     content = "「弄坏后就不能恢复吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4367,7 +4366,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「壊れたら戻らないのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4382,7 +4381,7 @@ def text c {
 
 } 
 </d>
-<d p="123.42100,9,36,16777215,1538467545,2,d2b8a56b,5937755805188096">def text c {
+<d p="123.42100,9,36,16777215,1538467545,2,d2b8a56b,5937755805188096">def text c1 {
     content = "「受的伤害无法痊愈吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4397,7 +4396,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「刻む伤は愈えないのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4412,7 +4411,7 @@ def text c {
 
 } 
 </d>
-<d p="126.55500,9,36,16777215,1538467641,2,d2b8a56b,5937806125826048">def text c {
+<d p="126.55500,9,36,16777215,1538467641,2,d2b8a56b,5937806125826048">def text c1 {
     content = "「这样做能刻画下时间吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4427,7 +4426,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「そうして时を刻むの?」"
     color = 0xFF0000
     fontSize =3%
@@ -4442,7 +4441,7 @@ def text c {
 
 } 
 </d>
-<d p="129.77800,9,36,16777215,1538469208,2,d2b8a56b,5938627784736768">def text c {
+<d p="129.77800,9,36,16777215,1538469208,2,d2b8a56b,5938627784736768">def text c1 {
     content = "我想要你的全部 想到浑身颤抖(希望你察觉我的心情 为什么没有察觉到呢?)"
     color = 0xFF0000
     fontSize =3%
@@ -4457,7 +4456,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "あなたのその全てが欲しくて 欲しくて震えてる (この気持ち気付いて どうして気付いてくれないの)"
     color = 0xFF0000
     fontSize =2%
@@ -4472,7 +4471,7 @@ def text c {
 
 } 
 </d>
-<d p="135.97900,9,36,16777215,1538469270,2,d2b8a56b,5938660507648000">def text c {
+<d p="135.97900,9,36,16777215,1538469270,2,d2b8a56b,5938660507648000">def text c1 {
     content = "就让那甜美的心跳 竭尽气力就此停止吧(渐渐地被陷入疯狂 无论怎样也无法抑止)"
     color = 0xFF0000
     fontSize =3%
@@ -4487,7 +4486,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘美なその鼓动を うだち尽くして止めようか (狂気に満ちてゆくわ どうすれば止まるの)"
     color = 0xFF0000
     fontSize =3%
@@ -4502,7 +4501,7 @@ def text c {
 
 } 
 </d>
-<d p="142.38200,9,36,16777215,1538469348,2,d2b8a56b,5938701199212608">def text c {
+<d p="142.38200,9,36,16777215,1538469348,2,d2b8a56b,5938701199212608">def text c1 {
     content = "尽情弄脏那片肌肤 污辱你的只有我(心情都被毁坏 接着该如何是好)"
     color = 0xFF0000
     fontSize =3%
@@ -4517,7 +4516,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "その肌を秽し尽くし 辱めるのは私だけ (この気持ち壊れたて どこへ辿り着くのでしょうか)"
     color = 0xFF0000
     fontSize =3%
@@ -4532,7 +4531,7 @@ def text c {
 
 } 
 </d>
-<d p="149.07000,9,36,16777215,1538469437,2,d2b8a56b,5938748044869634">def text c {
+<d p="149.07000,9,36,16777215,1538469437,2,d2b8a56b,5938748044869634">def text c1 {
     content = "快点平息这份爱抚 和操弄你的冲动吧(爱就要满溢出来 无法停止…)"
     color = 0xFF0000
     fontSize =3%
@@ -4547,7 +4546,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "爱で抚でて揺さ振られて この冲动杀してよ (爱漏れて行くわ 止めることはできない…)"
     color = 0xFF0000
     fontSize =3%
@@ -4562,7 +4561,7 @@ def text c {
 
 } 
 </d>
-<d p="155.37900,9,36,16777215,1538469531,2,d2b8a56b,5938797266075650">def text c {
+<d p="155.37900,9,36,16777215,1538469531,2,d2b8a56b,5938797266075650">def text c1 {
     content = "声嘶力竭歌唱的音色 旋律化作朱红之虹"
     color = 0xFF0000
     fontSize =3%
@@ -4577,7 +4576,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "喉を枯らし叫ウ音色 旋律は朱の虹となり"
     color = 0xFF0000
     fontSize =3%
@@ -4592,7 +4591,7 @@ def text c {
 
 } 
 </d>
-<d p="161.93900,9,36,16777215,1538469571,2,d2b8a56b,5938817941897216">def text c {
+<d p="161.93900,9,36,16777215,1538469571,2,d2b8a56b,5938817941897216">def text c1 {
     content = "那是屠杀你的色彩 绽放又甜又深之色"
     color = 0xFF0000
     fontSize =3%
@@ -4607,7 +4606,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "君屠る此ノ色彩 甘く深き色を放つ"
     color = 0xFF0000
     fontSize =3%
@@ -4622,7 +4621,7 @@ def text c {
 
 } 
 </d>
-<d p="168.20100,9,36,16777215,1538469643,2,d2b8a56b,5938856058683394">def text c {
+<d p="168.20100,9,36,16777215,1538469643,2,d2b8a56b,5938856058683394">def text c1 {
     content = "声嘶力竭歌唱的颜色 赤色之雨飞溅四周"
     color = 0xFF0000
     fontSize =3%
@@ -4637,7 +4636,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "喉を枯らし叫ウ音色 赤キ雨に彩られたら"
     color = 0xFF0000
     fontSize =3%
@@ -4652,7 +4651,7 @@ def text c {
 
 } 
 </d>
-<d p="174.86600,9,36,16777215,1538469689,2,d2b8a56b,5938879760695296">def text c {
+<d p="174.86600,9,36,16777215,1538469689,2,d2b8a56b,5938879760695296">def text c1 {
     content = "华丽的舞台业已构筑 我独自在其间起舞"
     color = 0xFF0000
     fontSize =3%
@@ -4667,7 +4666,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "华丽的舞台业已构筑 我独自在其间起舞"
     color = 0xFF0000
     fontSize =3%
@@ -4682,7 +4681,7 @@ def text c {
 
 } 
 </d>
-<d p="181.11300,9,36,16777215,1538473592,2,d2b8a56b,5940925985456128">def text c {
+<d p="181.11300,9,36,16777215,1538473592,2,d2b8a56b,5940925985456128">def text c1 {
     content = "「那份愿望破灭了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4697,7 +4696,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「その愿い溃えたのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4712,7 +4711,7 @@ def text c {
 
 } 
 </d>
-<d p="187.44700,9,36,16777215,1538473644,2,d2b8a56b,5940953480167424">def text c {
+<d p="187.44700,9,36,16777215,1538473644,2,d2b8a56b,5940953480167424">def text c1 {
     content = "「那份思念断绝了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4727,7 +4726,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「その想い断たれたのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4742,7 +4741,7 @@ def text c {
 
 } 
 </d>
-<d p="193.76600,9,36,16777215,1538473816,2,d2b8a56b,5941043452706818">def text c {
+<d p="193.76600,9,36,16777215,1538473816,2,d2b8a56b,5941043452706818">def text c1 {
     content = "「那份希望磨灭了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4757,7 +4756,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「その希望绝えたのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4772,7 +4771,7 @@ def text c {
 
 } 
 </d>
-<d p="197.07200,9,36,16777215,1538474055,2,d2b8a56b,5941169132929024">def text c {
+<d p="197.07200,9,36,16777215,1538474055,2,d2b8a56b,5941169132929024">def text c1 {
     content = "「那份目光燃烧了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4787,7 +4786,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「その瞳烧かれたのかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4802,7 +4801,7 @@ def text c {
 
 } 
 </d>
-<d p="200.26600,9,36,16777215,1538474342,2,d2b8a56b,5941319356645380">def text c {
+<d p="200.26600,9,36,16777215,1538474342,2,d2b8a56b,5941319356645380">def text c1 {
     content = "「那份肌肤污秽了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4817,7 +4816,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「その肌は秽されたかな?」"
     color = 0xFF0000
     fontSize =3%
@@ -4832,7 +4831,7 @@ def text c {
 
 } 
 </d>
-<d p="203.39900,9,36,16777215,1538474430,2,d2b8a56b,5941365810135040">def text c {
+<d p="203.39900,9,36,16777215,1538474430,2,d2b8a56b,5941365810135040">def text c1 {
     content = "「大家都已不见了吗?」"
     color = 0xFF0000
     fontSize =3%
@@ -4847,7 +4846,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "「そして谁もいなくなる?」"
     color = 0xFF0000
     fontSize =3%
@@ -4862,7 +4861,7 @@ def text c {
 
 } 
 </d>
-<d p="206.24200,9,36,16777215,1538474588,2,d2b8a56b,5941448419573760">def text c {
+<d p="206.24200,9,36,16777215,1538474588,2,d2b8a56b,5941448419573760">def text c1 {
     content = "尽然把这身体撕裂 只有赤银烟雾飞溅(因为哪里都不存在真正的我)"
     color = 0xFF0000
     fontSize =3%
@@ -4877,7 +4876,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ生を引き裂かれて 赤银を吐き消し飞べ (どこにも本当の 私なんていないのだから)"
     color = 0xFF0000
     fontSize =3%
@@ -4892,7 +4891,7 @@ def text c {
 
 } 
 </d>
-<d p="212.66000,9,36,16777215,1538474746,2,d2b8a56b,5941531335196676">def text c {
+<d p="212.66000,9,36,16777215,1538474746,2,d2b8a56b,5941531335196676">def text c1 {
     content = "让那身体四分五裂 其艳之色即我食粮(虚幻的生命 美丽又可爱)"
     color = 0xFF0000
     fontSize =3%
@@ -4907,7 +4906,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ生の华散らして 极彩に咲き我が粮 (儚い命だわ 美しく爱おしい)"
     color = 0xFF0000
     fontSize =3%
@@ -4922,7 +4921,7 @@ def text c {
 
 } 
 </d>
-<d p="219.45000,9,36,16777215,1538474841,2,d2b8a56b,5941580884082688">def text c {
+<d p="219.45000,9,36,16777215,1538474841,2,d2b8a56b,5941580884082688">def text c1 {
     content = "如果那具身体是你 我会将肉都吃得干干净净(你只能永远成为我的东西)"
     color = 0xFF0000
     fontSize =3%
@@ -4937,7 +4936,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ生がお前ならば 喰らい尽くして血肉にす (永远に私のものになるしかない)"
     color = 0xFF0000
     fontSize =3%
@@ -4952,7 +4951,7 @@ def text c {
 
 } 
 </d>
-<d p="225.73400,9,36,16777215,1538474992,2,d2b8a56b,5941660166914048">def text c {
+<d p="225.73400,9,36,16777215,1538474992,2,d2b8a56b,5941660166914048">def text c1 {
     content = "把那肢体作为供物 让你成为我脚边的死尸(一直在我身边 再也不放你走)"
     color = 0xFF0000
     fontSize =3%
@@ -4967,7 +4966,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ四肢を贽と捧げ 我が足元の死尸となれ (ずっと私の傍に もう行かさないから…)"
     color = 0xFF0000
     fontSize =3%
@@ -4982,7 +4981,7 @@ def text c {
 
 } 
 </d>
-<d p="235.56500,9,36,16777215,1538477530,2,d2b8a56b,5942990644707330">def text c {
+<d p="235.56500,9,36,16777215,1538477530,2,d2b8a56b,5942990644707330">def text c1 {
     content = "重复着一个单语"
     color = 0xFF0000
     fontSize =3%
@@ -4997,7 +4996,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "ひとつの単语を"
     color = 0xFF0000
     fontSize =3%
@@ -5012,7 +5011,7 @@ def text c {
 
 } 
 </d>
-<d p="232.25000,9,36,16777215,1538477491,2,d2b8a56b,5942970627391490">def text c {
+<d p="232.25000,9,36,16777215,1538477491,2,d2b8a56b,5942970627391490">def text c1 {
     content = "我之中的我 我之中的我(希望你能察觉到我的心情…)"
     color = 0xFF0000
     fontSize =3%
@@ -5027,7 +5026,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "私の中の私が 私の中の私が(この気持ち気付いて…)"
     color = 0xFF0000
     fontSize =3%
@@ -5041,7 +5040,7 @@ def text c {
      fontFamily = "宋体"
 
 } </d>
-<d p="236.81300,9,36,16777215,1538477681,2,d2b8a56b,5943070188634114">def text c {
+<d p="236.81300,9,36,16777215,1538477681,2,d2b8a56b,5943070188634114">def text c1 {
     content = "多少遍多少遍多少遍"
     color = 0xFF0000
     fontSize =3%
@@ -5056,7 +5055,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "何度も何度も何度も"
     color = 0xFF0000
     fontSize =3%
@@ -5071,7 +5070,7 @@ def text c {
 
 } 
 </d>
-<d p="238.63400,9,36,16777215,1538478025,2,d2b8a56b,5943250631786498">def text c {
+<d p="238.63400,9,36,16777215,1538478025,2,d2b8a56b,5943250631786498">def text c1 {
     content = "不断重复(渐渐地陷入疯狂…)"
     color = 0xFF0000
     fontSize =3%
@@ -5086,7 +5085,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "无尽蔵に(狂気満ちて行くわ…)"
     color = 0xFF0000
     fontSize =3%
@@ -5101,7 +5100,7 @@ def text c {
 
 } 
 </d>
-<d p="239.72500,9,36,16777215,1538478227,2,d2b8a56b,5943356133212162">def text c {
+<d p="239.72500,9,36,16777215,1538478227,2,d2b8a56b,5943356133212162">def text c1 {
     content ="重复着 重复着 重复着"
     color = 0xFF0000
     fontSize =3%
@@ -5116,7 +5115,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "缲り返し 缲り返し 缲り返し 缲り返し"
     color = 0xFF0000
     fontSize =3%
@@ -5131,7 +5130,7 @@ def text c {
 
 } 
 </d>
-<d p="244.24900,9,36,16777215,1538478396,2,d2b8a56b,5943445154168834">def text c {
+<d p="244.24900,9,36,16777215,1538478396,2,d2b8a56b,5943445154168834">def text c1 {
     content = "歌唱"
     color = 0xFF0000
     fontSize =3%
@@ -5146,7 +5145,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "歌う"
     color = 0xFF0000
     fontSize =3%
@@ -5161,7 +5160,7 @@ def text c {
 
 } 
 </d>
-<d p="245.01600,9,36,16777215,1538478410,2,d2b8a56b,5943452386197506">def text c {
+<d p="245.01600,9,36,16777215,1538478410,2,d2b8a56b,5943452386197506">def text c1 {
     content = "(希望你能察觉到我的心情…)"
     color = 0xFF0000
     fontSize =3%
@@ -5176,7 +5175,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "(この気持ち気付いて…)"
     color = 0xFF0000
     fontSize =3%
@@ -5191,7 +5190,7 @@ def text c {
 
 } 
 </d>
-<d p="245.95400,9,36,16777215,1538478480,2,d2b8a56b,5943488875069444">def text c {
+<d p="245.95400,9,36,16777215,1538478480,2,d2b8a56b,5943488875069444">def text c1 {
     content = "紧握的左手异常甜蜜 挥舞的右手无比甘甜"
     color = 0xFF0000
     fontSize =3%
@@ -5206,7 +5205,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "掴む左手が甘くて 震える右手が甘くて"
     color = 0xFF0000
     fontSize =3%
@@ -5221,7 +5220,7 @@ def text c {
 
 } 
 </d>
-<d p="249.18100,9,36,16777215,1538478552,2,d2b8a56b,5943526765363200">def text c {
+<d p="249.18100,9,36,16777215,1538478552,2,d2b8a56b,5943526765363200">def text c1 {
     content = "好甜…好甜… "
     color = 0xFF0000
     fontSize =3%
@@ -5236,7 +5235,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘くて 甘くて"
     color = 0xFF0000
     fontSize =3%
@@ -5251,7 +5250,7 @@ def text c {
 
 } 
 </d>
-<d p="251.49000,9,36,16777215,1538478653,2,d2b8a56b,5943579776122880">def text c {
+<d p="251.49000,9,36,16777215,1538478653,2,d2b8a56b,5943579776122880">def text c1 {
     content = "好快乐 好快乐"
     color = 0xFF0000
     fontSize =3%
@@ -5266,7 +5265,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "楽しくて 楽しくて  "
     color = 0xFF0000
     fontSize =3%
@@ -5281,7 +5280,7 @@ def text c {
 
 } 
 </d>
-<d p="250.12500,9,36,16777215,1538478600,2,d2b8a56b,5943551805882372">def text c {
+<d p="250.12500,9,36,16777215,1538478600,2,d2b8a56b,5943551805882372">def text c1 {
     content = "笑着的嘴巴已然开裂 随后便给予你杀戮"
     color = 0xFF0000
     fontSize =3%
@@ -5296,7 +5295,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "笑う口が裂けても それがあなたを杀し"
     color = 0xFF0000
     fontSize =3%
@@ -5311,7 +5310,7 @@ def text c {
 
 } 
 </d>
-<d p="252.65000,9,36,16777215,1538479457,2,d2b8a56b,5944000925138944">def text c {
+<d p="252.65000,9,36,16777215,1538479457,2,d2b8a56b,5944000925138944">def text c1 {
     content = "刻录在你的脑髓之中(爱就要满溢出来 再也无法停止…)"
     color = 0xFF0000
     fontSize =3%
@@ -5326,7 +5325,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = " 脳髄を烧くように(爱溢れて行くわ 止めることはできない…)"
     color = 0xFF0000
     fontSize =3%
@@ -5341,7 +5340,7 @@ def text c {
 
 } 
 </d>
-<d p="253.60600,9,36,16777215,1538479545,2,d2b8a56b,5944047168389120">def text c {
+<d p="253.60600,9,36,16777215,1538479545,2,d2b8a56b,5944047168389120">def text c1 {
     content = "好快乐 好快乐 "
     color = 0xFF0000
     fontSize =3%
@@ -5356,7 +5355,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "楽しくて  楽しくて"
     color = 0xFF0000
     fontSize =3%
@@ -5371,7 +5370,7 @@ def text c {
 
 } 
 </d>
-<d p="254.59200,9,36,16777215,1538479612,2,d2b8a56b,5944082498584576">def text c {
+<d p="254.59200,9,36,16777215,1538479612,2,d2b8a56b,5944082498584576">def text c1 {
     content = "快乐到颤抖"
     color = 0xFF0000
     fontSize =3%
@@ -5386,7 +5385,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "震えて"
     color = 0xFF0000
     fontSize =3%
@@ -5401,7 +5400,7 @@ def text c {
 
 } 
 </d>
-<d p="255.40100,9,36,16777215,1538479660,2,d2b8a56b,5944107704778754">def text c {
+<d p="255.40100,9,36,16777215,1538479660,2,d2b8a56b,5944107704778754">def text c1 {
     content = "好快乐 好快乐 "
     color = 0xFF0000
     fontSize =3%
@@ -5416,7 +5415,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "楽しくて 楽しくて "
     color = 0xFF0000
     fontSize =3%
@@ -5431,7 +5430,7 @@ def text c {
 
 } 
 </d>
-<d p="257.97400,9,36,16777215,1538481236,2,d2b8a56b,5944933780815872">def text c {
+<d p="257.97400,9,36,16777215,1538481236,2,d2b8a56b,5944933780815872">def text c1 {
     content = "希望你能察觉到我的心情 为什么没有察觉到呢"
     color = 0xFF0000
     fontSize =3%
@@ -5446,7 +5445,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "この気持ち気付いて どうして気付いてくれないの"
     color = 0xFF0000
     fontSize =3%
@@ -5461,7 +5460,7 @@ def text c {
 
 } 
 </d>
-<d p="264.11200,9,36,16777215,1538481274,2,d2b8a56b,5944953664962562">def text c {
+<d p="264.11200,9,36,16777215,1538481274,2,d2b8a56b,5944953664962562">def text c1 {
     content = "渐渐地陷入疯狂 无论怎样也无法抑止"
     color = 0xFF0000
     fontSize =3%
@@ -5476,7 +5475,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "狂気満ちて行くわ どうすれば止まるの"
     color = 0xFF0000
     fontSize =3%
@@ -5491,7 +5490,7 @@ def text c {
 
 } 
 </d>
-<d p="270.41500,9,36,16777215,1538481337,2,d2b8a56b,5944986968260608">def text c {
+<d p="270.41500,9,36,16777215,1538481337,2,d2b8a56b,5944986968260608">def text c1 {
     content = "心情都被毁坏 接着该如何是好"
     color = 0xFF0000
     fontSize =3%
@@ -5506,7 +5505,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "この気持ち気付いて どこへ辿り着くのでしょうか"
     color = 0xFF0000
     fontSize =3%
@@ -5521,7 +5520,7 @@ def text c {
 
 } 
 </d>
-<d p="276.99900,9,36,16777215,1538481379,2,d2b8a56b,5945008615587840">def text c {
+<d p="276.99900,9,36,16777215,1538481379,2,d2b8a56b,5945008615587840">def text c1 {
     content = "爱就要满溢出来 再也无法停止…"
     color = 0xFF0000
     fontSize =3%
@@ -5536,7 +5535,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "爱溢れて行くわ 止めることはできない…"
     color = 0xFF0000
     fontSize =3%
@@ -5551,7 +5550,7 @@ def text c {
 
 } 
 </d>
-<d p="283.21900,9,36,16777215,1538481518,2,d2b8a56b,5945081919438848">def text c {
+<d p="283.21900,9,36,16777215,1538481518,2,d2b8a56b,5945081919438848">def text c1 {
     content = "好甜…    好红…"
     color = 0xFF0000
     fontSize =3%
@@ -5566,7 +5565,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "甘い    赤い……"
     color = 0xFF0000
     fontSize =3%
@@ -5581,7 +5580,7 @@ def text c {
 
 } 
 </d>
-<d p="295.97400,9,36,16777215,1538481595,2,d2b8a56b,5945122164310016">def text c {
+<d p="295.97400,9,36,16777215,1538481595,2,d2b8a56b,5945122164310016">def text c1 {
     content = "你…"
     color = 0xFF0000
     fontSize =3%
@@ -5596,7 +5595,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "あなた…"
     color = 0xFF0000
     fontSize =3%
@@ -5611,7 +5610,7 @@ def text c {
 
 } 
 </d>
-<d p="296.68700,9,36,16777215,1538481659,2,d2b8a56b,5945155775365122">def text c {
+<d p="296.68700,9,36,16777215,1538481659,2,d2b8a56b,5945155775365122">def text c1 {
     content = "好甜… 好甜… "
     color = 0xFF0000
     fontSize =3%
@@ -5626,7 +5625,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = " 甘い…  甘い…"
     color = 0xFF0000
     fontSize =3%
@@ -5641,7 +5640,7 @@ def text c {
 
 } 
 </d>
-<d p="299.67800,9,36,16777215,1538481721,2,d2b8a56b,5945188144906240">def text c {
+<d p="299.67800,9,36,16777215,1538481721,2,d2b8a56b,5945188144906240">def text c1 {
     content = "赤い… 赤い…"
     color = 0xFF0000
     fontSize =3%
@@ -5656,7 +5655,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "好红…  好红… "
     color = 0xFF0000
     fontSize =3%
@@ -5671,7 +5670,7 @@ def text c {
 
 } 
 </d>
-<d p="307.39500,9,36,16777215,1538481780,2,d2b8a56b,5945219161784320">def text c {
+<d p="307.39500,9,36,16777215,1538481780,2,d2b8a56b,5945219161784320">def text c1 {
     content = "「让我杀了你!"
     color = 0xFF0000
     fontSize =3%
@@ -5686,7 +5685,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "『杀してあげる』"
     color = 0xFF0000
     fontSize =3%
@@ -5701,7 +5700,7 @@ def text c {
 
 } 
 </d>
-<d p="308.82900,9,36,16777215,1538481838,2,d2b8a56b,5945249453572098">def text c {
+<d p="308.82900,9,36,16777215,1538481838,2,d2b8a56b,5945249453572098">def text c1 {
     content = "就算把这身体撕裂 只有赤银烟雾飞溅(因为想要我的世界永远保持美丽)"
     color = 0xFF0000
     fontSize =3%
@@ -5716,7 +5715,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ生を引き裂かれて 赤银を吐き消し飞べ (私のセカイは 绮丽なままでいてほしいから)"
     color = 0xFF0000
     fontSize =3%
@@ -5731,7 +5730,7 @@ def text c {
 
 } 
 </d>
-<d p="321.50800,9,36,16777215,1538481929,2,d2b8a56b,5945297305862144">def text c {
+<d p="321.50800,9,36,16777215,1538481929,2,d2b8a56b,5945297305862144">def text c1 {
     content = "如果那具身体是你 我会将肉都吃得干干净净(对不起 这是我最后用来爱你的方式)"
     color = 0xFF0000
     fontSize =3%
@@ -5746,7 +5745,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ生がお前ならば 喰らい尽くして血肉にす (ごめんなさい これが最后の爱し方だったから)"
     color = 0xFF0000
     fontSize =3%
@@ -5761,7 +5760,7 @@ def text c {
 
 } 
 </d>
-<d p="315.22700,9,36,16777215,1538481883,2,d2b8a56b,5945273312346114">def text c {
+<d p="315.22700,9,36,16777215,1538481883,2,d2b8a56b,5945273312346114">def text c1 {
     content = "让那身体四分五裂 其艳之色即我食粮(诸多回忆飞舞 成为我的东西吧)"
     color = 0xFF0000
     fontSize =3%
@@ -5776,7 +5775,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ生の华散らして 极彩に咲き我が粮 (想い出が舞うわ 私のものにさせて)"
     color = 0xFF0000
     fontSize =3%
@@ -5791,7 +5790,7 @@ def text c {
 
 } 
 </d>
-<d p="327.94700,9,36,16777215,1538481996,2,d2b8a56b,5945332429488128">def text c {
+<d p="327.94700,9,36,16777215,1538481996,2,d2b8a56b,5945332429488128">def text c1 {
     content = "把那肢体作为供物 让你成为我脚边的死尸(一直在我身边 我想和你在一起)"
     color = 0xFF0000
     fontSize =3%
@@ -5806,7 +5805,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = "其ノ四肢を贽と捧げ 我が足元の死尸となれ (ずっと私の傍に あなたといきたいの…)"
     color = 0xFF0000
     fontSize =3%
@@ -5821,7 +5820,7 @@ def text c {
 
 } 
 </d>
-<d p="336.42100,9,36,16777215,1538482142,2,d2b8a56b,5945409107656704">def text c {
+<d p="336.42100,9,36,16777215,1538482142,2,d2b8a56b,5945409107656704">def text c1 {
     content = "Bas字幕弹幕作者：本人猫癌晚期 UID：75549002"
     color = 0xFF0000
     fontSize =3%
@@ -5835,7 +5834,7 @@ def text c {
      fontFamily = "宋体"
 
 } 
-def text c {
+def text c2 {
     content = "【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix"
     color = 0xFF0000
     fontSize =3%
@@ -5851,7 +5850,7 @@ def text c {
 } 
 
 </d>
-<d p="66.70500,9,36,16777215,1538550052,2,d2b8a56b,5981013231009792">def text c {
+<d p="66.70500,9,36,16777215,1538550052,2,d2b8a56b,5981013231009792">def text c1 {
     content = "原曲/U.N.オーエンは彼女なのか?"
     color = 0xFF0000
     fontSize =3%
@@ -5866,7 +5865,7 @@ def text c {
 
 } 
 
-def text c {
+def text c2 {
     content = " 緋色月下、狂咲ノ絶-1st Anniversary Remix"
     color = 0xFF0000
     fontSize =3%
