@@ -36,7 +36,7 @@ export class PageWatchlater extends Page {
     /** 点赞功能 */
     protected enLike() {
         if (this.BLOD.status.like) {
-            poll(() => document.querySelector<HTMLSpanElement>('.u.coin'), d => {
+            poll(() => document.querySelector<HTMLSpanElement>('#viewlater-app > div > div > div > div.video-top-info.clearfix.bili-wrapper.bili-wrapper > div.video-info-module > div.number > span.u.coin.on'), d => {
                 d.parentElement?.insertBefore(this.like, d);
                 addCss('.video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}', 'ulike-watchlater');
             }, undefined, 0);

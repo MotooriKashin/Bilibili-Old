@@ -285,7 +285,7 @@ export class PageAV extends Page {
     /** 点赞功能 */
     protected enLike() {
         if (this.BLOD.status.like) {
-            poll(() => document.querySelector<HTMLSpanElement>('[report-id*=coin]'), d => {
+            poll(() => document.querySelector<HTMLSpanElement>('#viewbox_report > div.number > span.u.coin'), d => {
                 if (this.destroy) return this.like.remove();
                 d.parentElement?.insertBefore(this.like, d);
                 addCss('.video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}', 'ulike-av');

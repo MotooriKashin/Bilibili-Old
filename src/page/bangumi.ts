@@ -445,7 +445,7 @@ export class PageBangumi extends Page {
     /** 点赞功能 */
     protected enLike() {
         if (this.BLOD.status.like) {
-            poll(() => document.querySelector<HTMLSpanElement>('[report-id*=coin]'), d => {
+            poll(() => document.querySelector<HTMLSpanElement>('#bangumi_header > div.header-info > div.count-wrapper.clearfix > div.bangumi-coin-wrap'), d => {
                 d.parentElement?.insertBefore(this.like, d);
                 addCss('.ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}', 'ulike-bangumi');
             });
