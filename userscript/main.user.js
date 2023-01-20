@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.1.5-855f3686b22c5c493d7df808d348e7e511658617
+// @version      10.1.6-229371ee75d82550f6e3292735f9eaaee0ae4f3b
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -7173,9 +7173,10 @@ var DanmakuBase = class {
   /** 编码xml弹幕 */
   static encodeXml(dms, cid) {
     return dms.reduce((s, d) => {
-      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${d.text.replace(/[<&]/g, (a) => {
+      const text = d.mode === 8 || d.mode === 9 ? d.text : d.text.replace(/[<&]/g, (a) => {
         return { "<": "&lt;", "&": "&amp;" }[a];
-      }).replace(/(\\n|\\r\\n)/g, "/n")}</d>
+      }).replace(/(\\n|\\r\\n)/g, "/n");
+      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${text}</d>
 \`;
       return s;
     }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
@@ -10843,7 +10844,7 @@ var PushButton = class extends HTMLElement {
     this._button.textContent = v;
   }
 };
-customElements.get(\`button-\${"855f368"}\`) || customElements.define(\`button-\${"855f368"}\`, PushButton);
+customElements.get(\`button-\${"229371e"}\`) || customElements.define(\`button-\${"229371e"}\`, PushButton);
 
 // src/html/popupbox.html
 var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
@@ -11004,7 +11005,7 @@ var PopupBox = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`popupbox-\${"855f368"}\`) || customElements.define(\`popupbox-\${"855f368"}\`, PopupBox);
+customElements.get(\`popupbox-\${"229371e"}\`) || customElements.define(\`popupbox-\${"229371e"}\`, PopupBox);
 
 // src/core/ui/alert.ts
 function alert(msg, title, buttons, fork = false) {
@@ -11152,7 +11153,8 @@ var _Player = class {
           reload: { get: () => window.player?.reload },
           seek: { get: () => window.player?.seek },
           stop: { get: () => window.player?.stop },
-          volume: { get: () => window.player?.volume }
+          volume: { get: () => window.player?.volume },
+          isInitialized: { value: () => true }
         });
       }
     });
@@ -11627,7 +11629,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(\`preview-image-\${"855f368"}\`) || customElements.define(\`preview-image-\${"855f368"}\`, PreviewImage);
+customElements.get(\`preview-image-\${"229371e"}\`) || customElements.define(\`preview-image-\${"229371e"}\`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -13894,19 +13896,24 @@ var BilioldDownload = class extends HTMLElement {
     this._container.replaceChildren(this._noData);
   }
 };
-customElements.get(\`download-\${"855f368"}\`) || customElements.define(\`download-\${"855f368"}\`, BilioldDownload);
+customElements.get(\`download-\${"229371e"}\`) || customElements.define(\`download-\${"229371e"}\`, BilioldDownload);
 
 // src/core/download.ts
 var Download = class {
   constructor(BLOD2) {
     this.BLOD = BLOD2;
-    switchVideo(() => this.destory());
+    switchVideo(() => {
+      this.destory();
+      this.BLOD.status.downloadButton && this.bgrayButton();
+    });
   }
   /** 下载界面 */
   ui = new BilioldDownload();
   /** 数据缓存 */
   data = this.ui.init();
   previewImage;
+  /** 下载按钮 */
+  bgrayButtonBtn;
   get fileName() {
     if (this.BLOD.videoInfo.metadata) {
       return \`\${this.BLOD.videoInfo.metadata.album}(\${this.BLOD.videoInfo.metadata.title})\`;
@@ -14056,6 +14063,20 @@ var Download = class {
     } else {
       this.BLOD.toast.warning("未找到封面信息！");
     }
+  }
+  /** 添加播放器下载按钮 */
+  bgrayButton() {
+    if (!this.bgrayButtonBtn) {
+      this.bgrayButtonBtn = document.createElement("div");
+      this.bgrayButtonBtn.classList.add("bgray-btn", "show");
+      this.bgrayButtonBtn.title = "下载当前视频";
+      this.bgrayButtonBtn.innerHTML = "下载<br>视频";
+      this.bgrayButtonBtn.addEventListener("click", (e) => {
+        this.BLOD.ui?.show("download");
+        e.stopPropagation();
+      });
+    }
+    document.querySelector(".bgray-btn-wrap")?.appendChild(this.bgrayButtonBtn);
   }
 };
 
@@ -14336,7 +14357,7 @@ var Toast = class extends HTMLDivElement {
     }
   }
 };
-customElements.get(\`toast-\${"855f368"}\`) || customElements.define(\`toast-\${"855f368"}\`, Toast, { extends: "div" });
+customElements.get(\`toast-\${"229371e"}\`) || customElements.define(\`toast-\${"229371e"}\`, Toast, { extends: "div" });
 var ToastContainer = class extends HTMLElement {
   /** 实际根节点 */
   container;
@@ -14446,7 +14467,7 @@ var ToastContainer = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`toast-container-\${"855f368"}\`) || customElements.define(\`toast-container-\${"855f368"}\`, ToastContainer);
+customElements.get(\`toast-container-\${"229371e"}\`) || customElements.define(\`toast-container-\${"229371e"}\`, ToastContainer);
 
 // src/io/api-login-app-third.ts
 var ApiLoginAppThird = class extends ApiSign {
@@ -14595,7 +14616,7 @@ var Desc = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`desc-\${"855f368"}\`) || customElements.define(\`desc-\${"855f368"}\`, Desc);
+customElements.get(\`desc-\${"229371e"}\`) || customElements.define(\`desc-\${"229371e"}\`, Desc);
 
 // src/html/ui-entry.html
 var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
@@ -14656,7 +14677,7 @@ var BilioldEntry = class extends HTMLElement {
     }
   }
 };
-customElements.get("biliold-entry-855f368") || customElements.define("bilibili-entry-855f368", BilioldEntry);
+customElements.get("biliold-entry-229371e") || customElements.define("bilibili-entry-229371e", BilioldEntry);
 
 // src/html/ui-interface.html
 var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
@@ -14729,7 +14750,7 @@ var SettingItem = class extends HTMLDivElement {
     this._value.appendChild(value);
   }
 };
-customElements.get(\`item-\${"855f368"}\`) || customElements.define(\`item-\${"855f368"}\`, SettingItem, { extends: "div" });
+customElements.get(\`item-\${"229371e"}\`) || customElements.define(\`item-\${"229371e"}\`, SettingItem, { extends: "div" });
 
 // src/core/ui/item-container.ts
 var ItemContainer = class extends HTMLDivElement {
@@ -14759,7 +14780,7 @@ var ItemContainer = class extends HTMLDivElement {
     this._card.append(...item);
   }
 };
-customElements.get(\`item-container-\${"855f368"}\`) || customElements.define(\`item-container-\${"855f368"}\`, ItemContainer, { extends: "div" });
+customElements.get(\`item-container-\${"229371e"}\`) || customElements.define(\`item-container-\${"229371e"}\`, ItemContainer, { extends: "div" });
 
 // src/core/ui/menu.ts
 var Menuitem = class extends HTMLDivElement {
@@ -14818,7 +14839,7 @@ var Menuitem = class extends HTMLDivElement {
     return this.container;
   }
 };
-customElements.get(\`menuitem-\${"855f368"}\`) || customElements.define(\`menuitem-\${"855f368"}\`, Menuitem, { extends: "div" });
+customElements.get(\`menuitem-\${"229371e"}\`) || customElements.define(\`menuitem-\${"229371e"}\`, Menuitem, { extends: "div" });
 
 // src/html/checkbox.html
 var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
@@ -14905,7 +14926,7 @@ var CheckBox = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`checkbox-\${"855f368"}\`) || customElements.define(\`checkbox-\${"855f368"}\`, CheckBox);
+customElements.get(\`checkbox-\${"229371e"}\`) || customElements.define(\`checkbox-\${"229371e"}\`, CheckBox);
 var CheckBoxs = class extends HTMLDivElement {
   \$value = [];
   checkboxs = {};
@@ -14955,7 +14976,7 @@ var CheckBoxs = class extends HTMLDivElement {
     });
   }
 };
-customElements.get(\`checkboxs-\${"855f368"}\`) || customElements.define(\`checkboxs-\${"855f368"}\`, CheckBoxs, { extends: "div" });
+customElements.get(\`checkboxs-\${"229371e"}\`) || customElements.define(\`checkboxs-\${"229371e"}\`, CheckBoxs, { extends: "div" });
 
 // src/html/input.html
 var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -15028,7 +15049,7 @@ var InputArea = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`input-\${"855f368"}\`) || customElements.define(\`input-\${"855f368"}\`, InputArea);
+customElements.get(\`input-\${"229371e"}\`) || customElements.define(\`input-\${"229371e"}\`, InputArea);
 
 // src/html/select.html
 var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -15092,7 +15113,7 @@ var SelectMenu = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`select-\${"855f368"}\`) || customElements.define(\`select-\${"855f368"}\`, SelectMenu);
+customElements.get(\`select-\${"229371e"}\`) || customElements.define(\`select-\${"229371e"}\`, SelectMenu);
 
 // src/html/slider.html
 var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
@@ -15265,7 +15286,7 @@ var SliderBlock = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`slider-\${"855f368"}\`) || customElements.define(\`slider-\${"855f368"}\`, SliderBlock);
+customElements.get(\`slider-\${"229371e"}\`) || customElements.define(\`slider-\${"229371e"}\`, SliderBlock);
 
 // src/html/switch.html
 var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
@@ -15312,7 +15333,7 @@ var SwitchButton = class extends HTMLElement {
     return this;
   }
 };
-customElements.get(\`switch-\${"855f368"}\`) || customElements.define(\`switch-\${"855f368"}\`, SwitchButton);
+customElements.get(\`switch-\${"229371e"}\`) || customElements.define(\`switch-\${"229371e"}\`, SwitchButton);
 
 // src/io/api-biliplus-playurl.ts
 async function apiBiliplusPlayurl(data) {
@@ -16054,6 +16075,7 @@ var UI = class {
       this.button("downloadImg", "下载图片", () => {
         this.BLOD.download.image();
       }, "当前封面", "图片", void 0, "下载当前封面，如果有其他特殊图片，如专栏正文图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。"),
+      this.switch("downloadButton", "下载按钮", "播放器右侧", void 0, void 0, "在旧版播放器右侧添加下载按钮，呼出并滚动到下载设置界面，以方便快捷下载。"),
       this.chockboxs("downloadType", "请求的文件类型", ["mp4", "dash", "flv"], "视频封装格式", void 0, () => this.BLOD.download.destory(), "勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。"),
       this.switch("TVresource", "请求tv端视频源", "无水印", void 0, (e) => {
         e && alert("下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！", "403警告", [
@@ -16687,7 +16709,9 @@ var userStatus = {
   /** 资源cdn */
   cdn: "jsdelivr",
   /** 弹幕保护计划 */
-  danmakuProtect: false
+  danmakuProtect: false,
+  /** 下载按钮 */
+  downloadButton: false
 };
 
 // src/core/user.ts
@@ -17912,7 +17936,7 @@ var Like = class extends HTMLSpanElement {
         debug.error("获取点赞情况失败", e);
       });
     }
-    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"855f368"}\`);
+    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"229371e"}\`);
   }
   /** 更新点赞数 */
   get likes() {
@@ -17930,7 +17954,7 @@ var Like = class extends HTMLSpanElement {
     this.innerHTML = (this.liked ? svg.like : svg.dislike) + "点赞 " + unitFormat(this.number);
   }
 };
-customElements.get(\`like-\${"855f368"}\`) || customElements.define(\`like-\${"855f368"}\`, Like, { extends: "span" });
+customElements.get(\`like-\${"229371e"}\`) || customElements.define(\`like-\${"229371e"}\`, Like, { extends: "span" });
 
 // src/css/uplist.css
 var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
@@ -25763,7 +25787,7 @@ var PageBangumi = class extends Page {
   /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
-      poll(() => document.querySelector("[report-id*=coin]"), (d) => {
+      poll(() => document.querySelector("#bangumi_header > div.header-info > div.count-wrapper.clearfix > div.bangumi-coin-wrap"), (d) => {
         d.parentElement?.insertBefore(this.like, d);
         addCss(".ulike {margin-left: 15px;position: relative;float: left;height: 100%;line-height: 18px;font-size: 12px;color: #222;}", "ulike-bangumi");
       });
@@ -26065,7 +26089,7 @@ var PageAV = class extends Page {
   /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
-      poll(() => document.querySelector("[report-id*=coin]"), (d) => {
+      poll(() => document.querySelector("#viewbox_report > div.number > span.u.coin"), (d) => {
         if (this.destroy)
           return this.like.remove();
         d.parentElement?.insertBefore(this.like, d);
@@ -26281,7 +26305,7 @@ var PagePlaylist = class extends Page {
   /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
-      poll(() => document.querySelector(".u.coin"), (d) => {
+      poll(() => document.querySelector("#viewbox_report > div.number > span.u.coin"), (d) => {
         d.parentElement?.insertBefore(this.like, d);
         addCss(".video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-playlist");
       });
@@ -26853,7 +26877,7 @@ var PageWatchlater = class extends Page {
   /** 点赞功能 */
   enLike() {
     if (this.BLOD.status.like) {
-      poll(() => document.querySelector(".u.coin"), (d) => {
+      poll(() => document.querySelector("#viewlater-app > div > div > div > div.video-top-info.clearfix.bili-wrapper.bili-wrapper > div.video-info-module > div.number > span.u.coin.on"), (d) => {
         d.parentElement?.insertBefore(this.like, d);
         addCss(".video-info-module .number .ulike {margin-left: 15px;margin-right: 5px;}", "ulike-watchlater");
       }, void 0, 0);
