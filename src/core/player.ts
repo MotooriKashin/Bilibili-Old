@@ -137,7 +137,8 @@ export class Player {
                     reload: { get: () => (<any>window).player?.reload },
                     seek: { get: () => (<any>window).player?.seek },
                     stop: { get: () => (<any>window).player?.stop },
-                    volume: { get: () => (<any>window).player?.volume }
+                    volume: { get: () => (<any>window).player?.volume },
+                    isInitialized: { value: () => true }
                 })
             }
         });
