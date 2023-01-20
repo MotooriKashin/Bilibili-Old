@@ -333,6 +333,7 @@ export class UI {
             this.button(<'aria2'>'downloadImg', '下载图片', () => {
                 this.BLOD.download.image();
             }, '当前封面', '图片', undefined, '下载当前封面，如果有其他特殊图片，如专栏正文图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。'),
+            this.switch('downloadButton', '下载按钮', '播放器右侧', undefined, undefined, '在旧版播放器右侧添加下载按钮，呼出并滚动到下载设置界面，以方便快捷下载。'),
             this.chockboxs('downloadType', '请求的文件类型', ['mp4', 'dash', 'flv'], '视频封装格式', undefined, () => this.BLOD.download.destory(), '勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。'),
             this.switch('TVresource', '请求tv端视频源', '无水印', undefined, e => {
                 e && alert('下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！', '403警告', [

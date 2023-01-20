@@ -18,6 +18,8 @@ export class Download {
     /** 数据缓存 */
     private data = this.ui.init();
     private previewImage?: PreviewImage;
+    /** 下载按钮 */
+    private bgrayButtonBtn?: HTMLDivElement;
     private get fileName() {
         if (this.BLOD.videoInfo.metadata) {
             return `${this.BLOD.videoInfo.metadata.album}(${this.BLOD.videoInfo.metadata.title})`;
@@ -26,7 +28,10 @@ export class Download {
     }
     constructor(private BLOD: BLOD) {
         // 切p时清空数据
-        switchVideo(() => this.destory());
+        switchVideo(() => {
+            this.destory();
+            this.BLOD.status.downloadButton && this.bgrayButton();
+        });
     }
     /** 解码playinfo */
     private decodePlayinfo(playinfo: Partial<Record<"data" | "result" | "durl" | "dash", any>>, fileName: string = this.fileName) {
@@ -175,5 +180,19 @@ export class Download {
         } else {
             this.BLOD.toast.warning('未找到封面信息！')
         }
+    }
+    /** 添加播放器下载按钮 */
+    private bgrayButton() {
+        if (!this.bgrayButtonBtn) {
+            this.bgrayButtonBtn = document.createElement('div');
+            this.bgrayButtonBtn.classList.add('bgray-btn', 'show');
+            this.bgrayButtonBtn.title = '下载当前视频';
+            this.bgrayButtonBtn.innerHTML = '下载<br>视频';
+            this.bgrayButtonBtn.addEventListener('click', e => {
+                this.BLOD.ui?.show(<any>'download');
+                e.stopPropagation();
+            });
+        }
+        document.querySelector('.bgray-btn-wrap')?.appendChild(this.bgrayButtonBtn);
     }
 }

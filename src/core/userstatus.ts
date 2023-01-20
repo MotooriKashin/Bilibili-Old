@@ -170,5 +170,7 @@ export const userStatus = {
     /** 资源cdn */
     cdn: 'jsdelivr',
     /** 弹幕保护计划 */
-    danmakuProtect: false
+    danmakuProtect: false,
+    /** 下载按钮 */
+    downloadButton: false
 }
