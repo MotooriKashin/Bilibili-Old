@@ -134,7 +134,7 @@ export class BLOD {
             this.EmbedPlayer();
             new PageWatchlater(this);
         }
-        if ((this.status.playlist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/playlist\/video\/pl/.test(location.href)) {
+        if ((this.status.playlist && /\/medialist\/play\//.test(location.href) && !/watchlater/.test(location.href)) || /\/list\/ml\d+/.test(location.href) || /\/playlist\/video\/pl/.test(location.href)) {
             this.EmbedPlayer();
             new PagePlaylist(this);
         }

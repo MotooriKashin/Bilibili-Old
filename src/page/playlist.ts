@@ -40,8 +40,9 @@ export class PagePlaylist extends Page {
     }
     /** 初始化 */
     protected init() {
-        this.isPl = Boolean(this.BLOD.path[5].startsWith("pl"));
-        this.BLOD.path[5].replace(/\d+/, d => this.pl = <any>d);
+        const path = this.BLOD.path.at(-1);
+        this.isPl = Boolean(path?.startsWith("pl"));
+        path?.replace(/\d+/, d => this.pl = <any>d);
         // 区分medialist类型
         if (this.route.business) {
             switch (this.route.business) {
