@@ -26,16 +26,18 @@ export class URL {
             str.split("&").forEach(d => {
                 const arr3 = d.split("="); // 第三次分割
                 const key = <string>arr3.shift(); // 提取键
-                let value = arr3.join("=") || ""; // 提取值
-                try {
-                    if (!isNumber(value)) {
-                        value = JSON.parse(value); // 格式化
+                if (key) {
+                    let value = arr3.join("=") || ""; // 提取值
+                    try {
+                        if (!isNumber(value)) {
+                            value = JSON.parse(value); // 格式化
+                        }
+                    } catch {
+                        value === "undefined" && (value = <any>undefined);
+                        value === "NaN" && (value = <any>NaN);
                     }
-                } catch {
-                    value === "undefined" && (value = <any>undefined);
-                    value === "NaN" && (value = <any>NaN);
+                    this.params[key] = value;
                 }
-                this.params[key] = value;
             });
         }
     }
