@@ -43,7 +43,7 @@ export class DanmakuBase {
                 weight: d.weight,
                 attr: d.attr,
             };
-            d.action?.startsWith("picture:") && (dm.html = `<img src="${d.action.replace('http:', '')}" style="width:auto;height:56.25px;">`);
+            d.action?.startsWith("picture:") && (dm.html = `<img src="${d.action.replace('picture:', '//')}" style="width:auto;height:28.13px;">`);
             return dm;
         })
     }
