@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.2.0-f3d0b91040ee56cc6dd45c0f598d6e9f29d39022
+// @version      10.2.1-f3d0b91040ee56cc6dd45c0f598d6e9f29d39022
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -345,7 +345,7 @@ var require_base64 = __commonJS({
   "node_modules/@protobufjs/base64/index.js"(exports2) {
     "use strict";
     var base64 = exports2;
-    base64.length = function length(string) {
+    base64.length = function length2(string) {
       var p = string.length;
       if (!p)
         return 0;
@@ -899,7 +899,7 @@ var require_longbits = __commonJS({
       this.hi = (this.hi >>> 1 ^ mask) >>> 0;
       return this;
     };
-    LongBits.prototype.length = function length() {
+    LongBits.prototype.length = function length2() {
       var part0 = this.lo, part1 = (this.lo >>> 28 | this.hi << 4) >>> 0, part2 = this.hi >>> 24;
       return part2 === 0 ? part1 === 0 ? part0 < 16384 ? part0 < 128 ? 1 : 2 : part0 < 2097152 ? 3 : 4 : part1 < 16384 ? part1 < 128 ? 5 : 6 : part1 < 2097152 ? 7 : 8 : part2 < 128 ? 9 : 10;
     };
@@ -1016,7 +1016,7 @@ var require_minimal = __commonJS({
           configurable: true
         },
         name: {
-          get() {
+          get: function get() {
             return name;
           },
           set: void 0,
@@ -1028,7 +1028,7 @@ var require_minimal = __commonJS({
           configurable: true
         },
         toString: {
-          value() {
+          value: function value() {
             return this.name + ": " + this.message;
           },
           writable: true,
@@ -1469,10 +1469,10 @@ var require_reader = __commonJS({
       return value;
     };
     Reader.prototype.bytes = function read_bytes() {
-      var length = this.uint32(), start = this.pos, end = this.pos + length;
+      var length2 = this.uint32(), start = this.pos, end = this.pos + length2;
       if (end > this.len)
-        throw indexOutOfRange(this, length);
-      this.pos += length;
+        throw indexOutOfRange(this, length2);
+      this.pos += length2;
       if (Array.isArray(this.buf))
         return this.buf.slice(start, end);
       return start === end ? new this.buf.constructor(0) : this._slice.call(this.buf, start, end);
@@ -1481,11 +1481,11 @@ var require_reader = __commonJS({
       var bytes = this.bytes();
       return utf8.read(bytes, 0, bytes.length);
     };
-    Reader.prototype.skip = function skip(length) {
-      if (typeof length === "number") {
-        if (this.pos + length > this.len)
-          throw indexOutOfRange(this, length);
-        this.pos += length;
+    Reader.prototype.skip = function skip(length2) {
+      if (typeof length2 === "number") {
+        if (this.pos + length2 > this.len)
+          throw indexOutOfRange(this, length2);
+        this.pos += length2;
       } else {
         do {
           if (this.pos >= this.len)
@@ -3487,8 +3487,8 @@ var require_type = __commonJS({
     Type2.prototype.encodeDelimited = function encodeDelimited(message, writer) {
       return this.encode(message, writer && writer.len ? writer.fork() : writer).ldelim();
     };
-    Type2.prototype.decode = function decode_setup(reader, length) {
-      return this.setup().decode(reader, length);
+    Type2.prototype.decode = function decode_setup(reader, length2) {
+      return this.setup().decode(reader, length2);
     };
     Type2.prototype.decodeDelimited = function decodeDelimited(reader) {
       if (!(reader instanceof Reader))
@@ -3554,10 +3554,10 @@ var require_root = __commonJS({
       function finish(err, root) {
         if (!callback)
           return;
-        if (sync)
-          throw err;
         var cb = callback;
         callback = null;
+        if (sync)
+          throw err;
         cb(err, root);
       }
       function getBundledFileName(filename2) {
@@ -3596,6 +3596,7 @@ var require_root = __commonJS({
           finish(null, self2);
       }
       function fetch2(filename2, weak) {
+        filename2 = getBundledFileName(filename2) || filename2;
         if (self2.files.indexOf(filename2) > -1)
           return;
         self2.files.push(filename2);
@@ -3667,6 +3668,9 @@ var require_root = __commonJS({
       var extendedType = field.parent.lookup(field.extend);
       if (extendedType) {
         var sisterField = new Field(field.fullName, field.id, field.type, field.rule, void 0, field.options);
+        if (extendedType.get(sisterField.name)) {
+          return true;
+        }
         sisterField.declaringField = field;
         field.extensionField = sisterField;
         extendedType.add(sisterField);
@@ -4322,8 +4326,8 @@ var require_lodash = __commonJS({
     }();
     var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
     function arrayFilter(array, predicate) {
-      var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
-      while (++index < length) {
+      var index = -1, length2 = array == null ? 0 : array.length, resIndex = 0, result = [];
+      while (++index < length2) {
         var value = array[index];
         if (predicate(value, index, array)) {
           result[resIndex++] = value;
@@ -4332,15 +4336,15 @@ var require_lodash = __commonJS({
       return result;
     }
     function arrayPush(array, values) {
-      var index = -1, length = values.length, offset2 = array.length;
-      while (++index < length) {
+      var index = -1, length2 = values.length, offset2 = array.length;
+      while (++index < length2) {
         array[offset2 + index] = values[index];
       }
       return array;
     }
     function arraySome(array, predicate) {
-      var index = -1, length = array == null ? 0 : array.length;
-      while (++index < length) {
+      var index = -1, length2 = array == null ? 0 : array.length;
+      while (++index < length2) {
         if (predicate(array[index], index, array)) {
           return true;
         }
@@ -4421,9 +4425,9 @@ var require_lodash = __commonJS({
     var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
     var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
     function Hash(entries) {
-      var index = -1, length = entries == null ? 0 : entries.length;
+      var index = -1, length2 = entries == null ? 0 : entries.length;
       this.clear();
-      while (++index < length) {
+      while (++index < length2) {
         var entry = entries[index];
         this.set(entry[0], entry[1]);
       }
@@ -4461,9 +4465,9 @@ var require_lodash = __commonJS({
     Hash.prototype.has = hashHas;
     Hash.prototype.set = hashSet;
     function ListCache(entries) {
-      var index = -1, length = entries == null ? 0 : entries.length;
+      var index = -1, length2 = entries == null ? 0 : entries.length;
       this.clear();
-      while (++index < length) {
+      while (++index < length2) {
         var entry = entries[index];
         this.set(entry[0], entry[1]);
       }
@@ -4509,9 +4513,9 @@ var require_lodash = __commonJS({
     ListCache.prototype.has = listCacheHas;
     ListCache.prototype.set = listCacheSet;
     function MapCache(entries) {
-      var index = -1, length = entries == null ? 0 : entries.length;
+      var index = -1, length2 = entries == null ? 0 : entries.length;
       this.clear();
-      while (++index < length) {
+      while (++index < length2) {
         var entry = entries[index];
         this.set(entry[0], entry[1]);
       }
@@ -4547,9 +4551,9 @@ var require_lodash = __commonJS({
     MapCache.prototype.has = mapCacheHas;
     MapCache.prototype.set = mapCacheSet;
     function SetCache(values) {
-      var index = -1, length = values == null ? 0 : values.length;
+      var index = -1, length2 = values == null ? 0 : values.length;
       this.__data__ = new MapCache();
-      while (++index < length) {
+      while (++index < length2) {
         this.add(values[index]);
       }
     }
@@ -4602,23 +4606,23 @@ var require_lodash = __commonJS({
     Stack.prototype.has = stackHas;
     Stack.prototype.set = stackSet;
     function arrayLikeKeys(value, inherited) {
-      var isArr = isArray2(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length = result.length;
+      var isArr = isArray2(value), isArg = !isArr && isArguments(value), isBuff = !isArr && !isArg && isBuffer(value), isType = !isArr && !isArg && !isBuff && isTypedArray(value), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value.length, String) : [], length2 = result.length;
       for (var key in value) {
         if ((inherited || hasOwnProperty.call(value, key)) && !(skipIndexes && // Safari 9 has enumerable \`arguments.length\` in strict mode.
         (key == "length" || // Node.js 0.10 has enumerable non-index properties on buffers.
         isBuff && (key == "offset" || key == "parent") || // PhantomJS 2 has enumerable non-index properties on typed arrays.
         isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || // Skip index properties.
-        isIndex(key, length)))) {
+        isIndex(key, length2)))) {
           result.push(key);
         }
       }
       return result;
     }
     function assocIndexOf(array, key) {
-      var length = array.length;
-      while (length--) {
-        if (eq(array[length][0], key)) {
-          return length;
+      var length2 = array.length;
+      while (length2--) {
+        if (eq(array[length2][0], key)) {
+          return length2;
         }
       }
       return -1;
@@ -4885,9 +4889,9 @@ var require_lodash = __commonJS({
         return result;
       };
     }
-    function isIndex(value, length) {
-      length = length == null ? MAX_SAFE_INTEGER : length;
-      return !!length && (typeof value == "number" || reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    function isIndex(value, length2) {
+      length2 = length2 == null ? MAX_SAFE_INTEGER : length2;
+      return !!length2 && (typeof value == "number" || reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length2);
     }
     function isKeyable(value) {
       var type = typeof value;
@@ -15516,8 +15520,8 @@ var ApiGlobalOgvPlayurl = class extends ApiSign {
             else
               hev.push(d2);
           });
-          let length = avc.length > hev.length ? avc.length : hev.length;
-          for (let i = length - 1; i >= 0; i--) {
+          let length2 = avc.length > hev.length ? avc.length : hev.length;
+          for (let i = length2 - 1; i >= 0; i--) {
             if (avc[i])
               video.push(avc[i]);
             if (hev[i])
@@ -17200,8 +17204,8 @@ var Scanner = class {
     this.text = "";
   }
   /** 移除已扫描字符长度 默认1位 */
-  removeScanned(length = 1) {
-    this.html = this.html.slice(length);
+  removeScanned(length2 = 1) {
+    this.html = this.html.slice(length2);
   }
   /** 处理TextContent */
   textContent() {
@@ -25196,6 +25200,7 @@ var toview_default = {
 // src/utils/hook/webpack.ts
 var arr = [];
 var param = [];
+var length;
 var _Webpack = class {
   backup = window.webpackJsonp;
   constructor() {
@@ -25208,15 +25213,18 @@ var _Webpack = class {
       },
       get: () => {
         return this.backup && ((chunkIds, moreModules, executeModules) => {
-          if (arr[moreModules.length]) {
-            const obj = arr[moreModules.length];
-            const pam = param[moreModules.length];
+          const len = moreModules.length ?? length;
+          if (len in arr) {
+            const obj = arr[len];
+            const pam = param[len];
             Object.entries(obj).forEach((d) => {
               let code = moreModules[d[0]];
               if (code) {
                 code = code.toString();
                 d[1].forEach((e) => code = e(code));
                 moreModules[d[0]] = new Function(pam[0], pam[1], pam[2], \`(\${code})(\${pam[0]},\${pam[1]},\${pam[2]})\`);
+              } else {
+                length = len;
               }
             });
           }
@@ -26438,16 +26446,8 @@ var PageRead = class extends Page {
   ops;
   /** 处理webpackJsonp污染 */
   webpackjsonp() {
-    propertyHook.modify(window, "webpackJsonp", (v) => {
-      if (typeof v === "function") {
-        setTimeout(() => {
-          Reflect.deleteProperty(window, "webpackJsonp");
-          Reflect.set(window, "webpackJsonp", v);
-        });
-        return v;
-      } else {
-        return;
-      }
+    webpackHook(115, 0, (str) => {
+      return str.replace("gi,function(i){return", 'gi,function(i){return i.indexOf("api.")>-1?i:');
     });
   }
   /** 获取专栏信息 */
@@ -26525,7 +26525,7 @@ var PageRead = class extends Page {
         debug.error(e);
       }
     }
-    return str;
+    return BV2avAll(str);
   }
   tagContainer() {
     this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {
@@ -26575,6 +26575,23 @@ var PageRead = class extends Page {
       document.addEventListener(event, function(e) {
         e.stopPropagation();
       }, true);
+    });
+  }
+  /** 重构后回调 */
+  loadedCallback() {
+    super.loadedCallback();
+    const pres = document.querySelectorAll("figure pre");
+    let prism = false;
+    pres.forEach((d) => {
+      const code = d.getAttribute("codecontent");
+      if (code) {
+        d.querySelector("code").textContent = code;
+        d.removeAttribute("codecontent");
+        prism = true;
+      }
+    });
+    prism && loadScript("//s1.hdslb.com/bfs/static/article-text/static/ueditor/plugins/prism/prism.js").catch((e) => {
+      this.BLOD.toast.error("代码组件加载失败！", e)();
     });
   }
 };
