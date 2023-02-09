@@ -1,5 +1,6 @@
 const arr: Record<number, ((code: string) => typeof code)[]>[] = [];
 const param: [string, string, string][] = [];
+let length: number;
 class Webpack {
     static load = false;
     protected backup = (<any>window).webpackJsonp;
@@ -13,15 +14,19 @@ class Webpack {
             },
             get: () => {
                 return this.backup && ((chunkIds: any[], moreModules: any[], executeModules: any[]) => {
-                    if (arr[moreModules.length]) {
-                        const obj = arr[moreModules.length];
-                        const pam = param[moreModules.length];
+                    const len = moreModules.length ?? length;
+                    if (len in arr) {
+                        const obj = arr[len];
+                        const pam = param[len];
                         Object.entries(obj).forEach(d => {
                             let code = moreModules[<any>d[0]];
                             if (code) {
                                 code = code.toString();
                                 d[1].forEach(e => code = e(code));
                                 moreModules[<any>d[0]] = new Function(pam[0], pam[1], pam[2], `(${code})(${pam[0]},${pam[1]},${pam[2]})`);
+                            } else {
+                                // 部分webpack此对象是类数组对象，取数组初始化时的值
+                                length = len;
                             }
                         })
                     }

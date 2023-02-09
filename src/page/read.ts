@@ -4,9 +4,11 @@ import { Comment } from "../core/comment";
 import html from '../html/read.html';
 import { IStat } from "../io/api";
 import { IUserInfo } from "../io/api-view-detail";
+import { BV2avAll } from '../utils/abv';
 import { debug } from "../utils/debug";
-import { addCss } from "../utils/element";
+import { addCss, loadScript } from "../utils/element";
 import { propertyHook } from "../utils/hook/method";
+import { webpackHook } from '../utils/hook/webpack';
 import { Page } from "./page";
 
 interface ReadInfo {
@@ -68,17 +70,10 @@ export class PageRead extends Page {
     }
     /** 处理webpackJsonp污染 */
     protected webpackjsonp() {
-        propertyHook.modify(window, 'webpackJsonp', v => {
-            if (typeof v === 'function') {
-                setTimeout(() => {
-                    Reflect.deleteProperty(window, 'webpackJsonp');
-                    Reflect.set(window, 'webpackJsonp', v);
-                });
-                return v;
-            } else {
-                return;
-            }
-        })
+        webpackHook(115, 0, str => {
+            // 处理超链接转义错误
+            return str.replace('gi,function(i){return', 'gi,function(i){return i.indexOf("api.")>-1?i:');
+        });
     }
     /** 获取专栏信息 */
     protected initState() {
@@ -164,7 +159,7 @@ export class PageRead extends Page {
                 debug.error(e)
             }
         }
-        return str;
+        return BV2avAll(str);
     }
     protected tagContainer() {
         this.readInfoStr += (this.readInfo.tags || []).reduce((o, d) => {
@@ -218,5 +213,22 @@ export class PageRead extends Page {
                 e.stopPropagation();
             }, true);
         });
+    }
+    /** 重构后回调 */
+    protected loadedCallback() {
+        super.loadedCallback();
+        const pres = document.querySelectorAll("figure pre");
+        let prism = false;
+        pres.forEach(d => {
+            const code = d.getAttribute("codecontent");
+            if (code) {
+                d.querySelector("code")!.textContent = code;
+                d.removeAttribute("codecontent");
+                prism = true;
+            }
+        });
+        prism && loadScript('//s1.hdslb.com/bfs/static/article-text/static/ueditor/plugins/prism/prism.js').catch(e => {
+            this.BLOD.toast.error('代码组件加载失败！', e)();
+        })
     }
 }
