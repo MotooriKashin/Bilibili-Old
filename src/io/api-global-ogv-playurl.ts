@@ -64,14 +64,14 @@ interface IGlobalOgvPlayurlResponse {
     };
 }
 export class ApiGlobalOgvPlayurl extends ApiSign {
-    protected fetch: Promise<Response>;
+    protected response?: IGlobalOgvPlayurlResponse;
     /**
      * @param data 查询参数
      * @param server 东南亚（泰区）代理服务器
      */
-    constructor(data: GlobalOgvPlayurlData, protected uposName: keyof typeof UPOS | "不替换", server = 'api.global.bilibili.com') {
+    constructor(protected data: GlobalOgvPlayurlData, protected uposName: keyof typeof UPOS | "不替换", server = 'api.global.bilibili.com') {
         super(URLS.GLOBAL_OGV_PLAYURL.replace('api.global.bilibili.com', server), '7d089525d3611b1c')
-        data = Object.assign({
+        this.data = Object.assign({
             area: "th",
             build: 1001310,
             device: "android",
@@ -80,18 +80,16 @@ export class ApiGlobalOgvPlayurl extends ApiSign {
             mobi_app: "bstar_a",
             platform: "android"
         }, data);
-        this.fetch = fetch(this.sign(<any>data));
     }
     async getDate() {
-        const response = await this.fetch;
+        if (this.response) return this.response;
+        const response = await fetch(this.sign());
         const text = await response.text();
-        return <IGlobalOgvPlayurlResponse>jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
+        return this.response = <IGlobalOgvPlayurlResponse>jsonCheck(VideoLimit.uposReplace(text, this.uposName)).data;
     }
     toPlayurl() {
         return new Promise((resolve: (value: IPlayurlDash) => void, reject) => {
-            this.fetch
-                .then(d => d.text())
-                .then(d => <IGlobalOgvPlayurlResponse>jsonCheck(VideoLimit.uposReplace(d, this.uposName)).data)
+            this.getDate()
                 .then(d => {
                     const playurl = new PlayurlDash();
                     const set: string[] = [];

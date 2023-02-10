@@ -172,5 +172,7 @@ export const userStatus = {
     /** 弹幕保护计划 */
     danmakuProtect: false,
     /** 下载按钮 */
-    downloadButton: false
+    downloadButton: false,
+    /** 全区域搜索 */
+    searchAllArea: false
 }

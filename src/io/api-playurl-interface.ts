@@ -10,7 +10,7 @@ interface IApiPlayurlInterface {
     cid: number;
 }
 export class ApiPlayurlInterface extends ApiSign {
-    constructor(private data: IApiPlayurlInterface, pgc = false) {
+    constructor(protected data: IApiPlayurlInterface, pgc = false) {
         super(pgc ? URLS.PLAYURL_BANGUMI : URLS.PLAYURL_INTERFACE, 'YvirImLGlLANCLvM');
         this.data = Object.assign({
             otype: 'json',
@@ -21,10 +21,7 @@ export class ApiPlayurlInterface extends ApiSign {
         }, data, pgc ? { module: "bangumi", season_type: 1 } : {});
     }
     async getData() {
-        const response = await fetch(this.sign(this.data), { credentials: 'include' });
+        const response = await fetch(this.sign(), { credentials: 'include' });
         return <IPlayurlDurl>await response.json();
-    }
-    toJSON() {
-        return this.sign(this.data);
     }
 }

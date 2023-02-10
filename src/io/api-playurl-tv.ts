@@ -14,7 +14,7 @@ interface IApiPlayurlTv {
     cid: number;
 }
 export class ApiPlayurlTv extends ApiSign {
-    constructor(private data: IApiPlayurlTv, dash = true, pgc = false) {
+    constructor(protected data: IApiPlayurlTv, dash = true, pgc = false) {
         super(pgc ? URLS.PGC_PLAYURL_TV : URLS.UGC_PLAYURL_TV, '4409e2ce8ffd12b8');
         this.data = Object.assign({
             qn,
@@ -26,7 +26,7 @@ export class ApiPlayurlTv extends ApiSign {
         }, data, dash ? { fnval, fnver } : {});
     }
     async getData() {
-        const response = await fetch(this.sign(this.data));
+        const response = await fetch(this.sign());
         const json = await response.json();
         return <IPlayurlDash | IPlayurlDurl>jsonCheck(json);
     }

@@ -17,7 +17,7 @@ interface IApiPlayurlIntl {
     cid: number;
 }
 export class ApiPlayurlIntl extends ApiSign {
-    constructor(private data: IApiPlayurlIntl, private fetch = self.fetch, dash = true, private pgc = false) {
+    constructor(protected data: IApiPlayurlIntl, private fetch = self.fetch, dash = true, private pgc = false) {
         super(pgc ? URLS.INTL_OGV_PLAYURL : URLS.INTL_PLAYURL, 'bb3101000e232e27');
         this.data = Object.assign({
             device: "android",
@@ -31,7 +31,7 @@ export class ApiPlayurlIntl extends ApiSign {
         }, data, dash ? { fnval, fnver } : {});
     }
     async getData() {
-        const response = await this.fetch(this.sign(this.data));
+        const response = await this.fetch(this.sign());
         const json = await response.json();
         if (this.pgc) {
             return <IPlayurlDash | IPlayurlDurl>jsonCheck(json);

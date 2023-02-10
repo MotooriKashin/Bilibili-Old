@@ -16,7 +16,7 @@ interface IApiPlayurlProj {
     cid: number;
 }
 export class ApiPlayurlProj extends ApiSign {
-    constructor(private data: IApiPlayurlProj, pgc = false) {
+    constructor(protected data: IApiPlayurlProj, pgc = false) {
         super(pgc ? URLS.PGC_PLAYURL_PROJ : URLS.PLAYURL_PROJ, 'bb3101000e232e27');
         this.data = Object.assign({
             build: "2040100",
@@ -26,10 +26,10 @@ export class ApiPlayurlProj extends ApiSign {
             platform: "android_i",
             qn
         }, data);
-        pgc && (data.module = "bangumi");
+        pgc && (this.data.module = "bangumi");
     }
     async getData() {
-        const response = await fetch(this.sign(this.data));
+        const response = await fetch(this.sign());
         return <IPlayurlDurl>await response.json();
     }
 }

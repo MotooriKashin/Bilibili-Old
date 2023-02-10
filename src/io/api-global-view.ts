@@ -130,18 +130,16 @@ interface IGlobalOgvViewResponse {
     user_status: { demand_no_pay_epids?: number[]; follow: number; like_state: number; vip: number; };
 }
 export class ApiGlobalOgvView extends ApiSign {
-    protected fetch: Promise<Response>;
-    constructor(data: ApiGlobalOgvViewDate, server = 'api.global.bilibili.com') {
+    constructor(protected data: ApiGlobalOgvViewDate, server = 'api.global.bilibili.com') {
         super(URLS.GLOBAL_OGV_VIEW.replace('api.global.bilibili.com', server), '7d089525d3611b1c');
-        data = Object.assign({
+        this.data = Object.assign({
             build: 108003,
             mobi_app: 'bstar_a',
             s_locale: 'zh_SG'
         }, data);
-        this.fetch = fetch(this.sign(<any>data));
     }
     async getDate() {
-        const response = await this.fetch;
+        const response = await fetch(this.sign());
         const json = await response.json();
         return <IGlobalOgvViewResponse>jsonCheck(json).result;
     }

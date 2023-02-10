@@ -14,6 +14,8 @@ import { userStatus } from "./core/userstatus";
 import { VideoInfo } from "./core/video-info";
 import { VideoLimit } from "./core/videolimit";
 import { WebTRC } from "./core/webrtc";
+import { urlSign } from "./io/api";
+import { ApiSearch } from "./io/api-search";
 import { URLS } from "./io/urls";
 import networkMock from './json/networkMock.json';
 import { PageIndex } from "./page";
@@ -93,6 +95,8 @@ export class BLOD {
     danmaku = new Danmaku(this);
     /** cdn */
     cdn = new Cdn();
+    /** 签名工具 */
+    urlSign = urlSign;
     /** @param GM 提权操作接口 */
     constructor(public GM: typeof GMC) {
         this.version = this.GM.info?.script.version.slice(-40);

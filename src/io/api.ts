@@ -189,9 +189,9 @@ export interface IDimension {
     rotate: number;
 }
 /** 检查并转化json接口返回值。**出错时将直接抛出！** */
-export function jsonCheck(str: string | IJsonRespense) {
+export function jsonCheck<T extends IJsonRespense>(str: string | T) {
     const result: IJsonRespense = typeof str === 'string' ? JSON.parse(str) : str;
-    if (result.code === 0) return result;
+    if (result.code === 0) return <T>result;
     throw new Error(`${result.code} ${result.message}`, { cause: result.code });
 }
 enum APP_KEY {
@@ -257,18 +257,15 @@ enum APP_KEY {
     /** 安卓 必剪 */
     '5dce947fe22167f9' = '',
     /** 上古 */
-    '8e9fc618fbd41e28' = ''
-}
-enum APP_SECRET {
-    /** VIP */
-    '9b288147e5474dd2aa67085f716c560d',
-    /** PlayUrl */
-    '1c15888dc316e05a15fdd0a02ed6584f'
+    '8e9fc618fbd41e28' = '',
+    '21087a09e533a072' = 'e5b8ba95cab6104100be35739304c23a'
 }
 export class ApiSign {
     protected get ts() {
         return new Date().getTime();
     }
+    /** 查询参数，须要在子类中初始化好才能无参数调用`sign`方法 */
+    protected data = {};
     constructor(protected url: string, protected appkey: keyof typeof APP_KEY) { }
     /**
      * URL签名
@@ -276,7 +273,7 @@ export class ApiSign {
      * @param api 授权api，**授权第三方登录专用**
      * @returns 签名后的api
      */
-    protected sign(searchParams = {}, api = '') {
+    sign(searchParams = this.data, api = '') {
         const url = new URL(this.url);
         Object.assign(url.params, searchParams, { ts: this.ts });
         delete url.params.sign;
@@ -323,4 +320,9 @@ export class ApiSign {
         }
         return APP_KEY[this.appkey];
     }
+}
+export async function urlSign(url: string, searchParams = {}, appkey: keyof typeof APP_KEY = 'c1b107428d337928') {
+    const api = new ApiSign(url, appkey);
+    const response = await fetch(api.sign(searchParams));
+    return await response.json();
 }
