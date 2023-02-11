@@ -1,7 +1,7 @@
 import { objUrl } from "../utils/format/url";
 import { xhrHook } from "../utils/hook/xhr";
 import { getUrlValue } from "../utils/utils";
-import { IAidDatail } from "./api";
+import { IAidDatail, jsonCheck } from "./api";
 import { IApiViewResponse } from "./api-view";
 import { ApiViewDetail } from "./api-view-detail";
 
@@ -46,6 +46,9 @@ export class apiBiliplusView {
         } else return this.view2Detail_v1(data);
     }
     protected view2Detail_v1(data: IApiViewPlusResponse) {
+        if ('code' in data) {
+            jsonCheck<any>(data);
+        }
         const result = new ApiViewDetail();
         const p = Number(getUrlValue("p"));
         result.data.Card.card = <any>{
@@ -54,11 +57,16 @@ export class apiBiliplusView {
             name: data.author,
             vip: <any>{}
         };
+        // 可能不含分P列表
+        data.list || (data.list = <any>[{
+            cid: -1,
+            dimension: { width: 1920, height: 1080, rotate: 0 }
+        }]);
         result.data.View = <any>{
             aid: data.aid || data.id || this.aid,
             cid: data.list[p ? p - 1 : 0].cid,
             copyright: 1,
-            ctime: data.created,
+            ctime: data.created ?? 0,
             dimension: { width: 1920, height: 1080, rotate: 0 },
             duration: -1,
             owner: result.data.Card.card,
@@ -66,8 +74,8 @@ export class apiBiliplusView {
                 d.dimension = { width: 1920, height: 1080, rotate: 0 };
                 return d;
             }),
-            pic: data.pic,
-            pubdate: data.lastupdatets,
+            pic: data.pic ?? '',
+            pubdate: data.lastupdatets ?? 0,
             rights: <any>{},
             stat: <any>{
                 aid: data.aid || data.id || this.aid,
@@ -85,10 +93,10 @@ export class apiBiliplusView {
             },
             state: 0,
             subtitle: { allow_submit: false, list: [] },
-            tid: data.tid,
-            title: data.title,
-            tname: data.typename,
-            videos: data.list.length
+            tid: data.tid ?? 0,
+            title: data.title ?? '',
+            tname: data.typename ?? '',
+            videos: data.list.length ?? 0
         };
         data.bangumi && (result.data.View.season = data.bangumi);
         xhrHook(`api.bilibili.com/x/web-interface/view?aid=${this.aid}`, undefined, (res) => {

@@ -117,7 +117,7 @@ export class PageAV extends Page {
                 const obj = urlObj(r);
                 if (obj.aid) {
                     this.aid = <number>obj.aid;
-                    this.getVideoInfo(call);
+                    this.getVideoInfo().then(d => call(d)).catch(() => call(res));
                     return true
                 }
             } else {
@@ -135,56 +135,54 @@ export class PageAV extends Page {
         }, false);
     }
     /** 通过其他接口获取aid数据 */
-    protected async getVideoInfo(callback: Function) {
+    protected async getVideoInfo() {
+        const data = [`av${this.aid}可能无效，尝试其他接口~`]
+        const toast = this.BLOD.toast.toast(0, 'info', ...data);
         try {
-            const data = [`av${this.aid}可能无效，尝试其他接口~`]
-            const toast = this.BLOD.toast.toast(0, 'info', ...data);
-            apiArticleCards({ av: this.aid })
-                .then(d => {
-                    if (d[`av${this.aid}`]) {
-                        if (d[`av${this.aid}`].redirect_url) {
-                            data.push(`bangumi重定向：${d[`av${this.aid}`].redirect_url}`);
-                            toast.data = data;
-                            toast.type = 'warning';
-                            callback(new ApiViewDetail()); // 必须先返回，否则超时跳转404
-                            this.BLOD.urlCleaner.updateLocation(d[`av${this.aid}`].redirect_url!);
-                            new PageBangumi(this.BLOD); // 跳转Bangumi
-                            this.destroy = true;
-                            return;
-                        }
-                    }
-                    new apiBiliplusView(this.aid)
-                        .toDetail()
-                        .then(d => {
-                            if (d?.data.View.season) {
-                                data.push(`bangumi重定向：${(<any>d).data.View.season.ogv_play_url}`);
-                                toast.data = data;
-                                toast.type = 'warning';
-                                d.data.View.season = undefined;
-                                callback(new ApiViewDetail());
-                                this.BLOD.urlCleaner.updateLocation((<any>d).data.View.season.ogv_play_url);
-                                new PageBangumi(this.BLOD); // 跳转Bangumi
-                                this.destroy = true;
-                                return;
-                            }
-                            callback(d);
-                            this.BLOD.videoInfo.aidDatail(d.data.View); // 记录视频数据
-                            data.push('获取缓存数据成功！');
-                            toast.data = data;
-                            toast.type = 'success';
-                        })
-                })
-                .catch(e => {
-                    debug.error('获取数据出错！', e);
-                    data.push('获取数据出错！', e);
+            const card = await apiArticleCards({ av: this.aid });
+            if (card[`av${this.aid}`]) {
+                if (card[`av${this.aid}`].redirect_url) {
+                    data.push(`bangumi重定向：${card[`av${this.aid}`].redirect_url}`);
                     toast.data = data;
-                    toast.type = 'error';
-                })
-                .finally(() => {
+                    toast.type = 'warning';
+                    setTimeout(() => {
+                        this.BLOD.urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
+                        new PageBangumi(this.BLOD); // 跳转Bangumi
+                        this.destroy = true;
+                        toast.delay = 4;
+                    }, 100);
+                    return new ApiViewDetail(); // 必须先返回，否则超时跳转404
+                }
+            }
+            const view = await new apiBiliplusView(this.aid).toDetail();
+            if (view?.data.View.season) {
+                data.push(`bangumi重定向：${(<any>view).data.View.season.ogv_play_url}`);
+                toast.data = data;
+                toast.type = 'warning';
+                view.data.View.season = undefined;
+                setTimeout(() => {
+                    this.BLOD.urlCleaner.updateLocation(card[`av${this.aid}`].redirect_url!);
+                    new PageBangumi(this.BLOD); // 跳转Bangumi
+                    this.destroy = true;
                     toast.delay = 4;
-                })
+                }, 100);
+                return new ApiViewDetail();
+            }
+            setTimeout(() => {
+                this.BLOD.videoInfo.aidDatail(view.data.View); // 记录视频数据
+                data.push('获取缓存数据成功！但这可能是个失效视频！');
+                toast.data = data;
+                toast.type = 'success';
+                toast.delay = 4;
+            }, 100);
+            return view;
         } catch (e) {
-            debug.error(e)
+            debug.error('获取数据出错！', e);
+            data.push('获取数据出错！', <any>e);
+            toast.data = data;
+            toast.type = 'error';
+            toast.delay = 4;
+            throw e;
         }
     }
     /** 合作UP */
