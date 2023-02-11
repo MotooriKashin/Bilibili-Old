@@ -21,6 +21,7 @@ const danmakuProtect = [
     329896, // 【白屏弹幕】10 years after
     469970, // 【黑屏弹幕】美丽之物【Soundhorizon】
     1474616, // 繁星梅露露(弹幕版)
+    4335759, // 【弹幕PV】世界终结舞厅
     384460933, // 【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix
 ];
 

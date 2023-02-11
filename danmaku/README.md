@@ -12,4 +12,5 @@
 | [329896](./329896.xml) | [【白屏弹幕】10 years after](https://www.bilibili.com/video/av202813) |
 | [469970](./469970.xml) | [【黑屏弹幕】美丽之物【Soundhorizon】](https://www.bilibili.com/video/av297197) |
 | [1474616](./1474616.xml) | [繁星梅露露(弹幕版)](https://www.bilibili.com/video/av63814) |
+| [4335759](./4335759.xml) | [【弹幕PV】世界终结舞厅](https://www.bilibili.com/video/av2775802) |
 | [384460933](./384460933.xml) | [【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix](https://www.bilibili.com/video/av39444?p=3) |
