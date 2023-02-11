@@ -8,6 +8,7 @@
 | cid | 对应标题 | 
 | ----- | ----- |
 | [96048](./96048.xml) | [【幸运星组曲】「らき☆すた動画」](https://www.bilibili.com/video/av2810) |
+| [207527](./207527.xml) | [【呆又呆】鹿乃呆? 弹幕呆?](https://www.bilibili.com/video/av124748) |
 | [329896](./329896.xml) | [【白屏弹幕】10 years after](https://www.bilibili.com/video/av202813) |
 | [469970](./469970.xml) | [【黑屏弹幕】美丽之物【Soundhorizon】](https://www.bilibili.com/video/av297197) |
 | [1474616](./1474616.xml) | [繁星梅露露(弹幕版)](https://www.bilibili.com/video/av63814) |
