@@ -16,8 +16,9 @@ import { localStorage } from "./storage";
 import { alert } from "./ui/alert";
 
 const danmakuProtect = [
+    96048, // 【幸运星组曲】「らき☆すた動画」
     469970, // 【黑屏弹幕】美丽之物【Soundhorizon】
-    384460933 // 【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix
+    384460933, // 【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix
 ];
 
 /** 播放器引导 */
