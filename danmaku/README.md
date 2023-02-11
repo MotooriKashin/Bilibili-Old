@@ -9,4 +9,5 @@
 | ----- | ----- |
 | [96048](./96048.xml) | [【幸运星组曲】「らき☆すた動画」](https://www.bilibili.com/video/av2810) |
 | [469970](./469970.xml) | [【黑屏弹幕】美丽之物【Soundhorizon】](https://www.bilibili.com/video/av297197) |
+| [1474616](./1474616.xml) | [繁星梅露露(弹幕版)](https://www.bilibili.com/video/av63814) |
 | [384460933](./384460933.xml) | [【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix](https://www.bilibili.com/video/av39444?p=3) |
