@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Bilibili 旧播放页
 // @namespace    MotooriKashin
-// @version      10.2.3-787e6b1c82cd05c0e17a088a9e6a77baeee4f411
+// @version      10.2.4-a55243ba13eb99942ffd8faf5a7e1c52583c043a
 // @description  恢复Bilibili旧版页面，为了那些念旧的人。
 // @author       MotooriKashin, wly5556
 // @homepage     https://github.com/MotooriKashin/Bilibili-Old
@@ -7188,10 +7188,10 @@ var DanmakuBase = class {
   /** 编码xml弹幕 */
   static encodeXml(dms, cid) {
     return dms.reduce((s, d) => {
-      const text = d.mode === 8 || d.mode === 9 ? d.text : d.text.replace(/[<&]/g, (a) => {
+      const text = d.mode === 8 || d.mode === 9 ? d.text : d.text.replace(/(\\n|\\r\\n)/g, "/n");
+      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${text.replace(/[<&]/g, (a) => {
         return { "<": "&lt;", "&": "&amp;" }[a];
-      }).replace(/(\\n|\\r\\n)/g, "/n");
-      s += \`<d p="\${d.stime},\${d.mode},\${d.size},\${d.color},\${d.date},\${d.class},\${d.uid},\${d.dmid}">\${text}</d>
+      })}</d>
 \`;
       return s;
     }, \`<?xml version="1.0" encoding="UTF-8"?><i><chatserver>chat.api.bilibili.com</chatserver><chatid>\${cid}</chatid><mission>0</mission><maxlimit>\${dms.length}</maxlimit><state>0</state><real_name>0</real_name><source>k-v</source>
@@ -10859,7 +10859,7 @@ var PushButton = class extends HTMLElement {
     this._button.textContent = v;
   }
 };
-customElements.get(\`button-\${"787e6b1"}\`) || customElements.define(\`button-\${"787e6b1"}\`, PushButton);
+customElements.get(\`button-\${"a55243b"}\`) || customElements.define(\`button-\${"a55243b"}\`, PushButton);
 
 // src/html/popupbox.html
 var popupbox_default = '<div class="box">\\r\\n    <div class="contain"></div>\\r\\n    <div class="fork"></div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        top: 50%;\\r\\n        left: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        transition: 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);\\r\\n        padding: 12px;\\r\\n        background-color: #fff;\\r\\n        color: black;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 4px 12px 0 rgb(0 0 0 / 5%);\\r\\n        border: 1px solid rgba(136, 136, 136, 0.13333);\\r\\n        box-sizing: border-box;\\r\\n        position: fixed;\\r\\n        font-size: 13px;\\r\\n        z-index: 11115;\\r\\n        line-height: 14px;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        height: 100%;\\r\\n    }\\r\\n\\r\\n    .fork {\\r\\n        position: absolute;\\r\\n        transform: scale(0.8);\\r\\n        right: 10px;\\r\\n        top: 10px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        pointer-events: visible;\\r\\n    }\\r\\n\\r\\n    .fork:hover {\\r\\n        border-radius: 50%;\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n</style>';
@@ -11020,7 +11020,7 @@ var PopupBox = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`popupbox-\${"787e6b1"}\`) || customElements.define(\`popupbox-\${"787e6b1"}\`, PopupBox);
+customElements.get(\`popupbox-\${"a55243b"}\`) || customElements.define(\`popupbox-\${"a55243b"}\`, PopupBox);
 
 // src/core/ui/alert.ts
 function alert(msg, title, buttons, fork = false) {
@@ -11050,8 +11050,18 @@ function alert(msg, title, buttons, fork = false) {
 
 // src/core/player.ts
 var danmakuProtect = [
+  96048,
+  // 【幸运星组曲】「らき☆すた動画」
+  207527,
+  // 【呆又呆】鹿乃呆? 弹幕呆?
+  329896,
+  // 【白屏弹幕】10 years after
   469970,
   // 【黑屏弹幕】美丽之物【Soundhorizon】
+  1474616,
+  // 繁星梅露露(弹幕版)
+  4335759,
+  // 【弹幕PV】世界终结舞厅
   384460933
   // 【弹幕祭应援】 緋色月下、狂咲ノ絶-1st Anniversary Remix
 ];
@@ -11644,7 +11654,7 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(\`preview-image-\${"787e6b1"}\`) || customElements.define(\`preview-image-\${"787e6b1"}\`, PreviewImage);
+customElements.get(\`preview-image-\${"a55243b"}\`) || customElements.define(\`preview-image-\${"a55243b"}\`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
@@ -12648,6 +12658,9 @@ var apiBiliplusView = class {
       return this.view2Detail_v1(data);
   }
   view2Detail_v1(data) {
+    if ("code" in data) {
+      jsonCheck(data);
+    }
     const result = new ApiViewDetail();
     const p = Number(getUrlValue("p"));
     result.data.Card.card = {
@@ -12656,11 +12669,15 @@ var apiBiliplusView = class {
       name: data.author,
       vip: {}
     };
+    data.list || (data.list = [{
+      cid: -1,
+      dimension: { width: 1920, height: 1080, rotate: 0 }
+    }]);
     result.data.View = {
       aid: data.aid || data.id || this.aid,
       cid: data.list[p ? p - 1 : 0].cid,
       copyright: 1,
-      ctime: data.created,
+      ctime: data.created ?? 0,
       dimension: { width: 1920, height: 1080, rotate: 0 },
       duration: -1,
       owner: result.data.Card.card,
@@ -12668,8 +12685,8 @@ var apiBiliplusView = class {
         d.dimension = { width: 1920, height: 1080, rotate: 0 };
         return d;
       }),
-      pic: data.pic,
-      pubdate: data.lastupdatets,
+      pic: data.pic ?? "",
+      pubdate: data.lastupdatets ?? 0,
       rights: {},
       stat: {
         aid: data.aid || data.id || this.aid,
@@ -12687,10 +12704,10 @@ var apiBiliplusView = class {
       },
       state: 0,
       subtitle: { allow_submit: false, list: [] },
-      tid: data.tid,
-      title: data.title,
-      tname: data.typename,
-      videos: data.list.length
+      tid: data.tid ?? 0,
+      title: data.title ?? "",
+      tname: data.typename ?? "",
+      videos: data.list.length ?? 0
     };
     data.bangumi && (result.data.View.season = data.bangumi);
     xhrHook(\`api.bilibili.com/x/web-interface/view?aid=\${this.aid}\`, void 0, (res) => {
@@ -13485,11 +13502,11 @@ var Ef2 = class {
   static file(data, fileName) {
     const result = [];
     data.forEach((d) => {
-      const arr2 = [];
+      const arr2 = ["<", "", "", "", ""];
       Object.entries(d).forEach((d2) => {
         switch (d2[0]) {
           case "cookie":
-            arr2.push(\`cookie: \${d2[1]}\`);
+            arr2[4] = \`cookie: \${d2[1]}\`;
             break;
           case "delay":
             break;
@@ -13508,16 +13525,16 @@ var Ef2 = class {
             arr2.push(\`postdata: \${d2[1]}\`);
             break;
           case "referer":
-            arr2.push(\`referer: \${d2[1]}\`);
+            arr2[2] = \`referer: \${d2[1]}\`;
             break;
           case "silence":
             break;
           case "url":
             d2[1].startsWith("//") && (d2[1] = "https:" + d2[1]);
-            arr2.unshift(d2[1]);
+            arr2[1] = d2[1];
             break;
           case "userAgent":
-            arr2.push(\`User-Agent: \${d2[1]}\`);
+            arr2[3] = \`User-Agent: \${d2[1]}\`;
             break;
           case "userName":
             arr2.push(\`username: \${d2[1]}\`);
@@ -13526,16 +13543,19 @@ var Ef2 = class {
             break;
         }
       });
-      arr2.unshift("<");
       arr2.push(">");
-      result.push(...arr2);
+      arr2.forEach((d2) => {
+        d2 && result.push(d2);
+      });
     });
+    result.push("");
     saveAs(result.join("\\r\\n"), fileName || \`\${data[0].out || getMetux()}.ef2\`);
   }
   /** 生成ef2协议 */
   static encode(data) {
     const arr2 = [];
     Object.entries(data).forEach((d) => {
+      typeof d[1] === "string" && d[1].startsWith('"') || (d[1] = \`"\${d[1]}"\`);
       switch (d[0]) {
         case "cookie":
           arr2.push("-c", d[1]);
@@ -13908,7 +13928,7 @@ var BilioldDownload = class extends HTMLElement {
     this._container.replaceChildren(this._noData);
   }
 };
-customElements.get(\`download-\${"787e6b1"}\`) || customElements.define(\`download-\${"787e6b1"}\`, BilioldDownload);
+customElements.get(\`download-\${"a55243b"}\`) || customElements.define(\`download-\${"a55243b"}\`, BilioldDownload);
 
 // src/core/download.ts
 var Download = class {
@@ -14369,7 +14389,7 @@ var Toast = class extends HTMLDivElement {
     }
   }
 };
-customElements.get(\`toast-\${"787e6b1"}\`) || customElements.define(\`toast-\${"787e6b1"}\`, Toast, { extends: "div" });
+customElements.get(\`toast-\${"a55243b"}\`) || customElements.define(\`toast-\${"a55243b"}\`, Toast, { extends: "div" });
 var ToastContainer = class extends HTMLElement {
   /** 实际根节点 */
   container;
@@ -14479,7 +14499,7 @@ var ToastContainer = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`toast-container-\${"787e6b1"}\`) || customElements.define(\`toast-container-\${"787e6b1"}\`, ToastContainer);
+customElements.get(\`toast-container-\${"a55243b"}\`) || customElements.define(\`toast-container-\${"a55243b"}\`, ToastContainer);
 
 // src/io/api-login-app-third.ts
 var ApiLoginAppThird = class extends ApiSign {
@@ -14628,7 +14648,7 @@ var Desc = class extends HTMLElement {
     }
   }
 };
-customElements.get(\`desc-\${"787e6b1"}\`) || customElements.define(\`desc-\${"787e6b1"}\`, Desc);
+customElements.get(\`desc-\${"a55243b"}\`) || customElements.define(\`desc-\${"a55243b"}\`, Desc);
 
 // src/html/ui-entry.html
 var ui_entry_default = '<div class="setting">\\r\\n    <i></i><span>设置</span>\\r\\n</div>\\r\\n<div class="gear"></div>\\r\\n<style type="text/css">\\r\\n    .gear {\\r\\n        position: fixed;\\r\\n        right: 40px;\\r\\n        bottom: 60px;\\r\\n        height: 20px;\\r\\n        width: 20px;\\r\\n        border: 1px solid #e9eaec;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 0 12px 4px rgb(106, 115, 133, 22%);\\r\\n        padding: 10px;\\r\\n        cursor: pointer;\\r\\n        animation: roll 1s ease-out;\\r\\n        transition: opacity 0.3s ease-out;\\r\\n        background: none;\\r\\n        z-index: 11110;\\r\\n    }\\r\\n\\r\\n    .setting {\\r\\n        box-sizing: content-box;\\r\\n        color: #fff;\\r\\n        background-color: #fff;\\r\\n        border-radius: 5px;\\r\\n        position: fixed;\\r\\n        bottom: 65px;\\r\\n        width: 56px;\\r\\n        height: 40px;\\r\\n        transition: right 0.7s;\\r\\n        -moz-transition: right 0.7s;\\r\\n        -webkit-transition: right 0.7s;\\r\\n        -o-transition: right 0.7s;\\r\\n        z-index: 11110;\\r\\n        padding: 4px;\\r\\n        right: -54px;\\r\\n    }\\r\\n\\r\\n    .setting:hover {\\r\\n        right: 0px;\\r\\n        box-shadow: rgba(0, 85, 255, 0.098) 0px 0px 20px 0px;\\r\\n        border: 1px solid rgb(233, 234, 236);\\r\\n    }\\r\\n\\r\\n    .setting i {\\r\\n        background-position: -471px -982px;\\r\\n        display: block;\\r\\n        width: 20px;\\r\\n        height: 20px;\\r\\n        transition: 0.2s;\\r\\n        background-image: url(//static.hdslb.com/images/base/icons.png);\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    .setting span {\\r\\n        font-size: 14px;\\r\\n        display: block;\\r\\n        width: 50%;\\r\\n        transition: 0.2s;\\r\\n        color: #000;\\r\\n        margin: auto;\\r\\n    }\\r\\n\\r\\n    @keyframes roll {\\r\\n\\r\\n        30%,\\r\\n        60%,\\r\\n        90% {\\r\\n            transform: scale(1) rotate(0deg);\\r\\n        }\\r\\n\\r\\n        10%,\\r\\n        40%,\\r\\n        70% {\\r\\n            transform: scale(1.11) rotate(-180deg);\\r\\n        }\\r\\n\\r\\n        20%,\\r\\n        50%,\\r\\n        80% {\\r\\n            transform: scale(0.9) rotate(-360deg);\\r\\n        }\\r\\n    }\\r\\n</style>';
@@ -14689,7 +14709,7 @@ var BilioldEntry = class extends HTMLElement {
     }
   }
 };
-customElements.get("biliold-entry-787e6b1") || customElements.define("bilibili-entry-787e6b1", BilioldEntry);
+customElements.get("biliold-entry-a55243b") || customElements.define("bilibili-entry-a55243b", BilioldEntry);
 
 // src/html/ui-interface.html
 var ui_interface_default = '<div class="box">\\r\\n    <div class="tool">\\r\\n        <div title="关闭" class="icon"></div>\\r\\n        <header>Bilbili Old</header>\\r\\n    </div>\\r\\n    <div class="content">\\r\\n        <div class="contain">\\r\\n            <div class="menu"></div>\\r\\n            <div class="item"></div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .box {\\r\\n        left: 50%;\\r\\n        top: 50%;\\r\\n        transform: translateX(-50%) translateY(-50%);\\r\\n        min-width: 600px;\\r\\n        min-height: 400px;\\r\\n        padding: 0;\\r\\n        border: 0;\\r\\n        position: fixed;\\r\\n        z-index: 11110;\\r\\n        display: none;\\r\\n        box-sizing: border-box;\\r\\n        background: #fff;\\r\\n        border-radius: 8px;\\r\\n        box-shadow: 0 6px 12px 0 rgba(106, 115, 133, 22%);\\r\\n        transition: transform 0.3s ease-in;\\r\\n        line-height: 14px;\\r\\n        font: 12px Helvetica Neue, Helvetica, Arial, Microsoft Yahei, Hiragino Sans GB,\\r\\n            Heiti SC, WenQuanYi Micro Hei, sans-serif;\\r\\n    }\\r\\n\\r\\n    .tool {\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        width: 100%;\\r\\n        display: inline-flex;\\r\\n        z-index: 1;\\r\\n        align-items: center;\\r\\n        justify-content: flex-end;\\r\\n        pointer-events: none;\\r\\n    }\\r\\n\\r\\n    .tool header {\\r\\n        position: absolute;\\r\\n        transform: translateX(-50%);\\r\\n        left: 50%;\\r\\n        font-size: 14px;\\r\\n    }\\r\\n\\r\\n    .tool div {\\r\\n        border-radius: 50%;\\r\\n        padding: 10px;\\r\\n        transform: scale(0.8);\\r\\n        pointer-events: visible;\\r\\n        transition: opacity 0.3s ease;\\r\\n    }\\r\\n\\r\\n    .tool div:hover {\\r\\n        background-color: rgba(0, 0, 0, 10%);\\r\\n    }\\r\\n\\r\\n    .content {\\r\\n        position: relative;\\r\\n        border-bottom-left-radius: 8px;\\r\\n        border-bottom-right-radius: 8px;\\r\\n        overflow: hidden;\\r\\n        background-color: #fff;\\r\\n    }\\r\\n\\r\\n    .contain {\\r\\n        padding-bottom: 15px;\\r\\n        background-position: top center;\\r\\n        background-size: contain;\\r\\n        background-repeat: no-repeat;\\r\\n        display: flex;\\r\\n        align-items: flex-start;\\r\\n        flex: 1;\\r\\n        height: 360px;\\r\\n    }\\r\\n\\r\\n    .menu::-webkit-scrollbar,\\r\\n    .item::-webkit-scrollbar {\\r\\n        width: 0 !important;\\r\\n        height: 0 !important;\\r\\n    }\\r\\n\\r\\n    .menu {\\r\\n        flex: 1 1 0;\\r\\n        flex-basis: calc(480px * 0.2);\\r\\n        height: 100%;\\r\\n        position: sticky;\\r\\n        top: 0;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        min-width: fit-content;\\r\\n        overflow: auto;\\r\\n    }\\r\\n\\r\\n    .item {\\r\\n        flex: 4 4 0;\\r\\n        flex-basis: calc(480px * 0.8);\\r\\n        height: 100%;\\r\\n        box-sizing: border-box;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        margin: 0 auto;\\r\\n        position: relative;\\r\\n        overflow: auto;\\r\\n        background-image: linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, white, white),\\r\\n            linear-gradient(to top, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0)),\\r\\n            linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0));\\r\\n        background-position: bottom center, top center, bottom center, top center;\\r\\n        background-color: white;\\r\\n        background-repeat: no-repeat;\\r\\n        background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;\\r\\n        background-attachment: local, local, scroll, scroll;\\r\\n    }\\r\\n\\r\\n    .item>div {\\r\\n        margin-bottom: 60px;\\r\\n    }\\r\\n\\r\\n    .menuitem {\\r\\n        align-items: center;\\r\\n        display: flex;\\r\\n        font-weight: 500;\\r\\n        margin-inline-end: 2px;\\r\\n        margin-inline-start: 1px;\\r\\n        min-height: 20px;\\r\\n        padding-bottom: 10px;\\r\\n        padding-inline-start: 23px;\\r\\n        padding-top: 10px;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .menuitem:hover {\\r\\n        background-color: rgb(0, 0, 0, 6%);\\r\\n    }\\r\\n\\r\\n    .menuitem>div {\\r\\n        padding-inline-end: 12px;\\r\\n    }\\r\\n\\r\\n    .selected {\\r\\n        color: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .selected>.icon {\\r\\n        fill: rgb(51, 103, 214) !important;\\r\\n    }\\r\\n\\r\\n    .contain1 {\\r\\n        margin-bottom: 3px;\\r\\n        padding-inline-start: 20px;\\r\\n        padding-inline-end: 20px;\\r\\n        display: flex;\\r\\n        flex-direction: column;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .header .title {\\r\\n        color: #000;\\r\\n        font-size: 108%;\\r\\n        font-weight: 400;\\r\\n        letter-spacing: 0.25px;\\r\\n        margin-bottom: 12px;\\r\\n        outline: none;\\r\\n        padding-bottom: 4px;\\r\\n    }\\r\\n\\r\\n    .card {\\r\\n        border-radius: 4px;\\r\\n        box-shadow: 0px 0px 1px 1px rgb(60 64 67 / 30%);\\r\\n        flex: 1;\\r\\n        color: #000;\\r\\n        line-height: 154%;\\r\\n        user-select: text;\\r\\n        margin-inline: 12px;\\r\\n        margin-bottom: 12px;\\r\\n    }\\r\\n\\r\\n    .contain2 {\\r\\n        align-items: center;\\r\\n        border-top: 1px solid rgba(0, 0, 0, 6%);\\r\\n        display: flex;\\r\\n        min-height: 24px;\\r\\n        padding: 0 20px;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        background-color: transparent !important;\\r\\n    }\\r\\n\\r\\n    .value {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n    }\\r\\n\\r\\n    .value>* {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        display: flex;\\r\\n        flex-wrap: wrap;\\r\\n        justify-content: flex-end;\\r\\n        align-items: center;\\r\\n        align-content: center;\\r\\n    }\\r\\n\\r\\n    .label {\\r\\n        flex: 1;\\r\\n        flex-basis: 1e-9px;\\r\\n        padding-block-end: 12px;\\r\\n        padding-block-start: 12px;\\r\\n        padding-inline-start: 12px;\\r\\n    }\\r\\n\\r\\n    .switch>.label,\\r\\n    .button>.label,\\r\\n    .select>.label,\\r\\n    .input>.label,\\r\\n    .slider>.label {\\r\\n        flex: 2;\\r\\n    }\\r\\n\\r\\n    .select>.value,\\r\\n    .input>.value,\\r\\n    .slider>.value {\\r\\n        flex: 3;\\r\\n    }\\r\\n\\r\\n    .sub {\\r\\n        color: rgb(95, 99, 104);\\r\\n        font-weight: 400;\\r\\n    }\\r\\n\\r\\n    .icon {\\r\\n        align-items: center;\\r\\n        border-radius: 50%;\\r\\n        display: flex;\\r\\n        height: 20px;\\r\\n        justify-content: center;\\r\\n        position: relative;\\r\\n        width: 20px;\\r\\n        box-sizing: content-box;\\r\\n        background: none;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n</style>';
@@ -14762,7 +14782,7 @@ var SettingItem = class extends HTMLDivElement {
     this._value.appendChild(value);
   }
 };
-customElements.get(\`item-\${"787e6b1"}\`) || customElements.define(\`item-\${"787e6b1"}\`, SettingItem, { extends: "div" });
+customElements.get(\`item-\${"a55243b"}\`) || customElements.define(\`item-\${"a55243b"}\`, SettingItem, { extends: "div" });
 
 // src/core/ui/item-container.ts
 var ItemContainer = class extends HTMLDivElement {
@@ -14792,7 +14812,7 @@ var ItemContainer = class extends HTMLDivElement {
     this._card.append(...item);
   }
 };
-customElements.get(\`item-container-\${"787e6b1"}\`) || customElements.define(\`item-container-\${"787e6b1"}\`, ItemContainer, { extends: "div" });
+customElements.get(\`item-container-\${"a55243b"}\`) || customElements.define(\`item-container-\${"a55243b"}\`, ItemContainer, { extends: "div" });
 
 // src/core/ui/menu.ts
 var Menuitem = class extends HTMLDivElement {
@@ -14851,7 +14871,7 @@ var Menuitem = class extends HTMLDivElement {
     return this.container;
   }
 };
-customElements.get(\`menuitem-\${"787e6b1"}\`) || customElements.define(\`menuitem-\${"787e6b1"}\`, Menuitem, { extends: "div" });
+customElements.get(\`menuitem-\${"a55243b"}\`) || customElements.define(\`menuitem-\${"a55243b"}\`, Menuitem, { extends: "div" });
 
 // src/html/checkbox.html
 var checkbox_default = \`<input type="checkbox" id="checkbox">\\r
@@ -14938,7 +14958,7 @@ var CheckBox = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`checkbox-\${"787e6b1"}\`) || customElements.define(\`checkbox-\${"787e6b1"}\`, CheckBox);
+customElements.get(\`checkbox-\${"a55243b"}\`) || customElements.define(\`checkbox-\${"a55243b"}\`, CheckBox);
 var CheckBoxs = class extends HTMLDivElement {
   \$value = [];
   checkboxs = {};
@@ -14988,7 +15008,7 @@ var CheckBoxs = class extends HTMLDivElement {
     });
   }
 };
-customElements.get(\`checkboxs-\${"787e6b1"}\`) || customElements.define(\`checkboxs-\${"787e6b1"}\`, CheckBoxs, { extends: "div" });
+customElements.get(\`checkboxs-\${"a55243b"}\`) || customElements.define(\`checkboxs-\${"a55243b"}\`, CheckBoxs, { extends: "div" });
 
 // src/html/input.html
 var input_default = '<div class="input"><input>\\r\\n    <ul class="input-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .input {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 0;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .input input {\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        display: inline;\\r\\n        user-select: auto;\\r\\n        text-decoration: none;\\r\\n        outline: none;\\r\\n        width: calc(100% - 10px);\\r\\n        background: transparent;\\r\\n        padding: 0 5px;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n    }\\r\\n\\r\\n    .input input:focus {\\r\\n        border-color: #00a1d6;\\r\\n    }\\r\\n\\r\\n    .input-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        border-radius: 0 0 4px 4px;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .input:hover .input-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .input-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n\\r\\n    .cancel {\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        top: 0px;\\r\\n        width: 38px;\\r\\n        height: 28px;\\r\\n        background: url(//static.hdslb.com/images/base/icons.png) -461px -530px no-repeat;\\r\\n    }\\r\\n\\r\\n    .input-list-row:hover .cancel {\\r\\n        background-position: -525px -530px;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -15061,7 +15081,7 @@ var InputArea = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`input-\${"787e6b1"}\`) || customElements.define(\`input-\${"787e6b1"}\`, InputArea);
+customElements.get(\`input-\${"a55243b"}\`) || customElements.define(\`input-\${"a55243b"}\`, InputArea);
 
 // src/html/select.html
 var select_default = '<div class="selectmenu">\\r\\n    <div class="selectmenu-txt"><span></span></div>\\r\\n    <div class="selectmenu-arrow arrow-down"></div>\\r\\n    <ul class="selectmenu-list"></ul>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .selectmenu {\\r\\n        width: 100%;\\r\\n        display: inline-block;\\r\\n        position: relative;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        border-radius: 4px;\\r\\n        overflow: visible;\\r\\n        white-space: nowrap;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n        cursor: pointer;\\r\\n        font-size: 12px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-txt {\\r\\n        display: inline-block;\\r\\n        overflow: hidden;\\r\\n        vertical-align: top;\\r\\n        text-overflow: ellipsis;\\r\\n        padding: 0 5px;\\r\\n        height: 24px;\\r\\n        line-height: 24px;\\r\\n    }\\r\\n\\r\\n    .selectmenu-arrow {\\r\\n        position: absolute;\\r\\n        background-color: transparent;\\r\\n        top: 0;\\r\\n        right: 4px;\\r\\n        z-index: 0;\\r\\n        border-radius: 4px;\\r\\n        width: 20px;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .arrow-down:before {\\r\\n        margin: 0 auto;\\r\\n        margin-top: 8px;\\r\\n        width: 0;\\r\\n        height: 0;\\r\\n        display: block;\\r\\n        border-width: 4px 4px 0;\\r\\n        border-style: solid;\\r\\n        border-color: #99a2aa transparent transparent;\\r\\n        position: relative;\\r\\n        content: "";\\r\\n    }\\r\\n\\r\\n    .selectmenu-list {\\r\\n        display: none;\\r\\n        margin: 0;\\r\\n        width: 100%;\\r\\n        padding: 0;\\r\\n        max-height: 120px;\\r\\n        background-color: #fff;\\r\\n        border: 1px solid #ccd0d7;\\r\\n        box-shadow: 0 0 2px 0 #ccd0d7;\\r\\n        position: absolute;\\r\\n        left: -1px;\\r\\n        right: auto;\\r\\n        z-index: 2;\\r\\n        overflow: hidden auto;\\r\\n        white-space: nowrap;\\r\\n    }\\r\\n\\r\\n    .selectmenu:hover .selectmenu-list {\\r\\n        display: block;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row {\\r\\n        padding: 0 5px;\\r\\n        transition: background-color .3s;\\r\\n        line-height: 30px;\\r\\n        height: 30px;\\r\\n        font-size: 12px;\\r\\n        cursor: pointer;\\r\\n        color: #222;\\r\\n    }\\r\\n\\r\\n    .selectmenu-list-row:hover {\\r\\n        background-color: #f4f5f7;\\r\\n        color: #6d757a;\\r\\n    }\\r\\n</style>\\r\\n<style type="text/css">\\r\\n    ::-webkit-scrollbar {\\r\\n        width: 7px;\\r\\n        height: 7px;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-track {\\r\\n        border-radius: 4px;\\r\\n        background-color: #EEE;\\r\\n    }\\r\\n\\r\\n    ::-webkit-scrollbar-thumb {\\r\\n        border-radius: 4px;\\r\\n        background-color: #999;\\r\\n    }\\r\\n</style>';
@@ -15125,7 +15145,7 @@ var SelectMenu = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`select-\${"787e6b1"}\`) || customElements.define(\`select-\${"787e6b1"}\`, SelectMenu);
+customElements.get(\`select-\${"a55243b"}\`) || customElements.define(\`select-\${"a55243b"}\`, SelectMenu);
 
 // src/html/slider.html
 var slider_default = '<div class="block">\\r\\n    <div class="slider">\\r\\n        <div class="slider-tracker-wrp">\\r\\n            <div class="slider-tracker">\\r\\n                <div class="slider-handle">\\r\\n                    <div class="slider-hint"></div>\\r\\n                </div>\\r\\n                <div class="slider-progress"></div>\\r\\n            </div>\\r\\n        </div>\\r\\n    </div>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .block {\\r\\n        vertical-align: top;\\r\\n        display: inline-block;\\r\\n        width: 100%;\\r\\n    }\\r\\n\\r\\n    .slider {\\r\\n        width: 100%;\\r\\n        height: 13px;\\r\\n        clear: both;\\r\\n        position: relative;\\r\\n    }\\r\\n\\r\\n    .slider-tracker-wrp {\\r\\n        position: relative;\\r\\n        width: 100%;\\r\\n        height: 100%;\\r\\n        cursor: pointer;\\r\\n    }\\r\\n\\r\\n    .slider-tracker {\\r\\n        position: absolute;\\r\\n        width: 100%;\\r\\n        height: 6px;\\r\\n        left: 0;\\r\\n        border-radius: 4px;\\r\\n        top: 50%;\\r\\n        margin-top: -3px;\\r\\n        background-color: #e5e9ef;\\r\\n    }\\r\\n\\r\\n    .slider-handle {\\r\\n        position: absolute;\\r\\n        top: -4px;\\r\\n        height: 14px;\\r\\n        width: 14px;\\r\\n        border-radius: 7px;\\r\\n        cursor: pointer;\\r\\n        z-index: 1;\\r\\n        margin-left: -7px;\\r\\n        box-shadow: 0 0 3px #017cc3;\\r\\n        background-color: #fff;\\r\\n        transition: box-shadow .3s;\\r\\n    }\\r\\n\\r\\n    .slider-handle:hover {\\r\\n        box-shadow: 0 0 5px #017cc3;\\r\\n    }\\r\\n\\r\\n    .slider-hint {\\r\\n        display: none;\\r\\n        position: absolute;\\r\\n        top: -21px;\\r\\n        white-space: nowrap;\\r\\n        border-radius: 4px;\\r\\n        background-color: hsla(0, 0%, 100%, .8);\\r\\n        padding: 0 3px;\\r\\n        border: 1px solid #fafafa;\\r\\n        z-index: 1;\\r\\n        transform: translateX(-25%);\\r\\n        user-select: none;\\r\\n    }\\r\\n\\r\\n    .slider-progress {\\r\\n        width: 0;\\r\\n        height: 100%;\\r\\n        border-radius: 4px;\\r\\n        background-color: #00a1d6;\\r\\n        position: relative;\\r\\n    }\\r\\n</style>';
@@ -15298,7 +15318,7 @@ var SliderBlock = class extends HTMLElement {
     Object.entries(value).forEach((d) => this[d[0]] = d[1]);
   }
 };
-customElements.get(\`slider-\${"787e6b1"}\`) || customElements.define(\`slider-\${"787e6b1"}\`, SliderBlock);
+customElements.get(\`slider-\${"a55243b"}\`) || customElements.define(\`slider-\${"a55243b"}\`, SliderBlock);
 
 // src/html/switch.html
 var switch_default = '<div class="switch">\\r\\n    <span class="bar"></span>\\r\\n    <span class="knob">\\r\\n        <i class="circle"></i>\\r\\n    </span>\\r\\n</div>\\r\\n<style type="text/css">\\r\\n    .switch {\\r\\n        cursor: pointer;\\r\\n        display: block;\\r\\n        min-width: 34px;\\r\\n        outline: none;\\r\\n        position: relative;\\r\\n        width: 34px;\\r\\n    }\\r\\n\\r\\n    .bar {\\r\\n        background-color: rgb(189, 193, 198);\\r\\n        border-radius: 8px;\\r\\n        height: 12px;\\r\\n        left: 3px;\\r\\n        position: absolute;\\r\\n        top: 2px;\\r\\n        transition: background-color linear 80ms;\\r\\n        width: 28px;\\r\\n        z-index: 0;\\r\\n    }\\r\\n\\r\\n    .bar[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        opacity: 0.5;\\r\\n    }\\r\\n\\r\\n    .bar:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob {\\r\\n        background-color: #fff;\\r\\n        border-radius: 50%;\\r\\n        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 40%);\\r\\n        display: block;\\r\\n        height: 16px;\\r\\n        position: relative;\\r\\n        transition: transform linear 80ms, background-color linear 80ms;\\r\\n        width: 16px;\\r\\n        z-index: 1;\\r\\n    }\\r\\n\\r\\n    .knob[checked] {\\r\\n        background-color: rgb(26, 115, 232);\\r\\n        transform: translate3d(18px, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n\\r\\n    .knob i {\\r\\n        color: rgba(128, 134, 139, 15%);\\r\\n        height: 40px;\\r\\n        left: -12px;\\r\\n        pointer-events: none;\\r\\n        top: -12px;\\r\\n        transition: color linear 80ms;\\r\\n        width: 40px;\\r\\n        border-radius: 50%;\\r\\n        bottom: 0;\\r\\n        display: block;\\r\\n        overflow: hidden;\\r\\n        position: absolute;\\r\\n        right: 0;\\r\\n        transform: translate3d(0, 0, 0);\\r\\n    }\\r\\n\\r\\n    .knob i[checked] {\\r\\n        color: rgb(26, 115, 232);\\r\\n    }\\r\\n\\r\\n    .knob i:active {\\r\\n        box-shadow: 0 0 1px 1px rgba(26, 115, 232, 80%);\\r\\n    }\\r\\n</style>';
@@ -15345,7 +15365,7 @@ var SwitchButton = class extends HTMLElement {
     return this;
   }
 };
-customElements.get(\`switch-\${"787e6b1"}\`) || customElements.define(\`switch-\${"787e6b1"}\`, SwitchButton);
+customElements.get(\`switch-\${"a55243b"}\`) || customElements.define(\`switch-\${"a55243b"}\`, SwitchButton);
 
 // src/io/api-biliplus-playurl.ts
 async function apiBiliplusPlayurl(data) {
@@ -17953,7 +17973,7 @@ var Like = class extends HTMLSpanElement {
         debug.error("获取点赞情况失败", e);
       });
     }
-    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"787e6b1"}\`);
+    addCss(".ulike {cursor: pointer;}.ulike svg{vertical-align: middle;margin-right: 10px;transform: translateY(-1px);}", \`ulike\${"a55243b"}\`);
   }
   /** 更新点赞数 */
   get likes() {
@@ -17971,7 +17991,7 @@ var Like = class extends HTMLSpanElement {
     this.innerHTML = (this.liked ? svg.like : svg.dislike) + "点赞 " + unitFormat(this.number);
   }
 };
-customElements.get(\`like-\${"787e6b1"}\`) || customElements.define(\`like-\${"787e6b1"}\`, Like, { extends: "span" });
+customElements.get(\`like-\${"a55243b"}\`) || customElements.define(\`like-\${"a55243b"}\`, Like, { extends: "span" });
 
 // src/css/uplist.css
 var uplist_default = ".up-info-m .up-card-box {\\r\\n    white-space: nowrap;\\r\\n    overflow: auto;\\r\\n}\\r\\n\\r\\n.up-info-m .up-card {\\r\\n    display: inline-block;\\r\\n    margin-top: 10px;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar img {\\r\\n    cursor: pointer;\\r\\n    width: 40px;\\r\\n    height: 40px;\\r\\n    border-radius: 50%;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    position: relative;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .info-tag {\\r\\n    position: absolute;\\r\\n    background: #fff;\\r\\n    border: 1px solid #fb7299;\\r\\n    border-radius: 2px;\\r\\n    display: inline-block;\\r\\n    font-size: 12px;\\r\\n    color: #fb7299;\\r\\n    padding: 0 3px;\\r\\n    top: -10px;\\r\\n    right: -10px;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar {\\r\\n    width: 60px;\\r\\n    height: 30px;\\r\\n    display: -ms-flexbox;\\r\\n    display: flex;\\r\\n    -ms-flex-pack: center;\\r\\n    justify-content: center;\\r\\n    -ms-flex-align: start;\\r\\n    align-items: flex-start;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text {\\r\\n    font-family: PingFangSC-Regular, sans-serif;\\r\\n    line-height: 30px;\\r\\n    color: #222;\\r\\n    word-break: break-all;\\r\\n    overflow: hidden;\\r\\n    text-overflow: ellipsis;\\r\\n    display: -webkit-box;\\r\\n    -webkit-line-clamp: 2;\\r\\n    -webkit-box-orient: vertical;\\r\\n    white-space: nowrap;\\r\\n}\\r\\n\\r\\n.up-info-m .avatar .name-text.is-vip,\\r\\n.up-info-m .avatar .name-text:hover {\\r\\n    color: #fb7299;\\r\\n}\\r\\n\\r\\n.up-info-m .title {\\r\\n    display: block;\\r\\n    font-size: 14px;\\r\\n    margin-right: 80px;\\r\\n    color: #525659;\\r\\n    overflow: hidden;\\r\\n    height: 24px;\\r\\n    font-weight: 400;\\r\\n    padding: 8px 0;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar {\\r\\n    width: 7px;\\r\\n    height: 7px;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-track {\\r\\n    border-radius: 4px;\\r\\n    background-color: #EEE;\\r\\n}\\r\\n\\r\\n.up-card-box::-webkit-scrollbar-thumb {\\r\\n    border-radius: 4px;\\r\\n    background-color: #999;\\r\\n}";
@@ -25954,7 +25974,7 @@ var PageAV = class extends Page {
         const obj = urlObj(r);
         if (obj.aid) {
           this.aid = obj.aid;
-          this.getVideoInfo(call);
+          this.getVideoInfo().then((d) => call(d)).catch(() => call(res));
           return true;
         }
       } else {
@@ -25971,51 +25991,54 @@ var PageAV = class extends Page {
     }, false);
   }
   /** 通过其他接口获取aid数据 */
-  async getVideoInfo(callback) {
+  async getVideoInfo() {
+    const data = [\`av\${this.aid}可能无效，尝试其他接口~\`];
+    const toast = this.BLOD.toast.toast(0, "info", ...data);
     try {
-      const data = [\`av\${this.aid}可能无效，尝试其他接口~\`];
-      const toast = this.BLOD.toast.toast(0, "info", ...data);
-      apiArticleCards({ av: this.aid }).then((d) => {
-        if (d[\`av\${this.aid}\`]) {
-          if (d[\`av\${this.aid}\`].redirect_url) {
-            data.push(\`bangumi重定向：\${d[\`av\${this.aid}\`].redirect_url}\`);
-            toast.data = data;
-            toast.type = "warning";
-            callback(new ApiViewDetail());
-            this.BLOD.urlCleaner.updateLocation(d[\`av\${this.aid}\`].redirect_url);
-            new PageBangumi(this.BLOD);
-            this.destroy = true;
-            return;
-          }
-        }
-        new apiBiliplusView(this.aid).toDetail().then((d2) => {
-          if (d2?.data.View.season) {
-            data.push(\`bangumi重定向：\${d2.data.View.season.ogv_play_url}\`);
-            toast.data = data;
-            toast.type = "warning";
-            d2.data.View.season = void 0;
-            callback(new ApiViewDetail());
-            this.BLOD.urlCleaner.updateLocation(d2.data.View.season.ogv_play_url);
-            new PageBangumi(this.BLOD);
-            this.destroy = true;
-            return;
-          }
-          callback(d2);
-          this.BLOD.videoInfo.aidDatail(d2.data.View);
-          data.push("获取缓存数据成功！");
+      const card = await apiArticleCards({ av: this.aid });
+      if (card[\`av\${this.aid}\`]) {
+        if (card[\`av\${this.aid}\`].redirect_url) {
+          data.push(\`bangumi重定向：\${card[\`av\${this.aid}\`].redirect_url}\`);
           toast.data = data;
-          toast.type = "success";
-        });
-      }).catch((e) => {
-        debug.error("获取数据出错！", e);
-        data.push("获取数据出错！", e);
+          toast.type = "warning";
+          setTimeout(() => {
+            this.BLOD.urlCleaner.updateLocation(card[\`av\${this.aid}\`].redirect_url);
+            new PageBangumi(this.BLOD);
+            this.destroy = true;
+            toast.delay = 4;
+          }, 100);
+          return new ApiViewDetail();
+        }
+      }
+      const view = await new apiBiliplusView(this.aid).toDetail();
+      if (view?.data.View.season) {
+        data.push(\`bangumi重定向：\${view.data.View.season.ogv_play_url}\`);
         toast.data = data;
-        toast.type = "error";
-      }).finally(() => {
+        toast.type = "warning";
+        view.data.View.season = void 0;
+        setTimeout(() => {
+          this.BLOD.urlCleaner.updateLocation(card[\`av\${this.aid}\`].redirect_url);
+          new PageBangumi(this.BLOD);
+          this.destroy = true;
+          toast.delay = 4;
+        }, 100);
+        return new ApiViewDetail();
+      }
+      setTimeout(() => {
+        this.BLOD.videoInfo.aidDatail(view.data.View);
+        data.push("获取缓存数据成功！但这可能是个失效视频！");
+        toast.data = data;
+        toast.type = "success";
         toast.delay = 4;
-      });
+      }, 100);
+      return view;
     } catch (e) {
-      debug.error(e);
+      debug.error("获取数据出错！", e);
+      data.push("获取数据出错！", e);
+      toast.data = data;
+      toast.type = "error";
+      toast.delay = 4;
+      throw e;
     }
   }
   /** 合作UP */
