@@ -36,11 +36,12 @@ export class Ef2 {
     static file(data: EF2Data[], fileName?: string) {
         const result: string[] = [];
         data.forEach(d => {
-            const arr: string[] = [];
+            // 原生关键词排在占位
+            const arr = ['<', '', '', '', ''];
             Object.entries(d).forEach(d => {
                 switch (<keyof EF2Data>d[0]) {
                     case 'cookie':
-                        arr.push(`cookie: ${d[1]}`);
+                        arr[4] = `cookie: ${d[1]}`;
                         break;
                     case 'delay':
                         break;
@@ -59,16 +60,16 @@ export class Ef2 {
                         arr.push(`postdata: ${d[1]}`);
                         break;
                     case 'referer':
-                        arr.push(`referer: ${d[1]}`);
+                        arr[2] = `referer: ${d[1]}`;
                         break;
                     case 'silence':
                         break;
                     case 'url':
                         d[1].startsWith("//") && (d[1] = 'https:' + d[1]);
-                        arr.unshift(d[1]);
+                        arr[1] = d[1];
                         break;
                     case 'userAgent':
-                        arr.push(`User-Agent: ${d[1]}`);
+                        arr[3] = `User-Agent: ${d[1]}`;
                         break;
                     case 'userName':
                         arr.push(`username: ${d[1]}`);
@@ -77,16 +78,19 @@ export class Ef2 {
                         break;
                 }
             });
-            arr.unshift('<');
             arr.push('>');
-            result.push(...arr);
+            arr.forEach(d => {
+                d && result.push(d);
+            });
         });
+        result.push('');
         saveAs(result.join('\r\n'), fileName || `${data[0].out || getMetux()}.ef2`)
     }
     /** 生成ef2协议 */
     static encode(data: EF2Data) {
         const arr: string[] = [];
         Object.entries(data).forEach(d => {
+            (typeof d[1] === 'string' && (d[1].startsWith('"'))) || (d[1] = `"${d[1]}"`);
             switch (<keyof EF2Data>d[0]) {
                 case 'cookie':
                     arr.push('-c', d[1]);
