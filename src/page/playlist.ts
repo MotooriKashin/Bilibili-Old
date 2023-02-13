@@ -1,8 +1,11 @@
-import { BLOD } from "../bilibili-old";
+import { BLOD } from "../core/bilibili-old";
 import { Comment } from "../core/comment";
 import { switchVideo } from "../core/observer";
-import { Player } from "../core/player";
+import { player } from "../core/player";
 import { Like } from "../core/ui/like";
+import { urlCleaner } from "../core/url";
+import { user } from "../core/user";
+import { videoInfo } from "../core/video-info";
 import html from '../html/playlist.html';
 import { IAidDatail, IAidInfo, jsonCheck } from "../io/api";
 import toview from '../json/toview.json';
@@ -24,10 +27,10 @@ export class PagePlaylist extends Page {
     /** 是否播单 */
     protected isPl = false;
     protected like: Like;
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
-        this.like = new Like(this.BLOD);
-        new Comment(BLOD);
+        this.like = new Like();
+        new Comment();
         this.init();
         this.EmbedPlayer();
         this.toviewHook();
@@ -40,7 +43,7 @@ export class PagePlaylist extends Page {
     }
     /** 初始化 */
     protected init() {
-        const path = this.BLOD.path.at(-1);
+        const path = BLOD.path.at(-1);
         this.isPl = Boolean(path?.startsWith("pl"));
         path?.replace(/\d+/, d => this.pl = <any>d);
         // 区分medialist类型
@@ -58,13 +61,13 @@ export class PagePlaylist extends Page {
             }
         }
         // 伪装页面
-        this.isPl || this.BLOD.urlCleaner.updateLocation(objUrl(`https://www.bilibili.com/playlist/video/pl${this.pl}`, this.route));
+        this.isPl || urlCleaner.updateLocation(objUrl(`https://www.bilibili.com/playlist/video/pl${this.pl}`, this.route));
     }
     /** 过滤播放启动参数 */
     protected EmbedPlayer() {
         // 伪造的播单页面的启动命令不对，修改后代发
         if (!this.isPl) {
-            Player.addModifyArgument(args => {
+            player.addModifyArgument(args => {
                 const obj = urlObj(`?${args[2]}`);
                 delete obj.playlist;
                 obj.playlistType = this.type;
@@ -78,7 +81,7 @@ export class PagePlaylist extends Page {
             xhrHook('x/v2/medialist/resource/list?', undefined, async res => {
                 const data = jsonCheck(res.response);
                 data.data.media_list.forEach((d: IAidInfo) => {
-                    this.BLOD.videoInfo.aidInfo(d);
+                    videoInfo.aidInfo(d);
                 });
             })
         }
@@ -87,14 +90,14 @@ export class PagePlaylist extends Page {
     protected toviewHook() {
         jsonpHook.async("toview", undefined, async () => {
             // 撤销伪装
-            this.BLOD.urlCleaner.updateLocation(this.BLOD.path.join('/'));
+            urlCleaner.updateLocation(BLOD.path.join('/'));
             return { code: 0, data: toview, message: "0", ttl: 1 }
         });
-        this.BLOD.videoInfo.toview(toview);
+        videoInfo.toview(toview);
     }
     /** 跳过充电鸣谢 */
     protected elecShow() {
-        if (this.BLOD.status.elecShow) {
+        if (user.userStatus!.elecShow) {
             jsonpHook("api.bilibili.com/x/web-interface/elec/show", undefined, res => {
                 try {
                     res.data.av_list = [];
@@ -107,11 +110,11 @@ export class PagePlaylist extends Page {
     }
     /** 伪造的播单页不应有识别参数 */
     protected switchVideo = () => {
-        this.BLOD.urlCleaner.updateLocation(this.BLOD.path.join('/'));
+        urlCleaner.updateLocation(BLOD.path.join('/'));
     }
     /** 点赞功能 */
     protected enLike() {
-        if (this.BLOD.status.like) {
+        if (user.userStatus!.like) {
             poll(() => document.querySelector<HTMLSpanElement>('#viewbox_report > div.number > span.u.coin'), d => {
                 d.parentElement?.insertBefore(this.like, d);
                 addCss('.video-info-m .number .ulike {margin-left: 15px;margin-right: 5px;}', 'ulike-playlist');
@@ -119,7 +122,7 @@ export class PagePlaylist extends Page {
             jsonpHook('x/web-interface/view?', undefined, d => {
                 setTimeout(() => {
                     const data: IAidDatail = jsonCheck(d).data;
-                    this.BLOD.aid = data.aid;
+                    BLOD.aid = data.aid;
                     this.like.likes = data.stat.like;
                 });
                 return d;

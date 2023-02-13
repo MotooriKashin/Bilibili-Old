@@ -1,4 +1,4 @@
-export class Cdn {
+class Cdn {
     /**
      * 
      * @param host CDN名
@@ -26,3 +26,4 @@ export class Cdn {
         protocol && (this.protocol = protocol);
     }
 }
+export const cdn = new Cdn();

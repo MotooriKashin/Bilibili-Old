@@ -3,7 +3,7 @@ import { executeScript } from "./utils/executescript";
 import { insertCSS } from "./utils/insertcss";
 import { sendSessionRules } from "./utils/session-rule";
 
-executeScript('main.js');
+executeScript('index.js');
 
 window.addEventListener(_MUTEX_, ev => {
     if (typeof (<CustomEvent>ev).detail.data === "object") {

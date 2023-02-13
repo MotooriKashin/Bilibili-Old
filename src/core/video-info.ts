@@ -1,7 +1,7 @@
-import { BLOD } from "../bilibili-old";
 import { IAidDatail, IAidInfo, IStat } from "../io/api";
 import { IBangumiEpisode, IBangumiSeasonResponse } from "../io/api-bangumi-season";
 import toview from '../json/toview.json';
+import { BLOD } from "./bilibili-old";
 
 
 interface MediaImage {
@@ -15,11 +15,11 @@ interface ICid {
     title: string;
     artwork: MediaImage[];
 }
-export class VideoInfo {
+class VideoInfo {
     private cids: Record<number, ICid> = {};
     private stats: Record<number, IStat> = {};
     get metadata() {
-        const cid = this.BLOD.cid;
+        const cid = BLOD.cid;
         return cid ? this.cids[cid] : undefined
     }
     get album() {
@@ -35,10 +35,9 @@ export class VideoInfo {
         return this.metadata?.artwork;
     }
     get stat() {
-        const aid = this.BLOD.aid;
+        const aid = BLOD.aid;
         return aid ? this.stats[aid] : undefined;
     }
-    constructor(private BLOD: BLOD) { }
     /** 数据变动回调栈 */
     private callbacks: ((value: VideoInfo) => void)[] = [];
     /**
@@ -145,3 +144,5 @@ export class VideoInfo {
         }
     }
 }
+/** 视频信息组件 */
+export const videoInfo = new VideoInfo();

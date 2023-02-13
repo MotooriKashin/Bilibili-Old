@@ -1,10 +1,15 @@
-import { BLOD } from "../bilibili-old";
 import { debug } from "../utils/debug";
 import { propertyHook } from "../utils/hook/method";
 import { poll } from "../utils/poll";
 import { svg } from "../utils/svg";
 import { AccessKey } from "./accesskey";
+import { BLOD } from "./bilibili-old";
+import { Chain } from "./chain";
+import { danmaku } from "./danmaku";
+import { download } from "./download";
 import { Aria2 } from "./download/aria2";
+import { player } from "./player";
+import { toast } from "./toast";
 import { alert } from "./ui/alert";
 import { Desc } from "./ui/desc";
 import { BilioldEntry } from "./ui/entry";
@@ -17,6 +22,7 @@ import { IInputAreaValue, InputArea } from "./ui/utils/input";
 import { ISelectMenuValue, SelectMenu } from "./ui/utils/select";
 import { ISliderBlockValue, SliderBlock } from "./ui/utils/slider";
 import { SwitchButton } from "./ui/utils/switch";
+import { user } from "./user";
 import { userStatus } from "./userstatus";
 import { UPOS } from "./videolimit";
 
@@ -35,11 +41,11 @@ export class UI {
     protected interface = new BiliOldInterface();
     protected menuitem: Record<keyof typeof Menus, Menuitem> = <any>{};
     protected settingItem: Record<keyof typeof userStatus, SettingItem> = <any>{}
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         this.initMenu();
         this.initSettings();
         poll(() => document.readyState === 'complete', () => {
-            this.entry.type = this.BLOD.status.uiEntryType;
+            this.entry.type = user.userStatus!.uiEntryType;
             document.body.appendChild(this.entry);
             this.updateCheck();
         }, 1e3, 0);
@@ -50,10 +56,10 @@ export class UI {
     }
     /** 检查播放器脚本更新 */
     protected async updateCheck() {
-        if (_UserScript_ && this.BLOD.status.bilibiliplayer && this.BLOD.status.checkUpdate) {
-            const version = await this.BLOD.GM.getValue('version');
-            if (version !== this.BLOD.version) {
-                this.BLOD.loadplayer(true);
+        if (_UserScript_ && user.userStatus!.bilibiliplayer && user.userStatus!.checkUpdate) {
+            const version = await GM.getValue('version');
+            if (version !== BLOD.version) {
+                player.loadplayer(true);
             }
         }
     }
@@ -81,7 +87,7 @@ export class UI {
         this.menuitem.common.addSetting([
             this.switch('development', '开发者模式', '暴露调试接口到控制台', svg.warn, v => {
                 if (v) {
-                    propertyHook(window, 'BLOD', this.BLOD);
+                    propertyHook(window, 'BLOD', BLOD);
                 } else {
                     Reflect.deleteProperty(window, 'BLOD');
                 }
@@ -97,15 +103,15 @@ export class UI {
                 ], '备份还原', [
                     {
                         text: '默认',
-                        callback: () => this.BLOD.user.restoreUserStatus()
+                        callback: () => user.restoreUserStatus()
                     },
                     {
                         text: '导出',
-                        callback: () => this.BLOD.user.outputUserStatus()
+                        callback: () => user.outputUserStatus()
                     },
                     {
                         text: '导入',
-                        callback: () => this.BLOD.user.inputUserStatus()
+                        callback: () => user.inputUserStatus()
                     }
                 ])
             }, '备份/恢复', '管理', svg.blind),
@@ -120,16 +126,16 @@ export class UI {
         ]);
         this.menuitem.common.addCard('toastr');
         this.menuitem.common.addSetting([
-            this.switch(<'toast'>'toast.disabled', '禁用', '<a href="https://github.com/CodeSeven/toastr" target="_blank">toastr</a>', undefined, v => this.BLOD.toast.disabled = v),
-            this.switch(<'toast'>'toast.rtl', '镜像', '左右翻转', undefined, v => this.BLOD.toast.rtl = v),
+            this.switch(<'toast'>'toast.disabled', '禁用', '<a href="https://github.com/CodeSeven/toastr" target="_blank">toastr</a>', undefined, v => toast.disabled = v),
+            this.switch(<'toast'>'toast.rtl', '镜像', '左右翻转', undefined, v => toast.rtl = v),
             this.select(<'toast'>'toast.position', '位置', {
                 candidate: ['top-left', 'top-center', 'top-right', 'top-full-width', 'bottom-left', 'bottom-right', 'bottom-center', 'bottom-full-width']
-            }, '相对屏幕', undefined, v => this.BLOD.toast.position = <'top-right'>v),
+            }, '相对屏幕', undefined, v => toast.position = <'top-right'>v),
             this.slider(<'toast'>'toast.delay', '时长', {
                 min: 2,
                 max: 60,
                 precision: 58
-            }, '单位：/秒', undefined, v => this.BLOD.toast.delay = v),
+            }, '单位：/秒', undefined, v => toast.delay = v),
             this.select(<'toast'>'toast.type', '类型', {
                 candidate: ["info", "success", "warning", "error"],
                 styles: {
@@ -143,9 +149,9 @@ export class UI {
                 candidate: ["Hello World!"]
             }, v => {
                 try {
-                    this.BLOD.toast.toast(this.BLOD.status.toast.delay, (<any>this).BLOD.status.toast.type, v);
+                    toast.toast(user.userStatus!.toast.delay, (<any>this).BLOD.status.toast.type, v);
                 } catch (e) {
-                    this.BLOD.toast.error('非常抱歉！发生了错误', e);
+                    toast.error('非常抱歉！发生了错误', e);
                 }
             }, '请输入一句话~')
         ], 1);
@@ -158,7 +164,7 @@ export class UI {
                 prop: { type: "text", readonly: "readonly" }
             }, '有效期一般为一个月', undefined, undefined, '脚本不会代为检查鉴权是否失效，请失效时自行重新授权。'),
             this.button(<'accessKey'>'accessKey.action', '进行授权', () => {
-                new AccessKey(this.BLOD);
+                new AccessKey();
             }, '授权脚本使用登录鉴权', '授权', svg.warn)
         ], 2);
         if (_UserScript_) {
@@ -189,16 +195,16 @@ export class UI {
             this.switch('dmwrap', '弹幕提权', '允许普权弹幕排版', undefined, undefined, '上古时代存在大量使用换行及空格等特殊字符来提权以达到高级弹幕效果的作品，在html5时代无法正常显示，启用此项将恢复普权弹幕排版效果。尽情享受弹幕艺术。【重构播放器】默认启用且不受此项影响。'),
             this.select('dmExtension', '弹幕格式', {
                 candidate: ['xml', 'json']
-            }, '拓展名', undefined, undefined, '【下载弹幕】及【本地弹幕】使用的弹幕格式，xml是传统格式，json是protobuf弹幕实际格式，前者一般拥有更小的体积，只是可能丢失彩蛋彩蛋及部分非法字符。'),
+            }, '拓展名', undefined, undefined, '【下载弹幕】及【本地弹幕】使用的弹幕格式，xml是传统格式，json是protobuf弹幕实际格式，前者一般拥有更小的体积，只是可能丢失彩蛋及部分非法字符。'),
             this.switch('dmContact', '合并弹幕', '本地弹幕或在线弹幕', undefined, undefined, '选择【本地弹幕】或【在线弹幕】是否与播放器内已有弹幕合并。'),
             this.inputCustom(<'dmContact'>'onlineDm', '在线弹幕', {
                 prop: { placeholder: 'ss3398' }
             }, v => {
-                v && typeof v === 'string' && this.BLOD.danmaku.onlineDm(v);
+                v && typeof v === 'string' && danmaku.onlineDm(v);
             }, '从其他视频加载弹幕', undefined, '从其他B站视频加载弹幕，可以输入关键url或者查询参数，如：<br/>av806828803<br/>av806828803?p=1<br/>aid=806828803&p=1<br/>ss3398<br/>ep84795<br/>注意：【重构播放器】此处加载的弹幕会替换【下载弹幕】的内容！'),
             this.button(<'dmContact'>'localDm', '本地弹幕', () => {
-                this.BLOD.status.dmExtension === 'json' ? this.BLOD.danmaku.localDmJson() : this.BLOD.danmaku.localDmXml();
-            }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，拓展名.xml，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。'),
+                user.userStatus!.dmExtension === 'json' ? danmaku.localDmJson() : danmaku.localDmXml();
+            }, '加载本地磁盘上的弹幕', '打开', undefined, '从本地磁盘上加载弹幕文件，来源可以是下载功能下载的弹幕，拓展名.xml或.json，编码utf-8。【合并弹幕】项能选择是否与播放器内已有弹幕合并。'),
             this.switch('danmakuProtect', '弹幕保护计划', '<a href="https://github.com/MotooriKashin/Bilibili-Old/blob/master/danmaku/README.md" target="_blank">查看目录</a>', undefined, undefined, '上古弹幕作品很多高级弹幕都丢失了，幸好本项目备份了一些。启用本功能将自动识别对应作品并使用【在线弹幕】功能加载备份的弹幕，找回曾经的感动。<br>※部分4:3视频请以播放器原始形态观看获取最佳体验，不推荐全屏。')
         ])
     }
@@ -225,10 +231,10 @@ export class UI {
             this.switch('lostVideo', '失效视频', '尝试获取失效视频信息', undefined, undefined, '修复收藏的失效视频的封面和标题信息，并以红色删除线标记。使用缓存数据恢复的页面重构av页默认开启且不受此项影响，其中部分上古失效视频甚至还保留了评论区。'),
             this.switch('disableSleepChcek', '禁用直播间挂机检测', '就喜欢挂后台听个响不行吗！'),
             this.switch('show1080p', '不登录高画质支持', 'dash模式限定', undefined, v => {
-                if (v && !this.BLOD.status.accessKey.token) {
-                    this.BLOD.toast.warning('需要启用【账户授权】功能！');
+                if (v && !user.userStatus!.accessKey.token) {
+                    toast.warning('需要启用【账户授权】功能！');
                     alert('需要启用【账户授权】功能！是否前往？', '【账户授权】', [{ text: '前往【账户授权】', callback: () => this.show(<'accessKey'>'accessKey.token') }]);
-                    this.BLOD.status.show1080p = false;
+                    user.userStatus!.show1080p = false;
                 }
             }, 'B站砍掉了不登录能获取的画质，最多只能获取480P。您可以启用【账户授权】功能，授权本脚本使用您的登录信息，如此您退出登录后依然能获取高画质视频流。本功能只会在请求播放源时添加上登录鉴权，不影响页面其他功能的未登录状态，B站也不会记录您的播放记录。本功能适用于那些经常用浏览器无痕模式上B站的用户。若<strong>非常抱歉</strong>报错请关闭本选项！'),
             this.switch('timeLine', '港澳台新番时间表', '填充首页番剧板块', undefined, undefined, '在首页番剧板块中填充港澳台最新番剧更新信息。只提取了最新的30条番剧信息，所以数据中可能不会包含过于久远的更新。本功能只能显示已更新的番剧信息，而不能作为即将更新番剧的预测。'),
@@ -245,7 +251,7 @@ export class UI {
                 value: 1,
                 solid: true
             }, e => {
-                this.BLOD.player.playbackRate(e);
+                player.playbackRate(e);
             }, '播放速率调整拓展', undefined, '调节当前HTML5播放器速率，拥有比播放器自带的更宽的调整范围。注意：未调整前的当前速率默认为1。'),
             this.switch('webRTC', 'WebRTC', '<strong>关闭</strong>以禁用p2p共享带宽', undefined, undefined, 'B站使用【WebRTC】实现p2p共享，等同于将您的设备变成了B站的一个视频服务器节点，别人观看相同的视频或直播便可以从您的设备取流而不必访问B站固有的服务器。脚本默认<strong>关闭</strong>了此功能，以减轻小水管的带宽压力，如果您的带宽允许，还是推荐开启，人人为我，我为人人。bilibili~乾杯 - ( ゜-゜)つロ！'),
             this.switch('elecShow', '充电鸣谢', '允许视频结尾的充电鸣谢'),
@@ -256,10 +262,10 @@ export class UI {
         this.menuitem.player.addSetting([
             this.switch(<'automate'>'automate.danmakuFirst', '展开弹幕列表', '而不是推荐视频', undefined, undefined, '载入播放器时右侧面板默认切换到弹幕列表。'),
             this.switch(<'automate'>'automate.showBofqi', '滚动到播放器', '载入视频时', undefined, undefined, '载入播放器时自动滚动到播放器。'),
-            this.switch(<'automate'>'automate.screenWide', '宽屏模式', '隐藏播放器右侧面板', undefined, v => v && (this.BLOD.status.automate.webFullScreen = false), '载入播放器时自动启用宽屏模式。（与网页全屏二选一）'),
+            this.switch(<'automate'>'automate.screenWide', '宽屏模式', '隐藏播放器右侧面板', undefined, v => v && (user.userStatus!.automate.webFullScreen = false), '载入播放器时自动启用宽屏模式。（与网页全屏二选一）'),
             this.switch(<'automate'>'automate.noDanmaku', '无弹幕模式', '默认关闭弹幕', undefined, undefined, '载入播放器时默认关闭弹幕。'),
             this.switch(<'automate'>'automate.autoPlay', '自动播放', '播放器初始化完成时', undefined, undefined, '播放器加载完成自动播放。'),
-            this.switch(<'automate'>'automate.webFullScreen', '网页全屏模式', '载入视频时', undefined, v => v && (this.BLOD.status.automate.screenWide = false), '载入播放器时自动网页全屏。（与宽屏模式二选一）'),
+            this.switch(<'automate'>'automate.webFullScreen', '网页全屏模式', '载入视频时', undefined, v => v && (user.userStatus!.automate.screenWide = false), '载入播放器时自动网页全屏。（与宽屏模式二选一）'),
             this.switch(<'automate'>'automate.videospeed', '记忆播放速率', '永久继承播放速率设定', undefined, undefined, '默认的记忆播放速率记忆仅同一个网页标签页有效，开启后将代为记忆固定下来。'),
         ], 1);
         this.menuitem.player.addCard('限制视频');
@@ -269,11 +275,11 @@ export class UI {
                 candidate: ['内置', '自定义']
             }, '<strong>自定义</strong>模式须要填写下面的服务器', undefined, v => {
                 if (v === '自定义') {
-                    if (!this.BLOD.status.videoLimit.cn && !this.BLOD.status.videoLimit.hk && !this.BLOD.status.videoLimit.tw) {
-                        this.BLOD.toast.warning('请至少填选以下代理服务器中的一下再选择！', '服务器请自行搭建或参考【公共反代服务器】');
-                        this.BLOD.status.videoLimit.server = '内置';
+                    if (!user.userStatus!.videoLimit.cn && !user.userStatus!.videoLimit.hk && !user.userStatus!.videoLimit.tw) {
+                        toast.warning('请至少填选以下代理服务器中的一下再选择！', '服务器请自行搭建或参考【公共反代服务器】');
+                        user.userStatus!.videoLimit.server = '内置';
                         alert('<a href="https://github.com/yujincheng08/BiliRoaming/wiki/%E5%85%AC%E5%85%B1%E8%A7%A3%E6%9E%90%E6%9C%8D%E5%8A%A1%E5%99%A8" target="_blank">https://github.com/yujincheng08/BiliRoaming/</a>', '公共反代服务器');
-                    } else if (!this.BLOD.status.accessKey.token) {
+                    } else if (!user.userStatus!.accessKey.token) {
                         alert([
                             '【公共反代服务器】一般都要求识别您的登录身份才能正常登录',
                             '点击【授权】将跳转到账户授权页面，点击【取消】或其他区域返回',
@@ -326,28 +332,28 @@ export class UI {
     protected initSettingDownload() {
         this.menuitem.download.addSetting([
             this.button(<'aria2'>'download', '下载视频', () => {
-                this.BLOD.download.default();
+                download.default();
             }, '当前视频', '视频', undefined, '根据当前设置下载当前网页（顶层）的视频，在页面底部列出所有可用下载源。仅在视频播放页可用。'),
             this.button(<'aria2'>'downloadDm', '下载弹幕', () => {
-                this.BLOD.danmaku.download();
+                danmaku.download();
             }, '当前弹幕', '弹幕', undefined, '下载当前视频的弹幕，你可以在【弹幕格式】里选择要保存的格式，详见对应设置项说明。文件名格式为“视频标题(分P标题).扩展名”或者“aid.cid.扩展名”。'),
             this.button(<'aria2'>'downloadImg', '下载图片', () => {
-                this.BLOD.download.image();
+                download.image();
             }, '当前封面', '图片', undefined, '下载当前封面，如果有其他特殊图片，如专栏正文图片，也会一并显示。请右键对应的<strong>图片另存为</strong>。'),
             this.switch('downloadButton', '下载按钮', '播放器右侧', undefined, undefined, '在旧版播放器右侧添加下载按钮，呼出并滚动到下载设置界面，以方便快捷下载。'),
-            this.chockboxs('downloadType', '请求的文件类型', ['mp4', 'dash', 'flv'], '视频封装格式', undefined, () => this.BLOD.download.destory(), '勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。'),
+            this.chockboxs('downloadType', '请求的文件类型', ['mp4', 'dash', 'flv'], '视频封装格式', undefined, () => download.destory(), '勾选视频的封装类型，具体能不能获取到两说。封装类型≠编码类型：①mp4封装，视频编码avc+音频编码aac，画质上限1080P。②flv封装，编码同mp4，但可能切分成多个分段，须手动合并。③dash，未封装的视频轨和音频轨，以编码格式分类，aac为音频轨（含flac、杜比全景声），avc、hev和av1为视频轨（任选其一即可），须下载音视频轨各一条后手动封装为一个视频文件。另外【解除区域限制】功能获取到的下载源不受本项限制。<br>※ 2022年11月2日以后的视频已经没有flv封装。'),
             this.switch('TVresource', '请求tv端视频源', '无水印', undefined, e => {
                 e && alert('下载TV源必须将【referer】置空，否则会403（无权访问）！另外浏览器不支持配置UA和referer，请更换【下载方式】！', '403警告', [
                     {
                         text: '置空referer',
-                        callback: () => this.BLOD.status.referer = ''
+                        callback: () => user.userStatus!.referer = ''
                     }
                 ])
-                this.BLOD.download.destory()
+                download.destory()
             }, '请求TV端下载源，唯一的优势是可能无Bilibili水印。注意：①B站tv端大会员不通用，所以可能无法获取到大会员视频或画质。②需要进行【账户授权】，否则只能以游客身份获取下载数据。③TV源要求特定的UA且不能发送referer，基本无法通过浏览器直接下载（403无权访问），请选择其他下载工具。④mp4封装的并非tv源。'),
             this.select('downloadQn', '画质', {
                 candidate: ["0", "15", "16", "32", "48", "64", "74", "80", "112", "116", "120", "125", "126", "127"]
-            }, 'flv限定', undefined, () => this.BLOD.download.destory(), '画质参数，只针对flv封装。mp4封装没得选，dash则由于特性会一次性提供所有画质选项。'),
+            }, 'flv限定', undefined, () => download.destory(), '画质参数，只针对flv封装。mp4封装没得选，dash则由于特性会一次性提供所有画质选项。'),
             this.select('downloadMethod', '下载方式', {
                 candidate: ['浏览器', 'IDM', 'ef2', 'aria2', 'aria2rpc']
             }, '浏览器或第三方工具', undefined, e => {
@@ -392,11 +398,11 @@ export class UI {
                 v && alert('您勾选了下载TV源，根据经验必须将referer置空，不然会触发403（无权访问）！是否撤销输入将referer置空？还是取消勾选tv源？', '设置冲突', [
                     {
                         text: '置空referer',
-                        callback: () => this.BLOD.status.referer = ''
+                        callback: () => user.userStatus!.referer = ''
                     },
                     {
                         text: '取消勾选tv源',
-                        callback: () => this.BLOD.status.TVresource = false
+                        callback: () => user.userStatus!.TVresource = false
                     }
                 ])
             }, '下载时发送给服务器的标志之一，鉴权关键参数之一，无效的User-Agent将导致403无权访问。此项在网页端必须存在，而且一般为主站域名，但是<strong>TV、APP等源此项必须为空！</strong>'),
@@ -427,21 +433,21 @@ export class UI {
             }, '单位：/MB', undefined, undefined, '如果一个文件有多个下载源，那么此项会间接决定使用几个下载源。一旦要下载的文件不小于此项的2倍，aria2便会同时尝试连接多个下载源。这也是提高下载速率的有效方法。注意：某种意义上此项是越小越好，原因不言而喻。'),
             this.button(<'aria2'>'aria2.test', '测试RPC连接', () => {
                 const data = ['正在测试RPC连接~'];
-                const toast = this.BLOD.toast.toast(0, 'info', ...data);
+                const tst = toast.toast(0, 'info', ...data);
                 new Aria2().getVersion()
                     .then(d => {
-                        toast.type = 'success';
+                        tst.type = 'success';
                         data.push(`-------aria2 v${d.version}-------`, ...d.enabledFeatures);
-                        toast.data = data;
+                        tst.data = data;
                     })
                     .catch(e => {
-                        toast.type = 'error';
+                        tst.type = 'error';
                         data.push('RPC链接失败 ಥ_ಥ', e);
                         debug.error('RPC链接失败 ಥ_ಥ', e);
-                        toast.data = data;
+                        tst.data = data;
                     })
                     .finally(() => {
-                        toast.delay = 4;
+                        tst.delay = 4;
                     });
             }, '获取aria2信息', 'ping', undefined, '请确定正确配置并启用了aria2的RPC服务器。')
         ], 1);
@@ -466,14 +472,14 @@ export class UI {
         const arr = id.split('.');
         let looping = false;
         item.init(arr.join(''), label, sub, svg);
-        button.update(this.BLOD.getStatus(id));
+        button.update(Chain.getStatus(id));
         button.addEventListener('change', () => {
             looping = true;
-            this.BLOD.setStatus(id, button.value);
+            Chain.setStatus(id, button.value);
             callback && callback(button.value);
         });
-        this.BLOD.bindStatusChange(<'toast'>arr.shift(), v => {
-            looping || button.update(this.BLOD.getStatus(arr.join('.'), v));
+        user.bindChange(<'toast'>arr.shift(), v => {
+            looping || button.update(Chain.getStatus(arr.join('.'), v));
             looping = false;
         });
         item.value(button);
@@ -497,15 +503,15 @@ export class UI {
         const arr = id.split('.');
         let looping = false;
         item.init(arr.join(''), label, sub, svg);
-        value.value = this.BLOD.getStatus(id);
+        value.value = Chain.getStatus(id);
         select.update(value);
         select.addEventListener('change', () => {
             looping = true;
-            this.BLOD.setStatus(id, select.value);
+            Chain.setStatus(id, select.value);
             callback && callback(select.value);
         });
-        this.BLOD.bindStatusChange(<'toast'>arr.shift(), v => {
-            looping || (select.value = this.BLOD.getStatus(arr.join('.'), v));
+        user.bindChange(<'toast'>arr.shift(), v => {
+            looping || (select.value = Chain.getStatus(arr.join('.'), v));
             looping = false;
         });
         item.value(select);
@@ -529,15 +535,15 @@ export class UI {
         const arr = id.split('.');
         let looping = false;
         item.init(arr.join(''), label, sub, svg);
-        value.value = this.BLOD.getStatus(id);
+        value.value = Chain.getStatus(id);
         slider.update(value);
         slider.addEventListener('change', () => {
             looping = true
-            this.BLOD.setStatus(id, slider.value);
+            Chain.setStatus(id, slider.value);
             callback && callback(slider.value);
         });
-        this.BLOD.bindStatusChange(<'toast'>arr.shift(), v => {
-            looping || (slider.value = this.BLOD.getStatus(arr.join('.'), v));
+        user.bindChange(<'toast'>arr.shift(), v => {
+            looping || (slider.value = Chain.getStatus(arr.join('.'), v));
             looping = false;
         });
         item.value(slider);
@@ -607,15 +613,15 @@ export class UI {
         const arr = id.split('.');
         let looping = false;
         item.init(arr.join(''), label, sub, svg);
-        value.value = this.BLOD.getStatus(id);
+        value.value = Chain.getStatus(id);
         input.update(value);
         input.addEventListener('change', () => {
             looping = true
-            this.BLOD.setStatus(id, input.value);
+            Chain.setStatus(id, input.value);
             callback && callback(input.value);
         });
-        this.BLOD.bindStatusChange(<'toast'>arr.shift(), v => {
-            looping || (input.value = this.BLOD.getStatus(arr.join('.'), v));
+        user.bindChange(<'toast'>arr.shift(), v => {
+            looping || (input.value = Chain.getStatus(arr.join('.'), v));
             looping = false;
         });
         item.value(input);
@@ -663,14 +669,14 @@ export class UI {
         let looping = false;
         item.init(arr.join(''), label, sub, svg);
         checkboxs.update(values);
-        checkboxs.value = Array.from(this.BLOD.getStatus(id));
+        checkboxs.value = Array.from(Chain.getStatus(id));
         checkboxs.addEventListener('change', () => {
             looping = true;
-            this.BLOD.setStatus(id, checkboxs.value);
+            Chain.setStatus(id, checkboxs.value);
             callback && callback(checkboxs.value);
         })
-        this.BLOD.bindStatusChange(<'toast'>arr.shift(), v => {
-            looping || (checkboxs.value = this.BLOD.getStatus(arr.join('.'), v));
+        user.bindChange(<'toast'>arr.shift(), v => {
+            looping || (checkboxs.value = Chain.getStatus(arr.join('.'), v));
             looping = false;
         });
         item.value(checkboxs);

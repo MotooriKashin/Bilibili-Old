@@ -3,20 +3,20 @@
 	"tasks": [
 		{
 			"type": "npm",
-			"script": "extension",
+			"script": "chrome",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"problemMatcher": [],
-			"label": "npm: extension",
+			"label": "npm: chrome",
 			"detail": "编译浏览器扩展"
 		},
 		{
 			"type": "npm",
-			"script": "userscript",
+			"script": "tampermonkey",
 			"problemMatcher": [],
-			"label": "npm: userscript",
+			"label": "npm: tampermonkey",
 			"detail": "编译用户脚本：Bilibili 旧播放页"
 		},
 		{

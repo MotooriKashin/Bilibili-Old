@@ -1,4 +1,3 @@
-import { BLOD } from "../bilibili-old";
 import { BV2avAll } from "../utils/abv";
 import { addCss, loadScript } from "../utils/element";
 import { jsonpHook } from "../utils/hook/node";
@@ -13,14 +12,19 @@ let load = false;
 /** 用于暂存页面事件 */
 let events: Record<string, any> = {};
 export class Comment {
-    constructor(protected BLOD: BLOD) {
-        Feedback = undefined;
-        loading = false;
-        load = false;
-        events = {};
-        this.bbComment();
-        this.initComment();
-        this.pageCount();
+    static commentJumpUrlTitle = false;
+    protected static loaded = false;
+    constructor() {
+        if (!Comment.loaded) {
+            Comment.loaded = true;
+            Feedback = undefined;
+            loading = false;
+            load = false;
+            events = {};
+            this.bbComment();
+            this.initComment();
+            this.pageCount();
+        }
     }
     /** 捕获评论组件 */
     protected bbComment() {
@@ -116,7 +120,7 @@ export class Comment {
         this._createSubReplyItem();
         this._registerEvent();
         this._resolvePictures();
-        this.BLOD.status.commentJumpUrlTitle && this._resolveJump();
+        Comment.commentJumpUrlTitle && this._resolveJump();
     }
     /** 样式修补 */
     protected styleFix() {

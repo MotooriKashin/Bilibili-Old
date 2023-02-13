@@ -1,0 +1,11 @@
+{
+  "name": "@jsc/chrome",
+  "version": "1.0.0",
+  "description": "浏览器扩展子模块，同时提供脚本运行环境变量。",
+  "main": "index",
+  "author": "MotooriKashin",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.212"
+  }
+}

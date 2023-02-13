@@ -1,5 +1,5 @@
-const manifest = require('./manifest.json');
-const esbuild = require('esbuild');
+import manifest from './manifest.json' assert { type: 'json' };
+import esbuild from 'esbuild';
 
 const banner = Object.entries(manifest).reduce((s, d) => {
     if (Array.isArray(d[1])) {
@@ -13,15 +13,15 @@ const banner = Object.entries(manifest).reduce((s, d) => {
 }, `// ==UserScript==\n`) + '// ==/UserScript==\n\n(function () {\n';
 const footer = `\n})();\n`;
 esbuild.build({
-    entryPoints: [ // 入口脚本
-        'userscript/comment/main.ts'
+    entryPoints: [
+        'src/comment.ts'
     ],
-    bundle: true, // 打包
-    format: 'esm', // 输出格式
-    treeShaking: true, // 清除无效代码
-    charset: 'utf8', // 文件编码
-    outfile: 'userscript/comment/main.user.js',
-    loader: { // 文件对应的解析方式
+    bundle: true,
+    format: 'esm',
+    treeShaking: true,
+    charset: 'utf8',
+    outfile: 'tampermonkey/comment/main.user.js',
+    loader: {
         '.html': 'text',
         '.svg': 'text',
         ".css": 'text'

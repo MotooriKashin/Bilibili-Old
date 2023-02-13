@@ -1,4 +1,5 @@
-import { BLOD } from "../bilibili-old";
+import { urlCleaner } from '../core/url';
+import { user } from '../core/user';
 import html from '../html/search.html';
 import { ApiSearch } from "../io/api-search";
 import { addCss } from "../utils/element";
@@ -9,7 +10,7 @@ import { poll } from "../utils/poll";
 import { Page } from "./page";
 
 export class PageSearch extends Page {
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         super(html);
         this.location();
         this.initState();
@@ -21,7 +22,7 @@ export class PageSearch extends Page {
     protected location() {
         // 搜索首页不应含有任何路径
         poll(() => location.href.endsWith('/all'), () => {
-            this.BLOD.urlCleaner.updateLocation(location.origin);
+            urlCleaner.updateLocation(location.origin);
         }, 10, 30);
     }
     /** 新版__INITIAL_STATE__可能损坏页面 */
@@ -41,7 +42,7 @@ export class PageSearch extends Page {
     }
     /** 获取港澳台搜索数据 */
     protected gat() {
-        if (this.BLOD.status.searchAllArea) {
+        if (user.userStatus!.searchAllArea) {
             jsonpHook.async('x/web-interface/search/all/v2?', undefined, async url => {
                 const data = await new ApiSearch(decodeURIComponent(<string>urlObj(url).keyword)).getData();
                 return ApiSearch.toSearchV2(data);

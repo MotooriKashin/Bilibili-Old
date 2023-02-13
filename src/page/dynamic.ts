@@ -1,10 +1,10 @@
-import { BLOD } from "../bilibili-old";
+import { user } from "../core/user";
 import { jsonCheck } from "../io/api";
 import { xhrHook } from "../utils/hook/xhr";
 
 export class PageDynamic {
-    constructor(protected BLOD: BLOD) {
-        this.BLOD.userLoadedCallback(status => {
+    constructor() {
+        user.addCallback(status => {
             status.liveRecord || this.liveRecord();
         });
     }

@@ -1,19 +1,23 @@
-import { BLOD } from "../bilibili-old";
 import { jsonCheck } from "../io/api";
 import { apiPgcSlideShow } from "../io/api-pgc-slideshow";
 import { apiSearchSquare } from "../io/api-search-square";
 import { apiWebshowLoc } from "../io/api-webshow-locs";
+import { URLS } from "../io/urls";
+import { cdn } from "../utils/cdn";
 import { DanmakuBase } from "../utils/danmaku";
 import { debug } from "../utils/debug";
-import { addCss } from "../utils/element";
+import { addCss, loadScript, loadStyle } from "../utils/element";
 import { cht2chs } from "../utils/format/cht2chs";
 import { objUrl } from "../utils/format/url";
 import { methodHook, propertyHook } from "../utils/hook/method";
 import { xhrHook } from "../utils/hook/xhr";
 import { poll } from "../utils/poll";
+import { BLOD } from "./bilibili-old";
 import { switchVideo } from "./observer";
 import { localStorage } from "./storage";
+import { toast } from "./toast";
 import { alert } from "./ui/alert";
+import { user } from "./user";
 
 const danmakuProtect = [
     96048, // 【幸运星组曲】「らき☆すた動画」
@@ -26,18 +30,21 @@ const danmakuProtect = [
 ];
 
 /** 播放器引导 */
-export class Player {
+class Player {
     /** 播放器启动参数修改回调栈 */
-    protected static modifyArgumentCallback: ((args: IArguments) => void)[] = [];
+    protected modifyArgumentCallback: ((args: IArguments) => void)[] = [];
     /** 添加播放器启动参数修改命令 */
-    static addModifyArgument(callback: (args: IArguments) => void) {
+    addModifyArgument(callback: (args: IArguments) => void) {
         this.modifyArgumentCallback.push(callback);
     }
     /** 捕获的新版播放器 */
     protected nanoPlayer: any;
     protected connect: any;
     protected isConnect: boolean = false;
-    constructor(private BLOD: BLOD) {
+
+    /** 已加载播放器 */
+    protected playLoaded = false;
+    constructor() {
         // 3.x播放器
         propertyHook.modify(window, 'nano', (v: any) => {
             debug('捕获新版播放器！')
@@ -74,8 +81,8 @@ export class Player {
     }
     /** 修改播放器启动参数 */
     protected modifyArgument(args: IArguments) {
-        while (Player.modifyArgumentCallback.length) {
-            Player.modifyArgumentCallback.shift()?.(args);
+        while (this.modifyArgumentCallback.length) {
+            this.modifyArgumentCallback.shift()?.(args);
         }
     }
     protected initData: Record<string, any> = {};
@@ -103,7 +110,7 @@ export class Player {
     /** 旧版播放器已启用 */
     private isEmbedPlayer = false;
     /** 旧版播放器正常引导 */
-    EmbedPlayer(loadPlayer: Function, isEmbedPlayer = true) {
+    protected EmbedPlayer(loadPlayer: Function, isEmbedPlayer = true) {
         this.nanoPermit = () => { } // 禁止放行新版播放器
         // this.loading = false; // 脚本初始化完成
         this.isEmbedPlayer = isEmbedPlayer; // 旧版播放器正常引导
@@ -120,7 +127,7 @@ export class Player {
         this.simpleChinese();
     }
     /** 通过hook新版播放器来引导旧版播放器 */
-    connectPlayer(loadPlayer: Function) {
+    protected connectPlayer(loadPlayer: Function) {
         this.EmbedPlayer(loadPlayer, false);
         this.dataInitedCallback(() => {
             // 记录播放器初始化参数后引导播放器
@@ -158,6 +165,22 @@ export class Player {
             this.connect?.()
         } else {
             this.isConnect = true;
+        }
+    }
+    /** 引导旧播放器 */
+    loadEmbedPlayer() {
+        if (!this.playLoaded) {
+            this.playLoaded = true;
+            this.EmbedPlayer(() => this.loadplayer());
+            this.playerSettings();
+        }
+    }
+    /** 替换新版播放器 */
+    loadConnectPlayer() {
+        if (!this.playLoaded) {
+            this.playLoaded = true;
+            this.connectPlayer(() => this.loadplayer());
+            this.playerSettings();
         }
     }
     /** 播放器启动栈 */
@@ -238,7 +261,7 @@ export class Player {
                     }
                 })
             }
-            this.BLOD.status.danmakuProtect && this.danmakuProtect();
+            user.userStatus!.danmakuProtect && this.danmakuProtect();
         });
     }
     private playbackRateTimer?: number;
@@ -247,13 +270,13 @@ export class Player {
         clearTimeout(this.playbackRateTimer);
         this.playbackRateTimer = setTimeout(() => {
             const video = document.querySelector<HTMLVideoElement>('#bilibiliPlayer video');
-            if (!video) return this.BLOD.toast.warning('未找到播放器！请在播放页面使用。');
+            if (!video) return toast.warning('未找到播放器！请在播放页面使用。');
             video.playbackRate = Number(playbackRate)
         }, 100);
     }
     /** 繁体字幕转简体 */
     private simpleChinese() {
-        if (this.BLOD.status.simpleChinese) {
+        if (user.userStatus!.simpleChinese) {
             xhrHook('x/player/v2?', undefined, res => {
                 try {
                     const response = jsonCheck(res.response);
@@ -272,7 +295,7 @@ export class Player {
                                                     } else {
                                                         res.response = res.responseText = response;
                                                     }
-                                                    this.BLOD.toast.warning('字幕：繁 -> 简', `原始语言：${d.lan_doc}`)
+                                                    toast.warning('字幕：繁 -> 简', `原始语言：${d.lan_doc}`)
                                                 }
                                             } catch (e) {
                                                 debug.error('繁 -> 简', e);
@@ -289,37 +312,38 @@ export class Player {
             }, false);
         }
     }
+    /** 弹幕保护计划 */
     private danmakuProtect() {
         if (!(<any>window).player?.appendDm) return;
-        const cid = Number(this.BLOD.cid);
+        const cid = Number(BLOD.cid);
         if (cid && danmakuProtect.includes(cid)) {
             alert('此视频高级弹幕部分丢失，点击确认加载备份弹幕。<br>※ 请在原弹幕加载完后再点确定，以免备份弹幕被覆盖。', '弹幕保护计划', [
                 {
                     text: '确定',
                     callback: () => {
                         const data = ['弹幕保护计划 >>>'];
-                        const toast = this.BLOD.toast.toast(0, 'info', ...data);
-                        this.BLOD.GM.fetch(this.BLOD.cdn.encode(`/danmaku/${cid}.xml`, ''), { cache: 'force-cache' })
+                        const tst = toast.toast(0, 'info', ...data);
+                        GM.fetch(cdn.encode(`/danmaku/${cid}.xml`, ''), { cache: 'force-cache' })
                             .then(d => {
                                 data.push(`获取存档：${cid}.xml`);
-                                toast.data = data;
-                                toast.type = 'success';
+                                tst.data = data;
+                                tst.type = 'success';
                                 return d.text();
                             })
                             .then(d => {
                                 const dm = DanmakuBase.decodeXml(d);
-                                (<any>window).player.appendDm(dm, !this.BLOD.status.dmContact);
-                                data.push(`有效弹幕数：${dm.length}`, `加载模式：${this.BLOD.status.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
-                                toast.data = data;
+                                (<any>window).player.appendDm(dm, !user.userStatus!.dmContact);
+                                data.push(`有效弹幕数：${dm.length}`, `加载模式：${user.userStatus!.dmContact ? '与已有弹幕合并' : '清空已有弹幕'}`);
+                                tst.data = data;
                             })
                             .catch(e => {
                                 data.push(e);
                                 debug.error('弹幕保护计划', e);
-                                toast.data = data;
-                                toast.type = 'error';
+                                tst.data = data;
+                                tst.type = 'error';
                             })
                             .finally(() => {
-                                toast.delay = this.BLOD.status.toast.delay;
+                                tst.delay = user.userStatus!.toast.delay;
                             })
                     }
                 },
@@ -329,7 +353,103 @@ export class Player {
             ], true)
         }
     }
+    /** 备份播放器设置 */
+    protected playerSettings() {
+        const local = localStorage.getItem('bilibili_player_settings');
+        if (local) {
+            GM.setValue('bilibili_player_settings', local);
+        } else {
+            GM.getValue('bilibili_player_settings').then(d => {
+                d && localStorage.setItem('bilibili_player_settings', d);
+            })
+        }
+    }
+    /** 正在更新播放器 */
+    protected updating = false;
+    /**
+     * 加载播放器
+     * @param force 强制更新
+     */
+    async loadplayer(force = false) {
+        if (!(<any>window).jQuery) await loadScript(URLS.JQUERY);
+        try {
+            if (user.userStatus!.bilibiliplayer) {
+                if (_UserScript_) {
+                    const data = await Promise.all([
+                        GM.getValue<string>('bilibiliplayer'),
+                        GM.getValue<string>('bilibiliplayerstyle')
+                    ]);
+                    if (force || !data[0] || !data[1]) {
+                        if (this.updating) throw new Error('一次只能运行一个更新实例！');
+                        this.updating = true;
+                        if (!BLOD.version) throw new Error(`未知错误导致脚本版本异常！version：${BLOD.version}`);
+                        const msg = [
+                            '更新播放器组件中，可能需要花费一点时间，请不要关闭页面！',
+                            '如果弹出跨域提醒，推荐【总是允许全部域名】',
+                            '如果多次更新失败，请禁用【重构播放器】功能！'
+                        ];
+                        const tst = toast.toast(0, 'warning', ...msg);
+                        let i = 1;
+                        await Promise.all([
+                            GM.fetch(cdn.encode('/chrome/player/video.js'))
+                                .then(d => d.text())
+                                .then(d => {
+                                    data[0] = d;
+                                    msg.push(`加载播放器组件：${i++}/2`);
+                                    tst.data = msg;
+                                })
+                                .catch(e => {
+                                    msg.push(`获取播放器组件出错！${i++}/2`, e);
+                                    tst.data = msg;
+                                    tst.type = 'error';
+                                }),
+                            GM.fetch(cdn.encode('/chrome/player/video.css'))
+                                .then(d => d.text())
+                                .then(d => {
+                                    data[1] = d;
+                                    msg.push(`加载播放器组件：${i++}/2`);
+                                    tst.data = msg;
+                                })
+                                .catch(e => {
+                                    msg.push(`获取播放器组件出错！${i++}/2`, e);
+                                    tst.data = msg;
+                                    tst.type = 'error';
+                                })
+                        ]);
+                        this.updating = false;
+                        tst.delay = user.userStatus!.toast.delay;
+                        if (!data[0] || !data[1]) throw new Error('获取播放器组件出错！');
+                        msg.push('-------加载成功-------');
+                        tst.data = msg;
+                        tst.type = 'success';
+                        GM.setValue('bilibiliplayer', data[0]);
+                        GM.setValue('bilibiliplayerstyle', data[1]);
+                    }
+                    new Function(data[0])();
+                    addCss(data[1], `bilibiliplayer-${BLOD.version}`);
+                    GM.setValue('version', BLOD.version);
+
+                } else {
+                    await Promise.all([
+                        GM.executeScript('player/video.js', true)
+                            .then(d => loadScript(d)),
+                        GM.insertCSS('player/video.css', true)
+                            .then(d => loadStyle(d))
+                    ]);
+                }
+            } else {
+                await loadScript(URLS.VIDEO);
+                addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
+            }
+        } catch (e) {
+            this.updating || toast.error('播放器加载失败！', '已回滚~', e)();
+            await loadScript(URLS.VIDEO);
+            addCss('.bilibili-player-video-progress-detail-img {transform: scale(0.333333);transform-origin: 0px 0px;}', 'detail-img');
+        }
+    }
 }
+/** 播放器组件 */
+export const player = new Player();
 
 interface NanoInitData {
     aid: number;

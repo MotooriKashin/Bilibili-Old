@@ -15,6 +15,12 @@
 
 (function () {
 
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
 
 // src/utils/abv.ts
 var Abv = class {
@@ -120,7 +126,7 @@ function integerFormat(num, byte = 2) {
 }
 
 // src/utils/format/time.ts
-function timeFormat(time = new Date().getTime(), type) {
+function timeFormat(time = (/* @__PURE__ */ new Date()).getTime(), type) {
   const date = new Date(time);
   const arr = date.toLocaleString().split(" ");
   const day = arr[0].split("/");
@@ -249,16 +255,18 @@ var URL = class {
       str.split("&").forEach((d) => {
         const arr3 = d.split("=");
         const key = arr3.shift();
-        let value = arr3.join("=") || "";
-        try {
-          if (!isNumber(value)) {
-            value = JSON.parse(value);
+        if (key) {
+          let value = arr3.join("=") || "";
+          try {
+            if (!isNumber(value)) {
+              value = JSON.parse(value);
+            }
+          } catch {
+            value === "undefined" && (value = void 0);
+            value === "NaN" && (value = NaN);
           }
-        } catch {
-          value === "undefined" && (value = void 0);
-          value === "NaN" && (value = NaN);
+          this.params[key] = value;
         }
-        this.params[key] = value;
       });
     }
   }
@@ -457,6 +465,9 @@ var left_default = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" 
 // src/svg/right.svg
 var right_default = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M5.82576 2.07564C5.59145 2.30995 5.59145 2.68985 5.82576 2.92417L10.9015 7.9999L5.82576 13.0756C5.59145 13.31 5.59145 13.6899 5.82576 13.9242C6.06008 14.1585 6.43997 14.1585 6.67429 13.9242L11.9386 8.65987C12.3031 8.29538 12.3031 7.70443 11.9386 7.33994L6.67429 2.07564C6.43997 1.84132 6.06008 1.84132 5.82576 2.07564Z" fill="#E19C2C"></path></svg>';
 
+// src/svg/net.svg
+var net_default = '<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"><g><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"></path></g></svg>';
+
 // src/utils/svg.ts
 var svg = {
   fork: fork_default,
@@ -474,7 +485,8 @@ var svg = {
   like: like_default,
   dislike: dislike_default,
   left: left_default,
-  right: right_default
+  right: right_default,
+  net: net_default
 };
 
 // src/core/ui/preview-image.ts
@@ -559,23 +571,25 @@ var PreviewImage = class extends HTMLElement {
     document.body.style.overflow = "hidden";
   }
 };
-customElements.get(`preview-image-${"i753z4kx088"}`) || customElements.define(`preview-image-${"i753z4kx088"}`, PreviewImage);
+customElements.get(`preview-image-${"z1avrej1mr"}`) || customElements.define(`preview-image-${"z1avrej1mr"}`, PreviewImage);
 
 // src/core/comment.ts
 var Feedback;
 var loading = false;
 var load = false;
 var events = {};
-var Comment = class {
-  constructor(BLOD) {
-    this.BLOD = BLOD;
-    Feedback = void 0;
-    loading = false;
-    load = false;
-    events = {};
-    this.bbComment();
-    this.initComment();
-    this.pageCount();
+var _Comment = class {
+  constructor() {
+    if (!_Comment.loaded) {
+      _Comment.loaded = true;
+      Feedback = void 0;
+      loading = false;
+      load = false;
+      events = {};
+      this.bbComment();
+      this.initComment();
+      this.pageCount();
+    }
   }
   /** 捕获评论组件 */
   bbComment() {
@@ -625,11 +639,12 @@ var Comment = class {
       set: (v) => true,
       get: () => {
         if (load) {
-          let initComment = function(tar, init) {
+          let initComment2 = function(tar, init) {
             new Feedback(tar, init.oid, init.pageType, init.userStatus);
           };
-          Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment });
-          return initComment;
+          var initComment = initComment2;
+          Reflect.defineProperty(window, "initComment", { configurable: true, value: initComment2 });
+          return initComment2;
         }
         return function() {
           if (!loading) {
@@ -669,7 +684,7 @@ var Comment = class {
     this._createSubReplyItem();
     this._registerEvent();
     this._resolvePictures();
-    this.BLOD.status.commentJumpUrlTitle && this._resolveJump();
+    _Comment.commentJumpUrlTitle && this._resolveJump();
   }
   /** 样式修补 */
   styleFix() {
@@ -889,12 +904,12 @@ var Comment = class {
         }
         fetchDialog(0).done((resp) => {
           if (resp.code == 0 && resp.data.replies && resp.data.replies.length > 0) {
-            let nextPage = function(minFloor) {
+            let nextPage2 = function(minFloor) {
               if (minFloor < resp.data.dialog.max_floor) {
                 fetchDialog(minFloor + 1).done((resp2) => {
                   if (resp2.code == 0 && resp2.data.replies && resp2.data.replies.length > 0) {
                     replyBox.insertAdjacentHTML("beforeend", l._createSubReplyList(resp2.data.replies, resp2.data.replies.length, true, rootid, null, false));
-                    nextPage(resp2.data.cursor.max_floor);
+                    nextPage2(resp2.data.cursor.max_floor);
                   }
                 });
               } else {
@@ -905,11 +920,12 @@ var Comment = class {
                             margin-right: 15px;`;
               }
             };
+            var nextPage = nextPage2;
             replyBox.innerHTML = l._createSubReplyList(resp.data.replies, resp.data.replies.length, true, rootid, null, false);
             l._registerEvent(container);
             container.className = "comment-dialog-container";
             fixEmojiPosition(replyBox);
-            nextPage(resp.data.cursor.max_floor);
+            nextPage2(resp.data.cursor.max_floor);
           }
         });
       });
@@ -1006,9 +1022,12 @@ var Comment = class {
     };
   }
 };
+var Comment = _Comment;
+__publicField(Comment, "commentJumpUrlTitle", false);
+__publicField(Comment, "loaded", false);
 
-// userscript/comment/main.ts
-new Comment({ status: {} });
+// src/comment.ts
+new Comment();
 // @license MIT
 
 })();

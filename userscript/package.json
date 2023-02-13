@@ -1,8 +1,0 @@
-{
-  "name": "@blod/userscript",
-  "version": "1.0.0",
-  "description": "用户脚本",
-  "main": "main",
-  "author": "MatooriKashin",
-  "license": "MIT"
-}

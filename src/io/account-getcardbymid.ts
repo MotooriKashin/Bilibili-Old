@@ -1,4 +1,3 @@
-import { BLOD } from "../bilibili-old";
 import { objUrl } from "../utils/format/url";
 import { jsonCheck } from "./api";
 import { URLS } from "./urls";
@@ -28,7 +27,7 @@ interface IAccountCard {
     sign: string;
     spacesta: number;
 }
-export async function accountGetCardByMid(mid: number, GM: BLOD['GM']) {
+export async function accountGetCardByMid(mid: number) {
     const response = await GM.fetch(objUrl(URLS.ACCOUNT_GETCARDBYMID, { mid }));
     const json = await response.json()
     return <IAccountCard>jsonCheck(json).card;

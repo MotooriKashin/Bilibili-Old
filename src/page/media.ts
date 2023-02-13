@@ -1,9 +1,8 @@
-import { BLOD } from "../bilibili-old";
 import { jsonCheck } from "../io/api";
 import { xhrHook } from "../utils/hook/xhr";
 
 export class PageMedia {
-    constructor(protected BLOD: BLOD) {
+    constructor() {
         this.limit();
     }
     /** 解除限制 */
