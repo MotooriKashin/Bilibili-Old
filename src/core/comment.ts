@@ -13,18 +13,14 @@ let load = false;
 let events: Record<string, any> = {};
 export class Comment {
     static commentJumpUrlTitle = false;
-    protected static loaded = false;
     constructor() {
-        if (!Comment.loaded) {
-            Comment.loaded = true;
-            Feedback = undefined;
-            loading = false;
-            load = false;
-            events = {};
-            this.bbComment();
-            this.initComment();
-            this.pageCount();
-        }
+        Feedback = undefined;
+        loading = false;
+        load = false;
+        events = {};
+        this.bbComment();
+        this.initComment();
+        this.pageCount();
     }
     /** 捕获评论组件 */
     protected bbComment() {
